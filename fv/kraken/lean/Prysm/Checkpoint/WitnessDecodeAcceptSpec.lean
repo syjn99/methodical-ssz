@@ -58,7 +58,7 @@ theorem runs_spec (g0 : SszValue) (zmms : RegZmms) (flags : StatusFlags) :
       simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
       exact H2)
-    (by simp [initial_state]) (by rw [SszValue.enc_size]; rfl) (by omega) (bump_makeslice1 180 placed_at_180 labels_fresh_at_180 _)
+    (by simp [initial_state]) (by rw [SszValue.encode_size]; rfl) (by omega) (bump_makeslice1 180 placed_at_180 labels_fresh_at_180 _)
     (model_memmove 186 placed_at_186 labels_fresh_at_186 8)
   exact ⟨g, h1, h2, eventually_mono h3 (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)⟩
 

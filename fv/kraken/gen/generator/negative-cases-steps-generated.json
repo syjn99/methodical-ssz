@@ -30,17 +30,17 @@
   "kind": "control"
  },
  {
-  "id": "sync-committee-message-decode-generated-step-s87-statement-truncate-8-to-16",
+  "id": "sync-committee-message-decode-generated-step-directive-87-statement-truncate-8-to-16",
   "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_s87",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_directive_87",
   "kind": "stmt",
   "old": "(BitVec.truncate 32 (8 : Int64).toBitVec)",
   "new": "(BitVec.truncate 32 (16 : Int64).toBitVec)"
  },
  {
-  "id": "sync-committee-message-decode-generated-step-s82-statement-ha-120-to-112",
+  "id": "sync-committee-message-decode-generated-step-directive-82-statement-ha-120-to-112",
   "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_s82",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_directive_82",
   "kind": "stmt",
   "old": "(ha : base + (120 : Int64).toBitVec = a)",
   "new": "(ha : base + (112 : Int64).toBitVec = a)"
@@ -70,9 +70,9 @@
   "new": "(hroot : root.length = 32)"
  },
  {
-  "id": "pending-partial-withdrawal-decode-generated-step-s54-statement-codec-r8-to-r9",
+  "id": "pending-partial-withdrawal-decode-generated-step-directive-54-statement-codec-r8-to-r9",
   "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_step_s54",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_54",
   "kind": "stmt",
   "old": "Codec.setRegister s Reg64.r8 (BitVec.ofInt",
   "new": "Codec.setRegister s Reg64.r9 (BitVec.ofInt"
@@ -102,9 +102,9 @@
   "new": "⋆ Eq (e8.At (bf + 8)) ⋆ Eq (c0.At (rcv + 16)) ⋆ F) st.data.dmem"
  },
  {
-  "id": "sync-committee-message-decode-generated-step-s86-code-add-0x28-to-0x30",
+  "id": "sync-committee-message-decode-generated-step-directive-86-code-add-0x28-to-0x30",
   "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_s86",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_directive_86",
   "kind": "code",
   "line": 87,
   "old": "  add $0x28,%rax",

@@ -31,9 +31,9 @@
   "new": "(hSrc : bf + (80 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "pending-deposit-decode-generated-step-s124-code-add-0xb8-to-0xb0",
+  "id": "pending-deposit-decode-generated-step-directive-124-code-add-0xb8-to-0xb0",
   "module": "Prysm/PendingDeposit/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.generated_step_s124",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_step_directive_124",
   "kind": "code",
   "old": "  add $0xb8,%rbx",
   "new": "  add $0xb0,%rbx",
@@ -219,9 +219,9 @@
   "new": "(hSrc : bf + (56 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "pow-block-decode-generated-step-s118-code-mov-0x30-rdx-to-0x28-rdx",
+  "id": "pow-block-decode-generated-step-directive-118-code-mov-0x30-rdx-to-0x28-rdx",
   "module": "Prysm/PowBlock/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.PowBlock.Decode.generated_step_s118",
+  "theorem": "Prysm.PowBlock.Decode.generated_step_directive_118",
   "kind": "code",
   "old": "  mov %rsi,0x30(%rdx)",
   "new": "  mov %rsi,0x28(%rdx)",

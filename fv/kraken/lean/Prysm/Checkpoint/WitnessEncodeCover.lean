@@ -46,11 +46,11 @@ theorem labels_fresh_at_8 : LabelsFresh marshalSSZTo 8 := labelsFresh_of (by rw 
 theorem labels_fresh_at_99 : LabelsFresh MemmoveGrowsliceModel 99 := labelsFresh_of (by rw [host_program_eq]; decide)
 
 theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [programLabels])
 
 abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
 abbrev word_bytes (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
-def pre30 : List UInt8 := (List.range 30).map (fun i => UInt8.ofNat (0x40 + i))
+def prefix30 : List UInt8 := (List.range 30).map (fun i => UInt8.ofNat (0x40 + i))
 
 /-- bump pointer · heap (9000) · guard · receiver (72) · root (32) · rslot · growslice spill (40) · l72
 · t40 (16) · t30 (16) · l32 · l24 · l16 · fp · return slot · spill rax · spill rbx · spill rcx · dst. -/
@@ -76,24 +76,24 @@ theorem runs (g : SszValue) (n : Nat) (hn : n ≤ 64) (zmms : RegZmms) (flags : 
     ∃ bs, serialize desc g.toValue = .ok bs ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∨ st.pc = label "runtime.growslice")
-      ⟨initial_state (uintBytes 8 g.epoch.toNat).toList g.root.toList (pre30 ++ zeros n) 0x12438 30 (UInt64.ofNat (30 + n))
+      ⟨initial_state (uintBytes 8 g.epoch.toNat).toList g.root.toList (prefix30 ++ zeros n) 0x12438 30 (UInt64.ofNat (30 + n))
         zmms flags, Host.addrOf 8⟩ := by
   have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   have hc : (UInt64.ofNat (30 + n)).toNat = 30 + n := by simp; omega
-  obtain ⟨bs, hs, he⟩ := Encode.cover 8 placed_at_8 labels_fresh_at_8 g (zeros 8) (word_bytes 32) (zeros 32) pre30 (zeros n) rfl rfl rfl
-    0x12380 (initial_state (uintBytes 8 g.epoch.toNat).toList g.root.toList (pre30 ++ zeros n) 0x12438 30 (UInt64.ofNat (30 + n))
-      zmms flags) 0 0 rfl (by simp only [initial_state, hc]; simp [pre30])
+  obtain ⟨bs, hs, he⟩ := Encode.cover 8 placed_at_8 labels_fresh_at_8 g (zeros 8) (word_bytes 32) (zeros 32) prefix30 (zeros n) rfl rfl rfl
+    0x12380 (initial_state (uintBytes 8 g.epoch.toNat).toList g.root.toList (prefix30 ++ zeros n) 0x12438 30 (UInt64.ofNat (30 + n))
+      zmms flags) 0 0 rfl (by simp only [initial_state, hc]; simp [prefix30])
     (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 16) (zeros 16) (zeros 8) (zeros 40) (zeros 8)
     rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl
     Std.ExtHashMap.emp 0 [] rfl bumpHeap 9000
     (by
-      have H : Eq ((block (uintBytes 8 g.epoch.toNat).toList g.root.toList (pre30 ++ zeros n)).At (0x10000 : BitVec 64))
-        (mem (uintBytes 8 g.epoch.toNat).toList g.root.toList (pre30 ++ zeros n)) := rfl
-      witness_split_n [he8, hroot, show pre30.length = 30 from rfl]
+      have H : Eq ((block (uintBytes 8 g.epoch.toNat).toList g.root.toList (prefix30 ++ zeros n)).At (0x10000 : BitVec 64))
+        (mem (uintBytes 8 g.epoch.toNat).toList g.root.toList (prefix30 ++ zeros n)) := rfl
+      witness_split_n [he8, hroot, show prefix30.length = 30 from rfl]
       have H2 := lift_heap H
-      rw [at_app pre30 (zeros n) rfl (by simp [pre30]; omega)]
-      simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, show Int.toBytes 8 (32#64).toInt = Int.toBytes 8 32 by decide, show pre30.length = 30 from rfl, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
+      rw [at_app prefix30 (zeros n) rfl (by simp [prefix30]; omega)]
+      simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, show Int.toBytes 8 (32#64).toInt = Int.toBytes 8 32 by decide, show prefix30.length = 30 from rfl, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil] at H2 ⊢
       generalize (uintBytes 8 g.epoch.toNat).toList = e8 at H2 ⊢
       generalize g.root.toList = root at H2 ⊢
@@ -123,7 +123,7 @@ theorem runs_nil (g : SszValue) (zmms : RegZmms) (flags : StatusFlags) :
         (mem (uintBytes 8 g.epoch.toNat).toList g.root.toList []) := rfl
       witness_split_n [he8, hroot]
       have H2 := lift_heap H
-      simp only [initial_state, word_bytes, nil_At_emp, List.nil_append, Std.ExtHashMap.sep_emp, show Int.toBytes 8 (32#64).toInt = Int.toBytes 8 32 by decide, show pre30.length = 30 from rfl, Std.ExtHashMap.emp_sep,
+      simp only [initial_state, word_bytes, nil_At_emp, List.nil_append, Std.ExtHashMap.sep_emp, show Int.toBytes 8 (32#64).toInt = Int.toBytes 8 32 by decide, show prefix30.length = 30 from rfl, Std.ExtHashMap.emp_sep,
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         List.length_nil] at H2 ⊢
       generalize (uintBytes 8 g.epoch.toNat).toList = e8 at H2 ⊢

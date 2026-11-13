@@ -37,23 +37,23 @@ theorem runs (g : SszValue) (n : Nat) (hn : n ≤ 64) (zmms : RegZmms) (flags : 
             ∧ nextSliceCap 70 (30 + n) ≤ st.data.regs.rcx.toNat)
         ∧ (n < 8 → (st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rbx.toNat = 70)
             ∨ (st.pc = label "runtime.growslice" ∧ st.data.regs.rbx.toNat = 70 ∧ st.data.regs.rdi.toNat = 32)))
-      ⟨(initial_state (uintBytes 8 g.epoch.toNat).toList g.root.toList (pre30 ++ zeros n) 0x12438 30 (UInt64.ofNat (30 + n)) zmms flags), Host.addrOf 8⟩ := by
+      ⟨(initial_state (uintBytes 8 g.epoch.toNat).toList g.root.toList (prefix30 ++ zeros n) 0x12438 30 (UInt64.ofNat (30 + n)) zmms flags), Host.addrOf 8⟩ := by
   have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   have hc : (UInt64.ofNat (30 + n)).toNat = 30 + n := by simp; omega
   have r30 : UInt64.toNat 30 = 30 := rfl
-  obtain ⟨bs, hs, hbs, he⟩ := Encode.cover_framed 8 placed_at_8 labels_fresh_at_8 g _ rfl (zeros 8) (word_bytes 32) (zeros 32) pre30 (zeros n) rfl rfl rfl
-    0x12380 (initial_state (uintBytes 8 g.epoch.toNat).toList g.root.toList (pre30 ++ zeros n) 0x12438 30 (UInt64.ofNat (30 + n)) zmms flags) 0 0 rfl (by simp only [initial_state, hc]; simp [pre30])
+  obtain ⟨bs, hs, hbs, he⟩ := Encode.cover_framed 8 placed_at_8 labels_fresh_at_8 g _ rfl (zeros 8) (word_bytes 32) (zeros 32) prefix30 (zeros n) rfl rfl rfl
+    0x12380 (initial_state (uintBytes 8 g.epoch.toNat).toList g.root.toList (prefix30 ++ zeros n) 0x12438 30 (UInt64.ofNat (30 + n)) zmms flags) 0 0 rfl (by simp only [initial_state, hc]; simp [prefix30])
     (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 16) (zeros 16) (zeros 8) (zeros 40) (zeros 8)
     rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl
     Std.ExtHashMap.emp 0 [] rfl bumpHeap 9000
     (by
-      have H : Eq ((block (uintBytes 8 g.epoch.toNat).toList g.root.toList (pre30 ++ zeros n)).At (0x10000 : BitVec 64))
-        (mem (uintBytes 8 g.epoch.toNat).toList g.root.toList (pre30 ++ zeros n)) := rfl
-      witness_split_n [he8, hroot, show pre30.length = 30 from rfl]
+      have H : Eq ((block (uintBytes 8 g.epoch.toNat).toList g.root.toList (prefix30 ++ zeros n)).At (0x10000 : BitVec 64))
+        (mem (uintBytes 8 g.epoch.toNat).toList g.root.toList (prefix30 ++ zeros n)) := rfl
+      witness_split_n [he8, hroot, show prefix30.length = 30 from rfl]
       have H2 := lift_heap H
-      rw [at_app pre30 (zeros n) rfl (by simp [pre30]; omega)]
-      simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, show Int.toBytes 8 (32#64).toInt = Int.toBytes 8 32 by decide, show pre30.length = 30 from rfl, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
+      rw [at_app prefix30 (zeros n) rfl (by simp [prefix30]; omega)]
+      simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, show Int.toBytes 8 (32#64).toInt = Int.toBytes 8 32 by decide, show prefix30.length = 30 from rfl, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil] at H2 ⊢
       generalize (uintBytes 8 g.epoch.toNat).toList = e8 at H2 ⊢
       generalize g.root.toList = root at H2 ⊢
@@ -99,7 +99,7 @@ theorem runs_nil (g : SszValue) (zmms : RegZmms) (flags : StatusFlags) :
         (mem (uintBytes 8 g.epoch.toNat).toList g.root.toList []) := rfl
       witness_split_n [he8, hroot]
       have H2 := lift_heap H
-      simp only [initial_state, word_bytes, nil_At_emp, List.nil_append, Std.ExtHashMap.sep_emp, show Int.toBytes 8 (32#64).toInt = Int.toBytes 8 32 by decide, show pre30.length = 30 from rfl, Std.ExtHashMap.emp_sep,
+      simp only [initial_state, word_bytes, nil_At_emp, List.nil_append, Std.ExtHashMap.sep_emp, show Int.toBytes 8 (32#64).toInt = Int.toBytes 8 32 by decide, show prefix30.length = 30 from rfl, Std.ExtHashMap.emp_sep,
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         List.length_nil] at H2 ⊢
       generalize (uintBytes 8 g.epoch.toNat).toList = e8 at H2 ⊢

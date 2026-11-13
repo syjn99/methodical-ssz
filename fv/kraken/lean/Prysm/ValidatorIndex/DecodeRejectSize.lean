@@ -160,11 +160,11 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   step_directive hk unmarshalSSZ 27
   step_directive hk unmarshalSSZ 28
   apply store_step_at _ _ (rsp.toBitVec - 88) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 19 + 1)).toBitVec.toInt) _ _
-    (Prysm.Epoch.Decode.reject_call2 _) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (Prysm.Epoch.Decode.reject_second_call _) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m10 H10
   simp only [Width.bytes, Width.bits] at H10
   unfold_step
-  rw [Prysm.Epoch.Decode.reject_call2] at *
+  rw [Prysm.Epoch.Decode.reject_second_call] at *
   rw [Prysm.Epoch.Decode.reject_eight_bytes] at H10
   simp only [ElfData.PrysmTarget.typeInt_addr, ElfData.PrysmTarget.boxedEight_addr, ElfData.PrysmTarget.formatBufferLength_addr] at H10 ⊢
   refine eventually_trans _ _ _ _ (hdd _ (Host.addrOf (k + 28 + 1)) av2 (Int.toBytes 8 (8 : BitVec 64).toInt) hb stk2

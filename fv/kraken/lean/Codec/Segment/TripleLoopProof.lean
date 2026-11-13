@@ -26,7 +26,7 @@ variable [Host]
 def TripleLoopElementSize (k w : Nat) : Prop := (k = 3 ∧ w = 24) ∨ (k = 4 ∧ w = 48) ∨ (k = 5 ∧ w = 96)
 
 set_option hygiene false in
-/-- Proof text of `vtri_iter` for the literal shift `k` and size `w` (names are the binders of the theorem). -/
+/-- Proof text of `triple_loop_one_iteration` for the literal shift `k` and size `w` (names are the binders of the theorem). -/
 local macro "triple_loop_iteration " k:num w:num : tactic => `(tactic| (
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hrax hrsp hrbp hr14 ⊢
@@ -213,7 +213,7 @@ local macro "triple_loop_iteration " k:num w:num : tactic => `(tactic| (
 -- lowest passing value. Cause: the case split runs the proof text three times in one declaration (one per size).
 set_option maxHeartbeats 800000 in
 /-- **One iteration** of the `3·2^k` element loop (`i < n`), from the loop head `jH` back to `jH`. -/
-theorem vtri_iter (k w : Nat) (hkw : TripleLoopElementSize k w) (n : Nat) (hn : n < 2 ^ 31) (lhead lexit lp lwb lback : String)
+theorem triple_loop_one_iteration (k w : Nat) (hkw : TripleLoopElementSize k w) (n : Nat) (hn : n < 2 ^ 31) (lhead lexit lp lwb lback : String)
     (dI d3 dP dB dR fL fP src : Int64) (jH jM jS jHd jT jB : Nat)
     (hB1 : (tripleLoopHead (OfNat.ofNat n) lhead lexit dI (OfNat.ofNat w)).IsInfixAt Host.prog jH)
     (hB2 : (tripleLoopMiddle (OfNat.ofNat k) dP dI d3 dB).IsInfixAt Host.prog jM)
@@ -264,7 +264,7 @@ theorem vtri_iter (k w : Nat) (hkw : TripleLoopElementSize k w) (n : Nat) (hn : 
   · triple_loop_iteration 5 96
 
 /-- **Loop exit** of the `3·2^k` shape: at the head with rax = n the `jge` is taken; the state reaches `jE`. -/
-theorem vtri_exit (n : Nat) (hn : n < 2 ^ 31) (lhead lexit : String) (dI w : Int64) (jH jE : Nat)
+theorem triple_loop_exit (n : Nat) (hn : n < 2 ^ 31) (lhead lexit : String) (dI w : Int64) (jH jE : Nat)
     (hB1 : (tripleLoopHead (OfNat.ofNat n) lhead lexit dI w).IsInfixAt Host.prog jH) (hle : label lexit = Host.addrOf jE)
     (P : MachineState → Prop) (s : MachineData) (hrax : s.regs.rax.toNat = n)
     (hP : ∀ f : StatusFlags, P ⟨⟨s.regs, s.zmms, f, s.dmem⟩, Host.addrOf jE⟩) :
@@ -285,7 +285,7 @@ theorem vtri_exit (n : Nat) (hn : n < 2 ^ 31) (lhead lexit : String) (dI w : Int
 
 /-- **The element loop** of the `3·2^k` shape: from the head with i elements done (`i + j = n`) to the exit label
 `jE` with all n done; the return slot holds the last `memmove` return address once one iteration has run. -/
-theorem vtri_loop (k w : Nat) (hkw : TripleLoopElementSize k w) (n : Nat) (hn : n < 2 ^ 31) (lhead lexit lp lwb lback : String)
+theorem triple_loop (k w : Nat) (hkw : TripleLoopElementSize k w) (n : Nat) (hn : n < 2 ^ 31) (lhead lexit lp lwb lback : String)
     (dI d3 dP dB dR fL fP src : Int64) (jH jM jS jHd jT jB jE : Nat)
     (hB1 : (tripleLoopHead (OfNat.ofNat n) lhead lexit dI (OfNat.ofNat w)).IsInfixAt Host.prog jH)
     (hB2 : (tripleLoopMiddle (OfNat.ofNat k) dP dI d3 dB).IsInfixAt Host.prog jM)
@@ -336,11 +336,11 @@ theorem vtri_loop (k w : Nat) (hkw : TripleLoopElementSize k w) (n : Nat) (hn : 
     obtain hr0 | hr0 := hr0
     · exact absurd hr0 (Nat.lt_irrefl 0)
     subst hr0
-    exact vtri_exit _ hn lhead lexit dI _ jH jE hB1 hle _ s hrax fun _ => ⟨rfl, hrsp, hrbp, hr14, ps, lI, l3, lP,
+    exact triple_loop_exit _ hn lhead lexit dI _ jH jE hB1 hle _ s hrax fun _ => ⟨rfl, hrsp, hrbp, hr14, ps, lI, l3, lP,
       spl, lo, hps, hlI, hl3, hlP, hspl, hlo, by simpa using h_mem⟩
   | succ j ih =>
     intro i ps lI l3 lP spl rslot lo avail s hij hps hlI hl3 hlP hspl hrs hlo hav _ hrax hrsp hrbp hr14 h_mem
-    refine eventually_trans _ _ _ _ (vtri_iter k w hkw n hn lhead lexit lp lwb lback dI d3 dP dB dR fL fP src
+    refine eventually_trans _ _ _ _ (triple_loop_one_iteration k w hkw n hn lhead lexit lp lwb lback dI d3 dP dB dR fL fP src
       jH jM jS jHd jT jB hB1 hB2 hB3 hB4 hB5 hB6 g1 gs g2 g3 g4 hlb sp recv bf bfs A aI a3 aP aB aR aL aA
       haI ha3 haP haB haR haL haA hsrc pks hpks hpk i (by omega) ps hps rbp0 r140 lI l3 lP spl rslot lo
       hlI hl3 hlP hspl hrs S hlo Heap avail (by rw [Nat.mul_succ] at hav; omega) R s hrax hrsp hrbp hr14 h_mem

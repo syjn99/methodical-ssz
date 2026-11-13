@@ -17,7 +17,7 @@ import Prysm.HistoricalSummary.EncodeFastPathExample
 | `Prysm/DepositMessage/EncodeFastPathExample.lean` | DepositMessage | large, 8 | `add $-0x80` | bytes 48, bytes 32, uint64; no `state` word | no reload | kind instance (no hand statement) |
 | `Prysm/HistoricalSummary/EncodeFastPathExample.lean` | HistoricalSummary | small | `sub $0x50` | bytes 32 twice | frame test (`Codec/EncodeFrameTest.lean`), reloads | kind instance (no hand statement) |
 
-Each module: `Encode.example_head` (`encHeadKindAnyFrame`), `Encode.example_f<i>` per field (`encFieldKindAnyFrame`), `Encode.example_epi`
+Each module: `Encode.example_head` (`encHeadKindAnyFrame`), `Encode.example_f<i>` per field (`encFieldKindAnyFrame`), `Encode.example_epilogue`
 (`encEpilogueKindAnyFrame`), `Encode.example_fast` (`encFastPathKindAnyFrame`), each with its `_kind` line, and, where a hand theorem
 exists, `Encode.example_fast_same_statement : type_of% <the hand theorem>`.
 

@@ -14,7 +14,7 @@ import Prysm.PendingDeposit.DecodeRejectSizeExample
 | `Prysm/VoluntaryExit/DecodeAcceptExample.lean` | VoluntaryExit | callee only | `0x48` | callee Epoch, callee ValidatorIndex | kind instance (no hand statement) |
 | `Prysm/PowBlock/DecodeAcceptExample.lean` | PowBlock | runtime only | `0x20` | bytes 32 three times | kind instance = `Prysm.PowBlock.Decode.accept_statement` |
 
-Each module: `Decode.example_head` (`decHeadKindAnyFrame`), `Decode.example_f<i>` per field (`decFieldKindAnyFrame`), `Decode.example_epi`
+Each module: `Decode.example_head` (`decHeadKindAnyFrame`), `Decode.example_f<i>` per field (`decFieldKindAnyFrame`), `Decode.example_epilogue`
 (`decEpilogueKindAnyFrame`), `Decode.example_accept` (`decAcceptKindAnyFrame`), each with its `_kind` line, and, where a hand
 statement exists, `Decode.example_accept_same_statement : <hand statement>`.
 
@@ -23,7 +23,7 @@ repository; it is not the generator). They are development data (in-sample). The
 the statements are the `rfl` ties of `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 
 `Prysm/PendingDeposit/DecodeRejectSizeExample.lean` and `Prysm/VoluntaryExit/DecodeRejectSizeExample.lean`: size-reject
-theorems of PendingDeposit and VoluntaryExit from `decrej_seg` (`decRejectKindAnyFrame`).
+theorems of PendingDeposit and VoluntaryExit from `dec_reject_seg` (`decRejectKindAnyFrame`).
 
 `Decode.example_accept_all` collects the four accept theorems under their kinds.
 -/

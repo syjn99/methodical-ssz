@@ -32,7 +32,7 @@ variable [Host]
 
 namespace Prysm.Checkpoint
 
-theorem DecodeThenEncode.scr (x : BitVec 64) (S : Nat) (h : 24 ≤ S) (hS : S < 2 ^ 60) (L : List UInt8) (hL : L.length = S) :
+theorem DecodeThenEncode.scratch_split_two_words (x : BitVec 64) (S : Nat) (h : 24 ≤ S) (hS : S < 2 ^ 60) (L : List UInt8) (hL : L.length = S) :
     Eq (L.At (x - 96 - BitVec.ofNat 64 S)) =
       Eq ((L.take (S - 24)).At (x - 120 - BitVec.ofNat 64 (S - 24)))
         ⋆ Eq (((L.drop (S - 24)).take 8).At (x - 120)) ⋆ Eq (((L.drop (S - 24)).drop 8).At (x - 112)) := by
@@ -120,7 +120,7 @@ theorem DecodeThenEncode.round_trip (kd : Nat) (hkd : unmarshalSSZ.IsInfixAt Hos
     hcP hcL hcC hctl _ S (by omega) hS scratch hsc Heap avail h_mem hguard hlen hav hms hmm) ?_
   rintro ⟨d, pc⟩ ⟨hpc, hrax, hrbx, -, -, hr14, p, scr, mm, hscr, -, hm⟩
   refine Eventually.done _ ⟨hpc, hrax, hrbx, fun mem2 zm fl hupd => ?_⟩
-  rw [DecodeThenEncode.scr _ S hS24 hS scr hscr] at hm
+  rw [DecodeThenEncode.scratch_split_two_words _ S hS24 hS scr hscr] at hm
   simp only [Std.ExtHashMap.sep_assoc] at hm
   have hmem2 := hupd _ (by ecancel)
   refine eventually_trans _ _ _ _ (Encode.fast_path km hkm hfm cst e8 (Int.toBytes 8 32) ctl root pre d0 d1

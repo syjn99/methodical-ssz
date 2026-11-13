@@ -108,7 +108,7 @@ theorem Encode.example_head_kind : ∀ (h : Host), type_of% (@Encode.example_hea
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 0 `Epoch` (uint64): directives 8–35; boundary state 0 → 1. -/
-theorem Encode.example_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.example_field_0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v0 c1 b1 pre d0 d1 : List UInt8) (hast : ast.length = 8) (hv0 : v0.length = 8) (hc1 : c1.length = 8) (hb1 : b1.length = 32) (hd0 : d0.length = 8) (hd1 : d1.length = 32)
     (p1 : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s2 l16 l24 l32 t64 t48 rslot : List UInt8) (hfp : fp.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8) (hl32 : l32.length = 8) (ht64 : t64.length = 16) (ht48 : t48.length = 16) (hrslot : rslot.length = 8)
@@ -229,7 +229,7 @@ theorem Encode.example_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
-theorem Encode.example_f0_kind : ∀ (h : Host), type_of% (@Encode.example_f0 h)
+theorem Encode.example_field_0_kind : ∀ (h : Host), type_of% (@Encode.example_field_0 h)
     = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.u64, .bytes 32]
     ⟨8, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 2), .at (.below 24) (.original 3), .at (.below 32) (.original 4), .at (.below 48) (.original 6), .at (.below 64) (.original 5), .at (.below 120) (.original 7), .low .scratch],
@@ -242,7 +242,7 @@ theorem Encode.example_f0_kind : ∀ (h : Host), type_of% (@Encode.example_f0 h)
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 1 `Root` (32 bytes): directives 36–62; boundary state 1 → 2. -/
-theorem Encode.example_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.example_field_1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v0 c1 b1 pre d0 d1 : List UInt8) (hast : ast.length = 8) (hv0 : v0.length = 8) (hc1 : c1.length = 8) (hb1 : b1.length = 32) (hd0 : d0.length = 8) (hd1 : d1.length = 32)
     (p1 : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s2 l16 l24 l32 t64 t48 rslot : List UInt8) (hfp : fp.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8) (hl32 : l32.length = 8) (ht64 : t64.length = 16) (ht48 : t48.length = 16) (hrslot : rslot.length = 8)
@@ -372,7 +372,7 @@ theorem Encode.example_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, x0, x1, scr1, hx0, hx1, hscr1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
-theorem Encode.example_f1_kind : ∀ (h : Host), type_of% (@Encode.example_f1 h)
+theorem Encode.example_field_1_kind : ∀ (h : Host), type_of% (@Encode.example_field_1 h)
     = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.u64, .bytes 32]
     ⟨36, 1, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 2), .at (.below 24) (.original 3), .at (.below 32) (.original 4), .at (.below 48) (.existential 1), .at (.below 64) (.field 0), .at (.below 56) (.existential 0), .at (.below 120) (.original 7), .low .scratch],
@@ -385,7 +385,7 @@ theorem Encode.example_f1_kind : ∀ (h : Host), type_of% (@Encode.example_f1 h)
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Epilogue: directives 63–return; boundary state 2 → the fast-path post-state. -/
-theorem Encode.example_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.example_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v0 c1 b1 pre d0 d1 : List UInt8) (hast : ast.length = 8) (hv0 : v0.length = 8) (hc1 : c1.length = 8) (hb1 : b1.length = 32) (hd0 : d0.length = 8) (hd1 : d1.length = 32)
     (p1 : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s2 l16 l24 l32 t64 t48 rslot : List UInt8) (hfp : fp.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8) (hl32 : l32.length = 8) (ht64 : t64.length = 16) (ht48 : t48.length = 16) (hrslot : rslot.length = 8)
@@ -480,7 +480,7 @@ theorem Encode.example_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pro
   intro fl; normalize_registers
   apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 112) + 104 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
   normalize_registers
-  refine eventually_trans _ _ _ _ (decret_seg _ (k + 69) (window_infix_at hk 69 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 69) (window_infix_at hk 69 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -498,7 +498,7 @@ theorem Encode.example_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pro
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
-theorem Encode.example_epi_kind : ∀ (h : Host), type_of% (@Encode.example_epi h)
+theorem Encode.example_epilogue_kind : ∀ (h : Host), type_of% (@Encode.example_epilogue h)
     = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.u64, .bytes 32]
     ⟨63, 2, [],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 24) (.reg .rdi), .at (.below 32) (.len 40), .at (.below 48) (.existential 1), .at (.below 64) (.field 0), .at (.below 56) (.existential 0), .at (.below 120) (.ret 63), .low (.existential 2)],
@@ -575,11 +575,11 @@ theorem Encode.example_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   intro k hk hf ast v0 c1 b1 pre d0 d1 hast hv0 hc1 hb1 hd0 hd1 p1 s ra guard hpre fp s2 l16 l24 l32 t64 t48 rslot hfp hs2 hl16 hl24 hl32 ht64 ht48 hrslot R S scratch hsc h_mem hguard hsp hcap hcap63 hmm
   refine eventually_trans _ _ _ _ (Encode.example_head k hk hf ast v0 c1 b1 pre d0 d1 hast hv0 hc1 hb1 hd0 hd1 p1 s ra guard hpre fp s2 l16 l24 l32 t64 t48 rslot hfp hs2 hl16 hl24 hl32 ht64 ht48 hrslot R S scratch hsc h_mem hguard hsp hcap hcap63 hmm) ?_
   intro st0 h0
-  refine eventually_trans _ _ _ _ (Encode.example_f0 k hk hf ast v0 c1 b1 pre d0 d1 hast hv0 hc1 hb1 hd0 hd1 p1 s ra guard hpre fp s2 l16 l24 l32 t64 t48 rslot hfp hs2 hl16 hl24 hl32 ht64 ht48 hrslot R S scratch hsc hsp hcap hcap63 hmm st0 h0) ?_
+  refine eventually_trans _ _ _ _ (Encode.example_field_0 k hk hf ast v0 c1 b1 pre d0 d1 hast hv0 hc1 hb1 hd0 hd1 p1 s ra guard hpre fp s2 l16 l24 l32 t64 t48 rslot hfp hs2 hl16 hl24 hl32 ht64 ht48 hrslot R S scratch hsc hsp hcap hcap63 hmm st0 h0) ?_
   intro st1 h1
-  refine eventually_trans _ _ _ _ (Encode.example_f1 k hk hf ast v0 c1 b1 pre d0 d1 hast hv0 hc1 hb1 hd0 hd1 p1 s ra guard hpre fp s2 l16 l24 l32 t64 t48 rslot hfp hs2 hl16 hl24 hl32 ht64 ht48 hrslot R S scratch hsc hsp hcap hcap63 hmm st1 h1) ?_
+  refine eventually_trans _ _ _ _ (Encode.example_field_1 k hk hf ast v0 c1 b1 pre d0 d1 hast hv0 hc1 hb1 hd0 hd1 p1 s ra guard hpre fp s2 l16 l24 l32 t64 t48 rslot hfp hs2 hl16 hl24 hl32 ht64 ht48 hrslot R S scratch hsc hsp hcap hcap63 hmm st1 h1) ?_
   intro st2 h2
-  exact Encode.example_epi k hk hf ast v0 c1 b1 pre d0 d1 hast hv0 hc1 hb1 hd0 hd1 p1 s ra guard hpre fp s2 l16 l24 l32 t64 t48 rslot hfp hs2 hl16 hl24 hl32 ht64 ht48 hrslot R S scratch hsc hsp hcap hcap63 st2 h2
+  exact Encode.example_epilogue k hk hf ast v0 c1 b1 pre d0 d1 hast hv0 hc1 hb1 hd0 hd1 p1 s ra guard hpre fp s2 l16 l24 l32 t64 t48 rslot hfp hs2 hl16 hl24 hl32 ht64 ht48 hrslot R S scratch hsc hsp hcap hcap63 st2 h2
 theorem Encode.example_fast_kind : ∀ (h : Host), type_of% (@Encode.example_fast h)
     = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.u64, .bytes 32] := by
   intro h; rfl

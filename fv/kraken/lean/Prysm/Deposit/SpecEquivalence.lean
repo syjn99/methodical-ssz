@@ -27,7 +27,7 @@ theorem serialize_checker (g : SszValue) : serialize checkerDesc g.toValue = .ok
   have hl1 := bytes32_vector_flatten_length 33 pr
   have hs1 := bytes32_vector_serialize 33 (by decide) pr
   have hs2 := Prysm.Deposit_Data.SszValue.serialize_eq_checker d
-  have hl2 := Prysm.Deposit_Data.SszValue.enc_size d
+  have hl2 := Prysm.Deposit_Data.SszValue.encode_size d
   simp only [Prysm.Deposit_Data.checkerDesc] at hs2
   simp only [checkerDesc, SszValue.toValue, serialize, serializeStruct, serializeFields] at hs1 ⊢
   simp only [List.length_map, Vector.length_toList, beq_self_eq_true, ↓reduceIte] at hs1 ⊢

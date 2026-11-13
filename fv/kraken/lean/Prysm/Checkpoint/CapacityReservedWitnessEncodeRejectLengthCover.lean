@@ -43,14 +43,14 @@ theorem labels_fresh_at_9 : LabelsFresh marshalSSZTo 9 := labelsFresh_of (by rw 
 theorem labels_fresh_at_144 : LabelsFresh MemmoveGrowsliceModel 144 := labelsFresh_of (by rw [host_program_eq]; decide)
 
 theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [programLabels])
 
 theorem label_err_bytes_length : label "ssz.ErrBytesLength" = 0x10008 :=
   mk_label program _ 8 _ (by simp [program, dataLabels]) (by decide)
 
 abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
 abbrev word_bytes (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
-def pre30 : List UInt8 := (List.range 30).map (fun i => UInt8.ofNat (0x40 + i))
+def prefix30 : List UInt8 := (List.range 30).map (fun i => UInt8.ofNat (0x40 + i))
 
 /-- bump pointer · ErrBytesLength words · heap (9000) · guard · receiver (72) · rslot · growslice spill (40) ·
 zA (16) · zB (16) · zC (8) · gap (8) · t40 (16) · t30 (16) · gap l32 (8) · l24 · l16 · fp · return slot ·
@@ -79,23 +79,23 @@ theorem runs (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl : rl ≠
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = 0x10e8 ∧ st.data.regs.rsi = 0x2b)
-      ⟨initial_state e8 rl (pre30 ++ zeros n) 0x12450 30 (UInt64.ofNat (30 + n)) zmms flags, Host.addrOf 9⟩ := by
+      ⟨initial_state e8 rl (prefix30 ++ zeros n) 0x12450 30 (UInt64.ofNat (30 + n)) zmms flags, Host.addrOf 9⟩ := by
   have hc : (UInt64.ofNat (30 + n)).toNat = 30 + n := by simp; omega
-  refine eventually_mono (CapacityReserved.Encode.reject_length_cover 9 placed_at_9 labels_fresh_at_9 (zeros 8) e8 (word_bytes 48) (zeros 32) pre30 (zeros n) rfl he8 rfl rfl
-    0x5000 rl 0x10e8 0x2b hrl (initial_state e8 rl (pre30 ++ zeros n) 0x12450 30 (UInt64.ofNat (30 + n)) zmms flags) 0 0 rfl
-    (by simp only [initial_state, hc]; simp [pre30])
+  refine eventually_mono (CapacityReserved.Encode.reject_length_cover 9 placed_at_9 labels_fresh_at_9 (zeros 8) e8 (word_bytes 48) (zeros 32) prefix30 (zeros n) rfl he8 rfl rfl
+    0x5000 rl 0x10e8 0x2b hrl (initial_state e8 rl (prefix30 ++ zeros n) 0x12450 30 (UInt64.ofNat (30 + n)) zmms flags) 0 0 rfl
+    (by simp only [initial_state, hc]; simp [prefix30])
     (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 16) (zeros 16) (zeros 16) (zeros 16) (zeros 8) (zeros 40) (zeros 8)
     rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl
     (Eq ((zeros 8).At (0x123e8 : BitVec 64)) ⋆ Eq ((zeros 8).At (0x12410 : BitVec 64))) 0 [] rfl bumpHeap 9000
     (by
-      have H : Eq ((block e8 rl (pre30 ++ zeros n)).At (0x10000 : BitVec 64)) (mem e8 rl (pre30 ++ zeros n)) := rfl
-      witness_split_n [he8, show pre30.length = 30 from rfl]
+      have H : Eq ((block e8 rl (prefix30 ++ zeros n)).At (0x10000 : BitVec 64)) (mem e8 rl (prefix30 ++ zeros n)) := rfl
+      witness_split_n [he8, show prefix30.length = 30 from rfl]
       rw [Std.ExtHashMap.sep_comm_l (Eq ((word_bytes 0x2b).At _)) (Eq ((zeros 9000).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((word_bytes 0x10e8).At _)) (Eq ((zeros 9000).At _))] at H
       have H2 := lift_heap H
-      rw [at_app pre30 (zeros n) rfl (by simp [pre30]; omega)]
+      rw [at_app prefix30 (zeros n) rfl (by simp [prefix30]; omega)]
       simp only [initial_state, word_bytes, nil_At_emp, List.nil_append, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep,
-        show pre30.length = 30 from rfl, ElfData.PrysmTarget.sszErrBytesLength_addr, label_err_bytes_length,
+        show prefix30.length = 30 from rfl, ElfData.PrysmTarget.sszErrBytesLength_addr, label_err_bytes_length,
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd,
         BitVec.reduceSub, List.length_nil] at H2 ⊢
       generalize e8 = e8' at H2 ⊢

@@ -52,7 +52,7 @@ def SszValue.toValueChecker (g : SszValue) : Value :=
 def SszValue.encode (g : SszValue) : Array UInt8 :=
   g.blockHash.toArray ++ g.parentHash.toArray ++ uintBytes 32 g.totalDifficulty.val
 
-theorem SszValue.enc_size (g : SszValue) : (SszValue.encode g).size = 96 := by
+theorem SszValue.encode_size (g : SszValue) : (SszValue.encode g).size = 96 := by
   simp [SszValue.encode, Spec.uintBytes_size]
 
 theorem SszValue.toValue_fits (g : SszValue) : Value.fits desc g.toValue = true := by
@@ -153,7 +153,7 @@ theorem SszValue.spec_accepts_iff (bs : Array UInt8) : (∃ v, deserialize desc 
   constructor
   · rintro ⟨v, hd⟩
     obtain ⟨g, rfl, hb⟩ := SszValue.accepted_is_encoding hd
-    rw [hb]; exact SszValue.enc_size g
+    rw [hb]; exact SszValue.encode_size g
   · intro h
     have r0 := readUint_lt bs 64 32
     let g : SszValue := ⟨⟨bs.extract 0 32, by simp; omega⟩, ⟨bs.extract 32 64, by simp; omega⟩,

@@ -49,7 +49,7 @@ Checks, per file (text only):
     with X a Prop-valued `abbrev` written by hand. This is an identity, NOT a kind. These rules
     restrict it:
      6a. `_type` is accepted ONLY for a composed theorem: its proof (the lines up to the next theorem) uses
-         both `Codec.dechead_seg` and `Codec.decepi_seg`. A segment theorem needs its `_kind`; a `_type`
+         both `Codec.dec_head_seg` and `Codec.dec_epilogue_seg`. A segment theorem needs its `_kind`; a `_type`
          in place of a `_kind` fails.
      6b. X must not be a generated name: not `Prysm.<T>.Decode.generated…` / `.example…` (or Encode) and not a
          name declared in a module `lean/Prysm/<T>/Generated*.lean` or `Decode*Example*.lean` (last name component). A
@@ -162,7 +162,7 @@ HAND_EXAMPLES = ("lean/Prysm/DepositMessage/DecodeFieldSegmentExamples.lean", "l
                  "lean/Prysm/Checkpoint/DecodeCallSegmentExamples.lean", "lean/Prysm/Deposit_Data/DecodeCallSegmentExamples.lean")
 GENNS = re.compile(r"^Prysm\.\w+\.(?:Decode|Encode)\.(?:generated|example|accept_generated_composition|accept_composed_example)")  # rule 6b: generated and example names
 DECL = re.compile(r"^(?:private |protected |noncomputable )*(?:theorem|lemma|def|abbrev) (\S+)")
-COMPOSED = ("(Codec.dechead_seg ", "(Codec.decepi_seg ")  # rule 6a
+COMPOSED = ("(Codec.dec_head_seg ", "(Codec.dec_epilogue_seg ")  # rule 6a
 UNCHECKED = "UNCHECKED STATEMENT"  # rule 6c
 
 # field-segment kinds (`lean/Codec/Kind/FixedBytesDecode.lean`, `lean/Codec/Kind/InlineUint64.lean`)
@@ -366,7 +366,7 @@ def check_text(text, gnames=None, partial=False, rule11=True):
             type_line(t)
             if not is_composed(t, j):
                 errs.append(f"{t}_type: {t} is not a composed accept theorem (its proof does not use "
-                            f"Codec.dechead_seg and Codec.decepi_seg): a segment theorem needs its `_kind`")
+                            f"Codec.dec_head_seg and Codec.dec_epilogue_seg): a segment theorem needs its `_kind`")
             elif partial:
                 errs.append(f"{t}: composed theorem in a partial file")
             composed.add(t)
@@ -728,9 +728,9 @@ set_option maxRecDepth 100000 in
 theorem d (k : Nat) (hk : Prysm.DepositMessage.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k)
     (x1 : List UInt8) :
     D := by
-  refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ 88 (k + 0) hH) ?_
+  refine eventually_trans _ _ _ _ (Codec.dec_head_seg _ _ _ _ 88 (k + 0) hH) ?_
   refine eventually_trans _ _ _ _ (Prysm.DepositMessage.Decode.generated_field_Amount_seg k hk hf) ?_
-  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + 86) hE) ?_
+  refine eventually_trans _ _ _ _ (Codec.dec_epilogue_seg (k + 86) hE) ?_
 
 /-- Statement check: the declared type is that of the hand theorem (definitional identity). -/
 theorem d_type : ∀ (h : Host),
@@ -806,7 +806,7 @@ def field_segment_fix_cases():
         ("field_segment_fix_unchecked_marker_with_identity", COMPOSED_FIELD_SEGMENTS.replace(
             "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k)\n", "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) -- UNCHECKED STATEMENT\n"), False, False),
         ("field_segment_fix_rhs_declared_in_gen_module", COMPOSED_FIELD_SEGMENTS.replace(rhs, "type_of% (@Prysm.Other.gen_seg_x h)"), False, False),
-        ("field_segment_fix_composed_without_decepi", COMPOSED_FIELD_SEGMENTS.replace("Codec.decepi_seg", "Codec.decepi_sex"), False, False),
+        ("field_segment_fix_composed_without_dec_epilogue_seg", COMPOSED_FIELD_SEGMENTS.replace("Codec.dec_epilogue_seg", "Codec.dec_epilogue_sex"), False, False),
         ("field_segment_fix_prop_identity_good", prop, True, False),
         ("field_segment_fix_prop_identity_generated_rhs", COMPOSED_FIELD_SEGMENTS.replace(rhs, "@Prysm.BlobIdentifier.Decode.accept_generated_composition h"), False, False),
         ("field_segment_fix_prop_identity_on_segment", GOOD_FIELD_SEGMENTS.replace(uc, ty.format(t="c").replace(rhs, "@Prysm.DepositMessage.Decode.hand_statement h")), False, False),
@@ -880,9 +880,9 @@ def call_segment_cases():
     ty = ("theorem c_type : ∀ (h : Host),\n    type_of% (@c h) = type_of% (@Prysm.DepositMessage.Decode.accept h) := by\n"
           "  intro h; with_reducible rfl\n")
     k04 = GOOD_FIELD_SEGMENTS.replace(uc, ty).replace("  with_reducible exact Codec.u64dec_inline_seg Reg64.rcx hX _ _ _ (k + 83) hA\n",
-                                        "  -- (Codec.dechead_seg x) (Codec.decepi_seg y)\n"
+                                        "  -- (Codec.dec_head_seg x) (Codec.dec_epilogue_seg y)\n"
                                         "  with_reducible exact Codec.u64dec_inline_seg Reg64.rcx hX _ _ _ (k + 83) hA\n")
-    k04b = k04.replace("  -- (Codec.dechead_seg x) (Codec.decepi_seg y)\n", "  /- (Codec.dechead_seg x) (Codec.decepi_seg y) -/\n")
+    k04b = k04.replace("  -- (Codec.dec_head_seg x) (Codec.dec_epilogue_seg y)\n", "  /- (Codec.dec_head_seg x) (Codec.dec_epilogue_seg y) -/\n")
     # k22-k24 (partial / coverage counts)
     unc = json_line([("Slot", "delegated overlay field"), ("ProposerIndex", "delegated overlay field")])
     PH = ("/-! PARTIAL OUTPUT (generator exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--field-segments); NOT "
@@ -923,12 +923,12 @@ def call_segment_cases():
         ("call_segment_compose_empty_fields", COMPOSED_CALL_SEGMENTS.replace(comp_kind, comp_kind.replace("[.bytes 48, .bytes 32, .u64]", "[]")), False, False),
         ("call_segment_compose_st_not_bool", COMPOSED_CALL_SEGMENTS.replace(comp_kind, comp_kind.replace(" false [", " 0 [")), False, False),
         ("call_segment_compose_other_const", COMPOSED_CALL_SEGMENTS.replace(comp_kind, comp_kind.replace("Prysm.DepositMessage.Code.unmarshalSSZ", "Prysm.BlobIdentifier.Code.unmarshalSSZ")), False, False),
-        ("call_segment_compose_not_composed_comment_only", comp_only.replace("(Codec.decepi_seg (k + 86) hE)", "foo -- (Codec.decepi_seg "), False, False),
+        ("call_segment_compose_not_composed_comment_only", comp_only.replace("(Codec.dec_epilogue_seg (k + 86) hE)", "foo -- (Codec.dec_epilogue_seg "), False, False),
         ("s1_k04_line_comment", k04, False, False),
         ("s1_k04_block_comment", k04b, False, False),
         # the two composed-lemma names in a string literal do not make a composed theorem
-        ("s2_n26b_string_literal", k04.replace("  -- (Codec.dechead_seg x) (Codec.decepi_seg y)\n",
-                                               '  have s := "(Codec.dechead_seg x) (Codec.decepi_seg y)"\n')
+        ("s2_n26b_string_literal", k04.replace("  -- (Codec.dec_head_seg x) (Codec.dec_epilogue_seg y)\n",
+                                               '  have s := "(Codec.dec_head_seg x) (Codec.dec_epilogue_seg y)"\n')
          .replace(" 3 of 3 fields", " 2 of 2 fields"), False, False),
         # rule 6d with the generator's new marker (`--call-segments --compose` without `--same-as*`)
         ("call_segment_compose_kind_only_marked", comp_only.replace("(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k)\n",
@@ -946,25 +946,25 @@ def call_segment_cases():
 
 # step controls: kind lines and proof lemma as `generator.py decoder --steps` writes them
 STEP_TEST_KINDS = {
-    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s50": ("@Codec.stepLoadBytesKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rbx 8 50 51", "step_load_bytes Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
-    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rax 16 51 52", "step_store Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
-    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s52": ("@Codec.stepAddKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdi (-16) 52 53", "step_add_immediate Reg64.rdi (-16) _ (k + 52) (k + 53) hq he hend"),
-    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53": ("@Codec.stepMoveImmediateKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rcx 8 53 55", "step_move_immediate Reg64.rcx 8 _ (k + 53) (k + 55) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50": ("@Codec.stepLoadBytesKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rbx 8 50 51", "step_load_bytes Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rax 16 51 52", "step_store Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52": ("@Codec.stepAddKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdi (-16) 52 53", "step_add_immediate Reg64.rdi (-16) _ (k + 52) (k + 53) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53": ("@Codec.stepMoveImmediateKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rcx 8 53 55", "step_move_immediate Reg64.rcx 8 _ (k + 53) (k + 55) hq he hend"),
     "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call": (f'@Codec.callDecSegKindWindow h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {VALIDATOR_INDEX_DECODER_LABEL} "L_pw_b9" 55 56 88',
                             "calldec_seg_window _ _ _ (k + 55) (k + 56) (k + 88) hq he hjc hB hl"),
     "pending_partial_withdrawal_step_Root_seg": ("@Codec.bytesDecSegKindWindow h 32 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rax 89 108 114 112 120 56 24 32 40 16",
                           "bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 89) (k + 102) (k + 102) (k + 108) (k + 114) hqA heA hqB heB hjl hl hjm hend"),
-    "pending_partial_withdrawal_step_s115": ("@Codec.stepJumpKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pw_200\" 115 130", 'step_jump "L_pw_200" _ (k + 115) (k + 130) hq he hl'),
-    "pending_partial_withdrawal_step_s130": ("@Codec.stepLabelKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pw_200\" 130 131", 'step_label "L_pw_200" _ (k + 130) (k + 131) hq he hend'),
-    "pending_partial_withdrawal_step_s131": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rax 24 131 132", "step_store Reg64.rsi Reg64.rax 24 _ (k + 131) (k + 132) hq he hend"),
+    "pending_partial_withdrawal_step_directive_115": ("@Codec.stepJumpKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pw_200\" 115 130", 'step_jump "L_pw_200" _ (k + 115) (k + 130) hq he hl'),
+    "pending_partial_withdrawal_step_directive_130": ("@Codec.stepLabelKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pw_200\" 130 131", 'step_label "L_pw_200" _ (k + 130) (k + 131) hq he hend'),
+    "pending_partial_withdrawal_step_directive_131": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rax 24 131 132", "step_store Reg64.rsi Reg64.rax 24 _ (k + 131) (k + 132) hq he hend"),
     "pending_partial_withdrawal_step_Sig_seg": ("@Codec.bytesDecSegOffsetZeroKindWindow h 96 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdx 132 150 156 112 120 56 48 56 64",
                          "bytesdec_seg_offset_zero_window 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 132) (k + 145) (k + 145) (k + 150) (k + 156) hqA heA hqB heB hjl hl hjm hend"),
-    "pending_partial_withdrawal_step_s156": ("@Codec.stepLoadValueKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rsp 56 156 157", "step_load_value Reg64.rsi Reg64.rsp 56 _ (k + 156) (k + 157) hq he hend"),
-    "pending_partial_withdrawal_step_s157": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rdx 48 157 158", "step_store Reg64.rsi Reg64.rdx 48 _ (k + 157) (k + 158) hq he hend"),
+    "pending_partial_withdrawal_step_directive_156": ("@Codec.stepLoadValueKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rsp 56 156 157", "step_load_value Reg64.rsi Reg64.rsp 56 _ (k + 156) (k + 157) hq he hend"),
+    "pending_partial_withdrawal_step_directive_157": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rdx 48 157 158", "step_store Reg64.rsi Reg64.rdx 48 _ (k + 157) (k + 158) hq he hend"),
 }
-STEP_TEST_FIELDS = [("Amount", ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51"]), ("Index", ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]),
-       ("Root", ["pending_partial_withdrawal_step_Root_seg", "pending_partial_withdrawal_step_s115", "pending_partial_withdrawal_step_s130", "pending_partial_withdrawal_step_s131"]),
-       ("Sig", ["pending_partial_withdrawal_step_Sig_seg", "pending_partial_withdrawal_step_s156", "pending_partial_withdrawal_step_s157"])]
+STEP_TEST_FIELDS = [("Amount", ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51"]), ("Index", ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]),
+       ("Root", ["pending_partial_withdrawal_step_Root_seg", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]),
+       ("Sig", ["pending_partial_withdrawal_step_Sig_seg", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"])]
 
 
 def step_block(t, kind, proof):
@@ -1007,20 +1007,20 @@ def step_cases():
           "Not a complete decoder output.\n" + unc + "\n-/\n")
     part = step_text(m=5).replace("\n\n/-! Generated", "\n\n" + PH + "/-! Generated", 1)
     assert part.count(PARTIAL) == 1
-    st = STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_s51"][0]
+    st = STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51"][0]
     k2 = dict(STEP_TEST_KINDS, pending_partial_withdrawal_step_Index_seg=STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_seg"])
     two_blocks = [STEP_TEST_FIELDS[0], ("Index", STEP_TEST_FIELDS[1][1] + ["pending_partial_withdrawal_step_Index_seg"]), STEP_TEST_FIELDS[2], STEP_TEST_FIELDS[3]]
     return [
         ("step_good", GOOD_STEPS, True, False),
-        ("step_step_degenerate_self", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", "type_of% (@Prysm.PendingPartialWithdrawal.Decode.generated_step_s51 h)"), False, False),
-        ("step_step_kind_other_namespace", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", st.replace("@Codec.", "@Prysm.Fixture.")), False, False),
-        ("step_step_degenerate_true", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", "True"), False, False),
-        ("step_step_kind_missing", GOOD_STEPS.replace("theorem Prysm.PendingPartialWithdrawal.Decode.generated_step_s51_kind", "theorem pending_partial_withdrawal_step_s51_kinx"), False, False),
-        ("step_st_without_disp", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", st.replace(" 16 51 52", " 51 52")), False, False),
-        ("step_st_register_not_reg64", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", st.replace("Reg64.r8", "Reg64.xmm0")), False, False),
-        ("step_st_register_symbolic", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", st.replace("Reg64.r8", "r")), False, False),
-        ("step_st_other_const", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", st.replace("Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ", "Prysm.PendingConsolidation.Code.unmarshalSSZ")), False, False),
-        ("step_add_extra_param", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s52", STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_s52"][0] + " 0"), False, False),
+        ("step_step_degenerate_self", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "type_of% (@Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51 h)"), False, False),
+        ("step_step_kind_other_namespace", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("@Codec.", "@Prysm.Fixture.")), False, False),
+        ("step_step_degenerate_true", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "True"), False, False),
+        ("step_step_kind_missing", GOOD_STEPS.replace("theorem Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51_kind", "theorem pending_partial_withdrawal_step_directive_51_kinx"), False, False),
+        ("step_st_without_disp", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace(" 16 51 52", " 51 52")), False, False),
+        ("step_st_register_not_reg64", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("Reg64.r8", "Reg64.xmm0")), False, False),
+        ("step_st_register_symbolic", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("Reg64.r8", "r")), False, False),
+        ("step_st_other_const", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ", "Prysm.PendingConsolidation.Code.unmarshalSSZ")), False, False),
+        ("step_add_extra_param", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52"][0] + " 0"), False, False),
         ("step_call_two_indices", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call", STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"][0].replace(" 56 88", " 88")), False, False),
         ("step_call_callee_without_spec", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call", STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"][0].replace(
             "consensus_types_primitives.ValidatorIndex", "proto_prysm_v1alpha1.Checkpoint")), False, False),
@@ -1028,15 +1028,15 @@ def step_cases():
         ("step_seg_size_64", kchg("pending_partial_withdrawal_step_Root_seg", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_seg"][0].replace(" h 32 ", " h 64 ")), False, False),
         ("step_seg_missing_src", kchg("pending_partial_withdrawal_step_Root_seg", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_seg"][0].replace(" 40 16", " 40")), False, False),
         ("step_segz_with_src", kchg("pending_partial_withdrawal_step_Sig_seg", STEP_TEST_KINDS["pending_partial_withdrawal_step_Sig_seg"][0] + " 0"), False, False),
-        ("step_lemma_kind_mismatch", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "  with_reducible exact Codec.step_load_value Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"), False, False),
-        ("step_lemma_only_in_string", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", '  have x := "Codec.step_load_bytes "\n  with_reducible exact foo\n'), False, False),
-        ("step_lemma_only_in_comment", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "  -- Codec.step_load_bytes\n  with_reducible exact foo\n"), False, False),
-        ("step_two_lemmas", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "  with_reducible exact Codec.step_load_bytes (Codec.step_store x)\n"), False, False),
+        ("step_lemma_kind_mismatch", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  with_reducible exact Codec.step_load_value Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"), False, False),
+        ("step_lemma_only_in_string", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", '  have x := "Codec.step_load_bytes "\n  with_reducible exact foo\n'), False, False),
+        ("step_lemma_only_in_comment", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  -- Codec.step_load_bytes\n  with_reducible exact foo\n"), False, False),
+        ("step_two_lemmas", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  with_reducible exact Codec.step_load_bytes (Codec.step_store x)\n"), False, False),
         ("step_fields_json_missing", GOOD_STEPS.replace("FIELDS-JSON: ", "FIELDS: "), False, False),
         ("step_fields_json_two_lines", GOOD_STEPS.replace("FIELDS-JSON: ", "FIELDS-JSON: []\nFIELDS-JSON: "), False, False),
-        ("step_theorem_not_listed", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s50"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_seg", "pending_partial_withdrawal_step_s115", "pending_partial_withdrawal_step_s130", "pending_partial_withdrawal_step_s131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_seg", "pending_partial_withdrawal_step_s156", "pending_partial_withdrawal_step_s157"]}]'), False, False),
-        ("step_listed_theorem_absent", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s49"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_seg", "pending_partial_withdrawal_step_s115", "pending_partial_withdrawal_step_s130", "pending_partial_withdrawal_step_s131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_seg", "pending_partial_withdrawal_step_s156", "pending_partial_withdrawal_step_s157"]}]'), False, False),
-        ("step_theorem_in_two_fields", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_seg", "pending_partial_withdrawal_step_s115", "pending_partial_withdrawal_step_s130", "pending_partial_withdrawal_step_s131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_seg", "pending_partial_withdrawal_step_s156", "pending_partial_withdrawal_step_s157"]}]'), False, False),
+        ("step_theorem_not_listed", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_seg", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_seg", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"]}]'), False, False),
+        ("step_listed_theorem_absent", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_49"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_seg", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_seg", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"]}]'), False, False),
+        ("step_theorem_in_two_fields", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_seg", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_seg", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"]}]'), False, False),
         ("step_two_blocks_one_field", step_text(fields=two_blocks, kinds=k2), False, False),
         ("step_block_name_other_field", step_text(fields=[("Amount", STEP_TEST_FIELDS[0][1]), ("Idx", STEP_TEST_FIELDS[1][1]), STEP_TEST_FIELDS[2], STEP_TEST_FIELDS[3]]), False, False),
         ("step_count_edited_dropped_field", step_text(fields=STEP_TEST_FIELDS[:3], n=4), False, False),
@@ -1076,7 +1076,7 @@ def exit_code_cases():
 # Rule 12 (`generator.py decoder --whole-accept`). A whole-accept file is a step file (checked by rules 1-11 up to the whole-accept
 # block) followed by one block `/-! Whole accept (`decoder --whole-accept` … WHOLE-ACCEPT-JSON: {…} -/` and the whole-accept theorems:
 #  12a. (removed: a git-blob pin of the kind and lemma modules);
-#  12b. the whole-accept theorems are exactly, in this order: P_head, P_f1 … P_fn, P_epi, P_accept, [P_accept_statement |
+#  12b. the whole-accept theorems are exactly, in this order: P_head, P_field_1 … P_field_n, P_epilogue, P_accept, [P_accept_statement |
 #       P_accept_same], P_reject (P = the WHOLE-ACCEPT-JSON prefix, n = the IR field count), each but the identity followed by
 #       its `_kind` theorem `theorem T_kind : ∀ (h : Host), type_of% (@T h)` / `    = @Codec.K h C …` with
 #       K = decHeadKindAnyFrame / decFieldKindAnyFrame / decEpilogueKindAnyFrame / decAcceptKindAnyFrame / decRejectKindAnyFrame and the proof line
@@ -1088,7 +1088,7 @@ def exit_code_cases():
 #       hand-written whole-accept lemmas, the `pc` and `done` of every boundary state (head end, the end of each field event along the
 #       accept path), and the reject size; a file whose kind parameters differ FAILS. This is the statement check of
 #       a generated accept theorem when no hand statement exists;
-#  12d. the accept proof chains P_head, every P_f<i> and P_epi;
+#  12d. the accept proof chains P_head, every P_field_<i> and P_epilogue;
 #  12e. an identity `P_accept_statement : X := P_accept` or `P_accept_same : … type_of% (@P_accept h) = type_of% (@X h)`
 #       names a hand statement X (not generated, rule 6b); without it the PASS line says "kind instance only".
 # Not checked here: the register facts, stack slots and existentials of the boundary states (the kernel checks that
@@ -1362,8 +1362,8 @@ def check_whole_accept(text, gnames=frozenset(), kr=None, expect=None):
             errs.append(f"whole-accept line {i}: top-level form not allowed: {l.strip()[:80]}")
     thms = [(i, m.group(1)) for i, l in enumerate(lines) if (m := THM.match(l))]
     names = [t for _, t in thms]
-    kinds = [(f"{P}_head", "decHeadKindAnyFrame", 1), *[(f"{P}_f{k + 1}", "decFieldKindAnyFrame", 2) for k in range(n)],
-             (f"{P}_epi", "decEpilogueKindAnyFrame", 1), (f"{P}_accept", "decAcceptKindAnyFrame", 0), (f"{P}_reject", "decRejectKindAnyFrame", None)]
+    kinds = [(f"{P}_head", "decHeadKindAnyFrame", 1), *[(f"{P}_field_{k + 1}", "decFieldKindAnyFrame", 2) for k in range(n)],
+             (f"{P}_epilogue", "decEpilogueKindAnyFrame", 1), (f"{P}_accept", "decAcceptKindAnyFrame", 0), (f"{P}_reject", "decRejectKindAnyFrame", None)]
     ident = [x for x in names if x in (f"{P}_accept_statement", f"{P}_accept_same")]
     want = []
     for t, _, _ in kinds:
@@ -1412,14 +1412,14 @@ def check_whole_accept(text, gnames=frozenset(), kr=None, expect=None):
             ds.append((int(dm.group(1)), int(dm.group(2))) if dm else None)
         if rest:
             errs.append(f"rule 12b: {t}_kind: extra parameters `{rest[:60]}`")
-        k = int(t.rsplit("_f", 1)[1]) if kn == "decFieldKindAnyFrame" else None
+        k = int(t.rsplit("_field_", 1)[1]) if kn == "decFieldKindAnyFrame" else None
         exp = {"decHeadKindAnyFrame": [0], "decFieldKindAnyFrame": [k - 1, k] if k else [], "decEpilogueKindAnyFrame": [n], "decAcceptKindAnyFrame": []}[kn]
         for dd, b in zip(ds, exp):
             if dd != (expect["pcs"][b], b):
                 errs.append(f"rule 12c: {t}_kind: boundary state (pc, done) = {dd}, recomputed {(expect['pcs'][b], b)}")
     # 12d: the accept proof is the chain
     acc = "\n".join(lines[pos[f"{P}_accept"]:pos[f"{P}_accept_kind"]])
-    for t in [f"({P}_head "] + [f"({P}_f{k + 1} " for k in range(n)] + [f"exact {P}_epi "]:
+    for t in [f"({P}_head "] + [f"({P}_field_{k + 1} " for k in range(n)] + [f"exact {P}_epilogue "]:
         if acc.count(t) != 1:
             errs.append(f"rule 12d: the accept proof does not use `{t.strip('( ')}` exactly once")
     # 12e: the statement identity
@@ -1506,10 +1506,10 @@ def whole_accept_good_text():
            f"namespace Prysm.Fixture\n\n")
     out += thm(f"{P}_head", "  exact x") + kd(f"{P}_head", "decHeadKindAnyFrame", [0])
     for i in range(n):
-        out += thm(f"{P}_f{i + 1}", "  exact x") + kd(f"{P}_f{i + 1}", "decFieldKindAnyFrame", [i, i + 1])
-    out += thm(f"{P}_epi", "  exact x") + kd(f"{P}_epi", "decEpilogueKindAnyFrame", [n])
+        out += thm(f"{P}_field_{i + 1}", "  exact x") + kd(f"{P}_field_{i + 1}", "decFieldKindAnyFrame", [i, i + 1])
+    out += thm(f"{P}_epilogue", "  exact x") + kd(f"{P}_epilogue", "decEpilogueKindAnyFrame", [n])
     chain = (f"  refine eventually_trans _ _ _ _ ({P}_head a) ?_\n"
-             + "".join(f"  refine eventually_trans _ _ _ _ ({P}_f{i + 1} a) ?_\n" for i in range(n)) + f"  exact {P}_epi a")
+             + "".join(f"  refine eventually_trans _ _ _ _ ({P}_field_{i + 1} a) ?_\n" for i in range(n)) + f"  exact {P}_epilogue a")
     out += thm(f"{P}_accept", chain) + kd(f"{P}_accept", "decAcceptKindAnyFrame", [])
     out += (f"set_option maxRecDepth 100000 in\ntheorem {P}_reject : ∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : "
             f"LabelsFresh {C} k),\n    T := by\n  exact y\ntheorem {P}_reject_kind : ∀ (h : Host), type_of% (@{P}_reject h)\n"
@@ -1535,14 +1535,14 @@ def whole_accept_cases():
         ("whole_accept_good_statement", stmt, True),
         ("whole_accept_good_same", same, True),
         ("whole_accept_accept_kind_missing", G.replace(acc_k, acc_k.replace("_accept_kind", "_accept_kinx")), False),
-        ("whole_accept_field_kind_missing", G.replace(f"theorem {P}_f2_kind ", f"theorem {P}_f2_kinx "), False),
+        ("whole_accept_field_kind_missing", G.replace(f"theorem {P}_field_2_kind ", f"theorem {P}_field_2_kinx "), False),
         ("whole_accept_reject_missing", G.split("set_option maxRecDepth 100000 in\ntheorem Decode.generated_reject ")[0] + "end Prysm.Fixture\n",
          False),
         ("whole_accept_extra_theorem", G.replace("end Prysm.Fixture\n", "theorem extra : True := trivial\n\nend Prysm.Fixture\n")[::-1].replace(
             "end Prysm.Fixture\n"[::-1], "", 0)[::-1], False),
         ("whole_accept_kind_name_swapped", G.replace("= @Codec.decEpilogueKindAnyFrame h", "= @Codec.decFieldKindAnyFrame h", 1), False),
-        ("whole_accept_kind_proof_not_rfl", G.replace("intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem Decode.generated_f1 ",
-                                            "intro h; simp\n\nset_option maxRecDepth 100000 in\ntheorem Decode.generated_f1 ", 1), False),
+        ("whole_accept_kind_proof_not_rfl", G.replace("intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem Decode.generated_field_1 ",
+                                            "intro h; simp\n\nset_option maxRecDepth 100000 in\ntheorem Decode.generated_field_1 ", 1), False),
         ("whole_accept_L_frame_wrong", G.replace("(.existential 1)] 80)", "(.existential 1)] 88)"), False),
         ("whole_accept_L_gd_wrong", G.replace("(none) 88 true", "(none) 80 true"), False),
         ("whole_accept_L_callee_order", G.replace("[Prysm.Epoch.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ]", "[Prysm.ValidatorIndex.Code.unmarshalSSZ, "
@@ -1556,10 +1556,10 @@ def whole_accept_cases():
         ("whole_accept_reject_size", G.replace("decRejectKindAnyFrame h Prysm.VoluntaryExit.Code.unmarshalSSZ 16 ", "decRejectKindAnyFrame h Prysm.VoluntaryExit.Code.unmarshalSSZ 24 "), False),
         ("whole_accept_reject_proof", G.replace("intro h; with_reducible rfl", "intro h; rfl"), False),
         ("whole_accept_const_other", G.replace("decAcceptKindAnyFrame h Prysm.VoluntaryExit.Code.unmarshalSSZ", "decAcceptKindAnyFrame h Prysm.PendingConsolidation.Code.unmarshalSSZ"), False),
-        ("whole_accept_hk_other", G.replace(f"theorem {P}_epi : ∀ (k : Nat) (hk : Prysm.VoluntaryExit.Code.unmarshalSSZ", f"theorem {P}_epi : ∀ (k : Nat) (hk : Prysm.PendingConsolidation.Code.unmarshalSSZ"),
+        ("whole_accept_hk_other", G.replace(f"theorem {P}_epilogue : ∀ (k : Nat) (hk : Prysm.VoluntaryExit.Code.unmarshalSSZ", f"theorem {P}_epilogue : ∀ (k : Nat) (hk : Prysm.PendingConsolidation.Code.unmarshalSSZ"),
          False),
-        ("whole_accept_chain_skips_field", G.replace(f"  refine eventually_trans _ _ _ _ ({P}_f1 a) ?_\n", ""), False),
-        ("whole_accept_stmt_generated", stmt.replace("Prysm.VoluntaryExit.Decode.hand_statement", "Prysm.VoluntaryExit.Decode.generated_step_s15"), False),
+        ("whole_accept_chain_skips_field", G.replace(f"  refine eventually_trans _ _ _ _ ({P}_field_1 a) ?_\n", ""), False),
+        ("whole_accept_stmt_generated", stmt.replace("Prysm.VoluntaryExit.Decode.hand_statement", "Prysm.VoluntaryExit.Decode.generated_step_directive_15"), False),
         ("whole_accept_same_self", same.replace("(@Prysm.VoluntaryExit.Decode.hand_accept h)", "(@Prysm.VoluntaryExit.Decode.example_accept h)"), False),
         ("whole_accept_sorry", G.replace("  exact y\n", "  sorry\n"), False),
         ("whole_accept_local_def", G.replace("namespace Prysm.Fixture\n\nset_option", "namespace Prysm.Fixture\n\ndef q := 1\n\nset_option"),
@@ -1624,7 +1624,7 @@ def whole_accept_selftest():
 #  13a. (Removed: a git-blob pin of the kind and lemma modules of the encoder lemmas.)
 #  13b. Structure: top-level lines as rule 2 plus exactly one `def <P>_layout : EncoderFrameLayout where` (none when a hand
 #       layout of FAST_PATH_HAND is named); no banned token (rule 3, comments and strings removed); the theorems are exactly
-#       P_head, P_f0 … P_f(n-1), P_epi, P_fast, each followed by its `_kind` (encHeadKindAnyFrame / encFieldKindAnyFrame /
+#       P_head, P_field_0 … P_field_(n-1), P_epilogue, P_fast, each followed by its `_kind` (encHeadKindAnyFrame / encFieldKindAnyFrame /
 #       encEpilogueKindAnyFrame / encFastPathKindAnyFrame), and optionally P_statement; every theorem's `hk` binder names the same code constant C;
 #       `set_option` only `maxHeartbeats 4000000` / `maxRecDepth 100000`; every kind proof is `  intro h; rfl`.
 #  13c. RECOMPUTATION (an own interpreter, it does not import the generator): from the `.S` and the IR named in
@@ -1634,7 +1634,7 @@ def whole_accept_selftest():
 #       (FAST_PATH_HAND, in `Prysm/<Type>/EncodeFastPathKindInstances.lean`) is accepted only if its def equals the recomputation in its own
 #       chunk order. C is bound to the `.S`: an imported code module of the file must define
 #       `def C : Program := include_x64_code "../<S of FAST-PATH-JSON>"`.
-#  13d. P_fast's proof uses P_head, every P_fi and P_epi exactly once.
+#  13d. P_fast's proof uses P_head, every P_field_i and P_epilogue exactly once.
 #  13e. P_statement, if present, is `theorem P_statement : type_of% (@X ‹Host›) :=` + `  [V ]P_fast` with X not generated and V
 #       empty or in FAST_PATH_VIA, or `theorem P_statement : X :=` + `  P_fast` (hand Prop).
 # Limits: the kind fixes the statement only up to what the kind reads (`hcap63` is a fixed premise; an extra
@@ -2132,8 +2132,8 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
         X = fast_path_expect(dirs, fs, goffs, size, hand_pre)
     except Exception as e:
         return errs + [f"rule 13c: recomputation refused: {type(e).__name__}: {e}"], info
-    want = [f"{P}_head", f"{P}_head_kind"] + [x for i in range(n) for x in (f"{P}_f{i}", f"{P}_f{i}_kind")] + \
-        [f"{P}_epi", f"{P}_epi_kind", f"{P}_fast", f"{P}_fast_kind"]
+    want = [f"{P}_head", f"{P}_head_kind"] + [x for i in range(n) for x in (f"{P}_field_{i}", f"{P}_field_{i}_kind")] + \
+        [f"{P}_epilogue", f"{P}_epilogue_kind", f"{P}_fast", f"{P}_fast_kind"]
     if thms not in (want, want + [f"{P}_statement"]):
         return errs + [f"rule 13b: theorems {thms}, expected {want} [+ {P}_statement]"], info
     # 13c: layout
@@ -2158,8 +2158,8 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
         return errs, info
     exp = {f"{P}_head": ("encHeadKindAnyFrame", " " + S0[0])}
     for i in range(n):
-        exp[f"{P}_f{i}"] = ("encFieldKindAnyFrame", " " + S0[i] + " " + S0[i + 1])
-    exp[f"{P}_epi"] = ("encEpilogueKindAnyFrame", " " + S0[n])
+        exp[f"{P}_field_{i}"] = ("encFieldKindAnyFrame", " " + S0[i] + " " + S0[i + 1])
+    exp[f"{P}_epilogue"] = ("encEpilogueKindAnyFrame", " " + S0[n])
     exp[f"{P}_fast"] = ("encFastPathKindAnyFrame", "")
     for t, (kind, sts) in exp.items():
         k = chunk[f"{t}_kind"]
@@ -2187,7 +2187,7 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
         errs.append(f"rule 13c: no imported code module defines `{C}` from `{S}`")
     # 13d: chaining
     fp = chunk[f"{P}_fast"]
-    for t in [f"({P}_head ", *[f"({P}_f{i} " for i in range(n)], f"exact {P}_epi "]:
+    for t in [f"({P}_head ", *[f"({P}_field_{i} " for i in range(n)], f"exact {P}_epilogue "]:
         if fp.count(t) != 1:
             errs.append(f"rule 13d: the fast-path proof does not use `{t.strip('( ')}` exactly once")
     # 13e: identity
@@ -2238,22 +2238,22 @@ def fast_path_cases(T):
         ("fast_path_layout_post_fld", r(V, "(.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1)]\n\n",
                                  "(.field 1), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1)]\n\n"), False),
         ("fast_path_layout_lens", r(V, "(2, 16), (3, 16)]", "(2, 8), (3, 16)]"), False),
-        ("fast_path_fields_param", r(V, "Encode.generated_f0 h)\n    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.generated_layout [.u64, .u64]",
-                              "Encode.generated_f0 h)\n    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.generated_layout [.u64, .bytes 32]"),
+        ("fast_path_fields_param", r(V, "Encode.generated_field_0 h)\n    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.generated_layout [.u64, .u64]",
+                              "Encode.generated_field_0 h)\n    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.generated_layout [.u64, .bytes 32]"),
          False),
         ("fast_path_boundary_pc", r(V, "[.u64, .u64]\n    ⟨8, 0,", "[.u64, .u64]\n    ⟨9, 0,"), False),
         ("fast_path_boundary_done", r(V, "[.u64, .u64]\n    ⟨8, 0,", "[.u64, .u64]\n    ⟨8, 1,"), False),
         ("fast_path_boundary_reg_dropped", r(V, "[.u64, .u64]\n    ⟨8, 0, [(.rax, .receiver), ", "[.u64, .u64]\n    ⟨8, 0, ["), False),
         ("fast_path_kind_name_swapped", r(V, "= @Codec.encEpilogueKindAnyFrame h", "= @Codec.encHeadKindAnyFrame h"), False),
-        ("fast_path_kind_line_missing", r(V, "theorem Encode.generated_f1_kind :", "theorem Encode.generated_f1_kinx :"), False),
+        ("fast_path_kind_line_missing", r(V, "theorem Encode.generated_field_1_kind :", "theorem Encode.generated_field_1_kinx :"), False),
         ("fast_path_kind_const", r(V, "= @Codec.encFastPathKindAnyFrame h marshalSSZTo", "= @Codec.encFastPathKindAnyFrame h Prysm.SyncAggregatorSelectionData.Code.marshalSSZTo"), False),
         ("fast_path_kind_proof", r(V, "  intro h; rfl\n", "  intro h; exact rfl\n"), False),
-        ("fast_path_hk_const", r(V, "theorem Encode.generated_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt",
-                          "theorem Encode.generated_f1 : ∀ (k : Nat) (hk : Prysm.SyncAggregatorSelectionData.Code.marshalSSZTo.IsInfixAt"), False),
+        ("fast_path_hk_const", r(V, "theorem Encode.generated_field_1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt",
+                          "theorem Encode.generated_field_1 : ∀ (k : Nat) (hk : Prysm.SyncAggregatorSelectionData.Code.marshalSSZTo.IsInfixAt"), False),
         ("fast_path_extra_def", r(V, "namespace Prysm.ValidatorBalance\n", "namespace Prysm.ValidatorBalance\n\ndef foo : Nat := 1\n"), False),
         ("fast_path_sorry", r(V, "  apply Eventually.done\n", "  sorry\n"), False),
         ("fast_path_heartbeats", r(V, "set_option maxHeartbeats 4000000 in", "set_option maxHeartbeats 8000000 in"), False),
-        ("fast_path_fast_skips_f0", r(V, "(Encode.generated_f0 k hk", "(Encode.generated_f1 k hk"), False),
+        ("fast_path_fast_skips_f0", r(V, "(Encode.generated_field_0 k hk", "(Encode.generated_field_1 k hk"), False),
         ("fast_path_extra_theorem", r(V, "\nend Prysm.ValidatorBalance", "\ntheorem extra : True := trivial\n\nend Prysm.ValidatorBalance"),
          False),
         ("fast_path_json_sha", r(V, sha, ("0" if sha[0] != "0" else "1") + sha[1:]), False),

@@ -44,7 +44,7 @@ theorem placed_at_17 : unmarshalSSZ.IsInfixAt Host.prog 17 :=
 theorem labels_fresh_at_17 : LabelsFresh unmarshalSSZ 17 := labelsFresh_of (by rw [host_program_eq]; decide)
 
 theorem label_err_size : label "ssz.ErrSize" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [programLabels])
 theorem label_err_invalid_variable_offset : label "ssz.ErrInvalidVariableOffset" = 0x10010 :=
   mk_label program _ 16 _ (by simp [program, dataLabels]) (by decide)
 

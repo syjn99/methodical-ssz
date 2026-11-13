@@ -30,7 +30,7 @@ theorem placed_at_1 : unmarshalSSZ.IsInfixAt Host.prog 1 := infixAt_of [.label "
 theorem labels_fresh_at_1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)
 
 theorem label_err_size : label "ssz.ErrSize" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program]) (by simp [programLabels])
 
 /-- error words · guard · fp · return address · spill rax · spill rbx. -/
 def block : List UInt8 := bitvec_word_bytes 0x10e8 ++ (bitvec_word_bytes 0x2b ++ (bitvec_word_bytes 0 ++ (zeros 8 ++ (bitvec_word_bytes 0 ++ (zeros 8 ++ zeros 8)))))
@@ -77,7 +77,7 @@ theorem placed_at_1 : unmarshalSSZ.IsInfixAt Host.prog 1 :=
 theorem labels_fresh_at_1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)
 
 theorem label_err_invalid_variable_offset : label "ssz.ErrInvalidVariableOffset" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program]) (by simp [programLabels])
 
 /-- error words · guard · fp · return address · spill rax · spill rbx · the offset bytes at buf + 32. -/
 def block (off : List UInt8) : List UInt8 :=

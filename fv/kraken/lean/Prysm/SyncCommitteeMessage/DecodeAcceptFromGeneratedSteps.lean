@@ -13,7 +13,7 @@ only through this accept theorem) over the GENERATED theorems of `Prysm/SyncComm
 * BlockRoot 47–81: generated segment (`Decode.generated_step_BlockRoot_seg`, rY = rax) + generated tail steps 72, 73, 80, 81;
 * ValidatorIndex 82–117: generated steps 82–87 + generated call block;
 * Signature 120–155: generated segment (the padding `nop` inside its window) + generated tail steps 146, 147, 154, 155.
-Hand text that remains: the field compositions, the head `Decode.head0` and the spills `Decode.spill2` (`Prysm/SyncCommitteeMessage/DecodeSegments.lean`; the
+Hand text that remains: the field compositions, the head `Decode.head_to_arguments` and the spills `Decode.spill_registers` (`Prysm/SyncCommitteeMessage/DecodeSegments.lean`; the
 generated steps 118 / 119 are not used), the epilogue 156–160 and the accept proof's glue. In-sample (development
 data); no transfer claim.
 -/
@@ -52,9 +52,9 @@ theorem Decode.from_generated_steps_Slot_field (k : Nat) (hk : Code.unmarshalSSZ
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 hrax hrbx h_mem ⊢
   subst rsp rbp r14 hrax hrbx
-  apply Decode.generated_step_s15 k hk hf
+  apply Decode.generated_step_directive_15 k hk hf
   intro fl1; normalize_registers
-  apply Decode.generated_step_s16 k hk hf
+  apply Decode.generated_step_directive_16 k hk hf
   normalize_registers
   refine eventually_trans _ _ _ _ (Decode.generated_step_Slot_call k hk hf hC sp (rax.toBitVec + 8) rbx.toBitVec aRet aFp aS2 hRet hFp hS2 rbp0 r140 guard e8 rslot
     fp s2 c0 he8 hrs hfp hs2 hc0 hguard _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl) (by first | rfl | decide)
@@ -116,11 +116,11 @@ theorem Decode.from_generated_steps_BlockRoot_field (k : Nat) (hk : Code.unmarsh
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩, zmms1, flags1, mem1⟩ := d
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
-  apply Decode.generated_step_s72 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_72 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s73 k hk hf
-  apply Decode.generated_step_s80 k hk hf
-  apply Decode.generated_step_s81 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
+  apply Decode.generated_step_directive_73 k hk hf
+  apply Decode.generated_step_directive_80 k hk hf
+  apply Decode.generated_step_directive_81 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
   normalize_registers
   simp only [Reg64s.get64] at H
@@ -164,17 +164,17 @@ theorem Decode.from_generated_steps_ValidatorIndex_field (k : Nat) (hk : Code.un
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 hrax h_mem ⊢
   subst rsp rbp r14 hrax
-  apply Decode.generated_step_s82 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_82 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s83 k hk hf
+  apply Decode.generated_step_directive_83 k hk hf
   intro fl1; normalize_registers
-  apply Decode.generated_step_s84 k hk hf sp aD hD vD hvD _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_84 k hk hf sp aD hD vD hvD _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s85 k hk hf
+  apply Decode.generated_step_directive_85 k hk hf
   intro fl2; normalize_registers
-  apply Decode.generated_step_s86 k hk hf
+  apply Decode.generated_step_directive_86 k hk hf
   intro fl3; normalize_registers
-  apply Decode.generated_step_s87 k hk hf
+  apply Decode.generated_step_directive_87 k hk hf
   normalize_registers
   refine eventually_trans _ _ _ _ (Decode.generated_step_ValidatorIndex_call k hk hf hC sp (rax.toBitVec + 40) (bf + 40) aRet aFp aS2 hRet hFp hS2 rbp0 r140 guard e8 rslot
     fp s2 c0 he8 hrs hfp hs2 hc0 hguard _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl) (by first | rfl | decide)
@@ -234,11 +234,11 @@ theorem Decode.from_generated_steps_Signature_field (k : Nat) (hk : Code.unmarsh
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩, zmms1, flags1, mem1⟩ := d
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
-  apply Decode.generated_step_s146 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_146 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s147 k hk hf
-  apply Decode.generated_step_s154 k hk hf
-  apply Decode.generated_step_s155 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
+  apply Decode.generated_step_directive_147 k hk hf
+  apply Decode.generated_step_directive_154 k hk hf
+  apply Decode.generated_step_directive_155 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
   normalize_registers
   simp only [Reg64s.get64] at H
@@ -270,7 +270,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
     exact Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS hl8
   rw [hlos] at h_mem
   -- head: entry → directive 15
-  refine eventually_trans _ _ _ _ (Decode.head0 k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
+  refine eventually_trans _ _ _ _ (Decode.head_to_arguments k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
     (by dsimp only; ecancel) (Nat.lt_of_le_of_lt (Nat.le_add_right _ 112) hguard) hlen) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
@@ -329,7 +329,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   dsimp only at hpc6 hrax6 hrbx6 hrsp6 hrbp6 hr146 Hm6
   subst hpc6
   -- nil-error spills 118–119
-  refine eventually_trans _ _ _ _ (Decode.spill2 k hk (rsp.toBitVec - 104) (rsp.toBitVec - 64) (rsp.toBitVec - 56)
+  refine eventually_trans _ _ _ _ (Decode.spill_registers k hk (rsp.toBitVec - 104) (rsp.toBitVec - 64) (rsp.toBitVec - 56)
     (by bv_omega) (by bv_omega) s28 s30 hs28 hs30 _ d6 hrsp6 (by ecancel)) ?_
   rintro ⟨d7, pc7⟩ ⟨hpc7, hrsp7, hrbp7, hr147, Hm7⟩
   dsimp only at hpc7 hrsp7 hrbp7 hr147 Hm7

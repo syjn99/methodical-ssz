@@ -10,11 +10,11 @@ Hand-written AFTER the raw generator output (`Prysm/PowBlock/GeneratedDecodeStep
 3/3 walker-covered) was committed. Statement = the pre-committed hand statement `Prysm.PowBlock.Decode.accept_statement`
 (`Prysm/PendingDeposit/Statements.lean`, unchanged). `--steps --compose` refuses by design, so every field composition is HAND text
 (`Decode.from_generated_steps_*_field`) over the GENERATED theorems, used as emitted:
-* head 0–12: `dechead_seg` (`Codec/DecoderHeadEpilogue.lean`, frame `0x20`, size 96);
+* head 0–12: `dec_head_seg` (`Codec/DecoderHeadEpilogue.lean`, frame `0x20`, size 96);
 * BlockHash 13–46: generated segment (offset-0 form) + generated tail steps 37, 38, 45, 46;
 * ParentHash 47–82: generated segment + generated tail steps 73, 74, 81, 82;
 * TotalDifficulty 83–118: generated segment + generated tail steps 109, 110, 117, 118;
-* epilogue 119–123: `decepi_seg` (`Codec/DecoderHeadEpilogue.lean`).
+* epilogue 119–123: `dec_epilogue_seg` (`Codec/DecoderHeadEpilogue.lean`).
 -/
 
 open Machine Runtime Prysm.PowBlock.Code Codec
@@ -69,11 +69,11 @@ theorem Decode.from_generated_steps_BlockHash_field (k : Nat) (hk : unmarshalSSZ
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩, zmms1, flags1, mem1⟩ := d
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
-  apply Decode.generated_step_s37 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_37 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s38 k hk hf
-  apply Decode.generated_step_s45 k hk hf
-  apply Decode.generated_step_s46 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
+  apply Decode.generated_step_directive_38 k hk hf
+  apply Decode.generated_step_directive_45 k hk hf
+  apply Decode.generated_step_directive_46 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
   normalize_registers
   simp only [Reg64s.get64] at H
@@ -130,11 +130,11 @@ theorem Decode.from_generated_steps_ParentHash_field (k : Nat) (hk : unmarshalSS
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩, zmms1, flags1, mem1⟩ := d
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
-  apply Decode.generated_step_s73 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_73 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s74 k hk hf
-  apply Decode.generated_step_s81 k hk hf
-  apply Decode.generated_step_s82 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
+  apply Decode.generated_step_directive_74 k hk hf
+  apply Decode.generated_step_directive_81 k hk hf
+  apply Decode.generated_step_directive_82 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
   normalize_registers
   simp only [Reg64s.get64] at H
@@ -191,11 +191,11 @@ theorem Decode.from_generated_steps_TotalDifficulty_field (k : Nat) (hk : unmars
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩, zmms1, flags1, mem1⟩ := d
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
-  apply Decode.generated_step_s109 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_109 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s110 k hk hf
-  apply Decode.generated_step_s117 k hk hf
-  apply Decode.generated_step_s118 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
+  apply Decode.generated_step_directive_110 k hk hf
+  apply Decode.generated_step_directive_117 k hk hf
+  apply Decode.generated_step_directive_118 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
   normalize_registers
   simp only [Reg64s.get64] at H
@@ -221,7 +221,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   have hE := Codec.infix_sub (q := Codec.decEpilogue) 119 hk
     (by simp only [unmarshalSSZ, Codec.decEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   -- head: entry → directive 13
-  refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ 96 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
+  refine eventually_trans _ _ _ _ (Codec.dec_head_seg _ _ _ _ 96 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
     (by dsimp only; ecancel) hguard (by rw [hlen]; rfl)) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
@@ -276,7 +276,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrdx4 Hm4
   subst hpc4
   -- epilogue 119–123
-  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + 119) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Codec.dec_epilogue_seg (k + 119) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra r14 _ d4 hrsp4 hr144 (by ecancel)) ?_
   rintro ⟨d5, pc5⟩ ⟨hpc5, hrax5, hrbx5, hrsp5, hrbp5, hr145, Hm5⟩
   dsimp only at hpc5 hrax5 hrbx5 hrsp5 hrbp5 hr145 Hm5

@@ -10,13 +10,13 @@ Hand-written AFTER the raw generator output (`Prysm/PendingDeposit/GeneratedDeco
 5/5 walker-covered) was committed. Statement = the pre-committed hand statement `Prysm.PendingDeposit.Decode.accept_statement`
 (`Prysm/PendingDeposit/Statements.lean`, unchanged). `--steps --compose` refuses by design, so every field composition is HAND text
 (`Decode.from_generated_steps_*_field`) over the GENERATED theorems, used as emitted:
-* head 0–13: `Decode.head` (hand; `decpro_seg` with F = 64, dB = 88, size 192, then the spills 11–13 as `step_store`);
+* head 0–13: `Decode.head` (hand; `dec_prologue_seg` with F = 64, dB = 88, size 192, then the spills 11–13 as `step_store`);
 * PublicKey 14–48: generated segment (offset-0 form) + generated tail steps 38, 39, 47, 48;
 * WithdrawalCredentials 49–84: generated segment + generated tail steps 74, 75, 83, 84;
 * Amount 85–87: generated steps 85, 86, 87;
 * Signature 88–122: generated segment + generated tail steps 113, 114, 121, 122;
 * Slot 123–160: generated steps 123–128 + generated call block (`hC` discharged by the proved `Prysm.Slot.Decode.accept_function_spec_holds`);
-* epilogue 161–163: `Decode.epilogue` (hand; `step_add_immediate` and `decret_seg`).
+* epilogue 161–163: `Decode.epilogue` (hand; `step_add_immediate` and `dec_return_seg`).
 -/
 
 open Machine Runtime Prysm.AttestationData.Code Prysm.PendingDeposit.Code Codec
@@ -44,7 +44,7 @@ theorem Decode.guard_lt (x : BitVec 64) (g : Nat) (h : g + 80 < x.toNat) : g < (
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- PendingDeposit head 0–13 (frame `0x40`, size 192): `decpro_seg`, then the spills rax → `0x50(%rsp)`,
+/-- PendingDeposit head 0–13 (frame `0x40`, size 192): `dec_prologue_seg`, then the spills rax → `0x50(%rsp)`,
 rdi → `0x68(%rsp)`, rbx → `0x58(%rsp)` as `step_store` steps (no nil check in this decoder). -/
 theorem Decode.head (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
     (s : MachineData) (ra guard : UInt64) (fp s1 s2 s4 : List UInt8)
@@ -66,7 +66,7 @@ theorem Decode.head (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
           ⋆ Eq ((Int.toBytes 8 s.regs.rdi.toBitVec.toInt).At (s.regs.rsp.toBitVec + 32))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  refine eventually_trans _ _ _ _ (decpro_seg _ _ _ _ 64 88 192 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
+  refine eventually_trans _ _ _ _ (dec_prologue_seg _ _ _ _ 64 88 192 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
     s ra guard (s.regs.rsp.toBitVec - 72) (s.regs.rsp.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     fp s2 hfp h2 _ (by ecancel) hguard (by rw [hlen]; rfl)) ?_
@@ -100,7 +100,7 @@ theorem Decode.head (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- PendingDeposit epilogue 161–163 (frame `0x40`): `add $0x40,%rsp` as `step_add_immediate`, then `decret_seg`. -/
+/-- PendingDeposit epilogue 161–163 (frame `0x40`): `add $0x40,%rsp` as `step_add_immediate`, then `dec_return_seg`. -/
 theorem Decode.epilogue (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
     (sp aFp aRa : BitVec 64) (hFp : sp + 64 = aFp) (hRa : sp + 72 = aRa)
     (fp0 ra : UInt64) (R : DataMem → Prop)
@@ -117,7 +117,7 @@ theorem Decode.epilogue (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
   subst rsp hFp hRa
   apply step_add_immediate Reg64.rsp 64 _ (k + 161) (k + 162) (window_infix_at hk 161 1) (by rfl) (by rfl)
   intro fl; normalize_registers
-  refine eventually_trans _ _ _ _ (decret_seg _ (k + 162) (window_infix_at hk 162 2) (by rfl) (sp + 64) (sp + 72) (by bv_omega)
+  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 162) (window_infix_at hk 162 2) (by rfl) (sp + 64) (sp + 72) (by bv_omega)
     fp0 ra R _ (by rfl) (by ecancel)) ?_
   rintro ⟨d, pc⟩ ⟨hpc, hrsp', hrbp', hreg, hmem⟩
   dsimp only at hpc hrsp' hrbp' hreg hmem
@@ -175,11 +175,11 @@ theorem Decode.from_generated_steps_PublicKey_field (k : Nat) (hk : Code.unmarsh
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩, zmms1, flags1, mem1⟩ := d
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
-  apply Decode.generated_step_s38 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_38 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s39 k hk hf
-  apply Decode.generated_step_s47 k hk hf
-  apply Decode.generated_step_s48 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
+  apply Decode.generated_step_directive_39 k hk hf
+  apply Decode.generated_step_directive_47 k hk hf
+  apply Decode.generated_step_directive_48 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
   normalize_registers
   simp only [Reg64s.get64] at H
@@ -236,11 +236,11 @@ theorem Decode.from_generated_steps_WithdrawalCredentials_field (k : Nat) (hk : 
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩, zmms1, flags1, mem1⟩ := d
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
-  apply Decode.generated_step_s74 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_74 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s75 k hk hf
-  apply Decode.generated_step_s83 k hk hf
-  apply Decode.generated_step_s84 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
+  apply Decode.generated_step_directive_75 k hk hf
+  apply Decode.generated_step_directive_83 k hk hf
+  apply Decode.generated_step_directive_84 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
   normalize_registers
   simp only [Reg64s.get64] at H
@@ -268,11 +268,11 @@ theorem Decode.from_generated_steps_Amount_field (k : Nat) (hk : Code.unmarshalS
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only [Reg64s.get64] at hrsp hrbp hr14 hrdx h_mem ⊢
   subst rsp rbp r14 hrdx
-  apply Decode.generated_step_s85 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_85 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s86 k hk hf bf (bf + 80) (by simp only [Int64.toBitVec_ofNat]) v hv _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_86 k hk hf bf (bf + 80) (by simp only [Int64.toBitVec_ofNat]) v hv _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s87 k hk hf rdx.toBitVec (rdx.toBitVec + 56) (by simp only [Int64.toBitVec_ofNat]) vF hvF _ _ _
+  apply Decode.generated_step_directive_87 k hk hf rdx.toBitVec (rdx.toBitVec + 56) (by simp only [Int64.toBitVec_ofNat]) vF hvF _ _ _
     (by rfl) (by ecancel)
   intro m' H
   normalize_registers
@@ -330,11 +330,11 @@ theorem Decode.from_generated_steps_Signature_field (k : Nat) (hk : Code.unmarsh
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩, zmms1, flags1, mem1⟩ := d
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
-  apply Decode.generated_step_s113 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_113 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s114 k hk hf
-  apply Decode.generated_step_s121 k hk hf
-  apply Decode.generated_step_s122 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
+  apply Decode.generated_step_directive_114 k hk hf
+  apply Decode.generated_step_directive_121 k hk hf
+  apply Decode.generated_step_directive_122 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
   normalize_registers
   simp only [Reg64s.get64] at H
@@ -376,17 +376,17 @@ theorem Decode.from_generated_steps_Slot_field (k : Nat) (hk : Code.unmarshalSSZ
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 hrax h_mem ⊢
   subst rsp rbp r14 hrax
-  apply Decode.generated_step_s123 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_123 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s124 k hk hf
+  apply Decode.generated_step_directive_124 k hk hf
   intro fl1; normalize_registers
-  apply Decode.generated_step_s125 k hk hf sp aD hD vD hvD _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_125 k hk hf sp aD hD vD hvD _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s126 k hk hf
+  apply Decode.generated_step_directive_126 k hk hf
   intro fl2; normalize_registers
-  apply Decode.generated_step_s127 k hk hf
+  apply Decode.generated_step_directive_127 k hk hf
   intro fl3; normalize_registers
-  apply Decode.generated_step_s128 k hk hf
+  apply Decode.generated_step_directive_128 k hk hf
   normalize_registers
   refine eventually_trans _ _ _ _ (Decode.generated_step_Slot_call k hk hf hC sp (rax.toBitVec + 88) (bf + 184) aRet aFp aS2 hRet hFp hS2 rbp0 r140 guard e8 rslot
     fp s2 c0 he8 hrs hfp hs2 hc0 hguard _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl) (by first | rfl | decide)

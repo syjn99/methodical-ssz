@@ -9,7 +9,7 @@ import Codec.CalleeDecodeWindow
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
 /-! Step chain fields (machine-readable, read by `kindcheck.py`):
-FIELDS-JSON: [{"field": "Slot", "theorems": ["Decode.generated_step_s15", "Decode.generated_step_s16", "Decode.generated_step_Slot_call"]}, {"field": "ProposerIndex", "theorems": ["Decode.generated_step_s47", "Decode.generated_step_s48", "Decode.generated_step_s49", "Decode.generated_step_s50", "Decode.generated_step_s51", "Decode.generated_step_s52", "Decode.generated_step_s53", "Decode.generated_step_ProposerIndex_call"]}, {"field": "ParentRoot", "theorems": ["Decode.generated_step_s86", "Decode.generated_step_s87", "Decode.generated_step_ParentRoot_seg", "Decode.generated_step_s113", "Decode.generated_step_s115", "Decode.generated_step_s122", "Decode.generated_step_s123"]}, {"field": "StateRoot", "theorems": ["Decode.generated_step_StateRoot_seg", "Decode.generated_step_s149", "Decode.generated_step_s150", "Decode.generated_step_s157", "Decode.generated_step_s158"]}, {"field": "BodyRoot", "theorems": ["Decode.generated_step_BodyRoot_seg", "Decode.generated_step_s184", "Decode.generated_step_s185", "Decode.generated_step_s193", "Decode.generated_step_s194"]}]
+FIELDS-JSON: [{"field": "Slot", "theorems": ["Decode.generated_step_directive_15", "Decode.generated_step_directive_16", "Decode.generated_step_Slot_call"]}, {"field": "ProposerIndex", "theorems": ["Decode.generated_step_directive_47", "Decode.generated_step_directive_48", "Decode.generated_step_directive_49", "Decode.generated_step_directive_50", "Decode.generated_step_directive_51", "Decode.generated_step_directive_52", "Decode.generated_step_directive_53", "Decode.generated_step_ProposerIndex_call"]}, {"field": "ParentRoot", "theorems": ["Decode.generated_step_directive_86", "Decode.generated_step_directive_87", "Decode.generated_step_ParentRoot_seg", "Decode.generated_step_directive_113", "Decode.generated_step_directive_115", "Decode.generated_step_directive_122", "Decode.generated_step_directive_123"]}, {"field": "StateRoot", "theorems": ["Decode.generated_step_StateRoot_seg", "Decode.generated_step_directive_149", "Decode.generated_step_directive_150", "Decode.generated_step_directive_157", "Decode.generated_step_directive_158"]}, {"field": "BodyRoot", "theorems": ["Decode.generated_step_BodyRoot_seg", "Decode.generated_step_directive_184", "Decode.generated_step_directive_185", "Decode.generated_step_directive_193", "Decode.generated_step_directive_194"]}]
 -/
 
 open Machine Runtime Prysm.BeaconBlockHeader.Code
@@ -21,7 +21,7 @@ namespace Prysm.BeaconBlockHeader
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 15 `add $0x8,%rax`: stepAddKind. -/
-theorem Decode.generated_step_s15 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_15 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : ∀ fl : StatusFlags, Eventually (step1 Host.exe) final
@@ -32,13 +32,13 @@ theorem Decode.generated_step_s15 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
   have he : Codec.eraseNop ((unmarshalSSZ.drop 15).take 1) = [Codec.instrAddImmediate Reg64.rax 8] := by rfl
   have hend : k + 15 + ((unmarshalSSZ.drop 15).take 1).length = k + 16 := by rfl
   with_reducible exact Codec.step_add_immediate Reg64.rax 8 _ (k + 15) (k + 16) hq he hend
-theorem Decode.generated_step_s15_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s15 h) = @Codec.stepAddKind h unmarshalSSZ Reg64.rax 8 15 16 := by
+theorem Decode.generated_step_directive_15_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_15 h) = @Codec.stepAddKind h unmarshalSSZ Reg64.rax 8 15 16 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 16 `mov $0x8,%ecx`: stepMoveImmediateKind. -/
-theorem Decode.generated_step_s16 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_16 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : Eventually (step1 Host.exe) final ⟨Codec.setRegister s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 17)⟩),
@@ -47,7 +47,7 @@ theorem Decode.generated_step_s16 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
   have he : Codec.eraseNop ((unmarshalSSZ.drop 16).take 1) = [Codec.instrMoveImmediate32 Reg64.rcx 8] := by rfl
   have hend : k + 16 + ((unmarshalSSZ.drop 16).take 1).length = k + 17 := by rfl
   with_reducible exact Codec.step_move_immediate Reg64.rcx 8 _ (k + 16) (k + 17) hq he hend
-theorem Decode.generated_step_s16_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s16 h) = @Codec.stepMoveImmediateKind h unmarshalSSZ Reg64.rcx 8 16 17 := by
+theorem Decode.generated_step_directive_16_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_16 h) = @Codec.stepMoveImmediateKind h unmarshalSSZ Reg64.rcx 8 16 17 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -90,7 +90,7 @@ theorem Decode.generated_step_Slot_call_kind : ∀ (h : Host), type_of% (@Decode
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 47 `mov 0x78(%rsp),%rbx`: stepLoadValueKind. -/
-theorem Decode.generated_step_s47 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_47 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (base a v : BitVec 64) (ha : base + (120 : Int64).toBitVec = a)
     (F : DataMem → Prop)
@@ -102,13 +102,13 @@ theorem Decode.generated_step_s47 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
   have he : Codec.eraseNop ((unmarshalSSZ.drop 47).take 1) = [Codec.instrLoad Reg64.rbx Reg64.rsp 120] := by rfl
   have hend : k + 47 + ((unmarshalSSZ.drop 47).take 1).length = k + 48 := by rfl
   with_reducible exact Codec.step_load_value Reg64.rbx Reg64.rsp 120 _ (k + 47) (k + 48) hq he hend
-theorem Decode.generated_step_s47_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s47 h) = @Codec.stepLoadValueKind h unmarshalSSZ Reg64.rbx Reg64.rsp 120 47 48 := by
+theorem Decode.generated_step_directive_47_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_47 h) = @Codec.stepLoadValueKind h unmarshalSSZ Reg64.rbx Reg64.rsp 120 47 48 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 48 `add $0x8,%rbx`: stepAddKind. -/
-theorem Decode.generated_step_s48 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_48 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : ∀ fl : StatusFlags, Eventually (step1 Host.exe) final
@@ -119,13 +119,13 @@ theorem Decode.generated_step_s48 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
   have he : Codec.eraseNop ((unmarshalSSZ.drop 48).take 1) = [Codec.instrAddImmediate Reg64.rbx 8] := by rfl
   have hend : k + 48 + ((unmarshalSSZ.drop 48).take 1).length = k + 49 := by rfl
   with_reducible exact Codec.step_add_immediate Reg64.rbx 8 _ (k + 48) (k + 49) hq he hend
-theorem Decode.generated_step_s48_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s48 h) = @Codec.stepAddKind h unmarshalSSZ Reg64.rbx 8 48 49 := by
+theorem Decode.generated_step_directive_48_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_48 h) = @Codec.stepAddKind h unmarshalSSZ Reg64.rbx 8 48 49 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 49 `mov 0x88(%rsp),%rdi`: stepLoadBytesKind. -/
-theorem Decode.generated_step_s49 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_49 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (base a : BitVec 64) (ha : base + (136 : Int64).toBitVec = a) (bs : List UInt8) (hbs : bs.length = 8)
     (F : DataMem → Prop)
@@ -137,13 +137,13 @@ theorem Decode.generated_step_s49 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
   have he : Codec.eraseNop ((unmarshalSSZ.drop 49).take 1) = [Codec.instrLoad Reg64.rdi Reg64.rsp 136] := by rfl
   have hend : k + 49 + ((unmarshalSSZ.drop 49).take 1).length = k + 50 := by rfl
   with_reducible exact Codec.step_load_bytes Reg64.rdi Reg64.rsp 136 _ (k + 49) (k + 50) hq he hend
-theorem Decode.generated_step_s49_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s49 h) = @Codec.stepLoadBytesKind h unmarshalSSZ Reg64.rdi Reg64.rsp 136 49 50 := by
+theorem Decode.generated_step_directive_49_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_49 h) = @Codec.stepLoadBytesKind h unmarshalSSZ Reg64.rdi Reg64.rsp 136 49 50 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 50 `add $-0x8,%rdi`: stepAddKind. -/
-theorem Decode.generated_step_s50 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_50 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : ∀ fl : StatusFlags, Eventually (step1 Host.exe) final
@@ -154,13 +154,13 @@ theorem Decode.generated_step_s50 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
   have he : Codec.eraseNop ((unmarshalSSZ.drop 50).take 1) = [Codec.instrAddImmediate Reg64.rdi (-8)] := by rfl
   have hend : k + 50 + ((unmarshalSSZ.drop 50).take 1).length = k + 51 := by rfl
   with_reducible exact Codec.step_add_immediate Reg64.rdi (-8) _ (k + 50) (k + 51) hq he hend
-theorem Decode.generated_step_s50_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s50 h) = @Codec.stepAddKind h unmarshalSSZ Reg64.rdi (-8) 50 51 := by
+theorem Decode.generated_step_directive_50_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_50 h) = @Codec.stepAddKind h unmarshalSSZ Reg64.rdi (-8) 50 51 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 51 `mov 0x70(%rsp),%rax`: stepLoadValueKind. -/
-theorem Decode.generated_step_s51 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_51 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (base a v : BitVec 64) (ha : base + (112 : Int64).toBitVec = a)
     (F : DataMem → Prop)
@@ -172,13 +172,13 @@ theorem Decode.generated_step_s51 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
   have he : Codec.eraseNop ((unmarshalSSZ.drop 51).take 1) = [Codec.instrLoad Reg64.rax Reg64.rsp 112] := by rfl
   have hend : k + 51 + ((unmarshalSSZ.drop 51).take 1).length = k + 52 := by rfl
   with_reducible exact Codec.step_load_value Reg64.rax Reg64.rsp 112 _ (k + 51) (k + 52) hq he hend
-theorem Decode.generated_step_s51_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s51 h) = @Codec.stepLoadValueKind h unmarshalSSZ Reg64.rax Reg64.rsp 112 51 52 := by
+theorem Decode.generated_step_directive_51_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_51 h) = @Codec.stepLoadValueKind h unmarshalSSZ Reg64.rax Reg64.rsp 112 51 52 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 52 `add $0x10,%rax`: stepAddKind. -/
-theorem Decode.generated_step_s52 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_52 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : ∀ fl : StatusFlags, Eventually (step1 Host.exe) final
@@ -189,13 +189,13 @@ theorem Decode.generated_step_s52 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
   have he : Codec.eraseNop ((unmarshalSSZ.drop 52).take 1) = [Codec.instrAddImmediate Reg64.rax 16] := by rfl
   have hend : k + 52 + ((unmarshalSSZ.drop 52).take 1).length = k + 53 := by rfl
   with_reducible exact Codec.step_add_immediate Reg64.rax 16 _ (k + 52) (k + 53) hq he hend
-theorem Decode.generated_step_s52_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s52 h) = @Codec.stepAddKind h unmarshalSSZ Reg64.rax 16 52 53 := by
+theorem Decode.generated_step_directive_52_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_52 h) = @Codec.stepAddKind h unmarshalSSZ Reg64.rax 16 52 53 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 53 `mov $0x8,%ecx`: stepMoveImmediateKind. -/
-theorem Decode.generated_step_s53 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_53 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : Eventually (step1 Host.exe) final ⟨Codec.setRegister s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 54)⟩),
@@ -204,7 +204,7 @@ theorem Decode.generated_step_s53 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
   have he : Codec.eraseNop ((unmarshalSSZ.drop 53).take 1) = [Codec.instrMoveImmediate32 Reg64.rcx 8] := by rfl
   have hend : k + 53 + ((unmarshalSSZ.drop 53).take 1).length = k + 54 := by rfl
   with_reducible exact Codec.step_move_immediate Reg64.rcx 8 _ (k + 53) (k + 54) hq he hend
-theorem Decode.generated_step_s53_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s53 h) = @Codec.stepMoveImmediateKind h unmarshalSSZ Reg64.rcx 8 53 54 := by
+theorem Decode.generated_step_directive_53_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_53 h) = @Codec.stepMoveImmediateKind h unmarshalSSZ Reg64.rcx 8 53 54 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -247,7 +247,7 @@ theorem Decode.generated_step_ProposerIndex_call_kind : ∀ (h : Host), type_of%
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 86 `mov %rbx,0x30(%rsp)`: stepStoreKind. -/
-theorem Decode.generated_step_s86 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_86 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (base a : BitVec 64) (ha : base + (48 : Int64).toBitVec = a) (bs : List UInt8) (hbs : bs.length = 8)
     (F : DataMem → Prop)
@@ -260,13 +260,13 @@ theorem Decode.generated_step_s86 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
   have he : Codec.eraseNop ((unmarshalSSZ.drop 86).take 1) = [Codec.instrStore Reg64.rbx Reg64.rsp 48] := by rfl
   have hend : k + 86 + ((unmarshalSSZ.drop 86).take 1).length = k + 87 := by rfl
   with_reducible exact Codec.step_store Reg64.rbx Reg64.rsp 48 _ (k + 86) (k + 87) hq he hend
-theorem Decode.generated_step_s86_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s86 h) = @Codec.stepStoreKind h unmarshalSSZ Reg64.rbx Reg64.rsp 48 86 87 := by
+theorem Decode.generated_step_directive_86_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_86 h) = @Codec.stepStoreKind h unmarshalSSZ Reg64.rbx Reg64.rsp 48 86 87 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 87 `mov %rax,0x28(%rsp)`: stepStoreKind. -/
-theorem Decode.generated_step_s87 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_87 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (base a : BitVec 64) (ha : base + (40 : Int64).toBitVec = a) (bs : List UInt8) (hbs : bs.length = 8)
     (F : DataMem → Prop)
@@ -279,7 +279,7 @@ theorem Decode.generated_step_s87 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
   have he : Codec.eraseNop ((unmarshalSSZ.drop 87).take 1) = [Codec.instrStore Reg64.rax Reg64.rsp 40] := by rfl
   have hend : k + 87 + ((unmarshalSSZ.drop 87).take 1).length = k + 88 := by rfl
   with_reducible exact Codec.step_store Reg64.rax Reg64.rsp 40 _ (k + 87) (k + 88) hq he hend
-theorem Decode.generated_step_s87_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s87 h) = @Codec.stepStoreKind h unmarshalSSZ Reg64.rax Reg64.rsp 40 87 88 := by
+theorem Decode.generated_step_directive_87_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_87 h) = @Codec.stepStoreKind h unmarshalSSZ Reg64.rax Reg64.rsp 40 87 88 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 16000000 in
@@ -339,7 +339,7 @@ theorem Decode.generated_step_ParentRoot_seg_kind : ∀ (h : Host), type_of% (@D
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 113 `mov 0x38(%rsp),%rdi`: stepLoadValueKind. -/
-theorem Decode.generated_step_s113 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_113 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (base a v : BitVec 64) (ha : base + (56 : Int64).toBitVec = a)
     (F : DataMem → Prop)
@@ -351,13 +351,13 @@ theorem Decode.generated_step_s113 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
   have he : Codec.eraseNop ((unmarshalSSZ.drop 113).take 1) = [Codec.instrLoad Reg64.rdi Reg64.rsp 56] := by rfl
   have hend : k + 113 + ((unmarshalSSZ.drop 113).take 1).length = k + 114 := by rfl
   with_reducible exact Codec.step_load_value Reg64.rdi Reg64.rsp 56 _ (k + 113) (k + 114) hq he hend
-theorem Decode.generated_step_s113_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s113 h) = @Codec.stepLoadValueKind h unmarshalSSZ Reg64.rdi Reg64.rsp 56 113 114 := by
+theorem Decode.generated_step_directive_113_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_113 h) = @Codec.stepLoadValueKind h unmarshalSSZ Reg64.rdi Reg64.rsp 56 113 114 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 115 `jmp L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_1f7`: stepJumpKind (window 114–115, leading `nop` skipped). -/
-theorem Decode.generated_step_s115 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_115 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 122)⟩),
@@ -368,13 +368,13 @@ theorem Decode.generated_step_s115 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.step_jump "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_1f7" _ (k + 114) (k + 122) hq he hl
-theorem Decode.generated_step_s115_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s115 h) = @Codec.stepJumpKind h unmarshalSSZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_1f7" 114 122 := by
+theorem Decode.generated_step_directive_115_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_115 h) = @Codec.stepJumpKind h unmarshalSSZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_1f7" 114 122 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 122 `L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_1f7:`: stepLabelKind. -/
-theorem Decode.generated_step_s122 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_122 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 123)⟩),
@@ -383,13 +383,13 @@ theorem Decode.generated_step_s122 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
   have he : Codec.eraseNop ((unmarshalSSZ.drop 122).take 1) = [Codec.instrLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_1f7"] := by rfl
   have hend : k + 122 + ((unmarshalSSZ.drop 122).take 1).length = k + 123 := by rfl
   with_reducible exact Codec.step_label "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_1f7" _ (k + 122) (k + 123) hq he hend
-theorem Decode.generated_step_s122_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s122 h) = @Codec.stepLabelKind h unmarshalSSZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_1f7" 122 123 := by
+theorem Decode.generated_step_directive_122_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_122 h) = @Codec.stepLabelKind h unmarshalSSZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_1f7" 122 123 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 123 `mov %rdi,0x18(%rdx)`: stepStoreKind. -/
-theorem Decode.generated_step_s123 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_123 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (base a : BitVec 64) (ha : base + (24 : Int64).toBitVec = a) (bs : List UInt8) (hbs : bs.length = 8)
     (F : DataMem → Prop)
@@ -402,7 +402,7 @@ theorem Decode.generated_step_s123 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
   have he : Codec.eraseNop ((unmarshalSSZ.drop 123).take 1) = [Codec.instrStore Reg64.rdi Reg64.rdx 24] := by rfl
   have hend : k + 123 + ((unmarshalSSZ.drop 123).take 1).length = k + 124 := by rfl
   with_reducible exact Codec.step_store Reg64.rdi Reg64.rdx 24 _ (k + 123) (k + 124) hq he hend
-theorem Decode.generated_step_s123_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s123 h) = @Codec.stepStoreKind h unmarshalSSZ Reg64.rdi Reg64.rdx 24 123 124 := by
+theorem Decode.generated_step_directive_123_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_123 h) = @Codec.stepStoreKind h unmarshalSSZ Reg64.rdi Reg64.rdx 24 123 124 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 16000000 in
@@ -462,7 +462,7 @@ theorem Decode.generated_step_StateRoot_seg_kind : ∀ (h : Host), type_of% (@De
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 149 `mov 0x38(%rsp),%rdi`: stepLoadValueKind. -/
-theorem Decode.generated_step_s149 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_149 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (base a v : BitVec 64) (ha : base + (56 : Int64).toBitVec = a)
     (F : DataMem → Prop)
@@ -474,13 +474,13 @@ theorem Decode.generated_step_s149 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
   have he : Codec.eraseNop ((unmarshalSSZ.drop 149).take 1) = [Codec.instrLoad Reg64.rdi Reg64.rsp 56] := by rfl
   have hend : k + 149 + ((unmarshalSSZ.drop 149).take 1).length = k + 150 := by rfl
   with_reducible exact Codec.step_load_value Reg64.rdi Reg64.rsp 56 _ (k + 149) (k + 150) hq he hend
-theorem Decode.generated_step_s149_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s149 h) = @Codec.stepLoadValueKind h unmarshalSSZ Reg64.rdi Reg64.rsp 56 149 150 := by
+theorem Decode.generated_step_directive_149_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_149 h) = @Codec.stepLoadValueKind h unmarshalSSZ Reg64.rdi Reg64.rsp 56 149 150 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 150 `jmp L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_292`: stepJumpKind. -/
-theorem Decode.generated_step_s150 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_150 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 157)⟩),
@@ -491,13 +491,13 @@ theorem Decode.generated_step_s150 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.step_jump "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_292" _ (k + 150) (k + 157) hq he hl
-theorem Decode.generated_step_s150_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s150 h) = @Codec.stepJumpKind h unmarshalSSZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_292" 150 157 := by
+theorem Decode.generated_step_directive_150_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_150 h) = @Codec.stepJumpKind h unmarshalSSZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_292" 150 157 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 157 `L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_292:`: stepLabelKind. -/
-theorem Decode.generated_step_s157 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_157 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 158)⟩),
@@ -506,13 +506,13 @@ theorem Decode.generated_step_s157 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
   have he : Codec.eraseNop ((unmarshalSSZ.drop 157).take 1) = [Codec.instrLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_292"] := by rfl
   have hend : k + 157 + ((unmarshalSSZ.drop 157).take 1).length = k + 158 := by rfl
   with_reducible exact Codec.step_label "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_292" _ (k + 157) (k + 158) hq he hend
-theorem Decode.generated_step_s157_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s157 h) = @Codec.stepLabelKind h unmarshalSSZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_292" 157 158 := by
+theorem Decode.generated_step_directive_157_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_157 h) = @Codec.stepLabelKind h unmarshalSSZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_292" 157 158 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 158 `mov %rdi,0x30(%rdx)`: stepStoreKind. -/
-theorem Decode.generated_step_s158 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_158 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (base a : BitVec 64) (ha : base + (48 : Int64).toBitVec = a) (bs : List UInt8) (hbs : bs.length = 8)
     (F : DataMem → Prop)
@@ -525,7 +525,7 @@ theorem Decode.generated_step_s158 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
   have he : Codec.eraseNop ((unmarshalSSZ.drop 158).take 1) = [Codec.instrStore Reg64.rdi Reg64.rdx 48] := by rfl
   have hend : k + 158 + ((unmarshalSSZ.drop 158).take 1).length = k + 159 := by rfl
   with_reducible exact Codec.step_store Reg64.rdi Reg64.rdx 48 _ (k + 158) (k + 159) hq he hend
-theorem Decode.generated_step_s158_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s158 h) = @Codec.stepStoreKind h unmarshalSSZ Reg64.rdi Reg64.rdx 48 158 159 := by
+theorem Decode.generated_step_directive_158_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_158 h) = @Codec.stepStoreKind h unmarshalSSZ Reg64.rdi Reg64.rdx 48 158 159 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 16000000 in
@@ -585,7 +585,7 @@ theorem Decode.generated_step_BodyRoot_seg_kind : ∀ (h : Host), type_of% (@Dec
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 184 `mov 0x38(%rsp),%rsi`: stepLoadValueKind. -/
-theorem Decode.generated_step_s184 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_184 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (base a v : BitVec 64) (ha : base + (56 : Int64).toBitVec = a)
     (F : DataMem → Prop)
@@ -597,13 +597,13 @@ theorem Decode.generated_step_s184 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
   have he : Codec.eraseNop ((unmarshalSSZ.drop 184).take 1) = [Codec.instrLoad Reg64.rsi Reg64.rsp 56] := by rfl
   have hend : k + 184 + ((unmarshalSSZ.drop 184).take 1).length = k + 185 := by rfl
   with_reducible exact Codec.step_load_value Reg64.rsi Reg64.rsp 56 _ (k + 184) (k + 185) hq he hend
-theorem Decode.generated_step_s184_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s184 h) = @Codec.stepLoadValueKind h unmarshalSSZ Reg64.rsi Reg64.rsp 56 184 185 := by
+theorem Decode.generated_step_directive_184_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_184 h) = @Codec.stepLoadValueKind h unmarshalSSZ Reg64.rsi Reg64.rsp 56 184 185 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 185 `jmp L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_331`: stepJumpKind. -/
-theorem Decode.generated_step_s185 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_185 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 193)⟩),
@@ -614,13 +614,13 @@ theorem Decode.generated_step_s185 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.step_jump "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_331" _ (k + 185) (k + 193) hq he hl
-theorem Decode.generated_step_s185_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s185 h) = @Codec.stepJumpKind h unmarshalSSZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_331" 185 193 := by
+theorem Decode.generated_step_directive_185_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_185 h) = @Codec.stepJumpKind h unmarshalSSZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_331" 185 193 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 193 `L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_331:`: stepLabelKind. -/
-theorem Decode.generated_step_s193 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_193 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 194)⟩),
@@ -629,13 +629,13 @@ theorem Decode.generated_step_s193 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
   have he : Codec.eraseNop ((unmarshalSSZ.drop 193).take 1) = [Codec.instrLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_331"] := by rfl
   have hend : k + 193 + ((unmarshalSSZ.drop 193).take 1).length = k + 194 := by rfl
   with_reducible exact Codec.step_label "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_331" _ (k + 193) (k + 194) hq he hend
-theorem Decode.generated_step_s193_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s193 h) = @Codec.stepLabelKind h unmarshalSSZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_331" 193 194 := by
+theorem Decode.generated_step_directive_193_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_193 h) = @Codec.stepLabelKind h unmarshalSSZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_331" 193 194 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 194 `mov %rsi,0x48(%rdx)`: stepStoreKind. -/
-theorem Decode.generated_step_s194 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_directive_194 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (base a : BitVec 64) (ha : base + (72 : Int64).toBitVec = a) (bs : List UInt8) (hbs : bs.length = 8)
     (F : DataMem → Prop)
@@ -648,7 +648,7 @@ theorem Decode.generated_step_s194 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
   have he : Codec.eraseNop ((unmarshalSSZ.drop 194).take 1) = [Codec.instrStore Reg64.rsi Reg64.rdx 72] := by rfl
   have hend : k + 194 + ((unmarshalSSZ.drop 194).take 1).length = k + 195 := by rfl
   with_reducible exact Codec.step_store Reg64.rsi Reg64.rdx 72 _ (k + 194) (k + 195) hq he hend
-theorem Decode.generated_step_s194_kind : ∀ (h : Host), type_of% (@Decode.generated_step_s194 h) = @Codec.stepStoreKind h unmarshalSSZ Reg64.rsi Reg64.rdx 72 194 195 := by
+theorem Decode.generated_step_directive_194_kind : ∀ (h : Host), type_of% (@Decode.generated_step_directive_194 h) = @Codec.stepStoreKind h unmarshalSSZ Reg64.rsi Reg64.rdx 72 194 195 := by
   intro h; with_reducible rfl
 
 end Prysm.BeaconBlockHeader

@@ -10,9 +10,9 @@ import Prysm.HistoricalBatch.WitnessDecodeRejectSize
 
 #print axioms Codec.Segment.bytes32_vector_serialize
 #print axioms Codec.Segment.bytes32_vector_of_bytes
-#print axioms Codec.Segment.vtri_iter
-#print axioms Codec.Segment.vtri_exit
-#print axioms Codec.Segment.vtri_loop
+#print axioms Codec.Segment.triple_loop_one_iteration
+#print axioms Codec.Segment.triple_loop_exit
+#print axioms Codec.Segment.triple_loop
 #print axioms Codec.Segment.sync_committee_loop
 #print axioms Prysm.Deposit.toValue_serialize
 #print axioms Prysm.Deposit.spec_accepts_iff

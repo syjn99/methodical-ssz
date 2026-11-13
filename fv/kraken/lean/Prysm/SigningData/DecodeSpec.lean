@@ -86,7 +86,7 @@ theorem Decode.accept_spec : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pro
   obtain ⟨g, rfl, hb⟩ := SszValue.accepted_is_encoding hd
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 64 := by
-    apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.enc_size]; rfl
+    apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.encode_size]; rfl
   exact Prysm.SigningData.Decode.generated_accept k hk hf _ _ (by simp) (by simp) s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 R S hlo Heap avail (Pm g hb) hguard hn hav hms hmm
 
 /-- `len(buf) ≠ 64`: EthLib rejects, and the machine code returns the two words of `ssz.ErrSize`. -/

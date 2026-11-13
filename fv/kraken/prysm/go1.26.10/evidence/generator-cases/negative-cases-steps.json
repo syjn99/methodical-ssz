@@ -120,9 +120,9 @@
   "new": "BytesDecWindow 48 Reg64.rdx Reg64.rax"
  },
  {
-  "id": "sync-committee-message-decode-example-step-s82-control",
+  "id": "sync-committee-message-decode-example-step-directive-82-control",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_s82",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_directive_82",
   "kind": "control",
   "code_def": "Code.unmarshalSSZ",
   "code_ns": "Prysm.SyncCommitteeMessage.Code",
@@ -130,17 +130,17 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-decode-example-step-s82-statement-ha-120-to-128",
+  "id": "sync-committee-message-decode-example-step-directive-82-statement-ha-120-to-128",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_s82",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_directive_82",
   "kind": "stmt",
   "old": "(ha : base + (120 : Int64).toBitVec = a)",
   "new": "(ha : base + (128 : Int64).toBitVec = a)"
  },
  {
-  "id": "sync-committee-message-decode-example-step-s82-code-mov-0x78-rsp-to-0x70-rsp",
+  "id": "sync-committee-message-decode-example-step-directive-82-code-mov-0x78-rsp-to-0x70-rsp",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_s82",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_directive_82",
   "kind": "code",
   "line": 83,
   "old": "  mov 0x78(%rsp),%rbx",
@@ -151,9 +151,9 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-decode-example-step-s86-code-add-rax-to-rdx",
+  "id": "sync-committee-message-decode-example-step-directive-86-code-add-rax-to-rdx",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_s86",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_directive_86",
   "kind": "code",
   "line": 87,
   "old": "  add $0x28,%rax",
@@ -164,9 +164,9 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-decode-example-step-s87-code-mov-ecx-to-eax",
+  "id": "sync-committee-message-decode-example-step-directive-87-code-mov-ecx-to-eax",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_s87",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_directive_87",
   "kind": "code",
   "line": 88,
   "old": "  mov $0x8,%ecx",
@@ -287,31 +287,31 @@
   "new": "⋆ Eq (e8.At (bf + 16)) ⋆ Eq (c0.At (rcv + 16)) ⋆ F),"
  },
  {
-  "id": "codec-decoder-prologue-decpro-seg-control",
+  "id": "codec-decoder-prologue-dec-prologue-seg-control",
   "module": "Codec/DecoderPrologue.lean",
-  "theorem": "decpro_seg",
+  "theorem": "dec_prologue_seg",
   "kind": "control"
  },
  {
-  "id": "codec-decoder-prologue-decpro-seg-statement-rsp-none-to-8",
+  "id": "codec-decoder-prologue-dec-prologue-seg-statement-rsp-none-to-8",
   "module": "Codec/DecoderPrologue.lean",
-  "theorem": "decpro_seg",
+  "theorem": "dec_prologue_seg",
   "kind": "stmt",
   "old": "st.data.regs.rsp = { toBitVec := sp }",
   "new": "st.data.regs.rsp = { toBitVec := sp + 8 }"
  },
  {
-  "id": "codec-decoder-prologue-decpro-seg-statement-hsp-8-to-none",
+  "id": "codec-decoder-prologue-dec-prologue-seg-statement-hsp-8-to-none",
   "module": "Codec/DecoderPrologue.lean",
-  "theorem": "decpro_seg",
+  "theorem": "dec_prologue_seg",
   "kind": "stmt",
   "old": "(hsp : s.regs.rsp.toBitVec - 8 - F.toBitVec = sp)",
   "new": "(hsp : s.regs.rsp.toBitVec - F.toBitVec = sp)"
  },
  {
-  "id": "codec-decoder-prologue-decret-seg-statement-rsp-16-to-8",
+  "id": "codec-decoder-prologue-dec-return-seg-statement-rsp-16-to-8",
   "module": "Codec/DecoderPrologue.lean",
-  "theorem": "decret_seg",
+  "theorem": "dec_return_seg",
   "kind": "stmt",
   "old": "st.data.regs.rsp = { toBitVec := sp + 16 }",
   "new": "st.data.regs.rsp = { toBitVec := sp + 8 }"

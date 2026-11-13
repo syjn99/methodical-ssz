@@ -10,7 +10,7 @@ Its proof uses the generated step chain of the field (`decoder --steps`) and the
   `rbx` into the middle one);
 - `frame_low_stack_split`: the low stack of a decoder with callee calls is `S` bytes and the callee's saved-`rbp` slot;
 - `frame_low_address_with_calls`, `frame_low_address_without_calls`: the low-stack address argument of a byte segment;
-- `decepi_n`: the epilogue `add $F,%rsp; pop %rbp; retq` for any frame `F`.
+- `dec_epilogue_any_frame`: the epilogue `add $F,%rsp; pop %rbp; retq` for any frame `F`.
 They are the frame-parametric forms of the per-type hand lemmas `Prysm.PendingDeposit.Decode.split_three_words`, `Prysm.PendingDeposit.Decode.low_stack_split`,
 `Prysm.PendingDeposit.Decode.stack_low_eq`, `Prysm.Eth1Data.Decode.stack_low_eq`, `Prysm.PendingDeposit.Decode.epilogue`.
 -/
@@ -56,7 +56,7 @@ set_option maxRecDepth 100000 in
 /-- **Epilogue, frame-parametric**: `add $F,%rsp` (window `q1` at `j`), then `pop %rbp; retq` (window `q2` at
 `e`). With rsp = `sp`, the saved frame pointer `fp0` at `aFp = sp + F` and the return address `ra` at
 `aRa = aFp + 8`: the pc is `ra`, rsp = `aRa + 8`, rbp = `fp0`; rax, rbx, r14 and the memory are kept. -/
-theorem decepi_n (F : Int64) (q1 : Program) (j e : Nat) (hq1 : q1.IsInfixAt Host.prog j)
+theorem dec_epilogue_any_frame (F : Int64) (q1 : Program) (j e : Nat) (hq1 : q1.IsInfixAt Host.prog j)
     (he1 : eraseNop q1 = [instrAddImmediate Reg64.rsp F]) (hend : j + q1.length = e)
     (q2 : Program) (hq2 : q2.IsInfixAt Host.prog e) (he2 : eraseNop q2 = decRet)
     (sp aFp aRa : BitVec 64) (hFp : sp + F.toBitVec = aFp) (hRa : aFp + 8 = aRa)
@@ -74,7 +74,7 @@ theorem decepi_n (F : Int64) (q1 : Program) (j e : Nat) (hq1 : q1.IsInfixAt Host
   subst rsp hFp hRa
   apply step_add_immediate Reg64.rsp F _ j e hq1 he1 hend
   intro fl; normalize_registers
-  refine eventually_trans _ _ _ _ (decret_seg _ e hq2 he2 (sp + F.toBitVec) (sp + F.toBitVec + 8) rfl
+  refine eventually_trans _ _ _ _ (dec_return_seg _ e hq2 he2 (sp + F.toBitVec) (sp + F.toBitVec + 8) rfl
     fp0 ra R _ (by rfl) (by ecancel)) ?_
   rintro ⟨d, pc⟩ ⟨hpc, hrsp', hrbp', hreg, hmem⟩
   dsimp only at hpc hrsp' hrbp' hreg hmem

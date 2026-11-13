@@ -88,7 +88,7 @@ step cases (`decoder --steps`; ids `steps-*`; mutated `.S` / IR copies in <work-
    mutated code): its theorems carry the mutated code's indices, never a parameter of the unmutated code.
  - steps-<what the input does>, table STEP_STACK_AND_SETUP_MUT (`rv` edits): seven inputs that the step walker had
    accepted without the block entry being established must be refused (an 8-byte stack store overlapping a tracked
-   slot: steps-stack-store-overlaps-*; a head that is not the `decpro_seg` prologue: steps-head-spill-before-push,
+   slot: steps-stack-store-overlaps-*; a head that is not the `dec_prologue_seg` prologue: steps-head-spill-before-push,
    steps-head-no-frame), and steps-head-overlapping-spills too; steps-head-extra-nop is a head miss of class padding;
    steps-callee-source-offset-zero class other; stores to the return-address slot or below rsp, writes to r14 / rbp
    refused; the ten valid variants stay covered. steps-store-after-last-field is refused by the epilogue rule (exit 2).
@@ -106,7 +106,7 @@ step cases (`decoder --steps`; ids `steps-*`; mutated `.S` / IR copies in <work-
    SyncCommitteeMessage, PendingPartialWithdrawal) imports the working-tree `generator.py`, monkeypatches it and calls
    `main()`: an unexpected exception, a plain `StepStop` and `SystemExit(0)` injected in the head (`step_head`), at every
    `step_parse` / `step_label_index` call of the walk (each field, by the walk's current field), at every theorem-text
-   call, in the epilogue (`step_epilogue` raising, or returning None / True / another value than STEP_EPI_OK), a walk
+   call, in the epilogue (`step_epilogue` raising, or returning None / True / another value than STEP_EPILOGUE_OK), a walk
    that returns every field with a stop or without an end index, and an inner run that returns a text without the
    flags. Expected for every injection: exit 2 or 3 (exit 2 for an unexpected exception and SystemExit), 0 bytes on
    stdout, the summary's exit equal, fewer fields covered than the IR has. Control: no injection, exit 0.
@@ -1099,8 +1099,8 @@ for kind in ("unexpected", "sysexit0"):
             setattr(sg, fn, o)
 for kind in ("unexpected", "step_stop", "sysexit0"):
     rec("epilogue", kind, "step_epilogue", patched("step_epilogue", lambda *a, k=kind: fire(k, "step_epilogue")))
-rec("epilogue", "StepEpiMiss", "step_epilogue",
-    patched("step_epilogue", lambda *a: (_ for _ in ()).throw(sg.StepEpiMiss(0, "injected", "other"))))
+rec("epilogue", "StepEpilogueMiss", "step_epilogue",
+    patched("step_epilogue", lambda *a: (_ for _ in ()).throw(sg.StepEpilogueMiss(0, "injected", "other"))))
 for v in (None, True, "ok", 0):
     rec("epilogue", f"returns {v!r}", "step_epilogue", patched("step_epilogue", lambda *a, v=v: v))
 ow = sg.step_walk
@@ -1229,8 +1229,8 @@ def step_cases(work, new):
         x0 = next((x for x, f in enumerate(fl) if f.get("status") != "covered"), len(fl))
         head_miss = sm.get("head", {}).get("status") == "not covered"
         # on an epilogue miss every field was reached
-        epi_miss = sm.get("epilogue", {}).get("status") == "not covered"
-        reach_ok = all(f.get("reached") == (False if head_miss else True if epi_miss else x <= x0)
+        epilogue_miss = sm.get("epilogue", {}).get("status") == "not covered"
+        reach_ok = all(f.get("reached") == (False if head_miss else True if epilogue_miss else x <= x0)
                        for x, f in enumerate(fl))
         ok = (rc == want and (so == b"") == (want != 0) and sm.get("exit") == want and cov == covw
               and kcr == {3: 3, 0: 0}.get(want) and (mcls is None or (unc and unc[0].get("miss_class") == mcls))
@@ -1285,10 +1285,10 @@ WHOLE_ACCEPT_MUT = [
     ("whole-accept-head-nop-moved", "VoluntaryExit: the head `nop` moved before `cmp 0x10(%r14),%rsp`", "VoluntaryExit",
      rv([(9, "nop", None), (3, "cmp 0x10(%r14),%rsp", ("before", ["nop"]))]), None, 2),
     ("whole-accept-size-imm", "VoluntaryExit: `cmp $0x18,%rcx` (IR SSZ size 16)", "VoluntaryExit", rv([(10, "cmp $0x10,%rcx", "cmp $0x18,%rcx")]), None, 2),
-    ("whole-accept-epi-jmp-missing", "PowBlock: `jmp runtime.abort` in place of `xor %eax,%eax` after the last field event", "PowBlock",
+    ("whole-accept-epilogue-jmp-missing", "PowBlock: `jmp runtime.abort` in place of `xor %eax,%eax` after the last field event", "PowBlock",
      rv([(120, "xor %eax,%eax", "jmp runtime.abort")]), None, 2),
     ("whole-accept-truncated", "SyncCommitteeMessage `.S` cut inside the Signature segment", "SyncCommitteeMessage", lambda L: L[:140], None, 2),
-    ("whole-accept-truncated-epi", "VoluntaryExit `.S` cut after `add $0x48,%rsp` of the accept epilogue", "VoluntaryExit", lambda L: L[:87], None, 2),
+    ("whole-accept-truncated-epilogue", "VoluntaryExit `.S` cut after `add $0x48,%rsp` of the accept epilogue", "VoluntaryExit", lambda L: L[:87], None, 2),
     ("whole-accept-callee-other-type", "VoluntaryExit: the ValidatorIndex field calls Epoch.UnmarshalSSZ", "VoluntaryExit",
      lambda L: [l.replace("ValidatorIndex.UnmarshalSSZ", "Epoch.UnmarshalSSZ") for l in L], None, 2),
     # whole-accept rules (the step front end covers these inputs; whole-accept refuses)
@@ -1300,11 +1300,11 @@ WHOLE_ACCEPT_MUT = [
      rv([(15, "test %al,(%rax)", ("before", ["mov %rcx,0x68(%rsp)"]))]), None, 2),
     ("whole-accept-head-db", "ValidatorBalance: decoderPrologue spills rbx to 0x48 (dB != F + 24)", "ValidatorBalance",
      rv([(8, "mov %rbx,0x50(%rsp)", "mov %rbx,0x48(%rsp)")]), None, 2),
-    ("whole-accept-epi-xor-frame48", "VoluntaryExit: `xor %eax,%eax; xor %ebx,%ebx` before `add $0x48,%rsp` (no xor lemma in frame 0x48)",
+    ("whole-accept-epilogue-xor-frame48", "VoluntaryExit: `xor %eax,%eax; xor %ebx,%ebx` before `add $0x48,%rsp` (no xor lemma in frame 0x48)",
      "VoluntaryExit", rv([(87, "add $0x48,%rsp", ("before", ["xor %eax,%eax", "xor %ebx,%ebx"]))]), None, 2),
-    ("whole-accept-epi-load-ptr-slot", "SyncCommitteeMessage: epilogue `mov 0x38(%rsp),%rax` (the pointer slot, not a zero slot)", "SyncCommitteeMessage",
+    ("whole-accept-epilogue-load-ptr-slot", "SyncCommitteeMessage: epilogue `mov 0x38(%rsp),%rax` (the pointer slot, not a zero slot)", "SyncCommitteeMessage",
      rv([(157, "mov 0x28(%rsp),%rax", "mov 0x38(%rsp),%rax")]), None, 2),
-    ("whole-accept-epi-nop", "PendingDeposit: a `nop` between `add $0x40,%rsp` and `pop %rbp` of the accept epilogue", "PendingDeposit",
+    ("whole-accept-epilogue-nop", "PendingDeposit: a `nop` between `add $0x40,%rsp` and `pop %rbp` of the accept epilogue", "PendingDeposit",
      rv([(163, "pop %rbp", ("before", ["nop"]))]), None, 2),
     ("whole-accept-reject-errsize", "SyncCommitteeMessage: size-error block loads ssz.ErrOffset", "SyncCommitteeMessage",
      rv([(163, "mov ssz.ErrSize(%rip),%rax", "mov ssz.ErrOffset(%rip),%rax")]), None, 2),
@@ -1357,7 +1357,7 @@ def whole_accept_cases(work, new):
         t = r1[1].decode()
         pre = c["args"][3]
         thm = all(f"\ntheorem {pre}_{x} : " in t and f"\ntheorem {pre}_{x}_kind : " in t
-                  for x in ("head", "f1", "epi", "accept", "reject")) if want == 0 else True
+                  for x in ("head", "field_1", "epilogue", "accept", "reject")) if want == 0 else True
         ok = (r1[0] == want and r1[:2] == r2[:2] and (r1[1] == b"") == (want != 0) and thm and kc == (0 if want == 0 else None)
               and r1[3].get("exit") == want and r1[3].get("accept_generated") == (want == 0))
         res.append(dict(id=f"whole-accept-new-{key}", expect=f"exit {want} twice, identical" + (", every whole-accept theorem kinded, kindcheck "
@@ -1465,7 +1465,7 @@ ow = sg.step_walk
 rec("step", "walk with a stop", "step_walk", patched(sg, "step_walk", lambda *a: (lambda r: (r[0], sg.StepStop(0, "x", "other"), r[2]))(ow(*a))))
 rec("step", "epilogue returns True", "step_epilogue", patched(sg, "step_epilogue", lambda *a: True))
 # phase derive: the specifications and every step rendering
-for fn in ("whole_accept_derive", "whole_accept_head_spec", "whole_accept_epi_spec", "whole_accept_reject_spec"):
+for fn in ("whole_accept_derive", "whole_accept_head_spec", "whole_accept_epilogue_spec", "whole_accept_reject_spec"):
     for kind in KINDS:
         rec("derive", kind, fn, patched(g5, fn, lambda *a, k=kind, fn=fn: fire(k, fn)))
 ostep, seq = g5.whole_accept_step, []
@@ -1483,7 +1483,7 @@ for kind in KINDS:
             return ostep(*a)
         rec("derive", kind, f"whole_accept_step call {n}", patched(g5, "whole_accept_step", inj))
 # phase render: every theorem renderer (each call), the kind recorder
-for meth in ("head", "field", "f_u64", "f_bytes", "f_call", "epi", "accept", "reject", "layout", "binders", "mem"):
+for meth in ("head", "field", "f_u64", "f_bytes", "f_call", "epilogue", "accept", "reject", "layout", "binders", "mem"):
     om, seqm = getattr(g5.T, meth), []
     setattr(g5.T, meth, lambda self, *a, om=om, seqm=seqm: (seqm.append(1), om(self, *a))[1])
     call()
@@ -1500,9 +1500,9 @@ for meth in ("head", "field", "f_u64", "f_bytes", "f_call", "epi", "accept", "re
             rec("render", kind, f"T.{meth} call {n}", patched(g5.T, meth, inj))
 ok_ = g5.T.kind
 rec("flags", "a kind line not recorded", "T.kind", patched(g5.T, "kind", lambda self, name, kind, extra: (
-    ok_(self, name, kind, extra), self.kinds_emitted.pop() if name.endswith("_f1") else None)[0]))
+    ok_(self, name, kind, extra), self.kinds_emitted.pop() if name.endswith("_field_1") else None)[0]))
 rec("flags", "a kind line dropped from the text", "T.body", patched(g5.T, "body", (lambda ob: lambda self: ob(self).replace(
-    "_epi_kind :", "_epi_kinx :", 1))(g5.T.body)))
+    "_epilogue_kind :", "_epilogue_kinx :", 1))(g5.T.body)))
 oi = sg._decoder_whole_accept
 rec("flags", "inner returns its text, outer flags not set", "_decoder_whole_accept",
     patched(sg, "_decoder_whole_accept", lambda args, flags: oi(args, dict(flags))))

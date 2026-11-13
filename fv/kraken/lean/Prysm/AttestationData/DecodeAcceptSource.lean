@@ -63,7 +63,7 @@ theorem Decode.frame_slices (stk : List UInt8) (S : Nat) :
   intro t0 t1 t2 t3 t4 t5 t6 t7
   simp only [Decode.frame, t0, t1, t2, t3, t4, t5, t6, t7, List.take_append_drop]
 
-theorem Decode.frame_lens (stk : List UInt8) (S : Nat) (h : stk.length = S + 96) :
+theorem Decode.frame_lengths (stk : List UInt8) (S : Nat) (h : stk.length = S + 96) :
     (stk.take S).length = S ∧ ((stk.drop S).take 8).length = 8 ∧ (((stk.drop S).drop 8).take 24).length = 24
       ∧ ((((stk.drop S).drop 8).drop 24).take 16).length = 16
       ∧ (((((stk.drop S).drop 8).drop 24).drop 16).take 8).length = 8
@@ -212,7 +212,7 @@ theorem Decode.source (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   unfold_step
   rw [Decode.accept_call] at *
   -- the callee frame in the S + 96 stack bytes
-  obtain ⟨l0, l1, l2, l3, l4, l5, l6, l7, l8⟩ := Decode.frame_lens stk3 S hstk3
+  obtain ⟨l0, l1, l2, l3, l4, l5, l6, l7, l8⟩ := Decode.frame_lengths stk3 S hstk3
   rw [Decode.frame_slices stk3 S] at H4
   try dsimp only at H4
   rw [Decode.frame_sep _ S hS _ _ _ _ _ _ _ _ _ l0 l1 l2 l3 l4 l5 l6 l7 l8, Decode.accept_split_argument_words _ _ l2] at H4

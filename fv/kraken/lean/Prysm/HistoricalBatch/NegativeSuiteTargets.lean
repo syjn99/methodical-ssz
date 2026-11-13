@@ -4,7 +4,7 @@ import Prysm.HistoricalBatch.DecodeSpec
 # Negative-suite targets for the spec companions of the HistoricalBatch decoder
 
 `spec_prop` and `complete_prop` are copies of the frozen `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement`
-(equal by `rfl`, the `example`s at the end). `spec_check` and `complete_chk` prove them again from the spec lemmas with
+(equal by `rfl`, the `example`s at the end). `spec_check` and `complete_check` prove them again from the spec lemmas with
 the proof text of the companions. A mutant changes the size constant inside a copy: the EthLib rejection property and
 the completeness property then no longer hold for that size, so the proof must fail inside the theorem
 (`prysm/go1.26.10/evidence/lists-and-vectors/negative-cases-specification.json`). The `example`s lie after the theorems; the negative runner cuts the module at the target.
@@ -46,7 +46,7 @@ theorem spec_check : spec_prop := by
 def complete_prop : Prop :=
   ∀ bs : Array UInt8, (¬ ∃ v, deserialize desc bs = .ok v) → bs.size ≠ 524288
 
-theorem complete_chk : complete_prop :=
+theorem complete_check : complete_prop :=
   fun bs h h' => h ((spec_accepts_iff bs).mpr h')
 
 example : spec_prop = Decode.reject_size_spec_statement := rfl

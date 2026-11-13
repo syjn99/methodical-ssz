@@ -293,7 +293,7 @@ class T:
         hg = 'hguard' if self.gd == 0 else f'(Nat.lt_of_le_of_lt (Nat.le_add_right _ {self.gd}) hguard)'
         fpn = self.slot_at({'stk': self.pre}, -8)[1]
         s2n = self.slot_at({'stk': self.pre}, 16)[1]
-        s += (f"  refine eventually_trans _ _ _ _ (decpro_seg _ _ _ _ {h['F']} {h['dB']} {self.ssz()} _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)\n"
+        s += (f"  refine eventually_trans _ _ _ _ (dec_prologue_seg _ _ _ _ {h['F']} {h['dB']} {self.ssz()} _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)\n"
               f"    s ra guard (s.regs.rsp.toBitVec - {self.frame}) (s.regs.rsp.toBitVec + 16)\n    {ADDR} {ADDR}\n"
               f"    {fpn} {s2n} h{fpn} h{s2n} _ (by ecancel) {hg} (by rw [hlen]; rfl)) ?_\n"
               "  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hreg1, Hm1⟩\n  dsimp only at hpc1 hrsp1 hrbp1 hreg1 Hm1\n  subst hpc1\n")
@@ -323,7 +323,7 @@ class T:
     # ---- field theorems
     def field(self, i):
         d, d2, f = self.states[i], self.states[i + 1], self.fspec[i]
-        name = f'{self.ns}_f{i + 1}'
+        name = f'{self.ns}_field_{i + 1}'
         big = f['shape'] == 'bytes'
         s = self.opts(big) + f"/-- Field {i + 1} `{f['name']}` ({f['shape']}): boundary state {i} (directive {d['pc']}) → boundary state {i + 1} (directive {d2['pc']}). -/\n"
         s += (f"theorem {name} : {self.binders()}    {self.hguard()}{self.rthyps()} (st0 : MachineState),\n"
@@ -385,9 +385,9 @@ class T:
         s += (f"  rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hr14', {pn}, spl', lo', hspl', hlo', hrY, Hm'⟩\n"
               "  dsimp only at hpc' hrsp' hrbp' hr14' hrY Hm'\n  subst hpc'\n" + destr("d'", '2') +
               "  simp only at hrsp' hrbp' hr14' hrY Hm'\n  subst rsp2 rbp2 r142\n")
-        s += P(f"  apply {self.ns}_s{t[0]} k hk hf (s.regs.rsp.toBitVec - {fr}) {soff(f['dS'] - fr)} {pn} {ADDR} _ _ _ (by rfl) (by ecancel)\n  normalize_registers\n"
-               f"  apply {self.ns}_s{t[1]} k hk hf\n  apply {self.ns}_s{t[2]} k hk hf\n"
-               f"  apply {self.ns}_s{t[3]} k hk hf {rc} {off(rc, g)} {ADDR0 if g == 0 else ADDR} (Int.toBytes 8 {pn}.toInt) {LEN} _ _ _\n"
+        s += P(f"  apply {self.ns}_directive_{t[0]} k hk hf (s.regs.rsp.toBitVec - {fr}) {soff(f['dS'] - fr)} {pn} {ADDR} _ _ _ (by rfl) (by ecancel)\n  normalize_registers\n"
+               f"  apply {self.ns}_directive_{t[1]} k hk hf\n  apply {self.ns}_directive_{t[2]} k hk hf\n"
+               f"  apply {self.ns}_directive_{t[3]} k hk hf {rc} {off(rc, g)} {ADDR0 if g == 0 else ADDR} (Int.toBytes 8 {pn}.toInt) {LEN} _ _ _\n"
                "    (by exact hrY) (by ecancel)\n  intro m' H\n  normalize_registers\n  simp only [Reg64s.get64] at H\n")
         if d2['exs'] != [24, 'lo']:
             refuse(f'whole-accept field {i + 1}: post state existentials {d2["exs"]} (byte recipe: [24, lo])')
@@ -472,10 +472,10 @@ class T:
         return s
 
     # ---- epilogue
-    def epi(self):
+    def epilogue(self):
         d = self.states[-1]
-        e = self.epispec
-        name = f'{self.ns}_epi'
+        e = self.epilogue_spec
+        name = f'{self.ns}_epilogue'
         fr = self.frame
         s = self.opts(False) + f"/-- Epilogue: boundary state {len(self.states) - 1} (directive {d['pc']}) → return. -/\n"
         s += (f"theorem {name} : {self.binders()}    (st0 : MachineState),\n    ({self.stp(d, 'st0')}) →\n"
@@ -492,13 +492,13 @@ class T:
             s += self.prefix(d, '', destructure=False)
             s += (f"  have hE := Codec.infix_sub (q := Codec.decEpilogue) {a} hk\n"
                   f"    (by simp only [{self.Cq}, Codec.decEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])\n")
-            s += P(f"  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + {a}) hE (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
+            s += P(f"  refine eventually_trans _ _ _ _ (Codec.dec_epilogue_seg (k + {a}) hE (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
                    "    (by bv_omega) (by bv_omega) rbp ra r14 _ d hrsp hr14 (by ecancel)) ?_\n")
             s += tail + "  · dsimp only; ecancel\n"
         else:
             s += self.prefix(d, '')
             s += ''.join(P(l) + '\n' for l in e.get('pre', []))
-            s += P(f"  refine eventually_trans _ _ _ _ (decepi_n {e['F']} _ (k + {a}) (k + {a + 1}) (window_infix_at hk {a} 1) (by rfl) (by rfl)\n"
+            s += P(f"  refine eventually_trans _ _ _ _ (dec_epilogue_any_frame {e['F']} _ (k + {a}) (k + {a + 1}) (window_infix_at hk {a} 1) (by rfl) (by rfl)\n"
                    f"    _ (window_infix_at hk {a + 1} 2) (by rfl) (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
                    f"    {ADDR} (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_\n")
             s += tail + "  · dsimp only; rw [hmem']; ecancel\n"
@@ -516,8 +516,8 @@ class T:
         s += f"  refine eventually_trans _ _ _ _ ({self.ns}_head {a} h_mem hguard hlen{self.rtnames()}) ?_\n  intro st0 h0\n"
         n = len(self.fields)
         for i in range(n):
-            s += f"  refine eventually_trans _ _ _ _ ({self.ns}_f{i + 1} {a} hguard{self.rtnames()} st{i} h{i}) ?_\n  intro st{i + 1} h{i + 1}\n"
-        s += f"  exact {self.ns}_epi {a} st{n} h{n}\n"
+            s += f"  refine eventually_trans _ _ _ _ ({self.ns}_field_{i + 1} {a} hguard{self.rtnames()} st{i} h{i}) ?_\n  intro st{i + 1} h{i + 1}\n"
+        s += f"  exact {self.ns}_epilogue {a} st{n} h{n}\n"
         s += self.kind(name, 'decAcceptKindAnyFrame', '')
         if self.same_as_prop:
             s += (f"/-- Statement check: the generated theorem proves the independently written hand statement `{self.same_as_prop}`. -/\n"
@@ -533,7 +533,7 @@ class T:
         name = f'{self.ns}_reject'
         C = self.Cq
         s = ("set_option maxRecDepth 100000 in\n"
-             f"/-- Size reject (`rcx ≠ {self.ssz()}`): `decrej_seg` (frame `{r['F']:#x}`, error block at {r['jl']}). -/\n"
+             f"/-- Size reject (`rcx ≠ {self.ssz()}`): `dec_reject_seg` (frame `{r['F']:#x}`, error block at {r['jl']}). -/\n"
              f"theorem {name} : ∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : LabelsFresh {C} k)\n"
              "    (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)\n"
              "    (R : DataMem → Prop)\n"
@@ -557,7 +557,7 @@ class T:
              f"  have hl := Machine.label_at' hk hf (j := {r['jl']})\n"
              f"    (by simp only [{C}, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)\n"
              f"    (by simp only [{C}, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)\n"
-             f"  exact decrej_seg _ _ _ _ {r['F']} {r['dB']} {self.ssz()} _ k (window_infix_at hk 0 11) (by rfl) (by decide)\n"
+             f"  exact dec_reject_seg _ _ _ _ {r['F']} {r['dB']} {self.ssz()} _ k (window_infix_at hk 0 11) (by rfl) (by decide)\n"
              f"    _ (k + {r['jl']}) (k + {r['jl'] + 3}) (window_infix_at hk {r['jl']} 3) (by rfl) (by rfl) hl\n"
              f"    _ (k + {r['jl'] + 4}) (window_infix_at hk {r['jl'] + 3} 1) (by rfl) (by rfl) _ (window_infix_at hk {r['jl'] + 4} {r['nret']}) (by rfl)\n"
              "    s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard (fun h => hlen (h.trans (by rfl)))\n")
@@ -572,7 +572,7 @@ class T:
         s = self.head()
         for i in range(len(self.fields)):
             s += self.field(i)
-        s += self.epi() + self.accept()
+        s += self.epilogue() + self.accept()
         if self.rejspec is not None:
             s += self.reject()
         return s
@@ -595,13 +595,13 @@ def whole_accept_head_spec(dirs, head_end, F, st):
             continue
         m = re.fullmatch(rx, dirs[i])
         if not m:
-            refuse(f"whole-accept head: directive {i} `{dirs[i]}` is not /{rx}/ (decpro_seg window, nop at 8)")
+            refuse(f"whole-accept head: directive {i} `{dirs[i]}` is not /{rx}/ (dec_prologue_seg window, nop at 8)")
         ms.append(m)
     if _hx(ms[4].group(1)) != F:
         refuse("whole-accept head: frame size differs from the step head")
     dB = _hx(ms[5].group(1))
     if dB != F + 24:
-        refuse(f"whole-accept head: rbx spill at {dB:#x}, decpro_seg needs F + 24 = {F + 24:#x}")
+        refuse(f"whole-accept head: rbx spill at {dB:#x}, dec_prologue_seg needs F + 24 = {F + 24:#x}")
     frame = F + 8
     home = {'rax': 8, 'rbx': 16, 'rdi': 32}
     spills = []
@@ -820,10 +820,10 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
         return out
 
     # epilogue form and its register needs
-    epi = whole_accept_epi_spec(dirs, end, F, has_rt, has_call)
+    epilogue = whole_accept_epilogue_spec(dirs, end, F, has_rt, has_call)
     # facts needed at boundary i: what field i + 1 reads before writing, plus what is needed at boundary i + 1 and
     # field i + 1 does not write (a fact is carried through a field that does not touch the register)
-    needs = [None] * n + [list(epi['reads'])]
+    needs = [None] * n + [list(epilogue['reads'])]
     for i in range(n - 1, -1, -1):
         rd, wr = reads(units[i]), writes(units[i])
         needs[i] = [r for r in REGS16 if r in rd or (r in needs[i + 1] and r not in wr)]
@@ -923,24 +923,24 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
             refuse(f"whole-accept field {fname}: ends at {pc}, the next unit starts at {nxt}")
         states.append(dict(pc=pc, done=i + 1, regs=facts(needs[i + 1], f'field {i + 2}' if i + 1 < n else 'epilogue'),
                            stk=freeze(stk), exs=list(exs)))
-    if states[-1]['pc'] != epi['start']:
+    if states[-1]['pc'] != epilogue['start']:
         refuse("whole-accept: epilogue does not start at the last boundary")
     # epilogue pre steps (loads of the two zero slots) and their slots
-    if epi['form'] == 'ld':
-        for r, d in epi['loads']:
+    if epilogue['form'] == 'ld':
+        for r, d in epilogue['loads']:
             if getslot(stk, d - frame) != ('zero',):
                 refuse(f"whole-accept epilogue: `mov {d:#x}(%rsp),%{r}` reads a slot that is not zero")
         Z = '(0 : UInt64).toBitVec'
-        epi['pre'] = [f"  apply step_load_value Reg64.{r} Reg64.rsp {d} _ (k + {epi['start'] + j}) (k + {epi['start'] + j + 1}) "
-                      f"(window_infix_at hk {epi['start'] + j} 1) (by rfl) (by rfl)\n    (s.regs.rsp.toBitVec - {frame}) "
+        epilogue['pre'] = [f"  apply step_load_value Reg64.{r} Reg64.rsp {d} _ (k + {epilogue['start'] + j}) (k + {epilogue['start'] + j + 1}) "
+                      f"(window_infix_at hk {epilogue['start'] + j} 1) (by rfl) (by rfl)\n    (s.regs.rsp.toBitVec - {frame}) "
                       f"{soff(d - frame)} {Z} {ADDR} _ _ _ (by rfl) (by ecancel)\n  normalize_registers"
-                      for j, (r, d) in enumerate(epi['loads'])]
+                      for j, (r, d) in enumerate(epilogue['loads'])]
     post = freeze(stk)
     rej = whole_accept_reject_spec(dirs, head, label_index)
     del regs0
     t = T(ns=pfx, C=args.const, Cq=args.const, go=args.type, L=None, same_as_prop=args.same_as_prop,
              same_as=args.same_as, callees=callees, fields=fl, st=st, stack=stack, pre=pre, rt=rt, gd=gd, frame=frame,
-             exs=exs, post=post, states=states, headspec=head, fspec=fspec, epispec=epi, rejspec=rej)
+             exs=exs, post=post, states=states, headspec=head, fspec=fspec, epilogue_spec=epilogue, rejspec=rej)
     t.L = t.layout()
     return t
 
@@ -952,10 +952,10 @@ def fl_done_ok(us, cls):
     return last['kind'] == 'st'
 
 
-def whole_accept_epi_spec(dirs, i, F, has_rt, has_call):
+def whole_accept_epilogue_spec(dirs, i, F, has_rt, has_call):
     """The three epilogue forms of the hand-written lemmas (contiguous, no nop): `add $F,%rsp; pop %rbp; retq` (rax = rbx = 0
     from the boundary facts), `mov d1(%rsp),%rax; mov d2(%rsp),%rbx` + that (two zero slots), and frame 0x20
-    `xor %eax,%eax; xor %ebx,%ebx` + that (`decepi_seg`). Anything else: refuse."""
+    `xor %eax,%eax; xor %ebx,%ebx` + that (`dec_epilogue_seg`). Anything else: refuse."""
     ret = [f"add ${F:#x},%rsp", "pop %rbp", "retq"]
     if dirs[i:i + 3] == ret:
         return dict(form='n', F=F, add=i, start=i, reads=['rax', 'rbx'])
@@ -966,7 +966,7 @@ def whole_accept_epi_spec(dirs, i, F, has_rt, has_call):
                     loads=[('rax', _hx(m1.group(1))), ('rbx', _hx(m2.group(1)))])
     if dirs[i:i + 2] == ["xor %eax,%eax", "xor %ebx,%ebx"] and dirs[i + 2:i + 5] == ret:
         if F != 0x20:
-            refuse(f"whole-accept epilogue: `xor` epilogue in frame {F:#x} (lemma decepi_seg: frame 0x20 only)")
+            refuse(f"whole-accept epilogue: `xor` epilogue in frame {F:#x} (lemma dec_epilogue_seg: frame 0x20 only)")
         return dict(form='e20', F=F, add=i, start=i, reads=[])
     refuse(f"whole-accept epilogue: directives {i}… {dirs[i:i + 5]} are none of the three epilogue forms")
 
@@ -974,7 +974,7 @@ def whole_accept_epi_spec(dirs, i, F, has_rt, has_call):
 def whole_accept_step(u, regs, stk, frame, pfx, fl, cur, fields):
     """Render one step step theorem as an application in entry terms and update the register model."""
     k = u['kind']
-    nm = f"{pfx}_s{u['jd']}"
+    nm = f"{pfx}_directive_{u['jd']}"
     rterm = {('RCV',): lambda o: off('s.regs.rax.toBitVec', o), ('BF',): lambda o: off('s.regs.rbx.toBitVec', o)}
 
     def base_term(r):

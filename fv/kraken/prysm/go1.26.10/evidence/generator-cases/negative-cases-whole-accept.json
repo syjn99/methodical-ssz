@@ -82,15 +82,15 @@
   "new": "(hz : x + 24 = z)"
  },
  {
-  "id": "codec-field-frame-decepi-n-control",
+  "id": "codec-field-frame-dec-epilogue-any-frame-control",
   "module": "Codec/FieldFrame.lean",
-  "theorem": "decepi_n",
+  "theorem": "dec_epilogue_any_frame",
   "kind": "control"
  },
  {
-  "id": "codec-field-frame-decepi-n-statement-h-ra-8-to-16",
+  "id": "codec-field-frame-dec-epilogue-any-frame-statement-h-ra-8-to-16",
   "module": "Codec/FieldFrame.lean",
-  "theorem": "decepi_n",
+  "theorem": "dec_epilogue_any_frame",
   "kind": "stmt",
   "old": "(hRa : aFp + 8 = aRa)",
   "new": "(hRa : aFp + 16 = aRa)"
@@ -148,31 +148,31 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
-  "id": "voluntary-exit-decode-example-f2-control",
+  "id": "voluntary-exit-decode-example-field-2-control",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
-  "theorem": "Prysm.VoluntaryExit.Decode.example_f2",
+  "theorem": "Prysm.VoluntaryExit.Decode.example_field_2",
   "kind": "control"
  },
  {
-  "id": "voluntary-exit-decode-example-f2-statement-host-56-to-57",
+  "id": "voluntary-exit-decode-example-field-2-statement-host-56-to-57",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
-  "theorem": "Prysm.VoluntaryExit.Decode.example_f2",
+  "theorem": "Prysm.VoluntaryExit.Decode.example_field_2",
   "kind": "stmt",
   "old": "Eq ((Int.toBytes 8 (Host.addrOf (k + 56)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 88))",
   "new": "Eq ((Int.toBytes 8 (Host.addrOf (k + 57)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 88))"
  },
  {
-  "id": "voluntary-exit-decode-example-f2-statement-in1-in1-to-in0",
+  "id": "voluntary-exit-decode-example-field-2-statement-in1-in1-to-in0",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
-  "theorem": "Prysm.VoluntaryExit.Decode.example_f2",
+  "theorem": "Prysm.VoluntaryExit.Decode.example_field_2",
   "kind": "stmt",
   "old": "Eq (in1.At (s.regs.rax.toBitVec + 16))",
   "new": "Eq (in0.At (s.regs.rax.toBitVec + 16))"
  },
  {
-  "id": "voluntary-exit-decode-example-epi-statement-rax-0-to-1",
+  "id": "voluntary-exit-decode-example-epilogue-statement-rax-0-to-1",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
-  "theorem": "Prysm.VoluntaryExit.Decode.example_epi",
+  "theorem": "Prysm.VoluntaryExit.Decode.example_epilogue",
   "kind": "stmt",
   "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
   "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
@@ -200,61 +200,61 @@
   "new": "Eq (in1.At (s.regs.rax.toBitVec + 24))"
  },
  {
-  "id": "pending-deposit-decode-example-f3-control",
+  "id": "pending-deposit-decode-example-field-3-control",
   "module": "Prysm/PendingDeposit/DecodeAcceptExample.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.example_f3",
+  "theorem": "Prysm.PendingDeposit.Decode.example_field_3",
   "kind": "control"
  },
  {
-  "id": "pending-deposit-decode-example-f3-statement-st0-rdx-to-rsi",
+  "id": "pending-deposit-decode-example-field-3-statement-st0-rdx-to-rsi",
   "module": "Prysm/PendingDeposit/DecodeAcceptExample.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.example_f3",
+  "theorem": "Prysm.PendingDeposit.Decode.example_field_3",
   "kind": "stmt",
   "old": "st0.data.regs.get64 Reg64.rdx = s.regs.rax.toBitVec",
   "new": "st0.data.regs.get64 Reg64.rsi = s.regs.rax.toBitVec"
  },
  {
-  "id": "pending-deposit-decode-example-f1-statement-heap-48-to-32",
+  "id": "pending-deposit-decode-example-field-1-statement-heap-48-to-32",
   "module": "Prysm/PendingDeposit/DecodeAcceptExample.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.example_f1",
+  "theorem": "Prysm.PendingDeposit.Decode.example_field_1",
   "kind": "stmt",
   "old": "Heap (avail - 48)",
   "new": "Heap (avail - 32)"
  },
  {
-  "id": "pending-deposit-decode-example-f5-statement-sl-88-to-80",
+  "id": "pending-deposit-decode-example-field-5-statement-sl-88-to-80",
   "module": "Prysm/PendingDeposit/DecodeAcceptExample.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.example_f5",
+  "theorem": "Prysm.PendingDeposit.Decode.example_field_5",
   "kind": "stmt",
   "old": "Eq (sl.At (s.regs.rax.toBitVec + 88))",
   "new": "Eq (sl.At (s.regs.rax.toBitVec + 80))"
  },
  {
-  "id": "sync-committee-message-decode-example-f4-statement-rsp-0-to-1",
+  "id": "sync-committee-message-decode-example-field-4-statement-rsp-0-to-1",
   "module": "Prysm/SyncCommitteeMessage/DecodeAcceptExample.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.example_f4",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.example_field_4",
   "kind": "stmt",
   "old": "Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At (s.regs.rsp.toBitVec - 64))",
   "new": "Eq ((Int.toBytes 8 (1 : UInt64).toBitVec.toInt).At (s.regs.rsp.toBitVec - 64))"
  },
  {
-  "id": "codec-decode-reject-size-any-frame-decrej-seg-control",
+  "id": "codec-decode-reject-size-any-frame-dec-reject-seg-control",
   "module": "Codec/DecodeRejectSizeAnyFrame.lean",
-  "theorem": "Codec.decrej_seg",
+  "theorem": "Codec.dec_reject_seg",
   "kind": "control"
  },
  {
-  "id": "codec-decode-reject-size-any-frame-decrej-seg-statement-hd-b-24-to-16",
+  "id": "codec-decode-reject-size-any-frame-dec-reject-seg-statement-hd-b-24-to-16",
   "module": "Codec/DecodeRejectSizeAnyFrame.lean",
-  "theorem": "Codec.decrej_seg",
+  "theorem": "Codec.dec_reject_seg",
   "kind": "stmt",
   "old": "(hdB : dB.toBitVec = F.toBitVec + 24)",
   "new": "(hdB : dB.toBitVec = F.toBitVec + 16)"
  },
  {
-  "id": "codec-decode-reject-size-any-frame-decrej-seg-statement-rax-none-to-none",
+  "id": "codec-decode-reject-size-any-frame-dec-reject-seg-statement-rax-none-to-none",
   "module": "Codec/DecodeRejectSizeAnyFrame.lean",
-  "theorem": "Codec.decrej_seg",
+  "theorem": "Codec.dec_reject_seg",
   "kind": "stmt",
   "old": "st.data.regs.rax = e0 ∧ st.data.regs.rbx = e1",
   "new": "st.data.regs.rax = e1 ∧ st.data.regs.rbx = e0"

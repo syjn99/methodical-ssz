@@ -71,7 +71,7 @@ theorem Decode.accept_spec : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pro
   obtain ⟨g, rfl, hb⟩ := SszValue.accepted_is_encoding hd
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 16 := by
-    apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.enc_size]; rfl
+    apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.encode_size]; rfl
   exact Prysm.SyncAggregatorSelectionData.Decode.generated_accept k hk hf kS hkS hfS _ _ (by simp [Spec.uintBytes_size]) (by simp [Spec.uintBytes_size]) s ra guard fp s1 s2 sp1 rslot lo ast aN0 aN1 hfp hs1 hs2 hsp1 hrslot hlo hast haN0 haN1 R (Pm g hb) hguard hn
 
 /-- `len(buf) ≠ 16`: EthLib rejects, and the machine code returns the two words of `ssz.ErrSize`. -/

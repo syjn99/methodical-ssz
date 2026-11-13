@@ -43,7 +43,7 @@ theorem placed_at_67 : ErrorfConvT64Model.IsInfixAt Host.prog 67 :=
 theorem labels_fresh_at_4 : LabelsFresh Code.unmarshalSSZ 4 := labelsFresh_of (by rw [host_program_eq]; decide)
 theorem labels_fresh_at_67 : LabelsFresh ErrorfConvT64Model 67 := labelsFresh_of (by rw [host_program_eq]; decide)
 
-theorem label_go_string : label "go_string._" = 0x10000 := mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [labs])
+theorem label_go_string : label "go_string._" = 0x10000 := mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [programLabels])
 theorem label_gcbits : label "runtime.gcbits._" = 0x10001 := mk_label program _ 1 _ (by simp [program, dataLabels]) (by decide)
 theorem label_staticuint64s : label "runtime.staticuint64s" = 0x10002 := mk_label program _ 2 _ (by simp [program, dataLabels]) (by decide)
 theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10003 := mk_label program _ 3 _ (by simp [program, dataLabels]) (by decide)

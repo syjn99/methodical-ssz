@@ -213,8 +213,8 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc5 hrsp5 hrbp5 hr145 hrdx5 Hm5
   subst hpc5
   -- pointer tail of AggregatePubkey (rsi), 106–107 and 115–116
-  have hTa := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_1f1" 40) 106 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hTa := Codec.infix_sub (q := Codec.bytesDecTailReloadJump Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_1f1" 40) 106 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecTailReloadJump, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hTb := Codec.infix_sub (q := Codec.bytesDecTailPointerStore Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_1f1" 32) 115 hk
     (by simp only [unmarshalSSZ, Codec.bytesDecTailPointerStore, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hlT := Machine.label_at' hk hf (j := 115)

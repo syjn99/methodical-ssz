@@ -37,7 +37,7 @@ theorem Decode.reject_eight_bytes : ElfData.PrysmTarget.boxedEight = Int.toBytes
 theorem Decode.reject_fmt_len : ElfData.PrysmTarget.formatBufferLength.length = 40 := by decide
 theorem Decode.reject_eq (x : BitVec 64) (h : x - 8#64 = 0#64) : x = 8 := by bv_omega
 theorem Decode.reject_call (x : BitVec 64) : x - 8#64 - 72 - 8#64 = x - 88 := by bv_omega
-theorem Decode.reject_call2 (x : BitVec 64) : x - 80 - 8#64 = x - 88 := by bv_omega
+theorem Decode.reject_second_call (x : BitVec 64) : x - 80 - 8#64 = x - 88 := by bv_omega
 theorem Decode.reject_ret (x : BitVec 64) : ({ toBitVec := x - 88 } + 8 : UInt64) = { toBitVec := x - 80 } := by
   apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
 
@@ -197,11 +197,11 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   step_directive hk unmarshalSSZ 27
   step_directive hk unmarshalSSZ 28
   apply store_step_at _ _ (rsp.toBitVec - 88) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 19 + 1)).toBitVec.toInt) _ _
-    (Decode.reject_call2 _) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (Decode.reject_second_call _) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m10 H10
   simp only [Width.bytes, Width.bits] at H10
   unfold_step
-  rw [Decode.reject_call2] at *
+  rw [Decode.reject_second_call] at *
   rw [Decode.reject_eight_bytes] at H10
   simp only [ElfData.PrysmTarget.typeInt_addr, ElfData.PrysmTarget.boxedEight_addr, ElfData.PrysmTarget.formatBufferLength_addr] at H10 ⊢
   refine eventually_trans _ _ _ _ (hdd _ (Host.addrOf (k + 28 + 1)) av2 (Int.toBytes 8 (8 : BitVec 64).toInt) hb stk2

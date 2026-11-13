@@ -181,6 +181,12 @@ The maps apply in this order:
   directive builders, step lemmas, tactics, runtime contracts and models, witness helpers, opaque lemma names).
   This step was applied by a script; the map directory holds only the name table (`names.tsv`) and the moved
   runtime model files (`files.tsv`).
+- `maps/generated-name-parts/`: the name parts that the generators write become words: `_s<N>` (the step theorem of
+  code directive N) becomes `_directive_<N>`, `_f<N>` becomes `_field_<N>`, `_epi` becomes `_epilogue`
+  (`Decode.generated_step_s82` is `Decode.generated_step_directive_82`); `SszValue.enc_size` becomes
+  `SszValue.encode_size`; short components of hand names get words (`vtri_loop` is `triple_loop`, `decpro_seg` is
+  `dec_prologue_seg`, `labs` is `programLabels`). This step was applied by a script; the map directory holds only
+  the name table (`names.tsv`) and an empty `files.tsv` (no file moves).
 
 Some steps were applied by scripts, not by maps. The inverse mode of `rename.py` does not undo them.
 The commit message of each such step lists its edits:

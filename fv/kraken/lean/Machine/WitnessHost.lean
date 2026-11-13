@@ -41,24 +41,24 @@ theorem mk_addrOf (P : Program) (hP : P.length < 2 ^ 32) (j : Nat) (hj : j ≤ P
   rw [sizeBefore_one, Nat.min_eq_left hj]
 
 /-- Labels of a program, in order. -/
-def labs (P : Program) : List Label :=
+def programLabels (P : Program) : List Label :=
   P.filterMap fun d => match d with | .label l => some l | _ => none
 
-theorem mem_labs {P : Program} {l : Label} (h : Kraken.Directive.label l ∈ P) : l ∈ labs P := by
-  simp only [labs, List.mem_filterMap]
+theorem mem_programLabels {P : Program} {l : Label} (h : Kraken.Directive.label l ∈ P) : l ∈ programLabels P := by
+  simp only [programLabels, List.mem_filterMap]
   exact ⟨_, h, rfl⟩
 
 theorem labelsFresh_of [Host] {p : Program} {k : Nat}
-    (h : ∀ l ∈ labs (Host.prog.take k), l ∉ labs p) : LabelsFresh p k := by
+    (h : ∀ l ∈ programLabels (Host.prog.take k), l ∉ programLabels p) : LabelsFresh p k := by
   intro i hi l hp hmem
-  apply h l _ (mem_labs hmem)
-  apply mem_labs
+  apply h l _ (mem_programLabels hmem)
+  apply mem_programLabels
   rw [List.mem_iff_getElem?]
   exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h), hp]⟩
 
 /-- A label that occurs first at index `j` resolves to `0x10000 + j`. -/
 theorem mk_label (P : Program) (hP : P.length < 2 ^ 32) (j : Nat) (l : Label)
-    (hj : P[j]? = some (.label l)) (hfirst : l ∉ labs (P.take j)) :
+    (hj : P[j]? = some (.label l)) (hfirst : l ∉ programLabels (P.take j)) :
     (letI := mkHost P hP; label l) = 0x10000 + Int64.ofNat j := by
   have hjl : j ≤ P.length := by
     rcases Nat.lt_or_ge j P.length with h | h
@@ -68,7 +68,7 @@ theorem mk_label (P : Program) (hP : P.length < 2 ^ 32) (j : Nat) (l : Label)
   rw [label_eq_addrOf (l := l) (j := j) hj ?_, mk_addrOf P hP j hjl]
   intro i hi hpi
   apply hfirst
-  apply mem_labs
+  apply mem_programLabels
   rw [List.mem_iff_getElem?]
   exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hpi⟩
 
@@ -83,10 +83,10 @@ theorem infixAt_of {P : Program} (A : Program) {X : Program} (B : Program) {n : 
   exact ⟨B, by rw [List.drop_left]⟩
 
 /-- A label that does not occur in the first `k` directives sits at no index below `k`. -/
-theorem notLabel_of [Host] {k : Nat} {l : Label} (h : l ∉ labs (Host.prog.take k)) :
+theorem notLabel_of [Host] {k : Nat} {l : Label} (h : l ∉ programLabels (Host.prog.take k)) :
     ∀ i < k, Host.prog[i]? ≠ some (.label l) := by
   intro i hi hp
-  apply h; apply mem_labs; rw [List.mem_iff_getElem?]
+  apply h; apply mem_programLabels; rw [List.mem_iff_getElem?]
   exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
 
 theorem u64_toBitVec_zero : (UInt64.toBitVec 0) = 0#64 := rfl

@@ -12,7 +12,7 @@ import Prysm.PowBlock.GeneratedDecodeSteps
 Text produced from one description of the type (frame facts, field list, boundary states, chain theorem names)
 by a scratch emitter (not in the tree); every theorem has a `_kind` line (`decHeadKindAnyFrame`, `decFieldKindAnyFrame`,
 `decEpilogueKindAnyFrame`, `decAcceptKindAnyFrame`). The `decoder --steps` chain theorems (`Decode.generated_step_*`) are used as emitted.
-Frame `0x20`: the epilogue (`xor`, `xor`, `add $0x20`, `pop`, `retq`) is the lemma `decepi_seg`.
+Frame `0x20`: the epilogue (`xor`, `xor`, `add $0x20`, `pop`, `retq`) is the lemma `dec_epilogue_seg`.
 -/
 
 open Machine Runtime Prysm.AttestationData.Code Prysm.PowBlock.Code Codec
@@ -88,7 +88,7 @@ theorem Decode.example_head : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Ho
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   intro k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail h_mem hguard hlen hav hms hmm
-  refine eventually_trans _ _ _ _ (decpro_seg _ _ _ _ 32 56 96 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
+  refine eventually_trans _ _ _ _ (dec_prologue_seg _ _ _ _ 32 56 96 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
     s ra guard (s.regs.rsp.toBitVec - 40) (s.regs.rsp.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega)
     fp s2 hfp hs2 _ (by ecancel) hguard (by rw [hlen]; rfl)) ?_
@@ -125,7 +125,7 @@ theorem Decode.example_head_kind : ∀ (h : Host), type_of% (@Decode.example_hea
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- Field 1 `BlockHash` (bytes): boundary state 0 (directive 13) → boundary state 1 (directive 47). -/
-theorem Decode.example_f1 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
+theorem Decode.example_field_1 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
     (bh ph td : List UInt8) (hbh : bh.length = 32) (hph : ph.length = 32) (htd : td.length = 32)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 : List UInt8)
@@ -217,11 +217,11 @@ theorem Decode.example_f1 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩, zmms2, flags2, mem2⟩ := d'
   simp only at hrsp' hrbp' hr14' hrY Hm'
   subst rsp2 rbp2 r142
-  apply Decode.generated_step_s37 k hk hf (rsp.toBitVec - 40) (rsp.toBitVec - 16) p1 (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_37 k hk hf (rsp.toBitVec - 40) (rsp.toBitVec - 16) p1 (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s38 k hk hf
-  apply Decode.generated_step_s45 k hk hf
-  apply Decode.generated_step_s46 k hk hf rax.toBitVec rax.toBitVec (by simp only [Int64.toBitVec_ofNat]; exact BitVec.add_zero _) (Int.toBytes 8 p1.toInt) (Int.toBytes_length 8 _) _ _ _
+  apply Decode.generated_step_directive_38 k hk hf
+  apply Decode.generated_step_directive_45 k hk hf
+  apply Decode.generated_step_directive_46 k hk hf rax.toBitVec rax.toBitVec (by simp only [Int64.toBitVec_ofNat]; exact BitVec.add_zero _) (Int.toBytes 8 p1.toInt) (Int.toBytes_length 8 _) _ _ _
     (by exact hrY) (by ecancel)
   intro m' H
   normalize_registers
@@ -231,7 +231,7 @@ theorem Decode.example_f1 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host
   dsimp only
   rw [show k + 31 + 1 = k + 32 from rfl] at H
   ecancel
-theorem Decode.example_f1_kind : ∀ (h : Host), type_of% (@Decode.example_f1 h)
+theorem Decode.example_field_1_kind : ∀ (h : Host), type_of% (@Decode.example_field_1 h)
     = @Codec.decFieldKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨13, 0, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.original 3), .at (.below 16) (.original 4), .at (.below 48) (.original 5), .low (.original 6)],
@@ -244,7 +244,7 @@ theorem Decode.example_f1_kind : ∀ (h : Host), type_of% (@Decode.example_f1 h)
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- Field 2 `ParentHash` (bytes): boundary state 1 (directive 47) → boundary state 2 (directive 83). -/
-theorem Decode.example_f2 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
+theorem Decode.example_field_2 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
     (bh ph td : List UInt8) (hbh : bh.length = 32) (hph : ph.length = 32) (htd : td.length = 32)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 : List UInt8)
@@ -338,11 +338,11 @@ theorem Decode.example_f2 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩, zmms2, flags2, mem2⟩ := d'
   simp only at hrsp' hrbp' hr14' hrY Hm'
   subst rsp2 rbp2 r142
-  apply Decode.generated_step_s73 k hk hf (rsp.toBitVec - 40) (rsp.toBitVec - 16) p2 (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_73 k hk hf (rsp.toBitVec - 40) (rsp.toBitVec - 16) p2 (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s74 k hk hf
-  apply Decode.generated_step_s81 k hk hf
-  apply Decode.generated_step_s82 k hk hf rax.toBitVec (rax.toBitVec + 24) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (Int.toBytes 8 p2.toInt) (Int.toBytes_length 8 _) _ _ _
+  apply Decode.generated_step_directive_74 k hk hf
+  apply Decode.generated_step_directive_81 k hk hf
+  apply Decode.generated_step_directive_82 k hk hf rax.toBitVec (rax.toBitVec + 24) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (Int.toBytes 8 p2.toInt) (Int.toBytes_length 8 _) _ _ _
     (by exact hrY) (by ecancel)
   intro m' H
   normalize_registers
@@ -353,7 +353,7 @@ theorem Decode.example_f2 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host
   rw [show k + 67 + 1 = k + 68 from rfl] at H
   rw [show avail - 32 - 32 = avail - 64 by omega] at H
   ecancel
-theorem Decode.example_f2_kind : ∀ (h : Host), type_of% (@Decode.example_f2 h)
+theorem Decode.example_field_2_kind : ∀ (h : Host), type_of% (@Decode.example_field_2 h)
     = @Codec.decFieldKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨47, 1, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.existential 0), .at (.below 16) (.ptr 0), .at (.below 48) (.ret 32), .low (.existential 1)],
@@ -366,7 +366,7 @@ theorem Decode.example_f2_kind : ∀ (h : Host), type_of% (@Decode.example_f2 h)
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- Field 3 `TotalDifficulty` (bytes): boundary state 2 (directive 83) → boundary state 3 (directive 119). -/
-theorem Decode.example_f3 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
+theorem Decode.example_field_3 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
     (bh ph td : List UInt8) (hbh : bh.length = 32) (hph : ph.length = 32) (htd : td.length = 32)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 : List UInt8)
@@ -462,11 +462,11 @@ theorem Decode.example_f3 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩, zmms2, flags2, mem2⟩ := d'
   simp only at hrsp' hrbp' hr14' hrY Hm'
   subst rsp2 rbp2 r142
-  apply Decode.generated_step_s109 k hk hf (rsp.toBitVec - 40) (rsp.toBitVec - 16) p3 (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_109 k hk hf (rsp.toBitVec - 40) (rsp.toBitVec - 16) p3 (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s110 k hk hf
-  apply Decode.generated_step_s117 k hk hf
-  apply Decode.generated_step_s118 k hk hf rax.toBitVec (rax.toBitVec + 48) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (Int.toBytes 8 p3.toInt) (Int.toBytes_length 8 _) _ _ _
+  apply Decode.generated_step_directive_110 k hk hf
+  apply Decode.generated_step_directive_117 k hk hf
+  apply Decode.generated_step_directive_118 k hk hf rax.toBitVec (rax.toBitVec + 48) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (Int.toBytes 8 p3.toInt) (Int.toBytes_length 8 _) _ _ _
     (by exact hrY) (by ecancel)
   intro m' H
   normalize_registers
@@ -477,7 +477,7 @@ theorem Decode.example_f3 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host
   rw [show k + 103 + 1 = k + 104 from rfl] at H
   rw [show avail - 64 - 32 = avail - 96 by omega] at H
   ecancel
-theorem Decode.example_f3_kind : ∀ (h : Host), type_of% (@Decode.example_f3 h)
+theorem Decode.example_field_3_kind : ∀ (h : Host), type_of% (@Decode.example_field_3 h)
     = @Codec.decFieldKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨83, 2, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.existential 0), .at (.below 16) (.ptr 1), .at (.below 48) (.ret 68), .low (.existential 1)],
@@ -490,7 +490,7 @@ theorem Decode.example_f3_kind : ∀ (h : Host), type_of% (@Decode.example_f3 h)
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Epilogue: boundary state 3 (directive 119) → return. -/
-theorem Decode.example_epi : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
+theorem Decode.example_epilogue : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
     (bh ph td : List UInt8) (hbh : bh.length = 32) (hph : ph.length = 32) (htd : td.length = 32)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 : List UInt8)
@@ -570,7 +570,7 @@ theorem Decode.example_epi : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Hos
   subst hpc
   have hE := Codec.infix_sub (q := Codec.decEpilogue) 119 hk
     (by simp only [Code.unmarshalSSZ, Codec.decEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + 119) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Codec.dec_epilogue_seg (k + 119) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra r14 _ d hrsp hr14 (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrax', hrbx', hrsp', hrbp', hr14', hmem'⟩
   dsimp only at hpc' hrax' hrbx' hrsp' hrbp' hr14' hmem'
@@ -581,7 +581,7 @@ theorem Decode.example_epi : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Hos
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; done)
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
   · dsimp only; ecancel
-theorem Decode.example_epi_kind : ∀ (h : Host), type_of% (@Decode.example_epi h)
+theorem Decode.example_epilogue_kind : ∀ (h : Host), type_of% (@Decode.example_epilogue h)
     = @Codec.decEpilogueKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨119, 3, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.existential 0), .at (.below 16) (.ptr 2), .at (.below 48) (.ret 104), .low (.existential 1)],
@@ -660,13 +660,13 @@ theorem Decode.example_accept : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt 
   intro k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail h_mem hguard hlen hav hms hmm
   refine eventually_trans _ _ _ _ (Decode.example_head k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail h_mem hguard hlen hav hms hmm) ?_
   intro st0 h0
-  refine eventually_trans _ _ _ _ (Decode.example_f1 k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail hguard hav hms hmm st0 h0) ?_
+  refine eventually_trans _ _ _ _ (Decode.example_field_1 k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail hguard hav hms hmm st0 h0) ?_
   intro st1 h1
-  refine eventually_trans _ _ _ _ (Decode.example_f2 k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail hguard hav hms hmm st1 h1) ?_
+  refine eventually_trans _ _ _ _ (Decode.example_field_2 k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail hguard hav hms hmm st1 h1) ?_
   intro st2 h2
-  refine eventually_trans _ _ _ _ (Decode.example_f3 k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail hguard hav hms hmm st2 h2) ?_
+  refine eventually_trans _ _ _ _ (Decode.example_field_3 k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail hguard hav hms hmm st2 h2) ?_
   intro st3 h3
-  exact Decode.example_epi k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail st3 h3
+  exact Decode.example_epilogue k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail st3 h3
 theorem Decode.example_accept_kind : ∀ (h : Host), type_of% (@Decode.example_accept h)
     = @Codec.decAcceptKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32] := by
   intro h; rfl

@@ -89,7 +89,7 @@ theorem Decode.accept_spec (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog
   obtain ⟨g, rfl, hb⟩ := SszValue.accepted_is_encoding hd
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 144 := by
-    apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.enc_size]; rfl
+    apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.encode_size]; rfl
   exact Decode.accept k hk hf kS hkS hfS kV hkV hfV _ _ _ _ (by simp [Spec.uintBytes_size]) (by simp) (by simp [Spec.uintBytes_size]) (by simp)
     s ra guard fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 aP1 aL1 aC1 a40 aP2 aL2 aC2
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrs hast ha8 haP1 haL1 haC1 ha40 haP2 haL2 haC2

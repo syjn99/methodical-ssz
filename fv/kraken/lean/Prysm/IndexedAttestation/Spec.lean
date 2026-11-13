@@ -22,7 +22,7 @@ theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem offsetBytes_toArray : offsetBytes.toArray = uintBytes 4 228 := by decide
 
 theorem encode_size (g : SszValue) : (SszValue.encode g).size = 228 + 8 * g.idx.length := by
-  simp [SszValue.encode, offsetBytes, Prysm.AttestationData.SszValue.enc_size, u64Bytes_size]; omega
+  simp [SszValue.encode, offsetBytes, Prysm.AttestationData.SszValue.encode_size, u64Bytes_size]; omega
 
 theorem toValue_fits (g : SszValue) : Value.fits desc g.toValue = true := by
   have h1 := Prysm.AttestationData.SszValue.toValue_fits g.data
@@ -49,7 +49,7 @@ theorem toValue_surjective (v : Value) (h : Value.fits desc v = true) : ∃ g : 
 theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszValue.encode g) := by
   obtain ⟨l, hl, d, ⟨z, hz⟩⟩ := g
   have hd := Prysm.AttestationData.SszValue.serialize_eq d
-  have hds := Prysm.AttestationData.SszValue.enc_size d
+  have hds := Prysm.AttestationData.SszValue.encode_size d
   have h32 : 228 + 8 * l.length < 2 ^ (8 * bytesPerOffset) := by simp [bytesPerOffset]; omega
   simp only [desc, SszValue.toValue, serialize, serializeStruct, serializeFields, serializeSequence,
     List.length_map, hl, decide_true, if_true, serializeEach_u64, Vector.toArray_mk, hz]

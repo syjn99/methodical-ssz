@@ -10,13 +10,13 @@ that the generator did not cover (`Prysm/SyncCommitteeMessage/GeneratedDecodeCal
 ValidatorIndex not). No contract, no new hypothesis form; the runtime callees use `MakesliceContract` / `MemmoveContract` as
 in `Codec/FixedBytesDecode.lean`.
 
-* `Decode.head0`: directives 0–14 (the text of `Prysm.BeaconBlockHeader.Decode.head0`; the frame `sub $0x60` and the spill order are the same,
+* `Decode.head_to_arguments`: directives 0–14 (the text of `Prysm.BeaconBlockHeader.Decode.head_to_arguments`; the frame `sub $0x60` and the spill order are the same,
   the length immediate is `0x90`).
 * `bytesDecMidRax` / `bytes32dec_seg_rax`: BlockRoot (47–71). The second block reloads the receiver into rax, not
   rdx (the generator's reason for BlockRoot); otherwise `bytesdec_seg` with `n = 32`.
 * `Decode.validator_index_arg`: ValidatorIndex argument set-up 82–87 (the receiver stays in rax; the generator read it as the
   first-field form).
-* `Decode.spill2`: the two nil-error spills 118–119 (the text of `Prysm.BeaconBlockHeader.Decode.spill2`).
+* `Decode.spill_registers`: the two nil-error spills 118–119 (the text of `Prysm.BeaconBlockHeader.Decode.spill_registers`).
 -/
 
 open Machine Runtime Prysm.SyncCommitteeMessage.Code Codec
@@ -61,7 +61,7 @@ variable [Host]
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- Head, directives 0–14: entry to the first argument set-up. -/
-theorem Decode.head0 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
+theorem Decode.head_to_arguments (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     (s : MachineData) (ra guard : UInt64) (fp s1 s2 s4 ast : List UInt8)
     (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (h4 : s4.length = 8) (hast : ast.length = 8)
     (R : DataMem → Prop)
@@ -153,7 +153,7 @@ theorem Decode.head0 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directives 118–119: `mov %rbx,0x30(%rsp); mov %rax,0x28(%rsp)`. -/
-theorem Decode.spill2 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
+theorem Decode.spill_registers (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     (sp a28 a30 : BitVec 64) (h28 : sp + 40 = a28) (h30 : sp + 48 = a30)
     (s28 s30 : List UInt8) (hs28 : s28.length = 8) (hs30 : s30.length = 8) (R : DataMem → Prop)
     (s : MachineData) (hrsp : s.regs.rsp = { toBitVec := sp })

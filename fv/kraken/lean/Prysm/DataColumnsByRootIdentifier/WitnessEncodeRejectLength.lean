@@ -35,7 +35,7 @@ theorem placed_at_1 : marshalSSZTo.IsInfixAt Host.prog 1 := infixAt_of [.label "
 theorem labels_fresh_at_1 : LabelsFresh marshalSSZTo 1 := labelsFresh_of (by decide)
 
 theorem label_err_bytes_length : label "ssz.ErrBytesLength" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program]) (by simp [programLabels])
 
 /-- error words · guard · receiver (state, BlockRoot ptr, len) · fp · return address · spill rax · spill rbx. -/
 def block (bl : BitVec 64) : List UInt8 :=
@@ -91,7 +91,7 @@ theorem labels_fresh_at_1 : LabelsFresh marshalSSZTo 1 := labelsFresh_of (by rw 
 theorem labels_fresh_at_119 : LabelsFresh MemmoveGrowsliceModel 119 := labelsFresh_of (by rw [host_program_eq]; decide)
 
 theorem label_err_list_too_big : label "ssz.ErrListTooBig" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program]) (by simp [programLabels])
 
 /-- error words · guard · receiver window (state, BlockRoot ptr/len/cap, Columns ptr/len) · root · rslot · gap 72 ·
 l64 · l56 · gap 8 · gap (l40) · l32 · gap (l24) · gap (l16) · fp · return address · spills rax, rbx · dst (36). -/

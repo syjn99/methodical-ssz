@@ -30,7 +30,7 @@ theorem placed_at_1 : unmarshalSSZ.IsInfixAt Host.prog 1 := infixAt_of [.label "
 theorem labels_fresh_at_1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)
 
 theorem label_err_size : label "ssz.ErrSize" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program]) (by simp [programLabels])
 
 abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
 abbrev word_bytes (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt

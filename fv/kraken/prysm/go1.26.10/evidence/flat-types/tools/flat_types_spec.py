@@ -82,7 +82,7 @@ def emit(X, ty, fs, chk):
     w(f'def {pe} (g : {P}) : Array UInt8 :=')
     w(f'  {enc}')
     w('')
-    w(f'theorem SszValue.enc_size (g : {P}) : ({pe} g).size = {N} := by')
+    w(f'theorem SszValue.encode_size (g : {P}) : ({pe} g).size = {N} := by')
     w(f'  simp [{pe}, Spec.uintBytes_size]')
     w('')
     lt = '; '.join(f'have := g.{f[0]}.toNat_lt' for f in us)
@@ -151,7 +151,7 @@ def emit(X, ty, fs, chk):
     w('  constructor')
     w('  · rintro ⟨v, hd⟩')
     w(f'    obtain ⟨g, rfl, hb⟩ := SszValue.accepted_is_encoding hd')
-    w(f'    rw [hb]; exact SszValue.enc_size g')
+    w(f'    rw [hb]; exact SszValue.encode_size g')
     w('  · intro h')
     rs = []
     for i, f in enumerate(fs):

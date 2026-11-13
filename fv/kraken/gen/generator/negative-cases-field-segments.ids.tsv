@@ -12,7 +12,7 @@ g2-ex-pk-control	deposit-message-decode-example-field-public-key-seg-control
 g2-ex-pk-stmt-size	deposit-message-decode-example-field-public-key-seg-statement-hroot-48-to-32
 g2-ex-idx-stmt-off	blob-identifier-decode-example-field-index-seg-statement-h-src-32-to-24
 g2-ex-idx-code-off	blob-identifier-decode-example-field-index-seg-code-mov-0x20-rcx-to-0x18-rcx
-g2-head-stmt-len	codec-decoder-head-epilogue-dechead-seg-statement-hlen-none-to-1
-g2-epi-stmt-rsp	codec-decoder-head-epilogue-decepi-seg-statement-rsp-48-to-40
+g2-head-stmt-len	codec-decoder-head-epilogue-dec-head-seg-statement-hlen-none-to-1
+g2-epi-stmt-rsp	codec-decoder-head-epilogue-dec-epilogue-seg-statement-rsp-48-to-40
 g2-tail-stmt-ptr	codec-decoder-head-epilogue-bytesdec-tail-seg-statement-p-int-to-bytes-8-to-v-p
 g2-compose-control	blob-identifier-decode-accept-composed-example-control

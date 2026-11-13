@@ -23,7 +23,7 @@ Straight-line forms not in `Codec/WindowSteps.lean`: `step_lea_indexed` (`lea (%
 Frame: `encoder_prologue_small_frame` (small stack guard) and `encoder_prologue_large_frame` (large-frame guard `lea -N(%rsp),%r12`): labels, guard,
 `push %rbp`, `mov %rsp,%rbp`; the frame allocation and the spills are steps. `encode_memmove_call`: the
 `callq runtime.memmove` block for any length (`encode32_memmove_call` is the 32-byte case), contract `MemmoveContract` in its
-existing form. The return is `decret_seg` (`Codec/DecoderPrologue.lean`).
+existing form. The return is `dec_return_seg` (`Codec/DecoderPrologue.lean`).
 All lemmas are in the continuation form of `Codec/WindowSteps.lean`; nops may be anywhere in a window.
 -/
 

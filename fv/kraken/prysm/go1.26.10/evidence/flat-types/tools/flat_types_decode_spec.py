@@ -87,7 +87,7 @@ theorem Decode.accept_spec : {stmt} := by
   obtain ⟨g, rfl, hb⟩ := SszValue.accepted_is_encoding hd
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = {N} := by
-    apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.enc_size]; rfl
+    apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.encode_size]; rfl
   exact {gname} {' '.join(args)}
 
 /-- `len(buf) ≠ {N}`: EthLib rejects, and the machine code returns the two words of `ssz.ErrSize`. -/

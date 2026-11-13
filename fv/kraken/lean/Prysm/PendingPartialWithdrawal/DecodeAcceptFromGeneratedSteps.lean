@@ -45,9 +45,9 @@ theorem Decode.from_generated_steps_Index_field (k : Nat) (hk : unmarshalSSZ.IsI
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 hrax hrbx h_mem ⊢
   subst rsp rbp r14 hrax hrbx
-  apply Decode.generated_step_s15 k hk hf
+  apply Decode.generated_step_directive_15 k hk hf
   intro fl1; normalize_registers
-  apply Decode.generated_step_s16 k hk hf
+  apply Decode.generated_step_directive_16 k hk hf
   normalize_registers
   refine eventually_trans _ _ _ _ (Decode.generated_step_Index_call k hk hf hC sp (rax.toBitVec + 8) rbx.toBitVec aRet aFp aS2 hRet hFp hS2 rbp0 r140 guard e8 rslot
     fp s2 c0 he8 hrs hfp hs2 hc0 hguard _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl) (by first | rfl | decide)
@@ -95,29 +95,29 @@ theorem Decode.from_generated_steps_Amount_WithdrawableEpoch_fields (k : Nat) (h
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14
-  apply Decode.generated_step_s48 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_48 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s49 k hk hf
+  apply Decode.generated_step_directive_49 k hk hf
   normalize_registers
-  apply Decode.generated_step_s50 k hk hf sp aD hD vD hvD _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_50 k hk hf sp aD hD vD hvD _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s51 k hk hf
+  apply Decode.generated_step_directive_51 k hk hf
   intro fl1; normalize_registers
-  apply Decode.generated_step_s52 k hk hf sp aR rcv hR _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_52 k hk hf sp aR rcv hR _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s53 k hk hf
+  apply Decode.generated_step_directive_53 k hk hf
   normalize_registers
-  apply Decode.generated_step_s54 k hk hf bf (bf + 8) (by simp only [Int64.toBitVec_ofNat]) v hv _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_54 k hk hf bf (bf + 8) (by simp only [Int64.toBitVec_ofNat]) v hv _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s55 k hk hf rcv (rcv + 16) (by simp only [Int64.toBitVec_ofNat]) vF hvF _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_55 k hk hf rcv (rcv + 16) (by simp only [Int64.toBitVec_ofNat]) vF hvF _ _ _ (by rfl) (by ecancel)
   intro m' H
   normalize_registers
   simp only [Reg64s.get64, toBytes_ofInt_ofBytes 64 8 rfl v hv] at H
-  apply Decode.generated_step_s56 k hk hf
+  apply Decode.generated_step_directive_56 k hk hf
   normalize_registers
-  apply Decode.generated_step_s57 k hk hf
+  apply Decode.generated_step_directive_57 k hk hf
   normalize_registers
-  apply Decode.generated_step_s58 k hk hf
+  apply Decode.generated_step_directive_58 k hk hf
   normalize_registers
   refine eventually_trans _ _ _ _ (Decode.generated_step_WithdrawableEpoch_call k hk hf hC sp (rcv + 24) (bf + 16) aRet aFp aS2 hRet hFp hS2 rbp0 r140
     guard e8 rslot fp s2 c0 he8 hrs hfp hs2 hc0 hguard _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl)

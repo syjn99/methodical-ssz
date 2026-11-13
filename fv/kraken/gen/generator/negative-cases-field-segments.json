@@ -101,17 +101,17 @@
   "new": "  mov 0x18(%rcx),%rcx"
  },
  {
-  "id": "codec-decoder-head-epilogue-dechead-seg-statement-hlen-none-to-1",
+  "id": "codec-decoder-head-epilogue-dec-head-seg-statement-hlen-none-to-1",
   "module": "Codec/DecoderHeadEpilogue.lean",
-  "theorem": "dechead_seg",
+  "theorem": "dec_head_seg",
   "kind": "stmt",
   "old": "(hlen : s.regs.rcx = { toBitVec := sz.toBitVec })",
   "new": "(hlen : s.regs.rcx = { toBitVec := sz.toBitVec + 1 })"
  },
  {
-  "id": "codec-decoder-head-epilogue-decepi-seg-statement-rsp-48-to-40",
+  "id": "codec-decoder-head-epilogue-dec-epilogue-seg-statement-rsp-48-to-40",
   "module": "Codec/DecoderHeadEpilogue.lean",
-  "theorem": "decepi_seg",
+  "theorem": "dec_epilogue_seg",
   "kind": "stmt",
   "old": "st.data.regs.rsp = { toBitVec := sp + 48 }",
   "new": "st.data.regs.rsp = { toBitVec := sp + 40 }"

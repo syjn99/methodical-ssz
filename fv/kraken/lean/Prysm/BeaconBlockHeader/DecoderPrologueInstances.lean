@@ -21,15 +21,15 @@ variable [Host]
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `Prysm.BeaconBlockHeader.Decode.head0` (BeaconBlockHeader head, frame `0x60`, size 112) from `decpro_seg`, the spills as `step_store` steps and `step_nil_check`. -/
-theorem Decode.head0_inst : type_of% (@Prysm.BeaconBlockHeader.Decode.head0 ‹Host›) := by
+/-- `Prysm.BeaconBlockHeader.Decode.head_to_arguments` (BeaconBlockHeader head, frame `0x60`, size 112) from `dec_prologue_seg`, the spills as `step_store` steps and `step_nil_check`. -/
+theorem Decode.head_to_arguments_inst : type_of% (@Prysm.BeaconBlockHeader.Decode.head_to_arguments ‹Host›) := by
   intro k hk s ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast R h_mem hguard hlen
   have hcs : Eq (ast.At s.regs.rax.toBitVec) =
       Eq ((ast.take 1).At s.regs.rax.toBitVec) ⋆ Eq ((ast.drop 1).At (s.regs.rax.toBitVec + 1)) := by
     conv => lhs; rw [← List.take_append_drop 1 ast]
     exact at_app _ _ (by rw [List.length_take, hast]; rfl) (by simp [hast])
   rw [hcs] at h_mem
-  refine eventually_trans _ _ _ _ (decpro_seg _ _ _ _ 96 120 112 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
+  refine eventually_trans _ _ _ _ (dec_prologue_seg _ _ _ _ 96 120 112 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
     s ra guard (s.regs.rsp.toBitVec - 104) (s.regs.rsp.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     fp s2 hfp h2 _ (by ecancel) hguard (by rw [hlen]; rfl)) ?_
@@ -66,8 +66,8 @@ theorem Decode.head0_inst : type_of% (@Prysm.BeaconBlockHeader.Decode.head0 ‹H
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `Prysm.BeaconBlockHeader.Decode.spill2` (BeaconBlockHeader nil-error spills 86–87) from two `step_store` steps. -/
-theorem Decode.spill2_inst : type_of% (@Prysm.BeaconBlockHeader.Decode.spill2 ‹Host›) := by
+/-- `Prysm.BeaconBlockHeader.Decode.spill_registers` (BeaconBlockHeader nil-error spills 86–87) from two `step_store` steps. -/
+theorem Decode.spill_registers_inst : type_of% (@Prysm.BeaconBlockHeader.Decode.spill_registers ‹Host›) := by
   intro k hk sp a28 a30 h28 h30 s28 s30 hs28 hs30 R s hrsp h_mem
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp h_mem ⊢

@@ -55,7 +55,7 @@ def SszValue.toValue (g : SszValue) : Value := .seq [.uint g.epoch.toNat, .bytes
 /-- `uintBytes 8 epoch ++ root`. -/
 def SszValue.encode (g : SszValue) : Array UInt8 := uintBytes 8 g.epoch.toNat ++ g.root.toArray
 
-theorem SszValue.enc_size (g : SszValue) : (SszValue.encode g).size = 40 := by
+theorem SszValue.encode_size (g : SszValue) : (SszValue.encode g).size = 40 := by
   simp [SszValue.encode, Spec.uintBytes_size]
 
 theorem SszValue.toValue_fits (g : SszValue) : Value.fits desc g.toValue = true := by
@@ -100,7 +100,7 @@ theorem SszValue.spec_accepts_iff (bs : Array UInt8) : (∃ v, deserialize desc 
   constructor
   · rintro ⟨v, hd⟩
     obtain ⟨g, rfl, rfl⟩ := SszValue.accepted_is_encoding hd
-    exact SszValue.enc_size g
+    exact SszValue.encode_size g
   · intro h
     have r8 := readUint_lt bs 0 8
     simp only [Nat.reducePow, Nat.reduceMul] at r8

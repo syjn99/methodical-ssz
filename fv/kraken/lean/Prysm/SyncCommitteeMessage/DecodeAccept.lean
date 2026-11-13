@@ -10,13 +10,13 @@ Hand composition, written AFTER the raw generator output was committed. The
 statement is the independent hand statement `Prysm.SyncCommitteeMessage.Decode.accept_statement` (`Prysm/SyncCommitteeMessage/Statements.lean`, unchanged). Chain of
 `eventually_trans` over
 
-* `Decode.head0` (hand, 0–14),
+* `Decode.head_to_arguments` (hand, 0–14),
 * `Decode.generated_call_Slot_arg` (15–16) and `Decode.generated_call_Slot_call` (17–19, label 46): GENERATED
   (`Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean`, raw); `hC` discharged by the proved `Prysm.Slot.Decode.accept_function_spec_holds`,
 * `bytes32dec_seg_rax` (hand lemma, BlockRoot 47–71) and hand steps 72–73, label 80, 81,
 * `Decode.validator_index_arg` (hand lemma, 82–87) and `Codec.calldec_seg` (existing lemma applied by hand, 88–90,
   label 117; callee ValidatorIndex, `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`),
-* `Decode.spill2` (hand, 118–119),
+* `Decode.spill_registers` (hand, 118–119),
 * `Decode.generated_call_Signature_seg` (120–145): GENERATED,
 * hand steps 146–147, label 154, 155 and the epilogue 156–160 (the text of the BeaconBlockHeader tail).
 
@@ -67,7 +67,7 @@ theorem Decode.accept : Decode.accept_statement := by
     (by simp only [Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   -- head: entry → directive 15
-  refine eventually_trans _ _ _ _ (Decode.head0 k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
+  refine eventually_trans _ _ _ _ (Decode.head_to_arguments k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
     (by dsimp only; ecancel) (Nat.lt_of_le_of_lt (Nat.le_add_right _ 112) hguard) hlen) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
@@ -158,7 +158,7 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc6 hrax6 hrbx6 hrsp6 hrbp6 hr146 Hm6
   subst hpc6
   -- nil-error spills 118–119
-  refine eventually_trans _ _ _ _ (Decode.spill2 k hk (rsp.toBitVec - 104) (rsp.toBitVec - 64) (rsp.toBitVec - 56)
+  refine eventually_trans _ _ _ _ (Decode.spill_registers k hk (rsp.toBitVec - 104) (rsp.toBitVec - 64) (rsp.toBitVec - 56)
     (by bv_omega) (by bv_omega) s28 s30 hs28 hs30 _ d6 hrsp6 (by ecancel)) ?_
   rintro ⟨d7, pc7⟩ ⟨hpc7, hrsp7, hrbp7, hr147, Hm7⟩
   dsimp only at hpc7 hrsp7 hrbp7 hr147 Hm7

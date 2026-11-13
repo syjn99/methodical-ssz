@@ -18,7 +18,7 @@ theorem desc_fixedSize : desc.fixedSize = some 1240 := by rfl
 theorem proofs_flatten_length (g : SszValue) : g.proofs.flatten.length = 1056 := bytes32_vector_flatten_length 33 g.proof
 
 theorem encode_size (g : SszValue) : (SszValue.encode g).size = 1240 := by
-  rw [SszValue.encode, Array.size_append, List.size_toArray, proofs_flatten_length, Prysm.Deposit_Data.SszValue.enc_size]
+  rw [SszValue.encode, Array.size_append, List.size_toArray, proofs_flatten_length, Prysm.Deposit_Data.SszValue.encode_size]
 
 theorem toValue_fits (g : SszValue) : Value.fits desc g.toValue = true := by
   have h := Prysm.Deposit_Data.SszValue.toValue_fits g.data
@@ -44,7 +44,7 @@ theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszVa
   have hl1 := bytes32_vector_flatten_length 33 pr
   have hs1 := bytes32_vector_serialize 33 (by decide) pr
   have hs2 := Prysm.Deposit_Data.SszValue.serialize_eq d
-  have hl2 := Prysm.Deposit_Data.SszValue.enc_size d
+  have hl2 := Prysm.Deposit_Data.SszValue.encode_size d
   simp only [desc, SszValue.toValue, serialize, serializeStruct, serializeFields] at hs1 ⊢
   simp only [List.length_map, Vector.length_toList, beq_self_eq_true, ↓reduceIte] at hs1 ⊢
   rw [hs1, hs2]

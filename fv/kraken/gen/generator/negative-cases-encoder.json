@@ -88,9 +88,9 @@
   "new": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (r2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))"
  },
  {
-  "id": "eth1-data-encode-enc-a-control",
+  "id": "eth1-data-encode-encode-deposit-root-control",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
-  "theorem": "Prysm.Eth1Data.Encode.enc_a",
+  "theorem": "Prysm.Eth1Data.Encode.encode_deposit_root",
   "kind": "control",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.Eth1Data.Code",
@@ -98,9 +98,9 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  },
  {
-  "id": "eth1-data-encode-enc-a-code-lea-0x8-rsp-to-0x10-rsp",
+  "id": "eth1-data-encode-encode-deposit-root-code-lea-0x8-rsp-to-0x10-rsp",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
-  "theorem": "Prysm.Eth1Data.Encode.enc_a",
+  "theorem": "Prysm.Eth1Data.Encode.encode_deposit_root",
   "kind": "code",
   "old": "  lea -0x8(%rsp),%r12",
   "new": "  lea -0x10(%rsp),%r12",
@@ -110,9 +110,9 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  },
  {
-  "id": "eth1-data-encode-enc-a-code-cmpq-0x20-to-0x21",
+  "id": "eth1-data-encode-encode-deposit-root-code-cmpq-0x20-to-0x21",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
-  "theorem": "Prysm.Eth1Data.Encode.enc_a",
+  "theorem": "Prysm.Eth1Data.Encode.encode_deposit_root",
   "kind": "code",
   "old": "  cmpq $0x20,0x10(%rax)",
   "new": "  cmpq $0x21,0x10(%rax)",
@@ -122,9 +122,9 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  },
  {
-  "id": "eth1-data-encode-enc-a-code-callq-runtime-memmove-to-runtime-growslice",
+  "id": "eth1-data-encode-encode-deposit-root-code-callq-runtime-memmove-to-runtime-growslice",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
-  "theorem": "Prysm.Eth1Data.Encode.enc_a",
+  "theorem": "Prysm.Eth1Data.Encode.encode_deposit_root",
   "kind": "code",
   "old": "  callq runtime.memmove",
   "new": "  callq runtime.growslice",

@@ -53,7 +53,7 @@ theorem no_label_before_191 : ∀ i < 191, Host.prog[i]? ≠ some (.label "runti
   notLabel_of (by rw [host_program_eq]; decide)
 
 theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [programLabels])
 
 theorem label_write_barrier : label "runtime.writeBarrier" = 0x10008 :=
   mk_label program _ 8 _ (by simp [program, dataLabels]) (by decide)

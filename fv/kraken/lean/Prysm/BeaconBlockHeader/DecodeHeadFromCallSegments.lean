@@ -5,10 +5,10 @@ import Codec.CalleeDecode
 # Second instance of the call-site lemmas: `Decode.head` re-derived with the call-site lemmas
 
 `Decode.head_from_call_segments` has the statement text of `Prysm.BeaconBlockHeader.Decode.head` (`Prysm/BeaconBlockHeader/DecodeHead.lean`, unchanged);
-`Decode.head_from_call_segments_type`: the two declared types are equal by `rfl`. Proof: `Decode.head0` (hand steps, directives
+`Decode.head_from_call_segments_type`: the two declared types are equal by `rfl`. Proof: `Decode.head_to_arguments` (hand steps, directives
 0–14, frame `sub $0x60`), then for `Slot` `callarg_first_seg` (15–16) + `calldec_seg` (17–19, label 46), for
 `ProposerIndex` `callarg_reload_seg` with the padding `nop` (47–54) + `calldec_seg` (55–57, label 85), then
-`Decode.spill2` (hand steps, 86–87: the two nil-error spills). The existing hypotheses `Prysm.Slot.Decode.accept_function_spec` / `Prysm.ValidatorIndex.Decode.accept_function_spec` are
+`Decode.spill_registers` (hand steps, 86–87: the two nil-error spills). The existing hypotheses `Prysm.Slot.Decode.accept_function_spec` / `Prysm.ValidatorIndex.Decode.accept_function_spec` are
 used as `U64CalleeAccept` (the same propositions, `Prysm/Slot/CalleeDecodeFunctionSpecs.lean`). Hand-written example; the existing theorem
 is unchanged.
 -/
@@ -23,7 +23,7 @@ theorem Decode.head_stack_pointer (x : BitVec 64) : x - 8#64 - 96 = x - 104 := b
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- Head, directives 0–14: entry to the first argument set-up. -/
-theorem Decode.head0 (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
+theorem Decode.head_to_arguments (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
     (s : MachineData) (ra guard : UInt64) (fp s1 s2 s4 ast : List UInt8)
     (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (h4 : s4.length = 8) (hast : ast.length = 8)
     (R : DataMem → Prop)
@@ -115,7 +115,7 @@ theorem Decode.head0 (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directives 86–87: `mov %rbx,0x30(%rsp); mov %rax,0x28(%rsp)`. -/
-theorem Decode.spill2 (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
+theorem Decode.spill_registers (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
     (sp a28 a30 : BitVec 64) (h28 : sp + 40 = a28) (h30 : sp + 48 = a30)
     (s28 s30 : List UInt8) (hs28 : s28.length = 8) (hs30 : s30.length = 8) (R : DataMem → Prop)
     (s : MachineData) (hrsp : s.regs.rsp = { toBitVec := sp })
@@ -210,7 +210,7 @@ theorem Decode.head_from_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfix
     (by simp only [Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   -- head: entry → directive 15
-  refine eventually_trans _ _ _ _ (Decode.head0 k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
+  refine eventually_trans _ _ _ _ (Decode.head_to_arguments k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
     (by dsimp only; ecancel) (Nat.lt_of_le_of_lt (Nat.le_add_right _ 112) hguard) hlen) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
@@ -256,7 +256,7 @@ theorem Decode.head_from_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfix
   dsimp only at hpc5 hrax5 hrbx5 hrsp5 hrbp5 hr145 Hm5
   subst hpc5
   -- nil-error spills 86–87
-  refine eventually_trans _ _ _ _ (Decode.spill2 k hk (rsp.toBitVec - 104) (rsp.toBitVec - 64) (rsp.toBitVec - 56)
+  refine eventually_trans _ _ _ _ (Decode.spill_registers k hk (rsp.toBitVec - 104) (rsp.toBitVec - 64) (rsp.toBitVec - 56)
     (by bv_omega) (by bv_omega) s28 s30 hs28 hs30 _ d5 hrsp5 (by ecancel)) ?_
   rintro ⟨d6, pc6⟩ ⟨hpc6, hrsp6, hrbp6, hr146, Hm6⟩
   dsimp only at hpc6 hrsp6 hrbp6 hr146 Hm6

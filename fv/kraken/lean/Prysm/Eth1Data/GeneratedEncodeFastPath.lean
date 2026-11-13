@@ -12,7 +12,7 @@ has a `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueK
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
 The statement is the declared type of the committed hand theorem `Prysm.Eth1Data.Encode.fast_path`.
-FAST-PATH-JSON: {"type": "Eth1Data", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 72, "frame": 128, "guard_addend": 8, "runtime_calls": true, "fields": [["DepositRoot", "b", 32], ["DepositCount", "u", 8], ["BlockHash", "b", 32]], "boundaries": [9, 37, 56, 81], "layout": "Prysm.Eth1Data.encodeLayout", "S_sha256": "911a0ea1fb983c58c9be8ea72f94afdcd9bb25d9555956f7ca02f1777136b6c1", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.Eth1Data.Encode.fast_path", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Eth1Data", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindAnyFrame"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_epi", "kind": "encEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encFastPathKindAnyFrame"}]}
+FAST-PATH-JSON: {"type": "Eth1Data", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 72, "frame": 128, "guard_addend": 8, "runtime_calls": true, "fields": [["DepositRoot", "b", 32], ["DepositCount", "u", 8], ["BlockHash", "b", 32]], "boundaries": [9, 37, 56, 81], "layout": "Prysm.Eth1Data.encodeLayout", "S_sha256": "911a0ea1fb983c58c9be8ea72f94afdcd9bb25d9555956f7ca02f1777136b6c1", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.Eth1Data.Encode.fast_path", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Eth1Data", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_2", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encFastPathKindAnyFrame"}]}
 -/
 
 open Machine Runtime Codec Prysm.Eth1Data.Code
@@ -122,7 +122,7 @@ theorem Encode.generated_head_kind : ∀ (h : Host), type_of% (@Encode.generated
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 0 `DepositRoot` (32 bytes): directives 9–36; boundary state 0 → 1. -/
-theorem Encode.generated_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.generated_field_0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v1 c0 c2 b0 b2 pre d0 d1 d2 : List UInt8) (hast : ast.length = 8) (hv1 : v1.length = 8) (hc0 : c0.length = 8) (hc2 : c2.length = 8) (hb0 : b0.length = 32) (hb2 : b2.length = 32) (hd0 : d0.length = 32) (hd1 : d1.length = 8) (hd2 : d2.length = 32)
     (p0 p2 : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s1 s2 l16 l24 l32 l40 l48 l56 rslot : List UInt8) (hfp : fp.length = 8) (hs1 : s1.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8) (hl32 : l32.length = 8) (hl40 : l40.length = 8) (hl48 : l48.length = 8) (hl56 : l56.length = 8) (hrslot : rslot.length = 8)
@@ -266,7 +266,7 @@ theorem Encode.generated_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, scr1, hscr1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
-theorem Encode.generated_f0_kind : ∀ (h : Host), type_of% (@Encode.generated_f0 h)
+theorem Encode.generated_field_0_kind : ∀ (h : Host), type_of% (@Encode.generated_field_0 h)
     = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .u64, .bytes 32]
     ⟨9, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.original 1), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 24) (.original 4), .at (.below 32) (.original 5), .at (.below 40) (.original 6), .at (.below 48) (.original 7), .at (.below 56) (.original 8), .at (.below 144) (.original 9), .low .scratch],
@@ -279,7 +279,7 @@ theorem Encode.generated_f0_kind : ∀ (h : Host), type_of% (@Encode.generated_f
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 1 `DepositCount` (uint64): directives 37–55; boundary state 1 → 2. -/
-theorem Encode.generated_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.generated_field_1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v1 c0 c2 b0 b2 pre d0 d1 d2 : List UInt8) (hast : ast.length = 8) (hv1 : v1.length = 8) (hc0 : c0.length = 8) (hc2 : c2.length = 8) (hb0 : b0.length = 32) (hb2 : b2.length = 32) (hd0 : d0.length = 32) (hd1 : d1.length = 8) (hd2 : d2.length = 32)
     (p0 p2 : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s1 s2 l16 l24 l32 l40 l48 l56 rslot : List UInt8) (hfp : fp.length = 8) (hs1 : s1.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8) (hl32 : l32.length = 8) (hl40 : l40.length = 8) (hl48 : l48.length = 8) (hl56 : l56.length = 8) (hrslot : rslot.length = 8)
@@ -401,7 +401,7 @@ theorem Encode.generated_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, x0, hx0, ?_⟩
   first | ecancel | (dsimp only; ecancel)
-theorem Encode.generated_f1_kind : ∀ (h : Host), type_of% (@Encode.generated_f1 h)
+theorem Encode.generated_field_1_kind : ∀ (h : Host), type_of% (@Encode.generated_field_1 h)
     = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .u64, .bytes 32]
     ⟨37, 1, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 24) (.reg .rbx), .at (.below 32) (.original 5), .at (.below 40) (.original 6), .at (.below 48) (.reg .rdi), .at (.below 56) (.len 32), .at (.below 144) (.ret 37), .low (.existential 0)],
@@ -414,7 +414,7 @@ theorem Encode.generated_f1_kind : ∀ (h : Host), type_of% (@Encode.generated_f
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 2 `BlockHash` (32 bytes): directives 56–80; boundary state 2 → 3. -/
-theorem Encode.generated_f2 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.generated_field_2 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v1 c0 c2 b0 b2 pre d0 d1 d2 : List UInt8) (hast : ast.length = 8) (hv1 : v1.length = 8) (hc0 : c0.length = 8) (hc2 : c2.length = 8) (hb0 : b0.length = 32) (hb2 : b2.length = 32) (hd0 : d0.length = 32) (hd1 : d1.length = 8) (hd2 : d2.length = 32)
     (p0 p2 : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s1 s2 l16 l24 l32 l40 l48 l56 rslot : List UInt8) (hfp : fp.length = 8) (hs1 : s1.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8) (hl32 : l32.length = 8) (hl40 : l40.length = 8) (hl48 : l48.length = 8) (hl56 : l56.length = 8) (hrslot : rslot.length = 8)
@@ -556,7 +556,7 @@ theorem Encode.generated_f2 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, scr2, hscr2, ?_⟩
   first | ecancel | (dsimp only; ecancel)
-theorem Encode.generated_f2_kind : ∀ (h : Host), type_of% (@Encode.generated_f2 h)
+theorem Encode.generated_field_2_kind : ∀ (h : Host), type_of% (@Encode.generated_field_2 h)
     = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .u64, .bytes 32]
     ⟨56, 2, [(.rax, .ptr), (.rbx, .len 40), (.rcx, .cap), (.rdx, .receiver)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 24) (.reg .rbx), .at (.below 32) (.original 5), .at (.below 40) (.original 6), .at (.below 48) (.reg .rdi), .at (.below 56) (.len 32), .at (.below 144) (.ret 37), .low (.existential 0)],
@@ -569,7 +569,7 @@ theorem Encode.generated_f2_kind : ∀ (h : Host), type_of% (@Encode.generated_f
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Epilogue: directives 81–return; boundary state 3 → the fast-path post-state. -/
-theorem Encode.generated_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v1 c0 c2 b0 b2 pre d0 d1 d2 : List UInt8) (hast : ast.length = 8) (hv1 : v1.length = 8) (hc0 : c0.length = 8) (hc2 : c2.length = 8) (hb0 : b0.length = 32) (hb2 : b2.length = 32) (hd0 : d0.length = 32) (hd1 : d1.length = 8) (hd2 : d2.length = 32)
     (p0 p2 : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s1 s2 l16 l24 l32 l40 l48 l56 rslot : List UInt8) (hfp : fp.length = 8) (hs1 : s1.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8) (hl32 : l32.length = 8) (hl40 : l40.length = 8) (hl48 : l48.length = 8) (hl56 : l56.length = 8) (hrslot : rslot.length = 8)
@@ -676,7 +676,7 @@ theorem Encode.generated_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.p
   intro fl; normalize_registers
   apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 136) - (-128) : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
   normalize_registers
-  refine eventually_trans _ _ _ _ (decret_seg _ (k + 87) (window_infix_at hk 87 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 87) (window_infix_at hk 87 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -694,7 +694,7 @@ theorem Encode.generated_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.p
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
-theorem Encode.generated_epi_kind : ∀ (h : Host), type_of% (@Encode.generated_epi h)
+theorem Encode.generated_epilogue_kind : ∀ (h : Host), type_of% (@Encode.generated_epilogue h)
     = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .u64, .bytes 32]
     ⟨81, 3, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 24) (.reg .rbx), .at (.below 32) (.len 72), .at (.below 40) (.reg .rdi), .at (.below 48) (.reg .rdi), .at (.below 56) (.len 32), .at (.below 144) (.ret 81), .low (.existential 0)],
@@ -784,13 +784,13 @@ theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   intro k hk hf ast v1 c0 c2 b0 b2 pre d0 d1 d2 hast hv1 hc0 hc2 hb0 hb2 hd0 hd1 hd2 p0 p2 s ra guard hpre fp s1 s2 l16 l24 l32 l40 l48 l56 rslot hfp hs1 hs2 hl16 hl24 hl32 hl40 hl48 hl56 hrslot R S scratch hsc h_mem hguard hsp hcap hcap63 hmm
   refine eventually_trans _ _ _ _ (Encode.generated_head k hk hf ast v1 c0 c2 b0 b2 pre d0 d1 d2 hast hv1 hc0 hc2 hb0 hb2 hd0 hd1 hd2 p0 p2 s ra guard hpre fp s1 s2 l16 l24 l32 l40 l48 l56 rslot hfp hs1 hs2 hl16 hl24 hl32 hl40 hl48 hl56 hrslot R S scratch hsc h_mem hguard hsp hcap hcap63 hmm) ?_
   intro st0 h0
-  refine eventually_trans _ _ _ _ (Encode.generated_f0 k hk hf ast v1 c0 c2 b0 b2 pre d0 d1 d2 hast hv1 hc0 hc2 hb0 hb2 hd0 hd1 hd2 p0 p2 s ra guard hpre fp s1 s2 l16 l24 l32 l40 l48 l56 rslot hfp hs1 hs2 hl16 hl24 hl32 hl40 hl48 hl56 hrslot R S scratch hsc hsp hcap hcap63 hmm st0 h0) ?_
+  refine eventually_trans _ _ _ _ (Encode.generated_field_0 k hk hf ast v1 c0 c2 b0 b2 pre d0 d1 d2 hast hv1 hc0 hc2 hb0 hb2 hd0 hd1 hd2 p0 p2 s ra guard hpre fp s1 s2 l16 l24 l32 l40 l48 l56 rslot hfp hs1 hs2 hl16 hl24 hl32 hl40 hl48 hl56 hrslot R S scratch hsc hsp hcap hcap63 hmm st0 h0) ?_
   intro st1 h1
-  refine eventually_trans _ _ _ _ (Encode.generated_f1 k hk hf ast v1 c0 c2 b0 b2 pre d0 d1 d2 hast hv1 hc0 hc2 hb0 hb2 hd0 hd1 hd2 p0 p2 s ra guard hpre fp s1 s2 l16 l24 l32 l40 l48 l56 rslot hfp hs1 hs2 hl16 hl24 hl32 hl40 hl48 hl56 hrslot R S scratch hsc hsp hcap hcap63 hmm st1 h1) ?_
+  refine eventually_trans _ _ _ _ (Encode.generated_field_1 k hk hf ast v1 c0 c2 b0 b2 pre d0 d1 d2 hast hv1 hc0 hc2 hb0 hb2 hd0 hd1 hd2 p0 p2 s ra guard hpre fp s1 s2 l16 l24 l32 l40 l48 l56 rslot hfp hs1 hs2 hl16 hl24 hl32 hl40 hl48 hl56 hrslot R S scratch hsc hsp hcap hcap63 hmm st1 h1) ?_
   intro st2 h2
-  refine eventually_trans _ _ _ _ (Encode.generated_f2 k hk hf ast v1 c0 c2 b0 b2 pre d0 d1 d2 hast hv1 hc0 hc2 hb0 hb2 hd0 hd1 hd2 p0 p2 s ra guard hpre fp s1 s2 l16 l24 l32 l40 l48 l56 rslot hfp hs1 hs2 hl16 hl24 hl32 hl40 hl48 hl56 hrslot R S scratch hsc hsp hcap hcap63 hmm st2 h2) ?_
+  refine eventually_trans _ _ _ _ (Encode.generated_field_2 k hk hf ast v1 c0 c2 b0 b2 pre d0 d1 d2 hast hv1 hc0 hc2 hb0 hb2 hd0 hd1 hd2 p0 p2 s ra guard hpre fp s1 s2 l16 l24 l32 l40 l48 l56 rslot hfp hs1 hs2 hl16 hl24 hl32 hl40 hl48 hl56 hrslot R S scratch hsc hsp hcap hcap63 hmm st2 h2) ?_
   intro st3 h3
-  exact Encode.generated_epi k hk hf ast v1 c0 c2 b0 b2 pre d0 d1 d2 hast hv1 hc0 hc2 hb0 hb2 hd0 hd1 hd2 p0 p2 s ra guard hpre fp s1 s2 l16 l24 l32 l40 l48 l56 rslot hfp hs1 hs2 hl16 hl24 hl32 hl40 hl48 hl56 hrslot R S scratch hsc hsp hcap hcap63 st3 h3
+  exact Encode.generated_epilogue k hk hf ast v1 c0 c2 b0 b2 pre d0 d1 d2 hast hv1 hc0 hc2 hb0 hb2 hd0 hd1 hd2 p0 p2 s ra guard hpre fp s1 s2 l16 l24 l32 l40 l48 l56 rslot hfp hs1 hs2 hl16 hl24 hl32 hl40 hl48 hl56 hrslot R S scratch hsc hsp hcap hcap63 st3 h3
 theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated_fast h)
     = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .u64, .bytes 32] := by
   intro h; rfl

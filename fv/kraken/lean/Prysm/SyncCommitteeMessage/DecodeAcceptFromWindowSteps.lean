@@ -16,8 +16,8 @@ import Prysm.SyncCommitteeMessage.Statements
   instead of the hand lemma `Decode.validator_index_arg` and a hand-applied `calldec_seg`;
 * Signature 120–145: `Decode.example_step_Signature_seg` (window; the padding `nop` before `callq runtime.makeslice` is inside it) instead of the `decoder --call-segments`
   `pad` instance.
-Unchanged: `Decode.head0` and `Decode.spill2` (hand, `Prysm/SyncCommitteeMessage/DecodeSegments.lean`), the generated Slot theorems (`Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean`),
-the hand steps 146–160. `Prysm/SyncCommitteeMessage/DecodeSegments.lean` is imported for `Decode.head0` / `Decode.spill2` only; `Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` checks by
+Unchanged: `Decode.head_to_arguments` and `Decode.spill_registers` (hand, `Prysm/SyncCommitteeMessage/DecodeSegments.lean`), the generated Slot theorems (`Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean`),
+the hand steps 146–160. `Prysm/SyncCommitteeMessage/DecodeSegments.lean` is imported for `Decode.head_to_arguments` / `Decode.spill_registers` only; `Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` checks by
 program that this proof does not reach `bytes32dec_seg_rax`, `Decode.validator_index_arg` or `calldec_nop_seg`.
 In-sample (the type is development data since the frozen generator ran on it); no transfer claim.
 -/
@@ -50,7 +50,7 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
     exact Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS hl8
   rw [hlos] at h_mem
   -- head: entry → directive 15
-  refine eventually_trans _ _ _ _ (Decode.head0 k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
+  refine eventually_trans _ _ _ _ (Decode.head_to_arguments k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
     (by dsimp only; ecancel) (Nat.lt_of_le_of_lt (Nat.le_add_right _ 112) hguard) hlen) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
@@ -116,7 +116,7 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
   dsimp only at hpc6 hrax6 hrbx6 hrsp6 hrbp6 hr146 Hm6
   subst hpc6
   -- nil-error spills 118–119
-  refine eventually_trans _ _ _ _ (Decode.spill2 k hk (rsp.toBitVec - 104) (rsp.toBitVec - 64) (rsp.toBitVec - 56)
+  refine eventually_trans _ _ _ _ (Decode.spill_registers k hk (rsp.toBitVec - 104) (rsp.toBitVec - 64) (rsp.toBitVec - 56)
     (by bv_omega) (by bv_omega) s28 s30 hs28 hs30 _ d6 hrsp6 (by ecancel)) ?_
   rintro ⟨d7, pc7⟩ ⟨hpc7, hrsp7, hrbp7, hr147, Hm7⟩
   dsimp only at hpc7 hrsp7 hrbp7 hr147 Hm7

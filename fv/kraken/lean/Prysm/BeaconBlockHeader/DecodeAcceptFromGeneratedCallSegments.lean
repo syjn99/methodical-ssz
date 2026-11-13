@@ -7,7 +7,7 @@ import Prysm.BeaconBlockHeader.GeneratedDecodeCallSegments
 
 Hand composition (not generator output). `Decode.head_from_generated_call_segments`: the chain of `Prysm/BeaconBlockHeader/DecodeHeadFromCallSegments.lean` with the four
 call-site lemma instances replaced by the generated theorems of `Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean` (`decoder --call-segments`, raw output):
-`Decode.generated_call_Slot_arg` / `_call`, `Decode.generated_call_ProposerIndex_arg` / `_call`; `Decode.head0` (0–14) and `Decode.spill2`
+`Decode.generated_call_Slot_arg` / `_call`, `Decode.generated_call_ProposerIndex_arg` / `_call`; `Decode.head_to_arguments` (0–14) and `Decode.spill_registers`
 (86–87) stay hand steps. `Decode.accept_from_generated_call_segments`: the proof text of `Prysm/BeaconBlockHeader/DecodeAccept.lean` with `Decode.head` replaced
 by `Decode.head_from_generated_call_segments` and the three hand root segments by the generated ones (`Decode.generated_call_*_seg`, same statements); the
 instance directives between the roots and the epilogue stay hand steps. Both declared types equal the existing
@@ -68,7 +68,7 @@ theorem Decode.head_from_generated_call_segments (k : Nat) (hk : Code.unmarshalS
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Decode.accept_guard _ _ hguard
   -- head: entry → directive 15
-  refine eventually_trans _ _ _ _ (Decode.head0 k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
+  refine eventually_trans _ _ _ _ (Decode.head_to_arguments k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
     (by dsimp only; ecancel) (Nat.lt_of_le_of_lt (Nat.le_add_right _ 112) hguard) hlen) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
@@ -114,7 +114,7 @@ theorem Decode.head_from_generated_call_segments (k : Nat) (hk : Code.unmarshalS
   dsimp only at hpc5 hrax5 hrbx5 hrsp5 hrbp5 hr145 Hm5
   subst hpc5
   -- nil-error spills 86–87
-  refine eventually_trans _ _ _ _ (Decode.spill2 k hk (rsp.toBitVec - 104) (rsp.toBitVec - 64) (rsp.toBitVec - 56)
+  refine eventually_trans _ _ _ _ (Decode.spill_registers k hk (rsp.toBitVec - 104) (rsp.toBitVec - 64) (rsp.toBitVec - 56)
     (by bv_omega) (by bv_omega) s28 s30 hs28 hs30 _ d5 hrsp5 (by ecancel)) ?_
   rintro ⟨d6, pc6⟩ ⟨hpc6, hrsp6, hrbp6, hr146, Hm6⟩
   dsimp only at hpc6 hrsp6 hrbp6 hr146 Hm6

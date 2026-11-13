@@ -36,7 +36,7 @@ theorem labels_fresh_at_8 : LabelsFresh marshalSSZTo 8 := labelsFresh_of (by rw 
 theorem labels_fresh_at_126 : LabelsFresh MemmoveGrowsliceModel 126 := labelsFresh_of (by rw [host_program_eq]; decide)
 
 theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [programLabels])
 
 abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
 abbrev bitvec_word_bytes (v : BitVec 64) : List UInt8 := Int.toBytes 8 v.toInt

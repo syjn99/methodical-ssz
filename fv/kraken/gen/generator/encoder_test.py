@@ -176,10 +176,10 @@ def adversarial(work):
     adv("frame-test-immediate", historical_summary, [("lea 0x60(%rsp),%rsi", ["lea 0x58(%rsp),%rsi"], 0)], "frame test against F + 8")
     adv("frame-test-target", historical_summary, [(f"jb {lbl(historical_summary, '12e')}", [f"jb {lbl(historical_summary, '13d')}"], 0)], "frame test branch to the return block")
     adv("frame-test-subtraction", historical_summary, [("sub %rsp,%rdx", ["sub %rsi,%rdx"], 0)], "frame test on a value other than ptr - rsp")
-    adv("epi-no-xor", validator_balance, [("xor %esi,%esi", None, 0)], "rsi not zeroed at the return")
-    adv("epi-rbx", validator_balance, [("mov %rdx,%rbx", ["mov %rcx,%rbx"], 2)], "result length register wrong")
-    adv("epi-no-ret", validator_balance, [("retq", ["nop"], 0)], "no retq after pop")
-    adv("epi-frame", validator_balance, [("add $0x68,%rsp", ["add $0x60,%rsp"], 0)], "frame release of the wrong size")
+    adv("epilogue-no-xor", validator_balance, [("xor %esi,%esi", None, 0)], "rsi not zeroed at the return")
+    adv("epilogue-rbx", validator_balance, [("mov %rdx,%rbx", ["mov %rcx,%rbx"], 2)], "result length register wrong")
+    adv("epilogue-no-ret", validator_balance, [("retq", ["nop"], 0)], "no retq after pop")
+    adv("epilogue-frame", validator_balance, [("add $0x68,%rsp", ["add $0x60,%rsp"], 0)], "frame release of the wrong size")
     # truncated / malformed files
     tr = lines_of(validator_balance)[:40]
     p = work / "truncated.S"
@@ -227,7 +227,7 @@ KINDS = ("encHeadKindAnyFrame", "encFieldKindAnyFrame", "encEpilogueKindAnyFrame
 
 def kinds_ok(out, p, nf):
     t = out.decode()
-    want = ["Encode.generated_head"] + [f"Encode.generated_f{i}" for i in range(nf)] + ["Encode.generated_epi", "Encode.generated_fast"]
+    want = ["Encode.generated_head"] + [f"Encode.generated_field_{i}" for i in range(nf)] + ["Encode.generated_epilogue", "Encode.generated_fast"]
     return all(t.count(f"\ntheorem {w}_kind : ∀ (h : Host), type_of% (@{w} h)\n") == 1 for w in want)
 
 
@@ -275,7 +275,7 @@ def main_once():
 PH_FUNCS = [("read_ir", fast_path_gen, "read_ir"), ("read_S", fast_path_gen, "read_S"), ("parse_layout", fast_path_gen, "parse_layout"),
             ("walk", fast_path_gen.FastPathGenerator, "walk"), ("run", fast_path_gen.FastPathGenerator, "run"), ("touch", fast_path_gen.FastPathGenerator, "touch"),
             ("boundary", fast_path_gen.FastPathGenerator, "boundary"), ("live_after", fast_path_gen.FastPathGenerator, "live_after"), ("frametest", fast_path_gen.FastPathGenerator, "frametest"),
-            ("epi", fast_path_gen.FastPathGenerator, "epi"), ("text", fast_path_gen.FastPathGenerator, "text"), ("meta", fast_path_gen.FastPathGenerator, "meta"), ("ins", fast_path_gen.FastPathGenerator, "ins"),
+            ("epilogue", fast_path_gen.FastPathGenerator, "epilogue"), ("text", fast_path_gen.FastPathGenerator, "text"), ("meta", fast_path_gen.FastPathGenerator, "meta"), ("ins", fast_path_gen.FastPathGenerator, "ins"),
             ("layout_fields", fast_path_gen.FastPathGenerator, "layout_fields")]
 code, n = main_once()
 R.append(dict(phase="control", kind="none", exit=code, stdout=n, ok=(code == 0 and n > 0)))
@@ -318,7 +318,7 @@ def sorry_text(self):
     return b.replace("  intro h; rfl", "  sorry", 1), k
 def kind_text_missing(self):
     b, k = orig_text(self)
-    return b.replace("_epi_kind :", "_epi_kinx :", 1), k
+    return b.replace("_epilogue_kind :", "_epilogue_kinx :", 1), k
 for nm, fn in (("drop_kind_list", drop_kind), ("sorry_token", sorry_text), ("kind_line_renamed", kind_text_missing)):
     fast_path_gen.FastPathGenerator.text = fn
     try:
@@ -402,7 +402,7 @@ def main():
         res.append(dict(id=f"fast-path-fail-closed-{ROW[t][4]}-harness", expect="harness exit 0 and >= 55 injections",
                         exit=r.returncode, stdout=0, ok=r.returncode == 0 and len(R) >= 55,
                         stderr=r.stderr.decode(errors="replace")[-300:]))
-    phases = {"read_ir", "read_S", "parse_layout", "walk", "run", "touch", "boundary", "live_after", "frametest", "epi",
+    phases = {"read_ir", "read_S", "parse_layout", "walk", "run", "touch", "boundary", "live_after", "frametest", "epilogue",
               "text", "meta", "ins", "layout_fields", "field0", "field1", "field2", "text-result", "flags"}
     res.append(dict(id="fast-path-fail-closed-every-phase-reached", expect="every injected phase reached in some type",
                     exit=0, stdout=0, ok=phases <= reached, missing=sorted(phases - reached)))

@@ -41,7 +41,7 @@ theorem labels_fresh_at_1 : LabelsFresh marshalSSZTo 1 := labelsFresh_of (by rw 
 theorem labels_fresh_at_196 : LabelsFresh MemmoveGrowsliceModel 196 := labelsFresh_of (by rw [host_program_eq]; decide)
 
 theorem label_err_bytes_length : label "ssz.ErrBytesLength" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program]) (by simp [programLabels])
 
 abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
 abbrev word_bytes (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt

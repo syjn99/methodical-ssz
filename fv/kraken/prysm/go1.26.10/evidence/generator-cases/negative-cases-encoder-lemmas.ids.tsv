@@ -13,12 +13,12 @@ e2-st-call-stmt-len	codec-encode-steps-encode-memmove-call-statement-hrcx-none-t
 e2-ft-control	codec-encode-frame-test-frame50-pointer-apart-control
 e2-ft-stmt-len	codec-encode-frame-test-frame50-pointer-apart-statement-ho-64-to-16
 e2-ft-far-stmt	codec-encode-frame-test-separated-chunks-apart-statement-ys-none-to-1
-e2-vb-f0-control	validator-balance-encode-example-f0-control
-e2-vb-f0-stmt-out	validator-balance-encode-example-f0-statement-v0-v0-to-v1
+e2-vb-f0-control	validator-balance-encode-example-field-0-control
+e2-vb-f0-stmt-out	validator-balance-encode-example-field-0-statement-v0-v0-to-v1
 e2-vb-fast-stmt-cap	validator-balance-encode-example-fast-statement-hcap-16-to-8
 e2-vb-fast-kind-fields	validator-balance-encode-example-fast-kind-statement-prysm-u64-to-bytes-8
 e2-vb-head-code-frame	validator-balance-encode-example-head-code-sub-0x68-to-0x70
-e2-hs-epi-control	historical-summary-encode-example-epi-control
-e2-hs-epi-code-ft	historical-summary-encode-example-epi-code-lea-0x60-rsp-to-0x40-rsp
-e2-bh-f2-code-cap	beacon-block-header-encode-example-f2-code-cmp-r9-to-r8
+e2-hs-epi-control	historical-summary-encode-example-epilogue-control
+e2-hs-epi-code-ft	historical-summary-encode-example-epilogue-code-lea-0x60-rsp-to-0x40-rsp
+e2-bh-f2-code-cap	beacon-block-header-encode-example-field-2-code-cmp-r9-to-r8
 e2-bh-stmt-control	beacon-block-header-encode-example-fast-same-statement-control

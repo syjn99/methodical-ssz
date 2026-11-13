@@ -1,9 +1,9 @@
 # negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
 hb-spec-control	historical-batch-negative-suite-targets-spec-check-control
-hb-complete-control	historical-batch-negative-suite-targets-complete-chk-control
+hb-complete-control	historical-batch-negative-suite-targets-complete-check-control
 hb-spec-size524287	historical-batch-negative-suite-targets-spec-check-statement-hbs-524288-to-524287
-hb-complete-524287	historical-batch-negative-suite-targets-complete-chk-statement-size-524288-to-524287
+hb-complete-524287	historical-batch-negative-suite-targets-complete-check-statement-size-524288-to-524287
 dep-spec-control	deposit-negative-suite-targets-spec-check-control
-dep-complete-control	deposit-negative-suite-targets-complete-chk-control
+dep-complete-control	deposit-negative-suite-targets-complete-check-control
 dep-spec-size1239	deposit-negative-suite-targets-spec-check-statement-hbs-1240-to-1239
-dep-complete-1239	deposit-negative-suite-targets-complete-chk-statement-size-1240-to-1239
+dep-complete-1239	deposit-negative-suite-targets-complete-check-statement-size-1240-to-1239

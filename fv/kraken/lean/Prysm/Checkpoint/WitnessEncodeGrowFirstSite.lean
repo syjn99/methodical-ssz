@@ -45,11 +45,11 @@ theorem labels_fresh_at_8 : LabelsFresh marshalSSZTo 8 := labelsFresh_of (by rw 
 theorem labels_fresh_at_99 : LabelsFresh MemmoveGrowsliceModel 99 := labelsFresh_of (by rw [host_program_eq]; decide)
 
 theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [programLabels])
 
 abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
 abbrev word_bytes (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
-def pre30 : List UInt8 := (List.range 30).map (fun i => UInt8.ofNat (0x40 + i))
+def prefix30 : List UInt8 := (List.range 30).map (fun i => UInt8.ofNat (0x40 + i))
 
 /-- bump pointer · heap (8336) · guard · receiver (72) · root (32) · rslot · growslice spill (40) · gap (8)
 · t40 (16) · t30 (16) · l32 · l24 · l16 · fp · return slot · spill rax · spill rbx · spill rcx
@@ -57,7 +57,7 @@ def pre30 : List UInt8 := (List.range 30).map (fun i => UInt8.ofNat (0x40 + i))
 def block (e8 root : List UInt8) : List UInt8 :=
   Int.toBytes 8 (0x10008 : BitVec 64).toInt ++ (zeros 8336 ++ (word_bytes 0 ++ (zeros 8 ++ (e8 ++ (word_bytes 0x120e8 ++ (word_bytes 32 ++ (word_bytes 32
     ++ (zeros 32 ++ (root ++ (zeros 8 ++ (zeros 40 ++ (zeros 8 ++ (zeros 16 ++ (zeros 16 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (word_bytes 0
-    ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (pre30 ++ zeros 6)))))))))))))))))))))))
+    ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (prefix30 ++ zeros 6)))))))))))))))))))))))
 
 def mem (e8 root : List UInt8) : DataMem := (block e8 root).At (0x10000 : BitVec 64)
 
@@ -81,7 +81,7 @@ theorem runs (e8 root : List UInt8) (he8 : e8.length = 8) (hroot : root.length =
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rbx.toNat = 30 + 40
         ∧ 72 ≤ st.data.regs.rcx.toNat ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0)
       ⟨initial_state e8 root zmms flags, Host.addrOf 8⟩ :=
-  eventually_mono (Encode.grow_first_site 8 placed_at_8 labels_fresh_at_8 (zeros 8) e8 (word_bytes 32) (zeros 32) root pre30 rfl he8 rfl rfl hroot
+  eventually_mono (Encode.grow_first_site 8 placed_at_8 labels_fresh_at_8 (zeros 8) e8 (word_bytes 32) (zeros 32) root prefix30 rfl he8 rfl rfl hroot
     0x120e8 (initial_state e8 root zmms flags) 0 0 rfl
     (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 16) (zeros 16) (zeros 8) (zeros 40)
     rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl
@@ -89,7 +89,7 @@ theorem runs (e8 root : List UInt8) (he8 : e8.length = 8) (hroot : root.length =
     0 [] rfl bumpHeap 8336
     (by
       have H : Eq ((block e8 root).At (0x10000 : BitVec 64)) (mem e8 root) := rfl
-      witness_split [he8, hroot, show pre30.length = 30 from rfl]
+      witness_split [he8, hroot, show prefix30.length = 30 from rfl]
       have H2 := lift_heap H
       simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil] at H2 ⊢

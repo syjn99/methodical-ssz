@@ -102,15 +102,15 @@
   "new": "ys.length + 1 ≤ (a - b).toNat ∧"
  },
  {
-  "id": "validator-balance-encode-example-f0-control",
+  "id": "validator-balance-encode-example-field-0-control",
   "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
-  "theorem": "Prysm.ValidatorBalance.Encode.example_f0",
+  "theorem": "Prysm.ValidatorBalance.Encode.example_field_0",
   "kind": "control"
  },
  {
-  "id": "validator-balance-encode-example-f0-statement-v0-v0-to-v1",
+  "id": "validator-balance-encode-example-field-0-statement-v0-v0-to-v1",
   "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
-  "theorem": "Prysm.ValidatorBalance.Encode.example_f0",
+  "theorem": "Prysm.ValidatorBalance.Encode.example_field_0",
   "kind": "stmt",
   "old": "Eq (v0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
   "new": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))"
@@ -145,15 +145,15 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S"
  },
  {
-  "id": "historical-summary-encode-example-epi-control",
+  "id": "historical-summary-encode-example-epilogue-control",
   "module": "Prysm/HistoricalSummary/EncodeFastPathExample.lean",
-  "theorem": "Prysm.HistoricalSummary.Encode.example_epi",
+  "theorem": "Prysm.HistoricalSummary.Encode.example_epilogue",
   "kind": "control"
  },
  {
-  "id": "historical-summary-encode-example-epi-code-lea-0x60-rsp-to-0x40-rsp",
+  "id": "historical-summary-encode-example-epilogue-code-lea-0x60-rsp-to-0x40-rsp",
   "module": "Prysm/HistoricalSummary/EncodeFastPathExample.lean",
-  "theorem": "Prysm.HistoricalSummary.Encode.example_epi",
+  "theorem": "Prysm.HistoricalSummary.Encode.example_epilogue",
   "kind": "code",
   "old": "  lea 0x60(%rsp),%rsi",
   "new": "  lea 0x40(%rsp),%rsi",
@@ -164,9 +164,9 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-encode-example-f2-code-cmp-r9-to-r8",
+  "id": "beacon-block-header-encode-example-field-2-code-cmp-r9-to-r8",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPathExample.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.example_f2",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.example_field_2",
   "kind": "code",
   "old": "  cmp %r9,%rdi",
   "new": "  cmp %r8,%rdi",

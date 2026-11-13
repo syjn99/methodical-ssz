@@ -21,7 +21,7 @@ namespace Prysm.Checkpoint
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 14 `add $0x8,%rax`: stepAddKind. -/
-theorem _root_.Prysm.Checkpoint.Decode.example_step_s14 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem _root_.Prysm.Checkpoint.Decode.example_step_directive_14 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : ∀ fl : StatusFlags, Eventually (step1 Host.exe) final
@@ -32,13 +32,13 @@ theorem _root_.Prysm.Checkpoint.Decode.example_step_s14 (k : Nat) (hk : unmarsha
   have he : Codec.eraseNop ((unmarshalSSZ.drop 14).take 1) = [Codec.instrAddImmediate Reg64.rax 8] := by rfl
   have hend : k + 14 + ((unmarshalSSZ.drop 14).take 1).length = k + 15 := by rfl
   with_reducible exact Codec.step_add_immediate Reg64.rax 8 _ (k + 14) (k + 15) hq he hend
-theorem _root_.Prysm.Checkpoint.Decode.example_step_s14_kind : ∀ (h : Host), type_of% (@Prysm.Checkpoint.Decode.example_step_s14 h) = @Codec.stepAddKind h unmarshalSSZ Reg64.rax 8 14 15 := by
+theorem _root_.Prysm.Checkpoint.Decode.example_step_directive_14_kind : ∀ (h : Host), type_of% (@Prysm.Checkpoint.Decode.example_step_directive_14 h) = @Codec.stepAddKind h unmarshalSSZ Reg64.rax 8 14 15 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Directive 15 `mov $0x8,%ecx`: stepMoveImmediateKind. -/
-theorem _root_.Prysm.Checkpoint.Decode.example_step_s15 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem _root_.Prysm.Checkpoint.Decode.example_step_directive_15 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
     (hk' : Eventually (step1 Host.exe) final ⟨Codec.setRegister s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 16)⟩),
@@ -47,7 +47,7 @@ theorem _root_.Prysm.Checkpoint.Decode.example_step_s15 (k : Nat) (hk : unmarsha
   have he : Codec.eraseNop ((unmarshalSSZ.drop 15).take 1) = [Codec.instrMoveImmediate32 Reg64.rcx 8] := by rfl
   have hend : k + 15 + ((unmarshalSSZ.drop 15).take 1).length = k + 16 := by rfl
   with_reducible exact Codec.step_move_immediate Reg64.rcx 8 _ (k + 15) (k + 16) hq he hend
-theorem _root_.Prysm.Checkpoint.Decode.example_step_s15_kind : ∀ (h : Host), type_of% (@Prysm.Checkpoint.Decode.example_step_s15 h) = @Codec.stepMoveImmediateKind h unmarshalSSZ Reg64.rcx 8 15 16 := by
+theorem _root_.Prysm.Checkpoint.Decode.example_step_directive_15_kind : ∀ (h : Host), type_of% (@Prysm.Checkpoint.Decode.example_step_directive_15 h) = @Codec.stepMoveImmediateKind h unmarshalSSZ Reg64.rcx 8 15 16 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in

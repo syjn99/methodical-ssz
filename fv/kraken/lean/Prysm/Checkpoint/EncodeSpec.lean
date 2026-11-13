@@ -93,6 +93,6 @@ theorem Size.result (k : Nat) (hk : sizeSSZ.IsInfixAt Host.prog k) (s : MachineD
     | (apply UInt64.toBitVec_inj.mp; simp; done)
 
 theorem Size.result_spec (g : SszValue) : ∃ bs, serialize desc g.toValue = .ok bs ∧ bs.size = 40 :=
-  ⟨SszValue.encode g, SszValue.serialize_eq g, SszValue.enc_size g⟩
+  ⟨SszValue.encode g, SszValue.serialize_eq g, SszValue.encode_size g⟩
 
 end Prysm.Checkpoint

@@ -21,7 +21,7 @@ import Codec.EncodeMemmove
 branches (directives 16–28, 46–53, 63–72), the two length rejects (89–107) and the morestack path
 (108–118) are not covered. Directive indices of `Prysm.Eth1Data.Code.marshalSSZTo`:
 
-* `Encode.enc_a` 0–36 + `runtime.memmove`: 2–4 stack guard (`lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe`,
+* `Encode.encode_deposit_root` 0–36 + `runtime.memmove`: 2–4 stack guard (`lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe`,
   closed with `Codec.lea_cmp_be_false`, N = 8), 5–8 prologue (`add $-0x80,%rsp`, rbx spill to rsp + 16),
   9–11 `len(DepositRoot)`, 12 receiver spill to rsp + 8, 13–15 capacity (`jae` taken), 29–35 spills of the
   slice pointer (rsp − 24), the new length (rsp − 56) and the capacity (rsp − 48), 36 the call.
@@ -54,7 +54,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- DepositRoot segment: entry to the return of the first `memmove` (directive 37): stack guard passed, frame set
 up, DepositRoot appended. -/
-theorem Encode.enc_a (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.encode_deposit_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (r1 d0 : List UInt8) (hr1 : r1.length = 32) (hd0 : d0.length = 32) (p1 : BitVec 64)
     (s : MachineData) (guard : UInt64)
     (fp s1 s2 l24 l48 l56 rslot scratch : List UInt8)
@@ -458,7 +458,7 @@ theorem Encode.fast_path (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   have hc63 : s.regs.rdi.toBitVec.toNat < 2 ^ 63 := hcap63
   rw [Encode.offset32_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.offset40_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec] at h_mem
   -- DepositRoot segment, directives 0–36, memmove
-  refine eventually_trans _ _ _ _ (Encode.enc_a k hk hf r1 d0 hr1 hd0 p1 s guard fp s1 s2 l24 l48 l56 rslot scratch
+  refine eventually_trans _ _ _ _ (Encode.encode_deposit_root k hk hf r1 d0 hr1 hd0 p1 s guard fp s1 s2 l24 l48 l56 rslot scratch
     hfp h1 h2 hl24 hl48 hl56 hrs S hsc _ (by ecancel) hguard hsp (by omega) hcap63 hmm) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, scr1, hscr1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 Hm1

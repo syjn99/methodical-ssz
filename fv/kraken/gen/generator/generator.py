@@ -1177,7 +1177,7 @@ def bytes_seg_pad(c, fname, src, fo, j1, j2, p):
 # Emits the whole accept theorem of a container decoder whose fields are ALL covered, as a chain of
 # `eventually_trans` over `Codec.dechead_seg`, the generated segment theorems (imported from the module
 # that `decoder --field-segments` wrote with the same `--prefix`), `Codec.bytesdec_tail_seg` after each byte vector and
-# `Codec.decepi_seg` (`lean/Codec/DecoderHeadEpilogue.lean`). Shape accepted (else exit 2, nothing written):
+# `Codec.dec_epilogue_seg` (`lean/Codec/DecoderHeadEpilogue.lean`). Shape accepted (else exit 2, nothing written):
 # frame 0x20 with the spills 0x30 / 0x38 (decHead), the first field a byte vector starting at directive 13,
 # every byte vector followed by `mov 0x18(%rsp),%rY; jmp L` and `L: mov %rY,fo(%rdx)`, the fields contiguous in
 # IR order, the epilogue right after the last field, and every Go field before the end of the last decoded
@@ -1364,14 +1364,14 @@ def compose(args, dirs, sha, irsha, fields, found):
         if st[0] != "bytes":
             continue
         a, tl = st[1], st[2]
-        code += infix_have(f"hTa{t}", f"Codec.bytesDecTailA Reg64.{tl['rY']} {lean_str(tl['lt'])} 24", tl["j3"], C)
+        code += infix_have(f"hTa{t}", f"Codec.bytesDecTailReloadJump Reg64.{tl['rY']} {lean_str(tl['lt'])} 24", tl["j3"], C)
         code += infix_have(f"hTb{t}", f"Codec.bytesDecTailPointerStore Reg64.{tl['rY']} {lean_str(tl['lt'])} {a[2]}", tl["j4"], C)
         code += label_have(f"hlT{t}", tl["j4"], C)
         code += f"  have hY{t} : Codec.U64InlineReg Reg64.{tl['rY']} := by decide\n"
     code += infix_have("hE", "Codec.decEpilogue", jE, C)
     Q.append(code.rstrip("\n"))
     Q.append("  -- head: entry → directive 13")
-    Q.append(f"  refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ {ssz} (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _")
+    Q.append(f"  refine eventually_trans _ _ _ _ (Codec.dec_head_seg _ _ _ _ {ssz} (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _")
     Q.append("    (by dsimp only; ecancel) hguard (by rw [hlen]; rfl)) ?_")
     Q.append("  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩")
     Q.append("  dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1")
@@ -1451,7 +1451,7 @@ def compose(args, dirs, sha, irsha, fields, found):
             Q.append(f"  dsimp only at hpc{d} hrsp{d} hrbp{d} hr14{d} hrdx{d} Hm{d}")
             Q.append(f"  subst hpc{d}")
     Q.append(f"  -- epilogue, {jE}–{jE + 4}")
-    Q.append(f"  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + {jE}) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) "
+    Q.append(f"  refine eventually_trans _ _ _ _ (Codec.dec_epilogue_seg (k + {jE}) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) "
              "rsp.toBitVec")
     Q.append(f"    (by bv_omega) (by bv_omega) rbp ra r14 _ d{d} hrsp{d} hr14{d} (by ecancel)) ?_")
     e = d + 1
@@ -1520,7 +1520,7 @@ def compose(args, dirs, sha, irsha, fields, found):
 # the receiver (`rcv + o`), the buffer (`bf + o`), an immediate, the bytes of the buffer at an offset, the new slice
 # pointer of a byte field, or something unknown. Each directive is one of:
 #   * a step form with a kinded step lemma (`mov %rS,%rD`, `mov d(%rB),%rD`, `mov %rS,d(%rB)`, `lea d(%rB),%rD`,
-#     `add $i,%rD`, `mov $i,%eD`, `jmp l`, `l:`): one theorem `<prefix>_s<index>` + `_kind` per directive;
+#     `add $i,%rD`, `mov $i,%eD`, `jmp l`, `l:`): one theorem `<prefix>_directive_<index>` + `_kind` per directive;
 #   * `nop`: nothing is emitted; the nop is a leading nop of the next window;
 #   * `callq <callee with a proved spec>`: the call block window `nop* callq nop* test nop* je lok` (`calldec_seg_window`,
 #     kind `callDecSegKindWindow`), emitted ONLY when the dataflow shows rax = rcv + (IR Go offset), rbx = bf + (IR SSZ
@@ -1626,7 +1626,7 @@ def _vstr(v):
 STEP_HEAD_SPILL = {"rax": ("RCV", 0), "rbx": ("BF", 0), "rcx": ("LEN",), "rdi": ("CAP",)}
 
 
-class StepEpiMiss(StepStop):
+class StepEpilogueMiss(StepStop):
     """Every field is complete but the directives after the last field event are not the plain return."""
 
 
@@ -1652,7 +1652,7 @@ def step_slot_ok(d, F):
 
 
 def step_head(dirs, ssz_size):
-    """The decoder head: directives 0–10 must be the `decoderPrologue` prologue of `decpro_seg` (two labels; directives 2–8
+    """The decoder head: directives 0–10 must be the `decoderPrologue` prologue of `dec_prologue_seg` (two labels; directives 2–8
     the six instructions `cmp 0x10(%r14),%rsp; jbe; push %rbp; mov %rsp,%rbp; sub $F,%rsp; mov %rbx,dB(%rsp)` in
     this order and one `nop`; directives 9–10 `cmp $size,%rcx; jne <size error>`), then the spills `mov %r,d(%rsp)`
     of the argument registers rax / rbx / rcx / rdi (after the frame is set up; each under the stack-store rule),
@@ -1668,7 +1668,7 @@ def step_head(dirs, ssz_size):
     if not ok:
         rest = [d for d in dirs[2:] if d != "nop"][:8]
         shifted = len(rest) == 8 and all(re.fullmatch(rx, d) for rx, d in zip(STEP_PRO, rest))
-        raise StepHeadMiss("step head: directives 2–10 are not the prologue of `decpro_seg` (`cmp 0x10(%r14),%rsp; jbe; "
+        raise StepHeadMiss("step head: directives 2–10 are not the prologue of `dec_prologue_seg` (`cmp 0x10(%r14),%rsp; jbe; "
                          "push %rbp; mov %rsp,%rbp; sub $F,%rsp; mov %rbx,dB(%rsp)` and one `nop` in 2–8, `cmp $size,%rcx; "
                          "jne` at 9–10)" + ("; it matches with the nops erased: a `nop` moves the fixed head positions"
                                             if shifted else ""), "padding" if shifted else "other")
@@ -2040,19 +2040,19 @@ def _step_walk(dirs, fields, head_end, slots0, F, done):
 
 
 # the only value of `step_epilogue` that counts as an examined plain return (checked with `is`)
-STEP_EPI_OK = object()
+STEP_EPILOGUE_OK = object()
 
 
 def step_epilogue(dirs, i, F):
     """The directives after the last field event (from `i`, following forward `jmp`s and labels) must be the
     plain return: only `nop`, labels, `mov d(%rsp),%rax|%rbx`, `xor %eax,%eax`, `xor %ebx,%ebx`, then
     `add $F,%rsp; pop %rbp; retq` with the head's frame size F. Any other directive (a store, a call, a branch)
-    could change a decoded field after its event: StepEpiMiss (class other). A `jmp` to a label that is
-    not in the file is a StepEpiMiss too. Returns STEP_EPI_OK only after `add $F,%rsp; pop %rbp; retq`."""
+    could change a decoded field after its event: StepEpilogueMiss (class other). A `jmp` to a label that is
+    not in the file is a StepEpilogueMiss too. Returns STEP_EPILOGUE_OK only after `add $F,%rsp; pop %rbp; retq`."""
     seen = set()
     while True:
         if i >= len(dirs) or i in seen:
-            raise StepEpiMiss(i, "epilogue: end of file or a loop before `add $F,%rsp; pop %rbp; retq`", "other")
+            raise StepEpilogueMiss(i, "epilogue: end of file or a loop before `add $F,%rsp; pop %rbp; retq`", "other")
         seen.add(i)
         d = dirs[i]
         if d == "nop" or label_of(d) is not None or re.fullmatch(r"mov (0x[0-9a-f]+)?\(%rsp\),%(rax|rbx)", d) \
@@ -2064,18 +2064,18 @@ def step_epilogue(dirs, i, F):
             try:
                 jl = label_index(dirs, m.group(1))
             except NoMatch:
-                raise StepEpiMiss(i, f"epilogue: directive {i} `{d}` jumps to a label that is not in the file (code "
+                raise StepEpilogueMiss(i, f"epilogue: directive {i} `{d}` jumps to a label that is not in the file (code "
                                    f"after the last field event is unknown)", "other")
             if jl <= i:
-                raise StepEpiMiss(i, f"epilogue: directive {i} `{d}` jumps backwards", "other")
+                raise StepEpilogueMiss(i, f"epilogue: directive {i} `{d}` jumps backwards", "other")
             i = jl
             continue
         if d == f"add ${F:#x},%rsp":
             rest = [x for x in dirs[i + 1:i + 6] if x != "nop"][:2]
             if rest == ["pop %rbp", "retq"]:
-                return STEP_EPI_OK
-            raise StepEpiMiss(i, f"epilogue: `{d}` not followed by `pop %rbp; retq`", "other")
-        raise StepEpiMiss(i, f"epilogue: directive {i} `{d}` after the last field event is not part of the plain "
+                return STEP_EPILOGUE_OK
+            raise StepEpilogueMiss(i, f"epilogue: `{d}` not followed by `pop %rbp; retq`", "other")
+        raise StepEpilogueMiss(i, f"epilogue: directive {i} `{d}` after the last field event is not part of the plain "
                            f"return (`mov d(%rsp),%rax|%rbx`, `xor`, `add ${F:#x},%rsp; pop %rbp; retq`): it could change "
                            f"a decoded field", "other")
 
@@ -2128,7 +2128,7 @@ def step_step_text(C, prefix, u):
     lem, kind = STEP_LEMMA[k]
     j, e, jd = u["j"], u["e"], u["jd"]
     n = e - j
-    name = f"{prefix}_s{jd}"
+    name = f"{prefix}_directive_{jd}"
     P = {x: u[x] for x in ("rD", "rS", "rB") if x in u}
     if "disp" in u:
         P["D"] = _i64(u["disp"])
@@ -2281,7 +2281,7 @@ def decoder_step(args):
     FAIL-CLOSED: the `else` branch below is the ONLY place that returns a text (exit 0). It is reached only
     when `_decoder_step` completed normally AND set all three flags of STEP_FLAGS: `head_ok` (step_head returned),
     `fields_complete` (the walk returned without a stop, every IR field completed in IR order) and `epilogue_ok`
-    (step_epilogue returned STEP_EPI_OK). NoMatch / Partial keep their exit 2 / 3; ANY other exception of any phase
+    (step_epilogue returned STEP_EPILOGUE_OK). NoMatch / Partial keep their exit 2 / 3; ANY other exception of any phase
     (also SystemExit, but not KeyboardInterrupt) becomes exit 2 with every field not covered."""
     flags = dict.fromkeys(STEP_FLAGS, False)
     try:
@@ -2312,7 +2312,7 @@ def _decoder_step(args, flags):
     if args.compose:
         raise NoMatch("--steps --compose: refused. The step lemmas have no kind for a field composition, none for a "
                       "composed accept statement with step blocks (call fields, register-parametric byte segments, step "
-                      "chains) and none for the head / epilogue lemmas (decpro_seg, step_nil_check, decret_seg); a composed "
+                      "chains) and none for the head / epilogue lemmas (dec_prologue_seg, step_nil_check, dec_return_seg); a composed "
                       "theorem would have no statement check. Accept theorems over the generated chains stay hand "
                       "compositions")
     ssz_size = ir_ssz_size(args.ir, args.type)  # an IR error (NoMatch) here is exit 2 without a field list, as before
@@ -2335,12 +2335,12 @@ def _decoder_step(args, flags):
     done, stop, end = step_walk(dirs, fields, head_end, slots, F)
     if stop is None and end is not None and [y for (y, _) in done] == list(range(len(fields))):
         flags["fields_complete"] = True
-        # phase 3: epilogue. ANY exception or any return value other than STEP_EPI_OK: no field is covered (exit 2)
+        # phase 3: epilogue. ANY exception or any return value other than STEP_EPILOGUE_OK: no field is covered (exit 2)
         try:
             r = step_epilogue(dirs, end, F)
         except Exception as e:
             r = e
-        if r is STEP_EPI_OK:
+        if r is STEP_EPILOGUE_OK:
             flags["epilogue_ok"] = True
             summ["epilogue"] = dict(status="covered")
         else:
@@ -2484,7 +2484,7 @@ def _decoder_whole_accept(args, flags):
     done, stop, end = step_walk(dirs, fields, head_end, slots, F)
     if stop is not None or end is None or [y for (y, _) in done] != list(range(len(fields))):
         raise whole_accept_gen.WholeAcceptRefuse("step walk did not complete every field")
-    if step_epilogue(dirs, end, F) is not STEP_EPI_OK:
+    if step_epilogue(dirs, end, F) is not STEP_EPILOGUE_OK:
         raise whole_accept_gen.WholeAcceptRefuse("step epilogue check failed")
     flags["step_ok"] = True
     # phase 2: the description (frame facts, boundary states) from the walk; WholeAcceptRefuse on anything not modelled
@@ -2494,8 +2494,8 @@ def _decoder_whole_accept(args, flags):
     body = t.body()
     flags["rendered"] = True
     n = len(fields)
-    want = ([(f"{args.prefix}_head", "decHeadKindAnyFrame")] + [(f"{args.prefix}_f{i + 1}", "decFieldKindAnyFrame") for i in range(n)]
-            + [(f"{args.prefix}_epi", "decEpilogueKindAnyFrame"), (f"{args.prefix}_accept", "decAcceptKindAnyFrame"),
+    want = ([(f"{args.prefix}_head", "decHeadKindAnyFrame")] + [(f"{args.prefix}_field_{i + 1}", "decFieldKindAnyFrame") for i in range(n)]
+            + [(f"{args.prefix}_epilogue", "decEpilogueKindAnyFrame"), (f"{args.prefix}_accept", "decAcceptKindAnyFrame"),
                (f"{args.prefix}_reject", "decRejectKindAnyFrame")])
     if t.kinds_emitted != want:
         raise whole_accept_gen.WholeAcceptRefuse(f"kind lines emitted {t.kinds_emitted}, required {want}")
@@ -2579,8 +2579,8 @@ def _encoder_fast_path(args, flags):
     body, kinds = g.text()
     flags["rendered"] = True
     px, n = args.prefix, len(g.fields)
-    want = ([(f"{px}_head", "encHeadKindAnyFrame")] + [(f"{px}_f{i}", "encFieldKindAnyFrame") for i in range(n)]
-            + [(f"{px}_epi", "encEpilogueKindAnyFrame"), (f"{px}_fast", "encFastPathKindAnyFrame")])
+    want = ([(f"{px}_head", "encHeadKindAnyFrame")] + [(f"{px}_field_{i}", "encFieldKindAnyFrame") for i in range(n)]
+            + [(f"{px}_epilogue", "encEpilogueKindAnyFrame"), (f"{px}_fast", "encFastPathKindAnyFrame")])
     if kinds != want:
         raise fast_path_gen.FastPathRefuse(f"kind lines emitted {kinds}, required {want}")
     for name, kind in want:

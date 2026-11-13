@@ -13,13 +13,13 @@ composition. Its statement is the independent hand statement `Prysm.Deposit_Data
 committed before the generator ran). Proof text: the composition text of `Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean` (generated for
 the in-sample DepositMessage) with the Deposit_Data indices, offsets and one more field.
 
-* head 0–12: `dechead_seg` (size 184);
+* head 0–12: `dec_head_seg` (size 184);
 * PublicKey 13–36: GENERATED `Decode.generated_field_PublicKey_seg` (raw `Prysm/Deposit_Data/GeneratedDecodeFieldSegmentsPartial.lean`); pointer tail 37–38, 45–46;
 * WithdrawalCredentials 47–72: HAND `bytes32dec_seg_nop` (`Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean`; the generator did not match the
   `nop` at 50); pointer tail 73–74, 81–82;
 * Amount 83–85: GENERATED `Decode.generated_field_Amount_seg`;
 * Signature 86–110: GENERATED `Decode.generated_field_Signature_seg`; pointer tail 111–112, 119–120;
-* epilogue 121–125: `decepi_seg`.
+* epilogue 121–125: `dec_epilogue_seg`.
 -/
 
 open Machine Runtime Prysm.Deposit_Data.Code
@@ -43,8 +43,8 @@ theorem Decode.accept : Decode.accept_statement := by
   -- code facts
   have hH := Codec.infix_sub (q := Codec.decHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_233" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_21f" 184) 0 hk
     (by simp only [unmarshalSSZ, Codec.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hTa0 := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_ca" 24) 37 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hTa0 := Codec.infix_sub (q := Codec.bytesDecTailReloadJump Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_ca" 24) 37 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecTailReloadJump, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hTb0 := Codec.infix_sub (q := Codec.bytesDecTailPointerStore Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_ca" 8) 45 hk
     (by simp only [unmarshalSSZ, Codec.bytesDecTailPointerStore, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hlT0 := Machine.label_at' hk hf (j := 45)
@@ -58,15 +58,15 @@ theorem Decode.accept : Decode.accept_statement := by
   have hlW := Machine.label_at' hk hf (j := 61)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hTa1 := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_169" 24) 73 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hTa1 := Codec.infix_sub (q := Codec.bytesDecTailReloadJump Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_169" 24) 73 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecTailReloadJump, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hTb1 := Codec.infix_sub (q := Codec.bytesDecTailPointerStore Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_169" 32) 81 hk
     (by simp only [unmarshalSSZ, Codec.bytesDecTailPointerStore, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hlT1 := Machine.label_at' hk hf (j := 81)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hTa2 := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_211" 24) 111 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hTa2 := Codec.infix_sub (q := Codec.bytesDecTailReloadJump Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_211" 24) 111 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecTailReloadJump, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hTb2 := Codec.infix_sub (q := Codec.bytesDecTailPointerStore Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_211" 64) 119 hk
     (by simp only [unmarshalSSZ, Codec.bytesDecTailPointerStore, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hlT2 := Machine.label_at' hk hf (j := 119)
@@ -76,7 +76,7 @@ theorem Decode.accept : Decode.accept_statement := by
   have hE := Codec.infix_sub (q := Codec.decEpilogue) 121 hk
     (by simp only [unmarshalSSZ, Codec.decEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   -- head: entry → directive 13
-  refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ 184 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
+  refine eventually_trans _ _ _ _ (Codec.dec_head_seg _ _ _ _ 184 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
     (by dsimp only; ecancel) hguard (by rw [hlen]; rfl)) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
@@ -169,7 +169,7 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc8 hrsp8 hrbp8 hr148 hrdx8 Hm8
   subst hpc8
   -- epilogue, 121–125
-  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + 121) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Codec.dec_epilogue_seg (k + 121) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra r14 _ d8 hrsp8 hr148 (by ecancel)) ?_
   rintro ⟨d9, pc9⟩ ⟨hpc9, hrax9, hrbx9, hrsp9, hrbp9, hr149, Hm9⟩
   dsimp only at hpc9 hrax9 hrbx9 hrsp9 hrbp9 hr149 Hm9

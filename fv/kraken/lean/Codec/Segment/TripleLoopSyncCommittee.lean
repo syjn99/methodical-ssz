@@ -3,9 +3,9 @@ import Codec.Segment.Bytes32LoopHistoricalBatch
 import Prysm.SyncCommittee.DecodeLoop
 
 /-!
-# The SyncCommittee loop `Prysm.SyncCommittee.Decode.loop` re-derived from the general loop `Codec.Segment.vtri_loop`
+# The SyncCommittee loop `Prysm.SyncCommittee.Decode.loop` re-derived from the general loop `Codec.Segment.triple_loop`
 
-The theorem has the type of the hand lemma `Prysm.SyncCommittee.Decode.loop` (`type_of%`); its proof instantiates `vtri_loop` (k = 4, w = 48,
+The theorem has the type of the hand lemma `Prysm.SyncCommittee.Decode.loop` (`type_of%`); its proof instantiates `triple_loop` (k = 4, w = 48,
 n = 512, the SyncCommittee frame slots, receiver offsets 8 and 16, src = 0) and steps the exit label (directive 80). Block facts
 by `infix_sub` on the real program; gaps read from the `nop` directives 39, 47 and 61.
 -/
@@ -64,7 +64,7 @@ theorem sync_committee_loop : type_of% @Prysm.SyncCommittee.Decode.loop := by
   | zero =>
     have hi : i = 512 := by omega
     subst hi
-    refine eventually_trans _ _ _ _ (vtri_exit 512 (by decide) _ _ 24 _ (k + 40) (k + 80) hB1 hle
+    refine eventually_trans _ _ _ _ (triple_loop_exit 512 (by decide) _ _ 24 _ (k + 40) (k + 80) hB1 hle
       (fun st => st.pc = Host.addrOf (k + 80) ∧ st.data.regs = s.regs ∧ st.data.dmem = s.dmem) s hrax
       (fun _ => ⟨rfl, rfl, rfl⟩)) ?_
     rintro st ⟨hpc, hr, hm⟩
@@ -74,7 +74,7 @@ theorem sync_committee_loop : type_of% @Prysm.SyncCommittee.Decode.loop := by
       l28, spl, rslot, lo, hps, h18, h20, h28, hspl, hrs, hlo, ?_⟩
     rw [hd, hm]; simpa using h_mem
   | succ j =>
-    refine eventually_trans _ _ _ _ (vtri_loop 4 48 (Or.inr (Or.inl ⟨rfl, rfl⟩)) 512 (by decide) (syncCommitteeLabel "a0")
+    refine eventually_trans _ _ _ _ (triple_loop 4 48 (Or.inr (Or.inl ⟨rfl, rfl⟩)) 512 (by decide) (syncCommitteeLabel "a0")
       (syncCommitteeLabel "156") (syncCommitteeLabel "1ff") (syncCommitteeLabel "137") (syncCommitteeLabel "91") 24 32 40 72 64 16 8 0 (k + 40) (k + 48) (k + 56) (k + 62)
       (k + 69) (k + 36) (k + 80) hB1 hB2 hB3 hB4 hB5 hB6 g1 (Or.inl ⟨rfl, rfl⟩) g2 (Or.inl rfl) g4 hlb hle
       sp recv bf bf A (sp + 24) (sp + 32) (sp + 40) (sp + 72) (sp + 64) (recv + 16) (recv + 8)

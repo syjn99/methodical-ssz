@@ -6,14 +6,14 @@ import Codec.DecoderHeadEpilogue
 
 The prologue of every development decoder (directives 0–10) is the same up to the frame size `F`, the
 displacement `dB` of the first rbx spill, the SSZ size `sz` and the labels. The `--field-segments` and `--call-segments` methods had one head lemma for
-the frame `0x20` (`Codec.dechead_seg`) and one hand lemma per call-field type (`Prysm.PendingPartialWithdrawal.Decode.head`, `Prysm.BeaconBlockHeader.Decode.head0`,
-`Prysm.SyncCommitteeMessage.Decode.head0`, `Prysm.PendingConsolidation.Decode.head`; epilogues
+the frame `0x20` (`Codec.dec_head_seg`) and one hand lemma per call-field type (`Prysm.PendingPartialWithdrawal.Decode.head`, `Prysm.BeaconBlockHeader.Decode.head_to_arguments`,
+`Prysm.SyncCommitteeMessage.Decode.head_to_arguments`, `Prysm.PendingConsolidation.Decode.head`; epilogues
 `Prysm.PendingPartialWithdrawal.Decode.epilogue`, `Prysm.PendingConsolidation.Decode.epilogue`). Here:
 
-* `decpro_seg fn l0 lmore lerr F dB sz` — the prologue over a window (`Codec/NopWindow.lean`; the `nop` at directive
+* `dec_prologue_seg fn l0 lmore lerr F dB sz` — the prologue over a window (`Codec/NopWindow.lean`; the `nop` at directive
   8 is a window nop), with `F`, `dB`, `sz` symbolic; every register except rsp / rbp is kept (register clause);
 * `step_nil_check rB` — the step `test %al,(%rB)`;
-* `decret_seg` — `pop %rbp; retq` over a window.
+* `dec_return_seg` — `pop %rbp; retq` over a window.
 The spills after the prologue (2–3, order differs per type) are `step_store` steps; the epilogue reloads and the
 `add $F,%rsp` are `step_load_*` / `step_add_immediate` steps (`Codec/WindowSteps.lean`). `Prysm/SyncCommitteeMessage/DecoderPrologueInstances.lean` re-proves the per-type hand
 lemmas with their committed statements from these. No runtime contract is used.
@@ -73,7 +73,7 @@ set_option maxRecDepth 100000 in
 /-- **Prologue segment, frame-parametric**: the window `q` at `j` holds `decoderPrologue …` and nops. With `rcx = sz`
 and the stack guard below rsp: rsp = `sp = rsp₀ − 8 − F`, rbp = `rsp₀ − 8`, the caller's rbp is saved at
 `rsp₀ − 8`, rbx is spilled to `aS = sp + dB`; every register except rsp and rbp is kept. -/
-theorem decpro_seg (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Program) (j e : Nat)
+theorem dec_prologue_seg (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Program) (j e : Nat)
     (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = decoderPrologue fn l0 lmore lerr F dB sz) (hend : j + q.length = e)
     (s : MachineData) (ra guard : UInt64) (sp aS : BitVec 64)
     (hsp : s.regs.rsp.toBitVec - 8 - F.toBitVec = sp) (hS : sp + dB.toBitVec = aS)
@@ -151,7 +151,7 @@ set_option maxRecDepth 100000 in
 /-- **Return segment**: the window `q` at `j` holds `pop %rbp; retq` and nops. With rsp = `sp`, the saved frame
 pointer `fp0` at `sp` and the return address `ra` at `aRa = sp + 8`: the pc is `ra`, rsp = `sp + 16`,
 rbp = `fp0`; every other register and the memory are kept. -/
-theorem decret_seg (q : Program) (j : Nat) (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = decRet)
+theorem dec_return_seg (q : Program) (j : Nat) (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = decRet)
     (sp aRa : BitVec 64) (hRa : sp + 8 = aRa) (fp0 ra : UInt64) (R : DataMem → Prop)
     (s : MachineData) (hrsp : s.regs.rsp = { toBitVec := sp })
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 fp0.toBitVec.toInt).At sp)

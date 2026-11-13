@@ -11,7 +11,7 @@ has a `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueK
 **Fast path only**: `len(dst) + 16 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
-FAST-PATH-JSON: {"type": "VoluntaryExit", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 16, "frame": 112, "guard_addend": 0, "runtime_calls": false, "fields": [["Epoch", "u", 8], ["ValidatorIndex", "u", 8]], "boundaries": [8, 35, 60], "layout": "Prysm.VoluntaryExit.Encode.generated_layout", "S_sha256": "bd095ba28de869327ec6b2aa03921ae4f3a4bbfcedfaf723460d8b1931ba8b72", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.VoluntaryExit", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindAnyFrame"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_epi", "kind": "encEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encFastPathKindAnyFrame"}]}
+FAST-PATH-JSON: {"type": "VoluntaryExit", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 16, "frame": 112, "guard_addend": 0, "runtime_calls": false, "fields": [["Epoch", "u", 8], ["ValidatorIndex", "u", 8]], "boundaries": [8, 35, 60], "layout": "Prysm.VoluntaryExit.Encode.generated_layout", "S_sha256": "bd095ba28de869327ec6b2aa03921ae4f3a4bbfcedfaf723460d8b1931ba8b72", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.VoluntaryExit", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encFastPathKindAnyFrame"}]}
 -/
 
 open Machine Runtime Codec Prysm.VoluntaryExit.Code
@@ -109,7 +109,7 @@ theorem Encode.generated_head_kind : ∀ (h : Host), type_of% (@Encode.generated
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 0 `Epoch` (uint64): directives 8–34; boundary state 0 → 1. -/
-theorem Encode.generated_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.generated_field_0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v0 v1 pre d0 d1 : List UInt8) (hast : ast.length = 8) (hv0 : v0.length = 8) (hv1 : v1.length = 8) (hd0 : d0.length = 8) (hd1 : d1.length = 8)
     (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s2 t40 t24 t72 t56 : List UInt8) (hfp : fp.length = 8) (hs2 : s2.length = 8) (ht40 : t40.length = 16) (ht24 : t24.length = 16) (ht72 : t72.length = 16) (ht56 : t56.length = 16)
@@ -218,7 +218,7 @@ theorem Encode.generated_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
-theorem Encode.generated_f0_kind : ∀ (h : Host), type_of% (@Encode.generated_f0 h)
+theorem Encode.generated_field_0_kind : ∀ (h : Host), type_of% (@Encode.generated_field_0 h)
     = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.VoluntaryExit.Encode.generated_layout [.u64, .u64]
     ⟨8, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 40) (.original 2), .at (.below 24) (.original 3), .at (.below 72) (.original 4), .at (.below 56) (.original 5)],
@@ -231,7 +231,7 @@ theorem Encode.generated_f0_kind : ∀ (h : Host), type_of% (@Encode.generated_f
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 1 `ValidatorIndex` (uint64): directives 35–59; boundary state 1 → 2. -/
-theorem Encode.generated_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.generated_field_1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v0 v1 pre d0 d1 : List UInt8) (hast : ast.length = 8) (hv0 : v0.length = 8) (hv1 : v1.length = 8) (hd0 : d0.length = 8) (hd1 : d1.length = 8)
     (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s2 t40 t24 t72 t56 : List UInt8) (hfp : fp.length = 8) (hs2 : s2.length = 8) (ht40 : t40.length = 16) (ht24 : t24.length = 16) (ht72 : t72.length = 16) (ht56 : t56.length = 16)
@@ -342,7 +342,7 @@ theorem Encode.generated_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, x0, x1, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), hx0, hx1, (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
-theorem Encode.generated_f1_kind : ∀ (h : Host), type_of% (@Encode.generated_f1 h)
+theorem Encode.generated_field_1_kind : ∀ (h : Host), type_of% (@Encode.generated_field_1 h)
     = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.VoluntaryExit.Encode.generated_layout [.u64, .u64]
     ⟨35, 1, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1), .at (.below 72) (.original 4), .at (.below 56) (.original 5)],
@@ -355,7 +355,7 @@ theorem Encode.generated_f1_kind : ∀ (h : Host), type_of% (@Encode.generated_f
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Epilogue: directives 60–return; boundary state 2 → the fast-path post-state. -/
-theorem Encode.generated_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v0 v1 pre d0 d1 : List UInt8) (hast : ast.length = 8) (hv0 : v0.length = 8) (hv1 : v1.length = 8) (hd0 : d0.length = 8) (hd1 : d1.length = 8)
     (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s2 t40 t24 t72 t56 : List UInt8) (hfp : fp.length = 8) (hs2 : s2.length = 8) (ht40 : t40.length = 16) (ht24 : t24.length = 16) (ht72 : t72.length = 16) (ht56 : t56.length = 16)
@@ -443,7 +443,7 @@ theorem Encode.generated_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.p
   intro fl; normalize_registers
   apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 120) + 112 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
   normalize_registers
-  refine eventually_trans _ _ _ _ (decret_seg _ (k + 66) (window_infix_at hk 66 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 66) (window_infix_at hk 66 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -461,7 +461,7 @@ theorem Encode.generated_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.p
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
-theorem Encode.generated_epi_kind : ∀ (h : Host), type_of% (@Encode.generated_epi h)
+theorem Encode.generated_epilogue_kind : ∀ (h : Host), type_of% (@Encode.generated_epilogue h)
     = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.VoluntaryExit.Encode.generated_layout [.u64, .u64]
     ⟨60, 2, [(.rbx, .ptr), (.rdi, .cap), (.r8, .len 16)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1), .at (.below 72) (.field 1), .at (.below 64) (.existential 2), .at (.below 56) (.existential 3)],
@@ -527,11 +527,11 @@ theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   intro k hk hf ast v0 v1 pre d0 d1 hast hv0 hv1 hd0 hd1 s ra guard hpre fp s2 t40 t24 t72 t56 hfp hs2 ht40 ht24 ht72 ht56 R h_mem hguard hsp hcap hcap63
   refine eventually_trans _ _ _ _ (Encode.generated_head k hk hf ast v0 v1 pre d0 d1 hast hv0 hv1 hd0 hd1 s ra guard hpre fp s2 t40 t24 t72 t56 hfp hs2 ht40 ht24 ht72 ht56 R h_mem hguard hsp hcap hcap63) ?_
   intro st0 h0
-  refine eventually_trans _ _ _ _ (Encode.generated_f0 k hk hf ast v0 v1 pre d0 d1 hast hv0 hv1 hd0 hd1 s ra guard hpre fp s2 t40 t24 t72 t56 hfp hs2 ht40 ht24 ht72 ht56 R hsp hcap hcap63 st0 h0) ?_
+  refine eventually_trans _ _ _ _ (Encode.generated_field_0 k hk hf ast v0 v1 pre d0 d1 hast hv0 hv1 hd0 hd1 s ra guard hpre fp s2 t40 t24 t72 t56 hfp hs2 ht40 ht24 ht72 ht56 R hsp hcap hcap63 st0 h0) ?_
   intro st1 h1
-  refine eventually_trans _ _ _ _ (Encode.generated_f1 k hk hf ast v0 v1 pre d0 d1 hast hv0 hv1 hd0 hd1 s ra guard hpre fp s2 t40 t24 t72 t56 hfp hs2 ht40 ht24 ht72 ht56 R hsp hcap hcap63 st1 h1) ?_
+  refine eventually_trans _ _ _ _ (Encode.generated_field_1 k hk hf ast v0 v1 pre d0 d1 hast hv0 hv1 hd0 hd1 s ra guard hpre fp s2 t40 t24 t72 t56 hfp hs2 ht40 ht24 ht72 ht56 R hsp hcap hcap63 st1 h1) ?_
   intro st2 h2
-  exact Encode.generated_epi k hk hf ast v0 v1 pre d0 d1 hast hv0 hv1 hd0 hd1 s ra guard hpre fp s2 t40 t24 t72 t56 hfp hs2 ht40 ht24 ht72 ht56 R hsp hcap hcap63 st2 h2
+  exact Encode.generated_epilogue k hk hf ast v0 v1 pre d0 d1 hast hv0 hv1 hd0 hd1 s ra guard hpre fp s2 t40 t24 t72 t56 hfp hs2 ht40 ht24 ht72 ht56 R hsp hcap hcap63 st2 h2
 theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated_fast h)
     = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.VoluntaryExit.Encode.generated_layout [.u64, .u64] := by
   intro h; rfl

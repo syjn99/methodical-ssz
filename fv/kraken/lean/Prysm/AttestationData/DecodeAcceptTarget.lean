@@ -130,7 +130,7 @@ theorem Decode.target (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   unfold_step
   rw [Decode.accept_call] at *
   -- the callee frame in the S + 96 stack bytes
-  obtain ⟨l0, l1, l2, l3, l4, l5, l6, l7, l8⟩ := Decode.frame_lens stk3 S hstk3
+  obtain ⟨l0, l1, l2, l3, l4, l5, l6, l7, l8⟩ := Decode.frame_lengths stk3 S hstk3
   rw [Decode.frame_slices stk3 S] at H4
   try dsimp only at H4
   rw [Decode.frame_sep _ S hS _ _ _ _ _ _ _ _ _ l0 l1 l2 l3 l4 l5 l6 l7 l8, Decode.accept_split_argument_words _ _ l2] at H4

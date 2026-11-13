@@ -7,9 +7,9 @@
  },
  {
   "module": "Prysm/HistoricalBatch/NegativeSuiteTargets.lean",
-  "id": "historical-batch-negative-suite-targets-complete-chk-control",
+  "id": "historical-batch-negative-suite-targets-complete-check-control",
   "kind": "control",
-  "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.complete_chk"
+  "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.complete_check"
  },
  {
   "module": "Prysm/HistoricalBatch/NegativeSuiteTargets.lean",
@@ -22,9 +22,9 @@
  },
  {
   "module": "Prysm/HistoricalBatch/NegativeSuiteTargets.lean",
-  "id": "historical-batch-negative-suite-targets-complete-chk-statement-size-524288-to-524287",
+  "id": "historical-batch-negative-suite-targets-complete-check-statement-size-524288-to-524287",
   "kind": "stmt",
-  "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.complete_chk",
+  "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.complete_check",
   "statement_def": "complete_prop",
   "old": "bs.size ≠ 524288",
   "new": "bs.size ≠ 524287"
@@ -37,9 +37,9 @@
  },
  {
   "module": "Prysm/Deposit/NegativeSuiteTargets.lean",
-  "id": "deposit-negative-suite-targets-complete-chk-control",
+  "id": "deposit-negative-suite-targets-complete-check-control",
   "kind": "control",
-  "theorem": "Prysm.Deposit.NegativeSuiteTargets.complete_chk"
+  "theorem": "Prysm.Deposit.NegativeSuiteTargets.complete_check"
  },
  {
   "module": "Prysm/Deposit/NegativeSuiteTargets.lean",
@@ -52,9 +52,9 @@
  },
  {
   "module": "Prysm/Deposit/NegativeSuiteTargets.lean",
-  "id": "deposit-negative-suite-targets-complete-chk-statement-size-1240-to-1239",
+  "id": "deposit-negative-suite-targets-complete-check-statement-size-1240-to-1239",
   "kind": "stmt",
-  "theorem": "Prysm.Deposit.NegativeSuiteTargets.complete_chk",
+  "theorem": "Prysm.Deposit.NegativeSuiteTargets.complete_check",
   "statement_def": "complete_prop",
   "old": "bs.size ≠ 1240",
   "new": "bs.size ≠ 1239"

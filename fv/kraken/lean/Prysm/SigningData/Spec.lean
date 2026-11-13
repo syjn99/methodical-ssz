@@ -44,7 +44,7 @@ def SszValue.toValue (g : SszValue) : Value :=
 def SszValue.encode (g : SszValue) : Array UInt8 :=
   g.objectRoot.toArray ++ g.domain.toArray
 
-theorem SszValue.enc_size (g : SszValue) : (SszValue.encode g).size = 64 := by
+theorem SszValue.encode_size (g : SszValue) : (SszValue.encode g).size = 64 := by
   simp [SszValue.encode]
 
 theorem SszValue.toValue_fits (g : SszValue) : Value.fits desc g.toValue = true := by
@@ -104,7 +104,7 @@ theorem SszValue.spec_accepts_iff (bs : Array UInt8) : (∃ v, deserialize desc 
   constructor
   · rintro ⟨v, hd⟩
     obtain ⟨g, rfl, hb⟩ := SszValue.accepted_is_encoding hd
-    rw [hb]; exact SszValue.enc_size g
+    rw [hb]; exact SszValue.encode_size g
   · intro h
     let g : SszValue := ⟨⟨bs.extract 0 32, by simp; omega⟩, ⟨bs.extract 32 64, by simp; omega⟩⟩
     have e : bs = SszValue.encode g := by

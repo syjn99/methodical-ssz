@@ -46,9 +46,9 @@ theorem Decode.from_generated_steps_SourceIndex_field (k : Nat) (hk : unmarshalS
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 hrax hrbx h_mem ⊢
   subst rsp rbp r14 hrax hrbx
-  apply Decode.generated_step_s15 k hk hf
+  apply Decode.generated_step_directive_15 k hk hf
   intro fl1; normalize_registers
-  apply Decode.generated_step_s16 k hk hf
+  apply Decode.generated_step_directive_16 k hk hf
   normalize_registers
   refine eventually_trans _ _ _ _ (Decode.generated_step_SourceIndex_call k hk hf hC sp (rax.toBitVec + 8) rbx.toBitVec aRet aFp aS2 hRet hFp hS2 rbp0 r140 guard e8 rslot
     fp s2 c0 he8 hrs hfp hs2 hc0 hguard _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl) (by first | rfl | decide)
@@ -95,19 +95,19 @@ theorem Decode.from_generated_steps_TargetIndex_field (k : Nat) (hk : unmarshalS
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14
-  apply Decode.generated_step_s48 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_48 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s49 k hk hf
+  apply Decode.generated_step_directive_49 k hk hf
   intro fl1; normalize_registers
-  apply Decode.generated_step_s50 k hk hf sp aD hD vD hvD _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_50 k hk hf sp aD hD vD hvD _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s51 k hk hf
+  apply Decode.generated_step_directive_51 k hk hf
   intro fl2; normalize_registers
-  apply Decode.generated_step_s52 k hk hf sp aR rcv hR _ _ _ (by rfl) (by ecancel)
+  apply Decode.generated_step_directive_52 k hk hf sp aR rcv hR _ _ _ (by rfl) (by ecancel)
   normalize_registers
-  apply Decode.generated_step_s53 k hk hf
+  apply Decode.generated_step_directive_53 k hk hf
   intro fl3; normalize_registers
-  apply Decode.generated_step_s54 k hk hf
+  apply Decode.generated_step_directive_54 k hk hf
   normalize_registers
   refine eventually_trans _ _ _ _ (Decode.generated_step_TargetIndex_call k hk hf hC sp (rcv + 16) (bf + 8) aRet aFp aS2 hRet hFp hS2 rbp0 r140 guard e8 rslot
     fp s2 c0 he8 hrs hfp hs2 hc0 hguard _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl) (by first | rfl | decide)

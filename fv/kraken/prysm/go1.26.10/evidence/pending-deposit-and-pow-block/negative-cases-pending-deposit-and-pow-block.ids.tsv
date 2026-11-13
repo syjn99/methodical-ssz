@@ -2,7 +2,7 @@
 pd-gen-control	pending-deposit-decode-generated-step-signature-seg-control
 pd-gen-code-siglen	pending-deposit-decode-generated-step-signature-seg-code-mov-0x60-to-0x50
 pd-gen-stmt-src	pending-deposit-decode-generated-step-signature-seg-statement-h-src-88-to-80
-pd-gen-code-slotoff	pending-deposit-decode-generated-step-s124-code-add-0xb8-to-0xb0
+pd-gen-code-slotoff	pending-deposit-decode-generated-step-directive-124-code-add-0xb8-to-0xb0
 pd-head-control	pending-deposit-decode-head-control
 pd-head-code-order	pending-deposit-decode-head-code-mov-0x68-rsp-to-0x60-rsp
 pd-head-code-size	pending-deposit-decode-head-code-cmp-0xc0-to-0xc8
@@ -22,7 +22,7 @@ pd-witr-stmt-len	pending-deposit-witness-decode-reject-size-runs-statement-hlen-
 pb-gen-control	pow-block-decode-generated-step-total-difficulty-seg-control
 pb-gen-code-len	pow-block-decode-generated-step-total-difficulty-seg-code-mov-0x20-to-0x18
 pb-gen-stmt-src	pow-block-decode-generated-step-total-difficulty-seg-statement-h-src-64-to-56
-pb-gen-code-store	pow-block-decode-generated-step-s118-code-mov-0x30-rdx-to-0x28-rdx
+pb-gen-code-store	pow-block-decode-generated-step-directive-118-code-mov-0x30-rdx-to-0x28-rdx
 pb-field-control	pow-block-decode-from-generated-steps-parent-hash-field-control
 pb-field-stmt-src	pow-block-decode-from-generated-steps-parent-hash-field-statement-h-src-32-to-24
 pb-field-stmt-end	pow-block-decode-from-generated-steps-total-difficulty-field-statement-pc-119-to-118

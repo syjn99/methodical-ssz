@@ -9,7 +9,7 @@ the two words of `ssz.ErrSize` into rax / rbx, `add $F,%rsp; pop %rbp; retq`. On
 spill displacement `dB = F + 24`, the size `sz` and the labels differ.
 - `decRejectKindAnyFrame C sz`: the statement of the committed theorems `Prysm.<Type>.Decode.reject_size` with the code
   constant and the size replaced (ties: `Prysm/BlobIdentifier/DecodeRejectSizeKindInstances.lean`).
-- `decrej_seg`: the proof over windows (nops anywhere): `decoderPrologue` (`Codec/DecoderPrologue.lean`), `decErrorBlock`, then `decepi_n`.
+- `dec_reject_seg`: the proof over windows (nops anywhere): `decoderPrologue` (`Codec/DecoderPrologue.lean`), `decErrorBlock`, then `dec_epilogue_any_frame`.
 Not covered: callee error returns (`fmt.errorf`), `morestack`.
 -/
 
@@ -19,7 +19,7 @@ open Codec
 namespace Codec
 
 /-- The error block of the size check, first part: `lerr:`, then the two words of `ssz.ErrSize` into rax and
-rbx. The epilogue `add $F,%rsp; pop %rbp; retq` follows (`decepi_n`). -/
+rbx. The epilogue `add $F,%rsp; pop %rbp; retq` follows (`dec_epilogue_any_frame`). -/
 def decErrorBlock (lerr : String) : Program :=
   [Kraken.Directive.label lerr,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
@@ -63,7 +63,7 @@ set_option maxRecDepth 100000 in
 /-- **Size reject, frame-parametric**: the prologue window `q` at `j` (`decoderPrologue`, the `jne lerr` taken because
 `rcx ≠ sz`), the error window `q2` at `j2` = `lerr` (`decErrorBlock`), then `add $F,%rsp` (window `q3` at `j3`) and
 `pop %rbp; retq` (window `q4` at `j4`). `dB = F + 24`: the first spill is the rbx home slot `rsp₀ + 16`. -/
-theorem decrej_seg (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Program) (j : Nat)
+theorem dec_reject_seg (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Program) (j : Nat)
     (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = decoderPrologue fn l0 lmore lerr F dB sz)
     (hdB : dB.toBitVec = F.toBitVec + 24)
     (q2 : Program) (j2 j3 : Nat) (hq2 : q2.IsInfixAt Host.prog j2) (he2 : eraseNop q2 = decErrorBlock lerr)
@@ -150,7 +150,7 @@ theorem decrej_seg (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Program) (
   apply load_step _ _ _ _ (Int.toBytes 8 e1.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   unfold_step
   window_skip_to_end hq2 he2 2 hend2
-  refine eventually_trans _ _ _ _ (decepi_n F q3 j3 j4 hq3 he3 hend3 q4 hq4 he4
+  refine eventually_trans _ _ _ _ (dec_epilogue_any_frame F q3 j3 j4 hq3 he3 hend3 q4 hq4 he4
     (rsp.toBitVec - 8 - F.toBitVec) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) (by bv_omega) rbp ra _ _
     (by first
       | rfl

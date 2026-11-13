@@ -94,7 +94,7 @@ theorem Decode.accept_spec : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pro
   obtain ⟨g, rfl, hb⟩ := SszValue.accepted_is_encoding hd
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 64 := by
-    apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.enc_size]; rfl
+    apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.encode_size]; rfl
   exact Prysm.ValidatorIdentity.Decode.generated_accept k hk hf kV hkV hfV kE hkE hfE _ _ _ (by simp [Spec.uintBytes_size]) (by simp) (by simp [Spec.uintBytes_size]) s ra guard fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aN0 aP1 aL1 aC1 aN2 hfp hs1 hs2 hs4 hsp0 hsp1 hsp2 hl28 hrslot hast haN0 haP1 haL1 haC1 haN2 R S hS hlo Heap avail (Pm g hb) hguard hn hav hms hmm
 
 /-- `len(buf) ≠ 64`: EthLib rejects, and the machine code returns the two words of `ssz.ErrSize`. -/

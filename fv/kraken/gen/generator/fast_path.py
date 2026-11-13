@@ -497,7 +497,7 @@ class FastPathGenerator:
             if a == ("pop",):
                 if self.done != len(self.fields):
                     raise FastPathRefuse(f"return reached after {self.done} of {len(self.fields)} fields")
-                self.epi(i)
+                self.epilogue(i)
                 return
             nd = self.done
             i = self.step(i)
@@ -1043,7 +1043,7 @@ class FastPathGenerator:
         self.reg["rsp"] = ("stk", -(self.F + 8))
         return b
 
-    def epi(self, i):
+    def epilogue(self, i):
         E = self.E
         if (self.reg.get("rax"), self.reg.get("rbx"), self.reg.get("rcx"), self.reg.get("rdi"), self.reg.get("rsi")) != \
                 (("ptr",), ("len", self.size), ("cap",), ("imm", 0), ("imm", 0)):
@@ -1054,7 +1054,7 @@ class FastPathGenerator:
             raise FastPathRefuse("return form (pop %rbp; retq)")
         a0 = i - self.pend
         self.pend = 0
-        E(f"refine eventually_trans _ _ _ _ (decret_seg _ (k + {a0}) (window_infix_at hk {a0} {i + 2 - a0}) (by rfl) "
+        E(f"refine eventually_trans _ _ _ _ (dec_return_seg _ (k + {a0}) (window_infix_at hk {a0} {i + 2 - a0}) (by rfl) "
           "(rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_")
         E("rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩")
         E("dsimp only at hpc' hrsp' hrbp' hreg' hmem'")
@@ -1227,7 +1227,7 @@ class FastPathGenerator:
             b, b2 = self.bstate[i], self.bstate[i + 1]
             f = self.fields[i]
             o.append(f"{OPT}/-- Field {i} `{f[0]}` ({'uint64' if f[1] == 'u' else f'{f[2]} bytes'}): directives {b['pc']}–{b2['pc'] - 1}; boundary state {i} → {i + 1}. -/")
-            o.append(f"theorem {px}_f{i} : ∀ {B}\n    {hrest}{hmm} (st0 : MachineState),\n    ("
+            o.append(f"theorem {px}_field_{i} : ∀ {B}\n    {hrest}{hmm} (st0 : MachineState),\n    ("
                      + self.stp(b, "st0", "        ") + ") →\n    Eventually (step1 Host.exe)\n      (fun st => "
                      + self.stp(b2, "st", "        ") + ")\n      st0 := by")
             o.append(f"  intro {nm} hsp hcap hcap63{hmn}")
@@ -1235,10 +1235,10 @@ class FastPathGenerator:
             o.append("  simp only at hsp hcap hcap63 hpre ⊢")
             o += self.entry(b)
             o += self.thms[i + 1]
-            o.append(kline(f"{px}_f{i}", "encFieldKindAnyFrame", f"\n    {self.stk_(b)}\n    {self.stk_(b2)}"))
+            o.append(kline(f"{px}_field_{i}", "encFieldKindAnyFrame", f"\n    {self.stk_(b)}\n    {self.stk_(b2)}"))
         b = self.bstate[nf]
         o.append(f"{OPT}/-- Epilogue: directives {b['pc']}–return; boundary state {nf} → the fast-path post-state. -/")
-        o.append(f"theorem {px}_epi : ∀ {B}\n    {hrest} (st0 : MachineState),\n    ("
+        o.append(f"theorem {px}_epilogue : ∀ {B}\n    {hrest} (st0 : MachineState),\n    ("
                  + self.stp(b, "st0", "        ") + ") →\n    Eventually (step1 Host.exe)\n      (fun st => "
                  + self.finalp("        ") + ")\n      st0 := by")
         o.append(f"  intro {nm} hsp hcap hcap63")
@@ -1246,7 +1246,7 @@ class FastPathGenerator:
         o.append("  simp only at hsp hcap hcap63 hpre ⊢")
         o += self.entry(b)
         o += self.thms[nf + 1]
-        o.append(kline(f"{px}_epi", "encEpilogueKindAnyFrame", f"\n    {self.stk_(b)}"))
+        o.append(kline(f"{px}_epilogue", "encEpilogueKindAnyFrame", f"\n    {self.stk_(b)}"))
         o.append(f"{OPT}/-- **Encoder fast path of `(*v1alpha1.{self.t}).MarshalSSZTo` (Go 1.26.10), generated** (`encoder --fast-path`):\n"
                  f"head, one theorem per field, epilogue, chained by `eventually_trans`. Premises: `len + {self.size} ≤ cap`,\n"
                  "every byte-vector field of its exact length. Statement = the kind instance (`_kind`). Fast path only. -/")
@@ -1256,9 +1256,9 @@ class FastPathGenerator:
         o.append(f"  refine eventually_trans _ _ _ _ ({px}_head {nm} h_mem hguard hsp hcap hcap63{hmn}) ?_")
         o.append("  intro st0 h0")
         for i in range(nf):
-            o.append(f"  refine eventually_trans _ _ _ _ ({px}_f{i} {nm} hsp hcap hcap63{hmn} st{i} h{i}) ?_")
+            o.append(f"  refine eventually_trans _ _ _ _ ({px}_field_{i} {nm} hsp hcap hcap63{hmn} st{i} h{i}) ?_")
             o.append(f"  intro st{i + 1} h{i + 1}")
-        o.append(f"  exact {px}_epi {nm} hsp hcap hcap63 st{nf} h{nf}")
+        o.append(f"  exact {px}_epilogue {nm} hsp hcap hcap63 st{nf} h{nf}")
         o.append(kline(f"{px}_fast", "encFastPathKindAnyFrame", ""))
         return "\n".join(o), kinds
 

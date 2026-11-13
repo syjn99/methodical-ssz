@@ -7,9 +7,9 @@ import Prysm.BlobIdentifier.DecodeAccept
 
 `Decode.accept_composed_example` has the statement text of `Prysm.BlobIdentifier.Decode.accept`
 (`Decode.accept_composed_example_type`: the two declared types are equal by `rfl`). Its proof steps no
-directive by hand: it is a chain of `eventually_trans` over `dechead_seg`, the BlockRoot segment
+directive by hand: it is a chain of `eventually_trans` over `dec_head_seg`, the BlockRoot segment
 (`Decode.example_field_BlockRoot_seg`, an instance of `bytesdec_seg_offset_zero 32`), `bytesdec_tail_seg`, the Index segment
-(`Decode.example_field_Index_seg`, an instance of `u64dec_inline_seg`) and `decepi_seg`. What stays per type is
+(`Decode.example_field_Index_seg`, an instance of `u64dec_inline_seg`) and `dec_epilogue_seg`. What stays per type is
 the frame instance of each step (addresses relative to the entry rsp, rax, rbx) and the code facts
 (`infix_sub`, `label_at'`). Hand-written example for the generator; the existing theorem is unchanged.
 -/
@@ -19,7 +19,7 @@ variable [Host]
 
 namespace Prysm.BlobIdentifier
 
-theorem Decode.example_lo (x : BitVec 64) (S : Nat) : x - 40 - 8 - BitVec.ofNat 64 S = x - 48 - BitVec.ofNat 64 S := by
+theorem Decode.example_low_address (x : BitVec 64) (S : Nat) : x - 40 - 8 - BitVec.ofNat 64 S = x - 48 - BitVec.ofNat 64 S := by
   bv_omega
 
 set_option maxHeartbeats 4000000 in
@@ -77,8 +77,8 @@ theorem Decode.accept_composed_example (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
   -- code facts
   have hH := Codec.infix_sub (q := Codec.decHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_f6" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_e2" 40) 0 hk
     (by simp only [unmarshalSSZ, Codec.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hT1 := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_c7" 24) 37 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hT1 := Codec.infix_sub (q := Codec.bytesDecTailReloadJump Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_c7" 24) 37 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecTailReloadJump, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hT2 := Codec.infix_sub (q := Codec.bytesDecTailPointerStore Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_c7" 8) 45 hk
     (by simp only [unmarshalSSZ, Codec.bytesDecTailPointerStore, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hlT := Machine.label_at' hk hf (j := 45)
@@ -88,7 +88,7 @@ theorem Decode.accept_composed_example (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
     (by simp only [unmarshalSSZ, Codec.decEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hY : Codec.U64InlineReg Reg64.rsi := by decide
   -- head: entry → directive 13
-  refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ 40 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
+  refine eventually_trans _ _ _ _ (Codec.dec_head_seg _ _ _ _ 40 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
     (by dsimp only; ecancel) hguard (by rw [hlen]; rfl)) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
@@ -99,7 +99,7 @@ theorem Decode.accept_composed_example (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 8) (rax.toBitVec + 16) (rax.toBitVec + 24) S
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
-    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega) (Decode.example_lo _ _)
+    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega) (Decode.example_low_address _ _)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     (by simp only [Int64.toBitVec_ofNat])
     (rsp - 8) r14 r1 hr1 spl rslot lo l18 aP1 aL1 aC1 hspl hrs hlo hl18 haP1 haL1 haC1
@@ -129,7 +129,7 @@ theorem Decode.accept_composed_example (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrdx4 Hm4
   subst hpc4
   -- epilogue, 50–54
-  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + 50) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Codec.dec_epilogue_seg (k + 50) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra r14 _ d4 hrsp4 hr144 (by ecancel)) ?_
   rintro ⟨d5, pc5⟩ ⟨hpc5, hrax5, hrbx5, hrsp5, hrbp5, hr145, Hm5⟩
   dsimp only at hpc5 hrax5 hrbx5 hrsp5 hrbp5 hr145 Hm5

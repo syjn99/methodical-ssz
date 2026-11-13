@@ -10,10 +10,10 @@ enc-e1-main-stmt-len	eth1-data-encode-fast-path-statement-rbx-72-to-73
 enc-e1-main-stmt-dc-unchanged	eth1-data-encode-fast-path-statement-dc-dc-to-d1
 enc-e1-main-stmt-root2-len	eth1-data-encode-fast-path-statement-hr1-32-to-31
 enc-e1-main-stmt-root-order	eth1-data-encode-fast-path-statement-pre-r1-to-r2
-enc-e1-a-control	eth1-data-encode-enc-a-control
-enc-e1-a-guard-lea	eth1-data-encode-enc-a-code-lea-0x8-rsp-to-0x10-rsp
-enc-e1-a-len-imm	eth1-data-encode-enc-a-code-cmpq-0x20-to-0x21
-enc-e1-a-call	eth1-data-encode-enc-a-code-callq-runtime-memmove-to-runtime-growslice
+enc-e1-a-control	eth1-data-encode-encode-deposit-root-control
+enc-e1-a-guard-lea	eth1-data-encode-encode-deposit-root-code-lea-0x8-rsp-to-0x10-rsp
+enc-e1-a-len-imm	eth1-data-encode-encode-deposit-root-code-cmpq-0x20-to-0x21
+enc-e1-a-call	eth1-data-encode-encode-deposit-root-code-callq-runtime-memmove-to-runtime-growslice
 enc-e1-m-control	eth1-data-encode-encode-deposit-count-block-hash-control
 enc-e1-m-count-field	eth1-data-encode-encode-deposit-count-block-hash-code-mov-0x20-rdx-to-0x28-rdx
 enc-e1-m-store-disp	eth1-data-encode-encode-deposit-count-block-hash-code-mov-0x8-rbx-rax-1-to-0x10-rbx-rax-1

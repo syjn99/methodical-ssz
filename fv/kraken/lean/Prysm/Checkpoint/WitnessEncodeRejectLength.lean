@@ -31,7 +31,7 @@ theorem placed_at_1 : marshalSSZTo.IsInfixAt Host.prog 1 := infixAt_of [.label "
 theorem labels_fresh_at_1 : LabelsFresh marshalSSZTo 1 := labelsFresh_of (by decide)
 
 theorem label_err_bytes_length : label "ssz.ErrBytesLength" = 0x10000 :=
-  mk_label program _ 0 _ (by simp [program]) (by simp [labs])
+  mk_label program _ 0 _ (by simp [program]) (by simp [programLabels])
 
 abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
 abbrev word_bytes (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
@@ -81,11 +81,11 @@ Same Host and layout; `dst` at 0x100b8 has `len = 5` (prefix bytes 1..5), `cap =
 frame `dst[13:48]`. -/
 namespace NonEmptyPrefix
 
-def pre5 : List UInt8 := [1, 2, 3, 4, 5]
+def prefix5 : List UInt8 := [1, 2, 3, 4, 5]
 
 def block (e8 : List UInt8) (rl : UInt64) : List UInt8 :=
   word_bytes 0x10e8 ++ (word_bytes 0x2b ++ (word_bytes 0 ++ (zeros 8 ++ (e8 ++ (word_bytes 0x5000 ++ (word_bytes rl ++ (word_bytes 48 ++ (zeros 32 ++ (zeros 16 ++ (zeros 16 ++ (zeros 24
-    ++ (zeros 8 ++ (word_bytes 0 ++ (zeros 8 ++ (zeros 8 ++ (pre5 ++ (zeros 8 ++ zeros 35)))))))))))))))))
+    ++ (zeros 8 ++ (word_bytes 0 ++ (zeros 8 ++ (zeros 8 ++ (prefix5 ++ (zeros 8 ++ zeros 35)))))))))))))))))
 
 def mem (e8 : List UInt8) (rl : UInt64) : DataMem := (block e8 rl).At (0x10000 : BitVec 64)
 
@@ -100,12 +100,12 @@ theorem runs (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl : rl ≠
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = 0x10e8 ∧ st.data.regs.rsi = 0x2b)
       ⟨initial_state e8 rl zmms flags, Host.addrOf 1⟩ :=
-  eventually_mono (Encode.reject_length 1 placed_at_1 labels_fresh_at_1 (zeros 8) e8 (word_bytes 48) (zeros 32) pre5 (zeros 8) rfl he8 rfl rfl rfl 0x5000 rl
+  eventually_mono (Encode.reject_length 1 placed_at_1 labels_fresh_at_1 (zeros 8) e8 (word_bytes 48) (zeros 32) prefix5 (zeros 8) rfl he8 rfl rfl rfl 0x5000 rl
     hrl (initial_state e8 rl zmms flags) 0 0 0x10e8 0x2b rfl (zeros 8) (zeros 8) (zeros 16) (zeros 16) rfl rfl rfl rfl
     (Eq ((zeros 24).At (0x10080 : BitVec 64)) ⋆ Eq ((zeros 8).At (0x100a8 : BitVec 64)) ⋆ Eq ((zeros 35).At (0x100c5 : BitVec 64)))
     (by
       have H : Eq ((block e8 rl).At (0x10000 : BitVec 64)) (mem e8 rl) := rfl
-      witness_split [he8, show pre5.length = 5 from rfl]
+      witness_split [he8, show prefix5.length = 5 from rfl]
       simp only [initial_state, word_bytes, ElfData.PrysmTarget.sszErrBytesLength_addr, label_err_bytes_length, nil_At_emp, Std.ExtHashMap.sep_emp,
         Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, show (UInt64.ofNat 0).toBitVec = 0#64 from rfl,

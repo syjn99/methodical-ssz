@@ -21,7 +21,7 @@ variable [Host]
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `Prysm.PendingConsolidation.Decode.head` (PendingConsolidation head, frame `0x48`, size 16) from `decpro_seg`, the spills as `step_store` steps and `step_nil_check`. -/
+/-- `Prysm.PendingConsolidation.Decode.head` (PendingConsolidation head, frame `0x48`, size 16) from `dec_prologue_seg`, the spills as `step_store` steps and `step_nil_check`. -/
 theorem Decode.head_inst : type_of% (@Prysm.PendingConsolidation.Decode.head ‹Host›) := by
   intro k hk s ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast R h_mem hguard hlen
   have hcs : Eq (ast.At s.regs.rax.toBitVec) =
@@ -29,7 +29,7 @@ theorem Decode.head_inst : type_of% (@Prysm.PendingConsolidation.Decode.head ‹
     conv => lhs; rw [← List.take_append_drop 1 ast]
     exact at_app _ _ (by rw [List.length_take, hast]; rfl) (by simp [hast])
   rw [hcs] at h_mem
-  refine eventually_trans _ _ _ _ (decpro_seg _ _ _ _ 72 96 16 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
+  refine eventually_trans _ _ _ _ (dec_prologue_seg _ _ _ _ 72 96 16 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
     s ra guard (s.regs.rsp.toBitVec - 80) (s.regs.rsp.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     fp s2 hfp h2 _ (by ecancel) hguard (by rw [hlen]; rfl)) ?_
@@ -66,7 +66,7 @@ theorem Decode.head_inst : type_of% (@Prysm.PendingConsolidation.Decode.head ‹
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `Prysm.PendingConsolidation.Decode.epilogue` (PendingConsolidation epilogue, frame `0x48`) from `step_add_immediate` and `decret_seg`. -/
+/-- `Prysm.PendingConsolidation.Decode.epilogue` (PendingConsolidation epilogue, frame `0x48`) from `step_add_immediate` and `dec_return_seg`. -/
 theorem Decode.epilogue_inst : type_of% (@Prysm.PendingConsolidation.Decode.epilogue ‹Host›) := by
   intro k hk sp aFp aRa hFp hRa fp0 ra R s hrsp h_mem
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -74,7 +74,7 @@ theorem Decode.epilogue_inst : type_of% (@Prysm.PendingConsolidation.Decode.epil
   subst rsp hFp hRa
   apply step_add_immediate Reg64.rsp 72 _ (k + 86) (k + 87) (window_infix_at hk 86 1) (by rfl) (by rfl)
   intro fl; normalize_registers
-  refine eventually_trans _ _ _ _ (decret_seg _ (k + 87) (window_infix_at hk 87 2) (by rfl) (sp + 72) (sp + 80) (by bv_omega)
+  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 87) (window_infix_at hk 87 2) (by rfl) (sp + 72) (sp + 80) (by bv_omega)
     fp0 ra R _ (by rfl) (by ecancel)) ?_
   rintro ⟨d, pc⟩ ⟨hpc, hrsp', hrbp', hreg, hmem⟩
   dsimp only at hpc hrsp' hrbp' hreg hmem

@@ -59,8 +59,8 @@ def SszValue.toValue (g : SszValue) : Value :=
 def SszValue.encode (g : SszValue) : Array UInt8 :=
   uintBytes 8 g.slot.toNat ++ uintBytes 8 g.index.toNat ++ g.root.toArray ++ Prysm.Checkpoint.SszValue.encode g.source ++ Prysm.Checkpoint.SszValue.encode g.target
 
-theorem SszValue.enc_size (g : SszValue) : (SszValue.encode g).size = 128 := by
-  simp [SszValue.encode, Spec.uintBytes_size, Prysm.Checkpoint.SszValue.enc_size]
+theorem SszValue.encode_size (g : SszValue) : (SszValue.encode g).size = 128 := by
+  simp [SszValue.encode, Spec.uintBytes_size, Prysm.Checkpoint.SszValue.encode_size]
 
 theorem checkpoint_toValue_injective (g h : Prysm.Checkpoint.SszValue) (e : g.toValue = h.toValue) : g = h := by
   obtain ⟨a, r⟩ := g; obtain ⟨a', r'⟩ := h
@@ -108,7 +108,7 @@ theorem SszValue.serialize_eq (g : SszValue) : serialize desc g.toValue = .ok (S
   rw [hs, ht]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
     headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, SszValue.encode, Prysm.Checkpoint.desc,
-    Prysm.Checkpoint.SszValue.enc_size, Desc.fieldsFixedSize, Array.append_assoc]
+    Prysm.Checkpoint.SszValue.encode_size, Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/
 theorem SszValue.roundtrip (g : SszValue) : deserialize desc (SszValue.encode g) = .ok g.toValue :=
@@ -133,7 +133,7 @@ theorem SszValue.spec_accepts_iff (bs : Array UInt8) : (∃ v, deserialize desc 
   constructor
   · rintro ⟨v, hd⟩
     obtain ⟨g, rfl, rfl⟩ := SszValue.accepted_is_encoding hd
-    exact SszValue.enc_size g
+    exact SszValue.encode_size g
   · intro h
     have r0 := readUint_lt bs 0 8; have r1 := readUint_lt bs 8 8
     simp only [Nat.reducePow, Nat.reduceMul] at r0 r1
