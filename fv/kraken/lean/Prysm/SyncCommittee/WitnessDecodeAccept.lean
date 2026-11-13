@@ -101,7 +101,7 @@ theorem runs (pks : List (List UInt8)) (agg oP1 oP2 : List UInt8) (hpks : pks.le
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
       ⟨cs0 pks.flatten agg oP1 oP2 zmms flags, Host.addrOf 9⟩ := by
-  have hfl : pks.flatten.length = 24576 := by rw [flatten_length pks hpk, hpks]
+  have hfl : pks.flatten.length = 24576 := by rw [Codec.flatten_length_of_length_48 pks hpk, hpks]
   exact eventually_mono (Decode.accept 9 hk9 hf9 pks agg hpks hpk hagg (cs0 pks.flatten agg oP1 oP2 zmms flags)
     0 0 (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 24) (z 8) (z 16) (z 8) oP1 (z 8) (z 8) oP2 (z 8) (z 8)
     rfl rfl rfl rfl rfl rfl rfl rfl rfl h1 rfl rfl h2 rfl rfl

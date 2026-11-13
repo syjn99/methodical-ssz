@@ -20,7 +20,7 @@ These definitions are part of the frozen IndexedAttestation statements (`Prysm/I
 - `SszValue.encode`: offset 228 (4 bytes) ‖ data (128) ‖ signature (96) ‖ the indices as 8-byte little-endian words.
 - `offsetBytes`: the 4 bytes of the offset 228.
 The element backing array of `[]uint64` is one contiguous block equal to the input bytes `buf[228:]`; the statements
-state it as one byte list of length `8 · n` with `n ≤ 2048`, so no per-element predicate (and not `Prysm.SyncCommittee.elementBlocks`) is used.
+state it as one byte list of length `8 · n` with `n ≤ 2048`, so no per-element predicate (and not `Codec.elementBlocks`) is used.
 -/
 
 open Machine Runtime EthLib.Serialization.Ssz

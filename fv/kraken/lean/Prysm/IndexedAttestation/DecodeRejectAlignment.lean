@@ -7,7 +7,7 @@ import Prysm.IndexedAttestation.DecodeAccept
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: alignment reject and overflow reject
 
 Statements: the corrected `Decode.reject_alignment_error_word_nonzero_statement` and `Decode.reject_overflow_error_word_nonzero_statement` (`Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean`, the frozen
-texts plus `e0 ≠ 0`). The text of `lu_reject_misaligned_main` (`TestTarget/ListU64DecodeRejectCall.lean`, Go 1.26.3) with the IndexedAttestation
+texts plus `e0 ≠ 0`). The text of the misaligned reject of the Go 1.26.3 test type ListU64 (a proof that is no longer in the tree) with the IndexedAttestation
 directive indices: the head 0–26 of `Prysm/IndexedAttestation/DecodeAccept.lean`; alignment reject: `jne L_1a2` taken (94), the 32-byte argument array at
 rsp − 48 (two `movups`), `convT64(len − 228)` (`ConvT64C`), the itab word (103–106, `e0 ≠ 0`), `fmt.errorf`
 (`FmtErrorfDWC`), `jne L_248` taken (rax ≠ 0), epilogue 128–130. Overflow reject: `jg L_105` taken (57), the array at rsp − 80,

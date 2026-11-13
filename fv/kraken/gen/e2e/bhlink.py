@@ -10,7 +10,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/bh/link.
-SizeSSZ is not in the set (excluded from the hold-out claim). The Slot callee is `Prysm.AttestationData.Code.slotUnmarshalSSZ`
+SizeSSZ is not in the set (excluded from the hold-out claim). The Slot callee is `Prysm.Slot.Code.unmarshalSSZ`
 (its code is in prysm/go1.26.10/e2e/ad/link); the shared items (uint8 type word, ssz.ErrSize, the
 errorString type, writeBarrier) are asserted equal to the Checkpoint / AttestationData sets' operands.
 """

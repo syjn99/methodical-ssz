@@ -170,7 +170,7 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   simp only [Width.bytes, Width.bits] at H10
   kunfold
   rw [Encode.reserve_call] at *
-  rw [Encode.fast_path_dst] at *
+  rw [Codec.add_add_8_mul_one] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 102 + 1)) root d1 scratch _
     (by rw [hroot]; rfl) (by rw [hroot, hd1]) hsc (by dsimp only; ecancel)) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hr141, hrbp1, stk1, hstk1, Hm1⟩

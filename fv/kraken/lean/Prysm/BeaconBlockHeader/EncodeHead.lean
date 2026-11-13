@@ -236,7 +236,7 @@ theorem Encode.enc_a2 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : 
   apply load_step_at _ _ (rsp.toBitVec - 88) _ _ pi _ _ (by eaddr) (by ecancel) (by exact hpi)
   kunfold
   kat hk marshalSSZTo 61
-  rw [Prysm.Checkpoint.Encode.fast_path_dst]
+  rw [Codec.add_add_8_mul_one]
   apply store_step _ _ _ _ _ d1 _ _ (by ecancel) (by exact hd1)
   intro m10 H10
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl pi hpi] at H10

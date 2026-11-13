@@ -278,8 +278,8 @@
   "module": "Prysm/Slot/CalleeDecodeFunctionSpecs.lean",
   "theorem": "Prysm.Slot.Decode.accept_function_spec_is_callee_accept",
   "kind": "stmt",
-  "old": "Prysm.AttestationData.Code.slotUnmarshalLabel",
-  "new": "Prysm.AttestationData.Code.committeeIndexUnmarshalLabel"
+  "old": "Prysm.Slot.Code.unmarshalSSZLabel",
+  "new": "Prysm.CommitteeIndex.Code.unmarshalSSZLabel"
  },
  {
   "id": "g3-wit-control",

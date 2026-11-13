@@ -117,14 +117,14 @@ def luGo : Desc := rn ["L"] Spec.luDesc
 def fvGo : Desc := rn ["R", "W"] Spec.fvDesc
 def bvGo : Desc := rn ["J"] Spec.bvDesc
 def blGo : Desc := rn ["B"] Spec.blDesc
-def cpGo : Desc := rn ["Epoch", "Root"] Spec.cpDesc
+def cpGo : Desc := rn ["Epoch", "Root"] Spec.checkpointDesc
 def neGo : Desc := match Spec.neDesc with
   | .container _ [a, _, _] => .container ["A", "S", "L"] [a, scGo, luGo]
   | d => d
 def lcGo : Desc := match Spec.lcDesc with
   | .container _ [.list _ n] => .container ["Items"] [.list luGo n]
   | d => d
-def adGo : Desc := match Spec.adDesc with
+def adGo : Desc := match Spec.attestationDataDesc with
   | .container _ [a, b, c, _, _] =>
     .container ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"] [a, b, c, cpGo, cpGo]
   | d => d
@@ -134,8 +134,8 @@ def refs : List ((String × String) × (String × Desc × Desc)) :=
   [((tgt, "Scalars"), ("Spec.scDesc", Spec.scDesc, scGo)), ((tgt, "FixedVec"), ("Spec.fvDesc", Spec.fvDesc, fvGo)),
    ((tgt, "ListU64"), ("Spec.luDesc", Spec.luDesc, luGo)), ((tgt, "BitVec"), ("Spec.bvDesc", Spec.bvDesc, bvGo)),
    ((tgt, "Nested"), ("Spec.neDesc", Spec.neDesc, neGo)), ((tgt, "ListC"), ("Spec.lcDesc", Spec.lcDesc, lcGo)),
-   ((tgt, "BitL"), ("Spec.blDesc", Spec.blDesc, blGo)), ((tgtPrysm, "Checkpoint"), ("Spec.cpDesc", Spec.cpDesc, cpGo)),
-   ((tgtPrysm, "AttestationData"), ("Spec.adDesc", Spec.adDesc, adGo))]
+   ((tgt, "BitL"), ("Spec.blDesc", Spec.blDesc, blGo)), ((tgtPrysm, "Checkpoint"), ("Spec.cpDesc", Spec.checkpointDesc, cpGo)),
+   ((tgtPrysm, "AttestationData"), ("Spec.adDesc", Spec.attestationDataDesc, adGo))]
 
 def handPackages : List String := [tgt, tgtPrysm]
 def handTypeNames : List String := refs.map (·.1.2)

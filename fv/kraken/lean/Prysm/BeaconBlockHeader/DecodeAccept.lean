@@ -61,7 +61,7 @@ input it returns nil and the receiver holds Slot = buf[0:8], ProposerIndex = buf
 ParentRoot / StateRoot / BodyRoot = buf[16:48] / buf[48:80] / buf[80:112] (len = cap = 32 each); the input,
 `state`, the caller's frame `R` and the stack guard are unchanged; 96 heap bytes are used. -/
 theorem Decode.accept (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
     (in0 in1 r1 r2 r3 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
     (hr1 : r1.length = 32) (hr2 : r2.length = 32) (hr3 : r3.length = 32)

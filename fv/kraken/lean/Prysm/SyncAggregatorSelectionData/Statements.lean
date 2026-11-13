@@ -69,12 +69,12 @@ variable [Host]
 namespace Prysm.SyncAggregatorSelectionData
 
 /-- Hand statement of the accept path of `(*v1alpha1.SyncAggregatorSelectionData).UnmarshalSSZ`: on a 16-byte
-input it returns nil and the receiver holds Slot = buf[0:8] (through the callee `slotUnmarshalSSZ`) and
+input it returns nil and the receiver holds Slot = buf[0:8] (through the callee `Prysm.Slot.Code.unmarshalSSZ`) and
 SubcommitteeIndex = buf[8:16]; input, `state`, the spills, the caller's frame `R` and the stack guard are
 unchanged. -/
 abbrev Decode.accept_statement : Prop :=
   ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 sp1 rslot lo ast a8 a16 : List UInt8)

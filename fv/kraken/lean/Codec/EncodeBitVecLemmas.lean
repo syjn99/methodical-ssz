@@ -21,4 +21,7 @@ theorem add_mul_one (x y : BitVec 64) : x + y * 1#64 = x + y := by rw [BitVec.mu
 
 theorem eq_32_of_sub_eq_zero (x : BitVec 64) (h : x - 32#64 = 0#64) : x = 32 := by bv_omega
 
+theorem add_add_8_mul_one (x y : BitVec 64) : x + (y + 8) * 1#64 = x + y + 8 := by
+  rw [BitVec.mul_one, BitVec.add_assoc]
+
 end Codec

@@ -407,7 +407,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
     fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aP1 aL1 aC1 aP2 aL2 aC2 aN aP3 aL3 aC3 aSl
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hl28 hrs hast haP1 haL1 haC1 haP2 haL2 haC2 haN haP3 haL3 haC3 haSl
     R S hS hlo Heap avail h_mem hguard hlen hav hms hmm
-  have hslc : U64CalleeAcc slotUnmarshalLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
+  have hslc : U64CalleeAcc Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size

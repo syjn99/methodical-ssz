@@ -10,8 +10,8 @@
   "module": "Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PendingDeposit.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
-  "old": "(layMix40 [Prysm.AttestationData.Code.slotUnmarshalSSZ] 131 2)",
-  "new": "(layMix40 [Prysm.AttestationData.Code.slotUnmarshalSSZ] 130 2)"
+  "old": "(layMix40 [Prysm.Slot.Code.unmarshalSSZ] 131 2)",
+  "new": "(layMix40 [Prysm.Slot.Code.unmarshalSSZ] 130 2)"
  },
  {
   "id": "g5-tie-pd-kind-size",
@@ -26,16 +26,16 @@
   "module": "Prysm/SyncCommitteeMessage/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
-  "old": "[Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1",
-  "new": "[Prysm.ValidatorIndex.Code.unmarshalSSZ, Prysm.AttestationData.Code.slotUnmarshalSSZ] 141 1"
+  "old": "[Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1",
+  "new": "[Prysm.ValidatorIndex.Code.unmarshalSSZ, Prysm.Slot.Code.unmarshalSSZ] 141 1"
  },
  {
   "id": "g5-tie-bh-kind-ptr",
   "module": "Prysm/BeaconBlockHeader/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.BeaconBlockHeader.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
-  "old": "[Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 179 2",
-  "new": "[Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 179 1"
+  "old": "[Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 179 2",
+  "new": "[Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 179 1"
  },
  {
   "id": "g5-tie-pb-kind-state",

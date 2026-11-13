@@ -17,8 +17,8 @@ ADDR0 = '(by simp only [Int64.toBitVec_ofNat]; exact BitVec.add_zero _)'
 RVT = {'rcv': 's.regs.rax.toBitVec', 'bf': 's.regs.rbx.toBitVec', 'zero': '0'}
 PRIM = 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.'
 # callee symbol -> (code constant, binder suffix, proved spec theorem); the four proved callees (interface of the GEN5 lemma unit)
-G5_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('Prysm.AttestationData.Code.slotUnmarshalSSZ', 'S', 'Prysm.Slot.Decode.accept_function_spec_holds'),
-              PRIM + 'CommitteeIndex.UnmarshalSSZ': ('Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ', 'C', 'Prysm.CommitteeIndex.Decode.accept_function_spec_holds'),
+G5_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('Prysm.Slot.Code.unmarshalSSZ', 'S', 'Prysm.Slot.Decode.accept_function_spec_holds'),
+              PRIM + 'CommitteeIndex.UnmarshalSSZ': ('Prysm.CommitteeIndex.Code.unmarshalSSZ', 'C', 'Prysm.CommitteeIndex.Decode.accept_function_spec_holds'),
               PRIM + 'ValidatorIndex.UnmarshalSSZ': ('Prysm.ValidatorIndex.Code.unmarshalSSZ', 'V', 'Prysm.ValidatorIndex.Decode.accept_function_spec_holds'),
               PRIM + 'Epoch.UnmarshalSSZ': ('Prysm.Epoch.Code.unmarshalSSZ', 'E', 'Prysm.Epoch.Decode.accept_function_spec_holds')}
 G5_IMPORTS = ['Codec.Kind.DecodeAcceptAnyFrameInstances', 'Codec.FieldFrame', 'Prysm.ValidatorIndex.DecodeAcceptFunctionSpec', 'Prysm.Epoch.DecodeAccept', 'Prysm.Slot.DecodeAccept',

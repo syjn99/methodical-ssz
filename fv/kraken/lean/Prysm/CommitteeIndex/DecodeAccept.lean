@@ -16,8 +16,8 @@ namespace Prysm.CommitteeIndex
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-theorem Decode.accept (k : Nat) (hk : committeeIndexUnmarshalSSZ.IsInfixAt Host.prog k)
-    (hf : LabelsFresh committeeIndexUnmarshalSSZ k)
+theorem Decode.accept (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh Code.unmarshalSSZ k)
     (e8 : List UInt8) (he8 : e8.length = 8)
     (s : MachineData) (ra guard : UInt64) (fp s2 c0 : List UInt8)
     (hfp : fp.length = 8) (h2 : s2.length = 8) (hc0 : c0.length = 8) (R : DataMem → Prop)
@@ -39,12 +39,12 @@ theorem Decode.accept (k : Nat) (hk : committeeIndexUnmarshalSSZ.IsInfixAt Host.
   simp only at h_mem hguard hlen ⊢
   subst hlen
   have := rsp.toNat_lt_size; have := guard.toNat_lt_size; simp only [UInt64.size] at *
-  kat hk committeeIndexUnmarshalSSZ 0
-  kat hk committeeIndexUnmarshalSSZ 1
-  kat hk committeeIndexUnmarshalSSZ 2
+  kat hk Code.unmarshalSSZ 0
+  kat hk Code.unmarshalSSZ 1
+  kat hk Code.unmarshalSSZ 2
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
-  kat hk committeeIndexUnmarshalSSZ 3
+  kat hk Code.unmarshalSSZ 3
   split
   · rename_i h; exfalso
     simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
@@ -52,45 +52,45 @@ theorem Decode.accept (k : Nat) (hk : committeeIndexUnmarshalSSZ.IsInfixAt Host.
     · apply h; omega
     · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
   simp only [Effects.All]
-  kat hk committeeIndexUnmarshalSSZ 4
+  kat hk Code.unmarshalSSZ 4
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
-  kat hk committeeIndexUnmarshalSSZ 5
-  kat hk committeeIndexUnmarshalSSZ 6
-  kat hk committeeIndexUnmarshalSSZ 7
+  kat hk Code.unmarshalSSZ 5
+  kat hk Code.unmarshalSSZ 6
+  kat hk Code.unmarshalSSZ 7
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold
-  kat hk committeeIndexUnmarshalSSZ 8
-  kat hk committeeIndexUnmarshalSSZ 9
-  kat hk committeeIndexUnmarshalSSZ 10
+  kat hk Code.unmarshalSSZ 8
+  kat hk Code.unmarshalSSZ 9
+  kat hk Code.unmarshalSSZ 10
   split
   case isFalse h => exact absurd h (by decide)
   simp only [Effects.All]
-  klabel hk hf committeeIndexUnmarshalSSZ 43
-  kat hk committeeIndexUnmarshalSSZ 43
-  kat hk committeeIndexUnmarshalSSZ 44
+  klabel hk hf Code.unmarshalSSZ 43
+  kat hk Code.unmarshalSSZ 43
+  kat hk Code.unmarshalSSZ 44
   apply load_step _ _ _ _ e8 _ _ (by ecancel) (by exact he8)
   kunfold
-  kat hk committeeIndexUnmarshalSSZ 45
-  kat hk committeeIndexUnmarshalSSZ 46
+  kat hk Code.unmarshalSSZ 45
+  kat hk Code.unmarshalSSZ 46
   apply store_step_at _ _ rax.toBitVec _ _ _ c0 _ _ (by bv_omega) (by ecancel) (by exact hc0)
   intro m3 H3
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H3
   kunfold
-  kat hk committeeIndexUnmarshalSSZ 47
+  kat hk Code.unmarshalSSZ 47
   intro _
-  kat hk committeeIndexUnmarshalSSZ 48
+  kat hk Code.unmarshalSSZ 48
   intro _
-  kat hk committeeIndexUnmarshalSSZ 49
-  kat hk committeeIndexUnmarshalSSZ 50
+  kat hk Code.unmarshalSSZ 49
+  kat hk Code.unmarshalSSZ 50
   rw [show (72 : BitVec 64) + (rsp.toBitVec - 8#64 - 72) = rsp.toBitVec - 8 by bv_omega]
   apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
-  kat hk committeeIndexUnmarshalSSZ 51
+  kat hk Code.unmarshalSSZ 51
   rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]
   apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
@@ -105,7 +105,7 @@ theorem Decode.accept (k : Nat) (hk : committeeIndexUnmarshalSSZ.IsInfixAt Host.
     | (apply UInt64.toBitVec_inj.mp; simp; bv_omega)
 
 /-- **Function specification of `(*primitives.CommitteeIndex).UnmarshalSSZ`, accept path**
-(`len(buf) = 8`), in the shape of `TestTarget.ScUAccC`: a hypothesis-shaped statement
+(`len(buf) = 8`), in the shape of a runtime contract: a hypothesis-shaped statement
 about the code at the CommitteeIndex label, for every machine state, return address and
 frame `F`. `Decode.accept_function_spec_holds` proves it from the machine code; the AttestationData
 decoder uses the callee only through this specification (no contract). -/
@@ -126,14 +126,14 @@ def Decode.accept_function_spec : Prop :=
           ⋆ Eq ((Int.toBytes 8 st.regs.rbx.toBitVec.toInt).At (st.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (st.regs.r14.toBitVec + 16))
           ⋆ Eq (e8.At st.regs.rbx.toBitVec) ⋆ Eq (e8.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
-      ⟨st, label committeeIndexUnmarshalLabel⟩
+      ⟨st, label Code.unmarshalSSZLabel⟩
 
 /-- The CommitteeIndex machine code satisfies its specification (no assumption beyond
 the code's place in the host and its label freshness). -/
-theorem Decode.accept_function_spec_holds (k : Nat) (hk : committeeIndexUnmarshalSSZ.IsInfixAt Host.prog k)
-    (hf : LabelsFresh committeeIndexUnmarshalSSZ k) : Decode.accept_function_spec := by
+theorem Decode.accept_function_spec_holds (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh Code.unmarshalSSZ k) : Decode.accept_function_spec := by
   intro st ret e8 fp s2 c0 guard F he8 hfp h2 hc0 hlen hguard hm
-  rw [show label committeeIndexUnmarshalLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]
+  rw [show label Code.unmarshalSSZLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]
   exact Decode.accept k hk hf e8 he8 st (UInt64.ofBitVec ret.toBitVec) guard fp s2 c0 hfp h2 hc0 F hm
     hguard hlen
 

@@ -25,7 +25,7 @@ states the new pointers `ps`, `pt` and the full 72-byte content of each new obje
 **Callees.** Slot, CommitteeIndex and both Checkpoint calls are discharged through the proved
 function specifications `Prysm.Slot.Decode.accept_function_spec_holds`, `Prysm.CommitteeIndex.Decode.accept_function_spec_holds`, `Prysm.Checkpoint.Decode.accept_function_spec_holds` (the code places
 `kS`, `kI`, `kC`, `kE` in the host); the statement has no hypothesis about their behaviour.
-The runtime contract forms (`Runtime/Contracts.lean`, `TestTarget/FunctionSpecs.lean`) stay visible: the
+The runtime contract forms (`Runtime/Contracts.lean`, `Runtime/NewobjectContract.lean`) stay visible: the
 Checkpoint callee's `MakesliceC … S` / `MemmoveC S` (what `Prysm.Checkpoint.Decode.accept_function_spec_holds` needs) and this
 function's own `MakesliceC … (S + 96)`, `MemmoveC (S + 96)`, `NewobjectC adCpType 72 (S + 96)`
 (its runtime calls get the `S + 96` stack bytes below their return slot, which contain the
@@ -79,8 +79,8 @@ buf[8:16], a fresh 32-byte BeaconBlockRoot = buf[16:48], and fresh Source / Targ
 decoded from buf[48:88] / buf[88:128]; the input, `state`, `unknownFields`, `sizeCache`, the
 caller's frame `R` and the stack guard are unchanged; 240 heap bytes are used. -/
 theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
-    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
-    (kI : Nat) (hkI : committeeIndexUnmarshalSSZ.IsInfixAt Host.prog kI) (hfI : LabelsFresh committeeIndexUnmarshalSSZ kI)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
+    (kI : Nat) (hkI : Prysm.CommitteeIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kI) (hfI : LabelsFresh Prysm.CommitteeIndex.Code.unmarshalSSZ kI)
     (kC : Nat) (hkC : Prysm.Checkpoint.Code.unmarshalSSZ.IsInfixAt Host.prog kC) (hfC : LabelsFresh Prysm.Checkpoint.Code.unmarshalSSZ kC)
     (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (in0 in1 root se sroot te troot : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)

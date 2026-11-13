@@ -1,5 +1,8 @@
 import Kraken.X64.Parser
 import Machine.Include
+import Prysm.Checkpoint.Code
+import Prysm.CommitteeIndex.Code
+import Prysm.Slot.Code
 
 /-!
 # Code of the AttestationData function set (prysm-e2e A1, Go 1.26.10 ELF `c6403c02…911e`)
@@ -18,14 +21,4 @@ def unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/e2e/ad/link/nor
 def marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S"
 /-- `(*v1alpha1.AttestationData).SizeSSZ`. -/
 def sizeSSZ : Program := include_x64_rt "../prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.SizeSSZ.S"
-/-- `(*primitives.Slot).UnmarshalSSZ` (hand-written, `consensus-types/primitives/slot.go:183`). -/
-def slotUnmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
-/-- `(*primitives.CommitteeIndex).UnmarshalSSZ` (hand-written, `committee_index.go:28`). -/
-def committeeIndexUnmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
-
-abbrev slotUnmarshalLabel : String := "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ"
-abbrev committeeIndexUnmarshalLabel : String := "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ"
-abbrev checkpointUnmarshalLabel : String := "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ"
-abbrev checkpointMarshalLabel : String := "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo"
-
 end Prysm.AttestationData.Code

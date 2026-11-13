@@ -7,7 +7,7 @@ import Runtime.CopyModel
 # Function specifications of the Checkpoint decoder and encoder
 
 `Decode.accept_function_spec Heap S` is the statement of `Prysm.Checkpoint.Decode.accept` as a hypothesis-shaped property of
-the code at the label `(*Checkpoint).UnmarshalSSZ` (the form of `TestTarget.ScUAccC` / `Prysm.Epoch.Decode.accept_function_spec`): for
+the code at the label `(*Checkpoint).UnmarshalSSZ` (the form of `Prysm.Epoch.Decode.accept_function_spec`): for
 every machine state, return address and frame `F`. The only change to the statement is that the
 callee's own `makeslice` return-slot word at rsp − 96 (`Host.addrOf (k + 70)` in the theorem) is an
 existential `rs'` of 8 bytes, so that the specification does not name the callee's place.
@@ -69,7 +69,7 @@ def Decode.accept_function_spec (Heap : Nat → DataMem → Prop) (S : Nat) : Pr
           ⋆ Eq ((Int.toBytes 8 32).At (st.regs.rax.toBitVec + 32))
           ⋆ Eq (ctl.At (st.regs.rax.toBitVec + 40)) ⋆ Eq (root.At p)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ F) st'.data.dmem)
-      ⟨st, label Prysm.AttestationData.Code.checkpointUnmarshalLabel⟩
+      ⟨st, label Prysm.Checkpoint.Code.unmarshalSSZLabel⟩
 
 theorem Decode.accept_function_spec_holds (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
@@ -77,7 +77,7 @@ theorem Decode.accept_function_spec_holds (k : Nat) (hk : unmarshalSSZ.IsInfixAt
     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) : Decode.accept_function_spec Heap S := by
   intro st ret guard avail e8 root fp s1 s2 l20 l28 l30 m0 m1 m2 rslot cst c0 cP cL cC ctl scratch F
     he8 hroot hfp h1 h2 hl20 hl28 hl30 hm0 hm1 hm2 hrs hcst hc0 hcP hcL hcC hctl hS8 hS hsc hguard hlen hav hm
-  rw [show label Prysm.AttestationData.Code.checkpointUnmarshalLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]
+  rw [show label Prysm.Checkpoint.Code.unmarshalSSZLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]
   refine eventually_mono (Prysm.Checkpoint.Decode.accept k hk hf kE hkE hfE e8 root he8 hroot st (UInt64.ofBitVec ret.toBitVec)
     guard fp s1 s2 l20 l28 l30 m0 m1 m2 rslot cst c0 cP cL cC ctl hfp h1 h2 hl20 hl28 hl30 hm0 hm1 hm2 hrs hcst hc0
     hcP hcL hcC hctl F S hS8 hS scratch hsc Heap avail hm hguard hlen hav hms hmm) ?_
@@ -132,13 +132,13 @@ def Encode.fast_path_function_spec (S : Nat) : Prop :=
           ⋆ Eq (ctl.At (st.regs.rax.toBitVec + 40)) ⋆ Eq (root.At p)
           ⋆ Eq (pre.At st.regs.rbx.toBitVec) ⋆ Eq (e8.At (st.regs.rbx.toBitVec + st.regs.rcx.toBitVec))
           ⋆ Eq (root.At (st.regs.rbx.toBitVec + st.regs.rcx.toBitVec + 8)) ⋆ F) st'.data.dmem)
-      ⟨st, label Prysm.AttestationData.Code.checkpointMarshalLabel⟩
+      ⟨st, label Prysm.Checkpoint.Code.marshalSSZToLabel⟩
 
 theorem Encode.fast_path_function_spec_holds (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (S : Nat) (hmm : MemmoveC S) : Encode.fast_path_function_spec S := by
   intro st ret guard p cst e8 cC ctl root pre d0 d1 fp s2 l16 l24 l32 t40 t30 rslot scratch F
     hcst he8 hcC hctl hroot hd0 hd1 hpre hfp h2 hl16 hl24 hl32 ht40 ht30 hrs hsc hguard hsp hcap hcap63 hm
-  rw [show label Prysm.AttestationData.Code.checkpointMarshalLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]
+  rw [show label Prysm.Checkpoint.Code.marshalSSZToLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]
   refine eventually_mono (Prysm.Checkpoint.Encode.fast_path k hk hf cst e8 cC ctl root pre d0 d1 hcst he8 hcC hctl hroot hd0 hd1
     p st (UInt64.ofBitVec ret.toBitVec) guard hpre fp s2 l16 l24 l32 t40 t30 rslot hfp h2 hl16 hl24 hl32 ht40 ht30 hrs
     F S scratch hsc hm hguard hsp hcap hcap63 hmm) ?_

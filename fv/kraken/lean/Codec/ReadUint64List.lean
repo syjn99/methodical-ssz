@@ -8,7 +8,7 @@ import EthLib.Serialization.Proofs.Ssz.Codec.Table
 
 `Codec.readUint64List bs start m` reads `m` little-endian 8-byte words from `start` (EthLib `readUint`).
 `Codec.u64Bytes_readUint64List`: their encoding (`Spec.u64Bytes`) is the slice of `bs`.
-The text is the text of `TestTarget/ListU64RejectSpec.lean`. The namespace is `Codec`, not `Spec`:
+The namespace is `Codec`, not `Spec`:
 in `Spec`, the name `readUint_lt` of the proof would resolve to `Spec.readUint_lt`.
 -/
 

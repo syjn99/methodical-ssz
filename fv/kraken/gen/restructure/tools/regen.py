@@ -143,7 +143,7 @@ for f, prefix in HOLD_OUT.items():
     m = re.search(r"--gen(\d)", tx[:3000])
     mode = f"--gen{m[1]}" if m else ""
     const = 'unmarshalSSZ'
-    opened = re.search(r"^open (?:Fk|Machine Runtime TestTarget|Machine Runtime) (\S+)", tx, re.M)[1]
+    opened = re.search(r"^open (?:Fk|Machine Runtime) (\S+)", tx, re.M)[1]
     user = [i for i in imps if not GENERATOR_ADDED.match(old_module_of.get(i, i))]
     cmd = ["python3", "-I", "-B", "gen/scal/scalgen.py", "p2dec"] + ([mode] if mode else [])
     out = os.path.join(work, f'holdout.{f.replace("/", ".")}.lean')

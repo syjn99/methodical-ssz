@@ -30,7 +30,7 @@ The shared-layer map has no `type` row and keeps the old behaviour.
 
 Maps compose in order: `shared-layer`, `checkpoint-and-epoch`, `attestation-data`, `sync-and-indexed-attestation`,
 `historical-batch-and-deposit`, `data-columns-by-root-identifier`,
-`flat-types`, `clean-up`, then the next step.
+`flat-types`, `clean-up`, `shared-names`, then the next step.
 To undo, run the inverse of the last map first.
 The forward run of a step needs nothing from the earlier maps.
 The inverse of the map of a step alone must give the tree from which the step started.
@@ -240,7 +240,7 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   A full name in `code_def` uses `_root_`.
 - Modules that use the Lean module system (`module`, `public import`) keep it after a move.
 - `fv/kraken/lean/Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` walks the project namespaces
-  `Prysm`, `Codec`, `ElfData`, `Machine`, `Runtime` and `TestTarget`. A step that adds a root namespace adds it there.
+  `Prysm`, `Codec`, `ElfData`, `Machine` and `Runtime`. A step that adds a root namespace adds it there.
 - `fv/kraken/gen/tools/proof_inventory.py` reads the code constants of `lean/{E2e,E2eAd,E2eScal}/**`.
   `lean/E2e`, `lean/E2eAd` and `lean/E2eScal` are gone.
   The script needs a rework before its next use.

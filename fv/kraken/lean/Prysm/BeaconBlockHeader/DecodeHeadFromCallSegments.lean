@@ -185,7 +185,7 @@ theorem Decode.head_from_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfix
           ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq (in1.At (s.regs.rax.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hsl' : U64CalleeAcc slotUnmarshalLabel := hsl
+  have hsl' : U64CalleeAcc Prysm.Slot.Code.unmarshalSSZLabel := hsl
   have hvi' : U64CalleeAcc Prysm.ValidatorIndex.Code.unmarshalLabel := hvi
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢

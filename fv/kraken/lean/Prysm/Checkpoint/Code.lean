@@ -8,7 +8,7 @@ import Prysm.Epoch.Code
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/link/norm`
 (`link/conv.py --norm` of the Go 1.26.10 ELF; `link/check.py` (a)–(e) PASS in
 `../RESULT`). The files are Lake inputs of the `Prysm` library (`lakefile.toml`).
-Nothing of the Go 1.26.3 code (`TestTarget.Code`) is used.
+Nothing of the code of the Go 1.26.3 test target is used.
 After the split of this module, the declarations of the other types are in `Prysm/Epoch/Code.lean`.
 -/
 
@@ -20,4 +20,8 @@ def unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/e2e/link/norm/g
 def marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
 /-- `(*v1alpha1.Checkpoint).SizeSSZ`. -/
 def sizeSSZ : Program := include_x64_rt "../prysm/go1.26.10/e2e/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ.S"
+
+abbrev unmarshalSSZLabel : String := "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ"
+abbrev marshalSSZToLabel : String := "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo"
+
 end Prysm.Checkpoint.Code

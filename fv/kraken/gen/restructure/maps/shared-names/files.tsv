@@ -1,0 +1,3 @@
+# old path	new path	meaning (paths are relative to the repository root)
+# Step shared-names: no file moves. The cut script of the step moves the renamed declarations into the
+# modules of their new names (fifth column of names.tsv).

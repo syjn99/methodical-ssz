@@ -32,7 +32,7 @@ def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := dataLabels ++ unmarshalSSZ ++ slotUnmarshalSSZ ++ committeeIndexUnmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ
+def P : Program := dataLabels ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ
   ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy ++ BumpNew72
 
 theorem P_len : P.length = 587 := by rfl
@@ -42,33 +42,33 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : unmarshalSSZ.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels (slotUnmarshalSSZ ++ committeeIndexUnmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1
+  infixAt_of dataLabels (Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1
     ++ RtCopy ++ BumpNew72) (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hk252 : slotUnmarshalSSZ.IsInfixAt Host.prog 252 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ) (committeeIndexUnmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1
+theorem hk252 : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog 252 :=
+  infixAt_of (dataLabels ++ unmarshalSSZ) (Prysm.CommitteeIndex.Code.unmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1
     ++ RtCopy ++ BumpNew72) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
-theorem hk315 : committeeIndexUnmarshalSSZ.IsInfixAt Host.prog 315 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ slotUnmarshalSSZ) (Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1
+theorem hk315 : Prysm.CommitteeIndex.Code.unmarshalSSZ.IsInfixAt Host.prog 315 :=
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ) (Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1
     ++ RtCopy ++ BumpNew72) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk378 : Prysm.Checkpoint.Code.unmarshalSSZ.IsInfixAt Host.prog 378 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ slotUnmarshalSSZ ++ committeeIndexUnmarshalSSZ) (Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ) (Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1
     ++ RtCopy ++ BumpNew72) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk486 : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog 486 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ slotUnmarshalSSZ ++ committeeIndexUnmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ) (BumpAlloc1
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ) (BumpAlloc1
     ++ RtCopy ++ BumpNew72) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk549 : BumpAlloc1.IsInfixAt Host.prog 549 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ slotUnmarshalSSZ ++ committeeIndexUnmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ)
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ)
     (RtCopy ++ BumpNew72) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk555 : RtCopy.IsInfixAt Host.prog 555 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ slotUnmarshalSSZ ++ committeeIndexUnmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ
     ++ BumpAlloc1) BumpNew72 (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk581 : BumpNew72.IsInfixAt Host.prog 581 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ slotUnmarshalSSZ ++ committeeIndexUnmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ
     ++ BumpAlloc1 ++ RtCopy) [] (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf9 : LabelsFresh unmarshalSSZ 9 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf252 : LabelsFresh slotUnmarshalSSZ 252 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf315 : LabelsFresh committeeIndexUnmarshalSSZ 315 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf252 : LabelsFresh Prysm.Slot.Code.unmarshalSSZ 252 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf315 : LabelsFresh Prysm.CommitteeIndex.Code.unmarshalSSZ 315 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf378 : LabelsFresh Prysm.Checkpoint.Code.unmarshalSSZ 378 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf486 : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ 486 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf555 : LabelsFresh RtCopy 555 := labelsFresh_of (by rw [prog_eq]; decide)

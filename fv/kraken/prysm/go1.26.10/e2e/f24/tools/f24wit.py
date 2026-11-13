@@ -14,7 +14,7 @@ SFILE = {'Dpr': 'engine_v1.DepositRequest', 'Bdr': 'engine_v1.BuilderDepositRequ
          'Bbr': 'prysm_v1alpha1.BeaconBlocksByRangeRequest', 'Bsr': 'prysm_v1alpha1.BlobSidecarsByRangeRequest',
          'Epr': 'prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest',
          'Pdc': 'prysm_v1alpha1.PartialDataColumnGroupID', 'Vid': 'prysm_v1alpha1.ValidatorIdentity'}
-CALLEE = {'Sl': ('Prysm.AttestationData.Code.slotUnmarshalSSZ', 'primitives.Slot'), 'Vi': ('Prysm.ValidatorIndex.Code.unmarshalSSZ', 'primitives.ValidatorIndex'),
+CALLEE = {'Sl': ('Prysm.Slot.Code.unmarshalSSZ', 'primitives.Slot'), 'Vi': ('Prysm.ValidatorIndex.Code.unmarshalSSZ', 'primitives.ValidatorIndex'),
           'Ep': ('Prysm.Epoch.Code.unmarshalSSZ', 'primitives.Epoch')}
 CLEN, BUMPLEN, RTLEN = 63, 6, 26
 
@@ -176,7 +176,7 @@ namespace E2eScal.Wit{X}GA
 
 set_option maxRecDepth 100000
 
-def P : Program := [.label "pad0"] ++ {X}Unmarshal ++ Prysm.AttestationData.Code.slotUnmarshalSSZ
+def P : Program := [.label "pad0"] ++ {X}Unmarshal ++ Prysm.Slot.Code.unmarshalSSZ
 
 theorem P_len : P.length = {plen} := by rfl
 
@@ -185,12 +185,12 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk1 : {X}Unmarshal.IsInfixAt Host.prog 1 :=
-  infixAt_of [.label "pad0"] (Prysm.AttestationData.Code.slotUnmarshalSSZ) (by simp [prog_eq, P, List.append_assoc]) rfl
+  infixAt_of [.label "pad0"] (Prysm.Slot.Code.unmarshalSSZ) (by simp [prog_eq, P, List.append_assoc]) rfl
 theorem hf1 : LabelsFresh {X}Unmarshal 1 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hk{1 + n} : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog {1 + n} :=
+theorem hk{1 + n} : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog {1 + n} :=
   infixAt_of ([.label "pad0"] ++ {X}Unmarshal) ([])
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
-theorem hf{1 + n} : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ {1 + n} := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf{1 + n} : LabelsFresh Prysm.Slot.Code.unmarshalSSZ {1 + n} := labelsFresh_of (by rw [prog_eq]; decide)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 abbrev w0 : List UInt8 := Int.toBytes 8 (0 : UInt64).toBitVec.toInt

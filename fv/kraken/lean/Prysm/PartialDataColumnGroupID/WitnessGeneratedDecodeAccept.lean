@@ -29,7 +29,7 @@ def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.slotUnmarshalSSZ ++ BumpAlloc1 ++ RtCopy
+def P : Program := dataLabels ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy
 
 theorem P_len : P.length = 210 := by rfl
 
@@ -38,16 +38,16 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : unmarshalSSZ.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels (Prysm.AttestationData.Code.slotUnmarshalSSZ ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hk115 : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog 115 :=
+  infixAt_of dataLabels (Prysm.Slot.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
+theorem hk115 : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog 115 :=
   infixAt_of (dataLabels ++ unmarshalSSZ) (BumpAlloc1 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
-theorem hf115 : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ 115 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf115 : LabelsFresh Prysm.Slot.Code.unmarshalSSZ 115 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hk178 : BumpAlloc1.IsInfixAt Host.prog 178 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.slotUnmarshalSSZ) RtCopy
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ) RtCopy
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk184 : RtCopy.IsInfixAt Host.prog 184 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.slotUnmarshalSSZ ++ BumpAlloc1) []
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ BumpAlloc1) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf9 : LabelsFresh unmarshalSSZ 9 := labelsFresh_of (by rw [prog_eq]; decide)

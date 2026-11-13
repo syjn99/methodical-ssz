@@ -23,11 +23,11 @@ namespace Prysm.PartialDataColumnGroupID
 
 /-- Hand statement of the accept path of `(*v1alpha1.PartialDataColumnGroupID).UnmarshalSSZ`: on a 40-byte input it
 returns nil and the receiver holds a fresh BeaconBlockRoot slice equal to buf[0:32] (len = cap = 32) and Slot =
-buf[32:40] (through the callee `slotUnmarshalSSZ`); input, `state`, the spills, the caller's frame `R` and the stack guard
+buf[32:40] (through the callee `Prysm.Slot.Code.unmarshalSSZ`); input, `state`, the spills, the caller's frame `R` and the stack guard
 are unchanged; 32 heap bytes are used. -/
 abbrev Decode.accept_statement : Prop :=
   ∀ (k : Nat) (hk : Prysm.PartialDataColumnGroupID.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PartialDataColumnGroupID.Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (rt sl : List UInt8) (hrt : rt.length = 32) (hsl : sl.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aP1 aL1 aC1 aS : List UInt8)

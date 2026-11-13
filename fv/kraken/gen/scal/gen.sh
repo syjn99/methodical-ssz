@@ -12,7 +12,7 @@ set -e
 cd "$(dirname "$0")/../.."
 G="python3 -I gen/scal/scalgen.py"
 N=prysm/go1.26.10/e2e/ad/link/norm
-$G p1 --S $N/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const committeeIndexUnmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.AttestationData.Code > lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean
+$G p1 --S $N/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.CommitteeIndex.Code > lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean
 $G p2dec --S $N/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix Decode.generated_root --imports Codec.Bytes32Decode,Prysm.AttestationData.Code --open Prysm.AttestationData.Code > lean/Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean
 $G p2dec --S prysm/go1.26.10/e2e/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.Checkpoint --prefix Decode.generated_root --imports Codec.Bytes32Decode,Prysm.Checkpoint.Code --open Prysm.Checkpoint.Code > lean/Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean
 # BeaconBlockHeader hold-out: ValidatorIndex and BeaconBlockHeader (opened 2026-11-10T17:53:24Z under the method freeze 56dfc27; raw output committed unedited).

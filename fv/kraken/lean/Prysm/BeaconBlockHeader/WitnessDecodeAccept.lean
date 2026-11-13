@@ -30,7 +30,7 @@ def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := dataLabels ++ Code.unmarshalSSZ ++ slotUnmarshalSSZ ++ Prysm.ValidatorIndex.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy
+def P : Program := dataLabels ++ Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.ValidatorIndex.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy
 
 theorem P_len : P.length = 384 := by rfl
 
@@ -39,22 +39,22 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : Code.unmarshalSSZ.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels (slotUnmarshalSSZ ++ Prysm.ValidatorIndex.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hk226 : slotUnmarshalSSZ.IsInfixAt Host.prog 226 :=
+  infixAt_of dataLabels (Prysm.Slot.Code.unmarshalSSZ ++ Prysm.ValidatorIndex.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
+theorem hk226 : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog 226 :=
   infixAt_of (dataLabels ++ Code.unmarshalSSZ) (Prysm.ValidatorIndex.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk289 : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog 289 :=
-  infixAt_of (dataLabels ++ Code.unmarshalSSZ ++ slotUnmarshalSSZ) (BumpAlloc1 ++ RtCopy)
+  infixAt_of (dataLabels ++ Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ) (BumpAlloc1 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk352 : BumpAlloc1.IsInfixAt Host.prog 352 :=
-  infixAt_of (dataLabels ++ Code.unmarshalSSZ ++ slotUnmarshalSSZ ++ Prysm.ValidatorIndex.Code.unmarshalSSZ) RtCopy
+  infixAt_of (dataLabels ++ Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.ValidatorIndex.Code.unmarshalSSZ) RtCopy
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk358 : RtCopy.IsInfixAt Host.prog 358 :=
-  infixAt_of (dataLabels ++ Code.unmarshalSSZ ++ slotUnmarshalSSZ ++ Prysm.ValidatorIndex.Code.unmarshalSSZ ++ BumpAlloc1) []
+  infixAt_of (dataLabels ++ Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.ValidatorIndex.Code.unmarshalSSZ ++ BumpAlloc1) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf9 : LabelsFresh Code.unmarshalSSZ 9 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf226 : LabelsFresh slotUnmarshalSSZ 226 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf226 : LabelsFresh Prysm.Slot.Code.unmarshalSSZ 226 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf289 : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ 289 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf358 : LabelsFresh RtCopy 358 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf352 : ∀ i < 352, Host.prog[i]? ≠ some (.label "runtime.makeslice") :=

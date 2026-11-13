@@ -13,7 +13,7 @@ open Codec
 namespace Prysm.CommitteeIndex
 
 theorem Decode.accept_kind_anchor : ∀ (h : Host), type_of% (@Prysm.CommitteeIndex.Decode.accept h)
-    = @u64DecAcceptKind h committeeIndexUnmarshalSSZ := by
+    = @u64DecAcceptKind h Code.unmarshalSSZ := by
   intro h; with_reducible rfl
 
 end Prysm.CommitteeIndex

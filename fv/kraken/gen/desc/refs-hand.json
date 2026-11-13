@@ -1,1 +1,1 @@
-{"Scalars":"Spec.scDesc","FixedVec":"Spec.fvDesc","ListU64":"Spec.luDesc","BitVec":"Spec.bvDesc","Nested":"Spec.neDesc","ListC":"Spec.lcDesc","BitL":"Spec.blDesc","Checkpoint":"Spec.cpDesc","AttestationData":"Spec.adDesc"}
+{"Scalars":"Spec.scDesc","FixedVec":"Spec.fvDesc","ListU64":"Spec.luDesc","BitVec":"Spec.bvDesc","Nested":"Spec.neDesc","ListC":"Spec.lcDesc","BitL":"Spec.blDesc","Checkpoint":"Spec.checkpointDesc","AttestationData":"Spec.attestationDataDesc"}

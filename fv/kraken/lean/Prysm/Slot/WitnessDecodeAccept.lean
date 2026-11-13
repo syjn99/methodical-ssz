@@ -22,15 +22,15 @@ namespace Prysm.Slot.Witness.DecodeAccept
 
 set_option maxRecDepth 100000
 
-def P : Program := slotUnmarshalSSZ
+def P : Program := Code.unmarshalSSZ
 
 theorem P_len : P.length = 63 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
-theorem hk0 : slotUnmarshalSSZ.IsInfixAt Host.prog 0 := ⟨[], by simp [Host.prog, mkHost, P]⟩
+theorem hk0 : Code.unmarshalSSZ.IsInfixAt Host.prog 0 := ⟨[], by simp [Host.prog, mkHost, P]⟩
 
-theorem hf0 : LabelsFresh slotUnmarshalSSZ 0 := fun i hi => absurd hi (Nat.not_lt_zero _)
+theorem hf0 : LabelsFresh Code.unmarshalSSZ 0 := fun i hi => absurd hi (Nat.not_lt_zero _)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 

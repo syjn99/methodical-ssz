@@ -22,11 +22,11 @@ open Codec
 namespace Prysm.BeaconBlocksByRangeRequest
 
 /-- Hand statement of the accept path of `(*v1alpha1.BeaconBlocksByRangeRequest).UnmarshalSSZ`: on a 24-byte input
-it returns nil and the receiver holds StartSlot = buf[0:8] (through the callee `slotUnmarshalSSZ`), Count = buf[8:16] and
+it returns nil and the receiver holds StartSlot = buf[0:8] (through the callee `Prysm.Slot.Code.unmarshalSSZ`), Count = buf[8:16] and
 Step = buf[16:24]; input, `state`, the spills, the caller's frame `R` and the stack guard are unchanged. -/
 abbrev Decode.accept_statement : Prop :=
   ∀ (k : Nat) (hk : Prysm.BeaconBlocksByRangeRequest.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.BeaconBlocksByRangeRequest.Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (in0 in1 in2 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8) (hin2 : in2.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 sp1 rslot lo ast a8 a16 a24 : List UInt8)

@@ -38,7 +38,7 @@ theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
       ⋆ Eq (spl.At sp) ⋆ Eq (rslot.At (sp - 8)) ⋆ Eq (lo.At (sp - 8 - BitVec.ofNat 64 S)) ⋆ Heap avail
       ⋆ Eq (pks.flatten.At (bf + 262144))
       ⋆ Eq ((Int.toBytes 8 A.toInt).At (recv + 24)) ⋆ Eq ((Int.toBytes 8 8192).At (recv + 32))
-      ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps ++ Prysm.SyncCommittee.zz (24 * (8192 - i))).At A) ⋆ Prysm.SyncCommittee.elementBlocks ps (pks.take i)
+      ⋆ Eq ((Codec.sliceHeaders 32 ps ++ Codec.zeroBytes (24 * (8192 - i))).At A) ⋆ Codec.elementBlocks ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
@@ -51,7 +51,7 @@ theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
           ⋆ Eq (spl'.At sp) ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 133)).toBitVec.toInt).At (sp - 8)) ⋆ Eq (lo'.At (sp - 8 - BitVec.ofNat 64 S)) ⋆ Heap (avail - 32)
           ⋆ Eq (pks.flatten.At (bf + 262144))
           ⋆ Eq ((Int.toBytes 8 A.toInt).At (recv + 24)) ⋆ Eq ((Int.toBytes 8 8192).At (recv + 32))
-          ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 (ps ++ [p]) ++ Prysm.SyncCommittee.zz (24 * (8192 - (i + 1)))).At A) ⋆ Prysm.SyncCommittee.elementBlocks (ps ++ [p]) (pks.take (i + 1))
+          ⋆ Eq ((Codec.sliceHeaders 32 (ps ++ [p]) ++ Codec.zeroBytes (24 * (8192 - (i + 1)))).At A) ⋆ Codec.elementBlocks (ps ++ [p]) (pks.take (i + 1))
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 108)⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -68,7 +68,7 @@ theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.signed] at h
-    exact Prysm.SyncCommittee.jge_false512 _ _ (by simp) (by simp; omega) h
+    exact Codec.jge_false_of_lt _ _ (by simp) (by simp; omega) h
   simp only [Effects.All]
   -- 43 rsi = i; 44 rax = 32i; 45 rdi = i + 1; 46 r8 = i + 1; 47 rdi = 32(i + 1); 48 nop; 49–50 jb not taken
   kat hk unmarshalSSZ 111
@@ -197,12 +197,12 @@ theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk unmarshalSSZ 141
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (Prysm.SyncCommittee.zz 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
   kunfold
   kat hk unmarshalSSZ 142
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (Prysm.SyncCommittee.zz 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
   intro m8 H8
   simp only [Width.bytes, Width.bits] at H8
   kunfold
@@ -223,7 +223,7 @@ theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
   klabel hk hf unmarshalSSZ 104
   kat hk unmarshalSSZ 104
   kat hk unmarshalSSZ 105
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (Prysm.SyncCommittee.zz 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
   kunfold
@@ -245,7 +245,7 @@ theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
     simp [BitVec.toNat_add]; omega
   · dsimp only
     rw [Decode.input_split (bf + 262144) pks hpks hpk i hi, Decode.array_join A rax3.toBitVec ps i hi hps,
-      List.take_succ_eq_append_getElem hlt, Prysm.SyncCommittee.elementBlocks_snoc ps (List.take i pks) _ _ (by simp [hps]; omega)]
+      List.take_succ_eq_append_getElem hlt, Codec.elementBlocks_snoc ps (List.take i pks) _ _ (by simp [hps]; omega)]
     simp only [hE]
     ecancel
 
@@ -285,7 +285,7 @@ theorem Decode.state_roots_loop (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
       ⋆ Eq (spl.At sp) ⋆ Eq (rslot.At (sp - 8)) ⋆ Eq (lo.At (sp - 8 - BitVec.ofNat 64 S)) ⋆ Heap avail
       ⋆ Eq (pks.flatten.At (bf + 262144))
       ⋆ Eq ((Int.toBytes 8 A.toInt).At (recv + 24)) ⋆ Eq ((Int.toBytes 8 8192).At (recv + 32))
-      ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps ++ Prysm.SyncCommittee.zz (24 * (8192 - i))).At A) ⋆ Prysm.SyncCommittee.elementBlocks ps (pks.take i)
+      ⋆ Eq ((Codec.sliceHeaders 32 ps ++ Codec.zeroBytes (24 * (8192 - i))).At A) ⋆ Codec.elementBlocks ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) →
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 155) ∧ st.data.regs.rsp = { toBitVec := sp } ∧ st.data.regs.rbp = rbp0
@@ -298,7 +298,7 @@ theorem Decode.state_roots_loop (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
       ⋆ Eq (spl'.At sp) ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 133)).toBitVec.toInt).At (sp - 8)) ⋆ Eq (lo'.At (sp - 8 - BitVec.ofNat 64 S)) ⋆ Heap (avail - 32 * j)
       ⋆ Eq (pks.flatten.At (bf + 262144))
       ⋆ Eq ((Int.toBytes 8 A.toInt).At (recv + 24)) ⋆ Eq ((Int.toBytes 8 8192).At (recv + 32))
-      ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps' ++ Prysm.SyncCommittee.zz (24 * (8192 - 8192))).At A) ⋆ Prysm.SyncCommittee.elementBlocks ps' (pks.take 8192)
+      ⋆ Eq ((Codec.sliceHeaders 32 ps' ++ Codec.zeroBytes (24 * (8192 - 8192))).At A) ⋆ Codec.elementBlocks ps' (pks.take 8192)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 108)⟩ := by
   intro j

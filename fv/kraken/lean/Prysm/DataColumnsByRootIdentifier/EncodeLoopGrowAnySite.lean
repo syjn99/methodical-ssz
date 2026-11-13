@@ -101,7 +101,7 @@ theorem Encode.grow_iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
-    exact Prysm.SyncCommittee.jge_false512 _ _ (by simp; omega) (by simp; omega) h
+    exact Codec.jge_false_of_lt _ _ (by simp; omega) (by simp; omega) h
   simp only [Effects.All]
   kat hk marshalSSZTo 85
   kat hk marshalSSZTo 86

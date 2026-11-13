@@ -134,7 +134,8 @@ A hand edit before the run puts new names into the old text, and the forward che
 
 The maps apply in this order:
 
-- `maps/shared-layer/`: the shared libraries `Machine`, `Runtime`, `TestTarget`, `Spec` and `Codec`.
+- `maps/shared-layer/`: the shared libraries `Machine`, `Runtime`, `Spec` and `Codec`, and the library of the Go 1.26.3
+  test target (deleted after the clean-up step).
   They come from `Fk`, `Fv`, `Fv1`, `E2eSeg`, `E2e/WitSplit.lean` and the type-independent modules of `E2eScal`.
 - `maps/checkpoint-and-epoch/`: the library `E2e` becomes `Prysm/Checkpoint/`, `Prysm/Epoch/` and `Prysm/ElfData/` (library `Prysm`).
   It is the first map in reference mode.
@@ -149,8 +150,11 @@ The maps apply in this order:
 - `maps/flat-types/`: the library `E2eScal` becomes `Prysm/<GoTypeName>/` for 24 flat types; some modules go to the
   directories of earlier types, and the type-independent modules go to `Codec/` and `Codec/Kind/`.
   The step changed the emit strings of the generators and the evidence tools, `kindcheck.py`, `regen.py` and `python_checks.sh`.
-- `maps/clean-up/`: renames of the clean-up step. The TestTarget declarations that other libraries use get the names of
+- `maps/clean-up/`: renames of the clean-up step. The declarations of the test-target library that other libraries used get the names of
   `Runtime`, `Machine` and `Codec`, and a hand edit moves their text into new modules of those libraries.
+- `maps/shared-names/`: names of declarations that other types use. The Slot and CommitteeIndex programs of the
+  AttestationData link set get the names of their types, and type-independent lemmas get `Codec` names.
+  A cut script then moves their text into the modules of their new names.
 
 Issue 10 of `syjn99/methodical-ssz` holds the list of the steps that remain.
 
@@ -173,7 +177,7 @@ On Linux, the `trash` command comes from the package `trash-cli`.
 | `negative_case_ranges.py` | Theorem line range of every negative case. `python_checks.sh` runs it | no |
 | `regen.py` | Regeneration comparison of the Python generators of Lean files | no |
 | `gate_dump_compare.py` | Comparison of two axioms gate dumps across the maps of a step | no |
-| `constant_uses.lean` | Use count of the constants of some modules in other modules. For the splits and the `TestTarget` removal | yes |
+| `constant_uses.lean` | Use count of the constants of some modules in other modules. For the splits and the detach of the test-target library | yes |
 
 The repository does not keep a declaration dump of the tree.
 Write a new one at the start of each step (section 6, item 3).

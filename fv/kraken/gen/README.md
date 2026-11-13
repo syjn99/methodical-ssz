@@ -11,7 +11,7 @@ The design principles are in `../../README.md`.
 - The statement of a generated theorem is checked separately, by a frozen kind (section 4) or by an identity with a hand statement.
 - A generated Lean file must be equal to the output of its generator. Do not edit a generated file by hand.
   The header comment of a generated file names its generator. Some headers also give the sha256 of the inputs.
-- A generator does not write to the shared libraries (`lean/Spec`, `lean/Machine`, `lean/Runtime`, `lean/TestTarget`, `lean/Codec`), `link/` or `gen/frozen/`.
+- A generator does not write to the shared libraries (`lean/Spec`, `lean/Machine`, `lean/Runtime`, `lean/Codec`), `link/` or `gen/frozen/`.
 - The Python programs use only the standard library. Run them with `python3 -I`.
 - A generator refuses an input that it does not match. It writes nothing, or it marks a partial output as partial.
 
@@ -44,7 +44,7 @@ Use `regen_check.sh` of the project skill. It runs the generator two times into 
 Exit 0 means the same bytes. Run it from `fv/kraken`:
 
 ```sh
-sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/scal/scalgen.py p1 --S prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const committeeIndexUnmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.AttestationData.Code > "$REGEN_OUT"'
+sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/scal/scalgen.py p1 --S prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.CommitteeIndex.Code > "$REGEN_OUT"'
 ```
 
 For the other files, take the command from `scal/gen.sh` or from the file header. Replace the output redirect with `> "$REGEN_OUT"`.

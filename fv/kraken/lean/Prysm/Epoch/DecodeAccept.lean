@@ -119,7 +119,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     | (apply UInt64.toBitVec_inj.mp; simp; bv_omega)
 
 /-- **Function specification of `(*primitives.Epoch).UnmarshalSSZ`, accept path**
-(`len(buf) = 8`), in the shape of `TestTarget.ScUAccC`: a hypothesis-shaped statement
+(`len(buf) = 8`), in the shape of a runtime contract: a hypothesis-shaped statement
 about the code at the Epoch label, for every machine state, return address and
 frame `F`. `Decode.accept_function_spec_holds` proves it from the machine code; the Checkpoint
 decoder uses the callee only through this specification (no contract). -/
