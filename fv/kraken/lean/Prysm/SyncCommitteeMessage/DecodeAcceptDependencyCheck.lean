@@ -48,25 +48,25 @@ def reach (env : Environment) (root : Name) : Array Name := Id.run do
 def banned : List Name :=
   [`Prysm.SyncCommitteeMessage.bytes32dec_seg_rax, `Prysm.SyncCommitteeMessage.Decode.validator_index_arg, `Prysm.PendingConsolidation.calldec_nop_seg]
 
-elab "#g4_dep_check" : command => do
+elab "#check_window_step_dependencies" : command => do
   let env ← getEnv
   for b in banned do
-    unless env.contains b do throwError "g4 dependency check: {b} is not in the environment (wrong name)"
+    unless env.contains b do throwError "window step dependency check: {b} is not in the environment (wrong name)"
   for root in [`Prysm.SyncCommitteeMessage.Decode.accept_from_window_steps, `Prysm.PendingConsolidation.Decode.accept_from_window_steps] do
-    unless env.contains root do throwError "g4 dependency check: {root} is not in the environment"
+    unless env.contains root do throwError "window step dependency check: {root} is not in the environment"
     let r := reach env root
     for b in banned do
-      if r.contains b then throwError "g4 dependency check FAILED: {root} reaches {b}"
-    logInfo m!"g4 dependency check PASS: {root} reaches {r.size} project constants, none of {banned}"
+      if r.contains b then throwError "window step dependency check FAILED: {root} reaches {b}"
+    logInfo m!"window step dependency check PASS: {root} reaches {r.size} project constants, none of {banned}"
   -- controls: the hold-out proofs must reach the hand lemmas (the walk can fail)
   let r1 := reach env `Prysm.SyncCommitteeMessage.Decode.accept
   unless r1.contains `Prysm.SyncCommitteeMessage.bytes32dec_seg_rax && r1.contains `Prysm.SyncCommitteeMessage.Decode.validator_index_arg do
-    throwError "g4 dependency check: control failed (sm_e2e_accept_main does not reach the hand lemmas)"
+    throwError "window step dependency check: control failed (sm_e2e_accept_main does not reach the hand lemmas)"
   let r2 := reach env `Prysm.PendingConsolidation.Decode.accept
   unless r2.contains `Prysm.PendingConsolidation.calldec_nop_seg do
-    throwError "g4 dependency check: control failed (pc_e2e_accept_main does not reach calldec_nop_seg)"
-  logInfo m!"g4 dependency check controls PASS: sm_e2e_accept_main reaches bytes32dec_seg_rax and sm_vi_arg ({r1.size} constants); pc_e2e_accept_main reaches calldec_nop_seg ({r2.size} constants)"
+    throwError "window step dependency check: control failed (pc_e2e_accept_main does not reach calldec_nop_seg)"
+  logInfo m!"window step dependency check controls PASS: sm_e2e_accept_main reaches bytes32dec_seg_rax and sm_vi_arg ({r1.size} constants); pc_e2e_accept_main reaches calldec_nop_seg ({r2.size} constants)"
 
-#g4_dep_check
+#check_window_step_dependencies
 
 end Prysm.SyncCommitteeMessage.DependencyCheck

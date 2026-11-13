@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of the generated `Decode.generated_accept` (`v1alpha1.PartialDataColumnGroupID` decoder accept path; FLAT24 / H7)
 
-Written by the FLAT24 evaluator with its evidence script `f24wit.py`: the text of `WitPdA.lean` with the
+Written by the FLAT24 evaluator with its evidence script `f24wit.py`: the text of `Prysm/PendingDeposit/WitnessDecodeAccept.lean` with the
 v1alpha1.PartialDataColumnGroupID host and layout. It shows that the premises of the generated accept theorem (statement = kind instance)
 are satisfiable. Host: data labels, the real Go 1.26.10 `(*v1alpha1.PartialDataColumnGroupID).UnmarshalSSZ` (index 9), `primitives.Slot` UnmarshalSSZ,
 the 1-byte bump `runtime.makeslice` (178, `bump_makeslice1`) and `RtCopy` (184, `rt_memmove`).

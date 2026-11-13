@@ -249,6 +249,8 @@ Then write the rows from the trial tree, and run the trial again with the rows.
 - The lakefile: a moved `.S` file of a library directory needs a new `input_dir` for its new directory (filter `.S`).
   Put that `input_dir` into the `needs` of `Prysm`.
   Remove the old `input_dir` from every `needs` list.
+- The tactic `bhaddr` and the command `#g4_dep_check` of `maps/flat-types` are now `beacon_block_header_addr` and
+  `#check_window_step_dependencies`, so an inverse run of that map needs these two names put back first.
 
 ## 6. Self-test
 

@@ -255,7 +255,7 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
   subst hrsp2 hrbp2 hr142
   -- instance directives 113–115, L_1f7 (122), 123
   kat hk Code.unmarshalSSZ 113
-  apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p1.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p1.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 114
@@ -263,7 +263,7 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
   klabel hk hf Code.unmarshalSSZ 122
   kat hk Code.unmarshalSSZ 122
   kat hk Code.unmarshalSSZ 123
-  apply store_step_at _ _ (rax.toBitVec + 24) _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrdx2]; try bhaddr) (by ecancel)
+  apply store_step_at _ _ (rax.toBitVec + 24) _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrdx2]; try beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
@@ -289,14 +289,14 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
   subst hrsp3 hrbp3 hr143
   -- instance directives 149–150, L_292 (157), 158
   kat hk Code.unmarshalSSZ 149
-  apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p2.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p2.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 150
   klabel hk hf Code.unmarshalSSZ 157
   kat hk Code.unmarshalSSZ 157
   kat hk Code.unmarshalSSZ 158
-  apply store_step_at _ _ (rax.toBitVec + 48) _ _ _ (Int.toBytes 8 p2.toInt) _ _ (by rw [hrdx3]; try bhaddr) (by ecancel)
+  apply store_step_at _ _ (rax.toBitVec + 48) _ _ _ (Int.toBytes 8 p2.toInt) _ _ (by rw [hrdx3]; try beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
@@ -322,33 +322,33 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
   subst hrsp4 hrbp4 hr144
   -- instance directives 184–185, L_331 (193), 194, epilogue 195–199
   kat hk Code.unmarshalSSZ 184
-  apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p3.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p3.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 185
   klabel hk hf Code.unmarshalSSZ 193
   kat hk Code.unmarshalSSZ 193
   kat hk Code.unmarshalSSZ 194
-  apply store_step_at _ _ (rax.toBitVec + 72) _ _ _ (Int.toBytes 8 p3.toInt) _ _ (by rw [hrdx4]; try bhaddr) (by ecancel)
+  apply store_step_at _ _ (rax.toBitVec + 72) _ _ _ (Int.toBytes 8 p3.toInt) _ _ (by rw [hrdx4]; try beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
   kunfold
   kat hk Code.unmarshalSSZ 195
-  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 196
-  apply load_step_at _ _ (rsp.toBitVec - 56) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 56) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 197
   kat hk Code.unmarshalSSZ 198
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 199
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -364,7 +364,7 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; bhaddr)
+    | (apply UInt64.toBitVec_inj.mp; beacon_block_header_addr)
 
 /-- Same declared type as the existing hand theorem `Decode.accept`. -/
 theorem Decode.accept_from_generated_call_segments_type : ∀ (h : Host),

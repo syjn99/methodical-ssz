@@ -5,7 +5,7 @@ import Machine.WitnessHost
 /-!
 # Witness of the generated `Decode.generated_accept` (`v1alpha1.BlobSidecarsByRangeRequest` decoder accept path; FLAT24 / H7)
 
-Written by the FLAT24 evaluator with its evidence script `f24wit.py`: the text of the G5-C witness `WitSaGA.lean`
+Written by the FLAT24 evaluator with its evidence script `f24wit.py`: the text of the G5-C witness `Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeAccept.lean`
 (frame `0x38`, one Slot callee) with the v1alpha1.BlobSidecarsByRangeRequest host and layout (2 input words). It shows that the premises of
 the generated accept theorem (statement = kind instance) are satisfiable. Host: one label, the real Go 1.26.10
 `(*v1alpha1.BlobSidecarsByRangeRequest).UnmarshalSSZ` (index 1) and `primitives.Slot` UnmarshalSSZ (74).

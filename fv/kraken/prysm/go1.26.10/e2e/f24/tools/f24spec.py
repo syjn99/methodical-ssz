@@ -225,6 +225,16 @@ def new_names(text, X):
     import re as _re
     x, T = X.lower(), GO_TYPE[X]
     rules = [
+        # old file names in the comments of the templates -> the paths of the restructured tree
+        (r'`F24Desc\.lean`', '`Prysm/%s/SpecDescription.lean`' % T),
+        (r'`F24%sSpecChecker\.lean`' % X, '`Prysm/%s/SpecChecker.lean`' % T),
+        (r'`Gen5F24%sDec\.lean`' % X, '`Prysm/%s/GeneratedDecodeAccept.lean`' % T),
+        (r'`SmSpec\.lean`', '`Prysm/SyncCommitteeMessage/Spec.lean`'),
+        (r'`SaSpec\.lean`', '`Prysm/SyncAggregatorSelectionData/Spec.lean`'),
+        (r'`WitDdA\.lean`', '`Prysm/Deposit_Data/WitnessDecodeAccept.lean`'),
+        (r'`WitPdA\.lean`', '`Prysm/PendingDeposit/WitnessDecodeAccept.lean`'),
+        (r'`WitSaGA\.lean`', '`Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeAccept.lean`'),
+        (r'`WitSaGR\.lean`', '`Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeRejectSize.lean`'),
         (r'\bimport E2eScal\.Gen5F24%sDec\b' % X, 'import Prysm.%s.GeneratedDecodeAccept' % T),
         (r'\bimport E2eScal\.Gen6F24%sEnc\b' % X, 'import Prysm.%s.GeneratedEncodeFastPath' % T),
         (r'\bimport E2eScal\.F24%sSpecChecker\b' % X, 'import Prysm.%s.SpecChecker' % T),
