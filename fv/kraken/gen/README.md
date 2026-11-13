@@ -99,6 +99,8 @@ Thus the Prysm theorems use a hand `Desc` written from consensus-specs, and a th
 ## 6. The axioms gate
 
 `checks/axioms_gate.py` is the one axioms gate. It covers every declaration of every Lean library of the project.
+`e2e/axioms_gate.py` only forwards to it: the CI workflow `.github/workflows/fv-lean.yaml` names that earlier path, and the workflow file
+cannot be changed with the access of this session. When the workflow names `gen/checks/axioms_gate.py`, delete `gen/e2e/`.
 
 ```sh
 python3 -I -B fv/kraken/gen/checks/axioms_gate.py run <scratch>/gate.json <scratch>/dump.tsv

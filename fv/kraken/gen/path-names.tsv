@@ -131,3 +131,4 @@ directory	gen/e2e	gen/checks
 directory	gen/gen1c	gen/first-generator
 directory	gen/kparse	gen/kraken-parser
 directory	gen/invtool	gen/inventory-tool
+kept	gen/e2e/axioms_gate.py	gen/checks/axioms_gate.py	a forwarder: .github/workflows/fv-lean.yaml names the earlier path (lines 47 and 53: `sys.path.insert(0, '../gen/e2e')`, `fv/kraken/gen/e2e/axioms_gate.py run`), and that file cannot be changed with the access of this session; change the two lines to gen/checks, then delete gen/e2e/
