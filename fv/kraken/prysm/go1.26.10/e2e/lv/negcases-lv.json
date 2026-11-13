@@ -218,6 +218,8 @@
   "theorem": "Prysm.SyncAggregate.spec_rejects",
   "inline": [
    "Prysm/SyncAggregate/SpecDescription.lean",
+   "Prysm/SyncAggregate/SpecDefinitions.lean",
+   "Codec/ByteSliceListDefinitions.lean",
    "Prysm/SyncCommittee/SpecDefinitions.lean"
   ]
  },
@@ -228,6 +230,8 @@
   "theorem": "Prysm.SyncAggregate.desc_fixedSize",
   "inline": [
    "Prysm/SyncAggregate/SpecDescription.lean",
+   "Prysm/SyncAggregate/SpecDefinitions.lean",
+   "Codec/ByteSliceListDefinitions.lean",
    "Prysm/SyncCommittee/SpecDefinitions.lean"
   ],
   "stmt_def": "Prysm.SyncAggregate.desc",
@@ -242,7 +246,10 @@
   "theorem": "Prysm.SyncCommittee.spec_rejects",
   "inline": [
    "Prysm/SyncAggregate/SpecDescription.lean",
-   "Prysm/SyncCommittee/SpecDefinitions.lean"
+   "Prysm/SyncAggregate/SpecDefinitions.lean",
+   "Codec/ByteSliceListDefinitions.lean",
+   "Prysm/SyncCommittee/SpecDefinitions.lean",
+   "Codec/SerializeInline.lean"
   ]
  },
  {
@@ -253,7 +260,10 @@
   "inline": [
    "Prysm/SyncCommittee/SpecDescription.lean",
    "Prysm/SyncAggregate/SpecDescription.lean",
-   "Prysm/SyncCommittee/SpecDefinitions.lean"
+   "Prysm/SyncAggregate/SpecDefinitions.lean",
+   "Codec/ByteSliceListDefinitions.lean",
+   "Prysm/SyncCommittee/SpecDefinitions.lean",
+   "Codec/SerializeInline.lean"
   ],
   "stmt_def": "Prysm.SyncCommittee.desc",
   "old": ".vector (.byteVector 48) 512",
@@ -267,6 +277,8 @@
   "theorem": "Prysm.SyncAggregate.toValue_fits",
   "inline": [
    "Prysm/SyncAggregate/SpecDescription.lean",
+   "Prysm/SyncAggregate/SpecDefinitions.lean",
+   "Codec/ByteSliceListDefinitions.lean",
    "Prysm/SyncCommittee/SpecDefinitions.lean"
   ],
   "stmt_def": "Prysm.SyncAggregate.desc",
@@ -282,7 +294,10 @@
   "inline": [
    "Prysm/SyncCommittee/SpecDescription.lean",
    "Prysm/SyncAggregate/SpecDescription.lean",
-   "Prysm/SyncCommittee/SpecDefinitions.lean"
+   "Prysm/SyncAggregate/SpecDefinitions.lean",
+   "Codec/ByteSliceListDefinitions.lean",
+   "Prysm/SyncCommittee/SpecDefinitions.lean",
+   "Codec/SerializeInline.lean"
   ],
   "stmt_def": "Prysm.SyncCommittee.desc",
   "old": "[.vector (.byteVector 48) 512, .byteVector 48]",

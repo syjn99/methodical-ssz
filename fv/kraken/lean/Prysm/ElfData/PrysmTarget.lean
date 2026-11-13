@@ -64,8 +64,7 @@ prysm_data_include dcdFmtTooBig
 -- "misaligned bytes: c.Columns length is %d, which is not a multiple of 8: %w" (74 bytes)
 prysm_data_include dcdFmtMis
 
-section
-
+-- The address lemmas. `variable [Host]` comes after the data includes, so it binds only these lemmas.
 variable [Host]
 
 theorem e2eErrSize_addr_eq : ElfData.PrysmTarget.e2eErrSize_addr = (label "ssz.ErrSize").toBitVec := rfl
@@ -76,7 +75,5 @@ theorem lvErrListTooBig_addr_eq : ElfData.PrysmTarget.lvErrListTooBig_addr = (la
 theorem lvFmtMis_addr_eq : ElfData.PrysmTarget.lvFmtMis_addr = (label "go_string._" + 171319).toBitVec := rfl
 theorem lvFmtTooBig_addr_eq : ElfData.PrysmTarget.lvFmtTooBig_addr = (label "go_string._" + 163839).toBitVec := rfl
 theorem e2eIntType_addr_eq : ElfData.PrysmTarget.e2eIntType_addr = (label "type__" + 387520).toBitVec := rfl
-
-end
 
 end ElfData.PrysmTarget
