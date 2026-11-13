@@ -7,7 +7,7 @@ that the Lean proofs step (`win hk a n`): frame, gd, rt, and the set of first-to
 Reads the layout def of the generated file or the pinned hand layout. No import of generator or kindcheck."""
 import json, re, glob, pathlib
 bad = 0
-ties = pathlib.Path("lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean").read_text()
+ties = lambda T: pathlib.Path(f"lean/Prysm/{T}/EncodeFastPathKindInstances.lean").read_text()
 for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
     t = pathlib.Path(f).read_text()
     J = json.loads([x for x in t.split("\n") if x.startswith("GEN6-JSON: ")][0][11:])
@@ -16,7 +16,7 @@ for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
     for a, n in re.findall(r"win hk (\d+) (\d+)", t):
         cov.update(range(int(a), int(a) + int(n)))
     lay = J["layout"].split(".")[-1]
-    src = ties if J["layout"].endswith(".encodeLayout") else t
+    src = ties(J["layout"].split(".")[1]) if J["layout"].endswith(".encodeLayout") else t
     # the def line: root-qualified (a layout of another type than the block), relative to Prysm.<T>, or the last component
     full, m = J["layout"], None
     for d in (f"_root_.{full}", full.split(".", 2)[2], lay):

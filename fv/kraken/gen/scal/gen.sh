@@ -88,9 +88,9 @@ done
 # Row: Go type name, link set directory, module of the code constants, the hand layout and identity options.
 PP=github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1
 LT="--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean"
-for row in "Checkpoint link Prysm.Checkpoint.Code --hand-layout=Prysm.Checkpoint.encodeLayout $LT --same-as=Prysm.Checkpoint.Encode.fast_path --same-as-via=Prysm.Checkpoint.Encode.fast_path_of_kind" \
+for row in "Checkpoint link Prysm.Checkpoint.Code --hand-layout=Prysm.Checkpoint.encodeLayout --hand-layout-src=lean/Prysm/Checkpoint/EncodeFastPathKindInstances.lean --same-as=Prysm.Checkpoint.Encode.fast_path --same-as-via=Prysm.Checkpoint.Encode.fast_path_of_kind" \
   "BeaconBlockHeader bh/link Prysm.BeaconBlockHeader.Code --hand-layout=Prysm.BeaconBlockHeader.encodeLayout $LT --same-as=Prysm.BeaconBlockHeader.Encode.fast_path" \
-  "Eth1Data e1/link Prysm.Eth1Data.Code --hand-layout=Prysm.Eth1Data.encodeLayout $LT --same-as=Prysm.Eth1Data.Encode.fast_path" \
+  "Eth1Data e1/link Prysm.Eth1Data.Code --hand-layout=Prysm.Eth1Data.encodeLayout --hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean --same-as=Prysm.Eth1Data.Encode.fast_path" \
   "BlobIdentifier enc2/link Prysm.BlobIdentifier.EncoderCode" "DepositMessage enc2/link Prysm.DepositMessage.EncoderCode" \
   "Deposit_Data enc2/link Prysm.Deposit_Data.EncoderCode" "PendingPartialWithdrawal enc2/link Prysm.PendingPartialWithdrawal.EncoderCode" \
   "SyncCommitteeMessage enc2/link Prysm.SyncCommitteeMessage.EncoderCode" "PendingConsolidation enc2/link Prysm.PendingConsolidation.EncoderCode" \

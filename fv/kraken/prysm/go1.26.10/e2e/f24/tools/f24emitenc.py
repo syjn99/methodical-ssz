@@ -142,7 +142,7 @@ def classify(info):
     lists = [b for b in B if b[1] == 'List UInt8']
     xs = lists[0][0]
     st = info['st']
-    if st is None:   # hand layouts (Checkpoint, BeaconBlockHeader, Eth1Data) live in `Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean`: decide from the binder count
+    if st is None:   # hand layouts (Checkpoint, BeaconBlockHeader, Eth1Data) live in `Prysm/<Type>/EncodeFastPathKindInstances.lean`: decide from the binder count
         st = len(xs) == 1 + nU + 2 * nB + 1 + len(fields)
     exp = (1 if st else 0) + nU + 2 * nB + 1 + len(fields)
     if len(xs) != exp:

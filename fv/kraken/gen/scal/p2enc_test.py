@@ -28,12 +28,12 @@ E = "prysm/go1.26.10/e2e"
 IR = "prysm/ir/ir-mainnet.json"
 ROWS = [  # type, link dir, const, code module, prefix, extra args, output file
     ("Checkpoint", "link", "marshalSSZTo", "Prysm.Checkpoint.Code", "cp", ["--hand-layout=Prysm.Checkpoint.encodeLayout",
-     "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Checkpoint.Encode.fast_path",
+     "--hand-layout-src=lean/Prysm/Checkpoint/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Checkpoint.Encode.fast_path",
      "--same-as-via=Prysm.Checkpoint.Encode.fast_path_of_kind"], "Gen6CpEnc"),
     ("BeaconBlockHeader", "bh/link", "marshalSSZTo", "Prysm.BeaconBlockHeader.Code", "bh", ["--hand-layout=Prysm.BeaconBlockHeader.encodeLayout",
      "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean", "--same-as=Prysm.BeaconBlockHeader.Encode.fast_path"], "Gen6BhEnc"),
     ("Eth1Data", "e1/link", "marshalSSZTo", "Prysm.Eth1Data.Code", "e1", ["--hand-layout=Prysm.Eth1Data.encodeLayout",
-     "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Eth1Data.Encode.fast_path"], "Gen6E1Enc"),
+     "--hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Eth1Data.Encode.fast_path"], "Gen6E1Enc"),
 ] + [(t, "enc2/link", c, f"Prysm.{t}.EncoderCode", p, [], f"Gen6{p.capitalize()}Enc") for t, c, p in [
     ("BlobIdentifier", "marshalSSZTo", "bi"), ("DepositMessage", "marshalSSZTo", "dm"), ("Deposit_Data", "marshalSSZTo", "dd"),
     ("PendingPartialWithdrawal", "marshalSSZTo", "pw"), ("SyncCommitteeMessage", "marshalSSZTo", "sc"),
@@ -203,7 +203,7 @@ def adversarial(work):
     adv("head-frame", vb, [("sub $0x68,%rsp", ["sub %rax,%rsp"], 0)], "frame allocation form")
     # hand layout of another type
     C.append(("e6-adv-hand-layout-other", argv(bh, extra=["--hand-layout=Prysm.Eth1Data.encodeLayout",
-                                                           "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean"]),
+                                                           "--hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean"]),
               "refuse", "hand layout of Eth1Data for BeaconBlockHeader"))
     C.append(("e6-adv-hand-layout-missing", argv(bh, extra=["--hand-layout=Prysm.BeaconBlockHeader.encodeLayoutMissing",
                                                              "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean"]),

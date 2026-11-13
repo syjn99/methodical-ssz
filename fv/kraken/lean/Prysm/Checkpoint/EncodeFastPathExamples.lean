@@ -26,7 +26,7 @@ length. No `runtime.growslice` directive is stepped. Not covered: growslice bran
 
 The texts were produced from the `.S` files and the IR by a scratch emitter of the lemma unit (not in the
 repository; it is not the generator). They are development data (in-sample). The independent checks of the
-statements are the ties of `Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean`.
+statements are the ties of `Prysm/<Type>/EncodeFastPathKindInstances.lean` (BeaconBlockHeader, Eth1Data, Checkpoint).
 
 `Encode.example_fast_all` collects the six theorems under their kinds. `Encode.example_bytes32_call_of_size`: the committed block
 `enc32_call` (statement as committed) follows from `encn_call`.

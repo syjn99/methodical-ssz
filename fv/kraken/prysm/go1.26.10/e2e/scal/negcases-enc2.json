@@ -23,13 +23,13 @@
  },
  {
   "id": "e2-tie-cp-control",
-  "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
+  "module": "Prysm/Checkpoint/EncodeFastPathKindInstances.lean",
   "theorem": "Prysm.Checkpoint.Encode.fast_path_of_kind",
   "kind": "control"
  },
  {
   "id": "e2-tie-cp-stmt-field",
-  "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
+  "module": "Prysm/Checkpoint/EncodeFastPathKindInstances.lean",
   "theorem": "Prysm.Checkpoint.Encode.fast_path_of_kind",
   "kind": "stmt",
   "old": "encodeLayout [.u64, .bytes 32]",

@@ -1623,7 +1623,7 @@ def g5_selftest():
 #       GEN6-JSON (sha256 checked) this program recomputes the fields list, the layout (st, frame, gd, rt, nstk, lens,
 #       pre, exs, post) and every boundary state (pc, done, live registers, stack slots, existential sizes); every
 #       kind line must equal, as whole normalised text, the line rendered from the recomputation. A hand layout name
-#       (GEN6_HAND, in `Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean`) is accepted only if its def equals the recomputation in its own
+#       (GEN6_HAND, in `Prysm/<Type>/EncodeFastPathKindInstances.lean`) is accepted only if its def equals the recomputation in its own
 #       chunk order. C is bound to the `.S`: an imported code module of the file must define
 #       `def C : Program := include_x64_rt "../<S of GEN6-JSON>"`.
 #  13d. P_fast's proof uses P_head, every P_fi and P_epi exactly once.
@@ -2113,10 +2113,11 @@ def check_gen6(text, gnames=frozenset(), kr=None):
         n = len(fs)
         hand_pre, handdef = None, None
         if hand:
-            ht = (kr / "lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean").read_text()
+            hsrc = f"lean/Prysm/{LAY.split('.')[1]}/EncodeFastPathKindInstances.lean"
+            ht = (kr / hsrc).read_text()
             handdef = g6_layout_def(ht, LAY.split(".")[-1], LAY)
             if handdef is None:
-                raise G6Mismatch(f"hand layout {LAY} not in EncTies.lean")
+                raise G6Mismatch(f"hand layout {LAY} not in {hsrc}")
             hand_pre = [(int(k) * (1 if d == "up" else -1), int(i)) for d, k, i in
                         re.findall(r"\.at \(\.(up|dn) (\d+)\) \(\.orig (\d+)\)", handdef["pre"])]
         dirs = [l.strip() for l in (kr / S).read_text().split("\n") if l.strip()]
@@ -2263,7 +2264,7 @@ def g6_cases(T):
 
 
 def g6_selftest():
-    """Rule 13 controls + the recomputation against the hand layouts of `Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean` and the example layouts of the encoder lemma unit.
+    """Rule 13 controls + the recomputation against the hand layouts of `Prysm/<Type>/EncodeFastPathKindInstances.lean` and the example layouts of the encoder lemma unit.
     Returns (n, bad)."""
     bad, n = [], 0
     try:
