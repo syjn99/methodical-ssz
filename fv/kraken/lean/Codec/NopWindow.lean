@@ -2,15 +2,16 @@ import Codec.SegmentTemplate
 import Machine.Step
 
 /-!
-# GEN4 L1: a code view that skips padding `nop` directives (variation class V1)
+# A code view that skips padding `nop` directives
 
-The hold-outs H4 and H5 missed fields because Go 1.26.10 put a one-byte `nop` inside a known shape (before
-`callq runtime.makeslice`, after a callee `callq`, at the end of an argument set-up). GEN3 answered with one
+In the hold-out tests of Deposit_Data and PendingPartialWithdrawal, and of PendingConsolidation and SyncCommitteeMessage, the generator missed fields because
+Go 1.26.10 put a one-byte `nop` inside a known shape (before `callq runtime.makeslice`, after a callee `callq`,
+at the end of an argument set-up). The dense lemmas answered with one
 `pad` flag per observed position. This module gives ONE mechanism for every position.
 
 * `isNop d`: `d` is a `nop` instruction. `eraseNop q`: `q` without its nops. `nopPos q i`: the index in `q` of
   the i-th directive that is not a nop (`q.length` after the last one, `nopPos_len`).
-* A G4 lemma takes a WINDOW of the host program instead of a dense template:
+* A window lemma takes a WINDOW of the host program instead of a dense template:
   `(hq : q.IsInfixAt Host.prog j) (he : eraseNop q = tmpl …) (hend : j + q.length = e)`.
   The window may hold nops before, between and after the template directives; there is no pad flag and no
   position parameter. An instance takes `q := (C.drop a).take n` (`win`) and proves `he` by computation.

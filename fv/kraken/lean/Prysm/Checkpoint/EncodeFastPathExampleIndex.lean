@@ -17,14 +17,14 @@ import Prysm.HistoricalSummary.EncodeFastPathExample
 | `Prysm/DepositMessage/EncodeFastPathExample.lean` | DepositMessage | large, 8 | `add $-0x80` | bytes 48, bytes 32, uint64; no `state` word | no reload | kind instance (no hand statement) |
 | `Prysm/HistoricalSummary/EncodeFastPathExample.lean` | HistoricalSummary | small | `sub $0x50` | bytes 32 twice | frame test (`Codec/EncodeFrameTest.lean`), reloads | kind instance (no hand statement) |
 
-Each module: `*_g6_head` (`encHeadKindN`), `*_g6_f<i>` per field (`encFieldKindN`), `*_g6_epi`
-(`encEpiKindN`), `*_e2e_marshal_g6` (`encFastKindN`), each with its `_kind` line, and, where a hand theorem
-exists, `*_e2e_marshal_g6_stmt : <declared type of the hand theorem>`.
+Each module: `Encode.example_head` (`encHeadKindN`), `Encode.example_f<i>` per field (`encFieldKindN`), `Encode.example_epi`
+(`encEpiKindN`), `Encode.example_fast` (`encFastKindN`), each with its `_kind` line, and, where a hand theorem
+exists, `Encode.example_fast_same_statement : type_of% <the hand theorem>`.
 
 **Fast path only** in every theorem: `len(dst) + SizeSSZ ≤ cap(dst)` and every byte-vector field of its exact
 length. No `runtime.growslice` directive is stepped. Not covered: growslice branches, length rejects, morestack.
 
-The texts were produced from the `.S` files and the IR by a scratch emitter of the lemma unit (not in the
+The texts were produced from the `.S` files and the IR by a scratch emitter (not in the
 repository; it is not the generator). They are development data (in-sample). The independent checks of the
 statements are the ties of `Prysm/<Type>/EncodeFastPathKindInstances.lean` (BeaconBlockHeader, Eth1Data, Checkpoint).
 

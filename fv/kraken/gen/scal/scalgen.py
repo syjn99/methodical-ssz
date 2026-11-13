@@ -15,7 +15,7 @@ field offsets). Emits Lean text that applies the parameterized lemmas of `lean/C
 Statement check: every emitted theorem `t` is followed by
 `t_kind : ∀ (h : Host), type_of% (@t h) = <kind> h <parameters>` proved by `with_reducible rfl`. The kind
 is hand text in `lean/Codec/Kind/FieldPatterns.lean` (`u64DecAcceptKind`, `rootDecSegKind`), proved from the lemma
-there (`*_of`) and, for the uint64 decoder kind, equal to the reviewed hand statements (`Prysm/Slot/Uint64DecoderKindAnchors.lean`). `@t h` is the whole
+there (`*_of`) and, for the uint64 decoder kind, equal to the reviewed hand statements (`Prysm/Slot/Uint64DecoderKindSameAsHand.lean`). `@t h` is the whole
 declared type, binders before and after the colon. So the kernel checks the full emitted statement against
 the frozen kind; it does not need a hand theorem of the instance type. What it does not check: that the
 parameters given to the kind are the right ones for the Go type. A wrong parameter gives a statement that
@@ -1523,7 +1523,7 @@ def compose(args, dirs, sha, irsha, fields, found):
 #     `add $i,%rD`, `mov $i,%eD`, `jmp l`, `l:`): one theorem `<prefix>_s<index>` + `_kind` per directive;
 #   * `nop`: nothing is emitted; the nop is a leading nop of the next window;
 #   * `callq <callee with a proved spec>`: the call block window `nop* callq nop* test nop* je lok` (`calldec_seg_w`,
-#     kind `callDecSegKindG4`), emitted ONLY when the dataflow shows rax = rcv + (IR Go offset), rbx = bf + (IR SSZ
+#     kind `callDecSegKindWindow`), emitted ONLY when the dataflow shows rax = rcv + (IR Go offset), rbx = bf + (IR SSZ
 #     offset), rcx = 8 and the IR field is the next one;
 #   * `lea type__+387072(%rip),%rax`: the byte segment over two windows (`bytesdec_seg_window` / `bytesdec_seg_z_window`,
 #     kinds `bytesDecSegKindWindow` / `bytesDecSegZKindWindow`), emitted ONLY when the receiver / buffer reload slots hold
@@ -2184,7 +2184,7 @@ def g4_call_text(C, prefix, fname, u):
             f"    (by simp only [{C}, Codec.callDecL, {SIMP_INFIX}])\n")
     out += g4_label_have("hl", j2, C)
     out += f"  with_reducible exact Codec.calldec_seg_w _ _ _ (k + {j}) (k + {jc}) (k + {j2}) hq he hjc hB hl\n"
-    out += kind_thm(name, f"Codec.callDecSegKindG4 h {C} {lean_str(u['fn'])} {lean_str(u['lok'])} {j} {jc} {j2}")
+    out += kind_thm(name, f"Codec.callDecSegKindWindow h {C} {lean_str(u['fn'])} {lean_str(u['lok'])} {j} {jc} {j2}")
     return out + "\n", name
 
 

@@ -106,7 +106,7 @@ theorem Decode.accept_from_generated_call_segments : Decode.accept_statement := 
     simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
   · dsimp only; rw [hmem8]; ecancel
 
-/-- Same declared type as the lemma unit's hand proof. -/
+/-- Same declared type as the hand proof `Decode.accept`. -/
 theorem Decode.accept_from_generated_call_segments_type : ∀ (h : Host),
     type_of% (@Decode.accept_from_generated_call_segments h) = type_of% (@Decode.accept h) := by
   intro h; with_reducible rfl

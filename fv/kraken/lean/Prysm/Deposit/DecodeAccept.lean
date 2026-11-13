@@ -40,7 +40,7 @@ theorem Decode.scratch_as_data_frame (y : BitVec 64) (Sd : Nat) (hSd : Sd < 2 ^ 
     at_app _ _ (b := y - 8) (by rw [hd]; bv_omega) (by simp [hd, he])]
   simp only [Std.ExtHashMap.sep_assoc]
 
-/-- The fresh Deposit_Data object as the receiver chunks of `dd_e2e_accept_main`. -/
+/-- The fresh Deposit_Data object as the receiver chunks of `Prysm.Deposit_Data.Decode.accept`. -/
 theorem Decode.data_object_words (p : BitVec 64) :
     Eq ((List.replicate 120 (0 : UInt8)).At p) = Eq ((List.replicate 8 0).At p) ⋆ Eq ((List.replicate 8 0).At (p + 8))
       ⋆ Eq ((List.replicate 8 0).At (p + 16)) ⋆ Eq ((List.replicate 8 0).At (p + 24))

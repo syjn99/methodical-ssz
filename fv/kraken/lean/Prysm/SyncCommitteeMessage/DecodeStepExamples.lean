@@ -15,12 +15,12 @@ import Prysm.PendingPartialWithdrawal.DecodeStepExamples
 # Example instances of the window and step mechanisms on the development sites
 
 One theorem and one `_kind` line per emitted unit, in the shape a generated theorem is to have (the idiom of
-`Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean`). Examples for the generator unit; not generator output (the text was produced by a
+`Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean`). Examples for the generator; not generator output (the text was produced by a
 scratch script from the `.S` files and the kind texts; directive index = `.S` line − 1). The code constants are written
 without their namespaces (`open` below), as in the generated modules, so that the negative suite can swap them.
 
-* a step theorem per set-up directive (`<type>_g4_s<index>`, kinds of `Codec/Kind/WindowSteps.lean`);
-* a call-block theorem per callee field (`…_call`, `callDecSegKindG4`); the window starts where the set-up
+* a step theorem per set-up directive (`Decode.example_step_s<index>`, kinds of `Codec/Kind/WindowSteps.lean`);
+* a call-block theorem per callee field (`…_call`, `callDecSegKindWindow`); the window starts where the set-up
   steps end, so a padding `nop` before the `callq` (Checkpoint, BeaconBlockHeader) or after it
   (PendingConsolidation) is inside the window;
 * a byte-segment theorem (`…_seg`, `bytesDecSegKindWindow`) over two windows;
@@ -175,7 +175,7 @@ theorem Decode.example_step_ValidatorIndex_call (k : Nat) (hk : Code.unmarshalSS
     (by simp only [Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.calldec_seg_w _ _ _ (k + 88) (k + 88) (k + 117) hq he hjc hB hl
-theorem Decode.example_step_ValidatorIndex_call_kind : ∀ (h : Host), type_of% (@Decode.example_step_ValidatorIndex_call h) = @Codec.callDecSegKindG4 h Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7" 88 88 117 := by
+theorem Decode.example_step_ValidatorIndex_call_kind : ∀ (h : Host), type_of% (@Decode.example_step_ValidatorIndex_call h) = @Codec.callDecSegKindWindow h Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7" 88 88 117 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in

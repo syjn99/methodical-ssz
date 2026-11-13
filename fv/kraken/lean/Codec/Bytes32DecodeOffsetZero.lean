@@ -1,13 +1,13 @@
 import Codec.Bytes32Decode
 
 /-!
-# S1 pattern P2, decode segment, offset-0 form (SG-1 extension)
+# The 32-byte field decode segment, offset-0 form
 
-Extension after both hold-outs were opened (FINDINGS SG-1; `scal/CONTAMINATION.md` §8). Eth1Data is
+Added after the hold-out types were opened, so no hold-out type tests it. Eth1Data is
 development data for it; no hold-out claim. When the 32-byte field is at SSZ offset 0, the memmove source
 is the buffer pointer itself and Go 1.26.10 emits no `add $src,%rbx`. The first block is the frozen
 `rootDecHead`; the second block `rootDecMidZ` is `rootDecMid` without the `add` directive (11 directives).
-Generalised from the hand module `Prysm/Eth1Data/DecodeFieldSegmentOffsetZero.lean` (session 13): same definition body and the same statement
+Generalised from the hand module `Prysm/Eth1Data/DecodeFieldSegmentOffsetZero.lean`: same definition body and the same statement
 and proof text, here without an instance import (`Prysm/Eth1Data/GeneratedDecodeOffsetZeroSameAsHand.lean` shows the identity). `Codec/Bytes32Decode.lean` and
 `Codec/Kind/FieldPatterns.lean` are unchanged.
 -/

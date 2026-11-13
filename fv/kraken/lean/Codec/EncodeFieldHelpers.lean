@@ -2,7 +2,7 @@ import Codec.EncodeSteps
 import Codec.FieldFrame
 
 /-!
-# ENC2 L2: helpers of the generated-style field proofs of encoders
+# Helpers of the generated-style field proofs of encoders
 
 A field theorem of a generated-style encoder proof is a list of step applications on a state with literal
 registers (`Codec/WindowSteps.lean`, `Codec/EncodeSteps.lean`). Two helpers keep the text independent of the syntactic form a

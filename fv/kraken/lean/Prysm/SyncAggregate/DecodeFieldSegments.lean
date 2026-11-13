@@ -6,7 +6,7 @@ import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 
 - `bytesdec_seg_z64`: the statement of `Codec.bytesdec_seg_z` with `hn : n = 64` (SyncCommitteeBits, offset 0).
   `Codec/FixedBytesDecode.lean` covers n ∈ {32, 48, 96}; its `hn` is a limit of the proof method (literal immediates).
-  The proof is `Codec/FixedBytesDecode.lean`'s local macro `bytesdec_z`, copied here as `bytes_decode_zero` with its text unchanged, at n = 64.
+  The proof is `Codec/FixedBytesDecode.lean`'s local macro `bytesdec_offset_zero_case`, copied here as `bytes_decode_zero` with its text unchanged, at n = 64.
 - `bytesDecHeadNop96`, `bytes96dec_seg_nop`: `Prysm.Deposit_Data.bytesDecHeadNop` / `bytes32dec_seg_nop` with the size
   literal 32 replaced by 96 (SyncCommitteeSignature has a `nop` between `mov $0x60,%ecx` and the makeslice call,
   directive 50). Every other token of the text is unchanged.

@@ -1,9 +1,10 @@
 import Codec.Bytes32Decode
 
 /-!
-# GEN2 L2: inline uint64 decode segment of a container decoder
+# Inline uint64 decode segment of a container decoder
 
-Added after the H3 hold-out (FINDINGS SG-2, proposal P-H3-1). Go 1.26.10 compiles
+Added after the hold-out test of BlobIdentifier and DepositMessage (a uint64 field after a byte vector).
+Go 1.26.10 compiles
 `x.F = ssz.UnmarshallUint64(buf[src:src+8])` inside a protoc container decoder, after a byte-vector field
 (the receiver is in rdx), to three directives:
 

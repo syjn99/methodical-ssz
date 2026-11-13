@@ -6,7 +6,7 @@ import Prysm.AttestationData.GeneratedDecodeRootFieldSegments
 import Prysm.Checkpoint.GeneratedDecodeRootFieldSegments
 import Prysm.Checkpoint.EncodeBytes32TemplatePlacement
 import Codec.Kind.FieldPatterns
-import Prysm.Slot.Uint64DecoderKindAnchors
+import Prysm.Slot.Uint64DecoderKindSameAsHand
 import Prysm.ValidatorIndex.WitnessDecodeAccept
 import Prysm.BeaconBlockHeader.DecodeSpec
 import Prysm.BeaconBlockHeader.WitnessDecodeAccept
@@ -134,7 +134,7 @@ import Prysm.SyncCommitteeMessage.DecodeAcceptExample
 import Prysm.VoluntaryExit.DecodeAcceptExample
 import Prysm.PowBlock.DecodeAcceptExample
 import Prysm.PendingDeposit.DecodeRejectSizeExample
-import Prysm.PendingDeposit.DecodeAcceptExamples
+import Prysm.PendingDeposit.DecodeAcceptExampleIndex
 import Prysm.VoluntaryExit.WitnessDecodeAccept
 import Prysm.Checkpoint.GeneratedDecodeAccept
 import Prysm.BeaconBlockHeader.GeneratedDecodeAccept
@@ -191,7 +191,7 @@ import Prysm.DepositMessage.EncodeFastPathExample
 import Prysm.Eth1Data.EncodeFastPathExample
 import Prysm.HistoricalSummary.EncodeFastPathExample
 import Prysm.ValidatorBalance.EncodeFastPathExample
-import Prysm.Checkpoint.EncodeFastPathExamples
+import Prysm.Checkpoint.EncodeFastPathExampleIndex
 import Codec.EncodeFieldHelpers
 import Codec.EncodeFrameTest
 import Codec.EncodeSteps
@@ -1380,8 +1380,8 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Codec.bytesdec_seg_window
 #print axioms Codec.bytesdec_seg_z_window
 #print axioms Codec.bytesdec_seg_z_inst
-#print axioms Codec.callDecSegKindG4_of
-#print axioms Codec.callDecSegKind_eq_G4
+#print axioms Codec.callDecSegKindWindow_of
+#print axioms Codec.callDecSegKind_eq_window
 #print axioms Codec.calldec_seg_dense
 #print axioms Codec.calldec_seg_w
 #print axioms Codec.decpro_seg

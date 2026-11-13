@@ -5,7 +5,7 @@ import Machine.Include
 # Code of the encoder of `v1alpha1.Deposit_Data` (Go 1.26.10 ELF `c6403c02…911e`)
 
 The constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`.
-The link check, the bundle hash and the rebuild limit are in `Prysm/BlobIdentifier/EncoderCode.lean`, which imports this module.
+`link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`. `Prysm/BlobIdentifier/EncoderCode.lean` imports this module.
 -/
 
 namespace Prysm.Deposit_Data

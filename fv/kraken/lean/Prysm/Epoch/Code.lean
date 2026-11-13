@@ -2,7 +2,7 @@ import Kraken.X64.Parser
 import Machine.Include
 
 /-!
-# Code of the prysm-e2e function set (Go 1.26.10 ELF `c6403c02…911e`): the `Epoch` part
+# Code of the `Epoch` functions (Go 1.26.10 ELF `c6403c02…911e`)
 
 The declarations of the other types of this group are in `Prysm/Checkpoint/Code.lean`.
 -/

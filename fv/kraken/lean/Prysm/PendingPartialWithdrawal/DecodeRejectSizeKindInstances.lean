@@ -12,7 +12,7 @@ import Prysm.AttestationData.DecodeRejectSize
 import Codec.DecodeRejectSizeAnyFrame
 
 /-!
-# GEN5 L3: ties of `decRejectKindN` to the committed size-reject theorems: the `PendingPartialWithdrawal` part
+# Ties of `decRejectKindN` to the committed size-reject theorems: the `PendingPartialWithdrawal` part
 
 The declarations of the other types of this group are in `Prysm/BlobIdentifier/DecodeRejectSizeKindInstances.lean`.
 -/

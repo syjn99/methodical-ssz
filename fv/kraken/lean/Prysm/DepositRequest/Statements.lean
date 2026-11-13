@@ -25,11 +25,11 @@ Sources: the Go receiver layout (IR `go_fields` of `prysm/ir/ir-mainnet.json`, g
 touched on the path and their contents at the return, the directive of the last call), the statement shape of the
 committed hand statements `Prysm.Deposit_Data.Decode.accept_statement`, `Prysm.SyncAggregatorSelectionData.Decode.accept_statement`, `Prysm.PendingDeposit.Decode.accept_statement`,
 `Prysm.SyncCommitteeMessage.Decode.accept_statement` (decoders), `Prysm.PendingPartialWithdrawal.Encode.fast_path_statement`, `Prysm.SyncCommitteeMessage.Encode.fast_path_statement`,
-`Prysm.PowBlock.Encode.fast_path_statement` (encoders), and the interface text of `enc2/L/OUT.md` (chunk order: saved rbp, home slots ascending,
+`Prysm.PowBlock.Encode.fast_path_statement` (encoders), and the interface rules of the encoder statements (chunk order: saved rbp, home slots ascending,
 other slots by first touch, the return slot; existentials in creation order). Independence limit: the layout
 rules come from that interface text and the earlier hand statements; the parameters are read from the `.S` by hand.
 
-Choice (classes with no independently tied statement before this unit):
+Choice (classes with no independently tied statement before this work):
 | type | side | class |
 | --- | --- | --- |
 | DepositRequest | decoder | frame `0x20`, no call, 48 + 32 + u64 + 96 + a trailing in-line u64 (Deposit_Data code + one field) |

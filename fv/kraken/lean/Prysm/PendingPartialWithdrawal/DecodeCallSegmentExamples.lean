@@ -13,7 +13,7 @@ import Prysm.Deposit_Data.DecodeCallSegmentExamples
 # Hand-written example instances of the `p2dec --gen3` lemmas on the development sites
 
 One theorem and one `_kind` line per lemma per site, in the shape a generated theorem is to have (the idiom
-of `Prysm/DepositMessage/DecodeFieldSegmentExamples.lean`). Examples for the generator unit; not generator output (the text was produced by a
+of `Prysm/DepositMessage/DecodeFieldSegmentExamples.lean`). Examples for the generator; not generator output (the text was produced by a
 scratch script from the `.S` files and the kind texts). Sites: the seven `uint64`-overlay callee fields of
 the development decoders (PendingPartialWithdrawal `Index`, `WithdrawableEpoch`; BeaconBlockHeader `Slot`,
 `ProposerIndex`; AttestationData `Slot`, `CommitteeIndex`; Checkpoint `Epoch`) with their argument set-ups,

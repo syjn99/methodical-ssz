@@ -8,7 +8,8 @@ The design principles are in `../../README.md`. The build commands are in `../RE
 
 The libraries `Spec`, `Machine`, `Runtime` and `Codec` are the shared layer.
 The library `Prysm` holds the proofs of the Prysm types (one directory for each type).
-`../gen/restructure/maps/shared-layer/files.tsv` gives the earlier path of each shared module and a one-line meaning.
+`../gen/restructure/maps/shared-layer/files.tsv` gives the earlier path and a one-line meaning of each module that this map moved.
+A module that a later step added or split is not in a `files.tsv`.
 
 **`Spec`.** EthLib specifications that several types share, and the ones that the `Desc` checker imports (`../gen/desccheck/`).
 They are the specifications of the small test types (`Spec/Test*.lean`) and of two reduced Prysm types (`Spec/ReducedPrysm.lean`).
@@ -26,7 +27,7 @@ A model is a small assembly program (`Runtime/*.S`) with theorems that it satisf
 
 **`Prysm`.** One directory for each Prysm type, `Prysm/<GoTypeName>/<Role>.lean`, namespace `Prysm.<GoTypeName>`.
 The full name of a main theorem is the name of the work, for example `Prysm.Checkpoint.Decode.reject_size`.
-The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `../gen/restructure/maps/attestation-data/` give the earlier path of each module and a one-line meaning.
+The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `../gen/restructure/maps/attestation-data/` give the earlier path and a one-line meaning of each module that these maps moved.
 - `Prysm/Checkpoint/`: the `v1alpha1.Checkpoint` decoder, encoder and `SizeSSZ`, the hand specification (`Spec.lean`),
   the Go value predicate (`GoValue.lean`) and the decoder-then-encoder composition (`DecodeThenEncode.lean`).
   The files `CapacityReserved*.lean` hold proofs about a separate test ELF of a generator option that is not adopted
@@ -42,13 +43,13 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
   caller that holds Checkpoint as a nested field (AttestationData), and their checks on the Checkpoint witness hosts.
 - `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/`, `Prysm/IndexedAttestation/`: the decoders of these types.
   They have byte vectors, a vector of byte vectors and a variable-size list.
-  `../gen/restructure/maps/sync-and-indexed-attestation/files.tsv` gives the earlier path of each module.
+  `../gen/restructure/maps/sync-and-indexed-attestation/files.tsv` gives the earlier path of each module that this map moved.
 - `Prysm/HistoricalBatch/`: the `v1alpha1.HistoricalBatch` decoder.
 - `Prysm/Deposit/`: the `v1alpha1.Deposit` decoder, proved with the lemmas of `Codec/Segment/`, and its witnesses.
-  `../gen/restructure/maps/historical-batch-and-deposit/files.tsv` gives the earlier path of each module of the two types.
+  `../gen/restructure/maps/historical-batch-and-deposit/files.tsv` gives the earlier path of each module of the two types that this map moved.
 - `Prysm/DataColumnsByRootIdentifier/`: the `v1alpha1.DataColumnsByRootIdentifier` encoder (fast path, growth at the
   first site and at any one site, two rejects), the decoder, and their composition at the machine level.
-  `../gen/restructure/maps/data-columns-by-root-identifier/files.tsv` gives the earlier path of each module.
+  `../gen/restructure/maps/data-columns-by-root-identifier/files.tsv` gives the earlier path of each module that this map moved.
 - `Prysm/RuntimeModel/`: witness-only models of runtime functions that read ELF data of a link set
   (bump allocators that dispatch on a type word). The library `Runtime` does not import `Prysm`.
 - `Prysm/ElfData/`: the ELF data of the link set `../prysm/go1.26.10/link-set` (`PrysmTarget.lean`, namespace
@@ -58,23 +59,29 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
 The flat fixed-size types (a flat type has only fixed-size fields and no nested container) have their directories in
 `Prysm/` too, for example `Prysm/BeaconBlockHeader/` and `Prysm/DepositRequest/`. The generated files are
 `Prysm/<GoTypeName>/Generated*.lean`. They use the patterns and kinds of `Codec`.
-`../gen/restructure/maps/flat-types/files.tsv` gives the earlier path of each module.
+`../gen/restructure/maps/flat-types/files.tsv` gives the earlier path of each module that this map moved.
 The statement kinds of the composed and whole accept theorems, of the callee calls and of the encoder fast path are in
 `Codec/Kind/` (`DecodeAccept*.lean`, `CalleeDecode.lean`, `EncodeFastPathAnyFrame.lean`); some of these modules import modules of single types.
 
 ### Dependencies
 
-The import graph has this order:
+The import lines of the tree give these relations:
 
 ```text
-EthLib -> Spec -> Machine -> Runtime -> Codec (except Codec/Segment/)
-       -> Prysm -> Prysm (list types, HistoricalBatch) -> Codec/Segment/ -> Prysm (Deposit)
+EthLib -> Spec -> Machine -> Runtime
+Codec <-> Prysm (at module level, both directions)
 ```
 
-The arrows give the order of the libraries in the import graph. A library imports only libraries to its left.
-Exception: `Codec/Bytes32Decode.lean` imports `Prysm/ElfData/PrysmTarget.lean`.
-`Prysm/Checkpoint/CapacityReserved*.lean` and `Prysm/Deposit/` import modules of the flat types, and `Prysm/HistoricalBatch/` does not import them.
-Some modules of `Codec/` and `Codec/Kind/` import modules of the flat types (the kinds and lemmas that the shared layer left in a type library).
+- `Spec` imports only EthLib and `Spec`. `Machine` imports only Kraken, Std and `Machine`. `Runtime` imports only
+  Kraken, `Machine` and `Runtime`. So these three libraries import only libraries to their left.
+- `Codec` and `Prysm` import each other at module level. 25 of the 60 `Codec` modules import a `Prysm` module:
+  13 of 36 in `Codec/`, 2 of 11 in `Codec/Kind/`, 10 of 13 in `Codec/Segment/`. 211 of the 673 `Prysm` modules
+  import a `Codec` module. Lean forbids a cycle of modules, so the module graph has no cycle; only the
+  libraries have no order.
+- The `Codec` modules that import `Prysm` hold lemmas and kinds that the shared layer took from a type
+  (for example `Codec/Bytes32Decode.lean` reads the ELF data of `Prysm/ElfData/PrysmTarget.lean`), and instances
+  that tie a general lemma to the lemmas of a type (`Codec/Segment/*Instances.lean`).
+- `Prysm/Checkpoint/CapacityReserved*.lean` and `Prysm/Deposit/` import modules of the flat types, and `Prysm/HistoricalBatch/` does not import them.
 A new type gets its own directory `Prysm/<GoTypeName>/`. Do not change a reviewed module to add a new type.
 
 ## 2. How machine code enters Lean
@@ -206,9 +213,43 @@ Use one witness host for each file. Two `Host` instances in one file make instan
 
 Module, namespace and main theorem names use the full Go type name (`../gen/restructure/SPEC.md`).
 The structure `Prysm.<GoTypeName>.SszValue` holds the SSZ content of a type.
-Short abbreviations of the Go types remain in the ELF data names and their readers (`Prysm/ElfData/`), in the names of
-the test types (`Spec/Test*.lean`, `Spec/ReducedPrysm.lean`), in generator prefixes and data file names, and in the
-records of earlier names (`../gen/restructure/maps/`). This table gives their meaning.
+Short names and labels remain in the places below. Each one stays because it is derived from a file id, because a
+generator writes it, or because it is a record. The table after the list gives the meaning of the type abbreviations.
+
+- ELF data names: `ElfData.PrysmTarget.<id>` and `<id>_addr` take the id of the data file
+  (`../prysm/go1.26.10/link-set/data/<id>.data`), for example `e2eErrSize`, `adFmtSlot`, `lvU64Type`, `dcdFmtMis`.
+  The prefix (`e2e`, `ad`, `lv`, `lvt3`, `dcd` and the type prefixes of the table) is the link set or type that
+  first read the item. The lemmas `<id>_addr_eq` (for example `e2eErrSize_addr_eq`, `lvFmtMis_addr_eq`) restate an
+  address. A new name would need new data file ids and a new link check result.
+- `Prysm.Deposit.Code.depDataType_addr`: a hand definition of a type descriptor address (data id `depDataType`).
+  `../gen/e2e/depcheck_data.py` compares it with its data file (see `../FINDINGS.md`).
+- Runtime model files: `Runtime/*.S` and `Prysm/*/*.S` (`BumpAlloc*.S`, `BumpNew*.S`, `RtCopy.S`, `RtErr.S`).
+  `include_x64_rt` reads them by path, and the code constants take their labels.
+- Statement kind structures of `Codec/Kind/` (their doc strings give the meaning): `SOff` stack offset, `SVal` /
+  `EVal` content of a stack slot (decoder / encoder), `RV` / `ERV` what a register holds at a field boundary,
+  `ExLen` length of an existential chunk, `RtCfg` runtime configuration, `StDesc` / `EncSt` boundary state,
+  `ExCh` / `ExBV` existential chunks / pointers, `Imps` a chain of implications, `layRt` / `layCal` the frame layouts
+  with runtime calls / callee calls, `decPro` / `encProL` decoder / encoder prologue templates, `iCmpMI` the
+  directive `cmpq $imm,disp(%rB)`, `stepLdvKind` / `stepLdbKind` the kinds of `kstep_ldv` / `kstep_ldb`
+  (`mov disp(%rB),%rD`, value / bytes form). Generated files and `../gen/scal/kindcheck.py` name them.
+- Generated theorem names with `_stmt` (`Decode.generated_accept_stmt`, `Encode.generated_stmt`): the generator writes
+  them.
+- Short tactic names (local or module macros): `vtri_iter_body`, `rstep`, `eb`, `kn`, `kunf`, `kwat`, `kwin`, `kwnx`,
+  `kwend`, `rej_infix`, `imm32`, and the notation `shl5`. Their doc strings say what each does.
+- Directory labels under `../prysm/go1.26.10/e2e/` (`ad`, `bh`, `e1`, `f24`, `g5c`, `h3` to `h6`, `lv`, `scal`), the
+  link and differential scripts `../gen/e2e/*link.py`, `../gen/e2e/*diff.py`, and the negative case files
+  `*negcases*.json`: records of the work steps; generated headers and tests name these paths.
+- Generator options `--gen2` to `--gen6` of `../gen/scal/scalgen.py`: generated headers, `../gen/restructure/tools/regen.py`
+  and the generator tests name them.
+- The evidence tools of `../prysm/go1.26.10/e2e/f24/tools/` keep templates with earlier file and declaration names
+  and translate them to the present names when they write (`new_names` of `f24spec.py`).
+- Labels that the generators write into comments of generated files (header text, coverage lines that
+  `kindcheck.py` reads): `GEN2` to `GEN6`, `GEN4 coverage`, `FIELDS-JSON`, `GEN6-JSON`, `FLAT24`, `G5-C`, `G5-L`,
+  `H3`, `H4`, `H7`, `unit E2-C`, `unit E2-G`, `unit G5-G`. A change needs the generator and a fresh run of each output.
+- The test type names of `Spec/Test*.lean` and `Spec/ReducedPrysm.lean` (test types of `../target/`).
+- Negative case ids (for example `epr-control`): records that the negative check results name.
+- The records of earlier names (`../gen/restructure/maps/`).
+
 Some abbreviations have two or three meanings. The context decides the meaning.
 
 | Abbreviation | Go type |
@@ -241,5 +282,5 @@ Some abbreviations have two or three meanings. The context decides the meaning.
 | `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` and `v1alpha1.SyncCommittee` in earlier names, and the test type `Scalars` (`Spec/TestScalars.lean`) |
 | `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` and `v1alpha1.SyncAggregate` in earlier names |
 | `Fv` | the test type `FixedVec` (`Spec/TestFixedVec.lean`) |
-| `epr` | two meanings: `ExecutionPayloadEnvelopesByRangeRequest`, and the Epoch reject witness `Prysm.Epoch.Witness.DecodeRejectSize.runs` |
+| `epr` | two meanings: `ExecutionPayloadEnvelopesByRangeRequest` (data ids, f24 tools), and the Epoch size reject in negative case ids (`epr-*`) |
 | `Pad` | `v1alpha1.PayloadAttestationData` in the generator scripts |

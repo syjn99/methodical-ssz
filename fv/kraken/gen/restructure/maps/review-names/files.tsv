@@ -1,0 +1,5 @@
+# old path	new path	meaning (paths are relative to the repository root)
+fv/kraken/lean/Prysm/Checkpoint/EncodeFastPathExamples.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeFastPathExampleIndex.lean	index of the encoder fast-path examples of six types (imports and a table; no declaration)
+fv/kraken/lean/Prysm/PendingDeposit/DecodeAcceptExamples.lean	fv/kraken/lean/Prysm/PendingDeposit/DecodeAcceptExampleIndex.lean	index of the decoder accept examples of four types and two size-reject examples (imports, table, the collection theorem)
+fv/kraken/lean/Prysm/Slot/Uint64DecoderKindAnchors.lean	fv/kraken/lean/Prysm/Slot/Uint64DecoderKindSameAsHand.lean	the uint64 decoder kind of Slot is the declared type of the hand theorem Prysm.Slot.Decode.accept (rfl)
+fv/kraken/lean/Prysm/CommitteeIndex/Uint64DecoderKindAnchors.lean	fv/kraken/lean/Prysm/CommitteeIndex/Uint64DecoderKindSameAsHand.lean	the uint64 decoder kind of CommitteeIndex is the declared type of the hand theorem Prysm.CommitteeIndex.Decode.accept (rfl)

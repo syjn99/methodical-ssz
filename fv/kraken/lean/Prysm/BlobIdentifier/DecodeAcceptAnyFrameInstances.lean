@@ -8,7 +8,7 @@ import Codec.Kind.DecodeAcceptAnyFrameInstances
 import Prysm.BlobIdentifier.DecodeAcceptComposition
 
 /-!
-# GEN5 L1: ties of `decAcceptKindN` to the hand accept statements: the `BlobIdentifier` part
+# Ties of `decAcceptKindN` to the hand accept statements: the `BlobIdentifier` part
 
 The declarations of the other types of this group are in `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 -/
@@ -24,7 +24,7 @@ theorem Decode.accept_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.BlobI
     = @decAcceptKindN h Prysm.BlobIdentifier.Code.unmarshalSSZ (layRt true 32 1) [.bytes 32, .u64] := by
   intro h; rfl
 
-/-! ## Relation to the GEN3 kind `decAcceptKind` (the four types it is tied to) -/
+/-! ## Relation to the composed accept kind `decAcceptKind` (the four types it is tied to) -/
 
 theorem Decode.accept_kind_any_frame_is_kind : ∀ (h : Host),
     @decAcceptKindN h Prysm.BlobIdentifier.Code.unmarshalSSZ (layRt true 32 1) [.bytes 32, .u64]

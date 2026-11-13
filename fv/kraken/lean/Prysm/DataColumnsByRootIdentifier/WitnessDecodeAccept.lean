@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `Decode.accept` (decoder accept path)
 
-The text of `Prysm/IndexedAttestation/WitnessDecodeAccept.lean` (branch `claude/ssz-fv-list-vector-20261112`, commit `a1c5d0d`) with this host and
+The text of `Prysm/IndexedAttestation/WitnessDecodeAccept.lean` with this host and
 layout. The premises of the frozen `Decode.accept_statement` are satisfiable for every `n ≤ 128`, the three contract hypotheses
 included: both `MakesliceC` instances from `Prysm.RuntimeModel.BumpAllocUint64DispatchForDataColumnsByRootIdentifier` (`Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_for_data_columns_by_root_identifier_size8`, `Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_for_data_columns_by_root_identifier_size1`), `MemmoveC`
 from `RtCopy`. Host: data labels (bump pointer at 0, `runtime.writeBarrier` at 8), the real Go 1.26.10

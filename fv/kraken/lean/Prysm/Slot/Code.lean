@@ -2,10 +2,10 @@ import Kraken.X64.Parser
 import Machine.Include
 
 /-!
-# Program constant of the `primitives.Slot` decoder in the AttestationData link set
+# Program constant of the `primitives.Slot` decoder
 
-`unmarshalSSZ` includes the `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm` (the link set of
-`Prysm.AttestationData.Code`); `unmarshalSSZLabel` is its label, the call target in the AttestationData decoder.
+`unmarshalSSZ` includes the `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm` (`link/check.py` (a)–(f) PASS in
+`prysm/go1.26.10/link-set/RESULT`); `unmarshalSSZLabel` is its label, the call target in the AttestationData decoder.
 -/
 
 namespace Prysm.Slot

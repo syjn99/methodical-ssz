@@ -3,7 +3,7 @@ import Runtime.Contracts
 import Prysm.ElfData.PrysmTarget
 
 /-!
-# S1 pattern P2, decode segment: `f = make([]byte, 0, 32); f = append(f, buf[src:src+32]...)`
+# The 32-byte field decode segment: `f = make([]byte, 0, 32); f = append(f, buf[src:src+32]...)`
 
 Go 1.26.10 compiles the 32-byte field decode of a protoc container (`Checkpoint.Root`,
 `AttestationData.BeaconBlockRoot`) to two code blocks:

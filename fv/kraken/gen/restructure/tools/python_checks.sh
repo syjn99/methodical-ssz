@@ -15,9 +15,9 @@
 #
 # Environment:
 #   KINDCHECK_FILES  the generated Lean files for kindcheck.py, as paths relative to fv/kraken.
-#                    Default: the generated and example modules that were the non-partial lean/E2eScal/Gen*.lean
-#                    files: lean/Prysm/*/Generated*.lean and lean/Prysm/*/Decode*Example*.lean, without the
-#                    identity and specification modules whose names also start with Generated.
+#                    Default: the non-partial generated and example modules lean/Prysm/*/Generated*.lean and
+#                    lean/Prysm/*/Decode*Example*.lean, without the identity and specification modules whose
+#                    names also start with Generated.
 #                    After a step that moves them, give the moved paths of the same files (see files.tsv).
 #   PARTIAL_FILES    the partial generator outputs for `kindcheck.py --partial`, relative to fv/kraken.
 #                    Default: lean/Prysm/*/Generated*Partial.lean.

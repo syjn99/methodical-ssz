@@ -5,7 +5,7 @@ import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 # The hand fixed-size segment lemmas as one-line instances of `Codec.Segment.FixedBytesAnySize`
 
 Each theorem below has as its type the type of a hand lemma (`type_of%`), and its proof applies the general
-lemma. So every hand statement follows from the general one (new names; `Codec/FixedBytesDecode.lean`, `Seg.lean` and
+lemma. So every hand statement follows from the general one (new names; `Codec/FixedBytesDecode.lean`, `Prysm/SyncAggregate/DecodeFieldSegments.lean` and
 `Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean` are unchanged). The templates with a literal size are the general templates (`rfl`).
 -/
 

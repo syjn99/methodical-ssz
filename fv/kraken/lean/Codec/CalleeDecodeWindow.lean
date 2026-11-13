@@ -2,17 +2,17 @@ import Codec.Kind.CalleeDecode
 import Codec.NopWindow
 
 /-!
-# GEN4: the callee-decoder call block over a window (padding anywhere)
+# The callee-decoder call block over a window (padding anywhere)
 
 `calldec_seg_w` is `calldec_seg` (`Codec/CalleeDecode.lean`) with the dense template hypothesis replaced by a window:
 `eraseNop q = callDec fn lok`. A `nop` may stand before the `callq`, between the `callq` and the `test`
-(PendingConsolidation.TargetIndex, the H5 miss P-H5-3) or between `test` and `je`. `jc` is the index of the
+(PendingConsolidation.TargetIndex, a field that the generator missed in the hold-out test of PendingConsolidation and SyncCommitteeMessage) or between `test` and `je`. `jc` is the index of the
 `callq` (`j + nopPos q 0`): the return slot holds the address of directive `jc + 1`, which is the nop when
 there is one. Callee specification: `U64CalleeAcc fn`, the existing form, unchanged. The entry registers
 (rax = destination, rbx = source, rcx = 8) are fixed by the Go register ABI of that specification; the
 set-up that establishes them is free (`Codec/WindowSteps.lean`).
 
-`calldec_seg_dense`: the GEN3 lemma `calldec_seg` is the instance `q := callDec fn lok` (statement equal).
+`calldec_seg_dense`: the dense lemma `calldec_seg` is the instance `q := callDec fn lok` (statement equal).
 -/
 
 open Machine Runtime
@@ -87,13 +87,13 @@ theorem calldec_seg_w (fn lok : String) (q : Program) (j jc j2 : Nat)
   apply Eventually.done
   exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, by ecancel⟩
 
-/-- The GEN3 lemma `calldec_seg` is the dense instance of `calldec_seg_w` (same statement). -/
+/-- The dense lemma `calldec_seg` is the instance of `calldec_seg_w` (same statement). -/
 theorem calldec_seg_dense : type_of% (@calldec_seg ‹Host›) :=
   fun fn lok j j2 hA hB hl hC => calldec_seg_w fn lok _ j j j2 hA rfl rfl hB hl hC
 
 set_option linter.unusedVariables false in
 /-- Call-block statement kind over a window: start `k + j`, `callq` at `k + jc`, `lok:` at `k + j2`. -/
-abbrev callDecSegKindG4 (C : Program) (fn lok : String) (j jc j2 : Nat) : Prop :=
+abbrev callDecSegKindWindow (C : Program) (fn lok : String) (j jc j2 : Nat) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k) (hC : U64CalleeAcc fn)
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
@@ -116,18 +116,18 @@ abbrev callDecSegKindG4 (C : Program) (fn lok : String) (j jc j2 : Nat) : Prop :
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + j)⟩
 
-/-- `callDecSegKindG4` follows from `calldec_seg_w` and the window facts of an instance. -/
-theorem callDecSegKindG4_of (C : Program) (fn lok : String) (j jc j2 : Nat) (q : Program)
+/-- `callDecSegKindWindow` follows from `calldec_seg_w` and the window facts of an instance. -/
+theorem callDecSegKindWindow_of (C : Program) (fn lok : String) (j jc j2 : Nat) (q : Program)
     (hq : ∀ k, C.IsInfixAt Host.prog k → q.IsInfixAt Host.prog (k + j)) (he : eraseNop q = callDec fn lok)
     (hjc : j + nopPos q 0 = jc)
     (hB : ∀ k, C.IsInfixAt Host.prog k → (callDecL lok).IsInfixAt Host.prog (k + j2))
     (hl : ∀ k, C.IsInfixAt Host.prog k → LabelsFresh C k → label lok = Host.addrOf (k + j2)) :
-    callDecSegKindG4 C fn lok j jc j2 :=
+    callDecSegKindWindow C fn lok j jc j2 :=
   fun k hk hf hC => calldec_seg_w fn lok q (k + j) (k + jc) (k + j2) (hq k hk) he (by omega) (hB k hk)
     (hl k hk hf) hC
 
-/-- The GEN3 kind is the `jc = j` case of the window kind. -/
-theorem callDecSegKind_eq_G4 (C : Program) (fn lok : String) (j j2 : Nat) :
-    callDecSegKind C fn lok j j2 = callDecSegKindG4 C fn lok j j j2 := rfl
+/-- The dense kind `callDecSegKind` is the `jc = j` case of the window kind. -/
+theorem callDecSegKind_eq_window (C : Program) (fn lok : String) (j j2 : Nat) :
+    callDecSegKind C fn lok j j2 = callDecSegKindWindow C fn lok j j j2 := rfl
 
 end Codec

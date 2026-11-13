@@ -1,10 +1,10 @@
 import Codec.Kind.DecodeAcceptComposition
 
 /-!
-# GEN5 L1 / L2: statement kinds for whole accept theorems of flat decoders, any frame
+# Statement kinds for whole accept theorems of flat decoders, any frame
 
 `decAcceptKindN C L fields` is the accept statement of a flat fixed-size container decoder `C`.
-- `fields : List DecField` (the GEN3 type): fixed byte vectors (`.bytes n`, a fresh slice, `len = cap = n`) and
+- `fields : List DecField` (`Codec/Kind/DecodeAcceptComposition.lean`): fixed byte vectors (`.bytes n`, a fresh slice, `len = cap = n`) and
   8-byte fields (`.u64`). A field decoded by a callee (`Slot`, `Epoch`, `ValidatorIndex`, `CommitteeIndex`
   `UnmarshalSSZ`) is `.u64` here: in the receiver and in the input it is the same as an inline `uint64`. The
   callee shows only as placement premises (`L.callees`).
@@ -13,12 +13,12 @@ import Codec.Kind.DecodeAcceptComposition
   for a decoder without `makeslice` / `memmove`), the stack-guard addend (`gd`), the `state` word (`st`).
 
 The input chunks, the receiver words before and after, the heap chunks and the sizes are computed from
-`fields` by the GEN3 functions of `Codec/Kind/DecodeAcceptComposition.lean` (unchanged). The stack part is a parameter: the kind does
+`fields` by the functions of `Codec/Kind/DecodeAcceptComposition.lean` (unchanged). The stack part is a parameter: the kind does
 not check that `L` is the frame of the code; a proof of an instance does (a wrong slot does not close).
 The kind does not check that `L.callees` are the callees of the fields: that is a rule of the generator.
 
 The binder prefix (`decBinders`) is shared with the three kinds of the intermediate theorems of a generated
-accept proof (GEN5 L2). These are stated over the WHOLE accept memory in entry-state terms:
+accept proof. These are stated over the WHOLE accept memory in entry-state terms:
 - `decHeadKindN C L fields d0`: accept premises, entry → boundary state `d0`;
 - `decFieldKindN C L fields d d'`: boundary state `d` → boundary state `d'` (one field);
 - `decEpiKindN C L fields d`: boundary state `d` → the accept post-state.
@@ -162,7 +162,7 @@ def rtBind (rt : Option RtCfg) (hsz : Nat) (cs : List (List UInt8))
           [hsz ≤ avail, MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (addX S c.x), MemmoveC (addX S c.x)])
 
 set_option linter.unusedVariables false in
-/-- The binder prefix of every GEN5 kind: code placement, callee placements, field values and their lengths,
+/-- The binder prefix of every whole-accept kind: code placement, callee placements, field values and their lengths,
 entry state, stack and receiver chunks and their lengths, the frame `R`, the runtime binders. -/
 def decBinders (C : Program) (L : DecLayout) (fields : List DecField)
     (body : Nat → List (List UInt8) → MachineData → UInt64 → UInt64 → List (List UInt8) → (DataMem → Prop)

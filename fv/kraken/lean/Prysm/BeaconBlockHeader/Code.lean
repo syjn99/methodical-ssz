@@ -3,11 +3,10 @@ import Machine.Include
 import Prysm.ValidatorIndex.Code
 
 /-!
-# Code of the hold-out function set (Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the `BeaconBlockHeader` functions (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code` and `Prysm.AttestationData.Code`; `link/check.py` (a)–(f) PASS in
-`../RESULT`, bundle `140eb7bd…`). The Slot callee is `Prysm.Slot.Code.unmarshalSSZ`.
+(`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code` and `Prysm.AttestationData.Code`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). The Slot callee is `Prysm.Slot.Code.unmarshalSSZ`.
 Hand-written include file (not generator output).
 The directory `prysm/go1.26.10/link-set/norm` is a Lake `input_dir` of the `Prysm` library,
 so Lake rebuilds these modules when a `.S` file changes.

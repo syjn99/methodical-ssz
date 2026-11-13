@@ -174,7 +174,7 @@ theorem _root_.Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call (
     (by simp only [Prysm.PendingConsolidation.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.PendingConsolidation.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.calldec_seg_w _ _ _ (k + 55) (k + 55) (k + 85) hq he hjc hB hl
-theorem _root_.Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call_kind : ∀ (h : Host), type_of% (@Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call h) = @Codec.callDecSegKindG4 h Prysm.PendingConsolidation.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d" 55 55 85 := by
+theorem _root_.Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call_kind : ∀ (h : Host), type_of% (@Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call h) = @Codec.callDecSegKindWindow h Prysm.PendingConsolidation.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d" 55 55 85 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in

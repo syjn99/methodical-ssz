@@ -1,0 +1,7 @@
+# new path (repository-relative)	line	text after the automatic rewrite	final text (declaring lines: the tool rewrites them only in moved modules)
+fv/kraken/lean/Codec/CalleeDecodeWindow.lean	96	abbrev callDecSegKindG4 (C : Program) (fn lok : String) (j jc j2 : Nat) : Prop :=	abbrev callDecSegKindWindow (C : Program) (fn lok : String) (j jc j2 : Nat) : Prop :=
+fv/kraken/lean/Codec/CalleeDecodeWindow.lean	120	theorem callDecSegKindG4_of (C : Program) (fn lok : String) (j jc j2 : Nat) (q : Program)	theorem callDecSegKindWindow_of (C : Program) (fn lok : String) (j jc j2 : Nat) (q : Program)
+fv/kraken/lean/Codec/CalleeDecodeWindow.lean	130	theorem callDecSegKind_eq_G4 (C : Program) (fn lok : String) (j j2 : Nat) :	theorem callDecSegKind_eq_window (C : Program) (fn lok : String) (j j2 : Nat) :
+fv/kraken/lean/Machine/Frame.lean	13	def luFrame (scratch rslot g1 s28 s30 s38 g2 fp : List UInt8) : List UInt8 :=	def stackFrame144 (scratch rslot g1 s28 s30 s38 g2 fp : List UInt8) : List UInt8 :=
+fv/kraken/lean/Machine/Frame.lean	21	theorem luFrame_sep (x : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (scratch rslot g1 s28 s30 s38 g2 fp : List UInt8)	theorem stackFrame144_sep (x : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (scratch rslot g1 s28 s30 s38 g2 fp : List UInt8)
+fv/kraken/lean/Machine/Frame.lean	39	theorem luFrame_slices (stk : List UInt8) (S : Nat) :	theorem stackFrame144_slices (stk : List UInt8) (S : Nat) :

@@ -138,7 +138,7 @@ theorem Decode.lo8 (x y : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (hy : y = x - 1
   simp only [Std.ExtHashMap.sep_assoc]
 
 omit [Host] in
-/-- A fresh 96-byte AttestationData object as the receiver chunks of `ad_e2e_accept_main`. -/
+/-- A fresh 96-byte AttestationData object as the receiver chunks of `Prysm.AttestationData.Decode.accept`. -/
 theorem Decode.obj96 (p : BitVec 64) :
     Eq ((List.replicate 96 (0 : UInt8)).At p) = Eq ((List.replicate 8 0).At p) ⋆ Eq ((List.replicate 8 0).At (p + 8))
       ⋆ Eq ((List.replicate 8 0).At (p + 16)) ⋆ Eq ((List.replicate 8 0).At (p + 24))

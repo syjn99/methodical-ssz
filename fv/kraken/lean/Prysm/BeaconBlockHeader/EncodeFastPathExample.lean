@@ -5,8 +5,8 @@ import Prysm.BeaconBlockHeader.Code
 /-!
 # Worked example: `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, fast-path theorem in generated style
 
-Text produced from the `.S` file and the IR by the recipe of the lemma hand-over (a scratch emitter of the
-lemma work, not the generator): a symbolic walk of the fast path, one application of a step lemma per directive
+Text produced from the `.S` file and the IR by a scratch emitter (not in the tree; it is not
+the generator): a symbolic walk of the fast path, one application of a step lemma per directive
 (`Codec/WindowSteps.lean`, `Codec/EncodeSteps.lean`; windows with the nops erased), boundary states between the fields. Every
 theorem has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKindN`).
 **Fast path only**: `len(dst) + 112 ≤ cap(dst)` and every byte-vector field of its exact length. No

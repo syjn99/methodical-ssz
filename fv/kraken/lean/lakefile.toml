@@ -29,10 +29,9 @@ name = "Machine"
 globs = ["Machine.+"]
 
 # Runtime: the contracts of the Go runtime callees and their models. The models are the .S files of
-# Runtime/; `include_x64_rt` reads them, so they are inputs of the library (Rebuild tracking: con-agua
-# ConAgua/AsmFile/Include.lean; a `needs` entry puts the file contents into the input hash of every module of
-# the library, so Lake rebuilds the proofs when a .S file changes). `Runtime/StaticUint64s.lean` reads the data file
-# staticuint64s.data of link/out (the input_dir test_target_data below).
+# Runtime/; `include_x64_rt` reads them, so they are inputs of the library. A `needs` entry puts the file
+# contents into the input hash of every module of the library, so Lake rebuilds the proofs when a .S file changes.
+# `Runtime/StaticUint64s.lean` reads the data file staticuint64s.data of link/out (the input_dir test_target_data below).
 [[input_dir]]
 name = "runtime_lean_S"
 path = "Runtime"
@@ -52,8 +51,9 @@ text = true
 
 # Codec: lemmas that do not depend on one Prysm type: the uint64 decoder pattern, the fixed-bytes field
 # patterns, segment and loop lemmas (Codec/Segment/), the statement kinds of the generated proofs (Codec/Kind/)
-# and the encoder step lemmas. No module of this library reads a code or data file itself. Some modules of
-# Codec/Segment/ import modules of the Prysm library.
+# and the encoder step lemmas. No module of this library reads a code or data file itself. Codec and Prysm import
+# each other at module level: 25 of the 60 Codec modules import a Prysm module (13 of 36 in Codec/, 2 of 11 in
+# Codec/Kind/, 10 of 13 in Codec/Segment/), and 211 of the 673 Prysm modules import a Codec module.
 [[lean_lib]]
 name = "Codec"
 globs = ["Codec.+"]
@@ -73,7 +73,7 @@ text = true
 
 # witness-only runtime model: the 72-byte bump newobject Prysm/AttestationData/BumpNew72.S
 [[input_dir]]
-name = "e2e_ad_lean_S"
+name = "attestation_data_runtime_model_S"
 path = "Prysm/AttestationData"
 text = true
 filter = {extension = ["S"]}
@@ -83,7 +83,7 @@ filter = {extension = ["S"]}
 [[lean_lib]]
 name = "Prysm"
 globs = ["Prysm.+"]
-needs = ["prysm_target_norm_S", "prysm_target_data", "e2e_ad_lean_S", "runtime_model_S", "deposit_lean_S"]
+needs = ["prysm_target_norm_S", "prysm_target_data", "attestation_data_runtime_model_S", "runtime_model_S", "deposit_lean_S"]
 
 # witness-only runtime models of the Prysm library: the type-dispatching bump allocators Prysm/RuntimeModel/*.S
 [[input_dir]]

@@ -8,12 +8,12 @@ import Prysm.Checkpoint.DecodeRejectSize
 /-!
 # Real Prysm `(*v1alpha1.Eth1Data).UnmarshalSSZ`: size reject (hold-out)
 
-Hand-written: the text of `Prysm/BeaconBlockHeader/DecodeRejectSize.lean` (`bh_e2e_reject_size_main`) with the
+Hand-written: the text of `Prysm/BeaconBlockHeader/DecodeRejectSize.lean` (`Prysm.BeaconBlockHeader.Decode.reject_size`) with the
 Eth1Data indices. `Decode.reject_size` (`len(buf) ≠ 72`, Go source `return ssz.ErrSize`):
 directives 2–7 (guard, prologue `sub $0x20`, rbx spill), 9–10 `cmp $0x48,%rcx; jne L_17f` taken,
 91 `L_17f`, 92–93 load the two words of `ssz.ErrSize` (`ElfData.PrysmTarget.e2eErrSize_addr`, the same ELF symbol
 as the Checkpoint decoder's; `e1link.py` asserts the operand), 94–96 epilogue. The two words `e0`, `e1`
-are the global's value after package init (premise, as in `cp_e2e_reject_size_main`).
+are the global's value after package init (premise, as in `Prysm.Checkpoint.Decode.reject_size`).
 The decoder has no `fmt.errorf` wrap and no callee error path: the size check is its only reject.
 -/
 

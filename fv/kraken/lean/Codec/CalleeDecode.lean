@@ -4,9 +4,10 @@ import Prysm.Epoch.DecodeAccept
 import Prysm.Slot.DecodeAccept
 
 /-!
-# GEN3 L1: a field decoded by a call to another type's `UnmarshalSSZ` (uint64 overlay callee)
+# A field decoded by a call to another type's `UnmarshalSSZ` (uint64 overlay callee)
 
-Added after the H4 hold-out (FINDINGS SG-3 context, miss M1). Go 1.26.10 compiles
+Added after the hold-out test of Deposit_Data and PendingPartialWithdrawal: the generator did not cover the fields that a callee
+decodes. Go 1.26.10 compiles
 `if err = x.F.UnmarshalSSZ(buf[s:s+8]); err != nil { ... }` for an overlay type of `uint64` (Slot,
 CommitteeIndex, ValidatorIndex, Epoch) to an argument set-up, then
 
@@ -17,14 +18,14 @@ CommitteeIndex, ValidatorIndex, Epoch) to an argument set-up, then
 `U64CalleeAcc fn` is the text of the four existing function specifications `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec`,
 `Prysm.ValidatorIndex.Decode.accept_function_spec`, `Prysm.Epoch.Decode.accept_function_spec` with the callee label as a parameter. It is the existing spec-hypothesis
 form (`Prysm/Slot/CalleeDecodeFunctionSpecs.lean`: each existing spec is `U64CalleeAcc <its label>` by `rfl`); the proved theorems
-`sl_uacc_holds`, `ci_uacc_holds`, `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`, `ep_uacc_holds` discharge it. No runtime contract is used.
+`Prysm.Slot.Decode.accept_function_spec_holds`, `Prysm.CommitteeIndex.Decode.accept_function_spec_holds`, `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`, `Prysm.Epoch.Decode.accept_function_spec_holds` discharge it. No runtime contract is used.
 
 * `calldec_seg` — the reusable call block: `callDec fn lok` (3 directives) and the label `lok`.
 * Argument set-up, the three straight-line forms of the seven development sites (register hand-over only,
   memory unchanged): `callarg_first_seg` (`add $f,%rax; mov $8,%ecx`), `callarg_reload_seg` (three reloads
   from the spills with `add`), `callarg_lea_seg` + `callarg_mov_seg` (the `lea` form whose results are moved
   to rax / rbx after an interleaved field read). `pad = true` adds the compiler padding `nop` before the call.
-Not covered: any other register choice; pointer-field callees (`CpUAccC`, a different specification form).
+Not covered: any other register choice; pointer-field callees (`Prysm.Checkpoint.Decode.accept_function_spec`, a different specification form).
 -/
 
 open Machine Runtime
@@ -35,7 +36,8 @@ namespace Codec
 variable [Host]
 
 /-- Accept-path function specification of a `uint64`-overlay `UnmarshalSSZ` at the label `fn`
-(`len(buf) = 8`): the common text of `SlUAccC`, `CiUAccC`, `Prysm.ValidatorIndex.Decode.accept_function_spec`, `EpUAccC`. -/
+(`len(buf) = 8`): the common text of `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec`,
+`Prysm.ValidatorIndex.Decode.accept_function_spec`, `Prysm.Epoch.Decode.accept_function_spec`. -/
 def U64CalleeAcc (fn : String) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (e8 fp s2 c0 : List UInt8) (guard : UInt64) (F : DataMem → Prop),
     e8.length = 8 → fp.length = 8 → s2.length = 8 → c0.length = 8 →

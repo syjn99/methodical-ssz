@@ -1,13 +1,13 @@
 import Codec.Kind.DecodeAcceptAnyFrame
 
 /-!
-# ENC2 L1 / L2: statement kinds for encoder fast-path theorems of flat containers, any frame
+# Statement kinds for encoder fast-path theorems of flat containers, any frame
 
 `encFastKindN C L fields` is the fast-path statement of `MarshalSSZTo` of a flat fixed-size container `C`.
 **Fast path only**: premise `len(dst) + SizeSSZ ≤ cap(dst)` and every byte-vector field of its exact length.
 The `runtime.growslice` branches, the length rejects and the morestack path are not part of the statement.
 
-- `fields : List DecField` (the GEN3 type): `.bytes n` = a `[]byte` field of SSZ size `n` (receiver words:
+- `fields : List DecField` (`Codec/Kind/DecodeAcceptComposition.lean`): `.bytes n` = a `[]byte` field of SSZ size `n` (receiver words:
   pointer, length `n`, capacity word); `.u64` = an 8-byte field (`uint64` or an overlay type of it).
 - `L : EncLayout`: the frame facts of the `.S` file. `st` (the receiver has the protoc `state` word), `frame`
   (the `sub` amount `F`), `gd` (stack-guard addend: 0 for the small guard, `N` of `lea -N(%rsp),%r12`), `rt`
@@ -23,7 +23,7 @@ The stack part is a parameter: the kind does not check that `L` is the frame of 
 instance does (a wrong slot does not close). The premise `cap < 2 ^ 63` is kept from the hand statements.
 
 The binder prefix (`encBinders`) is shared with the three kinds of the intermediate theorems of a
-generated-style proof, stated over the WHOLE memory in entry-state terms (the GEN5 form):
+generated-style proof, stated over the WHOLE memory in entry-state terms (the form of `Codec/Kind/DecodeAcceptAnyFrame.lean`):
 - `encHeadKindN C L fields d0`: fast-path premises, entry → boundary state `d0`;
 - `encFieldKindN C L fields d d'`: boundary state `d` → boundary state `d'` (one field);
 - `encEpiKindN C L fields d`: boundary state `d` → the post-state.
@@ -163,7 +163,7 @@ def encRt (rt : Bool) (body : Nat → List UInt8 → List Prop → Prop) : Prop 
   | true => ∀ (S : Nat) (scratch : List UInt8), scratch.length = S → body S scratch [MemmoveC S]
 
 set_option linter.unusedVariables false in
-/-- The binder prefix of every ENC2 kind: code placement, the binder group and its lengths, the field
+/-- The binder prefix of every encoder fast-path kind: code placement, the binder group and its lengths, the field
 pointers, the entry state, `hpre`, the stack chunks and their lengths, the frame `R`, the `memmove` binders. -/
 def encBinders (C : Program) (L : EncLayout) (fields : List DecField)
     (body : Nat → List (List UInt8) → List (BitVec 64) → MachineData → UInt64 → UInt64 → List (List UInt8)

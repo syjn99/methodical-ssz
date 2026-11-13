@@ -1,0 +1,10 @@
+# kind	old name	new name	scope	fifth column (see ../../README.md section 2)
+# type: only to run the tool in reference mode; no new name is in this namespace
+type	Prysm.Checkpoint	-	-	-
+declaration	Codec.callDecSegKindG4	Codec.callDecSegKindWindow	Codec	Codec.CalleeDecodeWindow
+declaration	Codec.callDecSegKindG4_of	Codec.callDecSegKindWindow_of	Codec	Codec.CalleeDecodeWindow
+declaration	Codec.callDecSegKind_eq_G4	Codec.callDecSegKind_eq_window	Codec	Codec.CalleeDecodeWindow
+declaration	Machine.luFrame	Machine.stackFrame144	Machine	Machine.Frame
+declaration	Machine.luFrame.eq_1	Machine.stackFrame144.eq_1	Machine	Machine.Frame
+declaration	Machine.luFrame_sep	Machine.stackFrame144_sep	Machine	Machine.Frame
+declaration	Machine.luFrame_slices	Machine.stackFrame144_slices	Machine	Machine.Frame

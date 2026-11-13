@@ -7,8 +7,10 @@ import Prysm.SyncCommitteeMessage.DecodeAccept
 
 A program (not a proof) walks the constants that the proof terms of `Decode.accept_from_window_steps` and
 `Prysm.PendingConsolidation.Decode.accept_from_window_steps` reach inside the project namespaces (`Prysm`, `Codec`, `ElfData`, `Machine`, `Runtime`) and fails the build
-if one of the hold-out hand lemmas `bytes32dec_seg_rax`, `sm_vi_arg`, `calldec_nop_seg` is among them.
-Controls: the same walk from the hold-out theorems `sm_e2e_accept_main` / `pc_e2e_accept_main` must reach them.
+if one of the hold-out hand lemmas `Prysm.SyncCommitteeMessage.bytes32dec_seg_rax`,
+`Prysm.SyncCommitteeMessage.Decode.validator_index_arg`, `Prysm.PendingConsolidation.calldec_nop_seg` is among them.
+Controls: the same walk from the hold-out theorems `Prysm.SyncCommitteeMessage.Decode.accept` /
+`Prysm.PendingConsolidation.Decode.accept` must reach them.
 Executable evidence only.
 -/
 
@@ -61,11 +63,11 @@ elab "#check_window_step_dependencies" : command => do
   -- controls: the hold-out proofs must reach the hand lemmas (the walk can fail)
   let r1 := reach env `Prysm.SyncCommitteeMessage.Decode.accept
   unless r1.contains `Prysm.SyncCommitteeMessage.bytes32dec_seg_rax && r1.contains `Prysm.SyncCommitteeMessage.Decode.validator_index_arg do
-    throwError "window step dependency check: control failed (sm_e2e_accept_main does not reach the hand lemmas)"
+    throwError "window step dependency check: control failed (Prysm.SyncCommitteeMessage.Decode.accept does not reach the hand lemmas)"
   let r2 := reach env `Prysm.PendingConsolidation.Decode.accept
   unless r2.contains `Prysm.PendingConsolidation.calldec_nop_seg do
-    throwError "window step dependency check: control failed (pc_e2e_accept_main does not reach calldec_nop_seg)"
-  logInfo m!"window step dependency check controls PASS: sm_e2e_accept_main reaches bytes32dec_seg_rax and sm_vi_arg ({r1.size} constants); pc_e2e_accept_main reaches calldec_nop_seg ({r2.size} constants)"
+    throwError "window step dependency check: control failed (Prysm.PendingConsolidation.Decode.accept does not reach Prysm.PendingConsolidation.calldec_nop_seg)"
+  logInfo m!"window step dependency check controls PASS: Prysm.SyncCommitteeMessage.Decode.accept reaches Prysm.SyncCommitteeMessage.bytes32dec_seg_rax and Prysm.SyncCommitteeMessage.Decode.validator_index_arg ({r1.size} constants); Prysm.PendingConsolidation.Decode.accept reaches Prysm.PendingConsolidation.calldec_nop_seg ({r2.size} constants)"
 
 #check_window_step_dependencies
 

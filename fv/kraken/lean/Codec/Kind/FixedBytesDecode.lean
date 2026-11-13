@@ -1,7 +1,7 @@
 import Codec.FixedBytesDecode
 
 /-!
-# GEN2 L1: statement kinds of the size-parametric fixed-bytes decode segments
+# Statement kinds of the size-parametric fixed-bytes decode segments
 
 `bytesDecSegKind n` / `bytesDecSegZKind n` are the texts of `rootDecSegKind` (`Codec/Kind/FieldPatterns.lean`) and
 `rootDecSegZKind` (`Codec/Kind/Bytes32DecodeOffsetZero.lean`) with the size `32` replaced by the parameter `n : Nat` (four places:

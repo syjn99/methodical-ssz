@@ -3,11 +3,11 @@ import Machine.Include
 import Prysm.DepositMessage.Code
 
 /-!
-# Code of the hold-out function set (Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the `BlobIdentifier` functions (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
 (`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code`, `Prysm.BeaconBlockHeader.Code` and `Prysm.Eth1Data.Code`;
-`link/check.py` (a)–(f) PASS in `../RESULT`, bundle `320a9df6…`).
+`link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`).
 Hand-written include file (not generator output; the text of `Prysm/Eth1Data/Code.lean`).
 The directory `prysm/go1.26.10/link-set/norm` is a Lake `input_dir` of the `Prysm` library,
 so Lake rebuilds these modules when a `.S` file changes.

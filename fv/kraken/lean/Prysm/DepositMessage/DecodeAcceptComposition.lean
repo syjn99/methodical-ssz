@@ -5,7 +5,7 @@ import Prysm.Deposit_Data.Statements
 import Codec.Kind.DecodeAcceptComposition
 
 /-!
-# GEN3 L4: a statement kind for composed decoder accept theorems (byte-vector / inline-uint64 shapes): the `DepositMessage` part
+# A statement kind for composed decoder accept theorems (byte-vector / inline-uint64 shapes): the `DepositMessage` part
 
 The declarations of the other types of this group are in `Codec/Kind/DecodeAcceptComposition.lean`.
 -/

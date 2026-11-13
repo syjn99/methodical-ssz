@@ -6,7 +6,7 @@ import Machine.Include
 
 `unmarshalSSZ` includes the `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
 (`link/conv.py --norm` after the fix `93b3f2a` that writes a negative 32-bit displacement in signed form; `gen/e2e/lvlink.py filter/data --t3`;
-`link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`, bundle `393eade6…`).
+`link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`).
 The directory is a Lake `input_dir` of the `Prysm` library (`lakefile.toml`).
 -/
 

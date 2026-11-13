@@ -7,9 +7,9 @@ import Prysm.ElfData.PrysmTarget
 # Type-dispatching bump model of `runtime.makeslice` for the decoder witness host
 
 The decoder accept path needs `MakesliceC` with esz 1 (uint8 type word) and esz 8 (`lvU64Type_addr`) in one Host.
-`Prysm/RuntimeModel/BumpAllocDc.S` is the text of the model `Prysm/RuntimeModel/BumpAllocT3.S` (branch `claude/ssz-fv-list-vector-20261112`,
-commit `a1c5d0d`, not in this branch's base) with the label renamed: it bumps by 8·cnt for `type__+387456` and by cnt
-otherwise. The two theorems below are the text of `Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1` / `Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size8` of that commit (`Prysm/RuntimeModel/BumpAllocatorUint64AndStructDispatch.lean`)
+`Prysm/RuntimeModel/BumpAllocDc.S` is the text of the model `Prysm/RuntimeModel/BumpAllocT3.S` with the label
+renamed: it bumps by 8·cnt for `type__+387456` and by cnt
+otherwise. The two theorems below are the text of `Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1` / `Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size8` (`Prysm/RuntimeModel/BumpAllocatorUint64AndStructDispatch.lean`)
 with the names changed. Abstract model for non-vacuity only, not a Go refinement. The `.S` file is in
 the Lake `input_dir` `runtime_model_S`.
 -/

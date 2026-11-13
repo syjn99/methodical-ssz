@@ -172,7 +172,7 @@ theorem _root_.Prysm.BeaconBlockHeader.Decode.example_step_ProposerIndex_call (k
     (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.calldec_seg_w _ _ _ (k + 54) (k + 55) (k + 85) hq he hjc hB hl
-theorem _root_.Prysm.BeaconBlockHeader.Decode.example_step_ProposerIndex_call_kind : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.example_step_ProposerIndex_call h) = @Codec.callDecSegKindG4 h Prysm.BeaconBlockHeader.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154" 54 55 85 := by
+theorem _root_.Prysm.BeaconBlockHeader.Decode.example_step_ProposerIndex_call_kind : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.example_step_ProposerIndex_call h) = @Codec.callDecSegKindWindow h Prysm.BeaconBlockHeader.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154" 54 55 85 := by
   intro h; with_reducible rfl
 
 end Prysm.BeaconBlockHeader

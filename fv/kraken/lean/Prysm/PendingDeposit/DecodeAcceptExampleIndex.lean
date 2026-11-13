@@ -14,11 +14,11 @@ import Prysm.PendingDeposit.DecodeRejectSizeExample
 | `Prysm/VoluntaryExit/DecodeAcceptExample.lean` | VoluntaryExit | callee only | `0x48` | callee Epoch, callee ValidatorIndex | kind instance (no hand statement) |
 | `Prysm/PowBlock/DecodeAcceptExample.lean` | PowBlock | runtime only | `0x20` | bytes 32 three times | kind instance = `Prysm.PowBlock.Decode.accept_statement` |
 
-Each module: `*_g5_head` (`decHeadKindN`), `*_g5_f<i>` per field (`decFieldKindN`), `*_g5_epi`
-(`decEpiKindN`), `*_e2e_accept_g5` (`decAcceptKindN`), each with its `_kind` line, and, where a hand
-statement exists, `*_e2e_accept_g5_stmt : <hand statement>`.
+Each module: `Decode.example_head` (`decHeadKindN`), `Decode.example_f<i>` per field (`decFieldKindN`), `Decode.example_epi`
+(`decEpiKindN`), `Decode.example_accept` (`decAcceptKindN`), each with its `_kind` line, and, where a hand
+statement exists, `Decode.example_accept_same_statement : <hand statement>`.
 
-The texts were produced from one description per type by a scratch emitter of the lemma unit (not in the
+The texts were produced from one description per type by a scratch emitter (not in the
 repository; it is not the generator). They are development data (in-sample). The independent checks of
 the statements are the `rfl` ties of `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 

@@ -13,11 +13,11 @@ BeaconBlockHeader indices. `Decode.reject_size` (`len(buf) ≠ 112`, Go source `
 directives 2–7 (guard, prologue `sub $0x60`, rbx spill), 9–10 `cmp $0x70,%rcx; jne L_345` taken,
 200 `L_345`, 201–202 load the two words of `ssz.ErrSize` (`ElfData.PrysmTarget.e2eErrSize_addr`, the same ELF symbol
 as the Checkpoint decoder's; `bhlink.py` asserts the operand), 203–205 epilogue. The two words `e0`, `e1`
-are the global's value after package init (premise, as in `cp_e2e_reject_size_main`).
+are the global's value after package init (premise, as in `Prysm.Checkpoint.Decode.reject_size`).
 
 The `fmt.errorf` wraps after the Slot call (directives 20–45) and the ValidatorIndex call (58–84) are not
 reached on a 112-byte input: `Decode.accept` passes from directive 19 to 46 and from 57 to 85 under
-`SlUAccC` / `Prysm.ValidatorIndex.Decode.accept_function_spec` (rax = 0). Not a reject row.
+`Prysm.Slot.Decode.accept_function_spec` / `Prysm.ValidatorIndex.Decode.accept_function_spec` (rax = 0). Not a reject row.
 
 **`unreachable_mc` rows** (the form of `Prysm.AttestationData.Decode.slot_err_unreachable`):
 `Decode.slot_err_unreachable` (directive 18 → 46, skips 20–45, "Slot: %w") and

@@ -6,7 +6,7 @@ import Prysm.Checkpoint.EncodeFastPathKindInstances
 import Prysm.Eth1Data.EncodeFastPathKindInstances
 
 /-!
-# ENC2 L1: ties of `encFastKindN` to the three hand-written encoder fast-path statements
+# Ties of `encFastKindN` to the three hand-written encoder fast-path statements
 
 - BeaconBlockHeader (`Encode.fast_path`) and Eth1Data (`Prysm.Eth1Data.Encode.fast_path`): the declared type of
   the committed theorem is the kind instance, `rfl` at default transparency (the recursive definitions of

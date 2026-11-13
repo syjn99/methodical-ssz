@@ -11,7 +11,8 @@ import Prysm.SyncCommittee.SpecDefinitions
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
 Statement shape: `Prysm.Deposit_Data.Decode.accept_statement` (Deposit_Data, the same makeslice + memmove field idiom),
-`dd_e2e_reject_size_main`, `dd_e2e_accept_spec_k`, `dd_e2e_reject_size_spec`, `dd_e2e_reject_complete`.
+`Prysm.Deposit_Data.Decode.reject_size`, `Prysm.Deposit_Data.Decode.accept_spec`, `Prysm.Deposit_Data.Decode.reject_size_spec`,
+`Prysm.Deposit_Data.Decode.reject_complete`.
 
     func (c *SyncAggregate) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 160 { return ssz.ErrSize }

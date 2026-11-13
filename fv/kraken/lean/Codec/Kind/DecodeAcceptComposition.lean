@@ -4,7 +4,7 @@ import Prysm.Eth1Data.DecodeAccept
 import Prysm.Deposit_Data.Statements
 
 /-!
-# GEN3 L4: a statement kind for composed decoder accept theorems (byte-vector / inline-uint64 shapes)
+# A statement kind for composed decoder accept theorems (byte-vector / inline-uint64 shapes)
 
 `decAcceptKind C st fields jret` is the accept statement of a protoc container decoder `C` whose fields are
 fixed byte vectors (`DecField.bytes n`: a fresh `n`-byte slice, `len = cap = n`) and inline `uint64`s

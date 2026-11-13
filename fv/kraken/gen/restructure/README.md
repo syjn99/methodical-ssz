@@ -2,7 +2,8 @@
 
 This directory holds the tool, the maps and the helper scripts that move Lean modules under `fv/`.
 They also rename namespaces and declarations.
-Each step of the restructuring has one map directory under `maps/`.
+Each step that renames with `rename.py` has one map directory under `maps/`.
+Some steps were applied by scripts only (section 4).
 The directory is temporary.
 Delete it (with `trash`) when the restructuring is done.
 
@@ -157,6 +158,12 @@ The maps apply in this order:
   A cut script then moves their text into the modules of their new names.
 - `maps/link-set/`: the data namespaces become `ElfData.PrysmTarget`, and eight address lemmas get names there.
   A hand-edit script merges the 16 link sets of the Prysm ELF into `prysm/go1.26.10/link-set` and the five data readers into one.
+- `maps/review-names/`: plain names from the independent review.
+  The callee window segment kind `Codec.callDecSegKindG4` (and `_of`, `_eq_G4`) becomes `Codec.callDecSegKindWindow` (`_of`, `_eq_window`).
+  The frame `Machine.luFrame` (`_sep`, `_slices`) becomes `Machine.stackFrame144`.
+  The modules `EncodeFastPathExamples` and `DecodeAcceptExamples` become `EncodeFastPathExampleIndex` and `DecodeAcceptExampleIndex`.
+  The module `Uint64DecoderKindAnchors` becomes `Uint64DecoderKindSameAsHand`.
+  A script renames the tactic `bytesdec_z` to `bytesdec_offset_zero_case`, and the kind name in `kindcheck.py` and `scalgen.py`.
 
 Some steps were applied by scripts, not by maps. The inverse mode of `rename.py` does not undo them.
 The commit message of each such step lists its edits:
@@ -168,7 +175,10 @@ The commit message of each such step lists its edits:
 - the cut after `maps/shared-names/`: a script moved declaration texts into the modules of their new names;
 - the template names step: a script renamed the tactic `bhaddr`, the command `#g4_dep_check` and the comments that
   generator templates write;
-- the step of the short tactic names: a script renamed the tactics listed in `TOOL-NOTES.md` section 5.
+- the step of the short tactic names: a script renamed the tactics listed in `TOOL-NOTES.md` section 5;
+- the link-set step after `maps/link-set/`: a script merged the 16 link sets into `prysm/go1.26.10/link-set`, merged the
+  five data modules and readers into `Prysm/ElfData/PrysmTarget.lean` and `PrysmTargetReader.lean`, moved the eight
+  address lemmas there, and renamed the tactics `iaaddr`, `laddr` and `lvbytesdec_z`.
 
 Issue 10 of `syjn99/methodical-ssz` holds the list of the steps that remain.
 

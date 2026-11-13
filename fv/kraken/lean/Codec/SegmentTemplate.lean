@@ -3,7 +3,7 @@ import Machine.Labels
 import Machine.Bytes
 
 /-!
-# Scalability stage S1: shared glue of the parameterized segment lemmas
+# Shared glue of the parameterized segment lemmas
 
 A segment lemma of `Codec` is stated for a *code template*: a Lean function from the
 parameters (labels, frame size, stack-slot and field displacements) to a list of

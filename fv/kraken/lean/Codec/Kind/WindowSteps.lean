@@ -2,7 +2,7 @@ import Codec.WindowSteps
 import Machine.Labels
 
 /-!
-# GEN4 L2: statement kinds of the per-instruction step lemmas
+# Statement kinds of the per-instruction step lemmas
 
 Each kind is the statement of its lemma (`Codec/WindowSteps.lean`) for a window of the decoder `C` that starts at `k + j`
 and ends at `k + e`, after the binders `k hk hf` (the idiom of `Codec/Kind/FieldPatterns.lean` / `Codec/Kind/CalleeDecode.lean`). The registers,

@@ -23,9 +23,9 @@ import Prysm.PowBlock.DecodeRejectSizeKindInstances
 import Prysm.SyncCommitteeMessage.DecodeRejectSizeKindInstances
 
 /-!
-# GEN5 L3: ties of `decRejectKindN` to the committed size-reject theorems
+# Ties of `decRejectKindN` to the committed size-reject theorems
 
-The declared type of each committed theorem `*_e2e_reject_size_main` (the 11 flat development types and
+The declared type of each committed theorem `Prysm.<Type>.Decode.reject_size` (the 11 flat development types and
 AttestationData) is the kind instance; `with_reducible rfl` (the kind is an `abbrev` and the text is the same).
 After the split of this module, the declarations of the other types are in `Prysm/AttestationData/DecodeRejectSizeKindInstances.lean`, `Prysm/BeaconBlockHeader/DecodeRejectSizeKindInstances.lean`, `Prysm/Checkpoint/DecodeRejectSizeKindInstances.lean`, `Prysm/DepositMessage/DecodeRejectSizeKindInstances.lean`, `Prysm/Deposit_Data/DecodeRejectSizeKindInstances.lean`, `Prysm/Eth1Data/DecodeRejectSizeKindInstances.lean`, `Prysm/PendingConsolidation/DecodeRejectSizeKindInstances.lean`, `Prysm/PendingDeposit/DecodeRejectSizeKindInstances.lean`, `Prysm/PendingPartialWithdrawal/DecodeRejectSizeKindInstances.lean`, `Prysm/PowBlock/DecodeRejectSizeKindInstances.lean`, `Prysm/SyncCommitteeMessage/DecodeRejectSizeKindInstances.lean`.
 -/

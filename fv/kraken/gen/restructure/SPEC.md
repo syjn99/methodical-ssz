@@ -117,7 +117,8 @@ All other declarations:
   An example is the data definitions that a data-include command makes from `.data` file ids.
   Change only their namespace.
 - Do not rename `.S` files or `.data` files.
-- Do not move link directories.
+- A type step does not move link directories.
+  The link-set step after the type steps merged them into `prysm/go1.26.10/link-set`.
 
 References: a renamed declaration has a short name that other types also use (`Decode.accept`).
 The tool must leave no ambiguous reference.

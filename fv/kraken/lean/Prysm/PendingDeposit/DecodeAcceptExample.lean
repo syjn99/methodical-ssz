@@ -9,7 +9,7 @@ import Prysm.PendingDeposit.GeneratedDecodeSteps
 # Worked example: `(*v1alpha1.PendingDeposit).UnmarshalSSZ`, accept theorem in generated style
 
 Text produced from one description of the type (frame facts, field list, boundary states, chain theorem names)
-by the recipe of the lemma hand-over; every theorem has a `_kind` line (`decHeadKindN`, `decFieldKindN`,
+by a scratch emitter (not in the tree); every theorem has a `_kind` line (`decHeadKindN`, `decFieldKindN`,
 `decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`Decode.generated_step_*`) are used as emitted.
 -/
 

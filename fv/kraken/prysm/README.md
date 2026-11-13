@@ -52,7 +52,9 @@ The subdirectory names are short labels. This table says what each one holds.
 | `lv/` | Lists and vectors: `SyncAggregate`, `SyncCommittee`, `IndexedAttestation`, `HistoricalBatch`, `Deposit`, `DataColumnsByRootIdentifier`. The negative case lists of each group |
 | `scal/` | The negative case lists of the generated proofs, the encoder specification emitter `e2c/e2cemit.py` and two check scripts |
 
-Other files in `e2e/`: `axioms-gate.json` is the record of the axioms gate. `e2e.json` binds the include files and the link inputs by sha256.
+Other files in `e2e/`: `axioms-gate.json` and `e2e.json` are records of runs before the restructuring.
+They name files and libraries that are no longer in the tree.
+`axioms-gate.json` is the record of an axioms gate run. `e2e.json` binds the include files and the link inputs of that time by sha256.
 `gen/e2e/axioms.py` writes `axioms.json` from `AXIOMS.txt`. `gen/e2e/differential.py check` writes `differential.json`. `gen/e2e/negative.py` writes `negative/result.json`.
 
 ## 4. Files that are inputs of checks

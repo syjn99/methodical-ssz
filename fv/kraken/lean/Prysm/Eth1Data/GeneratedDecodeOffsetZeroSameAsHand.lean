@@ -27,7 +27,7 @@ variable [Host]
 
 set_option linter.unusedVariables false in
 /-- The generated DepositRoot theorem gives the conclusion of the hand lemma `rootdec_seg0` at the
-instance used by ``Prysm/Eth1Data/DecodeAccept.lean`.e1_e2e_accept_main` (`k + 13`, `k + 26`, parameters 48 56 24 8 16 24). -/
+instance used by `Prysm.Eth1Data.Decode.accept` (`Prysm/Eth1Data/DecodeAccept.lean`) (`k + 13`, `k + 26`, parameters 48 56 24 8 16 24). -/
 theorem Decode.dec_DepositRoot_seg_hand (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh unmarshalSSZ k)
     (hA : (Codec.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" 48 16 24).IsInfixAt Host.prog (k + 13))

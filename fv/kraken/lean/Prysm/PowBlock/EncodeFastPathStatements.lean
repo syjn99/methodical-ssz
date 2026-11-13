@@ -12,7 +12,8 @@ opened. Sources: the Go layout in `prysm/ir/ir-mainnet.json` (`go_fields`, gc am
 of the four containers, the `.S` files of `prysm/go1.26.10/link-set/norm/` (frame, guard, stack slots
 touched on the fast path and their contents at the return) and the shape of the committed hand statements
 `Prysm.BeaconBlockHeader.Encode.fast_path` / `Prysm.Eth1Data.Encode.fast_path` (binder order and memory order per the
-interface text in `enc2/L/OUT.md`).
+interface rules of the encoder statements: saved rbp, home slots ascending, other slots by first touch,
+the return slot; existentials in creation order).
 
 **Encoder fast path only**: `len(dst) + SizeSSZ ≤ cap(dst)` and every byte-vector field of its exact length.
 No growslice branch, no length reject, no morestack path. Not a complete encoder result.

@@ -90,7 +90,7 @@ Checks, per file (text only):
         @Codec.stepLdvKind / stepLdbKind / stepStKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
         @Codec.stepMovIKind h C Reg64.rD imm j e                @Codec.stepJmpKind h C "l" j jl
         @Codec.stepLabelKind h C "l" j e                        @Codec.stepNopsKind h C j e
-        @Codec.callDecSegKindG4 h C "fn" "lok" j jc j2         (fn in CALLEES)
+        @Codec.callDecSegKindWindow h C "fn" "lok" j jc j2         (fn in CALLEES)
         @Codec.bytesDecSegKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC src
         @Codec.bytesDecSegZKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC
     (n = 32 | 48 | 96; rY one of rax, rcx, rdx, rsi, rdi; registers `Reg64.<one of the 16>`).
@@ -100,7 +100,7 @@ Checks, per file (text only):
     10c. A GEN4 file (header `GEN4 coverage (…): n of m fields`, or any GEN4 kind) carries exactly one line
          `FIELDS-JSON: [{"field": F, "theorems": [...]}, …]`: every theorem with a GEN4 kind is listed in exactly
          one field, every listed theorem is in the file, a field has at most one block theorem (`<p>_F_call` with
-         `callDecSegKindG4`, or `<p>_F_seg` with a byte kind), n = the number of listed fields; in `--partial` mode
+         `callDecSegKindWindow`, or `<p>_F_seg` with a byte kind), n = the number of listed fields; in `--partial` mode
          no field of `UNCOVERED-JSON` is listed (its entries may carry a `miss_class`).
 11. A file in which a non-composed theorem has a GEN2 / GEN3 / GEN4 kind must
     carry the coverage header (`GEN2|GEN3|GEN4 coverage (…): n of m fields`); rule 6a also ignores string literals.
@@ -133,7 +133,7 @@ Checks, per file (text only):
     The hand example modules `Gen5Ex*.lean` of the lemma unit are not generator output; they fail rule 12 (no GEN5
     block) and no recorded command runs `kindcheck.py` on them.
 
-Limits (not checked here): GEN4 label strings in `stepLabelKind`, `stepJmpKind` and `callDecSegKindG4` (`lok`) are
+Limits (not checked here): GEN4 label strings in `stepLabelKind`, `stepJmpKind` and `callDecSegKindWindow` (`lok`) are
 phantom kind parameters (they do not occur in the kind body; `stepLabelKind C l j e` is
 `stepNopsKind C j e` by `rfl`), so a label name in a kind line is NOT checked by this program or by the `_kind`
 line; the label is checked only by the proof's code fact (`he`, `hl`). Also not checked: that the kind parameters (C, indices, displacements, offsets) are the right
@@ -191,12 +191,12 @@ GEN4_KINDS = {
     "stepJmpKind": ("{C} LBL NAT NAT", "Codec", "kstep_jmp"),
     "stepLabelKind": ("{C} LBL NAT NAT", "Codec", "kstep_label"),
     "stepNopsKind": ("{C} NAT NAT", "Codec", "kstep_nops"),
-    "callDecSegKindG4": ("{C} LBL LBL NAT NAT NAT", "Codec", "calldec_seg_w"),
+    "callDecSegKindWindow": ("{C} LBL LBL NAT NAT NAT", "Codec", "calldec_seg_w"),
     "bytesDecSegKindWindow": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT INT", "Codec", "bytesdec_seg_window"),
     "bytesDecSegZKindWindow": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT", "Codec", "bytesdec_seg_z_window"),
 }
 G4_LEMMAS = {v[2]: v[1] for v in GEN4_KINDS.values()}   # lemma -> namespace
-G4_BLOCK = {"callDecSegKindG4": "call", "bytesDecSegKindWindow": "seg", "bytesDecSegZKindWindow": "seg"}
+G4_BLOCK = {"callDecSegKindWindow": "call", "bytesDecSegKindWindow": "seg", "bytesDecSegZKindWindow": "seg"}
 BOOL = r"(?:true|false)"
 LBL = r'"[^"\\\s]+"'
 RRREG = r"Reg64\.(?:rcx|rdx|rsi|rdi|r8|r9|r10|r11|r12|r13|r15)"
@@ -405,7 +405,7 @@ def check_text(text, gnames=None, partial=False, rule11=True):
             newkind.add(t)
             if g4m.group(1) != kns or not re.fullmatch(g4_param_rx(spec, C), g4m.group(3)):
                 errs.append(f"{t}_kind: header is not a frozen kind: {lines[j][:160]}")
-            elif kn == "callDecSegKindG4" and g4m.group(3).split(" ")[1] not in CALLEES:
+            elif kn == "callDecSegKindWindow" and g4m.group(3).split(" ")[1] not in CALLEES:
                 errs.append(f"{t}_kind: callee {g4m.group(3).split(' ')[1]} has no proved accept spec (allowed: Slot, "
                             f"CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives)")
             # rule 10b: the proof uses the lemma of the kind and no other GEN4 lemma
@@ -950,7 +950,7 @@ G4K = {
     "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51": ("@Codec.stepStKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rax 16 51 52", "kstep_st Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
     "Prysm.PendingPartialWithdrawal.Decode.generated_step_s52": ("@Codec.stepAddKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdi (-16) 52 53", "kstep_add Reg64.rdi (-16) _ (k + 52) (k + 53) hq he hend"),
     "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53": ("@Codec.stepMovIKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rcx 8 53 55", "kstep_movi Reg64.rcx 8 _ (k + 53) (k + 55) hq he hend"),
-    "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call": (f'@Codec.callDecSegKindG4 h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {FN_VI} "L_pw_b9" 55 56 88',
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call": (f'@Codec.callDecSegKindWindow h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {FN_VI} "L_pw_b9" 55 56 88',
                             "calldec_seg_w _ _ _ (k + 55) (k + 56) (k + 88) hq he hjc hB hl"),
     "pw_g4dec_Root_seg": ("@Codec.bytesDecSegKindWindow h 32 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rax 89 108 114 112 120 56 24 32 40 16",
                           "bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 89) (k + 102) (k + 102) (k + 108) (k + 114) hqA heA hqB heB hjl hl hjm hend"),

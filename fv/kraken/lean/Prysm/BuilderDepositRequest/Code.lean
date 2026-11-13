@@ -29,8 +29,8 @@ import Prysm.WithdrawalRequest.Code
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
 (`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.PendingDeposit.Code` and `Prysm.BlobIdentifier.EncoderCode`;
-`link/check.py` (a)–(f) PASS in `../RESULT`, bundle `942b10be…`). The decoder and the encoder of each of the
-24 flat fixed-size types outside the development population.
+`link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). The decoder and the encoder of each of the
+24 flat fixed-size types that were not used to develop the proof generators.
 Code constants only: no theorem, no contract. Hand-written include file (not generator
 output; the text of `Prysm/BlobIdentifier/EncoderCode.lean` with the function set changed).
 The directory `prysm/go1.26.10/link-set/norm` is a Lake `input_dir` of the `Prysm` library,

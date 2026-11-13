@@ -1,6 +1,6 @@
 import Codec.Kind.FieldPatterns
 import Prysm.Slot.DecodeAccept
-import Prysm.CommitteeIndex.Uint64DecoderKindAnchors
+import Prysm.CommitteeIndex.Uint64DecoderKindSameAsHand
 
 /-!
 # Anchors of the uint64 decoder statement kind
@@ -9,7 +9,7 @@ The uint64 decoder kind `Codec.u64DecAcceptKind C` is, for `C = Code.unmarshalSS
 type of the reviewed hand theorem (binders before the colon included). So the frozen kind is the hand
 statement kind, not new text. P2 decode has no hand theorem of the segment shape; its kind is tied to the
 lemma by `Codec.rootDecSegKind_of` only.
-After the split of this module, the declarations of the other types are in `Prysm/CommitteeIndex/Uint64DecoderKindAnchors.lean`.
+After the split of this module, the declarations of the other types are in `Prysm/CommitteeIndex/Uint64DecoderKindSameAsHand.lean`.
 -/
 
 open Machine Runtime Prysm.AttestationData.Code

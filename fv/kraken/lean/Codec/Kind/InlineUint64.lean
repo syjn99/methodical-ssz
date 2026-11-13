@@ -1,7 +1,7 @@
 import Codec.InlineUint64
 
 /-!
-# GEN2 L2: statement kind of the inline uint64 decode segments
+# Statement kind of the inline uint64 decode segments
 
 `u64DecInlineSegKind C j dB src f` is the conclusion of `u64dec_inline_seg` with `j := k + j`, after the
 binders `k hk hf` (the idiom of `Codec/Kind/FieldPatterns.lean`). The scratch register is not in the kind, because it is not in

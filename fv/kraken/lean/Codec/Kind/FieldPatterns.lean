@@ -2,7 +2,7 @@ import Codec.Uint64Decoder
 import Codec.Bytes32Decode
 
 /-!
-# Frozen statement kinds of the generated theorems (review fix-r1 M2, S1)
+# Frozen statement kinds of the generated theorems
 
 A generated theorem `t` is followed by `t_kind : ∀ (h : Host), type_of% (@t h) = <kind> …` (`rfl`).
 `@t h` is the whole declared type, binders before the colon included. So an added, removed or changed
@@ -14,7 +14,7 @@ The kinds are hand text, written once, and do not depend on a hand theorem of th
 body is kernel-checked against the lemma conclusion. They are `abbrev`s: `with_reducible rfl` unfolds
 them, but not `Int.toBytes` or other semireducible definitions. A wrong literal fails fast and does not run
 into a long unfolding.
-The anchors in `Prysm/Slot/Uint64DecoderKindAnchors.lean` show that the uint64 decoder kind is the statement of the reviewed hand
+The anchors in `Prysm/Slot/Uint64DecoderKindSameAsHand.lean` show that the uint64 decoder kind is the statement of the reviewed hand
 theorems `Prysm.Slot.Decode.accept` and `Prysm.CommitteeIndex.Decode.accept`.
 -/
 

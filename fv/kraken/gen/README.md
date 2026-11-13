@@ -153,9 +153,12 @@ These generated outputs do not reproduce from the tracked tree today:
 
 Other limits:
 
-- The specification and witness files of five flat types (`Hs`, `Sa`, `Sd`, `Vb`, `Ve`) have no tracked generator script.
+- The specification and witness files of five flat types (HistoricalSummary, SyncAggregatorSelectionData, SigningData, ValidatorBalance, VoluntaryExit) have no tracked generator script.
 - The commands of 12 generated files are not in `scal/gen.sh`. Their headers give the commands.
 - `prysm/go1.26.10/e2e/f24/gen/part1.sh` uses the GNU `sed` form `\U`. BSD `sed` on macOS writes wrong file names. `scal/gen.sh` uses `tr` and `cut` instead.
 - `prysm/go1.26.10/e2e/f24/gen/part1.sh` calls a job wrapper that is not tracked. Run its `scalgen.py` commands directly.
-- Six `*SpecChecker.lean` headers name a path where the `Desc` file is not. The file is in a subdirectory of `prysm/go1.26.10/e2e/`.
+- 15 of the 24 `*SpecChecker.lean` headers name a path where the `Desc` file is not. The file is in a subdirectory of
+  `prysm/go1.26.10/e2e/` (`e1/`, `f24/`, `g5c/`, `h3/` to `h6/`). Nine of these headers have a hand-added line that
+  gives the subdirectory; the other six do not (DepositRequest, HistoricalSummary, SigningData,
+  SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit).
 - `kindcheck.py` does not bind the code constant of a theorem to the `.S` file of the header. It does not check the `.S` label against the IR type.

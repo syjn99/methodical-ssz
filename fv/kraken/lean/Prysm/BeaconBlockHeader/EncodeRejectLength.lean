@@ -14,7 +14,7 @@ and `L_2a4` (156; body 157–164). Each tail is one instance of the reject block
 
 * `Encode.rej_b` (from 62), `Encode.rej_c` (from 90), `Encode.rej_d` (from 118): the length test of one root with a
   length word `rl ≠ 32`, the taken `jne`, the label, the block. Memory is unchanged.
-* `bh_e2e_marshal_reject{1,2,3}_main`: the function from its entry, by composition with the unchanged
+* `Encode.reject_length_parent_root`, `Encode.reject_length_state_root`, `Encode.reject_length_body_root`: the function from its entry, by composition with the unchanged
   fast-path segments `Encode.enc_a1`, `Encode.enc_a2`, `Encode.enc_b`, `Encode.enc_c`. The code writes Slot and
   ProposerIndex (and the earlier roots) to `dst[len:]` before it finds the bad length; the conclusions
   state these bytes (the encoder writes the earlier fields into the caller's spare capacity before it tests a root length). The returned slice is nil.

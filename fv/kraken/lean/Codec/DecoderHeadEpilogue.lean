@@ -1,7 +1,7 @@
 import Codec.InlineUint64
 
 /-!
-# GEN2 L3: shared segments for the composition of a container decoder accept path
+# Shared segments for the composition of a container decoder accept path
 
 The accept path of a protoc container decoder with the frame of the development sites (`sub $0x20,%rsp`,
 receiver spill `0x30(%rsp)`, buffer spill `0x38(%rsp)`) is: head, then per field its decode segment

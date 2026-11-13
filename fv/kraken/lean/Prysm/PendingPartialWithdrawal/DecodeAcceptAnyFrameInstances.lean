@@ -7,7 +7,7 @@ import Prysm.Checkpoint.DecodeAccept
 import Codec.Kind.DecodeAcceptAnyFrameInstances
 
 /-!
-# GEN5 L1: ties of `decAcceptKindN` to the hand accept statements: the `PendingPartialWithdrawal` part
+# Ties of `decAcceptKindN` to the hand accept statements: the `PendingPartialWithdrawal` part
 
 The declarations of the other types of this group are in `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 -/

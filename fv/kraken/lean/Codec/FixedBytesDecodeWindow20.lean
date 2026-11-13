@@ -12,7 +12,7 @@ immediate `0x14` (`mov $0x14,%ecx` before `callq runtime.makeslice` and `callq r
 `bytesdec_seg_z_window` take `hn : n = 32 ∨ n = 48 ∨ n = 96` because each case runs the proof with a literal
 immediate (a limit of the proof method, not of the statement). This module adds the case `n = 20`:
 
-* `bytesdec_g4_20_rX_rY` / `bytesdec_g4z_20_rX_rY`: one theorem per register pair (the same register sets),
+* `bytesdec_window_20_rX_rY` / `bytesdec_window_z_20_rX_rY`: one theorem per register pair (the same register sets),
   each proved by the proof text of `Codec/FixedBytesDecodeWindow.lean` / `Codec/FixedBytesDecodeWindowOffsetZero.lean` copied verbatim into a local macro (the
   model macros are `local`); only the literal size differs.
 * `bytesdec_seg_window_b20`, `bytesdec_seg_z_window_b20`: the collectors at `n = 20`.

@@ -2,12 +2,12 @@ import Codec.FieldFrame
 import Prysm.Checkpoint.DecodeRejectSize
 
 /-!
-# GEN5 L3: frame-parametric size reject of a container decoder, and its statement kind
+# Frame-parametric size reject of a container decoder, and its statement kind
 
 The size-reject path is the same code in every flat decoder: the prologue with `jne lerr` taken, `lerr:`,
 the two words of `ssz.ErrSize` into rax / rbx, `add $F,%rsp; pop %rbp; retq`. Only the frame `F`, the first
 spill displacement `dB = F + 24`, the size `sz` and the labels differ.
-- `decRejectKindN C sz`: the statement of the committed theorems `*_e2e_reject_size_main` with the code
+- `decRejectKindN C sz`: the statement of the committed theorems `Prysm.<Type>.Decode.reject_size` with the code
   constant and the size replaced (ties: `Prysm/BlobIdentifier/DecodeRejectSizeKindInstances.lean`).
 - `decrej_seg`: the proof over windows (nops anywhere): `decPro` (`Codec/DecoderPrologue.lean`), `decErrL`, then `decepi_n`.
 Not covered: callee error returns (`fmt.errorf`), `morestack`.
@@ -36,7 +36,7 @@ variable [Host]
 set_option linter.unusedVariables false in
 /-- **Size-reject statement kind of a container decoder**: with `len(buf) ≠ sz` the decoder returns the two
 words `e0`, `e1` of `ssz.ErrSize`; the receiver and the input are not read (they are in `R`). The text is the
-statement of the committed theorems `*_e2e_reject_size_main` with the code constant and the size replaced. -/
+statement of the committed theorems `Prysm.<Type>.Decode.reject_size` with the code constant and the size replaced. -/
 abbrev decRejectKindN (C : Program) (sz : UInt64) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)

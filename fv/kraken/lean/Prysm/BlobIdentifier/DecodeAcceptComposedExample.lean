@@ -11,7 +11,7 @@ directive by hand: it is a chain of `eventually_trans` over `dechead_seg`, the B
 (`Decode.example_field_BlockRoot_seg`, an instance of `bytesdec_seg_z 32`), `bytesdec_tail_seg`, the Index segment
 (`Decode.example_field_Index_seg`, an instance of `u64dec_inline_seg`) and `decepi_seg`. What stays per type is
 the frame instance of each step (addresses relative to the entry rsp, rax, rbx) and the code facts
-(`infix_sub`, `label_at'`). Hand-written example for the generator unit; the existing theorem is unchanged.
+(`infix_sub`, `label_at'`). Hand-written example for the generator; the existing theorem is unchanged.
 -/
 
 open Machine Runtime Codec Prysm.BlobIdentifier.Code

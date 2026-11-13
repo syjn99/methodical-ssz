@@ -5,7 +5,7 @@ import Machine.Include
 # Code of the decoder and the encoder of `v1.ConsolidationRequest` (Go 1.26.10 ELF `c6403c02…911e`)
 
 The constants include `.S` files of `fv/kraken/prysm/go1.26.10/link-set/norm`.
-The link check, the bundle hash and the rebuild limit are in `Prysm/BuilderDepositRequest/Code.lean`, which imports this module.
+`link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`. `Prysm/BuilderDepositRequest/Code.lean` imports this module.
 -/
 
 namespace Prysm.ConsolidationRequest

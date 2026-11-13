@@ -2,9 +2,10 @@ import Codec.Bytes32Decode
 import Codec.Bytes32DecodeOffsetZero
 
 /-!
-# GEN2 L1: size-parametric fixed-bytes decode segments (`[]byte` vector field of 32, 48 or 96 bytes)
+# Size-parametric fixed-bytes decode segments (`[]byte` vector field of 32, 48 or 96 bytes)
 
-Added after the H3 hold-out (FINDINGS SG-2, proposal P-H3-2). `Codec/Bytes32Decode.lean`, `Codec/Bytes32DecodeOffsetZero.lean`, `Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`
+Added after the hold-out test of BlobIdentifier and DepositMessage (a byte vector of another size than 32).
+`Codec/Bytes32Decode.lean`, `Codec/Bytes32DecodeOffsetZero.lean`, `Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`
 and the `Kind*.lean` files are unchanged. Go 1.26.10 compiles `f = append(make([]byte, 0, n), buf[src:src+n]...)`
 to the two blocks of `Codec/Bytes32Decode.lean` with the size `n` in three (head: two) immediates. The templates here
 are the texts of `rootDecHead`, `rootDecMid`, `rootDecMidZ` with each size immediate `32` replaced by the
@@ -20,7 +21,7 @@ The lemmas `bytesdec_seg` (add form) and `bytesdec_seg_z` (offset-0 form) take t
 runs the proof text of the model lemma (`rootdec_seg`, `rootdec_seg_z`) with the literal size. The
 hypothesis `hn` is a limit of the proof method (the machine steps are computed with a literal immediate),
 not of the code shape; another size needs one more case. Contracts: `MakesliceC` and `MemmoveC` exactly as
-in `rootdec_seg`. `Codec/FixedBytesDecodeSizeInstances.lean` shows that the 32-byte lemmas and `H3.bytes48dec_seg_z` are the
+in `rootdec_seg`. `Codec/FixedBytesDecodeSizeInstances.lean` shows that the 32-byte lemmas and `Prysm.DepositMessage.bytes48dec_seg_z` are the
 `n = 32` / `n = 48` instances (`rfl`).
 -/
 
@@ -292,7 +293,7 @@ theorem bytesdec_seg (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (lff lwb : St
 set_option hygiene false in
 /-- Proof text of the model lemma for the literal size `n` (the names are the binders of the lemma below;
 hygiene is off so that they are captured). Local to this file. -/
-local macro "bytesdec_z " n:num : tactic => `(tactic| (
+local macro "bytesdec_offset_zero_case " n:num : tactic => `(tactic| (
     replace hA : (bytesDecHead ($n : Int64) lff dR fL fC).IsInfixAt Host.prog j1 := hA
     replace hB : (bytesDecMidZ ($n : Int64) lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog j2 := hB
     rw [show (OfNat.ofNat ($n : Nat) : Int) = ($n : Int) from rfl]
@@ -452,8 +453,8 @@ theorem bytesdec_seg_z (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (lff lwb : 
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf j1⟩ := by
   rcases hn with rfl | rfl | rfl
-  · bytesdec_z 32
-  · bytesdec_z 48
-  · bytesdec_z 96
+  · bytesdec_offset_zero_case 32
+  · bytesdec_offset_zero_case 48
+  · bytesdec_offset_zero_case 96
 
 end Codec

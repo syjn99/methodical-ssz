@@ -1,7 +1,7 @@
 import Codec.EncodeFieldHelpers
 
 /-!
-# ENC2 L2: the frame test in the epilogue of three encoders (`runtime.moveSliceNoCapNoScan` is not reached)
+# The frame test in the epilogue of three encoders (`runtime.moveSliceNoCapNoScan` is not reached)
 
 `PowBlock`, `HistoricalSummary` and `SigningData` `MarshalSSZTo` end with
 

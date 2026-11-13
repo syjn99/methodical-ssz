@@ -2,14 +2,14 @@ import Codec.CalleeDecode
 import Codec.InlineUint64RegisterBase
 
 /-!
-# GEN3 L1 / L3: statement kinds of the callee-decoder call block, its argument set-ups and the two-directive
+# Statement kinds of the callee-decoder call block, its argument set-ups and the two-directive
 inline uint64 read
 
 Each kind is the conclusion of its lemma (`Codec/CalleeDecode.lean`, `Codec/InlineUint64RegisterBase.lean`) with `j := k + j` (`j2 := k + j2`),
 after the binders `k hk hf` (the idiom of `Codec/Kind/FieldPatterns.lean`). The `_of` theorems prove a kind from the lemma and
 the code facts of an instance, so the kind body is kernel-checked against the lemma conclusion. The callee
 specification `U64CalleeAcc fn` is a hypothesis of `callDecSegKind` (discharged at the composition by the
-proved `*_uacc_holds` theorems). The scratch register of the uint64 read is in its kind, because it is in
+proved `Prysm.<Type>.Decode.accept_function_spec_holds` theorems). The scratch register of the uint64 read is in its kind, because it is in
 the statement (the register clause).
 -/
 

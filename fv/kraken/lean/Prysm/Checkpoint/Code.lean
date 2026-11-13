@@ -3,11 +3,10 @@ import Machine.Include
 import Prysm.Epoch.Code
 
 /-!
-# Code of the prysm-e2e function set (Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the `Checkpoint` functions (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`link/conv.py --norm` of the Go 1.26.10 ELF; `link/check.py` (a)–(e) PASS in
-`../RESULT`). The files are Lake inputs of the `Prysm` library (`lakefile.toml`).
+(`link/conv.py --norm` of the Go 1.26.10 ELF; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). The files are Lake inputs of the `Prysm` library (`lakefile.toml`).
 Nothing of the code of the Go 1.26.3 test target is used.
 After the split of this module, the declarations of the other types are in `Prysm/Epoch/Code.lean`.
 -/

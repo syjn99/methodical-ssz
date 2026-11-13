@@ -2,7 +2,7 @@ import Codec.FixedBytesDecodeWindow
 import Machine.Labels
 
 /-!
-# GEN4: the fixed-bytes decode segment, offset-0 form, over windows with the receiver registers as parameters
+# The fixed-bytes decode segment, offset-0 form, over windows with the receiver registers as parameters
 
 `f = append(make([]byte, 0, n), buf[0:n]...)` (the first SSZ field: no `add $src,%rbx`). The first block is
 `bytesDecHeadR rX …` (`Codec/FixedBytesDecodeWindow.lean`); the second is `bytesDecMidZR rX rY …` = `bytesDecMidZ` (`Codec/FixedBytesDecode.lean`) with
@@ -11,7 +11,7 @@ two windows (`jl` = index of the label, `jm` = index of `callq runtime.memmove`,
 `regs.get64 rY = rcv`. Proof: one theorem per case (the proof text of `bytesdec_seg_z` with the window tactics).
 Same limits as `Codec/FixedBytesDecodeWindow.lean` (`rX` ∈ {rdx, rsi}, `rY` ∈ {rax, rcx, rdx, rsi, rdi}, `n` ∈ {32, 48, 96}). At the
 four development sites of this form the code is dense with rdx (no observed variation): the instance of the
-GEN2 lemma is `bytesdec_seg_z_inst`.
+dense lemma is `bytesdec_seg_z_inst`.
 -/
 
 open Machine Runtime
@@ -450,7 +450,7 @@ theorem bytesdec_seg_z_window (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (rX 
     | exact bytesdec_window_z_96_rsi_rsi
     | exact bytesdec_window_z_96_rsi_rdi
 
-/-- The GEN2 lemma `bytesdec_seg_z` is the dense rdx instance of `bytesdec_seg_z_window` (same statement). -/
+/-- The dense lemma `bytesdec_seg_z` is the rdx instance of `bytesdec_seg_z_window` (same statement). -/
 theorem bytesdec_seg_z_inst : type_of% (@bytesdec_seg_z ‹Host›) := by
   intro n hn lff lwb dR dB dS fP fL fC j1 j2 hA hB hl
   exact bytesdec_seg_z_window n hn Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))

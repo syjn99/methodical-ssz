@@ -30,7 +30,7 @@ The shared-layer map has no `type` row and keeps the old behaviour.
 
 Maps compose in order: `shared-layer`, `checkpoint-and-epoch`, `attestation-data`, `sync-and-indexed-attestation`,
 `historical-batch-and-deposit`, `data-columns-by-root-identifier`,
-`flat-types`, `clean-up`, `shared-names`, then the next step.
+`flat-types`, `clean-up`, `shared-names`, `link-set`, `review-names`, then the next step.
 To undo, run the inverse of the last map first.
 The forward run of a step needs nothing from the earlier maps.
 The inverse of the map of a step alone must give the tree from which the step started.
@@ -241,9 +241,6 @@ Then write the rows from the trial tree, and run the trial again with the rows.
 - Modules that use the Lean module system (`module`, `public import`) keep it after a move.
 - `fv/kraken/lean/Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` walks the project namespaces
   `Prysm`, `Codec`, `ElfData`, `Machine` and `Runtime`. A step that adds a root namespace adds it there.
-- `fv/kraken/gen/tools/proof_inventory.py` reads the code constants of `lean/{E2e,E2eAd,E2eScal}/**`.
-  `lean/E2e`, `lean/E2eAd` and `lean/E2eScal` are gone.
-  The script needs a rework before its next use.
 - `descterm.py` emits the namespace from the Go type name as written.
   For the Go type `Deposit_Data` the namespace is `Prysm.Deposit_Data`.
 - The lakefile: a moved `.S` file of a library directory needs a new `input_dir` for its new directory (filter `.S`).
@@ -257,6 +254,14 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   `data_columns_by_root_identifier_decode_addr`, `segment_addr`, `register_equation_close`, `bytesdec_window_case`,
   `bytesdec_window_offset_zero_case`, `bytesdec_window20_case`, `bytesdec_window20_offset_zero_case`,
   `setup_argument_close` and `uint64_register_case`. An inverse run of an earlier map needs the old names put back first.
+- The link-set step renamed the tactics `iaaddr`, `laddr` and `lvbytesdec_z` to `indexed_attestation_addr`,
+  `address_with_products` and `bytes_decode_zero`. The data reader commands `e2e_data_include`, `ad_data_include`,
+  `lv_data_include`, `lvt3_data_include` and `dcd_data_include` became the one command `prysm_data_include`.
+  An inverse run of an earlier map needs the old names put back first.
+- The records of `maps/flat-types/` and `maps/shared-names/` name `callDecSegKindG4_of`, `callDecSegKind_eq_G4`,
+  `EncodeFastPathExamples`, `DecodeAcceptExamples` and `Uint64DecoderKindAnchors`, which `maps/review-names/` renamed.
+  An inverse run of those maps needs `maps/review-names/` undone first.
+  The tactic `bytesdec_z` is now `bytesdec_offset_zero_case`.
 
 ## 6. Self-test
 

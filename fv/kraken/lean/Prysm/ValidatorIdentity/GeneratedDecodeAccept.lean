@@ -91,7 +91,7 @@ theorem Decode.generated_Index_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.calldec_seg_w _ _ _ (k + 17) (k + 17) (k + 47) hq he hjc hB hl
-theorem Decode.generated_Index_call_kind : ∀ (h : Host), type_of% (@Decode.generated_Index_call h) = @Codec.callDecSegKindG4 h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ_b9" 17 17 47 := by
+theorem Decode.generated_Index_call_kind : ∀ (h : Host), type_of% (@Decode.generated_Index_call h) = @Codec.callDecSegKindWindow h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ_b9" 17 17 47 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 16000000 in
@@ -353,7 +353,7 @@ theorem Decode.generated_ActivationEpoch_call (k : Nat) (hk : unmarshalSSZ.IsInf
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.calldec_seg_w _ _ _ (k + 90) (k + 90) (k + 120) hq he hjc hB hl
-theorem Decode.generated_ActivationEpoch_call_kind : ∀ (h : Host), type_of% (@Decode.generated_ActivationEpoch_call h) = @Codec.callDecSegKindG4 h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ_1e7" 90 90 120 := by
+theorem Decode.generated_ActivationEpoch_call_kind : ∀ (h : Host), type_of% (@Decode.generated_ActivationEpoch_call h) = @Codec.callDecSegKindWindow h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ_1e7" 90 90 120 := by
   intro h; with_reducible rfl
 
 end Prysm.ValidatorIdentity

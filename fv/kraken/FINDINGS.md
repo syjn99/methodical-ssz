@@ -154,11 +154,11 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Other tactic gaps
 
-- `kaddr` (`lean/Machine/Step.lean`) does not reduce `Width.W64.bits`. The local macro `checkpoint_addr` is used instead.
+- `kaddr` (`lean/Machine/Step.lean`) does not reduce `Width.W64.bits`. The macro `checkpoint_addr` (`lean/Prysm/Checkpoint/DecodeAccept.lean`) is used instead.
 - A `grind` timeout inside `kstep` cannot be caught. `load_step` and `store_step` are used instead.
 - Closing register goals with symbolic `BitVec` by `trivial` or `rfl` inside `first` used more than 6 GiB. The decoder proof is split, and the goals close with `exact trivial`, `with_reducible rfl` or `toBitVec_inj`.
 - Two witness `Host` instances in one file make instance resolution choose the wrong host. Each file has one witness host.
-- `lean/Machine/Include.lean` keeps the data reader private. Other libraries copy it, and `gen/e2e/check_include.py` compares the copies.
+- `lean/Machine/Include.lean` keeps the data reader private. `lean/Prysm/ElfData/PrysmTargetReader.lean` has one copy, and `gen/e2e/check_include.py` compares it with the original.
 - State: worked around in each case.
 
 ### Format string content is not checked
@@ -174,9 +174,11 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Link check result changes on a new run
 
-- What: the tracked `RESULT` files hash an axioms listing file that is no longer in the tree. `link/check.py` hashes that file only if it exists.
-- Effect: a new run writes a `RESULT` without that line, with a different bundle hash.
-- State: open for `link/out/RESULT` of the test target. The one `RESULT` of `prysm/go1.26.10/link-set` has no such line.
+- What: `link/check.py` hashes the ELF, the `norm/*.S` files, the `data/*.data` files and `AXIOMS.txt` if it exists. It hashes no Lean file.
+  Three tracked `RESULT` files have sha256 lines for `lean/Fk/Code.lean` and `AXIOMS.txt`. Neither file is in the tree now.
+- Where: `link/out/RESULT`, `prysm/go1.26.10/link/RESULT` and `prysm/go1.26.10/opt-r1/link/RESULT`.
+- Effect: a new run writes these files without the two lines, with a different bundle hash.
+- State: open for these three files. `prysm/go1.26.10/link-set/RESULT` has no such line.
 
 ### Link set `prysm/go1.26.10/link` cannot be checked from the tracked files
 
@@ -214,6 +216,29 @@ How to handle a new finding is in `../README.md` section 7.
 - What: a mutant passes when Lean reports an error inside the theorem. An unknown identifier or a parse error is such an error, but it does not test the code.
 - Where: `gen/e2e/negative.py`.
 - State: fixed in part (commit `23eceac` and later). Such first errors get the class `wrong_target`. The list of patterns is not complete. Read the first error of every row.
+
+### Five negative cases do not pass
+
+- What: five Lean mutants fail, but not inside their designated theorem, or they time out.
+  The runs on commit `0174730a` and on the current tree give the same result.
+- Where:
+  - `e2-tie-cp-stmt-field` (`prysm/go1.26.10/e2e/scal/negcases-enc2.json`, `Prysm.Checkpoint.Encode.fast_path_of_kind`): class `outside`.
+    The mutation is in the statement. The second error is a heartbeat timeout of the whole declaration.
+    Lean reports it at the start of the command, the `set_option … in` line above the `theorem` line.
+    The theorem range of the tool starts at the `theorem` line.
+  - `lv-sa-bitslen63` (`prysm/go1.26.10/e2e/lv/negcases-lv.json`, `Prysm.SyncAggregate.Decode.accept`): class `outside`.
+    The code mutation changes `movq $0x40,0x10(%rdx)` to `movq $0x3f,0x10(%rdx)`.
+    The only error (unsolved goals) is 7 lines before the theorem line.
+    That line is in the proof of the segment lemma `Prysm.SyncAggregate.Decode.bits_seg`, which reads the same code directives.
+  - `g3-kindacc-stmt-jret` (`prysm/go1.26.10/e2e/scal/negcases-gen3.json`, `Prysm.BlobIdentifier.Decode.accept_is_kind`): class `timeout_heartbeat`.
+  - `g5-tie-pd-kind-jret` and `g5-tie-bh-kind-ptr` (`prysm/go1.26.10/e2e/scal/negcases-gen5.json`,
+    `Prysm.PendingDeposit.Decode.accept_is_kind_any_frame` and `Prysm.BeaconBlockHeader.Decode.accept_is_kind_any_frame`): class `timeout_heartbeat`.
+  - The three timeouts occur at the default limit of 200000 heartbeats.
+    Each mutant changes one literal of the kind instance, and `rfl` does not refute the equality within the limit.
+- Effect: a timeout or an error outside the designated theorem is not a pass (`../README.md` section 6).
+  So these five mutants do not show that their theorem depends on the mutated text.
+  The controls of the same groups pass.
+- State: open. The cases and the tools are not changed.
 
 ### A theorem can look closed when it is not
 
@@ -258,7 +283,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Docstrings that say more than their theorem
 
-- What: the docstrings of the `*_reject_complete` theorems of `PendingDeposit`, `PowBlock`, `SyncCommitteeMessage` and `PendingConsolidation` say that the code reaches the `ssz.ErrSize` site. The theorem proves only `size ≠ N`.
+- What: the docstrings of the `Decode.reject_complete` theorems of `PendingDeposit`, `PowBlock`, `SyncCommitteeMessage` and `PendingConsolidation` say that the code reaches the `ssz.ErrSize` site. The theorem proves only `size ≠ N`.
   A comment in `lean/Prysm/ValidatorBalance/SpecDescription.lean` names the wrong Prysm tree.
 - State: open. The fix is a `.lean` edit.
 
@@ -274,7 +299,7 @@ How to handle a new finding is in `../README.md` section 7.
 - Effect: the hand `Desc` copies consensus-specs, but its independence from the checker is by content only.
 - State: recorded. A new type must have its hand `Desc` written before the checker `Desc` is printed.
 
-### Several code directories are not Lake inputs
+### A code directory is not a Lake input
 
 - What: `lean/Prysm/Checkpoint/CapacityReservedCode.lean` includes `.S` files from a directory that `lean/lakefile.toml` does not declare as an input.
   A change in such a file does not make Lake build the proofs again.

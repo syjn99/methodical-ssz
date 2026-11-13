@@ -47,12 +47,15 @@ A reader confirms that from the theorem statement.
 ## 3. What the result binds
 
 `RESULT` has one line for each check, and a sha256 line for each input file.
-The inputs are the ELF, the `.S` files, the data files and the Lean code file.
+The inputs are the ELF, the `.S` files of `norm/` and the data files of `data/`.
+`check.py` also hashes `fv/kraken/AXIOMS.txt` if that file exists. It does not hash a Lean file.
 The last line is a bundle hash: the sha256 of `RESULT` up to the last PASS line.
 One bundle hash thus binds the ELF to the exact text that Lean includes.
 
-The tracked `RESULT` files also hash an axioms listing file that is no longer in the tree.
-`check.py` hashes that file only if it exists. A new run can thus write a different bundle hash.
+Three tracked `RESULT` files have sha256 lines for two files that are no longer in the tree: `lean/Fk/Code.lean` and `AXIOMS.txt`.
+They are `link/out/RESULT`, `prysm/go1.26.10/link/RESULT` and `prysm/go1.26.10/opt-r1/link/RESULT`.
+A new run writes these files without the two lines, so their bundle hash changes.
+`prysm/go1.26.10/link-set/RESULT` has no such line.
 
 ## 4. Requirements
 
@@ -89,7 +92,7 @@ An item with only an `at` line gives only an address. The error globals `ssz.Err
 - `<id>_addr : BitVec 64`: `(label "<label>" + <offset>).toBitVec`, without `+ 0` for offset 0.
 
 The Prysm library uses one copy of this reader, `prysm_data_include` in `lean/Prysm/ElfData/PrysmTargetReader.lean`, for `prysm/go1.26.10/link-set/data`.
-`gen/e2e/check_include.py` compares the copies with the original text.
+`gen/e2e/check_include.py` compares this copy with the original text.
 
 Rules for a new data file:
 

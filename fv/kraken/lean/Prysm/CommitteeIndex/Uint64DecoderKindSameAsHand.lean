@@ -2,9 +2,9 @@ import Codec.Kind.FieldPatterns
 import Prysm.Slot.DecodeAccept
 
 /-!
-# Anchors of the P1 statement kind (review fix-r1 S1): the `CommitteeIndex` part
+# Anchors of the uint64 decoder statement kind: the `CommitteeIndex` part
 
-The declarations of the other types of this group are in `Prysm/Slot/Uint64DecoderKindAnchors.lean`.
+The declarations of the other types of this group are in `Prysm/Slot/Uint64DecoderKindSameAsHand.lean`.
 -/
 
 open Machine Runtime Prysm.AttestationData.Code

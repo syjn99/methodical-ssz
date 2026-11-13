@@ -1,0 +1,9 @@
+# written by rename.py forward; read by rename.py inverse. path	line	action	new text	old text
+fv/kraken/lean/Codec/CalleeDecodeWindow.lean	119	replace	/-- `callDecSegKindWindow` follows from `calldec_seg_w` and the window facts of an instance. -/	/-- `callDecSegKindG4` follows from `calldec_seg_w` and the window facts of an instance. -/
+fv/kraken/lean/Codec/CalleeDecodeWindow.lean	125	replace	    callDecSegKindWindow C fn lok j jc j2 :=	    callDecSegKindG4 C fn lok j jc j2 :=
+fv/kraken/lean/Codec/CalleeDecodeWindow.lean	131	replace	    callDecSegKind C fn lok j j2 = callDecSegKindWindow C fn lok j j j2 := rfl	    callDecSegKind C fn lok j j2 = callDecSegKindG4 C fn lok j j j2 := rfl
+fv/kraken/lean/Machine/Frame.lean	24	replace	    Eq ((stackFrame144 scratch rslot g1 s28 s30 s38 g2 fp).At (x - 144 - BitVec.ofNat 64 S)) =	    Eq ((luFrame scratch rslot g1 s28 s30 s38 g2 fp).At (x - 144 - BitVec.ofNat 64 S)) =
+fv/kraken/lean/Machine/Frame.lean	28	replace	  simp only [stackFrame144]	  simp only [luFrame]
+fv/kraken/lean/Machine/Frame.lean	42	replace	    stk = stackFrame144 (stk.take S) (t0.take 8) (t1.take 40) (t2.take 8) (t3.take 8) (t4.take 8) (t5.take 64) t6 := by	    stk = luFrame (stk.take S) (t0.take 8) (t1.take 40) (t2.take 8) (t3.take 8) (t4.take 8) (t5.take 64) t6 := by
+fv/kraken/lean/Machine/Frame.lean	44	replace	  simp only [stackFrame144, t0, t1, t2, t3, t4, t5, t6, List.take_append_drop]	  simp only [luFrame, t0, t1, t2, t3, t4, t5, t6, List.take_append_drop]
+fv/kraken/lean/Prysm/SyncCommitteeMessage/DecodeStepExamples.lean	23	replace	* a call-block theorem per callee field (`…_call`, `callDecSegKindWindow`); the window starts where the set-up	* a call-block theorem per callee field (`…_call`, `callDecSegKindG4`); the window starts where the set-up

@@ -2,7 +2,7 @@ import Kraken.X64.Parser
 import Machine.Include
 
 /-!
-# Code of the hold-out function set (Go 1.26.10 ELF `c6403c02…911e`): the `PendingPartialWithdrawal` part
+# Code of the `PendingPartialWithdrawal` functions (Go 1.26.10 ELF `c6403c02…911e`)
 
 The declarations of the other types of this group are in `Prysm/Deposit_Data/Code.lean`.
 -/

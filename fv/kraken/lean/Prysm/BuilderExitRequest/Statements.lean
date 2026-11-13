@@ -20,7 +20,7 @@ Sources: the Go receiver layout (IR `go_fields` of `prysm/ir/ir-mainnet.json`, g
 (field sizes in IR order), the `.S` files of `prysm/go1.26.10/link-set/norm/` (frame, guard, spills, stack slots
 touched on the path and their contents at the return, the directive of the last call), the statement shape of the
 committed hand statements `Prysm.DepositRequest.Decode.accept_statement` (decoders, frame `0x20`, no callee) and
-`Prysm.Deposit_Data.Encode.fast_path_statement`, `Prysm.ValidatorIdentity.Encode.fast_path_statement` (encoders), and the interface text of `enc2/L/OUT.md` (chunk order: saved
+`Prysm.Deposit_Data.Encode.fast_path_statement`, `Prysm.ValidatorIdentity.Encode.fast_path_statement` (encoders), and the interface rules of the encoder statements (chunk order: saved
 rbp, home slots ascending, other slots by first touch, the return slot; existentials in creation order).
 Independence limit: the layout rules come from that interface text and the earlier hand statements; the parameters
 are read from the `.S` by hand. Development data, no hold-out.

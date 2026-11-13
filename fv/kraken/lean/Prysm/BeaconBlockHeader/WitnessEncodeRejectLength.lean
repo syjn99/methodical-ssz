@@ -3,7 +3,7 @@ import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witnesses of `bh_e2e_marshal_reject{1,2,3}_main` (BeaconBlockHeader encoder, length rejects)
+# Witnesses of `Encode.reject_length_parent_root`, `Encode.reject_length_state_root`, `Encode.reject_length_body_root` (BeaconBlockHeader encoder, length rejects)
 
 Hand-written (the text of `Prysm/Checkpoint/WitnessEncodeRejectLength.lean` and `Prysm/BeaconBlockHeader/WitnessEncodeFastPath.lean` with this layout).
 Host: the label `ssz.ErrBytesLength` (index 0), the real Go 1.26.10

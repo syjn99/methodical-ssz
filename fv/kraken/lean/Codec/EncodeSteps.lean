@@ -5,7 +5,7 @@ import Machine.StoreLemmas
 import Runtime.StaticBoxLemmas
 
 /-!
-# ENC2 L2: step lemmas for the encoder fast path (window form, registers as parameters)
+# Step lemmas for the encoder fast path (window form, registers as parameters)
 
 The fast path of a flat `MarshalSSZTo` is straight-line code with three kinds of branch. Each has ONE lemma
 whose premise is the fact that decides the branch; a `runtime.growslice` directive is never stepped:

@@ -88,7 +88,7 @@ theorem Decode.generated_step_Slot_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt H
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.calldec_seg_w _ _ _ (k + 17) (k + 17) (k + 47) hq he hjc hB hl
-theorem Decode.generated_step_Slot_call_kind : ∀ (h : Host), type_of% (@Decode.generated_step_Slot_call h) = @Codec.callDecSegKindG4 h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7" 17 17 47 := by
+theorem Decode.generated_step_Slot_call_kind : ∀ (h : Host), type_of% (@Decode.generated_step_Slot_call h) = @Codec.callDecSegKindWindow h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7" 17 17 47 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -245,7 +245,7 @@ theorem Decode.generated_step_CommitteeIndex_call (k : Nat) (hk : unmarshalSSZ.I
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.calldec_seg_w _ _ _ (k + 55) (k + 55) (k + 85) hq he hjc hB hl
-theorem Decode.generated_step_CommitteeIndex_call_kind : ∀ (h : Host), type_of% (@Decode.generated_step_CommitteeIndex_call h) = @Codec.callDecSegKindG4 h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167" 55 55 85 := by
+theorem Decode.generated_step_CommitteeIndex_call_kind : ∀ (h : Host), type_of% (@Decode.generated_step_CommitteeIndex_call h) = @Codec.callDecSegKindWindow h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167" 55 55 85 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 16000000 in

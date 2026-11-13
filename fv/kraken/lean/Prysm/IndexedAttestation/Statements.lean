@@ -37,7 +37,7 @@ locals `0x28` = x − 136 (numElem), `0x30` = x − 128, `0x38` = x − 120 (cap
 (32 bytes, overflow reject), `0x80` = x − 48 (32 bytes, alignment reject); callee spill area `0x0…0x27` = x − 176 (40 bytes; errorf spills 40, makeslice 24,
 newobject / convT64 8; the AttestationData callee spills its rax, rbx, rdi at x − 176, x − 168, x − 152); runtime call
 return slot x − 184; scratch `S` below it. On the accept path the AttestationData callee's whole stack (its entry rsp = x − 184,
-`ad_e2e_accept_main` with scratch `Sd`) lies in our scratch: `S = Sd + 224`.
+`Prysm.AttestationData.Decode.accept` with scratch `Sd`) lies in our scratch: `S = Sd + 224`.
 Return addresses at the end: alignment reject errorf call 116 → `k + 117`; overflow reject errorf call 79 → `k + 80`; accept last memmove 240 → `k + 241`.
 -/
 

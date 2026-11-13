@@ -235,7 +235,7 @@ theorem _root_.Prysm.PendingPartialWithdrawal.Decode.example_step_WithdrawableEp
     (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.calldec_seg_w _ _ _ (k + 59) (k + 59) (k + 88) hq he hjc hB hl
-theorem _root_.Prysm.PendingPartialWithdrawal.Decode.example_step_WithdrawableEpoch_call_kind : ∀ (h : Host), type_of% (@Prysm.PendingPartialWithdrawal.Decode.example_step_WithdrawableEpoch_call h) = @Codec.callDecSegKindG4 h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159" 59 59 88 := by
+theorem _root_.Prysm.PendingPartialWithdrawal.Decode.example_step_WithdrawableEpoch_call_kind : ∀ (h : Host), type_of% (@Prysm.PendingPartialWithdrawal.Decode.example_step_WithdrawableEpoch_call h) = @Codec.callDecSegKindWindow h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159" 59 59 88 := by
   intro h; with_reducible rfl
 
 end Prysm.PendingPartialWithdrawal

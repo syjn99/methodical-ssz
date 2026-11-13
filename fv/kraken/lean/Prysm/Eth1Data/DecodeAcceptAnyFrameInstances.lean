@@ -8,7 +8,7 @@ import Codec.Kind.DecodeAcceptAnyFrameInstances
 import Prysm.Eth1Data.DecodeAcceptComposition
 
 /-!
-# GEN5 L1: ties of `decAcceptKindN` to the hand accept statements: the `Eth1Data` part
+# Ties of `decAcceptKindN` to the hand accept statements: the `Eth1Data` part
 
 The declarations of the other types of this group are in `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 -/
