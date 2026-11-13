@@ -10,7 +10,7 @@ Read these files first:
 
 - `SPEC.md`: the naming rules and the decisions, binding for every step.
 - `TOOL-NOTES.md`: the use of `rename.py` in reference mode, the map files, the warnings and the pitfalls.
-- This file: the order of the remaining steps, the procedure of one step and the checks before each commit.
+- This file: the tool, the applied maps, the procedure of one step and the checks before each commit.
 
 ## 1. The tool
 
@@ -130,9 +130,9 @@ The inverse of one map alone gives the tree from which its forward run started.
 Do hand edits (the Lake configuration, generator strings, runner logic) after the forward run.
 A hand edit before the run puts new names into the old text, and the forward check then stops.
 
-## 4. Steps
+## 4. Applied maps
 
-Done:
+The maps apply in this order:
 
 - `maps/shared-layer/`: the shared libraries `Machine`, `Runtime`, `TestTarget`, `Spec` and `Codec`.
   They come from `Fk`, `Fv`, `Fv1`, `E2eSeg`, `E2e/WitSplit.lean` and the type-independent modules of `E2eScal`.
@@ -143,32 +143,7 @@ Done:
 - `maps/sync-and-indexed-attestation/`: the library `E2eList` becomes `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/` and `Prysm/IndexedAttestation/`.
   Some of its modules go to `Prysm/RuntimeModel/` and `Prysm/ElfData/`.
 
-Remaining, in this order:
-
-1. HistoricalBatch and Deposit: the libraries `E2eHb`, `E2eDep` and `E2eDepW`.
-   Their generated checker files `E2eHb/HbSpecChecker.lean` and `E2eDep/SpecChecker.lean` still have `namespace E2eList`.
-   After the move, a fresh `lvdescterm.py` run must equal them.
-   `Codec/Segment/` imports modules of `E2eHb`.
-   These imports follow through the tool.
-2. DataColumnsByRootIdentifier: the libraries `E2eEnc` and `E2eDec`.
-   The generated checker file `E2eEnc/DcSpecChecker.lean` still has `namespace E2eList`.
-   The reader command `dcd_data_include` keeps its name (`SPEC.md` decision 4).
-3. The 24 flat types of `E2eScal`.
-   Generators write most of these files, so this step changes generator emit strings and commands.
-   Read the E2eScal items of `TOOL-NOTES.md` section 5 first:
-   - `scalgen.py` refuses a qualified `--const`.
-     Keep bare code constant names and an `open` of the code namespace.
-   - `e2cemit.py` still writes `open ... E2e ...`.
-     Its Checkpoint output `E2cSpecCp.lean` is not reproduced until this step.
-   - `E2eScal/G4DepCheck.lean` tests the namespace prefixes `E2eScal`, `E2e`, `E2eAd` and `Fk`, and has no `Prysm`.
-   - `gen/tools/proof_inventory.py` reads the code constants of `lean/{E2e,E2eAd,E2eScal}/**`.
-     It needs a rework.
-   - `tools/regen.py` and `tools/python_checks.sh` name `lean/E2eScal/` paths.
-     Update them in this step.
-4. Clean-up: the splits of two-type modules, the removal of `TestTarget`, comment clean-up, and duplicate-proof removal.
-   Section 7 lists the known items.
-   This step changes module contents, so the move-only rule of `SPEC.md` section 2 does not apply.
-   Theorem statements do not change.
+Issue 10 of `syjn99/methodical-ssz` holds the list of the steps that remain.
 
 ## 5. Helper scripts in `tools/`
 
@@ -274,45 +249,3 @@ Checks before the commit:
     Record the base commit, the results of items 12 to 17, the warnings and their reasons, and the kept names.
     Record a reason for each difference from the expected results.
     Do not use `git add -A`, amend, rebase or force push.
-
-## 7. Known items for the clean-up step
-
-Modules that hold declarations of two types and need a split:
-
-- `Prysm/Checkpoint/Code.lean` holds the Epoch program constants.
-- `Prysm/Slot/DecodeAccept.lean` holds the CommitteeIndex decoder (the second namespace block).
-- `Prysm/AttestationData/Code.lean` holds the Slot and CommitteeIndex programs and the labels of the Checkpoint callees.
-- `Prysm/SyncAggregate/Code.lean` and `Prysm/SyncAggregate/SpecDescription.lean` hold SyncCommittee declarations.
-- `Prysm/SyncCommittee/SpecDefinitions.lean` holds SyncAggregate declarations.
-- `Prysm/SyncCommittee/DecodeLoopLemmas.lean` holds lemmas that other types and `Codec/Segment/` use.
-
-Shared lemmas in the namespace `Prysm.Checkpoint` that other types use:
-
-- `Decode.errSize_addr_eq` (`Prysm/Checkpoint/DecodeRejectSize.lean`).
-- `Encode.fast_path_mul` (`Prysm/Checkpoint/EncodeFastPath.lean`).
-- `Encode.reject_length_eq` (`Prysm/Checkpoint/EncodeRejectLength.lean`).
-
-Modules that mix two roles and have the name of the main role:
-
-- `Prysm/AttestationData/Spec.lean` also holds the equality with the checker description.
-- `Prysm/AttestationData/DecodeRejectSize.lean` also holds four error wraps that no 128-byte input reaches.
-- `Prysm/IndexedAttestation/DecodeRejectSize.lean` holds the size reject and the offset reject.
-- `Prysm/IndexedAttestation/DecodeRejectAlignment.lean` holds the alignment reject and the overflow reject.
-
-`TestTarget`:
-
-- `Machine/Step.lean` imports `TestTarget.Code`.
-- 9 declarations of `TestTarget` are used outside `TestTarget`.
-  Find them with `tools/constant_uses.lean` before the removal.
-
-Comments and names:
-
-- About 8 comments still hold old abbreviations, for example `WitCpW`.
-- The ELF data names with the prefix `e2e` and the `*_data_include` commands keep their names until the link sets merge.
-  That merge needs the machine with the Prysm ELF (`SPEC.md` decision 4).
-
-Duplicate proofs:
-
-- The type steps keep duplicate modules and proofs (`SPEC.md` section 2).
-  The clean-up step finds them with a check and removes them.
-  No list of them exists yet.
