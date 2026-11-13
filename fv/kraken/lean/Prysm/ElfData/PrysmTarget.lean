@@ -6,7 +6,7 @@ import Prysm.ElfData.PrysmTargetReader
 # ELF data of the Prysm target that the theorems read
 
 Every definition below is elaborated by `prysm_data_include` from a file of `fv/kraken/prysm/go1.26.10/link-set/data/`.
-`gen/e2e/link_set.py data` writes the files with the item tables of the `gen/e2e/*link.py` scripts and
+`gen/checks/link_set.py data` writes the files with the item tables of the `gen/checks/*link.py` scripts and
 `link/data.py`'s code, from the operands of the converted code. `link/check.py` (f) compares them with the ELF
 (`prysm/go1.26.10/link-set/RESULT`). No byte and no offset below is written by hand.
 The names keep the ids of the data files. An operand that two functions share has one data file.

@@ -13,7 +13,7 @@ import Prysm.IndexedAttestation.WitnessDecodeRejectSize
 import Prysm.IndexedAttestation.DecodeRejectOverflow
 import Prysm.IndexedAttestation.DecodeRejectOffset
 
-/-! Hand list of the IndexedAttestation decoder theorems for `gen/e2e/axioms_gate.py` ("must exist" names;
+/-! Hand list of the IndexedAttestation decoder theorems for `gen/checks/axioms_gate.py` ("must exist" names;
 every name also gets the axiom check). -/
 
 #print axioms Prysm.IndexedAttestation.Decode.reject_size

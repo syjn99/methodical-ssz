@@ -5,7 +5,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `Encode.generated_fast` (HistoricalSummary encoder fast path, generated theorem)
 
-Emitted by the unit's evidence tool `e2cemit.py` (not the generator) from the committed statement text and
+Emitted by the unit's evidence tool `encode_spec_emitter.py` (not the generator) from the committed statement text and
 the IR; then built and kernel-checked. Host: the real Go 1.26.10 `MarshalSSZTo` (index 0) and `MemmoveGrowsliceModel` (index 115, `model_memmove`, S = 0).
 One memory block at `0x10000`: guard word (r14 = 0xfff0); the receiver at 0x10008 (`prysm/ir/ir-mainnet.json`
 gc amd64 layout, 88 bytes; byte fields = (pointer, n, n) with the n bytes after the receiver; unexported tail

@@ -1,0 +1,354 @@
+[
+ {
+  "id": "beacon-block-header-a1-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
+  "kind": "control",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-a1-guard-lea",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  lea -0x20(%rsp),%r12",
+  "new": "  lea -0x28(%rsp),%r12"
+ },
+ {
+  "id": "beacon-block-header-a1-slot-field",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x8(%rax),%r8",
+  "new": "  mov 0x10(%rax),%r8"
+ },
+ {
+  "id": "beacon-block-header-a1-frame",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  sub $0x98,%rsp",
+  "new": "  sub $0x90,%rsp"
+ },
+ {
+  "id": "beacon-block-header-a1-stmt-guard",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
+  "kind": "stmt",
+  "old": "(hguard : guard.toNat + 32 < s.regs.rsp.toNat)",
+  "new": "(hguard : guard.toNat < s.regs.rsp.toNat)"
+ },
+ {
+  "id": "beacon-block-header-a1-stmt-dst-unchanged",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
+  "kind": "stmt",
+  "old": "⋆ Eq (sl.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R) st.data.dmem)",
+  "new": "⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "beacon-block-header-a2-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
+  "kind": "control",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-a2-pi-field",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x10(%rax),%r9",
+  "new": "  mov 0x8(%rax),%r9"
+ },
+ {
+  "id": "beacon-block-header-a2-newlen",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  lea 0x8(%rdx),%r8",
+  "new": "  lea 0x10(%rdx),%r8"
+ },
+ {
+  "id": "beacon-block-header-b-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
+  "kind": "control",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-b-len33",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  cmpq $0x20,0x20(%rax)",
+  "new": "  cmpq $0x21,0x20(%rax)"
+ },
+ {
+  "id": "beacon-block-header-b-root-ptr",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x18(%rax),%rdx",
+  "new": "  mov 0x30(%rax),%rdx"
+ },
+ {
+  "id": "beacon-block-header-b-newlen",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "line": 67,
+  "old": "  lea 0x20(%r8),%r9",
+  "new": "  lea 0x21(%r8),%r9"
+ },
+ {
+  "id": "beacon-block-header-c-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
+  "kind": "control",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-c-root-ptr",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x30(%rdx),%rbx",
+  "new": "  mov 0x18(%rdx),%rbx"
+ },
+ {
+  "id": "beacon-block-header-c-len31",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  cmpq $0x20,0x38(%rdx)",
+  "new": "  cmpq $0x1f,0x38(%rdx)"
+ },
+ {
+  "id": "beacon-block-header-c-dst-off",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  add %r8,%rax",
+  "new": "  add %r9,%rax"
+ },
+ {
+  "id": "beacon-block-header-d-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_body_root",
+  "kind": "control",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-d-root-ptr",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_body_root",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x48(%rdx),%rbx",
+  "new": "  mov 0x30(%rdx),%rbx"
+ },
+ {
+  "id": "beacon-block-header-d-memmove31",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_body_root",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "line": 146,
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx"
+ },
+ {
+  "id": "beacon-block-header-e-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_return",
+  "kind": "control",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-e-len-slot",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_return",
+  "kind": "code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x38(%rsp),%rbx",
+  "new": "  mov 0x40(%rsp),%rbx"
+ },
+ {
+  "id": "beacon-block-header-e-stmt-rdi1",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_return",
+  "kind": "stmt",
+  "old": "st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0",
+  "new": "st.data.regs.rdi = 1 ∧ st.data.regs.rsi = 0"
+ },
+ {
+  "id": "beacon-block-header-main-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-block-header-main-stmt-len111",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 112",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 111"
+ },
+ {
+  "id": "beacon-block-header-main-stmt-cap111",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 111 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "beacon-block-header-main-stmt-swap-roots",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
+  "kind": "stmt",
+  "old": "⋆ Eq (r2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))",
+  "new": "⋆ Eq (r3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))"
+ },
+ {
+  "id": "beacon-block-header-main-stmt-small-guard",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
+  "kind": "stmt",
+  "old": "(hguard : guard.toNat + 32 < s.regs.rsp.toNat)",
+  "new": "(hguard : guard.toNat < s.regs.rsp.toNat)"
+ },
+ {
+  "id": "beacon-block-header-main-stmt-rsp16",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
+  "kind": "stmt",
+  "old": "st.data.regs.rsp = s.regs.rsp + 8",
+  "new": "st.data.regs.rsp = s.regs.rsp + 16"
+ },
+ {
+  "id": "beacon-block-header-main-stmt-dst-unchanged",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
+  "kind": "stmt",
+  "old": "⋆ Eq (r3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80)) ⋆ R) st.data.dmem)",
+  "new": "⋆ Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80)) ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "beacon-block-header-witness-encode-fast-path-runs-empty-wit-control",
+  "module": "Prysm/BeaconBlockHeader/WitnessEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-block-header-wit-stmt-root-ptr",
+  "module": "Prysm/BeaconBlockHeader/WitnessEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "0x10088 0x100a8 0x100c8 (initial_state",
+  "new": "0x10088 0x100a8 0x100c9 (initial_state"
+ },
+ {
+  "id": "beacon-block-header-wit-stmt-rax",
+  "module": "Prysm/BeaconBlockHeader/WitnessEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x101a8",
+  "new": "st.data.regs.rax = 0x101a9"
+ },
+ {
+  "id": "beacon-block-header-encode-fast-path-spec-spec-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeSpec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path_spec",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-block-header-spec-stmt-off8",
+  "module": "Prysm/BeaconBlockHeader/EncodeSpec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "beacon-block-header-spec-stmt-swap-recv",
+  "module": "Prysm/BeaconBlockHeader/EncodeSpec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path_spec",
+  "kind": "stmt",
+  "old": "Eq (g.parent.toList.At p1) ⋆ Eq (g.state.toList.At p2)",
+  "new": "Eq (g.state.toList.At p1) ⋆ Eq (g.parent.toList.At p2)"
+ }
+]

@@ -11,7 +11,7 @@ import Prysm.Checkpoint.DecodeRejectSize
 Hand-written: the text of `Prysm/Deposit_Data/DecodeRejectSize.lean` with the PowBlock indices and frame.
 `Decode.reject_size` (`len(buf) ≠ 96`, Go source `return ssz.ErrSize`): directives 2–7, 9–10
 `cmp $0x60,%rcx; jne L_210` taken, `L_210` (124) and the two loads of `ssz.ErrSize` (125–126; the same ELF
-symbol as the Checkpoint decoder's, asserted by `h6link.py`), epilogue 127–129. `e0`, `e1`: the global's value
+symbol as the Checkpoint decoder's, asserted by `seven_flat_decoders_link.py`), epilogue 127–129. `e0`, `e1`: the global's value
 (premise). The decoder has no `fmt.errorf` wrap and no callee: the size check is its only reject.
 -/
 

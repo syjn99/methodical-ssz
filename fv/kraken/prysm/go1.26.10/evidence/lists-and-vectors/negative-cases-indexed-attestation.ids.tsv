@@ -1,0 +1,17 @@
+# negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
+lv-ia-control-size	indexed-attestation-control-size
+lv-ia-control-accept	indexed-attestation-control-accept
+lv-ia-stmt-size229	indexed-attestation-stmt-size229
+lv-ia-size229	indexed-attestation-size229
+lv-ia-offset229	indexed-attestation-offset229
+lv-ia-align16	indexed-attestation-align16
+lv-ia-max2047	indexed-attestation-max2047
+lv-ia-stmt-heap	indexed-attestation-stmt-heap
+lv-ia-control-nz-mis	indexed-attestation-control-nz-mis
+lv-ia-nz-mis-no-he0nz	indexed-attestation-nz-mis-no-he0nz
+lv-ia-control-spec-offset	indexed-attestation-control-spec-offset
+lv-ia-spec-offset229	indexed-attestation-spec-offset229
+lv-ia-control-spec-accept	indexed-attestation-control-spec-accept
+lv-ia-spec-accept-budget	indexed-attestation-spec-accept-budget
+lv-ia-nz-mis-he0nz-trivial	indexed-attestation-nz-mis-he0nz-trivial
+lv-ia-stmt-offset229	indexed-attestation-stmt-offset229

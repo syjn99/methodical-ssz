@@ -1,0 +1,24 @@
+# negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
+e2-tie-bh-control	beacon-block-header-tie-control
+e2-tie-bh-kind-field	beacon-block-header-tie-kind-field
+e2-tie-e1-kind-layout	beacon-block-header-tie-kind-layout
+e2-tie-cp-control	checkpoint-encode-fast-path-of-kind-tie-control
+e2-tie-cp-stmt-field	checkpoint-encode-fast-path-of-kind-tie-stmt-field
+e2-st-jae-control	codec-encode-steps-st-jae-control
+e2-st-jae-stmt-le	codec-encode-steps-st-jae-stmt-le
+e2-st-jb-stmt-le	codec-encode-steps-st-jb-stmt-le
+e2-st-len-stmt-val	codec-encode-steps-st-len-stmt-val
+e2-st-call-control	codec-encode-steps-st-call-control
+e2-st-call-stmt-len	codec-encode-steps-st-call-stmt-len
+e2-ft-control	codec-encode-frame-test-ft-control
+e2-ft-stmt-len	codec-encode-frame-test-ft-stmt-len
+e2-ft-far-stmt	codec-encode-frame-test-ft-far-stmt
+e2-vb-f0-control	validator-balance-f0-control
+e2-vb-f0-stmt-out	validator-balance-f0-stmt-out
+e2-vb-fast-stmt-cap	validator-balance-fast-stmt-cap
+e2-vb-fast-kind-fields	validator-balance-fast-kind-fields
+e2-vb-head-code-frame	validator-balance-head-code-frame
+e2-hs-epi-control	historical-summary-encode-example-epi-epi-control
+e2-hs-epi-code-ft	historical-summary-encode-example-epi-epi-code-ft
+e2-bh-f2-code-cap	beacon-block-header-f2-code-cap
+e2-bh-stmt-control	beacon-block-header-stmt-control

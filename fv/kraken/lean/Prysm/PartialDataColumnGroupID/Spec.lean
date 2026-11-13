@@ -5,7 +5,7 @@ import Prysm.DepositRequest.SpecDescription
 /-!
 # Spec bridge for the real Prysm `v1alpha1.PartialDataColumnGroupID` (24 flat hold-out types)
 
-Written by the evidence script `f24spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`
+Written by the evidence script `flat_types_spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`
 generalised to a field list). `desc` (`Prysm/PartialDataColumnGroupID/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).
 No Desc-checker record exists for this type (`gen/desc/results/main.result.json`): no codec equality here.
 `SszValue` is the SSZ content of a Go `v1alpha1.PartialDataColumnGroupID`.

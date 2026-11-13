@@ -219,7 +219,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   unfold_step
-  -- WithdrawalCredentials: the generated segment theorem (raw scalgen output, `Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean`), 47 → 73
+  -- WithdrawalCredentials: the generated segment theorem (raw generator output, `Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean`), 47 → 73
   refine eventually_trans _ _ _ _ (Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg k hk hf
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)

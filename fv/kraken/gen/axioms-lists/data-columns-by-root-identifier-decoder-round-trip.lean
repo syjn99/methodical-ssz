@@ -10,7 +10,7 @@ import Prysm.DataColumnsByRootIdentifier.WitnessDecodeAccept
 import Prysm.DataColumnsByRootIdentifier.WitnessDecodeRejectSize
 
 /-! Hand list of the DataColumnsByRootIdentifier decoder, round-trip and one-growth encoder theorems for
-`gen/e2e/axioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
+`gen/checks/axioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
 
 #print axioms Prysm.DataColumnsByRootIdentifier.DecodeThenEncode.round_trip_spec
 #print axioms Prysm.DataColumnsByRootIdentifier.DecodeThenEncode.round_trip_spec'

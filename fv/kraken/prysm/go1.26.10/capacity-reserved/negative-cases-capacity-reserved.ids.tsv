@@ -1,0 +1,24 @@
+# negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
+o-head-fast-control	checkpoint-head-fast-control
+o-head-fast-jl	checkpoint-head-fast-jl
+o-head-fast-lea	checkpoint-head-fast-lea
+o-head-grow-control	checkpoint-head-grow-control
+o-head-grow-num32	checkpoint-head-grow-num32
+o-head-grow-bounds	checkpoint-head-grow-bounds
+o-head-grow-mm32	checkpoint-head-grow-mm32
+o-head-grow-zout	checkpoint-head-grow-zout
+o-tail-fit-control	checkpoint-tail-fit-control
+o-tail-fit-len	checkpoint-tail-fit-len
+o-tail-fit-store	checkpoint-tail-fit-store
+o-tail-fit-val	checkpoint-tail-fit-val
+o-tail-rej-control	checkpoint-tail-rej-control
+o-tail-rej-err	checkpoint-tail-rej-err
+o-main-control	checkpoint-main-control
+o-main-rcx	checkpoint-main-rcx
+o-rejmain-rdi	checkpoint-rejmain-rdi
+o-grow-control	checkpoint-grow-control
+o-grow-rbx	checkpoint-grow-rbx
+o-grow-alias	checkpoint-grow-alias
+o-rejgrow-noalloc	checkpoint-rejgrow-noalloc
+o-cover-control	checkpoint-cover-control
+o-cover-41	checkpoint-cover-41

@@ -1,0 +1,271 @@
+[
+ {
+  "id": "deposit-data-gen-control",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeFieldSegmentsPartial.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Signature_seg",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-data-gen-stmt-src",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeFieldSegmentsPartial.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Signature_seg",
+  "kind": "stmt",
+  "old": "(hSrc : bf + (88 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (80 : Int64).toBitVec = aSrc)"
+ },
+ {
+  "id": "deposit-data-gen-code-control",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeFieldSegmentsPartial.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Signature_seg",
+  "kind": "control",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.Deposit_Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "deposit-data-gen-code-siglen",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeFieldSegmentsPartial.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Signature_seg",
+  "kind": "code",
+  "line": 105,
+  "old": "  mov $0x60,%ecx",
+  "new": "  mov $0x50,%ecx",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.Deposit_Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "deposit-data-gen-code-amt",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeFieldSegmentsPartial.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Amount_seg",
+  "kind": "code",
+  "old": "  mov 0x50(%rsi),%rsi",
+  "new": "  mov 0x48(%rsi),%rsi",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.Deposit_Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "deposit-data-segnop-control",
+  "module": "Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean",
+  "theorem": "Prysm.Deposit_Data.bytes32dec_seg_nop",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-data-segnop-stmt-heap",
+  "module": "Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean",
+  "theorem": "Prysm.Deposit_Data.bytes32dec_seg_nop",
+  "kind": "stmt",
+  "old": "⋆ Heap (avail - 32)",
+  "new": "⋆ Heap (avail - 31)"
+ },
+ {
+  "id": "deposit-data-segnop-stmt-ret",
+  "module": "Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean",
+  "theorem": "Prysm.Deposit_Data.bytes32dec_seg_nop",
+  "kind": "stmt",
+  "old": "⋆ Eq ((Int.toBytes 8 (Host.addrOf (j2 + 6 + 1)).toBitVec.toInt).At aRet)",
+  "new": "⋆ Eq ((Int.toBytes 8 (Host.addrOf (j2 + 7 + 1)).toBitVec.toInt).At aRet)"
+ },
+ {
+  "id": "deposit-data-rej-control",
+  "module": "Prysm/Deposit_Data/DecodeRejectSize.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.reject_size",
+  "kind": "control",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.Deposit_Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "deposit-data-rej-stmt",
+  "module": "Prysm/Deposit_Data/DecodeRejectSize.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.reject_size",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "deposit-data-rej-code-size",
+  "module": "Prysm/Deposit_Data/DecodeRejectSize.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.reject_size",
+  "kind": "code",
+  "old": "  cmp $0xb8,%rcx",
+  "new": "  cmp $0xb0,%rcx",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.Deposit_Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "deposit-data-ssz-value-spec-accepts-iff-spec-control",
+  "module": "Prysm/Deposit_Data/Spec.lean",
+  "theorem": "Prysm.Deposit_Data.SszValue.spec_accepts_iff",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-data-spec-stmt-size",
+  "module": "Prysm/Deposit_Data/Spec.lean",
+  "theorem": "Prysm.Deposit_Data.SszValue.spec_accepts_iff",
+  "kind": "stmt",
+  "old": "bs.size = 184",
+  "new": "bs.size = 185"
+ },
+ {
+  "id": "deposit-data-ser-stmt-nearmiss",
+  "module": "Prysm/Deposit_Data/Spec.lean",
+  "theorem": "Prysm.Deposit_Data.desc_serialize_checker",
+  "kind": "stmt",
+  "old": "= serialize checkerDesc v :=",
+  "new": "= serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 3 (.byteVector 48)) | x => x) v :="
+ },
+ {
+  "id": "deposit-data-deser-stmt-value",
+  "module": "Prysm/Deposit_Data/Spec.lean",
+  "theorem": "Prysm.Deposit_Data.desc_deserialize_checker",
+  "kind": "stmt",
+  "old": "deserialize checkerDesc bs = .ok v",
+  "new": "deserialize checkerDesc bs = .ok (.seq [])"
+ },
+ {
+  "id": "deposit-data-ask-control",
+  "module": "Prysm/Deposit_Data/DecodeSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-data-ask-stmt-heap",
+  "module": "Prysm/Deposit_Data/DecodeSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "⋆ Heap (avail - 176)",
+  "new": "⋆ Heap (avail - 175)"
+ },
+ {
+  "id": "deposit-data-ask-stmt-swap",
+  "module": "Prysm/Deposit_Data/DecodeSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "⋆ Eq (g.pubkey.toList.At p1) ⋆ Eq (g.withdrawalCredentials.toList.At p2)",
+  "new": "⋆ Eq (g.withdrawalCredentials.toList.At p1) ⋆ Eq (g.pubkey.toList.At p2)"
+ },
+ {
+  "id": "deposit-data-ask-stmt-siglen",
+  "module": "Prysm/Deposit_Data/DecodeSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "Eq ((Int.toBytes 8 96).At (s.regs.rax.toBitVec + 72))",
+  "new": "Eq ((Int.toBytes 8 48).At (s.regs.rax.toBitVec + 72))"
+ },
+ {
+  "id": "deposit-data-ask-stmt-weaken",
+  "module": "Prysm/Deposit_Data/DecodeSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "(hav : 176 ≤ avail)",
+  "new": "(hav : True)"
+ },
+ {
+  "id": "deposit-data-ask-stmt-rsp",
+  "module": "Prysm/Deposit_Data/DecodeSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "∧ st.data.regs.rsp = s.regs.rsp + 8 ∧",
+  "new": "∧ st.data.regs.rsp = s.regs.rsp + 16 ∧"
+ },
+ {
+  "id": "deposit-data-rc-stmt-size",
+  "module": "Prysm/Deposit_Data/DecodeSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 184 :=",
+  "new": "bs.size ≠ 183 :="
+ },
+ {
+  "id": "deposit-data-wita-stmt-rax",
+  "module": "Prysm/Deposit_Data/WitnessDecodeAccept.lean",
+  "theorem": "Prysm.Deposit_Data.Witness.DecodeAccept.runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "deposit-data-witr-stmt-len",
+  "module": "Prysm/Deposit_Data/WitnessDecodeRejectSize.lean",
+  "theorem": "Prysm.Deposit_Data.Witness.DecodeRejectSize.runs",
+  "kind": "stmt",
+  "old": "(hlen : len ≠ 184)",
+  "new": "(hlen : len ≠ 185)"
+ },
+ {
+  "id": "pending-partial-withdrawal-rej-control",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeRejectSize.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
+  "kind": "control",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.PendingPartialWithdrawal.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-partial-withdrawal-rej-stmt",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeRejectSize.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "pending-partial-withdrawal-rej-code-size",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeRejectSize.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
+  "kind": "code",
+  "old": "  cmp $0x18,%rcx",
+  "new": "  cmp $0x10,%rcx",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.PendingPartialWithdrawal.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-partial-withdrawal-ssz-value-spec-accepts-iff-spec-control",
+  "module": "Prysm/PendingPartialWithdrawal/Spec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.SszValue.spec_accepts_iff",
+  "kind": "control"
+ },
+ {
+  "id": "pending-partial-withdrawal-spec-stmt-size",
+  "module": "Prysm/PendingPartialWithdrawal/Spec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.SszValue.spec_accepts_iff",
+  "kind": "stmt",
+  "old": "bs.size = 24",
+  "new": "bs.size = 25"
+ },
+ {
+  "id": "pending-partial-withdrawal-deser-stmt-value",
+  "module": "Prysm/PendingPartialWithdrawal/Spec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.desc_deserialize_checker",
+  "kind": "stmt",
+  "old": "deserialize checkerDesc bs = .ok v",
+  "new": "deserialize checkerDesc bs = .ok (.seq [])"
+ },
+ {
+  "id": "pending-partial-withdrawal-rc-stmt-size",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeSpec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 24 :=",
+  "new": "bs.size ≠ 23 :="
+ },
+ {
+  "id": "pending-partial-withdrawal-witr-stmt-len",
+  "module": "Prysm/PendingPartialWithdrawal/WitnessDecodeRejectSize.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Witness.DecodeRejectSize.runs",
+  "kind": "stmt",
+  "old": "(hlen : len ≠ 24)",
+  "new": "(hlen : len ≠ 25)"
+ }
+]

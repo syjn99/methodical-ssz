@@ -11,7 +11,7 @@ import Prysm.Checkpoint.DecodeRejectSize
 `Decode.reject_size` (`len(buf) ≠ 128`, Go source `return ssz.ErrSize`): directives
 2–7 (guard, prologue, rbx spill), 9–10 `cmp $0x80,%rcx; jne L_3ad` taken, 226 `L_3ad`,
 227–228 load the two words of `ssz.ErrSize` (`ElfData.PrysmTarget.sszErrSize_addr`, the same ELF symbol
-as the Checkpoint decoder's; `adlink.py` asserts the operand), 229–231 epilogue. The two words
+as the Checkpoint decoder's; `attestation_data_link.py` asserts the operand), 229–231 epilogue. The two words
 `e0`, `e1` are the global's value after package init (premise, as in `Prysm.Checkpoint.Decode.reject_size`).
 
 **`unreachable_mc` rows** (own column, never reject coverage): after each callee returns with

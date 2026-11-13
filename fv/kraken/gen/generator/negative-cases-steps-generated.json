@@ -1,0 +1,143 @@
+[
+ {
+  "id": "sync-committee-message-smdec-vi-call-control",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_ValidatorIndex_call",
+  "kind": "control"
+ },
+ {
+  "id": "pending-consolidation-pcdec-ti-call-control",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-data-dddec-pk-segz-control",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_step_PublicKey_seg",
+  "kind": "control"
+ },
+ {
+  "id": "sync-committee-message-smacc-control",
+  "module": "Prysm/SyncCommitteeMessage/DecodeAcceptFromGeneratedSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_from_generated_steps",
+  "kind": "control"
+ },
+ {
+  "id": "pending-partial-withdrawal-pwacc-control",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeAcceptFromGeneratedSteps.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.accept_from_generated_steps",
+  "kind": "control"
+ },
+ {
+  "id": "sync-committee-message-smdec-s87-stmt-imm",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_s87",
+  "kind": "stmt",
+  "old": "(BitVec.truncate 32 (8 : Int64).toBitVec)",
+  "new": "(BitVec.truncate 32 (16 : Int64).toBitVec)"
+ },
+ {
+  "id": "sync-committee-message-smdec-s82-stmt-disp",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_s82",
+  "kind": "stmt",
+  "old": "(ha : base + (120 : Int64).toBitVec = a)",
+  "new": "(ha : base + (112 : Int64).toBitVec = a)"
+ },
+ {
+  "id": "sync-committee-message-smdec-br-seg-stmt-ry",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_BlockRoot_seg",
+  "kind": "stmt",
+  "old": "st.data.regs.get64 Reg64.rax = rcv",
+  "new": "st.data.regs.get64 Reg64.rdx = rcv"
+ },
+ {
+  "id": "pending-consolidation-pcdec-ti-call-stmt-ret",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call",
+  "kind": "stmt",
+  "old": "(Host.addrOf (k + 55 + 1))",
+  "new": "(Host.addrOf (k + 56 + 1))"
+ },
+ {
+  "id": "deposit-data-dddec-pk-segz-stmt-size",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_step_PublicKey_seg",
+  "kind": "stmt",
+  "old": "(hroot : root.length = 48)",
+  "new": "(hroot : root.length = 32)"
+ },
+ {
+  "id": "pending-partial-withdrawal-pwdec-s54-stmt-reg",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_step_s54",
+  "kind": "stmt",
+  "old": "Codec.setRegister s Reg64.r8 (BitVec.ofInt",
+  "new": "Codec.setRegister s Reg64.r9 (BitVec.ofInt"
+ },
+ {
+  "id": "sync-committee-message-smgg-slot-stmt",
+  "module": "Prysm/SyncCommitteeMessage/DecodeAcceptFromGeneratedSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.from_generated_steps_Slot_field",
+  "kind": "stmt",
+  "old": "st.pc = Host.addrOf (k + 46 + 1)",
+  "new": "st.pc = Host.addrOf (k + 47 + 1)"
+ },
+ {
+  "id": "pending-partial-withdrawal-pwgg-aw-stmt-val",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeAcceptFromGeneratedSteps.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.from_generated_steps_Amount_WithdrawableEpoch_fields",
+  "kind": "stmt",
+  "old": "⋆ Eq (v.At (rcv + 16))\n",
+  "new": "⋆ Eq (vF.At (rcv + 16))\n"
+ },
+ {
+  "id": "pending-consolidation-pcgg-ti-stmt-src",
+  "module": "Prysm/PendingConsolidation/DecodeAcceptFromGeneratedSteps.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.from_generated_steps_TargetIndex_field",
+  "kind": "stmt",
+  "old": "⋆ Eq (e8.At (bf + 8)) ⋆ Eq (e8.At (rcv + 16)) ⋆ F) st.data.dmem",
+  "new": "⋆ Eq (e8.At (bf + 8)) ⋆ Eq (c0.At (rcv + 16)) ⋆ F) st.data.dmem"
+ },
+ {
+  "id": "sync-committee-message-smdec-s86-code-imm",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_s86",
+  "kind": "code",
+  "line": 87,
+  "old": "  add $0x28,%rax",
+  "new": "  add $0x30,%rax",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.SyncCommitteeMessage.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sync-committee-message-smdec-br-seg-code-ry",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_BlockRoot_seg",
+  "kind": "code",
+  "line": 68,
+  "old": "  mov 0x70(%rsp),%rax",
+  "new": "  mov 0x70(%rsp),%rcx",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.SyncCommitteeMessage.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-consolidation-pcdec-ti-call-code-nop",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call",
+  "kind": "code",
+  "line": 57,
+  "old": "  nop",
+  "new": "  mov %rax,%rax",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.PendingConsolidation.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ }
+]

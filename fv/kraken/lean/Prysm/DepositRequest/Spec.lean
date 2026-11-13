@@ -6,10 +6,10 @@ import Prysm.DepositRequest.SpecChecker
 /-!
 # Spec bridge for the real Prysm `v1.DepositRequest` (24 flat hold-out types)
 
-Written by the evidence script `f24spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`
+Written by the evidence script `flat_types_spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`
 generalised to a field list). `desc` (`Prysm/DepositRequest/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).
-`checkerDesc` (`Prysm/DepositRequest/SpecChecker.lean`, rendered by `gen/e2e/descterm.py`) is the Desc checker's Desc of the type
-(the producer output recorded in `gen/desc/results/main.result.json`, same sha256; copy in `prysm/go1.26.10/e2e/f24/`).
+`checkerDesc` (`Prysm/DepositRequest/SpecChecker.lean`, rendered by `gen/checks/desc_to_lean.py`) is the Desc checker's Desc of the type
+(the producer output recorded in `gen/desc/results/main.result.json`, same sha256; copy in `prysm/go1.26.10/evidence/flat-types/`).
 `SszValue` is the SSZ content of a Go `v1.DepositRequest`.
 -/
 

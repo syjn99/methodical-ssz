@@ -15,7 +15,7 @@
       Reads only the checker result files (main.result.json, scen/*.result.json). Writes
       <out.json> and <out.md> (table: case -> expected -> actual -> failing check).
       Exit status 1 on any mismatch.
-The emit side of every scenario is tested by gen1c/test_boundary.py.
+The emit side of every scenario is tested by first-generator/test_boundary.py.
 Python 3 standard library only. Run with python3 -I.
 """
 import copy

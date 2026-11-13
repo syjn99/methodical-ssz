@@ -12,7 +12,7 @@ Hand-written: the text of `Prysm.AttestationData.Decode.reject_size` with the
 BeaconBlockHeader indices. `Decode.reject_size` (`len(buf) ≠ 112`, Go source `return ssz.ErrSize`):
 directives 2–7 (guard, prologue `sub $0x60`, rbx spill), 9–10 `cmp $0x70,%rcx; jne L_345` taken,
 200 `L_345`, 201–202 load the two words of `ssz.ErrSize` (`ElfData.PrysmTarget.sszErrSize_addr`, the same ELF symbol
-as the Checkpoint decoder's; `bhlink.py` asserts the operand), 203–205 epilogue. The two words `e0`, `e1`
+as the Checkpoint decoder's; `beacon_block_header_link.py` asserts the operand), 203–205 epilogue. The two words `e0`, `e1`
 are the global's value after package init (premise, as in `Prysm.Checkpoint.Decode.reject_size`).
 
 The `fmt.errorf` wraps after the Slot call (directives 20–45) and the ValidatorIndex call (58–84) are not

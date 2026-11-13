@@ -1,0 +1,147 @@
+[
+ {
+  "id": "eth1-data-gz-control",
+  "module": "Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Eth1Data.Decode.generated_root_DepositRoot_seg",
+  "kind": "control",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.Eth1Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "eth1-data-gz-extra-before",
+  "module": "Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Eth1Data.Decode.generated_root_DepositRoot_seg",
+  "kind": "stmt",
+  "old": "(hf : LabelsFresh unmarshalSSZ k) :",
+  "new": "(hf : LabelsFresh unmarshalSSZ k) (hextra : (1 : Nat) = 2) :",
+  "why": "false hypothesis before the colon: only _kind catches it"
+ },
+ {
+  "id": "eth1-data-gz-extra-after",
+  "module": "Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Eth1Data.Decode.generated_root_DepositRoot_seg",
+  "kind": "stmt",
+  "old": "(hmm : MemmoveContract St),",
+  "new": "(hmm : MemmoveContract St) (hextra : (1 : Nat) = 2),",
+  "why": "false hypothesis after the colon"
+ },
+ {
+  "id": "eth1-data-gz-literal",
+  "module": "Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Eth1Data.Decode.generated_root_DepositRoot_seg",
+  "kind": "stmt",
+  "old": "⋆ Eq ((Int.toBytes 8 32).At aL)",
+  "new": "⋆ Eq ((Int.toBytes 8 33).At aL)",
+  "why": "wrong conclusion literal"
+ },
+ {
+  "id": "eth1-data-gz-index",
+  "module": "Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Eth1Data.Decode.generated_root_DepositRoot_seg",
+  "kind": "stmt",
+  "old": "st.pc = Host.addrOf (k + 26 + 11)",
+  "new": "st.pc = Host.addrOf (k + 26 + 12)",
+  "why": "wrong end index (the add form's +12)"
+ },
+ {
+  "id": "eth1-data-gz-kind-arg",
+  "module": "Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Eth1Data.Decode.generated_root_DepositRoot_seg",
+  "kind": "stmt",
+  "old": "unmarshalSSZ 13 26 48 56 24 8 16 24",
+  "new": "unmarshalSSZ 13 26 48 56 24 8 16 32",
+  "why": "wrong kind parameter (fC) in the _kind line"
+ },
+ {
+  "id": "eth1-data-gz-code-dest",
+  "module": "Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Eth1Data.Decode.generated_root_DepositRoot_seg",
+  "kind": "code",
+  "line": 29,
+  "old": "  mov %rax,0x8(%rdx)",
+  "new": "  mov %rax,0x10(%rdx)",
+  "why": "code: pointer stored at a wrong field offset",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.Eth1Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "codec-bytes32-decode-offset-zero-r1-z-control",
+  "kind": "control",
+  "module": "Codec/Bytes32DecodeOffsetZero.lean",
+  "theorem": "rootdec_seg_offset_zero",
+  "why": "unmutated control (review sg1-r1 case r1-z-control, S3)"
+ },
+ {
+  "id": "codec-bytes32-decode-offset-zero-r1-z-endpc",
+  "kind": "stmt",
+  "module": "Codec/Bytes32DecodeOffsetZero.lean",
+  "theorem": "rootdec_seg_offset_zero",
+  "old": "st.pc = Host.addrOf (j2 + 11)",
+  "new": "st.pc = Host.addrOf (j2 + 12)",
+  "why": "template lemma: end pc (review sg1-r1 case r1-z-endpc, S3)"
+ },
+ {
+  "id": "codec-bytes32-decode-offset-zero-r1-z-rdx",
+  "kind": "stmt",
+  "module": "Codec/Bytes32DecodeOffsetZero.lean",
+  "theorem": "rootdec_seg_offset_zero",
+  "old": "st.data.regs.rdx.toBitVec = rcv",
+  "new": "st.data.regs.rdx.toBitVec = bf",
+  "why": "template lemma: register post (review sg1-r1 case r1-z-rdx, S3)"
+ },
+ {
+  "id": "codec-bytes32-decode-offset-zero-r1-z-nohroot",
+  "kind": "stmt",
+  "module": "Codec/Bytes32DecodeOffsetZero.lean",
+  "theorem": "rootdec_seg_offset_zero",
+  "old": "(hroot : root.length = 32)",
+  "new": "(hroot : root.length = 16)",
+  "why": "template lemma: source length hypothesis (review sg1-r1 case r1-z-nohroot, S3)"
+ },
+ {
+  "id": "codec-bytes32-decode-offset-zero-r1-z-dst",
+  "kind": "stmt",
+  "module": "Codec/Bytes32DecodeOffsetZero.lean",
+  "theorem": "rootdec_seg_offset_zero",
+  "old": "⋆ Eq ((Int.toBytes 8 32).At aC) ⋆ Eq (root.At p)",
+  "new": "⋆ Eq ((Int.toBytes 8 32).At aC) ⋆ Eq (root.At bf)",
+  "why": "template lemma: copied bytes at the wrong address (review sg1-r1 case r1-z-dst, S3)"
+ },
+ {
+  "id": "eth1-data-control",
+  "module": "Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Eth1Data.Decode.generated_root_BlockHash_seg",
+  "kind": "control",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.Eth1Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "why": "unmutated control of the generated BlockHash (add form) segment (S3)"
+ },
+ {
+  "id": "eth1-data-r1-src0",
+  "kind": "stmt",
+  "module": "Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Eth1Data.Decode.generated_root_BlockHash_seg",
+  "old": "(hSrc : bf + (40 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (0 : Int64).toBitVec = aSrc)",
+  "why": "BlockHash claimed at source offset 0 (review sg1-r1 case r1-bh-src0, S3)"
+ },
+ {
+  "id": "eth1-data-code-src",
+  "module": "Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Eth1Data.Decode.generated_root_BlockHash_seg",
+  "kind": "code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.Eth1Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "old": "  add $0x28,%rbx",
+  "new": "  add $0x20,%rbx",
+  "why": "code: BlockHash source offset 0x20 instead of 0x28 (S3)"
+ }
+]

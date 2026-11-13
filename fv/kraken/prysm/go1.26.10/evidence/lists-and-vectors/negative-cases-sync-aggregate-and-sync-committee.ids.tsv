@@ -1,0 +1,27 @@
+# negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
+lv-sa-control	sync-aggregate-control
+lv-sa-size161	sync-aggregate-size161
+lv-sa-bitslen63	sync-aggregate-bitslen63
+lv-sa-sigsrc	sync-aggregate-sigsrc
+lv-sa-stmt-heap	sync-aggregate-stmt-heap
+lv-sa-stmt-sigcap	sync-aggregate-stmt-sigcap
+lv-sa-rej-control	sync-aggregate-rej-control
+lv-sa-rej-errword	sync-aggregate-rej-errword
+lv-sc-iter-control	sync-committee-iter-control
+lv-sc-iter-jae	sync-committee-iter-jae
+lv-sc-iter-len47	sync-committee-iter-len47
+lv-sc-iter-stride32	sync-committee-iter-stride32
+lv-sc-iter-bound511	sync-committee-iter-bound511
+lv-sc-control	sync-committee-control
+lv-sc-size	sync-committee-size
+lv-sc-stmt-len511	sync-committee-stmt-len511
+lv-sc-stmt-elems	sync-committee-stmt-elems
+lv-sa-bitslen63-seg	sync-aggregate-bitslen63-seg
+lv-sc-rej-control	sync-committee-rej-control
+lv-sc-rej-errword	sync-committee-rej-errword
+lv-sa-desc-control	sync-aggregate-desc-control
+lv-sa-desc-sig95	sync-aggregate-desc-sig95
+lv-sc-desc-control	sync-committee-desc-control
+lv-sc-desc-n511	sync-committee-desc-n511
+lv-sa-desc-kind	sync-aggregate-desc-kind
+lv-sc-desc-kind	sync-committee-desc-kind

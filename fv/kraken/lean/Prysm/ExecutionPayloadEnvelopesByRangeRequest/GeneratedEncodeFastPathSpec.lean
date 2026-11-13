@@ -9,7 +9,7 @@ import Runtime.CopyModel
 fields = `(p, n, cap)` with the n bytes at `p`), the generated fast-path theorem `Encode.generated_fast` writes at
 `dst[len:len+16]` exactly the bytes of `serialize desc g.toValue` (the Desc of the decoder's spec alignment).
 Shape of `Prysm.BeaconBlockHeader.Encode.fast_path_spec`. Encoder fast path only (`len + 16 ≤ cap`, exact field
-lengths). Emitted by the unit's evidence tool `e2cemit.py`, then built and kernel-checked.
+lengths). Emitted by the unit's evidence tool `encode_spec_emitter.py`, then built and kernel-checked.
 -/
 
 open Machine Runtime Codec Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code EthLib.Serialization.Ssz

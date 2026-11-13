@@ -1,0 +1,21 @@
+# negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
+g6-vb-fast-control	validator-balance-fast-control
+g6-cp-stmt-control	checkpoint-stmt-control
+g6-hs-epi-control	historical-summary-encode-generated-epi-epi-control
+g6-dm-f0-control	deposit-message-f0-control
+g6-vb-fast-stmt-hcap	validator-balance-fast-stmt-hcap
+g6-dm-f0-stmt-len	deposit-message-f0-stmt-len
+g6-hs-epi-stmt-size	historical-summary-epi-stmt-size
+g6-pd-fast-stmt-rsp	pending-deposit-fast-stmt-rsp
+g6-e1-stmt-other-hand	eth1-data-stmt-other-hand
+g6-ir-vb-goff	validator-balance-ir-goff
+g6-ir-dm-ssz-off	deposit-message-ir-ssz-off
+g6-ir-pw-order	pending-partial-withdrawal-ir-order
+g6-vb-kind-fields	validator-balance-kind-fields
+g6-vb-kind-pc	validator-balance-kind
+g6-cp-kind-layout	checkpoint-kind-layout
+g6-bh-kind-fields	beacon-block-header-kind-fields
+g6-vb-f1-code-store	validator-balance-f1-code-store
+g6-dm-f0-code-len	deposit-message-f0-code-len
+g6-hs-epi-code-ft	historical-summary-encode-generated-epi-epi-code-ft
+g6-dd-f3-code-size	deposit-data-f3-code-size

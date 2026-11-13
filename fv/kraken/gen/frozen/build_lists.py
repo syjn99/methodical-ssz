@@ -312,7 +312,7 @@ def main():
             {"id": "size-bounds", "what": "explicit size ranges in contracts", "conditions": "no quantification over all sizes and all frames (fv/AGENTS.md)"},
         ],
         "forbidden": ["sorry", "admit", "new axiom", "native_decide", "bv_decide", "hand-typed rodata/itab/type constants", "a premise that makes the conclusion vacuous (False derivable)", "dropping a live resource into `⋆ True` without classification"],
-        "sources": ["fv/kraken/CONTRACTS.md", "fv/kraken/REPORT.md sections 3 and 7", "fv/AGENTS.md", "run shared/INCLUDE-API.json api_version 3 (fix3 f9e2bc3 / FINAL 93b63cd, data include, approved final); gen/gen1c/include_adapter.py names the version in use"],
+        "sources": ["fv/kraken/CONTRACTS.md", "fv/kraken/REPORT.md sections 3 and 7", "fv/AGENTS.md", "run shared/INCLUDE-API.json api_version 3 (fix3 f9e2bc3 / FINAL 93b63cd, data include, approved final); gen/first-generator/include_adapter.py names the version in use"],
     }
     d = out_dir or f"{k}/gen/frozen"
     for name, obj in (("THEOREMS.json", th), ("ASSUMPTIONS.json", asm)):

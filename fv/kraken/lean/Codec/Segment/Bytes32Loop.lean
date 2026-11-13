@@ -17,7 +17,7 @@ The loop body is cut into six blocks at those places (`bytes32LoopHead` … `byt
 two blocks is empty or one `nop`, `GlueSrc` that it is empty (src = 0) or the `lea`.
 The element size is fixed at 32: other sizes compile to other sequences (48: `lea (x,x,2)` then `shl $4`), and
 `shl $5` is stepped with `shift_left64 5` (a literal count).
-The templates are the Kraken terms of `lv/link-hb` directives 36–77 (printed with `repr`) with the varying
+The templates are the Kraken terms of HistoricalBatch directives 36–77 (link set `prysm/go1.26.10/link-set`) (printed with `repr`) with the varying
 operands replaced by parameters; each use shows the equality with the real program by `infix_sub` and
 `rfl`/`decide` (`Codec/Segment/Bytes32LoopHistoricalBatch.lean`, `Prysm/Deposit/DecodeAccept.lean`).
 -/

@@ -4,7 +4,7 @@ import Prysm.HistoricalBatch.DecodeSpec
 import Prysm.HistoricalBatch.SpecEquivalence
 import Prysm.HistoricalBatch.WitnessDecodeAccept
 
-/-! Hand list for `gen/e2e/hbaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
+/-! Hand list for `gen/checks/hbaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
 
 #print axioms Prysm.HistoricalBatch.Decode.reject_size
 #print axioms Prysm.HistoricalBatch.Decode.block_roots_iter

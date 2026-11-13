@@ -1,0 +1,105 @@
+[
+ {
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "id": "data-columns-by-root-identifier-control-rb",
+  "kind": "control",
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_length",
+  "stmt_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
+ },
+ {
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "id": "data-columns-by-root-identifier-encode-iter-control-iter",
+  "kind": "control",
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeLoop.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.iter"
+ },
+ {
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "id": "data-columns-by-root-identifier-rb-len33",
+  "kind": "code",
+  "old": "  cmpq $0x20,0x10(%rax)",
+  "new": "  cmpq $0x21,0x10(%rax)",
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_length",
+  "stmt_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
+ },
+ {
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "id": "data-columns-by-root-identifier-rt-max129",
+  "kind": "code",
+  "old": "  cmp $0x80,%r8",
+  "new": "  cmp $0x81,%r8",
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_too_big",
+  "stmt_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
+ },
+ {
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "id": "data-columns-by-root-identifier-rt-offset37",
+  "kind": "code",
+  "old": "  movl $0x24,-0x4(%rbx,%rax,1)",
+  "new": "  movl $0x25,-0x4(%rbx,%rax,1)",
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_too_big",
+  "stmt_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
+ },
+ {
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "id": "data-columns-by-root-identifier-iter-step16",
+  "kind": "code",
+  "old": "  add $0x8,%rbx",
+  "new": "  add $0x10,%rbx",
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeLoop.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.iter"
+ },
+ {
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "id": "data-columns-by-root-identifier-iter-store",
+  "kind": "code",
+  "old": "  mov %r9,-0x8(%rbx,%rax,1)",
+  "new": "  mov %r9,-0x10(%rbx,%rax,1)",
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeLoop.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.iter"
+ },
+ {
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "id": "data-columns-by-root-identifier-stmt-rt127",
+  "kind": "stmt",
+  "stmt_def": "Prysm.DataColumnsByRootIdentifier.Encode.reject_too_big_statement",
+  "old": "(hn1 : 128 < nb.toNat)",
+  "new": "(hn1 : 127 < nb.toNat)",
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_too_big",
+  "stmt_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
+ },
+ {
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "id": "data-columns-by-root-identifier-stmt-rb33",
+  "kind": "stmt",
+  "stmt_def": "Prysm.DataColumnsByRootIdentifier.Encode.reject_length_statement",
+  "old": "(hbl : bl ≠ 32)",
+  "new": "(hbl : bl ≠ 33)",
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_length",
+  "stmt_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
+ }
+]

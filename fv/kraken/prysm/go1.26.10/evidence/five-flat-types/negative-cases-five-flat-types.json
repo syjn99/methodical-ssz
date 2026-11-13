@@ -1,0 +1,375 @@
+[
+ {
+  "id": "historical-summary-five-flat-types-decode-generated-accept-acc-control",
+  "module": "Prysm/HistoricalSummary/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.HistoricalSummary.Decode.generated_accept",
+  "kind": "control"
+ },
+ {
+  "id": "historical-summary-speck-control",
+  "module": "Prysm/HistoricalSummary/DecodeSpec.lean",
+  "theorem": "Prysm.HistoricalSummary.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "historical-summary-acc-stmt-post-swap",
+  "module": "Prysm/HistoricalSummary/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.HistoricalSummary.Decode.generated_accept",
+  "kind": "stmt",
+  "old": "⋆ Eq (fv0.At p1)",
+  "new": "⋆ Eq (fv1.At p1)"
+ },
+ {
+  "id": "historical-summary-speck-stmt-field-swap",
+  "module": "Prysm/HistoricalSummary/DecodeSpec.lean",
+  "theorem": "Prysm.HistoricalSummary.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "⋆ Eq (g.blockSummaryRoot.toArray.toList.At p1)",
+  "new": "⋆ Eq (g.stateSummaryRoot.toArray.toList.At p1)"
+ },
+ {
+  "id": "historical-summary-rej-stmt-size",
+  "module": "Prysm/HistoricalSummary/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.HistoricalSummary.Decode.generated_reject",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx ≠ 64)",
+  "new": "(hlen : s.regs.rcx ≠ 63)"
+ },
+ {
+  "id": "historical-summary-rej-code-frame",
+  "module": "Prysm/HistoricalSummary/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.HistoricalSummary.Decode.generated_reject",
+  "kind": "code",
+  "line": 91,
+  "old": "  add $0x20,%rsp",
+  "new": "  add $0x18,%rsp",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.HistoricalSummary.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.UnmarshalSSZ.S"
+ },
+ {
+  "id": "historical-summary-rejcomplete-stmt",
+  "module": "Prysm/HistoricalSummary/DecodeSpec.lean",
+  "theorem": "Prysm.HistoricalSummary.Decode.reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 64 := fun",
+  "new": "bs.size ≠ 65 := fun"
+ },
+ {
+  "id": "historical-summary-witA-stmt-rax",
+  "module": "Prysm/HistoricalSummary/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.HistoricalSummary.Witness.GeneratedDecodeAccept.runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0)"
+ },
+ {
+  "id": "signing-data-acc-control",
+  "module": "Prysm/SigningData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SigningData.Decode.generated_accept",
+  "kind": "control"
+ },
+ {
+  "id": "signing-data-speck-control",
+  "module": "Prysm/SigningData/DecodeSpec.lean",
+  "theorem": "Prysm.SigningData.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "signing-data-acc-stmt-post-swap",
+  "module": "Prysm/SigningData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SigningData.Decode.generated_accept",
+  "kind": "stmt",
+  "old": "⋆ Eq (fv0.At p1)",
+  "new": "⋆ Eq (fv1.At p1)"
+ },
+ {
+  "id": "signing-data-speck-stmt-field-swap",
+  "module": "Prysm/SigningData/DecodeSpec.lean",
+  "theorem": "Prysm.SigningData.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "⋆ Eq (g.objectRoot.toArray.toList.At p1)",
+  "new": "⋆ Eq (g.domain.toArray.toList.At p1)"
+ },
+ {
+  "id": "signing-data-rej-stmt-size",
+  "module": "Prysm/SigningData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SigningData.Decode.generated_reject",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx ≠ 64)",
+  "new": "(hlen : s.regs.rcx ≠ 63)"
+ },
+ {
+  "id": "signing-data-rej-code-frame",
+  "module": "Prysm/SigningData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SigningData.Decode.generated_reject",
+  "kind": "code",
+  "line": 92,
+  "old": "  add $0x20,%rsp",
+  "new": "  add $0x18,%rsp",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.SigningData.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "signing-data-rejcomplete-stmt",
+  "module": "Prysm/SigningData/DecodeSpec.lean",
+  "theorem": "Prysm.SigningData.Decode.reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 64 := fun",
+  "new": "bs.size ≠ 65 := fun"
+ },
+ {
+  "id": "signing-data-witA-stmt-rax",
+  "module": "Prysm/SigningData/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SigningData.Witness.GeneratedDecodeAccept.runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0)"
+ },
+ {
+  "id": "sync-aggregator-selection-data-acc-control",
+  "module": "Prysm/SyncAggregatorSelectionData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Decode.generated_accept",
+  "kind": "control"
+ },
+ {
+  "id": "sync-aggregator-selection-data-speck-control",
+  "module": "Prysm/SyncAggregatorSelectionData/DecodeSpec.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "sync-aggregator-selection-data-acc-stmt-post-swap",
+  "module": "Prysm/SyncAggregatorSelectionData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Decode.generated_accept",
+  "kind": "stmt",
+  "old": "⋆ Eq (fv0.At (s.regs.rax.toBitVec + 8))",
+  "new": "⋆ Eq (fv1.At (s.regs.rax.toBitVec + 8))"
+ },
+ {
+  "id": "sync-aggregator-selection-data-speck-stmt-field-swap",
+  "module": "Prysm/SyncAggregatorSelectionData/DecodeSpec.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "⋆ Eq ((uintBytes 8 g.slot.toNat).toList.At (s.regs.rax.toBitVec + 8))",
+  "new": "⋆ Eq ((uintBytes 8 g.subcommitteeIndex.toNat).toList.At (s.regs.rax.toBitVec + 8))"
+ },
+ {
+  "id": "sync-aggregator-selection-data-rej-stmt-size",
+  "module": "Prysm/SyncAggregatorSelectionData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Decode.generated_reject",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx ≠ 16)",
+  "new": "(hlen : s.regs.rcx ≠ 15)"
+ },
+ {
+  "id": "sync-aggregator-selection-data-rej-code-frame",
+  "module": "Prysm/SyncAggregatorSelectionData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Decode.generated_reject",
+  "kind": "code",
+  "line": 59,
+  "old": "  add $0x38,%rsp",
+  "new": "  add $0x30,%rsp",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.SyncAggregatorSelectionData.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sync-aggregator-selection-data-rejcomplete-stmt",
+  "module": "Prysm/SyncAggregatorSelectionData/DecodeSpec.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Decode.reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 16 := fun",
+  "new": "bs.size ≠ 17 := fun"
+ },
+ {
+  "id": "sync-aggregator-selection-data-witA-stmt-rax",
+  "module": "Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeAccept.runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0)"
+ },
+ {
+  "id": "sync-aggregator-selection-data-same-stmt-other",
+  "module": "Prysm/SyncAggregatorSelectionData/GeneratedDecodeAcceptSameAsHand.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Decode.generated_accept_same_as_statement",
+  "kind": "stmt",
+  "old": "= @Decode.accept_statement h",
+  "new": "= @Prysm.VoluntaryExit.Decode.accept_statement h"
+ },
+ {
+  "id": "validator-balance-acc-control",
+  "module": "Prysm/ValidatorBalance/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.ValidatorBalance.Decode.generated_accept",
+  "kind": "control"
+ },
+ {
+  "id": "validator-balance-speck-control",
+  "module": "Prysm/ValidatorBalance/DecodeSpec.lean",
+  "theorem": "Prysm.ValidatorBalance.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "validator-balance-acc-stmt-post-swap",
+  "module": "Prysm/ValidatorBalance/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.ValidatorBalance.Decode.generated_accept",
+  "kind": "stmt",
+  "old": "⋆ Eq (fv0.At (s.regs.rax.toBitVec + 8))",
+  "new": "⋆ Eq (fv1.At (s.regs.rax.toBitVec + 8))"
+ },
+ {
+  "id": "validator-balance-speck-stmt-field-swap",
+  "module": "Prysm/ValidatorBalance/DecodeSpec.lean",
+  "theorem": "Prysm.ValidatorBalance.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "⋆ Eq ((uintBytes 8 g.index.toNat).toList.At (s.regs.rax.toBitVec + 8))",
+  "new": "⋆ Eq ((uintBytes 8 g.balance.toNat).toList.At (s.regs.rax.toBitVec + 8))"
+ },
+ {
+  "id": "validator-balance-rej-stmt-size",
+  "module": "Prysm/ValidatorBalance/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.ValidatorBalance.Decode.generated_reject",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx ≠ 16)",
+  "new": "(hlen : s.regs.rcx ≠ 15)"
+ },
+ {
+  "id": "validator-balance-rej-code-frame",
+  "module": "Prysm/ValidatorBalance/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.ValidatorBalance.Decode.generated_reject",
+  "kind": "code",
+  "line": 59,
+  "old": "  add $0x38,%rsp",
+  "new": "  add $0x30,%rsp",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.ValidatorBalance.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S"
+ },
+ {
+  "id": "validator-balance-rejcomplete-stmt",
+  "module": "Prysm/ValidatorBalance/DecodeSpec.lean",
+  "theorem": "Prysm.ValidatorBalance.Decode.reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 16 := fun",
+  "new": "bs.size ≠ 17 := fun"
+ },
+ {
+  "id": "validator-balance-witA-stmt-rax",
+  "module": "Prysm/ValidatorBalance/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.ValidatorBalance.Witness.GeneratedDecodeAccept.runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0)"
+ },
+ {
+  "id": "validator-balance-same-stmt-other",
+  "module": "Prysm/ValidatorBalance/GeneratedDecodeAcceptSameAsHand.lean",
+  "theorem": "Prysm.ValidatorBalance.Decode.generated_accept_same_as_statement",
+  "kind": "stmt",
+  "old": "= @Prysm.ValidatorBalance.Decode.accept_statement h",
+  "new": "= @Prysm.VoluntaryExit.Decode.accept_statement h"
+ },
+ {
+  "id": "voluntary-exit-five-flat-types-decode-generated-accept-acc-control",
+  "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.VoluntaryExit.Decode.generated_accept",
+  "kind": "control"
+ },
+ {
+  "id": "voluntary-exit-speck-control",
+  "module": "Prysm/VoluntaryExit/DecodeSpec.lean",
+  "theorem": "Prysm.VoluntaryExit.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "voluntary-exit-acc-stmt-post-swap",
+  "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.VoluntaryExit.Decode.generated_accept",
+  "kind": "stmt",
+  "old": "⋆ Eq (fv0.At (s.regs.rax.toBitVec + 8))",
+  "new": "⋆ Eq (fv1.At (s.regs.rax.toBitVec + 8))"
+ },
+ {
+  "id": "voluntary-exit-speck-stmt-field-swap",
+  "module": "Prysm/VoluntaryExit/DecodeSpec.lean",
+  "theorem": "Prysm.VoluntaryExit.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "⋆ Eq ((uintBytes 8 g.epoch.toNat).toList.At (s.regs.rax.toBitVec + 8))",
+  "new": "⋆ Eq ((uintBytes 8 g.validatorIndex.toNat).toList.At (s.regs.rax.toBitVec + 8))"
+ },
+ {
+  "id": "voluntary-exit-decode-generated-reject-rej-stmt-size",
+  "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.VoluntaryExit.Decode.generated_reject",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx ≠ 16)",
+  "new": "(hlen : s.regs.rcx ≠ 15)"
+ },
+ {
+  "id": "voluntary-exit-five-flat-types-decode-generated-reject-rej-code-frame",
+  "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.VoluntaryExit.Decode.generated_reject",
+  "kind": "code",
+  "line": 93,
+  "old": "  add $0x48,%rsp",
+  "new": "  add $0x40,%rsp",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.VoluntaryExit.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "voluntary-exit-rejcomplete-stmt",
+  "module": "Prysm/VoluntaryExit/DecodeSpec.lean",
+  "theorem": "Prysm.VoluntaryExit.Decode.reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 16 := fun",
+  "new": "bs.size ≠ 17 := fun"
+ },
+ {
+  "id": "voluntary-exit-witA-stmt-rax",
+  "module": "Prysm/VoluntaryExit/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.VoluntaryExit.Witness.GeneratedDecodeAccept.runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0)"
+ },
+ {
+  "id": "voluntary-exit-same-stmt-other",
+  "module": "Prysm/VoluntaryExit/GeneratedDecodeAcceptSameAsHand.lean",
+  "theorem": "Prysm.VoluntaryExit.Decode.generated_accept_same_as_statement",
+  "kind": "stmt",
+  "old": "= @Prysm.VoluntaryExit.Decode.accept_statement h",
+  "new": "= @Prysm.SyncAggregatorSelectionData.Decode.accept_statement h"
+ },
+ {
+  "id": "sync-aggregator-selection-data-speck-stmt-rax",
+  "module": "Prysm/SyncAggregatorSelectionData/DecodeSpec.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "(fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧",
+  "new": "(fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "validator-balance-speck-stmt-rax",
+  "module": "Prysm/ValidatorBalance/DecodeSpec.lean",
+  "theorem": "Prysm.ValidatorBalance.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "(fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧",
+  "new": "(fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "voluntary-exit-speck-stmt-rax",
+  "module": "Prysm/VoluntaryExit/DecodeSpec.lean",
+  "theorem": "Prysm.VoluntaryExit.Decode.accept_spec",
+  "kind": "stmt",
+  "old": "(fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧",
+  "new": "(fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 1 ∧"
+ }
+]

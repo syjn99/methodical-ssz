@@ -62,13 +62,13 @@ python3 -I fv/kraken/gen/type_inventory.py reduce <out>/ir-mainnet.json fv/krake
 python3 -I fv/kraken/gen/type_inventory.py build fv/kraken/prysm
 python3 -I fv/kraken/gen/mnemonics.py <elf-out>/p1cbin-amd64.objdump fv/kraken/lean/.lake/packages/Kraken/Kraken/X64/Parser/Basic.lean fv/kraken/link/conv.py fv/kraken/prysm/inventory.json fv/kraken/prysm/go1.26.10/functions.json
 python3 -I fv/kraken/link/conv.py <elf-out>/p1cbin-amd64.objdump <elf-out>/p1cbin-amd64.nm <norm-out> --norm
-cd fv/kraken/lean && KPARSE_LIST=<.S list> lake env lean ../gen/kparse/KParse.lean
-python3 -I fv/kraken/gen/kparse/summ.py <kparse log> fv/kraken/prysm/go1.26.10/functions.json fv/kraken/prysm/go1.26.10/kparse.json
+cd fv/kraken/lean && KPARSE_LIST=<.S list> lake env lean ../gen/kraken-parser/KParse.lean
+python3 -I fv/kraken/gen/kraken-parser/summ.py <kparse log> fv/kraken/prysm/go1.26.10/functions.json fv/kraken/prysm/go1.26.10/kparse.json
 python3 -I fv/kraken/gen/type_list_document.py fv/kraken/prysm
 python3 -I fv/kraken/gen/type_scope.py fv/kraken
 ```
 
-The tracked file `prysm/go1.26.10/kparse-log.txt` is the parser log of the pinned ELF. `kparse/summ.py` makes `kparse.json` from it.
+The tracked file `prysm/go1.26.10/kparse-log.txt` is the parser log of the pinned ELF. `kraken-parser/summ.py` makes `kparse.json` from it.
 
 ## 4. Directory layout
 
@@ -100,8 +100,8 @@ After a build, `lake build --no-build <libraries>` must exit 0. `lake env lean` 
 **Lean and Python.** These scripts call Lean through Lake.
 
 ```sh
-python3 -I -B fv/kraken/gen/e2e/axioms_gate.py run <scratch>/gate.json <scratch>/dump.tsv
-python3 -I -B fv/kraken/gen/e2e/negative.py <cases.json> <work-dir> <scratch>/result.json <case-id>
+python3 -I -B fv/kraken/gen/checks/axioms_gate.py run <scratch>/gate.json <scratch>/dump.tsv
+python3 -I -B fv/kraken/gen/checks/negative.py <cases.json> <work-dir> <scratch>/result.json <case-id>
 python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <base.tsv> <head.tsv>
 ```
 
@@ -111,8 +111,8 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
 - The gate also checks that each name of the hand lists in `gen/axioms-lists/` is in the dump. Each `*.lean` file of that directory is a hand list.
 - A new library or a new hand list needs no change to the gate.
 - The gate overwrites its JSON argument. Give a scratch path, unless you intend to update a committed record.
-- The negative test files are `gen/e2e/negcases.json`, `gen/scal/negcases-*.json` and the `negcases-*.json` files under `prysm/go1.26.10/e2e/`.
-  Run one case per job. The cases of `prysm/go1.26.10/e2e/lv/negcases-lv*.json` use `gen/e2e/lvnegative.py` with the same arguments.
+- The negative test files are `gen/checks/negative-cases-checkpoint-and-attestation-data.json`, `gen/generator/negcases-*.json` and the `negcases-*.json` files under `prysm/go1.26.10/evidence/`.
+  Run one case per job. The cases of `prysm/go1.26.10/evidence/lists-and-vectors/negcases-lv*.json` use `gen/checks/list_negative.py` with the same arguments.
 - The drift check compares a dump with the dump of a reviewed tree.
 
 The proof inventory `prysm/proof-inventory.md` needs a built tree and the JSON of an axioms gate run on it (cwd `fv/kraken`):
@@ -128,9 +128,9 @@ python3 -I -B gen/tools/proof_inventory.py run <scratch>/decls.tsv <scratch>/gat
 
 ```sh
 python3 -B fv/kraken/link/data.py --check fv/kraken/link/out
-python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest
-python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean
-python3 -I -B fv/kraken/gen/e2e/axioms_gate.py --selftest
+python3 -I -B fv/kraken/gen/generator/kindcheck.py --selftest
+python3 -I -B fv/kraken/gen/generator/kindcheck.py fv/kraken/lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean
+python3 -I -B fv/kraken/gen/checks/axioms_gate.py --selftest
 ```
 
 `gen/README.md` tells how to regenerate a generated Lean file and compare it with the tracked file.
@@ -144,10 +144,10 @@ python3 -B fv/kraken/link/check.py --selftest fv/kraken/link/out
 
 **The Prysm target ELF.** You must build it first (section 3). Then these checks can run:
 
-- The link check of the Prysm link set `prysm/go1.26.10/link-set`. `gen/e2e/link_set.py` filters the disassembly and writes the data files with the item tables of the `gen/e2e/*link.py` scripts. Then `link/check.py` runs on the set.
+- The link check of the Prysm link set `prysm/go1.26.10/link-set`. `gen/checks/link_set.py` filters the disassembly and writes the data files with the item tables of the `gen/checks/*link.py` scripts. Then `link/check.py` runs on the set.
 - The method list of the inventory: `python3 -I -B fv/kraken/gen/tools/proof_inventory.py methods <nm-listing> <scratch>/ssz-methods.json`. Compare the output with `prysm/go1.26.10/ssz-methods.json`.
 
-**A Prysm tree and Go 1.26.10.** The Go differential scripts `gen/e2e/*diff.py` write test cases. A Go program in a temporary Prysm tree runs them.
+**A Prysm tree and Go 1.26.10.** The Go differential scripts `gen/checks/*diff.py` write test cases. A Go program in a temporary Prysm tree runs them.
 These runs check Go semantics on the host. They do not run the amd64 machine code.
 
 ## 6. Known limits

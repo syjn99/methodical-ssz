@@ -11,7 +11,7 @@ import Prysm.Checkpoint.DecodeRejectSize
 Hand-written: the text of `Prysm/Eth1Data/DecodeRejectSize.lean` with the BlobIdentifier indices.
 `Decode.reject_size` (`len(buf) ≠ 40`, Go source `return ssz.ErrSize`): directives 2–7 (guard,
 prologue, rbx spill), 9–10 `cmp $0x28,%rcx; jne L_e2` taken, L_e2 and the two loads of `ssz.ErrSize`
-(`ElfData.PrysmTarget.sszErrSize_addr`, the same ELF symbol as the Checkpoint decoder's; `h3link.py` asserts the operand),
+(`ElfData.PrysmTarget.sszErrSize_addr`, the same ELF symbol as the Checkpoint decoder's; `blob_identifier_and_deposit_message_link.py` asserts the operand),
 epilogue. The two words `e0`, `e1` are the global's value after package init (premise).
 The decoder has no `fmt.errorf` wrap and no callee error path: the size check is its only reject.
 -/

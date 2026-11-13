@@ -1,0 +1,18 @@
+# negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
+g4g-smdec-vi-call-control	sync-committee-message-smdec-vi-call-control
+g4g-pcdec-ti-call-control	pending-consolidation-pcdec-ti-call-control
+g4g-dddec-pk-segz-control	deposit-data-dddec-pk-segz-control
+g4g-smacc-control	sync-committee-message-smacc-control
+g4g-pwacc-control	pending-partial-withdrawal-pwacc-control
+g4g-smdec-s87-stmt-imm	sync-committee-message-smdec-s87-stmt-imm
+g4g-smdec-s82-stmt-disp	sync-committee-message-smdec-s82-stmt-disp
+g4g-smdec-br-seg-stmt-ry	sync-committee-message-smdec-br-seg-stmt-ry
+g4g-pcdec-ti-call-stmt-ret	pending-consolidation-pcdec-ti-call-stmt-ret
+g4g-dddec-pk-segz-stmt-size	deposit-data-dddec-pk-segz-stmt-size
+g4g-pwdec-s54-stmt-reg	pending-partial-withdrawal-pwdec-s54-stmt-reg
+g4g-smgg-slot-stmt-pc	sync-committee-message-smgg-slot-stmt
+g4g-pwgg-aw-stmt-val	pending-partial-withdrawal-pwgg-aw-stmt-val
+g4g-pcgg-ti-stmt-src	pending-consolidation-pcgg-ti-stmt-src
+g4g-smdec-s86-code-imm	sync-committee-message-smdec-s86-code-imm
+g4g-smdec-br-seg-code-ry	sync-committee-message-smdec-br-seg-code-ry
+g4g-pcdec-ti-call-code-nop	pending-consolidation-pcdec-ti-call-code-nop

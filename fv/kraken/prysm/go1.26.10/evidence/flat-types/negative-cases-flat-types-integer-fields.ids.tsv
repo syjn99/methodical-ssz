@@ -1,0 +1,13 @@
+# negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
+f24i-dpr-speck-control	deposit-request-flat-types-integer-fields-speck-control
+f24i-dpr-rejspec-size	deposit-request-flat-types-integer-fields-rejspec-size
+f24i-dpr-rejcomplete-size	deposit-request-flat-types-integer-fields-rejcomplete-size
+f24i-bbr-speck-control	beacon-blocks-by-range-request-flat-types-integer-fields-speck-control
+f24i-bbr-rejspec-size	beacon-blocks-by-range-request-flat-types-integer-fields-rejspec-size
+f24i-bbr-rejcomplete-size	beacon-blocks-by-range-request-flat-types-integer-fields-rejcomplete-size
+f24i-dpr-espec-control	deposit-request-flat-types-integer-fields-espec-control
+f24i-dpr-espec-desc	deposit-request-flat-types-integer-fields-espec-desc
+f24i-dpr-espec-len	deposit-request-flat-types-integer-fields-espec-len
+f24i-bbr-espec-control	beacon-blocks-by-range-request-flat-types-integer-fields-espec-control
+f24i-bbr-espec-desc	beacon-blocks-by-range-request-flat-types-integer-fields-espec-desc
+f24i-bbr-espec-len	beacon-blocks-by-range-request-flat-types-integer-fields-espec-len

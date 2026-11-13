@@ -4,7 +4,7 @@
 #
 # Usage: prysm-gen.sh <prysm-tree> <generator-binary> <outdir> [gen|ir|all]
 #   gen   : <outdir>/gen/{mainnet,minimal}/<config>[.minimal].ssz.go
-#   ir    : <outdir>/ir-{mainnet,minimal}.json (fv/kraken/gen/invtool)
+#   ir    : <outdir>/ir-{mainnet,minimal}.json (fv/kraken/gen/inventory-tool)
 #   other : <outdir>/gen/GEN_RC (one line per run), <outdir>/bin/invtool
 #
 # Flags are the ones of Prysm build/gen/ssz.go (genMethodical): mainnet loads
@@ -52,7 +52,7 @@ fi
 [ "$MODE" = gen ] && exit $fail
 
 mkdir -p fvphase1c/invtool
-cp "$HERE/invtool/main.go" fvphase1c/invtool/main.go
+cp "$HERE/inventory-tool/main.go" fvphase1c/invtool/main.go
 go build -p 2 -o "$O/bin/invtool" ./fvphase1c/invtool
 CFGS="$V/phase0.yaml $V/altair.yaml $V/bellatrix.yaml $V/capella.yaml $V/deneb.yaml $V/electra.yaml $V/fulu.yaml
 $V/gloas.yaml $V/heze.yaml $V/non-core.yaml proto/engine/v1/engine.yaml proto/eth/v1/gateway.yaml

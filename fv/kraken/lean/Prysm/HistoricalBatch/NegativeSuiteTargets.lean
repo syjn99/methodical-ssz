@@ -7,7 +7,7 @@ import Prysm.HistoricalBatch.DecodeSpec
 (equal by `rfl`, the `example`s at the end). `spec_check` and `complete_chk` prove them again from the spec lemmas with
 the proof text of the companions. A mutant changes the size constant inside a copy: the EthLib rejection property and
 the completeness property then no longer hold for that size, so the proof must fail inside the theorem
-(`lv/negcases-spec.json`). The `example`s lie after the theorems; the negative runner cuts the module at the target.
+(`prysm/go1.26.10/evidence/lists-and-vectors/negative-cases-specification.json`). The `example`s lie after the theorems; the negative runner cuts the module at the target.
 -/
 
 open Machine Runtime EthLib.Serialization.Ssz Prysm.HistoricalBatch.Code

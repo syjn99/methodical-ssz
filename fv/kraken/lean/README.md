@@ -178,7 +178,7 @@ The contracts assume that no garbage collection runs during the call, and that a
 Each Prysm type has two `Desc` terms.
 
 - The hand `Desc` is written from the consensus-specs definition, before the checker `Desc` is printed. Example: `Prysm.Checkpoint.desc` in `Prysm/Checkpoint/Spec.lean`.
-- The checker `Desc` comes from the generator IR through the checker in `../gen/desccheck/`. `../gen/e2e/descterm.py` renders it as Lean. Example: `Prysm/Checkpoint/SpecChecker.lean`.
+- The checker `Desc` comes from the generator IR through the checker in `../gen/desccheck/`. `../gen/checks/desc_to_lean.py` renders it as Lean. Example: `Prysm/Checkpoint/SpecChecker.lean`.
 - Codec equality theorems show that both give the same `serialize` and `deserialize`. Example: `Prysm.Checkpoint.desc_serialize_checker` in `Prysm/Checkpoint/SpecEquivalence.lean`.
 
 The theorems use the hand `Desc`. For a Prysm type, the checker only compares the IR with the inventory. It does not compare with the specification.
@@ -228,16 +228,12 @@ generator writes it, or because it is a record. The table after the list gives t
   `ExistsChunks` / `ExistsWords` existential chunks / pointers, `Implications` a chain of implications, `layoutRuntimeCalls` / `layoutCalleeCalls` the frame layouts
   with runtime calls / callee calls, `decoderPrologue` / `encoderPrologueLargeFrame` decoder / encoder prologue templates, `instrCompareMemoryImmediate` the
   directive `cmpq $imm,disp(%rB)`, `stepLoadValueKind` / `stepLoadBytesKind` the kinds of `step_load_value` / `step_load_bytes`
-  (`mov disp(%rB),%rD`, value / bytes form). Generated files and `../gen/scal/kindcheck.py` name them.
+  (`mov disp(%rB),%rD`, value / bytes form). Generated files and `../gen/generator/kindcheck.py` name them.
 - Short tactic names (local or module macros): `triple_loop_iteration`, `step_literal_directive`, `encoder_address_equation`, `normalize_registers`, `unfold_step_keep_registers`, `window_step_directive`, `window_skip_leading_nops`, `window_skip_nops`,
   `window_skip_to_end`, `size_reject_infix`, `immediate32_count`, and the notation `shift_left5`. Their doc strings say what each does.
-- Directory labels under `../prysm/go1.26.10/e2e/` (`ad`, `bh`, `e1`, `f24`, `g5c`, `h3` to `h6`, `lv`, `scal`), the
-  link and differential scripts `../gen/e2e/*link.py`, `../gen/e2e/*diff.py`, and the negative case files
-  `*negcases*.json`: records of the work steps; generated headers and tests name these paths.
 - The Go type and field names of `../target/` (for example `ListC`, a list of containers, and `BitL`, a bit list):
   external Go names. `Spec/Test*.lean` writes the type names in full words (`ListOfContainersValue`,
   `bitListDesc`) and keeps the Go field names in lower case as structure fields.
-- Negative case ids (for example `epr-control`): records that the negative check results name.
 - The records of earlier names (`../gen/restructure/maps/`).
 
 Some abbreviations have two or three meanings. The context decides the meaning.
@@ -272,5 +268,5 @@ Some abbreviations have two or three meanings. The context decides the meaning.
 | `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` and `v1alpha1.SyncCommittee` in earlier names, and the test type `Scalars` (`Spec/TestScalars.lean`) |
 | `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` and `v1alpha1.SyncAggregate` in earlier names |
 | `Fv` | the test type `FixedVec` (`Spec/TestFixedVec.lean`) |
-| `epr` | two meanings: `ExecutionPayloadEnvelopesByRangeRequest` (data ids, f24 tools), and the Epoch size reject in negative case ids (`epr-*`) |
+| `epr` | `ExecutionPayloadEnvelopesByRangeRequest` (data ids) |
 | `Pad` | `v1alpha1.PayloadAttestationData` in the generator scripts |

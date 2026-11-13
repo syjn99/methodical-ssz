@@ -1,0 +1,26 @@
+# negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
+g5g-ve-acc-control	voluntary-exit-whole-accept-generated-decode-generated-accept-acc-control
+g5g-pd-f3-control	pending-deposit-decode-generated-f3-f3-control
+g5g-cp-acc-control	checkpoint-acc-control
+g5g-hs-acc-control	historical-summary-whole-accept-generated-decode-generated-accept-acc-control
+g5g-ve-acc-stmt-guard	voluntary-exit-decode-generated-accept-acc-stmt-guard
+g5g-hs-acc-stmt-avail	historical-summary-acc-stmt-avail
+g5g-sa-acc-stmt-gooff	sync-aggregator-selection-data-acc-stmt-gooff
+g5g-pb-acc-stmt-size	pow-block-acc-stmt-size
+g5g-vb-acc-stmt-order	validator-balance-acc-stmt-order
+g5g-pd-f3-stmt-gooff	pending-deposit-f3-stmt-gooff
+g5g-sm-f2-stmt-heap	sync-committee-message-f2-stmt-heap
+g5g-ve-f2-stmt-ret	voluntary-exit-decode-generated-f2-f2-stmt-ret
+g5g-cp-f1-stmt-reg	checkpoint-f1-stmt-reg
+g5g-hs-head-stmt-rbp	historical-summary-head-stmt-rbp
+g5g-bi-epi-stmt-rsp	blob-identifier-epi-stmt-rsp
+g5g-ve-acc-kind-frame	voluntary-exit-acc-kind-frame
+g5g-sa-f1-kind-pc	sync-aggregator-selection-data-f1-kind
+g5g-pb-rej-kind-size	pow-block-rej-kind-size
+g5g-dm-acc-kind-fields	deposit-message-acc-kind-fields
+g5g-vb-head-code-spill	validator-balance-head-code-spill
+g5g-ve-epi-code-frame	voluntary-exit-epi-code-frame
+g5g-pd-rej-code-frame	pending-deposit-rej-code-frame
+g5g-sm-epi-code-load	sync-committee-message-epi-code-load
+g5g-ve-rej-code-frame	voluntary-exit-whole-accept-generated-decode-generated-reject-rej-code-frame
+g5g-pb-f1-stmt-size	pow-block-f1-stmt-size

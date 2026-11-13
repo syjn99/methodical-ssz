@@ -7,7 +7,7 @@ Hand-written AFTER the raw generator output was committed (result (S)).
 In `(*v1alpha1.Deposit_Data).UnmarshalSSZ` the WithdrawalCredentials segment (directives 47–72) has a `nop`
 (alignment padding, directive 50) between `mov $0x20,%ecx` and `callq runtime.makeslice`; the frozen
 generator reports the field "not covered: 0 decode segments match". This module is NOT part of the frozen
-method (`Codec/FixedBytesDecode.lean`, `Kind*.lean`, `scalgen.py` unchanged). Its text is produced from `Codec/FixedBytesDecode.lean`:
+method (`Codec/FixedBytesDecode.lean`, `Kind*.lean`, `generator.py` unchanged). Its text is produced from `Codec/FixedBytesDecode.lean`:
 `bytesDecHeadNop` = `bytesDecHead 32` with one `nop` after directive 2; `bytes32dec_seg_nop` = the statement
 of `bytesdec_seg` with `n = 32` and `hA` on `bytesDecHeadNop`; proof = the `bytes_decode_add_case 32` text with the
 head indices ≥ 3 shifted by one, one extra `step_directive` step for the `nop`, and the makeslice return address

@@ -1,7 +1,7 @@
 # prysm: the Prysm target and its evidence files
 
 This directory holds the Prysm target: the type inventory, the generator IR, the generated Go, the link set and the check records.
-Paths in section 1 and section 4 are relative to this directory. Paths in the tables of sections 2 and 3 are relative to `go1.26.10/` and `go1.26.10/e2e/`.
+Paths in section 1 and section 4 are relative to this directory. Paths in the tables of sections 2 and 3 are relative to `go1.26.10/` and `go1.26.10/evidence/`.
 A path that starts with `gen/` or `lean/` is relative to `fv/kraken/`.
 How to build the target ELF again is in `../README.md` section 3.
 
@@ -26,36 +26,36 @@ All files here belong to one ELF. Do not mix them with the files of another ELF.
 | `build-ids.txt` | The Go version, the build flags and the sha256 of the ELF, its disassembly and its symbol listing |
 | `p1cbin-main.go.txt`, `prysm-go.mod.diff` | The `main` package of the binary and the `go.mod` change in the Prysm tree |
 | `ssz-methods.json` | Every SSZ method of the ELF. It is the denominator of the inventory |
-| `functions.json`, `kparse.json`, `kparse-log.txt` | The functions with a converted `.S` file, which of them the Kraken parser reads, and the parser log that `gen/kparse/summ.py` reads |
+| `functions.json`, `kparse.json`, `kparse-log.txt` | The functions with a converted `.S` file, which of them the Kraken parser reads, and the parser log that `gen/kraken-parser/summ.py` reads |
 | `link/` | A link table of 136 functions of this ELF. No current theorem includes it |
-| `link-set/` | The one link set of the proved functions: `target.objdump`, `norm/*.S`, `norm/all.S`, `data/*.data` and `RESULT`. `gen/e2e/link_set.py` writes it. Its `RESULT` replaces the `RESULT` files of the 16 earlier link sets. `data-ids-old-new.tsv` maps the data ids of the earlier link sets and records to the present ids |
-| `e2e/` | The check records, negative case lists and generator records of the proved types (section 3) |
-| `opt-r1/` | A separate ELF of a generator option that reserves the encoder output once. The option is not adopted. `lean/Prysm/Checkpoint/CapacityReserved*.lean` prove theorems about it |
+| `link-set/` | The one link set of the proved functions: `target.objdump`, `norm/*.S`, `norm/all.S`, `data/*.data` and `RESULT`. `gen/checks/link_set.py` writes it. Its `RESULT` replaces the `RESULT` files of the 16 earlier link sets. `data-ids-old-new.tsv` maps the data ids of the earlier link sets and records to the present ids |
+| `evidence/` | The check records, negative case lists and generator records of the proved types (section 3) |
+| `capacity-reserved/` | A separate ELF of a generator option that reserves the encoder output once. The option is not adopted. `lean/Prysm/Checkpoint/CapacityReserved*.lean` prove theorems about it |
 
-## 3. Records under `go1.26.10/e2e/`
+## 3. Records under `go1.26.10/evidence/`
 
 The code and data files of all these types are in the one link set `link-set/` (section 2).
-The subdirectory names are short labels. This table says what each one holds.
+This table says what each subdirectory holds.
 
 | Subdirectory | Types or content |
 | --- | --- |
 | `negative/` | `Checkpoint` and `primitives.Epoch`, and the negative test results of their theorems |
-| `ad/` | `AttestationData`, `primitives.Slot`, `primitives.CommitteeIndex` |
-| `bh/` | `BeaconBlockHeader`, `primitives.ValidatorIndex` |
-| `e1/` | `Eth1Data` |
-| `h3/` | `BlobIdentifier`, `DepositMessage` decoders |
-| `h4/` | `Deposit_Data`, `PendingPartialWithdrawal` decoders |
-| `h5/` | `SyncCommitteeMessage`, `PendingConsolidation` decoders |
-| `h6/` | Seven flat decoders: `PendingDeposit`, `PowBlock`, `HistoricalSummary`, `SigningData`, `SyncAggregatorSelectionData`, `ValidatorBalance`, `VoluntaryExit` |
-| `g5c/` | `Desc` files, Go differential cases and negative case lists of five flat decoders |
-| `f24/` | The 24 other flat fixed-size types, with their generator tools |
-| `lv/` | Lists and vectors: `SyncAggregate`, `SyncCommittee`, `IndexedAttestation`, `HistoricalBatch`, `Deposit`, `DataColumnsByRootIdentifier`. The negative case lists of each group |
-| `scal/` | The negative case lists of the generated proofs, the encoder specification emitter `e2c/e2cemit.py` and two check scripts |
+| `attestation-data/` | `AttestationData`, `primitives.Slot`, `primitives.CommitteeIndex` |
+| `beacon-block-header/` | `BeaconBlockHeader`, `primitives.ValidatorIndex` |
+| `eth1-data/` | `Eth1Data` |
+| `blob-identifier-and-deposit-message/` | `BlobIdentifier`, `DepositMessage` decoders |
+| `deposit-data-and-pending-partial-withdrawal/` | `Deposit_Data`, `PendingPartialWithdrawal` decoders |
+| `pending-consolidation-and-sync-committee-message/` | `SyncCommitteeMessage`, `PendingConsolidation` decoders |
+| `pending-deposit-and-pow-block/` | `PendingDeposit`, `PowBlock` decoders (the link script `gen/checks/seven_flat_decoders_link.py` also covers the five types of `five-flat-types/`) |
+| `five-flat-types/` | `Desc` files, Go differential cases and negative case lists of five flat decoders |
+| `flat-types/` | The 24 other flat fixed-size types, with their generator tools |
+| `lists-and-vectors/` | Lists and vectors: `SyncAggregate`, `SyncCommittee`, `IndexedAttestation`, `HistoricalBatch`, `Deposit`, `DataColumnsByRootIdentifier`. The negative case lists of each group |
+| `generator-cases/` | The negative case lists of the generated proofs, the encoder specification emitter `encode-spec/encode_spec_emitter.py` and two check scripts |
 
-Other files in `e2e/`: `axioms-gate.json` and `e2e.json` are records of runs before the restructuring.
+Other files in `evidence/`: `axioms-gate.json` and `e2e.json` are records of runs before the restructuring.
 They name files and libraries that are no longer in the tree.
 `axioms-gate.json` is the record of an axioms gate run. `e2e.json` binds the include files and the link inputs of that time by sha256.
-`gen/e2e/axioms.py` writes `axioms.json` from `AXIOMS.txt`. `gen/e2e/differential.py check` writes `differential.json`. `gen/e2e/negative.py` writes `negative/result.json`.
+`gen/checks/axioms.py` writes `axioms.json` from `AXIOMS.txt`. `gen/checks/differential.py check` writes `differential.json`. `gen/checks/negative.py` writes `negative/result.json`.
 
 ## 4. Files that are inputs of checks
 

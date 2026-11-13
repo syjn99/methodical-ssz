@@ -1,0 +1,18 @@
+# negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
+g3g-pwdec-index-call-control	pending-partial-withdrawal-pwdec-index-call-control
+g3g-pwg3-control	pending-partial-withdrawal-pwg3-control
+g3g-ddc-control	deposit-data-ddc-control
+g3g-bhg3-control	beacon-block-header-bhg3-control
+g3g-pwdec-index-call-stmt-rbx	pending-partial-withdrawal-pwdec-index-call-stmt-rbx
+g3g-pwdec-amount-stmt-val	pending-partial-withdrawal-pwdec-amount-stmt-val
+g3g-pwdec-we-arg1-stmt-rsi	pending-partial-withdrawal-pwdec-we-arg1-stmt-rsi
+g3g-bhdec-pi-arg-stmt-pad	beacon-block-header-bhdec-pi-arg-stmt-pad
+g3g-bhdec-slot-call-stmt-callee	beacon-block-header-bhdec-slot-call-stmt-callee
+g3g-dddec-wc-stmt-size	deposit-data-dddec-wc-stmt-size
+g3g-ddc-kind-stmt-field	deposit-data-ddc-kind-stmt-field
+g3g-pwg3-stmt-other	pending-partial-withdrawal-pwg3-stmt-other
+g3g-bhg3-head-stmt-len	beacon-block-header-bhg3-head-stmt-len
+g3g-pwdec-amount-code-dst	pending-partial-withdrawal-pwdec-amount-code-dst
+g3g-pwdec-index-arg-code-add	pending-partial-withdrawal-pwdec-index-arg-code-add
+g3g-bhdec-pi-arg-code-rdi	beacon-block-header-bhdec-pi-arg-code-rdi
+g3g-dddec-wc-code-nop	deposit-data-dddec-wc-code-nop

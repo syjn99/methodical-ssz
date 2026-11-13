@@ -8,7 +8,7 @@ public meta import Lean
 The same reader as `data_include` (`Machine/Include.lean`), for the data directory of the one link set of the
 Prysm target: `../prysm/go1.26.10/link-set/data/<id>.data` (relative to `fv/kraken/lean`).
 `Machine/Include.lean` keeps its helpers private to its module and is not changed. The three helpers below are its
-text with the same names (`gen/e2e/check_include.py` compares the bodies). TRUSTED like `data_include`: this reader.
+text with the same names (`gen/checks/check_include.py` compares the bodies). TRUSTED like `data_include`: this reader.
 That the files are the ELF's bytes is `link/check.py`'s data check (f) in `prysm/go1.26.10/link-set/RESULT`.
 -/
 

@@ -7,7 +7,7 @@ Added after the hold-out types were opened, so no hold-out type tests it. `Codec
 changed. `rootDecSegOffsetZeroKind` is the text of `rootDecSegKind` with the
 `add`-form parts removed: no `src`, no `aSrc` / `hSrc`, the source bytes at `bf`, end pc `k + j2 + 11`,
 memmove return address `k + j2 + 5 + 1`. `rootDecSegOffsetZeroKind_of` proves the kind from the lemma
-`rootdec_seg_offset_zero` (kernel check that the kind body is the lemma conclusion). `gen/scal/kindcheck.py` accepts
+`rootdec_seg_offset_zero` (kernel check that the kind body is the lemma conclusion). `gen/generator/kindcheck.py` accepts
 it only with this file at its pinned blob.
 -/
 

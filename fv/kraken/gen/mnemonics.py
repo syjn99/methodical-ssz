@@ -18,7 +18,7 @@ How "Kraken supports a mnemonic" is decided (mnemonic level only):
      "norm" (conv.py --norm rewrites it to `nop`).
   3. Anything else is "unsupported".
 Operand forms are not checked here. A real parse of every function is a
-separate gated Lean run (fv/kraken/gen/kparse/).
+separate gated Lean run (fv/kraken/gen/kraken-parser/).
 Python 3 standard library only. Run with python3 -I.
 """
 import importlib.util

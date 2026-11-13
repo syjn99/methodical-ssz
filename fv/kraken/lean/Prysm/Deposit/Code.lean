@@ -6,7 +6,7 @@ import Machine.Labels
 /-!
 # Code and data of the Deposit decoder (Go 1.26.10 ELF `c6403c02…911e`)
 
-`unmarshalSSZ` includes the `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm` (`gen/e2e/deplink.py`,
+`unmarshalSSZ` includes the `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm` (`gen/checks/deposit_link.py`,
 `link/conv.py --norm`, `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). `ElfData.PrysmTarget.typeDeposit_Data_addr` is the address of
 the data item `prysm/go1.26.10/link-set/data/typeDeposit_Data.data` (checked against the ELF by `check.py` (f)).
 -/

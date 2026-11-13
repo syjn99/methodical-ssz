@@ -19,32 +19,32 @@ The design principles are in `../../README.md`.
 
 | Program | Reads | Writes |
 | --- | --- | --- |
-| `scal/scalgen.py`, with `scal/gen5.py` and `scal/gen6enc.py` | A converted `.S` file and the IR entry of one type | `lean/Prysm/<GoTypeName>/Generated*.lean`: segment, accept, size reject and encoder fast path theorems |
-| `scal/gen.sh` | | Runs `scalgen.py` once for each committed generated file |
-| `e2e/descterm.py`, `e2e/lvdescterm.py` | A `Desc` JSON file that the checker accepted | `*SpecChecker.lean`: the checker `Desc` as Lean |
-| `e2e/layout.py`, `e2e/adlayout.py` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/Checkpoint/Layout.lean`, `lean/Prysm/AttestationData/Layout.lean` |
+| `generator/generator.py`, with `generator/whole_accept.py` and `generator/fast_path.py` | A converted `.S` file and the IR entry of one type | `lean/Prysm/<GoTypeName>/Generated*.lean`: segment, accept, size reject and encoder fast path theorems |
+| `generator/gen.sh` | | Runs `generator.py` once for each committed generated file |
+| `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py` | A `Desc` JSON file that the checker accepted | `*SpecChecker.lean`: the checker `Desc` as Lean |
+| `checks/layout.py`, `checks/attestation_data_layout.py` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/Checkpoint/Layout.lean`, `lean/Prysm/AttestationData/Layout.lean` |
 | `desc/producer.py` | The reduced IR | One `Desc` JSON file for each type |
 | `type_inventory.py` | The raw IR of the generator | `prysm/ir/*.json` (`reduce`) and `prysm/inventory.json` (`build`) |
 | `type_list_document.py`, `type_scope.py` | `prysm/inventory.json` | `prysm/TYPES.md`, `prysm/type-scope.json`, `prysm/type-scope.md` |
 | `keepalive.py` | `prysm/inventory.json` | The `main.go` of the Prysm target |
 | `tools/proof_inventory.py` | The symbol listing of the ELF (`methods`); a declaration list from `tools/inventory_decls.lean` and the JSON of an axioms gate run, both on the built tree (`run`) | `prysm/go1.26.10/ssz-methods.json`, `prysm/proof-inventory.md`, `prysm/proof-inventory.json` |
-| `e2e/link_set.py`, `e2e/*link.py` | The Prysm ELF, its disassembly and symbol listing | The link set `prysm/go1.26.10/link-set`: the filtered disassembly and the data files. The `*link.py` scripts hold the item tables |
-| `e2e/callgraph.py` and the `callgraph` mode of `e2e/*link.py` | A filtered disassembly | `callgraph*.json` files. The tree holds none of them. `e2e/e2elink.py` imports the function list of `e2e/callgraph.py` |
-| `e2e/*diff.py` | Nothing, or a Go output file | Go differential cases, and their comparison with the Go output |
+| `checks/link_set.py`, `checks/*_link.py` | The Prysm ELF, its disassembly and symbol listing | The link set `prysm/go1.26.10/link-set`: the filtered disassembly and the data files. The `*link.py` scripts hold the item tables |
+| `checks/callgraph.py` and the `callgraph` mode of `checks/*_link.py` | A filtered disassembly | `callgraph*.json` files. The tree holds none of them. `checks/checkpoint_and_epoch_link.py` imports the function list of `checks/callgraph.py` |
+| `checks/*_differential.py` | Nothing, or a Go output file | Go differential cases, and their comparison with the Go output |
 | `frozen/build_lists.py` | The inventory and the generated Go | `frozen/THEOREMS.json`, `frozen/ASSUMPTIONS.json` |
-| `kparse/summ.py` | A log of `kparse/KParse.lean` | `prysm/go1.26.10/kparse.json`: which functions the Kraken parser reads |
+| `kraken-parser/summ.py` | A log of `kraken-parser/KParse.lean` | `prysm/go1.26.10/kparse.json`: which functions the Kraken parser reads |
 | `prysm-gen.sh`, `prysm-elf.sh` | A Prysm tree and the generator binary | Generated Go, the IR and the Prysm ELF (needs Go) |
 
-The tools for the 24 other flat types are in `prysm/go1.26.10/e2e/f24/tools/` and `prysm/go1.26.10/e2e/f24/gen/part1.sh`.
-The encoder specification and witness emitter of the flat types is `prysm/go1.26.10/e2e/scal/e2c/e2cemit.py`.
+The tools for the 24 other flat types are in `prysm/go1.26.10/evidence/flat-types/tools/` and `prysm/go1.26.10/evidence/flat-types/runs/run_generators.sh`.
+The encoder specification and witness emitter of the flat types is `prysm/go1.26.10/evidence/generator-cases/encode-spec/encode_spec_emitter.py`.
 
-`scal/scalgen.py` has three modes. `uint64`: the accept path of a uint64 primitive decoder. `decoder`: a container
+`generator/generator.py` has three modes. `uint64`: the accept path of a uint64 primitive decoder. `decoder`: a container
 decoder. Without an option it writes the 32-byte field segments. `--field-segments` adds byte vectors of 32, 48 and
 96 bytes and inline uint64 fields, `--call-segments` also the fields that a callee decodes, `--steps` the step chain
 over windows (a padding `nop` anywhere), and `--whole-accept` the step chain with the whole accept and size-reject
-theorems. `encoder --fast-path`: the encoder fast path theorem. `scal/option-names.tsv` gives the earlier names of
+theorems. `encoder --fast-path`: the encoder fast path theorem. `generator/option-names.tsv` gives the earlier names of
 the modes and options and of the labels in the generated headers (run records and old headers use them).
-`prysm/go1.26.10/e2e/f24/gen/record-names.tsv` maps the earlier run record names of `part1.sh`.
+`prysm/go1.26.10/evidence/flat-types/runs/record-names.tsv` maps the earlier run record names of `run_generators.sh`.
 
 ## 3. Check that a generated file is the generator output
 
@@ -52,10 +52,10 @@ Use `regen_check.sh` of the project skill. It runs the generator two times into 
 Exit 0 means the same bytes. Run it from `fv/kraken`:
 
 ```sh
-sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/scal/scalgen.py uint64 --S prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.CommitteeIndex.Code > "$REGEN_OUT"'
+sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/generator/generator.py uint64 --S prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.CommitteeIndex.Code > "$REGEN_OUT"'
 ```
 
-For the other files, take the command from `scal/gen.sh` or from the file header. Replace the output redirect with `> "$REGEN_OUT"`.
+For the other files, take the command from `generator/gen.sh` or from the file header. Replace the output redirect with `> "$REGEN_OUT"`.
 The check compares bytes only. It does not show that the output is correct.
 
 ## 4. The kind check
@@ -66,13 +66,13 @@ The kinds are hand text in `lean/Codec/Kind/*.lean`. Each kind has a proof from 
 Lean checks the identity. So a hypothesis that the generator adds, removes or changes makes `t_kind` fail.
 
 Lean does not check which kind the line names. A line that compares `t` with itself also compiles.
-`scal/kindcheck.py` closes this gap. It checks by text that every `t_kind` names a frozen kind and has the fixed proof line.
+`generator/kindcheck.py` closes this gap. It checks by text that every `t_kind` names a frozen kind and has the fixed proof line.
 It does not check the kind files and the lemma files themselves. Their git-blob pins were removed when the shared layer moved to `lean/Codec/`.
 
 ```sh
-python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest
-python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean
-python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean
+python3 -I -B fv/kraken/gen/generator/kindcheck.py --selftest
+python3 -I -B fv/kraken/gen/generator/kindcheck.py fv/kraken/lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean
+python3 -I -B fv/kraken/gen/generator/kindcheck.py --partial fv/kraken/lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean
 ```
 
 Run Lean and `kindcheck.py` together on every generated file. Each one alone lets a defect through.
@@ -98,12 +98,12 @@ Thus the Prysm theorems use a hand `Desc` written from consensus-specs, and a th
 
 ## 6. The axioms gate
 
-`e2e/axioms_gate.py` is the one axioms gate. It covers every declaration of every Lean library of the project.
+`checks/axioms_gate.py` is the one axioms gate. It covers every declaration of every Lean library of the project.
 
 ```sh
-python3 -I -B fv/kraken/gen/e2e/axioms_gate.py run <scratch>/gate.json <scratch>/dump.tsv
-python3 -I -B fv/kraken/gen/e2e/axioms_gate.py check <scratch>/dump.tsv <scratch>/gate.json
-python3 -I -B fv/kraken/gen/e2e/axioms_gate.py --selftest
+python3 -I -B fv/kraken/gen/checks/axioms_gate.py run <scratch>/gate.json <scratch>/dump.tsv
+python3 -I -B fv/kraken/gen/checks/axioms_gate.py check <scratch>/dump.tsv <scratch>/gate.json
+python3 -I -B fv/kraken/gen/checks/axioms_gate.py --selftest
 ```
 
 - The `run` mode needs Lean and a built tree. It runs `lake build --no-build` on all modules first. If that fails, it stops with exit 2.
@@ -114,7 +114,7 @@ python3 -I -B fv/kraken/gen/e2e/axioms_gate.py --selftest
 - A new library or a new hand list needs no change to the gate.
 - Each declaration must use only `propext`, `Classical.choice` and `Quot.sound`. `sorryAx` fails.
 - The `check` mode reads a dump that `run` wrote. It needs only Python.
-- `e2e/axioms.py` reads the output of `lake env lean <hand list>` for one hand list.
+- `checks/axioms.py` reads the output of `lake env lean <hand list>` for one hand list.
 
 ### Theorems with the same statement
 
@@ -139,17 +139,17 @@ python3 -I -B fv/kraken/gen/tools/duplicate_statements.py --selftest
 
 These run without Lean, Go or the Prysm ELF:
 
-- `scal/kindcheck.py`, and the `--selftest` mode of `e2e/axioms_gate.py`.
+- `generator/kindcheck.py`, and the `--selftest` mode of `checks/axioms_gate.py`.
 - `tools/duplicate_statements.py`, on a dump of the axioms gate (the dump itself needs Lean).
 - `python3 -B fv/kraken/link/data.py --check fv/kraken/link/out`.
-- `regen_check.sh` with `scal/scalgen.py`, `e2e/descterm.py`, `e2e/lvdescterm.py`, `e2e/layout.py` and `e2e/adlayout.py`.
-- `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`, `kparse/summ.py`.
+- `regen_check.sh` with `generator/generator.py`, `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py`, `checks/layout.py` and `checks/attestation_data_layout.py`.
+- `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`, `kraken-parser/summ.py`.
 - `frozen/test_frozen.py <repo-root> <scratch>`, which runs `frozen/build_lists.py` and compares the two frozen lists.
 - `desc/test_desc.py prepare` writes the `Desc` files. The checker run after it needs Lean.
 
 These need more than Python:
 
-- `e2e/negative.py` and the `run` mode of the axioms gate need Lean.
+- `checks/negative.py` and the `run` mode of the axioms gate need Lean.
 - The link checks need the ELF and the LLVM tools.
 - The differential checks need Go and a Prysm tree.
 - `tools/proof_inventory.py methods` needs the symbol listing of the Prysm ELF. Its `run` mode needs Lean: the output of
@@ -160,15 +160,15 @@ These need more than Python:
 These generated outputs do not reproduce from the tracked tree today:
 
 - `frozen/ASSUMPTIONS.json`: the file has a hand edit. `frozen/test_frozen.py` exits 1.
-- 11 of the 18 files that `e2e/descterm.py` writes have hand-added or edited header lines.
+- 11 of the 18 files that `checks/desc_to_lean.py` writes have hand-added or edited header lines.
 
 Other limits:
 
 - The specification and witness files of five flat types (HistoricalSummary, SyncAggregatorSelectionData, SigningData, ValidatorBalance, VoluntaryExit) have no tracked generator script.
-- The commands of 12 generated files are not in `scal/gen.sh`. Their headers give the commands.
-- `prysm/go1.26.10/e2e/f24/gen/part1.sh` calls a job wrapper that is not tracked. Run its `scalgen.py` commands directly.
+- The commands of 12 generated files are not in `generator/gen.sh`. Their headers give the commands.
+- `prysm/go1.26.10/evidence/flat-types/runs/run_generators.sh` calls a job wrapper that is not tracked. Run its `generator.py` commands directly.
 - 15 of the 24 `*SpecChecker.lean` headers name a path where the `Desc` file is not. The file is in a subdirectory of
-  `prysm/go1.26.10/e2e/` (`e1/`, `f24/`, `g5c/`, `h3/` to `h6/`). Nine of these headers have a hand-added line that
+  `prysm/go1.26.10/evidence/` (`eth1-data/`, `flat-types/`, `five-flat-types/` and the hold-out directories). Nine of these headers have a hand-added line that
   gives the subdirectory; the other six do not (DepositRequest, HistoricalSummary, SigningData,
   SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit).
 - `kindcheck.py` does not bind the code constant of a theorem to the `.S` file of the header. It does not check the `.S` label against the IR type.

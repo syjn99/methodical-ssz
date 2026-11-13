@@ -9,16 +9,16 @@ import Machine.Include
 
     if cap(dst)-len(dst) < 40 { var z [40]byte; dst = append(dst, z[:]...)[:len(dst)] }
 
-The `.S` is `fv/kraken/prysm/go1.26.10/opt-r1/link/norm` (`link/conv.py --norm`; `link/check.py`
+The `.S` is `fv/kraken/prysm/go1.26.10/capacity-reserved/link/norm` (`link/conv.py --norm`; `link/check.py`
 (a)–(f) PASS in `../RESULT`). The other six functions of that directory are byte-identical to
 `Prysm.Checkpoint.Code`'s; only this constant is new. Nothing about the baseline ELF `c6403c02…911e` changes.
 The `.S` file is not a Lake input of the `Prysm` library (no lakefile change): a changed file needs a
-clean rebuild of the `Prysm.Checkpoint.CapacityReserved` modules; its sha256 is pinned in `opt-r1/link/RESULT`.
+clean rebuild of the `Prysm.Checkpoint.CapacityReserved` modules; its sha256 is pinned in `capacity-reserved/link/RESULT`.
 -/
 
 namespace Prysm.Checkpoint.CapacityReserved.Code
 
 /-- `(*v1alpha1.Checkpoint).MarshalSSZTo` with the 40-byte reserve (`phase0.ssz.go:1959`). -/
-def marshalSSZTo : Program := include_x64_code "../prysm/go1.26.10/opt-r1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+def marshalSSZTo : Program := include_x64_code "../prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
 
 end Prysm.Checkpoint.CapacityReserved.Code

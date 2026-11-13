@@ -49,7 +49,7 @@ Per file (any failure = FAIL):
 Result file: schema `fvphase1c.desccheck-result/1`, inventory path and sha256, table keys,
 exceptions, list-level findings, one record per file (path, sha256 of the bytes (EthLib
 SHA-256, FIPS 180-4), role, package, type, status, PASS/FAIL, failed checks with details) and
-`verdict` OK/FAIL. `gen1c/emit.py` reads only this file. The human log escapes every character
+`verdict` OK/FAIL. `first-generator/emit.py` reads only this file. The human log escapes every character
 outside printable ASCII. A run with verdict FAIL ends with a non-zero exit.
 
 Threat model. Defends against: producer or IR bugs in the 9 hand types (spec comparison),

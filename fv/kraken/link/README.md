@@ -53,7 +53,7 @@ The last line is a bundle hash: the sha256 of `RESULT` up to the last PASS line.
 One bundle hash thus binds the ELF to the exact text that Lean includes.
 
 Three tracked `RESULT` files have sha256 lines for two files that are no longer in the tree: `lean/Fk/Code.lean` and `AXIOMS.txt`.
-They are `link/out/RESULT`, `prysm/go1.26.10/link/RESULT` and `prysm/go1.26.10/opt-r1/link/RESULT`.
+They are `link/out/RESULT`, `prysm/go1.26.10/link/RESULT` and `prysm/go1.26.10/capacity-reserved/link/RESULT`.
 A new run writes these files without the two lines, so their bundle hash changes.
 `prysm/go1.26.10/link-set/RESULT` has no such line.
 
@@ -92,7 +92,7 @@ An item with only an `at` line gives only an address. The error globals `ssz.Err
 - `<id>_addr : BitVec 64`: `(label "<label>" + <offset>).toBitVec`, without `+ 0` for offset 0.
 
 The Prysm library uses one copy of this reader, `prysm_data_include` in `lean/Prysm/ElfData/PrysmTargetReader.lean`, for `prysm/go1.26.10/link-set/data`.
-`gen/e2e/check_include.py` compares this copy with the original text.
+`gen/checks/check_include.py` compares this copy with the original text.
 
 Rules for a new data file:
 

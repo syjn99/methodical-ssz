@@ -14,7 +14,7 @@ Scope: the path lists come from program scans of the tracked files for Go source
 - The data extracts and tables also name or hold Go runtime and standard-library symbols (for example `runtime.memmove`, type descriptors).
 - Produced by: `link/conv.py --norm` and `link/check.py` on an ELF cross-compiled by Go 1.26.10 (`GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 -tags purego -trimpath`).
 - ELF sha256 `c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e` (`prysm/go1.26.10/build-ids.txt`).
-- `opt-r1/` uses ELF sha256 `3ef7ac890ba1a797fb90877b84ad1a6ffe0ac283f77c10b09ffb2c8cd7b7f602` (`prysm/go1.26.10/opt-r1/build-ids.txt`). It used generator `ca191bb`, not `698c202`. The ELFs are not committed.
+- `capacity-reserved/` uses ELF sha256 `3ef7ac890ba1a797fb90877b84ad1a6ffe0ac283f77c10b09ffb2c8cd7b7f602` (`prysm/go1.26.10/capacity-reserved/build-ids.txt`). It used generator `ca191bb`, not `698c202`. The ELFs are not committed.
 - Upstream: Prysm, <https://github.com/OffchainLabs/prysm>, commit `ab15ff70c72a568c870b2de662474685a95de294` (`README.md` section 2). Licence: GNU General Public License version 3 (root `LICENSE.md`).
 - Upstream: Go, <https://go.dev/>, <https://github.com/golang/go>. Licence: BSD-3-Clause (Go 1.26.10 `LICENSE`).
 
@@ -32,7 +32,7 @@ Scope: the path lists come from program scans of the tracked files for Go source
 
 ## D. Driver sources that import Prysm
 
-- Paths: `prysm/go1.26.10/**/*-main.go.txt` (13), `prysm/go1.26.10/opt-r1/bench/bench_test.go.txt` (1). Total 14.
+- Paths: `prysm/go1.26.10/**/*-main.go.txt` (13), `prysm/go1.26.10/capacity-reserved/bench/bench_test.go.txt` (1). Total 14.
 - What: copies of the scratch `main` and benchmark packages used to build, check or benchmark the family A ELFs. They import Prysm packages.
 - Written for this project. Upstream of the imported packages: Prysm, as in family A.
 
@@ -56,19 +56,19 @@ Scope: the path lists come from program scans of the tracked files for Go source
 ## G. Prysm type records and other text derived from Prysm files
 
 - `prysm/ir/ir-mainnet.json`, `prysm/ir/ir-minimal.json` (2): the generator IR of the Prysm types, with Go field names, types, tags and gc amd64 offsets.
-  Produced by `gen/invtool` (front end of generator `698c202`) in the Prysm tree, via `gen/prysm-gen.sh`, then `gen/type_inventory.py reduce`.
-- `prysm/inventory.json`, `prysm/TYPES.md` (2) and `prysm/go1.26.10/e2e/**/*.desc.json` (24): type sets, counts and SSZ descriptors made from the IR
+  Produced by `gen/inventory-tool` (front end of generator `698c202`) in the Prysm tree, via `gen/prysm-gen.sh`, then `gen/type_inventory.py reduce`.
+- `prysm/inventory.json`, `prysm/TYPES.md` (2) and `prysm/go1.26.10/evidence/**/*.desc.json` (24): type sets, counts and SSZ descriptors made from the IR
   by `gen/type_inventory.py build`, `gen/type_list_document.py` and `gen/desc/producer.py`.
-- `prysm/go1.26.10/e2e/gcflags-m2.txt` (1): Go 1.26.10 `-gcflags=-m=2` output on the Prysm tree. It prints inlined Prysm function bodies.
+- `prysm/go1.26.10/evidence/gcflags-m2.txt` (1): Go 1.26.10 `-gcflags=-m=2` output on the Prysm tree. It prints inlined Prysm function bodies.
 - `prysm/go1.26.10/prysm-go.mod.diff` (1): a diff of Prysm `go.mod`; its context lines are Prysm text.
 - `gen/frozen/THEOREMS.json` (1): obligation lists written by `gen/frozen/build_lists.py` with the site enumerator `gen/obligations.py`. Its 2752 `prysm.obligations` records
   quote a `guard` and a `ret` line of family B `mainnet/*.ssz.go` (132 types, 523 distinct pairs). Its `hand_case` records quote lines of `target/**/*.ssz.go`.
-- `prysm/go1.26.10/e2e/negative/result.json` (1): negative-test records; their `diff` fields hold unified diffs of family A `.S` lines. Total 32. Upstream: Prysm, as in family A.
+- `prysm/go1.26.10/evidence/negative/result.json` (1): negative-test records; their `diff` fields hold unified diffs of family A `.S` lines. Total 32. Upstream: Prysm, as in family A.
 
 ## H. Files that only name upstream symbols
 
 - Other files under `fv/kraken/` (850 tracked files outside sections A to G) may name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of families A and E.
-  Examples: `prysm/go1.26.10/functions.json`, `prysm/go1.26.10/kparse*` (4) and the negative-test case files `**/negcases*.json` (33).
+  Examples: `prysm/go1.26.10/functions.json`, `prysm/go1.26.10/kparse*` (4) and the negative-test case files `**/negative-cases*.json` (33).
 - A program scan of these files for Go source fragments (`func `, `return `, `{ return`, `inline call to`, `can inline`) found these quotes:
   - doc comments in `lean/Prysm/` quote short excerpts of family B methods and of Prysm `consensus-types/primitives` (`lean/Prysm/Epoch/DecodeAccept.lean` lines 9-11, `lean/Codec/Uint64Decoder.lean` lines 7-8);
 - The other hits are this project's own tool code or prose. The `.py`, `.go` and `.sh` hits were not each read. The files were not each read in full.

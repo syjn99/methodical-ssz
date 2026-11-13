@@ -1,0 +1,11 @@
+# negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
+hb-control-reject	historical-batch-control-reject
+hb-control-iter1	historical-batch-control-iter1
+hb-control-accept	historical-batch-control-accept
+hb-stmt-size524289	historical-batch-stmt-size524289
+hb-size524289	historical-batch-size524289
+hb-loopbound8191	historical-batch-loopbound8191
+hb-elem31	historical-batch-elem31
+hb-shl6	historical-batch-shl6
+hb-stmt-heap	historical-batch-stmt-heap
+hb-stmt-len8191	historical-batch-stmt-len8191

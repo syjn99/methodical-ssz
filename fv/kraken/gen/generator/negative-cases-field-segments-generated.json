@@ -1,0 +1,152 @@
+[
+ {
+  "id": "deposit-message-dmdec-pk-control",
+  "module": "Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_field_PublicKey_seg",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-message-dmgc-control",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean",
+  "theorem": "Prysm.DepositMessage.Decode.accept_generated_composition",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-message-dmg2-control",
+  "module": "Prysm/DepositMessage/DecodeAcceptFromGeneratedFieldSegments.lean",
+  "theorem": "Prysm.DepositMessage.Decode.accept_from_generated_field_segments",
+  "kind": "control"
+ },
+ {
+  "id": "blob-identifier-bigc-type-control",
+  "module": "Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
+  "theorem": "Prysm.BlobIdentifier.Decode.accept_generated_composition_type",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-message-dmdec-pk-stmt-size",
+  "module": "Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_field_PublicKey_seg",
+  "kind": "stmt",
+  "old": "(hroot : root.length = 48)",
+  "new": "(hroot : root.length = 32)"
+ },
+ {
+  "id": "deposit-message-dmdec-amt-stmt-val",
+  "module": "Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_field_Amount_seg",
+  "kind": "stmt",
+  "old": "⋆ Eq (v.At aF) ⋆ R) st.data.dmem",
+  "new": "⋆ Eq (vF.At aF) ⋆ R) st.data.dmem"
+ },
+ {
+  "id": "eth1-data-e1dec-cnt-stmt-off",
+  "module": "Prysm/Eth1Data/GeneratedDecodeFieldSegments.lean",
+  "theorem": "Prysm.Eth1Data.Decode.generated_field_DepositCount_seg",
+  "kind": "stmt",
+  "old": "(hF : rcv + (32 : Int64).toBitVec = aF)",
+  "new": "(hF : rcv + (40 : Int64).toBitVec = aF)"
+ },
+ {
+  "id": "deposit-message-dmgc-stmt-heap",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean",
+  "theorem": "Prysm.DepositMessage.Decode.accept_generated_composition",
+  "kind": "stmt",
+  "old": "Heap (avail - 80)",
+  "new": "Heap (avail - 48)"
+ },
+ {
+  "id": "blob-identifier-bigc-stmt-idx",
+  "module": "Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
+  "theorem": "Prysm.BlobIdentifier.Decode.accept_generated_composition",
+  "kind": "stmt",
+  "old": "⋆ Eq (x2.At (s.regs.rax.toBitVec + 32))",
+  "new": "⋆ Eq (g2n.At (s.regs.rax.toBitVec + 32))"
+ },
+ {
+  "id": "deposit-message-dmgc-type-rhs",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean",
+  "theorem": "Prysm.DepositMessage.Decode.accept_generated_composition_type",
+  "kind": "stmt",
+  "old": "type_of% (@Prysm.DepositMessage.Decode.accept h)",
+  "new": "type_of% (@Prysm.Eth1Data.Decode.accept h)"
+ },
+ {
+  "id": "deposit-message-dmg2-stmt-len",
+  "module": "Prysm/DepositMessage/DecodeAcceptFromGeneratedFieldSegments.lean",
+  "theorem": "Prysm.DepositMessage.Decode.accept_from_generated_field_segments",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx = 88)",
+  "new": "(hlen : s.regs.rcx = 80)"
+ },
+ {
+  "id": "blob-identifier-big2-stmt-rsp",
+  "module": "Prysm/BlobIdentifier/DecodeAcceptFromGeneratedFieldSegments.lean",
+  "theorem": "Prysm.BlobIdentifier.Decode.accept_from_generated_field_segments",
+  "kind": "stmt",
+  "old": "∧ st.data.regs.rsp = s.regs.rsp + 8",
+  "new": "∧ st.data.regs.rsp = s.regs.rsp + 16"
+ },
+ {
+  "id": "deposit-message-dmdec-pk-code-count",
+  "module": "Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_field_PublicKey_seg",
+  "kind": "code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.DepositMessage.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "old": "  mov $0x30,%ecx",
+  "new": "  mov $0x20,%ecx",
+  "line": 31
+ },
+ {
+  "id": "deposit-message-dmdec-amt-code-src",
+  "module": "Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_field_Amount_seg",
+  "kind": "code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.DepositMessage.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "old": "  mov 0x50(%rcx),%rcx",
+  "new": "  mov 0x48(%rcx),%rcx"
+ },
+ {
+  "id": "deposit-message-dmgc-code-tail",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean",
+  "theorem": "Prysm.DepositMessage.Decode.accept_generated_composition",
+  "kind": "code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.DepositMessage.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "old": "  mov %rdi,(%rdx)",
+  "new": "  mov %rdi,0x8(%rdx)"
+ },
+ {
+  "id": "blob-identifier-bigc-code-epi",
+  "module": "Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
+  "theorem": "Prysm.BlobIdentifier.Decode.accept_generated_composition",
+  "kind": "code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.BlobIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
+  "old": "  add $0x20,%rsp",
+  "new": "  add $0x28,%rsp",
+  "line": 53
+ },
+ {
+  "id": "deposit-message-dmg2-code-head",
+  "module": "Prysm/DepositMessage/DecodeAcceptFromGeneratedFieldSegments.lean",
+  "theorem": "Prysm.DepositMessage.Decode.accept_from_generated_field_segments",
+  "kind": "code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.DepositMessage.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "old": "  cmp $0x58,%rcx",
+  "new": "  cmp $0x50,%rcx"
+ }
+]

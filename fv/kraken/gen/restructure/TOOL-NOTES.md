@@ -136,7 +136,7 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   It never drops the namespace of a dotted declaration name.
   Exception: a file outside every type can get an `open` from an `open` row with scope `-` (or `*`).
   A reference in that file can be shortened through that `open` too.
-  Reason: `scalgen.py` needs a bare `--const` name and refuses a qualified one (`Prysm.Checkpoint.Code.marshalSSZTo`).
+  Reason: `generator.py` needs a bare `--const` name and refuses a qualified one (`Prysm.Checkpoint.Code.marshalSSZTo`).
   So the generated files keep `open Prysm.<GoTypeName>.Code` and the bare `unmarshalSSZ`.
 - Comments: the tool does not rewrite a short token whose last name component does not change.
   Such a token is often an English word: `word`, `block`, `host`.
@@ -191,8 +191,8 @@ Then write the rows from the trial tree, and run the trial again with the rows.
 - A generator template can write `open ... E2e ...` for all types.
   After a move, the namespace `E2e` can be gone from the imports of one generated file.
   The tool removes it from that file, and then the generator does not reproduce that file.
-  `gen5.py` (`G5_OPENS`) and `f24wit.py` were changed, because every output lost `E2e`.
-  `e2cemit.py` was changed in the flat-types step.
+  `whole_accept.py` (`G5_OPENS`) and `flat_types_witness.py` were changed, because every output lost `E2e`.
+  `encode_spec_emitter.py` was changed in the flat-types step.
 - A generator writes its `--prefix` into a comment (the `FAST-PATH-JSON` line), and an evidence tool writes old names into
   comments. The tool does not rewrite such text: give `manual-edits.tsv` rows, made by rule from a trial tree.
 - The tool rewrites a declaring line only in a moved module. A map that renames a declaration of a module that
@@ -233,7 +233,7 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   The tool leaves such short names in JSON fields unchanged.
   Count such names before and after the run in the files of the other library.
   The counts must be equal.
-- `negative.py` and `lvnegative.py` find a theorem by its full name, or by the written name if it is unique.
+- `negative.py` and `list_negative.py` find a theorem by its full name, or by the written name if it is unique.
   `negative.py --check-cases <files>` checks every case without Lean.
   Run it before and after (cwd `fv/kraken`).
   Without `code_ns`, a case in a module under `Prysm/<Type>/` uses `Prysm.<Type>.Code` (`negative.code_ns_of`).
@@ -241,7 +241,7 @@ Then write the rows from the trial tree, and run the trial again with the rows.
 - Modules that use the Lean module system (`module`, `public import`) keep it after a move.
 - `fv/kraken/lean/Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` walks the project namespaces
   `Prysm`, `Codec`, `ElfData`, `Machine` and `Runtime`. A step that adds a root namespace adds it there.
-- `descterm.py` emits the namespace from the Go type name as written.
+- `desc_to_lean.py` emits the namespace from the Go type name as written.
   For the Go type `Deposit_Data` the namespace is `Prysm.Deposit_Data`.
 - The lakefile: a moved `.S` file of a library directory needs a new `input_dir` for its new directory (filter `.S`).
   Put that `input_dir` into the `needs` of `Prysm`.

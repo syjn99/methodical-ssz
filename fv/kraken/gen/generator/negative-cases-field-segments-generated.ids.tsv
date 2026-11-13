@@ -1,0 +1,18 @@
+# negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
+g2g-dmdec-pk-control	deposit-message-dmdec-pk-control
+g2g-dmgc-control	deposit-message-dmgc-control
+g2g-dmg2-control	deposit-message-dmg2-control
+g2g-bigc-type-control	blob-identifier-bigc-type-control
+g2g-dmdec-pk-stmt-size	deposit-message-dmdec-pk-stmt-size
+g2g-dmdec-amt-stmt-val	deposit-message-dmdec-amt-stmt-val
+g2g-e1dec-cnt-stmt-off	eth1-data-e1dec-cnt-stmt-off
+g2g-dmgc-stmt-heap	deposit-message-dmgc-stmt-heap
+g2g-bigc-stmt-idx	blob-identifier-bigc-stmt-idx
+g2g-dmgc-type-rhs	deposit-message-dmgc-type-rhs
+g2g-dmg2-stmt-len	deposit-message-dmg2-stmt-len
+g2g-big2-stmt-rsp	blob-identifier-big2-stmt-rsp
+g2g-dmdec-pk-code-count	deposit-message-dmdec-pk-code-count
+g2g-dmdec-amt-code-src	deposit-message-dmdec-amt-code-src
+g2g-dmgc-code-tail	deposit-message-dmgc-code-tail
+g2g-bigc-code-epi	blob-identifier-bigc-code-epi
+g2g-dmg2-code-head	deposit-message-dmg2-code-head

@@ -36,12 +36,12 @@ Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `
 ## 3. Method
 
 1. `gen/prysm-gen.sh` runs the generator in a temporary Prysm tree. The flags are the same as in Prysm `build/gen/ssz.go`.
-2. The same script uses `gen/invtool` to extract the IR of the front end of the generator itself (`config`, `TypeDefs`, `ParseTypeDef`, delegate interface set) as JSON.
+2. The same script uses `gen/inventory-tool` to extract the IR of the front end of the generator itself (`config`, `TypeDefs`, `ParseTypeDef`, delegate interface set) as JSON.
 3. `gen/type_inventory.py reduce` cuts the parts below delegated fields and makes `ir/ir-{mainnet,minimal}.json`.
 4. `gen/type_inventory.py build` writes the sets, kinds, depths and scopes to `inventory.json`.
 5. `gen/prysm-elf.sh` builds the ELF two times and extracts objdump and nm. `gen/keepalive.py` makes `main`.
 6. `gen/mnemonics.py` counts the instructions, mnemonics and call kinds for each function (`go1.26.10/functions.json`).
-7. `link/conv.py --norm` (read only) makes the `.S` files, and `gen/kparse/KParse.lean` runs the Kraken runtime parser (`go1.26.10/kparse.json`).
+7. `link/conv.py --norm` (read only) makes the `.S` files, and `gen/kraken-parser/KParse.lean` runs the Kraken runtime parser (`go1.26.10/kparse.json`).
 
 - `fork_configs`: ['proto/prysm/v1alpha1/phase0.yaml', 'proto/prysm/v1alpha1/altair.yaml', 'proto/prysm/v1alpha1/bellatrix.yaml', 'proto/prysm/v1alpha1/capella.yaml', 'proto/prysm/v1alpha1/deneb.yaml', 'proto/prysm/v1alpha1/electra.yaml', 'proto/prysm/v1alpha1/fulu.yaml']
 - `set_A`: every type configured in a fork config (phase0..fulu)

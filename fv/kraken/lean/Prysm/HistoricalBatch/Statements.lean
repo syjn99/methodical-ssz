@@ -32,7 +32,7 @@ also written at directive 7 before the size check); loop locals `0x18(%rsp)` = x
 (32i), `0x28(%rsp)` = x − 24 (i), `0x30(%rsp)` = x − 16 (element pointer); `0x0…0x17(%rsp)` = x − 64 (24 bytes,
 `spl`, makeslice's spill area); runtime call return slot x − 72; `lo` = the `S` scratch bytes below it.
 Calls: makeslice of each backing array (`ElfData.PrysmTarget.typeUint8Slice_addr`, esz 24, len = cap = 8192; the same type
-word as SyncCommittee, asserted by `gen/e2e/hblink.py data`), 2 × 8192 uint8 makeslice (len 0, cap 32) + memmove (32) pairs.
+word as SyncCommittee, asserted by `gen/checks/historical_batch_link.py data`), 2 × 8192 uint8 makeslice (len 0, cap 32) + memmove (32) pairs.
 Heap: 2 · (24·8192 + 32·8192) = 917504 bytes. The last runtime call is the memmove at directive 132, so the
 return slot holds directive 133 at the end. The four loop locals are dead after the loops; the postcondition owns
 them with unnamed 8-byte values.

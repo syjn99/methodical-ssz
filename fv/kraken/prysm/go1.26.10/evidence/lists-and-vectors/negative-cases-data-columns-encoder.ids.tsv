@@ -1,0 +1,10 @@
+# negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
+enc-control-rb	data-columns-by-root-identifier-control-rb
+enc-control-iter	data-columns-by-root-identifier-encode-iter-control-iter
+enc-rb-len33	data-columns-by-root-identifier-rb-len33
+enc-rt-max129	data-columns-by-root-identifier-rt-max129
+enc-rt-offset37	data-columns-by-root-identifier-rt-offset37
+enc-iter-step16	data-columns-by-root-identifier-iter-step16
+enc-iter-store	data-columns-by-root-identifier-iter-store
+enc-stmt-rt127	data-columns-by-root-identifier-stmt-rt127
+enc-stmt-rb33	data-columns-by-root-identifier-stmt-rb33

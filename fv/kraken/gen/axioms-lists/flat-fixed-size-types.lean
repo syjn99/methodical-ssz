@@ -330,7 +330,7 @@ import Prysm.Eth1Data.DecodeAcceptComposition
 import Prysm.Deposit_Data.DecodeAcceptComposition
 
 -- Scalability: the segment lemmas, the in-sample re-derivations, the
--- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
+-- statement-identity checks and the generated instances. Checked with gen/checks/axioms.py <log> <out> <this file>.
 #print axioms Codec.infix_sub
 #print axioms Codec.u64dec_accept
 #print axioms Codec.rootdec_seg

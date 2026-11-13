@@ -98,7 +98,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: a generator option `--reserve-marshal` makes `Checkpoint.MarshalSSZTo` reserve `len + 40` bytes once.
   With an invalid `Root` and 8 to 39 spare bytes, the new code allocates one block and does not write the spare bytes of the caller.
-- Where: generator commit `ca191bb` on a branch that is not merged. The evidence is in `prysm/go1.26.10/opt-r1/` and `lean/Prysm/Checkpoint/CapacityReserved*.lean`.
+- Where: generator commit `ca191bb` on a branch that is not merged. The evidence is in `prysm/go1.26.10/capacity-reserved/` and `lean/Prysm/Checkpoint/CapacityReserved*.lean`.
 - How it shows: the benchmark results are mixed. The fast path is slower and the error path allocates one more block.
 - State: not adopted. The option is off by default. The old proofs apply only to the old ELF.
 
@@ -158,7 +158,7 @@ How to handle a new finding is in `../README.md` section 7.
 - A `grind` timeout inside `kstep` cannot be caught. `load_step` and `store_step` are used instead.
 - Closing register goals with symbolic `BitVec` by `trivial` or `rfl` inside `first` used more than 6 GiB. The decoder proof is split, and the goals close with `exact trivial`, `with_reducible rfl` or `toBitVec_inj`.
 - Two witness `Host` instances in one file make instance resolution choose the wrong host. Each file has one witness host.
-- `lean/Machine/Include.lean` keeps the data reader private. `lean/Prysm/ElfData/PrysmTargetReader.lean` has one copy, and `gen/e2e/check_include.py` compares it with the original.
+- `lean/Machine/Include.lean` keeps the data reader private. `lean/Prysm/ElfData/PrysmTargetReader.lean` has one copy, and `gen/checks/check_include.py` compares it with the original.
 - State: worked around in each case.
 
 ### Format string content is not checked
@@ -176,7 +176,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: `link/check.py` hashes the ELF, the `norm/*.S` files, the `data/*.data` files and `AXIOMS.txt` if it exists. It hashes no Lean file.
   Three tracked `RESULT` files have sha256 lines for `lean/Fk/Code.lean` and `AXIOMS.txt`. Neither file is in the tree now.
-- Where: `link/out/RESULT`, `prysm/go1.26.10/link/RESULT` and `prysm/go1.26.10/opt-r1/link/RESULT`.
+- Where: `link/out/RESULT`, `prysm/go1.26.10/link/RESULT` and `prysm/go1.26.10/capacity-reserved/link/RESULT`.
 - Effect: a new run writes these files without the two lines, with a different bundle hash.
 - State: open for these three files. `prysm/go1.26.10/link-set/RESULT` has no such line.
 
@@ -192,7 +192,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### The proof generator covers only some code forms
 
-- What: `gen/scal/scalgen.py` matches fixed instruction templates. It refuses a field whose code has another form.
+- What: `gen/generator/generator.py` matches fixed instruction templates. It refuses a field whose code has another form.
 - Where: the records give these forms as refused or not covered:
   - 20-byte, 4-byte and 1-byte byte vectors, `bool` fields and the `Gwei` callee.
   - The inline `DepositCount` read.
@@ -205,7 +205,7 @@ How to handle a new finding is in `../README.md` section 7.
 ### Kind checks do not bind every parameter
 
 - What: the accept kind `decAcceptKindAnyFrame` does not read the frame of its layout. An accept kind line with a wrong frame still elaborates.
-  `gen/scal/kindcheck.py` does not bind the code constant to the `.S` file of the header. It does not check the `.S` label against the IR type.
+  `gen/generator/kindcheck.py` does not bind the code constant to the `.S` file of the header. It does not check the `.S` label against the IR type.
 - How it shows: a negative test with a wrong frame in the kind line gives no error. The head, field and epilogue kinds fix the frame.
 - State: open. A kind change needs a new lemma unit.
 
@@ -214,7 +214,7 @@ How to handle a new finding is in `../README.md` section 7.
 ### Negative test classifier can count a wrong failure as a pass
 
 - What: a mutant passes when Lean reports an error inside the theorem. An unknown identifier or a parse error is such an error, but it does not test the code.
-- Where: `gen/e2e/negative.py`.
+- Where: `gen/checks/negative.py`.
 - State: fixed in part (commit `23eceac` and later). Such first errors get the class `wrong_target`. The list of patterns is not complete. Read the first error of every row.
 
 ### Five negative cases do not pass
@@ -222,16 +222,16 @@ How to handle a new finding is in `../README.md` section 7.
 - What: five Lean mutants fail, but not inside their designated theorem, or they time out.
   The runs on commit `0174730a` and on the current tree give the same result.
 - Where:
-  - `e2-tie-cp-stmt-field` (`prysm/go1.26.10/e2e/scal/negcases-enc2.json`, `Prysm.Checkpoint.Encode.fast_path_of_kind`): class `outside`.
+  - `checkpoint-encode-fast-path-of-kind-tie-stmt-field` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-encoder-lemmas.json`, `Prysm.Checkpoint.Encode.fast_path_of_kind`): class `outside`.
     The mutation is in the statement. The second error is a heartbeat timeout of the whole declaration.
     Lean reports it at the start of the command, the `set_option … in` line above the `theorem` line.
     The theorem range of the tool starts at the `theorem` line.
-  - `lv-sa-bitslen63` (`prysm/go1.26.10/e2e/lv/negcases-lv.json`, `Prysm.SyncAggregate.Decode.accept`): class `outside`.
+  - `sync-aggregate-bitslen63` (`prysm/go1.26.10/evidence/lists-and-vectors/negative-cases-sync-aggregate-and-sync-committee.json`, `Prysm.SyncAggregate.Decode.accept`): class `outside`.
     The code mutation changes `movq $0x40,0x10(%rdx)` to `movq $0x3f,0x10(%rdx)`.
     The only error (unsolved goals) is 7 lines before the theorem line.
     That line is in the proof of the segment lemma `Prysm.SyncAggregate.Decode.bits_seg`, which reads the same code directives.
-  - `g3-kindacc-stmt-jret` (`prysm/go1.26.10/e2e/scal/negcases-gen3.json`, `Prysm.BlobIdentifier.Decode.accept_is_kind`): class `timeout_heartbeat`.
-  - `g5-tie-pd-kind-jret` and `g5-tie-bh-kind-ptr` (`prysm/go1.26.10/e2e/scal/negcases-gen5.json`,
+  - `blob-identifier-kindacc-stmt-jret` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-call-segments.json`, `Prysm.BlobIdentifier.Decode.accept_is_kind`): class `timeout_heartbeat`.
+  - `pending-deposit-tie-kind-jret` and `beacon-block-header-tie-kind-ptr` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-whole-accept.json`,
     `Prysm.PendingDeposit.Decode.accept_is_kind_any_frame` and `Prysm.BeaconBlockHeader.Decode.accept_is_kind_any_frame`): class `timeout_heartbeat`.
   - The three timeouts occur at the default limit of 200000 heartbeats.
     Each mutant changes one literal of the kind instance, and `rfl` does not refute the equality within the limit.
@@ -250,7 +250,7 @@ How to handle a new finding is in `../README.md` section 7.
 ### A generated theorem can carry an extra hypothesis
 
 - What: a proof by `exact` checks only the text after the colon. A hypothesis added before the colon still compiles.
-- State: fixed by the `_kind` identity on the full type (commit `094e51e`) and the text check `gen/scal/kindcheck.py`. Neither check alone is enough.
+- State: fixed by the `_kind` identity on the full type (commit `094e51e`) and the text check `gen/generator/kindcheck.py`. Neither check alone is enough.
 
 ### `lake env lean` does not check that the build is current
 
@@ -316,8 +316,8 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: `lean/Prysm/Checkpoint/CapacityReservedCode.lean` includes `.S` files from a directory that `lean/lakefile.toml` does not declare as an input.
   A change in such a file does not make Lake build the proofs again.
-- Where: `prysm/go1.26.10/opt-r1/link/norm` (the capacity-reserved test ELF). The link set `prysm/go1.26.10/link-set` is an input.
-  `ElfData.PrysmTarget.typeDeposit_Data_addr` comes from the data include of its data file. `gen/e2e/depcheck_data.py` checks this.
+- Where: `prysm/go1.26.10/capacity-reserved/link/norm` (the capacity-reserved test ELF). The link set `prysm/go1.26.10/link-set` is an input.
+  `ElfData.PrysmTarget.typeDeposit_Data_addr` comes from the data include of its data file. `gen/checks/depcheck_data.py` checks this.
 - State: open for the capacity-reserved test ELF. A `lakefile.toml` change needs user approval.
 
 ### Inventory script trusts its method list
@@ -333,7 +333,7 @@ How to handle a new finding is in `../README.md` section 7.
 - A broken checker copy fails with a `KeyError`, not with a check result.
 - The IR reader of the encoder generator accepts any untagged 8-byte field as `uint64`.
 - The negative tests that compare the IR with the code change one theorem only. There are no whole-file mutants.
-- `prysm/go1.26.10/e2e/scal/e2c/own_layout_e2g_r1.py` is not a step of a gate script.
+- `prysm/go1.26.10/evidence/generator-cases/encode-spec/layout_recomputation.py` is not a step of a gate script.
 - State: open. Each needs a checker or test change.
 
 ### Paths that the proofs do not cover
@@ -366,7 +366,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Runtime contracts are not proved on the compiled runtime
 
-- What: the contracts come from a reading of the Go 1.26.3 runtime source. A source comparison (`gen/e2e/runtime_diff.py`) found the functions behind each contract unchanged in Go 1.26.10.
+- What: the contracts come from a reading of the Go 1.26.3 runtime source. A source comparison (`gen/checks/runtime_diff.py`) found the functions behind each contract unchanged in Go 1.26.10.
   `growslice` and `nextslicecap` are byte-identical. The changed functions (`moveSliceNoCap`, `itabInit`, `adjustframe`, GC stack scanning) carry no contract.
   The compiled runtime code is not compared. The contracts also assume no garbage collection during a call and a successful allocation.
 - State: accepted trust item.
@@ -383,7 +383,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Absolute paths in committed records
 
-- What: some generated records contain absolute paths of the original machine, for example `prysm/go1.26.10/e2e/negative/result.json`.
+- What: some generated records contain absolute paths of the original machine, for example `prysm/go1.26.10/evidence/negative/result.json`.
   Two Python bytecode files in git history contain container paths. They are not in the current tree.
 - How it shows: `git grep -nE "/workspace|fve2e-" -- fv/kraken ':!fv/kraken/lean/.lake'`.
 - State: open. The user decides how to treat the history before publication.

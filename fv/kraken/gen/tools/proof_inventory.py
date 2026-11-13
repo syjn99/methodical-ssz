@@ -10,12 +10,12 @@
   proof_inventory.py run <decls.tsv> <axioms-gate.json> <proof-inventory.md> <proof-inventory.json>
       read `prysm/go1.26.10/ssz-methods.json` (every SSZ method of the pinned target), `prysm/go1.26.10/functions.json`
       (the DUMPED subset: the functions with a `.S` text), `prysm/ir/ir-mainnet.json` (field shapes, for the flat
-      population), <axioms-gate.json> (the JSON of `gen/e2e/axioms_gate.py run` on the built tree of the same commit;
+      population), <axioms-gate.json> (the JSON of `gen/checks/axioms_gate.py run` on the built tree of the same commit;
       its verdict must be PASS; the table records its header, declaration, theorem and module counts), the code
       constants of `lean/Prysm/**` (`def X : Program := include_x64_code "…S"`, keyed by full declared name, whatever
       module declares them), the link tables `prysm/go1.26.10/**/RESULT`, and <decls.tsv> (output of
       `gen/tools/inventory_decls.lean` for the names above, run on the built tree of the same commit), and write the
-      table. The committed record `prysm/go1.26.10/e2e/axioms-gate.json` (a past run, old names) is not read.
+      table. The committed record `prysm/go1.26.10/evidence/axioms-gate.json` (a past run, old names) is not read.
   (cwd = fv/kraken)
 
 Three denominators are kept apart: (1) the SSZ methods of the target (`ssz-methods.json`, per method kind);
@@ -77,7 +77,7 @@ V1A = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
 PRIM = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
 V1E = "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
 
-# The development population: the 16 flat fixed-size types with which the generated-decoder work (`scalgen.py decoder
+# The development population: the 16 flat fixed-size types with which the generated-decoder work (`generator.py decoder
 # --whole-accept`) started (decoders; AttestationData has nested fields and is listed apart).
 DEVELOPMENT_TYPES = ["Checkpoint", "BeaconBlockHeader", "Eth1Data", "BlobIdentifier", "DepositMessage", "Deposit_Data",
           "PendingPartialWithdrawal", "SyncCommitteeMessage", "PendingConsolidation", "PendingDeposit", "PowBlock",
@@ -439,7 +439,7 @@ def run(decls_p, gate_p, md_p, json_p):
     gate = json.load(open(gate_p))
     for k in ("header", "verdict", "declarations", "theorems", "modules"):
         if k not in gate:
-            print(f"FAIL {gate_p}: no `{k}` (not an output of gen/e2e/axioms_gate.py run)")
+            print(f"FAIL {gate_p}: no `{k}` (not an output of gen/checks/axioms_gate.py run)")
             return 1
     raw = open(decls_p).read().split("\n")
     if not any(l.startswith("# inventory_decls v1") for l in raw):
@@ -714,7 +714,7 @@ def run(decls_p, gate_p, md_p, json_p):
           "not counted here.", "",
           f"Inputs: `{METHODS_JSON}` (made by `proof_inventory.py methods` from the `go tool nm` listing of the ELF, "
           f"sha256 `{sm['nm_sha256']}`; the listing is not committed), `prysm/go1.26.10/functions.json`, "
-          "`prysm/ir/ir-mainnet.json`, the output of `gen/e2e/axioms_gate.py run` on the built tree, the code constants "
+          "`prysm/ir/ir-mainnet.json`, the output of `gen/checks/axioms_gate.py run` on the built tree, the code constants "
           "of `lean/Prysm/` with the link tables of the pinned ELF (`prysm/go1.26.10/**/RESULT`), and the output "
           "of `gen/tools/inventory_decls.lean` on the built tree.", "",
           f"Declarations header: `{header}`. Axioms gate run: {gate['verdict']}, {gate['declarations']} declarations "

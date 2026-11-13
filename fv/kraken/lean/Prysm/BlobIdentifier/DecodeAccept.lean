@@ -169,7 +169,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
-  -- BlockRoot: the generated segment theorem (raw scalgen output, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean`), 13 → 37
+  -- BlockRoot: the generated segment theorem (raw generator output, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean`), 13 → 37
   refine eventually_trans _ _ _ _ (Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_seg k hk hf
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)

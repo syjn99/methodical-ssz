@@ -8,7 +8,7 @@ import Prysm.BlobIdentifier.DecodeAccept
 `Decode.accept_from_generated_field_segments` has the statement text of `Prysm.BlobIdentifier.Decode.accept`; `Decode.accept_from_generated_field_segments_type`
 proves that the two declared types are equal (`with_reducible rfl`). The proof is a chain of
 `eventually_trans` over `dechead_seg`, the generated BlockRoot segment
-`Prysm.BlobIdentifier.Decode.generated_field_BlockRoot_seg` (`Prysm/BlobIdentifier/GeneratedDecodeFieldSegments.lean`, raw `scalgen.py decoder --field-segments` output),
+`Prysm.BlobIdentifier.Decode.generated_field_BlockRoot_seg` (`Prysm/BlobIdentifier/GeneratedDecodeFieldSegments.lean`, raw `generator.py decoder --field-segments` output),
 `bytesdec_tail_seg`, the generated Index segment `Prysm.BlobIdentifier.Decode.generated_field_Index_seg` and `decepi_seg`.
 Model: `Prysm/BlobIdentifier/DecodeAcceptComposedExample.lean` (the same chain over hand-written example segments). By hand here: the
 statement copy, the code facts of the head / tail / epilogue templates and the frame instance of each step.

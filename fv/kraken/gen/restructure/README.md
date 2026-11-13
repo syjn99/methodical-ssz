@@ -163,7 +163,7 @@ The maps apply in this order:
   The frame `Machine.luFrame` (`_sep`, `_slices`) becomes `Machine.stackFrame144`.
   The modules `EncodeFastPathExamples` and `DecodeAcceptExamples` become `EncodeFastPathExampleIndex` and `DecodeAcceptExampleIndex`.
   The module `Uint64DecoderKindAnchors` becomes `Uint64DecoderKindSameAsHand`.
-  A script renames the tactic `bytesdec_z` to `bytesdec_offset_zero_case`, and the kind name in `kindcheck.py` and `scalgen.py`.
+  A script renames the tactic `bytesdec_z` to `bytesdec_offset_zero_case`, and the kind name in `kindcheck.py` and `generator.py`.
 - `maps/data-names/`: plain ids for the ELF data of the Prysm link set.
   The data names `ElfData.PrysmTarget.<id>`, `<id>_addr` and `<id>_addr_eq` take the new ids, and
   `Prysm.Deposit.Code.depDataType_addr` becomes the data include `ElfData.PrysmTarget.typeDeposit_Data_addr`.
@@ -232,7 +232,7 @@ Before the forward run:
 3. Write the declaration dump of the base:
    `sh fv/kraken/gen/restructure/tools/dump_all.sh <scratch>/dump-base.tsv`.
 4. Run the axioms gate on the base, and keep its dump:
-   `python3 -B fv/kraken/gen/e2e/axioms_gate.py run <scratch>/gate-base.json <scratch>/gate-base.tsv`.
+   `python3 -B fv/kraken/gen/checks/axioms_gate.py run <scratch>/gate-base.json <scratch>/gate-base.tsv`.
 5. Run the Python checks on the base:
    `sh fv/kraken/gen/restructure/tools/python_checks.sh <scratch>/python-before`.
 6. Run the regeneration comparison on the base:
@@ -271,7 +271,7 @@ Checks before the commit:
 13. Run `lake build` of every library of `lakefile.toml` (the command of item 2).
     Expected: exit 0.
 14. Run the axioms gate:
-    `python3 -B fv/kraken/gen/e2e/axioms_gate.py run <scratch>/gate.json <scratch>/gate.tsv`.
+    `python3 -B fv/kraken/gen/checks/axioms_gate.py run <scratch>/gate.json <scratch>/gate.tsv`.
     Expected: PASS. The count `declarations` of `<scratch>/gate.json` equals that of `<scratch>/gate-base.json`
     (item 4), or the difference is the declarations that the step adds or deletes, listed in the commit message.
     Then compare the two gate dumps across the map:
@@ -280,7 +280,7 @@ Checks before the commit:
     ```
     Expected: exit 0 (no missing name, no extra name, no changed kind or axiom set).
 15. Check the negative cases (cwd `fv/kraken`):
-    `python3 -I -B gen/e2e/negative.py --check-cases <every negcases*.json file>`.
+    `python3 -I -B gen/checks/negative.py --check-cases <every negcases*.json file>`.
     Expected: 0 failures.
     `python_checks.sh` runs this check with every tracked case file.
 16. Run the Python checks after the step:

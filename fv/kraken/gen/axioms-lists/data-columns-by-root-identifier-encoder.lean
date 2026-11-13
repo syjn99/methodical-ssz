@@ -7,7 +7,7 @@ import Prysm.DataColumnsByRootIdentifier.WitnessEncodeFastPath
 import Prysm.DataColumnsByRootIdentifier.WitnessEncodeGrowFirstSite
 import Prysm.DataColumnsByRootIdentifier.WitnessEncodeRejectLength
 
-/-! Hand list of the DataColumnsByRootIdentifier encoder theorems for `gen/e2e/axioms_gate.py` ("must exist" names;
+/-! Hand list of the DataColumnsByRootIdentifier encoder theorems for `gen/checks/axioms_gate.py` ("must exist" names;
 every name also gets the axiom check). -/
 
 #print axioms Prysm.DataColumnsByRootIdentifier.Encode.fast_path

@@ -3,10 +3,10 @@
 usage (from the repository root):
   python3 -I -B fv/kraken/gen/restructure/tools/negative_case_ranges.py <case file>...
 
-A case file path is relative to fv/kraken (for example gen/e2e/negcases.json).
+A case file path is relative to fv/kraken (for example gen/checks/negative-cases-checkpoint-and-attestation-data.json).
 A case file is a JSON list of cases, or an object with the key "cases".
 Each output line is: case file, case id, first line, last line, number of lines.
-The ranges come from `cut` of fv/kraken/gen/e2e/negative.py, the function that the negative runner uses.
+The ranges come from `cut` of fv/kraken/gen/checks/negative.py, the function that the negative runner uses.
 Run it before and after a step. A rename changes no line count, so the two outputs must be equal.
 Exit 1 if a case does not resolve to one theorem.
 """
@@ -20,7 +20,7 @@ if len(sys.argv) < 2:
 REPO = pathlib.Path(subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True,
                                    check=True).stdout.strip())
 KRAKEN = REPO / "fv" / "kraken"
-sys.path.insert(0, str(KRAKEN / "gen" / "e2e"))
+sys.path.insert(0, str(KRAKEN / "gen" / "checks"))
 import negative  # noqa: E402
 
 failures = 0

@@ -48,18 +48,18 @@ run() {
 }
 
 run data_check link/data.py python3 -B link/data.py --check link/out
-run axioms_gate_selftest gen/e2e/axioms_gate.py python3 -I -B gen/e2e/axioms_gate.py --selftest
-run check_include gen/e2e/check_include.py python3 -I -B gen/e2e/check_include.py
-run depcheck_data gen/e2e/depcheck_data.py python3 -I -B gen/e2e/depcheck_data.py
-run depcheck_data_selftest gen/e2e/depcheck_data.py python3 -I -B gen/e2e/depcheck_data.py --selftest
-run kindcheck_selftest gen/scal/kindcheck.py python3 -I -B gen/scal/kindcheck.py --selftest
+run axioms_gate_selftest gen/checks/axioms_gate.py python3 -I -B gen/checks/axioms_gate.py --selftest
+run check_include gen/checks/check_include.py python3 -I -B gen/checks/check_include.py
+run depcheck_data gen/checks/depcheck_data.py python3 -I -B gen/checks/depcheck_data.py
+run depcheck_data_selftest gen/checks/depcheck_data.py python3 -I -B gen/checks/depcheck_data.py --selftest
+run kindcheck_selftest gen/generator/kindcheck.py python3 -I -B gen/generator/kindcheck.py --selftest
 
 if [ -z "${KINDCHECK_FILES:-}" ]; then
   KINDCHECK_FILES=$(ls lean/Prysm/*/Generated*.lean lean/Prysm/*/Decode*Example*.lean 2>/dev/null | grep -v -e 'Partial\.lean$' -e SameAsHand -e GeneratedEncodeFastPathSpec -e CompositionKind)
 fi
 if [ -n "$KINDCHECK_FILES" ]; then
   # shellcheck disable=SC2086
-  run kindcheck_generated gen/scal/kindcheck.py python3 -I -B gen/scal/kindcheck.py $KINDCHECK_FILES
+  run kindcheck_generated gen/generator/kindcheck.py python3 -I -B gen/generator/kindcheck.py $KINDCHECK_FILES
 else
   echo "kindcheck_generated not run (no files)" | tee -a "$OUT/summary.txt"
 fi
@@ -67,15 +67,15 @@ if [ -z "${PARTIAL_FILES:-}" ]; then
   PARTIAL_FILES=$(ls lean/Prysm/*/Generated*Partial.lean 2>/dev/null)
 fi
 for f in $PARTIAL_FILES; do
-  run "kindcheck_partial_$(basename "$(dirname "$f")")_$(basename "$f" .lean)" gen/scal/kindcheck.py python3 -I -B gen/scal/kindcheck.py --partial "$f"
+  run "kindcheck_partial_$(basename "$(dirname "$f")")_$(basename "$f" .lean)" gen/generator/kindcheck.py python3 -I -B gen/generator/kindcheck.py --partial "$f"
 done
 
-run negative_selftest gen/e2e/negative.py python3 -I -B gen/e2e/negative.py --selftest
+run negative_selftest gen/checks/negative.py python3 -I -B gen/checks/negative.py --selftest
 # git ls-files in fv/kraken prints paths relative to fv/kraken.
-CASES=$(git ls-files '*negcases*.json' | sort)
+CASES=$(git ls-files '*negative-cases*.json' | sort)
 echo "$CASES" > "$OUT/negative_case_files.txt"
 # shellcheck disable=SC2086
-run negative_check_cases gen/e2e/negative.py python3 -I -B gen/e2e/negative.py --check-cases $CASES
+run negative_check_cases gen/checks/negative.py python3 -I -B gen/checks/negative.py --check-cases $CASES
 # shellcheck disable=SC2086
 run negative_case_ranges gen/restructure/tools/negative_case_ranges.py \
   python3 -I -B gen/restructure/tools/negative_case_ranges.py $CASES

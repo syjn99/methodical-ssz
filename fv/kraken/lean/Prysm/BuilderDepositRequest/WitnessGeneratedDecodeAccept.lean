@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of the generated `Decode.generated_accept` (`v1.BuilderDepositRequest` decoder accept path; 24 flat hold-out types)
 
-Written by the evidence script `f24wit.py`: the text of `Prysm/Deposit_Data/WitnessDecodeAccept.lean` with the
+Written by the evidence script `flat_types_witness.py`: the text of `Prysm/Deposit_Data/WitnessDecodeAccept.lean` with the
 v1.BuilderDepositRequest host and layout. It shows that the premises of the generated accept theorem (statement = kind instance)
 are satisfiable. Host: data labels, the real Go 1.26.10 `(*v1.BuilderDepositRequest).UnmarshalSSZ` (index 9),
 the 1-byte bump `runtime.makeslice` (152, `bump_makeslice1`) and `MemmoveGrowsliceModel` (158, `model_memmove`).

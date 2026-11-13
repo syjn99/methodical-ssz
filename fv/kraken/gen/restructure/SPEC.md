@@ -152,7 +152,7 @@ These decisions are binding for every step.
    Each namespace block of that module goes to the namespace of its own type.
    The module goes under the type of the first block.
    Mark it "shared, needs a split".
-6. The description term generators `fv/kraken/gen/e2e/descterm.py` and `lvdescterm.py` emit `namespace Prysm.<GoTypeName>`.
+6. The description term generators `fv/kraken/gen/checks/desc_to_lean.py` and `list_desc_to_lean.py` emit `namespace Prysm.<GoTypeName>`.
    The name comes from the Go type name.
    Do not edit the generators in a type step.
    Put the generated files of your types in the map.
@@ -195,7 +195,7 @@ These follow through the tool, or through the generator when a generator writes 
   Remove an old library when it has no module left.
 - README files and `fv/kraken/FINDINGS.md`.
 
-The axioms gate `fv/kraken/gen/e2e/axioms_gate.py` reads the library list from `lakefile.toml`.
+The axioms gate `fv/kraken/gen/checks/axioms_gate.py` reads the library list from `lakefile.toml`.
 It needs no edit.
 
 Do not rewrite these files:

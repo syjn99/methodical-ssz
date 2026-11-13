@@ -12,7 +12,7 @@ import Prysm.PendingConsolidation.Statements
 /-!
 # Independent hand STATEMENTS of the two accept theorems (hold-out; statements only, no proof)
 
-Hand-written BEFORE the proof generator (`gen/scal/scalgen.py`) was run on
+Hand-written BEFORE the proof generator (`gen/generator/generator.py`) was run on
 either type and before any generator output for them was read.
 Sources: the Go receiver layout (IR `go_fields` in `prysm/ir/ir-mainnet.json`), the SSZ layout
 (consensus-specs; `Prysm/SyncCommitteeMessage/SpecDescription.lean`, `Prysm/PendingConsolidation/SpecDescription.lean`), the frame facts of the two `.S` files

@@ -6,7 +6,7 @@ usage (from the repository root, or give --root):
           --regen <regen result.txt> [--out <groups.tsv>]
   python3 -I -B fv/kraken/gen/tools/duplicate_statements.py --selftest
 
-  <gate dump.tsv>  the dump of the axioms gate: `python3 -I -B fv/kraken/gen/e2e/axioms_gate.py run <json> <dump.tsv>`.
+  <gate dump.tsv>  the dump of the axioms gate: `python3 -I -B fv/kraken/gen/checks/axioms_gate.py run <json> <dump.tsv>`.
                    Columns: name, kind, statement (type) hash, value hash, axioms.
   --root           the directory fv/kraken of the tree that gave the dump (default: fv/kraken).
   --regen          the result of `gen/restructure/tools/regen.py` for the same tree (required). Its third column
@@ -312,7 +312,7 @@ def checked_names(root):
         for f in sorted(fs):
             p = os.path.join(dp, f)
             rel = os.path.relpath(p, root)
-            if 'negcases' in f and f.endswith('.json'):
+            if 'negative-cases' in f and f.endswith('.json'):
                 d = json.load(open(p, encoding='utf-8'))
                 cases = d if isinstance(d, list) else d.get('cases', [])
                 for c in cases:
@@ -471,7 +471,7 @@ FIXTURE = {
                              'theorem add_zero_hand (n : Nat) : n + 0 = n := rfl\nend Base\n',
     'lean/Base/Other.lean': 'namespace Other\ntheorem add_zero_other (n : Nat) : n + 0 = n := rfl\nend Other\n',
     'lean/Base/Uses.lean': 'import Base.Lemmas\nexample : Base.add_zero_hand 1 = Base.add_zero_hand 1 := rfl\n',
-    'lean/T/GeneratedDecodeAccept.lean': '/- written by scalgen.py decoder -/\nnamespace T\ntheorem generated_a : True := trivial\n'
+    'lean/T/GeneratedDecodeAccept.lean': '/- written by generator.py decoder -/\nnamespace T\ntheorem generated_a : True := trivial\n'
                                          'theorem generated_step_a : True := trivial\n'
                                          'theorem generated_b : 1 = 1 := rfl\n'
                                          'theorem generated_b_kind : 2 = 2 := rfl\nend T\n',
@@ -481,7 +481,7 @@ FIXTURE = {
     'lean/T/Plain.lean': 'namespace T\ntheorem lemma_one : 4 = 4 := rfl\nend T\n',
     'lean/T/PlainTwin.lean': 'import T.Plain\nnamespace T\ntheorem lemma_two : 4 = 4 := rfl\nend T\n'
                              'theorem use_two : 4 = 4 := T.lemma_two\n',
-    'gen/scal/gen.sh': 'python3 scalgen.py uint64 --same-as T.accept\n',
+    'gen/generator/gen.sh': 'python3 generator.py uint64 --same-as T.accept\n',
     'gen/axioms-lists/hand.lean': '#print axioms T.seg\n',
 }
 DUMP = [('Base.f.eq_1', 'h1'), ('Base.f_eq', 'h1'),              # lean-derived
@@ -544,7 +544,7 @@ def selftest():
          dict(want2, **{'T.made_by_macro': 'unclassified', 'T.lemma_one': 'unclassified'}), 1)
     # 5. a negative case names the free member: checked-derivation, exit 0
     files5 = dict(FIXTURE)
-    files5['gen/scal/negcases-x.json'] = json.dumps([{'module': 'T/Plain.lean', 'theorem': 'T.lemma_one', 'kind': 'control', 'id': 'x'},
+    files5['gen/generator/negative-cases-x.json'] = json.dumps([{'module': 'T/Plain.lean', 'theorem': 'T.lemma_one', 'kind': 'control', 'id': 'x'},
                                                      {'module': 'T/PlainTwin.lean', 'theorem': 'lemma_two', 'kind': 'control', 'id': 'y'}])
     case('negative cases name both members: checked-derivation, exit 0', files5, DUMP,
          dict(want, **{'T.lemma_one': 'checked-derivation', 'T.lemma_two': 'checked-derivation'}), 0)

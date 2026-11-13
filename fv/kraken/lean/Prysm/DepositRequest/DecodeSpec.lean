@@ -4,12 +4,12 @@ import Prysm.DepositRequest.Spec
 /-!
 # Spec alignment of the real `v1.DepositRequest` decoder (24 flat hold-out types)
 
-Built on the GENERATED theorems of `Prysm/DepositRequest/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `part1.sh`; raw output, not
+Built on the GENERATED theorems of `Prysm/DepositRequest/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`; raw output, not
 edited):
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
   The statement is the generated accept statement (kind instance) with the input chunks replaced by the
-  encoding of `g` (text written by the evidence script `f24speck.py` from the generated statement; then checked
+  encoding of `g` (text written by the evidence script `flat_types_decode_spec.py` from the generated statement; then checked
   by Lean against `Prysm.DepositRequest.Decode.generated_accept`).
 - `Decode.reject_size_spec`: `bs.size ≠ 192` → EthLib rejects, and the machine code returns `ssz.ErrSize`
   (generated `Decode.generated_reject`).

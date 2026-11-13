@@ -1,0 +1,706 @@
+[
+ {
+  "id": "checkpoint-spec-control",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "checkpoint-wit-control",
+  "module": "Prysm/Checkpoint/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "checkpoint-fast-stmt-out",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "checkpoint-spec-out",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "checkpoint-spec-hcap",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 40 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 32 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "checkpoint-wit-rax",
+  "module": "Prysm/Checkpoint/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x10100",
+  "new": "st.data.regs.rax = 0x10108"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-spec-spec-control",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-block-header-witness-generated-encode-fast-path-runs-empty-wit-control",
+  "module": "Prysm/BeaconBlockHeader/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-block-header-fast-stmt-out",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (b4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 88))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "beacon-block-header-spec-out",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "beacon-block-header-spec-hcap",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 104 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "beacon-block-header-wit-rax",
+  "module": "Prysm/BeaconBlockHeader/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x101a8",
+  "new": "st.data.regs.rax = 0x101b0"
+ },
+ {
+  "id": "eth1-data-spec-control",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "eth1-data-wit-control",
+  "module": "Prysm/Eth1Data/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "eth1-data-fast-stmt-out",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (b2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "eth1-data-spec-out",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "eth1-data-spec-hcap",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 72 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 64 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "eth1-data-wit-rax",
+  "module": "Prysm/Eth1Data/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x10150",
+  "new": "st.data.regs.rax = 0x10158"
+ },
+ {
+  "id": "blob-identifier-spec-control",
+  "module": "Prysm/BlobIdentifier/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BlobIdentifier.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "blob-identifier-wit-control",
+  "module": "Prysm/BlobIdentifier/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BlobIdentifier.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "blob-identifier-fast-stmt-out",
+  "module": "Prysm/BlobIdentifier/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BlobIdentifier.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 32))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "blob-identifier-spec-out",
+  "module": "Prysm/BlobIdentifier/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BlobIdentifier.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "blob-identifier-spec-hcap",
+  "module": "Prysm/BlobIdentifier/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BlobIdentifier.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 40 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 32 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "blob-identifier-wit-rax",
+  "module": "Prysm/BlobIdentifier/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BlobIdentifier.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x10100",
+  "new": "st.data.regs.rax = 0x10108"
+ },
+ {
+  "id": "deposit-message-spec-control",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-message-wit-control",
+  "module": "Prysm/DepositMessage/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-message-fast-stmt-out",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (v2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (v2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 88))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "deposit-message-spec-out",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "deposit-message-spec-hcap",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 88 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 80 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "deposit-message-wit-rax",
+  "module": "Prysm/DepositMessage/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x10138",
+  "new": "st.data.regs.rax = 0x10140"
+ },
+ {
+  "id": "deposit-data-encode-generated-fast-spec-spec-control",
+  "module": "Prysm/Deposit_Data/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-data-wit-control",
+  "module": "Prysm/Deposit_Data/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Deposit_Data.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-data-fast-stmt-out",
+  "module": "Prysm/Deposit_Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Deposit_Data.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (b3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 88))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 96))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "deposit-data-spec-out",
+  "module": "Prysm/Deposit_Data/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "deposit-data-spec-hcap",
+  "module": "Prysm/Deposit_Data/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 184 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 176 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "deposit-data-wit-rax",
+  "module": "Prysm/Deposit_Data/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Deposit_Data.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x101e0",
+  "new": "st.data.regs.rax = 0x101e8"
+ },
+ {
+  "id": "pending-partial-withdrawal-encode-generated-fast-spec-spec-control",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "pending-partial-withdrawal-witness-generated-encode-fast-path-runs-empty-wit-control",
+  "module": "Prysm/PendingPartialWithdrawal/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "pending-partial-withdrawal-fast-stmt-out",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (v2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (v2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 24))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "pending-partial-withdrawal-spec-out",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "pending-partial-withdrawal-spec-hcap",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 24 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "pending-partial-withdrawal-wit-rax",
+  "module": "Prysm/PendingPartialWithdrawal/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x10100",
+  "new": "st.data.regs.rax = 0x10108"
+ },
+ {
+  "id": "sync-committee-message-encode-generated-fast-spec-spec-control",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "sync-committee-message-wit-control",
+  "module": "Prysm/SyncCommitteeMessage/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "sync-committee-message-fast-stmt-out",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (b3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 56))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "sync-committee-message-spec-out",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "sync-committee-message-spec-hcap",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 144 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 136 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "sync-committee-message-wit-rax",
+  "module": "Prysm/SyncCommitteeMessage/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x101c0",
+  "new": "st.data.regs.rax = 0x101c8"
+ },
+ {
+  "id": "pending-consolidation-encode-generated-fast-spec-spec-control",
+  "module": "Prysm/PendingConsolidation/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingConsolidation.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "pending-consolidation-wit-control",
+  "module": "Prysm/PendingConsolidation/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "pending-consolidation-fast-stmt-out",
+  "module": "Prysm/PendingConsolidation/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingConsolidation.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "pending-consolidation-spec-out",
+  "module": "Prysm/PendingConsolidation/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingConsolidation.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "pending-consolidation-spec-hcap",
+  "module": "Prysm/PendingConsolidation/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingConsolidation.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "pending-consolidation-wit-rax",
+  "module": "Prysm/PendingConsolidation/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x100d8",
+  "new": "st.data.regs.rax = 0x100e0"
+ },
+ {
+  "id": "pending-deposit-encode-generated-fast-spec-spec-control",
+  "module": "Prysm/PendingDeposit/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingDeposit.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "pending-deposit-wit-control",
+  "module": "Prysm/PendingDeposit/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingDeposit.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "pending-deposit-fast-stmt-out",
+  "module": "Prysm/PendingDeposit/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingDeposit.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (v4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 184))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (v4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 192))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "pending-deposit-spec-out",
+  "module": "Prysm/PendingDeposit/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingDeposit.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "pending-deposit-spec-hcap",
+  "module": "Prysm/PendingDeposit/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingDeposit.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 192 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 184 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "pending-deposit-wit-rax",
+  "module": "Prysm/PendingDeposit/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingDeposit.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x10220",
+  "new": "st.data.regs.rax = 0x10228"
+ },
+ {
+  "id": "pow-block-encode-generated-fast-spec-spec-control",
+  "module": "Prysm/PowBlock/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PowBlock.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "pow-block-wit-control",
+  "module": "Prysm/PowBlock/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PowBlock.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "pow-block-fast-stmt-out",
+  "module": "Prysm/PowBlock/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PowBlock.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (b2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 64))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 72))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "pow-block-spec-out",
+  "module": "Prysm/PowBlock/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PowBlock.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "pow-block-spec-hcap",
+  "module": "Prysm/PowBlock/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PowBlock.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 96 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 88 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "pow-block-wit-rax",
+  "module": "Prysm/PowBlock/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PowBlock.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x10128",
+  "new": "st.data.regs.rax = 0x10130"
+ },
+ {
+  "id": "historical-summary-spec-control",
+  "module": "Prysm/HistoricalSummary/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.HistoricalSummary.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "historical-summary-wit-control",
+  "module": "Prysm/HistoricalSummary/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.HistoricalSummary.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "historical-summary-fast-stmt-out",
+  "module": "Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.HistoricalSummary.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 32))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "historical-summary-spec-out",
+  "module": "Prysm/HistoricalSummary/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.HistoricalSummary.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "historical-summary-spec-hcap",
+  "module": "Prysm/HistoricalSummary/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.HistoricalSummary.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 64 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 56 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "historical-summary-wit-rax",
+  "module": "Prysm/HistoricalSummary/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.HistoricalSummary.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x10118",
+  "new": "st.data.regs.rax = 0x10120"
+ },
+ {
+  "id": "signing-data-spec-control",
+  "module": "Prysm/SigningData/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.SigningData.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "signing-data-wit-control",
+  "module": "Prysm/SigningData/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.SigningData.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "signing-data-fast-stmt-out",
+  "module": "Prysm/SigningData/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.SigningData.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 32))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "signing-data-spec-out",
+  "module": "Prysm/SigningData/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.SigningData.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "signing-data-spec-hcap",
+  "module": "Prysm/SigningData/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.SigningData.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 64 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 56 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "signing-data-wit-rax",
+  "module": "Prysm/SigningData/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.SigningData.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x100f0",
+  "new": "st.data.regs.rax = 0x100f8"
+ },
+ {
+  "id": "sync-aggregator-selection-data-spec-control",
+  "module": "Prysm/SyncAggregatorSelectionData/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "sync-aggregator-selection-data-wit-control",
+  "module": "Prysm/SyncAggregatorSelectionData/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "sync-aggregator-selection-data-fast-stmt-out",
+  "module": "Prysm/SyncAggregatorSelectionData/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "sync-aggregator-selection-data-spec-out",
+  "module": "Prysm/SyncAggregatorSelectionData/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "sync-aggregator-selection-data-spec-hcap",
+  "module": "Prysm/SyncAggregatorSelectionData/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "sync-aggregator-selection-data-wit-rax",
+  "module": "Prysm/SyncAggregatorSelectionData/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x100d0",
+  "new": "st.data.regs.rax = 0x100d8"
+ },
+ {
+  "id": "validator-balance-spec-control",
+  "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "validator-balance-wit-control",
+  "module": "Prysm/ValidatorBalance/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorBalance.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "validator-balance-fast-stmt-out",
+  "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "validator-balance-spec-out",
+  "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "validator-balance-spec-hcap",
+  "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "validator-balance-wit-rax",
+  "module": "Prysm/ValidatorBalance/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorBalance.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x100d0",
+  "new": "st.data.regs.rax = 0x100d8"
+ },
+ {
+  "id": "voluntary-exit-spec-control",
+  "module": "Prysm/VoluntaryExit/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.VoluntaryExit.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "voluntary-exit-wit-control",
+  "module": "Prysm/VoluntaryExit/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.VoluntaryExit.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "voluntary-exit-fast-stmt-out",
+  "module": "Prysm/VoluntaryExit/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.VoluntaryExit.Encode.generated_fast",
+  "kind": "stmt",
+  "old": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "voluntary-exit-spec-out",
+  "module": "Prysm/VoluntaryExit/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.VoluntaryExit.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "voluntary-exit-spec-hcap",
+  "module": "Prysm/VoluntaryExit/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.VoluntaryExit.Encode.generated_fast_spec",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "voluntary-exit-wit-rax",
+  "module": "Prysm/VoluntaryExit/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.VoluntaryExit.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x100d8",
+  "new": "st.data.regs.rax = 0x100e0"
+ }
+]

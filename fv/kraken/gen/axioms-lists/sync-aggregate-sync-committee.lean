@@ -10,7 +10,7 @@ import Prysm.SyncCommittee.SpecEquivalence
 import Prysm.RuntimeModel.BumpAllocatorByteSliceDispatch
 import Prysm.SyncCommittee.WitnessDecodeAccept
 
-/-! Hand list of the SyncAggregate and SyncCommittee decoder theorems for `gen/e2e/axioms_gate.py` ("must exist" names;
+/-! Hand list of the SyncAggregate and SyncCommittee decoder theorems for `gen/checks/axioms_gate.py` ("must exist" names;
 every name also gets the axiom check). -/
 
 #print axioms Prysm.SyncAggregate.Decode.reject_size

@@ -1,6 +1,6 @@
-# Old data id (the records name it: e2e/e2e.json, negative/result.json, the RESULT files of the earlier
+# Old data id (the records name it: evidence/e2e.json, negative/result.json, the RESULT files of the earlier
 # link sets in git history) -> data id of prysm/go1.26.10/link-set/data/ and the rule that gives it
-# (link/data.py `item_id`, or the item table of a gen/e2e/*link.py script for a type descriptor).
+# (link/data.py `item_id`, or the item table of a gen/checks/*link.py script for a type descriptor).
 old id	new id	rule
 adCpType	typeCheckpoint	item table
 adFmtCi	formatCommitteeIndex	item_id
