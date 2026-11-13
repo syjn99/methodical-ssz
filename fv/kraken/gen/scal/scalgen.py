@@ -267,7 +267,7 @@ def ir_roots(ir_path, tname):
 # Offset-0 form (a 32-byte field at SSZ offset 0; extension after both hold-outs were opened; Eth1Data is development data for it).
 # When the memmove source is the buffer pointer itself, Go 1.26.10 omits `add $src,%rbx`: the second block
 # is `rootDecMid` without that directive (`Codec.rootDecMidZ`, lemma `rootdec_seg_z`, kind
-# `rootDecSegZKind`, `lean/E2eScal/{`Codec/Bytes32DecodeOffsetZero.lean`,`Codec/Kind/Bytes32DecodeOffsetZero.lean`}.lean`). The form is chosen by the directive after the
+# `rootDecSegZKind`, `lean/Codec/Bytes32DecodeOffsetZero.lean`, `lean/Codec/Kind/Bytes32DecodeOffsetZero.lean`). The form is chosen by the directive after the
 # buffer reload, never by a type or field name: `add $X,%rbx` = the add form (X must be the IR SSZ offset);
 # `mov $0x20,%ecx` = the offset-0 form (the IR SSZ offset must be 0); anything else = no match.
 P2DECZ_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
@@ -467,7 +467,7 @@ def p2dec(args):
 # classified and reported:
 #   fixed byte vector, `[]byte`, size 32  -> the theorem text of the first generator and its offset-0 extension (`rootdec_seg` / `rootdec_seg_z`);
 #   fixed byte vector, `[]byte`, size 48 / 96 -> `Codec.bytesdec_seg` / `bytesdec_seg_z` (lemmas of
-#                                             `lean/E2eScal/{`Codec/FixedBytesDecode.lean`,`Codec/Kind/FixedBytesDecode.lean`}.lean`), kinds `bytesDecSeg(Z)Kind`;
+#                                             `lean/Codec/FixedBytesDecode.lean`, `lean/Codec/Kind/FixedBytesDecode.lean`), kinds `bytesDecSeg(Z)Kind`;
 #   `uint64` (IR k = uint, 64 bits)        -> `Codec.u64dec_inline_seg` (`{`Codec/InlineUint64.lean`,`Codec/Kind/InlineUint64.lean`}.lean`);
 #   anything else (byte vector of another size, delegated overlay fields such as Slot / Epoch, nested
 #   containers, lists, bitfields, bool)    -> "not covered: <reason>", never a guessed theorem.
@@ -785,7 +785,7 @@ def p2dec_gen2(args):
 #
 # Compatibility switch: the GEN3 shapes are ONLY behind `--gen3`. Without it, `--gen2` and the default mode are
 # the earlier text byte for byte (`regen_check.sh` of every committed file). `--gen3` adds exactly the shapes
-# of the GEN3 lemma unit (`lean/E2eScal/{`Codec/CalleeDecode.lean`,`Codec/Kind/CalleeDecode.lean`,`Codec/InlineUint64RegisterBase.lean`,`Codec/FixedBytesDecodePadding.lean`,`Codec/Kind/DecodeAcceptComposition.lean`}.lean`):
+# of the GEN3 lemma unit (`lean/Codec/CalleeDecode.lean`, `lean/Codec/Kind/CalleeDecode.lean`, `lean/Codec/InlineUint64RegisterBase.lean`, `lean/Codec/FixedBytesDecodePadding.lean`, `lean/Codec/Kind/DecodeAcceptComposition.lean`):
 #   uint64-overlay field decoded by a CALL to a callee decoder with a proved accept spec (Slot, CommitteeIndex,
 #     ValidatorIndex, Epoch of `consensus-types/primitives`): the call block `calldec_seg` (`callq fn;
 #     test %rax,%rax; je lok`, label `lok:` after it) and the argument set-up before the `callq`, one of the
@@ -1513,8 +1513,8 @@ def compose(args, dirs, sha, irsha, fields, found):
 # ---------------------------------------------------------------- GEN4 (`p2dec --gen4`)
 #
 # Compatibility switch: GEN4 is ONLY behind `--gen4` (its own path; it does not change the default, `--gen2` or
-# `--gen3` text, `regen_check.sh` of every committed file). Lemmas: `lean/E2eScal/{`Codec/NopWindow.lean`,`Codec/WindowSteps.lean`,
-# `Codec/Kind/WindowSteps.lean`,`Codec/CalleeDecodeWindow.lean`,`Codec/FixedBytesDecodeWindow.lean`,`Codec/FixedBytesDecodeWindowOffsetZero.lean`,`Codec/Kind/FixedBytesDecodeWindow.lean`}.lean`; the interface is the GEN4 lemma unit's hand-over.
+# `--gen3` text, `regen_check.sh` of every committed file). Lemmas: `lean/Codec/NopWindow.lean`, `lean/Codec/WindowSteps.lean`,
+# `lean/Codec/Kind/WindowSteps.lean`, `lean/Codec/CalleeDecodeWindow.lean`, `lean/Codec/FixedBytesDecodeWindow.lean`, `lean/Codec/FixedBytesDecodeWindowOffsetZero.lean`, `lean/Codec/Kind/FixedBytesDecodeWindow.lean`; the interface is the GEN4 lemma unit's hand-over.
 # Matching is NOT by multi-directive set-up templates. The generator walks the accept path of the decoder from the
 # end of the head (prologue, spills, nil check) and keeps a small DATAFLOW state: which register / stack slot holds
 # the receiver (`rcv + o`), the buffer (`bf + o`), an immediate, the bytes of the buffer at an offset, the new slice

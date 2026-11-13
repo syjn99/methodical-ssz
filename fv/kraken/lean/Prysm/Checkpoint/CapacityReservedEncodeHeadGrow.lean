@@ -188,17 +188,17 @@ theorem Encode.head_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   kat hk marshalSSZTo 31
   kat hk marshalSSZTo 32
   kat hk marshalSSZTo 33
-  apply load_step_at _ _ (rsp.toBitVec + 24) _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 24) _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 34
   kat hk marshalSSZTo 35
-  apply store_step_at _ _ (rsp.toBitVec - 24) _ _ _ l24 _ _ (by eaddr) (by ecancel) (by exact hl24)
+  apply store_step_at _ _ (rsp.toBitVec - 24) _ _ _ l24 _ _ (by checkpoint_addr) (by ecancel) (by exact hl24)
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
   kunfold
   kat hk marshalSSZTo 36
-  apply store_step_at _ _ (rsp.toBitVec - 16) _ _ _ l16 _ _ (by eaddr) (by ecancel) (by exact hl16)
+  apply store_step_at _ _ (rsp.toBitVec - 16) _ _ _ l16 _ _ (by checkpoint_addr) (by ecancel) (by exact hl16)
   intro m10 H10
   simp only [Width.bytes, Width.bits] at H10
   kunfold
@@ -235,11 +235,11 @@ theorem Encode.head_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   subst rsp2 r142 rbp2
   -- directives 41–47: the [:len(dst)] bounds check and the reload
   kat hk marshalSSZTo 41
-  apply load_step_at _ _ (rsp.toBitVec + 24) _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 24) _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 42
-  apply load_step_at _ _ (rsp.toBitVec - 24) _ _ (Int.toBytes 8 rcx1.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 24) _ _ (Int.toBytes 8 rcx1.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 43
@@ -255,12 +255,12 @@ theorem Encode.head_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
       omega
   simp only [Effects.All]
   kat hk marshalSSZTo 45
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 46
   kat hk marshalSSZTo 47
-  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 rax1.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 rax1.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
@@ -280,6 +280,6 @@ theorem Encode.head_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   all_goals first
     | with_reducible rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)
-    | (apply UInt64.toBitVec_inj.mp; eaddr)
+    | (apply UInt64.toBitVec_inj.mp; checkpoint_addr)
 
 end Prysm.Checkpoint.CapacityReserved

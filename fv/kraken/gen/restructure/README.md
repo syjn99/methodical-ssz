@@ -156,6 +156,18 @@ The maps apply in this order:
   AttestationData link set get the names of their types, and type-independent lemmas get `Codec` names.
   A cut script then moves their text into the modules of their new names.
 
+Some steps were applied by scripts, not by maps. The inverse mode of `rename.py` does not undo them.
+The commit message of each such step lists its edits:
+
+- the clean-up step after `maps/clean-up/`: a script split the modules that held declarations of two types (each
+  declaration kept its full name and its text), and a script deleted the duplicate theorems whose statements were identical
+  to kept theorems;
+- the retirement of the library of the Go 1.26.3 test target: a script deleted that library with its proofs;
+- the cut after `maps/shared-names/`: a script moved declaration texts into the modules of their new names;
+- the template names step: a script renamed the tactic `bhaddr`, the command `#g4_dep_check` and the comments that
+  generator templates write;
+- the step of the short tactic names: a script renamed the tactics listed in `TOOL-NOTES.md` section 5.
+
 Issue 10 of `syjn99/methodical-ssz` holds the list of the steps that remain.
 
 ## 5. Helper scripts in `tools/`
@@ -240,7 +252,8 @@ Checks before the commit:
     Expected: exit 0.
 14. Run the axioms gate:
     `python3 -B fv/kraken/gen/e2e/axioms_gate.py run <scratch>/gate.json <scratch>/gate.tsv`.
-    Expected: PASS with 20309 declarations, or an explained difference.
+    Expected: PASS. The count `declarations` of `<scratch>/gate.json` equals that of `<scratch>/gate-base.json`
+    (item 4), or the difference is the declarations that the step adds or deletes, listed in the commit message.
     Then compare the two gate dumps across the map:
     ```sh
     python3 -I -B fv/kraken/gen/restructure/tools/gate_dump_compare.py <scratch>/gate-base.tsv <scratch>/gate.tsv fv/kraken/gen/restructure/maps/<step>

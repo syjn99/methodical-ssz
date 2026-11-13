@@ -128,7 +128,7 @@ theorem Encode.enc_a1 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : 
     show rsp.toBitVec - 56 + 8 = rsp.toBitVec - 48 by bv_omega] at H4
   kat hk marshalSSZTo 18
   apply store_step_at _ _ (rsp.toBitVec - 56) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
-    _ _ (by eaddr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
+    _ _ (by checkpoint_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
   intro m5 H5
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl sl hsl] at H5
   kunfold
@@ -141,7 +141,7 @@ theorem Encode.enc_a1 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : 
   klabel hk hf marshalSSZTo 33
   kat hk marshalSSZTo 33
   kat hk marshalSSZTo 34
-  apply load_step_at _ _ (rsp.toBitVec - 56) _ _ sl _ _ (by eaddr) (by ecancel) (by exact hsl)
+  apply load_step_at _ _ (rsp.toBitVec - 56) _ _ sl _ _ (by checkpoint_addr) (by ecancel) (by exact hsl)
   kunfold
   kat hk marshalSSZTo 35
   rw [Codec.add_mul_one]
@@ -196,7 +196,7 @@ theorem Encode.enc_a2 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : 
   simp only [UInt64.size] at *
   kat hk marshalSSZTo 36
   kat hk marshalSSZTo 37
-  apply load_step_at _ _ (rax.toBitVec + 16) _ _ pi _ _ (by eaddr) (by ecancel) (by exact hpi)
+  apply load_step_at _ _ (rax.toBitVec + 16) _ _ pi _ _ (by checkpoint_addr) (by ecancel) (by exact hpi)
   kunfold
   kat hk marshalSSZTo 38
   kat hk marshalSSZTo 39
@@ -220,7 +220,7 @@ theorem Encode.enc_a2 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : 
     show rsp.toBitVec - 88 + 8 = rsp.toBitVec - 80 by bv_omega] at H8
   kat hk marshalSSZTo 44
   apply store_step_at _ _ (rsp.toBitVec - 88) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
-    _ _ (by eaddr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
+    _ _ (by checkpoint_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
   intro m9 H9
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl pi hpi] at H9
   kunfold
@@ -233,7 +233,7 @@ theorem Encode.enc_a2 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : 
   klabel hk hf marshalSSZTo 59
   kat hk marshalSSZTo 59
   kat hk marshalSSZTo 60
-  apply load_step_at _ _ (rsp.toBitVec - 88) _ _ pi _ _ (by eaddr) (by ecancel) (by exact hpi)
+  apply load_step_at _ _ (rsp.toBitVec - 88) _ _ pi _ _ (by checkpoint_addr) (by ecancel) (by exact hpi)
   kunfold
   kat hk marshalSSZTo 61
   rw [Codec.add_add_8_mul_one]

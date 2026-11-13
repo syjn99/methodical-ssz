@@ -12,7 +12,7 @@ Hand-written after the hold-out was opened. The WithdrawalCredentials segment is
 raw generator theorem `Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg` (`Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean`, unedited). The
 PublicKey segment (48 bytes, source offset 0) is the hand lemma `Prysm.DepositMessage.bytes48dec_seg_z` (`Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`):
 the generator does not read 48-byte fields. Amount (inline uint64) is by hand. The head and the composition
-are the text of `Prysm/Eth1Data/DecodeAccept.lean`; `e1addr` and `Prysm.Eth1Data.Decode.stack_low_eq` are reused from it.
+are the text of `Prysm/Eth1Data/DecodeAccept.lean`; `eth1_data_addr` and `Prysm.Eth1Data.Decode.stack_low_eq` are reused from it.
 
     func (d *DepositMessage) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 88 { return ssz.ErrSize }
@@ -110,7 +110,7 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   rotate_right
   · ecancel
   all_goals (apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_sub, UInt64.toBitVec_ofNat]; try rfl)
-  all_goals e1addr
+  all_goals eth1_data_addr
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -207,14 +207,14 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   subst hrsp2 hrbp2 hr142
   -- directives 37–38, L_c4 (45), 46
   kat hk unmarshalSSZ 37
-  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 p1.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 p1.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 38
   klabel hk hf unmarshalSSZ 45
   kat hk unmarshalSSZ 45
   kat hk unmarshalSSZ 46
-  apply store_step_at _ _ rax.toBitVec _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrdx2]; try e1addr) (by ecancel)
+  apply store_step_at _ _ rax.toBitVec _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrdx2]; try eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
@@ -241,27 +241,27 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   subst hrsp3 hrbp3 hr143
   -- directives 73–74, L_162 (81), 82; Amount 83–85 (hand: no template for an inline uint64 read)
   kat hk unmarshalSSZ 73
-  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 p2.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 p2.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 74
   klabel hk hf unmarshalSSZ 81
   kat hk unmarshalSSZ 81
   kat hk unmarshalSSZ 82
-  apply store_step_at _ _ (rax.toBitVec + 24) _ _ _ (Int.toBytes 8 p2.toInt) _ _ (by rw [hrdx3]; try e1addr) (by ecancel)
+  apply store_step_at _ _ (rax.toBitVec + 24) _ _ _ (Int.toBytes 8 p2.toInt) _ _ (by rw [hrdx3]; try eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
   kunfold
   kat hk unmarshalSSZ 83
-  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 84
-  apply load_step_at _ _ (rbx.toBitVec + 80) _ _ amt _ _ (by e1addr) (by ecancel) (by exact hamt)
+  apply load_step_at _ _ (rbx.toBitVec + 80) _ _ amt _ _ (by eth1_data_addr) (by ecancel) (by exact hamt)
   kunfold
   kat hk unmarshalSSZ 85
-  apply store_step_at _ _ (rax.toBitVec + 48) _ _ _ aN _ _ (by rw [hrdx3]; try e1addr) (by ecancel)
+  apply store_step_at _ _ (rax.toBitVec + 48) _ _ _ aN _ _ (by rw [hrdx3]; try eth1_data_addr) (by ecancel)
     (by exact haN)
   intro m5' H5
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl amt hamt] at H5
@@ -273,11 +273,11 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   intro _
   kat hk unmarshalSSZ 88
   kat hk unmarshalSSZ 89
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 90
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -292,7 +292,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; e1addr)
+    | (apply UInt64.toBitVec_inj.mp; eth1_data_addr)
     | (apply UInt64.toBitVec_inj.mp; simp [BitVec.xor_self])
 
 end Prysm.DepositMessage

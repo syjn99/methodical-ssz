@@ -68,7 +68,7 @@ theorem Decode.accept : Decode.accept_statement := by
   simp only [UInt64.size] at hz1 hz2 hz3 hz4
   -- the spill area: the 24 makeslice spill bytes and the rest
   rw [show spl = spl.take 24 ++ spl.drop 24 from (List.take_append_drop 24 spl).symm,
-    at_app (spl.take 24) (spl.drop 24) (b := rsp.toBitVec - 120) (by simp [hspl]; dcaddr) (by simp [hspl])] at h_mem
+    at_app (spl.take 24) (spl.drop 24) (b := rsp.toBitVec - 120) (by simp [hspl]; data_columns_by_root_identifier_decode_addr) (by simp [hspl])] at h_mem
   -- 0–8 guard and prologue
   kat hk unmarshalSSZ 0
   kat hk unmarshalSSZ 1
@@ -85,14 +85,14 @@ theorem Decode.accept : Decode.accept_statement := by
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk unmarshalSSZ 5
-  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by dcaddr) (by ecancel) (by exact hfp)
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
   kat hk unmarshalSSZ 6
   kat hk unmarshalSSZ 7
   kat hk unmarshalSSZ 8
-  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by dcaddr) (by ecancel) (by exact h2)
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold
@@ -104,7 +104,7 @@ theorem Decode.accept : Decode.accept_statement := by
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega
   simp only [Effects.All]
   kat hk unmarshalSSZ 11
-  apply load_step_at _ _ (rbx.toBitVec + 32) _ _ Prysm.DataColumnsByRootIdentifier.offsetBytes _ _ (by dcaddr) (by ecancel) (by rfl)
+  apply load_step_at _ _ (rbx.toBitVec + 32) _ _ Prysm.DataColumnsByRootIdentifier.offsetBytes _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by rfl)
   kunfold
   kat hk unmarshalSSZ 12
   kat hk unmarshalSSZ 13
@@ -115,22 +115,22 @@ theorem Decode.accept : Decode.accept_statement := by
   simp only [Effects.All]
   -- 16–19 spills
   kat hk unmarshalSSZ 16
-  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by dcaddr) (by ecancel) (by exact h1)
+  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact h1)
   intro m3 H3
   simp only [Width.bytes, Width.bits] at H3
   kunfold
   kat hk unmarshalSSZ 17
-  apply store_step_at _ _ (rsp.toBitVec + 32) _ _ _ s4 _ _ (by dcaddr) (by ecancel) (by exact h4)
+  apply store_step_at _ _ (rsp.toBitVec + 32) _ _ _ s4 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact h4)
   intro m4 H4
   simp only [Width.bytes, Width.bits] at H4
   kunfold
   kat hk unmarshalSSZ 18
-  apply store_step_at _ _ (rsp.toBitVec + 24) _ _ _ s3 _ _ (by dcaddr) (by ecancel) (by exact h3)
+  apply store_step_at _ _ (rsp.toBitVec + 24) _ _ _ s3 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact h3)
   intro m5 H5
   simp only [Width.bytes, Width.bits] at H5
   kunfold
   kat hk unmarshalSSZ 19
-  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by dcaddr) (by ecancel)
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m6 H6
   simp only [Width.bytes, Width.bits] at H6
@@ -141,16 +141,16 @@ theorem Decode.accept : Decode.accept_statement := by
   intro _
   kat hk unmarshalSSZ 22
   kat hk unmarshalSSZ 23
-  apply store_step_at _ _ (rsp.toBitVec - 152) _ _ _ rslot _ _ (by dcaddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (rsp.toBitVec - 152) _ _ _ rslot _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact hrs)
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
   kunfold
-  rw [show rsp.toBitVec - 8#64 - 136 - 8#64 = rsp.toBitVec - 152 by dcaddr]
+  rw [show rsp.toBitVec - 8#64 - 136 - 8#64 = rsp.toBitVec - 152 by data_columns_by_root_identifier_decode_addr]
   refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 23 + 1)) 32 avail lo (spl.take 24) _
     rfl (by simp) (by rfl) (by omega) (by unfold maxAlloc; omega) (by decide) hlo (by simp [hspl])
     (by
       dsimp only
-      rw [show rsp.toBitVec - 152 + 8 = rsp.toBitVec - 144 by dcaddr]
+      rw [show rsp.toBitVec - 152 + 8 = rsp.toBitVec - 144 by data_columns_by_root_identifier_decode_addr]
       ecancel)) ?_
   rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, hrbp3, stk3, spm3, hstk3, hspm3, Hm3⟩
   dsimp only at hpc3 hrsp3 hr143 hrbp3 Hm3
@@ -159,36 +159,36 @@ theorem Decode.accept : Decode.accept_statement := by
     zmms3, flags3, mem3⟩ := d3
   simp only at hrsp3 hr143 hrbp3 Hm3
   rw [show ({ toBitVec := rsp.toBitVec - 152 } + 8 : UInt64) = { toBitVec := rsp.toBitVec - 144 } by
-    apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; dcaddr] at hrsp3
+    apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; data_columns_by_root_identifier_decode_addr] at hrsp3
   subst hrsp3 hr143 hrbp3
-  rw [show rsp.toBitVec - 152 + 8 = rsp.toBitVec - 144 by dcaddr] at Hm3
+  rw [show rsp.toBitVec - 152 + 8 = rsp.toBitVec - 144 by data_columns_by_root_identifier_decode_addr] at Hm3
   simp only [Nat.one_mul] at Hm3
   -- 24–26 the BlockRoot header: len 0, cap 32
   kat hk unmarshalSSZ 24
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by dcaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk unmarshalSSZ 25
-  apply store_step_at _ _ (rax.toBitVec + 16) _ _ _ aL1 _ _ (by dcaddr) (by ecancel) (by exact haL1)
+  apply store_step_at _ _ (rax.toBitVec + 16) _ _ _ aL1 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact haL1)
   intro m8 H8
   simp only [Width.bytes, Width.bits] at H8
   kunfold
   kat hk unmarshalSSZ 26
-  apply store_step_at _ _ (rax.toBitVec + 24) _ _ _ aC1 _ _ (by dcaddr) (by ecancel) (by exact haC1)
+  apply store_step_at _ _ (rax.toBitVec + 24) _ _ _ aC1 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact haC1)
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
   kunfold
   -- 27–35 the buf[36:] pointer
   kat hk unmarshalSSZ 27
-  apply load_step_at _ _ (rsp.toBitVec + 32) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by dcaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 32) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk unmarshalSSZ 28
   generalize hCdef : -36 + rdi.toBitVec = C
   kat hk unmarshalSSZ 29
-  apply store_step_at _ _ (rsp.toBitVec - 104) _ _ _ l28 _ _ (by dcaddr) (by ecancel) (by exact hl28)
+  apply store_step_at _ _ (rsp.toBitVec - 104) _ _ _ l28 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact hl28)
   intro m10 H10
   simp only [Width.bytes, Width.bits] at H10
   kunfold
@@ -198,7 +198,7 @@ theorem Decode.accept : Decode.accept_statement := by
   kat hk unmarshalSSZ 32
   intro _
   kat hk unmarshalSSZ 33
-  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by dcaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
@@ -211,7 +211,7 @@ theorem Decode.accept : Decode.accept_statement := by
   generalize rbx.toBitVec + BitVec.zeroExtend 64 (BitVec.extractLsb' 0 32
     (BitVec.sshiftRight (-C) 63) &&& BitVec.truncate 32 (36 : BitVec 64)) = P at hPib ⊢
   kat hk unmarshalSSZ 35
-  apply store_step_at _ _ (rsp.toBitVec - 88) _ _ _ l38 _ _ (by dcaddr) (by ecancel) (by exact hl38)
+  apply store_step_at _ _ (rsp.toBitVec - 88) _ _ _ l38 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact hl38)
   intro m11 H11
   simp only [Width.bytes, Width.bits] at H11
   kunfold
@@ -228,23 +228,23 @@ theorem Decode.accept : Decode.accept_statement := by
   -- 43–47 pointer stores and `memmove(pb, buf, 32)`
   kat hk unmarshalSSZ 43
   kat hk unmarshalSSZ 44
-  apply store_step_at _ _ (rsp.toBitVec - 80) _ _ _ l40 _ _ (by dcaddr) (by ecancel) (by exact hl40)
+  apply store_step_at _ _ (rsp.toBitVec - 80) _ _ _ l40 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact hl40)
   intro m12 H12
   simp only [Width.bytes, Width.bits] at H12
   kunfold
   kat hk unmarshalSSZ 45
-  apply store_step_at _ _ (rax.toBitVec + 8) _ _ _ aP1 _ _ (by dcaddr) (by ecancel) (by exact haP1)
+  apply store_step_at _ _ (rax.toBitVec + 8) _ _ _ aP1 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact haP1)
   intro m13 H13
   simp only [Width.bytes, Width.bits] at H13
   kunfold
   kat hk unmarshalSSZ 46
   kat hk unmarshalSSZ 47
   apply store_step_at _ _ (rsp.toBitVec - 152) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 23 + 1)).toBitVec.toInt) _ _
-    (by dcaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m14 H14
   simp only [Width.bytes, Width.bits] at H14
   kunfold
-  rw [show rsp.toBitVec - 144 - 8#64 = rsp.toBitVec - 152 by dcaddr]
+  rw [show rsp.toBitVec - 144 - 8#64 = rsp.toBitVec - 152 by data_columns_by_root_identifier_decode_addr]
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 47 + 1)) root (List.replicate 32 0) stk3 _
     (by rw [hroot]; rfl) (by simp [hroot]) hstk3 (by dsimp only; ecancel)) ?_
   rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, hr144, hrbp4, stk4, hstk4, Hm4⟩
@@ -254,22 +254,22 @@ theorem Decode.accept : Decode.accept_statement := by
     zmms4, flags4, mem4⟩ := d4
   simp only at hrsp4 hr144 hrbp4 Hm4
   rw [show ({ toBitVec := rsp.toBitVec - 152 } + 8 : UInt64) = { toBitVec := rsp.toBitVec - 144 } by
-    apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; dcaddr] at hrsp4
+    apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; data_columns_by_root_identifier_decode_addr] at hrsp4
   subst hrsp4 hr144 hrbp4
   -- 48–63 len = cap = 32, the barrier branch (not taken), the pointer store again
   kat hk unmarshalSSZ 48
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by dcaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk unmarshalSSZ 49
-  apply store_step_at _ _ (rax.toBitVec + 16) _ _ _ (Int.toBytes 8 (BitVec.toInt (0 : BitVec 64))) _ _ (by dcaddr)
+  apply store_step_at _ _ (rax.toBitVec + 16) _ _ _ (Int.toBytes 8 (BitVec.toInt (0 : BitVec 64))) _ _ (by data_columns_by_root_identifier_decode_addr)
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m15 H15
   simp only [Width.bytes, Width.bits] at H15
   kunfold
   kat hk unmarshalSSZ 50
-  apply store_step_at _ _ (rax.toBitVec + 24) _ _ _ (Int.toBytes 8 (BitVec.toInt (32 : BitVec 64))) _ _ (by dcaddr)
+  apply store_step_at _ _ (rax.toBitVec + 24) _ _ _ (Int.toBytes 8 (BitVec.toInt (32 : BitVec 64))) _ _ (by data_columns_by_root_identifier_decode_addr)
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m16 H16
   simp only [Width.bytes, Width.bits] at H16
@@ -284,7 +284,7 @@ theorem Decode.accept : Decode.accept_statement := by
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   kat hk unmarshalSSZ 54
-  apply load_step_at _ _ (rsp.toBitVec - 80) _ _ (Int.toBytes 8 rax3.toBitVec.toInt) _ _ (by dcaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 80) _ _ (Int.toBytes 8 rax3.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
@@ -292,14 +292,14 @@ theorem Decode.accept : Decode.accept_statement := by
   klabel hk hf unmarshalSSZ 62
   kat hk unmarshalSSZ 62
   kat hk unmarshalSSZ 63
-  apply store_step_at _ _ (rax.toBitVec + 8) _ _ _ (Int.toBytes 8 rax3.toBitVec.toInt) _ _ (by dcaddr) (by ecancel)
+  apply store_step_at _ _ (rax.toBitVec + 8) _ _ _ (Int.toBytes 8 rax3.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m17 H17
   simp only [Width.bytes, Width.bits] at H17
   kunfold
   -- 64–71 alignment and bound checks (not taken)
   kat hk unmarshalSSZ 64
-  apply load_step_at _ _ (rsp.toBitVec + 24) _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by dcaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 24) _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
@@ -331,7 +331,7 @@ theorem Decode.accept : Decode.accept_statement := by
   generalize BitVec.ushiftRight (-36 + rcx.toBitVec) 3 = Q at hq ⊢
   -- 72–75 the Columns makeslice (len = cap = n)
   kat hk unmarshalSSZ 72
-  apply store_step_at _ _ (rsp.toBitVec - 96) _ _ _ l30 _ _ (by dcaddr) (by ecancel) (by exact hl30)
+  apply store_step_at _ _ (rsp.toBitVec - 96) _ _ _ l30 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact hl30)
   intro m18 H18
   simp only [Width.bytes, Width.bits] at H18
   kunfold
@@ -339,16 +339,16 @@ theorem Decode.accept : Decode.accept_statement := by
   kat hk unmarshalSSZ 74
   kat hk unmarshalSSZ 75
   apply store_step_at _ _ (rsp.toBitVec - 152) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 47 + 1)).toBitVec.toInt) _ _
-    (by dcaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m19 H19
   simp only [Width.bytes, Width.bits] at H19
   kunfold
-  rw [show rsp.toBitVec - 144 - 8#64 = rsp.toBitVec - 152 by dcaddr]
+  rw [show rsp.toBitVec - 144 - 8#64 = rsp.toBitVec - 152 by data_columns_by_root_identifier_decode_addr]
   refine eventually_trans _ _ _ _ (hmsU _ (Host.addrOf (k + 75 + 1)) n (avail - 32) stk4 spm3 _
     rfl (by show Q.toNat ≤ n; omega) hq (by omega) (by unfold maxAlloc; omega) (by omega) hstk4 hspm3
     (by
       dsimp only
-      rw [show rsp.toBitVec - 152 + 8 = rsp.toBitVec - 144 by dcaddr]
+      rw [show rsp.toBitVec - 152 + 8 = rsp.toBitVec - 144 by data_columns_by_root_identifier_decode_addr]
       ecancel)) ?_
   rintro ⟨d5, pc5⟩ ⟨hpc5, hrsp5, hr145, hrbp5, stk5, spm5, hstk5, hspm5, Hm5⟩
   dsimp only at hpc5 hrsp5 hr145 hrbp5 Hm5
@@ -357,27 +357,27 @@ theorem Decode.accept : Decode.accept_statement := by
     zmms5, flags5, mem5⟩ := d5
   simp only at hrsp5 hr145 hrbp5 Hm5
   rw [show ({ toBitVec := rsp.toBitVec - 152 } + 8 : UInt64) = { toBitVec := rsp.toBitVec - 144 } by
-    apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; dcaddr] at hrsp5
+    apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; data_columns_by_root_identifier_decode_addr] at hrsp5
   subst hrsp5 hr145 hrbp5
-  rw [show rsp.toBitVec - 152 + 8 = rsp.toBitVec - 144 by dcaddr] at Hm5
+  rw [show rsp.toBitVec - 152 + 8 = rsp.toBitVec - 144 by data_columns_by_root_identifier_decode_addr] at Hm5
   -- 76–93 the Columns header and pointer, rcx = cap − 36, rdi = buf[36:], rax = 0, `jmp L_320`
   kat hk unmarshalSSZ 76
-  apply load_step_at _ _ (rsp.toBitVec - 96) _ _ (Int.toBytes 8 Q.toInt) _ _ (by dcaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 96) _ _ (Int.toBytes 8 Q.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk unmarshalSSZ 77
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by dcaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk unmarshalSSZ 78
-  apply store_step_at _ _ (rax.toBitVec + 40) _ _ _ aL2 _ _ (by dcaddr) (by ecancel) (by exact haL2)
+  apply store_step_at _ _ (rax.toBitVec + 40) _ _ _ aL2 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact haL2)
   intro m20 H20
   simp only [Width.bytes, Width.bits] at H20
   kunfold
   kat hk unmarshalSSZ 79
-  apply store_step_at _ _ (rax.toBitVec + 48) _ _ _ aC2 _ _ (by dcaddr) (by ecancel) (by exact haC2)
+  apply store_step_at _ _ (rax.toBitVec + 48) _ _ _ aC2 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact haC2)
   intro m21 H21
   simp only [Width.bytes, Width.bits] at H21
   kunfold
@@ -392,17 +392,17 @@ theorem Decode.accept : Decode.accept_statement := by
   klabel hk hf unmarshalSSZ 87
   kat hk unmarshalSSZ 87
   kat hk unmarshalSSZ 88
-  apply store_step_at _ _ (rax.toBitVec + 32) _ _ _ aP2 _ _ (by dcaddr) (by ecancel) (by exact haP2)
+  apply store_step_at _ _ (rax.toBitVec + 32) _ _ _ aP2 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact haP2)
   intro m22 H22
   simp only [Width.bytes, Width.bits] at H22
   kunfold
   kat hk unmarshalSSZ 89
-  apply load_step_at _ _ (rsp.toBitVec - 104) _ _ (Int.toBytes 8 C.toInt) _ _ (by dcaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 104) _ _ (Int.toBytes 8 C.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk unmarshalSSZ 90
-  apply load_step_at _ _ (rsp.toBitVec - 88) _ _ (Int.toBytes 8 P.toInt) _ _ (by dcaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 88) _ _ (Int.toBytes 8 P.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
@@ -436,11 +436,11 @@ theorem Decode.accept : Decode.accept_statement := by
   intro _
   kat hk unmarshalSSZ 207
   kat hk unmarshalSSZ 208
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by dcaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 209
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by dcaddr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -453,13 +453,13 @@ theorem Decode.accept : Decode.accept_statement := by
     spm5 ++ spl.drop 24, stk5, Int.toBytes_length 8 _, Int.toBytes_length 8 _, Int.toBytes_length 8 _,
     Int.toBytes_length 8 _, by simp [hspm5, hspl], hstk5, ?mem⟩
   case mem =>
-    rw [at_app spm5 (spl.drop 24) (b := rsp.toBitVec - 120) (by rw [hspm5]; dcaddr) (by simp [hspm5, hspl])]
+    rw [at_app spm5 (spl.drop 24) (b := rsp.toBitVec - 120) (by rw [hspm5]; data_columns_by_root_identifier_decode_addr) (by simp [hspm5, hspl])]
     rw [Nat.sub_sub, show k + 75 + 1 = k + 76 from rfl] at Hm6
     ecancel
   all_goals first
     | exact trivial
     | rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)
-    | (apply UInt64.toBitVec_inj.mp; dcaddr)
+    | (apply UInt64.toBitVec_inj.mp; data_columns_by_root_identifier_decode_addr)
 
 end Prysm.DataColumnsByRootIdentifier

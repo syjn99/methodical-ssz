@@ -155,12 +155,12 @@ theorem Encode.grow_iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
       (by rw [hA]; omega)] at h_mem
     simp only [Effects.All]
     kat hk marshalSSZTo 90
-    apply store_step_at _ _ (x - 48) _ _ _ l48 _ _ (by daddr) (by ecancel) (by exact hl48)
+    apply store_step_at _ _ (x - 48) _ _ _ l48 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl48)
     intro m1 H1
     simp only [Width.bytes, Width.bits] at H1
     kunfold
     kat hk marshalSSZTo 91
-    apply store_step_at _ _ (x - 72) _ _ _ l72 _ _ (by daddr) (by ecancel) (by exact hl72)
+    apply store_step_at _ _ (x - 72) _ _ _ l72 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl72)
     intro m2 H2
     simp only [Width.bytes, Width.bits,
       toBytes_ofInt_ofBytes 64 8 rfl _ (show ((cb.drop (8 * i)).take 8).length = 8 by simp; omega)] at H2
@@ -168,7 +168,7 @@ theorem Encode.grow_iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
     kat hk marshalSSZTo 92
     kat hk marshalSSZTo 93
     kat hk marshalSSZTo 94
-    apply store_step_at _ _ (x - 144) _ _ _ rslot _ _ (by daddr) (by ecancel) (by exact hrs)
+    apply store_step_at _ _ (x - 144) _ _ _ rslot _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hrs)
     intro m3 H3
     simp only [Width.bytes, Width.bits] at H3
     kunfold
@@ -202,19 +202,19 @@ theorem Encode.grow_iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
     rw [Encode.grow_loop_split _ tail2 rax1.toBitVec L i hA ht2 (by have := rcx1.toNat_lt_size; simp only [UInt64.size] at this; omega)]
       at Hm1
     kat hk marshalSSZTo 95
-    apply load_step_at _ _ (x - 24) _ _ (Int.toBytes 8 rdx.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+    apply load_step_at _ _ (x - 24) _ _ (Int.toBytes 8 rdx.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
       (by exact Int.toBytes_length 8 _)
     kunfold
     kat hk marshalSSZTo 96
-    apply load_step_at _ _ (x - 48) _ _ (Int.toBytes 8 rsi.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+    apply load_step_at _ _ (x - 48) _ _ (Int.toBytes 8 rsi.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
       (by exact Int.toBytes_length 8 _)
     kunfold
     kat hk marshalSSZTo 97
-    apply load_step_at _ _ (x - 40) _ _ (Int.toBytes 8 nb.toInt) _ _ (by daddr) (by ecancel)
+    apply load_step_at _ _ (x - 40) _ _ (Int.toBytes 8 nb.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
       (by exact Int.toBytes_length 8 _)
     kunfold
     kat hk marshalSSZTo 98
-    apply load_step_at _ _ (x - 72) _ _ ((cb.drop (8 * i)).take 8) _ _ (by daddr) (by ecancel) (by simp; omega)
+    apply load_step_at _ _ (x - 72) _ _ ((cb.drop (8 * i)).take 8) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by simp; omega)
     kunfold
     kat hk marshalSSZTo 99
     klabel hk hf marshalSSZTo 79

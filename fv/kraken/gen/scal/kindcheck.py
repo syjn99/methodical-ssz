@@ -602,7 +602,7 @@ theorem z (k : Nat) (hk : Prysm.Eth1Data.Code.unmarshalSSZ.IsInfixAt Host.prog k
 theorem z_kind : ∀ (h : Host), type_of% (@z h) = @Codec.rootDecSegZKind h Prysm.Eth1Data.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by
   intro h; with_reducible rfl
 
-theorem t_same : @E2eAd.x = @t := rfl
+theorem t_same : @Prysm.Fixture.x = @t := rfl
 
 end Prysm.Fixture
 """
@@ -622,7 +622,7 @@ def selftest():
         ("local_abbrev", GOOD.replace("namespace Prysm.Fixture\n", "namespace Prysm.Fixture\nabbrev Codec.u64DecAcceptKind := True\n"), False),
         ("sorry", GOOD.replace("with_reducible exact foo", "sorry"), False),
         ("kind_other_namespace", GOOD.replace("@Codec.u64DecAcceptKind", "@Prysm.Fixture.u64DecAcceptKind"), False),
-        ("same_not_identity", GOOD.replace("@E2eAd.x = @t := rfl", "True := trivial"), False),
+        ("same_not_identity", GOOD.replace("@Prysm.Fixture.x = @t := rfl", "True := trivial"), False),
         ("orphan_kind", GOOD + "theorem q_kind : True := trivial\n", False),
     ]
     # offset-0 kind of the generator extension (rootDecSegZKind, 8 parameters)

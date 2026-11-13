@@ -68,7 +68,7 @@ theorem calldec_nop_seg (fn lok : String) (j j2 : Nat)
   simp only at hrsp hrbp hr14 hrax hrbx hrcx h_mem ⊢
   subst rsp rbp r14 rcx hRet hFp hS2 hrax hrbx
   kat hA callDecNop 0
-  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by saddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
@@ -210,11 +210,11 @@ theorem Decode.epi (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   subst rsp hFp hRa
   kat hk unmarshalSSZ 86
   kat hk unmarshalSSZ 87
-  apply load_step_at _ _ (sp + 72) _ _ (Int.toBytes 8 fp0.toBitVec.toInt) _ _ (by saddr) (by ecancel)
+  apply load_step_at _ _ (sp + 72) _ _ (Int.toBytes 8 fp0.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 88
-  apply load_step_at _ _ (sp + 80) _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by saddr) (by ecancel)
+  apply load_step_at _ _ (sp + 80) _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -226,7 +226,7 @@ theorem Decode.epi (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; saddr)
+    | (apply UInt64.toBitVec_inj.mp; segment_addr)
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- **Accept path of the real `(*v1alpha1.PendingConsolidation).UnmarshalSSZ` (Go 1.26.10)**; statement = the

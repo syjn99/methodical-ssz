@@ -251,6 +251,12 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   Remove the old `input_dir` from every `needs` list.
 - The tactic `bhaddr` and the command `#g4_dep_check` of `maps/flat-types` are now `beacon_block_header_addr` and
   `#check_window_step_dependencies`, so an inverse run of that map needs these two names put back first.
+- The tactics `eaddr`, `adaddr`, `e1addr`, `daddr`, `dcaddr`, `saddr`, `g4_regclose`, `bytesdec_g4c`, `bytesdec_g4z`,
+  `bytesdec_g4c20`, `bytesdec_g4z20`, `smarg_close` and `u64rr_case` that the maps name are now `checkpoint_addr`,
+  `attestation_data_addr`, `eth1_data_addr`, `data_columns_by_root_identifier_encode_addr`,
+  `data_columns_by_root_identifier_decode_addr`, `segment_addr`, `register_equation_close`, `bytesdec_window_case`,
+  `bytesdec_window_offset_zero_case`, `bytesdec_window20_case`, `bytesdec_window20_offset_zero_case`,
+  `setup_argument_close` and `uint64_register_case`. An inverse run of an earlier map needs the old names put back first.
 
 ## 6. Self-test
 

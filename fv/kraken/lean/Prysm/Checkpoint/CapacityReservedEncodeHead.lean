@@ -202,6 +202,6 @@ theorem Encode.head_fast (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   all_goals first
     | with_reducible rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)
-    | (apply UInt64.toBitVec_inj.mp; eaddr)
+    | (apply UInt64.toBitVec_inj.mp; checkpoint_addr)
 
 end Prysm.Checkpoint.CapacityReserved

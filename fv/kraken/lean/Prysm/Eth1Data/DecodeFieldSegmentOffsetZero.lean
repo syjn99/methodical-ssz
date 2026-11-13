@@ -103,7 +103,7 @@ theorem rootdec_seg0 (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat
   intro _
   kat hA rootDecHead 2
   kat hA rootDecHead 3
-  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by saddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
@@ -163,7 +163,7 @@ theorem rootdec_seg0 (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat
   kat hB rootDecMid0 4
   kat hB rootDecMid0 5
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 3 + 1)).toBitVec.toInt) _ _
-    (by saddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6' H6
   simp only [Width.bytes, Width.bits] at H6
   kunfold

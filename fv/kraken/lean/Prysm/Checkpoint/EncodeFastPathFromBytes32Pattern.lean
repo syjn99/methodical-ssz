@@ -134,7 +134,7 @@ theorem Encode.fast_path_from_bytes32_pattern (k : Nat) (hk : marshalSSZTo.IsInf
     show rsp.toBitVec - 64 + 8 = rsp.toBitVec - 56 by bv_omega] at H4
   kat hk marshalSSZTo 16
   apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
-    _ _ (by eaddr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
+    _ _ (by checkpoint_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
   intro m5 H5
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H5
   kunfold
@@ -147,7 +147,7 @@ theorem Encode.fast_path_from_bytes32_pattern (k : Nat) (hk : marshalSSZTo.IsInf
   klabel hk hf marshalSSZTo 33
   kat hk marshalSSZTo 33
   kat hk marshalSSZTo 34
-  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ e8 _ _ (by eaddr) (by ecancel) (by exact he8)
+  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ e8 _ _ (by checkpoint_addr) (by ecancel) (by exact he8)
   kunfold
   kat hk marshalSSZTo 35
   rw [Codec.add_mul_one]
@@ -175,15 +175,15 @@ theorem Encode.fast_path_from_bytes32_pattern (k : Nat) (hk : marshalSSZTo.IsInf
   simp only at hrsp1 hr141 hrbp1 Hm1
   subst rsp1 r141 rbp1
   kat hk marshalSSZTo 63
-  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 64
-  apply load_step_at _ _ (rsp.toBitVec - 32) _ _ (Int.toBytes 8 (rcx.toBitVec + 8 + 32).toInt) _ _ (by eaddr)
+  apply load_step_at _ _ (rsp.toBitVec - 32) _ _ (Int.toBytes 8 (rcx.toBitVec + 8 + 32).toInt) _ _ (by checkpoint_addr)
     (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 65
-  apply load_step_at _ _ (rsp.toBitVec - 24) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 24) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 66
@@ -192,11 +192,11 @@ theorem Encode.fast_path_from_bytes32_pattern (k : Nat) (hk : marshalSSZTo.IsInf
   intro _
   kat hk marshalSSZTo 68
   kat hk marshalSSZTo 69
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 70
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -213,7 +213,7 @@ theorem Encode.fast_path_from_bytes32_pattern (k : Nat) (hk : marshalSSZTo.IsInf
     | with_reducible rfl
     | (exact Prysm.Checkpoint.Encode.fast_path_len40 rcx (by omega))
     | (apply UInt64.toBitVec_inj.mp; simp; done)
-    | (apply UInt64.toBitVec_inj.mp; eaddr)
+    | (apply UInt64.toBitVec_inj.mp; checkpoint_addr)
 
 /-- The in-sample statement is the hand statement (same proposition). -/
 theorem Encode.fast_path_from_bytes32_pattern_same_statement : @Prysm.Checkpoint.Encode.fast_path = @Encode.fast_path_from_bytes32_pattern := rfl

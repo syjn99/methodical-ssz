@@ -41,23 +41,23 @@ theorem Encode.fast_path : Encode.fast_path_statement := by
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk marshalSSZTo 5
-  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by daddr) (by ecancel) (by exact hfp)
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
   kat hk marshalSSZTo 6
   kat hk marshalSSZTo 7
   kat hk marshalSSZTo 8
-  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by daddr) (by ecancel) (by exact h2)
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold
   kat hk marshalSSZTo 9
-  apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 pr.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 pr.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 10
-  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 32) _ _ (by daddr) (by ecancel) (by rfl)
+  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 32) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by rfl)
   simp only [show Int.ofBytes (Int.toBytes 8 32) = 32 by decide]
   kunfold
   kat hk marshalSSZTo 11
@@ -65,7 +65,7 @@ theorem Encode.fast_path : Encode.fast_path_statement := by
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   kat hk marshalSSZTo 12
-  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by daddr) (by ecancel) (by exact h1)
+  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h1)
   intro m3 H3
   simp only [Width.bytes, Width.bits] at H3
   kunfold

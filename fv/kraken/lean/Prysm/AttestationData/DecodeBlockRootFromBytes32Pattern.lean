@@ -95,7 +95,7 @@ theorem Decode.block_root_from_bytes32_pattern (k : Nat) (hk : unmarshalSSZ.IsIn
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   kat hk unmarshalSSZ 112
-  apply load_step_at _ _ (rsp0.toBitVec - 16) _ _ (Int.toBytes 8 p.toInt) _ _ (by adaddr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec - 16) _ _ (Int.toBytes 8 p.toInt) _ _ (by attestation_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 113

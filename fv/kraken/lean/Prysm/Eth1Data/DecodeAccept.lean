@@ -39,7 +39,7 @@ variable [Host]
 namespace Prysm.Eth1Data
 
 /-- Address equation by `toNat` and `omega` (as `beacon_block_header_addr`). -/
-macro "e1addr" : tactic => `(tactic| (
+macro "eth1_data_addr" : tactic => `(tactic| (
   apply BitVec.eq_of_toNat_eq
   simp only [BitVec.toNat_add, BitVec.toNat_sub, BitVec.toNat_neg, BitVec.toNat_ofNat, BitVec.ofNat_eq_ofNat,
     UInt64.toNat_toBitVec, UInt64.toBitVec_add, UInt64.toBitVec_ofNat, Width.bits, Nat.reducePow]
@@ -118,7 +118,7 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   rotate_right
   · ecancel
   all_goals (apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_sub, UInt64.toBitVec_ofNat]; try rfl)
-  all_goals e1addr
+  all_goals eth1_data_addr
 
 theorem Decode.stack_low_eq (x : BitVec 64) (S : Nat) : x - 40 - 8 - BitVec.ofNat 64 S = x - 48 - BitVec.ofNat 64 S := by
   bv_omega
@@ -221,27 +221,27 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   subst hrsp2 hrbp2 hr142
   -- instance directives 37–38, L_c7 (45), 46; DepositCount 47–49
   kat hk unmarshalSSZ 37
-  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 p1.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 p1.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 38
   klabel hk hf unmarshalSSZ 45
   kat hk unmarshalSSZ 45
   kat hk unmarshalSSZ 46
-  apply store_step_at _ _ (rax.toBitVec + 8) _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrdx2]; try e1addr) (by ecancel)
+  apply store_step_at _ _ (rax.toBitVec + 8) _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrdx2]; try eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   kunfold
   kat hk unmarshalSSZ 47
-  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 48
-  apply load_step_at _ _ (rbx.toBitVec + 32) _ _ cnt _ _ (by e1addr) (by ecancel) (by exact hcnt)
+  apply load_step_at _ _ (rbx.toBitVec + 32) _ _ cnt _ _ (by eth1_data_addr) (by ecancel) (by exact hcnt)
   kunfold
   kat hk unmarshalSSZ 49
-  apply store_step_at _ _ (rax.toBitVec + 32) _ _ _ aN _ _ (by rw [hrdx2]; try e1addr) (by ecancel)
+  apply store_step_at _ _ (rax.toBitVec + 32) _ _ _ aN _ _ (by rw [hrdx2]; try eth1_data_addr) (by ecancel)
     (by exact haN)
   intro m4' H4
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl cnt hcnt] at H4
@@ -275,14 +275,14 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   subst hrsp3 hrbp3 hr143
   -- instance directives 75–76, L_171 (84), 85, epilogue 86–90
   kat hk unmarshalSSZ 75
-  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 p2.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 p2.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 76
   klabel hk hf unmarshalSSZ 84
   kat hk unmarshalSSZ 84
   kat hk unmarshalSSZ 85
-  apply store_step_at _ _ (rax.toBitVec + 40) _ _ _ (Int.toBytes 8 p2.toInt) _ _ (by rw [hrdx3]; try e1addr) (by ecancel)
+  apply store_step_at _ _ (rax.toBitVec + 40) _ _ _ (Int.toBytes 8 p2.toInt) _ _ (by rw [hrdx3]; try eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
@@ -293,11 +293,11 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   intro _
   kat hk unmarshalSSZ 88
   kat hk unmarshalSSZ 89
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 90
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -312,7 +312,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; e1addr)
+    | (apply UInt64.toBitVec_inj.mp; eth1_data_addr)
     | (apply UInt64.toBitVec_inj.mp; simp [BitVec.xor_self])
 
 end Prysm.Eth1Data

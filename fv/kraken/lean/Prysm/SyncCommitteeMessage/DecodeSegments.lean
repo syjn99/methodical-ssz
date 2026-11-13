@@ -168,12 +168,12 @@ theorem Decode.spill2 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   simp only at hrsp h_mem ⊢
   subst rsp h28 h30
   kat hk unmarshalSSZ 118
-  apply store_step_at _ _ (sp + 48) _ _ _ s30 _ _ (by saddr) (by ecancel) (by exact hs30)
+  apply store_step_at _ _ (sp + 48) _ _ _ s30 _ _ (by segment_addr) (by ecancel) (by exact hs30)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
   kat hk unmarshalSSZ 119
-  apply store_step_at _ _ (sp + 40) _ _ _ s28 _ _ (by saddr) (by ecancel) (by exact hs28)
+  apply store_step_at _ _ (sp + 40) _ _ _ s28 _ _ (by segment_addr) (by ecancel) (by exact hs28)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold
@@ -181,7 +181,7 @@ theorem Decode.spill2 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   exact ⟨rfl, rfl, rfl, rfl, by ecancel⟩
 
 /-- Closing step of the set-up lemma: register equations (the text of `callarg_close`, `Codec/CalleeDecode.lean`). -/
-local macro "smarg_close" : tactic => `(tactic| (
+local macro "setup_argument_close" : tactic => `(tactic| (
   all_goals first
     | rfl
     | exact BitVec.add_comm _ _
@@ -224,7 +224,7 @@ theorem Decode.validator_index_arg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
   kat hk unmarshalSSZ 87
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  smarg_close
+  setup_argument_close
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -278,7 +278,7 @@ theorem bytes32dec_seg_rax (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j
   intro _
   kat hA bytesDecHead 2
   kat hA bytesDecHead 3
-  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by saddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
@@ -339,7 +339,7 @@ theorem bytes32dec_seg_rax (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j
   kat hB bytesDecMidA 5
   kat hB bytesDecMidA 6
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 3 + 1)).toBitVec.toInt) _ _
-    (by saddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6' H6
   simp only [Width.bytes, Width.bits] at H6
   kunfold

@@ -122,17 +122,17 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   rw [Encode.tail_split d n hd hn] at h_mem
   kat hk marshalSSZTo 29
   kat hk marshalSSZTo 30
-  apply store_step_at _ _ (x - 64) _ _ _ l64 _ _ (by daddr) (by ecancel) (by exact hl64)
+  apply store_step_at _ _ (x - 64) _ _ _ l64 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl64)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
   kat hk marshalSSZTo 31
-  apply store_step_at _ _ (x - 32) _ _ _ l32 _ _ (by daddr) (by ecancel) (by exact hl32)
+  apply store_step_at _ _ (x - 32) _ _ _ l32 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl32)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold
   kat hk marshalSSZTo 32
-  apply store_step_at _ _ (x - 56) _ _ _ l56 _ _ (by daddr) (by ecancel) (by exact hl56)
+  apply store_step_at _ _ (x - 56) _ _ _ l56 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl56)
   intro m3 H3
   simp only [Width.bytes, Width.bits] at H3
   kunfold
@@ -140,7 +140,7 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   kat hk marshalSSZTo 34
   kat hk marshalSSZTo 35
   kat hk marshalSSZTo 36
-  apply store_step_at _ _ (x - 144) _ _ _ rslot _ _ (by daddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (x - 144) _ _ _ rslot _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hrs)
   intro m4 H4
   simp only [Width.bytes, Width.bits] at H4
   kunfold
@@ -157,13 +157,13 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
     rw [hrsp1]; apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
   subst hrsp1' hr141 hrbp1
   kat hk marshalSSZTo 37
-  apply load_step_at _ _ (x - 64) _ _ (Int.toBytes 8 r8.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (x - 64) _ _ (Int.toBytes 8 r8.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 38
   kat hk marshalSSZTo 39
   kat hk marshalSSZTo 40
-  apply load_step_at _ _ (x - 56) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (x - 56) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 41
@@ -176,7 +176,7 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
     simp [BitVec.toNat_add] at this h; omega
   simp only [Effects.All]
   kat hk marshalSSZTo 43
-  apply load_step_at _ _ (x - 32) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (x - 32) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 44
@@ -190,11 +190,11 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   simp only [Width.bytes, Encode.offset_bytes_eq] at H5
   kunfold
   kat hk marshalSSZTo 52
-  apply load_step_at _ _ (x + 8) _ _ (Int.toBytes 8 c.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (x + 8) _ _ (Int.toBytes 8 c.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 53
-  apply load_step_at _ _ (c + 40) _ _ (Int.toBytes 8 nb.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (c + 40) _ _ (Int.toBytes 8 nb.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 54
@@ -203,16 +203,16 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   case isTrue h => exfalso; rw [Encode.jg128_false _ _ (by omega)] at h; exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk marshalSSZTo 56
-  apply store_step_at _ _ (x - 40) _ _ _ l40 _ _ (by daddr) (by ecancel) (by exact hl40)
+  apply store_step_at _ _ (x - 40) _ _ _ l40 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl40)
   intro m6 H6
   simp only [Width.bytes, Width.bits] at H6
   kunfold
   kat hk marshalSSZTo 57
-  apply load_step_at _ _ (c + 32) _ _ (Int.toBytes 8 pc.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (c + 32) _ _ (Int.toBytes 8 pc.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 58
-  apply store_step_at _ _ (x - 24) _ _ _ l24 _ _ (by daddr) (by ecancel) (by exact hl24)
+  apply store_step_at _ _ (x - 24) _ _ _ l24 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl24)
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
   kunfold
@@ -242,11 +242,11 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   intro _
   kat hk marshalSSZTo 103
   kat hk marshalSSZTo 104
-  apply load_step_at _ _ (x - 8) _ _ (Int.toBytes 8 ob.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (x - 8) _ _ (Int.toBytes 8 ob.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 105
-  apply load_step_at _ _ x _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ x _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -265,6 +265,6 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
     | exact hrcx2
     | exact hrbx2
     | (apply UInt64.toBitVec_inj.mp; simp; done)
-    | daddr
+    | data_columns_by_root_identifier_encode_addr
 
 end Prysm.DataColumnsByRootIdentifier

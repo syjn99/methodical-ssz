@@ -151,7 +151,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Other tactic gaps
 
-- `kaddr` (`lean/Machine/Step.lean`) does not reduce `Width.W64.bits`. The local macro `eaddr` is used instead.
+- `kaddr` (`lean/Machine/Step.lean`) does not reduce `Width.W64.bits`. The local macro `checkpoint_addr` is used instead.
 - A `grind` timeout inside `kstep` cannot be caught. `load_step` and `store_step` are used instead.
 - Closing register goals with symbolic `BitVec` by `trivial` or `rfl` inside `first` used more than 6 GiB. The decoder proof is split, and the goals close with `exact trivial`, `with_reducible rfl` or `toBitVec_inj`.
 - Two witness `Host` instances in one file make instance resolution choose the wrong host. Each file has one witness host.
@@ -174,6 +174,16 @@ How to handle a new finding is in `../README.md` section 7.
 - What: the tracked `RESULT` files hash an axioms listing file that is no longer in the tree. `link/check.py` hashes that file only if it exists.
 - Effect: a new run writes a `RESULT` without that line, with a different bundle hash.
 - State: open.
+
+### Link set `prysm/go1.26.10/link` cannot be checked from the tracked files
+
+- What: the `norm` directory of this link set (136 functions, read by no theorem) does not have all the files that its
+  `all.S` and `link/check.py` need.
+- Evidence: a fresh conversion of the whole disassembly of the pinned ELF (642 files) gives 1269 PASS lines and one FAIL.
+  The FAIL is the reassembly check of `v1alpha1.BeaconStateBellatrix.MarshalSSZTo` at `0x93fd87`.
+  The instruction is a `jge`: the ELF bytes are `0f8d7a000000`, and clang gives a 2-byte form.
+  The 16 link sets under `prysm/go1.26.10/e2e/` pass on the same ELF.
+- State: open. The function has no proof.
 
 ### The proof generator covers only some code forms
 

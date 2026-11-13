@@ -40,7 +40,7 @@ variable [Host]
 
 set_option hygiene false in
 /-- Proof text of one register case of `u64dec_rr_seg` (binders of the lemma). Local to this file. -/
-local macro "u64rr_case" : tactic => `(tactic| (
+local macro "uint64_register_case" : tactic => `(tactic| (
   kat hA u64DecRR 0
   apply load_step_at _ _ aSrc _ _ v _ _ (by rw [← hSrc, ← hrbx]) (by ecancel) (by exact hv)
   kunfold
@@ -77,6 +77,6 @@ theorem u64dec_rr_seg (rX : Reg64) (hX : U64RRReg rX) (src f : Int64) (j : Nat)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrbx hrax h_mem ⊢
   rcases hX with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
-  all_goals u64rr_case
+  all_goals uint64_register_case
 
 end Codec

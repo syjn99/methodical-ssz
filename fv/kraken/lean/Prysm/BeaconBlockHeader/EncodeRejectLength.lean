@@ -81,10 +81,10 @@ theorem Encode.rej_b (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
   simp only at hrsp hrax h_mem ⊢
   subst hrsp hrax
   kat hk marshalSSZTo 62
-  apply load_step_at _ _ (recv + 24) _ _ (Int.toBytes 8 p1.toInt) _ _ (by eaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (recv + 24) _ _ (Int.toBytes 8 p1.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 63
-  apply load_step_at _ _ (recv + 32) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by eaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (recv + 32) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   kunfold
   kat hk marshalSSZTo 64
@@ -134,13 +134,13 @@ theorem Encode.rej_c (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
   simp only at hrsp h_mem ⊢
   subst hrsp
   kat hk marshalSSZTo 90
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 recv.toInt) _ _ (by eaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 recv.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 91
-  apply load_step_at _ _ (recv + 48) _ _ (Int.toBytes 8 p2.toInt) _ _ (by eaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (recv + 48) _ _ (Int.toBytes 8 p2.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 92
-  apply load_step_at _ _ (recv + 56) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by eaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (recv + 56) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   kunfold
   kat hk marshalSSZTo 93
@@ -189,13 +189,13 @@ theorem Encode.rej_d (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
   simp only at hrsp h_mem ⊢
   subst hrsp
   kat hk marshalSSZTo 118
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 recv.toInt) _ _ (by eaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 recv.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 119
-  apply load_step_at _ _ (recv + 72) _ _ (Int.toBytes 8 p3.toInt) _ _ (by eaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (recv + 72) _ _ (Int.toBytes 8 p3.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 120
-  apply load_step_at _ _ (recv + 80) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by eaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (recv + 80) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   kunfold
   kat hk marshalSSZTo 121

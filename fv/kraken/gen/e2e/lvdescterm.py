@@ -2,7 +2,7 @@
 """Render the `ssz` term of a Desc-checker input file (schema fvphase1c.desc/1) as Lean.
 
 A new file with the method of `descterm.py` (not changed); it also renders `bitVector`, `vector` and `list`.
-Usage: lvdescterm.py <desc.json> <lean-name> > lean/E2eList/<X>SpecChecker.lean
+Usage: lvdescterm.py <desc.json> <lean-name> > lean/Prysm/<GoTypeName>/SpecChecker.lean
 The namespace of the output is Prysm.<GoTypeName> (the `type` of the file).
 The file is the producer's Desc that the Desc checker accepted (gen/desc/results/main.result.json, same sha256;
 copies in prysm/go1.26.10/e2e/lv/desc/). Python 3 standard library only.

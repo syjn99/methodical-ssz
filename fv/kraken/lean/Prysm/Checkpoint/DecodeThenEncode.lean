@@ -41,14 +41,14 @@ theorem DecodeThenEncode.scr (x : BitVec 64) (S : Nat) (h : 24 ≤ S) (hS : S < 
     conv => lhs; rw [← List.take_append_drop (S - 24) L]
     refine at_app _ _ ?_ (by simp [hL]; omega)
     rw [List.length_take, hL, Nat.min_eq_left (by omega)]
-    eaddr
+    checkpoint_addr
   have e2 : Eq ((L.drop (S - 24)).At (x - 120)) =
       Eq (((L.drop (S - 24)).take 8).At (x - 120)) ⋆ Eq (((L.drop (S - 24)).drop 8).At (x - 112)) := by
     conv => lhs; rw [← List.take_append_drop 8 (L.drop (S - 24))]
     refine at_app _ _ ?_ (by simp [hL]; omega)
     rw [List.length_take, List.length_drop, hL, show min 8 (S - (S - 24)) = 8 by omega]
     bv_omega
-  have e3 : x - 96 - BitVec.ofNat 64 S = x - 120 - BitVec.ofNat 64 (S - 24) := by eaddr
+  have e3 : x - 96 - BitVec.ofNat 64 S = x - 120 - BitVec.ofNat 64 (S - 24) := by checkpoint_addr
   rw [e1, e2, e3, Std.ExtHashMap.sep_assoc]
 
 theorem DecodeThenEncode.t30 (x : BitVec 64) :

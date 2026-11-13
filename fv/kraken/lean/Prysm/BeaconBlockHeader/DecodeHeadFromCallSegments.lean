@@ -130,12 +130,12 @@ theorem Decode.spill2 (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
   simp only at hrsp h_mem ⊢
   subst rsp h28 h30
   kat hk Code.unmarshalSSZ 86
-  apply store_step_at _ _ (sp + 48) _ _ _ s30 _ _ (by saddr) (by ecancel) (by exact hs30)
+  apply store_step_at _ _ (sp + 48) _ _ _ s30 _ _ (by segment_addr) (by ecancel) (by exact hs30)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
   kat hk Code.unmarshalSSZ 87
-  apply store_step_at _ _ (sp + 40) _ _ _ s28 _ _ (by saddr) (by ecancel) (by exact hs28)
+  apply store_step_at _ _ (sp + 40) _ _ _ s28 _ _ (by segment_addr) (by ecancel) (by exact hs28)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold

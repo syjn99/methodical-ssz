@@ -610,7 +610,7 @@ def checkFile (ctx : Ctx) (path : String) : IO FileRes := do
         match refs.find? (fun (k, _) => k.2 == ty) with
         | some (_, (rname, rd, _)) =>
           out := out ++ [("exception-shape", Desc.beq (posNames d) (posNames rd), s!"excepted {ty} vs {rname} up to names")]
-        | none => out := out ++ [("exception-shape", false, s!"no Fv1 Desc for excepted {ty}")]
+        | none => out := out ++ [("exception-shape", false, s!"no spec Desc for excepted {ty}")]
     | none => out := out ++ [("inventory", false, s!"no inventory entry for ({pk}, {ty})")]
   return { path, sha, key, status, lines := out }
 

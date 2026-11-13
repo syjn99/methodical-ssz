@@ -72,23 +72,23 @@ theorem Encode.reject_length : Encode.reject_length_statement := by
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk marshalSSZTo 5
-  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by daddr) (by ecancel) (by exact hfp)
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
   kat hk marshalSSZTo 6
   kat hk marshalSSZTo 7
   kat hk marshalSSZTo 8
-  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by daddr) (by ecancel) (by exact h2)
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold
   kat hk marshalSSZTo 9
-  apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 pr.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 pr.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 10
-  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 bl.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 bl.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 11
@@ -112,11 +112,11 @@ theorem Encode.reject_length : Encode.reject_length_statement := by
   kat hk marshalSSZTo 75
   kat hk marshalSSZTo 76
   kat hk marshalSSZTo 77
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 78
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -127,7 +127,7 @@ theorem Encode.reject_length : Encode.reject_length_statement := by
     | exact trivial
     | rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)
-    | (apply UInt64.toBitVec_inj.mp; daddr)
+    | (apply UInt64.toBitVec_inj.mp; data_columns_by_root_identifier_encode_addr)
 
 theorem Encode.reject_too_big : Encode.reject_too_big_statement := by
   intro k hk hf s ra guard e0 e1 pr nb hn1 hn2 root pre d hroot hpre hd fp s1 s2 l32 l56 l64 rslot hfp h1 h2 hl32 hl56
@@ -152,23 +152,23 @@ theorem Encode.reject_too_big : Encode.reject_too_big_statement := by
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk marshalSSZTo 5
-  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by daddr) (by ecancel) (by exact hfp)
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
   kat hk marshalSSZTo 6
   kat hk marshalSSZTo 7
   kat hk marshalSSZTo 8
-  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by daddr) (by ecancel) (by exact h2)
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold
   kat hk marshalSSZTo 9
-  apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 pr.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 pr.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 10
-  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 32) _ _ (by daddr) (by ecancel) (by rfl)
+  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 32) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by rfl)
   simp only [show Int.ofBytes (Int.toBytes 8 32) = 32 by decide]
   kunfold
   kat hk marshalSSZTo 11
@@ -176,7 +176,7 @@ theorem Encode.reject_too_big : Encode.reject_too_big_statement := by
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   kat hk marshalSSZTo 12
-  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by daddr) (by ecancel) (by exact h1)
+  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h1)
   intro m3 H3
   simp only [Width.bytes, Width.bits] at H3
   kunfold
@@ -190,17 +190,17 @@ theorem Encode.reject_too_big : Encode.reject_too_big_statement := by
   klabel hk hf marshalSSZTo 29
   kat hk marshalSSZTo 29
   kat hk marshalSSZTo 30
-  apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ l64 _ _ (by daddr) (by ecancel) (by exact hl64)
+  apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ l64 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl64)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
   kat hk marshalSSZTo 31
-  apply store_step_at _ _ (rsp.toBitVec - 32) _ _ _ l32 _ _ (by daddr) (by ecancel) (by exact hl32)
+  apply store_step_at _ _ (rsp.toBitVec - 32) _ _ _ l32 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl32)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold
   kat hk marshalSSZTo 32
-  apply store_step_at _ _ (rsp.toBitVec - 56) _ _ _ l56 _ _ (by daddr) (by ecancel) (by exact hl56)
+  apply store_step_at _ _ (rsp.toBitVec - 56) _ _ _ l56 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl56)
   intro m3 H3
   simp only [Width.bytes, Width.bits] at H3
   kunfold
@@ -208,7 +208,7 @@ theorem Encode.reject_too_big : Encode.reject_too_big_statement := by
   kat hk marshalSSZTo 34
   kat hk marshalSSZTo 35
   kat hk marshalSSZTo 36
-  apply store_step_at _ _ (rsp.toBitVec - 144) _ _ _ rslot _ _ (by daddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (rsp.toBitVec - 144) _ _ _ rslot _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hrs)
   intro m4 H4
   simp only [Width.bytes, Width.bits] at H4
   kunfold
@@ -225,13 +225,13 @@ theorem Encode.reject_too_big : Encode.reject_too_big_statement := by
     rw [hrsp1]; apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
   subst hrsp1' hr141 hrbp1
   kat hk marshalSSZTo 37
-  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ (Int.toBytes 8 (rcx.toBitVec + 32).toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ (Int.toBytes 8 (rcx.toBitVec + 32).toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 38
   kat hk marshalSSZTo 39
   kat hk marshalSSZTo 40
-  apply load_step_at _ _ (rsp.toBitVec - 56) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 56) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 41
@@ -243,7 +243,7 @@ theorem Encode.reject_too_big : Encode.reject_too_big_statement := by
     simp [BitVec.toNat_add] at this h; omega
   simp only [Effects.All]
   kat hk marshalSSZTo 43
-  apply load_step_at _ _ (rsp.toBitVec - 32) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 32) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 44
@@ -257,11 +257,11 @@ theorem Encode.reject_too_big : Encode.reject_too_big_statement := by
   simp only [Width.bytes, Encode.offset_bytes_eq] at H5
   kunfold
   kat hk marshalSSZTo 52
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 53
-  apply load_step_at _ _ (rax.toBitVec + 40) _ _ (Int.toBytes 8 nb.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rax.toBitVec + 40) _ _ (Int.toBytes 8 nb.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 54
@@ -286,11 +286,11 @@ theorem Encode.reject_too_big : Encode.reject_too_big_statement := by
   kat hk marshalSSZTo 66
   kat hk marshalSSZTo 67
   kat hk marshalSSZTo 68
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by daddr) (by dsimp only; ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by dsimp only; ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 69
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -305,6 +305,6 @@ theorem Encode.reject_too_big : Encode.reject_too_big_statement := by
     | exact trivial
     | rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)
-    | (apply UInt64.toBitVec_inj.mp; daddr)
+    | (apply UInt64.toBitVec_inj.mp; data_columns_by_root_identifier_encode_addr)
 
 end Prysm.DataColumnsByRootIdentifier

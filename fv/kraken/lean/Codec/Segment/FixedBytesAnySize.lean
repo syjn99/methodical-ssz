@@ -104,7 +104,7 @@ theorem bytesdec_seg_g (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB dS 
   intro _
   kat hA bytesDecHead 2
   kat hA bytesDecHead 3
-  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by saddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
@@ -165,7 +165,7 @@ theorem bytesdec_seg_g (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB dS 
   kat hB bytesDecMid 5
   kat hB bytesDecMid 6
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 3 + 1)).toBitVec.toInt) _ _
-    (by saddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6' H6
   simp only [Width.bytes, Width.bits] at H6
   kunfold
@@ -260,7 +260,7 @@ theorem bytesdec_seg_z_g (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB d
   intro _
   kat hA bytesDecHead 2
   kat hA bytesDecHead 3
-  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by saddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
@@ -320,7 +320,7 @@ theorem bytesdec_seg_z_g (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB d
   kat hB bytesDecMidZ 4
   kat hB bytesDecMidZ 5
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 3 + 1)).toBitVec.toInt) _ _
-    (by saddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6' H6
   simp only [Width.bytes, Width.bits] at H6
   kunfold
@@ -415,7 +415,7 @@ theorem bytesdec_seg_nop_g (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB
   kat hA bytesDecHeadNopG 2
   kat hA bytesDecHeadNopG 3
   kat hA bytesDecHeadNopG 4
-  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by saddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
@@ -476,7 +476,7 @@ theorem bytesdec_seg_nop_g (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB
   kat hB bytesDecMid 5
   kat hB bytesDecMid 6
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 4 + 1)).toBitVec.toInt) _ _
-    (by saddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6' H6
   simp only [Width.bytes, Width.bits] at H6
   kunfold

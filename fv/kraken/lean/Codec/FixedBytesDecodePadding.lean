@@ -77,7 +77,7 @@ local macro "bytesdec_add_pad " n:num : tactic => `(tactic| (
     kat hA bytesDecHeadPad 2
     kat hA bytesDecHeadPad 3
     kat hA bytesDecHeadPad 4
-    apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by saddr) (by ecancel) (by exact hrs)
+    apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
     intro m1' H1
     simp only [Width.bytes, Width.bits] at H1
     kunfold
@@ -138,7 +138,7 @@ local macro "bytesdec_add_pad " n:num : tactic => `(tactic| (
     kat hB bytesDecMid 5
     kat hB bytesDecMid 6
     apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 4 + 1)).toBitVec.toInt) _ _
-      (by saddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+      (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
     intro m6' H6
     simp only [Width.bytes, Width.bits] at H6
     kunfold

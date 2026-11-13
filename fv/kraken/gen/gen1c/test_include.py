@@ -47,7 +47,7 @@ def prepare(work):
     gs_addr, gs_size = elfmod.extent(nm, inc.RODATA_SYMBOL)
     gs = e.read(gs_addr, gs_size)
     data_lean = open(f"{KRAKEN}/lean/Runtime/StaticUint64s.lean").read()
-    rows, lean = [], ["import Runtime.StaticUint64s", "", "open Fk", "", "set_option maxRecDepth 100000", ""]
+    rows, lean = [], ["import Runtime.StaticUint64s", "", "set_option maxRecDepth 100000", ""]
     for it in api["items"]:
         iid, label, off = it["id"], it["label"], it["offset"]
         path = os.path.join(REPO, inc.DATA_DIR_IN_REPO, inc.file_name(iid))
@@ -71,7 +71,7 @@ def prepare(work):
     # control: the address of the first retained item with offset + 1 must fail (no retained module includes a
     # rodata string, so the byte control of the deleted TestTarget items has no target)
     it = next(i for i in api["items"] if i["id"] in DATA_NS)
-    ctl = lean[:6] + [f"example [Host] : {DATA_NS[it['id']]}.{it['id']}_addr = {inc.addr_term(it['label'], it['offset'] + 1)} := rfl"]
+    ctl = lean[:4] + [f"example [Host] : {DATA_NS[it['id']]}.{it['id']}_addr = {inc.addr_term(it['label'], it['offset'] + 1)} := rfl"]
     open(f"{work}/IncludeControl.lean", "w").write("\n".join(ctl) + "\n")
     open(f"{work}/IncludeCheck.lean", "w").write("\n".join(lean) + "\n")
     res = {"api_version": api["api_version"], "status": api["status"], "fix3_commit": api["fix3_commit"],

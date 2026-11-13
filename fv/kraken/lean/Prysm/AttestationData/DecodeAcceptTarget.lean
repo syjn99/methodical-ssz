@@ -101,24 +101,24 @@ theorem Decode.target (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   kat hk unmarshalSSZ 177
-  apply load_step_at _ _ (rsp0.toBitVec + 8) _ _ (Int.toBytes 8 rcv.toInt) _ _ (by adaddr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec + 8) _ _ (Int.toBytes 8 rcv.toInt) _ _ (by attestation_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 178
   klabel hk hf unmarshalSSZ 185
   kat hk unmarshalSSZ 185
   kat hk unmarshalSSZ 186
-  apply store_step_at _ _ (rcv + 56) _ _ _ aT _ _ (by adaddr) (by ecancel) (by exact haT)
+  apply store_step_at _ _ (rcv + 56) _ _ _ aT _ _ (by attestation_data_addr) (by ecancel) (by exact haT)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   kunfold
   kat hk unmarshalSSZ 187
-  apply load_step_at _ _ (rsp0.toBitVec + 16) _ _ (Int.toBytes 8 bf.toInt) _ _ (by adaddr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec + 16) _ _ (Int.toBytes 8 bf.toInt) _ _ (by attestation_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 188
   kat hk unmarshalSSZ 189
-  apply load_step_at _ _ (rsp0.toBitVec + 32) _ _ s4 _ _ (by adaddr) (by ecancel) (by exact h4)
+  apply load_step_at _ _ (rsp0.toBitVec + 32) _ _ s4 _ _ (by attestation_data_addr) (by ecancel) (by exact h4)
   kunfold
   kat hk unmarshalSSZ 190
   kat hk unmarshalSSZ 191
@@ -184,11 +184,11 @@ theorem Decode.target (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   kat hk unmarshalSSZ 222
   kat hk unmarshalSSZ 223
   kat hk unmarshalSSZ 224
-  apply load_step_at _ _ (rsp0.toBitVec - 8) _ _ (Int.toBytes 8 rbp0.toBitVec.toInt) _ _ (by adaddr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec - 8) _ _ (Int.toBytes 8 rbp0.toBitVec.toInt) _ _ (by attestation_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 225
-  apply load_step_at _ _ rsp0.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by adaddr) (by ecancel)
+  apply load_step_at _ _ rsp0.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by attestation_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -208,6 +208,6 @@ theorem Decode.target (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; adaddr)
+    | (apply UInt64.toBitVec_inj.mp; attestation_data_addr)
 
 end Prysm.AttestationData

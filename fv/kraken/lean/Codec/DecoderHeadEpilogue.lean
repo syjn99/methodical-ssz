@@ -164,7 +164,7 @@ theorem dechead_seg (fn l0 lmore lerr : String) (sz : Int64) (j : Nat)
   rotate_right
   · ecancel
   all_goals (apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_sub, UInt64.toBitVec_ofNat]; try rfl)
-  all_goals saddr
+  all_goals segment_addr
 
 set_option hygiene false in
 /-- Proof text of one register case of `bytesdec_tail_seg`. Local to this file. -/
@@ -237,11 +237,11 @@ theorem decepi_seg (j : Nat) (hA : decEpi.IsInfixAt Host.prog j)
   intro _
   kat hA decEpi 2
   kat hA decEpi 3
-  apply load_step_at _ _ (sp + 32) _ _ (Int.toBytes 8 fp0.toBitVec.toInt) _ _ (by saddr) (by ecancel)
+  apply load_step_at _ _ (sp + 32) _ _ (Int.toBytes 8 fp0.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hA decEpi 4
-  apply load_step_at _ _ (sp + 40) _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by saddr) (by ecancel)
+  apply load_step_at _ _ (sp + 40) _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -254,7 +254,7 @@ theorem decepi_seg (j : Nat) (hA : decEpi.IsInfixAt Host.prog j)
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; saddr)
+    | (apply UInt64.toBitVec_inj.mp; segment_addr)
     | (apply UInt64.toBitVec_inj.mp; simp [BitVec.xor_self])
 
 end Codec

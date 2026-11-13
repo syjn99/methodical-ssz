@@ -150,7 +150,7 @@ theorem rootenc_seg (lrej lcf : String) (fP fL dCap dLen dPtr : Int64) (j1 j2 : 
   kat hB rootEncTail 5
   kat hB rootEncTail 6
   kat hB rootEncTail 7
-  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by saddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m4 H4
   simp only [Width.bytes, Width.bits] at H4
   kunfold

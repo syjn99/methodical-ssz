@@ -61,7 +61,7 @@ def iNilChk (rB : Reg64) : Directive :=
 variable [Host]
 
 /-- Closing step for register equations of the frame lemmas. -/
-local macro "g4_regclose" : tactic => `(tactic| first
+local macro "register_equation_close" : tactic => `(tactic| first
   | rfl
   | (apply UInt64.toBitVec_inj.mp; rfl)
   | (apply UInt64.toBitVec_inj.mp; bv_omega)
@@ -139,8 +139,8 @@ theorem decpro_seg (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Program) (
   kwend hq he 9 hend
   apply Eventually.done
   refine ⟨rfl, ?_, ?_, ?_, ?_⟩
-  · g4_regclose
-  · g4_regclose
+  · register_equation_close
+  · register_equation_close
   · intro r h1 h2
     cases r <;> first | rfl | exact absurd rfl h1 | exact absurd rfl h2
   · ecancel
@@ -166,12 +166,12 @@ theorem decret_seg (q : Program) (j : Nat) (hq : q.IsInfixAt Host.prog j) (he : 
   subst rsp hRa
   kwin hq
   kwat hq he decRet 0
-  apply load_step_at _ _ sp _ _ (Int.toBytes 8 fp0.toBitVec.toInt) _ _ (by first | rfl | saddr) (by ecancel)
+  apply load_step_at _ _ sp _ _ (Int.toBytes 8 fp0.toBitVec.toInt) _ _ (by first | rfl | segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kwnx hq he 0
   kwat hq he decRet 1
-  apply load_step_at _ _ (sp + 8) _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by first | rfl | saddr) (by ecancel)
+  apply load_step_at _ _ (sp + 8) _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by first | rfl | segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -185,7 +185,7 @@ theorem decret_seg (q : Program) (j : Nat) (hq : q.IsInfixAt Host.prog j) (he : 
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; saddr)
+    | (apply UInt64.toBitVec_inj.mp; segment_addr)
   · first | rfl | (apply UInt64.toBitVec_inj.mp; rfl)
   · intro r h1 h2
     cases r <;> first | rfl | exact absurd rfl h1 | exact absurd rfl h2

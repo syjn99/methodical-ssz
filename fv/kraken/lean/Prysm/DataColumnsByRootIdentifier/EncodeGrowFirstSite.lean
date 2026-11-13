@@ -69,23 +69,23 @@ theorem Encode.grow_first_site : Encode.grow_first_site_statement := by
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk marshalSSZTo 5
-  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by daddr) (by ecancel) (by exact hfp)
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
   kat hk marshalSSZTo 6
   kat hk marshalSSZTo 7
   kat hk marshalSSZTo 8
-  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by daddr) (by ecancel) (by exact h2)
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold
   kat hk marshalSSZTo 9
-  apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 pr.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 pr.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 10
-  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 32) _ _ (by daddr) (by ecancel) (by rfl)
+  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 32) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by rfl)
   simp only [show Int.ofBytes (Int.toBytes 8 32) = 32 by decide]
   kunfold
   kat hk marshalSSZTo 11
@@ -93,7 +93,7 @@ theorem Encode.grow_first_site : Encode.grow_first_site_statement := by
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   kat hk marshalSSZTo 12
-  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by daddr) (by ecancel) (by exact h1)
+  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h1)
   intro m3 H3
   simp only [Width.bytes, Width.bits] at H3
   kunfold
@@ -105,12 +105,12 @@ theorem Encode.grow_first_site : Encode.grow_first_site_statement := by
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega
   simp only [Effects.All]
   kat hk marshalSSZTo 16
-  apply store_step_at _ _ (rsp.toBitVec + 24) _ _ _ s3 _ _ (by daddr) (by ecancel) (by exact h3)
+  apply store_step_at _ _ (rsp.toBitVec + 24) _ _ _ s3 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h3)
   intro m4 H4
   simp only [Width.bytes, Width.bits] at H4
   kunfold
   kat hk marshalSSZTo 17
-  apply store_step_at _ _ (rsp.toBitVec - 16) _ _ _ l16 _ _ (by daddr) (by ecancel) (by exact hl16)
+  apply store_step_at _ _ (rsp.toBitVec - 16) _ _ _ l16 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl16)
   intro m5 H5
   simp only [Width.bytes, Width.bits] at H5
   kunfold
@@ -120,7 +120,7 @@ theorem Encode.grow_first_site : Encode.grow_first_site_statement := by
   kat hk marshalSSZTo 21
   kat hk marshalSSZTo 22
   kat hk marshalSSZTo 23
-  apply store_step_at _ _ (rsp.toBitVec - 144) _ _ _ rslot _ _ (by daddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (rsp.toBitVec - 144) _ _ _ rslot _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hrs)
   intro m6 H6
   simp only [Width.bytes, Width.bits] at H6
   kunfold
@@ -144,13 +144,13 @@ theorem Encode.grow_first_site : Encode.grow_first_site_statement := by
   rw [Encode.grow_first_site_split rax1.toBitVec rcx.toBitVec pre tail (36 + 8 * n) hpre htl (by omega),
     show rsp.toBitVec - 144 + 8 = rsp.toBitVec - 136 by bv_omega] at Hm1
   kat hk marshalSSZTo 24
-  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 pr.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 pr.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 25
   kat hk marshalSSZTo 26
   kat hk marshalSSZTo 27
-  apply load_step_at _ _ (rsp.toBitVec + 24) _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by daddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 24) _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 28

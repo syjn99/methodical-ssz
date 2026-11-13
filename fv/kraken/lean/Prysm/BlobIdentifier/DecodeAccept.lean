@@ -10,7 +10,7 @@ import Prysm.BlobIdentifier.GeneratedDecodeRootFieldSegments
 Hand-written after the hold-out was opened. The BlockRoot segment is the raw
 generator theorem `Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_seg` (`Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean`, unedited). The head and the
 composition are the text of `Prysm/Eth1Data/DecodeAccept.lean` with the BlobIdentifier indices and without the second root
-segment; `e1addr` and `Prysm.Eth1Data.Decode.stack_low_eq` are reused from `Prysm/Eth1Data/DecodeAccept.lean`.
+segment; `eth1_data_addr` and `Prysm.Eth1Data.Decode.stack_low_eq` are reused from `Prysm/Eth1Data/DecodeAccept.lean`.
 
     func (b *BlobIdentifier) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 40 { return ssz.ErrSize }
@@ -106,7 +106,7 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   rotate_right
   · ecancel
   all_goals (apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_sub, UInt64.toBitVec_ofNat]; try rfl)
-  all_goals e1addr
+  all_goals eth1_data_addr
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -192,27 +192,27 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   subst hrsp2 hrbp2 hr142
   -- directives 37–38, L_c7 (45), 46; Index 47–49 (hand: no template for an inline uint64 read)
   kat hk unmarshalSSZ 37
-  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 p1.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 p1.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 38
   klabel hk hf unmarshalSSZ 45
   kat hk unmarshalSSZ 45
   kat hk unmarshalSSZ 46
-  apply store_step_at _ _ (rax.toBitVec + 8) _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrdx2]; try e1addr) (by ecancel)
+  apply store_step_at _ _ (rax.toBitVec + 8) _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrdx2]; try eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   kunfold
   kat hk unmarshalSSZ 47
-  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 48
-  apply load_step_at _ _ (rbx.toBitVec + 32) _ _ idx _ _ (by e1addr) (by ecancel) (by exact hidx)
+  apply load_step_at _ _ (rbx.toBitVec + 32) _ _ idx _ _ (by eth1_data_addr) (by ecancel) (by exact hidx)
   kunfold
   kat hk unmarshalSSZ 49
-  apply store_step_at _ _ (rax.toBitVec + 32) _ _ _ aN _ _ (by rw [hrdx2]; try e1addr) (by ecancel)
+  apply store_step_at _ _ (rax.toBitVec + 32) _ _ _ aN _ _ (by rw [hrdx2]; try eth1_data_addr) (by ecancel)
     (by exact haN)
   intro m4' H4
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl idx hidx] at H4
@@ -224,11 +224,11 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   intro _
   kat hk unmarshalSSZ 52
   kat hk unmarshalSSZ 53
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 54
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by e1addr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -242,7 +242,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; e1addr)
+    | (apply UInt64.toBitVec_inj.mp; eth1_data_addr)
     | (apply UInt64.toBitVec_inj.mp; simp [BitVec.xor_self])
 
 end Prysm.BlobIdentifier

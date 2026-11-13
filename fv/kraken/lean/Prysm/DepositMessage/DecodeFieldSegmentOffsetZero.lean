@@ -124,7 +124,7 @@ theorem bytes48dec_seg_z (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 :
   intro _
   kat hA bytesDecHead48 2
   kat hA bytesDecHead48 3
-  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by saddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
@@ -184,7 +184,7 @@ theorem bytes48dec_seg_z (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 :
   kat hB bytesDecMidZ48 4
   kat hB bytesDecMidZ48 5
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 3 + 1)).toBitVec.toInt) _ _
-    (by saddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6' H6
   simp only [Width.bytes, Width.bits] at H6
   kunfold

@@ -56,7 +56,7 @@ theorem calldec_seg_w (fn lok : String) (q : Program) (j jc j2 : Nat)
   subst rsp rbp r14 rcx hRet hFp hS2 hrax hrbx hjc
   kwin hq
   kwat hq he callDec 0
-  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by saddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold

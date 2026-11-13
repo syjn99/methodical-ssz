@@ -7,7 +7,7 @@ The design principles are in `../../README.md`. The build commands are in `../RE
 ## 1. Libraries
 
 The libraries `Spec`, `Machine`, `Runtime` and `Codec` are the shared layer.
-The other libraries hold the proofs of Prysm types (one library or a group of modules for each type).
+The library `Prysm` holds the proofs of the Prysm types (one directory for each type).
 `../gen/restructure/maps/shared-layer/files.tsv` gives the earlier path of each shared module and a one-line meaning.
 
 **`Spec`.** EthLib specifications that several types share, and the ones that the `Desc` checker imports (`../gen/desccheck/`).
@@ -74,7 +74,7 @@ The arrows give the order of the libraries in the import graph. A library import
 Exception: `Codec/Bytes32Decode.lean` imports `Prysm/ElfData/CheckpointAndEpoch.lean`.
 `Prysm/Checkpoint/CapacityReserved*.lean` and `Prysm/Deposit/` import modules of the flat types, and `Prysm/HistoricalBatch/` does not import them.
 Some modules of `Codec/` and `Codec/Kind/` import modules of the flat types (the kinds and lemmas that the shared layer left in a type library).
-A new type gets its own library or modules. Do not change a reviewed module to add a new type.
+A new type gets its own directory `Prysm/<GoTypeName>/`. Do not change a reviewed module to add a new type.
 
 ## 2. How machine code enters Lean
 
@@ -175,15 +175,15 @@ Fields without an SSZ value (the protobuf fields `state`, `unknownFields`, `size
 
 The connection to EthLib has three theorem forms:
 
-- accept: if EthLib accepts the input as `v`, there is a Go value `g` with `toValue g = v`, and the machine code writes `g` to the receiver (`*_accept_spec_k`).
-- reject: if the input is not accepted, EthLib returns an error, and the machine code returns the Go error (`*_reject_*_spec`).
-- reject completeness: every input that EthLib rejects falls in a proved reject path (`*_reject_complete`).
+- accept: if EthLib accepts the input as `v`, there is a Go value `g` with `toValue g = v`, and the machine code writes `g` to the receiver (`Decode.accept_spec`).
+- reject: if the input is not accepted, EthLib returns an error, and the machine code returns the Go error (`Decode.reject_<cause>_spec`).
+- reject completeness: every input that EthLib rejects falls in a proved reject path (`Decode.reject_complete`).
 
 ## 6. Witnesses
 
-A witness file (`Wit*.lean`) builds one concrete `Host` with `Machine.Witness.mkHost` (`Machine/WitnessHost.lean`).
+A witness file (`Prysm/<GoTypeName>/Witness*.lean`, namespace `Prysm.<GoTypeName>.Witness.<Role>`) builds one concrete `Host` with `Machine.Witness.mkHost` (`Machine/WitnessHost.lean`).
 The program is the data labels, the real converted function and the runtime models.
-A theorem `*_runs` applies the main theorem to a concrete memory block and discharges every premise.
+A theorem `runs` (or `runs_<case>`) applies the main theorem to a concrete memory block and discharges every premise.
 The runtime models discharge the contract hypotheses. Example: `Prysm.SyncAggregate.Witness.DecodeAccept.runs`.
 For a variable length, the witnesses cover the empty value, one element and the maximum.
 The receiver in a witness must be a Go value of the type. `Prysm/Checkpoint/GoValue.lean` gives a Lean predicate for this check.
@@ -203,9 +203,12 @@ Use one witness host for each file. Two `Host` instances in one file make instan
 
 ## 8. Names
 
-The current file and theorem names use short abbreviations of the Go types.
-A structure `P<abbreviation>` holds the SSZ content of the type, for example `Prysm.Checkpoint.SszValue`.
-Some abbreviations have two or three meanings. The namespace decides the meaning.
+Module, namespace and main theorem names use the full Go type name (`../gen/restructure/SPEC.md`).
+The structure `Prysm.<GoTypeName>.SszValue` holds the SSZ content of a type.
+Short abbreviations of the Go types remain in the ELF data names and their readers (`Prysm/ElfData/`), in the names of
+the test types (`Spec/Test*.lean`, `Spec/ReducedPrysm.lean`), in generator prefixes and data file names, and in the
+records of earlier names (`../gen/restructure/maps/`). This table gives their meaning.
+Some abbreviations have two or three meanings. The context decides the meaning.
 
 | Abbreviation | Go type |
 | --- | --- |
@@ -234,8 +237,8 @@ Some abbreviations have two or three meanings. The namespace decides the meaning
 | `Pdc`, `Vid`, `Bpf` | `v1alpha1.PartialDataColumnGroupID`, `ValidatorIdentity`, `BuilderPreferences` |
 | `Ep`, `Sl`, `Ci`, `Vi` | `primitives.Epoch`, `Slot`, `CommitteeIndex`, `ValidatorIndex` (hand-written methods) |
 | `Lu`, `Lc`, `Bl`, `Bv` | test types `ListU64`, `ListC`, `BitL`, `BitVec` in `../target/` |
-| `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` in names of the old library `E2eScal` such as `Gen6ScEnc`, `v1alpha1.SyncCommittee` in the old library `E2eList`, and the test type `Scalars` (`Spec/TestScalars.lean`) |
-| `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` in the old library `E2eScal`, and `v1alpha1.SyncAggregate` in the old library `E2eList` |
+| `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` and `v1alpha1.SyncCommittee` in earlier names, and the test type `Scalars` (`Spec/TestScalars.lean`) |
+| `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` and `v1alpha1.SyncAggregate` in earlier names |
 | `Fv` | the test type `FixedVec` (`Spec/TestFixedVec.lean`) |
 | `epr` | two meanings: `ExecutionPayloadEnvelopesByRangeRequest`, and the Epoch reject witness `Prysm.Epoch.Witness.DecodeRejectSize.runs` |
 | `Pad` | `v1alpha1.PayloadAttestationData` in the generator scripts |

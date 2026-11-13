@@ -144,11 +144,11 @@ theorem Decode.epi (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   subst rsp hFp hRa
   kat hk unmarshalSSZ 89
   kat hk unmarshalSSZ 90
-  apply load_step_at _ _ (sp + 72) _ _ (Int.toBytes 8 fp0.toBitVec.toInt) _ _ (by saddr) (by ecancel)
+  apply load_step_at _ _ (sp + 72) _ _ (Int.toBytes 8 fp0.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 91
-  apply load_step_at _ _ (sp + 80) _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by saddr) (by ecancel)
+  apply load_step_at _ _ (sp + 80) _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -160,7 +160,7 @@ theorem Decode.epi (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; saddr)
+    | (apply UInt64.toBitVec_inj.mp; segment_addr)
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in

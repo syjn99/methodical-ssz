@@ -203,7 +203,7 @@ theorem calldec_seg (fn lok : String) (j j2 : Nat)
   simp only at hrsp hrbp hr14 hrax hrbx hrcx h_mem ⊢
   subst rsp rbp r14 rcx hRet hFp hS2 hrax hrbx
   kat hA callDec 0
-  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by saddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold

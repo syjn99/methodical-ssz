@@ -120,19 +120,19 @@ theorem enc_reject_tail (sub nop : Bool) (c : Int64) (j : Nat)
     rstep hA 5
     rstep hA 6
     apply load_step_at _ _ aFp _ _ (Int.toBytes 8 rbp0.toBitVec.toInt) _ _
-      (by first | exact hFp | (rw [← hFp]; exact BitVec.add_comm _ _) | (rw [← hFp]; saddr))
+      (by first | exact hFp | (rw [← hFp]; exact BitVec.add_comm _ _) | (rw [← hFp]; segment_addr))
       (by ecancel) (by exact Int.toBytes_length 8 _)
     kunfold
     rstep hA 7
     try (rstep hA 8)
     apply load_step_at _ _ aRa _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _
-      (by rw [← hRa, ← hFp]; first | rfl | saddr)
+      (by rw [← hRa, ← hFp]; first | rfl | segment_addr)
       (by ecancel) (by exact Int.toBytes_length 8 _)
     kunfold
     apply Eventually.done
     try simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?grsp, ?_, ?_, h_mem⟩
-    case grsp => rw [← hRa, ← hFp]; first | rfl | saddr
+    case grsp => rw [← hRa, ← hFp]; first | rfl | segment_addr
     all_goals first
       | exact trivial
       | with_reducible rfl
