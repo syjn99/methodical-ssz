@@ -1,6 +1,6 @@
 # negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
 e2-tie-bh-control	beacon-block-header-encode-fast-path-is-kind-any-frame-control
-e2-tie-bh-kind-field	beacon-block-header-encode-fast-path-is-kind-any-frame-statement-u64-32-to-48
+e2-tie-bh-kind-field	beacon-block-header-encode-fast-path-is-kind-any-frame-statement-uint64-32-to-48
 e2-tie-e1-kind-layout	beacon-block-header-encode-fast-path-is-kind-any-frame-statement-prysm-eth1-data-to-beacon-block-header
 e2-tie-cp-control	checkpoint-encode-fast-path-of-kind-control
 e2-tie-cp-stmt-field	checkpoint-encode-fast-path-of-kind-statement-encode-layout-32-to-48
@@ -16,7 +16,7 @@ e2-ft-far-stmt	codec-encode-frame-test-separated-chunks-apart-statement-ys-none-
 e2-vb-f0-control	validator-balance-encode-example-field-0-control
 e2-vb-f0-stmt-out	validator-balance-encode-example-field-0-statement-v0-v0-to-v1
 e2-vb-fast-stmt-cap	validator-balance-encode-example-fast-statement-hcap-16-to-8
-e2-vb-fast-kind-fields	validator-balance-encode-example-fast-kind-statement-prysm-u64-to-bytes-8
+e2-vb-fast-kind-fields	validator-balance-encode-example-fast-kind-statement-prysm-uint64-to-bytes-8
 e2-vb-head-code-frame	validator-balance-encode-example-head-code-sub-0x68-to-0x70
 e2-hs-epi-control	historical-summary-encode-example-epilogue-control
 e2-hs-epi-code-ft	historical-summary-encode-example-epilogue-code-lea-0x60-rsp-to-0x40-rsp

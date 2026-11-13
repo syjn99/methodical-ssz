@@ -1,7 +1,7 @@
 [
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-reject-size-control",
   "kind": "control",
@@ -10,8 +10,8 @@
   "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-iter-control",
   "kind": "control",
@@ -19,8 +19,8 @@
   "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.iter"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-reject-size-code-cmp-0x24-to-0x23",
   "kind": "code",
@@ -31,8 +31,8 @@
   "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-reject-offset-code-cmp-0x24-to-0x25",
   "kind": "code",
@@ -43,8 +43,8 @@
   "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-accept-code-test-0x7-to-0xf",
   "kind": "code",
@@ -58,8 +58,8 @@
   ]
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-accept-code-cmp-0x80-to-0x7f",
   "kind": "code",
@@ -73,8 +73,8 @@
   ]
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-iter-code-mov-r8-r10-8-to-0x8-r8-r10-8",
   "kind": "code",
@@ -84,11 +84,11 @@
   "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.iter"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-reject-size-statement-hlen-36-to-37",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.DataColumnsByRootIdentifier.Decode.reject_size_statement",
   "old": "(hlen : s.regs.rcx.toNat < 36)",
   "new": "(hlen : s.regs.rcx.toNat < 37)",
@@ -97,11 +97,11 @@
   "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-accept-statement-heap-32-to-31",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.DataColumnsByRootIdentifier.Decode.accept_statement",
   "old": "Heap (avail - (32 + 8 * n))",
   "new": "Heap (avail - (31 + 8 * n))",

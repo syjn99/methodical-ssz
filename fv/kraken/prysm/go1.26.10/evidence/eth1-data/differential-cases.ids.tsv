@@ -1,0 +1,7 @@
+# differential case ids: earlier id (the run records name it)	present id
+e1-accept-0	eth1-data-accept-0
+e1-accept-1	eth1-data-accept-1
+e1-accept-2	eth1-data-accept-2
+e1-size-0	eth1-data-size-0
+e1-size-71	eth1-data-size-71
+e1-size-73	eth1-data-size-73

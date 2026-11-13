@@ -1,6 +1,6 @@
 import Prysm.Checkpoint.CapacityReservedEncodeHead
 
-/-! # OPT-R1 reserve encoder: the grow prefix (`cap − len < 40`), directives 0–47. See `Prysm.Checkpoint.CapacityReservedEncodeHead`. -/
+/-! # Reserve encoder of the capacity-reserved build: the grow prefix (`cap − len < 40`), directives 0–47. See `Prysm.Checkpoint.CapacityReservedEncodeHead`. -/
 
 open Machine Runtime Prysm.Checkpoint.CapacityReserved.Code
 variable [Host]

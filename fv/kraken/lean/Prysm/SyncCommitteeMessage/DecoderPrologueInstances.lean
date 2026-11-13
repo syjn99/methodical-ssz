@@ -11,7 +11,7 @@ import Prysm.PendingPartialWithdrawal.DecoderPrologueInstances
 # The per-type hand head / epilogue / spill lemmas are instances of the frame-parametric mechanism
 
 Each theorem has the TYPE of a per-type hand lemma (`type_of%`: the committed statement) and is proved from
-`dec_prologue_seg`, `dec_return_seg`, `step_nil_check` (`Codec/DecoderPrologue.lean`) and the step lemmas (`Codec/WindowSteps.lean`) only:
+`decode_prologue_segment`, `decode_return_segment`, `step_nil_check` (`Codec/DecoderPrologue.lean`) and the step lemmas (`Codec/WindowSteps.lean`) only:
 heads `Decode.head_to_arguments`, `Prysm.PendingConsolidation.Decode.head`, `Prysm.PendingPartialWithdrawal.Decode.head`, `Prysm.BeaconBlockHeader.Decode.head_to_arguments` (frames `0x60`, `0x48`, `0x48`, `0x60`; three
 spill orders); epilogues `Prysm.PendingConsolidation.Decode.epilogue`, `Prysm.PendingPartialWithdrawal.Decode.epilogue`; nil-error spills `Decode.spill_registers`, `Prysm.BeaconBlockHeader.Decode.spill_registers`.
 The proof texts were produced by a scratch script from the `.S` files (directive index = line − 1); the only
@@ -30,7 +30,7 @@ variable [Host]
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `Decode.head_to_arguments` (SyncCommitteeMessage head, frame `0x60`, size 144) from `dec_prologue_seg`, the spills as `step_store` steps and `step_nil_check`. -/
+/-- `Decode.head_to_arguments` (SyncCommitteeMessage head, frame `0x60`, size 144) from `decode_prologue_segment`, the spills as `step_store` steps and `step_nil_check`. -/
 theorem Decode.head_to_arguments_inst : type_of% (@Decode.head_to_arguments ‹Host›) := by
   intro k hk s ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast R h_mem hguard hlen
   have hcs : Eq (ast.At s.regs.rax.toBitVec) =
@@ -38,7 +38,7 @@ theorem Decode.head_to_arguments_inst : type_of% (@Decode.head_to_arguments ‹H
     conv => lhs; rw [← List.take_append_drop 1 ast]
     exact at_app _ _ (by rw [List.length_take, hast]; rfl) (by simp [hast])
   rw [hcs] at h_mem
-  refine eventually_trans _ _ _ _ (dec_prologue_seg _ _ _ _ 96 120 144 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
+  refine eventually_trans _ _ _ _ (decode_prologue_segment _ _ _ _ 96 120 144 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
     s ra guard (s.regs.rsp.toBitVec - 104) (s.regs.rsp.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     fp s2 hfp h2 _ (by ecancel) hguard (by rw [hlen]; rfl)) ?_

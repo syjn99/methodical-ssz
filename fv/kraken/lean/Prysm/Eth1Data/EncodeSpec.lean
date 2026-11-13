@@ -19,7 +19,7 @@ variable [Host]
 open Codec
 namespace Prysm.Eth1Data
 
-theorem SszValue.enc_toList (g : SszValue) : (SszValue.encode g).toList = g.depositRoot.toList
+theorem SszValue.encode_toList (g : SszValue) : (SszValue.encode g).toList = g.depositRoot.toList
     ++ (uintBytes 8 g.depositCount.toNat).toList ++ g.blockHash.toList := by
   simp only [SszValue.encode, Array.toList_append]; rfl
 
@@ -80,7 +80,7 @@ theorem Encode.fast_path_spec (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k
     hfp h1 h2 hl16 hl24 hl32 hl40 hl48 hl56 hrs R S scratch hsc h_mem hguard hsp hcap hcap63 hmm)
     (fun st ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, _, _, _, scr, _, hm⟩ =>
       ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, ?_⟩)
-  rw [SszValue.enc_toList, Encode.split3 _ _ _ _ hr1 hdc hr2]
+  rw [SszValue.encode_toList, Encode.split3 _ _ _ _ hr1 hdc hr2]
   simp only [← Std.ExtHashMap.sep_assoc]
   generalize (uintBytes 8 g.depositCount.toNat).toList = DC at hm ⊢
   generalize g.depositRoot.toList = R1 at hm ⊢

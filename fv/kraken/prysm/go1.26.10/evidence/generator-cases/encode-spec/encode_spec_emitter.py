@@ -652,7 +652,7 @@ def main():
     for X in which:
         info = parse(lean_dir, X)
         info['module'] = 'Prysm.%s.GeneratedEncodeFastPath' % X
-        info['Spath'] = os.path.join(lean_dir, '..', info['hdr']['S'])
+        info['Spath'] = os.path.join(lean_dir, '..', info['hdr']['assembly'])
         if X in ('Checkpoint',):
             info['Spath'] = os.path.join(lean_dir, '..', 'prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S') if not os.path.exists(info['Spath']) else info['Spath']
         cl = classify(info)

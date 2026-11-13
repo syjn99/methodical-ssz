@@ -21,7 +21,7 @@ variable [Host]
 
 namespace Prysm.Checkpoint
 
-theorem SszValue.enc_toList (g : SszValue) : (SszValue.encode g).toList = (uintBytes 8 g.epoch.toNat).toList ++ g.root.toList := by
+theorem SszValue.encode_toList (g : SszValue) : (SszValue.encode g).toList = (uintBytes 8 g.epoch.toNat).toList ++ g.root.toList := by
   simp only [SszValue.encode, Array.toList_append]; rfl
 
 set_option maxHeartbeats 4000000 in
@@ -64,7 +64,7 @@ theorem Encode.fast_path_spec (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k
     guard hpre fp s2 l16 l24 l32 t40 t30 rslot hfp h2 hl16 hl24 hl32 ht40 ht30 hrs R S scratch hsc h_mem hguard hsp hcap
     hcap63 hmm) (fun st ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, _, _, _, t, u, scr, _, _, _, hm⟩ =>
       ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, ?_⟩)
-  rw [SszValue.enc_toList,
+  rw [SszValue.encode_toList,
     at_app _ g.root.toList (b := s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8) (by rw [he8]; rfl) (by simp [he8]), ← Std.ExtHashMap.sep_assoc]
   generalize (uintBytes 8 g.epoch.toNat).toList = E8 at hm ⊢
   generalize g.root.toList = Rt at hm ⊢

@@ -21,7 +21,7 @@ variable [Host]
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `Prysm.BeaconBlockHeader.Decode.head_to_arguments` (BeaconBlockHeader head, frame `0x60`, size 112) from `dec_prologue_seg`, the spills as `step_store` steps and `step_nil_check`. -/
+/-- `Prysm.BeaconBlockHeader.Decode.head_to_arguments` (BeaconBlockHeader head, frame `0x60`, size 112) from `decode_prologue_segment`, the spills as `step_store` steps and `step_nil_check`. -/
 theorem Decode.head_to_arguments_inst : type_of% (@Prysm.BeaconBlockHeader.Decode.head_to_arguments ‹Host›) := by
   intro k hk s ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast R h_mem hguard hlen
   have hcs : Eq (ast.At s.regs.rax.toBitVec) =
@@ -29,7 +29,7 @@ theorem Decode.head_to_arguments_inst : type_of% (@Prysm.BeaconBlockHeader.Decod
     conv => lhs; rw [← List.take_append_drop 1 ast]
     exact at_app _ _ (by rw [List.length_take, hast]; rfl) (by simp [hast])
   rw [hcs] at h_mem
-  refine eventually_trans _ _ _ _ (dec_prologue_seg _ _ _ _ 96 120 112 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
+  refine eventually_trans _ _ _ _ (decode_prologue_segment _ _ _ _ 96 120 112 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
     s ra guard (s.regs.rsp.toBitVec - 104) (s.regs.rsp.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     fp s2 hfp h2 _ (by ecancel) hguard (by rw [hlen]; rfl)) ?_

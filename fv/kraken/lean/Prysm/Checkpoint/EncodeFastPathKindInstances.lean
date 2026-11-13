@@ -2,7 +2,7 @@ import Codec.Kind.EncodeFastPathAnyFrame
 import Prysm.Checkpoint.EncodeFastPath
 
 /-!
-# Tie of `encFastPathKindAnyFrame` to the hand-written encoder fast-path statement of Checkpoint
+# Tie of `encodeFastPathKindAnyFrame` to the hand-written encoder fast-path statement of Checkpoint
 
 `encodeLayout` is the layout of the hand statement `Encode.fast_path`, with the stack chunks in its order.
 `Encode.fast_path_of_kind`: the kind instance implies the hand statement; the converse does not hold as stated.
@@ -37,7 +37,7 @@ set_option maxRecDepth 100000 in
 names a 32-byte chunk `ctl` at `rax + 40` (in the kind it is part of `R`). The kind instance is the stronger
 statement; the converse does not hold as stated. -/
 theorem Encode.fast_path_of_kind
-    (H : encFastPathKindAnyFrame Prysm.Checkpoint.Code.marshalSSZTo Prysm.Checkpoint.encodeLayout [.u64, .bytes 32]) :
+    (H : encodeFastPathKindAnyFrame Prysm.Checkpoint.Code.marshalSSZTo Prysm.Checkpoint.encodeLayout [.uint64, .bytes 32]) :
     type_of% (@Prysm.Checkpoint.Encode.fast_path ‹Host›) := by
   intro k hk hf cst e8 cC ctl root pre d0 d1 hcst he8 hcC hctl hroot hd0 hd1 p s ra guard hpre
     fp s2 l16 l24 l32 t40 t30 rslot hfp h2 hl16 hl24 hl32 ht40 ht30 hrs R S scratch hsc

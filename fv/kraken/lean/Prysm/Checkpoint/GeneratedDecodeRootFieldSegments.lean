@@ -15,7 +15,7 @@ namespace Prysm.Checkpoint
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `Root` (SSZ offset 8, Go offset 16): decode segment, directives 50–74. -/
-theorem Decode.generated_root_Root_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_root_Root_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + (96 : Int64).toBitVec = aR) (hB' : sp + (104 : Int64).toBitVec = aB)
     (hS : sp + (56 : Int64).toBitVec = aS)
@@ -53,15 +53,15 @@ theorem Decode.generated_root_Root_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
           ⋆ Eq (root.At aSrc)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 50)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_ff" 96 24 32) 50 hk
-    (by simp only [unmarshalSSZ, Codec.rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.rootDecMid "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_ff" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_142" 96 104 56 16 24 32 8) 63 hk
-    (by simp only [unmarshalSSZ, Codec.rootDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA := Codec.infix_sub (q := Codec.rootDecodeHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_ff" 96 24 32) 50 hk
+    (by simp only [unmarshalSSZ, Codec.rootDecodeHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.rootDecodeMiddle "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_ff" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_142" 96 104 56 16 24 32 8) 63 hk
+    (by simp only [unmarshalSSZ, Codec.rootDecodeMiddle, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 63)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.rootdec_seg _ _ _ _ _ _ _ _ _ (k + 50) (k + 63) hA hB hl
-theorem Decode.generated_root_Root_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_root_Root_seg h) = @Codec.rootDecSegKind h unmarshalSSZ 50 63 96 104 56 16 24 32 8 := by
+  with_reducible exact Codec.root_decode_segment _ _ _ _ _ _ _ _ _ (k + 50) (k + 63) hA hB hl
+theorem Decode.generated_root_Root_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_root_Root_segment h) = @Codec.rootDecodeSegmentKind h unmarshalSSZ 50 63 96 104 56 16 24 32 8 := by
   intro h; with_reducible rfl
 
 end Prysm.Checkpoint

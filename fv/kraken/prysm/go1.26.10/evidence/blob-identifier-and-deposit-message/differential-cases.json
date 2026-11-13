@@ -1,7 +1,7 @@
 [
  {
-  "id": "bi-accept-0",
-  "op": "bi_u",
+  "id": "blob-identifier-accept-0",
+  "op": "BlobIdentifier.UnmarshalSSZ",
   "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
   "exp": {
    "err": "",
@@ -18,8 +18,8 @@
   }
  },
  {
-  "id": "bi-accept-1",
-  "op": "bi_u",
+  "id": "blob-identifier-accept-1",
+  "op": "BlobIdentifier.UnmarshalSSZ",
   "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1fefcdab8967452301",
   "exp": {
    "err": "",
@@ -36,8 +36,8 @@
   }
  },
  {
-  "id": "bi-accept-2",
-  "op": "bi_u",
+  "id": "blob-identifier-accept-2",
+  "op": "BlobIdentifier.UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "exp": {
    "err": "",
@@ -54,32 +54,32 @@
   }
  },
  {
-  "id": "bi-size-0",
-  "op": "bi_u",
+  "id": "blob-identifier-size-0",
+  "op": "BlobIdentifier.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "bi-size-39",
-  "op": "bi_u",
+  "id": "blob-identifier-size-39",
+  "op": "BlobIdentifier.UnmarshalSSZ",
   "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "bi-size-41",
-  "op": "bi_u",
+  "id": "blob-identifier-size-41",
+  "op": "BlobIdentifier.UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "dm-accept-0",
-  "op": "dm_u",
+  "id": "deposit-message-accept-0",
+  "op": "DepositMessage.UnmarshalSSZ",
   "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
   "exp": {
    "err": "",
@@ -99,8 +99,8 @@
   }
  },
  {
-  "id": "dm-accept-1",
-  "op": "dm_u",
+  "id": "deposit-message-accept-1",
+  "op": "DepositMessage.UnmarshalSSZ",
   "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f2222222222222222222222222222222222222222222222222222222222222222efcdab8967452301",
   "exp": {
    "err": "",
@@ -120,8 +120,8 @@
   }
  },
  {
-  "id": "dm-accept-2",
-  "op": "dm_u",
+  "id": "deposit-message-accept-2",
+  "op": "DepositMessage.UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "exp": {
    "err": "",
@@ -141,24 +141,24 @@
   }
  },
  {
-  "id": "dm-size-0",
-  "op": "dm_u",
+  "id": "deposit-message-size-0",
+  "op": "DepositMessage.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "dm-size-87",
-  "op": "dm_u",
+  "id": "deposit-message-size-87",
+  "op": "DepositMessage.UnmarshalSSZ",
   "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "dm-size-89",
-  "op": "dm_u",
+  "id": "deposit-message-size-89",
+  "op": "DepositMessage.UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true

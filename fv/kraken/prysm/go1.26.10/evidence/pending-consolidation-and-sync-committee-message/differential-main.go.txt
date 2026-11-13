@@ -1,7 +1,7 @@
-// Scratch differential program (H5 hold-out evaluation, not committed in Prysm): runs the real generated
+// Scratch differential program (not committed in Prysm): runs the real generated
 // v1alpha1.SyncCommitteeMessage.UnmarshalSSZ and v1alpha1.PendingConsolidation.UnmarshalSSZ on the cases of
-// fv/kraken/gen/e2e/h5diff.py and prints the observed results as JSON. Expected values are computed by that
-// script independently (Python struct.pack), never from this program. (Text of h4check-main.go.txt.)
+// fv/kraken/gen/checks/pending_consolidation_and_sync_committee_message_differential.py and prints the observed results as JSON. Expected values are computed by that
+// script independently (Python struct.pack), never from this program. (Text of ../deposit-data-and-pending-partial-withdrawal/differential-main.go.txt.)
 package main
 
 import (
@@ -52,12 +52,12 @@ func main() {
 		r := Res{ID: c.ID}
 		var e error
 		switch c.Op {
-		case "sm_u":
+		case "SyncCommitteeMessage.UnmarshalSSZ":
 			h := &ethpb.SyncCommitteeMessage{}
 			e = h.UnmarshalSSZ(in)
 			r.U64s = []uint64{uint64(h.Slot), uint64(h.ValidatorIndex)}
 			put(&r, h.BlockRoot, h.Signature)
-		case "pc_u":
+		case "PendingConsolidation.UnmarshalSSZ":
 			h := &ethpb.PendingConsolidation{}
 			e = h.UnmarshalSSZ(in)
 			r.U64s = []uint64{uint64(h.SourceIndex), uint64(h.TargetIndex)}

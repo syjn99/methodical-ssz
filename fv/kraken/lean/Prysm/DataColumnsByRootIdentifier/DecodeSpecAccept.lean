@@ -5,7 +5,7 @@ import Prysm.DataColumnsByRootIdentifier.SpecDecodeBridge
 # Decoder accept path against EthLib (`Decode.accept_spec_statement`)
 
 An input that EthLib accepts against `desc` is `SszValue.encode g` for a `g : SszValue` with `g.toValue = v`
-(`accepted_is_encode`); its bytes are `root ‖ offsetBytes ‖ u64Bytes cols` (`encode_toList`), and the machine code decodes it
+(`accepted_is_encode`); its bytes are `root ‖ offsetBytes ‖ uint64Bytes cols` (`encode_toList`), and the machine code decodes it
 into `g` (`Decode.accept` with `n = g.cols.length`). The text of `Prysm/IndexedAttestation/DecodeSpecAccept.lean`.
 -/
 
@@ -29,7 +29,7 @@ theorem Decode.accept_spec : Decode.accept_spec_statement := by
   refine ⟨g, rfl, hb, ?_⟩
   have hsz := encode_size g
   have hn := g.hcols
-  have hcb : (Spec.u64Bytes g.cols).toList.length = 8 * g.cols.length := by simp [Spec.u64Bytes_size]
+  have hcb : (Spec.uint64Bytes g.cols).toList.length = 8 * g.cols.length := by simp [Spec.uint64Bytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   rw [hb, hsz] at hlen hav
   rw [hb, encode_toList, Decode.input_split _ _ _ hroot (by rw [hcb]; omega)] at h_mem

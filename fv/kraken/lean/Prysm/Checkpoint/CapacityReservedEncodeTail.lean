@@ -2,7 +2,7 @@ import Prysm.Checkpoint.CapacityReservedCode
 import Prysm.Checkpoint.EncodeTail
 
 /-!
-# OPT-R1 reserve encoder from `L_e5` (directive 48): the two tails
+# Reserve encoder of the capacity-reserved build from `L_e5` (directive 48): the two tails
 
 At `L_e5` both prefixes meet: `rax` = receiver `rcv`, `rbx` = block `b`, `rcx` = `len` `L`,
 `rdx` = block capacity `C`; rsp = rsp0 − 152 (frame `sub $0x90`), rbp = rsp0 − 8. The block is

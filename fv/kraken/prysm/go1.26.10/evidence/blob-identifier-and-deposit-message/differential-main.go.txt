@@ -1,7 +1,7 @@
-// Scratch differential program (unit G5-C, not committed in Prysm): runs the real generated
-// v1alpha1.{HistoricalSummary,SigningData,SyncAggregatorSelectionData,ValidatorBalance,VoluntaryExit}.UnmarshalSSZ
-// on the cases of fv/kraken/gen/e2e/g5cdiff.py and prints the observed results as JSON. Expected values are
-// computed by that script independently (Python struct.pack), never from this program. (Text of h6check-main.go.txt.)
+// Scratch differential program (not committed in Prysm): runs the real generated
+// v1alpha1.BlobIdentifier.UnmarshalSSZ and v1alpha1.DepositMessage.UnmarshalSSZ on the cases of
+// fv/kraken/gen/checks/blob_identifier_and_deposit_message_differential.py and prints the observed results as JSON. Expected values are computed by that
+// script independently (Python struct.pack), never from this program. (Text of ../eth1-data/differential-main.go.txt.)
 package main
 
 import (
@@ -24,7 +24,7 @@ type Res struct {
 	ID      string   `json:"id"`
 	Err     string   `json:"err"`
 	ErrSize bool     `json:"err_is_ErrSize"`
-	U64s    []uint64 `json:"u64s"`
+	U64     uint64   `json:"u64"`
 	Bytes   []string `json:"bytes"`
 	Lens    []int    `json:"lens"`
 	Caps    []int    `json:"caps"`
@@ -52,26 +52,16 @@ func main() {
 		r := Res{ID: c.ID}
 		var e error
 		switch c.Op {
-		case "hs_u":
-			h := &ethpb.HistoricalSummary{}
+		case "BlobIdentifier.UnmarshalSSZ":
+			h := &ethpb.BlobIdentifier{}
 			e = h.UnmarshalSSZ(in)
-			put(&r, h.BlockSummaryRoot, h.StateSummaryRoot)
-		case "sd_u":
-			h := &ethpb.SigningData{}
+			r.U64 = h.Index
+			put(&r, h.BlockRoot)
+		case "DepositMessage.UnmarshalSSZ":
+			h := &ethpb.DepositMessage{}
 			e = h.UnmarshalSSZ(in)
-			put(&r, h.ObjectRoot, h.Domain)
-		case "sa_u":
-			h := &ethpb.SyncAggregatorSelectionData{}
-			e = h.UnmarshalSSZ(in)
-			r.U64s = []uint64{uint64(h.Slot), h.SubcommitteeIndex}
-		case "vb_u":
-			h := &ethpb.ValidatorBalance{}
-			e = h.UnmarshalSSZ(in)
-			r.U64s = []uint64{uint64(h.Index), h.Balance}
-		case "ve_u":
-			h := &ethpb.VoluntaryExit{}
-			e = h.UnmarshalSSZ(in)
-			r.U64s = []uint64{uint64(h.Epoch), uint64(h.ValidatorIndex)}
+			r.U64 = h.Amount
+			put(&r, h.PublicKey, h.WithdrawalCredentials)
 		default:
 			panic(c.Op)
 		}

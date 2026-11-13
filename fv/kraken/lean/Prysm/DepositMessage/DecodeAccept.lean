@@ -9,8 +9,8 @@ import Prysm.DepositMessage.DecodeFieldSegmentOffsetZero
 # Real Prysm `(*v1alpha1.DepositMessage).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
 
 Hand-written after the frozen generator ran on this hold-out type. The WithdrawalCredentials segment is the
-raw generator theorem `Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg` (`Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean`, unedited). The
-PublicKey segment (48 bytes, source offset 0) is the hand lemma `Prysm.DepositMessage.bytes48dec_seg_offset_zero` (`Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`):
+raw generator theorem `Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_segment` (`Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean`, unedited). The
+PublicKey segment (48 bytes, source offset 0) is the hand lemma `Prysm.DepositMessage.bytes48_decode_segment_offset_zero` (`Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`):
 the generator does not read 48-byte fields. Amount (inline uint64) is by hand. The head and the composition
 are the text of `Prysm/Eth1Data/DecodeAccept.lean`; `eth1_data_addr` and `Prysm.Eth1Data.Decode.stack_low_eq` are reused from it.
 
@@ -178,14 +178,14 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- PublicKey (hand: 48-byte offset-0 segment, `Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`), 13 → 37
-  have hA1 := Codec.infix_sub (q := Prysm.DepositMessage.bytesDecHead48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" 48 8 16) 13 hk
-    (by simp only [unmarshalSSZ, Prysm.DepositMessage.bytesDecHead48, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB1 := Codec.infix_sub (q := Prysm.DepositMessage.bytesDecMidOffsetZero48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_b0" 48 56 24 0 8 16) 26 hk
-    (by simp only [unmarshalSSZ, Prysm.DepositMessage.bytesDecMidOffsetZero48, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA1 := Codec.infix_sub (q := Prysm.DepositMessage.bytesDecodeHead48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" 48 8 16) 13 hk
+    (by simp only [unmarshalSSZ, Prysm.DepositMessage.bytesDecodeHead48, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB1 := Codec.infix_sub (q := Prysm.DepositMessage.bytesDecodeMiddleOffsetZero48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_b0" 48 56 24 0 8 16) 26 hk
+    (by simp only [unmarshalSSZ, Prysm.DepositMessage.bytesDecodeMiddleOffsetZero48, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl1 := Machine.label_at' hk hf (j := 26)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  refine eventually_trans _ _ _ _ (Prysm.DepositMessage.bytes48dec_seg_offset_zero _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA1 hB1 hl1
+  refine eventually_trans _ _ _ _ (Prysm.DepositMessage.bytes48_decode_segment_offset_zero _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA1 hB1 hl1
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) rax.toBitVec (rax.toBitVec + 8) (rax.toBitVec + 16) S
@@ -220,7 +220,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   simp only [Width.bytes, Width.bits] at H3
   unfold_step
   -- WithdrawalCredentials: the generated segment theorem (raw generator output, `Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean`), 47 → 73
-  refine eventually_trans _ _ _ _ (Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg k hk hf
+  refine eventually_trans _ _ _ _ (Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_segment k hk hf
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 24) (rax.toBitVec + 32) (rax.toBitVec + 40)

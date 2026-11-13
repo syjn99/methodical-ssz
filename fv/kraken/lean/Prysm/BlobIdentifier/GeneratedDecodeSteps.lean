@@ -10,7 +10,7 @@ import Codec.FixedBytesDecodeWindowOffsetZero
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
 /-! Step chain fields (machine-readable, read by `kindcheck.py`):
-FIELDS-JSON: [{"field": "BlockRoot", "theorems": ["Decode.generated_step_BlockRoot_seg", "Decode.generated_step_directive_37", "Decode.generated_step_directive_38", "Decode.generated_step_directive_45", "Decode.generated_step_directive_46"]}, {"field": "Index", "theorems": ["Decode.generated_step_directive_47", "Decode.generated_step_directive_48", "Decode.generated_step_directive_49"]}]
+FIELDS-JSON: [{"field": "BlockRoot", "theorems": ["Decode.generated_step_BlockRoot_segment", "Decode.generated_step_directive_37", "Decode.generated_step_directive_38", "Decode.generated_step_directive_45", "Decode.generated_step_directive_46"]}, {"field": "Index", "theorems": ["Decode.generated_step_directive_47", "Decode.generated_step_directive_48", "Decode.generated_step_directive_49"]}]
 -/
 
 open Machine Runtime Prysm.BlobIdentifier.Code
@@ -22,7 +22,7 @@ namespace Prysm.BlobIdentifier
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `BlockRoot` (32-byte vector, SSZ offset 0, Go offset 8): decode segment (offset-0 form) over the windows 13–21 and 26–36; receiver in rdx after makeslice, in rdx after memmove (`callq` at 31). -/
-theorem Decode.generated_step_BlockRoot_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_BlockRoot_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB) (hS : sp + (24 : Int64).toBitVec = aS)
@@ -59,17 +59,17 @@ theorem Decode.generated_step_BlockRoot_seg (k : Nat) (hk : unmarshalSSZ.IsInfix
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 13)⟩ := by
   have hqA := Codec.window_infix_at hk 13 9
-  have heA : Codec.eraseNop ((unmarshalSSZ.drop 13).take 9) = Codec.bytesDecHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_75" 48 16 24 := by rfl
+  have heA : Codec.eraseNop ((unmarshalSSZ.drop 13).take 9) = Codec.bytesDecodeHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_75" 48 16 24 := by rfl
   have hqB := Codec.window_infix_at hk 26 11
-  have heB : Codec.eraseNop ((unmarshalSSZ.drop 26).take 11) = Codec.bytesDecMidOffsetZeroRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_b2" 48 56 24 8 16 24 := by rfl
+  have heB : Codec.eraseNop ((unmarshalSSZ.drop 26).take 11) = Codec.bytesDecodeMiddleOffsetZeroRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_b2" 48 56 24 8 16 24 := by rfl
   have hjl : k + 26 + Codec.nonNopIndex ((unmarshalSSZ.drop 26).take 11) 0 = k + 26 := by rfl
   have hl := Machine.label_at' hk hf (j := 26)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hjm : k + 26 + Codec.nonNopIndex ((unmarshalSSZ.drop 26).take 11) 5 = k + 31 := by rfl
   have hend : k + 26 + ((unmarshalSSZ.drop 26).take 11).length = k + 37 := by rfl
-  with_reducible exact Codec.bytesdec_seg_offset_zero_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 13) (k + 26) (k + 26) (k + 31) (k + 37) hqA heA hqB heB hjl hl hjm hend
-theorem Decode.generated_step_BlockRoot_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_step_BlockRoot_seg h) = @Codec.bytesDecSegOffsetZeroKindWindow h 32 unmarshalSSZ Reg64.rdx 13 31 37 48 56 24 8 16 24 := by
+  with_reducible exact Codec.bytes_decode_segment_offset_zero_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 13) (k + 26) (k + 26) (k + 31) (k + 37) hqA heA hqB heB hjl hl hjm hend
+theorem Decode.generated_step_BlockRoot_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_step_BlockRoot_segment h) = @Codec.bytesDecodeSegmentOffsetZeroKindWindow h 32 unmarshalSSZ Reg64.rdx 13 31 37 48 56 24 8 16 24 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in

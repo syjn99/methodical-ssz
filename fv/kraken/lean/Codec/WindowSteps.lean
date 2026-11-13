@@ -80,7 +80,7 @@ variable [Host]
 theorem step_nops (q : Program) (j e : Nat) (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = [])
     (hend : j + q.length = e) (final : MachineState → Prop) (s : MachineData)
     (hk : Eventually (step1 Host.exe) final ⟨s, Host.addrOf e⟩) :
-    Eventually (step1 Host.exe) final ⟨s, Host.addrOf j⟩ := wnops hq he hend hk
+    Eventually (step1 Host.exe) final ⟨s, Host.addrOf j⟩ := window_only_nops hq he hend hk
 
 /-- **Step: a label** (inert). -/
 theorem step_label (l : String) (q : Program) (j e : Nat) (hq : q.IsInfixAt Host.prog j)
@@ -90,7 +90,7 @@ theorem step_label (l : String) (q : Program) (j e : Nat) (hq : q.IsInfixAt Host
   window_skip_leading_nops hq
   have hd : [instrLabel l].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrLabel at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   window_skip_to_end hq he 0 hend
   exact hk
@@ -103,7 +103,7 @@ theorem step_jump (l : String) (q : Program) (j jl : Nat) (hq : q.IsInfixAt Host
   window_skip_leading_nops hq
   have hd : [instrJump l].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrJump at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   rw [hl]
   exact hk
@@ -116,7 +116,7 @@ theorem step_move_register (rD rS : Reg64) (q : Program) (j e : Nat) (hq : q.IsI
   window_skip_leading_nops hq
   have hd : [instrMoveRegister rD rS].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrMoveRegister at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   window_skip_to_end hq he 0 hend
   exact hk
@@ -133,7 +133,7 @@ theorem step_load_bytes (rD rB : Reg64) (disp : Int64) (q : Program) (j e : Nat)
   window_skip_leading_nops hq
   have hd : [instrLoad rD rB disp].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrLoad at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   apply load_step_at _ _ (s.regs.get64 rB + disp.toBitVec) _ _ bs _ _ rfl hm (by exact hbs)
   unfold_step_keep_registers
@@ -165,7 +165,7 @@ theorem step_store (rS rB : Reg64) (disp : Int64) (q : Program) (j e : Nat)
   window_skip_leading_nops hq
   have hd : [instrStore rS rB disp].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrStore at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   apply store_step_at _ _ (s.regs.get64 rB + disp.toBitVec) _ _ _ bs _ _ rfl hm (by exact hbs)
   intro m' H
@@ -182,7 +182,7 @@ theorem step_lea (rD rB : Reg64) (disp : Int64) (q : Program) (j e : Nat) (hq : 
   window_skip_leading_nops hq
   have hd : [instrLea rD rB disp].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrLea at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   window_skip_to_end hq he 0 hend
   exact hk
@@ -197,7 +197,7 @@ theorem step_add_immediate (rD : Reg64) (imm : Int64) (q : Program) (j e : Nat) 
   window_skip_leading_nops hq
   have hd : [instrAddImmediate rD imm].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrAddImmediate at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   simp only [BitVec.add_comm imm.toBitVec (s.regs.get64 rD)]
   window_skip_to_end hq he 0 hend
@@ -211,7 +211,7 @@ theorem step_move_immediate (rD : Reg64) (imm : Int64) (q : Program) (j e : Nat)
   window_skip_leading_nops hq
   have hd : [instrMoveImmediate32 rD imm].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrMoveImmediate32 at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   window_skip_to_end hq he 0 hend
   exact hk

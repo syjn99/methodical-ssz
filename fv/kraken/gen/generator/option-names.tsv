@@ -19,3 +19,13 @@ GEN6 (`p2enc --gen6`, unit E2-G)	Fast path (`encoder --fast-path`)	module headin
 GEN6-JSON	FAST-PATH-JSON	machine-readable line of a fast-path file
 G5-L kinds	whole-accept kinds	the kinds of Codec/Kind/DecodeAcceptAnyFrame.lean
 --t3	--with-indexed-attestation	link script option (lists_and_vectors_link.py, link_set.py): also link and read the IndexedAttestation decoder
+--S	--assembly	generator option: the `.S` file of the function (gen/generator/generator.py; the frozen generator keeps --S)
+S	assembly	key of the generator summary, of the FAST-PATH-JSON trailer and of the negative case files: the `.S` file
+S_sha256	assembly_sha256	key of the generator summary and of the FAST-PATH-JSON trailer: sha256 of the `.S` file
+code_ns	code_namespace	key of the negative case files: the namespace of the code constant
+code_def	code_definition	key of the negative case files: the Lean name of the included program
+stmt	statement	value of the negative case key "kind" (statement mutant)
+stmt <name>	statement <name>	value of "statement_check" in the WHOLE-ACCEPT-JSON trailer (--same-as-prop)
+u	uint64	key of the flat-type and encoder differential cases: the uint64 value of a field
+b	bytes	key of the flat-type and encoder differential cases: the hex bytes of a field
+spec_k	accept_spec	part name of gen/tools/proof_inventory.py (Decode.accept_spec)

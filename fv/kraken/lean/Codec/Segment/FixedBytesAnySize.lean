@@ -24,8 +24,8 @@ theorem toInt_ofNat_small (n : Nat) (h : n < 2 ^ 31) :
   have h1 : (OfNat.ofNat n : BitVec 64).toNat = n := by simp; omega
   rw [BitVec.toInt_eq_toNat_of_lt (by rw [h1]; omega), h1]; rfl
 
-/-- `bytesDecHead n` with a `nop` after `mov $n,%ecx` (10 directives; Go pads the call site). -/
-def bytesDecHeadNopAnySize (n : Int64) (lff : String) (dR fL fC : Int64) : Program :=
+/-- `bytesDecodeHead n` with a `nop` after `mov $n,%ecx` (10 directives; Go pads the call site). -/
+def bytesDecodeHeadNopAnySize (n : Int64) (lff : String) (dR fL fC : Int64) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.lea (Reg.low Reg64.rax Width.W64)
        (AddrExpr.mk (some RegOrRip.rip) none (((ConstExpr.label "type__").add (ConstExpr.int64 387072)).sub ConstExpr.after_current_instruction)))),
@@ -55,11 +55,11 @@ variable [Host]
 
 variable [Host]
 
-/-- **Fixed-bytes decode segment, add form, any size `n < 2^31`**: the statement of `Codec.bytesdec_seg`
+/-- **Fixed-bytes decode segment, add form, any size `n < 2^31`**: the statement of `Codec.bytes_decode_segment`
 with `hn : n < 2^31`. -/
-theorem bytesdec_seg_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
-    (hA : (bytesDecHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
-    (hB : (bytesDecMid (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)
+theorem bytes_decode_segment_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
+    (hA : (bytesDecodeHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
+    (hB : (bytesDecodeMiddle (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)
     (hl : label lff = Host.addrOf j2)
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
@@ -99,11 +99,11 @@ theorem bytesdec_seg_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14 hRet hLo
-  step_directive hA bytesDecHead 0
-  step_directive hA bytesDecHead 1
+  step_directive hA bytesDecodeHead 0
+  step_directive hA bytesDecodeHead 1
   intro _
-  step_directive hA bytesDecHead 2
-  step_directive hA bytesDecHead 3
+  step_directive hA bytesDecodeHead 2
+  step_directive hA bytesDecodeHead 3
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
@@ -123,47 +123,47 @@ theorem bytesdec_seg_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR
   subst hrsp3 hr143 hrbp3
   rw [show sp - 8 + 8 = sp by bv_omega] at Hm3
   simp only [Nat.one_mul] at Hm3
-  step_directive hA bytesDecHead 4
+  step_directive hA bytesDecodeHead 4
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA bytesDecHead 5
+  step_directive hA bytesDecodeHead 5
   apply store_step_at _ _ aL _ _ _ vL _ _ (by rw [← hL]) (by ecancel) (by exact hvL)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
   unfold_step
-  step_directive hA bytesDecHead 6
+  step_directive hA bytesDecodeHead 6
   apply store_step_at _ _ aC _ _ _ vC _ _ (by rw [← hC]) (by ecancel) (by exact hvC)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   unfold_step
-  step_directive hA bytesDecHead 7
+  step_directive hA bytesDecodeHead 7
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
   unfold_step
-  step_directive hA bytesDecHead 8
+  step_directive hA bytesDecodeHead 8
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   rw [hl]
-  step_directive hB bytesDecMid 0
-  step_directive hB bytesDecMid 1
+  step_directive hB bytesDecodeMiddle 0
+  step_directive hB bytesDecodeMiddle 1
   apply store_step_at _ _ aS _ _ _ lS _ _ (by rw [← hS]) (by ecancel) (by exact hlS)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
   unfold_step
-  step_directive hB bytesDecMid 2
+  step_directive hB bytesDecodeMiddle 2
   apply store_step_at _ _ aP _ _ _ vP _ _ (by rw [← hP]) (by ecancel) (by exact hvP)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
   unfold_step
-  step_directive hB bytesDecMid 3
+  step_directive hB bytesDecodeMiddle 3
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hB bytesDecMid 4
-  step_directive hB bytesDecMid 5
-  step_directive hB bytesDecMid 6
+  step_directive hB bytesDecodeMiddle 4
+  step_directive hB bytesDecodeMiddle 5
+  step_directive hB bytesDecodeMiddle 6
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 3 + 1)).toBitVec.toInt) _ _
     (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6' H6
@@ -183,27 +183,27 @@ theorem bytesdec_seg_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR
     apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega] at hrsp4
   subst hrsp4 hr144 hrbp4
   rw [show src.toBitVec + bf = aSrc by rw [← hSrc]; exact BitVec.add_comm _ _] at Hm4
-  step_directive hB bytesDecMid 7
+  step_directive hB bytesDecodeMiddle 7
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hB bytesDecMid 8
+  step_directive hB bytesDecodeMiddle 8
   apply store_step_at _ _ aL _ _ _ (Int.toBytes 8 (BitVec.toInt (0 : BitVec 64))) _ _ (by rw [← hL])
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m7' H7
   simp only [Width.bytes, Width.bits] at H7
   unfold_step
-  step_directive hB bytesDecMid 9
+  step_directive hB bytesDecodeMiddle 9
   apply store_step_at _ _ aC _ _ _ (Int.toBytes 8 (BitVec.toInt (OfNat.ofNat n : BitVec 64))) _ _ (by rw [← hC])
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m8' H8
   simp only [Width.bytes, Width.bits] at H8
   unfold_step
-  step_directive hB bytesDecMid 10
+  step_directive hB bytesDecodeMiddle 10
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
   unfold_step
-  step_directive hB bytesDecMid 11
+  step_directive hB bytesDecodeMiddle 11
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
@@ -212,11 +212,11 @@ theorem bytesdec_seg_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR
   exact ⟨rfl, rfl, rfl, rfl, rax3.toBitVec, spm3, stk4, hspm3, hstk4, rfl, by ecancel⟩
 
 /-- **Fixed-bytes decode segment, offset-0 form, any size `n < 2^31`**: the statement of
-`Codec.bytesdec_seg_offset_zero` with `hn : n < 2^31`. Proof text: `Codec/FixedBytesDecode.lean`'s `bytes_decode_offset_zero_case` macro with the literal-size
+`Codec.bytes_decode_segment_offset_zero` with `hn : n < 2^31`. Proof text: `Codec/FixedBytesDecode.lean`'s `bytes_decode_offset_zero_case` macro with the literal-size
 steps replaced (see the file header). -/
-theorem bytesdec_seg_offset_zero_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat)
-    (hA : (bytesDecHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
-    (hB : (bytesDecMidOffsetZero (OfNat.ofNat n) lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog j2)
+theorem bytes_decode_segment_offset_zero_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat)
+    (hA : (bytesDecodeHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
+    (hB : (bytesDecodeMiddleOffsetZero (OfNat.ofNat n) lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog j2)
     (hl : label lff = Host.addrOf j2)
     (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
@@ -255,11 +255,11 @@ theorem bytesdec_seg_offset_zero_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb :
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14 hRet hLo
-  step_directive hA bytesDecHead 0
-  step_directive hA bytesDecHead 1
+  step_directive hA bytesDecodeHead 0
+  step_directive hA bytesDecodeHead 1
   intro _
-  step_directive hA bytesDecHead 2
-  step_directive hA bytesDecHead 3
+  step_directive hA bytesDecodeHead 2
+  step_directive hA bytesDecodeHead 3
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
@@ -279,46 +279,46 @@ theorem bytesdec_seg_offset_zero_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb :
   subst hrsp3 hr143 hrbp3
   rw [show sp - 8 + 8 = sp by bv_omega] at Hm3
   simp only [Nat.one_mul] at Hm3
-  step_directive hA bytesDecHead 4
+  step_directive hA bytesDecodeHead 4
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA bytesDecHead 5
+  step_directive hA bytesDecodeHead 5
   apply store_step_at _ _ aL _ _ _ vL _ _ (by rw [← hL]) (by ecancel) (by exact hvL)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
   unfold_step
-  step_directive hA bytesDecHead 6
+  step_directive hA bytesDecodeHead 6
   apply store_step_at _ _ aC _ _ _ vC _ _ (by rw [← hC]) (by ecancel) (by exact hvC)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   unfold_step
-  step_directive hA bytesDecHead 7
+  step_directive hA bytesDecodeHead 7
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
   unfold_step
-  step_directive hA bytesDecHead 8
+  step_directive hA bytesDecodeHead 8
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   rw [hl]
-  step_directive hB bytesDecMidOffsetZero 0
-  step_directive hB bytesDecMidOffsetZero 1
+  step_directive hB bytesDecodeMiddleOffsetZero 0
+  step_directive hB bytesDecodeMiddleOffsetZero 1
   apply store_step_at _ _ aS _ _ _ lS _ _ (by rw [← hS]) (by ecancel) (by exact hlS)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
   unfold_step
-  step_directive hB bytesDecMidOffsetZero 2
+  step_directive hB bytesDecodeMiddleOffsetZero 2
   apply store_step_at _ _ aP _ _ _ vP _ _ (by rw [← hP]) (by ecancel) (by exact hvP)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
   unfold_step
-  step_directive hB bytesDecMidOffsetZero 3
+  step_directive hB bytesDecodeMiddleOffsetZero 3
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hB bytesDecMidOffsetZero 4
-  step_directive hB bytesDecMidOffsetZero 5
+  step_directive hB bytesDecodeMiddleOffsetZero 4
+  step_directive hB bytesDecodeMiddleOffsetZero 5
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 3 + 1)).toBitVec.toInt) _ _
     (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6' H6
@@ -337,27 +337,27 @@ theorem bytesdec_seg_offset_zero_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb :
   rw [show ({ toBitVec := sp - 8 } + 8 : UInt64) = { toBitVec := sp } by
     apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega] at hrsp4
   subst hrsp4 hr144 hrbp4
-  step_directive hB bytesDecMidOffsetZero 6
+  step_directive hB bytesDecodeMiddleOffsetZero 6
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hB bytesDecMidOffsetZero 7
+  step_directive hB bytesDecodeMiddleOffsetZero 7
   apply store_step_at _ _ aL _ _ _ (Int.toBytes 8 (BitVec.toInt (0 : BitVec 64))) _ _ (by rw [← hL])
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m7' H7
   simp only [Width.bytes, Width.bits] at H7
   unfold_step
-  step_directive hB bytesDecMidOffsetZero 8
+  step_directive hB bytesDecodeMiddleOffsetZero 8
   apply store_step_at _ _ aC _ _ _ (Int.toBytes 8 (BitVec.toInt (OfNat.ofNat n : BitVec 64))) _ _ (by rw [← hC])
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m8' H8
   simp only [Width.bytes, Width.bits] at H8
   unfold_step
-  step_directive hB bytesDecMidOffsetZero 9
+  step_directive hB bytesDecodeMiddleOffsetZero 9
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
   unfold_step
-  step_directive hB bytesDecMidOffsetZero 10
+  step_directive hB bytesDecodeMiddleOffsetZero 10
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
@@ -366,10 +366,10 @@ theorem bytesdec_seg_offset_zero_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb :
   exact ⟨rfl, rfl, rfl, rfl, rax3.toBitVec, spm3, stk4, hspm3, hstk4, rfl, by ecancel⟩
 
 /-- **Fixed-bytes decode segment, add form with the `nop` head, any size `n < 2^31`**: the statement of
-`Prysm.SyncAggregate.bytes96dec_seg_nop` / `Prysm.Deposit_Data.bytes32dec_seg_nop` with the size `n`. -/
-theorem bytesdec_seg_nop_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
-    (hA : (bytesDecHeadNopAnySize (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
-    (hB : (bytesDecMid (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)
+`Prysm.SyncAggregate.bytes96_decode_segment_nop` / `Prysm.Deposit_Data.bytes32_decode_segment_nop` with the size `n`. -/
+theorem bytes_decode_segment_nop_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
+    (hA : (bytesDecodeHeadNopAnySize (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
+    (hB : (bytesDecodeMiddle (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)
     (hl : label lff = Host.addrOf j2)
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
@@ -409,12 +409,12 @@ theorem bytesdec_seg_nop_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14 hRet hLo
-  step_directive hA bytesDecHeadNopAnySize 0
-  step_directive hA bytesDecHeadNopAnySize 1
+  step_directive hA bytesDecodeHeadNopAnySize 0
+  step_directive hA bytesDecodeHeadNopAnySize 1
   intro _
-  step_directive hA bytesDecHeadNopAnySize 2
-  step_directive hA bytesDecHeadNopAnySize 3
-  step_directive hA bytesDecHeadNopAnySize 4
+  step_directive hA bytesDecodeHeadNopAnySize 2
+  step_directive hA bytesDecodeHeadNopAnySize 3
+  step_directive hA bytesDecodeHeadNopAnySize 4
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
@@ -434,47 +434,47 @@ theorem bytesdec_seg_nop_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String)
   subst hrsp3 hr143 hrbp3
   rw [show sp - 8 + 8 = sp by bv_omega] at Hm3
   simp only [Nat.one_mul] at Hm3
-  step_directive hA bytesDecHeadNopAnySize 5
+  step_directive hA bytesDecodeHeadNopAnySize 5
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA bytesDecHeadNopAnySize 6
+  step_directive hA bytesDecodeHeadNopAnySize 6
   apply store_step_at _ _ aL _ _ _ vL _ _ (by rw [← hL]) (by ecancel) (by exact hvL)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
   unfold_step
-  step_directive hA bytesDecHeadNopAnySize 7
+  step_directive hA bytesDecodeHeadNopAnySize 7
   apply store_step_at _ _ aC _ _ _ vC _ _ (by rw [← hC]) (by ecancel) (by exact hvC)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   unfold_step
-  step_directive hA bytesDecHeadNopAnySize 8
+  step_directive hA bytesDecodeHeadNopAnySize 8
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
   unfold_step
-  step_directive hA bytesDecHeadNopAnySize 9
+  step_directive hA bytesDecodeHeadNopAnySize 9
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   rw [hl]
-  step_directive hB bytesDecMid 0
-  step_directive hB bytesDecMid 1
+  step_directive hB bytesDecodeMiddle 0
+  step_directive hB bytesDecodeMiddle 1
   apply store_step_at _ _ aS _ _ _ lS _ _ (by rw [← hS]) (by ecancel) (by exact hlS)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
   unfold_step
-  step_directive hB bytesDecMid 2
+  step_directive hB bytesDecodeMiddle 2
   apply store_step_at _ _ aP _ _ _ vP _ _ (by rw [← hP]) (by ecancel) (by exact hvP)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
   unfold_step
-  step_directive hB bytesDecMid 3
+  step_directive hB bytesDecodeMiddle 3
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hB bytesDecMid 4
-  step_directive hB bytesDecMid 5
-  step_directive hB bytesDecMid 6
+  step_directive hB bytesDecodeMiddle 4
+  step_directive hB bytesDecodeMiddle 5
+  step_directive hB bytesDecodeMiddle 6
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 4 + 1)).toBitVec.toInt) _ _
     (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6' H6
@@ -494,27 +494,27 @@ theorem bytesdec_seg_nop_any_size (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String)
     apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega] at hrsp4
   subst hrsp4 hr144 hrbp4
   rw [show src.toBitVec + bf = aSrc by rw [← hSrc]; exact BitVec.add_comm _ _] at Hm4
-  step_directive hB bytesDecMid 7
+  step_directive hB bytesDecodeMiddle 7
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hB bytesDecMid 8
+  step_directive hB bytesDecodeMiddle 8
   apply store_step_at _ _ aL _ _ _ (Int.toBytes 8 (BitVec.toInt (0 : BitVec 64))) _ _ (by rw [← hL])
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m7' H7
   simp only [Width.bytes, Width.bits] at H7
   unfold_step
-  step_directive hB bytesDecMid 9
+  step_directive hB bytesDecodeMiddle 9
   apply store_step_at _ _ aC _ _ _ (Int.toBytes 8 (BitVec.toInt (OfNat.ofNat n : BitVec 64))) _ _ (by rw [← hC])
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m8' H8
   simp only [Width.bytes, Width.bits] at H8
   unfold_step
-  step_directive hB bytesDecMid 10
+  step_directive hB bytesDecodeMiddle 10
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
   unfold_step
-  step_directive hB bytesDecMid 11
+  step_directive hB bytesDecodeMiddle 11
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]

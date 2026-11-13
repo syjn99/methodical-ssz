@@ -107,7 +107,7 @@ theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10000 :=
 theorem label_write_barrier : label "runtime.writeBarrier" = 0x10008 :=
   mk_label program _ 8 _ (by simp [program, dataLabels]) (by decide)
 
-theorem u8_ne_u64 : ElfData.PrysmTarget.typeUint8_addr ≠ ElfData.PrysmTarget.typeUint64_addr := by
+theorem uint8_ne_uint64 : ElfData.PrysmTarget.typeUint8_addr ≠ ElfData.PrysmTarget.typeUint64_addr := by
   simp only [ElfData.PrysmTarget.typeUint8_addr, ElfData.PrysmTarget.typeUint64_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega
 
@@ -200,10 +200,10 @@ theorem runs (n : Nat) (hn : n ≤ 2048) (in0 in1 root se sroot te troot sig ib 
     (by show (UInt64.ofNat (228 + 8 * n)).toNat < 2 ^ 63
         rw [UInt64.toNat_ofNat_of_lt' (by unfold UInt64.size; omega)]; omega)
     (by omega)
-    (Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size8 828 placed_at_828 no_label_before_828 labels_fresh_at_828) (Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1 828 placed_at_828 no_label_before_828 _ u8_ne_u64)
+    (Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size8 828 placed_at_828 no_label_before_828 labels_fresh_at_828) (Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1 828 placed_at_828 no_label_before_828 _ uint8_ne_uint64)
     (model_memmove 843 placed_at_843 labels_fresh_at_843 _) (Prysm.RuntimeModel.bump_newobject_struct_dispatch_size96 869 placed_at_869 no_label_before_869 labels_fresh_at_869)
-    (Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1 828 placed_at_828 no_label_before_828 _ u8_ne_u64) (model_memmove 843 placed_at_843 labels_fresh_at_843 _)
-    (Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1 828 placed_at_828 no_label_before_828 _ u8_ne_u64) (model_memmove 843 placed_at_843 labels_fresh_at_843 _)
+    (Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1 828 placed_at_828 no_label_before_828 _ uint8_ne_uint64) (model_memmove 843 placed_at_843 labels_fresh_at_843 _)
+    (Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1 828 placed_at_828 no_label_before_828 _ uint8_ne_uint64) (model_memmove 843 placed_at_843 labels_fresh_at_843 _)
     (Prysm.RuntimeModel.bump_newobject_struct_dispatch_size72 869 placed_at_869 no_label_before_869 _ checkpoint_type_ne_attestation_data_type))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 

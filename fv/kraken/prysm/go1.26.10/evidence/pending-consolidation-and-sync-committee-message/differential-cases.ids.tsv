@@ -1,0 +1,13 @@
+# differential case ids: earlier id (the run records name it)	present id
+sm-accept-0	sync-committee-message-accept-0
+sm-accept-1	sync-committee-message-accept-1
+sm-accept-2	sync-committee-message-accept-2
+sm-size-0	sync-committee-message-size-0
+sm-size-143	sync-committee-message-size-143
+sm-size-145	sync-committee-message-size-145
+pc-accept-0	pending-consolidation-accept-0
+pc-accept-1	pending-consolidation-accept-1
+pc-accept-2	pending-consolidation-accept-2
+pc-size-0	pending-consolidation-size-0
+pc-size-15	pending-consolidation-size-15
+pc-size-17	pending-consolidation-size-17

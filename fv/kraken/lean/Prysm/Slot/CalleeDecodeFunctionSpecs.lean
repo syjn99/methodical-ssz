@@ -4,10 +4,10 @@ import Prysm.Epoch.CalleeDecodeFunctionSpecs
 import Prysm.ValidatorIndex.CalleeDecodeFunctionSpecs
 
 /-!
-# `U64CalleeAccept` is the existing function-specification form
+# `Uint64CalleeAccept` is the existing function-specification form
 
-The four existing accept specifications of the `uint64`-overlay decoders are `U64CalleeAccept` at their label,
-by `rfl` (the definitions unfold to the same text). So `calldec_seg` takes its callee hypothesis in the
+The four existing accept specifications of the `uint64`-overlay decoders are `Uint64CalleeAccept` at their label,
+by `rfl` (the definitions unfold to the same text). So `call_decode_segment` takes its callee hypothesis in the
 existing form; the proved theorems `Prysm.Slot.Decode.accept_function_spec_holds`, `Prysm.CommitteeIndex.Decode.accept_function_spec_holds`, `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`, `Prysm.Epoch.Decode.accept_function_spec_holds` give it.
 After the split of this module, the declarations of the other types are in `Prysm/CommitteeIndex/CalleeDecodeFunctionSpecs.lean`, `Prysm/Epoch/CalleeDecodeFunctionSpecs.lean`, `Prysm/ValidatorIndex/CalleeDecodeFunctionSpecs.lean`.
 -/
@@ -17,7 +17,7 @@ open Machine Runtime
 open Codec
 namespace Prysm.Slot
 
-theorem Decode.accept_function_spec_is_callee_accept : ∀ (h : Host), @Prysm.Slot.Decode.accept_function_spec h = @U64CalleeAccept h Prysm.Slot.Code.unmarshalSSZLabel := by
+theorem Decode.accept_function_spec_is_callee_accept : ∀ (h : Host), @Prysm.Slot.Decode.accept_function_spec h = @Uint64CalleeAccept h Prysm.Slot.Code.unmarshalSSZLabel := by
   intro h; rfl
 
 end Prysm.Slot

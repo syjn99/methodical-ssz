@@ -10,18 +10,18 @@ decoders: one padding variant, a `nop` between `mov $n,%ecx` and `callq runtime.
 `Deposit_Data.WithdrawalCredentials`, n = 32). No `nop` before `callq runtime.memmove` and none in the
 offset-0 form was observed, so only this position has a parameter.
 
-* `bytesDecHeadPad n` = `bytesDecHead n` with one `nop` after directive 2 (10 directives);
-  `bytesDecHeadOptionalPadding pad n` selects (`false` = `bytesDecHead n`).
-* `bytesdec_seg_pad` — the statement of `bytesdec_seg` (`Codec/FixedBytesDecode.lean`) with the head `bytesDecHeadPad`,
+* `bytesDecodeHeadPad n` = `bytesDecodeHead n` with one `nop` after directive 2 (10 directives);
+  `bytesDecodeHeadOptionalPadding pad n` selects (`false` = `bytesDecodeHead n`).
+* `bytes_decode_segment_pad` — the statement of `bytes_decode_segment` (`Codec/FixedBytesDecode.lean`) with the head `bytesDecodeHeadPad`,
   n = 32, 48, 96. Proof text = the `Codec/FixedBytesDecode.lean` text with the head indices ≥ 3 shifted by one and one more
   step (produced from `Codec/FixedBytesDecode.lean` by a script, as `Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean` was by hand).
-* `bytesdec_seg_optional_padding pad` — one lemma for both heads. Its statement does not depend on `pad` except in the code
-  hypothesis `hA`, so the statement kind is the existing `bytesDecSegKind` (`Codec/Kind/FixedBytesDecode.lean`):
-  `bytesDecSegKind_of_optional_padding`.
-* Relations (`rfl`): `bytesDecHeadOptionalPadding false = bytesDecHead`, `bytesDecHeadPad 32 = Prysm.Deposit_Data.bytesDecHeadNop`, the
-  declared type of `bytesdec_seg_optional_padding false` is that of `bytesdec_seg`, the declared type of
-  `Prysm.Deposit_Data.bytes32dec_seg_nop` is that of `bytesdec_seg_pad 32 _`.
-Contracts: `MakesliceContract`, `MemmoveContract` as in `bytesdec_seg`. Not done: offset-0 form with a pad (no site).
+* `bytes_decode_segment_optional_padding pad` — one lemma for both heads. Its statement does not depend on `pad` except in the code
+  hypothesis `hA`, so the statement kind is the existing `bytesDecodeSegmentKind` (`Codec/Kind/FixedBytesDecode.lean`):
+  `bytesDecodeSegmentKind_of_optional_padding`.
+* Relations (`rfl`): `bytesDecodeHeadOptionalPadding false = bytesDecodeHead`, `bytesDecodeHeadPad 32 = Prysm.Deposit_Data.bytesDecodeHeadNop`, the
+  declared type of `bytes_decode_segment_optional_padding false` is that of `bytes_decode_segment`, the declared type of
+  `Prysm.Deposit_Data.bytes32_decode_segment_nop` is that of `bytes_decode_segment_pad 32 _`.
+Contracts: `MakesliceContract`, `MemmoveContract` as in `bytes_decode_segment`. Not done: offset-0 form with a pad (no site).
 -/
 
 open Machine Runtime
@@ -29,8 +29,8 @@ open Machine Runtime
 open Codec
 namespace Codec
 
-/-- `bytesDecHead n` with a `nop` after `mov $n,%ecx` (10 directives). -/
-def bytesDecHeadPad (n : Int64) (lff : String) (dR fL fC : Int64) : Program :=
+/-- `bytesDecodeHead n` with a `nop` after `mov $n,%ecx` (10 directives). -/
+def bytesDecodeHeadPad (n : Int64) (lff : String) (dR fL fC : Int64) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.lea (Reg.low Reg64.rax Width.W64)
        (AddrExpr.mk (some RegOrRip.rip) none (((ConstExpr.label "type__").add (ConstExpr.int64 387072)).sub ConstExpr.after_current_instruction)))),
@@ -57,27 +57,27 @@ def bytesDecHeadPad (n : Int64) (lff : String) (dR fL fC : Int64) : Program :=
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.z lff))]
 
 /-- Head block with or without the padding `nop`. -/
-def bytesDecHeadOptionalPadding : Bool → Int64 → String → Int64 → Int64 → Int64 → Program
-  | false, n, lff, dR, fL, fC => bytesDecHead n lff dR fL fC
-  | true, n, lff, dR, fL, fC => bytesDecHeadPad n lff dR fL fC
+def bytesDecodeHeadOptionalPadding : Bool → Int64 → String → Int64 → Int64 → Int64 → Program
+  | false, n, lff, dR, fL, fC => bytesDecodeHead n lff dR fL fC
+  | true, n, lff, dR, fL, fC => bytesDecodeHeadPad n lff dR fL fC
 
 variable [Host]
 
 set_option hygiene false in
 /-- Proof text for the literal size `n`, head with the `nop` (binders of the lemma below). Local to this file. -/
 local macro "bytes_decode_add_padding_case " n:num : tactic => `(tactic| (
-    replace hA : (bytesDecHeadPad ($n : Int64) lff dR fL fC).IsInfixAt Host.prog j1 := hA
-    replace hB : (bytesDecMid ($n : Int64) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2 := hB
+    replace hA : (bytesDecodeHeadPad ($n : Int64) lff dR fL fC).IsInfixAt Host.prog j1 := hA
+    replace hB : (bytesDecodeMiddle ($n : Int64) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2 := hB
     rw [show (OfNat.ofNat ($n : Nat) : Int) = ($n : Int) from rfl]
     obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
     simp only at hrsp hrbp hr14 h_mem ⊢
     subst rsp rbp r14 hRet hLo
-    step_directive hA bytesDecHeadPad 0
-    step_directive hA bytesDecHeadPad 1
+    step_directive hA bytesDecodeHeadPad 0
+    step_directive hA bytesDecodeHeadPad 1
     intro _
-    step_directive hA bytesDecHeadPad 2
-    step_directive hA bytesDecHeadPad 3
-    step_directive hA bytesDecHeadPad 4
+    step_directive hA bytesDecodeHeadPad 2
+    step_directive hA bytesDecodeHeadPad 3
+    step_directive hA bytesDecodeHeadPad 4
     apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
     intro m1' H1
     simp only [Width.bytes, Width.bits] at H1
@@ -97,47 +97,47 @@ local macro "bytes_decode_add_padding_case " n:num : tactic => `(tactic| (
     subst hrsp3 hr143 hrbp3
     rw [show sp - 8 + 8 = sp by bv_omega] at Hm3
     simp only [Nat.one_mul] at Hm3
-    step_directive hA bytesDecHeadPad 5
+    step_directive hA bytesDecodeHeadPad 5
     apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
       (by exact Int.toBytes_length 8 _)
     unfold_step
-    step_directive hA bytesDecHeadPad 6
+    step_directive hA bytesDecodeHeadPad 6
     apply store_step_at _ _ aL _ _ _ vL _ _ (by rw [← hL]) (by ecancel) (by exact hvL)
     intro m2' H2
     simp only [Width.bytes, Width.bits] at H2
     unfold_step
-    step_directive hA bytesDecHeadPad 7
+    step_directive hA bytesDecodeHeadPad 7
     apply store_step_at _ _ aC _ _ _ vC _ _ (by rw [← hC]) (by ecancel) (by exact hvC)
     intro m3' H3
     simp only [Width.bytes, Width.bits] at H3
     unfold_step
-    step_directive hA bytesDecHeadPad 8
+    step_directive hA bytesDecodeHeadPad 8
     apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
     simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
     unfold_step
-    step_directive hA bytesDecHeadPad 9
+    step_directive hA bytesDecodeHeadPad 9
     split
     case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
     simp only [Effects.All]
     rw [hl]
-    step_directive hB bytesDecMid 0
-    step_directive hB bytesDecMid 1
+    step_directive hB bytesDecodeMiddle 0
+    step_directive hB bytesDecodeMiddle 1
     apply store_step_at _ _ aS _ _ _ lS _ _ (by rw [← hS]) (by ecancel) (by exact hlS)
     intro m4' H4
     simp only [Width.bytes, Width.bits] at H4
     unfold_step
-    step_directive hB bytesDecMid 2
+    step_directive hB bytesDecodeMiddle 2
     apply store_step_at _ _ aP _ _ _ vP _ _ (by rw [← hP]) (by ecancel) (by exact hvP)
     intro m5' H5
     simp only [Width.bytes, Width.bits] at H5
     unfold_step
-    step_directive hB bytesDecMid 3
+    step_directive hB bytesDecodeMiddle 3
     apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
       (by exact Int.toBytes_length 8 _)
     unfold_step
-    step_directive hB bytesDecMid 4
-    step_directive hB bytesDecMid 5
-    step_directive hB bytesDecMid 6
+    step_directive hB bytesDecodeMiddle 4
+    step_directive hB bytesDecodeMiddle 5
+    step_directive hB bytesDecodeMiddle 6
     apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 4 + 1)).toBitVec.toInt) _ _
       (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
     intro m6' H6
@@ -157,27 +157,27 @@ local macro "bytes_decode_add_padding_case " n:num : tactic => `(tactic| (
       apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega] at hrsp4
     subst hrsp4 hr144 hrbp4
     rw [show src.toBitVec + bf = aSrc by rw [← hSrc]; exact BitVec.add_comm _ _] at Hm4
-    step_directive hB bytesDecMid 7
+    step_directive hB bytesDecodeMiddle 7
     apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
       (by exact Int.toBytes_length 8 _)
     unfold_step
-    step_directive hB bytesDecMid 8
+    step_directive hB bytesDecodeMiddle 8
     apply store_step_at _ _ aL _ _ _ (Int.toBytes 8 (BitVec.toInt (0 : BitVec 64))) _ _ (by rw [← hL])
       (by ecancel) (by exact Int.toBytes_length 8 _)
     intro m7' H7
     simp only [Width.bytes, Width.bits] at H7
     unfold_step
-    step_directive hB bytesDecMid 9
+    step_directive hB bytesDecodeMiddle 9
     apply store_step_at _ _ aC _ _ _ (Int.toBytes 8 (BitVec.toInt ($n : BitVec 64))) _ _ (by rw [← hC])
       (by ecancel) (by exact Int.toBytes_length 8 _)
     intro m8' H8
     simp only [Width.bytes, Width.bits] at H8
     unfold_step
-    step_directive hB bytesDecMid 10
+    step_directive hB bytesDecodeMiddle 10
     apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
     simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
     unfold_step
-    step_directive hB bytesDecMid 11
+    step_directive hB bytesDecodeMiddle 11
     split
     case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
     simp only [Effects.All]
@@ -188,10 +188,10 @@ local macro "bytes_decode_add_padding_case " n:num : tactic => `(tactic| (
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- **Fixed-bytes decode segment, add form, head with a padding `nop`** (`n` = 32, 48 or 96): the statement
-of `bytesdec_seg` with the head `bytesDecHeadPad`. -/
-theorem bytesdec_seg_pad (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
-    (hA : (bytesDecHeadPad (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
-    (hB : (bytesDecMid (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)
+of `bytes_decode_segment` with the head `bytesDecodeHeadPad`. -/
+theorem bytes_decode_segment_pad (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
+    (hA : (bytesDecodeHeadPad (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
+    (hB : (bytesDecodeMiddle (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)
     (hl : label lff = Host.addrOf j2)
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
@@ -234,10 +234,10 @@ theorem bytesdec_seg_pad (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (lff lwb 
   · bytes_decode_add_padding_case 96
 
 /-- **Fixed-bytes decode segment, add form, with or without the padding `nop`**: `pad = false` is
-`bytesdec_seg`, `pad = true` is `bytesdec_seg_pad`. -/
-theorem bytesdec_seg_optional_padding (pad : Bool) (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
-    (hA : (bytesDecHeadOptionalPadding pad (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
-    (hB : (bytesDecMid (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)
+`bytes_decode_segment`, `pad = true` is `bytes_decode_segment_pad`. -/
+theorem bytes_decode_segment_optional_padding (pad : Bool) (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
+    (hA : (bytesDecodeHeadOptionalPadding pad (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
+    (hB : (bytesDecodeMiddle (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)
     (hl : label lff = Host.addrOf j2)
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
@@ -275,37 +275,37 @@ theorem bytesdec_seg_optional_padding (pad : Bool) (n : Nat) (hn : n = 32 ∨ n 
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf j1⟩ := by
   cases pad
-  · exact bytesdec_seg n hn lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St
+  · exact bytes_decode_segment n hn lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St
       hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC
       R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  · exact bytesdec_seg_pad n hn lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St
+  · exact bytes_decode_segment_pad n hn lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St
       hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC
       R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
 
-/-- The existing kind `bytesDecSegKind` follows from `bytesdec_seg_optional_padding` and the code facts of an instance. -/
-theorem bytesDecSegKind_of_optional_padding (pad : Bool) (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (C : Program) (lff lwb : String)
+/-- The existing kind `bytesDecodeSegmentKind` follows from `bytes_decode_segment_optional_padding` and the code facts of an instance. -/
+theorem bytesDecodeSegmentKind_of_optional_padding (pad : Bool) (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (C : Program) (lff lwb : String)
     (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
-    (hA : ∀ k, C.IsInfixAt Host.prog k → (bytesDecHeadOptionalPadding pad (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog (k + j1))
+    (hA : ∀ k, C.IsInfixAt Host.prog k → (bytesDecodeHeadOptionalPadding pad (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog (k + j1))
     (hB : ∀ k, C.IsInfixAt Host.prog k →
-      (bytesDecMid (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog (k + j2))
+      (bytesDecodeMiddle (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog (k + j2))
     (hl : ∀ k, C.IsInfixAt Host.prog k → LabelsFresh C k → label lff = Host.addrOf (k + j2)) :
-    bytesDecSegKind n C j1 j2 dR dB dS fP fL fC src :=
-  fun k hk hf => bytesdec_seg_optional_padding pad n hn lff lwb dR dB dS fP fL fC src (k + j1) (k + j2) (hA k hk) (hB k hk) (hl k hk hf)
+    bytesDecodeSegmentKind n C j1 j2 dR dB dS fP fL fC src :=
+  fun k hk hf => bytes_decode_segment_optional_padding pad n hn lff lwb dR dB dS fP fL fC src (k + j1) (k + j2) (hA k hk) (hB k hk) (hl k hk hf)
 
-theorem bytesDecHeadOptionalPadding_false : bytesDecHeadOptionalPadding false = bytesDecHead := rfl
-theorem bytesDecHeadOptionalPadding_true : bytesDecHeadOptionalPadding true = bytesDecHeadPad := rfl
-theorem bytesDecHeadPad32_eq_nop : bytesDecHeadPad 32 = Prysm.Deposit_Data.bytesDecHeadNop := rfl
+theorem bytesDecodeHeadOptionalPadding_false : bytesDecodeHeadOptionalPadding false = bytesDecodeHead := rfl
+theorem bytesDecodeHeadOptionalPadding_true : bytesDecodeHeadOptionalPadding true = bytesDecodeHeadPad := rfl
+theorem bytesDecodeHeadPad32_eq_nop : bytesDecodeHeadPad 32 = Prysm.Deposit_Data.bytesDecodeHeadNop := rfl
 
-theorem bytesdec_seg_optional_padding_false_is_bytesdec_seg : ∀ (h : Host),
-    type_of% (@bytesdec_seg_optional_padding h false) = type_of% (@bytesdec_seg h) := by
+theorem bytes_decode_segment_optional_padding_false_is_bytes_decode_segment : ∀ (h : Host),
+    type_of% (@bytes_decode_segment_optional_padding h false) = type_of% (@bytes_decode_segment h) := by
   intro h; rfl
 
-theorem bytes32dec_seg_nop_is_pad32 : ∀ (h : Host),
-    type_of% (@Prysm.Deposit_Data.bytes32dec_seg_nop h) = type_of% (@bytesdec_seg_pad h 32 (Or.inl rfl)) := by
+theorem bytes32_decode_segment_nop_is_pad32 : ∀ (h : Host),
+    type_of% (@Prysm.Deposit_Data.bytes32_decode_segment_nop h) = type_of% (@bytes_decode_segment_pad h 32 (Or.inl rfl)) := by
   intro h; rfl
 
-theorem bytes32dec_seg_nop_is_optional_padding32 : ∀ (h : Host),
-    type_of% (@Prysm.Deposit_Data.bytes32dec_seg_nop h) = type_of% (@bytesdec_seg_optional_padding h true 32 (Or.inl rfl)) := by
+theorem bytes32_decode_segment_nop_is_optional_padding32 : ∀ (h : Host),
+    type_of% (@Prysm.Deposit_Data.bytes32_decode_segment_nop h) = type_of% (@bytes_decode_segment_optional_padding h true 32 (Or.inl rfl)) := by
   intro h; rfl
 
 end Codec

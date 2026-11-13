@@ -4,38 +4,38 @@
   "kind": "control",
   "module": "Prysm/Slot/DecodeAcceptFromUint64Pattern.lean",
   "theorem": "Prysm.Slot.Decode.accept_from_uint64_pattern",
-  "code_def": "Code.unmarshalSSZ",
-  "code_ns": "Prysm.Slot",
+  "code_definition": "Code.unmarshalSSZ",
+  "code_namespace": "Prysm.Slot",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
  },
  {
   "id": "slot-decode-accept-from-uint64-pattern-code-sub-0x48-to-0x50",
   "kind": "code",
   "module": "Prysm/Slot/DecodeAcceptFromUint64Pattern.lean",
   "theorem": "Prysm.Slot.Decode.accept_from_uint64_pattern",
-  "code_def": "Code.unmarshalSSZ",
-  "code_ns": "Prysm.Slot",
+  "code_definition": "Code.unmarshalSSZ",
+  "code_namespace": "Prysm.Slot",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
   "old": "  sub $0x48,%rsp",
   "new": "  sub $0x50,%rsp",
-  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
  },
  {
   "id": "slot-decode-accept-from-uint64-pattern-code-mov-rbx-to-0x8-rbx",
   "kind": "code",
   "module": "Prysm/Slot/DecodeAcceptFromUint64Pattern.lean",
   "theorem": "Prysm.Slot.Decode.accept_from_uint64_pattern",
-  "code_def": "Code.unmarshalSSZ",
-  "code_ns": "Prysm.Slot",
+  "code_definition": "Code.unmarshalSSZ",
+  "code_namespace": "Prysm.Slot",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
   "old": "  mov (%rbx),%rcx",
   "new": "  mov 0x8(%rbx),%rcx",
-  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
  },
  {
   "id": "slot-decode-accept-from-uint64-pattern-statement-s2-16-to-24",
-  "kind": "stmt",
+  "kind": "statement",
   "module": "Prysm/Slot/DecodeAcceptFromUint64Pattern.lean",
   "theorem": "Prysm.Slot.Decode.accept_from_uint64_pattern",
   "old": "Eq (s2.At (s.regs.rsp.toBitVec + 16))",
@@ -46,26 +46,26 @@
   "kind": "control",
   "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.CommitteeIndex.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.CommitteeIndex.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
  },
  {
   "id": "committee-index-decode-generated-accept-code-cmp-0x8-to-0x9",
   "kind": "code",
   "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.CommitteeIndex.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.CommitteeIndex.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
   "old": "  cmp $0x8,%rcx",
   "new": "  cmp $0x9,%rcx",
-  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
  },
  {
   "id": "committee-index-decode-generated-accept-statement-rax-0-to-1",
-  "kind": "stmt",
+  "kind": "statement",
   "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
   "old": "st.data.regs.rax = 0 ∧",
@@ -76,10 +76,10 @@
   "kind": "control",
   "module": "Prysm/AttestationData/DecodeBlockRootFromBytes32Pattern.lean",
   "theorem": "Prysm.AttestationData.Decode.block_root_from_bytes32_pattern",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.AttestationData.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.AttestationData.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
   "id": "attestation-data-decode-block-root-from-bytes32-pattern-code-add-0x10-to-0x18",
@@ -89,93 +89,93 @@
   "line": 105,
   "old": "  add $0x10,%rbx",
   "new": "  add $0x18,%rbx",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.AttestationData.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.AttestationData.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
   "id": "attestation-data-decode-block-root-from-bytes32-pattern-statement-rcv-32-to-0",
-  "kind": "stmt",
+  "kind": "statement",
   "module": "Prysm/AttestationData/DecodeBlockRootFromBytes32Pattern.lean",
   "theorem": "Prysm.AttestationData.Decode.block_root_from_bytes32_pattern",
   "old": "Eq ((Int.toBytes 8 32).At (rcv + 40)) ⋆ Eq (root.At p)",
   "new": "Eq ((Int.toBytes 8 0).At (rcv + 40)) ⋆ Eq (root.At p)"
  },
  {
-  "id": "attestation-data-decode-generated-root-beacon-block-root-seg-control",
+  "id": "attestation-data-decode-generated-root-beacon-block-root-segment-control",
   "kind": "control",
   "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.AttestationData.Code",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_segment",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.AttestationData.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
-  "id": "attestation-data-decode-generated-root-beacon-block-root-seg-code-movq-0x20-to-0x21",
+  "id": "attestation-data-decode-generated-root-beacon-block-root-segment-code-movq-0x20-to-0x21",
   "kind": "code",
   "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_segment",
   "line": 110,
   "old": "  movq $0x20,0x28(%rdx)",
   "new": "  movq $0x21,0x28(%rdx)",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.AttestationData.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.AttestationData.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
-  "id": "attestation-data-decode-generated-root-beacon-block-root-seg-statement-hmm-none-to-hextra-1-nat",
-  "kind": "stmt",
+  "id": "attestation-data-decode-generated-root-beacon-block-root-segment-statement-hmm-none-to-hextra-1-nat",
+  "kind": "statement",
   "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_segment",
   "old": "(hmm : MemmoveContract St),",
   "new": "(hmm : MemmoveContract St) (hextra : (1 : Nat) = 2),",
-  "why": "an extra false hypothesis in the generated statement must fail (the statement is kernel-checked against the rootdec_seg instance); with the old fixed-text statement this mutant compiled (rc 0)"
+  "why": "an extra false hypothesis in the generated statement must fail (the statement is kernel-checked against the root_decode_segment instance); with the old fixed-text statement this mutant compiled (rc 0)"
  },
  {
-  "id": "checkpoint-decode-generated-root-root-seg-control",
+  "id": "checkpoint-decode-generated-root-root-segment-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_seg",
-  "code_def": "unmarshalSSZ",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_segment",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
  },
  {
-  "id": "checkpoint-decode-generated-root-root-seg-code-add-0x8-to-0x10",
+  "id": "checkpoint-decode-generated-root-root-segment-code-add-0x8-to-0x10",
   "kind": "code",
   "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_seg",
+  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_segment",
   "old": "  add $0x8,%rbx",
   "new": "  add $0x10,%rbx",
-  "code_def": "unmarshalSSZ",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
  },
  {
-  "id": "checkpoint-decode-generated-root-root-seg-statement-hmm-none-to-hextra-1-nat",
-  "kind": "stmt",
+  "id": "checkpoint-decode-generated-root-root-segment-statement-hmm-none-to-hextra-1-nat",
+  "kind": "statement",
   "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_seg",
+  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_segment",
   "old": "(hmm : MemmoveContract St),",
   "new": "(hmm : MemmoveContract St) (hextra : (1 : Nat) = 2),",
-  "why": "an extra false hypothesis in the generated statement must fail (the statement is kernel-checked against the rootdec_seg instance); with the old fixed-text statement this mutant compiled (rc 0)"
+  "why": "an extra false hypothesis in the generated statement must fail (the statement is kernel-checked against the root_decode_segment instance); with the old fixed-text statement this mutant compiled (rc 0)"
  },
  {
   "id": "checkpoint-encode-bytes32-template-at-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/EncodeBytes32TemplatePlacement.lean",
   "theorem": "Prysm.Checkpoint.Encode.bytes32_template_at",
-  "code_def": "marshalSSZTo",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
  },
  {
   "id": "checkpoint-encode-bytes32-template-at-code-cmpq-0x18-rax-to-0x20-rax",
   "kind": "code",
   "module": "Prysm/Checkpoint/EncodeBytes32TemplatePlacement.lean",
   "theorem": "Prysm.Checkpoint.Encode.bytes32_template_at",
-  "code_def": "marshalSSZTo",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  cmpq $0x20,0x18(%rax)",
   "new": "  cmpq $0x20,0x20(%rax)"
  },
@@ -184,70 +184,70 @@
   "kind": "code",
   "module": "Prysm/Checkpoint/EncodeBytes32TemplatePlacement.lean",
   "theorem": "Prysm.Checkpoint.Encode.bytes32_template_at",
-  "code_def": "marshalSSZTo",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  mov %rdi,0x58(%rsp)",
   "new": "  mov %rdi,0x50(%rsp)"
  },
  {
   "id": "checkpoint-encode-bytes32-template-at-statement-96-to-104",
-  "kind": "stmt",
+  "kind": "statement",
   "module": "Prysm/Checkpoint/EncodeBytes32TemplatePlacement.lean",
   "theorem": "Prysm.Checkpoint.Encode.bytes32_template_at",
   "old": "88 80 96",
   "new": "88 80 104"
  },
  {
-  "id": "attestation-data-decode-generated-root-beacon-block-root-seg-statement-hf-none-to-hextra-1-nat",
-  "kind": "stmt",
+  "id": "attestation-data-decode-generated-root-beacon-block-root-segment-statement-hf-none-to-hextra-1-nat",
+  "kind": "statement",
   "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_segment",
   "old": "(hf : LabelsFresh unmarshalSSZ k) :",
   "new": "(hf : LabelsFresh unmarshalSSZ k) (hextra : (1 : Nat) = 2) :"
  },
  {
-  "id": "attestation-data-decode-generated-root-beacon-block-root-seg-statement-theorem-none-to-hextra-1-2",
-  "kind": "stmt",
+  "id": "attestation-data-decode-generated-root-beacon-block-root-segment-statement-theorem-none-to-hextra-1-2",
+  "kind": "statement",
   "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
-  "old": "theorem Decode.generated_root_BeaconBlockRoot_seg (k : Nat)",
-  "new": "theorem Decode.generated_root_BeaconBlockRoot_seg (hextra : (1 : Nat) = 2) (k : Nat)"
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_segment",
+  "old": "theorem Decode.generated_root_BeaconBlockRoot_segment (k : Nat)",
+  "new": "theorem Decode.generated_root_BeaconBlockRoot_segment (hextra : (1 : Nat) = 2) (k : Nat)"
  },
  {
-  "id": "attestation-data-decode-generated-root-beacon-block-root-seg-statement-avail-hav-32-avail-to-none",
-  "kind": "stmt",
+  "id": "attestation-data-decode-generated-root-beacon-block-root-segment-statement-avail-hav-32-avail-to-none",
+  "kind": "statement",
   "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_segment",
   "old": "(avail : Nat) (hav : 32 ≤ avail)",
   "new": "(avail : Nat)"
  },
  {
-  "id": "attestation-data-decode-generated-root-beacon-block-root-seg-statement-a-l-32-to-33",
-  "kind": "stmt",
+  "id": "attestation-data-decode-generated-root-beacon-block-root-segment-statement-a-l-32-to-33",
+  "kind": "statement",
   "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_segment",
   "old": "Eq ((Int.toBytes 8 32).At aL)",
   "new": "Eq ((Int.toBytes 8 33).At aL)"
  },
  {
-  "id": "attestation-data-decode-generated-root-beacon-block-root-seg-statement-unmarshal-ssz-16-to-8",
-  "kind": "stmt",
+  "id": "attestation-data-decode-generated-root-beacon-block-root-segment-statement-unmarshal-ssz-16-to-8",
+  "kind": "statement",
   "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_segment",
   "old": "unmarshalSSZ 86 100 128 136 104 24 32 40 16",
   "new": "unmarshalSSZ 86 100 128 136 104 24 32 40 8"
  },
  {
-  "id": "checkpoint-decode-generated-root-root-seg-statement-hf-none-to-hextra-1-nat",
-  "kind": "stmt",
+  "id": "checkpoint-decode-generated-root-root-segment-statement-hf-none-to-hextra-1-nat",
+  "kind": "statement",
   "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_seg",
+  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_segment",
   "old": "(hf : LabelsFresh unmarshalSSZ k) :",
   "new": "(hf : LabelsFresh unmarshalSSZ k) (hextra : (1 : Nat) = 2) :"
  },
  {
   "id": "committee-index-decode-generated-accept-statement-hlen-none-to-hextra-1-nat",
-  "kind": "stmt",
+  "kind": "statement",
   "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
   "old": "(hlen : s.regs.rcx = 8) :",
@@ -255,7 +255,7 @@
  },
  {
   "id": "committee-index-decode-generated-accept-statement-theorem-none-to-hextra-1-2",
-  "kind": "stmt",
+  "kind": "statement",
   "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
   "old": "theorem Decode.generated_accept (k : Nat)",

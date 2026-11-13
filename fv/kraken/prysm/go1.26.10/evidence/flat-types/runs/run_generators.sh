@@ -8,10 +8,10 @@ NN=10
 while read k t; do
   case $k in v1) PK=github.com_OffchainLabs_prysm_v7_proto_engine_v1;; *) PK=github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1;; esac
   [ -e $R/$t.whole-accept.rc ] && { echo "already ran $t whole-accept: refusing a rerun"; exit 9; }
-  $E/g.sh $NN "whole-accept $t" 300 $K -- bash -c "python3 -I -B gen/generator/generator.py decoder --whole-accept --S $N/$PK.$t.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type $k.$t --prefix Decode.generated --imports Prysm.$t.Code --open Prysm.$t.Code --summary $R/$t.whole-accept.summary.json > $R/$t.whole-accept.stdout 2> $R/$t.whole-accept.stderr"
+  $E/g.sh $NN "whole-accept $t" 300 $K -- bash -c "python3 -I -B gen/generator/generator.py decoder --whole-accept --assembly $N/$PK.$t.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type $k.$t --prefix Decode.generated --imports Prysm.$t.Code --open Prysm.$t.Code --summary $R/$t.whole-accept.summary.json > $R/$t.whole-accept.stdout 2> $R/$t.whole-accept.stderr"
   echo $? > $R/$t.whole-accept.rc; NN=$((NN+1))
   [ -e $R/$t.fast-path.rc ] && { echo "already ran $t fast-path: refusing a rerun"; exit 9; }
-  $E/g.sh $NN "fast-path $t" 300 $K -- bash -c "python3 -I -B gen/generator/generator.py encoder --fast-path --S $N/$PK.$t.MarshalSSZTo.S --const marshalSSZTo --ir prysm/ir/ir-mainnet.json --type $k.$t --prefix Encode.generated --imports Prysm.$t.Code --open Prysm.$t.Code --summary $R/$t.fast-path.summary.json > $R/$t.fast-path.stdout 2> $R/$t.fast-path.stderr"
+  $E/g.sh $NN "fast-path $t" 300 $K -- bash -c "python3 -I -B gen/generator/generator.py encoder --fast-path --assembly $N/$PK.$t.MarshalSSZTo.S --const marshalSSZTo --ir prysm/ir/ir-mainnet.json --type $k.$t --prefix Encode.generated --imports Prysm.$t.Code --open Prysm.$t.Code --summary $R/$t.fast-path.summary.json > $R/$t.fast-path.stdout 2> $R/$t.fast-path.stderr"
   echo $? > $R/$t.fast-path.rc; NN=$((NN+1))
 done <<'TYPES'
 v1 BuilderDepositRequest

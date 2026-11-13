@@ -3,7 +3,7 @@
 import pathlib, subprocess, sys
 K = pathlib.Path("gen/generator/kindcheck.py")
 src = K.read_text()
-# Not listed: the 13b def-line test. Its broken copy passed the selftest (run 1, brokencheck6-run1.out): the def count
+# Not listed: the 13b def-line test. Its broken copy passed the selftest in the first run (output not kept): the def count
 # and the layout lookup of 13b / 13c catch every def mutant of the selftest, so that sub-check is redundant.
 BROKEN = {
     "13a-pins-ignored": ('        if blobs.get(m) != b:\n            errs.append(f"rule 13a', '        if False:\n            errs.append(f"rule 13a'),
@@ -14,7 +14,7 @@ BROKEN = {
     "13c-kind-line-ignored": ('        if fast_path_norm(hdr) != fast_path_norm(line) or rl[0]', '        if False and fast_path_norm(hdr) != fast_path_norm(line) or rl[0]'),
     "13c-layout-ignored": ('            if fileL.get(k) != X["L"][k]:', '            if False:'),
     "13c-binding-ignored": ('    if not bound:\n', '    if False:\n'),
-    "13c-sha-ignored": ('        if tsha(S) != J["S_sha256"] or tsha(IR) != J["ir_sha256"]:', '        if False:'),
+    "13c-sha-ignored": ('        if tsha(S) != J["assembly_sha256"] or tsha(IR) != J["ir_sha256"]:', '        if False:'),
     "13c-recompute-wrong-order": ('        mem = [-8] + sorted(o for o in first if o > 0) + [o for o in first if o < 0 and o not in (-8, RS)] + \\\n',
                                   '        mem = [-8] + sorted(o for o in first if o > 0) + sorted(o for o in first if o < 0 and o not in (-8, RS)) + \\\n'),
     "13d-chain-ignored": ('        if fp.count(t) != 1:', '        if False:'),

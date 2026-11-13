@@ -8,7 +8,7 @@ import Prysm.BlobIdentifier.EncoderCode
 Text produced from the `.S` file and the IR by a scratch emitter (not in the tree; it is not
 the generator): a symbolic walk of the fast path, one application of a step lemma per directive
 (`Codec/WindowSteps.lean`, `Codec/EncodeSteps.lean`; windows with the nops erased), boundary states between the fields. Every
-theorem has a `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueKindAnyFrame`, `encFastPathKindAnyFrame`).
+theorem has a `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encodeEpilogueKindAnyFrame`, `encodeFastPathKindAnyFrame`).
 **Fast path only**: `len(dst) + 16 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path.
@@ -96,7 +96,7 @@ theorem Encode.example_head : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.example_head_kind : ∀ (h : Host), type_of% (@Encode.example_head h)
-    = @Codec.encHeadKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.u64, .u64]
+    = @Codec.encodeHeadKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.uint64, .uint64]
     ⟨8, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 40) (.original 2), .at (.below 24) (.original 3)],
       []⟩ := by
@@ -211,7 +211,7 @@ theorem Encode.example_field_0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.example_field_0_kind : ∀ (h : Host), type_of% (@Encode.example_field_0 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.u64, .u64]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.uint64, .uint64]
     ⟨8, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 40) (.original 2), .at (.below 24) (.original 3)],
       []⟩
@@ -312,7 +312,7 @@ theorem Encode.example_field_1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, x0, x1, hx0, hx1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.example_field_1_kind : ∀ (h : Host), type_of% (@Encode.example_field_1 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.u64, .u64]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.uint64, .uint64]
     ⟨36, 1, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1)],
       [.fixed 8, .fixed 16]⟩
@@ -406,7 +406,7 @@ theorem Encode.example_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Hos
   intro fl; normalize_registers
   apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 112) + 104 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
   normalize_registers
-  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 59) (window_infix_at hk 59 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (decode_return_segment _ (k + 59) (window_infix_at hk 59 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -425,7 +425,7 @@ theorem Encode.example_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Hos
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
 theorem Encode.example_epilogue_kind : ∀ (h : Host), type_of% (@Encode.example_epilogue h)
-    = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.u64, .u64]
+    = @Codec.encodeEpilogueKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.uint64, .uint64]
     ⟨53, 2, [(.rbx, .ptr), (.rdx, .len 16), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1)],
       [.fixed 8, .fixed 16]⟩ := by
@@ -491,7 +491,7 @@ theorem Encode.example_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   intro st2 h2
   exact Encode.example_epilogue k hk hf ast v0 v1 pre d0 d1 hast hv0 hv1 hd0 hd1 s ra guard hpre fp s2 t40 t24 hfp hs2 ht40 ht24 R hsp hcap hcap63 st2 h2
 theorem Encode.example_fast_kind : ∀ (h : Host), type_of% (@Encode.example_fast h)
-    = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.u64, .u64] := by
+    = @Codec.encodeFastPathKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.uint64, .uint64] := by
   intro h; rfl
 
 end Prysm.ValidatorBalance

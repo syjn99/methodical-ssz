@@ -7,7 +7,7 @@ import Prysm.BeaconBlockHeader.GeneratedDecodeCallSegments
 
 Hand composition (not generator output). `Decode.head_from_generated_call_segments`: the chain of `Prysm/BeaconBlockHeader/DecodeHeadFromCallSegments.lean` with the four
 call-site lemma instances replaced by the generated theorems of `Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean` (`decoder --call-segments`, raw output):
-`Decode.generated_call_Slot_arg` / `_call`, `Decode.generated_call_ProposerIndex_arg` / `_call`; `Decode.head_to_arguments` (0–14) and `Decode.spill_registers`
+`Decode.generated_call_Slot_argument` / `_call`, `Decode.generated_call_ProposerIndex_argument` / `_call`; `Decode.head_to_arguments` (0–14) and `Decode.spill_registers`
 (86–87) stay hand steps. `Decode.accept_from_generated_call_segments`: the proof text of `Prysm/BeaconBlockHeader/DecodeAccept.lean` with `Decode.head` replaced
 by `Decode.head_from_generated_call_segments` and the three hand root segments by the generated ones (`Decode.generated_call_*_seg`, same statements); the
 instance directives between the roots and the epilogue stay hand steps. Both declared types equal the existing
@@ -62,8 +62,8 @@ theorem Decode.head_from_generated_call_segments (k : Nat) (hk : Code.unmarshalS
           ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq (in1.At (s.regs.rax.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hsl' : U64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := hsl
-  have hvi' : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := hvi
+  have hsl' : Uint64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := hsl
+  have hvi' : Uint64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := hvi
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Decode.accept_guard _ _ hguard
@@ -74,7 +74,7 @@ theorem Decode.head_from_generated_call_segments (k : Nat) (hk : Code.unmarshalS
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- Slot: set-up 15–16
-  refine eventually_trans _ _ _ _ (Decode.generated_call_Slot_arg k hk hf rax.toBitVec (rax.toBitVec + 8)
+  refine eventually_trans _ _ _ _ (Decode.generated_call_Slot_argument k hk hf rax.toBitVec (rax.toBitVec + 8)
     (by simp only [Int64.toBitVec_ofNat]) d1 (by rw [hrax1])) ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, hrbx2, hrax2, hrcx2, hmem2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hrax2 hrcx2 hmem2
@@ -90,7 +90,7 @@ theorem Decode.head_from_generated_call_segments (k : Nat) (hk : Code.unmarshalS
   dsimp only at hpc3 hrax3 hrbx3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
   -- ProposerIndex: set-up by reload 47–54 (with the padding nop)
-  refine eventually_trans _ _ _ _ (Decode.generated_call_ProposerIndex_arg k hk hf
+  refine eventually_trans _ _ _ _ (Decode.generated_call_ProposerIndex_argument k hk hf
     (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec (rsp.toBitVec + 16) (rsp.toBitVec + 32) (rsp.toBitVec + 8)
     (rbx.toBitVec + 8) (rax.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
@@ -228,7 +228,7 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
   dsimp only at hpc1 hrsp1 hrbp1 hr141 Hm1
   subst hpc1
   -- segment 2: ParentRoot (generated), 88 → 113
-  refine eventually_trans _ _ _ _ (Decode.generated_call_ParentRoot_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_call_ParentRoot_segment k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
     (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rax.toBitVec + 24) (rax.toBitVec + 32) (rax.toBitVec + 40)
     (rbx.toBitVec + 16) (S + 8)
@@ -269,7 +269,7 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
   simp only [Width.bytes, Width.bits] at H3
   unfold_step
   -- segment 3: StateRoot (generated), 124 → 149
-  refine eventually_trans _ _ _ _ (Decode.generated_call_StateRoot_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_call_StateRoot_segment k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
     (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rax.toBitVec + 48) (rax.toBitVec + 56) (rax.toBitVec + 64)
     (rbx.toBitVec + 48) (S + 8)
@@ -302,7 +302,7 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
   simp only [Width.bytes, Width.bits] at H4
   unfold_step
   -- segment 4: BodyRoot (generated), 159 → 184
-  refine eventually_trans _ _ _ _ (Decode.generated_call_BodyRoot_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_call_BodyRoot_segment k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
     (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rax.toBitVec + 72) (rax.toBitVec + 80) (rax.toBitVec + 88)
     (rbx.toBitVec + 80) (S + 8)

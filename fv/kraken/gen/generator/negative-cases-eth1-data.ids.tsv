@@ -1,7 +1,7 @@
 # negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
-e1-seg0-control	eth1-data-rootdec-seg-source-offset-zero-control
-e1-seg0-stmt-pc	eth1-data-rootdec-seg-source-offset-zero-statement-pc-11-to-12
-e1-seg0-stmt-heap	eth1-data-rootdec-seg-source-offset-zero-statement-heap-32-to-31
+e1-seg0-control	eth1-data-root-decode-segment-source-offset-zero-control
+e1-seg0-stmt-pc	eth1-data-root-decode-segment-source-offset-zero-statement-pc-11-to-12
+e1-seg0-stmt-heap	eth1-data-root-decode-segment-source-offset-zero-statement-heap-32-to-31
 e1-head-control	eth1-data-decode-head-control
 e1-head-cmp	eth1-data-decode-head-code-cmp-0x48-to-0x49
 e1-head-spill	eth1-data-decode-head-code-mov-0x38-rsp-to-0x30-rsp

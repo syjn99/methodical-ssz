@@ -150,11 +150,11 @@ example (z' : RegZmms) (f : StatusFlags) :=
 before the decoder; the receiver that the encoder reads is the decoder conclusion's fragments
 `afterDecode` over it, a Go value for every `p ≠ 0`. Layout: `Prysm.Checkpoint.goFields`
 (IR; trust note in `Prysm.Checkpoint.GoValue`). -/
-theorem recv (p : BitVec 64) (hp : p ≠ 0) :
-    goValue (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c) = true
-    ∧ goValue (afterDecode (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c)
+theorem receiver_go_value (p : BitVec 64) (hp : p ≠ 0) :
+    goValue (receiverAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c) = true
+    ∧ goValue (afterDecode (receiverAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c)
       (Int.toBytes 8 0x0123456789abcdef) p) = true :=
-  have h : goValue (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c) = true := by
+  have h : goValue (receiverAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c) = true := by
     decide
   ⟨h, after_decode_goValue _ _ h (by decide) p hp⟩
 

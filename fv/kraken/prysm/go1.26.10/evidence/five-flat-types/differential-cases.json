@@ -1,7 +1,7 @@
 [
  {
-  "id": "hs-accept-0",
-  "op": "hs_u",
+  "id": "historical-summary-accept-0",
+  "op": "HistoricalSummary.UnmarshalSSZ",
   "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
   "exp": {
    "err": "",
@@ -20,8 +20,8 @@
   }
  },
  {
-  "id": "hs-accept-1",
-  "op": "hs_u",
+  "id": "historical-summary-accept-1",
+  "op": "HistoricalSummary.UnmarshalSSZ",
   "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2222222222222222222222222222222222222222222222222222222222222222",
   "exp": {
    "err": "",
@@ -40,8 +40,8 @@
   }
  },
  {
-  "id": "hs-accept-2",
-  "op": "hs_u",
+  "id": "historical-summary-accept-2",
+  "op": "HistoricalSummary.UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "exp": {
    "err": "",
@@ -60,32 +60,32 @@
   }
  },
  {
-  "id": "hs-size-0",
-  "op": "hs_u",
+  "id": "historical-summary-size-0",
+  "op": "HistoricalSummary.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "hs-size-63",
-  "op": "hs_u",
+  "id": "historical-summary-size-63",
+  "op": "HistoricalSummary.UnmarshalSSZ",
   "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "hs-size-65",
-  "op": "hs_u",
+  "id": "historical-summary-size-65",
+  "op": "HistoricalSummary.UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "sd-accept-0",
-  "op": "sd_u",
+  "id": "signing-data-accept-0",
+  "op": "SigningData.UnmarshalSSZ",
   "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
   "exp": {
    "err": "",
@@ -104,8 +104,8 @@
   }
  },
  {
-  "id": "sd-accept-1",
-  "op": "sd_u",
+  "id": "signing-data-accept-1",
+  "op": "SigningData.UnmarshalSSZ",
   "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2222222222222222222222222222222222222222222222222222222222222222",
   "exp": {
    "err": "",
@@ -124,8 +124,8 @@
   }
  },
  {
-  "id": "sd-accept-2",
-  "op": "sd_u",
+  "id": "signing-data-accept-2",
+  "op": "SigningData.UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "exp": {
    "err": "",
@@ -144,32 +144,32 @@
   }
  },
  {
-  "id": "sd-size-0",
-  "op": "sd_u",
+  "id": "signing-data-size-0",
+  "op": "SigningData.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "sd-size-63",
-  "op": "sd_u",
+  "id": "signing-data-size-63",
+  "op": "SigningData.UnmarshalSSZ",
   "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "sd-size-65",
-  "op": "sd_u",
+  "id": "signing-data-size-65",
+  "op": "SigningData.UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "sa-accept-0",
-  "op": "sa_u",
+  "id": "sync-aggregator-selection-data-accept-0",
+  "op": "SyncAggregatorSelectionData.UnmarshalSSZ",
   "in": "00000000000000000000000000000000",
   "exp": {
    "err": "",
@@ -180,8 +180,8 @@
   }
  },
  {
-  "id": "sa-accept-1",
-  "op": "sa_u",
+  "id": "sync-aggregator-selection-data-accept-1",
+  "op": "SyncAggregatorSelectionData.UnmarshalSSZ",
   "in": "efcdab89674523010700000000000000",
   "exp": {
    "err": "",
@@ -192,8 +192,8 @@
   }
  },
  {
-  "id": "sa-accept-2",
-  "op": "sa_u",
+  "id": "sync-aggregator-selection-data-accept-2",
+  "op": "SyncAggregatorSelectionData.UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffff",
   "exp": {
    "err": "",
@@ -204,32 +204,32 @@
   }
  },
  {
-  "id": "sa-size-0",
-  "op": "sa_u",
+  "id": "sync-aggregator-selection-data-size-0",
+  "op": "SyncAggregatorSelectionData.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "sa-size-15",
-  "op": "sa_u",
+  "id": "sync-aggregator-selection-data-size-15",
+  "op": "SyncAggregatorSelectionData.UnmarshalSSZ",
   "in": "010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "sa-size-17",
-  "op": "sa_u",
+  "id": "sync-aggregator-selection-data-size-17",
+  "op": "SyncAggregatorSelectionData.UnmarshalSSZ",
   "in": "0101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "vb-accept-0",
-  "op": "vb_u",
+  "id": "validator-balance-accept-0",
+  "op": "ValidatorBalance.UnmarshalSSZ",
   "in": "00000000000000000000000000000000",
   "exp": {
    "err": "",
@@ -240,8 +240,8 @@
   }
  },
  {
-  "id": "vb-accept-1",
-  "op": "vb_u",
+  "id": "validator-balance-accept-1",
+  "op": "ValidatorBalance.UnmarshalSSZ",
   "in": "efcdab89674523010700000000000000",
   "exp": {
    "err": "",
@@ -252,8 +252,8 @@
   }
  },
  {
-  "id": "vb-accept-2",
-  "op": "vb_u",
+  "id": "validator-balance-accept-2",
+  "op": "ValidatorBalance.UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffff",
   "exp": {
    "err": "",
@@ -264,32 +264,32 @@
   }
  },
  {
-  "id": "vb-size-0",
-  "op": "vb_u",
+  "id": "validator-balance-size-0",
+  "op": "ValidatorBalance.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "vb-size-15",
-  "op": "vb_u",
+  "id": "validator-balance-size-15",
+  "op": "ValidatorBalance.UnmarshalSSZ",
   "in": "010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "vb-size-17",
-  "op": "vb_u",
+  "id": "validator-balance-size-17",
+  "op": "ValidatorBalance.UnmarshalSSZ",
   "in": "0101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "ve-accept-0",
-  "op": "ve_u",
+  "id": "voluntary-exit-accept-0",
+  "op": "VoluntaryExit.UnmarshalSSZ",
   "in": "00000000000000000000000000000000",
   "exp": {
    "err": "",
@@ -300,8 +300,8 @@
   }
  },
  {
-  "id": "ve-accept-1",
-  "op": "ve_u",
+  "id": "voluntary-exit-accept-1",
+  "op": "VoluntaryExit.UnmarshalSSZ",
   "in": "efcdab89674523010700000000000000",
   "exp": {
    "err": "",
@@ -312,8 +312,8 @@
   }
  },
  {
-  "id": "ve-accept-2",
-  "op": "ve_u",
+  "id": "voluntary-exit-accept-2",
+  "op": "VoluntaryExit.UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffff",
   "exp": {
    "err": "",
@@ -324,24 +324,24 @@
   }
  },
  {
-  "id": "ve-size-0",
-  "op": "ve_u",
+  "id": "voluntary-exit-size-0",
+  "op": "VoluntaryExit.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "ve-size-15",
-  "op": "ve_u",
+  "id": "voluntary-exit-size-15",
+  "op": "VoluntaryExit.UnmarshalSSZ",
   "in": "010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "ve-size-17",
-  "op": "ve_u",
+  "id": "voluntary-exit-size-17",
+  "op": "VoluntaryExit.UnmarshalSSZ",
   "in": "0101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true

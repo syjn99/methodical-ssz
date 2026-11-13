@@ -142,7 +142,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `ProposerIndex`: call block over the window 54–57 (`nop; callq; test; je`), `callq` at 55, continuation label at 85. -/
 theorem _root_.Prysm.BeaconBlockHeader.Decode.example_step_ProposerIndex_call (k : Nat) (hk : Prysm.BeaconBlockHeader.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.BeaconBlockHeader.Code.unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
+    ∀ (hC : Uint64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -164,15 +164,15 @@ theorem _root_.Prysm.BeaconBlockHeader.Decode.example_step_ProposerIndex_call (k
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 54)⟩ := by
   have hq := Codec.window_infix_at hk 54 4
-  have he : Codec.eraseNop ((Prysm.BeaconBlockHeader.Code.unmarshalSSZ.drop 54).take 4) = Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154" := by rfl
+  have he : Codec.eraseNop ((Prysm.BeaconBlockHeader.Code.unmarshalSSZ.drop 54).take 4) = Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154" := by rfl
   have hjc : k + 54 + Codec.nonNopIndex ((Prysm.BeaconBlockHeader.Code.unmarshalSSZ.drop 54).take 4) 0 = k + 55 := by rfl
-  have hB := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
-    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
+    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 85)
     (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.calldec_seg_window _ _ _ (k + 54) (k + 55) (k + 85) hq he hjc hB hl
-theorem _root_.Prysm.BeaconBlockHeader.Decode.example_step_ProposerIndex_call_kind : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.example_step_ProposerIndex_call h) = @Codec.callDecSegKindWindow h Prysm.BeaconBlockHeader.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154" 54 55 85 := by
+  with_reducible exact Codec.call_decode_segment_window _ _ _ (k + 54) (k + 55) (k + 85) hq he hjc hB hl
+theorem _root_.Prysm.BeaconBlockHeader.Decode.example_step_ProposerIndex_call_kind : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.example_step_ProposerIndex_call h) = @Codec.callDecodeSegmentKindWindow h Prysm.BeaconBlockHeader.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154" 54 55 85 := by
   intro h; with_reducible rfl
 
 end Prysm.BeaconBlockHeader

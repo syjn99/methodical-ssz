@@ -15,8 +15,8 @@ at the end of an argument set-up). The dense lemmas answered with one
   `(hq : q.IsInfixAt Host.prog j) (he : eraseNop q = tmpl …) (hend : j + q.length = e)`.
   The window may hold nops before, between and after the template directives; there is no pad flag and no
   position parameter. An instance takes `q := (C.drop a).take n` (`window_infix_at`) and proves `he` by computation.
-* Stepping: `window_directive_at` (template directive `i` is at `j + nonNopIndex q i`), `window_skip_leading` (leading nops), `wskip` (nops
-  between directive `i` and `i + 1`), `wlast` (nops after the last directive), `wnops` (a window of nops only).
+* Stepping: `window_directive_at` (template directive `i` is at `j + nonNopIndex q i`), `window_skip_leading` (leading nops), `window_skip_between` (nops
+  between directive `i` and `i + 1`), `window_skip_after_last` (nops after the last directive), `window_only_nops` (a window of nops only).
   Tactics `window_skip_leading_nops`, `window_step_directive`, `window_skip_nops`, `window_skip_to_end` are the window forms of `step_directive` (`Machine/Step.lean`).
 
 Why the dense lemmas are not transferred by a general theorem: a `callq` pushes the address of the NEXT
@@ -90,7 +90,7 @@ theorem nop_step {d : Directive} {j : Nat} (hd : [d].IsInfixAt Host.prog j) (hn 
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf j⟩ := by
   unfold isNop at hn
   split at hn
-  · apply Machine.estep hd
+  · apply Machine.eventually_step_directive hd
     unfold_step
     exact hk
   · exact absurd hn (by decide)
@@ -163,13 +163,13 @@ theorem nonNopIndex_length : ∀ (q : Program), nonNopIndex q (eraseNop q).lengt
 theorem window_directive_at {q t : Program} {j : Nat} (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = t) (i : Nat) :
     (firstDirective (t.drop i)).IsInfixAt Host.prog (j + nonNopIndex q i) := he ▸ window_directive_at_aux q j i hq
 /-- The nops between directive `i` and directive `i + 1` of the window (`hi` by `rfl`). -/
-theorem wskip {q t : Program} {j : Nat} (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = t) (i : Nat)
+theorem window_skip_between {q t : Program} {j : Nat} (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = t) (i : Nat)
     (hi : Nat.blt i t.length = true) {final : MachineState → Prop} {s : MachineData}
     (hk : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (j + nonNopIndex q (i + 1))⟩) :
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (j + nonNopIndex q i + 1)⟩ :=
   window_skip_aux q j i hq (by subst he; exact Nat.le_of_ble_eq_true hi) hk
 /-- The nops after the last directive `i` of the window: the pc reaches the window end `e`. -/
-theorem wlast {q t : Program} {j : Nat} (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = t) (i : Nat)
+theorem window_skip_after_last {q t : Program} {j : Nat} (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = t) (i : Nat)
     (hi : i + 1 = t.length) {e : Nat} (hend : j + q.length = e) {final : MachineState → Prop} {s : MachineData}
     (hk : Eventually (step1 Host.exe) final ⟨s, Host.addrOf e⟩) :
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (j + nonNopIndex q i + 1)⟩ := by
@@ -178,7 +178,7 @@ theorem wlast {q t : Program} {j : Nat} (hq : q.IsInfixAt Host.prog j) (he : era
   rw [hi, nonNopIndex_length]
 
 /-- A window that holds only nops: the pc moves from `j` to the window end `e`. -/
-theorem wnops {q : Program} {j e : Nat} (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = [])
+theorem window_only_nops {q : Program} {j e : Nat} (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = [])
     (hend : j + q.length = e) {final : MachineState → Prop} {s : MachineData}
     (hk : Eventually (step1 Host.exe) final ⟨s, Host.addrOf e⟩) :
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf j⟩ := by
@@ -194,7 +194,7 @@ end Codec
 macro "window_step_directive " hq:term:max he:term:max prog:ident n:num : tactic => `(tactic| (
   have hkat := Codec.window_directive_at $hq $he $n
   simp only [$prog:ident, Codec.firstDirective, List.drop_succ_cons, List.drop_zero] at hkat
-  apply Machine.estep hkat
+  apply Machine.eventually_step_directive hkat
   clear hkat
   unfold_step))
 
@@ -202,8 +202,8 @@ macro "window_step_directive " hq:term:max he:term:max prog:ident n:num : tactic
 macro "window_skip_leading_nops " hq:term:max : tactic => `(tactic| refine Codec.window_skip_leading _ _ $hq ?_)
 
 /-- Skip the nops after directive `n`: the pc moves from `j + nonNopIndex q n + 1` to `j + nonNopIndex q (n + 1)`. -/
-macro "window_skip_nops " hq:term:max he:term:max n:num : tactic => `(tactic| refine Codec.wskip $hq $he $n rfl ?_)
+macro "window_skip_nops " hq:term:max he:term:max n:num : tactic => `(tactic| refine Codec.window_skip_between $hq $he $n rfl ?_)
 
 /-- Skip the nops after the last directive `n`: the pc moves from `j + nonNopIndex q n + 1` to the window end. -/
 macro "window_skip_to_end " hq:term:max he:term:max n:num hend:term:max : tactic =>
-  `(tactic| refine Codec.wlast $hq $he $n rfl $hend ?_)
+  `(tactic| refine Codec.window_skip_after_last $hq $he $n rfl $hend ?_)

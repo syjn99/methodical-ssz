@@ -17,25 +17,25 @@ def emit(d, X):
     src = open(os.path.join(d, 'Prysm', X, 'GeneratedDecodeAccept.lean')).read()
     i = src.index('theorem Decode.generated_accept : ∀ ')
     j = src.index(' := by\n', i)
-    stmt = src[i + len('theorem Decode.generated_accept : '):j]
+    statement_text = src[i + len('theorem Decode.generated_accept : '):j]
     intro = re.search(r'\n  intro (k hk hf [^\n]*)\n', src[j:]).group(1).split()
     ex = [f'(uintBytes 8 g.{f[0]}.toNat).toList' if f[1] == 'u' else f'g.{f[0]}.toArray.toList' for f in fs]
     lp = ['(by simp [Spec.uintBytes_size])' if f[1] == 'u' else '(by simp)' for f in fs]
     fvs = ' '.join(f'fv{k}' for k in range(n))
     hyps = ' '.join(rf'\(hfv{k} : fv{k}\.length = \d+\)' for k in range(n))
-    line = re.search(rf'\n    \({fvs} : List UInt8\) {hyps}\n', stmt)
+    line = re.search(rf'\n    \({fvs} : List UInt8\) {hyps}\n', statement_text)
     assert line, X
-    stmt = stmt.replace(line.group(0), f'\n    (bsA : Array UInt8) (v : Value) (hd : deserialize desc bsA = .ok v)\n', 1)
-    assert stmt.count('(h_mem : s.dmem =⋆') == 1
-    stmt = stmt.replace('(h_mem : s.dmem =⋆', f'(Pm : ∀ g : {P}, bsA = {pe} g →\n      s.dmem =⋆', 1)
-    assert stmt.count(f'(hlen : s.regs.rcx = {N})') == 1, X
-    stmt = stmt.replace(f'(hlen : s.regs.rcx = {N})', '(hlen : s.regs.rcx.toNat = bsA.size)', 1)
-    assert stmt.count(',\n    Eventually (step1 Host.exe)') == 1
-    stmt = stmt.replace(',\n    Eventually (step1 Host.exe)',
+    statement_text = statement_text.replace(line.group(0), f'\n    (bsA : Array UInt8) (v : Value) (hd : deserialize desc bsA = .ok v)\n', 1)
+    assert statement_text.count('(h_mem : s.dmem =⋆') == 1
+    statement_text = statement_text.replace('(h_mem : s.dmem =⋆', f'(Pm : ∀ g : {P}, bsA = {pe} g →\n      s.dmem =⋆', 1)
+    assert statement_text.count(f'(hlen : s.regs.rcx = {N})') == 1, X
+    statement_text = statement_text.replace(f'(hlen : s.regs.rcx = {N})', '(hlen : s.regs.rcx.toNat = bsA.size)', 1)
+    assert statement_text.count(',\n    Eventually (step1 Host.exe)') == 1
+    statement_text = statement_text.replace(',\n    Eventually (step1 Host.exe)',
                         f',\n    ∃ g : {P}, g.toValue = v ∧ bsA = {pe} g ∧\n    Eventually (step1 Host.exe)', 1)
     for k in range(n):
-        stmt = re.sub(rf'\bfv{k}\b', ex[k], stmt)
-    assert not re.search(r'\bfv\d\b', stmt)
+        statement_text = re.sub(rf'\bfv{k}\b', ex[k], statement_text)
+    assert not re.search(r'\bfv\d\b', statement_text)
     fvn = [f'fv{k}' for k in range(n)]
     hfn = [f'hfv{k}' for k in range(n)]
     names = [y for y in intro if y not in fvn + hfn]
@@ -82,7 +82,7 @@ namespace Prysm.{X}
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Accept side: the generated accept statement for the input chunks of the `g` that EthLib decodes. -/
-theorem Decode.accept_spec : {stmt} := by
+theorem Decode.accept_spec : {statement_text} := by
   intro {' '.join(names_i)}
   obtain ⟨g, rfl, hb⟩ := SszValue.accepted_is_encoding hd
   refine ⟨g, rfl, hb, ?_⟩

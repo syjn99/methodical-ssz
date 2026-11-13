@@ -7,12 +7,12 @@ import Prysm.Checkpoint.Code
 
 Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a
 step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem
-has a `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueKindAnyFrame`, `encFastPathKindAnyFrame`).
+has a `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encodeEpilogueKindAnyFrame`, `encodeFastPathKindAnyFrame`).
 **Fast path only**: `len(dst) + 40 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
 The statement implies the committed hand statement `Prysm.Checkpoint.Encode.fast_path` through `Prysm.Checkpoint.Encode.fast_path_of_kind`.
-FAST-PATH-JSON: {"type": "Checkpoint", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 40, "frame": 104, "guard_addend": 0, "runtime_calls": true, "fields": [["Epoch", "u", 8], ["Root", "b", 32]], "boundaries": [8, 36, 63], "layout": "Prysm.Checkpoint.encodeLayout", "S_sha256": "c4345527c651c0a3ff8319af3f35df1e375b8c58a6a45054762da0a0dcef1b1d", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.Checkpoint.Encode.fast_path via Prysm.Checkpoint.Encode.fast_path_of_kind", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Checkpoint", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encFastPathKindAnyFrame"}]}
+FAST-PATH-JSON: {"type": "Checkpoint", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 40, "frame": 104, "guard_addend": 0, "runtime_calls": true, "fields": [["Epoch", "u", 8], ["Root", "b", 32]], "boundaries": [8, 36, 63], "layout": "Prysm.Checkpoint.encodeLayout", "assembly_sha256": "c4345527c651c0a3ff8319af3f35df1e375b8c58a6a45054762da0a0dcef1b1d", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.Checkpoint.Encode.fast_path via Prysm.Checkpoint.Encode.fast_path_of_kind", "assembly": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Checkpoint", "kinds": [{"theorem": "Encode.generated_head", "kind": "encodeHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encodeEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encodeFastPathKindAnyFrame"}]}
 -/
 
 open Machine Runtime Codec Prysm.Checkpoint.Code
@@ -99,7 +99,7 @@ theorem Encode.generated_head : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_head_kind : ∀ (h : Host), type_of% (@Encode.generated_head h)
-    = @Codec.encHeadKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.u64, .bytes 32]
+    = @Codec.encodeHeadKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.uint64, .bytes 32]
     ⟨8, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 2), .at (.below 24) (.original 3), .at (.below 32) (.original 4), .at (.below 48) (.original 6), .at (.below 64) (.original 5), .at (.below 120) (.original 7), .low .scratch],
       []⟩ := by
@@ -230,7 +230,7 @@ theorem Encode.generated_field_0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_0_kind : ∀ (h : Host), type_of% (@Encode.generated_field_0 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.u64, .bytes 32]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.uint64, .bytes 32]
     ⟨8, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 2), .at (.below 24) (.original 3), .at (.below 32) (.original 4), .at (.below 48) (.original 6), .at (.below 64) (.original 5), .at (.below 120) (.original 7), .low .scratch],
       []⟩
@@ -373,7 +373,7 @@ theorem Encode.generated_field_1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, x0, x1, scr1, hx0, hx1, hscr1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_1_kind : ∀ (h : Host), type_of% (@Encode.generated_field_1 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.u64, .bytes 32]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.uint64, .bytes 32]
     ⟨36, 1, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 2), .at (.below 24) (.original 3), .at (.below 32) (.original 4), .at (.below 48) (.existential 1), .at (.below 64) (.field 0), .at (.below 56) (.existential 0), .at (.below 120) (.original 7), .low .scratch],
       [.fixed 8, .fixed 16]⟩
@@ -480,7 +480,7 @@ theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   intro fl; normalize_registers
   apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 112) + 104 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
   normalize_registers
-  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 69) (window_infix_at hk 69 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (decode_return_segment _ (k + 69) (window_infix_at hk 69 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -499,7 +499,7 @@ theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
 theorem Encode.generated_epilogue_kind : ∀ (h : Host), type_of% (@Encode.generated_epilogue h)
-    = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.u64, .bytes 32]
+    = @Codec.encodeEpilogueKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.uint64, .bytes 32]
     ⟨63, 2, [],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 24) (.reg .rdi), .at (.below 32) (.len 40), .at (.below 48) (.existential 1), .at (.below 64) (.field 0), .at (.below 56) (.existential 0), .at (.below 120) (.ret 63), .low (.existential 2)],
       [.fixed 8, .fixed 16, .low]⟩ := by
@@ -581,7 +581,7 @@ theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   intro st2 h2
   exact Encode.generated_epilogue k hk hf ast v0 c1 b1 pre d0 d1 hast hv0 hc1 hb1 hd0 hd1 p1 s ra guard hpre fp s2 l16 l24 l32 t64 t48 rslot hfp hs2 hl16 hl24 hl32 ht64 ht48 hrslot R S scratch hsc hsp hcap hcap63 st2 h2
 theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated_fast h)
-    = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.u64, .bytes 32] := by
+    = @Codec.encodeFastPathKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.uint64, .bytes 32] := by
   intro h; rfl
 
 /-- Statement check: the generated theorem proves the committed hand statement (implication tie). -/

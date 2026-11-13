@@ -3,10 +3,10 @@ import Codec.Kind.DecodeAcceptComposition
 /-!
 # Statement kinds for whole accept theorems of flat decoders, any frame
 
-`decAcceptKindAnyFrame C L fields` is the accept statement of a flat fixed-size container decoder `C`.
+`decodeAcceptKindAnyFrame C L fields` is the accept statement of a flat fixed-size container decoder `C`.
 - `fields : List ContainerField` (`Codec/Kind/DecodeAcceptComposition.lean`): fixed byte vectors (`.bytes n`, a fresh slice, `len = cap = n`) and
-  8-byte fields (`.u64`). A field decoded by a callee (`Slot`, `Epoch`, `ValidatorIndex`, `CommitteeIndex`
-  `UnmarshalSSZ`) is `.u64` here: in the receiver and in the input it is the same as an inline `uint64`. The
+  8-byte fields (`.uint64`). A field decoded by a callee (`Slot`, `Epoch`, `ValidatorIndex`, `CommitteeIndex`
+  `UnmarshalSSZ`) is `.uint64` here: in the receiver and in the input it is the same as an inline `uint64`. The
   callee shows only as placement premises (`L.callees`).
 - `L : DecoderFrameLayout`: the frame facts of the `.S` file. Stack chunk binders and length hypotheses (`stackChunkCount`,
   `stackChunkLengths`), the stack slots before (`pre`) and after (`post`, `existentials`), the runtime configuration (`runtime`: `none`
@@ -17,13 +17,13 @@ The input chunks, the receiver words before and after, the heap chunks and the s
 not check that `L` is the frame of the code; a proof of an instance does (a wrong slot does not close).
 The kind does not check that `L.callees` are the callees of the fields: that is a rule of the generator.
 
-The binder prefix (`decBinders`) is shared with the three kinds of the intermediate theorems of a generated
+The binder prefix (`decodeBinders`) is shared with the three kinds of the intermediate theorems of a generated
 accept proof. These are stated over the WHOLE accept memory in entry-state terms:
-- `decHeadKindAnyFrame C L fields d0`: accept premises, entry → boundary state `d0`;
-- `decFieldKindAnyFrame C L fields d d'`: boundary state `d` → boundary state `d'` (one field);
-- `decEpilogueKindAnyFrame C L fields d`: boundary state `d` → the accept post-state.
+- `decodeHeadKindAnyFrame C L fields d0`: accept premises, entry → boundary state `d0`;
+- `decodeFieldKindAnyFrame C L fields d d'`: boundary state `d` → boundary state `d'` (one field);
+- `decodeEpilogueKindAnyFrame C L fields d`: boundary state `d` → the accept post-state.
 A boundary state `DecodeBoundaryState` gives the directive index, the number of decoded fields, register facts and the
-stack slots; `decBoundaryStatePredicate` renders it. The accept proof chains the theorems with `eventually_trans` only.
+stack slots; `decodeBoundaryStatePredicate` renders it. The accept proof chains the theorems with `eventually_trans` only.
 
 Ties to the hand statements: `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 -/
@@ -164,7 +164,7 @@ def runtimeBinders (rt : Option RuntimeConfig) (hsz : Nat) (cs : List (List UInt
 set_option linter.unusedVariables false in
 /-- The binder prefix of every whole-accept kind: code placement, callee placements, field values and their lengths,
 entry state, stack and receiver chunks and their lengths, the frame `R`, the runtime binders. -/
-def decBinders (C : Program) (L : DecoderFrameLayout) (fields : List ContainerField)
+def decodeBinders (C : Program) (L : DecoderFrameLayout) (fields : List ContainerField)
     (body : Nat → List (List UInt8) → MachineData → UInt64 → UInt64 → List (List UInt8) → (DataMem → Prop)
       → Nat → (Nat → List (DataMem → Prop)) → List (DataMem → Prop) → List Prop → Prop) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k),
@@ -177,7 +177,7 @@ def decBinders (C : Program) (L : DecoderFrameLayout) (fields : List ContainerFi
         body k vs s ra guard cs R S heapAt wb hyps))))))
 
 /-- The memory of a boundary state: stack slots `stackSlots`, the first `done` fields decoded. -/
-def decMem (L : DecoderFrameLayout) (fields : List ContainerField) (stk : List StackSlot) (done : Nat)
+def decodeMem (L : DecoderFrameLayout) (fields : List ContainerField) (stk : List StackSlot) (done : Nat)
     (k : Nat) (vs : List (List UInt8)) (s : MachineData) (ra guard : UInt64) (cs : List (List UInt8))
     (R : DataMem → Prop) (S : Nat) (heapAt : Nat → List (DataMem → Prop)) (wb : List (DataMem → Prop))
     (xs : List (List UInt8)) (ps : List (BitVec 64)) : DataMem → Prop :=
@@ -195,7 +195,7 @@ def decMem (L : DecoderFrameLayout) (fields : List ContainerField) (stk : List S
       ++ wb ++ [R])
 
 /-- The accept post-state. -/
-def decFinalStatePredicate (L : DecoderFrameLayout) (fields : List ContainerField)
+def decodeFinalStatePredicate (L : DecoderFrameLayout) (fields : List ContainerField)
     (k : Nat) (vs : List (List UInt8)) (s : MachineData) (ra guard : UInt64) (cs : List (List UInt8))
     (R : DataMem → Prop) (S : Nat) (heapAt : Nat → List (DataMem → Prop)) (wb : List (DataMem → Prop)) :
     MachineState → Prop :=
@@ -203,16 +203,16 @@ def decFinalStatePredicate (L : DecoderFrameLayout) (fields : List ContainerFiel
     ∧ st'.data.regs.rsp = s.regs.rsp + 8 ∧ st'.data.regs.rbp = s.regs.rbp
     ∧ st'.data.regs.r14 = s.regs.r14 ∧
     ExistsWords (countBytesFields fields) (fun ps => ExistsChunks L.existentials.length (fun xs => Conjunctions (existentialLengthFacts S (RuntimeConfig.lowExtraOf L.runtime) L.existentials xs)
-      (decMem L fields L.post fields.length k vs s ra guard cs R S heapAt wb xs ps st'.data.dmem)))
+      (decodeMem L fields L.post fields.length k vs s ra guard cs R S heapAt wb xs ps st'.data.dmem)))
 
 set_option linter.unusedVariables false in
 /-- **Accept statement kind of a flat container decoder, any frame** (see the module text). -/
-abbrev decAcceptKindAnyFrame (C : Program) (L : DecoderFrameLayout) (fields : List ContainerField) : Prop :=
-  decBinders C L fields (fun k vs s ra guard cs R S heapAt wb hyps =>
-    ∀ (h_mem : s.dmem =⋆ decMem L fields L.pre 0 k vs s ra guard cs R S heapAt wb [] [])
+abbrev decodeAcceptKindAnyFrame (C : Program) (L : DecoderFrameLayout) (fields : List ContainerField) : Prop :=
+  decodeBinders C L fields (fun k vs s ra guard cs R S heapAt wb hyps =>
+    ∀ (h_mem : s.dmem =⋆ decodeMem L fields L.pre 0 k vs s ra guard cs R S heapAt wb [] [])
       (hguard : addExtra guard.toNat L.guardAddend < s.regs.rsp.toNat)
       (hlen : s.regs.rcx = UInt64.ofNat (sszSize fields)),
-      Implications hyps (Eventually (step1 Host.exe) (decFinalStatePredicate L fields k vs s ra guard cs R S heapAt wb)
+      Implications hyps (Eventually (step1 Host.exe) (decodeFinalStatePredicate L fields k vs s ra guard cs R S heapAt wb)
         ⟨s, Host.addrOf k⟩))
 
 /-- What a register holds at a field boundary: the receiver, the buffer, or zero. -/
@@ -241,7 +241,7 @@ def decodeRegisterFacts (s : MachineData) (st : MachineState) : List (Reg64 × D
   | (r, v) :: rs => (st.data.regs.get64 r = v.val s) :: decodeRegisterFacts s st rs
 
 /-- The state predicate of a boundary state. -/
-def decBoundaryStatePredicate (L : DecoderFrameLayout) (fields : List ContainerField) (d : DecodeBoundaryState)
+def decodeBoundaryStatePredicate (L : DecoderFrameLayout) (fields : List ContainerField) (d : DecodeBoundaryState)
     (k : Nat) (vs : List (List UInt8)) (s : MachineData) (ra guard : UInt64) (cs : List (List UInt8))
     (R : DataMem → Prop) (S : Nat) (heapAt : Nat → List (DataMem → Prop)) (wb : List (DataMem → Prop)) :
     MachineState → Prop :=
@@ -251,31 +251,31 @@ def decBoundaryStatePredicate (L : DecoderFrameLayout) (fields : List ContainerF
     Conjunctions (decodeRegisterFacts s st d.regs)
       (ExistsWords (countBytesFields (fields.take d.done)) (fun ps => ExistsChunks d.existentials.length (fun xs =>
         Conjunctions (existentialLengthFacts S (RuntimeConfig.lowExtraOf L.runtime) d.existentials xs)
-          (decMem L fields d.stackSlots d.done k vs s ra guard cs R S heapAt wb xs ps st.data.dmem))))
+          (decodeMem L fields d.stackSlots d.done k vs s ra guard cs R S heapAt wb xs ps st.data.dmem))))
 
 set_option linter.unusedVariables false in
 /-- Kind of the head theorem of a generated accept proof: accept premises, entry → boundary state `d0`. -/
-abbrev decHeadKindAnyFrame (C : Program) (L : DecoderFrameLayout) (fields : List ContainerField) (d0 : DecodeBoundaryState) : Prop :=
-  decBinders C L fields (fun k vs s ra guard cs R S heapAt wb hyps =>
-    ∀ (h_mem : s.dmem =⋆ decMem L fields L.pre 0 k vs s ra guard cs R S heapAt wb [] [])
+abbrev decodeHeadKindAnyFrame (C : Program) (L : DecoderFrameLayout) (fields : List ContainerField) (d0 : DecodeBoundaryState) : Prop :=
+  decodeBinders C L fields (fun k vs s ra guard cs R S heapAt wb hyps =>
+    ∀ (h_mem : s.dmem =⋆ decodeMem L fields L.pre 0 k vs s ra guard cs R S heapAt wb [] [])
       (hguard : addExtra guard.toNat L.guardAddend < s.regs.rsp.toNat)
       (hlen : s.regs.rcx = UInt64.ofNat (sszSize fields)),
-      Implications hyps (Eventually (step1 Host.exe) (decBoundaryStatePredicate L fields d0 k vs s ra guard cs R S heapAt wb)
+      Implications hyps (Eventually (step1 Host.exe) (decodeBoundaryStatePredicate L fields d0 k vs s ra guard cs R S heapAt wb)
         ⟨s, Host.addrOf k⟩))
 
 set_option linter.unusedVariables false in
 /-- Kind of a field theorem of a generated accept proof: boundary state `d` → boundary state `d'`. -/
-abbrev decFieldKindAnyFrame (C : Program) (L : DecoderFrameLayout) (fields : List ContainerField) (d d' : DecodeBoundaryState) : Prop :=
-  decBinders C L fields (fun k vs s ra guard cs R S heapAt wb hyps =>
+abbrev decodeFieldKindAnyFrame (C : Program) (L : DecoderFrameLayout) (fields : List ContainerField) (d d' : DecodeBoundaryState) : Prop :=
+  decodeBinders C L fields (fun k vs s ra guard cs R S heapAt wb hyps =>
     ∀ (hguard : addExtra guard.toNat L.guardAddend < s.regs.rsp.toNat),
-      Implications hyps (∀ (st0 : MachineState), decBoundaryStatePredicate L fields d k vs s ra guard cs R S heapAt wb st0 →
-        Eventually (step1 Host.exe) (decBoundaryStatePredicate L fields d' k vs s ra guard cs R S heapAt wb) st0))
+      Implications hyps (∀ (st0 : MachineState), decodeBoundaryStatePredicate L fields d k vs s ra guard cs R S heapAt wb st0 →
+        Eventually (step1 Host.exe) (decodeBoundaryStatePredicate L fields d' k vs s ra guard cs R S heapAt wb) st0))
 
 set_option linter.unusedVariables false in
 /-- Kind of the epilogue theorem of a generated accept proof: boundary state `d` → the accept post-state. -/
-abbrev decEpilogueKindAnyFrame (C : Program) (L : DecoderFrameLayout) (fields : List ContainerField) (d : DecodeBoundaryState) : Prop :=
-  decBinders C L fields (fun k vs s ra guard cs R S heapAt wb hyps =>
-    ∀ (st0 : MachineState), decBoundaryStatePredicate L fields d k vs s ra guard cs R S heapAt wb st0 →
-      Eventually (step1 Host.exe) (decFinalStatePredicate L fields k vs s ra guard cs R S heapAt wb) st0)
+abbrev decodeEpilogueKindAnyFrame (C : Program) (L : DecoderFrameLayout) (fields : List ContainerField) (d : DecodeBoundaryState) : Prop :=
+  decodeBinders C L fields (fun k vs s ra guard cs R S heapAt wb hyps =>
+    ∀ (st0 : MachineState), decodeBoundaryStatePredicate L fields d k vs s ra guard cs R S heapAt wb st0 →
+      Eventually (step1 Host.exe) (decodeFinalStatePredicate L fields k vs s ra guard cs R S heapAt wb) st0)
 
 end Codec

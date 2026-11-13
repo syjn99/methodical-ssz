@@ -10,16 +10,16 @@ statement is the independent hand statement `Prysm.PendingConsolidation.Decode.a
 `eventually_trans` over
 
 * `Decode.head` (hand steps, directives 0–14; the text of `Prysm.PendingPartialWithdrawal.Decode.head` with the two spills at 12 / 13 in the PendingConsolidation order),
-* `Decode.generated_call_SourceIndex_arg` (15–16) and `Decode.generated_call_SourceIndex_call` (17–19, label 47): GENERATED
-  (`Prysm/PendingConsolidation/GeneratedDecodeCallSegmentsPartial.lean`, raw); the `_call` theorem is conditional on `hC : U64CalleeAccept`, discharged here by
+* `Decode.generated_call_SourceIndex_argument` (15–16) and `Decode.generated_call_SourceIndex_call` (17–19, label 47): GENERATED
+  (`Prysm/PendingConsolidation/GeneratedDecodeCallSegmentsPartial.lean`, raw); the `_call` theorem is conditional on `hC : Uint64CalleeAccept`, discharged here by
   the proved `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`,
-* `Codec.callarg_reload_seg false 96 8 112 (-8) 88 16` (48–54; existing lemma, applied by hand: the
+* `Codec.call_argument_reload_segment false 96 8 112 (-8) 88 16` (48–54; existing lemma, applied by hand: the
   generator did not emit TargetIndex),
-* `calldec_nop_seg` (hand lemma below, 55–58 + label 85: the call block with a `nop` between `callq` and
+* `call_decode_nop_segment` (hand lemma below, 55–58 + label 85: the call block with a `nop` between `callq` and
   `test`, the reason the generator gave for TargetIndex),
 * `Decode.epilogue` (hand steps, 86–88).
 
-The callee is used only through `U64CalleeAccept` (= the existing `Prysm.ValidatorIndex.Decode.accept_function_spec`, proved by `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`). No
+The callee is used only through `Uint64CalleeAccept` (= the existing `Prysm.ValidatorIndex.Decode.accept_function_spec`, proved by `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`). No
 contract, no new hypothesis form.
 -/
 
@@ -29,7 +29,7 @@ variable [Host]
 namespace Prysm.PendingConsolidation
 
 /-- The call block with one padding `nop`: `callq fn; nop; test %rax,%rax; je lok`. -/
-def callDecNop (fn lok : String) : Program :=
+def callDecodeNop (fn lok : String) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.call (RelRegOrMem.rel ((ConstExpr.label fn).sub ConstExpr.after_current_instruction)))),
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.nop 1)),
@@ -40,10 +40,10 @@ def callDecNop (fn lok : String) : Program :=
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- `calldec_seg` (`Codec/CalleeDecode.lean`) for the block `callDecNop`: the same pre / post, one more step. -/
-theorem calldec_nop_seg (fn lok : String) (j j2 : Nat)
-    (hA : (callDecNop fn lok).IsInfixAt Host.prog j) (hB : (callDecContinuationLabel lok).IsInfixAt Host.prog j2)
-    (hl : label lok = Host.addrOf j2) (hC : U64CalleeAccept fn)
+/-- `call_decode_segment` (`Codec/CalleeDecode.lean`) for the block `callDecodeNop`: the same pre / post, one more step. -/
+theorem call_decode_nop_segment (fn lok : String) (j j2 : Nat)
+    (hA : (callDecodeNop fn lok).IsInfixAt Host.prog j) (hB : (callDecodeContinuationLabel lok).IsInfixAt Host.prog j2)
+    (hl : label lok = Host.addrOf j2) (hC : Uint64CalleeAccept fn)
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -67,7 +67,7 @@ theorem calldec_nop_seg (fn lok : String) (j j2 : Nat)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 hrax hrbx hrcx h_mem ⊢
   subst rsp rbp r14 rcx hRet hFp hS2 hrax hrbx
-  step_directive hA callDecNop 0
+  step_directive hA callDecodeNop 0
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
@@ -87,15 +87,15 @@ theorem calldec_nop_seg (fn lok : String) (j j2 : Nat)
   subst rax2 rbx2 rsp2 rbp2 r142
   rw [show sp - 8 - 8 = sp - 16 by bv_omega, show sp - 8 + 16 = sp + 8 by bv_omega] at Hm2
   rw [show j + 0 + 1 = j + 1 from rfl] at Hm2
-  step_directive hA callDecNop 1
-  step_directive hA callDecNop 2
+  step_directive hA callDecodeNop 1
+  step_directive hA callDecodeNop 2
   intro _
-  step_directive hA callDecNop 3
+  step_directive hA callDecodeNop 3
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   rw [hl]
-  step_directive hB callDecContinuationLabel 0
+  step_directive hB callDecodeContinuationLabel 0
   apply Eventually.done
   exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, by ecancel⟩
 
@@ -234,17 +234,17 @@ hand statement `Decode.accept_statement` (unchanged), from the generated SourceI
 theorem Decode.accept : Decode.accept_statement := by
   intro k hk hf kV hkV hfV in0 in1 hin0 hin1 s ra guard
     fp s1 s2 s4 sp1 rslot lo ast a8 a16 hfp h1 h2 h4 hsp1 hrs hlo hast ha8 ha16 R h_mem hguard hlen
-  have hvi : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hvi : Uint64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 88).toNat := Prysm.PendingPartialWithdrawal.Decode.accept_guard _ _ hguard
   -- code facts of the hand-applied blocks
-  have hRl := Codec.infix_sub (q := Codec.callArgReload false 96 8 112 (-8) 88 16) 48 hk
-    (by simp only [unmarshalSSZ, Codec.callArgReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hC2 := Codec.infix_sub (q := callDecNop "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 55 hk
-    (by simp only [unmarshalSSZ, callDecNop, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL2 := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 85 hk
-    (by simp only [unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hRl := Codec.infix_sub (q := Codec.callArgumentReload false 96 8 112 (-8) 88 16) 48 hk
+    (by simp only [unmarshalSSZ, Codec.callArgumentReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hC2 := Codec.infix_sub (q := callDecodeNop "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 55 hk
+    (by simp only [unmarshalSSZ, callDecodeNop, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hL2 := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 85 hk
+    (by simp only [unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl2 := Machine.label_at' hk hf (j := 85)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
@@ -255,7 +255,7 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- SourceIndex: set-up 15–16 (generated)
-  refine eventually_trans _ _ _ _ (Decode.generated_call_SourceIndex_arg k hk hf rax.toBitVec (rax.toBitVec + 8)
+  refine eventually_trans _ _ _ _ (Decode.generated_call_SourceIndex_argument k hk hf rax.toBitVec (rax.toBitVec + 8)
     (by simp only [Int64.toBitVec_ofNat]) d1 (by rw [hrax1])) ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, hrbx2, hrax2, hrcx2, hmem2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hrax2 hrcx2 hmem2
@@ -271,7 +271,7 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc3 hrax3 hrbx3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
   -- TargetIndex: set-up by reload 48–54 (existing lemma, by hand)
-  refine eventually_trans _ _ _ _ (Codec.callarg_reload_seg false 96 8 112 (-8) 88 16 (k + 48) hRl
+  refine eventually_trans _ _ _ _ (Codec.call_argument_reload_segment false 96 8 112 (-8) 88 16 (k + 48) hRl
     (rsp.toBitVec - 80) rax.toBitVec rbx.toBitVec (rsp.toBitVec + 16) (rsp.toBitVec + 32) (rsp.toBitVec + 8)
     (rbx.toBitVec + 8) (rax.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
@@ -282,7 +282,7 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrbx4 hrax4 hrcx4 hmem4
   subst hpc4
   -- TargetIndex: call block with nop 55–58, label 85 (hand lemma)
-  refine eventually_trans _ _ _ _ (calldec_nop_seg _ _ (k + 55) (k + 85) hC2 hL2 hl2 hvi
+  refine eventually_trans _ _ _ _ (call_decode_nop_segment _ _ (k + 55) (k + 85) hC2 hL2 hl2 hvi
     (rsp.toBitVec - 80) (rax.toBitVec + 16) (rbx.toBitVec + 8) (rsp.toBitVec - 88) (rsp.toBitVec - 96)
     (rsp.toBitVec - 72) (by bv_omega) (by bv_omega) (by bv_omega)
     { toBitVec := rsp.toBitVec - 8 } r14 guard in1

@@ -23,9 +23,9 @@ Receiver (protoc struct, gc amd64 layout from `prysm/ir/ir-mainnet.json` and the
 
 Directive indices of `Prysm.Eth1Data.Code.unmarshalSSZ` (index = line − 1 of the `.S`): 2–3 stack guard,
 4–7 prologue (`push %rbp`, `sub $0x20`, rbx spill at rsp + 16), 8 `nop`, 9–10 `cmp $0x48,%rcx; jne L_17f`,
-11–12 spills of rax, rbx at rsp + 8, + 16; 13–36 the DepositRoot segment (`rootdec_seg_source_offset_zero`, hand, source
+11–12 spills of rax, rbx at rsp + 8, + 16; 13–36 the DepositRoot segment (`root_decode_segment_source_offset_zero`, hand, source
 offset 0); 37–38 + `L_c7` 45–46 pointer reload and store; 47–49 DepositCount (`buf[32:40]` to receiver + 32);
-50–74 the BlockHash segment (frozen `rootdec_seg`, hand instance, source offset 40); 75–76 + `L_171` 84–85;
+50–74 the BlockHash segment (frozen `root_decode_segment`, hand instance, source offset 40); 75–76 + `L_171` 84–85;
 epilogue 86–90.
 
 Stack (rsp = s.regs.rsp at entry): return slot; saved rbp at rsp − 8; argument spills rsp + 8 (receiver),
@@ -192,14 +192,14 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- DepositRoot (hand, source offset 0), 13 → 37
-  have hA1 := Codec.infix_sub (q := Codec.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" 48 16 24) 13 hk
-    (by simp only [unmarshalSSZ, Codec.rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB1 := Codec.infix_sub (q := rootDecMidSourceOffsetZero "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_b2" 48 56 24 8 16 24) 26 hk
-    (by simp only [unmarshalSSZ, rootDecMidSourceOffsetZero, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA1 := Codec.infix_sub (q := Codec.rootDecodeHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" 48 16 24) 13 hk
+    (by simp only [unmarshalSSZ, Codec.rootDecodeHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB1 := Codec.infix_sub (q := rootDecodeMiddleSourceOffsetZero "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_b2" 48 56 24 8 16 24) 26 hk
+    (by simp only [unmarshalSSZ, rootDecodeMiddleSourceOffsetZero, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl1 := Machine.label_at' hk hf (j := 26)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  refine eventually_trans _ _ _ _ (rootdec_seg_source_offset_zero _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA1 hB1 hl1
+  refine eventually_trans _ _ _ _ (root_decode_segment_source_offset_zero _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA1 hB1 hl1
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 8) (rax.toBitVec + 16) (rax.toBitVec + 24) S
@@ -246,15 +246,15 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   intro m4' H4
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl cnt hcnt] at H4
   unfold_step
-  -- BlockHash (frozen rootdec_seg, hand instance), 50 → 75
-  have hA2 := Codec.infix_sub (q := Codec.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_119" 48 48 56) 50 hk
-    (by simp only [unmarshalSSZ, Codec.rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB2 := Codec.infix_sub (q := Codec.rootDecMid "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_119" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_15a" 48 56 24 40 48 56 40) 63 hk
-    (by simp only [unmarshalSSZ, Codec.rootDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  -- BlockHash (frozen root_decode_segment, hand instance), 50 → 75
+  have hA2 := Codec.infix_sub (q := Codec.rootDecodeHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_119" 48 48 56) 50 hk
+    (by simp only [unmarshalSSZ, Codec.rootDecodeHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB2 := Codec.infix_sub (q := Codec.rootDecodeMiddle "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_119" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_15a" 48 56 24 40 48 56 40) 63 hk
+    (by simp only [unmarshalSSZ, Codec.rootDecodeMiddle, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl2 := Machine.label_at' hk hf (j := 63)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  refine eventually_trans _ _ _ _ (Codec.rootdec_seg _ _ _ _ _ _ _ _ _ (k + 50) (k + 63) hA2 hB2 hl2
+  refine eventually_trans _ _ _ _ (Codec.root_decode_segment _ _ _ _ _ _ _ _ _ (k + 50) (k + 63) hA2 hB2 hl2
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 40) (rax.toBitVec + 48) (rax.toBitVec + 56)

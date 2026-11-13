@@ -19,7 +19,7 @@ variable [Host]
 
 /-- Deposit_Data: the hand statement is the kind `[bytes 48, bytes 32, u64, bytes 96]`. -/
 theorem Decode.accept_is_kind : ∀ (h : Host), @Prysm.Deposit_Data.Decode.accept_statement h
-    = @decAcceptKind h Prysm.Deposit_Data.Code.unmarshalSSZ true [.bytes 48, .bytes 32, .u64, .bytes 96] 106 := by
+    = @decodeAcceptKind h Prysm.Deposit_Data.Code.unmarshalSSZ true [.bytes 48, .bytes 32, .uint64, .bytes 96] 106 := by
   intro h; rfl
 
 end Prysm.Deposit_Data

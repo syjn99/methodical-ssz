@@ -25,7 +25,7 @@ WHOLE_ACCEPT_IMPORTS = ['Codec.Kind.DecodeAcceptAnyFrameInstances', 'Codec.Field
               'Codec.DecoderHeadEpilogue', 'Prysm.BlobIdentifier.DecodeRejectSizeKindInstances']
 WHOLE_ACCEPT_OPENS = 'Codec'
 # the statement kinds of the whole-accept lemmas (kindcheck.py pins their modules)
-WHOLE_ACCEPT_KINDS = ('decHeadKindAnyFrame', 'decFieldKindAnyFrame', 'decEpilogueKindAnyFrame', 'decAcceptKindAnyFrame', 'decRejectKindAnyFrame')
+WHOLE_ACCEPT_KINDS = ('decodeHeadKindAnyFrame', 'decodeFieldKindAnyFrame', 'decodeEpilogueKindAnyFrame', 'decodeAcceptKindAnyFrame', 'decodeRejectKindAnyFrame')
 
 
 class WholeAcceptRefuse(Exception):
@@ -121,7 +121,7 @@ class T:
         return f"⟨{d['pc']}, {d['done']}, {regs},\n      {stk},\n      {self.exlean(d['exs'])}⟩"
 
     def fieldslean(self):
-        return '[' + ', '.join(f'.bytes {f[2]}' if f[1] == 'bytes' else '.u64' for f in self.fields) + ']'
+        return '[' + ', '.join(f'.bytes {f[2]}' if f[1] == 'bytes' else '.uint64' for f in self.fields) + ']'
 
     def layout(self):
         """The `DecoderFrameLayout` literal (kind parameter `L`), from the derived frame facts."""
@@ -293,7 +293,7 @@ class T:
         hg = 'hguard' if self.gd == 0 else f'(Nat.lt_of_le_of_lt (Nat.le_add_right _ {self.gd}) hguard)'
         fpn = self.slot_at({'stk': self.pre}, -8)[1]
         s2n = self.slot_at({'stk': self.pre}, 16)[1]
-        s += (f"  refine eventually_trans _ _ _ _ (dec_prologue_seg _ _ _ _ {h['F']} {h['dB']} {self.ssz()} _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)\n"
+        s += (f"  refine eventually_trans _ _ _ _ (decode_prologue_segment _ _ _ _ {h['F']} {h['dB']} {self.ssz()} _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)\n"
               f"    s ra guard (s.regs.rsp.toBitVec - {self.frame}) (s.regs.rsp.toBitVec + 16)\n    {ADDR} {ADDR}\n"
               f"    {fpn} {s2n} h{fpn} h{s2n} _ (by ecancel) {hg} (by rw [hlen]; rfl)) ?_\n"
               "  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hreg1, Hm1⟩\n  dsimp only at hpc1 hrsp1 hrbp1 hreg1 Hm1\n  subst hpc1\n")
@@ -318,7 +318,7 @@ class T:
         s += "  apply Eventually.done\n  refine ⟨rfl, rfl, rfl, rfl, " + ''.join('rfl, ' for _ in d0['regs']) + "?_⟩\n  dsimp only\n"
         if h.get('nil') is not None: s += "  rw [hcs]; simp only [Std.ExtHashMap.sep_assoc]\n"
         s += "  ecancel\n"
-        return s + self.kind(name, 'decHeadKindAnyFrame', f"\n    {self.dlean(d0)}")
+        return s + self.kind(name, 'decodeHeadKindAnyFrame', f"\n    {self.dlean(d0)}")
 
     # ---- field theorems
     def field(self, i):
@@ -330,7 +330,7 @@ class T:
               f"    ({self.stp(d, 'st0')}) →\n    Eventually (step1 Host.exe)\n      (fun st => {self.stp(d2)})\n      st0 := by\n")
         hy = ' hguard' + self.rtnames()
         s += {'u64': self.f_u64, 'bytes': self.f_bytes, 'call': self.f_call}[f['shape']](i, d, d2, f, hy)
-        return s + self.kind(name, 'decFieldKindAnyFrame', f"\n    {self.dlean(d)}\n    {self.dlean(d2)}")
+        return s + self.kind(name, 'decodeFieldKindAnyFrame', f"\n    {self.dlean(d)}\n    {self.dlean(d2)}")
 
     def f_u64(self, i, d, d2, f, hy):
         s = self.prefix(d, hy)
@@ -490,19 +490,19 @@ class T:
         a = e['add']
         if e['form'] == 'e20':
             s += self.prefix(d, '', destructure=False)
-            s += (f"  have hE := Codec.infix_sub (q := Codec.decEpilogue) {a} hk\n"
-                  f"    (by simp only [{self.Cq}, Codec.decEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])\n")
-            s += P(f"  refine eventually_trans _ _ _ _ (Codec.dec_epilogue_seg (k + {a}) hE (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
+            s += (f"  have hE := Codec.infix_sub (q := Codec.decodeEpilogue) {a} hk\n"
+                  f"    (by simp only [{self.Cq}, Codec.decodeEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])\n")
+            s += P(f"  refine eventually_trans _ _ _ _ (Codec.decode_epilogue_segment (k + {a}) hE (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
                    "    (by bv_omega) (by bv_omega) rbp ra r14 _ d hrsp hr14 (by ecancel)) ?_\n")
             s += tail + "  · dsimp only; ecancel\n"
         else:
             s += self.prefix(d, '')
             s += ''.join(P(l) + '\n' for l in e.get('pre', []))
-            s += P(f"  refine eventually_trans _ _ _ _ (dec_epilogue_any_frame {e['F']} _ (k + {a}) (k + {a + 1}) (window_infix_at hk {a} 1) (by rfl) (by rfl)\n"
+            s += P(f"  refine eventually_trans _ _ _ _ (decode_epilogue_any_frame {e['F']} _ (k + {a}) (k + {a + 1}) (window_infix_at hk {a} 1) (by rfl) (by rfl)\n"
                    f"    _ (window_infix_at hk {a + 1} 2) (by rfl) (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
                    f"    {ADDR} (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_\n")
             s += tail + "  · dsimp only; rw [hmem']; ecancel\n"
-        return s + self.kind(name, 'decEpilogueKindAnyFrame', f"\n    {self.dlean(d)}")
+        return s + self.kind(name, 'decodeEpilogueKindAnyFrame', f"\n    {self.dlean(d)}")
 
     # ---- accept
     def accept(self):
@@ -518,7 +518,7 @@ class T:
         for i in range(n):
             s += f"  refine eventually_trans _ _ _ _ ({self.ns}_field_{i + 1} {a} hguard{self.rtnames()} st{i} h{i}) ?_\n  intro st{i + 1} h{i + 1}\n"
         s += f"  exact {self.ns}_epilogue {a} st{n} h{n}\n"
-        s += self.kind(name, 'decAcceptKindAnyFrame', '')
+        s += self.kind(name, 'decodeAcceptKindAnyFrame', '')
         if self.same_as_prop:
             s += (f"/-- Statement check: the generated theorem proves the independently written hand statement `{self.same_as_prop}`. -/\n"
                   f"theorem {name}_statement : {self.same_as_prop} := {name}\n\n")
@@ -533,7 +533,7 @@ class T:
         name = f'{self.ns}_reject'
         C = self.Cq
         s = ("set_option maxRecDepth 100000 in\n"
-             f"/-- Size reject (`rcx ≠ {self.ssz()}`): `dec_reject_seg` (frame `{r['F']:#x}`, error block at {r['jl']}). -/\n"
+             f"/-- Size reject (`rcx ≠ {self.ssz()}`): `decode_reject_segment` (frame `{r['F']:#x}`, error block at {r['jl']}). -/\n"
              f"theorem {name} : ∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : LabelsFresh {C} k)\n"
              "    (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)\n"
              "    (R : DataMem → Prop)\n"
@@ -557,12 +557,12 @@ class T:
              f"  have hl := Machine.label_at' hk hf (j := {r['jl']})\n"
              f"    (by simp only [{C}, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)\n"
              f"    (by simp only [{C}, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)\n"
-             f"  exact dec_reject_seg _ _ _ _ {r['F']} {r['dB']} {self.ssz()} _ k (window_infix_at hk 0 11) (by rfl) (by decide)\n"
+             f"  exact decode_reject_segment _ _ _ _ {r['F']} {r['dB']} {self.ssz()} _ k (window_infix_at hk 0 11) (by rfl) (by decide)\n"
              f"    _ (k + {r['jl']}) (k + {r['jl'] + 3}) (window_infix_at hk {r['jl']} 3) (by rfl) (by rfl) hl\n"
              f"    _ (k + {r['jl'] + 4}) (window_infix_at hk {r['jl'] + 3} 1) (by rfl) (by rfl) _ (window_infix_at hk {r['jl'] + 4} {r['nret']}) (by rfl)\n"
              "    s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard (fun h => hlen (h.trans (by rfl)))\n")
-        self.kinds_emitted.append((name, 'decRejectKindAnyFrame'))
-        s += (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @Codec.decRejectKindAnyFrame h {C} {self.ssz()} := by\n"
+        self.kinds_emitted.append((name, 'decodeRejectKindAnyFrame'))
+        s += (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @Codec.decodeRejectKindAnyFrame h {C} {self.ssz()} := by\n"
               "  intro h; with_reducible rfl\n\n")
         return s
 
@@ -595,13 +595,13 @@ def whole_accept_head_spec(dirs, head_end, F, st):
             continue
         m = re.fullmatch(rx, dirs[i])
         if not m:
-            refuse(f"whole-accept head: directive {i} `{dirs[i]}` is not /{rx}/ (dec_prologue_seg window, nop at 8)")
+            refuse(f"whole-accept head: directive {i} `{dirs[i]}` is not /{rx}/ (decode_prologue_segment window, nop at 8)")
         ms.append(m)
     if _hx(ms[4].group(1)) != F:
         refuse("whole-accept head: frame size differs from the step head")
     dB = _hx(ms[5].group(1))
     if dB != F + 24:
-        refuse(f"whole-accept head: rbx spill at {dB:#x}, dec_prologue_seg needs F + 24 = {F + 24:#x}")
+        refuse(f"whole-accept head: rbx spill at {dB:#x}, decode_prologue_segment needs F + 24 = {F + 24:#x}")
     frame = F + 8
     home = {'rax': 8, 'rbx': 16, 'rdi': 32}
     spills = []
@@ -638,7 +638,7 @@ def whole_accept_reject_spec(dirs, head, label_index):
             "pop %rbp"]
     if blk != want:
         refuse(f"whole-accept reject: the size-error block at {jl} is not {want} + `retq` (it is {dirs[jl:jl + 6]})")
-    # `pop %rbp`, then `nop`s (the `decRet` window erases them, `eraseNop`), then `retq`
+    # `pop %rbp`, then `nop`s (the `decodeRet` window erases them, `eraseNop`), then `retq`
     m = 1
     while jl + 4 + m < len(dirs) and dirs[jl + 4 + m] == "nop" and m < 4:
         m += 1
@@ -878,7 +878,7 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
             exs = [24, 'lo']
             regs = {r: ('UNK',) for r in REGS16}
             regs[blk['rY']] = ('RCV', 0)
-            fspec.append(dict(name=fname, shape='bytes', seg=f"{pfx}_{fname}_seg", dR=blk['dR'], dB=blk['dB'],
+            fspec.append(dict(name=fname, shape='bytes', seg=f"{pfx}_{fname}_segment", dR=blk['dR'], dB=blk['dB'],
                               dS=blk['dS'], jm=blk['jm'], tail=[t['jd'] for t in tail], pre=steps))
             bi += 1
         elif cls == 'call':
@@ -955,7 +955,7 @@ def fl_done_ok(us, cls):
 def whole_accept_epilogue_spec(dirs, i, F, has_rt, has_call):
     """The three epilogue forms of the hand-written lemmas (contiguous, no nop): `add $F,%rsp; pop %rbp; retq` (rax = rbx = 0
     from the boundary facts), `mov d1(%rsp),%rax; mov d2(%rsp),%rbx` + that (two zero slots), and frame 0x20
-    `xor %eax,%eax; xor %ebx,%ebx` + that (`dec_epilogue_seg`). Anything else: refuse."""
+    `xor %eax,%eax; xor %ebx,%ebx` + that (`decode_epilogue_segment`). Anything else: refuse."""
     ret = [f"add ${F:#x},%rsp", "pop %rbp", "retq"]
     if dirs[i:i + 3] == ret:
         return dict(form='n', F=F, add=i, start=i, reads=['rax', 'rbx'])
@@ -966,7 +966,7 @@ def whole_accept_epilogue_spec(dirs, i, F, has_rt, has_call):
                     loads=[('rax', _hx(m1.group(1))), ('rbx', _hx(m2.group(1)))])
     if dirs[i:i + 2] == ["xor %eax,%eax", "xor %ebx,%ebx"] and dirs[i + 2:i + 5] == ret:
         if F != 0x20:
-            refuse(f"whole-accept epilogue: `xor` epilogue in frame {F:#x} (lemma dec_epilogue_seg: frame 0x20 only)")
+            refuse(f"whole-accept epilogue: `xor` epilogue in frame {F:#x} (lemma decode_epilogue_segment: frame 0x20 only)")
         return dict(form='e20', F=F, add=i, start=i, reads=[])
     refuse(f"whole-accept epilogue: directives {i}… {dirs[i:i + 5]} are none of the three epilogue forms")
 

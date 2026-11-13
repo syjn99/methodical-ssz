@@ -8,7 +8,7 @@ from the 32-byte one of `Codec.Segment.Bytes32Loop`: no overflow check, the inde
 shifted by `k` (`shl $k`), so the element size is `3·2^k`. One statement cannot cover both sequences (the templates
 differ in length and in the registers), so this is a second general loop. The blocks are the Kraken terms of
 SyncCommittee directives 36–71 (link set `prysm/go1.26.10/link-set`) with the count, the stack slots, the receiver offsets, the labels, the shift
-`k` and the element size `w` as parameters; the gaps (`Glue`, `GlueSrc`) and the `nop` are those of `Codec.Segment.Bytes32Loop`.
+`k` and the element size `w` as parameters; the gaps (`Glue`, `GlueSource`) and the `nop` are those of `Codec.Segment.Bytes32Loop`.
 -/
 
 open Machine Runtime

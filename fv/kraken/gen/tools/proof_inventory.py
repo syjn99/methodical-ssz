@@ -31,15 +31,15 @@ The encoder theorems outside the fast path need hand-written premise texts (`ENC
 Rule. A function's state comes ONLY from the mapping and the declarations in <decls.tsv>:
   * every chosen theorem must exist (kind `theorem`) and have only the standard axioms
     (`propext`, `Classical.choice`, `Quot.sound`); otherwise the script FAILS (exit 1);
-  * the accept / reject / spec_k / reject_size_spec theorems of a decoder row, and the theorems of an encoder or
+  * the accept / reject / accept_spec / reject_size_spec theorems of a decoder row, and the theorems of an encoder or
     SizeSSZ row, must have, in their TYPE, the code constant whose included `.S` is that function of the target, and
     that function must be the SUBJECT: the only one of the theorem's target code constants that no other of them calls
     (call graph = `call_targets` of `functions.json`); a constant counts only if its `.S` is
     `../prysm/go1.26.10/<dir>/norm/<function>.S` and `<dir>/RESULT` names the pinned ELF sha256, ends in
     `PASS all` and has `PASS (a) <function>:`; else FAIL;
-  * a witness must use (in its proof) the row's accept / reject theorem, and `accept_spec_k` the accept theorem,
+  * a witness must use (in its proof) the row's accept / reject theorem, and `accept_spec` the accept theorem,
     `reject_size_spec` the reject theorem; else FAIL;
-  * a decoder is "complete" (in this sense only) when accept, size reject, spec alignment (spec_k, reject_size_spec,
+  * a decoder is "complete" (in this sense only) when accept, size reject, spec alignment (accept_spec, reject_size_spec,
     reject_complete), codec equality / correspondence of the Desc, accept witness and reject witness are all present
     under these checks; "partial" when some are; "none" when the type has no row or no theorem.
   * an encoder `MarshalSSZTo` counts "fast path complete" when its row names a fast-path theorem, a spec
@@ -119,7 +119,7 @@ V1A_PREFIX = "Prysm."
 DEC_CANDIDATES = {
     "accept": ["Decode.accept", "Decode.accept_from_generated_steps", "Decode.generated_accept"],
     "reject": ["Decode.reject_size", "Decode.generated_reject"],
-    "spec_k": ["Decode.accept_spec"],
+    "accept_spec": ["Decode.accept_spec"],
     "reject_size_spec": ["Decode.reject_size_spec"],
     "reject_complete": ["Decode.reject_complete"],
     # codec equality of the hand Desc and the Desc checker's Desc; the alternative pair is the correspondence form
@@ -179,7 +179,7 @@ ENC_UNCLASSIFIED = ["Encode.grow_first_site", "Encode.grow_second_site", "Encode
                     "Encode.reject_length", "Encode.reject_too_big"]
 ENC_PARTS = ["fast", "spec", "witness", "hand", "rejects", "grow", "other_witness"]
 ENC_PREMISE = "premise: len + SizeSSZ <= cap, exact field lengths"
-DEC_PARTS = ["accept", "reject", "spec_k", "reject_size_spec", "reject_complete", "codec", "witness_accept",
+DEC_PARTS = ["accept", "reject", "accept_spec", "reject_size_spec", "reject_complete", "codec", "witness_accept",
              "witness_reject"]
 SKIP_DIRS = {"ElfData", "RuntimeModel"}
 
@@ -224,7 +224,7 @@ def derive(D, target_key):
             continue
         key, P = target_key[t], f"{V1A_PREFIX}{t}."
         r = {}
-        for part in ("accept", "reject", "spec_k", "reject_size_spec", "reject_complete"):
+        for part in ("accept", "reject", "accept_spec", "reject_size_spec", "reject_complete"):
             r[part] = next((P + c for c in DEC_CANDIDATES[part] if have(P + c)), None)
         r["codec"] = next(([P + c for c in grp] for grp in DEC_CANDIDATES["codec"] if all(have(P + c) for c in grp)), None)
         acc_form = r["accept"][len(P):] if r["accept"] else None
@@ -519,10 +519,10 @@ def run(decls_p, gate_p, md_p, json_p):
         for part in DEC_PARTS:
             v = r[part]
             st[part] = bool(v)
-        for part in ("accept", "reject", "spec_k", "reject_size_spec"):
+        for part in ("accept", "reject", "accept_spec", "reject_size_spec"):
             if r[part] and r[part] in D:
                 code_ok(r[part], pkg, typ, "UnmarshalSSZ")
-        for part, target in (("witness_accept", "accept"), ("witness_reject", "reject"), ("spec_k", "accept"),
+        for part, target in (("witness_accept", "accept"), ("witness_reject", "reject"), ("accept_spec", "accept"),
                              ("reject_size_spec", "reject")):
             if r[part] and r[target] and r[part] in D and r[target] not in refs(r[part]):
                 fails.append(f"{r[part]}: does not use {r[target]} (refs: {refs(r[part])})")
@@ -696,9 +696,9 @@ def run(decls_p, gate_p, md_p, json_p):
                methods_source=dict(file=METHODS_JSON, nm_sha256=sm["nm_sha256"], elf_sha256=sm["elf_sha256"]),
                axioms_gate=dict(header=gate["header"], verdict=gate["verdict"],
                                 declarations=gate["declarations"], theorems=gate["theorems"], modules=gate["modules"]),
-               definition_complete="decoder: accept + size reject + spec alignment (accept_spec_k, reject_size_spec, "
+               definition_complete="decoder: accept + size reject + spec alignment (accept_spec, reject_size_spec, "
                "reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all "
-               "kernel-checked theorems with standard axioms; accept / reject / spec_k / reject_size_spec theorems "
+               "kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems "
                "keyed to the function by the code constant in their type (the function is the subject: no other "
                "target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / "
                "reject theorem",

@@ -1,7 +1,7 @@
 [
  {
-  "id": "bh-accept-0",
-  "op": "bh_u",
+  "id": "beacon-block-header-accept-0",
+  "op": "BeaconBlockHeader.UnmarshalSSZ",
   "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
   "exp": {
    "err": "",
@@ -25,8 +25,8 @@
   }
  },
  {
-  "id": "bh-accept-1",
-  "op": "bh_u",
+  "id": "beacon-block-header-accept-1",
+  "op": "BeaconBlockHeader.UnmarshalSSZ",
   "in": "efcdab89674523010700000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f11111111111111111111111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222222222222222222222",
   "exp": {
    "err": "",
@@ -50,8 +50,8 @@
   }
  },
  {
-  "id": "bh-accept-2",
-  "op": "bh_u",
+  "id": "beacon-block-header-accept-2",
+  "op": "BeaconBlockHeader.UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "exp": {
    "err": "",
@@ -75,32 +75,32 @@
   }
  },
  {
-  "id": "bh-size-0",
-  "op": "bh_u",
+  "id": "beacon-block-header-size-0",
+  "op": "BeaconBlockHeader.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "bh-size-111",
-  "op": "bh_u",
+  "id": "beacon-block-header-size-111",
+  "op": "BeaconBlockHeader.UnmarshalSSZ",
   "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "bh-size-113",
-  "op": "bh_u",
+  "id": "beacon-block-header-size-113",
+  "op": "BeaconBlockHeader.UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "vi-accept-0",
-  "op": "vi_u",
+  "id": "validator-index-accept-0",
+  "op": "ValidatorIndex.UnmarshalSSZ",
   "in": "0000000000000000",
   "exp": {
    "err": "",
@@ -108,8 +108,8 @@
   }
  },
  {
-  "id": "vi-accept-1",
-  "op": "vi_u",
+  "id": "validator-index-accept-1",
+  "op": "ValidatorIndex.UnmarshalSSZ",
   "in": "efcdab8967452301",
   "exp": {
    "err": "",
@@ -117,8 +117,8 @@
   }
  },
  {
-  "id": "vi-accept-2",
-  "op": "vi_u",
+  "id": "validator-index-accept-2",
+  "op": "ValidatorIndex.UnmarshalSSZ",
   "in": "ffffffffffffffff",
   "exp": {
    "err": "",
@@ -126,24 +126,24 @@
   }
  },
  {
-  "id": "vi-len-0",
-  "op": "vi_u",
+  "id": "validator-index-len-0",
+  "op": "ValidatorIndex.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_nonempty": true
   }
  },
  {
-  "id": "vi-len-7",
-  "op": "vi_u",
+  "id": "validator-index-len-7",
+  "op": "ValidatorIndex.UnmarshalSSZ",
   "in": "01010101010101",
   "exp": {
    "err_nonempty": true
   }
  },
  {
-  "id": "vi-len-9",
-  "op": "vi_u",
+  "id": "validator-index-len-9",
+  "op": "ValidatorIndex.UnmarshalSSZ",
   "in": "010101010101010101",
   "exp": {
    "err_nonempty": true

@@ -7,7 +7,7 @@ import Prysm.Checkpoint.DecodeAccept
 import Codec.Kind.DecodeAcceptAnyFrameInstances
 
 /-!
-# Ties of `decAcceptKindAnyFrame` to the hand accept statements: the `BeaconBlockHeader` part
+# Ties of `decodeAcceptKindAnyFrame` to the hand accept statements: the `BeaconBlockHeader` part
 
 The declarations of the other types of this group are in `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 -/
@@ -18,9 +18,9 @@ open Codec
 namespace Prysm.BeaconBlockHeader
 
 theorem Decode.accept_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.accept h)
-    = @decAcceptKindAnyFrame h Prysm.BeaconBlockHeader.Code.unmarshalSSZ
+    = @decodeAcceptKindAnyFrame h Prysm.BeaconBlockHeader.Code.unmarshalSSZ
         (layoutMixedFrame60 [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 179 2)
-        [.u64, .u64, .bytes 32, .bytes 32, .bytes 32] := by
+        [.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32] := by
   intro h; rfl
 
 end Prysm.BeaconBlockHeader

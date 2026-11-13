@@ -246,7 +246,7 @@ def Encode.reject_too_big_statement : Prop :=
       ⟨s, Host.addrOf k⟩
 
 /-- **Fast path against EthLib (spec companion, shape of `Prysm.Checkpoint.Encode.fast_path_spec`).** For a receiver holding the Go
-layout of `g : SszValue` (BlockRoot bytes `g.root`, Columns backing bytes `u64Bytes g.cols`), the fast path returns
+layout of `g : SszValue` (BlockRoot bytes `g.root`, Columns backing bytes `uint64Bytes g.cols`), the fast path returns
 `len + |bs|` and `dst[0 : len + |bs|] = pre ‖ bs`, where `bs = serialize desc g.toValue`. The full frame
 accounting is `Encode.fast_path_statement`. -/
 def Encode.fast_path_spec_statement : Prop :=
@@ -270,7 +270,7 @@ def Encode.fast_path_spec_statement : Prop :=
       ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 pc.toInt).At (s.regs.rax.toBitVec + 32))
       ⋆ Eq ((Int.toBytes 8 nb.toInt).At (s.regs.rax.toBitVec + 40))
-      ⋆ Eq (g.root.toList.At pr) ⋆ Eq ((Spec.u64Bytes g.cols).toList.At pc)
+      ⋆ Eq (g.root.toList.At pr) ⋆ Eq ((Spec.uint64Bytes g.cols).toList.At pc)
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R)
     (hguard : guard.toNat + 8 < s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 36 + 8 * g.cols.length ≤ s.regs.rdi.toNat)
@@ -309,7 +309,7 @@ def Encode.grow_first_site_spec_statement : Prop :=
       ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 pc.toInt).At (s.regs.rax.toBitVec + 32))
       ⋆ Eq ((Int.toBytes 8 nb.toInt).At (s.regs.rax.toBitVec + 40))
-      ⋆ Eq (g.root.toList.At pr) ⋆ Eq ((Spec.u64Bytes g.cols).toList.At pc)
+      ⋆ Eq (g.root.toList.At pr) ⋆ Eq ((Spec.uint64Bytes g.cols).toList.At pc)
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 8 < s.regs.rsp.toNat)
     (hlc : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 32)

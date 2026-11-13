@@ -19,7 +19,7 @@ variable [Host]
 open Codec
 namespace Prysm.BeaconBlockHeader
 
-theorem SszValue.enc_toList (g : SszValue) : (SszValue.encode g).toList = (uintBytes 8 g.slot.toNat).toList
+theorem SszValue.encode_toList (g : SszValue) : (SszValue.encode g).toList = (uintBytes 8 g.slot.toNat).toList
     ++ (uintBytes 8 g.proposer.toNat).toList ++ g.parent.toList ++ g.state.toList ++ g.body.toList := by
   simp only [SszValue.encode, Array.toList_append]; rfl
 
@@ -91,7 +91,7 @@ theorem Encode.fast_path_spec (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k
     hfp h1 h2 hl16 hl96 hl104 ht1a ht1b ht2a ht2b hrs R S scratch hsc h_mem hguard hsp hcap hcap63 hmm)
     (fun st ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, _, _, _, t1, u1, t2, u2, scr, _, _, _, _, _, hm⟩ =>
       ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, ?_⟩)
-  rw [SszValue.enc_toList, Encode.split5 _ _ _ _ _ _ hsl hpi hr1 hr2 hr3]
+  rw [SszValue.encode_toList, Encode.split5 _ _ _ _ _ _ hsl hpi hr1 hr2 hr3]
   simp only [← Std.ExtHashMap.sep_assoc]
   generalize (uintBytes 8 g.slot.toNat).toList = SL at hm ⊢
   generalize (uintBytes 8 g.proposer.toNat).toList = PI at hm ⊢

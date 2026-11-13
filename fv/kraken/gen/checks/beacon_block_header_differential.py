@@ -3,7 +3,8 @@
 
   beacon_block_header_differential.py cases <cases.json>                      write the cases
   beacon_block_header_differential.py check <cases.json> <go-out.json> <result.json>
-The Go program is the scratch package fve2e/bhcheck of the temporary Prysm tree (run natively with Go 1.26.10
+The Go program is `prysm/go1.26.10/evidence/beacon-block-header/differential-main.go.txt`, built as a scratch package of the
+temporary Prysm tree (run natively with Go 1.26.10
 through the gate; this is a Go-semantics check, not an execution of the amd64 ELF). Every expected value is
 computed here, independently of the code under test, from consensus-specs: BeaconBlockHeader = uint64 LE slot
 ++ uint64 LE proposer_index ++ three Bytes32; decoding accepts exactly 112 bytes; ValidatorIndex = uint64 LE,
@@ -22,15 +23,15 @@ def cases():
     cs = []
     for i, ((s, p), rs) in enumerate(zip(VALS, ROOTS)):
         b = struct.pack("<QQ", s, p) + b"".join(rs)
-        cs.append({"id": f"bh-accept-{i}", "op": "bh_u", "in": b.hex(),
+        cs.append({"id": f"beacon-block-header-accept-{i}", "op": "BeaconBlockHeader.UnmarshalSSZ", "in": b.hex(),
                    "exp": {"err": "", "slot": s, "proposer": p, "roots": [r.hex() for r in rs],
                            "lens": [32] * 3, "caps": [32] * 3}})
     for n in (0, 111, 113):
-        cs.append({"id": f"bh-size-{n}", "op": "bh_u", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
+        cs.append({"id": f"beacon-block-header-size-{n}", "op": "BeaconBlockHeader.UnmarshalSSZ", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
     for i, (v, _) in enumerate(VALS):
-        cs.append({"id": f"vi-accept-{i}", "op": "vi_u", "in": struct.pack("<Q", v).hex(), "exp": {"err": "", "vi": v}})
+        cs.append({"id": f"validator-index-accept-{i}", "op": "ValidatorIndex.UnmarshalSSZ", "in": struct.pack("<Q", v).hex(), "exp": {"err": "", "vi": v}})
     for n in (0, 7, 9):
-        cs.append({"id": f"vi-len-{n}", "op": "vi_u", "in": (b"\x01" * n).hex(), "exp": {"err_nonempty": True}})
+        cs.append({"id": f"validator-index-len-{n}", "op": "ValidatorIndex.UnmarshalSSZ", "in": (b"\x01" * n).hex(), "exp": {"err_nonempty": True}})
     return cs
 
 

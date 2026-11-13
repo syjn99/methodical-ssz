@@ -148,7 +148,7 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   It is unique among the moved declarations, it changes, and it is not the last component of a `declared.txt` name.
 - JSON case files are a list, or `{"cases": [...]}`, of objects with `module` and `theorem`.
   The tool rewrites their fields in the scope of that theorem in that module.
-  `theorem` becomes the FULL new name, `code_def` the form that the module writes, and `code_ns` the new namespace (open rows).
+  `theorem` becomes the FULL new name, `code_definition` the form that the module writes, and `code_namespace` the new namespace (open rows).
   The fields `old`, `new` and `diff` are rewritten like Lean text.
 - Inverse: the tool records in `applied-lines.tsv` every line that the rule-based inverse does not restore.
   The rule-based inverse covers full names, modules and paths.
@@ -236,8 +236,8 @@ Then write the rows from the trial tree, and run the trial again with the rows.
 - `negative.py` and `list_negative.py` find a theorem by its full name, or by the written name if it is unique.
   `negative.py --check-cases <files>` checks every case without Lean.
   Run it before and after (cwd `fv/kraken`).
-  Without `code_ns`, a case in a module under `Prysm/<Type>/` uses `Prysm.<Type>.Code` (`negative.code_ns_of`).
-  A full name in `code_def` uses `_root_`.
+  Without `code_namespace`, a case in a module under `Prysm/<Type>/` uses `Prysm.<Type>.Code` (`negative.code_namespace_of`).
+  A full name in `code_definition` uses `_root_`.
 - Modules that use the Lean module system (`module`, `public import`) keep it after a move.
 - `fv/kraken/lean/Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` walks the project namespaces
   `Prysm`, `Codec`, `ElfData`, `Machine` and `Runtime`. A step that adds a root namespace adds it there.

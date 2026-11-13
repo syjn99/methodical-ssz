@@ -10,7 +10,7 @@ import Prysm.IndexedAttestation.SpecDefinitions
 # Spec bridge for the real Prysm `v1alpha1.IndexedAttestation`
 
 The order of `Prysm/Deposit_Data/Spec.lean` / `Prysm/SyncAggregate/Spec.lean` with one variable field. The list part reuses the Go 1.26.3 ListU64 lemmas
-(`Spec.serializeEach_u64`, `Spec.inlineParts_*`, `Codec.readUint64List`, `Codec.u64Bytes_readUint64List`, `Spec.allFit_u64(_inv)`); the data part
+(`Spec.serializeEach_uint64`, `Spec.inlineParts_*`, `Codec.readUint64List`, `Codec.uint64Bytes_readUint64List`, `Spec.allFit_uint64(_inv)`); the data part
 reuses `Prysm.AttestationData.SszValue.*`. `decodeChecks` are the four checks of the Go decoder in its order.
 -/
 
@@ -22,13 +22,13 @@ theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem offsetBytes_toArray : offsetBytes.toArray = uintBytes 4 228 := by decide
 
 theorem encode_size (g : SszValue) : (SszValue.encode g).size = 228 + 8 * g.idx.length := by
-  simp [SszValue.encode, offsetBytes, Prysm.AttestationData.SszValue.encode_size, u64Bytes_size]; omega
+  simp [SszValue.encode, offsetBytes, Prysm.AttestationData.SszValue.encode_size, uint64Bytes_size]; omega
 
 theorem toValue_fits (g : SszValue) : Value.fits desc g.toValue = true := by
   have h1 := Prysm.AttestationData.SszValue.toValue_fits g.data
   have h2 := g.hidx
   simp only [desc, SszValue.toValue, Value.fits, Value.fieldsFit] at *
-  simp [h1, allFit_u64, h2]
+  simp [h1, allFit_uint64, h2]
 
 theorem toValue_surjective (v : Value) (h : Value.fits desc v = true) : ∃ g : SszValue, g.toValue = v := by
   obtain ⟨vs, rfl, hf⟩ := fits_container h
@@ -39,7 +39,7 @@ theorem toValue_surjective (v : Value) (h : Value.fits desc v = true) : ∃ g : 
     obtain ⟨h0, h1, h2, -⟩ := hf
     obtain ⟨es, rfl, hlen, hall⟩ : ∃ es, v0 = .seq es ∧ es.length ≤ 2048 ∧ Value.allFit (.uint 8) es = true := by
       cases v0 <;> simp [Value.fits] at h0 ⊢; exact h0
-    obtain ⟨l, rfl⟩ := allFit_u64_inv es hall
+    obtain ⟨l, rfl⟩ := allFit_uint64_inv es hall
     obtain ⟨d, rfl⟩ := Prysm.AttestationData.SszValue.toValue_surjective v1 h1
     obtain ⟨z, rfl, hz⟩ : ∃ d, v2 = .bytes d ∧ d.size = 96 := by
       cases v2 <;> simp [Value.fits] at h2 ⊢; exact h2
@@ -52,7 +52,7 @@ theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszVa
   have hds := Prysm.AttestationData.SszValue.encode_size d
   have h32 : 228 + 8 * l.length < 2 ^ (8 * bytesPerOffset) := by simp [bytesPerOffset]; omega
   simp only [desc, SszValue.toValue, serialize, serializeStruct, serializeFields, serializeSequence,
-    List.length_map, hl, decide_true, if_true, serializeEach_u64, Vector.toArray_mk, hz]
+    List.length_map, hl, decide_true, if_true, serializeEach_uint64, Vector.toArray_mk, hz]
   rw [hd]
   simp only [bind, Except.bind, pure, Except.pure, assemble, Desc.isFixed, Desc.fixedSize, Option.isSome_some]
   simp only [inlineParts_headWidth, inlineParts_bodyWidth, inlineParts_headOf, inlineParts_bodiesOf]
@@ -64,7 +64,7 @@ theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszVa
         Desc.container ["epoch", "root"] [Desc.uint 8, Desc.byteVector 32]]).isFixed = true := rfl
   have f3 : (Desc.byteVector 96).isFixed = true := rfl
   have f4 : Prysm.AttestationData.desc.isFixed = true := rfl
-  simp (config := {decide := true}) [bodyWidth, headOf, bodiesOf, headWidth, u64Bytes_size, h4, h8, bytesPerOffset,
+  simp (config := {decide := true}) [bodyWidth, headOf, bodiesOf, headWidth, uint64Bytes_size, h4, h8, bytesPerOffset,
     SszValue.encode, hds, hz, offsetBytes_toArray, Array.append_assoc, f1, f2, f3, f4]
 
 /-- **Spec roundtrip.** -/
@@ -101,7 +101,7 @@ theorem decodeChecks_encode (bs : Array UInt8) (h : decodeChecks bs) : ∃ g : S
   have e1 : bs.extract 0 132 ++ bs.extract 132 228 = bs.extract 0 228 := extract_join bs (by omega) (by omega)
   have e2 : bs.extract 0 228 ++ bs.extract 228 (228 + 8 * n) = bs.extract 0 bs.size := by
     rw [extract_join bs (by omega) (by omega), ← hsz]
-  simp only [SszValue.encode, ← h4, ← hd, Codec.u64Bytes_readUint64List bs n 228 (by omega)]
+  simp only [SszValue.encode, ← h4, ← hd, Codec.uint64Bytes_readUint64List bs n 228 (by omega)]
   rw [e0, e1, e2]; simp
 
 /-- **EthLib accepts exactly the inputs that pass the four checks.** -/

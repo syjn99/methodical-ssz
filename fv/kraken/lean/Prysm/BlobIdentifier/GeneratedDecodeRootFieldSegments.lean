@@ -17,7 +17,7 @@ namespace Prysm.BlobIdentifier
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `BlockRoot` (SSZ offset 0, Go offset 8): decode segment, directives 13–36. -/
-theorem Decode.generated_root_BlockRoot_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_root_BlockRoot_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB)
     (hS : sp + (24 : Int64).toBitVec = aS)
@@ -54,15 +54,15 @@ theorem Decode.generated_root_BlockRoot_seg (k : Nat) (hk : unmarshalSSZ.IsInfix
           ⋆ Eq (root.At bf)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 13)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_75" 48 16 24) 13 hk
-    (by simp only [unmarshalSSZ, Codec.rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.rootDecMidOffsetZero "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_b2" 48 56 24 8 16 24) 26 hk
-    (by simp only [unmarshalSSZ, Codec.rootDecMidOffsetZero, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA := Codec.infix_sub (q := Codec.rootDecodeHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_75" 48 16 24) 13 hk
+    (by simp only [unmarshalSSZ, Codec.rootDecodeHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.rootDecodeMiddleOffsetZero "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_b2" 48 56 24 8 16 24) 26 hk
+    (by simp only [unmarshalSSZ, Codec.rootDecodeMiddleOffsetZero, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 26)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.rootdec_seg_offset_zero _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
-theorem Decode.generated_root_BlockRoot_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_root_BlockRoot_seg h) = @Codec.rootDecSegOffsetZeroKind h unmarshalSSZ 13 26 48 56 24 8 16 24 := by
+  with_reducible exact Codec.root_decode_segment_offset_zero _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
+theorem Decode.generated_root_BlockRoot_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_root_BlockRoot_segment h) = @Codec.rootDecodeSegmentOffsetZeroKind h unmarshalSSZ 13 26 48 56 24 8 16 24 := by
   intro h; with_reducible rfl
 
 end Prysm.BlobIdentifier

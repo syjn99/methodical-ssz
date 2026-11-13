@@ -6,18 +6,18 @@
   "kind": "control"
  },
  {
-  "id": "beacon-block-header-encode-fast-path-is-kind-any-frame-statement-u64-32-to-48",
+  "id": "beacon-block-header-encode-fast-path-is-kind-any-frame-statement-uint64-32-to-48",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path_is_kind_any_frame",
-  "kind": "stmt",
-  "old": "[.u64, .u64, .bytes 32, .bytes 32, .bytes 32]",
-  "new": "[.u64, .u64, .bytes 32, .bytes 32, .bytes 48]"
+  "kind": "statement",
+  "old": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32]",
+  "new": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 48]"
  },
  {
   "id": "beacon-block-header-encode-fast-path-is-kind-any-frame-statement-prysm-eth1-data-to-beacon-block-header",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
   "theorem": "Prysm.Eth1Data.Encode.fast_path_is_kind_any_frame",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "Prysm.Eth1Data.Code.marshalSSZTo Prysm.Eth1Data.encodeLayout",
   "new": "Prysm.Eth1Data.Code.marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout"
  },
@@ -31,9 +31,9 @@
   "id": "checkpoint-encode-fast-path-of-kind-statement-encode-layout-32-to-48",
   "module": "Prysm/Checkpoint/EncodeFastPathKindInstances.lean",
   "theorem": "Prysm.Checkpoint.Encode.fast_path_of_kind",
-  "kind": "stmt",
-  "old": "encodeLayout [.u64, .bytes 32]",
-  "new": "encodeLayout [.u64, .bytes 48]"
+  "kind": "statement",
+  "old": "encodeLayout [.uint64, .bytes 32]",
+  "new": "encodeLayout [.uint64, .bytes 48]"
  },
  {
   "id": "codec-encode-steps-step-cmp-jae-taken-control",
@@ -45,7 +45,7 @@
   "id": "codec-encode-steps-step-cmp-jae-taken-statement-hle-none-to-none",
   "module": "Codec/EncodeSteps.lean",
   "theorem": "step_cmp_jae_taken",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(hle : (s.regs.get64 rN).toNat ≤ (s.regs.get64 rC).toNat)",
   "new": "(hle : (s.regs.get64 rC).toNat ≤ (s.regs.get64 rN).toNat)"
  },
@@ -53,7 +53,7 @@
   "id": "codec-encode-steps-step-cmp-jb-not-taken-statement-hle-none-to-none",
   "module": "Codec/EncodeSteps.lean",
   "theorem": "step_cmp_jb_not_taken",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(hle : (s.regs.get64 rN).toNat ≤ (s.regs.get64 rC).toNat)",
   "new": "(hle : (s.regs.get64 rC).toNat ≤ (s.regs.get64 rN).toNat)"
  },
@@ -61,7 +61,7 @@
   "id": "codec-encode-steps-step-length-check-statement-hv-imm-to-disp",
   "module": "Codec/EncodeSteps.lean",
   "theorem": "step_length_check",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(hv : BitVec.ofInt 64 (Int.ofBytes bs) = imm.toBitVec)",
   "new": "(hv : BitVec.ofInt 64 (Int.ofBytes bs) = disp.toBitVec)"
  },
@@ -75,7 +75,7 @@
   "id": "codec-encode-steps-encode-memmove-call-statement-hrcx-none-to-1",
   "module": "Codec/EncodeSteps.lean",
   "theorem": "encode_memmove_call",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(hrcx : s.regs.rcx.toNat = src.length)",
   "new": "(hrcx : s.regs.rcx.toNat = src.length + 1)"
  },
@@ -89,7 +89,7 @@
   "id": "codec-encode-frame-test-frame50-pointer-apart-statement-ho-64-to-16",
   "module": "Codec/EncodeFrameTest.lean",
   "theorem": "frame50_pointer_apart",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(ho : 64 ≤ o.length)",
   "new": "(ho : 16 ≤ o.length)"
  },
@@ -97,7 +97,7 @@
   "id": "codec-encode-frame-test-separated-chunks-apart-statement-ys-none-to-1",
   "module": "Codec/EncodeFrameTest.lean",
   "theorem": "separated_chunks_apart",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "ys.length ≤ (a - b).toNat ∧",
   "new": "ys.length + 1 ≤ (a - b).toNat ∧"
  },
@@ -111,7 +111,7 @@
   "id": "validator-balance-encode-example-field-0-statement-v0-v0-to-v1",
   "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.example_field_0",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "Eq (v0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
   "new": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))"
  },
@@ -119,17 +119,17 @@
   "id": "validator-balance-encode-example-fast-statement-hcap-16-to-8",
   "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.example_fast",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)",
   "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "validator-balance-encode-example-fast-kind-statement-prysm-u64-to-bytes-8",
+  "id": "validator-balance-encode-example-fast-kind-statement-prysm-uint64-to-bytes-8",
   "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.example_fast_kind",
-  "kind": "stmt",
-  "old": "Prysm.ValidatorBalance.Encode.example_layout [.u64, .u64]",
-  "new": "Prysm.ValidatorBalance.Encode.example_layout [.u64, .bytes 8]"
+  "kind": "statement",
+  "old": "Prysm.ValidatorBalance.Encode.example_layout [.uint64, .uint64]",
+  "new": "Prysm.ValidatorBalance.Encode.example_layout [.uint64, .bytes 8]"
  },
  {
   "id": "validator-balance-encode-example-head-code-sub-0x68-to-0x70",
@@ -139,10 +139,10 @@
   "old": "  sub $0x68,%rsp",
   "new": "  sub $0x70,%rsp",
   "line": 7,
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.ValidatorBalance.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.ValidatorBalance.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S"
  },
  {
   "id": "historical-summary-encode-example-epilogue-control",
@@ -158,10 +158,10 @@
   "old": "  lea 0x60(%rsp),%rsi",
   "new": "  lea 0x40(%rsp),%rsi",
   "line": 69,
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.HistoricalSummary.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.HistoricalSummary.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S"
  },
  {
   "id": "beacon-block-header-encode-example-field-2-code-cmp-r9-to-r8",
@@ -171,10 +171,10 @@
   "old": "  cmp %r9,%rdi",
   "new": "  cmp %r8,%rdi",
   "line": 68,
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.BeaconBlockHeader.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
   "id": "beacon-block-header-encode-example-fast-same-statement-control",

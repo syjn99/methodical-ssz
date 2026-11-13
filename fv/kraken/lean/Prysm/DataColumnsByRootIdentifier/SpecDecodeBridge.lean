@@ -22,7 +22,7 @@ theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem toValue_fits (g : SszValue) : Value.fits desc g.toValue = true := by
   have h2 := g.hcols
   simp only [desc, SszValue.toValue, receiverValue, Value.fits, Value.fieldsFit]
-  simp [allFit_u64, h2]
+  simp [allFit_uint64, h2]
 
 theorem toValue_surjective (v : Value) (h : Value.fits desc v = true) : ∃ g : SszValue, g.toValue = v := by
   obtain ⟨vs, rfl, hf⟩ := fits_container h
@@ -35,7 +35,7 @@ theorem toValue_surjective (v : Value) (h : Value.fits desc v = true) : ∃ g : 
       cases v0 <;> simp [Value.fits] at h0 ⊢; exact h0
     obtain ⟨es, rfl, hlen, hall⟩ : ∃ es, v1 = .seq es ∧ es.length ≤ 128 ∧ Value.allFit (.uint 8) es = true := by
       cases v1 <;> simp [Value.fits] at h1 ⊢; exact h1
-    obtain ⟨l, rfl⟩ := allFit_u64_inv es hall
+    obtain ⟨l, rfl⟩ := allFit_uint64_inv es hall
     exact ⟨⟨⟨z, hz⟩, l, by simpa using hlen⟩, rfl⟩
 
 /-- **Spec roundtrip.** -/
@@ -70,7 +70,7 @@ theorem decodeChecks_encode (bs : Array UInt8) (h : decodeChecks bs) : ∃ g : S
   have e0 : bs.extract 0 32 ++ bs.extract 32 36 = bs.extract 0 36 := extract_join bs (by omega) (by omega)
   have e2 : bs.extract 0 36 ++ bs.extract 36 (36 + 8 * n) = bs.extract 0 bs.size := by
     rw [extract_join bs (by omega) (by omega), ← hsz]
-  simp only [SszValue.encode, ← h4, Codec.u64Bytes_readUint64List bs n 36 (by omega)]
+  simp only [SszValue.encode, ← h4, Codec.uint64Bytes_readUint64List bs n 36 (by omega)]
   rw [e0, e2]; simp
 
 /-- **EthLib accepts exactly the inputs that pass the checks.** -/

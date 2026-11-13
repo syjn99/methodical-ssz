@@ -1,7 +1,7 @@
-// Scratch differential program (S3 hold-out H2 evaluation, not committed in Prysm): runs the real generated
-// v1alpha1.Eth1Data.UnmarshalSSZ on the cases of fv/kraken/gen/e2e/e1diff.py and prints the observed results
+// Scratch differential program (not committed in Prysm): runs the real generated
+// v1alpha1.Eth1Data.UnmarshalSSZ on the cases of fv/kraken/gen/checks/eth1_data_differential.py and prints the observed results
 // as JSON. Expected values are computed by that script independently (Python struct.pack), never from this
-// program. (Text of bhcheck-main.go.txt with the Eth1Data fields.)
+// program. (Text of ../beacon-block-header/differential-main.go.txt with the Eth1Data fields.)
 package main
 
 import (
@@ -43,7 +43,7 @@ func main() {
 		}
 		r := Res{ID: c.ID}
 		switch c.Op {
-		case "e1_u":
+		case "Eth1Data.UnmarshalSSZ":
 			h := &ethpb.Eth1Data{}
 			e := h.UnmarshalSSZ(in)
 			if e != nil {

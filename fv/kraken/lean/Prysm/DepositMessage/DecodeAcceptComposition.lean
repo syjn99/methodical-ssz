@@ -19,7 +19,7 @@ variable [Host]
 
 /-- DepositMessage: the hand accept theorem has the kind `[bytes 48, bytes 32, u64]` (no `state` word). -/
 theorem Decode.accept_is_kind : ∀ (h : Host), type_of% (@Prysm.DepositMessage.Decode.accept h)
-    = @decAcceptKind h Prysm.DepositMessage.Code.unmarshalSSZ false [.bytes 48, .bytes 32, .u64] 68 := by
+    = @decodeAcceptKind h Prysm.DepositMessage.Code.unmarshalSSZ false [.bytes 48, .bytes 32, .uint64] 68 := by
   intro h; rfl
 
 end Prysm.DepositMessage

@@ -1,8 +1,9 @@
-// Scratch differential program (FLAT24 / H7, not committed in Prysm): runs the real generated UnmarshalSSZ and
-// MarshalSSZTo of the eight FLAT24 types with a generated theorem on the cases of fv/kraken/gen/e2e/f24diff.py and
+// Scratch differential program (not committed in Prysm): runs the real generated UnmarshalSSZ and
+// MarshalSSZTo of the flat types with a generated theorem on the cases of fv/kraken/gen/checks/flat_types_differential.py and
 // prints the observed results as JSON. Expected values are computed by that script independently, never from this
 // program. Fields are read / set by reflection by Go field name (uint64 and overlay kinds by Uint / SetUint, []byte
-// by Bytes / SetBytes of a fresh copy). Text of the G5-C and E2-C programs, merged.
+// by Bytes / SetBytes of a fresh copy). Text of ../five-flat-types/differential-main.go.txt and
+// ../generator-cases/encode-spec/differential-main.go.txt, merged.
 package main
 
 import (
@@ -20,8 +21,8 @@ import (
 
 type Field struct {
 	Name string `json:"name"`
-	U    uint64 `json:"u"`
-	B    string `json:"b"`
+	U    uint64 `json:"uint64"`
+	B    string `json:"bytes"`
 }
 
 type Case struct {
@@ -37,8 +38,8 @@ type Case struct {
 
 type Val struct {
 	Name string `json:"name"`
-	U    uint64 `json:"u"`
-	B    string `json:"b"`
+	U    uint64 `json:"uint64"`
+	B    string `json:"bytes"`
 	Len  int    `json:"len"`
 	Cap  int    `json:"cap"`
 	Kind string `json:"kind"`
@@ -132,7 +133,7 @@ func main() {
 		m := newT(c.Type)
 		r := Res{ID: c.ID}
 		switch c.Op {
-		case "u":
+		case "UnmarshalSSZ":
 			in, err := hex.DecodeString(c.In)
 			if err != nil {
 				panic(err)
@@ -156,7 +157,7 @@ func main() {
 					}
 				}
 			}
-		case "m":
+		case "MarshalSSZTo":
 			set(m, c.Fields)
 			pre, err := hex.DecodeString(c.Pre)
 			if err != nil {

@@ -10,9 +10,9 @@ import Prysm.PowBlock.GeneratedDecodeSteps
 # Worked example: `(*v1alpha1.PowBlock).UnmarshalSSZ`, accept theorem in generated style
 
 Text produced from one description of the type (frame facts, field list, boundary states, chain theorem names)
-by a scratch emitter (not in the tree); every theorem has a `_kind` line (`decHeadKindAnyFrame`, `decFieldKindAnyFrame`,
-`decEpilogueKindAnyFrame`, `decAcceptKindAnyFrame`). The `decoder --steps` chain theorems (`Decode.generated_step_*`) are used as emitted.
-Frame `0x20`: the epilogue (`xor`, `xor`, `add $0x20`, `pop`, `retq`) is the lemma `dec_epilogue_seg`.
+by a scratch emitter (not in the tree); every theorem has a `_kind` line (`decodeHeadKindAnyFrame`, `decodeFieldKindAnyFrame`,
+`decodeEpilogueKindAnyFrame`, `decodeAcceptKindAnyFrame`). The `decoder --steps` chain theorems (`Decode.generated_step_*`) are used as emitted.
+Frame `0x20`: the epilogue (`xor`, `xor`, `add $0x20`, `pop`, `retq`) is the lemma `decode_epilogue_segment`.
 -/
 
 open Machine Runtime Prysm.AttestationData.Code Prysm.PowBlock.Code Codec
@@ -88,7 +88,7 @@ theorem Decode.example_head : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Ho
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   intro k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail h_mem hguard hlen hav hms hmm
-  refine eventually_trans _ _ _ _ (dec_prologue_seg _ _ _ _ 32 56 96 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
+  refine eventually_trans _ _ _ _ (decode_prologue_segment _ _ _ _ 32 56 96 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
     s ra guard (s.regs.rsp.toBitVec - 40) (s.regs.rsp.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega)
     fp s2 hfp hs2 _ (by ecancel) hguard (by rw [hlen]; rfl)) ?_
@@ -116,7 +116,7 @@ theorem Decode.example_head : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Ho
   dsimp only
   ecancel
 theorem Decode.example_head_kind : ∀ (h : Host), type_of% (@Decode.example_head h)
-    = @Codec.decHeadKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
+    = @Codec.decodeHeadKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨13, 0, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.original 3), .at (.below 16) (.original 4), .at (.below 48) (.original 5), .low (.original 6)],
       []⟩ := by
@@ -201,7 +201,7 @@ theorem Decode.example_field_1 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt
   rintro ⟨d, pc⟩ ⟨hpc, hrsp, hrbp, hr14, Hm⟩
   dsimp only at hpc hrsp hrbp hr14  Hm
   subst hpc
-  refine eventually_trans _ _ _ _ (Decode.generated_step_BlockHash_seg k hk hf (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_step_BlockHash_segment k hk hf (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) rax.toBitVec (rax.toBitVec + 8) (rax.toBitVec + 16) S
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (frame_low_address_without_calls _ 40 48 S (by decide))
@@ -232,7 +232,7 @@ theorem Decode.example_field_1 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt
   rw [show k + 31 + 1 = k + 32 from rfl] at H
   ecancel
 theorem Decode.example_field_1_kind : ∀ (h : Host), type_of% (@Decode.example_field_1 h)
-    = @Codec.decFieldKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
+    = @Codec.decodeFieldKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨13, 0, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.original 3), .at (.below 16) (.original 4), .at (.below 48) (.original 5), .low (.original 6)],
       []⟩
@@ -322,7 +322,7 @@ theorem Decode.example_field_2 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt
   rintro ⟨d, pc⟩ ⟨hpc, hrsp, hrbp, hr14, p1, x0, x1, hx0, hx1, Hm⟩
   dsimp only at hpc hrsp hrbp hr14  Hm
   subst hpc
-  refine eventually_trans _ _ _ _ (Decode.generated_step_ParentHash_seg k hk hf (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_step_ParentHash_segment k hk hf (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 24) (rax.toBitVec + 32) (rax.toBitVec + 40) (rbx.toBitVec + 32) S
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (frame_low_address_without_calls _ 40 48 S (by decide))
@@ -354,7 +354,7 @@ theorem Decode.example_field_2 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt
   rw [show avail - 32 - 32 = avail - 64 by omega] at H
   ecancel
 theorem Decode.example_field_2_kind : ∀ (h : Host), type_of% (@Decode.example_field_2 h)
-    = @Codec.decFieldKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
+    = @Codec.decodeFieldKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨47, 1, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.existential 0), .at (.below 16) (.ptr 0), .at (.below 48) (.ret 32), .low (.existential 1)],
       [.fixed 24, .low]⟩
@@ -446,7 +446,7 @@ theorem Decode.example_field_3 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt
   rintro ⟨d, pc⟩ ⟨hpc, hrsp, hrbp, hr14, p1, p2, x0, x1, hx0, hx1, Hm⟩
   dsimp only at hpc hrsp hrbp hr14  Hm
   subst hpc
-  refine eventually_trans _ _ _ _ (Decode.generated_step_TotalDifficulty_seg k hk hf (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_step_TotalDifficulty_segment k hk hf (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 48) (rax.toBitVec + 56) (rax.toBitVec + 64) (rbx.toBitVec + 64) S
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (frame_low_address_without_calls _ 40 48 S (by decide))
@@ -478,7 +478,7 @@ theorem Decode.example_field_3 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt
   rw [show avail - 64 - 32 = avail - 96 by omega] at H
   ecancel
 theorem Decode.example_field_3_kind : ∀ (h : Host), type_of% (@Decode.example_field_3 h)
-    = @Codec.decFieldKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
+    = @Codec.decodeFieldKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨83, 2, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.existential 0), .at (.below 16) (.ptr 1), .at (.below 48) (.ret 68), .low (.existential 1)],
       [.fixed 24, .low]⟩
@@ -568,9 +568,9 @@ theorem Decode.example_epilogue : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixA
   rintro ⟨d, pc⟩ ⟨hpc, hrsp, hrbp, hr14, p1, p2, p3, x0, x1, hx0, hx1, Hm⟩
   dsimp only at hpc hrsp hrbp hr14  Hm
   subst hpc
-  have hE := Codec.infix_sub (q := Codec.decEpilogue) 119 hk
-    (by simp only [Code.unmarshalSSZ, Codec.decEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  refine eventually_trans _ _ _ _ (Codec.dec_epilogue_seg (k + 119) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
+  have hE := Codec.infix_sub (q := Codec.decodeEpilogue) 119 hk
+    (by simp only [Code.unmarshalSSZ, Codec.decodeEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  refine eventually_trans _ _ _ _ (Codec.decode_epilogue_segment (k + 119) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra r14 _ d hrsp hr14 (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrax', hrbx', hrsp', hrbp', hr14', hmem'⟩
   dsimp only at hpc' hrax' hrbx' hrsp' hrbp' hr14' hmem'
@@ -582,7 +582,7 @@ theorem Decode.example_epilogue : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixA
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
   · dsimp only; ecancel
 theorem Decode.example_epilogue_kind : ∀ (h : Host), type_of% (@Decode.example_epilogue h)
-    = @Codec.decEpilogueKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
+    = @Codec.decodeEpilogueKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨119, 3, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.existential 0), .at (.below 16) (.ptr 2), .at (.below 48) (.ret 104), .low (.existential 1)],
       [.fixed 24, .low]⟩ := by
@@ -668,7 +668,7 @@ theorem Decode.example_accept : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt 
   intro st3 h3
   exact Decode.example_epilogue k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail st3 h3
 theorem Decode.example_accept_kind : ∀ (h : Host), type_of% (@Decode.example_accept h)
-    = @Codec.decAcceptKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32] := by
+    = @Codec.decodeAcceptKindAnyFrame h Code.unmarshalSSZ (Codec.layoutRuntimeCalls false 104 3) [.bytes 32, .bytes 32, .bytes 32] := by
   intro h; rfl
 
 /-- The generated-style theorem proves the committed hand statement `Prysm.PowBlock.Decode.accept_statement` (unchanged). -/

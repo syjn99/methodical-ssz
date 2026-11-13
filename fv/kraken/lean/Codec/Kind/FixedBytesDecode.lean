@@ -3,14 +3,14 @@ import Codec.FixedBytesDecode
 /-!
 # Statement kinds of the size-parametric fixed-bytes decode segments
 
-`bytesDecSegKind n` / `bytesDecSegOffsetZeroKind n` are the texts of `rootDecSegKind` (`Codec/Kind/FieldPatterns.lean`) and
-`rootDecSegOffsetZeroKind` (`Codec/Kind/Bytes32DecodeOffsetZero.lean`) with the size `32` replaced by the parameter `n : Nat` (four places:
+`bytesDecodeSegmentKind n` / `bytesDecodeSegmentOffsetZeroKind n` are the texts of `rootDecodeSegmentKind` (`Codec/Kind/FieldPatterns.lean`) and
+`rootDecodeSegmentOffsetZeroKind` (`Codec/Kind/Bytes32DecodeOffsetZero.lean`) with the size `32` replaced by the parameter `n : Nat` (four places:
 `root.length = n`, `n ≤ avail`, `Heap (avail - n)`, `Int.toBytes 8 (OfNat.ofNat n)` twice). `Codec/Kind/FieldPatterns.lean` and `Codec/Kind/Bytes32DecodeOffsetZero.lean`
-are unchanged. `bytesDecSegKind_of` / `bytesDecSegOffsetZeroKind_of` prove a kind from the lemma (`bytesdec_seg`,
-`bytesdec_seg_offset_zero`) and the code facts of an instance, so the kind body is kernel-checked against the lemma
+are unchanged. `bytesDecodeSegmentKind_of` / `bytesDecodeSegmentOffsetZeroKind_of` prove a kind from the lemma (`bytes_decode_segment`,
+`bytes_decode_segment_offset_zero`) and the code facts of an instance, so the kind body is kernel-checked against the lemma
 conclusion. The kind has no size hypothesis: for a size outside 32 / 48 / 96 it is a proposition without a
-proof here. `Codec/FixedBytesDecodeSizeInstances.lean` shows `rootDecSegKind = bytesDecSegKind 32` and
-`rootDecSegOffsetZeroKind = bytesDecSegOffsetZeroKind 32` (`rfl`).
+proof here. `Codec/FixedBytesDecodeSizeInstances.lean` shows `rootDecodeSegmentKind = bytesDecodeSegmentKind 32` and
+`rootDecodeSegmentOffsetZeroKind = bytesDecodeSegmentOffsetZeroKind 32` (`rfl`).
 -/
 
 open Machine Runtime
@@ -22,9 +22,9 @@ variable [Host]
 set_option linter.unusedVariables false in
 /-- Fixed-bytes decode statement kind, add form: the decode segment of one `n`-byte field of the decoder `C`,
 head block at `k + j1`, second block at `k + j2`, stack displacements `dR dB dS`, Go field offsets
-`fP fL fC`, SSZ source offset `src`. The text is the conclusion of `bytesdec_seg` with `j1 := k + j1`,
+`fP fL fC`, SSZ source offset `src`. The text is the conclusion of `bytes_decode_segment` with `j1 := k + j1`,
 `j2 := k + j2`, after the binders `k hk hf`. -/
-abbrev bytesDecSegKind (n : Nat) (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC src : Int64) : Prop :=
+abbrev bytesDecodeSegmentKind (n : Nat) (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC src : Int64) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
@@ -62,20 +62,20 @@ abbrev bytesDecSegKind (n : Nat) (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC 
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + j1)⟩
 
-/-- The add-form kind follows from `bytesdec_seg` and the code facts of an instance. -/
-theorem bytesDecSegKind_of (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (C : Program) (lff lwb : String)
+/-- The add-form kind follows from `bytes_decode_segment` and the code facts of an instance. -/
+theorem bytesDecodeSegmentKind_of (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (C : Program) (lff lwb : String)
     (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
-    (hA : ∀ k, C.IsInfixAt Host.prog k → (bytesDecHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog (k + j1))
+    (hA : ∀ k, C.IsInfixAt Host.prog k → (bytesDecodeHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog (k + j1))
     (hB : ∀ k, C.IsInfixAt Host.prog k →
-      (bytesDecMid (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog (k + j2))
+      (bytesDecodeMiddle (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog (k + j2))
     (hl : ∀ k, C.IsInfixAt Host.prog k → LabelsFresh C k → label lff = Host.addrOf (k + j2)) :
-    bytesDecSegKind n C j1 j2 dR dB dS fP fL fC src :=
-  fun k hk hf => bytesdec_seg n hn lff lwb dR dB dS fP fL fC src (k + j1) (k + j2) (hA k hk) (hB k hk) (hl k hk hf)
+    bytesDecodeSegmentKind n C j1 j2 dR dB dS fP fL fC src :=
+  fun k hk hf => bytes_decode_segment n hn lff lwb dR dB dS fP fL fC src (k + j1) (k + j2) (hA k hk) (hB k hk) (hl k hk hf)
 
 set_option linter.unusedVariables false in
-/-- Fixed-bytes decode statement kind, offset-0 form: as `bytesDecSegKind` without `src`, source bytes at
-`bf`, second block `bytesDecMidOffsetZero` (11 directives). The text is the conclusion of `bytesdec_seg_offset_zero`. -/
-abbrev bytesDecSegOffsetZeroKind (n : Nat) (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC : Int64) : Prop :=
+/-- Fixed-bytes decode statement kind, offset-0 form: as `bytesDecodeSegmentKind` without `src`, source bytes at
+`bf`, second block `bytesDecodeMiddleOffsetZero` (11 directives). The text is the conclusion of `bytes_decode_segment_offset_zero`. -/
+abbrev bytesDecodeSegmentOffsetZeroKind (n : Nat) (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC : Int64) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)
     (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
@@ -112,14 +112,14 @@ abbrev bytesDecSegOffsetZeroKind (n : Nat) (C : Program) (j1 j2 : Nat) (dR dB dS
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + j1)⟩
 
-/-- The offset-0 kind follows from `bytesdec_seg_offset_zero` and the code facts of an instance. -/
-theorem bytesDecSegOffsetZeroKind_of (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (C : Program) (lff lwb : String)
+/-- The offset-0 kind follows from `bytes_decode_segment_offset_zero` and the code facts of an instance. -/
+theorem bytesDecodeSegmentOffsetZeroKind_of (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (C : Program) (lff lwb : String)
     (dR dB dS fP fL fC : Int64) (j1 j2 : Nat)
-    (hA : ∀ k, C.IsInfixAt Host.prog k → (bytesDecHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog (k + j1))
+    (hA : ∀ k, C.IsInfixAt Host.prog k → (bytesDecodeHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog (k + j1))
     (hB : ∀ k, C.IsInfixAt Host.prog k →
-      (bytesDecMidOffsetZero (OfNat.ofNat n) lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog (k + j2))
+      (bytesDecodeMiddleOffsetZero (OfNat.ofNat n) lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog (k + j2))
     (hl : ∀ k, C.IsInfixAt Host.prog k → LabelsFresh C k → label lff = Host.addrOf (k + j2)) :
-    bytesDecSegOffsetZeroKind n C j1 j2 dR dB dS fP fL fC :=
-  fun k hk hf => bytesdec_seg_offset_zero n hn lff lwb dR dB dS fP fL fC (k + j1) (k + j2) (hA k hk) (hB k hk) (hl k hk hf)
+    bytesDecodeSegmentOffsetZeroKind n C j1 j2 dR dB dS fP fL fC :=
+  fun k hk hf => bytes_decode_segment_offset_zero n hn lff lwb dR dB dS fP fL fC (k + j1) (k + j2) (hA k hk) (hB k hk) (hl k hk hf)
 
 end Codec

@@ -3,7 +3,7 @@ import Codec.Kind.EncodeFastPathAnyFrame
 /-!
 # Hand layout of the Eth1Data encoder fast-path statement
 
-`encodeLayout` is the layout of the hand statement `Encode.fast_path`, as `encFastPathKindAnyFrame` reads it.
+`encodeLayout` is the layout of the hand statement `Encode.fast_path`, as `encodeFastPathKindAnyFrame` reads it.
 The tie theorem of Eth1Data stays in `Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean`, because its negative case compares the two layouts.
 -/
 

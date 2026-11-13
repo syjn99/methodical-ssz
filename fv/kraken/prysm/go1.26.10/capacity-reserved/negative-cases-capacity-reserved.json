@@ -1,19 +1,19 @@
 [
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-head-fast-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeHead.lean",
   "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.head_fast"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-head-fast-code-jge-to-jl",
   "kind": "code",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeHead.lean",
@@ -22,10 +22,10 @@
   "new": "  jl L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_e5"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-head-fast-code-lea-0x18-rsp-to-0x28-rsp",
   "kind": "code",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeHead.lean",
@@ -34,20 +34,20 @@
   "new": "  lea -0x28(%rsp),%r12"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-head-grow-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeHeadGrow.lean",
   "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.head_grow"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-head-grow-code-mov-0x28-to-0x20",
   "kind": "code",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeHeadGrow.lean",
@@ -56,10 +56,10 @@
   "new": "  mov $0x20,%edi"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-head-grow-code-cmp-rdx-rbx-to-rbx-rdx",
   "kind": "code",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeHeadGrow.lean",
@@ -68,10 +68,10 @@
   "new": "  cmp %rbx,%rdx"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-head-grow-code-mov-0x28-to-0x20-2",
   "kind": "code",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeHeadGrow.lean",
@@ -80,10 +80,10 @@
   "new": "  mov $0x20,%ecx"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-head-grow-code-movups-0x18-r8-to-0x20-r8",
   "kind": "code",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeHeadGrow.lean",
@@ -92,20 +92,20 @@
   "new": "  movups %xmm15,0x20(%r8)"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-tail-fit-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeTail.lean",
   "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.tail_fit"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-tail-fit-code-cmpq-0x20-to-0x21",
   "kind": "code",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeTail.lean",
@@ -114,10 +114,10 @@
   "new": "  cmpq $0x21,0x18(%rax)"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-tail-fit-code-mov-rbx-rcx-1-to-0x1-rbx-rcx-1",
   "kind": "code",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeTail.lean",
@@ -126,10 +126,10 @@
   "new": "  mov %r9,0x1(%rbx,%rcx,1)"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-tail-fit-code-mov-r9-to-r8",
   "kind": "code",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeTail.lean",
@@ -138,20 +138,20 @@
   "new": "  mov %r8,(%rbx,%rcx,1)"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-tail-reject-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeTailReject.lean",
   "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.tail_reject"
  },
  {
-  "code_def": "marshalSSZTo",
-  "code_ns": "Prysm.Checkpoint.CapacityReserved.Code",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Checkpoint.CapacityReserved.Code",
   "norm": "prysm/go1.26.10/capacity-reserved/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "id": "checkpoint-capacity-reserved-encode-tail-reject-code-mov-ssz-err-bytes-length-8-rip-to-ssz-err-bytes-length-rip",
   "kind": "code",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeTailReject.lean",
@@ -167,7 +167,7 @@
  },
  {
   "id": "checkpoint-capacity-reserved-encode-fast-path-statement-rcx-rdi-to-rcx",
-  "kind": "stmt",
+  "kind": "statement",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeFastPath.lean",
   "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.fast_path",
   "old": "st.data.regs.rcx = s.regs.rdi",
@@ -175,7 +175,7 @@
  },
  {
   "id": "checkpoint-capacity-reserved-encode-reject-length-statement-rdi-e0-to-e1",
-  "kind": "stmt",
+  "kind": "statement",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeFastPath.lean",
   "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.reject_length",
   "old": "st.data.regs.rdi = e0",
@@ -189,7 +189,7 @@
  },
  {
   "id": "checkpoint-capacity-reserved-encode-grow-first-site-statement-rbx-40-to-39",
-  "kind": "stmt",
+  "kind": "statement",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeGrowFirstSite.lean",
   "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.grow_first_site",
   "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40",
@@ -197,7 +197,7 @@
  },
  {
   "id": "checkpoint-capacity-reserved-encode-grow-first-site-statement-pre-st-data-rax-to-s-rbx",
-  "kind": "stmt",
+  "kind": "statement",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeGrowFirstSite.lean",
   "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.grow_first_site",
   "old": "⋆ Eq (pre.At st.data.regs.rax.toBitVec)",
@@ -205,7 +205,7 @@
  },
  {
   "id": "checkpoint-capacity-reserved-encode-reject-length-grow-first-site-statement-av-nc-to-nat-to-none",
-  "kind": "stmt",
+  "kind": "statement",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeGrowFirstSite.lean",
   "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.reject_length_grow_first_site",
   "old": "∧ av' + nc.toNat ≤ avail",
@@ -219,7 +219,7 @@
  },
  {
   "id": "checkpoint-capacity-reserved-encode-cover-statement-rcx-40-to-41",
-  "kind": "stmt",
+  "kind": "statement",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeSpec.lean",
   "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.cover",
   "old": "s.regs.rcx.toNat + 40 ≤ st.data.regs.rcx.toNat",

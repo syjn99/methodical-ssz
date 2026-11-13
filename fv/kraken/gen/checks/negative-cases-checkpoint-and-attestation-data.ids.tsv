@@ -150,6 +150,6 @@ cpw-cf-3c-ret	checkpoint-encode-cover-framed-statement-pc-label-runtime-growslic
 cpw-rf-control	checkpoint-encode-reject-length-cover-framed-control
 cpw-rf-c1	checkpoint-encode-reject-length-cover-framed-statement-pre-none-to-1
 cpw-rf-nb	checkpoint-encode-reject-length-cover-framed-statement-pre-none-to-1-2
-gv-w-control	checkpoint-witness-encode-reject-length-cover-recv-control
-gv-w-stmt-rl49	checkpoint-witness-encode-reject-length-cover-recv-statement-go-value-48-to-49
-gv-w-stmt-root	checkpoint-witness-encode-cover-recv-statement-0x12380-32-to-33
+gv-w-control	checkpoint-witness-encode-reject-length-cover-receiver-control
+gv-w-stmt-rl49	checkpoint-witness-encode-reject-length-cover-receiver-statement-go-value-48-to-49
+gv-w-stmt-root	checkpoint-witness-encode-cover-receiver-statement-0x12380-32-to-33

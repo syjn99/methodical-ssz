@@ -1,9 +1,9 @@
-// OPT-R1 scratch differential program (not committed in Prysm): runs the generated
+// Scratch differential program of the capacity-reserving generator option (not committed in Prysm): runs the generated
 // v1alpha1.Checkpoint.MarshalSSZTo of the tree it is built in (old = 698c202 output, new = the
-// reserve output) on the cases of fv/kraken/prysm/go1.26.10/opt-r1/diff/odiff.py and prints, per case,
+// reserve output) on the cases of fv/kraken/prysm/go1.26.10/capacity-reserved/diff/checkpoint_marshal_differential.py and prints, per case,
 // the returned bytes / error, the caller's backing array after the call, aliasing, cap(out), receiver
 // integrity and testing.AllocsPerRun. Built twice with identical flags (old and new phase0 files);
-// expected values are computed by odiff.py independently, never from this program.
+// expected values are computed by that script independently, never from this program.
 package main
 
 import (

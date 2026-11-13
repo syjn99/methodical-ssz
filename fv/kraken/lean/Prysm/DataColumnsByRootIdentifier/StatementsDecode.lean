@@ -188,7 +188,7 @@ def Decode.accept_spec_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 A.toInt).At (s.regs.rax.toBitVec + 32))
           ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 g.cols.length).toInt).At (s.regs.rax.toBitVec + 40))
           ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 g.cols.length).toInt).At (s.regs.rax.toBitVec + 48))
-          ⋆ Eq (g.root.toList.At pb) ⋆ Eq ((Spec.u64Bytes g.cols).toList.At A)
+          ⋆ Eq (g.root.toList.At pb) ⋆ Eq ((Spec.uint64Bytes g.cols).toList.At A)
           ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 

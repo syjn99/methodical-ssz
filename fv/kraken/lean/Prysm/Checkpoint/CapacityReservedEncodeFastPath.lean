@@ -3,7 +3,7 @@ import Prysm.Checkpoint.CapacityReservedEncodeTailReject
 import Runtime.CopyModel
 
 /-!
-# OPT-R1 reserve encoder `(*v1alpha1.Checkpoint).MarshalSSZTo`: the four main theorems
+# Reserve encoder of the capacity-reserved build `(*v1alpha1.Checkpoint).MarshalSSZTo`: the four main theorems
 
 Contract of the pilot for the new ELF `3ef7ac89…f602`
 (`L = len(dst)`, `C = cap(dst)`, `spare = C − L`):

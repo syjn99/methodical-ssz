@@ -6,11 +6,11 @@ import Prysm.PendingDeposit.Statements
 import Prysm.Checkpoint.DecodeAccept
 
 /-!
-# Ties of `decAcceptKindAnyFrame` to the hand accept statements
+# Ties of `decodeAcceptKindAnyFrame` to the hand accept statements
 
 For every flat development type with a hand-written accept statement, the kind instance is that statement.
 `rfl` at default transparency (the recursive definitions of the kind unfold on the literal layout and field
-list), as the ties of the composed accept kind `decAcceptKind`. The hand statements and theorems are used as committed.
+list), as the ties of the composed accept kind `decodeAcceptKind`. The hand statements and theorems are used as committed.
 
 Layouts: three frame classes.
 - `layoutRuntimeCalls st jret nb` (frame `0x20`, `makeslice` / `memmove` only): BlobIdentifier, DepositMessage, Eth1Data,

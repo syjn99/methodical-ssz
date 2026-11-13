@@ -8,9 +8,9 @@ It imports `negative.py` and uses its `cut`, `classify`, `precheck` and `main` u
   (`Prysm/SyncAggregate/Statements.lean`, `Prysm/SyncCommittee/Statements.lean`). A case may name "statement_module" (path under fv/kraken/lean), or "inline", a list of
   such modules in dependency order (for example `Prysm/SyncAggregate/SpecDescription.lean` then `Defs.lean` for a Desc mutant). The mutant file then
   inlines those modules' bodies (their imports are replaced by their own imports), so that the code rename
-  `<code_def>` → `<code_def>Mut` also reaches the statement. A "stmt" case names "statement_def" and mutates the text
-  of that def (old → new, unique inside the def). "norm" is the .S path under fv/kraken; "code_ns" the namespace
-  of the code constant (default: `negative.code_ns_of`, Prysm.<Type>.Code for a module under Prysm/<Type>/).
+  `<code_definition>` → `<code_definition>Mut` also reaches the statement. A "statement" case names "statement_def" and mutates the text
+  of that def (old → new, unique inside the def). "norm" is the .S path under fv/kraken; "code_namespace" the namespace
+  of the code constant (default: `negative.code_namespace_of`, Prysm.<Type>.Code for a module under Prysm/<Type>/).
 * run_capped: no `gen/tools/memory_limit.py` (it reads /proc, absent on macOS); the job runs under the heavy-job
   gate's cap. A case that exceeds the per-case timeout is killed with its process group (start_new_session).
 A mutant passes when Lean reports an error and every error line lies inside the designated theorem and the first
@@ -77,7 +77,7 @@ def run_case(c, work):
         body = pre_body + body
     rest = "\n".join(body)
     diff = ""
-    if c.get("code_def"):
+    if c.get("code_definition"):
         S = (KR / c["norm"]).read_text()
         if c["kind"] == "code":
             if "line" in c:
@@ -92,11 +92,11 @@ def run_case(c, work):
         else:
             S2 = S
         (d / "mut.S").write_text(S2)
-        name = c["code_def"]
+        name = c["code_definition"]
         rest = re.sub(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", name + "Mut", rest)
-        decl = f'def {n.code_ns_of(c)}.{name}Mut : Program := include_x64_code "{d / "mut.S"}"'
+        decl = f'def {n.code_namespace_of(c)}.{name}Mut : Program := include_x64_code "{d / "mut.S"}"'
         rest = decl + "\n\n" + rest
-    if c["kind"] == "stmt":
+    if c["kind"] == "statement":
         rl = rest.split("\n")
         a, _ = n.find_decl(rl, c["statement_def"], ("def",))
         b = next((i for i in range(a + 1, len(rl)) if n.TOP.match(rl[i])), len(rl))

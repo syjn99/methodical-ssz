@@ -3,7 +3,8 @@
 
   eth1_data_differential.py cases <cases.json>                      write the cases
   eth1_data_differential.py check <cases.json> <go-out.json> <result.json>
-The Go program is the scratch package fve2e/e1check of the temporary Prysm tree (run natively with Go 1.26.10
+The Go program is `prysm/go1.26.10/evidence/eth1-data/differential-main.go.txt`, built as a scratch package of the temporary
+Prysm tree (run natively with Go 1.26.10
 through the gate; this is a Go-semantics check, not an execution of the amd64 ELF). Every expected value is
 computed here, independently of the code under test, from consensus-specs: Eth1Data = Bytes32 deposit_root
 ++ uint64 LE deposit_count ++ Bytes32 block_hash; decoding accepts exactly 72 bytes. The error identity
@@ -21,10 +22,10 @@ def cases():
     cs = []
     for i, (c, (r1, r2)) in enumerate(zip(VALS, ROOTS)):
         b = r1 + struct.pack("<Q", c) + r2
-        cs.append({"id": f"e1-accept-{i}", "op": "e1_u", "in": b.hex(),
+        cs.append({"id": f"eth1-data-accept-{i}", "op": "Eth1Data.UnmarshalSSZ", "in": b.hex(),
                    "exp": {"err": "", "count": c, "roots": [r1.hex(), r2.hex()], "lens": [32, 32], "caps": [32, 32]}})
     for n in (0, 71, 73):
-        cs.append({"id": f"e1-size-{n}", "op": "e1_u", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
+        cs.append({"id": f"eth1-data-size-{n}", "op": "Eth1Data.UnmarshalSSZ", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
     return cs
 
 

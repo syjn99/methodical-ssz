@@ -4,7 +4,7 @@
 
   deposit_data_and_pending_partial_withdrawal_differential.py cases <cases.json>                      write the cases
   deposit_data_and_pending_partial_withdrawal_differential.py check <cases.json> <go-out.json> <result.json>
-The Go program is `prysm/go1.26.10/evidence/deposit-data-and-pending-partial-withdrawal/h4check-main.go.txt`, run natively with Go 1.26.10 through the gate
+The Go program is `prysm/go1.26.10/evidence/deposit-data-and-pending-partial-withdrawal/differential-main.go.txt`, run natively with Go 1.26.10 through the gate
 with `go run -overlay` in the temporary Prysm tree (read only). This is a Go-semantics check on the host
 (linux/arm64), not an execution of the amd64 ELF. Every expected value is computed here, independently of the
 code under test, from consensus-specs:
@@ -27,17 +27,17 @@ def cases():
     sigs = [bytes(96), bytes(range(100, 196)), b"\xff" * 96]
     for i, (v, p, w, g) in enumerate(zip(VALS, pks, wcs, sigs)):
         b = p + w + struct.pack("<Q", v) + g
-        cs.append({"id": f"dd-accept-{i}", "op": "dd_u", "in": b.hex(),
+        cs.append({"id": f"deposit-data-accept-{i}", "op": "Deposit_Data.UnmarshalSSZ", "in": b.hex(),
                    "exp": {"err": "", "u64s": [v], "bytes": [p.hex(), w.hex(), g.hex()], "lens": [48, 32, 96],
                            "caps": [48, 32, 96]}})
     for n in (0, 183, 185):
-        cs.append({"id": f"dd-size-{n}", "op": "dd_u", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
+        cs.append({"id": f"deposit-data-size-{n}", "op": "Deposit_Data.UnmarshalSSZ", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
     trip = [(0, 0, 0), (0x0123456789ABCDEF, 32000000000, 0xFEDCBA9876543210), (2 ** 64 - 1, 2 ** 64 - 1, 2 ** 64 - 1)]
     for i, (x, y, z) in enumerate(trip):
         b = struct.pack("<QQQ", x, y, z)
-        cs.append({"id": f"pw-accept-{i}", "op": "pw_u", "in": b.hex(), "exp": {"err": "", "u64s": [x, y, z]}})
+        cs.append({"id": f"pending-partial-withdrawal-accept-{i}", "op": "PendingPartialWithdrawal.UnmarshalSSZ", "in": b.hex(), "exp": {"err": "", "u64s": [x, y, z]}})
     for n in (0, 23, 25):
-        cs.append({"id": f"pw-size-{n}", "op": "pw_u", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
+        cs.append({"id": f"pending-partial-withdrawal-size-{n}", "op": "PendingPartialWithdrawal.UnmarshalSSZ", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
     return cs
 
 

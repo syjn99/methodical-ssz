@@ -42,7 +42,7 @@ theorem toValue_fits_checker (g : SszValue) : Value.fits checkerDesc g.toValue =
   have h2 := g.hidx
   rw [desc_checker.2]
   simp only [SszValue.toValue, Value.fits, Value.fieldsFit]
-  simp [h1, allFit_u64, h2]
+  simp [h1, allFit_uint64, h2]
 
 theorem toValue_surjective_checker (v : Value) (h : Value.fits checkerDesc v = true) :
     ∃ g : SszValue, g.toValue = v := by
@@ -55,7 +55,7 @@ theorem toValue_surjective_checker (v : Value) (h : Value.fits checkerDesc v = t
     obtain ⟨h0, h1, h2, -⟩ := hf
     obtain ⟨es, rfl, hlen, hall⟩ : ∃ es, v0 = .seq es ∧ es.length ≤ 2048 ∧ Value.allFit (.uint 8) es = true := by
       cases v0 <;> simp [Value.fits] at h0 ⊢; exact h0
-    obtain ⟨l, rfl⟩ := allFit_u64_inv es hall
+    obtain ⟨l, rfl⟩ := allFit_uint64_inv es hall
     obtain ⟨d, rfl⟩ := Prysm.AttestationData.SszValue.toValue_surjective_checker v1 h1
     obtain ⟨z, rfl, hz⟩ : ∃ d, v2 = .bytes d ∧ d.size = 96 := by
       cases v2 <;> simp [Value.fits] at h2 ⊢; exact h2

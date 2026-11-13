@@ -14,7 +14,7 @@ the receiver spill slot, the pointer spill slot) and `dst` at 0x10060: the prefi
 contents, the spare capacity. Frame `R`: the receiver spill slot (not written on the fast path) and the spare
 capacity.
 Two instances: empty prefix with `cap = 16`, and a 3-byte prefix with 5 spare bytes. For every Index and
-Balance every premise of the kind instance `encFastPathKindAnyFrame marshalSSZTo Encode.example_layout [.u64, .u64]` holds.
+Balance every premise of the kind instance `encodeFastPathKindAnyFrame marshalSSZTo Encode.example_layout [.uint64, .uint64]` holds.
 -/
 
 open Machine Runtime Machine.Witness Codec Prysm.ValidatorBalance.Code

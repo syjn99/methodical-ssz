@@ -7,7 +7,7 @@ import Prysm.Checkpoint.DecodeAccept
 import Codec.Kind.DecodeAcceptAnyFrameInstances
 
 /-!
-# Ties of `decAcceptKindAnyFrame` to the hand accept statements: the `Checkpoint` part
+# Ties of `decodeAcceptKindAnyFrame` to the hand accept statements: the `Checkpoint` part
 
 The declarations of the other types of this group are in `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 -/
@@ -47,7 +47,7 @@ after `R S`, orders three stack chunks and the two existential chunks differentl
 `Int.toBytes 8 0`, and names a 32-byte receiver tail chunk `ctl` (in the kind it is part of `R`). The kind
 instance is the stronger statement; the converse does not hold (`R` need not contain a tail chunk). -/
 theorem Decode.accept_of_kind
-    (H : decAcceptKindAnyFrame Prysm.Checkpoint.Code.unmarshalSSZ Prysm.Checkpoint.decodeLayout [.u64, .bytes 32]) :
+    (H : decodeAcceptKindAnyFrame Prysm.Checkpoint.Code.unmarshalSSZ Prysm.Checkpoint.decodeLayout [.uint64, .bytes 32]) :
     type_of% (@Prysm.Checkpoint.Decode.accept ‹Host›) := by
   intro k hk hf kE hkE hfE e8 root he8 hroot s ra guard fp s1 s2 l20 l28 l30 m0 m1 m2 rslot cst c0 cP cL cC ctl
     hfp h1 h2 hl20 hl28 hl30 hm0 hm1 hm2 hrs hcst hc0 hcP hcL hcC hctl R S hS8 hS scratch hsc Heap avail

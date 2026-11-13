@@ -8,7 +8,7 @@ import Codec.Kind.DecodeAcceptAnyFrameInstances
 import Prysm.BlobIdentifier.DecodeAcceptComposition
 
 /-!
-# Ties of `decAcceptKindAnyFrame` to the hand accept statements: the `BlobIdentifier` part
+# Ties of `decodeAcceptKindAnyFrame` to the hand accept statements: the `BlobIdentifier` part
 
 The declarations of the other types of this group are in `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 -/
@@ -21,14 +21,14 @@ namespace Prysm.BlobIdentifier
 /-! ## Class A: frame `0x20` -/
 
 theorem Decode.accept_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.BlobIdentifier.Decode.accept h)
-    = @decAcceptKindAnyFrame h Prysm.BlobIdentifier.Code.unmarshalSSZ (layoutRuntimeCalls true 32 1) [.bytes 32, .u64] := by
+    = @decodeAcceptKindAnyFrame h Prysm.BlobIdentifier.Code.unmarshalSSZ (layoutRuntimeCalls true 32 1) [.bytes 32, .uint64] := by
   intro h; rfl
 
-/-! ## Relation to the composed accept kind `decAcceptKind` (the four types it is tied to) -/
+/-! ## Relation to the composed accept kind `decodeAcceptKind` (the four types it is tied to) -/
 
 theorem Decode.accept_kind_any_frame_is_kind : ∀ (h : Host),
-    @decAcceptKindAnyFrame h Prysm.BlobIdentifier.Code.unmarshalSSZ (layoutRuntimeCalls true 32 1) [.bytes 32, .u64]
-    = @decAcceptKind h Prysm.BlobIdentifier.Code.unmarshalSSZ true [.bytes 32, .u64] 32 :=
+    @decodeAcceptKindAnyFrame h Prysm.BlobIdentifier.Code.unmarshalSSZ (layoutRuntimeCalls true 32 1) [.bytes 32, .uint64]
+    = @decodeAcceptKind h Prysm.BlobIdentifier.Code.unmarshalSSZ true [.bytes 32, .uint64] 32 :=
   fun h => (Prysm.BlobIdentifier.Decode.accept_is_kind_any_frame h).symm.trans (Prysm.BlobIdentifier.Decode.accept_is_kind h)
 
 end Prysm.BlobIdentifier

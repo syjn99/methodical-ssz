@@ -21,7 +21,7 @@ offsets 24 / 48 / 72 from it): `state` 0, `Slot` 8, `ProposerIndex` 16, `ParentR
 
 **Proof.** `Decode.head` (entry → directive 88: length check, Slot and ValidatorIndex callees through
 `Prysm.Slot.Decode.accept_function_spec` / `Prysm.ValidatorIndex.Decode.accept_function_spec`, spills of their nil errors), then the three GENERATED segment theorems
-`Decode.generated_root_ParentRoot_seg` (88–112), `Decode.generated_root_StateRoot_seg` (124–148), `Decode.generated_root_BodyRoot_seg`
+`Decode.generated_root_ParentRoot_segment` (88–112), `Decode.generated_root_StateRoot_segment` (124–148), `Decode.generated_root_BodyRoot_segment`
 (159–183), with the instance directives between them by hand: 113–115 + `L_1f7` 122–123, 149–150 +
 `L_292` 157–158, 184–185 + `L_331` 193–194 (reload of the slice pointer from rsp − 48 and its store), and
 the epilogue 195–199 (rax, rbx reloaded from the spills, `add`, `pop`, `retq`).
@@ -151,7 +151,7 @@ theorem Decode.accept (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (
   dsimp only at hpc1 hrsp1 hrbp1 hr141 Hm1
   subst hpc1
   -- segment 2: ParentRoot (generated), 88 → 113
-  refine eventually_trans _ _ _ _ (Decode.generated_root_ParentRoot_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_root_ParentRoot_segment k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
     (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rax.toBitVec + 24) (rax.toBitVec + 32) (rax.toBitVec + 40)
     (rbx.toBitVec + 16) (S + 8)
@@ -192,7 +192,7 @@ theorem Decode.accept (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (
   simp only [Width.bytes, Width.bits] at H3
   unfold_step
   -- segment 3: StateRoot (generated), 124 → 149
-  refine eventually_trans _ _ _ _ (Decode.generated_root_StateRoot_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_root_StateRoot_segment k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
     (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rax.toBitVec + 48) (rax.toBitVec + 56) (rax.toBitVec + 64)
     (rbx.toBitVec + 48) (S + 8)
@@ -225,7 +225,7 @@ theorem Decode.accept (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (
   simp only [Width.bytes, Width.bits] at H4
   unfold_step
   -- segment 4: BodyRoot (generated), 159 → 184
-  refine eventually_trans _ _ _ _ (Decode.generated_root_BodyRoot_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_root_BodyRoot_segment k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
     (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rax.toBitVec + 72) (rax.toBitVec + 80) (rax.toBitVec + 88)
     (rbx.toBitVec + 80) (S + 8)

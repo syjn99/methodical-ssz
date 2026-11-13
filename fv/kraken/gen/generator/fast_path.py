@@ -4,7 +4,7 @@ Interface: the encoder lemmas; the reference texts are `lean/Prysm/*/EncodeFastP
 dataflow walk over the fast path of the `.S` file (head; per IR field its length test not taken, its capacity test
 passed with the growslice site SKIPPED, never stepped; the store / `memmove` commit; the epilogue with the frame
 test where present) produces ONE module: the head theorem, one theorem per IR field, the epilogue theorem, the
-fast-path theorem, each with its `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueKindAnyFrame`, `encFastPathKindAnyFrame`),
+fast-path theorem, each with its `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encodeEpilogueKindAnyFrame`, `encodeFastPathKindAnyFrame`),
 and, on request, the identity with a hand statement (`_statement`).
 
 **Fast path only**: the premises are `len(dst) + SizeSSZ ≤ cap(dst)` and every byte-vector field of its exact
@@ -19,7 +19,7 @@ FAST_PATH_IMPORTS = ["Prysm.BeaconBlockHeader.EncodeFastPathKindInstances", "Cod
 R64 = "rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15".split()
 R32 = {"eax": "rax", "ebx": "rbx", "ecx": "rcx", "edx": "rdx", "esi": "rsi", "edi": "rdi"}
 BYTE_SIZES = (32, 48, 96)
-OPT = "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
+THEOREM_OPTIONS = "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
 
 
 class FastPathRefuse(Exception):
@@ -1054,7 +1054,7 @@ class FastPathGenerator:
             raise FastPathRefuse("return form (pop %rbp; retq)")
         a0 = i - self.pend
         self.pend = 0
-        E(f"refine eventually_trans _ _ _ _ (dec_return_seg _ (k + {a0}) (window_infix_at hk {a0} {i + 2 - a0}) (by rfl) "
+        E(f"refine eventually_trans _ _ _ _ (decode_return_segment _ (k + {a0}) (window_infix_at hk {a0} {i + 2 - a0}) (by rfl) "
           "(rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_")
         E("rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩")
         E("dsimp only at hpc' hrsp' hrbp' hreg' hmem'")
@@ -1184,7 +1184,7 @@ class FastPathGenerator:
                 + "".join(f"  {k} := {f[k]}\n" for k in ("stateWord", "frame", "guardAddend", "callsMemmove", "stackChunkCount", "stackChunkLengths", "pre", "existentials", "post")) + "\n")
 
     def fieldsk(self):
-        return "[" + ", ".join(".u64" if f[1] == "u" else f".bytes {f[2]}" for f in self.fields) + "]"
+        return "[" + ", ".join(".uint64" if f[1] == "u" else f".bytes {f[2]}" for f in self.fields) + "]"
 
     def stk_(self, b):
         regs = "[" + ", ".join(f"(.{r}, {s_kind(v)})" for r, v in b["regs"]) + "]"
@@ -1214,7 +1214,7 @@ class FastPathGenerator:
             kinds.append((name, kind))
             return (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @Codec.{kind} h {C} {lay} {fk}"
                     + extra + " := by\n  intro h; rfl\n")
-        o.append(f"{OPT}/-- Head: directives 0–{b0['pc'] - 1} (stack guard, frame, spills); entry → boundary state 0. -/")
+        o.append(f"{THEOREM_OPTIONS}/-- Head: directives 0–{b0['pc'] - 1} (stack guard, frame, spills); entry → boundary state 0. -/")
         o.append(f"theorem {px}_head : ∀ {B}\n    {hmem}\n    {hg} {hrest}{hmm},\n    Eventually (step1 Host.exe)\n      (fun st => "
                  + self.stp(b0, "st", "        ") + f")\n      ⟨s, Host.addrOf k⟩ := by")
         o.append(f"  intro {nm} h_mem hguard hsp hcap hcap63{hmn}")
@@ -1222,11 +1222,11 @@ class FastPathGenerator:
         o.append("  simp only at h_mem hguard hsp hcap hcap63 hpre ⊢")
         o.append(f"  have hcap' : rcx.toBitVec.toNat + {self.size} ≤ rdi.toBitVec.toNat := hcap")
         o += self.thms[0]
-        o.append(kline(f"{px}_head", "encHeadKindAnyFrame", f"\n    {self.stk_(b0)}"))
+        o.append(kline(f"{px}_head", "encodeHeadKindAnyFrame", f"\n    {self.stk_(b0)}"))
         for i in range(nf):
             b, b2 = self.bstate[i], self.bstate[i + 1]
             f = self.fields[i]
-            o.append(f"{OPT}/-- Field {i} `{f[0]}` ({'uint64' if f[1] == 'u' else f'{f[2]} bytes'}): directives {b['pc']}–{b2['pc'] - 1}; boundary state {i} → {i + 1}. -/")
+            o.append(f"{THEOREM_OPTIONS}/-- Field {i} `{f[0]}` ({'uint64' if f[1] == 'u' else f'{f[2]} bytes'}): directives {b['pc']}–{b2['pc'] - 1}; boundary state {i} → {i + 1}. -/")
             o.append(f"theorem {px}_field_{i} : ∀ {B}\n    {hrest}{hmm} (st0 : MachineState),\n    ("
                      + self.stp(b, "st0", "        ") + ") →\n    Eventually (step1 Host.exe)\n      (fun st => "
                      + self.stp(b2, "st", "        ") + ")\n      st0 := by")
@@ -1235,9 +1235,9 @@ class FastPathGenerator:
             o.append("  simp only at hsp hcap hcap63 hpre ⊢")
             o += self.entry(b)
             o += self.thms[i + 1]
-            o.append(kline(f"{px}_field_{i}", "encFieldKindAnyFrame", f"\n    {self.stk_(b)}\n    {self.stk_(b2)}"))
+            o.append(kline(f"{px}_field_{i}", "encodeFieldKindAnyFrame", f"\n    {self.stk_(b)}\n    {self.stk_(b2)}"))
         b = self.bstate[nf]
-        o.append(f"{OPT}/-- Epilogue: directives {b['pc']}–return; boundary state {nf} → the fast-path post-state. -/")
+        o.append(f"{THEOREM_OPTIONS}/-- Epilogue: directives {b['pc']}–return; boundary state {nf} → the fast-path post-state. -/")
         o.append(f"theorem {px}_epilogue : ∀ {B}\n    {hrest} (st0 : MachineState),\n    ("
                  + self.stp(b, "st0", "        ") + ") →\n    Eventually (step1 Host.exe)\n      (fun st => "
                  + self.finalp("        ") + ")\n      st0 := by")
@@ -1246,8 +1246,8 @@ class FastPathGenerator:
         o.append("  simp only at hsp hcap hcap63 hpre ⊢")
         o += self.entry(b)
         o += self.thms[nf + 1]
-        o.append(kline(f"{px}_epilogue", "encEpilogueKindAnyFrame", f"\n    {self.stk_(b)}"))
-        o.append(f"{OPT}/-- **Encoder fast path of `(*v1alpha1.{self.t}).MarshalSSZTo` (Go 1.26.10), generated** (`encoder --fast-path`):\n"
+        o.append(kline(f"{px}_epilogue", "encodeEpilogueKindAnyFrame", f"\n    {self.stk_(b)}"))
+        o.append(f"{THEOREM_OPTIONS}/-- **Encoder fast path of `(*v1alpha1.{self.t}).MarshalSSZTo` (Go 1.26.10), generated** (`encoder --fast-path`):\n"
                  f"head, one theorem per field, epilogue, chained by `eventually_trans`. Premises: `len + {self.size} ≤ cap`,\n"
                  "every byte-vector field of its exact length. Statement = the kind instance (`_kind`). Fast path only. -/")
         o.append(f"theorem {px}_fast : ∀ {B}\n    {hmem}\n    {hg} {hrest}{hmm},\n    Eventually (step1 Host.exe)\n      (fun st => "
@@ -1259,7 +1259,7 @@ class FastPathGenerator:
             o.append(f"  refine eventually_trans _ _ _ _ ({px}_field_{i} {nm} hsp hcap hcap63{hmn} st{i} h{i}) ?_")
             o.append(f"  intro st{i + 1} h{i + 1}")
         o.append(f"  exact {px}_epilogue {nm} hsp hcap hcap63 st{nf} h{nf}")
-        o.append(kline(f"{px}_fast", "encFastPathKindAnyFrame", ""))
+        o.append(kline(f"{px}_fast", "encodeFastPathKindAnyFrame", ""))
         return "\n".join(o), kinds
 
     def entry(self, b):
@@ -1284,4 +1284,4 @@ class FastPathGenerator:
         """facts for the FAST-PATH-JSON header (kindcheck recomputes them independently; they are not trusted)"""
         return dict(type=self.t, const=self.C, prefix=self.px, size=self.size, frame=self.F, guard_addend=self.gd, runtime_calls=self.rt,
                     fields=[[f[0], f[1], f[2]] for f in self.fields], boundaries=[b["pc"] for b in self.bstate],
-                    layout=self.layout(), S_sha256=self.Ssha, ir_sha256=self.irsha)
+                    layout=self.layout(), assembly_sha256=self.Ssha, ir_sha256=self.irsha)

@@ -11,14 +11,14 @@ import Prysm.SyncCommitteeMessage.Statements
 `Prysm/SyncCommitteeMessage/DecodeAccept.lean` with the two fields that the frozen generator missed taken from the window and step mechanisms:
 
 * BlockRoot 47–81: `Decode.example_step_BlockRoot_field` (byte segment over windows with the receiver register
-  `rY = rax`, then the tail as four steps) instead of the hand lemma `bytes32dec_seg_rax` and hand steps;
+  `rY = rax`, then the tail as four steps) instead of the hand lemma `bytes32_decode_segment_rax` and hand steps;
 * ValidatorIndex 82–117: `Decode.example_step_ValidatorIndex_field` (six step theorems and the call-block window)
-  instead of the hand lemma `Decode.validator_index_arg` and a hand-applied `calldec_seg`;
-* Signature 120–145: `Decode.example_step_Signature_seg` (window; the padding `nop` before `callq runtime.makeslice` is inside it) instead of the `decoder --call-segments`
+  instead of the hand lemma `Decode.validator_index_argument` and a hand-applied `call_decode_segment`;
+* Signature 120–145: `Decode.example_step_Signature_segment` (window; the padding `nop` before `callq runtime.makeslice` is inside it) instead of the `decoder --call-segments`
   `pad` instance.
 Unchanged: `Decode.head_to_arguments` and `Decode.spill_registers` (hand, `Prysm/SyncCommitteeMessage/DecodeSegments.lean`), the generated Slot theorems (`Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean`),
 the hand steps 146–160. `Prysm/SyncCommitteeMessage/DecodeSegments.lean` is imported for `Decode.head_to_arguments` / `Decode.spill_registers` only; `Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` checks by
-program that this proof does not reach `bytes32dec_seg_rax`, `Decode.validator_index_arg` or `calldec_nop_seg`.
+program that this proof does not reach `bytes32_decode_segment_rax`, `Decode.validator_index_argument` or `call_decode_nop_segment`.
 In-sample (the type is development data since the frozen generator ran on it); no transfer claim.
 -/
 
@@ -36,8 +36,8 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
     fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 aP1 aL1 aC1 a40 aP2 aL2 aC2
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrs hast ha8 haP1 haL1 haC1 ha40 haP2 haL2 haC2
     R S hS hlo Heap avail h_mem hguard hlen hav hms hmm
-  have hsl : U64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
-  have hvi : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hsl : Uint64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
+  have hvi : Uint64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
@@ -56,7 +56,7 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- Slot: set-up 15–16 (generated)
-  refine eventually_trans _ _ _ _ (Decode.generated_call_Slot_arg k hk hf rax.toBitVec (rax.toBitVec + 8)
+  refine eventually_trans _ _ _ _ (Decode.generated_call_Slot_argument k hk hf rax.toBitVec (rax.toBitVec + 8)
     (by simp only [Int64.toBitVec_ofNat]) d1 (by rw [hrax1])) ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, hrbx2, hrax2, hrcx2, hmem2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hrax2 hrcx2 hmem2
@@ -123,7 +123,7 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
   subst hpc7
   rw [hrax6, hrbx6] at Hm7
   -- Signature: 120 → 146 (window segment: the nop before makeslice is inside the first window)
-  refine eventually_trans _ _ _ _ (Prysm.SyncCommitteeMessage.Decode.example_step_Signature_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Prysm.SyncCommitteeMessage.Decode.example_step_Signature_segment k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
     (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rax.toBitVec + 48) (rax.toBitVec + 56) (rax.toBitVec + 64)
     (rbx.toBitVec + 48) (S + 8)

@@ -144,7 +144,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `TargetIndex`: call block over the window 55–58 (`callq; nop; test; je`), `callq` at 55, continuation label at 85. -/
 theorem _root_.Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call (k : Nat) (hk : Prysm.PendingConsolidation.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingConsolidation.Code.unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
+    ∀ (hC : Uint64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -166,15 +166,15 @@ theorem _root_.Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call (
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 55)⟩ := by
   have hq := Codec.window_infix_at hk 55 4
-  have he : Codec.eraseNop ((Prysm.PendingConsolidation.Code.unmarshalSSZ.drop 55).take 4) = Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d" := by rfl
+  have he : Codec.eraseNop ((Prysm.PendingConsolidation.Code.unmarshalSSZ.drop 55).take 4) = Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d" := by rfl
   have hjc : k + 55 + Codec.nonNopIndex ((Prysm.PendingConsolidation.Code.unmarshalSSZ.drop 55).take 4) 0 = k + 55 := by rfl
-  have hB := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 85 hk
-    (by simp only [Prysm.PendingConsolidation.Code.unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 85 hk
+    (by simp only [Prysm.PendingConsolidation.Code.unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 85)
     (by simp only [Prysm.PendingConsolidation.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.PendingConsolidation.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.calldec_seg_window _ _ _ (k + 55) (k + 55) (k + 85) hq he hjc hB hl
-theorem _root_.Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call_kind : ∀ (h : Host), type_of% (@Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call h) = @Codec.callDecSegKindWindow h Prysm.PendingConsolidation.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d" 55 55 85 := by
+  with_reducible exact Codec.call_decode_segment_window _ _ _ (k + 55) (k + 55) (k + 85) hq he hjc hB hl
+theorem _root_.Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call_kind : ∀ (h : Host), type_of% (@Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call h) = @Codec.callDecodeSegmentKindWindow h Prysm.PendingConsolidation.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d" 55 55 85 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -184,7 +184,7 @@ step theorems of its set-up and the call-block theorem (worked example of the `d
 conditions of the call block (rax = `rcv + 16`, rbx = `bf + 8`, rcx = 8) are closed by `rfl` on the state
 that the steps computed. -/
 theorem _root_.Prysm.PendingConsolidation.Decode.example_step_TargetIndex_field (k : Nat) (hk : Prysm.PendingConsolidation.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingConsolidation.Code.unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
+    ∀ (hC : Uint64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
     (sp rcv bf aRet aFp aS2 aB aD aR : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (hB : sp + (96 : Int64).toBitVec = aB) (hD : sp + (112 : Int64).toBitVec = aD) (hR : sp + (88 : Int64).toBitVec = aR)

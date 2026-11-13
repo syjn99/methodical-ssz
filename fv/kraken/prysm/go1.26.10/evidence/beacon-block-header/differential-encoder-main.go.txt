@@ -1,7 +1,7 @@
-// Scratch differential program (T-9, not committed in Prysm): runs the real generated
-// v1alpha1.BeaconBlockHeader.MarshalSSZTo on the cases of fv/kraken/gen/e2e/bhmdiff.py and prints the observed
+// Scratch differential program (not committed in Prysm): runs the real generated
+// v1alpha1.BeaconBlockHeader.MarshalSSZTo on the cases of fv/kraken/gen/checks/beacon_block_header_encoder_differential.py and prints the observed
 // results as JSON. Expected values are computed by that script independently (Python struct.pack), never from
-// this program. Run as package fve2e/bhmcheck of the temporary Prysm tree with `go run -overlay`.
+// this program. Run as a scratch package of the temporary Prysm tree with `go run -overlay`.
 package main
 
 import (

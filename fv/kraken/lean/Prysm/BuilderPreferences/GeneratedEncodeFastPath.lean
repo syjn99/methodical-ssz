@@ -7,11 +7,11 @@ import Prysm.BuilderPreferences.Code
 
 Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a
 step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem
-has a `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueKindAnyFrame`, `encFastPathKindAnyFrame`).
+has a `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encodeEpilogueKindAnyFrame`, `encodeFastPathKindAnyFrame`).
 **Fast path only**: `len(dst) + 8 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
-FAST-PATH-JSON: {"type": "BuilderPreferences", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 8, "frame": 72, "guard_addend": 0, "runtime_calls": false, "fields": [["MaxExecutionPayment", "u", 8]], "boundaries": [8, 33], "layout": "Prysm.BuilderPreferences.Encode.generated_layout", "S_sha256": "e21892cbe54a798fd0e798ad727b5201c979e46c184d63cc012fb826f2375377", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.BuilderPreferences", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encFastPathKindAnyFrame"}]}
+FAST-PATH-JSON: {"type": "BuilderPreferences", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 8, "frame": 72, "guard_addend": 0, "runtime_calls": false, "fields": [["MaxExecutionPayment", "u", 8]], "boundaries": [8, 33], "layout": "Prysm.BuilderPreferences.Encode.generated_layout", "assembly_sha256": "e21892cbe54a798fd0e798ad727b5201c979e46c184d63cc012fb826f2375377", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "assembly": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.BuilderPreferences", "kinds": [{"theorem": "Encode.generated_head", "kind": "encodeHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encodeEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encodeFastPathKindAnyFrame"}]}
 -/
 
 open Machine Runtime Codec Prysm.BuilderPreferences.Code
@@ -92,7 +92,7 @@ theorem Encode.generated_head : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_head_kind : ∀ (h : Host), type_of% (@Encode.generated_head h)
-    = @Codec.encHeadKindAnyFrame h marshalSSZTo Prysm.BuilderPreferences.Encode.generated_layout [.u64]
+    = @Codec.encodeHeadKindAnyFrame h marshalSSZTo Prysm.BuilderPreferences.Encode.generated_layout [.uint64]
     ⟨8, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 40) (.original 2), .at (.below 24) (.original 3)],
       []⟩ := by
@@ -202,7 +202,7 @@ theorem Encode.generated_field_0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_0_kind : ∀ (h : Host), type_of% (@Encode.generated_field_0 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BuilderPreferences.Encode.generated_layout [.u64]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.BuilderPreferences.Encode.generated_layout [.uint64]
     ⟨8, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 40) (.original 2), .at (.below 24) (.original 3)],
       []⟩
@@ -292,7 +292,7 @@ theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   intro fl; normalize_registers
   apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 80) + 72 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
   normalize_registers
-  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 39) (window_infix_at hk 39 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (decode_return_segment _ (k + 39) (window_infix_at hk 39 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -311,7 +311,7 @@ theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
 theorem Encode.generated_epilogue_kind : ∀ (h : Host), type_of% (@Encode.generated_epilogue h)
-    = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.BuilderPreferences.Encode.generated_layout [.u64]
+    = @Codec.encodeEpilogueKindAnyFrame h marshalSSZTo Prysm.BuilderPreferences.Encode.generated_layout [.uint64]
     ⟨33, 1, [(.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1)],
       [.fixed 8, .fixed 16]⟩ := by
@@ -371,7 +371,7 @@ theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   intro st1 h1
   exact Encode.generated_epilogue k hk hf ast v0 pre d0 hast hv0 hd0 s ra guard hpre fp s2 t40 t24 hfp hs2 ht40 ht24 R hsp hcap hcap63 st1 h1
 theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated_fast h)
-    = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.BuilderPreferences.Encode.generated_layout [.u64] := by
+    = @Codec.encodeFastPathKindAnyFrame h marshalSSZTo Prysm.BuilderPreferences.Encode.generated_layout [.uint64] := by
   intro h; rfl
 
 end Prysm.BuilderPreferences

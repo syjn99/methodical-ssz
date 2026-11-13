@@ -170,7 +170,7 @@ g4f3-x02	steps-tail-indirect-jump
 g4f3-x03	steps-tail-jump-to-callee
 fc-E1-control-none	steps-fail-closed-Eth1Data-control-none
 fc-E1-epilogue-returns_'ok'	steps-fail-closed-Eth1Data-epilogue-returns_'ok'
-fc-E1-epilogue-G4EpiMiss	steps-fail-closed-Eth1Data-epilogue-StepEpiMiss
+fc-E1-epilogue-G4EpiMiss	steps-fail-closed-Eth1Data-epilogue-StepEpilogueMiss
 fc-E1-epilogue-g4stop	steps-fail-closed-Eth1Data-epilogue-returns_0
 fc-E1-epilogue-returns_0	steps-fail-closed-Eth1Data-epilogue-returns_None
 fc-E1-epilogue-returns_None	steps-fail-closed-Eth1Data-epilogue-returns_True
@@ -199,7 +199,7 @@ fc-E1-text-unexpected	steps-fail-closed-Eth1Data-text-unexpected
 fc-E1-phases	steps-fail-closed-Eth1Data-phases
 fc-SM-control-none	steps-fail-closed-SyncCommitteeMessage-control-none
 fc-SM-epilogue-returns_'ok'	steps-fail-closed-SyncCommitteeMessage-epilogue-returns_'ok'
-fc-SM-epilogue-G4EpiMiss	steps-fail-closed-SyncCommitteeMessage-epilogue-StepEpiMiss
+fc-SM-epilogue-G4EpiMiss	steps-fail-closed-SyncCommitteeMessage-epilogue-StepEpilogueMiss
 fc-SM-epilogue-g4stop	steps-fail-closed-SyncCommitteeMessage-epilogue-returns_0
 fc-SM-epilogue-returns_0	steps-fail-closed-SyncCommitteeMessage-epilogue-returns_None
 fc-SM-epilogue-returns_None	steps-fail-closed-SyncCommitteeMessage-epilogue-returns_True
@@ -231,7 +231,7 @@ fc-SM-text-unexpected	steps-fail-closed-SyncCommitteeMessage-text-unexpected
 fc-SM-phases	steps-fail-closed-SyncCommitteeMessage-phases
 fc-PW-control-none	steps-fail-closed-PendingPartialWithdrawal-control-none
 fc-PW-epilogue-returns_'ok'	steps-fail-closed-PendingPartialWithdrawal-epilogue-returns_'ok'
-fc-PW-epilogue-G4EpiMiss	steps-fail-closed-PendingPartialWithdrawal-epilogue-StepEpiMiss
+fc-PW-epilogue-G4EpiMiss	steps-fail-closed-PendingPartialWithdrawal-epilogue-StepEpilogueMiss
 fc-PW-epilogue-g4stop	steps-fail-closed-PendingPartialWithdrawal-epilogue-returns_0
 fc-PW-epilogue-returns_0	steps-fail-closed-PendingPartialWithdrawal-epilogue-returns_None
 fc-PW-epilogue-returns_None	steps-fail-closed-PendingPartialWithdrawal-epilogue-returns_True
@@ -419,7 +419,7 @@ steps-new-SM	steps-new-SyncCommitteeMessage
 steps-new-PC	steps-new-PendingConsolidation
 steps-fail-closed-E1-control-none	steps-fail-closed-Eth1Data-control-none
 steps-fail-closed-E1-epilogue-returns_'ok'	steps-fail-closed-Eth1Data-epilogue-returns_'ok'
-steps-fail-closed-E1-epilogue-G4EpiMiss	steps-fail-closed-Eth1Data-epilogue-StepEpiMiss
+steps-fail-closed-E1-epilogue-G4EpiMiss	steps-fail-closed-Eth1Data-epilogue-StepEpilogueMiss
 steps-fail-closed-E1-epilogue-g4stop	steps-fail-closed-Eth1Data-epilogue-returns_0
 steps-fail-closed-E1-epilogue-returns_0	steps-fail-closed-Eth1Data-epilogue-returns_None
 steps-fail-closed-E1-epilogue-returns_None	steps-fail-closed-Eth1Data-epilogue-returns_True
@@ -448,7 +448,7 @@ steps-fail-closed-E1-text-unexpected	steps-fail-closed-Eth1Data-text-unexpected
 steps-fail-closed-E1-phases	steps-fail-closed-Eth1Data-phases
 steps-fail-closed-SM-control-none	steps-fail-closed-SyncCommitteeMessage-control-none
 steps-fail-closed-SM-epilogue-returns_'ok'	steps-fail-closed-SyncCommitteeMessage-epilogue-returns_'ok'
-steps-fail-closed-SM-epilogue-G4EpiMiss	steps-fail-closed-SyncCommitteeMessage-epilogue-StepEpiMiss
+steps-fail-closed-SM-epilogue-G4EpiMiss	steps-fail-closed-SyncCommitteeMessage-epilogue-StepEpilogueMiss
 steps-fail-closed-SM-epilogue-g4stop	steps-fail-closed-SyncCommitteeMessage-epilogue-returns_0
 steps-fail-closed-SM-epilogue-returns_0	steps-fail-closed-SyncCommitteeMessage-epilogue-returns_None
 steps-fail-closed-SM-epilogue-returns_None	steps-fail-closed-SyncCommitteeMessage-epilogue-returns_True
@@ -480,7 +480,7 @@ steps-fail-closed-SM-text-unexpected	steps-fail-closed-SyncCommitteeMessage-text
 steps-fail-closed-SM-phases	steps-fail-closed-SyncCommitteeMessage-phases
 steps-fail-closed-PW-control-none	steps-fail-closed-PendingPartialWithdrawal-control-none
 steps-fail-closed-PW-epilogue-returns_'ok'	steps-fail-closed-PendingPartialWithdrawal-epilogue-returns_'ok'
-steps-fail-closed-PW-epilogue-G4EpiMiss	steps-fail-closed-PendingPartialWithdrawal-epilogue-StepEpiMiss
+steps-fail-closed-PW-epilogue-G4EpiMiss	steps-fail-closed-PendingPartialWithdrawal-epilogue-StepEpilogueMiss
 steps-fail-closed-PW-epilogue-g4stop	steps-fail-closed-PendingPartialWithdrawal-epilogue-returns_0
 steps-fail-closed-PW-epilogue-returns_0	steps-fail-closed-PendingPartialWithdrawal-epilogue-returns_None
 steps-fail-closed-PW-epilogue-returns_None	steps-fail-closed-PendingPartialWithdrawal-epilogue-returns_True

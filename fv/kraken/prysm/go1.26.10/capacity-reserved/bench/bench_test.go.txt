@@ -1,4 +1,4 @@
-// OPT-R1 benchmarks (protocol §5; scratch package of the temporary Prysm tree, not committed in Prysm).
+// Benchmarks of the capacity-reserving generator option (scratch package of the temporary Prysm tree, not committed in Prysm).
 // The same file is compiled into two test binaries with identical flags: one with the old (698c202) and one
 // with the new (reserve) phase0 files. Native linux/arm64 only; no x86-64 claim.
 package bench

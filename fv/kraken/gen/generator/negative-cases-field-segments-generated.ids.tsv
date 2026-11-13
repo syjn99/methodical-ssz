@@ -1,18 +1,18 @@
 # negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
-g2g-dmdec-pk-control	deposit-message-decode-generated-field-public-key-seg-control
+g2g-dmdec-pk-control	deposit-message-decode-generated-field-public-key-segment-control
 g2g-dmgc-control	deposit-message-decode-accept-generated-composition-control
 g2g-dmg2-control	deposit-message-decode-accept-from-generated-field-segments-control
 g2g-bigc-type-control	blob-identifier-decode-accept-generated-composition-type-control
-g2g-dmdec-pk-stmt-size	deposit-message-decode-generated-field-public-key-seg-statement-hroot-48-to-32
-g2g-dmdec-amt-stmt-val	deposit-message-decode-generated-field-amount-seg-statement-v-v-to-v-f
-g2g-e1dec-cnt-stmt-off	eth1-data-decode-generated-field-deposit-count-seg-statement-h-f-32-to-40
+g2g-dmdec-pk-stmt-size	deposit-message-decode-generated-field-public-key-segment-statement-hroot-48-to-32
+g2g-dmdec-amt-stmt-val	deposit-message-decode-generated-field-amount-segment-statement-v-v-to-v-f
+g2g-e1dec-cnt-stmt-off	eth1-data-decode-generated-field-deposit-count-segment-statement-h-f-32-to-40
 g2g-dmgc-stmt-heap	deposit-message-decode-accept-generated-composition-statement-heap-80-to-48
 g2g-bigc-stmt-idx	blob-identifier-decode-accept-generated-composition-statement-x2-x2-to-g2n
 g2g-dmgc-type-rhs	deposit-message-decode-accept-generated-composition-type-statement-type-deposit-message-to-eth1-data
 g2g-dmg2-stmt-len	deposit-message-decode-accept-from-generated-field-segments-statement-hlen-88-to-80
 g2g-big2-stmt-rsp	blob-identifier-decode-accept-from-generated-field-segments-statement-rsp-8-to-16
-g2g-dmdec-pk-code-count	deposit-message-decode-generated-field-public-key-seg-code-mov-0x30-to-0x20
-g2g-dmdec-amt-code-src	deposit-message-decode-generated-field-amount-seg-code-mov-0x50-rcx-to-0x48-rcx
+g2g-dmdec-pk-code-count	deposit-message-decode-generated-field-public-key-segment-code-mov-0x30-to-0x20
+g2g-dmdec-amt-code-src	deposit-message-decode-generated-field-amount-segment-code-mov-0x50-rcx-to-0x48-rcx
 g2g-dmgc-code-tail	deposit-message-decode-accept-generated-composition-code-mov-rdx-to-0x8-rdx
 g2g-bigc-code-epi	blob-identifier-decode-accept-generated-composition-code-add-0x20-to-0x28
 g2g-dmg2-code-head	deposit-message-decode-accept-from-generated-field-segments-code-cmp-0x58-to-0x50

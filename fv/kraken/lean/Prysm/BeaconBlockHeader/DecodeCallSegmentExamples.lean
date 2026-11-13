@@ -20,7 +20,7 @@ namespace Prysm.BeaconBlockHeader
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Slot` (callee decoder field, Go offset 8): argument set-up, first-field form, directives 15–16. -/
-theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_Slot_arg (k : Nat) (hk : Prysm.BeaconBlockHeader.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.BeaconBlockHeader.Code.unmarshalSSZ k) :
+theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_Slot_argument (k : Nat) (hk : Prysm.BeaconBlockHeader.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.BeaconBlockHeader.Code.unmarshalSSZ k) :
     ∀
     (rcv aF : BitVec 64) (hF : rcv + (8 : Int64).toBitVec = aF)
     (s : MachineData) (hrax : s.regs.rax.toBitVec = rcv),
@@ -29,17 +29,17 @@ theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_Slot_arg (k : Nat) (h
         ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧ st.data.regs.rbx = s.regs.rbx
         ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8 ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 15)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.callArgFirst false 8) 15 hk
-    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  with_reducible exact Codec.callarg_first_seg false _ (k + 15) hA
-theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_Slot_arg_kind : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.example_call_Slot_arg h) = @Codec.callArgFirstKind h Prysm.BeaconBlockHeader.Code.unmarshalSSZ false 8 15 := by
+  have hA := Codec.infix_sub (q := Codec.callArgumentFirst false 8) 15 hk
+    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callArgumentFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  with_reducible exact Codec.call_argument_first_segment false _ (k + 15) hA
+theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_Slot_argument_kind : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.example_call_Slot_argument h) = @Codec.callArgumentFirstKind h Prysm.BeaconBlockHeader.Code.unmarshalSSZ false 8 15 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Slot`: call block of the callee decoder, directives 17–19, continuation label at 46. -/
 theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_Slot_call (k : Nat) (hk : Prysm.BeaconBlockHeader.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.BeaconBlockHeader.Code.unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ")
+    ∀ (hC : Uint64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -60,21 +60,21 @@ theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_Slot_call (k : Nat) (
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 17)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 17 hk
-    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 46 hk
-    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA := Codec.infix_sub (q := Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 17 hk
+    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callDecode, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 46 hk
+    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 46)
     (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.calldec_seg _ _ (k + 17) (k + 46) hA hB hl
-theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_Slot_call_kind : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.example_call_Slot_call h) = @Codec.callDecSegKind h Prysm.BeaconBlockHeader.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9" 17 46 := by
+  with_reducible exact Codec.call_decode_segment _ _ (k + 17) (k + 46) hA hB hl
+theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_Slot_call_kind : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.example_call_Slot_call h) = @Codec.callDecodeSegmentKind h Prysm.BeaconBlockHeader.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9" 17 46 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `ProposerIndex` (callee decoder field, SSZ offset 8, Go offset 16): argument set-up by reload, directives 47–54 (padding `nop`). -/
-theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_arg (k : Nat) (hk : Prysm.BeaconBlockHeader.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.BeaconBlockHeader.Code.unmarshalSSZ k) :
+theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_argument (k : Nat) (hk : Prysm.BeaconBlockHeader.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.BeaconBlockHeader.Code.unmarshalSSZ k) :
     ∀
     (sp rcv bf aB aD aR aSrc aF : BitVec 64)
     (hB' : sp + (120 : Int64).toBitVec = aB) (hD : sp + (136 : Int64).toBitVec = aD) (hR : sp + (112 : Int64).toBitVec = aR)
@@ -89,17 +89,17 @@ theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_arg (k 
         ∧ st.data.regs.rbx.toBitVec = aSrc ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8
         ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 47)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.callArgReload true 120 8 136 (-8) 112 16) 47 hk
-    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callArgReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  with_reducible exact Codec.callarg_reload_seg true _ _ _ _ _ _ (k + 47) hA
-theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_arg_kind : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_arg h) = @Codec.callArgReloadKind h Prysm.BeaconBlockHeader.Code.unmarshalSSZ true 120 8 136 (-8) 112 16 47 := by
+  have hA := Codec.infix_sub (q := Codec.callArgumentReload true 120 8 136 (-8) 112 16) 47 hk
+    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callArgumentReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  with_reducible exact Codec.call_argument_reload_segment true _ _ _ _ _ _ (k + 47) hA
+theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_argument_kind : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_argument h) = @Codec.callArgumentReloadKind h Prysm.BeaconBlockHeader.Code.unmarshalSSZ true 120 8 136 (-8) 112 16 47 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `ProposerIndex`: call block of the callee decoder, directives 55–57, continuation label at 85. -/
 theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_call (k : Nat) (hk : Prysm.BeaconBlockHeader.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.BeaconBlockHeader.Code.unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
+    ∀ (hC : Uint64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -120,15 +120,15 @@ theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_call (k
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 55)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 55 hk
-    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
-    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA := Codec.infix_sub (q := Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 55 hk
+    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callDecode, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
+    (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 85)
     (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.BeaconBlockHeader.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.calldec_seg _ _ (k + 55) (k + 85) hA hB hl
-theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_call_kind : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_call h) = @Codec.callDecSegKind h Prysm.BeaconBlockHeader.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154" 55 85 := by
+  with_reducible exact Codec.call_decode_segment _ _ (k + 55) (k + 85) hA hB hl
+theorem _root_.Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_call_kind : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Decode.example_call_ProposerIndex_call h) = @Codec.callDecodeSegmentKind h Prysm.BeaconBlockHeader.Code.unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154" 55 85 := by
   intro h; with_reducible rfl
 
 end Prysm.BeaconBlockHeader

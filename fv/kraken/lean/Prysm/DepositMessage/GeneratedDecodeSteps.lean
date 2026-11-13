@@ -10,7 +10,7 @@ import Codec.FixedBytesDecodeWindowOffsetZero
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
 /-! Step chain fields (machine-readable, read by `kindcheck.py`):
-FIELDS-JSON: [{"field": "PublicKey", "theorems": ["Decode.generated_step_PublicKey_seg", "Decode.generated_step_directive_37", "Decode.generated_step_directive_38", "Decode.generated_step_directive_45", "Decode.generated_step_directive_46"]}, {"field": "WithdrawalCredentials", "theorems": ["Decode.generated_step_WithdrawalCredentials_seg", "Decode.generated_step_directive_73", "Decode.generated_step_directive_74", "Decode.generated_step_directive_81", "Decode.generated_step_directive_82"]}, {"field": "Amount", "theorems": ["Decode.generated_step_directive_83", "Decode.generated_step_directive_84", "Decode.generated_step_directive_85"]}]
+FIELDS-JSON: [{"field": "PublicKey", "theorems": ["Decode.generated_step_PublicKey_segment", "Decode.generated_step_directive_37", "Decode.generated_step_directive_38", "Decode.generated_step_directive_45", "Decode.generated_step_directive_46"]}, {"field": "WithdrawalCredentials", "theorems": ["Decode.generated_step_WithdrawalCredentials_segment", "Decode.generated_step_directive_73", "Decode.generated_step_directive_74", "Decode.generated_step_directive_81", "Decode.generated_step_directive_82"]}, {"field": "Amount", "theorems": ["Decode.generated_step_directive_83", "Decode.generated_step_directive_84", "Decode.generated_step_directive_85"]}]
 -/
 
 open Machine Runtime Prysm.DepositMessage.Code
@@ -22,7 +22,7 @@ namespace Prysm.DepositMessage
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `PublicKey` (48-byte vector, SSZ offset 0, Go offset 0): decode segment (offset-0 form) over the windows 13–21 and 26–36; receiver in rdx after makeslice, in rdx after memmove (`callq` at 31). -/
-theorem Decode.generated_step_PublicKey_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_PublicKey_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB) (hS : sp + (24 : Int64).toBitVec = aS)
@@ -59,17 +59,17 @@ theorem Decode.generated_step_PublicKey_seg (k : Nat) (hk : unmarshalSSZ.IsInfix
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 13)⟩ := by
   have hqA := Codec.window_infix_at hk 13 9
-  have heA : Codec.eraseNop ((unmarshalSSZ.drop 13).take 9) = Codec.bytesDecHeadRegister Reg64.rdx 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" 48 8 16 := by rfl
+  have heA : Codec.eraseNop ((unmarshalSSZ.drop 13).take 9) = Codec.bytesDecodeHeadRegister Reg64.rdx 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" 48 8 16 := by rfl
   have hqB := Codec.window_infix_at hk 26 11
-  have heB : Codec.eraseNop ((unmarshalSSZ.drop 26).take 11) = Codec.bytesDecMidOffsetZeroRegisters Reg64.rdx Reg64.rdx 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_b0" 48 56 24 0 8 16 := by rfl
+  have heB : Codec.eraseNop ((unmarshalSSZ.drop 26).take 11) = Codec.bytesDecodeMiddleOffsetZeroRegisters Reg64.rdx Reg64.rdx 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_b0" 48 56 24 0 8 16 := by rfl
   have hjl : k + 26 + Codec.nonNopIndex ((unmarshalSSZ.drop 26).take 11) 0 = k + 26 := by rfl
   have hl := Machine.label_at' hk hf (j := 26)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hjm : k + 26 + Codec.nonNopIndex ((unmarshalSSZ.drop 26).take 11) 5 = k + 31 := by rfl
   have hend : k + 26 + ((unmarshalSSZ.drop 26).take 11).length = k + 37 := by rfl
-  with_reducible exact Codec.bytesdec_seg_offset_zero_window 48 (Or.inr (Or.inl rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 13) (k + 26) (k + 26) (k + 31) (k + 37) hqA heA hqB heB hjl hl hjm hend
-theorem Decode.generated_step_PublicKey_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_step_PublicKey_seg h) = @Codec.bytesDecSegOffsetZeroKindWindow h 48 unmarshalSSZ Reg64.rdx 13 31 37 48 56 24 0 8 16 := by
+  with_reducible exact Codec.bytes_decode_segment_offset_zero_window 48 (Or.inr (Or.inl rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 13) (k + 26) (k + 26) (k + 31) (k + 37) hqA heA hqB heB hjl hl hjm hend
+theorem Decode.generated_step_PublicKey_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_step_PublicKey_segment h) = @Codec.bytesDecodeSegmentOffsetZeroKindWindow h 48 unmarshalSSZ Reg64.rdx 13 31 37 48 56 24 0 8 16 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -144,7 +144,7 @@ theorem Decode.generated_step_directive_46_kind : ∀ (h : Host), type_of% (@Dec
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `WithdrawalCredentials` (32-byte vector, SSZ offset 48, Go offset 24): decode segment over the windows 47–55 and 61–72; receiver in rdx after makeslice, in rdx after memmove (`callq` at 67). -/
-theorem Decode.generated_step_WithdrawalCredentials_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_WithdrawalCredentials_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB) (hS : sp + (24 : Int64).toBitVec = aS)
@@ -182,17 +182,17 @@ theorem Decode.generated_step_WithdrawalCredentials_seg (k : Nat) (hk : unmarsha
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 47)⟩ := by
   have hqA := Codec.window_infix_at hk 47 9
-  have heA : Codec.eraseNop ((unmarshalSSZ.drop 47).take 9) = Codec.bytesDecHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_10c" 48 32 40 := by rfl
+  have heA : Codec.eraseNop ((unmarshalSSZ.drop 47).take 9) = Codec.bytesDecodeHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_10c" 48 32 40 := by rfl
   have hqB := Codec.window_infix_at hk 61 12
-  have heB : Codec.eraseNop ((unmarshalSSZ.drop 61).take 12) = Codec.bytesDecMidRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_10c" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_14d" 48 56 24 24 32 40 48 := by rfl
+  have heB : Codec.eraseNop ((unmarshalSSZ.drop 61).take 12) = Codec.bytesDecodeMiddleRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_10c" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_14d" 48 56 24 24 32 40 48 := by rfl
   have hjl : k + 61 + Codec.nonNopIndex ((unmarshalSSZ.drop 61).take 12) 0 = k + 61 := by rfl
   have hl := Machine.label_at' hk hf (j := 61)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hjm : k + 61 + Codec.nonNopIndex ((unmarshalSSZ.drop 61).take 12) 6 = k + 67 := by rfl
   have hend : k + 61 + ((unmarshalSSZ.drop 61).take 12).length = k + 73 := by rfl
-  with_reducible exact Codec.bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) (k + 61) (k + 67) (k + 73) hqA heA hqB heB hjl hl hjm hend
-theorem Decode.generated_step_WithdrawalCredentials_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_step_WithdrawalCredentials_seg h) = @Codec.bytesDecSegKindWindow h 32 unmarshalSSZ Reg64.rdx 47 67 73 48 56 24 24 32 40 48 := by
+  with_reducible exact Codec.bytes_decode_segment_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) (k + 61) (k + 67) (k + 73) hqA heA hqB heB hjl hl hjm hend
+theorem Decode.generated_step_WithdrawalCredentials_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_step_WithdrawalCredentials_segment h) = @Codec.bytesDecodeSegmentKindWindow h 32 unmarshalSSZ Reg64.rdx 47 67 73 48 56 24 24 32 40 48 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in

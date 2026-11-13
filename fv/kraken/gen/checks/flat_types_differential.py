@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Go differential of the generated decoders (UnmarshalSSZ, 7 types) and encoder fast paths
-(MarshalSSZTo, 8 types) closed in this unit (Python 3 standard library only; text of five_flat_types_differential.py + flat_encoders_differential.py).
+(MarshalSSZTo, 8 types) of the flat types (Python 3 standard library only; text of five_flat_types_differential.py + flat_encoders_differential.py).
 
   flat_types_differential.py cases <cases.json>                      write the cases
   flat_types_differential.py plant <cases.json> <planted.json>       copy with two expected values changed (negative control)
   flat_types_differential.py check <cases.json> <go-out.json> <result.json>
-The Go program is `prysm/go1.26.10/evidence/flat-types/f24check-main.go.txt`, run natively with Go 1.26.10 through the gate
+The Go program is `prysm/go1.26.10/evidence/flat-types/differential-main.go.txt`, run natively with Go 1.26.10 through the gate
 with `go run -overlay` in the parked Prysm tree (read only). This is a Go-semantics check on the host
 (linux/arm64), not an execution of the amd64 ELF. Every expected value is computed here, independently of the code
 under test, from the field list of the hand Desc (`lean/Prysm/DepositRequest/SpecDescription.lean`, Prysm proto): the encoding is the
@@ -60,25 +60,25 @@ def cases():
     for t in DEC:
         for k in range(3):
             vs = values(t, k)
-            cs.append({"id": f"u-{t}-accept-{k}", "type": t, "op": "u", "in": enc(vs).hex(),
+            cs.append({"id": f"unmarshal-{t}-accept-{k}", "type": t, "op": "UnmarshalSSZ", "in": enc(vs).hex(),
                        "names": [n for n, _, _ in vs],
-                       "exp": {"err": "", "vals": [{"name": n, "kind": kind, "u": v if kind == "u" else 0,
-                                                   "b": v.hex() if kind == "b" else "",
+                       "exp": {"err": "", "vals": [{"name": n, "kind": kind, "uint64": v if kind == "u" else 0,
+                                                   "bytes": v.hex() if kind == "b" else "",
                                                    "len": len(v) if kind == "b" else 0,
                                                    "cap": len(v) if kind == "b" else 0} for n, kind, v in vs]}})
         n = size(t)
         for m in (0, n - 1, n + 1):
-            cs.append({"id": f"u-{t}-size-{m}", "type": t, "op": "u", "in": (b"\x01" * m).hex(), "names": [],
+            cs.append({"id": f"unmarshal-{t}-size-{m}", "type": t, "op": "UnmarshalSSZ", "in": (b"\x01" * m).hex(), "names": [],
                        "exp": {"err_is_ErrSize": True}})
     for t in ENC:
         for k in range(3):
             vs = values(t, k)
-            fields = [{"name": n, "u": v if kind == "u" else 0, "b": v.hex() if kind == "b" else ""} for n, kind, v in vs]
+            fields = [{"name": n, "uint64": v if kind == "u" else 0, "bytes": v.hex() if kind == "b" else ""} for n, kind, v in vs]
             for pl in (0, 7):
                 pre = bytes(0xa0 + j for j in range(pl))
                 for spare in (0, 5):
                     cap = pl + size(t) + spare
-                    cs.append({"id": f"m-{t}-v{k}-p{pl}-c{spare}", "type": t, "op": "m", "fields": fields,
+                    cs.append({"id": f"marshal-{t}-v{k}-p{pl}-c{spare}", "type": t, "op": "MarshalSSZTo", "fields": fields,
                                "pre": pre.hex(), "cap": cap,
                                "exp": {"err": "", "out": (pre + enc(vs)).hex(), "out_cap": cap, "same_array": True,
                                        "recv_unchanged": True}})
@@ -95,7 +95,7 @@ def check(cases_p, out_p, res_p):
             bad.append((c["id"], "missing"))
             continue
         e = c["exp"]
-        if c["op"] == "u":
+        if c["op"] == "UnmarshalSSZ":
             if e.get("err_is_ErrSize"):
                 if not (r["err"] and r["err_is_ErrSize"]):
                     bad.append((c["id"], "not ErrSize"))
@@ -103,7 +103,7 @@ def check(cases_p, out_p, res_p):
             if r["err"] != "":
                 bad.append((c["id"], "err " + r["err"]))
                 continue
-            got = [{k: v[k] for k in ("name", "kind", "u", "b", "len", "cap")} for v in (r["vals"] or [])]
+            got = [{k: v[k] for k in ("name", "kind", "uint64", "bytes", "len", "cap")} for v in (r["vals"] or [])]
             if got != e["vals"]:
                 bad.append((c["id"], "vals"))
         else:
@@ -120,9 +120,9 @@ def check(cases_p, out_p, res_p):
 def plant(cases_p, out_p):
     cs = json.load(open(cases_p))
     for c in cs:
-        if c["id"] == "u-ValidatorIdentity-accept-1":
-            c["exp"]["vals"][0]["u"] ^= 1
-        if c["id"] == "m-DepositRequest-v1-p7-c5":
+        if c["id"] == "unmarshal-ValidatorIdentity-accept-1":
+            c["exp"]["vals"][0]["uint64"] ^= 1
+        if c["id"] == "marshal-DepositRequest-v1-p7-c5":
             c["exp"]["out"] = c["exp"]["out"][:-2] + "00"
     json.dump(cs, open(out_p, "w"), indent=1)
     return 0

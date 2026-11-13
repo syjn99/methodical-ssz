@@ -2,12 +2,12 @@ import Codec.Bytes32Encode
 import Prysm.Checkpoint.EncodeFastPath
 
 /-!
-# In-sample check of the 32-byte field pattern (encode): the Checkpoint encoder fast path through `rootenc_seg`
+# In-sample check of the 32-byte field pattern (encode): the Checkpoint encoder fast path through `root_encode_segment`
 
 `Encode.fast_path_from_bytes32_pattern` has the statement of `Prysm.Checkpoint.Encode.fast_path` (`Prysm/Checkpoint/EncodeFastPath.lean`)
 word for word. Its proof is the hand proof with directives 36–62 (the `Root` length test,
 the capacity test, the spills and `memmove`) replaced by one application of
-`Codec.rootenc_seg` (head block at k + 36, `lrej` = `L_108`, tail block at k + 55 = `L_cf`;
+`Codec.root_encode_segment` (head block at k + 36, `lrej` = `L_108`, tail block at k + 55 = `L_cf`;
 field displacements 16 / 24; spills 0x58 / 0x50 / 0x60). Directives 0–35 (guard, prologue,
 the inlined Epoch encoder) and 63–70 (return) are the hand text unchanged (verbatim share;
 they are not part of the 32-byte field pattern). `Encode.fast_path_from_bytes32_pattern_same_statement` checks that the statements are the
@@ -70,11 +70,11 @@ theorem Encode.fast_path_from_bytes32_pattern (k : Nat) (hk : marshalSSZTo.IsInf
           ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
           ⋆ Eq (root.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hA := Codec.infix_sub (q := Codec.rootEncHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf" 16 24) 36 hk
-    (by simp only [marshalSSZTo, Codec.rootEncHead, List.drop_succ_cons, List.drop_zero, List.length_cons,
+  have hA := Codec.infix_sub (q := Codec.rootEncodeHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf" 16 24) 36 hk
+    (by simp only [marshalSSZTo, Codec.rootEncodeHead, List.drop_succ_cons, List.drop_zero, List.length_cons,
       List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.rootEncTail "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf" 88 80 96) 55 hk
-    (by simp only [marshalSSZTo, Codec.rootEncTail, List.drop_succ_cons, List.drop_zero, List.length_cons,
+  have hB := Codec.infix_sub (q := Codec.rootEncodeTail "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf" 88 80 96) 55 hk
+    (by simp only [marshalSSZTo, Codec.rootEncodeTail, List.drop_succ_cons, List.drop_zero, List.length_cons,
       List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 55)
     (by simp only [marshalSSZTo, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
@@ -155,7 +155,7 @@ theorem Encode.fast_path_from_bytes32_pattern (k : Nat) (hk : marshalSSZTo.IsInf
   intro m6 H6
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6
   unfold_step
-  refine eventually_trans _ _ _ _ (Codec.rootenc_seg _ _ 16 24 88 80 96 (k + 36) (k + 55) hA hB hl
+  refine eventually_trans _ _ _ _ (Codec.root_encode_segment _ _ 16 24 88 80 96 (k + 36) (k + 55) hA hB hl
     (rsp.toBitVec - 8#64 - 104) rax.toBitVec (rcx.toBitVec + 8) rbx.toBitVec rdi.toBitVec p
     (rax.toBitVec + 16) (rax.toBitVec + 24) (rsp.toBitVec - 24) (rsp.toBitVec - 32) (rsp.toBitVec - 16)
     (rsp.toBitVec - 120) (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rbx.toBitVec + rcx.toBitVec + 8) S

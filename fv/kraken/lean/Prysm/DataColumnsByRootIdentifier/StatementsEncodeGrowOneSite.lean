@@ -123,7 +123,7 @@ def Encode.grow_one_site_spec_statement : Prop :=
       ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 pc.toInt).At (s.regs.rax.toBitVec + 32))
       ⋆ Eq ((Int.toBytes 8 nb.toInt).At (s.regs.rax.toBitVec + 40))
-      ⋆ Eq (g.root.toList.At pr) ⋆ Eq ((Spec.u64Bytes g.cols).toList.At pc)
+      ⋆ Eq (g.root.toList.At pr) ⋆ Eq ((Spec.uint64Bytes g.cols).toList.At pc)
       ⋆ Eq ((pre ++ spare).At s.regs.rbx.toBitVec) ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 8 < s.regs.rsp.toNat)
     (hbud : 4 * (s.regs.rcx.toNat + 36 + 8 * g.cols.length) + 8576 ≤ avail)

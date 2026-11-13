@@ -1,12 +1,12 @@
 # negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
-sm-gen-control	sync-committee-message-decode-generated-call-signature-seg-control
-sm-gen-code-siglen	sync-committee-message-decode-generated-call-signature-seg-code-mov-0x60-to-0x50
-sm-gen-stmt-src	sync-committee-message-decode-generated-call-signature-seg-statement-h-src-48-to-40
-sm-seg-control	sync-committee-message-decode-validator-index-arg-control
-sm-seg-code-viadd	sync-committee-message-decode-validator-index-arg-code-add-0x28-to-0x20
-sm-seg-stmt-vi	sync-committee-message-decode-validator-index-arg-statement-h-src-40-to-32
-sm-rax-control	sync-committee-message-bytes32dec-seg-rax-control
-sm-rax-stmt-len	sync-committee-message-bytes32dec-seg-rax-statement-heap-32-to-0
+sm-gen-control	sync-committee-message-decode-generated-call-signature-segment-control
+sm-gen-code-siglen	sync-committee-message-decode-generated-call-signature-segment-code-mov-0x60-to-0x50
+sm-gen-stmt-src	sync-committee-message-decode-generated-call-signature-segment-statement-h-src-48-to-40
+sm-seg-control	sync-committee-message-decode-validator-index-argument-control
+sm-seg-code-viadd	sync-committee-message-decode-validator-index-argument-code-add-0x28-to-0x20
+sm-seg-stmt-vi	sync-committee-message-decode-validator-index-argument-statement-h-src-40-to-32
+sm-rax-control	sync-committee-message-bytes32-decode-segment-rax-control
+sm-rax-stmt-len	sync-committee-message-bytes32-decode-segment-rax-statement-heap-32-to-0
 sm-rej-control	sync-committee-message-decode-reject-size-control
 sm-rej-stmt	sync-committee-message-decode-reject-size-statement-rbx-e1-to-e0
 sm-rej-code-size	sync-committee-message-decode-reject-size-code-cmp-0x90-to-0x91
@@ -21,11 +21,11 @@ sm-ask-stmt-weaken	sync-committee-message-decode-accept-spec-statement-hav-128-a
 sm-rc-stmt-size	sync-committee-message-decode-reject-complete-statement-size-144-to-143
 sm-wita-stmt-rax	sync-committee-message-witness-decode-accept-runs-statement-rax-0-to-1
 sm-witr-stmt-len	sync-committee-message-witness-decode-reject-size-runs-statement-hlen-144-to-145
-pc-gen-control	pending-consolidation-decode-generated-call-source-index-arg-control
-pc-gen-code-off	pending-consolidation-decode-generated-call-source-index-arg-code-add-0x8-to-0x10
-pc-gen-stmt-off	pending-consolidation-decode-generated-call-source-index-arg-statement-h-f-8-to-16
-pc-nop-control	pending-consolidation-calldec-nop-seg-control
-pc-nop-stmt-spill	pending-consolidation-calldec-nop-seg-statement-h-s2-8-to-16
+pc-gen-control	pending-consolidation-decode-generated-call-source-index-argument-control
+pc-gen-code-off	pending-consolidation-decode-generated-call-source-index-argument-code-add-0x8-to-0x10
+pc-gen-stmt-off	pending-consolidation-decode-generated-call-source-index-argument-statement-h-f-8-to-16
+pc-nop-control	pending-consolidation-call-decode-nop-segment-control
+pc-nop-stmt-spill	pending-consolidation-call-decode-nop-segment-statement-h-s2-8-to-16
 pc-head-control	pending-consolidation-decode-head-control
 pc-head-code-order	pending-consolidation-decode-head-code-mov-0x70-rsp-to-0x68-rsp
 pc-rej-control	pending-consolidation-decode-reject-size-control

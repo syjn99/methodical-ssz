@@ -3,7 +3,7 @@
 
   checkpoint_marshal_differential.py cases <cases.json>
   checkpoint_marshal_differential.py check <cases.json> <old.json> <new.json> <result.json>
-The Go program is odiff-main.go.txt, built twice in the temporary Prysm tree (old and new phase0 files,
+The Go program is differential-main.go.txt, built twice in the temporary Prysm tree (old and new phase0 files,
 identical flags) and run natively on linux/arm64 with Go 1.26.10. It checks Go semantics, not the amd64 ELF.
 Expected values are computed here, independently of the code under test:
  - returned value (contract items 1-2): ok -> prefix ++ struct.pack('<Q', epoch) ++ root; len(root) != 32 ->

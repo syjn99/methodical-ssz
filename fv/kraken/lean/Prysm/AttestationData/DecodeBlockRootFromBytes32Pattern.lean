@@ -2,10 +2,10 @@ import Codec.Bytes32Decode
 import Prysm.AttestationData.DecodeAcceptBlockRoot
 
 /-!
-# In-sample check of the 32-byte field pattern (decode): `AttestationData.BeaconBlockRoot` from `rootdec_seg`
+# In-sample check of the 32-byte field pattern (decode): `AttestationData.BeaconBlockRoot` from `root_decode_segment`
 
 `Decode.block_root_from_bytes32_pattern` has the statement of `Prysm.AttestationData.Decode.block_root` (`Prysm/AttestationData/DecodeAcceptBlockRoot.lean`) word for word.
-Its proof steps the label `L_167` (directive 85), applies `Codec.rootdec_seg` with the
+Its proof steps the label `L_167` (directive 85), applies `Codec.root_decode_segment` with the
 AttestationData parameters (head block at k + 86, second block at k + 100 = `L_1ac`,
 `lwb` = `L_1f3`; receiver spill 0x80, buffer spill 0x88, pointer slot 0x68; field offsets
 24 / 32 / 40; source offset 16; callee stack `S + 96`), and does the two instance-specific
@@ -56,15 +56,15 @@ theorem Decode.block_root_from_bytes32_pattern (k : Nat) (hk : unmarshalSSZ.IsIn
           ⋆ Eq (root.At (bf + 16))
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 85)⟩ := by
-  have hA := infix_sub (q := rootDecHead
+  have hA := infix_sub (q := rootDecodeHead
     "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac" 128 32 40) 86 hk
-    (by simp only [unmarshalSSZ, rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons,
+    (by simp only [unmarshalSSZ, rootDecodeHead, List.drop_succ_cons, List.drop_zero, List.length_cons,
       List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := infix_sub (q := rootDecMid
+  have hB := infix_sub (q := rootDecodeMiddle
     "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac"
     "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1f3"
     128 136 104 24 32 40 16) 100 hk
-    (by simp only [unmarshalSSZ, rootDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons,
+    (by simp only [unmarshalSSZ, rootDecodeMiddle, List.drop_succ_cons, List.drop_zero, List.length_cons,
       List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 100)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
@@ -73,7 +73,7 @@ theorem Decode.block_root_from_bytes32_pattern (k : Nat) (hk : unmarshalSSZ.IsIn
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14
   step_directive hk unmarshalSSZ 85
-  refine eventually_trans _ _ _ _ (rootdec_seg _ _ 128 136 104 24 32 40 16 (k + 86) (k + 100) hA hB hl
+  refine eventually_trans _ _ _ _ (root_decode_segment _ _ 128 136 104 24 32 40 16 (k + 86) (k + 100) hA hB hl
     (rsp0.toBitVec - 120) rcv bf (rsp0.toBitVec + 8) (rsp0.toBitVec + 16) (rsp0.toBitVec - 16)
     (rsp0.toBitVec - 128) (rsp0.toBitVec - 224 - BitVec.ofNat 64 S) (rcv + 24) (rcv + 32) (rcv + 40) (bf + 16)
     (S + 96)

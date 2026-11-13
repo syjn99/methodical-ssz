@@ -15,15 +15,15 @@ CommitteeIndex, ValidatorIndex, Epoch) to an argument set-up, then
     test %rax,%rax
     je L            -- nil error: continue at L
 
-`U64CalleeAccept fn` is the text of the four existing function specifications `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec`,
+`Uint64CalleeAccept fn` is the text of the four existing function specifications `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec`,
 `Prysm.ValidatorIndex.Decode.accept_function_spec`, `Prysm.Epoch.Decode.accept_function_spec` with the callee label as a parameter. It is the existing spec-hypothesis
-form (`Prysm/Slot/CalleeDecodeFunctionSpecs.lean`: each existing spec is `U64CalleeAccept <its label>` by `rfl`); the proved theorems
+form (`Prysm/Slot/CalleeDecodeFunctionSpecs.lean`: each existing spec is `Uint64CalleeAccept <its label>` by `rfl`); the proved theorems
 `Prysm.Slot.Decode.accept_function_spec_holds`, `Prysm.CommitteeIndex.Decode.accept_function_spec_holds`, `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`, `Prysm.Epoch.Decode.accept_function_spec_holds` discharge it. No runtime contract is used.
 
-* `calldec_seg` — the reusable call block: `callDec fn lok` (3 directives) and the label `lok`.
+* `call_decode_segment` — the reusable call block: `callDecode fn lok` (3 directives) and the label `lok`.
 * Argument set-up, the three straight-line forms of the seven development sites (register hand-over only,
-  memory unchanged): `callarg_first_seg` (`add $f,%rax; mov $8,%ecx`), `callarg_reload_seg` (three reloads
-  from the spills with `add`), `callarg_lea_seg` + `callarg_mov_seg` (the `lea` form whose results are moved
+  memory unchanged): `call_argument_first_segment` (`add $f,%rax; mov $8,%ecx`), `call_argument_reload_segment` (three reloads
+  from the spills with `add`), `call_argument_lea_segment` + `call_argument_mov_segment` (the `lea` form whose results are moved
   to rax / rbx after an interleaved field read). `pad = true` adds the compiler padding `nop` before the call.
 Not covered: any other register choice; pointer-field callees (`Prysm.Checkpoint.Decode.accept_function_spec`, a different specification form).
 -/
@@ -38,7 +38,7 @@ variable [Host]
 /-- Accept-path function specification of a `uint64`-overlay `UnmarshalSSZ` at the label `fn`
 (`len(buf) = 8`): the common text of `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec`,
 `Prysm.ValidatorIndex.Decode.accept_function_spec`, `Prysm.Epoch.Decode.accept_function_spec`. -/
-def U64CalleeAccept (fn : String) : Prop :=
+def Uint64CalleeAccept (fn : String) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (e8 fp s2 c0 : List UInt8) (guard : UInt64) (F : DataMem → Prop),
     e8.length = 8 → fp.length = 8 → s2.length = 8 → c0.length = 8 →
     st.regs.rcx = 8 → guard.toNat < st.regs.rsp.toNat →
@@ -63,7 +63,7 @@ def padLen : Bool → Nat
   | true => 1
 
 /-- The call block: `callq fn; test %rax,%rax; je lok`. -/
-def callDec (fn lok : String) : Program :=
+def callDecode (fn lok : String) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.call (RelRegOrMem.rel ((ConstExpr.label fn).sub ConstExpr.after_current_instruction)))),
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
@@ -72,10 +72,10 @@ def callDec (fn lok : String) : Program :=
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.z lok))]
 
 /-- The continuation label of the call block. -/
-def callDecContinuationLabel (lok : String) : Program := [Kraken.Directive.label lok]
+def callDecodeContinuationLabel (lok : String) : Program := [Kraken.Directive.label lok]
 
 /-- Set-up of the first field: `add $f,%rax; mov $0x8,%ecx` (+ `nop`). -/
-def callArgFirst : Bool → Int64 → Program
+def callArgumentFirst : Bool → Int64 → Program
   | false, f =>
     [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
        (Operation.add (RegOrMem.reg (Reg.low Reg64.rax Width.W64)) (Operand.imm (ConstExpr.int64 f)))),
@@ -90,7 +90,7 @@ def callArgFirst : Bool → Int64 → Program
 
 /-- Set-up by reload: `mov dB(%rsp),%rbx; add $src,%rbx; mov dD(%rsp),%rdi; add $c,%rdi; mov dR(%rsp),%rax;
 add $f,%rax; mov $0x8,%ecx` (+ `nop`). -/
-def callArgReload : Bool → Int64 → Int64 → Int64 → Int64 → Int64 → Int64 → Program
+def callArgumentReload : Bool → Int64 → Int64 → Int64 → Int64 → Int64 → Int64 → Program
   | false, dB, src, dD, c, dR, f =>
     [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
        (Operation.mov (RegOrMem.reg (Reg.low Reg64.rbx Width.W64))
@@ -131,7 +131,7 @@ def callArgReload : Bool → Int64 → Int64 → Int64 → Int64 → Int64 → I
 
 /-- Set-up, `lea` form, first part: `mov dB(%rsp),%rbx; lea src(%rbx),%rdx; mov dD(%rsp),%rdi; add $c,%rdi;
 mov dR(%rsp),%rax; lea f(%rax),%rsi`. -/
-def callArgLea (dB src dD c dR f : Int64) : Program :=
+def callArgumentLea (dB src dD c dR f : Int64) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.reg (Reg.low Reg64.rbx Width.W64))
        (Operand.regOrMem (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rsp)) none (ConstExpr.int64 dB)))))),
@@ -151,7 +151,7 @@ def callArgLea (dB src dD c dR f : Int64) : Program :=
        (AddrExpr.mk (some (RegOrRip.reg Reg64.rax)) none (ConstExpr.int64 f))))]
 
 /-- Set-up, `lea` form, second part: `mov %rsi,%rax; mov %rdx,%rbx; mov $0x8,%ecx`. -/
-def callArgMov : Program :=
+def callArgumentMov : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.reg (Reg.low Reg64.rax Width.W64))
        (Operand.regOrMem (RegOrMem.reg (Reg.low Reg64.rsi Width.W64))))),
@@ -178,9 +178,9 @@ With rsp = `sp`, rcx = 8, the destination `dst` in rax and the source `src` in r
 `hC`) stores the 8 source bytes `e8` at `dst` and returns nil; the block ends after the label `lok` with
 rax = rbx = 0. The return slot `aRet = sp − 8` holds the address of directive `j + 1`, the callee's frame
 pointer slot `aFp = sp − 16` the caller's rbp and its spill slot `aS2 = sp + 8` the source pointer. -/
-theorem calldec_seg (fn lok : String) (j j2 : Nat)
-    (hA : (callDec fn lok).IsInfixAt Host.prog j) (hB : (callDecContinuationLabel lok).IsInfixAt Host.prog j2)
-    (hl : label lok = Host.addrOf j2) (hC : U64CalleeAccept fn)
+theorem call_decode_segment (fn lok : String) (j j2 : Nat)
+    (hA : (callDecode fn lok).IsInfixAt Host.prog j) (hB : (callDecodeContinuationLabel lok).IsInfixAt Host.prog j2)
+    (hl : label lok = Host.addrOf j2) (hC : Uint64CalleeAccept fn)
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -204,7 +204,7 @@ theorem calldec_seg (fn lok : String) (j j2 : Nat)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 hrax hrbx hrcx h_mem ⊢
   subst rsp rbp r14 rcx hRet hFp hS2 hrax hrbx
-  step_directive hA callDec 0
+  step_directive hA callDecode 0
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
@@ -224,14 +224,14 @@ theorem calldec_seg (fn lok : String) (j j2 : Nat)
   subst rax2 rbx2 rsp2 rbp2 r142
   rw [show sp - 8 - 8 = sp - 16 by bv_omega, show sp - 8 + 16 = sp + 8 by bv_omega] at Hm2
   rw [show j + 0 + 1 = j + 1 from rfl] at Hm2
-  step_directive hA callDec 1
+  step_directive hA callDecode 1
   intro _
-  step_directive hA callDec 2
+  step_directive hA callDecode 2
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   rw [hl]
-  step_directive hB callDecContinuationLabel 0
+  step_directive hB callDecodeContinuationLabel 0
   apply Eventually.done
   exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, by ecancel⟩
 
@@ -239,8 +239,8 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- **Set-up of the first callee field**: `add $f,%rax; mov $0x8,%ecx` (+ `nop` if `pad`) at `j`. With the
 receiver `rcv` in rax: rax = `aF = rcv + f`, rcx = 8; rbx, rsp, rbp, r14 and the memory are unchanged. -/
-theorem callarg_first_seg (pad : Bool) (f : Int64) (j : Nat)
-    (hA : (callArgFirst pad f).IsInfixAt Host.prog j)
+theorem call_argument_first_segment (pad : Bool) (f : Int64) (j : Nat)
+    (hA : (callArgumentFirst pad f).IsInfixAt Host.prog j)
     (rcv aF : BitVec 64) (hF : rcv + f.toBitVec = aF)
     (s : MachineData) (hrax : s.regs.rax.toBitVec = rcv) :
     Eventually (step1 Host.exe)
@@ -252,36 +252,36 @@ theorem callarg_first_seg (pad : Bool) (f : Int64) (j : Nat)
   simp only at hrax ⊢
   subst hrax hF
   cases pad
-  · step_directive hA callArgFirst 0
-    step_directive hA callArgFirst 1
+  · step_directive hA callArgumentFirst 0
+    step_directive hA callArgumentFirst 1
     apply Eventually.done
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
     call_argument_close
-  · step_directive hA callArgFirst 0
-    step_directive hA callArgFirst 1
-    step_directive hA callArgFirst 2
+  · step_directive hA callArgumentFirst 0
+    step_directive hA callArgumentFirst 1
+    step_directive hA callArgumentFirst 2
     apply Eventually.done
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
     call_argument_close
 
 set_option hygiene false in
-/-- Steps 0–6 of `callArgReload` (binders of the lemma below). -/
+/-- Steps 0–6 of `callArgumentReload` (binders of the lemma below). -/
 local macro "call_argument_reload_steps" : tactic => `(tactic| (
-  step_directive hA callArgReload 0
+  step_directive hA callArgumentReload 0
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA callArgReload 1
-  step_directive hA callArgReload 2
+  step_directive hA callArgumentReload 1
+  step_directive hA callArgumentReload 2
   apply load_step_at _ _ aD _ _ vD _ _ (by rw [← hD]) (by ecancel) (by exact hvD)
   unfold_step
-  step_directive hA callArgReload 3
-  step_directive hA callArgReload 4
+  step_directive hA callArgumentReload 3
+  step_directive hA callArgumentReload 4
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA callArgReload 5
-  step_directive hA callArgReload 6))
+  step_directive hA callArgumentReload 5
+  step_directive hA callArgumentReload 6))
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -289,8 +289,8 @@ set_option maxRecDepth 100000 in
 buffer pointer `bf` in the spill slot `aB = sp + dB`, 8 bytes `vD` in `aD = sp + dD` and the receiver `rcv`
 in `aR = sp + dR`: rbx = `aSrc = bf + src`, rax = `aF = rcv + f`, rcx = 8; rsp, rbp, r14 and the memory are
 unchanged. -/
-theorem callarg_reload_seg (pad : Bool) (dB src dD c dR f : Int64) (j : Nat)
-    (hA : (callArgReload pad dB src dD c dR f).IsInfixAt Host.prog j)
+theorem call_argument_reload_segment (pad : Bool) (dB src dD c dR f : Int64) (j : Nat)
+    (hA : (callArgumentReload pad dB src dD c dR f).IsInfixAt Host.prog j)
     (sp rcv bf aB aD aR aSrc aF : BitVec 64)
     (hB' : sp + dB.toBitVec = aB) (hD : sp + dD.toBitVec = aD) (hR : sp + dR.toBitVec = aR)
     (hSrc : bf + src.toBitVec = aSrc) (hF : rcv + f.toBitVec = aF)
@@ -313,7 +313,7 @@ theorem callarg_reload_seg (pad : Bool) (dB src dD c dR f : Int64) (j : Nat)
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
     call_argument_close
   · call_argument_reload_steps
-    step_directive hA callArgReload 7
+    step_directive hA callArgumentReload 7
     apply Eventually.done
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
     call_argument_close
@@ -321,10 +321,10 @@ theorem callarg_reload_seg (pad : Bool) (dB src dD c dR f : Int64) (j : Nat)
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- **Set-up of a callee field, `lea` form, first part**: 6 directives at `j`. With rsp = `sp` and the spill
-slots as in `callarg_reload_seg`: rbx = `bf`, rdx = `aSrc = bf + src`, rax = `rcv`, rsi = `aF = rcv + f`;
+slots as in `call_argument_reload_segment`: rbx = `bf`, rdx = `aSrc = bf + src`, rax = `rcv`, rsi = `aF = rcv + f`;
 rsp, rbp, r14 and the memory are unchanged. -/
-theorem callarg_lea_seg (dB src dD c dR f : Int64) (j : Nat)
-    (hA : (callArgLea dB src dD c dR f).IsInfixAt Host.prog j)
+theorem call_argument_lea_segment (dB src dD c dR f : Int64) (j : Nat)
+    (hA : (callArgumentLea dB src dD c dR f).IsInfixAt Host.prog j)
     (sp rcv bf aB aD aR aSrc aF : BitVec 64)
     (hB' : sp + dB.toBitVec = aB) (hD : sp + dD.toBitVec = aD) (hR : sp + dR.toBitVec = aR)
     (hSrc : bf + src.toBitVec = aSrc) (hF : rcv + f.toBitVec = aF)
@@ -342,20 +342,20 @@ theorem callarg_lea_seg (dB src dD c dR f : Int64) (j : Nat)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp h_mem ⊢
   subst rsp hSrc hF
-  step_directive hA callArgLea 0
+  step_directive hA callArgumentLea 0
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA callArgLea 1
-  step_directive hA callArgLea 2
+  step_directive hA callArgumentLea 1
+  step_directive hA callArgumentLea 2
   apply load_step_at _ _ aD _ _ vD _ _ (by rw [← hD]) (by ecancel) (by exact hvD)
   unfold_step
-  step_directive hA callArgLea 3
-  step_directive hA callArgLea 4
+  step_directive hA callArgumentLea 3
+  step_directive hA callArgumentLea 4
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA callArgLea 5
+  step_directive hA callArgumentLea 5
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   call_argument_close
@@ -364,7 +364,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- **Set-up of a callee field, `lea` form, second part**: `mov %rsi,%rax; mov %rdx,%rbx; mov $0x8,%ecx`
 at `j`: rax = old rsi, rbx = old rdx, rcx = 8; rsp, rbp, r14 and the memory are unchanged. -/
-theorem callarg_mov_seg (j : Nat) (hA : callArgMov.IsInfixAt Host.prog j) (s : MachineData) :
+theorem call_argument_mov_segment (j : Nat) (hA : callArgumentMov.IsInfixAt Host.prog j) (s : MachineData) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (j + 3) ∧ st.data.regs.rsp = s.regs.rsp
         ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
@@ -373,9 +373,9 @@ theorem callarg_mov_seg (j : Nat) (hA : callArgMov.IsInfixAt Host.prog j) (s : M
       ⟨s, Host.addrOf j⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only
-  step_directive hA callArgMov 0
-  step_directive hA callArgMov 1
-  step_directive hA callArgMov 2
+  step_directive hA callArgumentMov 0
+  step_directive hA callArgumentMov 1
+  step_directive hA callArgumentMov 2
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   call_argument_close

@@ -5,19 +5,19 @@ import Codec.InlineUint64
 
 The accept path of a protoc container decoder with the frame of the development sites (`sub $0x20,%rsp`,
 receiver spill `0x30(%rsp)`, buffer spill `0x38(%rsp)`) is: head, then per field its decode segment
-(`bytesdec_seg` / `bytesdec_seg_offset_zero` followed by the pointer tail below, or `u64dec_inline_seg`), then the
+(`bytes_decode_segment` / `bytes_decode_segment_offset_zero` followed by the pointer tail below, or `uint64_decode_inline_segment`), then the
 epilogue. This file has the three pieces that are not a field segment. Each one is a segment lemma of the
 form of `Codec/SegmentTemplate.lean` (template + `IsInfixAt` hypothesis); none uses a runtime contract.
 
-* `dec_head_seg` — `decHead fn l0 lmore lerr sz` (13 directives: two labels, stack guard, prologue,
+* `decode_head_segment` — `decodeHead fn l0 lmore lerr sz` (13 directives: two labels, stack guard, prologue,
   `cmp $sz,%rcx; jne lerr`, the two spills). Statement = the statement of `Prysm.BlobIdentifier.Decode.head` with the
   size `sz` (`hlen : rcx = sz`). The frame size and the spill displacements are literals (the three
   development decoders agree); another frame is not covered.
-* `bytesdec_tail_seg` — the code after the `jne lwb` of a byte-vector segment when the write barrier is
-  off: `bytesDecTailReloadJump rY l dS` = `mov dS(%rsp),%rY; jmp l` and `bytesDecTailPointerStore rY l fP` =
+* `bytes_decode_tail_segment` — the code after the `jne lwb` of a byte-vector segment when the write barrier is
+  off: `bytesDecodeTailReloadJump rY l dS` = `mov dS(%rsp),%rY; jmp l` and `bytesDecodeTailPointerStore rY l fP` =
   `l: mov %rY,fP(%rdx)` (the write-barrier block between them is skipped). `rY` is rsi or rdi at the
-  development sites; the lemma takes any register of `U64InlineReg`.
-* `dec_epilogue_seg` — `decEpilogue` = `xor %eax,%eax; xor %ebx,%ebx; add $0x20,%rsp; pop %rbp; retq`.
+  development sites; the lemma takes any register of `Uint64InlineReg`.
+* `decode_epilogue_segment` — `decodeEpilogue` = `xor %eax,%eax; xor %ebx,%ebx; add $0x20,%rsp; pop %rbp; retq`.
 
 A composed accept theorem is a chain of `eventually_trans` over these lemmas; the frame of each step is an
 explicit instance (`Prysm/BlobIdentifier/DecodeAcceptComposedExample.lean` has one worked example). There is no generic combinator over a list
@@ -29,7 +29,7 @@ open Machine Runtime
 namespace Codec
 
 /-- Head of a container decoder (directives 0–12 of the development decoders), SSZ size `sz`. -/
-def decHead (fn l0 lmore lerr : String) (sz : Int64) : Program :=
+def decodeHead (fn l0 lmore lerr : String) (sz : Int64) : Program :=
   [Kraken.Directive.label fn,
    Kraken.Directive.label l0,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
@@ -58,7 +58,7 @@ def decHead (fn l0 lmore lerr : String) (sz : Int64) : Program :=
        (Operand.regOrMem (RegOrMem.reg (Reg.low Reg64.rbx Width.W64)))))]
 
 /-- Pointer tail of a byte-vector segment, first part: `mov dS(%rsp),%rY; jmp l`. -/
-def bytesDecTailReloadJump (rY : Reg64) (l : String) (dS : Int64) : Program :=
+def bytesDecodeTailReloadJump (rY : Reg64) (l : String) (dS : Int64) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.reg (Reg.low rY Width.W64))
        (Operand.regOrMem (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rsp)) none (ConstExpr.int64 dS)))))),
@@ -66,14 +66,14 @@ def bytesDecTailReloadJump (rY : Reg64) (l : String) (dS : Int64) : Program :=
      (Operation.jmp (RelRegOrMem.rel ((ConstExpr.label l).sub ConstExpr.after_current_instruction))))]
 
 /-- Pointer tail of a byte-vector segment, second part: `l: mov %rY,fP(%rdx)`. -/
-def bytesDecTailPointerStore (rY : Reg64) (l : String) (fP : Int64) : Program :=
+def bytesDecodeTailPointerStore (rY : Reg64) (l : String) (fP : Int64) : Program :=
   [Kraken.Directive.label l,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rdx)) none (ConstExpr.int64 fP)))
        (Operand.regOrMem (RegOrMem.reg (Reg.low rY Width.W64)))))]
 
 /-- Epilogue of a container decoder on the accept path (5 directives), frame `0x20`. -/
-def decEpilogue : Program :=
+def decodeEpilogue : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W32
      (Operation.xor (RegOrMem.reg (Reg.low Reg64.rax Width.W32))
        (Operand.regOrMem (RegOrMem.reg (Reg.low Reg64.rax Width.W32))))),
@@ -93,8 +93,8 @@ set_option maxRecDepth 100000 in
 /-- **Head segment**: from the entry through the stack guard, the prologue, the size check
 (`rcx = sz`) and the two spills to directive `j + 13`. The statement is that of
 `Prysm.BlobIdentifier.Decode.head` with the template and the size as parameters. -/
-theorem dec_head_seg (fn l0 lmore lerr : String) (sz : Int64) (j : Nat)
-    (hA : (decHead fn l0 lmore lerr sz).IsInfixAt Host.prog j)
+theorem decode_head_segment (fn l0 lmore lerr : String) (sz : Int64) (j : Nat)
+    (hA : (decodeHead fn l0 lmore lerr sz).IsInfixAt Host.prog j)
     (s : MachineData) (ra guard : UInt64) (fp s1 s2 : List UInt8)
     (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8)
     (R : DataMem → Prop)
@@ -117,12 +117,12 @@ theorem dec_head_seg (fn l0 lmore lerr : String) (sz : Int64) (j : Nat)
   simp only at h_mem hguard hlen ⊢
   subst hlen
   have := rsp.toNat_lt_size; have := guard.toNat_lt_size; simp only [UInt64.size] at *
-  step_directive hA decHead 0
-  step_directive hA decHead 1
-  step_directive hA decHead 2
+  step_directive hA decodeHead 0
+  step_directive hA decodeHead 1
+  step_directive hA decodeHead 2
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA decHead 3
+  step_directive hA decodeHead 3
   split
   · rename_i h; exfalso
     simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
@@ -130,30 +130,30 @@ theorem dec_head_seg (fn l0 lmore lerr : String) (sz : Int64) (j : Nat)
     · apply h; omega
     · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
   simp only [Effects.All]
-  step_directive hA decHead 4
+  step_directive hA decodeHead 4
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   unfold_step
-  step_directive hA decHead 5
-  step_directive hA decHead 6
-  step_directive hA decHead 7
+  step_directive hA decodeHead 5
+  step_directive hA decodeHead 6
+  step_directive hA decodeHead 7
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
   unfold_step
-  step_directive hA decHead 8
-  step_directive hA decHead 9
-  step_directive hA decHead 10
+  step_directive hA decodeHead 8
+  step_directive hA decodeHead 9
+  step_directive hA decodeHead 10
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  step_directive hA decHead 11
+  step_directive hA decodeHead 11
   apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by bv_omega) (by ecancel) (by exact h1)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   unfold_step
-  step_directive hA decHead 12
+  step_directive hA decodeHead 12
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by bv_omega) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m4' H4
@@ -167,16 +167,16 @@ theorem dec_head_seg (fn l0 lmore lerr : String) (sz : Int64) (j : Nat)
   all_goals segment_addr
 
 set_option hygiene false in
-/-- Proof text of one register case of `bytesdec_tail_seg`. Local to this file. -/
+/-- Proof text of one register case of `bytes_decode_tail_segment`. Local to this file. -/
 local macro "bytes_tail_case" : tactic => `(tactic| (
-  step_directive hA bytesDecTailReloadJump 0
+  step_directive hA bytesDecodeTailReloadJump 0
   apply load_step_at _ _ aS _ _ (Int.toBytes 8 p.toInt) _ _ (by rw [← hS]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA bytesDecTailReloadJump 1
+  step_directive hA bytesDecodeTailReloadJump 1
   rw [hl]
-  step_directive hB bytesDecTailPointerStore 0
-  step_directive hB bytesDecTailPointerStore 1
+  step_directive hB bytesDecodeTailPointerStore 0
+  step_directive hB bytesDecodeTailPointerStore 1
   apply store_step_at _ _ aP _ _ _ vP _ _ (by rw [← hP, ← hrdx]) (by ecancel) (by exact hvP)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
@@ -189,9 +189,9 @@ set_option maxRecDepth 100000 in
 /-- **Pointer tail segment** of a byte-vector field: from `mov dS(%rsp),%rY` (at `j3`) over the jump to
 `l` (at `j4`, `label l = Host.addrOf j4`) through `mov %rY,fP(%rdx)`. The pointer `p` in the slot
 `aS = sp + dS` is stored to the field pointer slot `aP = rcv + fP`; rsp, rbp, r14 and rdx are kept. -/
-theorem bytesdec_tail_seg (rY : Reg64) (hY : U64InlineReg rY) (l : String) (dS fP : Int64) (j3 j4 : Nat)
-    (hA : (bytesDecTailReloadJump rY l dS).IsInfixAt Host.prog j3)
-    (hB : (bytesDecTailPointerStore rY l fP).IsInfixAt Host.prog j4)
+theorem bytes_decode_tail_segment (rY : Reg64) (hY : Uint64InlineReg rY) (l : String) (dS fP : Int64) (j3 j4 : Nat)
+    (hA : (bytesDecodeTailReloadJump rY l dS).IsInfixAt Host.prog j3)
+    (hB : (bytesDecodeTailPointerStore rY l fP).IsInfixAt Host.prog j4)
     (hl : label l = Host.addrOf j4)
     (sp rcv p aS aP : BitVec 64) (hS : sp + dS.toBitVec = aS) (hP : rcv + fP.toBitVec = aP)
     (rbp0 r140 : UInt64) (vP : List UInt8) (hvP : vP.length = 8)
@@ -216,7 +216,7 @@ set_option maxRecDepth 100000 in
 rsp = `sp`, the saved frame pointer `fp0` at `aFp = sp + 32` and the return address `ra` at
 `aRa = sp + 40`, it returns to `ra` with rax = rbx = 0, rsp = `sp + 48`, rbp = `fp0`, r14 kept and the
 memory unchanged. -/
-theorem dec_epilogue_seg (j : Nat) (hA : decEpilogue.IsInfixAt Host.prog j)
+theorem decode_epilogue_segment (j : Nat) (hA : decodeEpilogue.IsInfixAt Host.prog j)
     (sp aFp aRa : BitVec 64) (hFp : sp + 32 = aFp) (hRa : sp + 40 = aRa)
     (fp0 ra r140 : UInt64) (R : DataMem → Prop)
     (s : MachineData) (hrsp : s.regs.rsp = { toBitVec := sp }) (hr14 : s.regs.r14 = r140)
@@ -231,16 +231,16 @@ theorem dec_epilogue_seg (j : Nat) (hA : decEpilogue.IsInfixAt Host.prog j)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hr14 h_mem ⊢
   subst rsp r14 hFp hRa
-  step_directive hA decEpilogue 0
+  step_directive hA decodeEpilogue 0
   intro _
-  step_directive hA decEpilogue 1
+  step_directive hA decodeEpilogue 1
   intro _
-  step_directive hA decEpilogue 2
-  step_directive hA decEpilogue 3
+  step_directive hA decodeEpilogue 2
+  step_directive hA decodeEpilogue 3
   apply load_step_at _ _ (sp + 32) _ _ (Int.toBytes 8 fp0.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA decEpilogue 4
+  step_directive hA decodeEpilogue 4
   apply load_step_at _ _ (sp + 40) _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step

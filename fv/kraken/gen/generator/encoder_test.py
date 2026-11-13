@@ -50,7 +50,7 @@ def spath(t):
 
 def argv(t, S=None, ir=IR, extra=None, summary=None):
     _, d, c, mod, p, x, _ = ROW[t]
-    a = ["python3", "-I", "-B", "gen/generator/generator.py", "encoder", "--fast-path", "--S", S or spath(t), "--const", c,
+    a = ["python3", "-I", "-B", "gen/generator/generator.py", "encoder", "--fast-path", "--assembly", S or spath(t), "--const", c,
          "--ir", ir, "--type", f"v1alpha1.{t}", "--prefix", "Encode.generated", "--imports", mod, "--open", f"Prysm.{t}.Code"]
     a += x if extra is None else extra
     if summary:
@@ -110,34 +110,34 @@ def adversarial(work):
     validator_balance, deposit_message, historical_summary, beacon_block_header, eth1_data, blob_identifier = "ValidatorBalance", "DepositMessage", "HistoricalSummary", "BeaconBlockHeader", "Eth1Data", \
         "BlobIdentifier"
 
-    def adv(i, t, edits, what, expect="refuse", extra=None):
+    def adversarial_case(i, t, edits, what, expect="refuse", extra=None):
         C.append((f"fast-path-refused-{i}" if expect == "refuse" else f"fast-path-covered-{i}", argv(t, S=mut(t, edits, work, i), extra=extra),
                   expect, what))
     # capacity test altered: the growslice site is on the walked path / the test is not provably passed
-    adv("cap-jae-deleted", validator_balance, [(f"jae {lbl(validator_balance, '7b')}", None, 0)], "capacity test branch removed: growslice on the path")
-    adv("cap-jae-to-jb", validator_balance, [(f"jae {lbl(validator_balance, '7b')}", [f"jb {lbl(validator_balance, '7b')}"], 0)],
+    adversarial_case("cap-jae-deleted", validator_balance, [(f"jae {lbl(validator_balance, '7b')}", None, 0)], "capacity test branch removed: growslice on the path")
+    adversarial_case("cap-jae-to-jb", validator_balance, [(f"jae {lbl(validator_balance, '7b')}", [f"jb {lbl(validator_balance, '7b')}"], 0)],
         "capacity test jae -> jb to the merge label: growslice on the fall-through")
-    adv("cap-operands-swapped", validator_balance, [("cmp %rdx,%rdi", ["cmp %rdi,%rdx"], 0)], "cmp of capacity and length swapped")
-    adv("cap-short", validator_balance, [("lea 0x8(%rcx),%rdx", ["lea 0x7(%rcx),%rdx"], 0)], "capacity test for len + 7 (field needs 8)")
-    adv("cap-jae-to-growslice", validator_balance, [(f"jae {lbl(validator_balance, '7b')}", [f"jae {lbl(validator_balance, 'gs')}"], 0),
+    adversarial_case("cap-operands-swapped", validator_balance, [("cmp %rdx,%rdi", ["cmp %rdi,%rdx"], 0)], "cmp of capacity and length swapped")
+    adversarial_case("cap-short", validator_balance, [("lea 0x8(%rcx),%rdx", ["lea 0x7(%rcx),%rdx"], 0)], "capacity test for len + 7 (field needs 8)")
+    adversarial_case("cap-jae-to-growslice", validator_balance, [(f"jae {lbl(validator_balance, '7b')}", [f"jae {lbl(validator_balance, 'gs')}"], 0),
                                      ("callq runtime.growslice", [f"{lbl(validator_balance, 'gs')}:", "callq runtime.growslice"], 0)],
         "capacity test jumps INTO the growslice site")
-    adv("cap-missing-deposit-message", deposit_message, [("cmp %r8,%rdi", None, 0), (f"jae {lbl(deposit_message, '7b')}", None, 0)],
+    adversarial_case("cap-missing-deposit-message", deposit_message, [("cmp %r8,%rdi", None, 0), (f"jae {lbl(deposit_message, '7b')}", None, 0)],
         "byte field without capacity test")
     # length test
-    adv("len-imm", deposit_message, [("cmpq $0x30,0x8(%rax)", ["cmpq $0x20,0x8(%rax)"], 0)], "length test with a wrong immediate")
-    adv("len-word", deposit_message, [("cmpq $0x30,0x8(%rax)", ["cmpq $0x30,0x10(%rax)"], 0)], "length test on the capacity word")
-    adv("len-missing", deposit_message, [("cmpq $0x30,0x8(%rax)", None, 0), (f"jne {lbl(deposit_message, '183')}", None, 0)],
+    adversarial_case("len-imm", deposit_message, [("cmpq $0x30,0x8(%rax)", ["cmpq $0x20,0x8(%rax)"], 0)], "length test with a wrong immediate")
+    adversarial_case("len-word", deposit_message, [("cmpq $0x30,0x8(%rax)", ["cmpq $0x30,0x10(%rax)"], 0)], "length test on the capacity word")
+    adversarial_case("len-missing", deposit_message, [("cmpq $0x30,0x8(%rax)", None, 0), (f"jne {lbl(deposit_message, '183')}", None, 0)],
         "byte field without its length test")
-    adv("len-je", deposit_message, [(f"jne {lbl(deposit_message, '183')}", [f"je {lbl(deposit_message, '183')}"], 0)], "length test with je")
+    adversarial_case("len-je", deposit_message, [(f"jne {lbl(deposit_message, '183')}", [f"je {lbl(deposit_message, '183')}"], 0)], "length test with je")
     # stores against the IR
-    adv("store-offset", validator_balance, [("mov %r8,-0x8(%rdx,%rbx,1)", ["mov %r8,-0x10(%rdx,%rbx,1)"], 0)],
+    adversarial_case("store-offset", validator_balance, [("mov %r8,-0x8(%rdx,%rbx,1)", ["mov %r8,-0x10(%rdx,%rbx,1)"], 0)],
         "second uint64 stored at SSZ offset 0 (IR: 8)")
-    adv("store-offset-first", validator_balance, [("mov %r8,(%rbx,%rcx,1)", ["mov %r8,0x8(%rbx,%rcx,1)"], 0)],
+    adversarial_case("store-offset-first", validator_balance, [("mov %r8,(%rbx,%rcx,1)", ["mov %r8,0x8(%rbx,%rcx,1)"], 0)],
         "first uint64 stored at SSZ offset 8 (IR: 0)")
-    adv("extra-store", validator_balance, [("mov %r8,-0x8(%rdx,%rbx,1)", ["mov %r8,-0x8(%rdx,%rbx,1)", "mov %r8,(%rdx,%rbx,1)"], 0)],
+    adversarial_case("extra-store", validator_balance, [("mov %r8,-0x8(%rdx,%rbx,1)", ["mov %r8,-0x8(%rdx,%rbx,1)", "mov %r8,(%rdx,%rbx,1)"], 0)],
         "an extra store at len + size after the last field")
-    adv("store-wrong-value", validator_balance, [("mov 0x10(%rax),%r8", ["mov 0x8(%rax),%r8"], 0)],
+    adversarial_case("store-wrong-value", validator_balance, [("mov 0x10(%rax),%r8", ["mov 0x8(%rax),%r8"], 0)],
         "field 1 slot gets field 0's value")
     def swap(ty):
         g = ty["go_fields"]
@@ -145,7 +145,7 @@ def adversarial(work):
         ty["ir"]["fields"].reverse()
     C.append(("fast-path-refused-fields-out-of-order", argv(validator_balance, ir=ir_mut(validator_balance, swap, work, "validator-balance-swap")), "refuse",
               "IR field order swapped, Go offsets as in the code"))
-    adv("code-fields-swapped", validator_balance, [("mov 0x10(%rax),%r8", ["mov 0x8(%rax),%r8"], 0),
+    adversarial_case("code-fields-swapped", validator_balance, [("mov 0x10(%rax),%r8", ["mov 0x8(%rax),%r8"], 0),
                                     ("mov 0x8(%rax),%r8", ["mov 0x10(%rax),%r8"], 0)],
         "code writes Balance first and Index second")
     C.append(("fast-path-refused-ir-goff", argv(validator_balance, ir=ir_mut(validator_balance, lambda ty: ty["go_fields"][2].__setitem__("offset_gc_amd64", 24),
@@ -160,47 +160,47 @@ def adversarial(work):
     C.append(("fast-path-refused-ir-missing-type", argv(validator_balance) [:0] + [x.replace("v1alpha1.ValidatorBalance", "v1alpha1.NoSuchType")
                                                          for x in argv(validator_balance)], "refuse", "type not in the IR"))
     # clobbered registers
-    adv("clobber-len", validator_balance, [("mov %r8,(%rbx,%rcx,1)", ["mov $0x0,%ecx", "mov %r8,(%rbx,%rcx,1)"], 0)],
+    adversarial_case("clobber-len", validator_balance, [("mov %r8,(%rbx,%rcx,1)", ["mov $0x0,%ecx", "mov %r8,(%rbx,%rcx,1)"], 0)],
         "len register clobbered before the store")
-    adv("clobber-dst", validator_balance, [("mov %r8,(%rbx,%rcx,1)", ["xor %ebx,%ebx", "mov %r8,(%rbx,%rcx,1)"], 0)],
+    adversarial_case("clobber-dst", validator_balance, [("mov %r8,(%rbx,%rcx,1)", ["xor %ebx,%ebx", "mov %r8,(%rbx,%rcx,1)"], 0)],
         "dst register clobbered before the store")
-    adv("clobber-rcv", deposit_message, [("mov 0x18(%rdx),%rbx", ["mov 0x18(%rcx),%rbx"], 0)], "receiver load through a clobbered register")
+    adversarial_case("clobber-rcv", deposit_message, [("mov 0x18(%rdx),%rbx", ["mov 0x18(%rcx),%rbx"], 0)], "receiver load through a clobbered register")
     # memmove
-    adv("memmove-swapped", deposit_message, [("lea (%rcx,%rbx,1),%rax", ["mov %rdx,%rax"], 0), ("mov %rdx,%rbx", ["lea (%rcx,%rbx,1),%rbx"], 0)],
+    adversarial_case("memmove-swapped", deposit_message, [("lea (%rcx,%rbx,1),%rax", ["mov %rdx,%rax"], 0), ("mov %rdx,%rbx", ["lea (%rcx,%rbx,1),%rbx"], 0)],
         "memmove with swapped source / destination")
-    adv("memmove-size", deposit_message, [("mov $0x30,%ecx", ["mov $0x20,%ecx"], 0)], "memmove of 32 bytes for a 48-byte field")
-    adv("memmove-other-callee", deposit_message, [("callq runtime.memmove", ["callq runtime.memclrNoHeapPointers"], 0)],
+    adversarial_case("memmove-size", deposit_message, [("mov $0x30,%ecx", ["mov $0x20,%ecx"], 0)], "memmove of 32 bytes for a 48-byte field")
+    adversarial_case("memmove-other-callee", deposit_message, [("callq runtime.memmove", ["callq runtime.memclrNoHeapPointers"], 0)],
         "unknown callee on the path")
     # epilogue / frame test
-    adv("frame-test-jae", historical_summary, [(f"jb {lbl(historical_summary, '12e')}", [f"jae {lbl(historical_summary, '12e')}"], 0)], "frame test with jae")
-    adv("frame-test-immediate", historical_summary, [("lea 0x60(%rsp),%rsi", ["lea 0x58(%rsp),%rsi"], 0)], "frame test against F + 8")
-    adv("frame-test-target", historical_summary, [(f"jb {lbl(historical_summary, '12e')}", [f"jb {lbl(historical_summary, '13d')}"], 0)], "frame test branch to the return block")
-    adv("frame-test-subtraction", historical_summary, [("sub %rsp,%rdx", ["sub %rsi,%rdx"], 0)], "frame test on a value other than ptr - rsp")
-    adv("epilogue-no-xor", validator_balance, [("xor %esi,%esi", None, 0)], "rsi not zeroed at the return")
-    adv("epilogue-rbx", validator_balance, [("mov %rdx,%rbx", ["mov %rcx,%rbx"], 2)], "result length register wrong")
-    adv("epilogue-no-ret", validator_balance, [("retq", ["nop"], 0)], "no retq after pop")
-    adv("epilogue-frame", validator_balance, [("add $0x68,%rsp", ["add $0x60,%rsp"], 0)], "frame release of the wrong size")
+    adversarial_case("frame-test-jae", historical_summary, [(f"jb {lbl(historical_summary, '12e')}", [f"jae {lbl(historical_summary, '12e')}"], 0)], "frame test with jae")
+    adversarial_case("frame-test-immediate", historical_summary, [("lea 0x60(%rsp),%rsi", ["lea 0x58(%rsp),%rsi"], 0)], "frame test against F + 8")
+    adversarial_case("frame-test-target", historical_summary, [(f"jb {lbl(historical_summary, '12e')}", [f"jb {lbl(historical_summary, '13d')}"], 0)], "frame test branch to the return block")
+    adversarial_case("frame-test-subtraction", historical_summary, [("sub %rsp,%rdx", ["sub %rsi,%rdx"], 0)], "frame test on a value other than ptr - rsp")
+    adversarial_case("epilogue-no-xor", validator_balance, [("xor %esi,%esi", None, 0)], "rsi not zeroed at the return")
+    adversarial_case("epilogue-rbx", validator_balance, [("mov %rdx,%rbx", ["mov %rcx,%rbx"], 2)], "result length register wrong")
+    adversarial_case("epilogue-no-ret", validator_balance, [("retq", ["nop"], 0)], "no retq after pop")
+    adversarial_case("epilogue-frame", validator_balance, [("add $0x68,%rsp", ["add $0x60,%rsp"], 0)], "frame release of the wrong size")
     # truncated / malformed files
     tr = lines_of(validator_balance)[:40]
     p = work / "truncated.S"
     p.write_text("\n".join(tr))
     C.append(("fast-path-refused-truncated", argv(validator_balance, S=str(p)), "refuse", "file cut after 40 lines"))
-    adv("blank-line", validator_balance, [("mov %rbx,0x80(%rsp)", ["mov %rbx,0x80(%rsp)", ""], 0)], "blank line inside")
-    adv("dup-label", validator_balance, [("mov %r8,-0x8(%rdx,%rbx,1)", [f"{lbl(validator_balance, '7b')}:", "mov %r8,-0x8(%rdx,%rbx,1)"], 0)],
+    adversarial_case("blank-line", validator_balance, [("mov %rbx,0x80(%rsp)", ["mov %rbx,0x80(%rsp)", ""], 0)], "blank line inside")
+    adversarial_case("dup-label", validator_balance, [("mov %r8,-0x8(%rdx,%rbx,1)", [f"{lbl(validator_balance, '7b')}:", "mov %r8,-0x8(%rdx,%rbx,1)"], 0)],
         "label defined twice")
-    adv("unknown-directive", validator_balance, [("mov %r8,0x48(%rsp)", ["movq %r8,0x48(%rsp)"], 0)], "directive form without a step lemma")
-    adv("unknown-label", validator_balance, [(f"jae {lbl(validator_balance, '7b')}", [f"jae {lbl(validator_balance, 'zz')}"], 0)], "jump to a label not in the file")
-    adv("backward-jmp", historical_summary, [(f"jmp {lbl(historical_summary, '13d')}", [f"jmp {lbl(historical_summary, '0')}"], 0)], "backward jump on the path")
+    adversarial_case("unknown-directive", validator_balance, [("mov %r8,0x48(%rsp)", ["movq %r8,0x48(%rsp)"], 0)], "directive form without a step lemma")
+    adversarial_case("unknown-label", validator_balance, [(f"jae {lbl(validator_balance, '7b')}", [f"jae {lbl(validator_balance, 'zz')}"], 0)], "jump to a label not in the file")
+    adversarial_case("backward-jmp", historical_summary, [(f"jmp {lbl(historical_summary, '13d')}", [f"jmp {lbl(historical_summary, '0')}"], 0)], "backward jump on the path")
     # stack stores outside the frame
-    adv("store-saved-rbp", validator_balance, [("mov %rbx,0x80(%rsp)", ["mov %rbx,0x68(%rsp)"], 0)], "spill over the saved rbp")
-    adv("store-ret-addr", validator_balance, [("mov %rbx,0x80(%rsp)", ["mov %rbx,0x70(%rsp)"], 0)], "spill over the return address")
-    adv("store-below-frame", validator_balance, [("mov %r8,0x48(%rsp)", ["mov %r8,-0x8(%rsp)"], 0)], "store below the frame")
-    adv("movups-dst", validator_balance, [("movups %xmm15,(%r9)", ["movups %xmm15,(%rbx)"], 0)], "zeroing store through the dst pointer")
-    adv("overlap", validator_balance, [("mov %r8,0x48(%rsp)", ["mov %r8,0x4c(%rsp)"], 0)], "8-byte store across two stack regions")
+    adversarial_case("store-saved-rbp", validator_balance, [("mov %rbx,0x80(%rsp)", ["mov %rbx,0x68(%rsp)"], 0)], "spill over the saved rbp")
+    adversarial_case("store-ret-addr", validator_balance, [("mov %rbx,0x80(%rsp)", ["mov %rbx,0x70(%rsp)"], 0)], "spill over the return address")
+    adversarial_case("store-below-frame", validator_balance, [("mov %r8,0x48(%rsp)", ["mov %r8,-0x8(%rsp)"], 0)], "store below the frame")
+    adversarial_case("movups-dst", validator_balance, [("movups %xmm15,(%r9)", ["movups %xmm15,(%rbx)"], 0)], "zeroing store through the dst pointer")
+    adversarial_case("overlap", validator_balance, [("mov %r8,0x48(%rsp)", ["mov %r8,0x4c(%rsp)"], 0)], "8-byte store across two stack regions")
     # head variants
-    adv("head-no-push", validator_balance, [("push %rbp", ["nop"], 0)], "prologue without push")
-    adv("head-guard", validator_balance, [("cmp 0x10(%r14),%rsp", ["cmp 0x18(%r14),%rsp"], 0)], "stack guard on another word")
-    adv("head-frame", validator_balance, [("sub $0x68,%rsp", ["sub %rax,%rsp"], 0)], "frame allocation form")
+    adversarial_case("head-no-push", validator_balance, [("push %rbp", ["nop"], 0)], "prologue without push")
+    adversarial_case("head-guard", validator_balance, [("cmp 0x10(%r14),%rsp", ["cmp 0x18(%r14),%rsp"], 0)], "stack guard on another word")
+    adversarial_case("head-frame", validator_balance, [("sub $0x68,%rsp", ["sub %rax,%rsp"], 0)], "frame allocation form")
     # hand layout of another type
     C.append(("fast-path-refused-hand-layout-other", argv(beacon_block_header, extra=["--hand-layout=Prysm.Eth1Data.encodeLayout",
                                                            "--hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean"]),
@@ -209,20 +209,20 @@ def adversarial(work):
                                                              "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean"]),
               "refuse", "hand layout not in the file"))
     # valid variants: must stay covered
-    adv("nops", validator_balance, [("lea 0x8(%rcx),%rdx", ["nop", "lea 0x8(%rcx),%rdx", "nop"], 0), ("cmp %rdx,%rdi", ["cmp %rdx,%rdi", "nop"], 0),
+    adversarial_case("nops", validator_balance, [("lea 0x8(%rcx),%rdx", ["nop", "lea 0x8(%rcx),%rdx", "nop"], 0), ("cmp %rdx,%rdi", ["cmp %rdx,%rdi", "nop"], 0),
                      ("mov 0x48(%rsp),%r8", ["nop", "nop", "mov 0x48(%rsp),%r8"], 0), ("pop %rbp", ["nop", "pop %rbp"], 0)],
         "nops at start, middle (inside a cmp / jae window), doubled, before pop", "covered")
-    adv("nops-call", deposit_message, [("callq runtime.memmove", ["nop", "nop", "callq runtime.memmove"], 0)],
+    adversarial_case("nops-call", deposit_message, [("callq runtime.memmove", ["nop", "nop", "callq runtime.memmove"], 0)],
         "two nops before a memmove", "covered")
-    adv("extra-move", validator_balance, [("mov 0x10(%rax),%r8", ["mov %rax,%r10", "mov 0x10(%rax),%r8"], 0)], "an extra harmless move",
+    adversarial_case("extra-move", validator_balance, [("mov 0x10(%rax),%r8", ["mov %rax,%r10", "mov 0x10(%rax),%r8"], 0)], "an extra harmless move",
         "covered")
-    adv("rename", validator_balance, [("mov 0x10(%rax),%r8", ["mov 0x10(%rax),%r9"], 0), ("mov %r8,-0x8(%rdx,%rbx,1)",
+    adversarial_case("rename", validator_balance, [("mov 0x10(%rax),%r8", ["mov 0x10(%rax),%r9"], 0), ("mov %r8,-0x8(%rdx,%rbx,1)",
                                                                            ["mov %r9,-0x8(%rdx,%rbx,1)"], 0)],
         "field 1 value through r9 instead of r8", "covered")
     return C
 
 
-KINDS = ("encHeadKindAnyFrame", "encFieldKindAnyFrame", "encEpilogueKindAnyFrame", "encFastPathKindAnyFrame")
+KINDS = ("encodeHeadKindAnyFrame", "encodeFieldKindAnyFrame", "encodeEpilogueKindAnyFrame", "encodeFastPathKindAnyFrame")
 
 
 def kinds_ok(out, p, nf):
@@ -241,7 +241,7 @@ def nfields(t):
 
 FAIL_CLOSED_HARNESS = r'''
 import importlib.util, io, json, sys, contextlib
-spec = importlib.util.spec_from_file_location("scalgen_fast_path_fail_closed", sys.argv[1])
+spec = importlib.util.spec_from_file_location("generator_fast_path_fail_closed", sys.argv[1])
 sg = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sg)
 cfg = json.loads(open(sys.argv[2]).read())

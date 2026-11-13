@@ -8,7 +8,7 @@ import Prysm.BlobIdentifier.GeneratedDecodeRootFieldSegments
 # Real Prysm `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
 
 Hand-written after the frozen generator ran on this hold-out type. The BlockRoot segment is the raw
-generator theorem `Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_seg` (`Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean`, unedited). The head and the
+generator theorem `Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_segment` (`Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean`, unedited). The head and the
 composition are the text of `Prysm/Eth1Data/DecodeAccept.lean` with the BlobIdentifier indices and without the second root
 segment; `eth1_data_addr` and `Prysm.Eth1Data.Decode.stack_low_eq` are reused from `Prysm/Eth1Data/DecodeAccept.lean`.
 
@@ -170,7 +170,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- BlockRoot: the generated segment theorem (raw generator output, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean`), 13 → 37
-  refine eventually_trans _ _ _ _ (Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_seg k hk hf
+  refine eventually_trans _ _ _ _ (Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_segment k hk hf
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 8) (rax.toBitVec + 16) (rax.toBitVec + 24) S

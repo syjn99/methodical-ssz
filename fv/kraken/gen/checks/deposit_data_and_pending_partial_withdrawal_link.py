@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Call graph and link tables of the real v1alpha1.Deposit_Data and v1alpha1.PendingPartialWithdrawal
-UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the
-hold-out of Deposit_Data and PendingPartialWithdrawal had been run; the text of `blob_identifier_and_deposit_message_link.py` with the function set and the data items changed).
+UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; Deposit_Data and
+PendingPartialWithdrawal are hold-out types; the text of `blob_identifier_and_deposit_message_link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   deposit_data_and_pending_partial_withdrawal_link.py callgraph <objdump> <out.json>          call targets with contract class

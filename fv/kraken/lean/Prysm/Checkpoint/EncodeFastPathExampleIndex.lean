@@ -17,8 +17,8 @@ import Prysm.HistoricalSummary.EncodeFastPathExample
 | `Prysm/DepositMessage/EncodeFastPathExample.lean` | DepositMessage | large, 8 | `add $-0x80` | bytes 48, bytes 32, uint64; no `state` word | no reload | kind instance (no hand statement) |
 | `Prysm/HistoricalSummary/EncodeFastPathExample.lean` | HistoricalSummary | small | `sub $0x50` | bytes 32 twice | frame test (`Codec/EncodeFrameTest.lean`), reloads | kind instance (no hand statement) |
 
-Each module: `Encode.example_head` (`encHeadKindAnyFrame`), `Encode.example_f<i>` per field (`encFieldKindAnyFrame`), `Encode.example_epilogue`
-(`encEpilogueKindAnyFrame`), `Encode.example_fast` (`encFastPathKindAnyFrame`), each with its `_kind` line, and, where a hand theorem
+Each module: `Encode.example_head` (`encodeHeadKindAnyFrame`), `Encode.example_f<i>` per field (`encodeFieldKindAnyFrame`), `Encode.example_epilogue`
+(`encodeEpilogueKindAnyFrame`), `Encode.example_fast` (`encodeFastPathKindAnyFrame`), each with its `_kind` line, and, where a hand theorem
 exists, `Encode.example_fast_same_statement : type_of% <the hand theorem>`.
 
 **Fast path only** in every theorem: `len(dst) + SizeSSZ ≤ cap(dst)` and every byte-vector field of its exact
@@ -41,12 +41,12 @@ variable [Host]
 
 /-- The six generated-style fast-path theorems, stated by their kinds. -/
 theorem Encode.example_fast_all :
-    encFastPathKindAnyFrame Prysm.Checkpoint.Code.marshalSSZTo encodeLayout [.u64, .bytes 32]
-    ∧ encFastPathKindAnyFrame Prysm.BeaconBlockHeader.Code.marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
-    ∧ encFastPathKindAnyFrame Prysm.Eth1Data.Code.marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .u64, .bytes 32]
-    ∧ encFastPathKindAnyFrame Prysm.ValidatorBalance.Code.marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.u64, .u64]
-    ∧ encFastPathKindAnyFrame Prysm.DepositMessage.Code.marshalSSZTo Prysm.DepositMessage.Encode.example_layout [.bytes 48, .bytes 32, .u64]
-    ∧ encFastPathKindAnyFrame Prysm.HistoricalSummary.Code.marshalSSZTo Prysm.HistoricalSummary.Encode.example_layout [.bytes 32, .bytes 32] :=
+    encodeFastPathKindAnyFrame Prysm.Checkpoint.Code.marshalSSZTo encodeLayout [.uint64, .bytes 32]
+    ∧ encodeFastPathKindAnyFrame Prysm.BeaconBlockHeader.Code.marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32]
+    ∧ encodeFastPathKindAnyFrame Prysm.Eth1Data.Code.marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .uint64, .bytes 32]
+    ∧ encodeFastPathKindAnyFrame Prysm.ValidatorBalance.Code.marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.uint64, .uint64]
+    ∧ encodeFastPathKindAnyFrame Prysm.DepositMessage.Code.marshalSSZTo Prysm.DepositMessage.Encode.example_layout [.bytes 48, .bytes 32, .uint64]
+    ∧ encodeFastPathKindAnyFrame Prysm.HistoricalSummary.Code.marshalSSZTo Prysm.HistoricalSummary.Encode.example_layout [.bytes 32, .bytes 32] :=
   ⟨Encode.example_fast, Prysm.BeaconBlockHeader.Encode.example_fast, Prysm.Eth1Data.Encode.example_fast, Prysm.ValidatorBalance.Encode.example_fast, Prysm.DepositMessage.Encode.example_fast,
     Prysm.HistoricalSummary.Encode.example_fast⟩
 

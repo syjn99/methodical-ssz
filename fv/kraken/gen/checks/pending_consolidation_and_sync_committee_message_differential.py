@@ -4,7 +4,7 @@
 
   pending_consolidation_and_sync_committee_message_differential.py cases <cases.json>                      write the cases
   pending_consolidation_and_sync_committee_message_differential.py check <cases.json> <go-out.json> <result.json>
-The Go program is `prysm/go1.26.10/evidence/pending-consolidation-and-sync-committee-message/h5check-main.go.txt`, run natively with Go 1.26.10 through the gate
+The Go program is `prysm/go1.26.10/evidence/pending-consolidation-and-sync-committee-message/differential-main.go.txt`, run natively with Go 1.26.10 through the gate
 with `go run -overlay` in the temporary Prysm tree (read only). This is a Go-semantics check on the host
 (linux/arm64), not an execution of the amd64 ELF. Every expected value is computed here, independently of the
 code under test, from consensus-specs:
@@ -27,17 +27,17 @@ def cases():
     vis = [0, 7, 2 ** 64 - 1]
     for i, (v, r, w, g) in enumerate(zip(VALS, roots, vis, sigs)):
         b = struct.pack("<Q", v) + r + struct.pack("<Q", w) + g
-        cs.append({"id": f"sm-accept-{i}", "op": "sm_u", "in": b.hex(),
+        cs.append({"id": f"sync-committee-message-accept-{i}", "op": "SyncCommitteeMessage.UnmarshalSSZ", "in": b.hex(),
                    "exp": {"err": "", "u64s": [v, w], "bytes": [r.hex(), g.hex()], "lens": [32, 96],
                            "caps": [32, 96]}})
     for n in (0, 143, 145):
-        cs.append({"id": f"sm-size-{n}", "op": "sm_u", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
+        cs.append({"id": f"sync-committee-message-size-{n}", "op": "SyncCommitteeMessage.UnmarshalSSZ", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
     pairs = [(0, 0), (0x0123456789ABCDEF, 0xFEDCBA9876543210), (2 ** 64 - 1, 2 ** 64 - 1)]
     for i, (x, y) in enumerate(pairs):
         b = struct.pack("<QQ", x, y)
-        cs.append({"id": f"pc-accept-{i}", "op": "pc_u", "in": b.hex(), "exp": {"err": "", "u64s": [x, y]}})
+        cs.append({"id": f"pending-consolidation-accept-{i}", "op": "PendingConsolidation.UnmarshalSSZ", "in": b.hex(), "exp": {"err": "", "u64s": [x, y]}})
     for n in (0, 15, 17):
-        cs.append({"id": f"pc-size-{n}", "op": "pc_u", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
+        cs.append({"id": f"pending-consolidation-size-{n}", "op": "PendingConsolidation.UnmarshalSSZ", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
     return cs
 
 

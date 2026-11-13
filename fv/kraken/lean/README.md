@@ -238,10 +238,28 @@ Earlier short names and labels remain only in the places below, each for the rea
   - `../prysm/go1.26.10/link-set/data-ids-old-new.tsv`: earlier data ids of the Prysm link set;
   - `../gen/desc/spec-names-old-new.tsv`: earlier names of the `Spec` test-type declarations, which the records of the
     `Desc` checker name;
+  - `differential-cases.ids.tsv`, next to each Go differential case file `differential-cases.json`: earlier ids of the
+    differential cases;
   - the maps of `../gen/restructure/maps/` (`names.tsv`, `files.tsv`): the module and declaration names before and
     after each rename step (`../gen/restructure/README.md` section 4).
+  Some of these records also keep earlier names inside their files:
+  - the first generator `../gen/first-generator/` (an earlier run): the namespaces it writes (`Gen1c.*`, `TestTarget.*`,
+    `Fk.*`) name libraries that were removed, and the include API snapshot `include-api-v3.json` keeps its fields
+    (`fix3_commit`, `status`);
+  - the parser-run records `../prysm/go1.26.10/kparse.json`, `kparse-log.txt`, `kparse-riz-diag.json`,
+    `kparse-riz-diag-log.txt` and the log lines `KPARSE OK` / `KPARSE ERR` / `KPARSE DONE` that
+    `../gen/kraken-parser/ParserRun.lean` prints and `summarize_parser_log.py` reads;
+  - the raw output of the frozen generator `../prysm/go1.26.10/evidence/eth1-data/gen-e1dec.raw.txt` (earlier tool
+    names and labels inside) and the mode name `p2dec` and option `--S` of the frozen generator in the case `old-gen`
+    of `../gen/generator/decoder_test.py`;
+  - the set labels `set_A`, `set_B`, `set_I`, `in_A`, `in_B`, `A_minus_B`, `B_generated_minus_A`, `I_hand_written` of
+    `../prysm/inventory.json` (the inventory format that `../gen/type_inventory.py`, `type_list_document.py`,
+    `type_scope.py` and `../prysm/TYPES.md` use);
+  - the axioms records `../prysm/go1.26.10/evidence/AXIOMS.txt` and `axioms.json`, which name two theorems of an
+    earlier tree (`Prysm.Epoch.Decode.reject_static_addr`, `Prysm.Checkpoint.Encode.tail_rej`).
 - Schema ids: `fvphase1c.*` (for example `fvphase1c.inventory/1`, `fvphase1c.desc/1`) and `fvpar.include-api/1`. They are
   format identifiers that the tools write and that records and checks compare, so they are kept.
 - The forwarder `../gen/e2e/axioms_gate.py`: the CI workflow names this earlier path (`../gen/README.md` section 6).
-- Standard short words: `dec` and `enc` (decode, encode), `u64` (uint64), and lemma names of the form instruction +
-  constant + fact (`Machine.and7_zero`, `Machine.zx8`, `Machine.jg16_false`).
+- Standard short words: lemma names of the form instruction + constant + fact (`Machine.and7_zero`, `Machine.zx8`,
+  `Machine.jg16_false`); the instruction, register and memory words of Kraken and x86 inside `Codec` names (`Lea`,
+  `Mov`, `Nop`, `Ret`, `Reg`, `Mem`, `rax`, …).

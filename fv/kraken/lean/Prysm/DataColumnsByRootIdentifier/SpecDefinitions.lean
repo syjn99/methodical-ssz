@@ -16,7 +16,7 @@ These definitions are part of the frozen encoder statements (`Prysm/DataColumnsB
 - `receiverValue`: the `Value` of a Go receiver with any BlockRoot bytes and any Columns (for the reject specs).
 - `offsetBytes`: the 4 bytes of the offset 36.
 - `SszValue.encode`: block_root (32) ‖ offset 36 (4) ‖ the columns as 8-byte little-endian words.
-The backing array of `[]uint64` is one contiguous block; its bytes are `Spec.u64Bytes cols`.
+The backing array of `[]uint64` is one contiguous block; its bytes are `Spec.uint64Bytes cols`.
 -/
 
 open EthLib.Serialization.Ssz
@@ -42,6 +42,6 @@ def SszValue.toValue (g : SszValue) : Value := receiverValue g.root.toArray g.co
 def offsetBytes : List UInt8 := [0x24, 0, 0, 0]
 
 /-- `block_root ‖ offset 36 ‖ columns`. -/
-def SszValue.encode (g : SszValue) : Array UInt8 := g.root.toArray ++ offsetBytes.toArray ++ Spec.u64Bytes g.cols
+def SszValue.encode (g : SszValue) : Array UInt8 := g.root.toArray ++ offsetBytes.toArray ++ Spec.uint64Bytes g.cols
 
 end Prysm.DataColumnsByRootIdentifier

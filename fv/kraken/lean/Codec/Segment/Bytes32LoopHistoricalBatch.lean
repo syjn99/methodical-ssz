@@ -24,8 +24,8 @@ theorem glue_of {p : Program} {k a : Nat} (hk : p.IsInfixAt Host.prog k) (h : p[
     rcases (List.getElem?_eq_some_iff.mp h) with ⟨ha, -⟩; exact ha
   rw [List.isInfixAt_iff_getElem?.mp hk a ha, ← List.getElem?_eq_getElem ha]; exact h
 
-theorem src_of {p : Program} {k a : Nat} {src : Int64} (hk : p.IsInfixAt Host.prog k)
-    (h : p[a]? = some (bytes32LoopLeaSource src)) : GlueSrc (k + a) (k + a + 1) src := by
+theorem source_of {p : Program} {k a : Nat} {src : Int64} (hk : p.IsInfixAt Host.prog k)
+    (h : p[a]? = some (bytes32LoopLeaSource src)) : GlueSource (k + a) (k + a + 1) src := by
   refine Or.inr ⟨rfl, ?_⟩
   have ha : a < p.length := by
     rcases (List.getElem?_eq_some_iff.mp h) with ⟨ha, -⟩; exact ha
@@ -136,7 +136,7 @@ theorem historical_batch_state_roots_loop : type_of% @Prysm.HistoricalBatch.Deco
     (by simp only [unmarshalSSZ, bytes32LoopNop, List.getElem?_cons_succ, List.getElem?_cons_zero])
   have g4 : Glue (k + 104 + 3) (k + 108) := glue_of hk (a := 107)
     (by simp only [unmarshalSSZ, bytes32LoopNop, List.getElem?_cons_succ, List.getElem?_cons_zero])
-  have gs : GlueSrc (k + 117 + 13) (k + 131) 262144 := src_of hk (a := 130)
+  have gs : GlueSource (k + 117 + 13) (k + 131) 262144 := source_of hk (a := 130)
     (by simp only [unmarshalSSZ, bytes32LoopLeaSource, List.getElem?_cons_succ, List.getElem?_cons_zero])
   have hlb := Machine.label_at' hk hf (j := 104)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)

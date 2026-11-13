@@ -8,11 +8,11 @@ import Prysm.ElfData.PrysmTarget
 Go 1.26.10 compiles the 32-byte field decode of a protoc container (`Checkpoint.Root`,
 `AttestationData.BeaconBlockRoot`) to two code blocks:
 
-* `rootDecHead lff dR fL fC` (9 directives): `lea type:uint8,%rax; xor %ebx,%ebx;
+* `rootDecodeHead lff dR fL fC` (9 directives): `lea type:uint8,%rax; xor %ebx,%ebx;
   mov $0x20,%ecx; callq runtime.makeslice; mov dR(%rsp),%rdx` (reload the receiver),
   `movq $0x0,fL(%rdx); movq $0x20,fC(%rdx)` (slice length and capacity),
   `cmpl $0x0,runtime.writeBarrier(%rip); je lff`;
-* `rootDecMid lff lwb dR dB dS fP fL fC src` (12 directives): `lff:`, `mov %rax,dS(%rsp)` (save
+* `rootDecodeMiddle lff lwb dR dB dS fP fL fC src` (12 directives): `lff:`, `mov %rax,dS(%rsp)` (save
   the new pointer), `mov %rax,fP(%rdx)` (slice pointer), `mov dB(%rsp),%rbx; add $src,%rbx;
   mov $0x20,%ecx; callq runtime.memmove`, reload the receiver, `movq $0x20,fL(%rdx);
   movq $0x20,fC(%rdx)`, `cmpl $0x0,runtime.writeBarrier(%rip); jne lwb`.
@@ -36,7 +36,7 @@ open Machine Runtime
 namespace Codec
 
 /-- First block of the P2 decode segment (from the `lea` of `type:uint8` to `je lff`). -/
-def rootDecHead (lff : String) (dR fL fC : Int64) : Program :=
+def rootDecodeHead (lff : String) (dR fL fC : Int64) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.lea (Reg.low Reg64.rax Width.W64)
        (AddrExpr.mk (some RegOrRip.rip) none (((ConstExpr.label "type__").add (ConstExpr.int64 387072)).sub ConstExpr.after_current_instruction)))),
@@ -62,7 +62,7 @@ def rootDecHead (lff : String) (dR fL fC : Int64) : Program :=
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.z lff))]
 
 /-- Second block of the P2 decode segment (from `lff:` to `jne lwb`). -/
-def rootDecMid (lff lwb : String) (dR dB dS fP fL fC src : Int64) : Program :=
+def rootDecodeMiddle (lff lwb : String) (dR dB dS fP fL fC src : Int64) : Program :=
   [Kraken.Directive.label lff,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rsp)) none (ConstExpr.int64 dS)))
@@ -108,9 +108,9 @@ set_option maxRecDepth 100000 in
 block (at `j2`, `label lff = Host.addrOf j2`), with `runtime.writeBarrier` = 0. The field gets
 a new 32-byte heap chunk `p` holding the source bytes, length and capacity 32; `p` is also in
 the slot `aS`; rdx holds the receiver. -/
-theorem rootdec_seg (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
-    (hA : (rootDecHead lff dR fL fC).IsInfixAt Host.prog j1)
-    (hB : (rootDecMid lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)
+theorem root_decode_segment (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
+    (hA : (rootDecodeHead lff dR fL fC).IsInfixAt Host.prog j1)
+    (hB : (rootDecodeMiddle lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)
     (hl : label lff = Host.addrOf j2)
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
@@ -150,11 +150,11 @@ theorem rootdec_seg (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : 
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14 hRet hLo
-  step_directive hA rootDecHead 0
-  step_directive hA rootDecHead 1
+  step_directive hA rootDecodeHead 0
+  step_directive hA rootDecodeHead 1
   intro _
-  step_directive hA rootDecHead 2
-  step_directive hA rootDecHead 3
+  step_directive hA rootDecodeHead 2
+  step_directive hA rootDecodeHead 3
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
@@ -174,47 +174,47 @@ theorem rootdec_seg (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : 
   subst hrsp3 hr143 hrbp3
   rw [show sp - 8 + 8 = sp by bv_omega] at Hm3
   simp only [Nat.one_mul] at Hm3
-  step_directive hA rootDecHead 4
+  step_directive hA rootDecodeHead 4
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA rootDecHead 5
+  step_directive hA rootDecodeHead 5
   apply store_step_at _ _ aL _ _ _ vL _ _ (by rw [← hL]) (by ecancel) (by exact hvL)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
   unfold_step
-  step_directive hA rootDecHead 6
+  step_directive hA rootDecodeHead 6
   apply store_step_at _ _ aC _ _ _ vC _ _ (by rw [← hC]) (by ecancel) (by exact hvC)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   unfold_step
-  step_directive hA rootDecHead 7
+  step_directive hA rootDecodeHead 7
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
   unfold_step
-  step_directive hA rootDecHead 8
+  step_directive hA rootDecodeHead 8
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   rw [hl]
-  step_directive hB rootDecMid 0
-  step_directive hB rootDecMid 1
+  step_directive hB rootDecodeMiddle 0
+  step_directive hB rootDecodeMiddle 1
   apply store_step_at _ _ aS _ _ _ lS _ _ (by rw [← hS]) (by ecancel) (by exact hlS)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
   unfold_step
-  step_directive hB rootDecMid 2
+  step_directive hB rootDecodeMiddle 2
   apply store_step_at _ _ aP _ _ _ vP _ _ (by rw [← hP]) (by ecancel) (by exact hvP)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
   unfold_step
-  step_directive hB rootDecMid 3
+  step_directive hB rootDecodeMiddle 3
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hB rootDecMid 4
-  step_directive hB rootDecMid 5
-  step_directive hB rootDecMid 6
+  step_directive hB rootDecodeMiddle 4
+  step_directive hB rootDecodeMiddle 5
+  step_directive hB rootDecodeMiddle 6
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 3 + 1)).toBitVec.toInt) _ _
     (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6' H6
@@ -234,27 +234,27 @@ theorem rootdec_seg (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : 
     apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega] at hrsp4
   subst hrsp4 hr144 hrbp4
   rw [show src.toBitVec + bf = aSrc by rw [← hSrc]; exact BitVec.add_comm _ _] at Hm4
-  step_directive hB rootDecMid 7
+  step_directive hB rootDecodeMiddle 7
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hB rootDecMid 8
+  step_directive hB rootDecodeMiddle 8
   apply store_step_at _ _ aL _ _ _ (Int.toBytes 8 (BitVec.toInt (0 : BitVec 64))) _ _ (by rw [← hL])
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m7' H7
   simp only [Width.bytes, Width.bits] at H7
   unfold_step
-  step_directive hB rootDecMid 9
+  step_directive hB rootDecodeMiddle 9
   apply store_step_at _ _ aC _ _ _ (Int.toBytes 8 (BitVec.toInt (32 : BitVec 64))) _ _ (by rw [← hC])
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m8' H8
   simp only [Width.bytes, Width.bits] at H8
   unfold_step
-  step_directive hB rootDecMid 10
+  step_directive hB rootDecodeMiddle 10
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
   unfold_step
-  step_directive hB rootDecMid 11
+  step_directive hB rootDecodeMiddle 11
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]

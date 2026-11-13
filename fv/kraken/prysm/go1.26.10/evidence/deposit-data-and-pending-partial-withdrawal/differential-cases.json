@@ -1,7 +1,7 @@
 [
  {
-  "id": "dd-accept-0",
-  "op": "dd_u",
+  "id": "deposit-data-accept-0",
+  "op": "Deposit_Data.UnmarshalSSZ",
   "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
   "exp": {
    "err": "",
@@ -26,8 +26,8 @@
   }
  },
  {
-  "id": "dd-accept-1",
-  "op": "dd_u",
+  "id": "deposit-data-accept-1",
+  "op": "Deposit_Data.UnmarshalSSZ",
   "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f2222222222222222222222222222222222222222222222222222222222222222efcdab89674523016465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3",
   "exp": {
    "err": "",
@@ -52,8 +52,8 @@
   }
  },
  {
-  "id": "dd-accept-2",
-  "op": "dd_u",
+  "id": "deposit-data-accept-2",
+  "op": "Deposit_Data.UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "exp": {
    "err": "",
@@ -78,32 +78,32 @@
   }
  },
  {
-  "id": "dd-size-0",
-  "op": "dd_u",
+  "id": "deposit-data-size-0",
+  "op": "Deposit_Data.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "dd-size-183",
-  "op": "dd_u",
+  "id": "deposit-data-size-183",
+  "op": "Deposit_Data.UnmarshalSSZ",
   "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "dd-size-185",
-  "op": "dd_u",
+  "id": "deposit-data-size-185",
+  "op": "Deposit_Data.UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "pw-accept-0",
-  "op": "pw_u",
+  "id": "pending-partial-withdrawal-accept-0",
+  "op": "PendingPartialWithdrawal.UnmarshalSSZ",
   "in": "000000000000000000000000000000000000000000000000",
   "exp": {
    "err": "",
@@ -115,8 +115,8 @@
   }
  },
  {
-  "id": "pw-accept-1",
-  "op": "pw_u",
+  "id": "pending-partial-withdrawal-accept-1",
+  "op": "PendingPartialWithdrawal.UnmarshalSSZ",
   "in": "efcdab896745230100405973070000001032547698badcfe",
   "exp": {
    "err": "",
@@ -128,8 +128,8 @@
   }
  },
  {
-  "id": "pw-accept-2",
-  "op": "pw_u",
+  "id": "pending-partial-withdrawal-accept-2",
+  "op": "PendingPartialWithdrawal.UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffff",
   "exp": {
    "err": "",
@@ -141,24 +141,24 @@
   }
  },
  {
-  "id": "pw-size-0",
-  "op": "pw_u",
+  "id": "pending-partial-withdrawal-size-0",
+  "op": "PendingPartialWithdrawal.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "pw-size-23",
-  "op": "pw_u",
+  "id": "pending-partial-withdrawal-size-23",
+  "op": "PendingPartialWithdrawal.UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "pw-size-25",
-  "op": "pw_u",
+  "id": "pending-partial-withdrawal-size-25",
+  "op": "PendingPartialWithdrawal.UnmarshalSSZ",
   "in": "01010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true

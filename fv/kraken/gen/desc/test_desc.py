@@ -7,7 +7,7 @@
         only: changes the inventory binding cannot see), list mutants.txt;
       - the replay of every review mutant: review/r1_mutants.py (20), r2_mutants.py (32),
         r3_mutants.py (40), copied unchanged from the review directories;
-      - list scenarios: the reviewer's t01-t13, mine, and for every wrong hand-type Desc an
+      - list scenarios: t01-t13 of review/r3_mutants.py, the scenarios of this file, and for every wrong hand-type Desc an
         "add" (next to the originals) and a "replace" (in place of its base) scenario;
       expect.json and batch.txt.
   run_desc_checker.sh <work-dir> <fv/kraken/lean>       (gated; writes the checker result files)
@@ -290,7 +290,7 @@ def prepare(work):
     # list scenarios t01-t13 of review/r3_mutants.py (their lists name files under replay/)
     for sc in r3["scenarios"]:
         exp["scenarios"][sc["id"]] = {"source": "r3", "what": sc["what"], "list": sc["list"], "expect": "FAIL"}
-    # my scenarios
+    # the scenarios of this file
     for sid, what, repl, finding in SCENARIOS:
         lst = []
         for p in originals:
@@ -418,12 +418,12 @@ def evaluate(work, out):
         if r["role"] != "original":
             md.append(f"| {r['id']} | {r['role']} | {r['base']} | {r.get('designated', 'PASS or FAIL')} | {r['result']} | {r['status']} | "
                       f"{', '.join(r.get('failed_checks', []))} |")
-    md += ["", "## Replay of the review mutants (r1: 20, r2: 32, r3)", "",
-           "| review | id | base | reviewer expects | result | status | failed checks | note |", "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+    md += ["", "## Replay of the mutants of review/r1_mutants.py (r1: 20), r2_mutants.py (r2: 32) and r3_mutants.py (r3)", "",
+           "| mutant file | id | base | expected by the mutant file | result | status | failed checks | note |", "| --- | --- | --- | --- | --- | --- | --- | --- |"]
     for r in full["replay"]:
         md.append(f"| {r['review']} | {r['id']} | {r['base']} | {r['reviewer_expects']} | {r['result']} | {r['status']} | "
                   f"{', '.join(r['failed_checks'])} | {r['note']} |")
-    md += ["", "## List scenarios (reviewer t01-t13, mine, emit-boundary add/replace)", "",
+    md += ["", "## List scenarios (t01-t13 of review/r3_mutants.py, the scenarios of this file, emit-boundary add/replace)", "",
            "| id | source | verdict | findings | as expected |", "| --- | --- | --- | --- | --- |"]
     for r in full["scenarios"]:
         f = "; ".join(f"{k}: {len(v) if isinstance(v, list) else v}" for k, v in r["findings"].items())

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """Proof generator skeleton: emits per-type files into a scratch directory.
+Record of an earlier run: the namespaces that this generator writes (`Gen1c.*`, `TestTarget.*`, `Fk.*`) name
+libraries that the present tree no longer has (lean/README.md section 8). Its tests check that run, not the
+present Lean tree.
 
 Usage:
   emit.py --out DIR --desc-dir DIR --go F.ssz.go[,F2...] --elf ELF --nm NM --norm DIR
@@ -260,8 +263,8 @@ def lean_namespace(mode, pkg, t):
 CODE_NS = {"hand_case": "TestTarget.Code", "prysm": "Fk.PrysmCode"}
 
 
-def size_stmt(code, n, code_ns="TestTarget.Code"):
-    return (f"def size_stmt [Host] : Prop :=\n"
+def size_statement(code, n, code_ns="TestTarget.Code"):
+    return (f"def size_statement [Host] : Prop :=\n"
             f"  ∀ (k : Nat) (hk : {code_ns}.{code}SizeSSZ.IsInfixAt Host.prog k) (s : MachineData) (ra : UInt64)\n"
             f"    (R : DataMem → Prop) (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ R),\n"
             f"    Eventually (step1 Host.exe)\n"
@@ -300,7 +303,7 @@ def negative_cases(t, desc, has_size):
     cases = []
     if has_size:
         n = desc["fixed_size"]
-        cases.append({"id": f"{t}.size.const", "target": "statements.lean size_stmt",
+        cases.append({"id": f"{t}.size.const", "target": "statements.lean size_statement",
                       "mutation": f"rax = {n} -> rax = {n + 1}", "expect": "the size theorem fails in its final goal",
                       "control": "unmutated statement proves", "status": "format only (not run)"})
     cases.append({"id": f"{t}.code.flip", "target": f"{t} UnmarshalSSZ machine code",
@@ -341,7 +344,7 @@ def main():
     want = accept(a.desccheck_result, a.desc_dir, a.types.split(","), a.obligations, th)
     os.makedirs(os.path.join(out, "data"), exist_ok=True)
     manifest = {"schema": "fvphase1c.gen-manifest/1", "include_api_version": inc.API_VERSION,
-                "include_api_status": api["status"], "include_api_fix3_commit": api.get("fix3_commit"),
+                "include_api_status": api["status"], "include_api_commit": api.get("fix3_commit"),
                 "inputs": {"elf": sha(a.elf), "nm": sha(a.nm), "go": {os.path.basename(g): sha(g) for g in gofiles},
                            "theorems": sha(a.theorems)},
                 "types": {}, "data_items": {}}
@@ -357,11 +360,11 @@ def main():
                  f"namespace {ns}", "open Fk TestTarget.Code" if a.obligations == "hand_case" else "open Fk", ""]
         has_size = d["fixed_size"] is not None
         if has_size:
-            lines.append(size_stmt(code, d["fixed_size"], CODE_NS[a.obligations]))
+            lines.append(size_statement(code, d["fixed_size"], CODE_NS[a.obligations]))
         rows = [r for r in obl if r["type"] == t]
         lines.append("/-! Obligations of the frozen list (gen/frozen/THEOREMS.json) for this type:")
         for r in rows:
-            tmpl = "template: size_stmt" if (r["obligation"] == "size" and has_size) else "no template yet"
+            tmpl = "template: size_statement" if (r["obligation"] == "size" and has_size) else "no template yet"
             lines.append(f"  {r['id']}: {tmpl}")
         lines += ["-/", "", f"end {ns}", ""]
         open(os.path.join(td, "statements.lean"), "w").write("\n".join(lines))
@@ -403,7 +406,7 @@ def main():
                                                    "file": inc.file_name(iid), "lean": inc.addr_name(iid)}
                 items.append(iid)
         manifest["types"][f"{key[0]}.{t}"] = {"desc_sha256": dsha, "out": os.path.relpath(td, out), "namespace": ns, "code_name": code, "files": sorted(os.listdir(td)), "data_items": sorted(set(items)),
-                                "obligations": len(rows), "templates": ["size_stmt"] if has_size else []}
+                                "obligations": len(rows), "templates": ["size_statement"] if has_size else []}
     json.dump(manifest, open(os.path.join(out, "manifest.json"), "w"), indent=1)
     print(json.dumps({"types": len(manifest["types"]), "data_items": len(manifest["data_items"]),
                       "data_errors": [k for k, v in manifest["data_items"].items() if "error" in v]}))

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Call graph and link tables of the real v1alpha1.BeaconBlockHeader SSZ functions and the
-primitives.ValidatorIndex methods on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after
-the hold-out had been run; the text of `attestation_data_link.py` with the function set changed).
+primitives.ValidatorIndex methods on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; BeaconBlockHeader
+and ValidatorIndex are hold-out types; the text of `attestation_data_link.py` with the function set changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   beacon_block_header_link.py callgraph <objdump> <out.json>          call targets with contract class

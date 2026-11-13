@@ -32,16 +32,16 @@ theorem Decode.generated_accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
           ⋆ Eq (e8.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At s.regs.rax.toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hA := Codec.infix_sub (q := Codec.u64DecHead "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ_cc" "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ_bb" 72 96) 0 hk
-    (by simp only [unmarshalSSZ, Codec.u64DecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.u64DecTail "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ_bb" 72) 43 hk
-    (by simp only [unmarshalSSZ, Codec.u64DecTail, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA := Codec.infix_sub (q := Codec.uint64DecodeHead "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ_cc" "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ_bb" 72 96) 0 hk
+    (by simp only [unmarshalSSZ, Codec.uint64DecodeHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.uint64DecodeTail "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ_bb" 72) 43 hk
+    (by simp only [unmarshalSSZ, Codec.uint64DecodeTail, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 43)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact (Codec.u64dec_accept _ _ _ _ 72 96 (by decide) k (k + 43)
+  with_reducible exact (Codec.uint64_decode_accept _ _ _ _ 72 96 (by decide) k (k + 43)
     hA hB hl e8 he8 s ra guard fp s2 c0 hfp h2 hc0 R h_mem hguard hlen)
-theorem Decode.generated_accept_kind : ∀ (h : Host), type_of% (@Decode.generated_accept h) = @Codec.u64DecAcceptKind h unmarshalSSZ := by
+theorem Decode.generated_accept_kind : ∀ (h : Host), type_of% (@Decode.generated_accept h) = @Codec.uint64DecodeAcceptKind h unmarshalSSZ := by
   intro h; with_reducible rfl
 
 end Prysm.ValidatorIndex

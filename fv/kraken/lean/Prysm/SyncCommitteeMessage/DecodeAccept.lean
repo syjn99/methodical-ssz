@@ -11,13 +11,13 @@ statement is the independent hand statement `Prysm.SyncCommitteeMessage.Decode.a
 `eventually_trans` over
 
 * `Decode.head_to_arguments` (hand, 0–14),
-* `Decode.generated_call_Slot_arg` (15–16) and `Decode.generated_call_Slot_call` (17–19, label 46): GENERATED
+* `Decode.generated_call_Slot_argument` (15–16) and `Decode.generated_call_Slot_call` (17–19, label 46): GENERATED
   (`Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean`, raw); `hC` discharged by the proved `Prysm.Slot.Decode.accept_function_spec_holds`,
-* `bytes32dec_seg_rax` (hand lemma, BlockRoot 47–71) and hand steps 72–73, label 80, 81,
-* `Decode.validator_index_arg` (hand lemma, 82–87) and `Codec.calldec_seg` (existing lemma applied by hand, 88–90,
+* `bytes32_decode_segment_rax` (hand lemma, BlockRoot 47–71) and hand steps 72–73, label 80, 81,
+* `Decode.validator_index_argument` (hand lemma, 82–87) and `Codec.call_decode_segment` (existing lemma applied by hand, 88–90,
   label 117; callee ValidatorIndex, `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`),
 * `Decode.spill_registers` (hand, 118–119),
-* `Decode.generated_call_Signature_seg` (120–145): GENERATED,
+* `Decode.generated_call_Signature_segment` (120–145): GENERATED,
 * hand steps 146–147, label 154, 155 and the epilogue 156–160 (the text of the BeaconBlockHeader tail).
 
 Stack (rsp = entry rsp): frame `sub $0x60` as BeaconBlockHeader; the helper lemmas `Prysm.BeaconBlockHeader.Decode.stack_low_eq`, `Prysm.BeaconBlockHeader.Decode.low_stack_split`,
@@ -38,8 +38,8 @@ theorem Decode.accept : Decode.accept_statement := by
     fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 aP1 aL1 aC1 a40 aP2 aL2 aC2
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrs hast ha8 haP1 haL1 haC1 ha40 haP2 haL2 haC2
     R S hS hlo Heap avail h_mem hguard hlen hav hms hmm
-  have hsl : U64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
-  have hvi : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hsl : Uint64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
+  have hvi : Uint64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
@@ -52,17 +52,17 @@ theorem Decode.accept : Decode.accept_statement := by
     exact Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS hl8
   rw [hlos] at h_mem
   -- code facts of the hand-applied blocks
-  have hRA := Codec.infix_sub (q := Codec.bytesDecHead 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" 112 24 32) 47 hk
-    (by simp only [Code.unmarshalSSZ, Codec.bytesDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hRB := Codec.infix_sub (q := bytesDecMidRax 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_13e" 112 120 56 16 24 32 8) 60 hk
-    (by simp only [Code.unmarshalSSZ, bytesDecMidRax, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hRA := Codec.infix_sub (q := Codec.bytesDecodeHead 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" 112 24 32) 47 hk
+    (by simp only [Code.unmarshalSSZ, Codec.bytesDecodeHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hRB := Codec.infix_sub (q := bytesDecodeMiddleRax 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_13e" 112 120 56 16 24 32 8) 60 hk
+    (by simp only [Code.unmarshalSSZ, bytesDecodeMiddleRax, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hRl := Machine.label_at' hk hf (j := 60)
     (by simp only [Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hC2 := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 88 hk
-    (by simp only [Code.unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL2 := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 117 hk
-    (by simp only [Code.unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hC2 := Codec.infix_sub (q := Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 88 hk
+    (by simp only [Code.unmarshalSSZ, Codec.callDecode, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hL2 := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 117 hk
+    (by simp only [Code.unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl2 := Machine.label_at' hk hf (j := 117)
     (by simp only [Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
@@ -73,7 +73,7 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- Slot: set-up 15–16 (generated)
-  refine eventually_trans _ _ _ _ (Decode.generated_call_Slot_arg k hk hf rax.toBitVec (rax.toBitVec + 8)
+  refine eventually_trans _ _ _ _ (Decode.generated_call_Slot_argument k hk hf rax.toBitVec (rax.toBitVec + 8)
     (by simp only [Int64.toBitVec_ofNat]) d1 (by rw [hrax1])) ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, hrbx2, hrax2, hrcx2, hmem2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hrax2 hrcx2 hmem2
@@ -89,7 +89,7 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc3 hrax3 hrbx3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
   -- BlockRoot: 47 → 72 (hand lemma, receiver in rax)
-  refine eventually_trans _ _ _ _ (bytes32dec_seg_rax _ _ 112 120 56 16 24 32 8 (k + 47) (k + 60) hRA hRB hRl
+  refine eventually_trans _ _ _ _ (bytes32_decode_segment_rax _ _ 112 120 56 16 24 32 8 (k + 47) (k + 60) hRA hRB hRl
     (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
     (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rax.toBitVec + 16) (rax.toBitVec + 24) (rax.toBitVec + 32)
@@ -138,7 +138,7 @@ theorem Decode.accept : Decode.accept_statement := by
   have hlo3 : lo1 = lo1.take S ++ lo1.drop S := (List.take_append_drop S lo1).symm
   rw [hsp3, hlo3, Prysm.BeaconBlockHeader.Decode.split_three_words _ _ _ _ hq0 hq1 hq2, Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS1 hl81] at H3
   -- ValidatorIndex: set-up 82–87 (hand lemma)
-  refine eventually_trans _ _ _ _ (Decode.validator_index_arg k hk (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.validator_index_argument k hk (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 16) (rsp.toBitVec + 32) (rbx.toBitVec + 40) (rax.toBitVec + 40)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
@@ -147,7 +147,7 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc5 hrsp5 hrbp5 hr145 hrbx5 hrax5 hrcx5 hmem5
   subst hpc5
   -- ValidatorIndex: call block 88–90, label 117 (existing lemma; hC = Prysm.ValidatorIndex.Decode.accept_function_spec_holds)
-  refine eventually_trans _ _ _ _ (Codec.calldec_seg _ _ (k + 88) (k + 117) hC2 hL2 hl2 hvi
+  refine eventually_trans _ _ _ _ (Codec.call_decode_segment _ _ (k + 88) (k + 117) hC2 hL2 hl2 hvi
     (rsp.toBitVec - 104) (rax.toBitVec + 40) (rbx.toBitVec + 40) (rsp.toBitVec - 112) (rsp.toBitVec - 120)
     (rsp.toBitVec - 96) (by bv_omega) (by bv_omega) (by bv_omega)
     { toBitVec := rsp.toBitVec - 8#64 } _ guard in1
@@ -165,7 +165,7 @@ theorem Decode.accept : Decode.accept_statement := by
   subst hpc7
   rw [hrax6, hrbx6] at Hm7
   -- Signature: 120 → 146 (generated)
-  refine eventually_trans _ _ _ _ (Decode.generated_call_Signature_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_call_Signature_segment k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
     (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rax.toBitVec + 48) (rax.toBitVec + 56) (rax.toBitVec + 64)
     (rbx.toBitVec + 48) (S + 8)

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Call graph and link tables of the real UnmarshalSSZ and MarshalSSZTo of the 24 flat fixed-size
 types outside the development population (fv/kraken/prysm/proof-inventory.md at the freeze of the 24 flat types) on the Go 1.26.10
-ELF (the same ELF as prysm/go1.26.10/link-set; written after the hold-out of the 24 flat types had been run;
-the text of `seven_flat_decoders_link.py` + `flat_encoders_link.py` with the function set changed and the data items made per function).
+ELF (the same ELF as prysm/go1.26.10/link-set; the 24 flat types are
+hold-out types; the text of `seven_flat_decoders_link.py` + `flat_encoders_link.py` with the function set changed and the data items made per function).
 
 Usage (Python 3 standard library only; python3 -I -B; every step runs gated):
   flat_types_link.py callgraph <objdump> <out.json>          call targets with contract class

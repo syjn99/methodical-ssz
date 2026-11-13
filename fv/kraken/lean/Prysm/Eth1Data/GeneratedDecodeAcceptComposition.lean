@@ -84,34 +84,34 @@ theorem Decode.accept_generated_composition (k : Nat) (hk : unmarshalSSZ.IsInfix
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
   -- code facts of the composition templates
-  have hH := Codec.infix_sub (q := Codec.decHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_193" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_17f" 72) 0 hk
-    (by simp only [unmarshalSSZ, Codec.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hTa0 := Codec.infix_sub (q := Codec.bytesDecTailReloadJump Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_c7" 24) 37 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecTailReloadJump, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hTb0 := Codec.infix_sub (q := Codec.bytesDecTailPointerStore Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_c7" 8) 45 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecTailPointerStore, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hH := Codec.infix_sub (q := Codec.decodeHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_193" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_17f" 72) 0 hk
+    (by simp only [unmarshalSSZ, Codec.decodeHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hTa0 := Codec.infix_sub (q := Codec.bytesDecodeTailReloadJump Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_c7" 24) 37 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecodeTailReloadJump, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hTb0 := Codec.infix_sub (q := Codec.bytesDecodeTailPointerStore Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_c7" 8) 45 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecodeTailPointerStore, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hlT0 := Machine.label_at' hk hf (j := 45)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hY0 : Codec.U64InlineReg Reg64.rdi := by decide
-  have hTa2 := Codec.infix_sub (q := Codec.bytesDecTailReloadJump Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_171" 24) 75 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecTailReloadJump, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hTb2 := Codec.infix_sub (q := Codec.bytesDecTailPointerStore Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_171" 40) 84 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecTailPointerStore, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hY0 : Codec.Uint64InlineReg Reg64.rdi := by decide
+  have hTa2 := Codec.infix_sub (q := Codec.bytesDecodeTailReloadJump Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_171" 24) 75 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecodeTailReloadJump, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hTb2 := Codec.infix_sub (q := Codec.bytesDecodeTailPointerStore Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_171" 40) 84 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecodeTailPointerStore, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hlT2 := Machine.label_at' hk hf (j := 84)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hY2 : Codec.U64InlineReg Reg64.rsi := by decide
-  have hE := Codec.infix_sub (q := Codec.decEpilogue) 86 hk
-    (by simp only [unmarshalSSZ, Codec.decEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hY2 : Codec.Uint64InlineReg Reg64.rsi := by decide
+  have hE := Codec.infix_sub (q := Codec.decodeEpilogue) 86 hk
+    (by simp only [unmarshalSSZ, Codec.decodeEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   -- head: entry → directive 13
-  refine eventually_trans _ _ _ _ (Codec.dec_head_seg _ _ _ _ 72 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
+  refine eventually_trans _ _ _ _ (Codec.decode_head_segment _ _ _ _ 72 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
     (by dsimp only; ecancel) hguard (by rw [hlen]; rfl)) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- DepositRoot: generated segment (32 bytes, zero form), 13 → 37
-  refine eventually_trans _ _ _ _ (Prysm.Eth1Data.Decode.generated_field_DepositRoot_seg k hk hf
+  refine eventually_trans _ _ _ _ (Prysm.Eth1Data.Decode.generated_field_DepositRoot_segment k hk hf
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 8) (rax.toBitVec + 16) (rax.toBitVec + 24) S
@@ -128,7 +128,7 @@ theorem Decode.accept_generated_composition (k : Nat) (hk : unmarshalSSZ.IsInfix
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrdx2 Hm2
   subst hpc2
   -- pointer tail of DepositRoot (rdi), 37–38 and 45–46
-  refine eventually_trans _ _ _ _ (Codec.bytesdec_tail_seg Reg64.rdi hY0 _ _ _ (k + 37) (k + 45) hTa0 hTb0 hlT0
+  refine eventually_trans _ _ _ _ (Codec.bytes_decode_tail_segment Reg64.rdi hY0 _ _ _ (k + 37) (k + 45) hTa0 hTb0 hlT0
     (rsp.toBitVec - 40) rax.toBitVec p1 (rsp.toBitVec - 16) (rax.toBitVec + 8)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat])
     (rsp - 8) r14 (Int.toBytes 8 p1.toInt) (Int.toBytes_length 8 _) _ d2 hrsp2 hrbp2 hr142 hrdx2
@@ -137,7 +137,7 @@ theorem Decode.accept_generated_composition (k : Nat) (hk : unmarshalSSZ.IsInfix
   dsimp only at hpc3 hrsp3 hrbp3 hr143 hrdx3 Hm3
   subst hpc3
   -- DepositCount: generated segment (inline uint64), 47–49
-  refine eventually_trans _ _ _ _ (Prysm.Eth1Data.Decode.generated_field_DepositCount_seg k hk hf
+  refine eventually_trans _ _ _ _ (Prysm.Eth1Data.Decode.generated_field_DepositCount_segment k hk hf
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec (rsp.toBitVec + 16) (rbx.toBitVec + 32) (rax.toBitVec + 32)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat])
     (by simp only [Int64.toBitVec_ofNat])
@@ -146,7 +146,7 @@ theorem Decode.accept_generated_composition (k : Nat) (hk : unmarshalSSZ.IsInfix
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrdx4 Hm4
   subst hpc4
   -- BlockHash: generated segment (32 bytes, add form), 50 → 75
-  refine eventually_trans _ _ _ _ (Prysm.Eth1Data.Decode.generated_field_BlockHash_seg k hk hf
+  refine eventually_trans _ _ _ _ (Prysm.Eth1Data.Decode.generated_field_BlockHash_segment k hk hf
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 40) (rax.toBitVec + 48) (rax.toBitVec + 56) (rbx.toBitVec + 40) S
@@ -163,7 +163,7 @@ theorem Decode.accept_generated_composition (k : Nat) (hk : unmarshalSSZ.IsInfix
   dsimp only at hpc5 hrsp5 hrbp5 hr145 hrdx5 Hm5
   subst hpc5
   -- pointer tail of BlockHash (rsi), 75–76 and 84–85
-  refine eventually_trans _ _ _ _ (Codec.bytesdec_tail_seg Reg64.rsi hY2 _ _ _ (k + 75) (k + 84) hTa2 hTb2 hlT2
+  refine eventually_trans _ _ _ _ (Codec.bytes_decode_tail_segment Reg64.rsi hY2 _ _ _ (k + 75) (k + 84) hTa2 hTb2 hlT2
     (rsp.toBitVec - 40) rax.toBitVec p2 (rsp.toBitVec - 16) (rax.toBitVec + 40)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat])
     (rsp - 8) r14 (Int.toBytes 8 p2.toInt) (Int.toBytes_length 8 _) _ d5 hrsp5 hrbp5 hr145 hrdx5
@@ -172,7 +172,7 @@ theorem Decode.accept_generated_composition (k : Nat) (hk : unmarshalSSZ.IsInfix
   dsimp only at hpc6 hrsp6 hrbp6 hr146 hrdx6 Hm6
   subst hpc6
   -- epilogue, 86–90
-  refine eventually_trans _ _ _ _ (Codec.dec_epilogue_seg (k + 86) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Codec.decode_epilogue_segment (k + 86) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra r14 _ d6 hrsp6 hr146 (by ecancel)) ?_
   rintro ⟨d7, pc7⟩ ⟨hpc7, hrax7, hrbx7, hrsp7, hrbp7, hr147, Hm7⟩
   dsimp only at hpc7 hrax7 hrbx7 hrsp7 hrbp7 hr147 Hm7

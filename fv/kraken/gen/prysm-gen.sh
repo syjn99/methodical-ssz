@@ -5,13 +5,13 @@
 # Usage: prysm-gen.sh <prysm-tree> <generator-binary> <outdir> [gen|ir|all]
 #   gen   : <outdir>/gen/{mainnet,minimal}/<config>[.minimal].ssz.go
 #   ir    : <outdir>/ir-{mainnet,minimal}.json (fv/kraken/gen/inventory-tool)
-#   other : <outdir>/gen/GEN_RC (one line per run), <outdir>/bin/invtool
+#   other : <outdir>/gen/GEN_RC (one line per run), <outdir>/bin/inventory-tool
 #
 # Flags are the ones of Prysm build/gen/ssz.go (genMethodical): mainnet loads
 # the default sources and stamps //go:build !minimal; minimal loads
 # -tags minimal sources and stamps //go:build minimal; progressive is on
 # (no --disable-progressive). Output goes outside the Prysm tree. The only
-# write into the Prysm tree is the invtool scratch package fvphase1c/invtool.
+# write into the Prysm tree is the inventory-tool scratch package fvphase1c/inventorytool.
 set -eu
 P=$1
 GEN=$2
@@ -51,14 +51,14 @@ cat "$O/gen/GEN_RC"
 fi
 [ "$MODE" = gen ] && exit $fail
 
-mkdir -p fvphase1c/invtool
-cp "$HERE/inventory-tool/main.go" fvphase1c/invtool/main.go
-go build -p 2 -o "$O/bin/invtool" ./fvphase1c/invtool
+mkdir -p fvphase1c/inventorytool
+cp "$HERE/inventory-tool/main.go" fvphase1c/inventorytool/main.go
+go build -p 2 -o "$O/bin/inventory-tool" ./fvphase1c/inventorytool
 CFGS="$V/phase0.yaml $V/altair.yaml $V/bellatrix.yaml $V/capella.yaml $V/deneb.yaml $V/electra.yaml $V/fulu.yaml
 $V/gloas.yaml $V/heze.yaml $V/non-core.yaml proto/engine/v1/engine.yaml proto/eth/v1/gateway.yaml
 proto/ssz_query/response.yaml proto/ssz_query/testing/test_containers.yaml"
 # shellcheck disable=SC2086
-"$O/bin/invtool" -out "$O/ir-mainnet.json" $CFGS
+"$O/bin/inventory-tool" -out "$O/ir-mainnet.json" $CFGS
 # shellcheck disable=SC2086
-"$O/bin/invtool" -tags minimal -out "$O/ir-minimal.json" $CFGS
+"$O/bin/inventory-tool" -tags minimal -out "$O/ir-minimal.json" $CFGS
 exit $fail

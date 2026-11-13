@@ -21,7 +21,7 @@ namespace Prysm.Deposit_Data
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `WithdrawalCredentials` (32-byte vector): decode segment over the windows 47–56 and 61–72; receiver in rdx after makeslice, in rdx after memmove (`callq` at 67); a `nop` is inside the first window. -/
-theorem _root_.Prysm.Deposit_Data.Decode.example_step_WithdrawalCredentials_seg (k : Nat) (hk : Prysm.Deposit_Data.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.Deposit_Data.Code.unmarshalSSZ k) :
+theorem _root_.Prysm.Deposit_Data.Decode.example_step_WithdrawalCredentials_segment (k : Nat) (hk : Prysm.Deposit_Data.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.Deposit_Data.Code.unmarshalSSZ k) :
     ∀
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB) (hS : sp + (24 : Int64).toBitVec = aS)
@@ -59,17 +59,17 @@ theorem _root_.Prysm.Deposit_Data.Decode.example_step_WithdrawalCredentials_seg 
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 47)⟩ := by
   have hqA := Codec.window_infix_at hk 47 10
-  have heA : Codec.eraseNop ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 47).take 10) = Codec.bytesDecHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" 48 40 48 := by rfl
+  have heA : Codec.eraseNop ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 47).take 10) = Codec.bytesDecodeHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" 48 40 48 := by rfl
   have hqB := Codec.window_infix_at hk 61 12
-  have heB : Codec.eraseNop ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 61).take 12) = Codec.bytesDecMidRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_154" 48 56 24 32 40 48 48 := by rfl
+  have heB : Codec.eraseNop ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 61).take 12) = Codec.bytesDecodeMiddleRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_154" 48 56 24 32 40 48 48 := by rfl
   have hjl : k + 61 + Codec.nonNopIndex ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 61).take 12) 0 = k + 61 := by rfl
   have hl := Machine.label_at' hk hf (j := 61)
     (by simp only [Prysm.Deposit_Data.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.Deposit_Data.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hjm : k + 61 + Codec.nonNopIndex ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 61).take 12) 6 = k + 67 := by rfl
   have hend : k + 61 + ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 61).take 12).length = k + 73 := by rfl
-  with_reducible exact Codec.bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) (k + 61) (k + 67) (k + 73) hqA heA hqB heB hjl hl hjm hend
-theorem _root_.Prysm.Deposit_Data.Decode.example_step_WithdrawalCredentials_seg_kind : ∀ (h : Host), type_of% (@Prysm.Deposit_Data.Decode.example_step_WithdrawalCredentials_seg h) = @Codec.bytesDecSegKindWindow h 32 Prysm.Deposit_Data.Code.unmarshalSSZ Reg64.rdx 47 67 73 48 56 24 32 40 48 48 := by
+  with_reducible exact Codec.bytes_decode_segment_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) (k + 61) (k + 67) (k + 73) hqA heA hqB heB hjl hl hjm hend
+theorem _root_.Prysm.Deposit_Data.Decode.example_step_WithdrawalCredentials_segment_kind : ∀ (h : Host), type_of% (@Prysm.Deposit_Data.Decode.example_step_WithdrawalCredentials_segment h) = @Codec.bytesDecodeSegmentKindWindow h 32 Prysm.Deposit_Data.Code.unmarshalSSZ Reg64.rdx 47 67 73 48 56 24 32 40 48 48 := by
   intro h; with_reducible rfl
 
 end Prysm.Deposit_Data

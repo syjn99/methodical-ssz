@@ -7,11 +7,11 @@ import Prysm.ValidatorIdentity.Code
 
 Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a
 step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem
-has a `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueKindAnyFrame`, `encFastPathKindAnyFrame`).
+has a `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encodeEpilogueKindAnyFrame`, `encodeFastPathKindAnyFrame`).
 **Fast path only**: `len(dst) + 64 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
-FAST-PATH-JSON: {"type": "ValidatorIdentity", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 64, "frame": 144, "guard_addend": 24, "runtime_calls": true, "fields": [["Index", "u", 8], ["Pubkey", "b", 48], ["ActivationEpoch", "u", 8]], "boundaries": [10, 36, 64, 92], "layout": "Prysm.ValidatorIdentity.Encode.generated_layout", "S_sha256": "cdfd21b3d578e12dc28267992dc650230ca9c15b2e3ec1a13b66fccd337e77f7", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.ValidatorIdentity", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_2", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encFastPathKindAnyFrame"}]}
+FAST-PATH-JSON: {"type": "ValidatorIdentity", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 64, "frame": 144, "guard_addend": 24, "runtime_calls": true, "fields": [["Index", "u", 8], ["Pubkey", "b", 48], ["ActivationEpoch", "u", 8]], "boundaries": [10, 36, 64, 92], "layout": "Prysm.ValidatorIdentity.Encode.generated_layout", "assembly_sha256": "cdfd21b3d578e12dc28267992dc650230ca9c15b2e3ec1a13b66fccd337e77f7", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "assembly": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.ValidatorIdentity", "kinds": [{"theorem": "Encode.generated_head", "kind": "encodeHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_2", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encodeEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encodeFastPathKindAnyFrame"}]}
 -/
 
 open Machine Runtime Codec Prysm.ValidatorIdentity.Code
@@ -125,7 +125,7 @@ theorem Encode.generated_head : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_head_kind : ∀ (h : Host), type_of% (@Encode.generated_head h)
-    = @Codec.encHeadKindAnyFrame h marshalSSZTo Prysm.ValidatorIdentity.Encode.generated_layout [.u64, .bytes 48, .u64]
+    = @Codec.encodeHeadKindAnyFrame h marshalSSZTo Prysm.ValidatorIdentity.Encode.generated_layout [.uint64, .bytes 48, .uint64]
     ⟨10, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 56) (.original 3), .at (.below 40) (.original 4), .at (.below 24) (.original 5), .at (.below 104) (.original 6), .at (.below 96) (.original 7), .at (.below 88) (.original 8), .at (.below 72) (.original 9), .at (.below 160) (.original 10), .low .scratch],
       []⟩ := by
@@ -266,7 +266,7 @@ theorem Encode.generated_field_0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_0_kind : ∀ (h : Host), type_of% (@Encode.generated_field_0 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorIdentity.Encode.generated_layout [.u64, .bytes 48, .u64]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorIdentity.Encode.generated_layout [.uint64, .bytes 48, .uint64]
     ⟨10, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 56) (.original 3), .at (.below 40) (.original 4), .at (.below 24) (.original 5), .at (.below 104) (.original 6), .at (.below 96) (.original 7), .at (.below 88) (.original 8), .at (.below 72) (.original 9), .at (.below 160) (.original 10), .low .scratch],
       []⟩
@@ -419,7 +419,7 @@ theorem Encode.generated_field_1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, x0, x1, scr1, hx0, hx1, hscr1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_1_kind : ∀ (h : Host), type_of% (@Encode.generated_field_1 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorIdentity.Encode.generated_layout [.u64, .bytes 48, .u64]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorIdentity.Encode.generated_layout [.uint64, .bytes 48, .uint64]
     ⟨36, 1, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 24) (.original 5), .at (.below 104) (.original 6), .at (.below 96) (.original 7), .at (.below 88) (.original 8), .at (.below 72) (.original 9), .at (.below 160) (.original 10), .low .scratch],
       [.fixed 8, .fixed 16]⟩
@@ -570,7 +570,7 @@ theorem Encode.generated_field_2 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, x0, x1, x2, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), hx0, hx1, hx2, (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_2_kind : ∀ (h : Host), type_of% (@Encode.generated_field_2 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorIdentity.Encode.generated_layout [.u64, .bytes 48, .u64]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorIdentity.Encode.generated_layout [.uint64, .bytes 48, .uint64]
     ⟨64, 2, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 24) (.reg .rbx), .at (.below 104) (.len 56), .at (.below 96) (.reg .rdi), .at (.below 88) (.original 8), .at (.below 72) (.original 9), .at (.below 160) (.ret 64), .low (.existential 2)],
       [.fixed 8, .fixed 16, .low]⟩
@@ -688,7 +688,7 @@ theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   intro fl; normalize_registers
   apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 152) + 144 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
   normalize_registers
-  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 96) (window_infix_at hk 96 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (decode_return_segment _ (k + 96) (window_infix_at hk 96 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -707,7 +707,7 @@ theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
 theorem Encode.generated_epilogue_kind : ∀ (h : Host), type_of% (@Encode.generated_epilogue h)
-    = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.ValidatorIdentity.Encode.generated_layout [.u64, .bytes 48, .u64]
+    = @Codec.encodeEpilogueKindAnyFrame h marshalSSZTo Prysm.ValidatorIdentity.Encode.generated_layout [.uint64, .bytes 48, .uint64]
     ⟨92, 3, [(.rax, .ptr), (.rcx, .cap), (.rdx, .len 64)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 24) (.reg .rbx), .at (.below 104) (.len 56), .at (.below 96) (.reg .rdi), .at (.below 88) (.field 2), .at (.below 80) (.existential 3), .at (.below 72) (.existential 4), .at (.below 160) (.ret 64), .low (.existential 2)],
       [.fixed 8, .fixed 16, .low, .fixed 8, .fixed 16]⟩ := by
@@ -802,7 +802,7 @@ theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   intro st3 h3
   exact Encode.generated_epilogue k hk hf ast v0 v2 c1 b1 pre d0 d1 d2 hast hv0 hv2 hc1 hb1 hd0 hd1 hd2 p1 s ra guard hpre fp s1 s2 t56 t40 l24 l104 l96 t88 t72 rslot hfp hs1 hs2 ht56 ht40 hl24 hl104 hl96 ht88 ht72 hrslot R S scratch hsc hsp hcap hcap63 st3 h3
 theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated_fast h)
-    = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.ValidatorIdentity.Encode.generated_layout [.u64, .bytes 48, .u64] := by
+    = @Codec.encodeFastPathKindAnyFrame h marshalSSZTo Prysm.ValidatorIdentity.Encode.generated_layout [.uint64, .bytes 48, .uint64] := by
   intro h; rfl
 
 end Prysm.ValidatorIdentity

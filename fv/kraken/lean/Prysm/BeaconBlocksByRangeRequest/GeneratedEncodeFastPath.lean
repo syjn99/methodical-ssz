@@ -7,11 +7,11 @@ import Prysm.BeaconBlocksByRangeRequest.Code
 
 Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a
 step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem
-has a `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueKindAnyFrame`, `encFastPathKindAnyFrame`).
+has a `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encodeEpilogueKindAnyFrame`, `encodeFastPathKindAnyFrame`).
 **Fast path only**: `len(dst) + 24 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
-FAST-PATH-JSON: {"type": "BeaconBlocksByRangeRequest", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 24, "frame": 112, "guard_addend": 0, "runtime_calls": false, "fields": [["StartSlot", "u", 8], ["Count", "u", 8], ["Step", "u", 8]], "boundaries": [9, 35, 53, 70], "layout": "Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout", "S_sha256": "6599236ed7c2489476a9f2a9fadeff055e7a0edbf4e848d316d20bb3dc6fc9a4", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.BeaconBlocksByRangeRequest", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_2", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encFastPathKindAnyFrame"}]}
+FAST-PATH-JSON: {"type": "BeaconBlocksByRangeRequest", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 24, "frame": 112, "guard_addend": 0, "runtime_calls": false, "fields": [["StartSlot", "u", 8], ["Count", "u", 8], ["Step", "u", 8]], "boundaries": [9, 35, 53, 70], "layout": "Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout", "assembly_sha256": "6599236ed7c2489476a9f2a9fadeff055e7a0edbf4e848d316d20bb3dc6fc9a4", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "assembly": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.BeaconBlocksByRangeRequest", "kinds": [{"theorem": "Encode.generated_head", "kind": "encodeHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_2", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encodeEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encodeFastPathKindAnyFrame"}]}
 -/
 
 open Machine Runtime Codec Prysm.BeaconBlocksByRangeRequest.Code
@@ -105,7 +105,7 @@ theorem Encode.generated_head : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_head_kind : ∀ (h : Host), type_of% (@Encode.generated_head h)
-    = @Codec.encHeadKindAnyFrame h marshalSSZTo Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout [.u64, .u64, .u64]
+    = @Codec.encodeHeadKindAnyFrame h marshalSSZTo Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout [.uint64, .uint64, .uint64]
     ⟨9, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.original 3), .at (.below 24) (.original 4)],
       []⟩ := by
@@ -226,7 +226,7 @@ theorem Encode.generated_field_0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_0_kind : ∀ (h : Host), type_of% (@Encode.generated_field_0 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout [.u64, .u64, .u64]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout [.uint64, .uint64, .uint64]
     ⟨9, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.original 3), .at (.below 24) (.original 4)],
       []⟩
@@ -334,7 +334,7 @@ theorem Encode.generated_field_1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, x0, x1, hx0, hx1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_1_kind : ∀ (h : Host), type_of% (@Encode.generated_field_1 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout [.u64, .u64, .u64]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout [.uint64, .uint64, .uint64]
     ⟨35, 1, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1)],
       [.fixed 8, .fixed 16]⟩
@@ -441,7 +441,7 @@ theorem Encode.generated_field_2 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, x0, x1, hx0, hx1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_2_kind : ∀ (h : Host), type_of% (@Encode.generated_field_2 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout [.u64, .u64, .u64]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout [.uint64, .uint64, .uint64]
     ⟨53, 2, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 16), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1)],
       [.fixed 8, .fixed 16]⟩
@@ -541,7 +541,7 @@ theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   intro fl; normalize_registers
   apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 120) + 112 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
   normalize_registers
-  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 76) (window_infix_at hk 76 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (decode_return_segment _ (k + 76) (window_infix_at hk 76 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -560,7 +560,7 @@ theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
 theorem Encode.generated_epilogue_kind : ∀ (h : Host), type_of% (@Encode.generated_epilogue h)
-    = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout [.u64, .u64, .u64]
+    = @Codec.encodeEpilogueKindAnyFrame h marshalSSZTo Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout [.uint64, .uint64, .uint64]
     ⟨70, 3, [(.rbx, .ptr), (.rdx, .len 24), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1)],
       [.fixed 8, .fixed 16]⟩ := by
@@ -634,7 +634,7 @@ theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   intro st3 h3
   exact Encode.generated_epilogue k hk hf ast v0 v1 v2 pre d0 d1 d2 hast hv0 hv1 hv2 hd0 hd1 hd2 s ra guard hpre fp s1 s2 t40 t24 hfp hs1 hs2 ht40 ht24 R hsp hcap hcap63 st3 h3
 theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated_fast h)
-    = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout [.u64, .u64, .u64] := by
+    = @Codec.encodeFastPathKindAnyFrame h marshalSSZTo Prysm.BeaconBlocksByRangeRequest.Encode.generated_layout [.uint64, .uint64, .uint64] := by
   intro h; rfl
 
 end Prysm.BeaconBlocksByRangeRequest

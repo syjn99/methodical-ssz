@@ -2,7 +2,7 @@ import Prysm.Checkpoint.CapacityReservedEncodeTail
 import Codec.StackGuard
 
 /-!
-# OPT-R1 reserve encoder: the two prefixes up to `L_e5` (directive 48)
+# Reserve encoder of the capacity-reserved build: the two prefixes up to `L_e5` (directive 48)
 
 - `head_fast` (`len + 40 ≤ cap`, `cap < 2^63`): directives 0–15: large-frame stack guard
   (`lea -0x18(%rsp),%r12`, premise `guard + 24 < rsp`, lemma `Codec.lea_cmp_be_false`), prologue

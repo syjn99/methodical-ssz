@@ -6,8 +6,8 @@ import Prysm.PendingPartialWithdrawal.GeneratedDecodeCallSegments
 
 Hand composition (not generator output): the chain of `Prysm/PendingPartialWithdrawal/DecodeAccept.lean` with every lemma instance replaced by
 the generated theorem of `Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean` (`decoder --call-segments`, raw output) whose declared type is that instance
-(its `_kind`): `Decode.generated_call_Index_arg` / `_call`, `Decode.generated_call_WithdrawableEpoch_arg1`,
-`Decode.generated_call_Amount_seg`, `Decode.generated_call_WithdrawableEpoch_arg2` / `_call`. The code facts come from the generated theorems; head
+(its `_kind`): `Decode.generated_call_Index_argument` / `_call`, `Decode.generated_call_WithdrawableEpoch_argument_1`,
+`Decode.generated_call_Amount_segment`, `Decode.generated_call_WithdrawableEpoch_argument_2` / `_call`. The code facts come from the generated theorems; head
 (`Decode.head`, 0–14) and epilogue (`Decode.epilogue`, 89–91) stay hand steps of `Prysm/PendingPartialWithdrawal/DecodeAccept.lean` (frame `0x48`). The
 statement is the hand statement `Decode.accept_statement` (`Prysm/Deposit_Data/Statements.lean`, unchanged). In-sample (development data).
 -/
@@ -24,8 +24,8 @@ statement = the hand statement `Decode.accept_statement` (unchanged). -/
 theorem Decode.accept_from_generated_call_segments : Decode.accept_statement := by
   intro k hk hf kV hkV hfV kE hkE hfE in0 in1 in2 hin0 hin1 hin2 s ra guard
     fp s1 s2 s4 sp1 rslot lo ast a8 a16 a24 hfp h1 h2 h4 hsp1 hrs hlo hast ha8 ha16 ha24 R h_mem hguard hlen
-  have hvi : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
-  have hep : U64CalleeAccept Prysm.Epoch.Code.unmarshalSSZLabel := Prysm.Epoch.Decode.accept_function_spec_holds kE hkE hfE
+  have hvi : Uint64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hep : Uint64CalleeAccept Prysm.Epoch.Code.unmarshalSSZLabel := Prysm.Epoch.Decode.accept_function_spec_holds kE hkE hfE
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 88).toNat := Decode.accept_guard _ _ hguard
@@ -36,7 +36,7 @@ theorem Decode.accept_from_generated_call_segments : Decode.accept_statement := 
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- Index: set-up 15–16
-  refine eventually_trans _ _ _ _ (Decode.generated_call_Index_arg k hk hf rax.toBitVec (rax.toBitVec + 8)
+  refine eventually_trans _ _ _ _ (Decode.generated_call_Index_argument k hk hf rax.toBitVec (rax.toBitVec + 8)
     (by simp only [Int64.toBitVec_ofNat]) d1 (by rw [hrax1])) ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, hrbx2, hrax2, hrcx2, hmem2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hrax2 hrcx2 hmem2
@@ -52,7 +52,7 @@ theorem Decode.accept_from_generated_call_segments : Decode.accept_statement := 
   dsimp only at hpc3 hrax3 hrbx3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
   -- WithdrawableEpoch: set-up, first part 48–53
-  refine eventually_trans _ _ _ _ (Decode.generated_call_WithdrawableEpoch_arg1 k hk hf
+  refine eventually_trans _ _ _ _ (Decode.generated_call_WithdrawableEpoch_argument_1 k hk hf
     (rsp.toBitVec - 80) rax.toBitVec rbx.toBitVec (rsp.toBitVec + 16) (rsp.toBitVec + 32) (rsp.toBitVec + 8)
     (rbx.toBitVec + 16) (rax.toBitVec + 24)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
@@ -63,7 +63,7 @@ theorem Decode.accept_from_generated_call_segments : Decode.accept_statement := 
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrbx4 hrdx4 hrax4 hrsi4 hmem4
   subst hpc4
   -- Amount: 54–55
-  refine eventually_trans _ _ _ _ (Decode.generated_call_Amount_seg k hk hf
+  refine eventually_trans _ _ _ _ (Decode.generated_call_Amount_segment k hk hf
     rbx.toBitVec rax.toBitVec (rbx.toBitVec + 8) (rax.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     in1 a16 hin1 ha16 _ d4 hrbx4 hrax4 (by rw [hmem4]; ecancel)) ?_
@@ -73,7 +73,7 @@ theorem Decode.accept_from_generated_call_segments : Decode.accept_statement := 
   have hrsi5 : d5.regs.rsi.toBitVec = rax.toBitVec + 24 := (hreg5 Reg64.rsi (by decide)).trans hrsi4
   have hrdx5 : d5.regs.rdx.toBitVec = rbx.toBitVec + 16 := (hreg5 Reg64.rdx (by decide)).trans hrdx4
   -- WithdrawableEpoch: set-up, second part 56–58
-  refine eventually_trans _ _ _ _ (Decode.generated_call_WithdrawableEpoch_arg2 k hk hf d5) ?_
+  refine eventually_trans _ _ _ _ (Decode.generated_call_WithdrawableEpoch_argument_2 k hk hf d5) ?_
   rintro ⟨d6, pc6⟩ ⟨hpc6, hrsp6, hrbp6, hr146, hrax6, hrbx6, hrcx6, hmem6⟩
   dsimp only at hpc6 hrsp6 hrbp6 hr146 hrax6 hrbx6 hrcx6 hmem6
   subst hpc6

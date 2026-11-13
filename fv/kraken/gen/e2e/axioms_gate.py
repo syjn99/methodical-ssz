@@ -1,8 +1,8 @@
 """Forwarder to gen/checks/axioms_gate.py, kept only for the CI workflow.
 
 The workflow file .github/workflows/fv-lean.yaml names this path (`sys.path.insert(0, '../gen/e2e')` and
-`python3 -B fv/kraken/gen/e2e/axioms_gate.py run ...`). The workflow file cannot be changed with the access of this
-session. When the workflow names gen/checks/axioms_gate.py (the two-line change is recorded in gen/path-names.tsv),
+`python3 -B fv/kraken/gen/e2e/axioms_gate.py run ...`). The push token has no `workflow` scope, so the workflow file
+is not changed here. When the workflow names gen/checks/axioms_gate.py (the two-line change is recorded in gen/path-names.tsv),
 delete this file and its directory.
 """
 import importlib.util

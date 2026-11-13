@@ -1,8 +1,8 @@
 [
  {
-  "id": "u-DepositRequest-accept-0",
+  "id": "unmarshal-DepositRequest-accept-0",
   "type": "DepositRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
   "names": [
    "Pubkey",
@@ -17,40 +17,40 @@
     {
      "name": "Pubkey",
      "kind": "b",
-     "u": 0,
-     "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "uint64": 0,
+     "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
      "len": 48,
      "cap": 48
     },
     {
      "name": "WithdrawalCredentials",
      "kind": "b",
-     "u": 0,
-     "b": "0000000000000000000000000000000000000000000000000000000000000000",
+     "uint64": 0,
+     "bytes": "0000000000000000000000000000000000000000000000000000000000000000",
      "len": 32,
      "cap": 32
     },
     {
      "name": "Amount",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Signature",
      "kind": "b",
-     "u": 0,
-     "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "uint64": 0,
+     "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
      "len": 96,
      "cap": 96
     },
     {
      "name": "Index",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -58,9 +58,9 @@
   }
  },
  {
-  "id": "u-DepositRequest-accept-1",
+  "id": "unmarshal-DepositRequest-accept-1",
   "type": "DepositRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292af1cdab89674523012122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80f3cdab8967452301",
   "names": [
    "Pubkey",
@@ -75,40 +75,40 @@
     {
      "name": "Pubkey",
      "kind": "b",
-     "u": 0,
-     "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+     "uint64": 0,
+     "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
      "len": 48,
      "cap": 48
     },
     {
      "name": "WithdrawalCredentials",
      "kind": "b",
-     "u": 0,
-     "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a",
+     "uint64": 0,
+     "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a",
      "len": 32,
      "cap": 32
     },
     {
      "name": "Amount",
      "kind": "u",
-     "u": 81985529216486897,
-     "b": "",
+     "uint64": 81985529216486897,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Signature",
      "kind": "b",
-     "u": 0,
-     "b": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80",
+     "uint64": 0,
+     "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80",
      "len": 96,
      "cap": 96
     },
     {
      "name": "Index",
      "kind": "u",
-     "u": 81985529216486899,
-     "b": "",
+     "uint64": 81985529216486899,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -116,9 +116,9 @@
   }
  },
  {
-  "id": "u-DepositRequest-accept-2",
+  "id": "unmarshal-DepositRequest-accept-2",
   "type": "DepositRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "names": [
    "Pubkey",
@@ -133,40 +133,40 @@
     {
      "name": "Pubkey",
      "kind": "b",
-     "u": 0,
-     "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "uint64": 0,
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
      "len": 48,
      "cap": 48
     },
     {
      "name": "WithdrawalCredentials",
      "kind": "b",
-     "u": 0,
-     "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "uint64": 0,
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
      "len": 32,
      "cap": 32
     },
     {
      "name": "Amount",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Signature",
      "kind": "b",
-     "u": 0,
-     "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "uint64": 0,
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
      "len": 96,
      "cap": 96
     },
     {
      "name": "Index",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -174,9 +174,9 @@
   }
  },
  {
-  "id": "u-DepositRequest-size-0",
+  "id": "unmarshal-DepositRequest-size-0",
   "type": "DepositRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "",
   "names": [],
   "exp": {
@@ -184,9 +184,9 @@
   }
  },
  {
-  "id": "u-DepositRequest-size-191",
+  "id": "unmarshal-DepositRequest-size-191",
   "type": "DepositRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -194,9 +194,9 @@
   }
  },
  {
-  "id": "u-DepositRequest-size-193",
+  "id": "unmarshal-DepositRequest-size-193",
   "type": "DepositRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -204,9 +204,9 @@
   }
  },
  {
-  "id": "u-BuilderDepositRequest-accept-0",
+  "id": "unmarshal-BuilderDepositRequest-accept-0",
   "type": "BuilderDepositRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
   "names": [
    "Pubkey",
@@ -220,32 +220,32 @@
     {
      "name": "Pubkey",
      "kind": "b",
-     "u": 0,
-     "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "uint64": 0,
+     "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
      "len": 48,
      "cap": 48
     },
     {
      "name": "WithdrawalCredentials",
      "kind": "b",
-     "u": 0,
-     "b": "0000000000000000000000000000000000000000000000000000000000000000",
+     "uint64": 0,
+     "bytes": "0000000000000000000000000000000000000000000000000000000000000000",
      "len": 32,
      "cap": 32
     },
     {
      "name": "Amount",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Signature",
      "kind": "b",
-     "u": 0,
-     "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "uint64": 0,
+     "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
      "len": 96,
      "cap": 96
     }
@@ -253,9 +253,9 @@
   }
  },
  {
-  "id": "u-BuilderDepositRequest-accept-1",
+  "id": "unmarshal-BuilderDepositRequest-accept-1",
   "type": "BuilderDepositRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292af1cdab89674523012122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80",
   "names": [
    "Pubkey",
@@ -269,32 +269,32 @@
     {
      "name": "Pubkey",
      "kind": "b",
-     "u": 0,
-     "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+     "uint64": 0,
+     "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
      "len": 48,
      "cap": 48
     },
     {
      "name": "WithdrawalCredentials",
      "kind": "b",
-     "u": 0,
-     "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a",
+     "uint64": 0,
+     "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a",
      "len": 32,
      "cap": 32
     },
     {
      "name": "Amount",
      "kind": "u",
-     "u": 81985529216486897,
-     "b": "",
+     "uint64": 81985529216486897,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Signature",
      "kind": "b",
-     "u": 0,
-     "b": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80",
+     "uint64": 0,
+     "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80",
      "len": 96,
      "cap": 96
     }
@@ -302,9 +302,9 @@
   }
  },
  {
-  "id": "u-BuilderDepositRequest-accept-2",
+  "id": "unmarshal-BuilderDepositRequest-accept-2",
   "type": "BuilderDepositRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "names": [
    "Pubkey",
@@ -318,32 +318,32 @@
     {
      "name": "Pubkey",
      "kind": "b",
-     "u": 0,
-     "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "uint64": 0,
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
      "len": 48,
      "cap": 48
     },
     {
      "name": "WithdrawalCredentials",
      "kind": "b",
-     "u": 0,
-     "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "uint64": 0,
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
      "len": 32,
      "cap": 32
     },
     {
      "name": "Amount",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Signature",
      "kind": "b",
-     "u": 0,
-     "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "uint64": 0,
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
      "len": 96,
      "cap": 96
     }
@@ -351,9 +351,9 @@
   }
  },
  {
-  "id": "u-BuilderDepositRequest-size-0",
+  "id": "unmarshal-BuilderDepositRequest-size-0",
   "type": "BuilderDepositRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "",
   "names": [],
   "exp": {
@@ -361,9 +361,9 @@
   }
  },
  {
-  "id": "u-BuilderDepositRequest-size-183",
+  "id": "unmarshal-BuilderDepositRequest-size-183",
   "type": "BuilderDepositRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -371,9 +371,9 @@
   }
  },
  {
-  "id": "u-BuilderDepositRequest-size-185",
+  "id": "unmarshal-BuilderDepositRequest-size-185",
   "type": "BuilderDepositRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -381,9 +381,9 @@
   }
  },
  {
-  "id": "u-BeaconBlocksByRangeRequest-accept-0",
+  "id": "unmarshal-BeaconBlocksByRangeRequest-accept-0",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "000000000000000000000000000000000000000000000000",
   "names": [
    "StartSlot",
@@ -396,24 +396,24 @@
     {
      "name": "StartSlot",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Count",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Step",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -421,9 +421,9 @@
   }
  },
  {
-  "id": "u-BeaconBlocksByRangeRequest-accept-1",
+  "id": "unmarshal-BeaconBlocksByRangeRequest-accept-1",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "efcdab8967452301f0cdab8967452301f1cdab8967452301",
   "names": [
    "StartSlot",
@@ -436,24 +436,24 @@
     {
      "name": "StartSlot",
      "kind": "u",
-     "u": 81985529216486895,
-     "b": "",
+     "uint64": 81985529216486895,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Count",
      "kind": "u",
-     "u": 81985529216486896,
-     "b": "",
+     "uint64": 81985529216486896,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Step",
      "kind": "u",
-     "u": 81985529216486897,
-     "b": "",
+     "uint64": 81985529216486897,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -461,9 +461,9 @@
   }
  },
  {
-  "id": "u-BeaconBlocksByRangeRequest-accept-2",
+  "id": "unmarshal-BeaconBlocksByRangeRequest-accept-2",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffff",
   "names": [
    "StartSlot",
@@ -476,24 +476,24 @@
     {
      "name": "StartSlot",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Count",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Step",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -501,9 +501,9 @@
   }
  },
  {
-  "id": "u-BeaconBlocksByRangeRequest-size-0",
+  "id": "unmarshal-BeaconBlocksByRangeRequest-size-0",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "",
   "names": [],
   "exp": {
@@ -511,9 +511,9 @@
   }
  },
  {
-  "id": "u-BeaconBlocksByRangeRequest-size-23",
+  "id": "unmarshal-BeaconBlocksByRangeRequest-size-23",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -521,9 +521,9 @@
   }
  },
  {
-  "id": "u-BeaconBlocksByRangeRequest-size-25",
+  "id": "unmarshal-BeaconBlocksByRangeRequest-size-25",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "01010101010101010101010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -531,9 +531,9 @@
   }
  },
  {
-  "id": "u-BlobSidecarsByRangeRequest-accept-0",
+  "id": "unmarshal-BlobSidecarsByRangeRequest-accept-0",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "00000000000000000000000000000000",
   "names": [
    "StartSlot",
@@ -545,16 +545,16 @@
     {
      "name": "StartSlot",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Count",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -562,9 +562,9 @@
   }
  },
  {
-  "id": "u-BlobSidecarsByRangeRequest-accept-1",
+  "id": "unmarshal-BlobSidecarsByRangeRequest-accept-1",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "efcdab8967452301f0cdab8967452301",
   "names": [
    "StartSlot",
@@ -576,16 +576,16 @@
     {
      "name": "StartSlot",
      "kind": "u",
-     "u": 81985529216486895,
-     "b": "",
+     "uint64": 81985529216486895,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Count",
      "kind": "u",
-     "u": 81985529216486896,
-     "b": "",
+     "uint64": 81985529216486896,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -593,9 +593,9 @@
   }
  },
  {
-  "id": "u-BlobSidecarsByRangeRequest-accept-2",
+  "id": "unmarshal-BlobSidecarsByRangeRequest-accept-2",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffff",
   "names": [
    "StartSlot",
@@ -607,16 +607,16 @@
     {
      "name": "StartSlot",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Count",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -624,9 +624,9 @@
   }
  },
  {
-  "id": "u-BlobSidecarsByRangeRequest-size-0",
+  "id": "unmarshal-BlobSidecarsByRangeRequest-size-0",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "",
   "names": [],
   "exp": {
@@ -634,9 +634,9 @@
   }
  },
  {
-  "id": "u-BlobSidecarsByRangeRequest-size-15",
+  "id": "unmarshal-BlobSidecarsByRangeRequest-size-15",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -644,9 +644,9 @@
   }
  },
  {
-  "id": "u-BlobSidecarsByRangeRequest-size-17",
+  "id": "unmarshal-BlobSidecarsByRangeRequest-size-17",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "0101010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -654,9 +654,9 @@
   }
  },
  {
-  "id": "u-ExecutionPayloadEnvelopesByRangeRequest-accept-0",
+  "id": "unmarshal-ExecutionPayloadEnvelopesByRangeRequest-accept-0",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "00000000000000000000000000000000",
   "names": [
    "StartSlot",
@@ -668,16 +668,16 @@
     {
      "name": "StartSlot",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Count",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -685,9 +685,9 @@
   }
  },
  {
-  "id": "u-ExecutionPayloadEnvelopesByRangeRequest-accept-1",
+  "id": "unmarshal-ExecutionPayloadEnvelopesByRangeRequest-accept-1",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "efcdab8967452301f0cdab8967452301",
   "names": [
    "StartSlot",
@@ -699,16 +699,16 @@
     {
      "name": "StartSlot",
      "kind": "u",
-     "u": 81985529216486895,
-     "b": "",
+     "uint64": 81985529216486895,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Count",
      "kind": "u",
-     "u": 81985529216486896,
-     "b": "",
+     "uint64": 81985529216486896,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -716,9 +716,9 @@
   }
  },
  {
-  "id": "u-ExecutionPayloadEnvelopesByRangeRequest-accept-2",
+  "id": "unmarshal-ExecutionPayloadEnvelopesByRangeRequest-accept-2",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffff",
   "names": [
    "StartSlot",
@@ -730,16 +730,16 @@
     {
      "name": "StartSlot",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Count",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -747,9 +747,9 @@
   }
  },
  {
-  "id": "u-ExecutionPayloadEnvelopesByRangeRequest-size-0",
+  "id": "unmarshal-ExecutionPayloadEnvelopesByRangeRequest-size-0",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "",
   "names": [],
   "exp": {
@@ -757,9 +757,9 @@
   }
  },
  {
-  "id": "u-ExecutionPayloadEnvelopesByRangeRequest-size-15",
+  "id": "unmarshal-ExecutionPayloadEnvelopesByRangeRequest-size-15",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -767,9 +767,9 @@
   }
  },
  {
-  "id": "u-ExecutionPayloadEnvelopesByRangeRequest-size-17",
+  "id": "unmarshal-ExecutionPayloadEnvelopesByRangeRequest-size-17",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "0101010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -777,9 +777,9 @@
   }
  },
  {
-  "id": "u-PartialDataColumnGroupID-accept-0",
+  "id": "unmarshal-PartialDataColumnGroupID-accept-0",
   "type": "PartialDataColumnGroupID",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
   "names": [
    "BeaconBlockRoot",
@@ -791,16 +791,16 @@
     {
      "name": "BeaconBlockRoot",
      "kind": "b",
-     "u": 0,
-     "b": "0000000000000000000000000000000000000000000000000000000000000000",
+     "uint64": 0,
+     "bytes": "0000000000000000000000000000000000000000000000000000000000000000",
      "len": 32,
      "cap": 32
     },
     {
      "name": "Slot",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -808,9 +808,9 @@
   }
  },
  {
-  "id": "u-PartialDataColumnGroupID-accept-1",
+  "id": "unmarshal-PartialDataColumnGroupID-accept-1",
   "type": "PartialDataColumnGroupID",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1ff0cdab8967452301",
   "names": [
    "BeaconBlockRoot",
@@ -822,16 +822,16 @@
     {
      "name": "BeaconBlockRoot",
      "kind": "b",
-     "u": 0,
-     "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+     "uint64": 0,
+     "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
      "len": 32,
      "cap": 32
     },
     {
      "name": "Slot",
      "kind": "u",
-     "u": 81985529216486896,
-     "b": "",
+     "uint64": 81985529216486896,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -839,9 +839,9 @@
   }
  },
  {
-  "id": "u-PartialDataColumnGroupID-accept-2",
+  "id": "unmarshal-PartialDataColumnGroupID-accept-2",
   "type": "PartialDataColumnGroupID",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "names": [
    "BeaconBlockRoot",
@@ -853,16 +853,16 @@
     {
      "name": "BeaconBlockRoot",
      "kind": "b",
-     "u": 0,
-     "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "uint64": 0,
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
      "len": 32,
      "cap": 32
     },
     {
      "name": "Slot",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -870,9 +870,9 @@
   }
  },
  {
-  "id": "u-PartialDataColumnGroupID-size-0",
+  "id": "unmarshal-PartialDataColumnGroupID-size-0",
   "type": "PartialDataColumnGroupID",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "",
   "names": [],
   "exp": {
@@ -880,9 +880,9 @@
   }
  },
  {
-  "id": "u-PartialDataColumnGroupID-size-39",
+  "id": "unmarshal-PartialDataColumnGroupID-size-39",
   "type": "PartialDataColumnGroupID",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -890,9 +890,9 @@
   }
  },
  {
-  "id": "u-PartialDataColumnGroupID-size-41",
+  "id": "unmarshal-PartialDataColumnGroupID-size-41",
   "type": "PartialDataColumnGroupID",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -900,9 +900,9 @@
   }
  },
  {
-  "id": "u-ValidatorIdentity-accept-0",
+  "id": "unmarshal-ValidatorIdentity-accept-0",
   "type": "ValidatorIdentity",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
   "names": [
    "Index",
@@ -915,24 +915,24 @@
     {
      "name": "Index",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Pubkey",
      "kind": "b",
-     "u": 0,
-     "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "uint64": 0,
+     "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
      "len": 48,
      "cap": 48
     },
     {
      "name": "ActivationEpoch",
      "kind": "u",
-     "u": 0,
-     "b": "",
+     "uint64": 0,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -940,9 +940,9 @@
   }
  },
  {
-  "id": "u-ValidatorIdentity-accept-1",
+  "id": "unmarshal-ValidatorIdentity-accept-1",
   "type": "ValidatorIdentity",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "efcdab89674523010b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393af1cdab8967452301",
   "names": [
    "Index",
@@ -955,24 +955,24 @@
     {
      "name": "Index",
      "kind": "u",
-     "u": 81985529216486895,
-     "b": "",
+     "uint64": 81985529216486895,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Pubkey",
      "kind": "b",
-     "u": 0,
-     "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a",
+     "uint64": 0,
+     "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a",
      "len": 48,
      "cap": 48
     },
     {
      "name": "ActivationEpoch",
      "kind": "u",
-     "u": 81985529216486897,
-     "b": "",
+     "uint64": 81985529216486897,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -980,9 +980,9 @@
   }
  },
  {
-  "id": "u-ValidatorIdentity-accept-2",
+  "id": "unmarshal-ValidatorIdentity-accept-2",
   "type": "ValidatorIdentity",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "names": [
    "Index",
@@ -995,24 +995,24 @@
     {
      "name": "Index",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     },
     {
      "name": "Pubkey",
      "kind": "b",
-     "u": 0,
-     "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "uint64": 0,
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
      "len": 48,
      "cap": 48
     },
     {
      "name": "ActivationEpoch",
      "kind": "u",
-     "u": 18446744073709551615,
-     "b": "",
+     "uint64": 18446744073709551615,
+     "bytes": "",
      "len": 0,
      "cap": 0
     }
@@ -1020,9 +1020,9 @@
   }
  },
  {
-  "id": "u-ValidatorIdentity-size-0",
+  "id": "unmarshal-ValidatorIdentity-size-0",
   "type": "ValidatorIdentity",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "",
   "names": [],
   "exp": {
@@ -1030,9 +1030,9 @@
   }
  },
  {
-  "id": "u-ValidatorIdentity-size-63",
+  "id": "unmarshal-ValidatorIdentity-size-63",
   "type": "ValidatorIdentity",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -1040,9 +1040,9 @@
   }
  },
  {
-  "id": "u-ValidatorIdentity-size-65",
+  "id": "unmarshal-ValidatorIdentity-size-65",
   "type": "ValidatorIdentity",
-  "op": "u",
+  "op": "UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "names": [],
   "exp": {
@@ -1050,34 +1050,34 @@
   }
  },
  {
-  "id": "m-DepositRequest-v0-p0-c0",
+  "id": "marshal-DepositRequest-v0-p0-c0",
   "type": "DepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Amount",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Index",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -1091,34 +1091,34 @@
   }
  },
  {
-  "id": "m-DepositRequest-v0-p0-c5",
+  "id": "marshal-DepositRequest-v0-p0-c5",
   "type": "DepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Amount",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Index",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -1132,34 +1132,34 @@
   }
  },
  {
-  "id": "m-DepositRequest-v0-p7-c0",
+  "id": "marshal-DepositRequest-v0-p7-c0",
   "type": "DepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Amount",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Index",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -1173,34 +1173,34 @@
   }
  },
  {
-  "id": "m-DepositRequest-v0-p7-c5",
+  "id": "marshal-DepositRequest-v0-p7-c5",
   "type": "DepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Amount",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Index",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -1214,34 +1214,34 @@
   }
  },
  {
-  "id": "m-DepositRequest-v1-p0-c0",
+  "id": "marshal-DepositRequest-v1-p0-c0",
   "type": "DepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+    "uint64": 0,
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
+    "uint64": 0,
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
    },
    {
     "name": "Amount",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
+    "uint64": 0,
+    "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
    },
    {
     "name": "Index",
-    "u": 81985529216486899,
-    "b": ""
+    "uint64": 81985529216486899,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -1255,34 +1255,34 @@
   }
  },
  {
-  "id": "m-DepositRequest-v1-p0-c5",
+  "id": "marshal-DepositRequest-v1-p0-c5",
   "type": "DepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+    "uint64": 0,
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
+    "uint64": 0,
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
    },
    {
     "name": "Amount",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
+    "uint64": 0,
+    "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
    },
    {
     "name": "Index",
-    "u": 81985529216486899,
-    "b": ""
+    "uint64": 81985529216486899,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -1296,34 +1296,34 @@
   }
  },
  {
-  "id": "m-DepositRequest-v1-p7-c0",
+  "id": "marshal-DepositRequest-v1-p7-c0",
   "type": "DepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+    "uint64": 0,
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
+    "uint64": 0,
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
    },
    {
     "name": "Amount",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
+    "uint64": 0,
+    "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
    },
    {
     "name": "Index",
-    "u": 81985529216486899,
-    "b": ""
+    "uint64": 81985529216486899,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -1337,34 +1337,34 @@
   }
  },
  {
-  "id": "m-DepositRequest-v1-p7-c5",
+  "id": "marshal-DepositRequest-v1-p7-c5",
   "type": "DepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+    "uint64": 0,
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
+    "uint64": 0,
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
    },
    {
     "name": "Amount",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
+    "uint64": 0,
+    "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
    },
    {
     "name": "Index",
-    "u": 81985529216486899,
-    "b": ""
+    "uint64": 81985529216486899,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -1378,34 +1378,34 @@
   }
  },
  {
-  "id": "m-DepositRequest-v2-p0-c0",
+  "id": "marshal-DepositRequest-v2-p0-c0",
   "type": "DepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Amount",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Index",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -1419,34 +1419,34 @@
   }
  },
  {
-  "id": "m-DepositRequest-v2-p0-c5",
+  "id": "marshal-DepositRequest-v2-p0-c5",
   "type": "DepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Amount",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Index",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -1460,34 +1460,34 @@
   }
  },
  {
-  "id": "m-DepositRequest-v2-p7-c0",
+  "id": "marshal-DepositRequest-v2-p7-c0",
   "type": "DepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Amount",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Index",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -1501,34 +1501,34 @@
   }
  },
  {
-  "id": "m-DepositRequest-v2-p7-c5",
+  "id": "marshal-DepositRequest-v2-p7-c5",
   "type": "DepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Amount",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Index",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -1542,29 +1542,29 @@
   }
  },
  {
-  "id": "m-BuilderDepositRequest-v0-p0-c0",
+  "id": "marshal-BuilderDepositRequest-v0-p0-c0",
   "type": "BuilderDepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Amount",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    }
   ],
   "pre": "",
@@ -1578,29 +1578,29 @@
   }
  },
  {
-  "id": "m-BuilderDepositRequest-v0-p0-c5",
+  "id": "marshal-BuilderDepositRequest-v0-p0-c5",
   "type": "BuilderDepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Amount",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    }
   ],
   "pre": "",
@@ -1614,29 +1614,29 @@
   }
  },
  {
-  "id": "m-BuilderDepositRequest-v0-p7-c0",
+  "id": "marshal-BuilderDepositRequest-v0-p7-c0",
   "type": "BuilderDepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Amount",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -1650,29 +1650,29 @@
   }
  },
  {
-  "id": "m-BuilderDepositRequest-v0-p7-c5",
+  "id": "marshal-BuilderDepositRequest-v0-p7-c5",
   "type": "BuilderDepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Amount",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -1686,29 +1686,29 @@
   }
  },
  {
-  "id": "m-BuilderDepositRequest-v1-p0-c0",
+  "id": "marshal-BuilderDepositRequest-v1-p0-c0",
   "type": "BuilderDepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+    "uint64": 0,
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
+    "uint64": 0,
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
    },
    {
     "name": "Amount",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
+    "uint64": 0,
+    "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
    }
   ],
   "pre": "",
@@ -1722,29 +1722,29 @@
   }
  },
  {
-  "id": "m-BuilderDepositRequest-v1-p0-c5",
+  "id": "marshal-BuilderDepositRequest-v1-p0-c5",
   "type": "BuilderDepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+    "uint64": 0,
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
+    "uint64": 0,
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
    },
    {
     "name": "Amount",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
+    "uint64": 0,
+    "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
    }
   ],
   "pre": "",
@@ -1758,29 +1758,29 @@
   }
  },
  {
-  "id": "m-BuilderDepositRequest-v1-p7-c0",
+  "id": "marshal-BuilderDepositRequest-v1-p7-c0",
   "type": "BuilderDepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+    "uint64": 0,
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
+    "uint64": 0,
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
    },
    {
     "name": "Amount",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
+    "uint64": 0,
+    "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -1794,29 +1794,29 @@
   }
  },
  {
-  "id": "m-BuilderDepositRequest-v1-p7-c5",
+  "id": "marshal-BuilderDepositRequest-v1-p7-c5",
   "type": "BuilderDepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+    "uint64": 0,
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
+    "uint64": 0,
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
    },
    {
     "name": "Amount",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
+    "uint64": 0,
+    "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -1830,29 +1830,29 @@
   }
  },
  {
-  "id": "m-BuilderDepositRequest-v2-p0-c0",
+  "id": "marshal-BuilderDepositRequest-v2-p0-c0",
   "type": "BuilderDepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Amount",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    }
   ],
   "pre": "",
@@ -1866,29 +1866,29 @@
   }
  },
  {
-  "id": "m-BuilderDepositRequest-v2-p0-c5",
+  "id": "marshal-BuilderDepositRequest-v2-p0-c5",
   "type": "BuilderDepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Amount",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    }
   ],
   "pre": "",
@@ -1902,29 +1902,29 @@
   }
  },
  {
-  "id": "m-BuilderDepositRequest-v2-p7-c0",
+  "id": "marshal-BuilderDepositRequest-v2-p7-c0",
   "type": "BuilderDepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Amount",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -1938,29 +1938,29 @@
   }
  },
  {
-  "id": "m-BuilderDepositRequest-v2-p7-c5",
+  "id": "marshal-BuilderDepositRequest-v2-p7-c5",
   "type": "BuilderDepositRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "WithdrawalCredentials",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Amount",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Signature",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -1974,24 +1974,24 @@
   }
  },
  {
-  "id": "m-BeaconBlocksByRangeRequest-v0-p0-c0",
+  "id": "marshal-BeaconBlocksByRangeRequest-v0-p0-c0",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Step",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2005,24 +2005,24 @@
   }
  },
  {
-  "id": "m-BeaconBlocksByRangeRequest-v0-p0-c5",
+  "id": "marshal-BeaconBlocksByRangeRequest-v0-p0-c5",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Step",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2036,24 +2036,24 @@
   }
  },
  {
-  "id": "m-BeaconBlocksByRangeRequest-v0-p7-c0",
+  "id": "marshal-BeaconBlocksByRangeRequest-v0-p7-c0",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Step",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2067,24 +2067,24 @@
   }
  },
  {
-  "id": "m-BeaconBlocksByRangeRequest-v0-p7-c5",
+  "id": "marshal-BeaconBlocksByRangeRequest-v0-p7-c5",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Step",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2098,24 +2098,24 @@
   }
  },
  {
-  "id": "m-BeaconBlocksByRangeRequest-v1-p0-c0",
+  "id": "marshal-BeaconBlocksByRangeRequest-v1-p0-c0",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    },
    {
     "name": "Step",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2129,24 +2129,24 @@
   }
  },
  {
-  "id": "m-BeaconBlocksByRangeRequest-v1-p0-c5",
+  "id": "marshal-BeaconBlocksByRangeRequest-v1-p0-c5",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    },
    {
     "name": "Step",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2160,24 +2160,24 @@
   }
  },
  {
-  "id": "m-BeaconBlocksByRangeRequest-v1-p7-c0",
+  "id": "marshal-BeaconBlocksByRangeRequest-v1-p7-c0",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    },
    {
     "name": "Step",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2191,24 +2191,24 @@
   }
  },
  {
-  "id": "m-BeaconBlocksByRangeRequest-v1-p7-c5",
+  "id": "marshal-BeaconBlocksByRangeRequest-v1-p7-c5",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    },
    {
     "name": "Step",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2222,24 +2222,24 @@
   }
  },
  {
-  "id": "m-BeaconBlocksByRangeRequest-v2-p0-c0",
+  "id": "marshal-BeaconBlocksByRangeRequest-v2-p0-c0",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Step",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2253,24 +2253,24 @@
   }
  },
  {
-  "id": "m-BeaconBlocksByRangeRequest-v2-p0-c5",
+  "id": "marshal-BeaconBlocksByRangeRequest-v2-p0-c5",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Step",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2284,24 +2284,24 @@
   }
  },
  {
-  "id": "m-BeaconBlocksByRangeRequest-v2-p7-c0",
+  "id": "marshal-BeaconBlocksByRangeRequest-v2-p7-c0",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Step",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2315,24 +2315,24 @@
   }
  },
  {
-  "id": "m-BeaconBlocksByRangeRequest-v2-p7-c5",
+  "id": "marshal-BeaconBlocksByRangeRequest-v2-p7-c5",
   "type": "BeaconBlocksByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Step",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2346,19 +2346,19 @@
   }
  },
  {
-  "id": "m-BlobSidecarsByRangeRequest-v0-p0-c0",
+  "id": "marshal-BlobSidecarsByRangeRequest-v0-p0-c0",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2372,19 +2372,19 @@
   }
  },
  {
-  "id": "m-BlobSidecarsByRangeRequest-v0-p0-c5",
+  "id": "marshal-BlobSidecarsByRangeRequest-v0-p0-c5",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2398,19 +2398,19 @@
   }
  },
  {
-  "id": "m-BlobSidecarsByRangeRequest-v0-p7-c0",
+  "id": "marshal-BlobSidecarsByRangeRequest-v0-p7-c0",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2424,19 +2424,19 @@
   }
  },
  {
-  "id": "m-BlobSidecarsByRangeRequest-v0-p7-c5",
+  "id": "marshal-BlobSidecarsByRangeRequest-v0-p7-c5",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2450,19 +2450,19 @@
   }
  },
  {
-  "id": "m-BlobSidecarsByRangeRequest-v1-p0-c0",
+  "id": "marshal-BlobSidecarsByRangeRequest-v1-p0-c0",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2476,19 +2476,19 @@
   }
  },
  {
-  "id": "m-BlobSidecarsByRangeRequest-v1-p0-c5",
+  "id": "marshal-BlobSidecarsByRangeRequest-v1-p0-c5",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2502,19 +2502,19 @@
   }
  },
  {
-  "id": "m-BlobSidecarsByRangeRequest-v1-p7-c0",
+  "id": "marshal-BlobSidecarsByRangeRequest-v1-p7-c0",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2528,19 +2528,19 @@
   }
  },
  {
-  "id": "m-BlobSidecarsByRangeRequest-v1-p7-c5",
+  "id": "marshal-BlobSidecarsByRangeRequest-v1-p7-c5",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2554,19 +2554,19 @@
   }
  },
  {
-  "id": "m-BlobSidecarsByRangeRequest-v2-p0-c0",
+  "id": "marshal-BlobSidecarsByRangeRequest-v2-p0-c0",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2580,19 +2580,19 @@
   }
  },
  {
-  "id": "m-BlobSidecarsByRangeRequest-v2-p0-c5",
+  "id": "marshal-BlobSidecarsByRangeRequest-v2-p0-c5",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2606,19 +2606,19 @@
   }
  },
  {
-  "id": "m-BlobSidecarsByRangeRequest-v2-p7-c0",
+  "id": "marshal-BlobSidecarsByRangeRequest-v2-p7-c0",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2632,19 +2632,19 @@
   }
  },
  {
-  "id": "m-BlobSidecarsByRangeRequest-v2-p7-c5",
+  "id": "marshal-BlobSidecarsByRangeRequest-v2-p7-c5",
   "type": "BlobSidecarsByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2658,19 +2658,19 @@
   }
  },
  {
-  "id": "m-ExecutionPayloadEnvelopesByRangeRequest-v0-p0-c0",
+  "id": "marshal-ExecutionPayloadEnvelopesByRangeRequest-v0-p0-c0",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2684,19 +2684,19 @@
   }
  },
  {
-  "id": "m-ExecutionPayloadEnvelopesByRangeRequest-v0-p0-c5",
+  "id": "marshal-ExecutionPayloadEnvelopesByRangeRequest-v0-p0-c5",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2710,19 +2710,19 @@
   }
  },
  {
-  "id": "m-ExecutionPayloadEnvelopesByRangeRequest-v0-p7-c0",
+  "id": "marshal-ExecutionPayloadEnvelopesByRangeRequest-v0-p7-c0",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2736,19 +2736,19 @@
   }
  },
  {
-  "id": "m-ExecutionPayloadEnvelopesByRangeRequest-v0-p7-c5",
+  "id": "marshal-ExecutionPayloadEnvelopesByRangeRequest-v0-p7-c5",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2762,19 +2762,19 @@
   }
  },
  {
-  "id": "m-ExecutionPayloadEnvelopesByRangeRequest-v1-p0-c0",
+  "id": "marshal-ExecutionPayloadEnvelopesByRangeRequest-v1-p0-c0",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2788,19 +2788,19 @@
   }
  },
  {
-  "id": "m-ExecutionPayloadEnvelopesByRangeRequest-v1-p0-c5",
+  "id": "marshal-ExecutionPayloadEnvelopesByRangeRequest-v1-p0-c5",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2814,19 +2814,19 @@
   }
  },
  {
-  "id": "m-ExecutionPayloadEnvelopesByRangeRequest-v1-p7-c0",
+  "id": "marshal-ExecutionPayloadEnvelopesByRangeRequest-v1-p7-c0",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2840,19 +2840,19 @@
   }
  },
  {
-  "id": "m-ExecutionPayloadEnvelopesByRangeRequest-v1-p7-c5",
+  "id": "marshal-ExecutionPayloadEnvelopesByRangeRequest-v1-p7-c5",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2866,19 +2866,19 @@
   }
  },
  {
-  "id": "m-ExecutionPayloadEnvelopesByRangeRequest-v2-p0-c0",
+  "id": "marshal-ExecutionPayloadEnvelopesByRangeRequest-v2-p0-c0",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2892,19 +2892,19 @@
   }
  },
  {
-  "id": "m-ExecutionPayloadEnvelopesByRangeRequest-v2-p0-c5",
+  "id": "marshal-ExecutionPayloadEnvelopesByRangeRequest-v2-p0-c5",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2918,19 +2918,19 @@
   }
  },
  {
-  "id": "m-ExecutionPayloadEnvelopesByRangeRequest-v2-p7-c0",
+  "id": "marshal-ExecutionPayloadEnvelopesByRangeRequest-v2-p7-c0",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2944,19 +2944,19 @@
   }
  },
  {
-  "id": "m-ExecutionPayloadEnvelopesByRangeRequest-v2-p7-c5",
+  "id": "marshal-ExecutionPayloadEnvelopesByRangeRequest-v2-p7-c5",
   "type": "ExecutionPayloadEnvelopesByRangeRequest",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "StartSlot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Count",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -2970,19 +2970,19 @@
   }
  },
  {
-  "id": "m-PartialDataColumnGroupID-v0-p0-c0",
+  "id": "marshal-PartialDataColumnGroupID-v0-p0-c0",
   "type": "PartialDataColumnGroupID",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "BeaconBlockRoot",
-    "u": 0,
-    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Slot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -2996,19 +2996,19 @@
   }
  },
  {
-  "id": "m-PartialDataColumnGroupID-v0-p0-c5",
+  "id": "marshal-PartialDataColumnGroupID-v0-p0-c5",
   "type": "PartialDataColumnGroupID",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "BeaconBlockRoot",
-    "u": 0,
-    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Slot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3022,19 +3022,19 @@
   }
  },
  {
-  "id": "m-PartialDataColumnGroupID-v0-p7-c0",
+  "id": "marshal-PartialDataColumnGroupID-v0-p7-c0",
   "type": "PartialDataColumnGroupID",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "BeaconBlockRoot",
-    "u": 0,
-    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Slot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3048,19 +3048,19 @@
   }
  },
  {
-  "id": "m-PartialDataColumnGroupID-v0-p7-c5",
+  "id": "marshal-PartialDataColumnGroupID-v0-p7-c5",
   "type": "PartialDataColumnGroupID",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "BeaconBlockRoot",
-    "u": 0,
-    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "Slot",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3074,19 +3074,19 @@
   }
  },
  {
-  "id": "m-PartialDataColumnGroupID-v1-p0-c0",
+  "id": "marshal-PartialDataColumnGroupID-v1-p0-c0",
   "type": "PartialDataColumnGroupID",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "BeaconBlockRoot",
-    "u": 0,
-    "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+    "uint64": 0,
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
    },
    {
     "name": "Slot",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3100,19 +3100,19 @@
   }
  },
  {
-  "id": "m-PartialDataColumnGroupID-v1-p0-c5",
+  "id": "marshal-PartialDataColumnGroupID-v1-p0-c5",
   "type": "PartialDataColumnGroupID",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "BeaconBlockRoot",
-    "u": 0,
-    "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+    "uint64": 0,
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
    },
    {
     "name": "Slot",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3126,19 +3126,19 @@
   }
  },
  {
-  "id": "m-PartialDataColumnGroupID-v1-p7-c0",
+  "id": "marshal-PartialDataColumnGroupID-v1-p7-c0",
   "type": "PartialDataColumnGroupID",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "BeaconBlockRoot",
-    "u": 0,
-    "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+    "uint64": 0,
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
    },
    {
     "name": "Slot",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3152,19 +3152,19 @@
   }
  },
  {
-  "id": "m-PartialDataColumnGroupID-v1-p7-c5",
+  "id": "marshal-PartialDataColumnGroupID-v1-p7-c5",
   "type": "PartialDataColumnGroupID",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "BeaconBlockRoot",
-    "u": 0,
-    "b": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+    "uint64": 0,
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
    },
    {
     "name": "Slot",
-    "u": 81985529216486896,
-    "b": ""
+    "uint64": 81985529216486896,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3178,19 +3178,19 @@
   }
  },
  {
-  "id": "m-PartialDataColumnGroupID-v2-p0-c0",
+  "id": "marshal-PartialDataColumnGroupID-v2-p0-c0",
   "type": "PartialDataColumnGroupID",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "BeaconBlockRoot",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Slot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3204,19 +3204,19 @@
   }
  },
  {
-  "id": "m-PartialDataColumnGroupID-v2-p0-c5",
+  "id": "marshal-PartialDataColumnGroupID-v2-p0-c5",
   "type": "PartialDataColumnGroupID",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "BeaconBlockRoot",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Slot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3230,19 +3230,19 @@
   }
  },
  {
-  "id": "m-PartialDataColumnGroupID-v2-p7-c0",
+  "id": "marshal-PartialDataColumnGroupID-v2-p7-c0",
   "type": "PartialDataColumnGroupID",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "BeaconBlockRoot",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Slot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3256,19 +3256,19 @@
   }
  },
  {
-  "id": "m-PartialDataColumnGroupID-v2-p7-c5",
+  "id": "marshal-PartialDataColumnGroupID-v2-p7-c5",
   "type": "PartialDataColumnGroupID",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "BeaconBlockRoot",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "Slot",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3282,24 +3282,24 @@
   }
  },
  {
-  "id": "m-ValidatorIdentity-v0-p0-c0",
+  "id": "marshal-ValidatorIdentity-v0-p0-c0",
   "type": "ValidatorIdentity",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Index",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "ActivationEpoch",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3313,24 +3313,24 @@
   }
  },
  {
-  "id": "m-ValidatorIdentity-v0-p0-c5",
+  "id": "marshal-ValidatorIdentity-v0-p0-c5",
   "type": "ValidatorIdentity",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Index",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "ActivationEpoch",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3344,24 +3344,24 @@
   }
  },
  {
-  "id": "m-ValidatorIdentity-v0-p7-c0",
+  "id": "marshal-ValidatorIdentity-v0-p7-c0",
   "type": "ValidatorIdentity",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Index",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "ActivationEpoch",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3375,24 +3375,24 @@
   }
  },
  {
-  "id": "m-ValidatorIdentity-v0-p7-c5",
+  "id": "marshal-ValidatorIdentity-v0-p7-c5",
   "type": "ValidatorIdentity",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Index",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    },
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    "uint64": 0,
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
    },
    {
     "name": "ActivationEpoch",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3406,24 +3406,24 @@
   }
  },
  {
-  "id": "m-ValidatorIdentity-v1-p0-c0",
+  "id": "marshal-ValidatorIdentity-v1-p0-c0",
   "type": "ValidatorIdentity",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Index",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a"
+    "uint64": 0,
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a"
    },
    {
     "name": "ActivationEpoch",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3437,24 +3437,24 @@
   }
  },
  {
-  "id": "m-ValidatorIdentity-v1-p0-c5",
+  "id": "marshal-ValidatorIdentity-v1-p0-c5",
   "type": "ValidatorIdentity",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Index",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a"
+    "uint64": 0,
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a"
    },
    {
     "name": "ActivationEpoch",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3468,24 +3468,24 @@
   }
  },
  {
-  "id": "m-ValidatorIdentity-v1-p7-c0",
+  "id": "marshal-ValidatorIdentity-v1-p7-c0",
   "type": "ValidatorIdentity",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Index",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a"
+    "uint64": 0,
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a"
    },
    {
     "name": "ActivationEpoch",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3499,24 +3499,24 @@
   }
  },
  {
-  "id": "m-ValidatorIdentity-v1-p7-c5",
+  "id": "marshal-ValidatorIdentity-v1-p7-c5",
   "type": "ValidatorIdentity",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Index",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    },
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a"
+    "uint64": 0,
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a"
    },
    {
     "name": "ActivationEpoch",
-    "u": 81985529216486897,
-    "b": ""
+    "uint64": 81985529216486897,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3530,24 +3530,24 @@
   }
  },
  {
-  "id": "m-ValidatorIdentity-v2-p0-c0",
+  "id": "marshal-ValidatorIdentity-v2-p0-c0",
   "type": "ValidatorIdentity",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Index",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "ActivationEpoch",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3561,24 +3561,24 @@
   }
  },
  {
-  "id": "m-ValidatorIdentity-v2-p0-c5",
+  "id": "marshal-ValidatorIdentity-v2-p0-c5",
   "type": "ValidatorIdentity",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Index",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "ActivationEpoch",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3592,24 +3592,24 @@
   }
  },
  {
-  "id": "m-ValidatorIdentity-v2-p7-c0",
+  "id": "marshal-ValidatorIdentity-v2-p7-c0",
   "type": "ValidatorIdentity",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Index",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "ActivationEpoch",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3623,24 +3623,24 @@
   }
  },
  {
-  "id": "m-ValidatorIdentity-v2-p7-c5",
+  "id": "marshal-ValidatorIdentity-v2-p7-c5",
   "type": "ValidatorIdentity",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "Index",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    },
    {
     "name": "Pubkey",
-    "u": 0,
-    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "uint64": 0,
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
    },
    {
     "name": "ActivationEpoch",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3654,14 +3654,14 @@
   }
  },
  {
-  "id": "m-BuilderPreferences-v0-p0-c0",
+  "id": "marshal-BuilderPreferences-v0-p0-c0",
   "type": "BuilderPreferences",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "MaxExecutionPayment",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3675,14 +3675,14 @@
   }
  },
  {
-  "id": "m-BuilderPreferences-v0-p0-c5",
+  "id": "marshal-BuilderPreferences-v0-p0-c5",
   "type": "BuilderPreferences",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "MaxExecutionPayment",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3696,14 +3696,14 @@
   }
  },
  {
-  "id": "m-BuilderPreferences-v0-p7-c0",
+  "id": "marshal-BuilderPreferences-v0-p7-c0",
   "type": "BuilderPreferences",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "MaxExecutionPayment",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3717,14 +3717,14 @@
   }
  },
  {
-  "id": "m-BuilderPreferences-v0-p7-c5",
+  "id": "marshal-BuilderPreferences-v0-p7-c5",
   "type": "BuilderPreferences",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "MaxExecutionPayment",
-    "u": 0,
-    "b": ""
+    "uint64": 0,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3738,14 +3738,14 @@
   }
  },
  {
-  "id": "m-BuilderPreferences-v1-p0-c0",
+  "id": "marshal-BuilderPreferences-v1-p0-c0",
   "type": "BuilderPreferences",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "MaxExecutionPayment",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3759,14 +3759,14 @@
   }
  },
  {
-  "id": "m-BuilderPreferences-v1-p0-c5",
+  "id": "marshal-BuilderPreferences-v1-p0-c5",
   "type": "BuilderPreferences",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "MaxExecutionPayment",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3780,14 +3780,14 @@
   }
  },
  {
-  "id": "m-BuilderPreferences-v1-p7-c0",
+  "id": "marshal-BuilderPreferences-v1-p7-c0",
   "type": "BuilderPreferences",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "MaxExecutionPayment",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3801,14 +3801,14 @@
   }
  },
  {
-  "id": "m-BuilderPreferences-v1-p7-c5",
+  "id": "marshal-BuilderPreferences-v1-p7-c5",
   "type": "BuilderPreferences",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "MaxExecutionPayment",
-    "u": 81985529216486895,
-    "b": ""
+    "uint64": 81985529216486895,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3822,14 +3822,14 @@
   }
  },
  {
-  "id": "m-BuilderPreferences-v2-p0-c0",
+  "id": "marshal-BuilderPreferences-v2-p0-c0",
   "type": "BuilderPreferences",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "MaxExecutionPayment",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3843,14 +3843,14 @@
   }
  },
  {
-  "id": "m-BuilderPreferences-v2-p0-c5",
+  "id": "marshal-BuilderPreferences-v2-p0-c5",
   "type": "BuilderPreferences",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "MaxExecutionPayment",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "",
@@ -3864,14 +3864,14 @@
   }
  },
  {
-  "id": "m-BuilderPreferences-v2-p7-c0",
+  "id": "marshal-BuilderPreferences-v2-p7-c0",
   "type": "BuilderPreferences",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "MaxExecutionPayment",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",
@@ -3885,14 +3885,14 @@
   }
  },
  {
-  "id": "m-BuilderPreferences-v2-p7-c5",
+  "id": "marshal-BuilderPreferences-v2-p7-c5",
   "type": "BuilderPreferences",
-  "op": "m",
+  "op": "MarshalSSZTo",
   "fields": [
    {
     "name": "MaxExecutionPayment",
-    "u": 18446744073709551615,
-    "b": ""
+    "uint64": 18446744073709551615,
+    "bytes": ""
    }
   ],
   "pre": "a0a1a2a3a4a5a6",

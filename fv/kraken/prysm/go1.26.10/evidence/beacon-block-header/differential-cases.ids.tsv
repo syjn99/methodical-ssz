@@ -1,0 +1,13 @@
+# differential case ids: earlier id (the run records name it)	present id
+bh-accept-0	beacon-block-header-accept-0
+bh-accept-1	beacon-block-header-accept-1
+bh-accept-2	beacon-block-header-accept-2
+bh-size-0	beacon-block-header-size-0
+bh-size-111	beacon-block-header-size-111
+bh-size-113	beacon-block-header-size-113
+vi-accept-0	validator-index-accept-0
+vi-accept-1	validator-index-accept-1
+vi-accept-2	validator-index-accept-2
+vi-len-0	validator-index-len-0
+vi-len-7	validator-index-len-7
+vi-len-9	validator-index-len-9

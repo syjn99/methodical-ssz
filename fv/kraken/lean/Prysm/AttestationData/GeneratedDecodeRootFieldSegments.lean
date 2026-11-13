@@ -15,7 +15,7 @@ namespace Prysm.AttestationData
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `BeaconBlockRoot` (SSZ offset 16, Go offset 24): decode segment, directives 86–111. -/
-theorem Decode.generated_root_BeaconBlockRoot_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_root_BeaconBlockRoot_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + (128 : Int64).toBitVec = aR) (hB' : sp + (136 : Int64).toBitVec = aB)
     (hS : sp + (104 : Int64).toBitVec = aS)
@@ -53,15 +53,15 @@ theorem Decode.generated_root_BeaconBlockRoot_seg (k : Nat) (hk : unmarshalSSZ.I
           ⋆ Eq (root.At aSrc)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 86)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac" 128 32 40) 86 hk
-    (by simp only [unmarshalSSZ, Codec.rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.rootDecMid "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1f3" 128 136 104 24 32 40 16) 100 hk
-    (by simp only [unmarshalSSZ, Codec.rootDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA := Codec.infix_sub (q := Codec.rootDecodeHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac" 128 32 40) 86 hk
+    (by simp only [unmarshalSSZ, Codec.rootDecodeHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.rootDecodeMiddle "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1f3" 128 136 104 24 32 40 16) 100 hk
+    (by simp only [unmarshalSSZ, Codec.rootDecodeMiddle, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 100)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.rootdec_seg _ _ _ _ _ _ _ _ _ (k + 86) (k + 100) hA hB hl
-theorem Decode.generated_root_BeaconBlockRoot_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_root_BeaconBlockRoot_seg h) = @Codec.rootDecSegKind h unmarshalSSZ 86 100 128 136 104 24 32 40 16 := by
+  with_reducible exact Codec.root_decode_segment _ _ _ _ _ _ _ _ _ (k + 86) (k + 100) hA hB hl
+theorem Decode.generated_root_BeaconBlockRoot_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_root_BeaconBlockRoot_segment h) = @Codec.rootDecodeSegmentKind h unmarshalSSZ 86 100 128 136 104 24 32 40 16 := by
   intro h; with_reducible rfl
 
 end Prysm.AttestationData

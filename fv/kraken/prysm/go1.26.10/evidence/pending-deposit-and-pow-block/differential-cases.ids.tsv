@@ -1,0 +1,13 @@
+# differential case ids: earlier id (the run records name it)	present id
+pd-accept-0	pending-deposit-accept-0
+pd-accept-1	pending-deposit-accept-1
+pd-accept-2	pending-deposit-accept-2
+pd-size-0	pending-deposit-size-0
+pd-size-191	pending-deposit-size-191
+pd-size-193	pending-deposit-size-193
+pb-accept-0	pow-block-accept-0
+pb-accept-1	pow-block-accept-1
+pb-accept-2	pow-block-accept-2
+pb-size-0	pow-block-size-0
+pb-size-95	pow-block-size-95
+pb-size-97	pow-block-size-97

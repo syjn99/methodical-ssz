@@ -84,8 +84,8 @@ def parse(lean_dir, X):
     m = re.search(r'theorem %s_fast : ∀ (.*?):= by' % p, src, re.S)
     if not m:
         die('no fast theorem in ' + path)
-    stmt = m.group(1)
-    gs, rest = groups(stmt)
+    statement_text = m.group(1)
+    gs, rest = groups(statement_text)
     binders = []
     for g in gs:
         names, ty = g.split(' : ', 1)
@@ -640,7 +640,7 @@ def main():
     for X in which:
         info = parse(lean_dir, X)
         info['module'] = 'Prysm.%s.GeneratedEncodeFastPath' % X
-        info['Spath'] = os.path.join(lean_dir, '..', info['hdr']['S'])
+        info['Spath'] = os.path.join(lean_dir, '..', info['hdr']['assembly'])
         if X in ('Checkpoint',):
             info['Spath'] = os.path.join(lean_dir, '..', 'prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S') if not os.path.exists(info['Spath']) else info['Spath']
         cl = classify(info)

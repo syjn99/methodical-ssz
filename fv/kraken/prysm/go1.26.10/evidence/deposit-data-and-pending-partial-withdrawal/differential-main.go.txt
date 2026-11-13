@@ -1,7 +1,7 @@
-// Scratch differential program (H3 hold-out evaluation, not committed in Prysm): runs the real generated
-// v1alpha1.BlobIdentifier.UnmarshalSSZ and v1alpha1.DepositMessage.UnmarshalSSZ on the cases of
-// fv/kraken/gen/e2e/h3diff.py and prints the observed results as JSON. Expected values are computed by that
-// script independently (Python struct.pack), never from this program. (Text of e1check-main.go.txt.)
+// Scratch differential program (not committed in Prysm): runs the real generated
+// v1alpha1.Deposit_Data.UnmarshalSSZ and v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ on the cases of
+// fv/kraken/gen/checks/deposit_data_and_pending_partial_withdrawal_differential.py and prints the observed results as JSON. Expected values are computed by that
+// script independently (Python struct.pack), never from this program. (Text of ../blob-identifier-and-deposit-message/differential-main.go.txt.)
 package main
 
 import (
@@ -24,7 +24,7 @@ type Res struct {
 	ID      string   `json:"id"`
 	Err     string   `json:"err"`
 	ErrSize bool     `json:"err_is_ErrSize"`
-	U64     uint64   `json:"u64"`
+	U64s    []uint64 `json:"u64s"`
 	Bytes   []string `json:"bytes"`
 	Lens    []int    `json:"lens"`
 	Caps    []int    `json:"caps"`
@@ -52,16 +52,15 @@ func main() {
 		r := Res{ID: c.ID}
 		var e error
 		switch c.Op {
-		case "bi_u":
-			h := &ethpb.BlobIdentifier{}
+		case "Deposit_Data.UnmarshalSSZ":
+			h := &ethpb.Deposit_Data{}
 			e = h.UnmarshalSSZ(in)
-			r.U64 = h.Index
-			put(&r, h.BlockRoot)
-		case "dm_u":
-			h := &ethpb.DepositMessage{}
+			r.U64s = []uint64{h.Amount}
+			put(&r, h.PublicKey, h.WithdrawalCredentials, h.Signature)
+		case "PendingPartialWithdrawal.UnmarshalSSZ":
+			h := &ethpb.PendingPartialWithdrawal{}
 			e = h.UnmarshalSSZ(in)
-			r.U64 = h.Amount
-			put(&r, h.PublicKey, h.WithdrawalCredentials)
+			r.U64s = []uint64{uint64(h.Index), h.Amount, uint64(h.WithdrawableEpoch)}
 		default:
 			panic(c.Op)
 		}

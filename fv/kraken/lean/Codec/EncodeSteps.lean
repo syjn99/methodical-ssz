@@ -23,7 +23,7 @@ Straight-line forms not in `Codec/WindowSteps.lean`: `step_lea_indexed` (`lea (%
 Frame: `encoder_prologue_small_frame` (small stack guard) and `encoder_prologue_large_frame` (large-frame guard `lea -N(%rsp),%r12`): labels, guard,
 `push %rbp`, `mov %rsp,%rbp`; the frame allocation and the spills are steps. `encode_memmove_call`: the
 `callq runtime.memmove` block for any length (`encode32_memmove_call` is the 32-byte case), contract `MemmoveContract` in its
-existing form. The return is `dec_return_seg` (`Codec/DecoderPrologue.lean`).
+existing form. The return is `decode_return_segment` (`Codec/DecoderPrologue.lean`).
 All lemmas are in the continuation form of `Codec/WindowSteps.lean`; nops may be anywhere in a window.
 -/
 
@@ -141,12 +141,12 @@ theorem step_cmp_jae_taken (rC rN : Reg64) (l : String) (q : Program) (j jl : Na
   window_skip_leading_nops hq
   have hd : [instrCompareRegisters rC rN].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrCompareRegisters at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   window_skip_nops hq he 0
   have hd2 : [instrConditionalJump CondCode.nc l].IsInfixAt Host.prog (j + nonNopIndex q 1) := window_directive_at hq he 1
   unfold instrConditionalJump at hd2
-  apply Machine.estep hd2
+  apply Machine.eventually_step_directive hd2
   unfold_step_keep_registers
   rw [if_pos (cmp_nc_true _ _ _ _ hle)]
   simp only [Effects.All]
@@ -166,12 +166,12 @@ theorem step_cmp_jb_not_taken (rC rN : Reg64) (l : String) (q : Program) (j e : 
   window_skip_leading_nops hq
   have hd : [instrCompareRegisters rC rN].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrCompareRegisters at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   window_skip_nops hq he 0
   have hd2 : [instrConditionalJump CondCode.c l].IsInfixAt Host.prog (j + nonNopIndex q 1) := window_directive_at hq he 1
   unfold instrConditionalJump at hd2
-  apply Machine.estep hd2
+  apply Machine.eventually_step_directive hd2
   unfold_step_keep_registers
   rw [if_neg (by rw [cmp_c_false _ _ _ _ hle]; exact Bool.false_ne_true)]
   simp only [Effects.All]
@@ -195,7 +195,7 @@ theorem step_length_check (rB : Reg64) (disp imm : Int64) (l : String) (q : Prog
   window_skip_leading_nops hq
   have hd : [instrCompareMemoryImmediate rB disp imm].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrCompareMemoryImmediate at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   apply load_step_at _ _ (s.regs.get64 rB + disp.toBitVec) _ _ bs _ _ rfl hm (by exact hbs)
   unfold_step_keep_registers
@@ -203,7 +203,7 @@ theorem step_length_check (rB : Reg64) (disp imm : Int64) (l : String) (q : Prog
   window_skip_nops hq he 0
   have hd2 : [instrConditionalJump CondCode.nz l].IsInfixAt Host.prog (j + nonNopIndex q 1) := window_directive_at hq he 1
   unfold instrConditionalJump at hd2
-  apply Machine.estep hd2
+  apply Machine.eventually_step_directive hd2
   unfold_step_keep_registers
   rw [if_neg (by rw [cmp_nz_false]; exact Bool.false_ne_true)]
   simp only [Effects.All]
@@ -218,7 +218,7 @@ theorem step_lea_indexed (rD rB rI : Reg64) (q : Program) (j e : Nat) (hq : q.Is
   window_skip_leading_nops hq
   have hd : [instrLeaIndexed rD rB rI].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrLeaIndexed at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   simp only [Machine.ofInt_base_index_scale, BitVec.mul_one, Machine.add_int64_zero]
   window_skip_to_end hq he 0 hend
@@ -234,7 +234,7 @@ theorem step_add_registers (rD rS : Reg64) (q : Program) (j e : Nat) (hq : q.IsI
   window_skip_leading_nops hq
   have hd : [instrAddRegisters rD rS].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrAddRegisters at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   simp only [BitVec.add_comm (s.regs.get64 rS) (s.regs.get64 rD)]
   window_skip_to_end hq he 0 hend
@@ -250,7 +250,7 @@ theorem step_sub_immediate (rD : Reg64) (imm : Int64) (q : Program) (j e : Nat) 
   window_skip_leading_nops hq
   have hd : [instrSubImmediate rD imm].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrSubImmediate at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   window_skip_to_end hq he 0 hend
   exact hk _
@@ -264,7 +264,7 @@ theorem step_xor32 (rD : Reg64) (q : Program) (j e : Nat) (hq : q.IsInfixAt Host
   window_skip_leading_nops hq
   have hd : [instrXor32 rD].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrXor32 at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   intro af
   simp only [BitVec.xor_self]
@@ -284,7 +284,7 @@ theorem step_store_indexed (rS rB rI : Reg64) (disp : Int64) (q : Program) (j e 
   window_skip_leading_nops hq
   have hd : [instrStoreIndexed rS rB rI disp].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrStoreIndexed at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   simp only [Machine.ofInt_base_index_scale, BitVec.mul_one]
   apply store_step_at _ _ (s.regs.get64 rB + s.regs.get64 rI + disp.toBitVec) _ _ _ bs _ _ rfl hm (by exact hbs)
@@ -307,7 +307,7 @@ theorem step_store_xmm15 (rB : Reg64) (disp : Int64) (q : Program) (j e : Nat)
   window_skip_leading_nops hq
   have hd : [instrStoreXmm15 rB disp].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrStoreXmm15 at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   unfold_step_keep_registers

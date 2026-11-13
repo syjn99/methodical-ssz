@@ -6,7 +6,7 @@ import Codec.Segment.Bytes32LoopProof
 
 Generalized once from `Prysm.SyncCommittee.Decode.iter` / `Prysm.SyncCommittee.Decode.exit` / `Prysm.SyncCommittee.Decode.loop`: the directive indices are block offsets, the
 frame slots and receiver words are parameters with address equations, the input is at `bfs`, the gaps are `Glue`
-(`nop`) and `GlueSrc` (`lea src(%rbx),%rbx`). The return slot keeps the last `memmove` return address (`jS + 2`).
+(`nop`) and `GlueSource` (`lea src(%rbx),%rbx`). The return slot keeps the last `memmove` return address (`jS + 2`).
 
 Element size: the shift `shl $k` is stepped with `shift_left64`, which needs the count as a numeral: it decides
 `count == 0` and rewrites `(BitVec.extractLsb' 0 8 (k : BitVec 64)).toNat &&& 63 = k` by `decide`. The size then
@@ -101,7 +101,7 @@ local macro "triple_loop_iteration " k:num w:num : tactic => `(tactic| (
   try simp only [ofInt_ofBytes_toBytes64]
   step_directive hB2 tripleLoopMiddle 7
   -- source offset (empty or `lea src(%rbx),%rbx`)
-  refine glue_src gs ?_
+  refine glue_source gs ?_
   dsimp only
   rw [show bf + (rax.toBitVec + rax.toBitVec * 2#64) <<< $k * 1#64 + src.toBitVec
       = bfs + BitVec.ofNat 64 ($w * i) by rw [← hsrc]; address_with_products]
@@ -221,7 +221,7 @@ theorem triple_loop_one_iteration (k w : Nat) (hkw : TripleLoopElementSize k w) 
     (hB4 : (tripleLoopHeader lp fP d3 (OfNat.ofNat w)).IsInfixAt Host.prog jHd)
     (hB5 : (tripleLoopTail lwb lback dP).IsInfixAt Host.prog jT)
     (hB6 : (tripleLoopBack lback).IsInfixAt Host.prog jB)
-    (g1 : Glue (jH + 7) jM) (gs : GlueSrc (jM + 8) jS src) (g2 : Glue (jS + 5) jHd) (g3 : Glue (jHd + 7) jT)
+    (g1 : Glue (jH + 7) jM) (gs : GlueSource (jM + 8) jS src) (g2 : Glue (jS + 5) jHd) (g3 : Glue (jHd + 7) jT)
     (g4 : Glue (jB + 3) jH) (hlb : label lback = Host.addrOf jB)
     (sp recv bf bfs A aI a3 aP aB aR aL aA : BitVec 64)
     (haI : sp + dI.toBitVec = aI) (ha3 : sp + d3.toBitVec = a3) (haP : sp + dP.toBitVec = aP)
@@ -293,7 +293,7 @@ theorem triple_loop (k w : Nat) (hkw : TripleLoopElementSize k w) (n : Nat) (hn 
     (hB4 : (tripleLoopHeader lp fP d3 (OfNat.ofNat w)).IsInfixAt Host.prog jHd)
     (hB5 : (tripleLoopTail lwb lback dP).IsInfixAt Host.prog jT)
     (hB6 : (tripleLoopBack lback).IsInfixAt Host.prog jB)
-    (g1 : Glue (jH + 7) jM) (gs : GlueSrc (jM + 8) jS src) (g2 : Glue (jS + 5) jHd) (g3 : Glue (jHd + 7) jT)
+    (g1 : Glue (jH + 7) jM) (gs : GlueSource (jM + 8) jS src) (g2 : Glue (jS + 5) jHd) (g3 : Glue (jHd + 7) jT)
     (g4 : Glue (jB + 3) jH) (hlb : label lback = Host.addrOf jB) (hle : label lexit = Host.addrOf jE)
     (sp recv bf bfs A aI a3 aP aB aR aL aA : BitVec 64)
     (haI : sp + dI.toBitVec = aI) (ha3 : sp + d3.toBitVec = a3) (haP : sp + dP.toBitVec = aP)

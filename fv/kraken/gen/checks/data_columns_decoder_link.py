@@ -8,9 +8,8 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 
 Data items are located from the converted code. Items equal to an item of the Checkpoint set (`checkpoint_and_epoch_link.py`) or of
-the IndexedAttestation set (`lists_and_vectors_link.py --with-indexed-attestation`) are asserted equal (same label and offset) and written again under the `dcd`
-prefix so that check (f) binds them to the ELF in this directory; the Lean statements read the `dcd` names through
-their own reader.
+the IndexedAttestation set (`lists_and_vectors_link.py --with-indexed-attestation`) are asserted equal (same label and offset) and written again
+into this output directory, so that check (f) binds them to the ELF in this directory.
 """
 import importlib.util
 import pathlib

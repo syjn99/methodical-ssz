@@ -8,10 +8,10 @@ import Prysm.SyncCommitteeMessage.DecodeStepExamples
 `Prysm/PendingConsolidation/DecodeAccept.lean` with the field that the frozen generator missed taken from the window and step mechanisms:
 
 * TargetIndex 48–85: `Decode.example_step_TargetIndex_field` (seven step theorems, then the call-block WINDOW
-  `callq; nop; test; je`) instead of a hand-applied `callarg_reload_seg` and the hand lemma `calldec_nop_seg`.
+  `callq; nop; test; je`) instead of a hand-applied `call_argument_reload_segment` and the hand lemma `call_decode_nop_segment`.
 Unchanged: `Decode.head`, `Decode.epilogue` (hand, `Prysm/PendingConsolidation/DecodeAccept.lean`), the generated SourceIndex theorems
 (`Prysm/PendingConsolidation/GeneratedDecodeCallSegmentsPartial.lean`). `Prysm/PendingConsolidation/DecodeAccept.lean` is imported for `Decode.head` / `Decode.epilogue` only; `Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` checks by
-program that this proof does not reach `calldec_nop_seg`, `bytes32dec_seg_rax` or `Prysm.SyncCommitteeMessage.Decode.validator_index_arg`.
+program that this proof does not reach `call_decode_nop_segment`, `bytes32_decode_segment_rax` or `Prysm.SyncCommitteeMessage.Decode.validator_index_argument`.
 In-sample (the type is development data since the frozen generator ran on it); no transfer claim.
 -/
 
@@ -27,7 +27,7 @@ window and step mechanisms**; statement = the hand statement `Decode.accept_stat
 theorem Decode.accept_from_window_steps : Decode.accept_statement := by
   intro k hk hf kV hkV hfV in0 in1 hin0 hin1 s ra guard
     fp s1 s2 s4 sp1 rslot lo ast a8 a16 hfp h1 h2 h4 hsp1 hrs hlo hast ha8 ha16 R h_mem hguard hlen
-  have hvi : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hvi : Uint64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 88).toNat := Prysm.PendingPartialWithdrawal.Decode.accept_guard _ _ hguard
@@ -38,7 +38,7 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- SourceIndex: set-up 15–16 (generated)
-  refine eventually_trans _ _ _ _ (Decode.generated_call_SourceIndex_arg k hk hf rax.toBitVec (rax.toBitVec + 8)
+  refine eventually_trans _ _ _ _ (Decode.generated_call_SourceIndex_argument k hk hf rax.toBitVec (rax.toBitVec + 8)
     (by simp only [Int64.toBitVec_ofNat]) d1 (by rw [hrax1])) ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, hrbx2, hrax2, hrcx2, hmem2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hrax2 hrcx2 hmem2

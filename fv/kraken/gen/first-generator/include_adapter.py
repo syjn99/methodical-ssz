@@ -1,4 +1,7 @@
 """The one adapter between the first generator and the data-include API.
+Record of an earlier run: the namespaces that this generator writes (`Gen1c.*`, `TestTarget.*`, `Fk.*`) name
+libraries that the present tree no longer has (lean/README.md section 8). Its tests check that run, not the
+present Lean tree.
 
 Every name and syntax of the include interface lives here and nowhere else.
 Built against the include API version 3 (snapshot include-api-v3.json; the status and commit fields of that record
@@ -12,7 +15,7 @@ import os
 
 API_VERSION = 3
 API_STATUS = "approved (final, stage B)"
-API_FIX3_COMMIT = "f9e2bc3dc02ed3521e33b04b4bdaeb9c1fa5f3fe"
+API_COMMIT = "f9e2bc3dc02ed3521e33b04b4bdaeb9c1fa5f3fe"
 SNAPSHOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "include-api-v3.json")
 # old data id of the snapshot -> present id of the data file (link/out/data-ids-old-new.tsv)
 PRESENT_ID = {l.split("\t")[0]: l.split("\t")[1] for l in open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -50,8 +53,8 @@ def check_api(path=SNAPSHOT):
     d = json.load(open(path))
     if d.get("api_version") != API_VERSION:
         raise SystemExit(f"include adapter speaks api_version {API_VERSION}, {path} has {d.get('api_version')}")
-    if d.get("status") != API_STATUS or d.get("fix3_commit") != API_FIX3_COMMIT:
-        raise SystemExit(f"include adapter is built against {API_STATUS} at {API_FIX3_COMMIT}, {path} has "
+    if d.get("status") != API_STATUS or d.get("fix3_commit") != API_COMMIT:
+        raise SystemExit(f"include adapter is built against {API_STATUS} at {API_COMMIT}, {path} has "
                          f"{d.get('status')!r} at {d.get('fix3_commit')!r}")
     return d
 

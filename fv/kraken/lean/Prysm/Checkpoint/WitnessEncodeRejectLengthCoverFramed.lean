@@ -7,7 +7,7 @@ import Machine.WitnessSplit
 
 Same host, block, registers and instances as `Prysm/Checkpoint/WitnessEncodeRejectLengthCover.lean` (the `Prysm/Checkpoint/WitnessEncodeRejectLengthCover.lean` Host is the only one in
 scope, because two `Host` instances in one file make instance resolution unfold both programs): len 30, cap 30 + n (n ≤ 64), nil `dst`, any `rl ≠ 32` (a Go value only for `rl ≤ 48`:
-`Prysm.Checkpoint.witness_encode_reject_length_cover_recv`, `Prysm.Checkpoint.witness_encode_reject_length_cover_recv_bad`).
+`Prysm.Checkpoint.witness_encode_reject_length_cover_receiver`, `Prysm.Checkpoint.witness_encode_reject_length_cover_receiver_bad`).
 -/
 
 open Machine Runtime Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz

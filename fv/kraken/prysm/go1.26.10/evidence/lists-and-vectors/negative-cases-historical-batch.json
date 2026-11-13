@@ -1,7 +1,7 @@
 [
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.HistoricalBatch.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.HistoricalBatch.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
   "statement_module": "Prysm/HistoricalBatch/Statements.lean",
   "module": "Prysm/HistoricalBatch/DecodeRejectSize.lean",
@@ -10,8 +10,8 @@
   "kind": "control"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.HistoricalBatch.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.HistoricalBatch.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
   "module": "Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean",
   "theorem": "Prysm.HistoricalBatch.Decode.block_roots_iter",
@@ -26,21 +26,21 @@
   "kind": "control"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.HistoricalBatch.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.HistoricalBatch.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
   "statement_module": "Prysm/HistoricalBatch/Statements.lean",
   "module": "Prysm/HistoricalBatch/DecodeRejectSize.lean",
   "theorem": "Prysm.HistoricalBatch.Decode.reject_size",
   "id": "historical-batch-decode-reject-size-statement-hlen-524288-to-524289",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.HistoricalBatch.Decode.reject_size_statement",
   "old": "(hlen : s.regs.rcx ≠ 524288)",
   "new": "(hlen : s.regs.rcx ≠ 524289)"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.HistoricalBatch.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.HistoricalBatch.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
   "statement_module": "Prysm/HistoricalBatch/Statements.lean",
   "module": "Prysm/HistoricalBatch/DecodeRejectSize.lean",
@@ -51,8 +51,8 @@
   "new": "  cmp $0x80001,%rcx"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.HistoricalBatch.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.HistoricalBatch.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
   "module": "Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean",
   "theorem": "Prysm.HistoricalBatch.Decode.block_roots_iter",
@@ -63,8 +63,8 @@
   "new": "  cmp $0x1fff,%rax"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.HistoricalBatch.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.HistoricalBatch.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
   "module": "Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean",
   "theorem": "Prysm.HistoricalBatch.Decode.block_roots_iter",
@@ -75,8 +75,8 @@
   "new": "  mov $0x1f,%ecx"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.HistoricalBatch.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.HistoricalBatch.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
   "module": "Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean",
   "theorem": "Prysm.HistoricalBatch.Decode.block_roots_iter",
@@ -91,7 +91,7 @@
   "module": "Prysm/HistoricalBatch/DecodeAccept.lean",
   "theorem": "Prysm.HistoricalBatch.Decode.accept",
   "id": "historical-batch-decode-accept-statement-heap-917504-to-917503",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.HistoricalBatch.Decode.accept_statement",
   "old": "Heap (avail - 917504)",
   "new": "Heap (avail - 917503)"
@@ -101,7 +101,7 @@
   "module": "Prysm/HistoricalBatch/DecodeAccept.lean",
   "theorem": "Prysm.HistoricalBatch.Decode.accept",
   "id": "historical-batch-decode-accept-statement-rax-8192-to-8191",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.HistoricalBatch.Decode.accept_statement",
   "old": "Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 8))",
   "new": "Eq ((Int.toBytes 8 8191).At (s.regs.rax.toBitVec + 8))"

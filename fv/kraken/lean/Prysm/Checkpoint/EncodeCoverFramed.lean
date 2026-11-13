@@ -223,8 +223,8 @@ theorem Encode.cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) 
             ⋆ Eq (mid.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 8))
             ⋆ Heap av' ⋆ R) st.data.dmem))
       ⟨s, Host.addrOf k⟩ := by
-  refine ⟨SszValue.encode g, SszValue.serialize_eq g, by rw [SszValue.enc_toList, he8g], ?_⟩
-  rw [SszValue.enc_toList, ← he8g]
+  refine ⟨SszValue.encode g, SszValue.serialize_eq g, by rw [SszValue.encode_toList, he8g], ?_⟩
+  rw [SszValue.encode_toList, ← he8g]
   have he8 : e8.length = 8 := by rw [he8g]; simp [Spec.uintBytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   generalize g.root.toList = root at *

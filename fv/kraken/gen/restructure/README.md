@@ -107,7 +107,7 @@ The renames are keyed on the full old name and the declaring module, never on th
    It is unique among the moved declarations, it changes, and no name of `declared.txt` has it as last component.
 7. A JSON file of negative cases holds objects with `module` and `theorem`.
    The tool rewrites their fields in the scope of that theorem.
-   `theorem` becomes the full new name, `code_def` the form that the module writes, and `code_ns` the new namespace.
+   `theorem` becomes the full new name, `code_definition` the form that the module writes, and `code_namespace` the new namespace.
    The fields `old`, `new` and `diff` are rewritten like Lean text.
 8. Every line that the rule-based inverse (full names, modules, paths) does not restore goes to `applied-lines.tsv`.
    The forward mode runs the inverse in memory and stops if it does not give the old text.
@@ -187,6 +187,14 @@ The maps apply in this order:
   `SszValue.encode_size`; short components of hand names get words (`vtri_loop` is `triple_loop`, `decpro_seg` is
   `dec_prologue_seg`, `labs` is `programLabels`). This step was applied by a script; the map directory holds only
   the name table (`names.tsv`) and an empty `files.tsv` (no file moves).
+- `maps/plain-name-parts/`: the remaining short name parts become words: `seg` becomes `segment`, `dec`, `enc`, `u64`
+  become `decode`, `encode`, `uint64`, and the fused forms follow (`bytesdec_seg` is `bytes_decode_segment`,
+  `rootDecMid` is `rootDecodeMiddle`, `callArgFirstKind` is `callArgumentFirstKind`); `recv`, `src`, `fmt` become
+  `receiver`, `source`, `format`; the nop-window lemmas `wskip`, `wlast`, `wnops` and `Machine.estep` get words.
+  The generated call-field parts `_arg`, `_arg1`, `_arg2` become `_argument`, `_argument_1`, `_argument_2`, and the
+  constructor `Codec.ContainerField.u64` becomes `uint64` (`.u64` is `.uint64` in the field lists).
+  The parts that stay are listed in `../../lean/README.md` section 8. This step was applied by a script; the map
+  directory holds only the name table (`names.tsv`) and an empty `files.tsv` (no file moves).
 
 Some steps were applied by scripts, not by maps. The inverse mode of `rename.py` does not undo them.
 The commit message of each such step lists its edits:

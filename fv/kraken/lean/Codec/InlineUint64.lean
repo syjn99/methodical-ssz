@@ -12,7 +12,7 @@ Go 1.26.10 compiles
     mov src(%rX),%rX      -- the 8 source bytes
     mov %rX,f(%rdx)       -- store to the field at Go offset f of the receiver
 
-`u64DecInline rX dB src f` is this template. The three development sites differ in the scratch register
+`uint64DecodeInline rX dB src f` is this template. The three development sites differ in the scratch register
 only: `Eth1Data.DepositCount` uses rsi, `BlobIdentifier.Index` and `DepositMessage.Amount` use rcx; the
 receiver register is rdx and the addressing forms are the same at the three sites. The scratch register is
 a parameter `rX : Reg64`. The lemma holds for every register except rdx (the receiver), rsp, rbp and r14
@@ -27,7 +27,7 @@ open Machine Runtime
 namespace Codec
 
 /-- The inline uint64 decode template (3 directives), scratch register `rX`. -/
-def u64DecInline (rX : Reg64) (dB src f : Int64) : Program :=
+def uint64DecodeInline (rX : Reg64) (dB src f : Int64) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.reg (Reg.low rX Width.W64))
        (Operand.regOrMem (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rsp)) none (ConstExpr.int64 dB)))))),
@@ -38,25 +38,25 @@ def u64DecInline (rX : Reg64) (dB src f : Int64) : Program :=
      (Operation.mov (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rdx)) none (ConstExpr.int64 f)))
        (Operand.regOrMem (RegOrMem.reg (Reg.low rX Width.W64)))))]
 
-/-- The scratch registers of `u64dec_inline_seg`: every register except rdx, rsp, rbp, r14. -/
-abbrev U64InlineReg (rX : Reg64) : Prop :=
+/-- The scratch registers of `uint64_decode_inline_segment`: every register except rdx, rsp, rbp, r14. -/
+abbrev Uint64InlineReg (rX : Reg64) : Prop :=
   rX = Reg64.rax ∨ rX = Reg64.rbx ∨ rX = Reg64.rcx ∨ rX = Reg64.rsi ∨ rX = Reg64.rdi ∨ rX = Reg64.r8
     ∨ rX = Reg64.r9 ∨ rX = Reg64.r10 ∨ rX = Reg64.r11 ∨ rX = Reg64.r12 ∨ rX = Reg64.r13 ∨ rX = Reg64.r15
 
 variable [Host]
 
 set_option hygiene false in
-/-- Proof text of one register case of `u64dec_inline_seg` (the names are the binders of the lemma; hygiene
+/-- Proof text of one register case of `uint64_decode_inline_segment` (the names are the binders of the lemma; hygiene
 is off so that they are captured). Local to this file. -/
 local macro "uint64_inline_case" : tactic => `(tactic| (
-  step_directive hA u64DecInline 0
+  step_directive hA uint64DecodeInline 0
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA u64DecInline 1
+  step_directive hA uint64DecodeInline 1
   apply load_step_at _ _ aSrc _ _ v _ _ (by rw [← hSrc]) (by ecancel) (by exact hv)
   unfold_step
-  step_directive hA u64DecInline 2
+  step_directive hA uint64DecodeInline 2
   apply store_step_at _ _ aF _ _ _ vF _ _ (by rw [← hF, ← hrdx]) (by ecancel) (by exact hvF)
   intro m1' H1
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl v hv] at H1
@@ -70,8 +70,8 @@ set_option maxRecDepth 100000 in
 in the spill slot `aB = sp + dB`, the 8 source bytes `v` at `aSrc = bf + src` and the receiver `rcv` in rdx,
 the field slot `aF = rcv + f` gets `v`; the source, the spill slot and the frame `R` are unchanged; rsp, rbp,
 r14 and rdx are kept. The scratch register `rX` is not in the statement. -/
-theorem u64dec_inline_seg (rX : Reg64) (hX : U64InlineReg rX) (dB src f : Int64) (j : Nat)
-    (hA : (u64DecInline rX dB src f).IsInfixAt Host.prog j)
+theorem uint64_decode_inline_segment (rX : Reg64) (hX : Uint64InlineReg rX) (dB src f : Int64) (j : Nat)
+    (hA : (uint64DecodeInline rX dB src f).IsInfixAt Host.prog j)
     (sp rcv bf aB aSrc aF : BitVec 64)
     (hB' : sp + dB.toBitVec = aB) (hSrc : bf + src.toBitVec = aSrc) (hF : rcv + f.toBitVec = aF)
     (rbp0 r140 : UInt64) (v vF : List UInt8) (hv : v.length = 8) (hvF : vF.length = 8)

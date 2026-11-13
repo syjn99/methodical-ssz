@@ -1,6 +1,6 @@
 [
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "statement_module": "Prysm/IndexedAttestation/Statements.lean",
   "id": "indexed-attestation-decode-reject-size-control",
@@ -9,7 +9,7 @@
   "theorem": "Prysm.IndexedAttestation.Decode.reject_size"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "statement_module": "Prysm/IndexedAttestation/Statements.lean",
   "inline": [
@@ -22,11 +22,11 @@
   "theorem": "Prysm.IndexedAttestation.Decode.accept"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "statement_module": "Prysm/IndexedAttestation/Statements.lean",
   "id": "indexed-attestation-decode-reject-size-statement-hlen-228-to-229",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.IndexedAttestation.Decode.reject_size_statement",
   "old": "(hlen : s.regs.rcx.toNat < 228)",
   "new": "(hlen : s.regs.rcx.toNat < 229)",
@@ -34,7 +34,7 @@
   "theorem": "Prysm.IndexedAttestation.Decode.reject_size"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "statement_module": "Prysm/IndexedAttestation/Statements.lean",
   "inline": [
@@ -49,7 +49,7 @@
   "theorem": "Prysm.IndexedAttestation.Decode.accept"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "statement_module": "Prysm/IndexedAttestation/Statements.lean",
   "inline": [
@@ -64,7 +64,7 @@
   "theorem": "Prysm.IndexedAttestation.Decode.accept"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "statement_module": "Prysm/IndexedAttestation/Statements.lean",
   "inline": [
@@ -79,7 +79,7 @@
   "theorem": "Prysm.IndexedAttestation.Decode.accept"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "statement_module": "Prysm/IndexedAttestation/Statements.lean",
   "inline": [
@@ -94,7 +94,7 @@
   "theorem": "Prysm.IndexedAttestation.Decode.accept"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "statement_module": "Prysm/IndexedAttestation/Statements.lean",
   "inline": [
@@ -102,7 +102,7 @@
    "Codec/BitVecShiftLemmas.lean"
   ],
   "id": "indexed-attestation-decode-accept-statement-heap-432-to-431",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.IndexedAttestation.Decode.accept_statement",
   "old": "Heap (avail - (8 * n + 432))",
   "new": "Heap (avail - (8 * n + 431))",
@@ -110,7 +110,7 @@
   "theorem": "Prysm.IndexedAttestation.Decode.accept"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "id": "indexed-attestation-decode-reject-alignment-error-word-nonzero-control",
   "kind": "control",
@@ -119,10 +119,10 @@
   "theorem": "Prysm.IndexedAttestation.Decode.reject_alignment_error_word_nonzero"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "id": "indexed-attestation-decode-reject-alignment-error-word-nonzero-statement-he0nz-he0nz-e0-0-to-none",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.IndexedAttestation.Decode.reject_alignment_error_word_nonzero_statement",
   "old": "(he0nz : e0 \u2260 0) ",
   "new": "",
@@ -131,7 +131,7 @@
   "theorem": "Prysm.IndexedAttestation.Decode.reject_alignment_error_word_nonzero"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "id": "indexed-attestation-decode-reject-offset-spec-control",
   "kind": "control",
@@ -144,10 +144,10 @@
   "theorem": "Prysm.IndexedAttestation.Decode.reject_offset_spec"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "id": "indexed-attestation-decode-reject-offset-spec-statement-hoff-offset-bytes-to-0xe5-0-0",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.IndexedAttestation.Decode.reject_offset_spec_statement",
   "old": "(hoff : bs.toList.take 4 \u2260 offsetBytes)",
   "new": "(hoff : bs.toList.take 4 \u2260 [0xe5, 0, 0, 0])",
@@ -160,7 +160,7 @@
   "theorem": "Prysm.IndexedAttestation.Decode.reject_offset_spec"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "id": "indexed-attestation-decode-accept-spec-control",
   "kind": "control",
@@ -174,10 +174,10 @@
   "theorem": "Prysm.IndexedAttestation.Decode.accept_spec"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "id": "indexed-attestation-decode-accept-spec-statement-hav-432-to-431",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.IndexedAttestation.Decode.accept_spec_statement",
   "old": "(hav : bsA.size - 228 + 432 \u2264 avail)",
   "new": "(hav : bsA.size - 228 + 431 \u2264 avail)",
@@ -191,10 +191,10 @@
   "theorem": "Prysm.IndexedAttestation.Decode.accept_spec"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "id": "indexed-attestation-decode-reject-alignment-error-word-nonzero-statement-he0nz-0-to-e0",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.IndexedAttestation.Decode.reject_alignment_error_word_nonzero_statement",
   "old": "(he0nz : e0 \u2260 0)",
   "new": "(he0nz : e0 = e0)",
@@ -203,10 +203,10 @@
   "theorem": "Prysm.IndexedAttestation.Decode.reject_alignment_error_word_nonzero"
  },
  {
-  "code_def": "unmarshalSSZ",
+  "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
   "id": "indexed-attestation-decode-reject-offset-statement-hoff-offset-bytes-to-0xe5-0-0",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.IndexedAttestation.Decode.reject_offset_statement",
   "old": "(hoff : off \u2260 offsetBytes)",
   "new": "(hoff : off \u2260 [0xe5, 0, 0, 0])",

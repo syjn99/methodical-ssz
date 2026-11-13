@@ -13,7 +13,7 @@ the 32 root bytes, the stack window rsp − 160 … rsp + 32 (rsp = 0x10110) and
 8 + 32 bytes of old contents, the spare capacity. Frame `R`: the untouched 88-byte frame gap (rsp − 152 …
 rsp − 65; the reserve's `z` and the growslice spill area are not used on this path) and the spare capacity.
 Instances: empty prefix with `cap = 40` (spare exactly 40), a 3-byte prefix with 5 more spare bytes.
-`recv`: the receiver bytes are a Go value of `v1alpha1.Checkpoint` (`Prysm.Checkpoint.goValue`).
+`receiver_go_value`: the receiver bytes are a Go value of `v1alpha1.Checkpoint` (`Prysm.Checkpoint.goValue`).
 -/
 
 open Machine Runtime Machine.Witness Prysm.Checkpoint.CapacityReserved Prysm.Checkpoint.CapacityReserved.Code
@@ -105,7 +105,7 @@ example (z' : RegZmms) (f : StatusFlags) :=
   runs_prefix (Int.toBytes 8 (2 ^ 64 - 1)) (List.replicate 32 0xff) (by decide) rfl z' f
 
 /-- Go-value element: the receiver of this witness (offset 8 of the block; Root = (0x10050, 32, 32)). -/
-theorem recv : goValue (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)
+theorem receiver_go_value : goValue (receiverAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)
     [0xaa, 0xbb, 0xcc] (zeros 5)) 8) = true := by decide
 
 end Prysm.Checkpoint.Witness.CapacityReservedEncodeFastPath

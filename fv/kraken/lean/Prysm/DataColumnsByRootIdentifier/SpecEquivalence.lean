@@ -32,7 +32,7 @@ theorem toValue_fits_checker (g : SszValue) : Value.fits Prysm.DataColumnsByRoot
   have h2 := g.hcols
   rw [desc_checker.2]
   simp only [SszValue.toValue, receiverValue, Value.fits, Value.fieldsFit]
-  simp [allFit_u64, h2]
+  simp [allFit_uint64, h2]
 
 theorem toValue_surjective_checker (v : Value) (h : Value.fits Prysm.DataColumnsByRootIdentifier.checkerDesc v = true) :
     ∃ g : SszValue, g.toValue = v := by

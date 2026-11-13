@@ -2,7 +2,7 @@
 """Prysm Fulu type inventory from the sszgen 698c202 IR.
 
   type_inventory.py reduce <raw-ir.json> <out-ir.json>
-      Cut the raw invtool dump: a field whose type delegates (the generated
+      Cut the raw inventory-tool dump: a field whose type delegates (the generated
       code calls that type's own SSZ methods) keeps only its name, package,
       sizes and delegation flags. The result is committed under
       fv/kraken/prysm/ir/ and is the only input of `build`.

@@ -21,9 +21,9 @@ variable [Host]
 namespace Prysm.IndexedAttestation
 
 omit [Host] in
-theorem fmtMisaligned_length : ElfData.PrysmTarget.formatAttestingIndicesMisaligned.length = 83 := by rfl
+theorem formatMisaligned_length : ElfData.PrysmTarget.formatAttestingIndicesMisaligned.length = 83 := by rfl
 omit [Host] in
-theorem fmtTooBig_length : ElfData.PrysmTarget.formatAttestingIndicesTooBig.length = 73 := by rfl
+theorem formatTooBig_length : ElfData.PrysmTarget.formatAttestingIndicesTooBig.length = 73 := by rfl
 
 omit [Host] in
 /-- `cmp $0x800, a; jg` is taken when `2048 < a < 2⁶²`. -/
@@ -235,8 +235,8 @@ theorem Decode.reject_alignment_error_word_nonzero : Decode.reject_alignment_err
   rw [show rsp.toBitVec - 176 - 8#64 = rsp.toBitVec - 184 by indexed_attestation_addr]
   refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 116 + 1)) av1 ity msg hb1 stk1 (sp1 ++ spl.drop 8)
     rax1.toBitVec C e1.toBitVec esp _
-    (by rw [fmtMisaligned_length]; rfl) (by first | rfl | decide) (by first | rfl | decide)
-    hity hbox1 hstk1 (by simp [hsp1, hspl]) (by rw [fmtMisaligned_length] at hav ⊢; omega)
+    (by rw [formatMisaligned_length]; rfl) (by first | rfl | decide) (by first | rfl | decide)
+    hity hbox1 hstk1 (by simp [hsp1, hspl]) (by rw [formatMisaligned_length] at hav ⊢; omega)
     (by
       dsimp only
       rw [show rsp.toBitVec - 176 + 128 = rsp.toBitVec - 48 by indexed_attestation_addr]

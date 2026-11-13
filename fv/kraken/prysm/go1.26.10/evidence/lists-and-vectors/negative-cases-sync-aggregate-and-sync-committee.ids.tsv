@@ -16,7 +16,7 @@ lv-sc-control	sync-committee-decode-accept-control
 lv-sc-size	sync-committee-decode-accept-code-cmp-0x6030-to-0x6031
 lv-sc-stmt-len511	sync-committee-decode-accept-statement-rax-512-to-511
 lv-sc-stmt-elems	sync-committee-decode-accept-statement-element-blocks-none-to-reverse
-lv-sa-bitslen63-seg	sync-aggregate-decode-bits-seg-code-movq-0x40-to-0x3f
+lv-sa-bitslen63-seg	sync-aggregate-decode-bits-segment-code-movq-0x40-to-0x3f
 lv-sc-rej-control	sync-committee-decode-reject-size-control
 lv-sc-rej-errword	sync-committee-decode-reject-size-code-mov-ssz-err-size-8-rip-to-ssz-err-size-rip
 lv-sa-desc-control	sync-aggregate-spec-rejects-control

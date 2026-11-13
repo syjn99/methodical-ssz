@@ -46,6 +46,6 @@ def offsetBytes : List UInt8 := [0xe4, 0, 0, 0]
 
 /-- `offset 228 ‖ data ‖ signature ‖ indices`. -/
 def SszValue.encode (g : SszValue) : Array UInt8 :=
-  offsetBytes.toArray ++ Prysm.AttestationData.SszValue.encode g.data ++ g.signature.toArray ++ Spec.u64Bytes g.idx
+  offsetBytes.toArray ++ Prysm.AttestationData.SszValue.encode g.data ++ g.signature.toArray ++ Spec.uint64Bytes g.idx
 
 end Prysm.IndexedAttestation

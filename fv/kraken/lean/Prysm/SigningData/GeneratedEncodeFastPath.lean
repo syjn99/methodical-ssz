@@ -7,11 +7,11 @@ import Prysm.SigningData.EncoderCode
 
 Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a
 step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem
-has a `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueKindAnyFrame`, `encFastPathKindAnyFrame`).
+has a `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encodeEpilogueKindAnyFrame`, `encodeFastPathKindAnyFrame`).
 **Fast path only**: `len(dst) + 64 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
-FAST-PATH-JSON: {"type": "SigningData", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 64, "frame": 80, "guard_addend": 0, "runtime_calls": true, "fields": [["ObjectRoot", "b", 32], ["Domain", "b", 32]], "boundaries": [8, 37, 66], "layout": "Prysm.SigningData.Encode.generated_layout", "S_sha256": "65be2f0e02190d370e5762b30610233d9412a259bbd0b6770a6219192955955a", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.SigningData", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encFastPathKindAnyFrame"}]}
+FAST-PATH-JSON: {"type": "SigningData", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 64, "frame": 80, "guard_addend": 0, "runtime_calls": true, "fields": [["ObjectRoot", "b", 32], ["Domain", "b", 32]], "boundaries": [8, 37, 66], "layout": "Prysm.SigningData.Encode.generated_layout", "assembly_sha256": "65be2f0e02190d370e5762b30610233d9412a259bbd0b6770a6219192955955a", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "assembly": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.SigningData", "kinds": [{"theorem": "Encode.generated_head", "kind": "encodeHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encodeEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encodeFastPathKindAnyFrame"}]}
 -/
 
 open Machine Runtime Codec Prysm.SigningData.Code
@@ -114,7 +114,7 @@ theorem Encode.generated_head : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_head_kind : ∀ (h : Host), type_of% (@Encode.generated_head h)
-    = @Codec.encHeadKindAnyFrame h marshalSSZTo Prysm.SigningData.Encode.generated_layout [.bytes 32, .bytes 32]
+    = @Codec.encodeHeadKindAnyFrame h marshalSSZTo Prysm.SigningData.Encode.generated_layout [.bytes 32, .bytes 32]
     ⟨8, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.original 1), .at (.above 16) (.reg .rbx), .at (.below 32) (.original 3), .at (.below 40) (.original 4), .at (.below 16) (.original 5), .at (.below 96) (.original 6), .low .scratch],
       []⟩ := by
@@ -256,7 +256,7 @@ theorem Encode.generated_field_0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, scr1, hscr1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_0_kind : ∀ (h : Host), type_of% (@Encode.generated_field_0 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.SigningData.Encode.generated_layout [.bytes 32, .bytes 32]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.SigningData.Encode.generated_layout [.bytes 32, .bytes 32]
     ⟨8, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.original 1), .at (.above 16) (.reg .rbx), .at (.below 32) (.original 3), .at (.below 40) (.original 4), .at (.below 16) (.original 5), .at (.below 96) (.original 6), .low .scratch],
       []⟩
@@ -403,7 +403,7 @@ theorem Encode.generated_field_1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, scr2, hscr2, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_1_kind : ∀ (h : Host), type_of% (@Encode.generated_field_1 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.SigningData.Encode.generated_layout [.bytes 32, .bytes 32]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.SigningData.Encode.generated_layout [.bytes 32, .bytes 32]
     ⟨37, 1, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 32) (.reg .rdi), .at (.below 40) (.len 32), .at (.below 16) (.reg .rbx), .at (.below 96) (.ret 37), .low (.existential 0)],
       [.low]⟩
@@ -545,7 +545,7 @@ theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   intro fl; normalize_registers
   apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 88) + 80 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
   normalize_registers
-  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 85) (window_infix_at hk 85 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (decode_return_segment _ (k + 85) (window_infix_at hk 85 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -564,7 +564,7 @@ theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
 theorem Encode.generated_epilogue_kind : ∀ (h : Host), type_of% (@Encode.generated_epilogue h)
-    = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.SigningData.Encode.generated_layout [.bytes 32, .bytes 32]
+    = @Codec.encodeEpilogueKindAnyFrame h marshalSSZTo Prysm.SigningData.Encode.generated_layout [.bytes 32, .bytes 32]
     ⟨66, 2, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 32) (.reg .rdi), .at (.below 40) (.len 64), .at (.below 16) (.reg .rbx), .at (.below 96) (.ret 66), .low (.existential 0)],
       [.low]⟩ := by
@@ -647,7 +647,7 @@ theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   intro st2 h2
   exact Encode.generated_epilogue k hk hf c0 c1 b0 b1 pre d0 d1 hc0 hc1 hb0 hb1 hd0 hd1 p0 p1 s ra guard hpre fp s1 s2 l32 l40 l16 rslot hfp hs1 hs2 hl32 hl40 hl16 hrslot R S scratch hsc hsp hcap hcap63 st2 h2
 theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated_fast h)
-    = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.SigningData.Encode.generated_layout [.bytes 32, .bytes 32] := by
+    = @Codec.encodeFastPathKindAnyFrame h marshalSSZTo Prysm.SigningData.Encode.generated_layout [.bytes 32, .bytes 32] := by
   intro h; rfl
 
 end Prysm.SigningData

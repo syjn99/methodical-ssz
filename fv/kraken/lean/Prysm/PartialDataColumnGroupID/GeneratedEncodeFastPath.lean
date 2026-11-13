@@ -7,11 +7,11 @@ import Prysm.PartialDataColumnGroupID.Code
 
 Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a
 step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem
-has a `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueKindAnyFrame`, `encFastPathKindAnyFrame`).
+has a `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encodeEpilogueKindAnyFrame`, `encodeFastPathKindAnyFrame`).
 **Fast path only**: `len(dst) + 40 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
-FAST-PATH-JSON: {"type": "PartialDataColumnGroupID", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 40, "frame": 104, "guard_addend": 0, "runtime_calls": true, "fields": [["BeaconBlockRoot", "b", 32], ["Slot", "u", 8]], "boundaries": [8, 36, 63], "layout": "Prysm.PartialDataColumnGroupID.Encode.generated_layout", "S_sha256": "e1331a1bb0344f6d900049a91a8e4a3fd8acea7de21cd25546dd82bc47509d4f", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.PartialDataColumnGroupID", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encFastPathKindAnyFrame"}]}
+FAST-PATH-JSON: {"type": "PartialDataColumnGroupID", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 40, "frame": 104, "guard_addend": 0, "runtime_calls": true, "fields": [["BeaconBlockRoot", "b", 32], ["Slot", "u", 8]], "boundaries": [8, 36, 63], "layout": "Prysm.PartialDataColumnGroupID.Encode.generated_layout", "assembly_sha256": "e1331a1bb0344f6d900049a91a8e4a3fd8acea7de21cd25546dd82bc47509d4f", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "assembly": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.PartialDataColumnGroupID", "kinds": [{"theorem": "Encode.generated_head", "kind": "encodeHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encodeEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encodeFastPathKindAnyFrame"}]}
 -/
 
 open Machine Runtime Codec Prysm.PartialDataColumnGroupID.Code
@@ -114,7 +114,7 @@ theorem Encode.generated_head : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_head_kind : ∀ (h : Host), type_of% (@Encode.generated_head h)
-    = @Codec.encHeadKindAnyFrame h marshalSSZTo Prysm.PartialDataColumnGroupID.Encode.generated_layout [.bytes 32, .u64]
+    = @Codec.encodeHeadKindAnyFrame h marshalSSZTo Prysm.PartialDataColumnGroupID.Encode.generated_layout [.bytes 32, .uint64]
     ⟨8, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.original 1), .at (.above 16) (.reg .rbx), .at (.below 24) (.original 3), .at (.below 64) (.original 4), .at (.below 72) (.original 5), .at (.below 56) (.original 6), .at (.below 40) (.original 7), .at (.below 120) (.original 8), .low .scratch],
       []⟩ := by
@@ -256,7 +256,7 @@ theorem Encode.generated_field_0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, scr1, hscr1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_0_kind : ∀ (h : Host), type_of% (@Encode.generated_field_0 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.PartialDataColumnGroupID.Encode.generated_layout [.bytes 32, .u64]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.PartialDataColumnGroupID.Encode.generated_layout [.bytes 32, .uint64]
     ⟨8, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.original 1), .at (.above 16) (.reg .rbx), .at (.below 24) (.original 3), .at (.below 64) (.original 4), .at (.below 72) (.original 5), .at (.below 56) (.original 6), .at (.below 40) (.original 7), .at (.below 120) (.original 8), .low .scratch],
       []⟩
@@ -397,7 +397,7 @@ theorem Encode.generated_field_1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, x0, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), hx0, (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_field_1_kind : ∀ (h : Host), type_of% (@Encode.generated_field_1 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.PartialDataColumnGroupID.Encode.generated_layout [.bytes 32, .u64]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.PartialDataColumnGroupID.Encode.generated_layout [.bytes 32, .uint64]
     ⟨36, 1, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 24) (.reg .rbx), .at (.below 64) (.reg .rdi), .at (.below 72) (.len 32), .at (.below 56) (.original 6), .at (.below 40) (.original 7), .at (.below 120) (.ret 36), .low (.existential 0)],
       [.low]⟩
@@ -505,7 +505,7 @@ theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   intro fl; normalize_registers
   apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 112) + 104 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
   normalize_registers
-  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 67) (window_infix_at hk 67 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (decode_return_segment _ (k + 67) (window_infix_at hk 67 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -524,7 +524,7 @@ theorem Encode.generated_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
 theorem Encode.generated_epilogue_kind : ∀ (h : Host), type_of% (@Encode.generated_epilogue h)
-    = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.PartialDataColumnGroupID.Encode.generated_layout [.bytes 32, .u64]
+    = @Codec.encodeEpilogueKindAnyFrame h marshalSSZTo Prysm.PartialDataColumnGroupID.Encode.generated_layout [.bytes 32, .uint64]
     ⟨63, 2, [(.rax, .ptr), (.rcx, .cap), (.rdx, .len 40)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 24) (.reg .rbx), .at (.below 64) (.reg .rdi), .at (.below 72) (.len 32), .at (.below 56) (.field 1), .at (.below 48) (.existential 1), .at (.below 40) (.existential 2), .at (.below 120) (.ret 36), .low (.existential 0)],
       [.low, .fixed 8, .fixed 16]⟩ := by
@@ -608,7 +608,7 @@ theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   intro st2 h2
   exact Encode.generated_epilogue k hk hf ast v1 c0 b0 pre d0 d1 hast hv1 hc0 hb0 hd0 hd1 p0 s ra guard hpre fp s1 s2 l24 l64 l72 t56 t40 rslot hfp hs1 hs2 hl24 hl64 hl72 ht56 ht40 hrslot R S scratch hsc hsp hcap hcap63 st2 h2
 theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated_fast h)
-    = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.PartialDataColumnGroupID.Encode.generated_layout [.bytes 32, .u64] := by
+    = @Codec.encodeFastPathKindAnyFrame h marshalSSZTo Prysm.PartialDataColumnGroupID.Encode.generated_layout [.bytes 32, .uint64] := by
   intro h; rfl
 
 end Prysm.PartialDataColumnGroupID

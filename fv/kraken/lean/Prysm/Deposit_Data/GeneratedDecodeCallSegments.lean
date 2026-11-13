@@ -21,7 +21,7 @@ namespace Prysm.Deposit_Data
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `PublicKey` (48 bytes, SSZ offset 0, Go offset 8): decode segment, directives 13–36. -/
-theorem Decode.generated_call_PublicKey_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_call_PublicKey_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB)
     (hS : sp + (24 : Int64).toBitVec = aS)
@@ -58,21 +58,21 @@ theorem Decode.generated_call_PublicKey_seg (k : Nat) (hk : unmarshalSSZ.IsInfix
           ⋆ Eq (root.At bf)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 13)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.bytesDecHead 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_78" 48 16 24) 13 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.bytesDecMidOffsetZero 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_78" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_b5" 48 56 24 8 16 24) 26 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecMidOffsetZero, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA := Codec.infix_sub (q := Codec.bytesDecodeHead 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_78" 48 16 24) 13 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecodeHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.bytesDecodeMiddleOffsetZero 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_78" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_b5" 48 56 24 8 16 24) 26 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecodeMiddleOffsetZero, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 26)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.bytesdec_seg_offset_zero 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
-theorem Decode.generated_call_PublicKey_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_call_PublicKey_seg h) = @Codec.bytesDecSegOffsetZeroKind h 48 unmarshalSSZ 13 26 48 56 24 8 16 24 := by
+  with_reducible exact Codec.bytes_decode_segment_offset_zero 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
+theorem Decode.generated_call_PublicKey_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_call_PublicKey_segment h) = @Codec.bytesDecodeSegmentOffsetZeroKind h 48 unmarshalSSZ 13 26 48 56 24 8 16 24 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `WithdrawalCredentials` (32 bytes, SSZ offset 48, Go offset 32): decode segment with the padding `nop` before `callq runtime.makeslice`, directives 47–72. -/
-theorem Decode.generated_call_WithdrawalCredentials_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_call_WithdrawalCredentials_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB)
     (hS : sp + (24 : Int64).toBitVec = aS)
@@ -110,21 +110,21 @@ theorem Decode.generated_call_WithdrawalCredentials_seg (k : Nat) (hk : unmarsha
           ⋆ Eq (root.At aSrc)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 47)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.bytesDecHeadOptionalPadding true 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" 48 40 48) 47 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecHeadOptionalPadding, Codec.bytesDecHeadPad, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.bytesDecMid 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_154" 48 56 24 32 40 48 48) 61 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA := Codec.infix_sub (q := Codec.bytesDecodeHeadOptionalPadding true 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" 48 40 48) 47 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecodeHeadOptionalPadding, Codec.bytesDecodeHeadPad, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.bytesDecodeMiddle 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_154" 48 56 24 32 40 48 48) 61 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecodeMiddle, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 61)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.bytesdec_seg_optional_padding true 32 (Or.inl rfl) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl
-theorem Decode.generated_call_WithdrawalCredentials_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_call_WithdrawalCredentials_seg h) = @Codec.bytesDecSegKind h 32 unmarshalSSZ 47 61 48 56 24 32 40 48 48 := by
+  with_reducible exact Codec.bytes_decode_segment_optional_padding true 32 (Or.inl rfl) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl
+theorem Decode.generated_call_WithdrawalCredentials_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_call_WithdrawalCredentials_segment h) = @Codec.bytesDecodeSegmentKind h 32 unmarshalSSZ 47 61 48 56 24 32 40 48 48 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Amount` (inline uint64, SSZ offset 80, Go offset 56): decode segment, directives 83–85, scratch register rsi. -/
-theorem Decode.generated_call_Amount_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_call_Amount_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀ (sp rcv bf aB aSrc aF : BitVec 64)
     (hB' : sp + (56 : Int64).toBitVec = aB) (hSrc : bf + (80 : Int64).toBitVec = aSrc)
     (hF : rcv + (56 : Int64).toBitVec = aF)
@@ -138,17 +138,17 @@ theorem Decode.generated_call_Amount_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt 
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧ st.data.regs.rdx.toBitVec = rcv ∧
         (Eq ((Int.toBytes 8 bf.toInt).At aB) ⋆ Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 83)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.u64DecInline Reg64.rsi 56 80 56) 83 hk
-    (by simp only [unmarshalSSZ, Codec.u64DecInline, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hX : Codec.U64InlineReg Reg64.rsi := by decide
-  with_reducible exact Codec.u64dec_inline_seg Reg64.rsi hX _ _ _ (k + 83) hA
-theorem Decode.generated_call_Amount_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_call_Amount_seg h) = @Codec.u64DecInlineSegKind h unmarshalSSZ 83 56 80 56 := by
+  have hA := Codec.infix_sub (q := Codec.uint64DecodeInline Reg64.rsi 56 80 56) 83 hk
+    (by simp only [unmarshalSSZ, Codec.uint64DecodeInline, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hX : Codec.Uint64InlineReg Reg64.rsi := by decide
+  with_reducible exact Codec.uint64_decode_inline_segment Reg64.rsi hX _ _ _ (k + 83) hA
+theorem Decode.generated_call_Amount_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_call_Amount_segment h) = @Codec.uint64DecodeInlineSegmentKind h unmarshalSSZ 83 56 80 56 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `Signature` (96 bytes, SSZ offset 88, Go offset 64): decode segment, directives 86–110. -/
-theorem Decode.generated_call_Signature_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_call_Signature_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB)
     (hS : sp + (24 : Int64).toBitVec = aS)
@@ -186,15 +186,15 @@ theorem Decode.generated_call_Signature_seg (k : Nat) (hk : unmarshalSSZ.IsInfix
           ⋆ Eq (root.At aSrc)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 86)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.bytesDecHead 96 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_1bb" 48 72 80) 86 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.bytesDecMid 96 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_1bb" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_1fc" 48 56 24 64 72 80 88) 99 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA := Codec.infix_sub (q := Codec.bytesDecodeHead 96 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_1bb" 48 72 80) 86 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecodeHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.bytesDecodeMiddle 96 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_1bb" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_1fc" 48 56 24 64 72 80 88) 99 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecodeMiddle, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 99)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.bytesdec_seg 96 (Or.inr (Or.inr rfl)) _ _ _ _ _ _ _ _ _ (k + 86) (k + 99) hA hB hl
-theorem Decode.generated_call_Signature_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_call_Signature_seg h) = @Codec.bytesDecSegKind h 96 unmarshalSSZ 86 99 48 56 24 64 72 80 88 := by
+  with_reducible exact Codec.bytes_decode_segment 96 (Or.inr (Or.inr rfl)) _ _ _ _ _ _ _ _ _ (k + 86) (k + 99) hA hB hl
+theorem Decode.generated_call_Signature_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_call_Signature_segment h) = @Codec.bytesDecodeSegmentKind h 96 unmarshalSSZ 86 99 48 56 24 64 72 80 88 := by
   intro h; with_reducible rfl
 
 end Prysm.Deposit_Data

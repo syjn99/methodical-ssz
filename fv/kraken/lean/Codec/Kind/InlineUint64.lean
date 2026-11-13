@@ -3,9 +3,9 @@ import Codec.InlineUint64
 /-!
 # Statement kind of the inline uint64 decode segments
 
-`u64DecInlineSegKind C j dB src f` is the conclusion of `u64dec_inline_seg` with `j := k + j`, after the
+`uint64DecodeInlineSegmentKind C j dB src f` is the conclusion of `uint64_decode_inline_segment` with `j := k + j`, after the
 binders `k hk hf` (the idiom of `Codec/Kind/FieldPatterns.lean`). The scratch register is not in the kind, because it is not in
-the statement. `u64DecInlineSegKind_of` proves the kind from the lemma and the code fact of an instance, so
+the statement. `uint64DecodeInlineSegmentKind_of` proves the kind from the lemma and the code fact of an instance, so
 the kind body is kernel-checked against the lemma conclusion.
 -/
 
@@ -18,7 +18,7 @@ variable [Host]
 set_option linter.unusedVariables false in
 /-- Inline uint64 decode statement kind: the segment of one inline uint64 field of the decoder `C`, three
 directives at `k + j`, buffer spill displacement `dB`, SSZ source offset `src`, Go field offset `f`. -/
-abbrev u64DecInlineSegKind (C : Program) (j : Nat) (dB src f : Int64) : Prop :=
+abbrev uint64DecodeInlineSegmentKind (C : Program) (j : Nat) (dB src f : Int64) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)
     (sp rcv bf aB aSrc aF : BitVec 64)
     (hB' : sp + dB.toBitVec = aB) (hSrc : bf + src.toBitVec = aSrc) (hF : rcv + f.toBitVec = aF)
@@ -33,10 +33,10 @@ abbrev u64DecInlineSegKind (C : Program) (j : Nat) (dB src f : Int64) : Prop :=
         (Eq ((Int.toBytes 8 bf.toInt).At aB) ⋆ Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + j)⟩
 
-/-- The inline uint64 kind follows from `u64dec_inline_seg` and the code fact of an instance. -/
-theorem u64DecInlineSegKind_of (C : Program) (rX : Reg64) (hX : U64InlineReg rX) (dB src f : Int64) (j : Nat)
-    (hA : ∀ k, C.IsInfixAt Host.prog k → (u64DecInline rX dB src f).IsInfixAt Host.prog (k + j)) :
-    u64DecInlineSegKind C j dB src f :=
-  fun k hk _ => u64dec_inline_seg rX hX dB src f (k + j) (hA k hk)
+/-- The inline uint64 kind follows from `uint64_decode_inline_segment` and the code fact of an instance. -/
+theorem uint64DecodeInlineSegmentKind_of (C : Program) (rX : Reg64) (hX : Uint64InlineReg rX) (dB src f : Int64) (j : Nat)
+    (hA : ∀ k, C.IsInfixAt Host.prog k → (uint64DecodeInline rX dB src f).IsInfixAt Host.prog (k + j)) :
+    uint64DecodeInlineSegmentKind C j dB src f :=
+  fun k hk _ => uint64_decode_inline_segment rX hX dB src f (k + j) (hA k hk)
 
 end Codec

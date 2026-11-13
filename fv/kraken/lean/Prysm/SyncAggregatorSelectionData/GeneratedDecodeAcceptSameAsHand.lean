@@ -8,9 +8,9 @@ import Prysm.VoluntaryExit.GeneratedDecodeAcceptSameAsHand
 /-!
 # Identity of three generated accept theorems with independent hand statements
 
-The hand statements `Decode.accept_statement` of SyncAggregatorSelectionData, ValidatorBalance and VoluntaryExit (`Prysm/SyncAggregatorSelectionData/Statements.lean`) were committed before this session
-opened the generated modules. Each line below type-checks only if the type of the generated accept theorem
-(`decoder --whole-accept`; statement = kind instance `decAcceptKindAnyFrame`) is definitionally the hand statement.
+The hand statements `Decode.accept_statement` of SyncAggregatorSelectionData, ValidatorBalance and VoluntaryExit (`Prysm/SyncAggregatorSelectionData/Statements.lean`) were committed before the
+generated modules were written. Each line below type-checks only if the type of the generated accept theorem
+(`decoder --whole-accept`; statement = kind instance `decodeAcceptKindAnyFrame`) is definitionally the hand statement.
 Neither side is edited for this check.
 After the split of this module, the declarations of the other types are in `Prysm/ValidatorBalance/GeneratedDecodeAcceptSameAsHand.lean`, `Prysm/VoluntaryExit/GeneratedDecodeAcceptSameAsHand.lean`.
 -/

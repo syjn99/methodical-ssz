@@ -6,10 +6,10 @@ import Codec.CalleeDecode
 
 `Decode.head_from_call_segments` has the statement text of `Prysm.BeaconBlockHeader.Decode.head` (`Prysm/BeaconBlockHeader/DecodeHead.lean`, unchanged);
 `Decode.head_from_call_segments_type`: the two declared types are equal by `rfl`. Proof: `Decode.head_to_arguments` (hand steps, directives
-0–14, frame `sub $0x60`), then for `Slot` `callarg_first_seg` (15–16) + `calldec_seg` (17–19, label 46), for
-`ProposerIndex` `callarg_reload_seg` with the padding `nop` (47–54) + `calldec_seg` (55–57, label 85), then
+0–14, frame `sub $0x60`), then for `Slot` `call_argument_first_segment` (15–16) + `call_decode_segment` (17–19, label 46), for
+`ProposerIndex` `call_argument_reload_segment` with the padding `nop` (47–54) + `call_decode_segment` (55–57, label 85), then
 `Decode.spill_registers` (hand steps, 86–87: the two nil-error spills). The existing hypotheses `Prysm.Slot.Decode.accept_function_spec` / `Prysm.ValidatorIndex.Decode.accept_function_spec` are
-used as `U64CalleeAccept` (the same propositions, `Prysm/Slot/CalleeDecodeFunctionSpecs.lean`). Hand-written example; the existing theorem
+used as `Uint64CalleeAccept` (the same propositions, `Prysm/Slot/CalleeDecodeFunctionSpecs.lean`). Hand-written example; the existing theorem
 is unchanged.
 -/
 
@@ -185,27 +185,27 @@ theorem Decode.head_from_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfix
           ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq (in1.At (s.regs.rax.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hsl' : U64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := hsl
-  have hvi' : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := hvi
+  have hsl' : Uint64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := hsl
+  have hvi' : Uint64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := hvi
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Decode.accept_guard _ _ hguard
   -- code facts
-  have hF1 := Codec.infix_sub (q := Codec.callArgFirst false 8) 15 hk
-    (by simp only [Code.unmarshalSSZ, Codec.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hC1 := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 17 hk
-    (by simp only [Code.unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL1 := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 46 hk
-    (by simp only [Code.unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hF1 := Codec.infix_sub (q := Codec.callArgumentFirst false 8) 15 hk
+    (by simp only [Code.unmarshalSSZ, Codec.callArgumentFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hC1 := Codec.infix_sub (q := Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 17 hk
+    (by simp only [Code.unmarshalSSZ, Codec.callDecode, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hL1 := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 46 hk
+    (by simp only [Code.unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl1 := Machine.label_at' hk hf (j := 46)
     (by simp only [Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hRl := Codec.infix_sub (q := Codec.callArgReload true 120 8 136 (-8) 112 16) 47 hk
-    (by simp only [Code.unmarshalSSZ, Codec.callArgReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hC2 := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 55 hk
-    (by simp only [Code.unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL2 := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
-    (by simp only [Code.unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hRl := Codec.infix_sub (q := Codec.callArgumentReload true 120 8 136 (-8) 112 16) 47 hk
+    (by simp only [Code.unmarshalSSZ, Codec.callArgumentReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hC2 := Codec.infix_sub (q := Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 55 hk
+    (by simp only [Code.unmarshalSSZ, Codec.callDecode, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hL2 := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
+    (by simp only [Code.unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl2 := Machine.label_at' hk hf (j := 85)
     (by simp only [Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
@@ -216,13 +216,13 @@ theorem Decode.head_from_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfix
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- Slot: set-up 15–16
-  refine eventually_trans _ _ _ _ (Codec.callarg_first_seg false 8 (k + 15) hF1 rax.toBitVec (rax.toBitVec + 8)
+  refine eventually_trans _ _ _ _ (Codec.call_argument_first_segment false 8 (k + 15) hF1 rax.toBitVec (rax.toBitVec + 8)
     (by simp only [Int64.toBitVec_ofNat]) d1 (by rw [hrax1])) ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, hrbx2, hrax2, hrcx2, hmem2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hrax2 hrcx2 hmem2
   subst hpc2
   -- Slot: call block 17–19, label 46
-  refine eventually_trans _ _ _ _ (Codec.calldec_seg _ _ (k + 17) (k + 46) hC1 hL1 hl1 hsl'
+  refine eventually_trans _ _ _ _ (Codec.call_decode_segment _ _ (k + 17) (k + 46) hC1 hL1 hl1 hsl'
     (rsp.toBitVec - 104) (rax.toBitVec + 8) rbx.toBitVec (rsp.toBitVec - 112) (rsp.toBitVec - 120) (rsp.toBitVec - 96)
     (by bv_omega) (by bv_omega) (by bv_omega)
     { toBitVec := rsp.toBitVec - 8#64 } r14 guard in0 rslot lf sp1 a8 hin0 hrs hlf hsp1 ha8 hg _ d2
@@ -232,7 +232,7 @@ theorem Decode.head_from_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfix
   dsimp only at hpc3 hrax3 hrbx3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
   -- ProposerIndex: set-up by reload 47–54 (with the padding nop)
-  refine eventually_trans _ _ _ _ (Codec.callarg_reload_seg true 120 8 136 (-8) 112 16 (k + 47) hRl
+  refine eventually_trans _ _ _ _ (Codec.call_argument_reload_segment true 120 8 136 (-8) 112 16 (k + 47) hRl
     (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec (rsp.toBitVec + 16) (rsp.toBitVec + 32) (rsp.toBitVec + 8)
     (rbx.toBitVec + 8) (rax.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
@@ -243,7 +243,7 @@ theorem Decode.head_from_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfix
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrbx4 hrax4 hrcx4 hmem4
   subst hpc4
   -- ProposerIndex: call block 55–57, label 85
-  refine eventually_trans _ _ _ _ (Codec.calldec_seg _ _ (k + 55) (k + 85) hC2 hL2 hl2 hvi'
+  refine eventually_trans _ _ _ _ (Codec.call_decode_segment _ _ (k + 55) (k + 85) hC2 hL2 hl2 hvi'
     (rsp.toBitVec - 104) (rax.toBitVec + 16) (rbx.toBitVec + 8) (rsp.toBitVec - 112) (rsp.toBitVec - 120)
     (rsp.toBitVec - 96) (by bv_omega) (by bv_omega) (by bv_omega)
     { toBitVec := rsp.toBitVec - 8#64 } r14 guard in1

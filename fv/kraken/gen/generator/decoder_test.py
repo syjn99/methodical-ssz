@@ -48,7 +48,7 @@ field-segment fix cases (ids `field-segments-fix-*`):
    `-- UNCHECKED STATEMENT` and the header says the statement is checked by nobody; kindcheck exit 1.
  - field-segments-fix-same-as-generated: `--same-as Prysm.BlobIdentifier.Decode.accept_generated_composition` (a generated theorem): exit 0, kindcheck
    exit 1.
- - field-segments-fix-same-as-prop: `--same-as-prop Prysm.BlobIdentifier.Decode.hand_statement`: exit 0, the Prop identity line, kindcheck PASS; the
+ - field-segments-fix-same-as-prop: `--same-as-prop Prysm.BlobIdentifier.Decode.accept_statement`: exit 0, the Prop identity line, kindcheck PASS; the
    test fixture `field-segments-fix-blob-identifier-prop-fixture.lean` (the output with a scratch `abbrev` equal to the type of
    `Prysm.BlobIdentifier.Decode.accept`) is written to <work-dir> for a separate gated `lake env lean`.
 
@@ -67,7 +67,7 @@ call-segment cases (`decoder --call-segments`; ids `call-segments-*`; mutated `.
    callee field not 0). Expected: the field is not covered (exit 3; no theorem whose name has the field) or
    exit 2; 0 bytes on stdout whenever the exit code is not 0; `--summary` agrees.
  - call-segments-compose-*: `--call-segments --compose` refuses callee / two-directive types (PendingPartialWithdrawal,
-   BeaconBlockHeader: exit 2, 0 bytes); Deposit_Data composes (exit 0) with the `decAcceptKind` `_kind` line
+   BeaconBlockHeader: exit 2, 0 bytes); Deposit_Data composes (exit 0) with the `decodeAcceptKind` `_kind` line
    and the identity with `Prysm.Deposit_Data.Decode.accept_statement`; kindcheck PASS; = committed `Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean` when it exists.
 
 step cases (`decoder --steps`; ids `steps-*`; mutated `.S` / IR copies in <work-dir> only):
@@ -88,7 +88,7 @@ step cases (`decoder --steps`; ids `steps-*`; mutated `.S` / IR copies in <work-
    mutated code): its theorems carry the mutated code's indices, never a parameter of the unmutated code.
  - steps-<what the input does>, table STEP_STACK_AND_SETUP_MUT (`rv` edits): seven inputs that the step walker had
    accepted without the block entry being established must be refused (an 8-byte stack store overlapping a tracked
-   slot: steps-stack-store-overlaps-*; a head that is not the `dec_prologue_seg` prologue: steps-head-spill-before-push,
+   slot: steps-stack-store-overlaps-*; a head that is not the `decode_prologue_segment` prologue: steps-head-spill-before-push,
    steps-head-no-frame), and steps-head-overlapping-spills too; steps-head-extra-nop is a head miss of class padding;
    steps-callee-source-offset-zero class other; stores to the return-address slot or below rsp, writes to r14 / rbp
    refused; the ten valid variants stay covered. steps-store-after-last-field is refused by the epilogue rule (exit 2).
@@ -263,7 +263,7 @@ FIELD_SEGMENT_MUT = [
      [(84, "  mov 0x38(%rsp),%rcx", "  mov 0x38(%rbp),%rcx")], None, 3, ["PublicKey", "WithdrawalCredentials"]),
     ("field-segments-u64-base-not-rdx", "Amount: store to 0x30(%rax) (receiver not in rdx)", "DepositMessage",
      [(86, "  mov %rcx,0x30(%rdx)", "  mov %rcx,0x30(%rax)")], None, 3, ["PublicKey", "WithdrawalCredentials"]),
-    ("field-segments-u64-reg-rbp", "Amount: scratch register rbp (not in U64InlineReg)", "DepositMessage",
+    ("field-segments-u64-reg-rbp", "Amount: scratch register rbp (not in Uint64InlineReg)", "DepositMessage",
      [(84, "  mov 0x38(%rsp),%rcx", "  mov 0x38(%rsp),%rbp"), (85, "  mov 0x50(%rcx),%rcx", "  mov 0x50(%rbp),%rbp"),
       (86, "  mov %rcx,0x30(%rdx)", "  mov %rbp,0x30(%rdx)")], None, 3, ["PublicKey", "WithdrawalCredentials"]),
     ("field-segments-u64-src-disp", "Amount: source displacement 0x48 against IR SSZ offset 80", "DepositMessage",
@@ -291,7 +291,7 @@ def field_segment_cases(work, new):
     # compatibility: default mode = committed files of hold-out types BlobIdentifier and DepositMessage
     for key in ("BlobIdentifier", "DepositMessage"):
         c = FIELD_SEGMENT_CASES[key]
-        rc, so, se = run(["python3", "-I", str(new), "decoder", "--S", c["S"], "--ir", IR, "--type", c["type"]]
+        rc, so, se = run(["python3", "-I", str(new), "decoder", "--assembly", c["S"], "--ir", IR, "--type", c["type"]]
                          + c["old_args"], KR)
         ok = rc == 0 and so == (KR / c["old"]).read_bytes()
         res.append(dict(id=f"field-segments-compat-{key}", expect=f"default mode exit 0, stdout = {c['old']}", exit=rc,
@@ -303,7 +303,7 @@ def field_segment_cases(work, new):
         outs = []
         for i in range(2):
             sm = work / f"field-segments-new-{key}-{i}.json"
-            rc, so, se = run(["python3", "-I", str(new), "decoder", "--field-segments", "--summary", str(sm), "--S", c["S"],
+            rc, so, se = run(["python3", "-I", str(new), "decoder", "--field-segments", "--summary", str(sm), "--assembly", c["S"],
                               "--ir", IR, "--type", c["type"]] + c["args"], KR)
             outs.append((rc, so, json.loads(sm.read_text())))
         com = (KR / c["committed"]).read_bytes() if (KR / c["committed"]).exists() else None
@@ -330,7 +330,7 @@ def field_segment_cases(work, new):
         sm = work / f"{mid}.summary.json"
         if sm.exists():
             sm.unlink()
-        rc, so, se = run(["python3", "-I", str(new), "decoder", "--field-segments", "--summary", str(sm), "--S", str(f),
+        rc, so, se = run(["python3", "-I", str(new), "decoder", "--field-segments", "--summary", str(sm), "--assembly", str(f),
                           "--ir", irp, "--type", c["type"]] + c["args"], KR)
         s = json.loads(sm.read_text()) if sm.exists() else {}
         cov = [x["field"] for x in s.get("fields", []) if x.get("status") == "covered"]
@@ -351,16 +351,16 @@ def field_segment_cases(work, new):
     f.write_text("\n".join(lines))
     irf = work / "field-segments-syn48-add.ir.json"
     irf.write_text(ir_edit(irt, c["type"], ir_size("WithdrawalCredentials", 48)))
-    rc, so, se = run(["python3", "-I", str(new), "decoder", "--field-segments", "--S", str(f), "--ir", str(irf), "--type", c["type"]]
+    rc, so, se = run(["python3", "-I", str(new), "decoder", "--field-segments", "--assembly", str(f), "--ir", str(irf), "--type", c["type"]]
                      + c["args"], KR)
     t = so.decode()
-    want = ["@Codec.bytesDecSegKind h 48 unmarshalSSZ 47 61 48 56 24 24 32 40 48 := by",
-            "with_reducible exact Codec.bytesdec_seg 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl",
+    want = ["@Codec.bytesDecodeSegmentKind h 48 unmarshalSSZ 47 61 48 56 24 24 32 40 48 := by",
+            "with_reducible exact Codec.bytes_decode_segment 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl",
             "(hroot : root.length = 48)", "(hav : 48 ≤ avail)", "⋆ Heap (avail - 48)", "Eq ((Int.toBytes 8 48).At aL)",
             "Eq ((Int.toBytes 8 48).At aC)", "(hSrc : bf + (48 : Int64).toBitVec = aSrc)",
-            "@Codec.u64DecInlineSegKind h unmarshalSSZ 83 56 96 48 := by"]
+            "@Codec.uint64DecodeInlineSegmentKind h unmarshalSSZ 83 56 96 48 := by"]
     miss = [w for w in want if w not in t]
-    ok = rc == 0 and not miss and "length = 32" not in t.split("Decode.generated_field_WithdrawalCredentials_seg")[1].split("theorem")[0]
+    ok = rc == 0 and not miss and "length = 32" not in t.split("Decode.generated_field_WithdrawalCredentials_segment")[1].split("theorem")[0]
     res.append(dict(id="field-segments-syn48-add", what="synthetic 48-byte add-form field (text check only, not kernel-checked)",
                     expect="exit 0; add-form 48 shape with the synthetic parameters", exit=rc, stdout_bytes=len(so),
                     missing=miss, ok=bool(ok)))
@@ -370,7 +370,7 @@ def field_segment_cases(work, new):
     po = work / "field-segments-partial.lean"
     if po.exists():
         po.unlink()
-    rc, so, se = run(["python3", "-I", str(new), "decoder", "--field-segments", "--S", str(f), "--partial-out", str(po), "--ir", IR,
+    rc, so, se = run(["python3", "-I", str(new), "decoder", "--field-segments", "--assembly", str(f), "--partial-out", str(po), "--ir", IR,
                       "--type", c["type"]] + c["args"], KR)
     pt = po.read_text() if po.exists() else ""
     kc = subprocess.run(["python3", "-I", "-B", str(HERE / "kindcheck.py"), str(po)], capture_output=True, text=True)
@@ -378,7 +378,7 @@ def field_segment_cases(work, new):
     ph = [l for l in pt.split("\n") if "PARTIAL OUTPUT" in l]
     uj = [json.loads(l.split(": ", 1)[1]) for l in pt.split("\n") if l.startswith("UNCOVERED-JSON: ")]
     ok = (rc == 3 and so == b"" and pt.startswith("import ") and len(ph) == 1 and "NOT generated: Amount" in ph[0]
-          and uj and [u["field"] for u in uj[0]] == ["Amount"] and "Decode.generated_field_Amount_seg" not in pt
+          and uj and [u["field"] for u in uj[0]] == ["Amount"] and "Decode.generated_field_Amount_segment" not in pt
           and kc.returncode == 1 and kp.returncode == 3 and "PARTIAL 2/3 fields" in kp.stdout)
     res.append(dict(id="field-segments-partial", expect="exit 3, Lean-module PARTIAL file without Amount, kindcheck exit 1, --partial exit 3",
                     exit=rc, stdout_bytes=len(so), partial_header=ph, kindcheck_exit=kc.returncode,
@@ -401,7 +401,7 @@ def field_segment_cases(work, new):
                 + ["--ir", IR, "--type", c["type"]] + a)
 
     for key in ("BlobIdentifier", "DepositMessage", "Eth1Data"):
-        outs = [run(["python3", "-I", str(new)] + cargs(key) + ["--S", FIELD_SEGMENT_CASES[key]["S"]], KR) for _ in range(2)]
+        outs = [run(["python3", "-I", str(new)] + cargs(key) + ["--assembly", FIELD_SEGMENT_CASES[key]["S"]], KR) for _ in range(2)]
         com = (KR / COMPOSITION_CASES[key][2]).read_bytes() if (KR / COMPOSITION_CASES[key][2]).exists() else None
         tf = work / f"field-segments-compose-{key}.lean"
         tf.write_bytes(outs[0][1])
@@ -412,7 +412,7 @@ def field_segment_cases(work, new):
                         exit=[o[0] for o in outs], stdout_bytes=len(outs[0][1]), equals_committed=outs[0][1] == com,
                         kindcheck_exit=kc.returncode, ok=bool(ok)))
         bad |= not ok
-    rc, so, se = run(["python3", "-I", str(new)] + cargs("BlobIdentifier", same=False) + ["--S", FIELD_SEGMENT_CASES["BlobIdentifier"]["S"]], KR)
+    rc, so, se = run(["python3", "-I", str(new)] + cargs("BlobIdentifier", same=False) + ["--assembly", FIELD_SEGMENT_CASES["BlobIdentifier"]["S"]], KR)
     tf = work / "field-segments-compose-nosame.lean"
     tf.write_bytes(so)
     kc = subprocess.run(["python3", "-I", str(HERE / "kindcheck.py"), str(tf)], capture_output=True, text=True)
@@ -427,7 +427,7 @@ def field_segment_cases(work, new):
             ("field-segments-compose-epilogue", "epilogue frame 0x28", [(89, "  add $0x20,%rsp", "  add $0x28,%rsp")])]:
         f = work / f"{mid}.S"
         f.write_text("\n".join(edits(base, eds)))
-        rc, so, se = run(["python3", "-I", str(new)] + cargs("DepositMessage") + ["--S", str(f)], KR)
+        rc, so, se = run(["python3", "-I", str(new)] + cargs("DepositMessage") + ["--assembly", str(f)], KR)
         ok = rc == 2 and so == b""
         res.append(dict(id=mid, what=what, expect="exit 2, 0 bytes", exit=rc, stdout_bytes=len(so),
                         stderr=se.strip().split("\n")[-1:], ok=bool(ok)))
@@ -449,7 +449,7 @@ def field_segment_fix_cases(work, new, cargs, COMPOSITION_CASES, irt):
         po = work / f"field-segments-fix-beacon-block-header-partial-{i}.lean"
         if po.exists():
             po.unlink()
-        rc, so, se = run(["python3", "-I", "-B", str(new), "decoder", "--field-segments", "--partial-out", str(po), "--S", c["S"],
+        rc, so, se = run(["python3", "-I", "-B", str(new), "decoder", "--field-segments", "--partial-out", str(po), "--assembly", c["S"],
                           "--ir", IR, "--type", c["type"]] + c["args"], KR)
         outs.append((rc, so, po.read_bytes() if po.exists() else b""))
     po = work / "field-segments-fix-beacon-block-header-partial-0.lean"
@@ -492,13 +492,13 @@ def field_segment_fix_cases(work, new, cargs, COMPOSITION_CASES, irt):
         po = work / f"{mid}.partial.lean"
         if po.exists():
             po.unlink()
-        rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--S", S, "--partial-out", str(po)], KR)
+        rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--assembly", S, "--partial-out", str(po)], KR)
         ok = rc == 2 and so == b"" and not po.exists() and "no template match" in se
         res.append(dict(id=mid, what=what, expect="exit 2, 0 bytes, no partial file", exit=rc, stdout_bytes=len(so),
                         partial_file=po.exists(), stderr=se.strip().split("\n")[-1:], ok=bool(ok)))
         bad |= not ok
     # --compose without --same-as: marker
-    rc, so, se = run(["python3", "-I", "-B", str(new)] + cargs("BlobIdentifier", same=False) + ["--S", FIELD_SEGMENT_CASES["BlobIdentifier"]["S"]], KR)
+    rc, so, se = run(["python3", "-I", "-B", str(new)] + cargs("BlobIdentifier", same=False) + ["--assembly", FIELD_SEGMENT_CASES["BlobIdentifier"]["S"]], KR)
     tf = work / "field-segments-fix-nosame.lean"
     tf.write_bytes(so)
     kc = subprocess.run(KC + [str(tf)], capture_output=True, text=True)
@@ -512,8 +512,8 @@ def field_segment_fix_cases(work, new, cargs, COMPOSITION_CASES, irt):
     # --same-as a generated theorem
     a = cargs("BlobIdentifier")
     a[a.index("--same-as") + 1] = "Prysm.BlobIdentifier.Decode.accept_generated_composition"
-    a[a.index("--name") + 1] = "bi_selfgen_gc"  # another name, right-hand side generated
-    rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--S", FIELD_SEGMENT_CASES["BlobIdentifier"]["S"]], KR)
+    a[a.index("--name") + 1] = "blob_identifier_same_as_generated"  # another name, right-hand side generated
+    rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--assembly", FIELD_SEGMENT_CASES["BlobIdentifier"]["S"]], KR)
     tf = work / "field-segments-fix-same-as-generated.lean"
     tf.write_bytes(so)
     kc = subprocess.run(KC + [str(tf)], capture_output=True, text=True)
@@ -523,22 +523,22 @@ def field_segment_fix_cases(work, new, cargs, COMPOSITION_CASES, irt):
     bad |= not ok
     # --same-as-prop
     a = cargs("BlobIdentifier")
-    a[a.index("--same-as"):a.index("--same-as") + 2] = ["--same-as-prop", "Prysm.BlobIdentifier.Decode.hand_statement"]
-    rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--S", FIELD_SEGMENT_CASES["BlobIdentifier"]["S"]], KR)
+    a[a.index("--same-as"):a.index("--same-as") + 2] = ["--same-as-prop", "Prysm.BlobIdentifier.Decode.accept_statement"]
+    rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--assembly", FIELD_SEGMENT_CASES["BlobIdentifier"]["S"]], KR)
     t = so.decode()
     tf = work / "field-segments-fix-same-as-prop.lean"
     tf.write_bytes(so)
     kc = subprocess.run(KC + [str(tf)], capture_output=True, text=True)
-    line = "    type_of% (@Decode.accept_generated_composition h) = @Prysm.BlobIdentifier.Decode.hand_statement h := by"
+    line = "    type_of% (@Decode.accept_generated_composition h) = @Prysm.BlobIdentifier.Decode.accept_statement h := by"
     com = (KR / COMPOSITION_CASES["BlobIdentifier"][2]).read_text()
-    ok = (rc == 0 and line in t and kc.returncode == 0 and "identity against Prysm.BlobIdentifier.Decode.hand_statement" in kc.stdout
-          and t.split("\n/-- Statement check")[0].replace("Prysm.BlobIdentifier.Decode.hand_statement", "Prysm.BlobIdentifier.Decode.accept")
+    ok = (rc == 0 and line in t and kc.returncode == 0 and "identity against Prysm.BlobIdentifier.Decode.accept_statement" in kc.stdout
+          and t.split("\n/-- Statement check")[0].replace("Prysm.BlobIdentifier.Decode.accept_statement", "Prysm.BlobIdentifier.Decode.accept")
           == com.split("\n/-- Statement check")[0])
     imps, rest = t.split("\n\n", 1)
     (work / "field-segments-fix-blob-identifier-prop-fixture.lean").write_text(
         imps + "\n\n-- TEST FIXTURE (scratch, not in the library): a Prop-valued abbrev equal to the type of the hand\n"
         "-- theorem `Prysm.BlobIdentifier.Decode.accept`.\n"
-        "abbrev Prysm.BlobIdentifier.Decode.hand_statement [h : Host] : Prop := type_of% (@Prysm.BlobIdentifier.Decode.accept h)\n\n" + rest)
+        "abbrev Prysm.BlobIdentifier.Decode.accept_statement [h : Host] : Prop := type_of% (@Prysm.BlobIdentifier.Decode.accept h)\n\n" + rest)
     res.append(dict(id="field-segments-fix-same-as-prop", expect="exit 0, Prop identity line, kindcheck PASS; fixture written",
                     exit=rc, stdout_bytes=len(so), kindcheck_exit=kc.returncode, ok=bool(ok)))
     bad |= not ok
@@ -617,7 +617,7 @@ CALL_SEGMENT_MUT = [
     ("call-segments-rr-reg-rdx", "Amount read through rdx (clobbers the `lea` set-up register)", "PendingPartialWithdrawal",
      [(55, "  mov 0x8(%rbx),%r8", "  mov 0x8(%rbx),%rdx"), (56, "  mov %r8,0x10(%rax)", "  mov %rdx,0x10(%rax)")], None, 3,
      ["Index", "Amount"]),
-    ("call-segments-rr-reg-rbp", "Amount read through rbp (not in U64ScratchRegister)", "PendingPartialWithdrawal",
+    ("call-segments-rr-reg-rbp", "Amount read through rbp (not in Uint64ScratchRegister)", "PendingPartialWithdrawal",
      [(55, "  mov 0x8(%rbx),%r8", "  mov 0x8(%rbx),%rbp"), (56, "  mov %r8,0x10(%rax)", "  mov %rbp,0x10(%rax)")], None, 3,
      ["Index"]),
     ("call-segments-lea-src-disp", "WithdrawableEpoch: `lea 0x18(%rbx),%rdx` against IR SSZ offset 16", "PendingPartialWithdrawal",
@@ -662,7 +662,7 @@ def call_segment_cases(work, new):
             for q in (po, su):
                 if q.exists():
                     q.unlink()
-            rc, so, se = run(G + ["--S", c["S"], "--ir", IR, "--type", c["type"], "--summary", str(su),
+            rc, so, se = run(G + ["--assembly", c["S"], "--ir", IR, "--type", c["type"], "--summary", str(su),
                                   "--partial-out", str(po)] + c["args"], KR)
             outs.append((rc, so, po.read_bytes() if po.exists() else b"", json.loads(su.read_text())))
         rc, so, pt, sm = outs[0]
@@ -695,7 +695,7 @@ def call_segment_cases(work, new):
         for q in (po, su):
             if q.exists():
                 q.unlink()
-        rc, so, se = run(G + ["--S", str(fS), "--ir", str(irp), "--type", c["type"], "--summary", str(su),
+        rc, so, se = run(G + ["--assembly", str(fS), "--ir", str(irp), "--type", c["type"], "--summary", str(su),
                               "--partial-out", str(po)] + c["args"], KR)
         sm = json.loads(su.read_text()) if su.exists() else {}
         cov = [f["field"] for f in sm.get("fields", []) if f.get("status") == "covered"] if rc != 2 else []
@@ -716,7 +716,7 @@ def call_segment_cases(work, new):
         po = work / f"call-segments-compose-{key}.partial.lean"
         if po.exists():
             po.unlink()
-        rc, so, se = run(G + ["--compose", "--name", "x_call_segment", "--S", c["S"], "--ir", IR, "--type", c["type"],
+        rc, so, se = run(G + ["--compose", "--name", "x_call_segment", "--assembly", c["S"], "--ir", IR, "--type", c["type"],
                               "--partial-out", str(po)] + c["args"], KR)
         ok = rc == 2 and so == b"" and not po.exists() and "no composition" in se
         res.append(dict(id=f"call-segments-compose-refuse-{key}", expect="exit 2, 0 bytes, no file", exit=rc, stdout_bytes=len(so),
@@ -724,7 +724,7 @@ def call_segment_cases(work, new):
         bad |= not ok
     c = CALL_SEGMENT_CASES["Deposit_Data"]
     outs = [run(G + ["--compose", "--name", "Decode.accept_generated_composition", "--same-as-prop", "Prysm.Deposit_Data.Decode.accept_statement",
-                     "--S", c["S"], "--ir", IR, "--type", c["type"], "--const", "unmarshalSSZ", "--prefix", "Decode.generated_call",
+                     "--assembly", c["S"], "--ir", IR, "--type", c["type"], "--const", "unmarshalSSZ", "--prefix", "Decode.generated_call",
                      "--imports", "Codec.DecoderHeadEpilogue,Prysm.Deposit_Data.GeneratedDecodeCallSegments,Prysm.Deposit_Data.Statements", "--open", "Prysm.Deposit_Data.Code"], KR)
             for _ in range(2)]
     rc, so, se = outs[0]
@@ -734,17 +734,17 @@ def call_segment_cases(work, new):
     com = KR / "lean/Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean"
     com = com.read_bytes() if com.exists() else None
     t = so.decode()
-    ok = (rc == 0 and outs[0] == outs[1] and kc.returncode == 0 and "decAcceptKind" in kc.stdout
-          and "@Codec.decAcceptKind h unmarshalSSZ true [.bytes 48, .bytes 32, .u64, .bytes 96] 106 := by" in t
+    ok = (rc == 0 and outs[0] == outs[1] and kc.returncode == 0 and "decodeAcceptKind" in kc.stdout
+          and "@Codec.decodeAcceptKind h unmarshalSSZ true [.bytes 48, .bytes 32, .uint64, .bytes 96] 106 := by" in t
           and "set_option maxHeartbeats 200000 in\ntheorem Decode.accept_generated_composition_kind" in t
           and "UNCHECKED" not in t and (com is None or com == so))
-    res.append(dict(id="call-segments-compose-Deposit_Data", expect="exit 0 twice, identical, decAcceptKind line + Prop identity, kindcheck PASS",
+    res.append(dict(id="call-segments-compose-Deposit_Data", expect="exit 0 twice, identical, decodeAcceptKind line + Prop identity, kindcheck PASS",
                     exit=rc, stdout_bytes=len(so), kindcheck_exit=kc.returncode, committed_present=com is not None,
                     ok=bool(ok)))
     bad |= not ok
     # --call-segments without a call-segment shape (Eth1Data) covers what --field-segments covers, with the same theorem text
     c2 = FIELD_SEGMENT_CASES["Eth1Data"]
-    rc, so, se = run(G + ["--S", c2["S"], "--ir", IR, "--type", c2["type"]] + c2["args"], KR)
+    rc, so, se = run(G + ["--assembly", c2["S"], "--ir", IR, "--type", c2["type"]] + c2["args"], KR)
     com = (KR / c2["committed"]).read_text()
     body = lambda s: s.split("namespace Prysm.Eth1Data\n", 1)[1]
     ok = rc == 0 and body(so.decode()) == body(com)
@@ -1003,7 +1003,7 @@ sg = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sg)
 ARGV = list(sys.argv)  # call() replaces sys.argv
 cfg = json.loads(pathlib.Path(ARGV[2]).read_text())
-SU = pathlib.Path(cfg["summary"])
+SUMMARY_PATH = pathlib.Path(cfg["summary"])
 
 
 class Boom(Exception):
@@ -1011,8 +1011,8 @@ class Boom(Exception):
 
 
 def call():
-    sys.argv = ["generator.py"] + cfg["argv"] + ["--summary", str(SU)]
-    SU.unlink(missing_ok=True)
+    sys.argv = ["generator.py"] + cfg["argv"] + ["--summary", str(SUMMARY_PATH)]
+    SUMMARY_PATH.unlink(missing_ok=True)
     so, se = io.StringIO(), io.StringIO()
     with contextlib.redirect_stdout(so), contextlib.redirect_stderr(se):
         try:
@@ -1022,7 +1022,7 @@ def call():
             rc = e.code if isinstance(e.code, int) else (0 if e.code is None else 1)
         except BaseException as e:
             rc = "uncaught " + type(e).__name__
-    sm = json.loads(SU.read_text()) if SU.exists() else None
+    sm = json.loads(SUMMARY_PATH.read_text()) if SUMMARY_PATH.exists() else None
     return rc, len(so.getvalue()), sm
 
 
@@ -1048,7 +1048,7 @@ res = []
 
 def rec(phase, kind, where, r):
     rc, nso, sm = r
-    res.append(dict(phase=phase, kind=kind, where=where, rc=rc, stdout=nso, sm_exit=(sm or {}).get("exit"),
+    res.append(dict(phase=phase, kind=kind, where=where, rc=rc, stdout=nso, summary_exit=(sm or {}).get("exit"),
                     covered=(sm or {}).get("covered"), total=(sm or {}).get("total")))
 
 
@@ -1125,7 +1125,7 @@ def fail_closed_cases(work, new):
     for key in ("Eth1Data", "SyncCommitteeMessage", "PendingPartialWithdrawal"):
         c = STEP_CASES[key]
         cfg, out = work / f"steps-fail-closed-{key}.cfg.json", work / f"steps-fail-closed-{key}.result.json"
-        cfg.write_text(json.dumps(dict(argv=["decoder", "--steps", "--S", c["S"], "--ir", IR, "--type", c["type"]] + c["args"],
+        cfg.write_text(json.dumps(dict(argv=["decoder", "--steps", "--assembly", c["S"], "--ir", IR, "--type", c["type"]] + c["args"],
                                        summary=str(work / f"steps-fail-closed-{key}.summary.json"))))
         out.unlink(missing_ok=True)
         rc, so, se = run(["python3", "-I", "-B", str(h), str(new), str(cfg), str(out)], KR)
@@ -1140,7 +1140,7 @@ def fail_closed_cases(work, new):
                 ok = all(r["rc"] == 0 and r["stdout"] > 0 and r["covered"] == n for r in rs)
             else:
                 ok = all(r["rc"] in ((2,) if kind in ("unexpected", "sysexit0") else (2, 3)) and r["stdout"] == 0
-                         and r["sm_exit"] == r["rc"] and r["total"] == n and r["covered"] < n for r in rs)
+                         and r["summary_exit"] == r["rc"] and r["total"] == n and r["covered"] < n for r in rs)
             res.append(dict(id=f"steps-fail-closed-{key}-{ph.replace(' ', '')}-{kind.replace(' ', '_')}", expect="control: exit 0, all "
                             "covered" if ph == "control" else "exit 2 / 3 (2 for unexpected / SystemExit), 0 bytes, "
                             "summary exit equal, covered < total", exit=sorted({str(r["rc"]) for r in rs}),
@@ -1170,7 +1170,7 @@ def step_cases(work, new):
             for q in (po, su):
                 if q.exists():
                     q.unlink()
-            rc, so, se = run(G + ["--S", c["S"], "--ir", IR, "--type", c["type"], "--summary", str(su),
+            rc, so, se = run(G + ["--assembly", c["S"], "--ir", IR, "--type", c["type"], "--summary", str(su),
                                   "--partial-out", str(po)] + c["args"], KR)
             outs.append((rc, so, po.read_bytes() if po.exists() else b"", json.loads(su.read_text())))
         rc, so, pt, sm = outs[0]
@@ -1192,7 +1192,7 @@ def step_cases(work, new):
     po = work / "steps-compose.partial.lean"
     if po.exists():
         po.unlink()
-    rc, so, se = run(G + ["--compose", "--name", "x_step", "--S", c["S"], "--ir", IR, "--type", c["type"],
+    rc, so, se = run(G + ["--compose", "--name", "x_step", "--assembly", c["S"], "--ir", IR, "--type", c["type"],
                           "--partial-out", str(po)] + c["args"], KR)
     ok = rc == 2 and so == b"" and not po.exists() and "--steps --compose: refused" in se
     res.append(dict(id="steps-compose-refuse", expect="exit 2, 0 bytes, no file, reason", exit=rc, stdout_bytes=len(so),
@@ -1212,7 +1212,7 @@ def step_cases(work, new):
         for q in (po, su):
             if q.exists():
                 q.unlink()
-        rc, so, se = run(G + ["--S", str(fS), "--ir", str(irp), "--type", c["type"], "--summary", str(su),
+        rc, so, se = run(G + ["--assembly", str(fS), "--ir", str(irp), "--type", c["type"], "--summary", str(su),
                               "--partial-out", str(po)] + c["args"], KR)
         sm = json.loads(su.read_text()) if su.exists() else {}
         cov = [f["field"] for f in sm.get("fields", []) if f.get("status") == "covered"] if rc != 2 else []
@@ -1332,9 +1332,9 @@ WHOLE_ACCEPT_MUT = [
 
 
 def whole_accept_run(work, new, mid, c, S=None, ir=None, extra=()):
-    su = work / f"{mid}.g5.json"
+    su = work / f"{mid}.whole-accept.json"
     su.unlink(missing_ok=True)
-    rc, so, se = run(["python3", "-I", "-B", str(new), "decoder", "--whole-accept", "--S", S or c["S"], "--ir", ir or IR,
+    rc, so, se = run(["python3", "-I", "-B", str(new), "decoder", "--whole-accept", "--assembly", S or c["S"], "--ir", ir or IR,
                       "--type", c["type"], "--summary", str(su)] + c["args"] + list(extra), KR)
     sm = json.loads(su.read_text()) if su.exists() else {}
     return rc, so, se, sm
@@ -1399,10 +1399,10 @@ import contextlib, importlib.util, io, json, pathlib, sys
 spec = importlib.util.spec_from_file_location("generator_whole_accept_fail_closed", sys.argv[1])
 sg = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sg)
-g5 = sg.whole_accept_module()
+whole_accept_gen = sg.whole_accept_module()
 ARGV = list(sys.argv)
 cfg = json.loads(pathlib.Path(ARGV[2]).read_text())
-SU = pathlib.Path(cfg["summary"])
+SUMMARY_PATH = pathlib.Path(cfg["summary"])
 
 
 class Boom(Exception):
@@ -1410,8 +1410,8 @@ class Boom(Exception):
 
 
 def call():
-    sys.argv = ["generator.py"] + cfg["argv"] + ["--summary", str(SU)]
-    SU.unlink(missing_ok=True)
+    sys.argv = ["generator.py"] + cfg["argv"] + ["--summary", str(SUMMARY_PATH)]
+    SUMMARY_PATH.unlink(missing_ok=True)
     so, se = io.StringIO(), io.StringIO()
     with contextlib.redirect_stdout(so), contextlib.redirect_stderr(se):
         try:
@@ -1421,7 +1421,7 @@ def call():
             rc = e.code if isinstance(e.code, int) else (0 if e.code is None else 1)
         except BaseException as e:
             rc = "uncaught " + type(e).__name__
-    sm = json.loads(SU.read_text()) if SU.exists() else None
+    sm = json.loads(SUMMARY_PATH.read_text()) if SUMMARY_PATH.exists() else None
     return rc, len(so.getvalue()), sm
 
 
@@ -1429,7 +1429,7 @@ def fire(kind, where):
     if kind == "unexpected":
         raise Boom("injected at " + where)
     if kind == "refuse":
-        raise g5.WholeAcceptRefuse("injected at " + where)
+        raise whole_accept_gen.WholeAcceptRefuse("injected at " + where)
     raise SystemExit(0)
 
 
@@ -1447,7 +1447,7 @@ res = []
 
 def rec(phase, kind, where, r):
     rc, nso, sm = r
-    res.append(dict(phase=phase, kind=kind, where=where, rc=rc, stdout=nso, sm_exit=(sm or {}).get("exit"),
+    res.append(dict(phase=phase, kind=kind, where=where, rc=rc, stdout=nso, summary_exit=(sm or {}).get("exit"),
                     acc=(sm or {}).get("accept_generated")))
 
 
@@ -1467,11 +1467,11 @@ rec("step", "epilogue returns True", "step_epilogue", patched(sg, "step_epilogue
 # phase derive: the specifications and every step rendering
 for fn in ("whole_accept_derive", "whole_accept_head_spec", "whole_accept_epilogue_spec", "whole_accept_reject_spec"):
     for kind in KINDS:
-        rec("derive", kind, fn, patched(g5, fn, lambda *a, k=kind, fn=fn: fire(k, fn)))
-ostep, seq = g5.whole_accept_step, []
-setattr(g5, "whole_accept_step", lambda *a: (seq.append(1), ostep(*a))[1])
+        rec("derive", kind, fn, patched(whole_accept_gen, fn, lambda *a, k=kind, fn=fn: fire(k, fn)))
+ostep, seq = whole_accept_gen.whole_accept_step, []
+setattr(whole_accept_gen, "whole_accept_step", lambda *a: (seq.append(1), ostep(*a))[1])
 call()
-setattr(g5, "whole_accept_step", ostep)
+setattr(whole_accept_gen, "whole_accept_step", ostep)
 for kind in KINDS:
     for n in range(len(seq)):
         cnt = [0]
@@ -1481,13 +1481,13 @@ for kind in KINDS:
             if cnt[0] == n + 1:
                 fire(kind, f"whole_accept_step call {n}")
             return ostep(*a)
-        rec("derive", kind, f"whole_accept_step call {n}", patched(g5, "whole_accept_step", inj))
+        rec("derive", kind, f"whole_accept_step call {n}", patched(whole_accept_gen, "whole_accept_step", inj))
 # phase render: every theorem renderer (each call), the kind recorder
 for meth in ("head", "field", "f_u64", "f_bytes", "f_call", "epilogue", "accept", "reject", "layout", "binders", "mem"):
-    om, seqm = getattr(g5.T, meth), []
-    setattr(g5.T, meth, lambda self, *a, om=om, seqm=seqm: (seqm.append(1), om(self, *a))[1])
+    om, seqm = getattr(whole_accept_gen.T, meth), []
+    setattr(whole_accept_gen.T, meth, lambda self, *a, om=om, seqm=seqm: (seqm.append(1), om(self, *a))[1])
     call()
-    setattr(g5.T, meth, om)
+    setattr(whole_accept_gen.T, meth, om)
     for kind in KINDS:
         for n in range(len(seqm)):
             cnt = [0]
@@ -1497,12 +1497,12 @@ for meth in ("head", "field", "f_u64", "f_bytes", "f_call", "epilogue", "accept"
                 if cnt[0] == n + 1:
                     fire(kind, f"T.{meth} call {n}")
                 return om(self, *a)
-            rec("render", kind, f"T.{meth} call {n}", patched(g5.T, meth, inj))
-ok_ = g5.T.kind
-rec("flags", "a kind line not recorded", "T.kind", patched(g5.T, "kind", lambda self, name, kind, extra: (
+            rec("render", kind, f"T.{meth} call {n}", patched(whole_accept_gen.T, meth, inj))
+ok_ = whole_accept_gen.T.kind
+rec("flags", "a kind line not recorded", "T.kind", patched(whole_accept_gen.T, "kind", lambda self, name, kind, extra: (
     ok_(self, name, kind, extra), self.kinds_emitted.pop() if name.endswith("_field_1") else None)[0]))
-rec("flags", "a kind line dropped from the text", "T.body", patched(g5.T, "body", (lambda ob: lambda self: ob(self).replace(
-    "_epilogue_kind :", "_epilogue_kinx :", 1))(g5.T.body)))
+rec("flags", "a kind line dropped from the text", "T.body", patched(whole_accept_gen.T, "body", (lambda ob: lambda self: ob(self).replace(
+    "_epilogue_kind :", "_epilogue_kinx :", 1))(whole_accept_gen.T.body)))
 oi = sg._decoder_whole_accept
 rec("flags", "inner returns its text, outer flags not set", "_decoder_whole_accept",
     patched(sg, "_decoder_whole_accept", lambda args, flags: oi(args, dict(flags))))
@@ -1522,7 +1522,7 @@ def whole_accept_fc_cases(work, new, keys=None):
     for key in (keys or WHOLE_ACCEPT_FAIL_CLOSED_KEYS):
         c = WHOLE_ACCEPT_CASES[key]
         cfg, out = work / f"whole-accept-fail-closed-{key}.cfg.json", work / f"whole-accept-fail-closed-{key}.result.json"
-        cfg.write_text(json.dumps(dict(argv=["decoder", "--whole-accept", "--S", c["S"], "--ir", IR, "--type", c["type"]] + c["args"],
+        cfg.write_text(json.dumps(dict(argv=["decoder", "--whole-accept", "--assembly", c["S"], "--ir", IR, "--type", c["type"]] + c["args"],
                                        summary=str(work / f"whole-accept-fail-closed-{key}.summary.json"))))
         out.unlink(missing_ok=True)
         rc, so, se = run(["python3", "-I", "-B", str(h), str(new), str(cfg), str(out)], KR)
@@ -1534,7 +1534,7 @@ def whole_accept_fc_cases(work, new, keys=None):
             if ph == "control":
                 ok = all(r["rc"] == 0 and r["stdout"] > 0 and r["acc"] is True for r in rs)
             else:
-                ok = all(r["rc"] == 2 and r["stdout"] == 0 and r["sm_exit"] == 2 and r["acc"] is False for r in rs)
+                ok = all(r["rc"] == 2 and r["stdout"] == 0 and r["summary_exit"] == 2 and r["acc"] is False for r in rs)
             res.append(dict(id=f"whole-accept-fail-closed-{key}-{ph}-{kind.replace(' ', '_')}", expect="control: exit 0" if ph == "control"
                             else "exit 2, 0 bytes, summary exit 2, accept_generated false", exit=sorted({str(r["rc"]) for r in rs}),
                             stdout_bytes=sum(r["stdout"] for r in rs), injections=len(rs),
@@ -1566,7 +1566,7 @@ def main(work, out):
     # new generator, two runs, committed output
     outs = []
     for _ in range(2):
-        rc, so, se = run(["python3", "-I", str(new), "decoder", "--S", S] + ARGS, KR)
+        rc, so, se = run(["python3", "-I", str(new), "decoder", "--assembly", S] + ARGS, KR)
         outs.append((rc, so, se))
     com = (KR / COMMITTED).read_bytes() if (KR / COMMITTED).exists() else None
     ok = all(r == 0 for r, _, _ in outs) and outs[0][1] == outs[1][1] and outs[0][1] == com
@@ -1584,7 +1584,7 @@ def main(work, out):
             lines = mutate(base, line, o, n)
         f = work / f"{mid}.S"
         f.write_text("\n".join(lines))
-        rc, so, se = run(["python3", "-I", str(new), "decoder", "--S", str(f)] + ARGS, KR)
+        rc, so, se = run(["python3", "-I", str(new), "decoder", "--assembly", str(f)] + ARGS, KR)
         got = sorted(l.split()[3].rstrip(":") for l in se.split("\n") if ": MATCH form" in l)
         ok = rc == want and so == b"" and (want == 2 or got == sorted(match))
         res.append(dict(id=mid, what=what, expect=f"exit {want}, 0 bytes" + (f", MATCH {match}" if want == 3 else ""),
@@ -1596,10 +1596,10 @@ def main(work, out):
     po = work / "partial.lean"
     if po.exists():
         po.unlink()
-    rc, so, se = run(["python3", "-I", str(new), "decoder", "--S", str(f), "--partial-out", str(po)] + ARGS, KR)
+    rc, so, se = run(["python3", "-I", str(new), "decoder", "--assembly", str(f), "--partial-out", str(po)] + ARGS, KR)
     pt = po.read_text() if po.exists() else ""
     ok = (rc == 3 and so == b"" and pt.startswith("/-! PARTIAL OUTPUT") and "NOT generated: BlockHash" in pt.split("\n")[0]
-          and "theorem Decode.generated_root_DepositRoot_seg " in pt and "Decode.generated_root_BlockHash_seg" not in pt)
+          and "theorem Decode.generated_root_DepositRoot_segment " in pt and "Decode.generated_root_BlockHash_segment" not in pt)
     res.append(dict(id="partial", expect="exit 3, 0 bytes on stdout, --partial-out file marked PARTIAL, DepositRoot only",
                     exit=rc, stdout_bytes=len(so), partial_first_line=pt.split("\n")[0], ok=bool(ok)))
     bad |= not ok

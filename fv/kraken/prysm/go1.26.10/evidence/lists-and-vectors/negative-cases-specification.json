@@ -14,7 +14,7 @@
  {
   "module": "Prysm/HistoricalBatch/NegativeSuiteTargets.lean",
   "id": "historical-batch-negative-suite-targets-spec-check-statement-hbs-524288-to-524287",
-  "kind": "stmt",
+  "kind": "statement",
   "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.spec_check",
   "statement_def": "spec_prop",
   "old": "(hbs : bs.size ≠ 524288)",
@@ -23,7 +23,7 @@
  {
   "module": "Prysm/HistoricalBatch/NegativeSuiteTargets.lean",
   "id": "historical-batch-negative-suite-targets-complete-check-statement-size-524288-to-524287",
-  "kind": "stmt",
+  "kind": "statement",
   "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.complete_check",
   "statement_def": "complete_prop",
   "old": "bs.size ≠ 524288",
@@ -44,7 +44,7 @@
  {
   "module": "Prysm/Deposit/NegativeSuiteTargets.lean",
   "id": "deposit-negative-suite-targets-spec-check-statement-hbs-1240-to-1239",
-  "kind": "stmt",
+  "kind": "statement",
   "theorem": "Prysm.Deposit.NegativeSuiteTargets.spec_check",
   "statement_def": "spec_prop",
   "old": "(hbs : bs.size ≠ 1240)",
@@ -53,7 +53,7 @@
  {
   "module": "Prysm/Deposit/NegativeSuiteTargets.lean",
   "id": "deposit-negative-suite-targets-complete-check-statement-size-1240-to-1239",
-  "kind": "stmt",
+  "kind": "statement",
   "theorem": "Prysm.Deposit.NegativeSuiteTargets.complete_check",
   "statement_def": "complete_prop",
   "old": "bs.size ≠ 1240",

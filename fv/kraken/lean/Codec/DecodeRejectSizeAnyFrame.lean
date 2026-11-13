@@ -7,9 +7,9 @@ import Prysm.Checkpoint.DecodeRejectSize
 The size-reject path is the same code in every flat decoder: the prologue with `jne lerr` taken, `lerr:`,
 the two words of `ssz.ErrSize` into rax / rbx, `add $F,%rsp; pop %rbp; retq`. Only the frame `F`, the first
 spill displacement `dB = F + 24`, the size `sz` and the labels differ.
-- `decRejectKindAnyFrame C sz`: the statement of the committed theorems `Prysm.<Type>.Decode.reject_size` with the code
+- `decodeRejectKindAnyFrame C sz`: the statement of the committed theorems `Prysm.<Type>.Decode.reject_size` with the code
   constant and the size replaced (ties: `Prysm/BlobIdentifier/DecodeRejectSizeKindInstances.lean`).
-- `dec_reject_seg`: the proof over windows (nops anywhere): `decoderPrologue` (`Codec/DecoderPrologue.lean`), `decErrorBlock`, then `dec_epilogue_any_frame`.
+- `decode_reject_segment`: the proof over windows (nops anywhere): `decoderPrologue` (`Codec/DecoderPrologue.lean`), `decodeErrorBlock`, then `decode_epilogue_any_frame`.
 Not covered: callee error returns (`fmt.errorf`), `morestack`.
 -/
 
@@ -19,8 +19,8 @@ open Codec
 namespace Codec
 
 /-- The error block of the size check, first part: `lerr:`, then the two words of `ssz.ErrSize` into rax and
-rbx. The epilogue `add $F,%rsp; pop %rbp; retq` follows (`dec_epilogue_any_frame`). -/
-def decErrorBlock (lerr : String) : Program :=
+rbx. The epilogue `add $F,%rsp; pop %rbp; retq` follows (`decode_epilogue_any_frame`). -/
+def decodeErrorBlock (lerr : String) : Program :=
   [Kraken.Directive.label lerr,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.reg (Reg.low Reg64.rax Width.W64))
@@ -37,7 +37,7 @@ set_option linter.unusedVariables false in
 /-- **Size-reject statement kind of a container decoder**: with `len(buf) ≠ sz` the decoder returns the two
 words `e0`, `e1` of `ssz.ErrSize`; the receiver and the input are not read (they are in `R`). The text is the
 statement of the committed theorems `Prysm.<Type>.Decode.reject_size` with the code constant and the size replaced. -/
-abbrev decRejectKindAnyFrame (C : Program) (sz : UInt64) : Prop :=
+abbrev decodeRejectKindAnyFrame (C : Program) (sz : UInt64) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
     (R : DataMem → Prop)
@@ -61,15 +61,15 @@ abbrev decRejectKindAnyFrame (C : Program) (sz : UInt64) : Prop :=
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- **Size reject, frame-parametric**: the prologue window `q` at `j` (`decoderPrologue`, the `jne lerr` taken because
-`rcx ≠ sz`), the error window `q2` at `j2` = `lerr` (`decErrorBlock`), then `add $F,%rsp` (window `q3` at `j3`) and
+`rcx ≠ sz`), the error window `q2` at `j2` = `lerr` (`decodeErrorBlock`), then `add $F,%rsp` (window `q3` at `j3`) and
 `pop %rbp; retq` (window `q4` at `j4`). `dB = F + 24`: the first spill is the rbx home slot `rsp₀ + 16`. -/
-theorem dec_reject_seg (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Program) (j : Nat)
+theorem decode_reject_segment (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Program) (j : Nat)
     (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = decoderPrologue fn l0 lmore lerr F dB sz)
     (hdB : dB.toBitVec = F.toBitVec + 24)
-    (q2 : Program) (j2 j3 : Nat) (hq2 : q2.IsInfixAt Host.prog j2) (he2 : eraseNop q2 = decErrorBlock lerr)
+    (q2 : Program) (j2 j3 : Nat) (hq2 : q2.IsInfixAt Host.prog j2) (he2 : eraseNop q2 = decodeErrorBlock lerr)
     (hend2 : j2 + q2.length = j3) (hl : label lerr = Host.addrOf j2)
     (q3 : Program) (j4 : Nat) (hq3 : q3.IsInfixAt Host.prog j3) (he3 : eraseNop q3 = [instrAddImmediate Reg64.rsp F])
-    (hend3 : j3 + q3.length = j4) (q4 : Program) (hq4 : q4.IsInfixAt Host.prog j4) (he4 : eraseNop q4 = decRet)
+    (hend3 : j3 + q3.length = j4) (q4 : Program) (hq4 : q4.IsInfixAt Host.prog j4) (he4 : eraseNop q4 = decodeRet)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
     (R : DataMem → Prop)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -140,17 +140,17 @@ theorem dec_reject_seg (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Progra
   simp only [Effects.All]
   rw [hl]
   window_skip_leading_nops hq2
-  window_step_directive hq2 he2 decErrorBlock 0
+  window_step_directive hq2 he2 decodeErrorBlock 0
   window_skip_nops hq2 he2 0
-  window_step_directive hq2 he2 decErrorBlock 1
+  window_step_directive hq2 he2 decodeErrorBlock 1
   apply load_step _ _ _ _ (Int.toBytes 8 e0.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   unfold_step
   window_skip_nops hq2 he2 1
-  window_step_directive hq2 he2 decErrorBlock 2
+  window_step_directive hq2 he2 decodeErrorBlock 2
   apply load_step _ _ _ _ (Int.toBytes 8 e1.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   unfold_step
   window_skip_to_end hq2 he2 2 hend2
-  refine eventually_trans _ _ _ _ (dec_epilogue_any_frame F q3 j3 j4 hq3 he3 hend3 q4 hq4 he4
+  refine eventually_trans _ _ _ _ (decode_epilogue_any_frame F q3 j3 j4 hq3 he3 hend3 q4 hq4 he4
     (rsp.toBitVec - 8 - F.toBitVec) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) (by bv_omega) rbp ra _ _
     (by first
       | rfl

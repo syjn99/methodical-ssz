@@ -27,7 +27,7 @@
   "id": "voluntary-exit-decode-generated-accept-statement-hguard-88-to-80",
   "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.generated_accept",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(hguard : guard.toNat + 88 < s.regs.rsp.toNat)",
   "new": "(hguard : guard.toNat + 80 < s.regs.rsp.toNat)"
  },
@@ -35,7 +35,7 @@
   "id": "historical-summary-decode-generated-accept-statement-hav-64-to-32",
   "module": "Prysm/HistoricalSummary/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.HistoricalSummary.Decode.generated_accept",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(hav : 64 ≤ avail)",
   "new": "(hav : 32 ≤ avail)"
  },
@@ -43,7 +43,7 @@
   "id": "sync-aggregator-selection-data-decode-generated-accept-statement-fv1-16-to-24",
   "module": "Prysm/SyncAggregatorSelectionData/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.SyncAggregatorSelectionData.Decode.generated_accept",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "Eq (fv1.At (s.regs.rax.toBitVec + 16))",
   "new": "Eq (fv1.At (s.regs.rax.toBitVec + 24))"
  },
@@ -51,7 +51,7 @@
   "id": "pow-block-decode-generated-accept-statement-rax-32-to-48",
   "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.PowBlock.Decode.generated_accept",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 8))",
   "new": "Eq ((Int.toBytes 8 48).At (s.regs.rax.toBitVec + 8))"
  },
@@ -59,7 +59,7 @@
   "id": "validator-balance-decode-generated-accept-statement-fv0-fv0-to-fv1-2",
   "module": "Prysm/ValidatorBalance/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.ValidatorBalance.Decode.generated_accept",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "Eq (fv0.At (s.regs.rax.toBitVec + 8))",
   "new": "Eq (fv1.At (s.regs.rax.toBitVec + 8))"
  },
@@ -67,7 +67,7 @@
   "id": "pending-deposit-decode-generated-field-3-statement-fv2-56-to-48",
   "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.PendingDeposit.Decode.generated_field_3",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "Eq (fv2.At (s.regs.rax.toBitVec + 56))",
   "new": "Eq (fv2.At (s.regs.rax.toBitVec + 48))"
  },
@@ -75,7 +75,7 @@
   "id": "sync-committee-message-decode-generated-field-2-statement-heap-32-to-24",
   "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_field_2",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "Heap (avail - 32)",
   "new": "Heap (avail - 24)"
  },
@@ -83,7 +83,7 @@
   "id": "voluntary-exit-decode-generated-field-2-statement-host-56-to-55",
   "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.generated_field_2",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(Int.toBytes 8 (Host.addrOf (k + 56)).toBitVec.toInt)",
   "new": "(Int.toBytes 8 (Host.addrOf (k + 55)).toBitVec.toInt)"
  },
@@ -91,7 +91,7 @@
   "id": "checkpoint-decode-generated-field-1-statement-get64-0-to-s-regs-rbx",
   "module": "Prysm/Checkpoint/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.Checkpoint.Decode.generated_field_1",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "st.data.regs.get64 Reg64.rbx = 0",
   "new": "st.data.regs.get64 Reg64.rbx = s.regs.rbx.toBitVec"
  },
@@ -99,7 +99,7 @@
   "id": "historical-summary-decode-generated-head-statement-rbp-8-to-16",
   "module": "Prysm/HistoricalSummary/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.HistoricalSummary.Decode.generated_head",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "st.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }",
   "new": "st.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 16 }"
  },
@@ -107,41 +107,41 @@
   "id": "blob-identifier-decode-generated-epilogue-statement-rsp-8-to-16",
   "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.generated_epilogue",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "st.data.regs.rsp = s.regs.rsp + 8",
   "new": "st.data.regs.rsp = s.regs.rsp + 16"
  },
  {
-  "id": "voluntary-exit-decode-generated-accept-statement-u64-80-to-88",
+  "id": "voluntary-exit-decode-generated-accept-statement-uint64-80-to-88",
   "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.generated_accept",
-  "kind": "stmt",
-  "old": "\n      80) [.u64, .u64] := by",
-  "new": "\n      88) [.u64, .u64] := by"
+  "kind": "statement",
+  "old": "\n      80) [.uint64, .uint64] := by",
+  "new": "\n      88) [.uint64, .uint64] := by"
  },
  {
   "id": "sync-aggregator-selection-data-decode-generated-field-1-statement-48-to-47",
   "module": "Prysm/SyncAggregatorSelectionData/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.SyncAggregatorSelectionData.Decode.generated_field_1",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "⟨48, 1, ",
   "new": "⟨47, 1, "
  },
  {
-  "id": "pow-block-decode-generated-reject-statement-dec-reject-kind-any-frame-96-to-64",
+  "id": "pow-block-decode-generated-reject-statement-decode-reject-kind-any-frame-96-to-64",
   "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.PowBlock.Decode.generated_reject",
-  "kind": "stmt",
-  "old": "decRejectKindAnyFrame h unmarshalSSZ 96 ",
-  "new": "decRejectKindAnyFrame h unmarshalSSZ 64 "
+  "kind": "statement",
+  "old": "decodeRejectKindAnyFrame h unmarshalSSZ 96 ",
+  "new": "decodeRejectKindAnyFrame h unmarshalSSZ 64 "
  },
  {
   "id": "deposit-message-decode-generated-accept-statement-bytes-none-to-none",
   "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.DepositMessage.Decode.generated_accept",
-  "kind": "stmt",
-  "old": "[.bytes 48, .bytes 32, .u64] := by",
-  "new": "[.bytes 32, .bytes 48, .u64] := by"
+  "kind": "statement",
+  "old": "[.bytes 48, .bytes 32, .uint64] := by",
+  "new": "[.bytes 32, .bytes 48, .uint64] := by"
  },
  {
   "id": "validator-balance-decode-generated-head-code-mov-0x48-rsp-to-0x40-rsp",
@@ -151,10 +151,10 @@
   "old": "  mov %rax,0x48(%rsp)",
   "new": "  mov %rax,0x40(%rsp)",
   "line": 12,
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.ValidatorBalance.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.ValidatorBalance.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S"
  },
  {
   "id": "voluntary-exit-decode-generated-epilogue-code-add-0x48-to-0x40",
@@ -164,10 +164,10 @@
   "old": "  add $0x48,%rsp",
   "new": "  add $0x40,%rsp",
   "line": 87,
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.VoluntaryExit.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.VoluntaryExit.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
   "id": "pending-deposit-decode-generated-reject-code-add-0x40-to-0x48",
@@ -177,10 +177,10 @@
   "old": "  add $0x40,%rsp",
   "new": "  add $0x48,%rsp",
   "line": 168,
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.PendingDeposit.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingDeposit.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
  },
  {
   "id": "sync-committee-message-decode-generated-epilogue-code-mov-0x28-rsp-to-0x38-rsp",
@@ -190,10 +190,10 @@
   "old": "  mov 0x28(%rsp),%rax",
   "new": "  mov 0x38(%rsp),%rax",
   "line": 157,
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.SyncCommitteeMessage.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
   "id": "voluntary-exit-decode-generated-reject-code-add-0x48-to-0x40-2",
@@ -203,16 +203,16 @@
   "old": "  add $0x48,%rsp",
   "new": "  add $0x40,%rsp",
   "line": 93,
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.VoluntaryExit.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.VoluntaryExit.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
   "id": "pow-block-decode-generated-field-1-statement-rax-32-to-48",
   "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.PowBlock.Decode.generated_field_1",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 8))",
   "new": "Eq ((Int.toBytes 8 48).At (s.regs.rax.toBitVec + 8))"
  }

@@ -18,10 +18,10 @@ enc-e1-m-control	eth1-data-encode-encode-deposit-count-block-hash-control
 enc-e1-m-count-field	eth1-data-encode-encode-deposit-count-block-hash-code-mov-0x20-rdx-to-0x28-rdx
 enc-e1-m-store-disp	eth1-data-encode-encode-deposit-count-block-hash-code-mov-0x8-rbx-rax-1-to-0x10-rbx-rax-1
 enc-e1-callat-call	eth1-data-encode-call-at-code-callq-runtime-memmove-to-runtime-growslice
-enc-rej-block-control	codec-encode-reject-tail-enc-reject-tail-control
-enc-rej-block-stmt-err-swap	codec-encode-reject-tail-enc-reject-tail-statement-rcx-none-to-none
-enc-rej-block-stmt-rsp	codec-encode-reject-tail-enc-reject-tail-statement-rsp-8-to-none
-enc-rej-block-stmt-fp	codec-encode-reject-tail-enc-reject-tail-statement-h-fp-8-to-16
+enc-rej-block-control	codec-encode-reject-tail-encode-reject-tail-control
+enc-rej-block-stmt-err-swap	codec-encode-reject-tail-encode-reject-tail-statement-rcx-none-to-none
+enc-rej-block-stmt-rsp	codec-encode-reject-tail-encode-reject-tail-statement-rsp-8-to-none
+enc-rej-block-stmt-fp	codec-encode-reject-tail-encode-reject-tail-statement-h-fp-8-to-16
 enc-bh-rejat-control	beacon-block-header-encode-reject-tails-at-control
 enc-bh-rejat-frame	beacon-block-header-encode-reject-tails-at-code-add-0x98-to-0x90
 enc-bh-rej-b-control	beacon-block-header-encode-reject-parent-root-control

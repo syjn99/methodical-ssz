@@ -88,7 +88,7 @@ theorem step_sub_registers (rD rS : Reg64) (q : Program) (j e : Nat) (hq : q.IsI
   window_skip_leading_nops hq
   have hd : [instrSubRegisters rD rS].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrSubRegisters at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   window_skip_to_end hq he 0 hend
   exact hk _

@@ -3,8 +3,8 @@
 
   flat_encoders_differential.py cases <cases.json>                      write the cases
   flat_encoders_differential.py check <cases.json> <go-out.json> <result.json>
-The Go program is `prysm/go1.26.10/evidence/generator-cases/encode-spec/e2ccheck-main.go.txt`, run natively with Go 1.26.10 through the
-gate as package fve2e/e2ccheck of the temporary Prysm tree (by `go run -overlay`; nothing is written into that
+The Go program is `prysm/go1.26.10/evidence/generator-cases/encode-spec/differential-main.go.txt`, run natively with Go 1.26.10 through the
+gate as a scratch package of the temporary Prysm tree (by `go run -overlay`; nothing is written into that
 tree). This is a Go-semantics check on the host (linux/arm64), not an execution of the amd64 ELF.
 Every expected value is computed here, independently of the code under test, from the consensus-specs field
 lists (ValidatorBalance: Prysm proto; no consensus-specs container): uint64 fields = 8 bytes little endian, byte
@@ -72,8 +72,8 @@ def cases():
             vals = values(fields, v)
             for plen, spare in DST:
                 pre = bytes((0xA0 + j) & 0xFF for j in range(plen))
-                f = [{"name": n, "u": x if k == "u" else 0,
-                      "b": (x.hex() if k == "b" else x.to_bytes(32, "little").hex()) if k != "u" else ""}
+                f = [{"name": n, "uint64": x if k == "u" else 0,
+                      "bytes": (x.hex() if k == "b" else x.to_bytes(32, "little").hex()) if k != "u" else ""}
                      for n, k, x in vals]
                 cs.append({"id": f"{t}-v{v}-pre{plen}-spare{spare}", "type": t, "fields": f, "pre": pre.hex(),
                            "cap": plen + size + spare,

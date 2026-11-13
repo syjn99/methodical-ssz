@@ -30,13 +30,13 @@ def ListU64.toValue (v : ListU64) : Value := .seq [.seq (v.l.map fun x => .uint 
 /-- The values a Go `ListU64` can hold that EthLib accepts: at most 16 elements. -/
 def ListU64.ok (v : ListU64) : Prop := v.l.length ≤ 16
 
-theorem allFit_u64 (l : List UInt64) : Value.allFit (.uint 8) (l.map fun x => .uint x.toNat) = true := by
+theorem allFit_uint64 (l : List UInt64) : Value.allFit (.uint 8) (l.map fun x => .uint x.toNat) = true := by
   induction l with
   | nil => simp [Value.allFit]
   | cons x xs ih => have := x.toNat_lt; simp [Value.allFit, Value.fits, ih]; omega
 
 theorem listU64_toValue_fits (v : ListU64) (h : v.ok) : Value.fits listU64Desc v.toValue = true := by
-  simp [ListU64.toValue, listU64Desc, Value.fits, Value.fieldsFit, allFit_u64, ListU64.ok] at h ⊢; exact h
+  simp [ListU64.toValue, listU64Desc, Value.fits, Value.fieldsFit, allFit_uint64, ListU64.ok] at h ⊢; exact h
 
 theorem listU64_toValue_injective (v w : ListU64) (h : v.toValue = w.toValue) : v = w := by
   obtain ⟨l⟩ := v; obtain ⟨l'⟩ := w
@@ -51,13 +51,13 @@ theorem listU64_toValue_injective (v w : ListU64) (h : v.toValue = w.toValue) : 
       simp only [List.map_cons, List.cons.injEq, Value.uint.injEq] at h
       rw [UInt64.toNat_inj.mp h.1, ih ys h.2]
 
-theorem allFit_u64_inv : ∀ (vs : List Value), Value.allFit (.uint 8) vs = true →
+theorem allFit_uint64_inv : ∀ (vs : List Value), Value.allFit (.uint 8) vs = true →
     ∃ l : List UInt64, l.map (fun x => Value.uint x.toNat) = vs
   | [], _ => ⟨[], rfl⟩
   | v :: vs, h => by
     simp only [Value.allFit, Bool.and_eq_true] at h
     obtain ⟨n, rfl, hn⟩ := fits_uint h.1
-    obtain ⟨l, hl⟩ := allFit_u64_inv vs h.2
+    obtain ⟨l, hl⟩ := allFit_uint64_inv vs h.2
     exact ⟨UInt64.ofNat n :: l, by simp [hl, Nat.mod_eq_of_lt (by simpa using hn)]⟩
 
 theorem listU64_toValue_surjective (v : Value) (h : Value.fits listU64Desc v = true) :
@@ -70,25 +70,25 @@ theorem listU64_toValue_surjective (v : Value) (h : Value.fits listU64Desc v = t
     obtain ⟨h1, -⟩ := hf
     obtain ⟨es, rfl, hlen, hall⟩ : ∃ es, v1 = .seq es ∧ es.length ≤ 16 ∧ Value.allFit (.uint 8) es = true := by
       cases v1 <;> simp [Value.fits] at h1 ⊢; exact h1
-    obtain ⟨l, rfl⟩ := allFit_u64_inv es hall
+    obtain ⟨l, rfl⟩ := allFit_uint64_inv es hall
     exact ⟨⟨l⟩, by simpa [ListU64.ok] using hlen, rfl⟩
 
 /-! ## Encoding -/
 
 /-- The element bytes: each element as 8 little-endian bytes. -/
-def u64Bytes : List UInt64 → Array UInt8
+def uint64Bytes : List UInt64 → Array UInt8
   | [] => #[]
-  | x :: xs => uintBytes 8 x.toNat ++ u64Bytes xs
+  | x :: xs => uintBytes 8 x.toNat ++ uint64Bytes xs
 
-theorem u64Bytes_size (l : List UInt64) : (u64Bytes l).size = 8 * l.length := by
+theorem uint64Bytes_size (l : List UInt64) : (uint64Bytes l).size = 8 * l.length := by
   induction l with
   | nil => rfl
-  | cons x xs ih => simp [u64Bytes, Spec.uintBytes_size, ih]; omega
+  | cons x xs ih => simp [uint64Bytes, Spec.uintBytes_size, ih]; omega
 
 /-- The encoding: the offset 4, then the elements. -/
-def listU64Encode (g : ListU64) : Array UInt8 := uintBytes 4 4 ++ u64Bytes g.l
+def listU64Encode (g : ListU64) : Array UInt8 := uintBytes 4 4 ++ uint64Bytes g.l
 
-theorem serializeEach_u64 (l : List UInt64) :
+theorem serializeEach_uint64 (l : List UInt64) :
     serializeEach (.uint 8) (l.map fun x => .uint x.toNat) = .ok (l.map fun x => uintBytes 8 x.toNat) := by
   induction l with
   | nil => simp [serializeEach]
@@ -110,10 +110,10 @@ theorem inlineParts_bodyWidth (l : List UInt64) : bodyWidth (((l.map fun x => ui
   induction l with
   | nil => rfl
   | cons x xs ih => rw [show ((((x :: xs).map fun x => uintBytes 8 x.toNat).map fun _ => true).zip ((x :: xs).map fun x => uintBytes 8 x.toNat)) = (true, uintBytes 8 x.toNat) :: (((xs.map fun x => uintBytes 8 x.toNat).map fun _ => true).zip (xs.map fun x => uintBytes 8 x.toNat)) from rfl]; simp only [bodyWidth, ih]
-theorem inlineParts_headOf (l : List UInt64) (s : Nat) : headOf s (((l.map fun x => uintBytes 8 x.toNat).map fun _ => true).zip (l.map fun x => uintBytes 8 x.toNat)) = u64Bytes l := by
+theorem inlineParts_headOf (l : List UInt64) (s : Nat) : headOf s (((l.map fun x => uintBytes 8 x.toNat).map fun _ => true).zip (l.map fun x => uintBytes 8 x.toNat)) = uint64Bytes l := by
   induction l with
   | nil => rfl
-  | cons x xs ih => rw [show ((((x :: xs).map fun x => uintBytes 8 x.toNat).map fun _ => true).zip ((x :: xs).map fun x => uintBytes 8 x.toNat)) = (true, uintBytes 8 x.toNat) :: (((xs.map fun x => uintBytes 8 x.toNat).map fun _ => true).zip (xs.map fun x => uintBytes 8 x.toNat)) from rfl]; simp only [headOf, ih, u64Bytes]
+  | cons x xs ih => rw [show ((((x :: xs).map fun x => uintBytes 8 x.toNat).map fun _ => true).zip ((x :: xs).map fun x => uintBytes 8 x.toNat)) = (true, uintBytes 8 x.toNat) :: (((xs.map fun x => uintBytes 8 x.toNat).map fun _ => true).zip (xs.map fun x => uintBytes 8 x.toNat)) from rfl]; simp only [headOf, ih, uint64Bytes]
 theorem inlineParts_bodiesOf (l : List UInt64) : bodiesOf (((l.map fun x => uintBytes 8 x.toNat).map fun _ => true).zip (l.map fun x => uintBytes 8 x.toNat)) = #[] := by
   induction l with
   | nil => rfl
@@ -125,18 +125,18 @@ theorem listU64_serialize (g : ListU64) (h : g.ok) : serialize listU64Desc g.toV
   have h32 : 8 * l.length < 2 ^ (8 * bytesPerOffset) := by simp [bytesPerOffset]; omega
   have h32' : 4 + 8 * l.length < 2 ^ (8 * bytesPerOffset) := by simp [bytesPerOffset]; omega
   simp only [listU64Desc, ListU64.toValue, serialize, serializeStruct, serializeFields, serializeSequence,
-    List.length_map, h, decide_true, if_true, serializeEach_u64]
+    List.length_map, h, decide_true, if_true, serializeEach_uint64]
   simp only [bind, Except.bind, pure, Except.pure, assemble, Desc.isFixed, Desc.fixedSize, Option.isSome_some]
   simp only [inlineParts_headWidth, inlineParts_bodyWidth, inlineParts_headOf, inlineParts_bodiesOf]
   simp only [Nat.add_zero,
     show ¬ (8 * l.length ≥ 2 ^ (8 * bytesPerOffset)) from Nat.not_le.mpr h32, if_false,
     Array.append_empty, Desc.isFixed, Desc.fixedSize, List.map_cons, List.map_nil, List.zip_cons_cons,
-    List.zip_nil_right, headWidth, bodyWidth, headOf, bodiesOf, Bool.false_eq_true, u64Bytes_size,
+    List.zip_nil_right, headWidth, bodyWidth, headOf, bodiesOf, Bool.false_eq_true, uint64Bytes_size,
     Array.size_append, Spec.uintBytes_size]
   have h4 : ¬ (4294967296 ≤ 4 + 8 * l.length) := by omega
-  simp [bodyWidth, headOf, bodiesOf, u64Bytes_size, h4, bytesPerOffset, listU64Encode]
+  simp [bodyWidth, headOf, bodiesOf, uint64Bytes_size, h4, bytesPerOffset, listU64Encode]
 
 theorem listU64_encode_size (g : ListU64) : (listU64Encode g).size = 4 + 8 * g.l.length := by
-  simp [listU64Encode, Spec.uintBytes_size, u64Bytes_size]
+  simp [listU64Encode, Spec.uintBytes_size, uint64Bytes_size]
 
 end Spec

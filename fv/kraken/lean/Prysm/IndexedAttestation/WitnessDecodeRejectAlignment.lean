@@ -30,7 +30,7 @@ namespace Prysm.IndexedAttestation.Witness.DecodeRejectAlignment
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "go_string._", .label "pad2", .label "pad3", .label "runtime.modelBumpPointer"]
 
-def tailLabels : Program := [.label "go_itab._errors.errorString_error", .label "pad_t0", .label "pad_t1", .label "pad_t2", .label "pad_t3", .label "pad_t4", .label "pad_t5", .label "pad_t6", .label "pad_t7", .label "pad_t8", .label "pad_t9", .label "pad_t10", .label "pad_t11", .label "pad_t12", .label "pad_t13", .label "pad_t14", .label "ssz.ErrIncorrectListSize", .label "pad_s0", .label "pad_s1", .label "pad_s2", .label "pad_s3", .label "pad_s4", .label "pad_s5", .label "pad_s6", .label "pad_s7", .label "pad_s8", .label "pad_s9", .label "pad_s10", .label "pad_s11", .label "pad_s12", .label "pad_s13", .label "pad_s14", .label "ssz.ErrListTooBig", .label "pad_u0", .label "pad_u1", .label "pad_u2", .label "pad_u3", .label "pad_u4", .label "pad_u5", .label "pad_u6", .label "pad_u7", .label "pad_u8", .label "pad_u9", .label "pad_u10", .label "pad_u11", .label "pad_u12", .label "pad_u13", .label "pad_u14", .label "runtime.staticuint64s"]
+def tailLabels : Program := [.label "go_itab._errors.errorString_error", .label "pad_after_itab_0", .label "pad_after_itab_1", .label "pad_after_itab_2", .label "pad_after_itab_3", .label "pad_after_itab_4", .label "pad_after_itab_5", .label "pad_after_itab_6", .label "pad_after_itab_7", .label "pad_after_itab_8", .label "pad_after_itab_9", .label "pad_after_itab_10", .label "pad_after_itab_11", .label "pad_after_itab_12", .label "pad_after_itab_13", .label "pad_after_itab_14", .label "ssz.ErrIncorrectListSize", .label "pad_after_incorrect_list_size_0", .label "pad_after_incorrect_list_size_1", .label "pad_after_incorrect_list_size_2", .label "pad_after_incorrect_list_size_3", .label "pad_after_incorrect_list_size_4", .label "pad_after_incorrect_list_size_5", .label "pad_after_incorrect_list_size_6", .label "pad_after_incorrect_list_size_7", .label "pad_after_incorrect_list_size_8", .label "pad_after_incorrect_list_size_9", .label "pad_after_incorrect_list_size_10", .label "pad_after_incorrect_list_size_11", .label "pad_after_incorrect_list_size_12", .label "pad_after_incorrect_list_size_13", .label "pad_after_incorrect_list_size_14", .label "ssz.ErrListTooBig", .label "pad_after_list_too_big_0", .label "pad_after_list_too_big_1", .label "pad_after_list_too_big_2", .label "pad_after_list_too_big_3", .label "pad_after_list_too_big_4", .label "pad_after_list_too_big_5", .label "pad_after_list_too_big_6", .label "pad_after_list_too_big_7", .label "pad_after_list_too_big_8", .label "pad_after_list_too_big_9", .label "pad_after_list_too_big_10", .label "pad_after_list_too_big_11", .label "pad_after_list_too_big_12", .label "pad_after_list_too_big_13", .label "pad_after_list_too_big_14", .label "runtime.staticuint64s"]
 
 def program : Program := dataLabels ++ unmarshalSSZ ++ ErrorfConvT64Model ++ tailLabels
 
@@ -85,7 +85,7 @@ theorem runs_alignment (zmms : RegZmms) (flags : StatusFlags) :
     (zeros 8) (zeros 8) (zeros 32) (zeros 40) (zeros 8) (zeros 8) rfl rfl rfl rfl rfl 8 rfl bumpHeap 8320 (fun _ => True)
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
-      witness_split [fmtMisaligned_length, fmtTooBig_length]
+      witness_split [formatMisaligned_length, formatTooBig_length]
       simp only [UInt64.toBitVec_ofNat] at H
       have H2 : ((Eq ((Int.toBytes 8 (66560#64).toInt).At 65540#64) ⋆ Eq ((zeros 8320).At 66560#64)) ⋆ (Eq ((zeros 4).At 65536#64) ⋆ Eq ((zeros 295).At 65548#64) ⋆ Eq ((zeros 8).At 65843#64) ⋆ Eq ((Int.toBytes 8 (65835#64).toInt).At 65851#64) ⋆ Eq ((Int.toBytes 8 (65904#64).toInt).At 65859#64) ⋆ Eq ((Int.toBytes 8 (65835#64).toInt).At 65867#64) ⋆ Eq ((Int.toBytes 8 (65904#64).toInt).At 65875#64) ⋆ Eq ((zeros 8).At 65883#64) ⋆ Eq ((Int.toBytes 8 (1#64).toInt).At 65891#64) ⋆ Eq ((zeros 5).At 65899#64) ⋆ Eq ((Int.toBytes 8 (65920#64).toInt).At 65904#64) ⋆ Eq ((Int.toBytes 8 (3#64).toInt).At 65912#64) ⋆ Eq (([101, 114, 114]).At 65920#64) ⋆ Eq ((zeros 189).At 65923#64) ⋆ Eq ((zeros 8).At 66112#64) ⋆ Eq ((zeros 8).At 66120#64) ⋆ Eq ((zeros 40).At 66128#64) ⋆ Eq ((zeros 56).At 66168#64) ⋆ Eq ((zeros 32).At 66224#64) ⋆ Eq ((zeros 32).At 66256#64) ⋆ Eq ((zeros 8).At 66288#64) ⋆ Eq ((zeros 8).At 66296#64) ⋆ Eq ((Int.toBytes 8 (0#64).toInt).At 66304#64) ⋆ Eq ((zeros 8).At 66312#64) ⋆ Eq ((zeros 8).At 66320#64) ⋆ Eq ((zeros 8).At 66328#64) ⋆ Eq ((Int.toBytes 8 (0#64).toInt).At 66336#64) ⋆ Eq ((zeros 8).At 66344#64) ⋆ Eq (([228, 0, 0, 0]).At 66352#64) ⋆ Eq ((zeros 204).At 66356#64) ⋆ Eq ((zeros 154496).At 74880#64) ⋆ Eq ((ElfData.PrysmTarget.formatAttestingIndicesTooBig).At 229376#64) ⋆ Eq ((zeros 7407).At 229449#64) ⋆ Eq ((ElfData.PrysmTarget.formatAttestingIndicesMisaligned).At 236856#64))) mem := by ecancel
       have H3 := sep_mono_left (P' := bumpHeap 8320)
@@ -93,14 +93,14 @@ theorem runs_alignment (zmms : RegZmms) (flags : StatusFlags) :
       apply sep_true
       simp only [start_state, ErrStr, ErrObj, ElfData.PrysmTarget.sszErrIncorrectListSize_addr_eq, ElfData.PrysmTarget.formatAttestingIndicesMisaligned_addr_eq, label_err_incorrect_list_size, label_error_string_itab, label_go_string,
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd,
-        BitVec.reduceSub, Nat.reduceAdd, u64_toBitVec_ofNat, offsetBytes, List.length_cons, List.length_nil]
+        BitVec.reduceSub, Nat.reduceAdd, uint64_toBitVec_ofNat, offsetBytes, List.length_cons, List.length_nil]
       rw [staticBox_of_lt (by decide), Mem.At_append_sep _ _ _ (by simp [Int.toBytes_length])]
       simp only [Data.staticuint64s_addr, label_staticuint64s, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd,
         BitVec.reduceMul, Int.toBytes_length]
       ecancel)
     (by show (0 : UInt64).toNat + 48 < (0x10300 : UInt64).toNat; decide)
     (by show 228 ≤ (UInt64.ofNat 229).toNat; decide)
-    (by show ((UInt64.ofNat 229).toNat - 228) % 8 ≠ 0; decide) (by rw [fmtMisaligned_length]; decide)
+    (by show ((UInt64.ofNat 229).toNat - 228) % 8 ≠ 0; decide) (by rw [formatMisaligned_length]; decide)
     (model_convT64 284 placed_at_284 labels_fresh_at_284 8) (model_errorf_decimal_wrap 284 placed_at_284 labels_fresh_at_284 bumpHeap _ _ 8))
     (fun _ h => ⟨h.1, h.2.1⟩)
 
@@ -115,7 +115,7 @@ theorem runs_overflow (zmms : RegZmms) (flags : StatusFlags) :
     (zeros 8) (zeros 8) (zeros 32) (zeros 40) (zeros 8) (zeros 8) rfl rfl rfl rfl rfl 8 rfl bumpHeap 8320 (fun _ => True)
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
-      witness_split [fmtMisaligned_length, fmtTooBig_length]
+      witness_split [formatMisaligned_length, formatTooBig_length]
       simp only [UInt64.toBitVec_ofNat] at H
       have H2 : ((Eq ((Int.toBytes 8 (66560#64).toInt).At 65540#64) ⋆ Eq ((zeros 8320).At 66560#64)) ⋆ (Eq ((zeros 4).At 65536#64) ⋆ Eq ((zeros 295).At 65548#64) ⋆ Eq ((zeros 8).At 65843#64) ⋆ Eq ((Int.toBytes 8 (65835#64).toInt).At 65851#64) ⋆ Eq ((Int.toBytes 8 (65904#64).toInt).At 65859#64) ⋆ Eq ((Int.toBytes 8 (65835#64).toInt).At 65867#64) ⋆ Eq ((Int.toBytes 8 (65904#64).toInt).At 65875#64) ⋆ Eq ((zeros 8).At 65883#64) ⋆ Eq ((Int.toBytes 8 (1#64).toInt).At 65891#64) ⋆ Eq ((zeros 5).At 65899#64) ⋆ Eq ((Int.toBytes 8 (65920#64).toInt).At 65904#64) ⋆ Eq ((Int.toBytes 8 (3#64).toInt).At 65912#64) ⋆ Eq (([101, 114, 114]).At 65920#64) ⋆ Eq ((zeros 189).At 65923#64) ⋆ Eq ((zeros 8).At 66112#64) ⋆ Eq ((zeros 8).At 66120#64) ⋆ Eq ((zeros 40).At 66128#64) ⋆ Eq ((zeros 56).At 66168#64) ⋆ Eq ((zeros 32).At 66224#64) ⋆ Eq ((zeros 32).At 66256#64) ⋆ Eq ((zeros 8).At 66288#64) ⋆ Eq ((zeros 8).At 66296#64) ⋆ Eq ((Int.toBytes 8 (0#64).toInt).At 66304#64) ⋆ Eq ((zeros 8).At 66312#64) ⋆ Eq ((zeros 8).At 66320#64) ⋆ Eq ((zeros 8).At 66328#64) ⋆ Eq ((Int.toBytes 8 (0#64).toInt).At 66336#64) ⋆ Eq ((zeros 8).At 66344#64) ⋆ Eq (([228, 0, 0, 0]).At 66352#64) ⋆ Eq ((zeros 204).At 66356#64) ⋆ Eq ((zeros 154496).At 74880#64) ⋆ Eq ((ElfData.PrysmTarget.formatAttestingIndicesTooBig).At 229376#64) ⋆ Eq ((zeros 7407).At 229449#64) ⋆ Eq ((ElfData.PrysmTarget.formatAttestingIndicesMisaligned).At 236856#64))) mem := by ecancel
       have H3 := sep_mono_left (P' := bumpHeap 8320)
@@ -132,7 +132,7 @@ theorem runs_overflow (zmms : RegZmms) (flags : StatusFlags) :
     (by show (0 : UInt64).toNat + 48 < (0x10300 : UInt64).toNat; decide)
     (by show 228 ≤ (UInt64.ofNat 16620).toNat; decide)
     (by show ((UInt64.ofNat 16620).toNat - 228) % 8 = 0; decide)
-    (by show 2048 < ((UInt64.ofNat 16620).toNat - 228) / 8; decide) (by rw [fmtTooBig_length]; decide)
+    (by show 2048 < ((UInt64.ofNat 16620).toNat - 228) / 8; decide) (by rw [formatTooBig_length]; decide)
     (model_convT64 284 placed_at_284 labels_fresh_at_284 8) (model_errorf_decimal_wrap 284 placed_at_284 labels_fresh_at_284 bumpHeap _ _ 8))
     (fun _ h => ⟨h.1, h.2.1⟩)
 

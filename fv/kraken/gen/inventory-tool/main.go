@@ -1,4 +1,4 @@
-// invtool dumps the sszgen 698c202 intermediate representation (IR) of every
+// inventory-tool dumps the sszgen 698c202 intermediate representation (IR) of every
 // type in one or more generator configs as JSON. It is read-only over its
 // inputs and calls the generator's own front end (config parser, TypeDefs,
 // ParseTypeDef, delegation interface set), so the IR is the one the renderer
@@ -9,7 +9,7 @@
 // It has its own go.mod here only so that the methodical-ssz root module does
 // not compile it. Usage:
 //
-//	invtool -tags <comma tags or empty> -out <file.json> <config.yaml>...
+//	inventory-tool -tags <comma tags or empty> -out <file.json> <config.yaml>...
 package main
 
 import (
@@ -178,7 +178,7 @@ func main() {
 	outPath := flag.String("out", "", "output JSON file")
 	flag.Parse()
 	if *outPath == "" || flag.NArg() == 0 {
-		die(fmt.Errorf("usage: invtool -tags T -out F config.yaml..."))
+		die(fmt.Errorf("usage: inventory-tool -tags T -out F config.yaml..."))
 	}
 	var err error
 	if set, err = interfaces.DefaultSet(); err != nil {

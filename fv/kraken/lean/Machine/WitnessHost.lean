@@ -89,8 +89,8 @@ theorem notLabel_of [Host] {k : Nat} {l : Label} (h : l ∉ programLabels (Host.
   apply h; apply mem_programLabels; rw [List.mem_iff_getElem?]
   exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
 
-theorem u64_toBitVec_zero : (UInt64.toBitVec 0) = 0#64 := rfl
-theorem u64_toBitVec_ofNat (n : Nat) : (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := rfl
+theorem uint64_toBitVec_zero : (UInt64.toBitVec 0) = 0#64 := rfl
+theorem uint64_toBitVec_ofNat (n : Nat) : (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := rfl
 
 /-- Split `H : Eq ((block ..).At a) m` into one `Eq (chunk.At addr)` per chunk and
 normalize the addresses; the terms are the length hypotheses of the chunks.

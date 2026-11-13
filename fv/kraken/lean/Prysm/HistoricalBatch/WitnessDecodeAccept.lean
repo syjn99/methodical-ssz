@@ -58,8 +58,8 @@ theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10000 :=
 theorem label_write_barrier : label "runtime.writeBarrier" = 0x10008 :=
   mk_label program _ 8 _ (by simp [program, dataLabels]) (by decide)
 
-/-- The text of `Prysm.SyncCommittee.Witness.DecodeAccept.u8_ne_slice` (that module cannot be imported: it declares its own `Host` instance). -/
-theorem u8_ne_slice : ElfData.PrysmTarget.typeUint8_addr ≠ ElfData.PrysmTarget.typeUint8Slice_addr := by
+/-- The text of `Prysm.SyncCommittee.Witness.DecodeAccept.uint8_ne_slice` (that module cannot be imported: it declares its own `Host` instance). -/
+theorem uint8_ne_slice : ElfData.PrysmTarget.typeUint8_addr ≠ ElfData.PrysmTarget.typeUint8Slice_addr := by
   simp only [ElfData.PrysmTarget.typeUint8_addr, ElfData.PrysmTarget.typeUint8Slice_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega
 
@@ -122,7 +122,7 @@ theorem runs (brs srs : List (List UInt8)) (oP1 oP2 : List UInt8) (hbrs : brs.le
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
       exact H2)
     (by simp [initial_state]) rfl (by omega)
-    (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1 191 placed_at_191 no_label_before_191 _ u8_ne_slice) (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24 191 placed_at_191 no_label_before_191 labels_fresh_at_191)
+    (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1 191 placed_at_191 no_label_before_191 _ uint8_ne_slice) (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24 191 placed_at_191 no_label_before_191 labels_fresh_at_191)
     (model_memmove 207 placed_at_207 labels_fresh_at_207 _))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 

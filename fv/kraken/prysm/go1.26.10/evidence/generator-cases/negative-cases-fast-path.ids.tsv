@@ -11,10 +11,10 @@ g6-e1-stmt-other-hand	eth1-data-encode-generated-statement-statement-type-eth1-d
 g6-ir-vb-goff	validator-balance-encode-generated-fast-statement-v1-16-to-24
 g6-ir-dm-ssz-off	deposit-message-encode-generated-fast-statement-b1-48-to-40
 g6-ir-pw-order	pending-partial-withdrawal-encode-generated-fast-statement-v1-v1-to-v2
-g6-vb-kind-fields	validator-balance-encode-generated-fast-kind-statement-u64-u64-to-bytes-32
+g6-vb-kind-fields	validator-balance-encode-generated-fast-kind-statement-uint64-uint64-to-bytes-32
 g6-vb-kind-pc	validator-balance-encode-generated-field-0-kind-statement-8-to-9
 g6-cp-kind-layout	checkpoint-encode-generated-fast-kind-statement-prysm-checkpoint-to-eth1-data
-g6-bh-kind-fields	beacon-block-header-encode-generated-epilogue-kind-statement-u64-32-to-48
+g6-bh-kind-fields	beacon-block-header-encode-generated-epilogue-kind-statement-uint64-32-to-48
 g6-vb-f1-code-store	validator-balance-encode-generated-field-1-code-mov-0x8-rdx-rbx-1-to-0x10-rdx-rbx-1
 g6-dm-f0-code-len	deposit-message-encode-generated-field-0-code-cmpq-0x30-to-0x20
 g6-hs-epi-code-ft	historical-summary-encode-generated-epilogue-code-lea-0x60-rsp-to-0x58-rsp

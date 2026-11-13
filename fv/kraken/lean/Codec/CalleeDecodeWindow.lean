@@ -4,15 +4,15 @@ import Codec.NopWindow
 /-!
 # The callee-decoder call block over a window (padding anywhere)
 
-`calldec_seg_window` is `calldec_seg` (`Codec/CalleeDecode.lean`) with the dense template hypothesis replaced by a window:
-`eraseNop q = callDec fn lok`. A `nop` may stand before the `callq`, between the `callq` and the `test`
+`call_decode_segment_window` is `call_decode_segment` (`Codec/CalleeDecode.lean`) with the dense template hypothesis replaced by a window:
+`eraseNop q = callDecode fn lok`. A `nop` may stand before the `callq`, between the `callq` and the `test`
 (PendingConsolidation.TargetIndex, a field that the frozen generator missed on the hold-out types PendingConsolidation and SyncCommitteeMessage) or between `test` and `je`. `jc` is the index of the
 `callq` (`j + nonNopIndex q 0`): the return slot holds the address of directive `jc + 1`, which is the nop when
-there is one. Callee specification: `U64CalleeAccept fn`, the existing form, unchanged. The entry registers
+there is one. Callee specification: `Uint64CalleeAccept fn`, the existing form, unchanged. The entry registers
 (rax = destination, rbx = source, rcx = 8) are fixed by the Go register ABI of that specification; the
 set-up that establishes them is free (`Codec/WindowSteps.lean`).
 
-`calldec_seg_dense`: the dense lemma `calldec_seg` is the instance `q := callDec fn lok` (statement equal).
+`call_decode_segment_dense`: the dense lemma `call_decode_segment` is the instance `q := callDecode fn lok` (statement equal).
 -/
 
 open Machine Runtime
@@ -25,12 +25,12 @@ variable [Host]
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- **Call block of a callee-decoder field over a window**: the window `q` at `j` holds `callq fn; test
-%rax,%rax; je lok` and nops; `lok:` at `j2`. Statement of `calldec_seg` with the return address
+%rax,%rax; je lok` and nops; `lok:` at `j2`. Statement of `call_decode_segment` with the return address
 `addrOf (jc + 1)`, `jc` = the index of the `callq`. -/
-theorem calldec_seg_window (fn lok : String) (q : Program) (j jc j2 : Nat)
-    (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = callDec fn lok) (hjc : j + nonNopIndex q 0 = jc)
-    (hB : (callDecContinuationLabel lok).IsInfixAt Host.prog j2)
-    (hl : label lok = Host.addrOf j2) (hC : U64CalleeAccept fn)
+theorem call_decode_segment_window (fn lok : String) (q : Program) (j jc j2 : Nat)
+    (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = callDecode fn lok) (hjc : j + nonNopIndex q 0 = jc)
+    (hB : (callDecodeContinuationLabel lok).IsInfixAt Host.prog j2)
+    (hl : label lok = Host.addrOf j2) (hC : Uint64CalleeAccept fn)
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -55,7 +55,7 @@ theorem calldec_seg_window (fn lok : String) (q : Program) (j jc j2 : Nat)
   simp only at hrsp hrbp hr14 hrax hrbx hrcx h_mem ⊢
   subst rsp rbp r14 rcx hRet hFp hS2 hrax hrbx hjc
   window_skip_leading_nops hq
-  window_step_directive hq he callDec 0
+  window_step_directive hq he callDecode 0
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
@@ -75,26 +75,26 @@ theorem calldec_seg_window (fn lok : String) (q : Program) (j jc j2 : Nat)
   subst rax2 rbx2 rsp2 rbp2 r142
   rw [show sp - 8 - 8 = sp - 16 by bv_omega, show sp - 8 + 16 = sp + 8 by bv_omega] at Hm2
   window_skip_nops hq he 0
-  window_step_directive hq he callDec 1
+  window_step_directive hq he callDecode 1
   intro _
   window_skip_nops hq he 1
-  window_step_directive hq he callDec 2
+  window_step_directive hq he callDecode 2
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   rw [hl]
-  step_directive hB callDecContinuationLabel 0
+  step_directive hB callDecodeContinuationLabel 0
   apply Eventually.done
   exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, by ecancel⟩
 
-/-- The dense lemma `calldec_seg` is the instance of `calldec_seg_window` (same statement). -/
-theorem calldec_seg_dense : type_of% (@calldec_seg ‹Host›) :=
-  fun fn lok j j2 hA hB hl hC => calldec_seg_window fn lok _ j j j2 hA rfl rfl hB hl hC
+/-- The dense lemma `call_decode_segment` is the instance of `call_decode_segment_window` (same statement). -/
+theorem call_decode_segment_dense : type_of% (@call_decode_segment ‹Host›) :=
+  fun fn lok j j2 hA hB hl hC => call_decode_segment_window fn lok _ j j j2 hA rfl rfl hB hl hC
 
 set_option linter.unusedVariables false in
 /-- Call-block statement kind over a window: start `k + j`, `callq` at `k + jc`, `lok:` at `k + j2`. -/
-abbrev callDecSegKindWindow (C : Program) (fn lok : String) (j jc j2 : Nat) : Prop :=
-  ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k) (hC : U64CalleeAccept fn)
+abbrev callDecodeSegmentKindWindow (C : Program) (fn lok : String) (j jc j2 : Nat) : Prop :=
+  ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k) (hC : Uint64CalleeAccept fn)
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -116,18 +116,18 @@ abbrev callDecSegKindWindow (C : Program) (fn lok : String) (j jc j2 : Nat) : Pr
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + j)⟩
 
-/-- `callDecSegKindWindow` follows from `calldec_seg_window` and the window facts of an instance. -/
-theorem callDecSegKindWindow_of (C : Program) (fn lok : String) (j jc j2 : Nat) (q : Program)
-    (hq : ∀ k, C.IsInfixAt Host.prog k → q.IsInfixAt Host.prog (k + j)) (he : eraseNop q = callDec fn lok)
+/-- `callDecodeSegmentKindWindow` follows from `call_decode_segment_window` and the window facts of an instance. -/
+theorem callDecodeSegmentKindWindow_of (C : Program) (fn lok : String) (j jc j2 : Nat) (q : Program)
+    (hq : ∀ k, C.IsInfixAt Host.prog k → q.IsInfixAt Host.prog (k + j)) (he : eraseNop q = callDecode fn lok)
     (hjc : j + nonNopIndex q 0 = jc)
-    (hB : ∀ k, C.IsInfixAt Host.prog k → (callDecContinuationLabel lok).IsInfixAt Host.prog (k + j2))
+    (hB : ∀ k, C.IsInfixAt Host.prog k → (callDecodeContinuationLabel lok).IsInfixAt Host.prog (k + j2))
     (hl : ∀ k, C.IsInfixAt Host.prog k → LabelsFresh C k → label lok = Host.addrOf (k + j2)) :
-    callDecSegKindWindow C fn lok j jc j2 :=
-  fun k hk hf hC => calldec_seg_window fn lok q (k + j) (k + jc) (k + j2) (hq k hk) he (by omega) (hB k hk)
+    callDecodeSegmentKindWindow C fn lok j jc j2 :=
+  fun k hk hf hC => call_decode_segment_window fn lok q (k + j) (k + jc) (k + j2) (hq k hk) he (by omega) (hB k hk)
     (hl k hk hf) hC
 
-/-- The dense kind `callDecSegKind` is the `jc = j` case of the window kind. -/
-theorem callDecSegKind_eq_window (C : Program) (fn lok : String) (j j2 : Nat) :
-    callDecSegKind C fn lok j j2 = callDecSegKindWindow C fn lok j j j2 := rfl
+/-- The dense kind `callDecodeSegmentKind` is the `jc = j` case of the window kind. -/
+theorem callDecodeSegmentKind_eq_window (C : Program) (fn lok : String) (j j2 : Nat) :
+    callDecodeSegmentKind C fn lok j j2 = callDecodeSegmentKindWindow C fn lok j j j2 := rfl
 
 end Codec

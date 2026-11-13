@@ -6,14 +6,14 @@ import Codec.DecoderHeadEpilogue
 
 The prologue of every development decoder (directives 0–10) is the same up to the frame size `F`, the
 displacement `dB` of the first rbx spill, the SSZ size `sz` and the labels. The `--field-segments` and `--call-segments` methods had one head lemma for
-the frame `0x20` (`Codec.dec_head_seg`) and one hand lemma per call-field type (`Prysm.PendingPartialWithdrawal.Decode.head`, `Prysm.BeaconBlockHeader.Decode.head_to_arguments`,
+the frame `0x20` (`Codec.decode_head_segment`) and one hand lemma per call-field type (`Prysm.PendingPartialWithdrawal.Decode.head`, `Prysm.BeaconBlockHeader.Decode.head_to_arguments`,
 `Prysm.SyncCommitteeMessage.Decode.head_to_arguments`, `Prysm.PendingConsolidation.Decode.head`; epilogues
 `Prysm.PendingPartialWithdrawal.Decode.epilogue`, `Prysm.PendingConsolidation.Decode.epilogue`). Here:
 
-* `dec_prologue_seg fn l0 lmore lerr F dB sz` — the prologue over a window (`Codec/NopWindow.lean`; the `nop` at directive
+* `decode_prologue_segment fn l0 lmore lerr F dB sz` — the prologue over a window (`Codec/NopWindow.lean`; the `nop` at directive
   8 is a window nop), with `F`, `dB`, `sz` symbolic; every register except rsp / rbp is kept (register clause);
 * `step_nil_check rB` — the step `test %al,(%rB)`;
-* `dec_return_seg` — `pop %rbp; retq` over a window.
+* `decode_return_segment` — `pop %rbp; retq` over a window.
 The spills after the prologue (2–3, order differs per type) are `step_store` steps; the epilogue reloads and the
 `add $F,%rsp` are `step_load_*` / `step_add_immediate` steps (`Codec/WindowSteps.lean`). `Prysm/SyncCommitteeMessage/DecoderPrologueInstances.lean` re-proves the per-type hand
 lemmas with their committed statements from these. No runtime contract is used.
@@ -48,7 +48,7 @@ def decoderPrologue (fn l0 lmore lerr : String) (F dB sz : Int64) : Program :=
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.nz lerr))]
 
 /-- `pop %rbp; retq`. -/
-def decRet : Program :=
+def decodeRet : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.pop (RegOrMem.reg (Reg.low Reg64.rbp Width.W64)))),
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 Operation.ret)]
@@ -73,7 +73,7 @@ set_option maxRecDepth 100000 in
 /-- **Prologue segment, frame-parametric**: the window `q` at `j` holds `decoderPrologue …` and nops. With `rcx = sz`
 and the stack guard below rsp: rsp = `sp = rsp₀ − 8 − F`, rbp = `rsp₀ − 8`, the caller's rbp is saved at
 `rsp₀ − 8`, rbx is spilled to `aS = sp + dB`; every register except rsp and rbp is kept. -/
-theorem dec_prologue_seg (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Program) (j e : Nat)
+theorem decode_prologue_segment (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Program) (j e : Nat)
     (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = decoderPrologue fn l0 lmore lerr F dB sz) (hend : j + q.length = e)
     (s : MachineData) (ra guard : UInt64) (sp aS : BitVec 64)
     (hsp : s.regs.rsp.toBitVec - 8 - F.toBitVec = sp) (hS : sp + dB.toBitVec = aS)
@@ -151,7 +151,7 @@ set_option maxRecDepth 100000 in
 /-- **Return segment**: the window `q` at `j` holds `pop %rbp; retq` and nops. With rsp = `sp`, the saved frame
 pointer `fp0` at `sp` and the return address `ra` at `aRa = sp + 8`: the pc is `ra`, rsp = `sp + 16`,
 rbp = `fp0`; every other register and the memory are kept. -/
-theorem dec_return_seg (q : Program) (j : Nat) (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = decRet)
+theorem decode_return_segment (q : Program) (j : Nat) (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = decodeRet)
     (sp aRa : BitVec 64) (hRa : sp + 8 = aRa) (fp0 ra : UInt64) (R : DataMem → Prop)
     (s : MachineData) (hrsp : s.regs.rsp = { toBitVec := sp })
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 fp0.toBitVec.toInt).At sp)
@@ -166,12 +166,12 @@ theorem dec_return_seg (q : Program) (j : Nat) (hq : q.IsInfixAt Host.prog j) (h
   simp only at hrsp h_mem ⊢
   subst rsp hRa
   window_skip_leading_nops hq
-  window_step_directive hq he decRet 0
+  window_step_directive hq he decodeRet 0
   apply load_step_at _ _ sp _ _ (Int.toBytes 8 fp0.toBitVec.toInt) _ _ (by first | rfl | segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   window_skip_nops hq he 0
-  window_step_directive hq he decRet 1
+  window_step_directive hq he decodeRet 1
   apply load_step_at _ _ (sp + 8) _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by first | rfl | segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
@@ -206,7 +206,7 @@ theorem step_nil_check (rB : Reg64) (q : Program) (j e : Nat) (hq : q.IsInfixAt 
   window_skip_leading_nops hq
   have hd : [instrNilCheck rB].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
   unfold instrNilCheck at hd
-  apply Machine.estep hd
+  apply Machine.eventually_step_directive hd
   unfold_step_keep_registers
   apply load_step_at _ _ (s.regs.get64 rB) _ _ bs _ _ (by first | rfl | simp) hm (by exact hbs)
   unfold_step_keep_registers

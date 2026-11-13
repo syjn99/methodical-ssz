@@ -6,7 +6,7 @@ import Prysm.Checkpoint.EncodeFastPathKindInstances
 import Prysm.Eth1Data.EncodeFastPathKindInstances
 
 /-!
-# Ties of `encFastPathKindAnyFrame` to the three hand-written encoder fast-path statements
+# Ties of `encodeFastPathKindAnyFrame` to the three hand-written encoder fast-path statements
 
 - BeaconBlockHeader (`Encode.fast_path`) and Eth1Data (`Prysm.Eth1Data.Encode.fast_path`): the declared type of
   the committed theorem is the kind instance, `rfl` at default transparency (the recursive definitions of
@@ -50,12 +50,12 @@ variable [Host]
 
 /-- BeaconBlockHeader: the declared type of the hand theorem is the kind instance. -/
 theorem Encode.fast_path_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Encode.fast_path h)
-    = @encFastPathKindAnyFrame h Prysm.BeaconBlockHeader.Code.marshalSSZTo encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32] := by
+    = @encodeFastPathKindAnyFrame h Prysm.BeaconBlockHeader.Code.marshalSSZTo encodeLayout [.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32] := by
   intro h; rfl
 
 /-- Eth1Data: the declared type of the hand theorem is the kind instance. -/
 theorem _root_.Prysm.Eth1Data.Encode.fast_path_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.Eth1Data.Encode.fast_path h)
-    = @encFastPathKindAnyFrame h Prysm.Eth1Data.Code.marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .u64, .bytes 32] := by
+    = @encodeFastPathKindAnyFrame h Prysm.Eth1Data.Code.marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .uint64, .bytes 32] := by
   intro h; rfl
 
 end Prysm.BeaconBlockHeader

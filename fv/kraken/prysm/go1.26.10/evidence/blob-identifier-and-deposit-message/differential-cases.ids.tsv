@@ -1,0 +1,13 @@
+# differential case ids: earlier id (the run records name it)	present id
+bi-accept-0	blob-identifier-accept-0
+bi-accept-1	blob-identifier-accept-1
+bi-accept-2	blob-identifier-accept-2
+bi-size-0	blob-identifier-size-0
+bi-size-39	blob-identifier-size-39
+bi-size-41	blob-identifier-size-41
+dm-accept-0	deposit-message-accept-0
+dm-accept-1	deposit-message-accept-1
+dm-accept-2	deposit-message-accept-2
+dm-size-0	deposit-message-size-0
+dm-size-87	deposit-message-size-87
+dm-size-89	deposit-message-size-89

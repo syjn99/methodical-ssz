@@ -2,7 +2,7 @@ import Prysm.Checkpoint.CapacityReservedEncodeGrowFirstSite
 import Prysm.Checkpoint.EncodeCover
 
 /-!
-# OPT-R1 reserve encoder against EthLib: spec corollary and the two covers
+# Reserve encoder of the capacity-reserved build against EthLib: spec corollary and the two covers
 
 - `Encode.fast_path_spec`: the conclusion of the baseline `Prysm.Checkpoint.Encode.fast_path_spec`, word for word, for the
   new code constant `marshalSSZTo` (fast path, `L + 40 ≤ C`). Its premises are the new frame (spills at
@@ -62,7 +62,7 @@ theorem Encode.fast_path_spec (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k
     guard hpre fp s1 s2 s3 l16 l24 l32 t40 t30 rslot hfp h1 h2 h3 hl16 hl24 hl32 ht40 ht30 hrs R S scratch hsc h_mem
     hguard hcap hcap63 hmm) (fun st ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, _, _, _, t, u, scr, _, _, _, hm⟩ =>
       ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, ?_⟩)
-  rw [SszValue.enc_toList,
+  rw [SszValue.encode_toList,
     at_app _ g.root.toList (b := s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8) (by rw [he8]; rfl) (by simp [he8]), ← Std.ExtHashMap.sep_assoc]
   generalize (uintBytes 8 g.epoch.toNat).toList = E8 at hm ⊢
   generalize g.root.toList = Rt at hm ⊢
@@ -109,7 +109,7 @@ theorem Encode.cover (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
             st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨SszValue.encode g, SszValue.serialize_eq g, ?_⟩
-  rw [SszValue.enc_toList]
+  rw [SszValue.encode_toList]
   have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   generalize (uintBytes 8 g.epoch.toNat).toList = e8 at *

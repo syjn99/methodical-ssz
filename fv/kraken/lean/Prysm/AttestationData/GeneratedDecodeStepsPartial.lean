@@ -13,7 +13,7 @@ UNCOVERED-JSON: [{"field": "Source", "reason": "field kind pointer (*Checkpoint,
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
 /-! Step chain fields (machine-readable, read by `kindcheck.py`):
-FIELDS-JSON: [{"field": "Slot", "theorems": ["Decode.generated_step_directive_15", "Decode.generated_step_directive_16", "Decode.generated_step_Slot_call"]}, {"field": "CommitteeIndex", "theorems": ["Decode.generated_step_directive_48", "Decode.generated_step_directive_49", "Decode.generated_step_directive_50", "Decode.generated_step_directive_51", "Decode.generated_step_directive_52", "Decode.generated_step_directive_53", "Decode.generated_step_directive_54", "Decode.generated_step_CommitteeIndex_call"]}, {"field": "BeaconBlockRoot", "theorems": ["Decode.generated_step_BeaconBlockRoot_seg", "Decode.generated_step_directive_112", "Decode.generated_step_directive_113", "Decode.generated_step_directive_120", "Decode.generated_step_directive_121"]}]
+FIELDS-JSON: [{"field": "Slot", "theorems": ["Decode.generated_step_directive_15", "Decode.generated_step_directive_16", "Decode.generated_step_Slot_call"]}, {"field": "CommitteeIndex", "theorems": ["Decode.generated_step_directive_48", "Decode.generated_step_directive_49", "Decode.generated_step_directive_50", "Decode.generated_step_directive_51", "Decode.generated_step_directive_52", "Decode.generated_step_directive_53", "Decode.generated_step_directive_54", "Decode.generated_step_CommitteeIndex_call"]}, {"field": "BeaconBlockRoot", "theorems": ["Decode.generated_step_BeaconBlockRoot_segment", "Decode.generated_step_directive_112", "Decode.generated_step_directive_113", "Decode.generated_step_directive_120", "Decode.generated_step_directive_121"]}]
 -/
 
 open Machine Runtime Prysm.AttestationData.Code
@@ -58,7 +58,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Slot`: call block over the window 17–19, `callq` at 17, continuation label at 47. -/
 theorem Decode.generated_step_Slot_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ")
+    ∀ (hC : Uint64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -80,15 +80,15 @@ theorem Decode.generated_step_Slot_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt H
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 17)⟩ := by
   have hq := Codec.window_infix_at hk 17 3
-  have he : Codec.eraseNop ((unmarshalSSZ.drop 17).take 3) = Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7" := by rfl
+  have he : Codec.eraseNop ((unmarshalSSZ.drop 17).take 3) = Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7" := by rfl
   have hjc : k + 17 + Codec.nonNopIndex ((unmarshalSSZ.drop 17).take 3) 0 = k + 17 := by rfl
-  have hB := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7") 47 hk
-    (by simp only [unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7") 47 hk
+    (by simp only [unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 47)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.calldec_seg_window _ _ _ (k + 17) (k + 17) (k + 47) hq he hjc hB hl
-theorem Decode.generated_step_Slot_call_kind : ∀ (h : Host), type_of% (@Decode.generated_step_Slot_call h) = @Codec.callDecSegKindWindow h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7" 17 17 47 := by
+  with_reducible exact Codec.call_decode_segment_window _ _ _ (k + 17) (k + 17) (k + 47) hq he hjc hB hl
+theorem Decode.generated_step_Slot_call_kind : ∀ (h : Host), type_of% (@Decode.generated_step_Slot_call h) = @Codec.callDecodeSegmentKindWindow h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7" 17 17 47 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -215,7 +215,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `CommitteeIndex`: call block over the window 55–57, `callq` at 55, continuation label at 85. -/
 theorem Decode.generated_step_CommitteeIndex_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ")
+    ∀ (hC : Uint64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -237,21 +237,21 @@ theorem Decode.generated_step_CommitteeIndex_call (k : Nat) (hk : unmarshalSSZ.I
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 55)⟩ := by
   have hq := Codec.window_infix_at hk 55 3
-  have he : Codec.eraseNop ((unmarshalSSZ.drop 55).take 3) = Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167" := by rfl
+  have he : Codec.eraseNop ((unmarshalSSZ.drop 55).take 3) = Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167" := by rfl
   have hjc : k + 55 + Codec.nonNopIndex ((unmarshalSSZ.drop 55).take 3) 0 = k + 55 := by rfl
-  have hB := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167") 85 hk
-    (by simp only [unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167") 85 hk
+    (by simp only [unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 85)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.calldec_seg_window _ _ _ (k + 55) (k + 55) (k + 85) hq he hjc hB hl
-theorem Decode.generated_step_CommitteeIndex_call_kind : ∀ (h : Host), type_of% (@Decode.generated_step_CommitteeIndex_call h) = @Codec.callDecSegKindWindow h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167" 55 55 85 := by
+  with_reducible exact Codec.call_decode_segment_window _ _ _ (k + 55) (k + 55) (k + 85) hq he hjc hB hl
+theorem Decode.generated_step_CommitteeIndex_call_kind : ∀ (h : Host), type_of% (@Decode.generated_step_CommitteeIndex_call h) = @Codec.callDecodeSegmentKindWindow h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167" 55 55 85 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `BeaconBlockRoot` (32-byte vector, SSZ offset 16, Go offset 24): decode segment over the windows 86–94 and 100–111; receiver in rdx after makeslice, in rdx after memmove (`callq` at 106). -/
-theorem Decode.generated_step_BeaconBlockRoot_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_BeaconBlockRoot_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + (128 : Int64).toBitVec = aR) (hB' : sp + (136 : Int64).toBitVec = aB) (hS : sp + (104 : Int64).toBitVec = aS)
@@ -289,17 +289,17 @@ theorem Decode.generated_step_BeaconBlockRoot_seg (k : Nat) (hk : unmarshalSSZ.I
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 86)⟩ := by
   have hqA := Codec.window_infix_at hk 86 9
-  have heA : Codec.eraseNop ((unmarshalSSZ.drop 86).take 9) = Codec.bytesDecHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac" 128 32 40 := by rfl
+  have heA : Codec.eraseNop ((unmarshalSSZ.drop 86).take 9) = Codec.bytesDecodeHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac" 128 32 40 := by rfl
   have hqB := Codec.window_infix_at hk 100 12
-  have heB : Codec.eraseNop ((unmarshalSSZ.drop 100).take 12) = Codec.bytesDecMidRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1f3" 128 136 104 24 32 40 16 := by rfl
+  have heB : Codec.eraseNop ((unmarshalSSZ.drop 100).take 12) = Codec.bytesDecodeMiddleRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1f3" 128 136 104 24 32 40 16 := by rfl
   have hjl : k + 100 + Codec.nonNopIndex ((unmarshalSSZ.drop 100).take 12) 0 = k + 100 := by rfl
   have hl := Machine.label_at' hk hf (j := 100)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hjm : k + 100 + Codec.nonNopIndex ((unmarshalSSZ.drop 100).take 12) 6 = k + 106 := by rfl
   have hend : k + 100 + ((unmarshalSSZ.drop 100).take 12).length = k + 112 := by rfl
-  with_reducible exact Codec.bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 86) (k + 100) (k + 100) (k + 106) (k + 112) hqA heA hqB heB hjl hl hjm hend
-theorem Decode.generated_step_BeaconBlockRoot_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_step_BeaconBlockRoot_seg h) = @Codec.bytesDecSegKindWindow h 32 unmarshalSSZ Reg64.rdx 86 106 112 128 136 104 24 32 40 16 := by
+  with_reducible exact Codec.bytes_decode_segment_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 86) (k + 100) (k + 100) (k + 106) (k + 112) hqA heA hqB heB hjl hl hjm hend
+theorem Decode.generated_step_BeaconBlockRoot_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_step_BeaconBlockRoot_segment h) = @Codec.bytesDecodeSegmentKindWindow h 32 unmarshalSSZ Reg64.rdx 86 106 112 128 136 104 24 32 40 16 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in

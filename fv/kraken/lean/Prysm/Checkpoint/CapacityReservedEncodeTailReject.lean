@@ -1,6 +1,6 @@
 import Prysm.Checkpoint.CapacityReservedEncodeTail
 
-/-! # OPT-R1 reserve encoder from `L_e5`: the reject tail (`len(Root) ≠ 32`). See `Prysm.Checkpoint.CapacityReservedEncodeTail`. -/
+/-! # Reserve encoder of the capacity-reserved build from `L_e5`: the reject tail (`len(Root) ≠ 32`). See `Prysm.Checkpoint.CapacityReservedEncodeTail`. -/
 
 open Machine Runtime Prysm.Checkpoint.CapacityReserved.Code
 variable [Host]

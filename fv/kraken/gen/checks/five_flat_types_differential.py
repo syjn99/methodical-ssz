@@ -5,7 +5,7 @@ cases).
 
   five_flat_types_differential.py cases <cases.json>                      write the cases
   five_flat_types_differential.py check <cases.json> <go-out.json> <result.json>
-The Go program is `prysm/go1.26.10/evidence/five-flat-types/g5ccheck-main.go.txt`, run natively with Go 1.26.10 through the gate
+The Go program is `prysm/go1.26.10/evidence/five-flat-types/differential-main.go.txt`, run natively with Go 1.26.10 through the gate
 with `go run -overlay` in the temporary Prysm tree (read only). This is a Go-semantics check on the host
 (linux/arm64), not an execution of the amd64 ELF. Every expected value is computed here, independently of the
 code under test, from consensus-specs: HistoricalSummary = Root block_summary_root ++ Root state_summary_root;
@@ -20,22 +20,24 @@ import sys
 
 VALS = [(0, 0), (0x0123456789ABCDEF, 7), (2 ** 64 - 1, 2 ** 64 - 1)]
 ROOTS = [(bytes(32), bytes(32)), (bytes(range(32)), b"\x22" * 32), (b"\xff" * 32, b"\xff" * 32)]
+# the case id prefix of each operation (the Go type in kebab case)
+CASE_PREFIX = {"HistoricalSummary.UnmarshalSSZ": "historical-summary", "SigningData.UnmarshalSSZ": "signing-data", "SyncAggregatorSelectionData.UnmarshalSSZ": "sync-aggregator-selection-data", "ValidatorBalance.UnmarshalSSZ": "validator-balance", "VoluntaryExit.UnmarshalSSZ": "voluntary-exit"}
 
 
 def cases():
     cs = []
-    for op in ("hs_u", "sd_u"):
+    for op in ("HistoricalSummary.UnmarshalSSZ", "SigningData.UnmarshalSSZ"):
         for i, (a, b) in enumerate(ROOTS):
-            cs.append({"id": f"{op[:2]}-accept-{i}", "op": op, "in": (a + b).hex(),
+            cs.append({"id": f"{CASE_PREFIX[op]}-accept-{i}", "op": op, "in": (a + b).hex(),
                        "exp": {"err": "", "bytes": [a.hex(), b.hex()], "lens": [32, 32], "caps": [32, 32]}})
         for n in (0, 63, 65):
-            cs.append({"id": f"{op[:2]}-size-{n}", "op": op, "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
-    for op in ("sa_u", "vb_u", "ve_u"):
+            cs.append({"id": f"{CASE_PREFIX[op]}-size-{n}", "op": op, "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
+    for op in ("SyncAggregatorSelectionData.UnmarshalSSZ", "ValidatorBalance.UnmarshalSSZ", "VoluntaryExit.UnmarshalSSZ"):
         for i, (a, b) in enumerate(VALS):
-            cs.append({"id": f"{op[:2]}-accept-{i}", "op": op, "in": (struct.pack("<Q", a) + struct.pack("<Q", b)).hex(),
+            cs.append({"id": f"{CASE_PREFIX[op]}-accept-{i}", "op": op, "in": (struct.pack("<Q", a) + struct.pack("<Q", b)).hex(),
                        "exp": {"err": "", "u64s": [a, b]}})
         for n in (0, 15, 17):
-            cs.append({"id": f"{op[:2]}-size-{n}", "op": op, "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
+            cs.append({"id": f"{CASE_PREFIX[op]}-size-{n}", "op": op, "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
     return cs
 
 

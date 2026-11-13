@@ -221,8 +221,8 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
   rw [show rsp.toBitVec - 176 - 8#64 = rsp.toBitVec - 184 by indexed_attestation_addr]
   refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 79 + 1)) av1 ity msg hb1 stk1 (sp1 ++ spl.drop 8)
     rax1.toBitVec Q e1.toBitVec esp _
-    (by rw [fmtTooBig_length]; rfl) (by first | rfl | decide) (by first | rfl | decide)
-    hity hbox1 hstk1 (by simp [hsp1, hspl]) (by rw [fmtTooBig_length] at hav ⊢; omega)
+    (by rw [formatTooBig_length]; rfl) (by first | rfl | decide) (by first | rfl | decide)
+    hity hbox1 hstk1 (by simp [hsp1, hspl]) (by rw [formatTooBig_length] at hav ⊢; omega)
     (by
       dsimp only
       rw [show rsp.toBitVec - 176 + 96 = rsp.toBitVec - 80 by indexed_attestation_addr]

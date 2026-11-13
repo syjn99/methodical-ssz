@@ -1,6 +1,6 @@
-// Scratch differential program (S3 hold-out H1 evaluation, not committed in Prysm): runs the real generated
+// Scratch differential program (not committed in Prysm): runs the real generated
 // v1alpha1.BeaconBlockHeader.UnmarshalSSZ and the hand-written primitives.ValidatorIndex.UnmarshalSSZ on the
-// cases of fv/kraken/gen/e2e/bhdiff.py and prints the observed results as JSON. Expected values are computed
+// cases of fv/kraken/gen/checks/beacon_block_header_differential.py and prints the observed results as JSON. Expected values are computed
 // by that script independently (Python struct.pack), never from this program.
 package main
 
@@ -46,7 +46,7 @@ func main() {
 		}
 		r := Res{ID: c.ID}
 		switch c.Op {
-		case "bh_u":
+		case "BeaconBlockHeader.UnmarshalSSZ":
 			h := &ethpb.BeaconBlockHeader{}
 			e := h.UnmarshalSSZ(in)
 			if e != nil {
@@ -59,7 +59,7 @@ func main() {
 				r.Lens = append(r.Lens, len(b))
 				r.Caps = append(r.Caps, cap(b))
 			}
-		case "vi_u":
+		case "ValidatorIndex.UnmarshalSSZ":
 			var v primitives.ValidatorIndex
 			e := v.UnmarshalSSZ(in)
 			if e != nil {

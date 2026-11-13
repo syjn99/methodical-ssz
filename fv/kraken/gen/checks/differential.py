@@ -3,7 +3,7 @@
 
   differential.py cases <cases.json>                write the cases
   differential.py check <cases.json> <go-out.json> <result.json>
-The Go program is the scratch package fve2e/cpcheck of the temporary Prysm tree (run natively with
+The Go program is `prysm/go1.26.10/evidence/differential-main.go.txt`, built as a scratch package of the temporary Prysm tree (run natively with
 Go 1.26.10 through the gate). Every expected value is computed here, independently of the code under
 test: encoding = struct.pack('<Q', epoch) + root (consensus-specs uint64 little endian ++ Bytes32);
 decoding accepts exactly 40 bytes; the error identities come from the Go source (ssz.ErrSize,

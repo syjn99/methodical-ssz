@@ -8,7 +8,7 @@ import Prysm.BeaconBlockHeader.Code
 Text produced from the `.S` file and the IR by a scratch emitter (not in the tree; it is not
 the generator): a symbolic walk of the fast path, one application of a step lemma per directive
 (`Codec/WindowSteps.lean`, `Codec/EncodeSteps.lean`; windows with the nops erased), boundary states between the fields. Every
-theorem has a `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueKindAnyFrame`, `encFastPathKindAnyFrame`).
+theorem has a `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encodeEpilogueKindAnyFrame`, `encodeFastPathKindAnyFrame`).
 **Fast path only**: `len(dst) + 112 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path.
@@ -132,7 +132,7 @@ theorem Encode.example_head : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.example_head_kind : ∀ (h : Host), type_of% (@Encode.example_head h)
-    = @Codec.encHeadKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    = @Codec.encodeHeadKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32]
     ⟨10, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 96) (.original 4), .at (.below 104) (.original 5), .at (.below 56) (.original 6), .at (.below 40) (.original 7), .at (.below 88) (.original 8), .at (.below 72) (.original 9), .at (.below 168) (.original 10), .low .scratch],
       []⟩ := by
@@ -293,7 +293,7 @@ theorem Encode.example_field_0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.example_field_0_kind : ∀ (h : Host), type_of% (@Encode.example_field_0 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32]
     ⟨10, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 96) (.original 4), .at (.below 104) (.original 5), .at (.below 56) (.original 6), .at (.below 40) (.original 7), .at (.below 88) (.original 8), .at (.below 72) (.original 9), .at (.below 168) (.original 10), .low .scratch],
       []⟩
@@ -460,7 +460,7 @@ theorem Encode.example_field_1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, x0, x1, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), hx0, hx1, (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.example_field_1_kind : ∀ (h : Host), type_of% (@Encode.example_field_1 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32]
     ⟨36, 1, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 96) (.original 4), .at (.below 104) (.original 5), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.original 8), .at (.below 72) (.original 9), .at (.below 168) (.original 10), .low .scratch],
       [.fixed 8, .fixed 16]⟩
@@ -635,7 +635,7 @@ theorem Encode.example_field_2 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host
   refine ⟨rfl, rfl, rfl, rfl, x0, x1, x2, x3, scr1, hx0, hx1, hx2, hx3, hscr1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.example_field_2_kind : ∀ (h : Host), type_of% (@Encode.example_field_2 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32]
     ⟨62, 2, [(.rax, .receiver), (.rbx, .ptr), (.rdi, .cap), (.r8, .len 16)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 96) (.original 4), .at (.below 104) (.original 5), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.field 1), .at (.below 80) (.existential 2), .at (.below 72) (.existential 3), .at (.below 168) (.original 10), .low .scratch],
       [.fixed 8, .fixed 16, .fixed 8, .fixed 16]⟩
@@ -813,7 +813,7 @@ theorem Encode.example_field_3 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host
   refine ⟨rfl, rfl, rfl, rfl, x0, x1, x2, x3, scr2, hx0, hx1, hx2, hx3, hscr2, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.example_field_3_kind : ∀ (h : Host), type_of% (@Encode.example_field_3 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32]
     ⟨90, 3, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 96) (.len 48), .at (.below 104) (.reg .rdi), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.field 1), .at (.below 80) (.existential 2), .at (.below 72) (.existential 3), .at (.below 168) (.ret 90), .low (.existential 4)],
       [.fixed 8, .fixed 16, .fixed 8, .fixed 16, .low]⟩
@@ -992,7 +992,7 @@ theorem Encode.example_field_4 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host
   refine ⟨rfl, rfl, rfl, rfl, x0, x1, x2, x3, scr3, hx0, hx1, hx2, hx3, hscr3, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.example_field_4_kind : ∀ (h : Host), type_of% (@Encode.example_field_4 h)
-    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32]
     ⟨118, 4, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 96) (.reg .rdi), .at (.below 104) (.len 80), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.field 1), .at (.below 80) (.existential 2), .at (.below 72) (.existential 3), .at (.below 168) (.ret 118), .low (.existential 4)],
       [.fixed 8, .fixed 16, .fixed 8, .fixed 16, .low]⟩
@@ -1131,7 +1131,7 @@ theorem Encode.example_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Hos
   intro fl; normalize_registers
   apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 160) + 152 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
   normalize_registers
-  refine eventually_trans _ _ _ _ (dec_return_seg _ (k + 154) (window_infix_at hk 154 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (decode_return_segment _ (k + 154) (window_infix_at hk 154 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -1150,7 +1150,7 @@ theorem Encode.example_epilogue : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Hos
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
 theorem Encode.example_epilogue_kind : ∀ (h : Host), type_of% (@Encode.example_epilogue h)
-    = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    = @Codec.encodeEpilogueKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32]
     ⟨148, 5, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 96) (.reg .rdi), .at (.below 104) (.len 112), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.field 1), .at (.below 80) (.existential 2), .at (.below 72) (.existential 3), .at (.below 168) (.ret 148), .low (.existential 4)],
       [.fixed 8, .fixed 16, .fixed 8, .fixed 16, .low]⟩ := by
@@ -1269,7 +1269,7 @@ theorem Encode.example_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   intro st5 h5
   exact Encode.example_epilogue k hk hf ast v0 v1 c2 c3 c4 b2 b3 b4 pre d0 d1 d2 d3 d4 hast hv0 hv1 hc2 hc3 hc4 hb2 hb3 hb4 hd0 hd1 hd2 hd3 hd4 p2 p3 p4 s ra guard hpre fp s1 s2 l16 l96 l104 t56 t40 t88 t72 rslot hfp hs1 hs2 hl16 hl96 hl104 ht56 ht40 ht88 ht72 hrslot R S scratch hsc hsp hcap hcap63 st5 h5
 theorem Encode.example_fast_kind : ∀ (h : Host), type_of% (@Encode.example_fast h)
-    = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32] := by
+    = @Codec.encodeFastPathKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32] := by
   intro h; rfl
 
 /-- The generated-style theorem proves the committed hand statement. -/

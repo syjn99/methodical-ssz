@@ -12,7 +12,7 @@ import Prysm.AttestationData.DecodeRejectSize
 import Codec.DecodeRejectSizeAnyFrame
 
 /-!
-# Ties of `decRejectKindAnyFrame` to the committed size-reject theorems: the `PendingDeposit` part
+# Ties of `decodeRejectKindAnyFrame` to the committed size-reject theorems: the `PendingDeposit` part
 
 The declarations of the other types of this group are in `Prysm/BlobIdentifier/DecodeRejectSizeKindInstances.lean`.
 -/
@@ -23,7 +23,7 @@ open Codec
 namespace Prysm.PendingDeposit
 
 theorem Decode.reject_size_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.PendingDeposit.Decode.reject_size h)
-    = @decRejectKindAnyFrame h Prysm.PendingDeposit.Code.unmarshalSSZ 192 := by
+    = @decodeRejectKindAnyFrame h Prysm.PendingDeposit.Code.unmarshalSSZ 192 := by
   intro h; with_reducible rfl
 
 end Prysm.PendingDeposit

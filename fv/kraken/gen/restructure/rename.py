@@ -1196,9 +1196,9 @@ class RefRename:
                 ascii_ = all(ord(ch) < 128 for ch in lines[i])
                 if key == "theorem":
                     nv = self.target(oldfull, mod_new) if oldfull in self.old_rows else val
-                elif key == "code_def":
+                elif key == "code_definition":
                     nv = self.ref_token(val, so, sn, f"{rel}:{i + 1}", True, mod_new)
-                elif key == "code_ns":
+                elif key == "code_namespace":
                     r = self.resolve_ns(val, so, self.isns_old)
                     nv = val
                     if r and r[0] in self.old_ns_mine:

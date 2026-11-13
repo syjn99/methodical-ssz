@@ -14,12 +14,12 @@ the independent hand statement `Prysm.PendingPartialWithdrawal.Decode.accept_sta
 not prove it (three attempts). Proof: a chain of `eventually_trans` over
 
 * `Decode.head` (hand steps, directives 0–14: stack guard, prologue `sub $0x48`, length check, three spills, nil check),
-* `callarg_first_seg` (15–16) and `calldec_seg` (17–19, label 47) for `Index` — callee `ValidatorIndex`,
-* `callarg_lea_seg` (48–53), `u64dec_scratch_register_seg` (54–55, `Amount`), `callarg_mov_seg` (56–58) and `calldec_seg`
+* `call_argument_first_segment` (15–16) and `call_decode_segment` (17–19, label 47) for `Index` — callee `ValidatorIndex`,
+* `call_argument_lea_segment` (48–53), `uint64_decode_scratch_register_segment` (54–55, `Amount`), `call_argument_mov_segment` (56–58) and `call_decode_segment`
   (59–61, label 88) for `WithdrawableEpoch` — callee `Epoch`,
 * `Decode.epilogue` (hand steps, 89–91: `add $0x48,%rsp; pop %rbp; retq`).
 
-The callees are used only through `U64CalleeAccept` (= the existing `Prysm.ValidatorIndex.Decode.accept_function_spec` / `Prysm.Epoch.Decode.accept_function_spec`, proved by
+The callees are used only through `Uint64CalleeAccept` (= the existing `Prysm.ValidatorIndex.Decode.accept_function_spec` / `Prysm.Epoch.Decode.accept_function_spec`, proved by
 `Prysm.ValidatorIndex.Decode.accept_function_spec_holds` / `Prysm.Epoch.Decode.accept_function_spec_holds` from their machine code). No contract, no new hypothesis form.
 Stack (rsp = entry rsp): callee return slot rsp − 88, callee saved rbp rsp − 96, callee rbx spill rsp − 72.
 -/
@@ -169,32 +169,32 @@ the hand statement `Decode.accept_statement` (unchanged). -/
 theorem Decode.accept : Decode.accept_statement := by
   intro k hk hf kV hkV hfV kE hkE hfE in0 in1 in2 hin0 hin1 hin2 s ra guard
     fp s1 s2 s4 sp1 rslot lo ast a8 a16 a24 hfp h1 h2 h4 hsp1 hrs hlo hast ha8 ha16 ha24 R h_mem hguard hlen
-  have hvi : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
-  have hep : U64CalleeAccept Prysm.Epoch.Code.unmarshalSSZLabel := Prysm.Epoch.Decode.accept_function_spec_holds kE hkE hfE
+  have hvi : Uint64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hep : Uint64CalleeAccept Prysm.Epoch.Code.unmarshalSSZLabel := Prysm.Epoch.Decode.accept_function_spec_holds kE hkE hfE
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 88).toNat := Decode.accept_guard _ _ hguard
   -- code facts
-  have hF1 := Codec.infix_sub (q := Codec.callArgFirst false 8) 15 hk
-    (by simp only [unmarshalSSZ, Codec.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hC1 := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 17 hk
-    (by simp only [unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL1 := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 47 hk
-    (by simp only [unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hF1 := Codec.infix_sub (q := Codec.callArgumentFirst false 8) 15 hk
+    (by simp only [unmarshalSSZ, Codec.callArgumentFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hC1 := Codec.infix_sub (q := Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 17 hk
+    (by simp only [unmarshalSSZ, Codec.callDecode, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hL1 := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 47 hk
+    (by simp only [unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl1 := Machine.label_at' hk hf (j := 47)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hLea := Codec.infix_sub (q := Codec.callArgLea 96 16 112 (-16) 88 24) 48 hk
-    (by simp only [unmarshalSSZ, Codec.callArgLea, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hRR := Codec.infix_sub (q := Codec.u64DecScratchRegister Reg64.r8 8 16) 54 hk
-    (by simp only [unmarshalSSZ, Codec.u64DecScratchRegister, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hX : Codec.U64ScratchRegister Reg64.r8 := by decide
-  have hMov := Codec.infix_sub (q := Codec.callArgMov) 56 hk
-    (by simp only [unmarshalSSZ, Codec.callArgMov, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hC2 := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 59 hk
-    (by simp only [unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL2 := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 88 hk
-    (by simp only [unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hLea := Codec.infix_sub (q := Codec.callArgumentLea 96 16 112 (-16) 88 24) 48 hk
+    (by simp only [unmarshalSSZ, Codec.callArgumentLea, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hRR := Codec.infix_sub (q := Codec.uint64DecodeScratchRegister Reg64.r8 8 16) 54 hk
+    (by simp only [unmarshalSSZ, Codec.uint64DecodeScratchRegister, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hX : Codec.Uint64ScratchRegister Reg64.r8 := by decide
+  have hMov := Codec.infix_sub (q := Codec.callArgumentMov) 56 hk
+    (by simp only [unmarshalSSZ, Codec.callArgumentMov, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hC2 := Codec.infix_sub (q := Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 59 hk
+    (by simp only [unmarshalSSZ, Codec.callDecode, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hL2 := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 88 hk
+    (by simp only [unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl2 := Machine.label_at' hk hf (j := 88)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
@@ -205,13 +205,13 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- Index: set-up 15–16
-  refine eventually_trans _ _ _ _ (Codec.callarg_first_seg false 8 (k + 15) hF1 rax.toBitVec (rax.toBitVec + 8)
+  refine eventually_trans _ _ _ _ (Codec.call_argument_first_segment false 8 (k + 15) hF1 rax.toBitVec (rax.toBitVec + 8)
     (by simp only [Int64.toBitVec_ofNat]) d1 (by rw [hrax1])) ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, hrbx2, hrax2, hrcx2, hmem2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hrax2 hrcx2 hmem2
   subst hpc2
   -- Index: call block 17–19, label 47
-  refine eventually_trans _ _ _ _ (Codec.calldec_seg _ _ (k + 17) (k + 47) hC1 hL1 hl1 hvi
+  refine eventually_trans _ _ _ _ (Codec.call_decode_segment _ _ (k + 17) (k + 47) hC1 hL1 hl1 hvi
     (rsp.toBitVec - 80) (rax.toBitVec + 8) rbx.toBitVec (rsp.toBitVec - 88) (rsp.toBitVec - 96) (rsp.toBitVec - 72)
     (by bv_omega) (by bv_omega) (by bv_omega)
     { toBitVec := rsp.toBitVec - 8 } r14 guard in0 rslot lo sp1 a8 hin0 hrs hlo hsp1 ha8 hg _ d2
@@ -221,7 +221,7 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc3 hrax3 hrbx3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
   -- WithdrawableEpoch: set-up, first part 48–53
-  refine eventually_trans _ _ _ _ (Codec.callarg_lea_seg 96 16 112 (-16) 88 24 (k + 48) hLea
+  refine eventually_trans _ _ _ _ (Codec.call_argument_lea_segment 96 16 112 (-16) 88 24 (k + 48) hLea
     (rsp.toBitVec - 80) rax.toBitVec rbx.toBitVec (rsp.toBitVec + 16) (rsp.toBitVec + 32) (rsp.toBitVec + 8)
     (rbx.toBitVec + 16) (rax.toBitVec + 24)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
@@ -232,7 +232,7 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrbx4 hrdx4 hrax4 hrsi4 hmem4
   subst hpc4
   -- Amount: 54–55
-  refine eventually_trans _ _ _ _ (Codec.u64dec_scratch_register_seg Reg64.r8 hX 8 16 (k + 54) hRR
+  refine eventually_trans _ _ _ _ (Codec.uint64_decode_scratch_register_segment Reg64.r8 hX 8 16 (k + 54) hRR
     rbx.toBitVec rax.toBitVec (rbx.toBitVec + 8) (rax.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     in1 a16 hin1 ha16 _ d4 hrbx4 hrax4 (by rw [hmem4]; ecancel)) ?_
@@ -242,12 +242,12 @@ theorem Decode.accept : Decode.accept_statement := by
   have hrsi5 : d5.regs.rsi.toBitVec = rax.toBitVec + 24 := (hreg5 Reg64.rsi (by decide)).trans hrsi4
   have hrdx5 : d5.regs.rdx.toBitVec = rbx.toBitVec + 16 := (hreg5 Reg64.rdx (by decide)).trans hrdx4
   -- WithdrawableEpoch: set-up, second part 56–58
-  refine eventually_trans _ _ _ _ (Codec.callarg_mov_seg (k + 56) hMov d5) ?_
+  refine eventually_trans _ _ _ _ (Codec.call_argument_mov_segment (k + 56) hMov d5) ?_
   rintro ⟨d6, pc6⟩ ⟨hpc6, hrsp6, hrbp6, hr146, hrax6, hrbx6, hrcx6, hmem6⟩
   dsimp only at hpc6 hrsp6 hrbp6 hr146 hrax6 hrbx6 hrcx6 hmem6
   subst hpc6
   -- WithdrawableEpoch: call block 59–61, label 88
-  refine eventually_trans _ _ _ _ (Codec.calldec_seg _ _ (k + 59) (k + 88) hC2 hL2 hl2 hep
+  refine eventually_trans _ _ _ _ (Codec.call_decode_segment _ _ (k + 59) (k + 88) hC2 hL2 hl2 hep
     (rsp.toBitVec - 80) (rax.toBitVec + 24) (rbx.toBitVec + 16) (rsp.toBitVec - 88) (rsp.toBitVec - 96)
     (rsp.toBitVec - 72) (by bv_omega) (by bv_omega) (by bv_omega)
     { toBitVec := rsp.toBitVec - 8 } r14 guard in2

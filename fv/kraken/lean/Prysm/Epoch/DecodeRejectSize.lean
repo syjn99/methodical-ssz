@@ -34,7 +34,7 @@ set_option maxRecDepth 100000 in
 theorem Decode.reject_static_table : ElfData.PrysmTarget.runtimeStaticuint64s = Runtime.Data.staticuint64s := by rfl
 -- The address that `Runtime.StaticBox` reads is the Go 1.26.10 label `runtime.staticuint64s`.
 theorem Decode.reject_eight_bytes : ElfData.PrysmTarget.boxedEight = Int.toBytes 8 (8 : BitVec 64).toInt := by decide
-theorem Decode.reject_fmt_len : ElfData.PrysmTarget.formatBufferLength.length = 40 := by decide
+theorem Decode.reject_format_len : ElfData.PrysmTarget.formatBufferLength.length = 40 := by decide
 theorem Decode.reject_eq (x : BitVec 64) (h : x - 8#64 = 0#64) : x = 8 := by bv_omega
 theorem Decode.reject_call (x : BitVec 64) : x - 8#64 - 72 - 8#64 = x - 88 := by bv_omega
 theorem Decode.reject_second_call (x : BitVec 64) : x - 80 - 8#64 = x - 88 := by bv_omega
@@ -206,8 +206,8 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   simp only [ElfData.PrysmTarget.typeInt_addr, ElfData.PrysmTarget.boxedEight_addr, ElfData.PrysmTarget.formatBufferLength_addr] at H10 ⊢
   refine eventually_trans _ _ _ _ (hdd _ (Host.addrOf (k + 28 + 1)) av2 (Int.toBytes 8 (8 : BitVec 64).toInt) hb stk2
     (sp2 ++ sp32) (label "runtime.gcbits._" + 1432).toBitVec 8 rax2.toBitVec rcx.toBitVec ?F
-    (by rw [Decode.reject_fmt_len]; rfl) rfl rfl (Or.inr rfl) hbox hstk2 (by simp [hsp2, hsp32])
-    (by rw [Decode.reject_fmt_len]; omega) ?hpre) ?_
+    (by rw [Decode.reject_format_len]; rfl) rfl rfl (Or.inr rfl) hbox hstk2 (by simp [hsp2, hsp32])
+    (by rw [Decode.reject_format_len]; omega) ?hpre) ?_
   case hpre =>
     dsimp only
     simp only [ElfData.PrysmTarget.typeInt_addr]

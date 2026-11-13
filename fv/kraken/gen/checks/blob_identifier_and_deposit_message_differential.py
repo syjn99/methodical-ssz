@@ -4,7 +4,7 @@
 
   blob_identifier_and_deposit_message_differential.py cases <cases.json>                      write the cases
   blob_identifier_and_deposit_message_differential.py check <cases.json> <go-out.json> <result.json>
-The Go program is `prysm/go1.26.10/evidence/blob-identifier-and-deposit-message/h3check-main.go.txt`, run natively with Go 1.26.10 through the gate
+The Go program is `prysm/go1.26.10/evidence/blob-identifier-and-deposit-message/differential-main.go.txt`, run natively with Go 1.26.10 through the gate
 in a scratch module that replaces the Prysm module by the temporary Prysm tree (read only). This is a
 Go-semantics check on the host (linux/arm64), not an execution of the amd64 ELF. Every expected value is
 computed here, independently of the code under test, from consensus-specs:
@@ -25,18 +25,18 @@ def cases():
     roots = [bytes(32), bytes(range(32)), b"\xff" * 32]
     for i, (v, r) in enumerate(zip(VALS, roots)):
         b = r + struct.pack("<Q", v)
-        cs.append({"id": f"bi-accept-{i}", "op": "bi_u", "in": b.hex(),
+        cs.append({"id": f"blob-identifier-accept-{i}", "op": "BlobIdentifier.UnmarshalSSZ", "in": b.hex(),
                    "exp": {"err": "", "u64": v, "bytes": [r.hex()], "lens": [32], "caps": [32]}})
     for n in (0, 39, 41):
-        cs.append({"id": f"bi-size-{n}", "op": "bi_u", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
+        cs.append({"id": f"blob-identifier-size-{n}", "op": "BlobIdentifier.UnmarshalSSZ", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
     pks = [bytes(48), bytes(range(48)), b"\xff" * 48]
     wcs = [bytes(32), b"\x22" * 32, b"\xff" * 32]
     for i, (v, p, w) in enumerate(zip(VALS, pks, wcs)):
         b = p + w + struct.pack("<Q", v)
-        cs.append({"id": f"dm-accept-{i}", "op": "dm_u", "in": b.hex(),
+        cs.append({"id": f"deposit-message-accept-{i}", "op": "DepositMessage.UnmarshalSSZ", "in": b.hex(),
                    "exp": {"err": "", "u64": v, "bytes": [p.hex(), w.hex()], "lens": [48, 32], "caps": [48, 32]}})
     for n in (0, 87, 89):
-        cs.append({"id": f"dm-size-{n}", "op": "dm_u", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
+        cs.append({"id": f"deposit-message-size-{n}", "op": "DepositMessage.UnmarshalSSZ", "in": (b"\x01" * n).hex(), "exp": {"err_is_ErrSize": True}})
     return cs
 
 

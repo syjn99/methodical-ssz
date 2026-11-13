@@ -19,7 +19,7 @@ variable [Host]
 
 /-- BlobIdentifier: the hand accept theorem has the kind `[bytes 32, u64]`. -/
 theorem Decode.accept_is_kind : ∀ (h : Host), type_of% (@Prysm.BlobIdentifier.Decode.accept h)
-    = @decAcceptKind h Prysm.BlobIdentifier.Code.unmarshalSSZ true [.bytes 32, .u64] 32 := by
+    = @decodeAcceptKind h Prysm.BlobIdentifier.Code.unmarshalSSZ true [.bytes 32, .uint64] 32 := by
   intro h; rfl
 
 end Prysm.BlobIdentifier

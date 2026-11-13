@@ -17,7 +17,7 @@ import Codec.FixedBytesDecodeWindowOffsetZero
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
 /-! Step chain fields (machine-readable, read by `kindcheck.py`):
-FIELDS-JSON: [{"field": "PublicKey", "theorems": ["Decode.generated_PublicKey_seg", "Decode.generated_directive_38", "Decode.generated_directive_39", "Decode.generated_directive_47", "Decode.generated_directive_48"]}, {"field": "WithdrawalCredentials", "theorems": ["Decode.generated_WithdrawalCredentials_seg", "Decode.generated_directive_74", "Decode.generated_directive_75", "Decode.generated_directive_83", "Decode.generated_directive_84"]}, {"field": "Amount", "theorems": ["Decode.generated_directive_85", "Decode.generated_directive_86", "Decode.generated_directive_87"]}, {"field": "Signature", "theorems": ["Decode.generated_Signature_seg", "Decode.generated_directive_113", "Decode.generated_directive_114", "Decode.generated_directive_121", "Decode.generated_directive_122"]}, {"field": "Slot", "theorems": ["Decode.generated_directive_123", "Decode.generated_directive_124", "Decode.generated_directive_125", "Decode.generated_directive_126", "Decode.generated_directive_127", "Decode.generated_directive_128", "Decode.generated_Slot_call"]}]
+FIELDS-JSON: [{"field": "PublicKey", "theorems": ["Decode.generated_PublicKey_segment", "Decode.generated_directive_38", "Decode.generated_directive_39", "Decode.generated_directive_47", "Decode.generated_directive_48"]}, {"field": "WithdrawalCredentials", "theorems": ["Decode.generated_WithdrawalCredentials_segment", "Decode.generated_directive_74", "Decode.generated_directive_75", "Decode.generated_directive_83", "Decode.generated_directive_84"]}, {"field": "Amount", "theorems": ["Decode.generated_directive_85", "Decode.generated_directive_86", "Decode.generated_directive_87"]}, {"field": "Signature", "theorems": ["Decode.generated_Signature_segment", "Decode.generated_directive_113", "Decode.generated_directive_114", "Decode.generated_directive_121", "Decode.generated_directive_122"]}, {"field": "Slot", "theorems": ["Decode.generated_directive_123", "Decode.generated_directive_124", "Decode.generated_directive_125", "Decode.generated_directive_126", "Decode.generated_directive_127", "Decode.generated_directive_128", "Decode.generated_Slot_call"]}]
 -/
 
 open Machine Runtime Prysm.PendingDeposit.Code
@@ -29,7 +29,7 @@ namespace Prysm.PendingDeposit
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `PublicKey` (48-byte vector, SSZ offset 0, Go offset 8): decode segment (offset-0 form) over the windows 14–22 and 27–37; receiver in rdx after makeslice, in rdx after memmove (`callq` at 32). -/
-theorem Decode.generated_PublicKey_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_PublicKey_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + (80 : Int64).toBitVec = aR) (hB' : sp + (88 : Int64).toBitVec = aB) (hS : sp + (40 : Int64).toBitVec = aS)
@@ -66,17 +66,17 @@ theorem Decode.generated_PublicKey_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 14)⟩ := by
   have hqA := Codec.window_infix_at hk 14 9
-  have heA : Codec.eraseNop ((unmarshalSSZ.drop 14).take 9) = Codec.bytesDecHeadRegister Reg64.rdx 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_7d" 80 16 24 := by rfl
+  have heA : Codec.eraseNop ((unmarshalSSZ.drop 14).take 9) = Codec.bytesDecodeHeadRegister Reg64.rdx 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_7d" 80 16 24 := by rfl
   have hqB := Codec.window_infix_at hk 27 11
-  have heB : Codec.eraseNop ((unmarshalSSZ.drop 27).take 11) = Codec.bytesDecMidOffsetZeroRegisters Reg64.rdx Reg64.rdx 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_7d" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_ba" 80 88 40 8 16 24 := by rfl
+  have heB : Codec.eraseNop ((unmarshalSSZ.drop 27).take 11) = Codec.bytesDecodeMiddleOffsetZeroRegisters Reg64.rdx Reg64.rdx 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_7d" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_ba" 80 88 40 8 16 24 := by rfl
   have hjl : k + 27 + Codec.nonNopIndex ((unmarshalSSZ.drop 27).take 11) 0 = k + 27 := by rfl
   have hl := Machine.label_at' hk hf (j := 27)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hjm : k + 27 + Codec.nonNopIndex ((unmarshalSSZ.drop 27).take 11) 5 = k + 32 := by rfl
   have hend : k + 27 + ((unmarshalSSZ.drop 27).take 11).length = k + 38 := by rfl
-  with_reducible exact Codec.bytesdec_seg_offset_zero_window 48 (Or.inr (Or.inl rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 14) (k + 27) (k + 27) (k + 32) (k + 38) hqA heA hqB heB hjl hl hjm hend
-theorem Decode.generated_PublicKey_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_PublicKey_seg h) = @Codec.bytesDecSegOffsetZeroKindWindow h 48 unmarshalSSZ Reg64.rdx 14 32 38 80 88 40 8 16 24 := by
+  with_reducible exact Codec.bytes_decode_segment_offset_zero_window 48 (Or.inr (Or.inl rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 14) (k + 27) (k + 27) (k + 32) (k + 38) hqA heA hqB heB hjl hl hjm hend
+theorem Decode.generated_PublicKey_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_PublicKey_segment h) = @Codec.bytesDecodeSegmentOffsetZeroKindWindow h 48 unmarshalSSZ Reg64.rdx 14 32 38 80 88 40 8 16 24 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -151,7 +151,7 @@ theorem Decode.generated_directive_48_kind : ∀ (h : Host), type_of% (@Decode.g
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `WithdrawalCredentials` (32-byte vector, SSZ offset 48, Go offset 32): decode segment over the windows 49–57 and 62–73; receiver in rdx after makeslice, in rdx after memmove (`callq` at 68). -/
-theorem Decode.generated_WithdrawalCredentials_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_WithdrawalCredentials_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + (80 : Int64).toBitVec = aR) (hB' : sp + (88 : Int64).toBitVec = aB) (hS : sp + (40 : Int64).toBitVec = aS)
@@ -189,17 +189,17 @@ theorem Decode.generated_WithdrawalCredentials_seg (k : Nat) (hk : unmarshalSSZ.
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 49)⟩ := by
   have hqA := Codec.window_infix_at hk 49 9
-  have heA : Codec.eraseNop ((unmarshalSSZ.drop 49).take 9) = Codec.bytesDecHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_116" 80 40 48 := by rfl
+  have heA : Codec.eraseNop ((unmarshalSSZ.drop 49).take 9) = Codec.bytesDecodeHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_116" 80 40 48 := by rfl
   have hqB := Codec.window_infix_at hk 62 12
-  have heB : Codec.eraseNop ((unmarshalSSZ.drop 62).take 12) = Codec.bytesDecMidRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_116" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_157" 80 88 40 32 40 48 48 := by rfl
+  have heB : Codec.eraseNop ((unmarshalSSZ.drop 62).take 12) = Codec.bytesDecodeMiddleRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_116" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_157" 80 88 40 32 40 48 48 := by rfl
   have hjl : k + 62 + Codec.nonNopIndex ((unmarshalSSZ.drop 62).take 12) 0 = k + 62 := by rfl
   have hl := Machine.label_at' hk hf (j := 62)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hjm : k + 62 + Codec.nonNopIndex ((unmarshalSSZ.drop 62).take 12) 6 = k + 68 := by rfl
   have hend : k + 62 + ((unmarshalSSZ.drop 62).take 12).length = k + 74 := by rfl
-  with_reducible exact Codec.bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 49) (k + 62) (k + 62) (k + 68) (k + 74) hqA heA hqB heB hjl hl hjm hend
-theorem Decode.generated_WithdrawalCredentials_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_WithdrawalCredentials_seg h) = @Codec.bytesDecSegKindWindow h 32 unmarshalSSZ Reg64.rdx 49 68 74 80 88 40 32 40 48 48 := by
+  with_reducible exact Codec.bytes_decode_segment_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 49) (k + 62) (k + 62) (k + 68) (k + 74) hqA heA hqB heB hjl hl hjm hend
+theorem Decode.generated_WithdrawalCredentials_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_WithdrawalCredentials_segment h) = @Codec.bytesDecodeSegmentKindWindow h 32 unmarshalSSZ Reg64.rdx 49 68 74 80 88 40 32 40 48 48 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -329,7 +329,7 @@ theorem Decode.generated_directive_87_kind : ∀ (h : Host), type_of% (@Decode.g
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `Signature` (96-byte vector, SSZ offset 88, Go offset 64): decode segment over the windows 88–96 and 101–112; receiver in rdx after makeslice, in rax after memmove (`callq` at 107). -/
-theorem Decode.generated_Signature_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_Signature_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + (80 : Int64).toBitVec = aR) (hB' : sp + (88 : Int64).toBitVec = aB) (hS : sp + (40 : Int64).toBitVec = aS)
@@ -367,17 +367,17 @@ theorem Decode.generated_Signature_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 88)⟩ := by
   have hqA := Codec.window_infix_at hk 88 9
-  have heA : Codec.eraseNop ((unmarshalSSZ.drop 88).take 9) = Codec.bytesDecHeadRegister Reg64.rdx 96 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_1c3" 80 72 80 := by rfl
+  have heA : Codec.eraseNop ((unmarshalSSZ.drop 88).take 9) = Codec.bytesDecodeHeadRegister Reg64.rdx 96 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_1c3" 80 72 80 := by rfl
   have hqB := Codec.window_infix_at hk 101 12
-  have heB : Codec.eraseNop ((unmarshalSSZ.drop 101).take 12) = Codec.bytesDecMidRegisters Reg64.rdx Reg64.rax 96 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_1c3" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_204" 80 88 40 64 72 80 88 := by rfl
+  have heB : Codec.eraseNop ((unmarshalSSZ.drop 101).take 12) = Codec.bytesDecodeMiddleRegisters Reg64.rdx Reg64.rax 96 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_1c3" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_204" 80 88 40 64 72 80 88 := by rfl
   have hjl : k + 101 + Codec.nonNopIndex ((unmarshalSSZ.drop 101).take 12) 0 = k + 101 := by rfl
   have hl := Machine.label_at' hk hf (j := 101)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hjm : k + 101 + Codec.nonNopIndex ((unmarshalSSZ.drop 101).take 12) 6 = k + 107 := by rfl
   have hend : k + 101 + ((unmarshalSSZ.drop 101).take 12).length = k + 113 := by rfl
-  with_reducible exact Codec.bytesdec_seg_window 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 88) (k + 101) (k + 101) (k + 107) (k + 113) hqA heA hqB heB hjl hl hjm hend
-theorem Decode.generated_Signature_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_Signature_seg h) = @Codec.bytesDecSegKindWindow h 96 unmarshalSSZ Reg64.rax 88 107 113 80 88 40 64 72 80 88 := by
+  with_reducible exact Codec.bytes_decode_segment_window 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 88) (k + 101) (k + 101) (k + 107) (k + 113) hqA heA hqB heB hjl hl hjm hend
+theorem Decode.generated_Signature_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_Signature_segment h) = @Codec.bytesDecodeSegmentKindWindow h 96 unmarshalSSZ Reg64.rax 88 107 113 80 88 40 64 72 80 88 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -555,7 +555,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Slot`: call block over the window 129–132, `callq` at 130, continuation label at 160. -/
 theorem Decode.generated_Slot_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ")
+    ∀ (hC : Uint64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -577,15 +577,15 @@ theorem Decode.generated_Slot_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 129)⟩ := by
   have hq := Codec.window_infix_at hk 129 4
-  have he : Codec.eraseNop ((unmarshalSSZ.drop 129).take 4) = Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_2b4" := by rfl
+  have he : Codec.eraseNop ((unmarshalSSZ.drop 129).take 4) = Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_2b4" := by rfl
   have hjc : k + 129 + Codec.nonNopIndex ((unmarshalSSZ.drop 129).take 4) 0 = k + 130 := by rfl
-  have hB := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_2b4") 160 hk
-    (by simp only [unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_2b4") 160 hk
+    (by simp only [unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 160)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.calldec_seg_window _ _ _ (k + 129) (k + 130) (k + 160) hq he hjc hB hl
-theorem Decode.generated_Slot_call_kind : ∀ (h : Host), type_of% (@Decode.generated_Slot_call h) = @Codec.callDecSegKindWindow h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_2b4" 129 130 160 := by
+  with_reducible exact Codec.call_decode_segment_window _ _ _ (k + 129) (k + 130) (k + 160) hq he hjc hB hl
+theorem Decode.generated_Slot_call_kind : ∀ (h : Host), type_of% (@Decode.generated_Slot_call h) = @Codec.callDecodeSegmentKindWindow h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_2b4" 129 130 160 := by
   intro h; with_reducible rfl
 
 end Prysm.PendingDeposit
@@ -593,7 +593,7 @@ end Prysm.PendingDeposit
 /-! Whole accept (`decoder --whole-accept`): the whole accept theorem `Decode.generated_accept` of `v1alpha1.PendingDeposit` from
 the step chain above: head, one theorem per field, epilogue (boundary states in entry terms), accept, size
 reject. Every statement has a `_kind` line against the whole-accept kinds. In-sample (development data).
-WHOLE-ACCEPT-JSON: {"accept": "Decode.generated_accept", "kinds": [{"theorem": "Decode.generated_head", "kind": "decHeadKindAnyFrame"}, {"theorem": "Decode.generated_field_1", "kind": "decFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_2", "kind": "decFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_3", "kind": "decFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_4", "kind": "decFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_5", "kind": "decFieldKindAnyFrame"}, {"theorem": "Decode.generated_epilogue", "kind": "decEpilogueKindAnyFrame"}, {"theorem": "Decode.generated_accept", "kind": "decAcceptKindAnyFrame"}, {"theorem": "Decode.generated_reject", "kind": "decRejectKindAnyFrame"}], "fields": "[.bytes 48, .bytes 32, .u64, .bytes 96, .u64]", "frame": 72, "statement_check": "stmt Prysm.PendingDeposit.Decode.accept_statement"}
+WHOLE-ACCEPT-JSON: {"accept": "Decode.generated_accept", "kinds": [{"theorem": "Decode.generated_head", "kind": "decodeHeadKindAnyFrame"}, {"theorem": "Decode.generated_field_1", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_2", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_3", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_4", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_5", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_epilogue", "kind": "decodeEpilogueKindAnyFrame"}, {"theorem": "Decode.generated_accept", "kind": "decodeAcceptKindAnyFrame"}, {"theorem": "Decode.generated_reject", "kind": "decodeRejectKindAnyFrame"}], "fields": "[.bytes 48, .bytes 32, .uint64, .bytes 96, .uint64]", "frame": 72, "statement_check": "statement Prysm.PendingDeposit.Decode.accept_statement"}
 -/
 
 open Codec
@@ -685,7 +685,7 @@ theorem Decode.generated_head : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   intro k hk hf kS hkS hfS fv0 fv1 fv2 fv3 fv4 hfv0 hfv1 hfv2 hfv3 hfv4 s ra guard fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aP0 aL0 aC0 aP1 aL1 aC1 aN2 aP3 aL3 aC3 aN4 hfp hs1 hs2 hs4 hsp0 hsp1 hsp2 hl28 hrslot hast haP0 haL0 haC0 haP1 haL1 haC1 haN2 haP3 haL3 haC3 haN4 R S hS hlo Heap avail h_mem hguard hlen hav hms hmm
-  refine eventually_trans _ _ _ _ (dec_prologue_seg _ _ _ _ 64 88 192 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
+  refine eventually_trans _ _ _ _ (decode_prologue_segment _ _ _ _ 64 88 192 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
     s ra guard (s.regs.rsp.toBitVec - 72) (s.regs.rsp.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega)
     fp s2 hfp hs2 _ (by ecancel) (Nat.lt_of_le_of_lt (Nat.le_add_right _ 80) hguard) (by rw [hlen]; rfl)) ?_
@@ -717,12 +717,12 @@ theorem Decode.generated_head : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.
   dsimp only
   ecancel
 theorem Decode.generated_head_kind : ∀ (h : Host), type_of% (@Decode.generated_head h)
-    = @Codec.decHeadKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
+    = @Codec.decodeHeadKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), .at (.below 72) (.original 4), .at (.below 64) (.original 5), .at (.below 56) (.original 6), .at (.below 32) (.original 7), .at (.below 80) (.original 8), .low (.original 9)]
       (some ⟨true, 8, 9, 88⟩) 80 true [.fixed 24, .low]
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 2), .at (.below 80) (.ret 131), .low (.existential 1)]
-      72) [.bytes 48, .bytes 32, .u64, .bytes 96, .u64]
+      72) [.bytes 48, .bytes 32, .uint64, .bytes 96, .uint64]
     ⟨14, 0, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.original 4), .at (.below 64) (.original 5), .at (.below 56) (.original 6), .at (.below 32) (.original 7), .at (.below 80) (.original 8), .low (.original 9)],
       []⟩ := by
@@ -822,7 +822,7 @@ theorem Decode.generated_field_1 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
   rintro ⟨d, pc⟩ ⟨hpc, hrsp, hrbp, hr14, Hm⟩
   dsimp only at hpc hrsp hrbp hr14  Hm
   subst hpc
-  refine eventually_trans _ _ _ _ (Decode.generated_PublicKey_seg k hk hf (rsp.toBitVec - 72) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_PublicKey_segment k hk hf (rsp.toBitVec - 72) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 32) (rsp.toBitVec - 80)
     (rsp.toBitVec - 88 - BitVec.ofNat 64 S) (rax.toBitVec + 8) (rax.toBitVec + 16) (rax.toBitVec + 24) (S + 8)
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (frame_low_address_with_calls _ 72 88 S (by decide))
@@ -853,12 +853,12 @@ theorem Decode.generated_field_1 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
   rw [show k + 32 + 1 = k + 33 from rfl] at H
   ecancel
 theorem Decode.generated_field_1_kind : ∀ (h : Host), type_of% (@Decode.generated_field_1 h)
-    = @Codec.decFieldKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
+    = @Codec.decodeFieldKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), .at (.below 72) (.original 4), .at (.below 64) (.original 5), .at (.below 56) (.original 6), .at (.below 32) (.original 7), .at (.below 80) (.original 8), .low (.original 9)]
       (some ⟨true, 8, 9, 88⟩) 80 true [.fixed 24, .low]
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 2), .at (.below 80) (.ret 131), .low (.existential 1)]
-      72) [.bytes 48, .bytes 32, .u64, .bytes 96, .u64]
+      72) [.bytes 48, .bytes 32, .uint64, .bytes 96, .uint64]
     ⟨14, 0, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.original 4), .at (.below 64) (.original 5), .at (.below 56) (.original 6), .at (.below 32) (.original 7), .at (.below 80) (.original 8), .low (.original 9)],
       []⟩
@@ -962,7 +962,7 @@ theorem Decode.generated_field_2 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
   rintro ⟨d, pc⟩ ⟨hpc, hrsp, hrbp, hr14, p1, x0, x1, hx0, hx1, Hm⟩
   dsimp only at hpc hrsp hrbp hr14  Hm
   subst hpc
-  refine eventually_trans _ _ _ _ (Decode.generated_WithdrawalCredentials_seg k hk hf (rsp.toBitVec - 72) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_WithdrawalCredentials_segment k hk hf (rsp.toBitVec - 72) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 32) (rsp.toBitVec - 80)
     (rsp.toBitVec - 88 - BitVec.ofNat 64 S) (rax.toBitVec + 32) (rax.toBitVec + 40) (rax.toBitVec + 48) (rbx.toBitVec + 48) (S + 8)
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (frame_low_address_with_calls _ 72 88 S (by decide))
@@ -994,12 +994,12 @@ theorem Decode.generated_field_2 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
   rw [show avail - 48 - 32 = avail - 80 by omega] at H
   ecancel
 theorem Decode.generated_field_2_kind : ∀ (h : Host), type_of% (@Decode.generated_field_2 h)
-    = @Codec.decFieldKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
+    = @Codec.decodeFieldKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), .at (.below 72) (.original 4), .at (.below 64) (.original 5), .at (.below 56) (.original 6), .at (.below 32) (.original 7), .at (.below 80) (.original 8), .low (.original 9)]
       (some ⟨true, 8, 9, 88⟩) 80 true [.fixed 24, .low]
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 2), .at (.below 80) (.ret 131), .low (.existential 1)]
-      72) [.bytes 48, .bytes 32, .u64, .bytes 96, .u64]
+      72) [.bytes 48, .bytes 32, .uint64, .bytes 96, .uint64]
     ⟨49, 1, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 0), .at (.below 80) (.ret 33), .low (.existential 1)],
       [.fixed 24, .low]⟩
@@ -1122,12 +1122,12 @@ theorem Decode.generated_field_3 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
   dsimp only
   ecancel
 theorem Decode.generated_field_3_kind : ∀ (h : Host), type_of% (@Decode.generated_field_3 h)
-    = @Codec.decFieldKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
+    = @Codec.decodeFieldKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), .at (.below 72) (.original 4), .at (.below 64) (.original 5), .at (.below 56) (.original 6), .at (.below 32) (.original 7), .at (.below 80) (.original 8), .low (.original 9)]
       (some ⟨true, 8, 9, 88⟩) 80 true [.fixed 24, .low]
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 2), .at (.below 80) (.ret 131), .low (.existential 1)]
-      72) [.bytes 48, .bytes 32, .u64, .bytes 96, .u64]
+      72) [.bytes 48, .bytes 32, .uint64, .bytes 96, .uint64]
     ⟨85, 2, [(.rdx, .receiver)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 1), .at (.below 80) (.ret 69), .low (.existential 1)],
       [.fixed 24, .low]⟩
@@ -1233,7 +1233,7 @@ theorem Decode.generated_field_4 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
   rintro ⟨d, pc⟩ ⟨hpc, hrsp, hrbp, hr14, p1, p2, x0, x1, hx0, hx1, Hm⟩
   dsimp only at hpc hrsp hrbp hr14  Hm
   subst hpc
-  refine eventually_trans _ _ _ _ (Decode.generated_Signature_seg k hk hf (rsp.toBitVec - 72) rax.toBitVec rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.generated_Signature_segment k hk hf (rsp.toBitVec - 72) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 32) (rsp.toBitVec - 80)
     (rsp.toBitVec - 88 - BitVec.ofNat 64 S) (rax.toBitVec + 64) (rax.toBitVec + 72) (rax.toBitVec + 80) (rbx.toBitVec + 88) (S + 8)
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (frame_low_address_with_calls _ 72 88 S (by decide))
@@ -1265,12 +1265,12 @@ theorem Decode.generated_field_4 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
   rw [show avail - 80 - 96 = avail - 176 by omega] at H
   ecancel
 theorem Decode.generated_field_4_kind : ∀ (h : Host), type_of% (@Decode.generated_field_4 h)
-    = @Codec.decFieldKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
+    = @Codec.decodeFieldKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), .at (.below 72) (.original 4), .at (.below 64) (.original 5), .at (.below 56) (.original 6), .at (.below 32) (.original 7), .at (.below 80) (.original 8), .low (.original 9)]
       (some ⟨true, 8, 9, 88⟩) 80 true [.fixed 24, .low]
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 2), .at (.below 80) (.ret 131), .low (.existential 1)]
-      72) [.bytes 48, .bytes 32, .u64, .bytes 96, .u64]
+      72) [.bytes 48, .bytes 32, .uint64, .bytes 96, .uint64]
     ⟨88, 3, [],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 1), .at (.below 80) (.ret 69), .low (.existential 1)],
       [.fixed 24, .low]⟩
@@ -1423,12 +1423,12 @@ theorem Decode.generated_field_5 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
   rw [show k + 130 + 1 = k + 131 from rfl] at Hm'
   ecancel
 theorem Decode.generated_field_5_kind : ∀ (h : Host), type_of% (@Decode.generated_field_5 h)
-    = @Codec.decFieldKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
+    = @Codec.decodeFieldKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), .at (.below 72) (.original 4), .at (.below 64) (.original 5), .at (.below 56) (.original 6), .at (.below 32) (.original 7), .at (.below 80) (.original 8), .low (.original 9)]
       (some ⟨true, 8, 9, 88⟩) 80 true [.fixed 24, .low]
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 2), .at (.below 80) (.ret 131), .low (.existential 1)]
-      72) [.bytes 48, .bytes 32, .u64, .bytes 96, .u64]
+      72) [.bytes 48, .bytes 32, .uint64, .bytes 96, .uint64]
     ⟨123, 4, [(.rax, .receiver)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 2), .at (.below 80) (.ret 108), .low (.existential 1)],
       [.fixed 24, .low]⟩
@@ -1538,7 +1538,7 @@ theorem Decode.generated_epilogue : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt H
   subst rsp1 rbp1 r141
   obtain rfl : (0 : UInt64) = rax1 := (UInt64.toBitVec_inj.mp (show rax1.toBitVec = (0 : UInt64).toBitVec from hrrax)).symm
   obtain rfl : (0 : UInt64) = rbx1 := (UInt64.toBitVec_inj.mp (show rbx1.toBitVec = (0 : UInt64).toBitVec from hrrbx)).symm
-  refine eventually_trans _ _ _ _ (dec_epilogue_any_frame 64 _ (k + 161) (k + 162) (window_infix_at hk 161 1) (by rfl) (by rfl)
+  refine eventually_trans _ _ _ _ (decode_epilogue_any_frame 64 _ (k + 161) (k + 162) (window_infix_at hk 161 1) (by rfl) (by rfl)
     _ (window_infix_at hk 162 2) (by rfl) (rsp.toBitVec - 72) (rsp.toBitVec - 8) rsp.toBitVec
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrax', hrbx', hrsp', hrbp', hr14', hmem'⟩
@@ -1551,12 +1551,12 @@ theorem Decode.generated_epilogue : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt H
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
   · dsimp only; rw [hmem']; ecancel
 theorem Decode.generated_epilogue_kind : ∀ (h : Host), type_of% (@Decode.generated_epilogue h)
-    = @Codec.decEpilogueKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
+    = @Codec.decodeEpilogueKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), .at (.below 72) (.original 4), .at (.below 64) (.original 5), .at (.below 56) (.original 6), .at (.below 32) (.original 7), .at (.below 80) (.original 8), .low (.original 9)]
       (some ⟨true, 8, 9, 88⟩) 80 true [.fixed 24, .low]
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 2), .at (.below 80) (.ret 131), .low (.existential 1)]
-      72) [.bytes 48, .bytes 32, .u64, .bytes 96, .u64]
+      72) [.bytes 48, .bytes 32, .uint64, .bytes 96, .uint64]
     ⟨161, 5, [(.rax, .zero), (.rbx, .zero)],
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 2), .at (.below 80) (.ret 131), .low (.existential 1)],
       [.fixed 24, .low]⟩ := by
@@ -1661,19 +1661,19 @@ theorem Decode.generated_accept : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Hos
   intro st5 h5
   exact Decode.generated_epilogue k hk hf kS hkS hfS fv0 fv1 fv2 fv3 fv4 hfv0 hfv1 hfv2 hfv3 hfv4 s ra guard fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aP0 aL0 aC0 aP1 aL1 aC1 aN2 aP3 aL3 aC3 aN4 hfp hs1 hs2 hs4 hsp0 hsp1 hsp2 hl28 hrslot hast haP0 haL0 haC0 haP1 haL1 haC1 haN2 haP3 haL3 haC3 haN4 R S hS hlo Heap avail st5 h5
 theorem Decode.generated_accept_kind : ∀ (h : Host), type_of% (@Decode.generated_accept h)
-    = @Codec.decAcceptKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
+    = @Codec.decodeAcceptKindAnyFrame h unmarshalSSZ (Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), .at (.below 72) (.original 4), .at (.below 64) (.original 5), .at (.below 56) (.original 6), .at (.below 32) (.original 7), .at (.below 80) (.original 8), .low (.original 9)]
       (some ⟨true, 8, 9, 88⟩) 80 true [.fixed 24, .low]
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), .at (.below 32) (.ptr 2), .at (.below 80) (.ret 131), .low (.existential 1)]
-      72) [.bytes 48, .bytes 32, .u64, .bytes 96, .u64] := by
+      72) [.bytes 48, .bytes 32, .uint64, .bytes 96, .uint64] := by
   intro h; rfl
 
 /-- Statement check: the generated theorem proves the independently written hand statement `Prysm.PendingDeposit.Decode.accept_statement`. -/
 theorem Decode.generated_accept_statement : Prysm.PendingDeposit.Decode.accept_statement := Decode.generated_accept
 
 set_option maxRecDepth 100000 in
-/-- Size reject (`rcx ≠ 192`): `dec_reject_seg` (frame `0x40`, error block at 164). -/
+/-- Size reject (`rcx ≠ 192`): `decode_reject_segment` (frame `0x40`, error block at 164). -/
 theorem Decode.generated_reject : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
     (R : DataMem → Prop)
@@ -1697,12 +1697,12 @@ theorem Decode.generated_reject : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Hos
   have hl := Machine.label_at' hk hf (j := 164)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  exact dec_reject_seg _ _ _ _ 64 88 192 _ k (window_infix_at hk 0 11) (by rfl) (by decide)
+  exact decode_reject_segment _ _ _ _ 64 88 192 _ k (window_infix_at hk 0 11) (by rfl) (by decide)
     _ (k + 164) (k + 167) (window_infix_at hk 164 3) (by rfl) (by rfl) hl
     _ (k + 168) (window_infix_at hk 167 1) (by rfl) (by rfl) _ (window_infix_at hk 168 2) (by rfl)
     s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard (fun h => hlen (h.trans (by rfl)))
 theorem Decode.generated_reject_kind : ∀ (h : Host), type_of% (@Decode.generated_reject h)
-    = @Codec.decRejectKindAnyFrame h unmarshalSSZ 192 := by
+    = @Codec.decodeRejectKindAnyFrame h unmarshalSSZ 192 := by
   intro h; with_reducible rfl
 
 end Prysm.PendingDeposit

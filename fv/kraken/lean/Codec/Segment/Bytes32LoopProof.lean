@@ -23,7 +23,7 @@ theorem bytes32_loop_iteration (n : Nat) (hn : n < 2 ^ 31) (lhead lexit lp1 lp2 
     (hB4 : (bytes32LoopHeader lp2 fP).IsInfixAt Host.prog jHd)
     (hB5 : (bytes32LoopTail lwb lback dP).IsInfixAt Host.prog jT)
     (hB6 : (bytes32LoopBack lback dI1).IsInfixAt Host.prog jB)
-    (g1 : Glue (jH + 8) jM) (gs : GlueSrc (jM + 13) jS src) (g2 : Glue (jS + 5) jHd) (g3 : Glue (jHd + 7) jT)
+    (g1 : Glue (jH + 8) jM) (gs : GlueSource (jM + 13) jS src) (g2 : Glue (jS + 5) jHd) (g3 : Glue (jHd + 7) jT)
     (g4 : Glue (jB + 3) jH) (hlb : label lback = Host.addrOf jB)
     (sp recv bf bfs A aI aD aI1 aP aB aR aL aA : BitVec 64)
     (haI : sp + dI.toBitVec = aI) (haD : sp + dD.toBitVec = aD) (haI1 : sp + dI1.toBitVec = aI1)
@@ -149,7 +149,7 @@ theorem bytes32_loop_iteration (n : Nat) (hn : n < 2 ^ 31) (lhead lexit lp1 lp2 
   try simp only [ofInt_ofBytes_toBytes64]
   step_directive hB2 bytes32LoopMiddle 12
   -- source offset (empty or `lea src(%rbx),%rbx`)
-  refine glue_src gs ?_
+  refine glue_source gs ?_
   dsimp only
   rw [show bf + (rax.toBitVec <<< 5) * 1#64 + src.toBitVec = bfs + BitVec.ofNat 64 (32 * i) by
     rw [← hsrc]; address_with_products]
@@ -287,7 +287,7 @@ theorem bytes32_loop (n : Nat) (hn : n < 2 ^ 31) (lhead lexit lp1 lp2 lwb lback 
     (hB4 : (bytes32LoopHeader lp2 fP).IsInfixAt Host.prog jHd)
     (hB5 : (bytes32LoopTail lwb lback dP).IsInfixAt Host.prog jT)
     (hB6 : (bytes32LoopBack lback dI1).IsInfixAt Host.prog jB)
-    (g1 : Glue (jH + 8) jM) (gs : GlueSrc (jM + 13) jS src) (g2 : Glue (jS + 5) jHd) (g3 : Glue (jHd + 7) jT)
+    (g1 : Glue (jH + 8) jM) (gs : GlueSource (jM + 13) jS src) (g2 : Glue (jS + 5) jHd) (g3 : Glue (jHd + 7) jT)
     (g4 : Glue (jB + 3) jH) (hlb : label lback = Host.addrOf jB) (hle : label lexit = Host.addrOf jE)
     (sp recv bf bfs A aI aD aI1 aP aB aR aL aA : BitVec 64)
     (haI : sp + dI.toBitVec = aI) (haD : sp + dD.toBitVec = aD) (haI1 : sp + dI1.toBitVec = aI1)

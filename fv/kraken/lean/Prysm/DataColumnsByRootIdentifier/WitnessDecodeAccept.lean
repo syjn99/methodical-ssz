@@ -55,7 +55,7 @@ theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10000 :=
 theorem label_write_barrier : label "runtime.writeBarrier" = 0x10008 :=
   mk_label program _ 8 _ (by simp [program, dataLabels]) (by decide)
 
-theorem u8_ne_u64 : ElfData.PrysmTarget.typeUint8_addr ≠ ElfData.PrysmTarget.typeUint64_addr := by
+theorem uint8_ne_uint64 : ElfData.PrysmTarget.typeUint8_addr ≠ ElfData.PrysmTarget.typeUint64_addr := by
   simp only [ElfData.PrysmTarget.typeUint8_addr, ElfData.PrysmTarget.typeUint64_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega
 
@@ -133,7 +133,7 @@ theorem runs (n : Nat) (hn : n ≤ 128) (root ib aP1 aL1 aC1 aP2 aL2 aC2 : List 
     (by show (UInt64.ofNat (36 + 8 * n)).toNat < 2 ^ 63
         rw [UInt64.toNat_ofNat_of_lt' (by unfold UInt64.size; omega)]; omega)
     (by omega)
-    (Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_for_data_columns_by_root_identifier_size1 238 placed_at_238 no_label_before_238 _ u8_ne_u64) (Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_for_data_columns_by_root_identifier_size8 238 placed_at_238 no_label_before_238 labels_fresh_at_238)
+    (Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_for_data_columns_by_root_identifier_size1 238 placed_at_238 no_label_before_238 _ uint8_ne_uint64) (Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_for_data_columns_by_root_identifier_size8 238 placed_at_238 no_label_before_238 labels_fresh_at_238)
     (model_memmove 253 placed_at_253 labels_fresh_at_253 _))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 

@@ -4,13 +4,13 @@
 Usage (run inside one gated job, Lean env, cwd anywhere):
   negative.py <cases.json> <work-dir> <result.json> [<case-id>...]
 cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoch/DecodeAccept.lean"), "theorem",
-  "kind": "code" | "stmt" | "control",
-  code:  "code_def" (Lean name of the included program, e.g. "Prysm.Epoch.Code.unmarshalSSZ"), "S" (file under
+  "kind": "code" | "statement" | "control",
+  code:  "code_definition" (Lean name of the included program, e.g. "Prysm.Epoch.Code.unmarshalSSZ"), "assembly" (file under
          prysm/go1.26.10/link-set/norm), "old", "new" (one exact instruction line, unique in the file,
          or at the 1-based "line" of the file)
-  stmt:  "old", "new" (exact text, unique inside the theorem statement)
-  control: optional "code_def"/"S" (then an unmutated copy of the .S is included the same way)
-  optional for code/control: "code_ns" (namespace of the code constant, default Prysm.Checkpoint.Code) and "norm"
+  statement:  "old", "new" (exact text, unique inside the theorem statement)
+  control: optional "code_definition"/"assembly" (then an unmutated copy of the .S is included the same way)
+  optional for code/control: "code_namespace" (namespace of the code constant, default Prysm.Checkpoint.Code) and "norm"
   (path of the .S under fv/kraken instead of prysm/go1.26.10/link-set/norm/<S>; AttestationData set)}
 For each case the mutant Lean file is the module's text up to the end of the designated theorem
 (the next top-level `theorem`/`def`/`end`/`example`/`/--` after it is cut; a `theorem <thm>_kind` that
@@ -29,7 +29,7 @@ error is kept in "later_resource_error"). These three resource classes and wrong
 negative.py --reclassify <result.json> [<work-dir>] recomputes the classes of a result file; --selftest checks them.
 negative.py --check-cases <cases.json>... resolves every case to one theorem line and checks the code_def use (no Lean).
 "theorem" is the full Lean name or the name as written on the declaration line; the full name selects the namespace
-block when one module holds the same written name twice. Without "code_ns", a full name in "code_def" is declared
+block when one module holds the same written name twice. Without "code_namespace", a full name in "code_definition" is declared
 with `_root_`, and a module under Prysm/<Type>/ uses Prysm.<Type>.Code.
 On a per-case timeout the whole process tree (memory_limit.py, and lake/lean in its own session) is killed
 and the driver asserts that none survives before the next case; --selftest-timeout checks
@@ -126,12 +126,12 @@ def find_decl(lines, name, kinds=("theorem",)):
     return hits[0]
 
 
-def code_ns_of(c):
+def code_namespace_of(c):
     """Namespace of the code constant of a case: `code_ns`, else `_root_` for a full name in `code_def`, else
     `Prysm.<Type>.Code` for a module under Prysm/<Type>/, else Prysm.Checkpoint.Code (the old default set)."""
-    if "code_ns" in c:
-        return c["code_ns"]
-    if "." in c["code_def"]:
+    if "code_namespace" in c:
+        return c["code_namespace"]
+    if "." in c["code_definition"]:
         return "_root_"
     p = c["module"].split("/")
     if p[0] == "Prysm" and len(p) > 2:
@@ -253,8 +253,8 @@ def run_case(c, work):
     lines, lo, hi = cut(src, c["theorem"])
     text = "\n".join(lines)
     diff = ""
-    if c.get("code_def"):
-        S = (KR / c["norm"] if "norm" in c else NORM / c["S"]).read_text()
+    if c.get("code_definition"):
+        S = (KR / c["norm"] if "norm" in c else NORM / c["assembly"]).read_text()
         if c["kind"] == "code":
             if "line" in c:  # 1-based line of the .S file (for an instruction that occurs twice)
                 sl = S.split("\n")
@@ -268,16 +268,16 @@ def run_case(c, work):
         else:
             S2 = S
         (d / "mut.S").write_text(S2)
-        name = c["code_def"]
+        name = c["code_definition"]
         tl = text.split("\n")
         k = max(i for i, l in enumerate(tl) if l.startswith("import ")) + 1
         rest = re.sub(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", name + "Mut", "\n".join(tl[k:]))
-        ns = code_ns_of(c)
+        ns = code_namespace_of(c)
         decl = f'def {ns}.{name}Mut : Program := include_x64_code "{d / "mut.S"}"'
         text = "\n".join(tl[:k] + ["", decl] + [rest])
         lo += 2
         hi += 2
-    if c["kind"] == "stmt":
+    if c["kind"] == "statement":
         tl = text.split("\n")
         seg = "\n".join(tl[lo - 1:hi])
         assert seg.count(c["old"]) == 1, (c["id"], "statement text not unique in the theorem")
@@ -413,7 +413,7 @@ def main(cases, work, out, *ids):
 
 def selftest():
     """Classifier fixture: a heartbeat timeout and a wall timeout are never a pass."""
-    base = dict(kind="stmt", range=[1, 9], rc=1, killed=False, timeout=False)
+    base = dict(kind="statement", range=[1, 9], rc=1, killed=False, timeout=False)
     fx = [("hb", dict(error_lines=[5], first_error="x:5:1: error: (deterministic) timeout at `whnf`"), "timeout_heartbeat"),
           ("in", dict(error_lines=[5], first_error="x:5:1: error: type mismatch"), "inside"),
           ("wall", dict(error_lines=[], first_error=None, rc=None, timeout=True), "timeout_wall"),
@@ -518,15 +518,15 @@ def check_cases(*paths):
                     mods = c.get("inline", [c["statement_module"]] if c.get("statement_module") else [])
                     text = "\n".join((LEAN / m).read_text() for m in mods) if mods else "\n".join(lines)
                     find_decl(text.split("\n"), c["statement_def"], ("def",))
-                elif c["kind"] == "stmt" and "\n".join(lines[lo - 1:hi]).count(c["old"]) != 1:
+                elif c["kind"] == "statement" and "\n".join(lines[lo - 1:hi]).count(c["old"]) != 1:
                     raise ValueError("statement text not unique in the theorem")
             except (OSError, ValueError, StopIteration, KeyError) as e:
                 bad.append(f"{p}: {c['id']}: {type(e).__name__} {e}")
                 continue
-            if c.get("code_def"):
+            if c.get("code_definition"):
                 tl = "\n".join(lines).split("\n")
                 k = max(i for i, l in enumerate(tl) if l.startswith("import ")) + 1
-                name = c["code_def"]
+                name = c["code_definition"]
                 body = "\n".join(tl[k:])
                 for m in c.get("inline", [c["statement_module"]] if c.get("statement_module") else []):
                     body += "\n" + (LEAN / m).read_text()

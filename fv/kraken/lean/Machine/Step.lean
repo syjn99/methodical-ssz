@@ -107,7 +107,7 @@ theorem isInfixAt_drop {α : Type} {p l : List α} {k : Nat} (h : p.IsInfixAt l 
 variable [Host]
 
 /-- One directive of a fragment at index `k`, chained into `Eventually`. -/
-theorem estep {k : Nat} {d : Directive} {p : Program} (hdp : (d :: p).IsInfixAt Host.prog k)
+theorem eventually_step_directive {k : Nat} {d : Directive} {p : Program} (hdp : (d :: p).IsInfixAt Host.prog k)
     {final : MachineState → Prop} {s : MachineData}
     (h : (d.interp s ⟨Host.addrOf k, Host.addrOf (k + 1)⟩
       (fun s' => .done ⟨s', Host.addrOf (k + 1)⟩) (fun a s' => .done ⟨s', a⟩)).All
@@ -131,7 +131,7 @@ literal list exceeds the recursion limit near n = 44). -/
 macro "step_directive " hk:term:max prog:ident n:num : tactic => `(tactic| (
   have hkat := Machine.isInfixAt_drop $hk $n
   simp only [$prog:ident, List.drop_succ_cons, List.drop_zero] at hkat
-  apply Machine.estep hkat
+  apply Machine.eventually_step_directive hkat
   clear hkat
   unfold_step))
 

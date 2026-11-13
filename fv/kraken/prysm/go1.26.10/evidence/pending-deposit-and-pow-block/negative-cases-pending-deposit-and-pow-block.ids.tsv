@@ -1,7 +1,7 @@
 # negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
-pd-gen-control	pending-deposit-decode-generated-step-signature-seg-control
-pd-gen-code-siglen	pending-deposit-decode-generated-step-signature-seg-code-mov-0x60-to-0x50
-pd-gen-stmt-src	pending-deposit-decode-generated-step-signature-seg-statement-h-src-88-to-80
+pd-gen-control	pending-deposit-decode-generated-step-signature-segment-control
+pd-gen-code-siglen	pending-deposit-decode-generated-step-signature-segment-code-mov-0x60-to-0x50
+pd-gen-stmt-src	pending-deposit-decode-generated-step-signature-segment-statement-h-src-88-to-80
 pd-gen-code-slotoff	pending-deposit-decode-generated-step-directive-124-code-add-0xb8-to-0xb0
 pd-head-control	pending-deposit-decode-head-control
 pd-head-code-order	pending-deposit-decode-head-code-mov-0x68-rsp-to-0x60-rsp
@@ -19,9 +19,9 @@ pd-deser-stmt-value	pending-deposit-desc-deserialize-checker-statement-deseriali
 pd-rc-stmt-size	pending-deposit-decode-reject-complete-statement-size-192-to-191
 pd-wita-stmt-rax	pending-deposit-witness-decode-accept-runs-statement-rax-0-to-1
 pd-witr-stmt-len	pending-deposit-witness-decode-reject-size-runs-statement-hlen-192-to-193
-pb-gen-control	pow-block-decode-generated-step-total-difficulty-seg-control
-pb-gen-code-len	pow-block-decode-generated-step-total-difficulty-seg-code-mov-0x20-to-0x18
-pb-gen-stmt-src	pow-block-decode-generated-step-total-difficulty-seg-statement-h-src-64-to-56
+pb-gen-control	pow-block-decode-generated-step-total-difficulty-segment-control
+pb-gen-code-len	pow-block-decode-generated-step-total-difficulty-segment-code-mov-0x20-to-0x18
+pb-gen-stmt-src	pow-block-decode-generated-step-total-difficulty-segment-statement-h-src-64-to-56
 pb-gen-code-store	pow-block-decode-generated-step-directive-118-code-mov-0x30-rdx-to-0x28-rdx
 pb-field-control	pow-block-decode-from-generated-steps-parent-hash-field-control
 pb-field-stmt-src	pow-block-decode-from-generated-steps-parent-hash-field-statement-h-src-32-to-24

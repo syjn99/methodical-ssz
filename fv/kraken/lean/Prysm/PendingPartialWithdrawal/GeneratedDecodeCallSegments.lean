@@ -15,7 +15,7 @@ namespace Prysm.PendingPartialWithdrawal
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Index` (callee decoder field, Go offset 8): argument set-up, first-field form, directives 15–16. -/
-theorem Decode.generated_call_Index_arg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_call_Index_argument (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (rcv aF : BitVec 64) (hF : rcv + (8 : Int64).toBitVec = aF)
     (s : MachineData) (hrax : s.regs.rax.toBitVec = rcv),
@@ -24,17 +24,17 @@ theorem Decode.generated_call_Index_arg (k : Nat) (hk : unmarshalSSZ.IsInfixAt H
         ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧ st.data.regs.rbx = s.regs.rbx
         ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8 ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 15)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.callArgFirst false 8) 15 hk
-    (by simp only [unmarshalSSZ, Codec.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  with_reducible exact Codec.callarg_first_seg false _ (k + 15) hA
-theorem Decode.generated_call_Index_arg_kind : ∀ (h : Host), type_of% (@Decode.generated_call_Index_arg h) = @Codec.callArgFirstKind h unmarshalSSZ false 8 15 := by
+  have hA := Codec.infix_sub (q := Codec.callArgumentFirst false 8) 15 hk
+    (by simp only [unmarshalSSZ, Codec.callArgumentFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  with_reducible exact Codec.call_argument_first_segment false _ (k + 15) hA
+theorem Decode.generated_call_Index_argument_kind : ∀ (h : Host), type_of% (@Decode.generated_call_Index_argument h) = @Codec.callArgumentFirstKind h unmarshalSSZ false 8 15 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Index`: call block of the callee decoder, directives 17–19, continuation label at 47. -/
 theorem Decode.generated_call_Index_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
+    ∀ (hC : Uint64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -55,21 +55,21 @@ theorem Decode.generated_call_Index_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt 
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 17)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 17 hk
-    (by simp only [unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 47 hk
-    (by simp only [unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA := Codec.infix_sub (q := Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 17 hk
+    (by simp only [unmarshalSSZ, Codec.callDecode, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 47 hk
+    (by simp only [unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 47)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.calldec_seg _ _ (k + 17) (k + 47) hA hB hl
-theorem Decode.generated_call_Index_call_kind : ∀ (h : Host), type_of% (@Decode.generated_call_Index_call h) = @Codec.callDecSegKind h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9" 17 47 := by
+  with_reducible exact Codec.call_decode_segment _ _ (k + 17) (k + 47) hA hB hl
+theorem Decode.generated_call_Index_call_kind : ∀ (h : Host), type_of% (@Decode.generated_call_Index_call h) = @Codec.callDecodeSegmentKind h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9" 17 47 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Amount` (inline uint64, two-directive form, SSZ offset 8, Go offset 16): decode segment, directives 54–55, scratch register r8. -/
-theorem Decode.generated_call_Amount_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_call_Amount_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (bf rcv aSrc aF : BitVec 64) (hSrc : bf + (8 : Int64).toBitVec = aSrc) (hF : rcv + (16 : Int64).toBitVec = aF)
     (v vF : List UInt8) (hv : v.length = 8) (hvF : vF.length = 8)
@@ -83,17 +83,17 @@ theorem Decode.generated_call_Amount_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt 
         ∧ (∀ r : Reg64, r ≠ Reg64.r8 → st.data.regs.get64 r = s.regs.get64 r)
         ∧ (Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 54)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.u64DecScratchRegister Reg64.r8 8 16) 54 hk
-    (by simp only [unmarshalSSZ, Codec.u64DecScratchRegister, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hX : Codec.U64ScratchRegister Reg64.r8 := by decide
-  with_reducible exact Codec.u64dec_scratch_register_seg Reg64.r8 hX _ _ (k + 54) hA
-theorem Decode.generated_call_Amount_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_call_Amount_seg h) = @Codec.u64DecScratchRegisterSegKind h unmarshalSSZ Reg64.r8 8 16 54 := by
+  have hA := Codec.infix_sub (q := Codec.uint64DecodeScratchRegister Reg64.r8 8 16) 54 hk
+    (by simp only [unmarshalSSZ, Codec.uint64DecodeScratchRegister, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hX : Codec.Uint64ScratchRegister Reg64.r8 := by decide
+  with_reducible exact Codec.uint64_decode_scratch_register_segment Reg64.r8 hX _ _ (k + 54) hA
+theorem Decode.generated_call_Amount_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_call_Amount_segment h) = @Codec.uint64DecodeScratchRegisterSegmentKind h unmarshalSSZ Reg64.r8 8 16 54 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `WithdrawableEpoch` (callee decoder field, SSZ offset 16, Go offset 24): argument set-up, `lea` form, first part, directives 48–53. -/
-theorem Decode.generated_call_WithdrawableEpoch_arg1 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_call_WithdrawableEpoch_argument_1 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (sp rcv bf aB aD aR aSrc aF : BitVec 64)
     (hB' : sp + (96 : Int64).toBitVec = aB) (hD : sp + (112 : Int64).toBitVec = aD) (hR : sp + (88 : Int64).toBitVec = aR)
@@ -109,16 +109,16 @@ theorem Decode.generated_call_WithdrawableEpoch_arg1 (k : Nat) (hk : unmarshalSS
         ∧ st.data.regs.rax.toBitVec = rcv ∧ st.data.regs.rsi.toBitVec = aF
         ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 48)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.callArgLea 96 16 112 (-16) 88 24) 48 hk
-    (by simp only [unmarshalSSZ, Codec.callArgLea, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  with_reducible exact Codec.callarg_lea_seg _ _ _ _ _ _ (k + 48) hA
-theorem Decode.generated_call_WithdrawableEpoch_arg1_kind : ∀ (h : Host), type_of% (@Decode.generated_call_WithdrawableEpoch_arg1 h) = @Codec.callArgLeaKind h unmarshalSSZ 96 16 112 (-16) 88 24 48 := by
+  have hA := Codec.infix_sub (q := Codec.callArgumentLea 96 16 112 (-16) 88 24) 48 hk
+    (by simp only [unmarshalSSZ, Codec.callArgumentLea, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  with_reducible exact Codec.call_argument_lea_segment _ _ _ _ _ _ (k + 48) hA
+theorem Decode.generated_call_WithdrawableEpoch_argument_1_kind : ∀ (h : Host), type_of% (@Decode.generated_call_WithdrawableEpoch_argument_1 h) = @Codec.callArgumentLeaKind h unmarshalSSZ 96 16 112 (-16) 88 24 48 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `WithdrawableEpoch`: argument set-up, `lea` form, second part, directives 56–58. -/
-theorem Decode.generated_call_WithdrawableEpoch_arg2 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_call_WithdrawableEpoch_argument_2 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (s : MachineData),
     Eventually (step1 Host.exe)
@@ -127,17 +127,17 @@ theorem Decode.generated_call_WithdrawableEpoch_arg2 (k : Nat) (hk : unmarshalSS
         ∧ st.data.regs.rax = s.regs.rsi ∧ st.data.regs.rbx = s.regs.rdx ∧ st.data.regs.rcx = 8
         ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 56)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.callArgMov) 56 hk
-    (by simp only [unmarshalSSZ, Codec.callArgMov, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  with_reducible exact Codec.callarg_mov_seg (k + 56) hA
-theorem Decode.generated_call_WithdrawableEpoch_arg2_kind : ∀ (h : Host), type_of% (@Decode.generated_call_WithdrawableEpoch_arg2 h) = @Codec.callArgMovKind h unmarshalSSZ 56 := by
+  have hA := Codec.infix_sub (q := Codec.callArgumentMov) 56 hk
+    (by simp only [unmarshalSSZ, Codec.callArgumentMov, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  with_reducible exact Codec.call_argument_mov_segment (k + 56) hA
+theorem Decode.generated_call_WithdrawableEpoch_argument_2_kind : ∀ (h : Host), type_of% (@Decode.generated_call_WithdrawableEpoch_argument_2 h) = @Codec.callArgumentMovKind h unmarshalSSZ 56 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `WithdrawableEpoch`: call block of the callee decoder, directives 59–61, continuation label at 88. -/
 theorem Decode.generated_call_WithdrawableEpoch_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ")
+    ∀ (hC : Uint64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -158,15 +158,15 @@ theorem Decode.generated_call_WithdrawableEpoch_call (k : Nat) (hk : unmarshalSS
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 59)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 59 hk
-    (by simp only [unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 88 hk
-    (by simp only [unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hA := Codec.infix_sub (q := Codec.callDecode "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 59 hk
+    (by simp only [unmarshalSSZ, Codec.callDecode, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.callDecodeContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 88 hk
+    (by simp only [unmarshalSSZ, Codec.callDecodeContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 88)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.calldec_seg _ _ (k + 59) (k + 88) hA hB hl
-theorem Decode.generated_call_WithdrawableEpoch_call_kind : ∀ (h : Host), type_of% (@Decode.generated_call_WithdrawableEpoch_call h) = @Codec.callDecSegKind h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159" 59 88 := by
+  with_reducible exact Codec.call_decode_segment _ _ (k + 59) (k + 88) hA hB hl
+theorem Decode.generated_call_WithdrawableEpoch_call_kind : ∀ (h : Host), type_of% (@Decode.generated_call_WithdrawableEpoch_call h) = @Codec.callDecodeSegmentKind h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159" 59 88 := by
   intro h; with_reducible rfl
 
 end Prysm.PendingPartialWithdrawal

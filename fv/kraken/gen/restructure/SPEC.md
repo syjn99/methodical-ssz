@@ -188,7 +188,7 @@ These follow through the tool, or through the generator when a generator writes 
 
 - Imports and references in every Lean file, also outside `fv/kraken/lean`.
   This includes the description checker and the hand lists in `fv/kraken/gen/axioms-lists/`.
-- Negative-case files (`module`, `theorem`, `code_def`, `code_ns`, paths, `old` / `new` text pairs).
+- Negative-case files (`module`, `theorem`, `code_definition`, `code_namespace`, paths, `old` / `new` text pairs).
 - Scripts that name the moved modules, namespaces or paths.
   Examples: link scripts, `check_include` scripts, generators and their emitted strings.
   A regenerated output must equal the moved file.

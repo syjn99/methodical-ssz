@@ -1,0 +1,13 @@
+# differential case ids: earlier id (the run records name it)	present id
+dd-accept-0	deposit-data-accept-0
+dd-accept-1	deposit-data-accept-1
+dd-accept-2	deposit-data-accept-2
+dd-size-0	deposit-data-size-0
+dd-size-183	deposit-data-size-183
+dd-size-185	deposit-data-size-185
+pw-accept-0	pending-partial-withdrawal-accept-0
+pw-accept-1	pending-partial-withdrawal-accept-1
+pw-accept-2	pending-partial-withdrawal-accept-2
+pw-size-0	pending-partial-withdrawal-size-0
+pw-size-23	pending-partial-withdrawal-size-23
+pw-size-25	pending-partial-withdrawal-size-25

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """Cross-check of the include adapter with the real data files and the data includes of the retained modules.
+Record of an earlier run: the namespaces that this generator writes (`Gen1c.*`, `TestTarget.*`, `Fk.*`) name
+libraries that the present tree no longer has (lean/README.md section 8). The adapter part that it checks still reads the present data files, not the
+present Lean tree.
 
 Usage:
   test_include.py prepare <work-dir>                     Python checks + <work>/IncludeCheck.lean

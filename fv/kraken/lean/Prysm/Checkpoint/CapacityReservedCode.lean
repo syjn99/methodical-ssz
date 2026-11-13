@@ -2,7 +2,7 @@ import Kraken.X64.Parser
 import Machine.Include
 
 /-!
-# OPT-R1: code of the reserve encoder (Go 1.26.10 ELF `3ef7ac89…f602`)
+# Code of the reserve encoder of the capacity-reserved build (Go 1.26.10 ELF `3ef7ac89…f602`)
 
 `(*v1alpha1.Checkpoint).MarshalSSZTo` built from generator `ca191bb` with
 `--reserve-marshal=Checkpoint`: one inserted statement at the top of the body,

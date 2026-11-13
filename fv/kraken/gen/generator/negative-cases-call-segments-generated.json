@@ -27,31 +27,31 @@
   "id": "pending-partial-withdrawal-decode-generated-call-index-call-statement-rax-0-to-8",
   "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_Index_call",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
   "new": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 8"
  },
  {
-  "id": "pending-partial-withdrawal-decode-generated-call-amount-seg-statement-v-v-to-v-f",
+  "id": "pending-partial-withdrawal-decode-generated-call-amount-segment-statement-v-v-to-v-f",
   "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_Amount_seg",
-  "kind": "stmt",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_Amount_segment",
+  "kind": "statement",
   "old": "⋆ Eq (v.At aF) ⋆ R) st.data.dmem",
   "new": "⋆ Eq (vF.At aF) ⋆ R) st.data.dmem"
  },
  {
-  "id": "pending-partial-withdrawal-decode-generated-call-withdrawable-epoch-arg1-statement-rsi-a-f-to-a-src",
+  "id": "pending-partial-withdrawal-decode-generated-call-withdrawable-epoch-argument-1-statement-rsi-a-f-to-a-src",
   "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_WithdrawableEpoch_arg1",
-  "kind": "stmt",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_WithdrawableEpoch_argument_1",
+  "kind": "statement",
   "old": "st.data.regs.rsi.toBitVec = aF",
   "new": "st.data.regs.rsi.toBitVec = aSrc"
  },
  {
-  "id": "beacon-block-header-decode-generated-call-proposer-index-arg-statement-k-true-to-false",
+  "id": "beacon-block-header-decode-generated-call-proposer-index-argument-statement-k-true-to-false",
   "module": "Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_call_ProposerIndex_arg",
-  "kind": "stmt",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_call_ProposerIndex_argument",
+  "kind": "statement",
   "old": "(k + 47 + 7 + padLen true)",
   "new": "(k + 47 + 7 + padLen false)"
  },
@@ -59,15 +59,15 @@
   "id": "beacon-block-header-decode-generated-call-slot-call-statement-primitives-slot-to-epoch",
   "module": "Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean",
   "theorem": "Prysm.BeaconBlockHeader.Decode.generated_call_Slot_call",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "primitives.Slot.UnmarshalSSZ\")",
   "new": "primitives.Epoch.UnmarshalSSZ\")"
  },
  {
-  "id": "deposit-data-decode-generated-call-withdrawal-credentials-seg-statement-hroot-32-to-48",
+  "id": "deposit-data-decode-generated-call-withdrawal-credentials-segment-statement-hroot-32-to-48",
   "module": "Prysm/Deposit_Data/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.generated_call_WithdrawalCredentials_seg",
-  "kind": "stmt",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_call_WithdrawalCredentials_segment",
+  "kind": "statement",
   "old": "(hroot : root.length = 32)",
   "new": "(hroot : root.length = 48)"
  },
@@ -75,15 +75,15 @@
   "id": "deposit-data-decode-accept-generated-composition-kind-statement-bytes-32-to-48",
   "module": "Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean",
   "theorem": "Prysm.Deposit_Data.Decode.accept_generated_composition_kind",
-  "kind": "stmt",
-  "old": "[.bytes 48, .bytes 32, .u64, .bytes 96]",
-  "new": "[.bytes 48, .bytes 48, .u64, .bytes 96]"
+  "kind": "statement",
+  "old": "[.bytes 48, .bytes 32, .uint64, .bytes 96]",
+  "new": "[.bytes 48, .bytes 48, .uint64, .bytes 96]"
  },
  {
   "id": "pending-partial-withdrawal-decode-accept-from-generated-call-segments-statement-theorem-none-to-prysm-deposit-data",
   "module": "Prysm/PendingPartialWithdrawal/DecodeAcceptFromGeneratedCallSegments.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.accept_from_generated_call_segments",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "theorem Decode.accept_from_generated_call_segments : Decode.accept_statement",
   "new": "theorem Decode.accept_from_generated_call_segments : Prysm.Deposit_Data.Decode.accept_statement"
  },
@@ -91,60 +91,60 @@
   "id": "beacon-block-header-decode-head-from-generated-call-segments-statement-hlen-112-to-104",
   "module": "Prysm/BeaconBlockHeader/DecodeAcceptFromGeneratedCallSegments.lean",
   "theorem": "Prysm.BeaconBlockHeader.Decode.head_from_generated_call_segments",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(hlen : s.regs.rcx = 112)",
   "new": "(hlen : s.regs.rcx = 104)"
  },
  {
-  "id": "pending-partial-withdrawal-decode-generated-call-amount-seg-code-mov-0x10-rax-to-0x18-rax",
+  "id": "pending-partial-withdrawal-decode-generated-call-amount-segment-code-mov-0x10-rax-to-0x18-rax",
   "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_Amount_seg",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_Amount_segment",
   "kind": "code",
   "line": 56,
   "old": "  mov %r8,0x10(%rax)",
   "new": "  mov %r8,0x18(%rax)",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.PendingPartialWithdrawal.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingPartialWithdrawal.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-partial-withdrawal-decode-generated-call-index-arg-code-add-0x8-to-0x10",
+  "id": "pending-partial-withdrawal-decode-generated-call-index-argument-code-add-0x8-to-0x10",
   "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_Index_arg",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_Index_argument",
   "kind": "code",
   "line": 16,
   "old": "  add $0x8,%rax",
   "new": "  add $0x10,%rax",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.PendingPartialWithdrawal.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingPartialWithdrawal.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {
-  "id": "beacon-block-header-decode-generated-call-proposer-index-arg-code-add-0x8-to-0x10",
+  "id": "beacon-block-header-decode-generated-call-proposer-index-argument-code-add-0x8-to-0x10",
   "module": "Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_call_ProposerIndex_arg",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_call_ProposerIndex_argument",
   "kind": "code",
   "line": 51,
   "old": "  add $-0x8,%rdi",
   "new": "  add $-0x10,%rdi",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.BeaconBlockHeader.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.BeaconBlockHeader.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-data-decode-generated-call-withdrawal-credentials-seg-code-nop-mov-none-to-0x20-ecx",
+  "id": "deposit-data-decode-generated-call-withdrawal-credentials-segment-code-nop-mov-none-to-0x20-ecx",
   "module": "Prysm/Deposit_Data/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.generated_call_WithdrawalCredentials_seg",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_call_WithdrawalCredentials_segment",
   "kind": "code",
   "line": 51,
   "old": "  nop",
   "new": "  mov $0x20,%ecx",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit_Data.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit_Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  }
 ]

@@ -1,7 +1,7 @@
 [
  {
-  "id": "pd-accept-0",
-  "op": "pd_u",
+  "id": "pending-deposit-accept-0",
+  "op": "PendingDeposit.UnmarshalSSZ",
   "in": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
   "exp": {
    "err": "",
@@ -27,8 +27,8 @@
   }
  },
  {
-  "id": "pd-accept-1",
-  "op": "pd_u",
+  "id": "pending-deposit-accept-1",
+  "op": "PendingDeposit.UnmarshalSSZ",
   "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f2222222222222222222222222222222222222222222222222222222222222222efcdab89674523016465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c30700000000000000",
   "exp": {
    "err": "",
@@ -54,8 +54,8 @@
   }
  },
  {
-  "id": "pd-accept-2",
-  "op": "pd_u",
+  "id": "pending-deposit-accept-2",
+  "op": "PendingDeposit.UnmarshalSSZ",
   "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "exp": {
    "err": "",
@@ -81,32 +81,32 @@
   }
  },
  {
-  "id": "pd-size-0",
-  "op": "pd_u",
+  "id": "pending-deposit-size-0",
+  "op": "PendingDeposit.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "pd-size-191",
-  "op": "pd_u",
+  "id": "pending-deposit-size-191",
+  "op": "PendingDeposit.UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "pd-size-193",
-  "op": "pd_u",
+  "id": "pending-deposit-size-193",
+  "op": "PendingDeposit.UnmarshalSSZ",
   "in": "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "pb-accept-0",
-  "op": "pb_u",
+  "id": "pow-block-accept-0",
+  "op": "PowBlock.UnmarshalSSZ",
   "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1fc8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e70000000000000000000000000000000000000000000000000000000000000000",
   "exp": {
    "err": "",
@@ -128,8 +128,8 @@
   }
  },
  {
-  "id": "pb-accept-1",
-  "op": "pb_u",
+  "id": "pow-block-accept-1",
+  "op": "PowBlock.UnmarshalSSZ",
   "in": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e73930000000000000000000000000000000000000000000000000000000000080",
   "exp": {
    "err": "",
@@ -151,8 +151,8 @@
   }
  },
  {
-  "id": "pb-accept-2",
-  "op": "pb_u",
+  "id": "pow-block-accept-2",
+  "op": "PowBlock.UnmarshalSSZ",
   "in": "02030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "exp": {
    "err": "",
@@ -174,24 +174,24 @@
   }
  },
  {
-  "id": "pb-size-0",
-  "op": "pb_u",
+  "id": "pow-block-size-0",
+  "op": "PowBlock.UnmarshalSSZ",
   "in": "",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "pb-size-95",
-  "op": "pb_u",
+  "id": "pow-block-size-95",
+  "op": "PowBlock.UnmarshalSSZ",
   "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true
   }
  },
  {
-  "id": "pb-size-97",
-  "op": "pb_u",
+  "id": "pow-block-size-97",
+  "op": "PowBlock.UnmarshalSSZ",
   "in": "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
   "exp": {
    "err_is_ErrSize": true

@@ -42,11 +42,11 @@ def goValue (b : List UInt8) : Bool :=
   decide (b.length = goSize) && goSliceOk b (fieldOffset "Root") && goSliceOk b (fieldOffset "unknownFields")
 
 /-- The receiver bytes at offset `o` of a witness block. -/
-def recvAt (blk : List UInt8) (o : Nat) : List UInt8 := (blk.drop o).take goSize
+def receiverAt (blk : List UInt8) (o : Nat) : List UInt8 := (blk.drop o).take goSize
 
 open Witness.DecodeAccept in
 /-- Decoder witness, before the call: the receiver (offset 0x5c of the block) is a zero `Checkpoint`. -/
-theorem witness_decode_accept_recv_pre : goValue (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c)
+theorem witness_decode_accept_receiver_pre : goValue (receiverAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c)
     = true := by decide
 
 /-! After the decoder. The receiver bytes are not written by hand: `afterDecode b e8 p`
@@ -130,21 +130,21 @@ theorem after_decode_goValue (b e8 : List UInt8) (hb : goValue b = true) (he8 : 
     exact hb'.2
 open Witness.DecodeAccept in
 /-- Decoder witness, after the call: the receiver from the conclusion fragments over the witness block. -/
-theorem witness_decode_accept_recv_post (p : BitVec 64) (hp : p ≠ 0) :
-    goValue (afterDecode (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c)
+theorem witness_decode_accept_receiver_post (p : BitVec 64) (hp : p ≠ 0) :
+    goValue (afterDecode (receiverAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c)
       (Int.toBytes 8 0x0123456789abcdef) p) = true :=
-  after_decode_goValue _ _ witness_decode_accept_recv_pre (by decide) p hp
+  after_decode_goValue _ _ witness_decode_accept_receiver_pre (by decide) p hp
 
 open Witness.EncodeFastPath in
 /-- Encoder witnesses: the receiver at offset 8 (Root = (0x10050, 32, 32)). -/
-theorem witness_encode_fast_path_recv : goValue (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)
+theorem witness_encode_fast_path_receiver : goValue (receiverAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)
     [] []) 8) = true := by decide
 
 open Witness.EncodeRejectLength in
 /-- Encoder reject witness: the receiver at offset 24 with `len(Root)` 31, 33, 0 and cap 48. -/
-theorem witness_encode_reject_length_recv : goValue (recvAt (block (Int.toBytes 8 7) 31) 24) = true
-    ∧ goValue (recvAt (block (Int.toBytes 8 7) 33) 24) = true
-    ∧ goValue (recvAt (block (Int.toBytes 8 7) 0) 24) = true := by decide
+theorem witness_encode_reject_length_receiver : goValue (receiverAt (block (Int.toBytes 8 7) 31) 24) = true
+    ∧ goValue (receiverAt (block (Int.toBytes 8 7) 33) 24) = true
+    ∧ goValue (receiverAt (block (Int.toBytes 8 7) 0) 24) = true := by decide
 
 /-- Control: a header with `len > cap` is not a Go value. -/
 theorem goValue_rejects_bad : goValue (List.replicate 24 0 ++ Int.toBytes 8 33 ++ Int.toBytes 8 32

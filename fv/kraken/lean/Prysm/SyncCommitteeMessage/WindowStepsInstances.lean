@@ -23,8 +23,8 @@ variable [Host]
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `Prysm.SyncCommitteeMessage.Decode.validator_index_arg` (hand set-up: the receiver is already in rax) from the step lemmas. -/
-theorem Decode.validator_index_arg_inst : type_of% (@Prysm.SyncCommitteeMessage.Decode.validator_index_arg ‹Host›) := by
+/-- `Prysm.SyncCommitteeMessage.Decode.validator_index_argument` (hand set-up: the receiver is already in rax) from the step lemmas. -/
+theorem Decode.validator_index_argument_inst : type_of% (@Prysm.SyncCommitteeMessage.Decode.validator_index_argument ‹Host›) := by
   intro k hk sp rcv bf aB aD aSrc aF hB' hD hSrc hF vD hvD R s hrsp hrax h_mem
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrax h_mem ⊢

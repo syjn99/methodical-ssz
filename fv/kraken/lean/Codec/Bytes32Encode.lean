@@ -6,17 +6,17 @@ import Codec.Bytes32Decode
 Go 1.26.10 compiles the 32-byte field encode of a protoc container (`Checkpoint.Root`) to two
 code blocks (the growslice block between them is not taken when the field fits):
 
-* `rootEncHead lrej lcf fP fL` (6 directives): `mov fP(%rax),%r8` (field pointer),
+* `rootEncodeHead lrej lcf fP fL` (6 directives): `mov fP(%rax),%r8` (field pointer),
   `cmpq $0x20,fL(%rax); jne lrej` (length test), `lea 0x20(%rdx),%r9; cmp %r9,%rdi; jae lcf`
   (capacity test);
-* `rootEncTail lcf dCap dLen dPtr` (8 directives): `lcf:`, spills of the capacity, the new
+* `rootEncodeTail lcf dCap dLen dPtr` (8 directives): `lcf:`, spills of the capacity, the new
   length and the base `mov %rdi,dCap(%rsp); mov %r9,dLen(%rsp); mov %rbx,dPtr(%rsp)`,
   `lea (%rbx,%rdx,1),%rax; mov %r8,%rbx; mov $0x20,%ecx; callq runtime.memmove`.
 
 Registers at the segment: rax = receiver `rcv`, rbx = destination base `dstp`, rdx = current
 length `off`, rdi = capacity `cap`. Parameters: labels `lrej`, `lcf`; field displacements
 `fP`, `fL`; stack displacements `dCap`, `dLen`, `dPtr`; the places `j1`, `j2`; the address of
-`lcf`; addresses with equations as in `rootdec_seg`. The lemma ends at the return of
+`lcf`; addresses with equations as in `root_decode_segment`. The lemma ends at the return of
 `memmove` (directive `j2 + 8`).
 -/
 
@@ -25,7 +25,7 @@ open Machine Runtime
 namespace Codec
 
 /-- First block of the 32-byte field encode segment (length test, capacity test). -/
-def rootEncHead (lrej lcf : String) (fP fL : Int64) : Program :=
+def rootEncodeHead (lrej lcf : String) (fP fL : Int64) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.reg (Reg.low Reg64.r8 Width.W64))
        (Operand.regOrMem (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rax)) none (ConstExpr.int64 fP)))))),
@@ -41,7 +41,7 @@ def rootEncHead (lrej lcf : String) (fP fL : Int64) : Program :=
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.nc lcf))]
 
 /-- Second block of the 32-byte field encode segment (from `lcf:` to the `memmove` call). -/
-def rootEncTail (lcf : String) (dCap dLen dPtr : Int64) : Program :=
+def rootEncodeTail (lcf : String) (dCap dLen dPtr : Int64) : Program :=
   [Kraken.Directive.label lcf,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rsp)) none (ConstExpr.int64 dCap)))
@@ -72,9 +72,9 @@ set_option maxRecDepth 100000 in
 /-- **32-byte field encode segment lemma** (the field fits: `off + 32 ≤ cap`): `len(f) = 32` is read, the
 capacity, new length and base are spilled, and `memmove` copies the 32 bytes at the field
 pointer `p` to `dstp + off`. Ends at the return of `memmove`. -/
-theorem rootenc_seg (lrej lcf : String) (fP fL dCap dLen dPtr : Int64) (j1 j2 : Nat)
-    (hA : (rootEncHead lrej lcf fP fL).IsInfixAt Host.prog j1)
-    (hB : (rootEncTail lcf dCap dLen dPtr).IsInfixAt Host.prog j2)
+theorem root_encode_segment (lrej lcf : String) (fP fL dCap dLen dPtr : Int64) (j1 j2 : Nat)
+    (hA : (rootEncodeHead lrej lcf fP fL).IsInfixAt Host.prog j1)
+    (hB : (rootEncodeTail lcf dCap dLen dPtr).IsInfixAt Host.prog j2)
     (hl : label lcf = Host.addrOf j2)
     (sp rcv off dstp cap p aP aL aCap aLen aPtr aRet aLo aDst : BitVec 64) (St : Nat)
     (hP : rcv + fP.toBitVec = aP) (hL : rcv + fL.toBitVec = aL)
@@ -110,46 +110,46 @@ theorem rootenc_seg (lrej lcf : String) (fP fL dCap dLen dPtr : Int64) (j1 j2 : 
   have := rdi.toNat_lt_size; have := rdx.toNat_lt_size
   simp only [UInt64.size] at *
   try simp only [UInt64.toNat_toBitVec] at hfit
-  step_directive hA rootEncHead 0
+  step_directive hA rootEncodeHead 0
   apply load_step_at _ _ aP _ _ (Int.toBytes 8 p.toInt) _ _ (by rw [← hP]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
-  step_directive hA rootEncHead 1
+  step_directive hA rootEncodeHead 1
   apply load_step_at _ _ aL _ _ (Int.toBytes 8 32) _ _ (by rw [← hL]) (by ecancel) (by rfl)
   simp only [show Int.ofBytes (Int.toBytes 8 32) = 32 by decide]
   unfold_step
-  step_directive hA rootEncHead 2
+  step_directive hA rootEncodeHead 2
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  step_directive hA rootEncHead 3
-  step_directive hA rootEncHead 4
-  step_directive hA rootEncHead 5
+  step_directive hA rootEncodeHead 3
+  step_directive hA rootEncodeHead 4
+  step_directive hA rootEncodeHead 5
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega
   simp only [Effects.All]
   rw [hl]
-  step_directive hB rootEncTail 0
-  step_directive hB rootEncTail 1
+  step_directive hB rootEncodeTail 0
+  step_directive hB rootEncodeTail 1
   apply store_step_at _ _ aCap _ _ _ vCap _ _ (by rw [← hCap]) (by ecancel) (by exact hvCap)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   unfold_step
-  step_directive hB rootEncTail 2
+  step_directive hB rootEncodeTail 2
   apply store_step_at _ _ aLen _ _ _ vLen _ _ (by rw [← hLen]) (by ecancel) (by exact hvLen)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   unfold_step
-  step_directive hB rootEncTail 3
+  step_directive hB rootEncodeTail 3
   apply store_step_at _ _ aPtr _ _ _ vPtr _ _ (by rw [← hPtr]) (by ecancel) (by exact hvPtr)
   intro m3 H3
   simp only [Width.bytes, Width.bits] at H3
   unfold_step
-  step_directive hB rootEncTail 4
-  step_directive hB rootEncTail 5
-  step_directive hB rootEncTail 6
-  step_directive hB rootEncTail 7
+  step_directive hB rootEncodeTail 4
+  step_directive hB rootEncodeTail 5
+  step_directive hB rootEncodeTail 6
+  step_directive hB rootEncodeTail 7
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m4 H4
   simp only [Width.bytes, Width.bits] at H4

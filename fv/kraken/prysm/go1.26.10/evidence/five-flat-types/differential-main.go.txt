@@ -1,7 +1,7 @@
-// Scratch differential program (H6 hold-out evaluation, not committed in Prysm): runs the real generated
-// v1alpha1.PendingDeposit.UnmarshalSSZ and v1alpha1.PowBlock.UnmarshalSSZ on the cases of
-// fv/kraken/gen/e2e/h6diff.py and prints the observed results as JSON. Expected values are computed by that
-// script independently (Python struct.pack / int.to_bytes), never from this program. (Text of h5check-main.go.txt.)
+// Scratch differential program (not committed in Prysm): runs the real generated
+// v1alpha1.{HistoricalSummary,SigningData,SyncAggregatorSelectionData,ValidatorBalance,VoluntaryExit}.UnmarshalSSZ
+// on the cases of fv/kraken/gen/checks/five_flat_types_differential.py and prints the observed results as JSON. Expected values are
+// computed by that script independently (Python struct.pack), never from this program. (Text of ../pending-deposit-and-pow-block/differential-main.go.txt.)
 package main
 
 import (
@@ -52,15 +52,26 @@ func main() {
 		r := Res{ID: c.ID}
 		var e error
 		switch c.Op {
-		case "pd_u":
-			h := &ethpb.PendingDeposit{}
+		case "HistoricalSummary.UnmarshalSSZ":
+			h := &ethpb.HistoricalSummary{}
 			e = h.UnmarshalSSZ(in)
-			r.U64s = []uint64{h.Amount, uint64(h.Slot)}
-			put(&r, h.PublicKey, h.WithdrawalCredentials, h.Signature)
-		case "pb_u":
-			h := &ethpb.PowBlock{}
+			put(&r, h.BlockSummaryRoot, h.StateSummaryRoot)
+		case "SigningData.UnmarshalSSZ":
+			h := &ethpb.SigningData{}
 			e = h.UnmarshalSSZ(in)
-			put(&r, h.BlockHash, h.ParentHash, h.TotalDifficulty)
+			put(&r, h.ObjectRoot, h.Domain)
+		case "SyncAggregatorSelectionData.UnmarshalSSZ":
+			h := &ethpb.SyncAggregatorSelectionData{}
+			e = h.UnmarshalSSZ(in)
+			r.U64s = []uint64{uint64(h.Slot), h.SubcommitteeIndex}
+		case "ValidatorBalance.UnmarshalSSZ":
+			h := &ethpb.ValidatorBalance{}
+			e = h.UnmarshalSSZ(in)
+			r.U64s = []uint64{uint64(h.Index), h.Balance}
+		case "VoluntaryExit.UnmarshalSSZ":
+			h := &ethpb.VoluntaryExit{}
+			e = h.UnmarshalSSZ(in)
+			r.U64s = []uint64{uint64(h.Epoch), uint64(h.ValidatorIndex)}
 		default:
 			panic(c.Op)
 		}

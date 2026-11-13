@@ -1,6 +1,6 @@
-// Scratch differential program (prysm-e2e E6, not committed in Prysm): runs the real generated
+// Scratch differential program (not committed in Prysm): runs the real generated
 // v1alpha1.Checkpoint SSZ methods and the hand-written primitives.Epoch decoder on the cases of
-// fv/kraken/gen/e2e/differential.py (with the review e2e-r1 S8 fields) and prints the observed results as JSON. Expected values are
+// fv/kraken/gen/checks/differential.py (with the sentinel field) and prints the observed results as JSON. Expected values are
 // computed by that script independently (Python struct.pack), never from this program.
 package main
 
@@ -23,7 +23,7 @@ type Case struct {
 	Root   string `json:"root"`
 	Prefix string `json:"prefix"`
 	Spare  int    `json:"spare"`
-	// review e2e-r1 S8: start the receiver from a sentinel value (reject cases)
+	// start the receiver from a sentinel value (reject cases)
 	Sentinel bool `json:"sentinel"`
 }
 

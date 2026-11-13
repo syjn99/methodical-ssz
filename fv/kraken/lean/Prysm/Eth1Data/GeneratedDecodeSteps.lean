@@ -10,7 +10,7 @@ import Codec.FixedBytesDecodeWindowOffsetZero
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
 /-! Step chain fields (machine-readable, read by `kindcheck.py`):
-FIELDS-JSON: [{"field": "DepositRoot", "theorems": ["Decode.generated_step_DepositRoot_seg", "Decode.generated_step_directive_37", "Decode.generated_step_directive_38", "Decode.generated_step_directive_45", "Decode.generated_step_directive_46"]}, {"field": "DepositCount", "theorems": ["Decode.generated_step_directive_47", "Decode.generated_step_directive_48", "Decode.generated_step_directive_49"]}, {"field": "BlockHash", "theorems": ["Decode.generated_step_BlockHash_seg", "Decode.generated_step_directive_75", "Decode.generated_step_directive_76", "Decode.generated_step_directive_84", "Decode.generated_step_directive_85"]}]
+FIELDS-JSON: [{"field": "DepositRoot", "theorems": ["Decode.generated_step_DepositRoot_segment", "Decode.generated_step_directive_37", "Decode.generated_step_directive_38", "Decode.generated_step_directive_45", "Decode.generated_step_directive_46"]}, {"field": "DepositCount", "theorems": ["Decode.generated_step_directive_47", "Decode.generated_step_directive_48", "Decode.generated_step_directive_49"]}, {"field": "BlockHash", "theorems": ["Decode.generated_step_BlockHash_segment", "Decode.generated_step_directive_75", "Decode.generated_step_directive_76", "Decode.generated_step_directive_84", "Decode.generated_step_directive_85"]}]
 -/
 
 open Machine Runtime Prysm.Eth1Data.Code
@@ -22,7 +22,7 @@ namespace Prysm.Eth1Data
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `DepositRoot` (32-byte vector, SSZ offset 0, Go offset 8): decode segment (offset-0 form) over the windows 13–21 and 26–36; receiver in rdx after makeslice, in rdx after memmove (`callq` at 31). -/
-theorem Decode.generated_step_DepositRoot_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_DepositRoot_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB) (hS : sp + (24 : Int64).toBitVec = aS)
@@ -59,17 +59,17 @@ theorem Decode.generated_step_DepositRoot_seg (k : Nat) (hk : unmarshalSSZ.IsInf
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 13)⟩ := by
   have hqA := Codec.window_infix_at hk 13 9
-  have heA : Codec.eraseNop ((unmarshalSSZ.drop 13).take 9) = Codec.bytesDecHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" 48 16 24 := by rfl
+  have heA : Codec.eraseNop ((unmarshalSSZ.drop 13).take 9) = Codec.bytesDecodeHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" 48 16 24 := by rfl
   have hqB := Codec.window_infix_at hk 26 11
-  have heB : Codec.eraseNop ((unmarshalSSZ.drop 26).take 11) = Codec.bytesDecMidOffsetZeroRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_b2" 48 56 24 8 16 24 := by rfl
+  have heB : Codec.eraseNop ((unmarshalSSZ.drop 26).take 11) = Codec.bytesDecodeMiddleOffsetZeroRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_b2" 48 56 24 8 16 24 := by rfl
   have hjl : k + 26 + Codec.nonNopIndex ((unmarshalSSZ.drop 26).take 11) 0 = k + 26 := by rfl
   have hl := Machine.label_at' hk hf (j := 26)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hjm : k + 26 + Codec.nonNopIndex ((unmarshalSSZ.drop 26).take 11) 5 = k + 31 := by rfl
   have hend : k + 26 + ((unmarshalSSZ.drop 26).take 11).length = k + 37 := by rfl
-  with_reducible exact Codec.bytesdec_seg_offset_zero_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 13) (k + 26) (k + 26) (k + 31) (k + 37) hqA heA hqB heB hjl hl hjm hend
-theorem Decode.generated_step_DepositRoot_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_step_DepositRoot_seg h) = @Codec.bytesDecSegOffsetZeroKindWindow h 32 unmarshalSSZ Reg64.rdx 13 31 37 48 56 24 8 16 24 := by
+  with_reducible exact Codec.bytes_decode_segment_offset_zero_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 13) (k + 26) (k + 26) (k + 31) (k + 37) hqA heA hqB heB hjl hl hjm hend
+theorem Decode.generated_step_DepositRoot_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_step_DepositRoot_segment h) = @Codec.bytesDecodeSegmentOffsetZeroKindWindow h 32 unmarshalSSZ Reg64.rdx 13 31 37 48 56 24 8 16 24 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -199,7 +199,7 @@ theorem Decode.generated_step_directive_49_kind : ∀ (h : Host), type_of% (@Dec
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `BlockHash` (32-byte vector, SSZ offset 40, Go offset 40): decode segment over the windows 50–58 and 63–74; receiver in rdx after makeslice, in rdx after memmove (`callq` at 69). -/
-theorem Decode.generated_step_BlockHash_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
+theorem Decode.generated_step_BlockHash_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB) (hS : sp + (24 : Int64).toBitVec = aS)
@@ -237,17 +237,17 @@ theorem Decode.generated_step_BlockHash_seg (k : Nat) (hk : unmarshalSSZ.IsInfix
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 50)⟩ := by
   have hqA := Codec.window_infix_at hk 50 9
-  have heA : Codec.eraseNop ((unmarshalSSZ.drop 50).take 9) = Codec.bytesDecHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_119" 48 48 56 := by rfl
+  have heA : Codec.eraseNop ((unmarshalSSZ.drop 50).take 9) = Codec.bytesDecodeHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_119" 48 48 56 := by rfl
   have hqB := Codec.window_infix_at hk 63 12
-  have heB : Codec.eraseNop ((unmarshalSSZ.drop 63).take 12) = Codec.bytesDecMidRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_119" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_15a" 48 56 24 40 48 56 40 := by rfl
+  have heB : Codec.eraseNop ((unmarshalSSZ.drop 63).take 12) = Codec.bytesDecodeMiddleRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_119" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_15a" 48 56 24 40 48 56 40 := by rfl
   have hjl : k + 63 + Codec.nonNopIndex ((unmarshalSSZ.drop 63).take 12) 0 = k + 63 := by rfl
   have hl := Machine.label_at' hk hf (j := 63)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hjm : k + 63 + Codec.nonNopIndex ((unmarshalSSZ.drop 63).take 12) 6 = k + 69 := by rfl
   have hend : k + 63 + ((unmarshalSSZ.drop 63).take 12).length = k + 75 := by rfl
-  with_reducible exact Codec.bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 50) (k + 63) (k + 63) (k + 69) (k + 75) hqA heA hqB heB hjl hl hjm hend
-theorem Decode.generated_step_BlockHash_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_step_BlockHash_seg h) = @Codec.bytesDecSegKindWindow h 32 unmarshalSSZ Reg64.rdx 50 69 75 48 56 24 40 48 56 40 := by
+  with_reducible exact Codec.bytes_decode_segment_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 50) (k + 63) (k + 63) (k + 69) (k + 75) hqA heA hqB heB hjl hl hjm hend
+theorem Decode.generated_step_BlockHash_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_step_BlockHash_segment h) = @Codec.bytesDecodeSegmentKindWindow h 32 unmarshalSSZ Reg64.rdx 50 69 75 48 56 24 40 48 56 40 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in

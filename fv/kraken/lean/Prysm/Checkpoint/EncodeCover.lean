@@ -85,7 +85,7 @@ theorem Encode.cover (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
           ∧ st.data.regs.rdi.toNat = 32))
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨SszValue.encode g, SszValue.serialize_eq g, ?_⟩
-  rw [SszValue.enc_toList]
+  rw [SszValue.encode_toList]
   have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   generalize (uintBytes 8 g.epoch.toNat).toList = e8 at *

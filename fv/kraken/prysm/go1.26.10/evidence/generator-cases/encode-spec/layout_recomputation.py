@@ -11,7 +11,7 @@ ties = lambda T: pathlib.Path(f"lean/Prysm/{T}/EncodeFastPathKindInstances.lean"
 for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
     t = pathlib.Path(f).read_text()
     J = json.loads([x for x in t.split("\n") if x.startswith("FAST-PATH-JSON: ")][0][len("FAST-PATH-JSON: "):])
-    D = [l.strip() for l in pathlib.Path(J["S"]).read_text().split("\n") if l.strip()]
+    D = [l.strip() for l in pathlib.Path(J["assembly"]).read_text().split("\n") if l.strip()]
     cov = set()
     for a, n in re.findall(r"window_infix_at hk (\d+) (\d+)", t):
         cov.update(range(int(a), int(a) + int(n)))

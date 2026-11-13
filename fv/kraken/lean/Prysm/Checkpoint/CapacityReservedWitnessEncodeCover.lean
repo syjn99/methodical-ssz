@@ -145,7 +145,7 @@ example (g : SszValue) (z' : RegZmms) (f : StatusFlags) := runs g 41 (by decide)
 example (g : SszValue) (z' : RegZmms) (f : StatusFlags) := runs_nil g z' f
 
 /-- Go-value element: the receiver of this witness (offset 0x2338 of the block; Root = (0x12380, 32, 32)). -/
-theorem recv : goValue (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff) []) 0x2338)
+theorem receiver_go_value : goValue (receiverAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff) []) 0x2338)
     = true := by decide
 
 end Prysm.Checkpoint.Witness.CapacityReservedEncodeCover

@@ -1,12 +1,12 @@
 # negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
-dd-gen-control	deposit-data-decode-generated-field-signature-seg-control
-dd-gen-stmt-src	deposit-data-decode-generated-field-signature-seg-statement-h-src-88-to-80
-dd-gen-code-control	deposit-data-decode-generated-field-signature-seg-control-2
-dd-gen-code-siglen	deposit-data-decode-generated-field-signature-seg-code-mov-0x60-to-0x50
-dd-gen-code-amt	deposit-data-decode-generated-field-amount-seg-code-mov-0x50-rsi-to-0x48-rsi
-dd-segnop-control	deposit-data-bytes32dec-seg-nop-control
-dd-segnop-stmt-heap	deposit-data-bytes32dec-seg-nop-statement-heap-32-to-31
-dd-segnop-stmt-ret	deposit-data-bytes32dec-seg-nop-statement-host-6-to-7
+dd-gen-control	deposit-data-decode-generated-field-signature-segment-control
+dd-gen-stmt-src	deposit-data-decode-generated-field-signature-segment-statement-h-src-88-to-80
+dd-gen-code-control	deposit-data-decode-generated-field-signature-segment-control-2
+dd-gen-code-siglen	deposit-data-decode-generated-field-signature-segment-code-mov-0x60-to-0x50
+dd-gen-code-amt	deposit-data-decode-generated-field-amount-segment-code-mov-0x50-rsi-to-0x48-rsi
+dd-segnop-control	deposit-data-bytes32-decode-segment-nop-control
+dd-segnop-stmt-heap	deposit-data-bytes32-decode-segment-nop-statement-heap-32-to-31
+dd-segnop-stmt-ret	deposit-data-bytes32-decode-segment-nop-statement-host-6-to-7
 dd-rej-control	deposit-data-decode-reject-size-control
 dd-rej-stmt	deposit-data-decode-reject-size-statement-rbx-e1-to-e0
 dd-rej-code-size	deposit-data-decode-reject-size-code-cmp-0xb8-to-0xb0

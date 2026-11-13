@@ -10,7 +10,7 @@ Hand text: `Prysm.Epoch.Decode.reject_size` with the code constant `Prysm.Epoch.
 `unmarshalSSZ`. The two `.S` files are identical modulo labels, including the format operand
 `go_string._+110057` (the Go linker keeps one copy of the string), so the `FmtErrorfDecimalDecimalContract` instance with
 `ElfData.PrysmTarget.formatBufferLength` and `ElfData.PrysmTarget.typeInt_addr` is the same instance; `ConvT64Contract` likewise.
-No new contract form. The helper lemmas `Prysm.Epoch.Decode.reject_*` and `Prysm.Epoch.Decode.reject_eight_bytes` / `Prysm.Epoch.Decode.reject_fmt_len` are reused.
+No new contract form. The helper lemmas `Prysm.Epoch.Decode.reject_*` and `Prysm.Epoch.Decode.reject_eight_bytes` / `Prysm.Epoch.Decode.reject_format_len` are reused.
 -/
 
 open Machine Runtime Prysm.ValidatorIndex.Code
@@ -169,8 +169,8 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   simp only [ElfData.PrysmTarget.typeInt_addr, ElfData.PrysmTarget.boxedEight_addr, ElfData.PrysmTarget.formatBufferLength_addr] at H10 ⊢
   refine eventually_trans _ _ _ _ (hdd _ (Host.addrOf (k + 28 + 1)) av2 (Int.toBytes 8 (8 : BitVec 64).toInt) hb stk2
     (sp2 ++ sp32) (label "runtime.gcbits._" + 1432).toBitVec 8 rax2.toBitVec rcx.toBitVec ?F
-    (by rw [Prysm.Epoch.Decode.reject_fmt_len]; rfl) rfl rfl (Or.inr rfl) hbox hstk2 (by simp [hsp2, hsp32])
-    (by rw [Prysm.Epoch.Decode.reject_fmt_len]; omega) ?hpre) ?_
+    (by rw [Prysm.Epoch.Decode.reject_format_len]; rfl) rfl rfl (Or.inr rfl) hbox hstk2 (by simp [hsp2, hsp32])
+    (by rw [Prysm.Epoch.Decode.reject_format_len]; omega) ?hpre) ?_
   case hpre =>
     dsimp only
     simp only [ElfData.PrysmTarget.typeInt_addr]

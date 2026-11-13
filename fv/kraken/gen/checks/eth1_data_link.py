@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Call graph and link tables of the real v1alpha1.Eth1Data UnmarshalSSZ and MarshalSSZTo
-on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the Eth1Data
-hold-out had been run; the text of `beacon_block_header_link.py` with the function set changed).
+on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; Eth1Data is a
+hold-out type; the text of `beacon_block_header_link.py` with the function set changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   eth1_data_link.py callgraph <objdump> <out.json>          call targets with contract class

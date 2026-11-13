@@ -12,7 +12,7 @@ before `retq`:
     xor %eax,%eax; xor %ebx,%ebx; mov %rbx,%rcx
     add $c,%rsp | sub $c,%rsp;  pop %rbp;  [nop;]  retq
 
-`rejectTail sub nop c` is that template (after the label). `enc_reject_tail` is the block: from the first
+`rejectTail sub nop c` is that template (after the label). `encode_reject_tail` is the block: from the first
 `mov` it returns to the caller with `rax = rbx = rcx = 0` (nil slice), `rdi, rsi` = the two words of
 `ssz.ErrBytesLength`, the saved rbp restored, memory unchanged. Parameters: the two template flags, `c`,
 the place `j`, rsp at the block `sp`, the saved-rbp address `aFp` (`releaseAddress sub c sp = aFp`) and the
@@ -72,7 +72,7 @@ variable [Host]
 local macro "step_literal_directive " h:ident n:num : tactic => `(tactic| (
   have hkat := Machine.isInfixAt_drop $h $n
   simp only [List.drop_succ_cons, List.drop_zero] at hkat
-  apply Machine.estep hkat
+  apply Machine.eventually_step_directive hkat
   clear hkat
   unfold_step))
 
@@ -81,7 +81,7 @@ set_option maxRecDepth 100000 in
 /-- **Reject block**: the tail `rejectTail sub nop c` at `j` returns `(nil, ssz.ErrBytesLength)`: pc = the
 return address `ra`, `rax = rbx = rcx = 0`, `rdi = e0`, `rsi = e1`, rsp = `aRa + 8`, rbp = the saved
 `rbp0`, r14 kept, memory unchanged. -/
-theorem enc_reject_tail (sub nop : Bool) (c : Int64) (j : Nat)
+theorem encode_reject_tail (sub nop : Bool) (c : Int64) (j : Nat)
     (hA : (rejectTail sub nop c).IsInfixAt Host.prog j)
     (sp aFp aRa : BitVec 64) (hFp : releaseAddress sub c sp = aFp) (hRa : aFp + 8 = aRa)
     (ra rbp0 e0 e1 : UInt64) (R : DataMem → Prop) (s : MachineData)

@@ -1,5 +1,5 @@
-// Scratch differential program (unit E2-C, not committed in Prysm): runs the real generated
-// v1alpha1.<T>.MarshalSSZTo of the 16 flat development types on the cases of fv/kraken/gen/e2e/e2cdiff.py
+// Scratch differential program (not committed in Prysm): runs the real generated
+// v1alpha1.<T>.MarshalSSZTo of the 16 flat development types on the cases of fv/kraken/gen/checks/flat_encoders_differential.py
 // (fast path: len(dst) + size <= cap(dst)) and prints the observed results as JSON. Expected values are
 // computed by that script independently, never from this program. Fields are set by reflection by Go field
 // name (uint64 and overlay kinds by SetUint, []byte by SetBytes of a fresh copy).
@@ -17,8 +17,8 @@ import (
 
 type Field struct {
 	Name string `json:"name"`
-	U    uint64 `json:"u"`
-	B    string `json:"b"`
+	U    uint64 `json:"uint64"`
+	B    string `json:"bytes"`
 }
 
 type Case struct {

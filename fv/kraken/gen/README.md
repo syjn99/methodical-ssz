@@ -52,7 +52,7 @@ Use `regen_check.sh` of the project skill. It runs the generator two times into 
 Exit 0 means the same bytes. Run it from `fv/kraken`:
 
 ```sh
-sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/generator/generator.py uint64 --S prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.CommitteeIndex.Code > "$REGEN_OUT"'
+sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/generator/generator.py uint64 --assembly prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.CommitteeIndex.Code > "$REGEN_OUT"'
 ```
 
 For the other files, take the command from `generator/gen.sh` or from the file header. Replace the output redirect with `> "$REGEN_OUT"`.
@@ -173,7 +173,7 @@ Other limits:
 - The commands of 12 generated files are not in `generator/gen.sh`. Their headers give the commands.
 - `prysm/go1.26.10/evidence/flat-types/runs/run_generators.sh` calls a job wrapper that is not tracked. Run its `generator.py` commands directly.
 - 15 of the 24 `*SpecChecker.lean` headers name a path where the `Desc` file is not. The file is in a subdirectory of
-  `prysm/go1.26.10/evidence/` (`eth1-data/`, `flat-types/`, `five-flat-types/` and the hold-out directories). Nine of these headers have a hand-added line that
+  `prysm/go1.26.10/evidence/` (`eth1-data/`, `flat-types/`, `five-flat-types/` and the directories named after the hold-out types). Nine of these headers have a hand-added line that
   gives the subdirectory; the other six do not (DepositRequest, HistoricalSummary, SigningData,
   SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit).
 - `kindcheck.py` does not bind the code constant of a theorem to the `.S` file of the header. It does not check the `.S` label against the IR type.

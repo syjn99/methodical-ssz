@@ -1,72 +1,72 @@
 [
  {
-  "id": "deposit-data-decode-generated-field-signature-seg-control",
+  "id": "deposit-data-decode-generated-field-signature-segment-control",
   "module": "Prysm/Deposit_Data/GeneratedDecodeFieldSegmentsPartial.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Signature_seg",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Signature_segment",
   "kind": "control"
  },
  {
-  "id": "deposit-data-decode-generated-field-signature-seg-statement-h-src-88-to-80",
+  "id": "deposit-data-decode-generated-field-signature-segment-statement-h-src-88-to-80",
   "module": "Prysm/Deposit_Data/GeneratedDecodeFieldSegmentsPartial.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Signature_seg",
-  "kind": "stmt",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Signature_segment",
+  "kind": "statement",
   "old": "(hSrc : bf + (88 : Int64).toBitVec = aSrc)",
   "new": "(hSrc : bf + (80 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "deposit-data-decode-generated-field-signature-seg-control-2",
+  "id": "deposit-data-decode-generated-field-signature-segment-control-2",
   "module": "Prysm/Deposit_Data/GeneratedDecodeFieldSegmentsPartial.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Signature_seg",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Signature_segment",
   "kind": "control",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit_Data.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit_Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-data-decode-generated-field-signature-seg-code-mov-0x60-to-0x50",
+  "id": "deposit-data-decode-generated-field-signature-segment-code-mov-0x60-to-0x50",
   "module": "Prysm/Deposit_Data/GeneratedDecodeFieldSegmentsPartial.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Signature_seg",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Signature_segment",
   "kind": "code",
   "line": 105,
   "old": "  mov $0x60,%ecx",
   "new": "  mov $0x50,%ecx",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit_Data.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit_Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-data-decode-generated-field-amount-seg-code-mov-0x50-rsi-to-0x48-rsi",
+  "id": "deposit-data-decode-generated-field-amount-segment-code-mov-0x50-rsi-to-0x48-rsi",
   "module": "Prysm/Deposit_Data/GeneratedDecodeFieldSegmentsPartial.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Amount_seg",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_field_Amount_segment",
   "kind": "code",
   "old": "  mov 0x50(%rsi),%rsi",
   "new": "  mov 0x48(%rsi),%rsi",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit_Data.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit_Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-data-bytes32dec-seg-nop-control",
+  "id": "deposit-data-bytes32-decode-segment-nop-control",
   "module": "Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean",
-  "theorem": "Prysm.Deposit_Data.bytes32dec_seg_nop",
+  "theorem": "Prysm.Deposit_Data.bytes32_decode_segment_nop",
   "kind": "control"
  },
  {
-  "id": "deposit-data-bytes32dec-seg-nop-statement-heap-32-to-31",
+  "id": "deposit-data-bytes32-decode-segment-nop-statement-heap-32-to-31",
   "module": "Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean",
-  "theorem": "Prysm.Deposit_Data.bytes32dec_seg_nop",
-  "kind": "stmt",
+  "theorem": "Prysm.Deposit_Data.bytes32_decode_segment_nop",
+  "kind": "statement",
   "old": "⋆ Heap (avail - 32)",
   "new": "⋆ Heap (avail - 31)"
  },
  {
-  "id": "deposit-data-bytes32dec-seg-nop-statement-host-6-to-7",
+  "id": "deposit-data-bytes32-decode-segment-nop-statement-host-6-to-7",
   "module": "Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean",
-  "theorem": "Prysm.Deposit_Data.bytes32dec_seg_nop",
-  "kind": "stmt",
+  "theorem": "Prysm.Deposit_Data.bytes32_decode_segment_nop",
+  "kind": "statement",
   "old": "⋆ Eq ((Int.toBytes 8 (Host.addrOf (j2 + 6 + 1)).toBitVec.toInt).At aRet)",
   "new": "⋆ Eq ((Int.toBytes 8 (Host.addrOf (j2 + 7 + 1)).toBitVec.toInt).At aRet)"
  },
@@ -75,16 +75,16 @@
   "module": "Prysm/Deposit_Data/DecodeRejectSize.lean",
   "theorem": "Prysm.Deposit_Data.Decode.reject_size",
   "kind": "control",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit_Data.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit_Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
   "id": "deposit-data-decode-reject-size-statement-rbx-e1-to-e0",
   "module": "Prysm/Deposit_Data/DecodeRejectSize.lean",
   "theorem": "Prysm.Deposit_Data.Decode.reject_size",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "st.data.regs.rbx = e1",
   "new": "st.data.regs.rbx = e0"
  },
@@ -95,10 +95,10 @@
   "kind": "code",
   "old": "  cmp $0xb8,%rcx",
   "new": "  cmp $0xb0,%rcx",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit_Data.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit_Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
   "id": "deposit-data-ssz-value-spec-accepts-iff-control",
@@ -110,7 +110,7 @@
   "id": "deposit-data-ssz-value-spec-accepts-iff-statement-size-184-to-185",
   "module": "Prysm/Deposit_Data/Spec.lean",
   "theorem": "Prysm.Deposit_Data.SszValue.spec_accepts_iff",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "bs.size = 184",
   "new": "bs.size = 185"
  },
@@ -118,7 +118,7 @@
   "id": "deposit-data-desc-serialize-checker-statement-serialize-none-to-match-with-container",
   "module": "Prysm/Deposit_Data/Spec.lean",
   "theorem": "Prysm.Deposit_Data.desc_serialize_checker",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "= serialize checkerDesc v :=",
   "new": "= serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 3 (.byteVector 48)) | x => x) v :="
  },
@@ -126,7 +126,7 @@
   "id": "deposit-data-desc-deserialize-checker-statement-deserialize-v-to-seq",
   "module": "Prysm/Deposit_Data/Spec.lean",
   "theorem": "Prysm.Deposit_Data.desc_deserialize_checker",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "deserialize checkerDesc bs = .ok v",
   "new": "deserialize checkerDesc bs = .ok (.seq [])"
  },
@@ -140,7 +140,7 @@
   "id": "deposit-data-decode-accept-spec-statement-heap-176-to-175",
   "module": "Prysm/Deposit_Data/DecodeSpec.lean",
   "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "⋆ Heap (avail - 176)",
   "new": "⋆ Heap (avail - 175)"
  },
@@ -148,7 +148,7 @@
   "id": "deposit-data-decode-accept-spec-statement-g-none-to-none",
   "module": "Prysm/Deposit_Data/DecodeSpec.lean",
   "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "⋆ Eq (g.pubkey.toList.At p1) ⋆ Eq (g.withdrawalCredentials.toList.At p2)",
   "new": "⋆ Eq (g.withdrawalCredentials.toList.At p1) ⋆ Eq (g.pubkey.toList.At p2)"
  },
@@ -156,7 +156,7 @@
   "id": "deposit-data-decode-accept-spec-statement-rax-96-to-48",
   "module": "Prysm/Deposit_Data/DecodeSpec.lean",
   "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "Eq ((Int.toBytes 8 96).At (s.regs.rax.toBitVec + 72))",
   "new": "Eq ((Int.toBytes 8 48).At (s.regs.rax.toBitVec + 72))"
  },
@@ -164,7 +164,7 @@
   "id": "deposit-data-decode-accept-spec-statement-hav-176-avail-to-true",
   "module": "Prysm/Deposit_Data/DecodeSpec.lean",
   "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(hav : 176 ≤ avail)",
   "new": "(hav : True)"
  },
@@ -172,7 +172,7 @@
   "id": "deposit-data-decode-accept-spec-statement-rsp-8-to-16",
   "module": "Prysm/Deposit_Data/DecodeSpec.lean",
   "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "∧ st.data.regs.rsp = s.regs.rsp + 8 ∧",
   "new": "∧ st.data.regs.rsp = s.regs.rsp + 16 ∧"
  },
@@ -180,7 +180,7 @@
   "id": "deposit-data-decode-reject-complete-statement-size-184-to-183",
   "module": "Prysm/Deposit_Data/DecodeSpec.lean",
   "theorem": "Prysm.Deposit_Data.Decode.reject_complete",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "bs.size ≠ 184 :=",
   "new": "bs.size ≠ 183 :="
  },
@@ -188,7 +188,7 @@
   "id": "deposit-data-witness-decode-accept-runs-statement-rax-0-to-1",
   "module": "Prysm/Deposit_Data/WitnessDecodeAccept.lean",
   "theorem": "Prysm.Deposit_Data.Witness.DecodeAccept.runs",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "st.data.regs.rax = 0 ∧",
   "new": "st.data.regs.rax = 1 ∧"
  },
@@ -196,7 +196,7 @@
   "id": "deposit-data-witness-decode-reject-size-runs-statement-hlen-184-to-185",
   "module": "Prysm/Deposit_Data/WitnessDecodeRejectSize.lean",
   "theorem": "Prysm.Deposit_Data.Witness.DecodeRejectSize.runs",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(hlen : len ≠ 184)",
   "new": "(hlen : len ≠ 185)"
  },
@@ -205,16 +205,16 @@
   "module": "Prysm/PendingPartialWithdrawal/DecodeRejectSize.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
   "kind": "control",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.PendingPartialWithdrawal.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingPartialWithdrawal.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {
   "id": "pending-partial-withdrawal-decode-reject-size-statement-rbx-e1-to-e0",
   "module": "Prysm/PendingPartialWithdrawal/DecodeRejectSize.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "st.data.regs.rbx = e1",
   "new": "st.data.regs.rbx = e0"
  },
@@ -225,10 +225,10 @@
   "kind": "code",
   "old": "  cmp $0x18,%rcx",
   "new": "  cmp $0x10,%rcx",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.PendingPartialWithdrawal.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingPartialWithdrawal.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {
   "id": "pending-partial-withdrawal-ssz-value-spec-accepts-iff-control",
@@ -240,7 +240,7 @@
   "id": "pending-partial-withdrawal-ssz-value-spec-accepts-iff-statement-size-24-to-25",
   "module": "Prysm/PendingPartialWithdrawal/Spec.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.SszValue.spec_accepts_iff",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "bs.size = 24",
   "new": "bs.size = 25"
  },
@@ -248,7 +248,7 @@
   "id": "pending-partial-withdrawal-desc-deserialize-checker-statement-deserialize-v-to-seq",
   "module": "Prysm/PendingPartialWithdrawal/Spec.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.desc_deserialize_checker",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "deserialize checkerDesc bs = .ok v",
   "new": "deserialize checkerDesc bs = .ok (.seq [])"
  },
@@ -256,7 +256,7 @@
   "id": "pending-partial-withdrawal-decode-reject-complete-statement-size-24-to-23",
   "module": "Prysm/PendingPartialWithdrawal/DecodeSpec.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_complete",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "bs.size ≠ 24 :=",
   "new": "bs.size ≠ 23 :="
  },
@@ -264,7 +264,7 @@
   "id": "pending-partial-withdrawal-witness-decode-reject-size-runs-statement-hlen-24-to-25",
   "module": "Prysm/PendingPartialWithdrawal/WitnessDecodeRejectSize.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Witness.DecodeRejectSize.runs",
-  "kind": "stmt",
+  "kind": "statement",
   "old": "(hlen : len ≠ 24)",
   "new": "(hlen : len ≠ 25)"
  }

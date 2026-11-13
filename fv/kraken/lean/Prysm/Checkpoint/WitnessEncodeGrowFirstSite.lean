@@ -113,7 +113,7 @@ example (z' : RegZmms) (f : StatusFlags) :=
 
 /-- Go-value element: the receiver of this witness, read from the witness block at offset 0x20a0
 (Root = (0x120e8, 32, 32)). -/
-theorem recv : goValue (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x20a0)
+theorem receiver_go_value : goValue (receiverAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x20a0)
     = true := by decide
 
 end Prysm.Checkpoint.Witness.EncodeGrowFirstSite

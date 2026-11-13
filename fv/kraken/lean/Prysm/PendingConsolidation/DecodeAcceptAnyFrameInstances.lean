@@ -7,7 +7,7 @@ import Prysm.Checkpoint.DecodeAccept
 import Codec.Kind.DecodeAcceptAnyFrameInstances
 
 /-!
-# Ties of `decAcceptKindAnyFrame` to the hand accept statements: the `PendingConsolidation` part
+# Ties of `decodeAcceptKindAnyFrame` to the hand accept statements: the `PendingConsolidation` part
 
 The declarations of the other types of this group are in `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 -/
@@ -18,7 +18,7 @@ open Codec
 namespace Prysm.PendingConsolidation
 
 theorem Decode.accept_is_kind_any_frame : ∀ (h : Host), @Prysm.PendingConsolidation.Decode.accept_statement h
-    = @decAcceptKindAnyFrame h Prysm.PendingConsolidation.Code.unmarshalSSZ (layoutCalleeCalls [Prysm.ValidatorIndex.Code.unmarshalSSZ] 56) [.u64, .u64] := by
+    = @decodeAcceptKindAnyFrame h Prysm.PendingConsolidation.Code.unmarshalSSZ (layoutCalleeCalls [Prysm.ValidatorIndex.Code.unmarshalSSZ] 56) [.uint64, .uint64] := by
   intro h; rfl
 
 end Prysm.PendingConsolidation

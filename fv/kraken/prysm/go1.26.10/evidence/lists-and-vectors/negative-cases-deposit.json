@@ -1,7 +1,7 @@
 [
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeRejectSize.lean",
@@ -10,8 +10,8 @@
   "kind": "control"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeAccept.lean",
@@ -20,21 +20,21 @@
   "kind": "control"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeRejectSize.lean",
   "theorem": "Prysm.Deposit.Decode.reject_size",
   "id": "deposit-decode-reject-size-statement-hlen-1240-to-1241",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.Deposit.Decode.reject_size_statement",
   "old": "(hlen : s.regs.rcx ≠ 1240)",
   "new": "(hlen : s.regs.rcx ≠ 1241)"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeRejectSize.lean",
@@ -45,8 +45,8 @@
   "new": "  cmp $0x4d9,%rcx"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeAccept.lean",
@@ -58,8 +58,8 @@
   "new": "  cmp $0x20,%rax"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeAccept.lean",
@@ -71,8 +71,8 @@
   "new": "  mov $0x1f,%ecx"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeAccept.lean",
@@ -84,8 +84,8 @@
   "new": "  add $0x421,%rbx"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeAccept.lean",
@@ -97,14 +97,14 @@
   "new": "  mov $0xb7,%ecx"
  },
  {
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.Deposit.Code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.Deposit.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeAccept.lean",
   "theorem": "Prysm.Deposit.Decode.accept",
   "id": "deposit-decode-accept-statement-heap-2144-to-2143",
-  "kind": "stmt",
+  "kind": "statement",
   "statement_def": "Prysm.Deposit.Decode.accept_statement",
   "old": "Heap (avail - 2144)",
   "new": "Heap (avail - 2143)"

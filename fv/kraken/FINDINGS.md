@@ -205,7 +205,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Kind checks do not bind every parameter
 
-- What: the accept kind `decAcceptKindAnyFrame` does not read the frame of its layout. An accept kind line with a wrong frame still elaborates.
+- What: the accept kind `decodeAcceptKindAnyFrame` does not read the frame of its layout. An accept kind line with a wrong frame still elaborates.
   `gen/generator/kindcheck.py` does not bind the code constant to the `.S` file of the header. It does not check the `.S` label against the IR type.
 - How it shows: a negative test with a wrong frame in the kind line gives no error. The head, field and epilogue kinds fix the frame.
 - State: open. A kind change needs a new lemma unit.
@@ -230,7 +230,7 @@ How to handle a new finding is in `../README.md` section 7.
   - `sync-aggregate-decode-accept-code-movq-0x40-to-0x3f` (`prysm/go1.26.10/evidence/lists-and-vectors/negative-cases-sync-aggregate-and-sync-committee.json`, `Prysm.SyncAggregate.Decode.accept`): class `outside`.
     The code mutation changes `movq $0x40,0x10(%rdx)` to `movq $0x3f,0x10(%rdx)`.
     The only error (unsolved goals) is 7 lines before the theorem line.
-    That line is in the proof of the segment lemma `Prysm.SyncAggregate.Decode.bits_seg`, which reads the same code directives.
+    That line is in the proof of the segment lemma `Prysm.SyncAggregate.Decode.bits_segment`, which reads the same code directives.
   - `blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-call-segments.json`, `Prysm.BlobIdentifier.Decode.accept_is_kind`): class `timeout_heartbeat`.
   - `pending-deposit-decode-accept-is-kind-any-frame-statement-layout-mixed-frame40-131-to-130` and
     `beacon-block-header-decode-accept-is-kind-any-frame-statement-prysm-2-to-1` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-whole-accept.json`,
@@ -268,7 +268,7 @@ How to handle a new finding is in `../README.md` section 7.
 ### Slow proof steps
 
 - What: two proofs spent most of their time in one `omega` side goal each.
-- Where: the `bv_omega` of the argument `hLo` of `Codec.rootenc_seg` in `lean/Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean`. The `witness_split` side goals of the Checkpoint cover witnesses.
+- Where: the `bv_omega` of the argument `hLo` of `Codec.root_encode_segment` in `lean/Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean`. The `witness_split` side goals of the Checkpoint cover witnesses.
 - State: fixed. `lean/Machine/WitnessSplit.lean` has `witness_split_n` (commit `301300f`). The `Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean` step is a constant-only rewrite (commit `ab43cbb`).
 
 ### Limit options without a profiled cause

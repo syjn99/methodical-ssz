@@ -3,8 +3,8 @@
 
   beacon_block_header_encoder_differential.py cases <cases.json>                      write the cases
   beacon_block_header_encoder_differential.py check <cases.json> <go-out.json> <result.json>
-The Go program is prysm/go1.26.10/evidence/beacon-block-header/bhmcheck-main.go.txt, run natively with Go 1.26.10 through the gate as
-package fve2e/bhmcheck of the temporary Prysm tree (by `go run -overlay`; nothing is written into that tree).
+The Go program is `prysm/go1.26.10/evidence/beacon-block-header/differential-encoder-main.go.txt`, run natively with Go 1.26.10 through the gate as
+a scratch package of the temporary Prysm tree (by `go run -overlay`; nothing is written into that tree).
 This is a Go-semantics check, not an execution of the amd64 ELF. Every expected value is computed here,
 independently of the code under test, from consensus-specs: serialize(BeaconBlockHeader) = uint64 LE slot ++
 uint64 LE proposer_index ++ parent_root ++ state_root ++ body_root (three Bytes32); MarshalSSZTo(dst) returns

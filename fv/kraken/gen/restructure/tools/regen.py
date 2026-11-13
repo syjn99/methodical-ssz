@@ -148,7 +148,7 @@ for f, prefix in HOLD_OUT.items():
     partial = "PARTIAL OUTPUT" in tx[:600]
     if partial:
         cmd += ["--partial-out", out]
-    cmd += ["--S", source, "--const", const, "--ir", "prysm/ir/ir-mainnet.json", "--type", go_type, "--prefix", prefix,
+    cmd += ["--assembly", source, "--const", const, "--ir", "prysm/ir/ir-mainnet.json", "--type", go_type, "--prefix", prefix,
             "--imports", ",".join(user), "--open", opened]
     r = run(cmd, COPY_KRAKEN)
     gen = open(out, 'rb').read() if partial and os.path.exists(out) else r.stdout
@@ -166,7 +166,7 @@ for kind, go_type in rows:
                           'GeneratedDecodeAccept.lean' if g == 'decoder' else 'GeneratedEncodeFastPath.lean')
         if not os.path.exists(tr):
             continue
-        cmd = ['python3', '-I', '-B', 'gen/generator/generator.py', g, tag, '--S', f'{NORM}/{PK}.{go_type}.{meth}.S', '--const',
+        cmd = ['python3', '-I', '-B', 'gen/generator/generator.py', g, tag, '--assembly', f'{NORM}/{PK}.{go_type}.{meth}.S', '--const',
                'unmarshalSSZ' if g == 'decoder' else 'marshalSSZTo', '--ir', 'prysm/ir/ir-mainnet.json', '--type',
                f'{kind}.{go_type}', '--prefix', 'Decode.generated' if g == 'decoder' else 'Encode.generated', '--imports',
                f'Prysm.{go_type}.Code', '--open', f'Prysm.{go_type}.Code',

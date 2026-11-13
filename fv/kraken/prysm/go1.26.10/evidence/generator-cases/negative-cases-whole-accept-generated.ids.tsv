@@ -14,9 +14,9 @@ g5g-ve-f2-stmt-ret	voluntary-exit-decode-generated-field-2-statement-host-56-to-
 g5g-cp-f1-stmt-reg	checkpoint-decode-generated-field-1-statement-get64-0-to-s-regs-rbx
 g5g-hs-head-stmt-rbp	historical-summary-decode-generated-head-statement-rbp-8-to-16
 g5g-bi-epi-stmt-rsp	blob-identifier-decode-generated-epilogue-statement-rsp-8-to-16
-g5g-ve-acc-kind-frame	voluntary-exit-decode-generated-accept-statement-u64-80-to-88
+g5g-ve-acc-kind-frame	voluntary-exit-decode-generated-accept-statement-uint64-80-to-88
 g5g-sa-f1-kind-pc	sync-aggregator-selection-data-decode-generated-field-1-statement-48-to-47
-g5g-pb-rej-kind-size	pow-block-decode-generated-reject-statement-dec-reject-kind-any-frame-96-to-64
+g5g-pb-rej-kind-size	pow-block-decode-generated-reject-statement-decode-reject-kind-any-frame-96-to-64
 g5g-dm-acc-kind-fields	deposit-message-decode-generated-accept-statement-bytes-none-to-none
 g5g-vb-head-code-spill	validator-balance-decode-generated-head-code-mov-0x48-rsp-to-0x40-rsp
 g5g-ve-epi-code-frame	voluntary-exit-decode-generated-epilogue-code-add-0x48-to-0x40

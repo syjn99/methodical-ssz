@@ -4,12 +4,12 @@ import Prysm.Checkpoint.EncodeRejectLength
 import Runtime.CopyModel
 
 /-!
-# Length rejects of `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` through `Codec.enc_reject_tail`
+# Length rejects of `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` through `Codec.encode_reject_tail`
 
 Go source: `if size := len(b.ParentRoot); size != 32 { return nil, ssz.ErrBytesLength }` (the same for
 StateRoot and BodyRoot). Directive indices of `Prysm.BeaconBlockHeader.Code.marshalSSZTo`: the three `jne` are 65, 93 and
 121; the tails are `L_2e1` (175; body 176–183), `L_2c2` (165; body 166–174, with a `nop` before `retq`)
-and `L_2a4` (156; body 157–164). Each tail is one instance of the reject block `enc_reject_tail`
+and `L_2a4` (156; body 157–164). Each tail is one instance of the reject block `encode_reject_tail`
 (`Encode.reject_tails_at`: the code facts).
 
 * `Encode.reject_parent_root` (from 62), `Encode.reject_state_root` (from 90), `Encode.reject_body_root` (from 118): the length test of one root with a
@@ -96,7 +96,7 @@ theorem Encode.reject_parent_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   simp only [Effects.All]
   label_address hk hf marshalSSZTo 175
   step_directive hk marshalSSZTo 175
-  refine eventually_mono (enc_reject_tail false false 152 (k + 176) (Encode.reject_tails_at k hk).1
+  refine eventually_mono (encode_reject_tail false false 152 (k + 176) (Encode.reject_tails_at k hk).1
     (rsp.toBitVec - 8#64 - 152) (rsp.toBitVec - 8) rsp.toBitVec (Encode.reject_frame_pointer _) (Encode.reject_return_address _) ra rbp0 e0 e1 _ _
     (by rfl) (by ecancel)) ?_
   rintro st ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp', hr14', hm⟩
@@ -151,7 +151,7 @@ theorem Encode.reject_state_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pro
   simp only [Effects.All]
   label_address hk hf marshalSSZTo 165
   step_directive hk marshalSSZTo 165
-  refine eventually_mono (enc_reject_tail false true 152 (k + 166) (Encode.reject_tails_at k hk).2.1
+  refine eventually_mono (encode_reject_tail false true 152 (k + 166) (Encode.reject_tails_at k hk).2.1
     (rsp.toBitVec - 8#64 - 152) (rsp.toBitVec - 8) rsp.toBitVec (Encode.reject_frame_pointer _) (Encode.reject_return_address _) ra rbp0 e0 e1 _ _
     (by rfl) (by ecancel)) ?_
   rintro st ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp', hr14', hm⟩
@@ -206,7 +206,7 @@ theorem Encode.reject_body_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog
   simp only [Effects.All]
   label_address hk hf marshalSSZTo 156
   step_directive hk marshalSSZTo 156
-  refine eventually_mono (enc_reject_tail false false 152 (k + 157) (Encode.reject_tails_at k hk).2.2
+  refine eventually_mono (encode_reject_tail false false 152 (k + 157) (Encode.reject_tails_at k hk).2.2
     (rsp.toBitVec - 8#64 - 152) (rsp.toBitVec - 8) rsp.toBitVec (Encode.reject_frame_pointer _) (Encode.reject_return_address _) ra rbp0 e0 e1 _ _
     (by rfl) (by ecancel)) ?_
   rintro st ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp', hr14', hm⟩

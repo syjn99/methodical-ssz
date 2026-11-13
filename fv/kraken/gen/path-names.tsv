@@ -148,4 +148,17 @@ file	gen/desc/ir-hand.json	gen/desc/hand-types-ir.json
 file	gen/desc/refs-hand.json	gen/desc/hand-types-references.json
 file	prysm/go1.26.10/opt-r1/gen-wrap.sh	prysm/go1.26.10/capacity-reserved/generator_wrapper.sh
 file	prysm/go1.26.10/opt-r1/diff/odiff.py	prysm/go1.26.10/capacity-reserved/diff/checkpoint_marshal_differential.py
-kept	gen/e2e/axioms_gate.py	gen/checks/axioms_gate.py	a forwarder: .github/workflows/fv-lean.yaml names the earlier path (lines 47 and 53: `sys.path.insert(0, '../gen/e2e')`, `fv/kraken/gen/e2e/axioms_gate.py run`), and that file cannot be changed with the access of this session; change the two lines to gen/checks, then delete gen/e2e/
+file	prysm/go1.26.10/e2e/bh/bhcheck-main.go.txt	prysm/go1.26.10/evidence/beacon-block-header/differential-main.go.txt
+file	prysm/go1.26.10/e2e/h3/h3check-main.go.txt	prysm/go1.26.10/evidence/blob-identifier-and-deposit-message/differential-main.go.txt
+file	prysm/go1.26.10/e2e/h4/h4check-main.go.txt	prysm/go1.26.10/evidence/deposit-data-and-pending-partial-withdrawal/differential-main.go.txt
+file	prysm/go1.26.10/e2e/e1/e1check-main.go.txt	prysm/go1.26.10/evidence/eth1-data/differential-main.go.txt
+file	prysm/go1.26.10/e2e/h5/h5check-main.go.txt	prysm/go1.26.10/evidence/pending-consolidation-and-sync-committee-message/differential-main.go.txt
+file	prysm/go1.26.10/e2e/h6/h6check-main.go.txt	prysm/go1.26.10/evidence/pending-deposit-and-pow-block/differential-main.go.txt
+file	prysm/go1.26.10/e2e/g5c/g5ccheck-main.go.txt	prysm/go1.26.10/evidence/five-flat-types/differential-main.go.txt
+file	prysm/go1.26.10/e2e/bh/bhmcheck-main.go.txt	prysm/go1.26.10/evidence/beacon-block-header/differential-encoder-main.go.txt
+file	prysm/go1.26.10/e2e/cpcheck-main.go.txt	prysm/go1.26.10/evidence/differential-main.go.txt
+file	prysm/go1.26.10/e2e/f24/f24check-main.go.txt	prysm/go1.26.10/evidence/flat-types/differential-main.go.txt
+file	prysm/go1.26.10/e2e/scal/e2c/e2ccheck-main.go.txt	prysm/go1.26.10/evidence/generator-cases/encode-spec/differential-main.go.txt
+file	prysm/go1.26.10/opt-r1/diff/odiff-main.go.txt	prysm/go1.26.10/capacity-reserved/diff/differential-main.go.txt
+file	prysm/go1.26.10/opt-r1/diff/odiff-cases.json	prysm/go1.26.10/capacity-reserved/diff/differential-cases.json
+kept	gen/e2e/axioms_gate.py	gen/checks/axioms_gate.py	a forwarder: .github/workflows/fv-lean.yaml names the earlier path (lines 47 and 53: `sys.path.insert(0, '../gen/e2e')`, `fv/kraken/gen/e2e/axioms_gate.py run`), and the push token has no `workflow` scope, so that file is not changed here; change the two lines to gen/checks, then delete gen/e2e/

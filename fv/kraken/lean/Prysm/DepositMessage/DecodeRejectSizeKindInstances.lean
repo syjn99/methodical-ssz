@@ -12,7 +12,7 @@ import Prysm.AttestationData.DecodeRejectSize
 import Codec.DecodeRejectSizeAnyFrame
 
 /-!
-# Ties of `decRejectKindAnyFrame` to the committed size-reject theorems: the `DepositMessage` part
+# Ties of `decodeRejectKindAnyFrame` to the committed size-reject theorems: the `DepositMessage` part
 
 The declarations of the other types of this group are in `Prysm/BlobIdentifier/DecodeRejectSizeKindInstances.lean`.
 -/
@@ -23,7 +23,7 @@ open Codec
 namespace Prysm.DepositMessage
 
 theorem Decode.reject_size_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.DepositMessage.Decode.reject_size h)
-    = @decRejectKindAnyFrame h Prysm.DepositMessage.Code.unmarshalSSZ 88 := by
+    = @decodeRejectKindAnyFrame h Prysm.DepositMessage.Code.unmarshalSSZ 88 := by
   intro h; with_reducible rfl
 
 end Prysm.DepositMessage

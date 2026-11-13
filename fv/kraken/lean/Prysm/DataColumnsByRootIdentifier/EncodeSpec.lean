@@ -19,7 +19,7 @@ theorem Encode.fast_path_spec : Encode.fast_path_spec_statement := by
     hl56 hl64 hrs S scratch hsc R h_mem hguard hcap hmm
   refine ⟨SszValue.encode g, toValue_serialize g, ?_⟩
   have hroot : g.root.toList.length = 32 := by simp
-  have hcb : (Spec.u64Bytes g.cols).toList.length = 8 * g.cols.length := by simp [Spec.u64Bytes_size]
+  have hcb : (Spec.uint64Bytes g.cols).toList.length = 8 * g.cols.length := by simp [Spec.uint64Bytes_size]
   refine eventually_mono (Encode.fast_path k hk hf s ra guard pr pc nb g.cols.length hnb g.hcols _ _ pre d
     hroot hcb hpre hd fp s1 s2 l24 l32 l40 l56 l64 rslot hfp h1 h2 hl24 hl32 hl40 hl56 hl64 hrs S scratch hsc R
     h_mem hguard hcap hmm) ?_
