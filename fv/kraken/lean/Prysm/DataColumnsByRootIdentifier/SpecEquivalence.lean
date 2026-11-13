@@ -11,7 +11,7 @@ alike and accept the same inputs with the same values. The text of `Prysm/Indexe
 -/
 
 namespace Prysm.DataColumnsByRootIdentifier
-open EthLib.Serialization.Ssz Spec TestTarget
+open EthLib.Serialization.Ssz Spec
 
 theorem desc_checker :
     desc = .container ["block_root", "columns"] [.byteVector 32, .list (.uint 8) 128]

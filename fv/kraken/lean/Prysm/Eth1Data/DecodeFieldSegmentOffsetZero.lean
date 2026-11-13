@@ -7,12 +7,12 @@ import Prysm.Eth1Data.Code
 Hand text, written after the hold-out was opened. The one generator run
 stopped with exit 2 on this field: its memmove source is `buf + 0`, so the code has no `add $src,%rbx`
 and does not match the frozen template `rootDecMid`. This file is NOT part of the frozen method
-(`Kind.lean`, `scalgen.py`, the uint64 decoder and 32-byte field segment lemmas are unchanged): `rootDecMid0` is `rootDecMid` without the
+(`Codec/Kind/FieldPatterns.lean`, `scalgen.py`, the uint64 decoder and 32-byte field segment lemmas are unchanged): `rootDecMid0` is `rootDecMid` without the
 `add` directive, and `rootdec_seg0` is the statement and proof text of `Codec.rootdec_seg`
-(`P2Dec.lean`) with the `add` step removed (copied text, written after the Eth1Data hold-out was opened).
+(`Codec/Bytes32Decode.lean`) with the `add` step removed (copied text, written after the Eth1Data hold-out was opened).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 open Codec
 namespace Prysm.Eth1Data

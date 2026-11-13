@@ -17,7 +17,7 @@ hypotheses of `Decode.accept_function_spec_holds`, so they stay visible in every
 assumed. `Encode.fast_path_function_spec` (encoder) follows the same rule (below).
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code
+open Machine Runtime Prysm.Checkpoint.Code
 variable [Host]
 
 namespace Prysm.Checkpoint

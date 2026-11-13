@@ -11,14 +11,14 @@ callee field to
     mov %rX,f(%rax)       -- store to the field at Go offset f; the receiver is in rax
 
 (`rX` = r8 at the one development site). `u64DecRR rX src f` is this template; it differs from
-`u64DecInline` (`U64Inline.lean`: reload from the spill slot, receiver in rdx, one scratch register for
+`u64DecInline` (`Codec/InlineUint64.lean`: reload from the spill slot, receiver in rdx, one scratch register for
 both roles). The lemma holds for every scratch register except rax, rbx (the bases), rsp, rbp, r14; `hX`
 lists the eleven others. Every register except `rX` is kept (the neighbouring set-up directives hold live
 values in rdx, rsi, rdi). No runtime contract is used.
 Not covered: other base registers (one site observed; no second form).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

@@ -6,9 +6,9 @@ import Prysm.PendingDeposit.Statements
 /-!
 # `(*v1alpha1.PendingDeposit).UnmarshalSSZ`, accept path from the GENERATED `p2dec --gen4` chains (hold-out, full-proof type)
 
-Hand-written AFTER the raw generator output (`Gen4H6PdDec.lean`, `p2dec --gen4`, exit 0,
+Hand-written AFTER the raw generator output (`Prysm/PendingDeposit/GeneratedDecodeSteps.lean`, `p2dec --gen4`, exit 0,
 5/5 walker-covered) was committed. Statement = the pre-committed hand statement `Prysm.PendingDeposit.Decode.accept_statement`
-(`H6Stmt.lean`, unchanged). `--gen4 --compose` refuses by design, so every field composition is HAND text
+(`Prysm/PendingDeposit/Statements.lean`, unchanged). `--gen4 --compose` refuses by design, so every field composition is HAND text
 (`pd_gg_*_field`) over the GENERATED theorems, used as emitted:
 * head 0–13: `Decode.head` (hand; `decpro_seg` with F = 64, dB = 88, size 192, then the spills 11–13 as `kstep_st`);
 * PublicKey 14–48: generated segment (offset-0 form) + generated tail steps 38, 39, 47, 48;
@@ -19,7 +19,7 @@ Hand-written AFTER the raw generator output (`Gen4H6PdDec.lean`, `p2dec --gen4`,
 * epilogue 161–163: `Decode.epi` (hand; `kstep_add` and `decret_seg`).
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.PendingDeposit.Code Codec
+open Machine Runtime Prysm.AttestationData.Code Prysm.PendingDeposit.Code Codec
 variable [Host]
 
 namespace Prysm.PendingDeposit

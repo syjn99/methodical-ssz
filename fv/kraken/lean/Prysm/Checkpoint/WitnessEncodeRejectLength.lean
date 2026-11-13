@@ -15,7 +15,7 @@ the rax spill slot and `dst[8:48]`. For every `rl ≠ 32` (instances 31, 33, 0)
 the encoder returns the error words and a nil slice.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code
+open Machine Runtime Machine.Witness Prysm.Checkpoint.Code
 
 namespace Prysm.Checkpoint.Witness.EncodeRejectLength
 

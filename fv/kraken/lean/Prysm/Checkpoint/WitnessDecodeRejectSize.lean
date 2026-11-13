@@ -14,7 +14,7 @@ unused rax spill slot (the frame `R`) and the rbx spill slot. For every length
 `≠ 40` (instances 39, 41, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code
+open Machine Runtime Machine.Witness Prysm.Checkpoint.Code
 
 namespace Prysm.Checkpoint.Witness.DecodeRejectSize
 

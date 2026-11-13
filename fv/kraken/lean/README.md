@@ -22,8 +22,10 @@ It also has the commands that read code and data files (`Machine/Include.lean`) 
 A model is a small assembly program (`Runtime/*.S`) with theorems that it satisfies its contract. Examples are a bump allocator, a memory copy and error formatting.
 
 **`TestTarget`.** Code, data and proofs of the small test target (Go 1.26.3, `../link/out/`), for example `TestTarget/ScalarsDecodeAccept.lean` and `TestTarget/ListU64DecodeReject.lean`.
-It also has the function specifications of the test target callees (`TestTarget/FunctionSpecs.lean`) and the contract form `NewobjectC`.
-Some Prysm proofs use a few of its declarations (for example `TestTarget.Data.staticuint64s_addr`, `store_avx_step`, `TestTarget.luElems`).
+It also has the function specifications of the test target callees (`TestTarget/FunctionSpecs.lean`).
+No module of another library imports a module of `TestTarget`.
+The declarations that other libraries used are in `Runtime/StaticUint64s.lean`, `Runtime/NewobjectContract.lean`,
+`Runtime/StaticBoxLemmas.lean`, `Machine/StoreLemmas.lean` and `Codec/ReadUint64List.lean`.
 
 **`Codec`.** Lemmas that do not depend on one Prysm type: the `uint64` decoder pattern (`Codec/Uint64Decoder.lean`), the fixed-bytes field decoder and encoder patterns (`Codec/Bytes32*.lean`, `Codec/FixedBytesDecode*.lean`), the encoder step lemmas (`Codec/Encode*.lean`) and the statement kinds of the generated proofs (`Codec/Kind/`).
 `Codec/Segment/` holds segment and loop lemmas stated once for any size or element count, with the fixed instances of `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/` and `Prysm/HistoricalBatch/` as corollaries.
@@ -36,20 +38,17 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
   The files `CapacityReserved*.lean` hold proofs about a separate test ELF of a generator option that is not adopted
   (the encoder reserves 40 bytes of capacity first; namespace `Prysm.Checkpoint.CapacityReserved`).
 - `Prysm/Epoch/`: the decoder of the hand-written `primitives.Epoch` method and its function specification.
-  Its program constant is in `Prysm/Checkpoint/Code.lean` (shared module, declared as `Prysm.Epoch.Code.unmarshalSSZ`).
+  Its program constant is `Prysm.Epoch.Code.unmarshalSSZ` (`Prysm/Epoch/Code.lean`).
 - `Prysm/AttestationData/`: the `v1alpha1.AttestationData` decoder (accept path in four parts, size reject, EthLib
   alignment), its hand specification and witnesses. `Code.lean` also holds the programs of the Slot and
   CommitteeIndex decoders (shared module).
 - `Prysm/Slot/` and `Prysm/CommitteeIndex/`: the decoders of the hand-written `primitives.Slot` and
-  `primitives.CommitteeIndex` methods and their function specifications. `Prysm/Slot/DecodeAccept.lean` holds both
-  types (one namespace block each; shared module).
+  `primitives.CommitteeIndex` methods and their function specifications.
 - `Prysm/Checkpoint/*AsNestedField.lean`: the function specifications of the Checkpoint decoder and encoder for a
   caller that holds Checkpoint as a nested field (AttestationData), and their checks on the Checkpoint witness hosts.
 - `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/`, `Prysm/IndexedAttestation/`: the decoders of these types.
   They have byte vectors, a vector of byte vectors and a variable-size list.
   `../gen/restructure/maps/sync-and-indexed-attestation/files.tsv` gives the earlier path of each module.
-  Three modules hold declarations of two types and need a split: `Prysm/SyncAggregate/Code.lean`,
-  `Prysm/SyncAggregate/SpecDescription.lean` and `Prysm/SyncCommittee/SpecDefinitions.lean`.
 - `Prysm/HistoricalBatch/`: the `v1alpha1.HistoricalBatch` decoder.
 - `Prysm/Deposit/`: the `v1alpha1.Deposit` decoder, proved with the lemmas of `Codec/Segment/`, and its witnesses.
   `../gen/restructure/maps/historical-batch-and-deposit/files.tsv` gives the earlier path of each module of the two types.
@@ -78,8 +77,8 @@ EthLib -> Spec -> Machine -> Runtime -> TestTarget -> Codec (except Codec/Segmen
 ```
 
 The arrows give the order of the libraries in the import graph. A library imports only libraries to its left.
-Exceptions: `Machine/Step.lean` imports `TestTarget/Code.lean`, `Runtime/Contracts.lean` imports `TestTarget/Data.lean`,
-`Runtime/BumpAllocatorVariants.lean` imports `TestTarget/FunctionSpecs.lean`, and `Codec/Bytes32Decode.lean` imports `Prysm/ElfData/CheckpointAndEpoch.lean`.
+Exceptions: `TestTarget` imports modules of `Codec` (`Codec/ReadUint64List.lean`) and no library imports `TestTarget`,
+and `Codec/Bytes32Decode.lean` imports `Prysm/ElfData/CheckpointAndEpoch.lean`.
 `Prysm/Checkpoint/CapacityReserved*.lean` and `Prysm/Deposit/` import modules of the flat types, and `Prysm/HistoricalBatch/` does not import them.
 Some modules of `Codec/` and `Codec/Kind/` import modules of the flat types (the kinds and lemmas that the shared layer left in a type library).
 A new type gets its own library or modules. Do not change a reviewed module to add a new type.

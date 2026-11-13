@@ -8,9 +8,9 @@ import Prysm.BlobIdentifier.GeneratedDecodeRootFieldSegments
 # Real Prysm `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
 
 Hand-written after the hold-out was opened. The BlockRoot segment is the raw
-generator theorem `Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_seg` (`GenBiDec.lean`, unedited). The head and the
-composition are the text of `E1Accept.lean` with the BlobIdentifier indices and without the second root
-segment; `e1addr` and `Prysm.Eth1Data.Decode.stack_low_eq` are reused from `E1Accept`.
+generator theorem `Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_seg` (`Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean`, unedited). The head and the
+composition are the text of `Prysm/Eth1Data/DecodeAccept.lean` with the BlobIdentifier indices and without the second root
+segment; `e1addr` and `Prysm.Eth1Data.Decode.stack_low_eq` are reused from `Prysm/Eth1Data/DecodeAccept.lean`.
 
     func (b *BlobIdentifier) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 40 { return ssz.ErrSize }
@@ -25,10 +25,10 @@ path (in `R`). The code agrees: the receiver stores are at 8, 16, 24 and 32.
 Directive indices of `Prysm.BlobIdentifier.Code.unmarshalSSZ` (index = line − 1 of the `.S`): 2–3 stack guard,
 4–7 prologue, 8 `nop`, 9–10 `cmp $0x28,%rcx; jne L_e2`, 11–12 spills; 13–36 the BlockRoot segment
 (generated); 37–38 + `L_c7` 45–46 pointer reload and store; 47–49 Index (`buf[32:40]` to receiver + 32);
-epilogue 50–54. Stack as in `E1Accept.lean`.
+epilogue 50–54. Stack as in `Prysm/Eth1Data/DecodeAccept.lean`.
 -/
 
-open Machine Runtime TestTarget Codec Prysm.BlobIdentifier.Code
+open Machine Runtime Codec Prysm.BlobIdentifier.Code
 variable [Host]
 
 namespace Prysm.BlobIdentifier
@@ -169,7 +169,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
-  -- BlockRoot: the generated segment theorem (raw scalgen output, GenBiDec), 13 → 37
+  -- BlockRoot: the generated segment theorem (raw scalgen output, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean`), 13 → 37
   refine eventually_trans _ _ _ _ (Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_seg k hk hf
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)

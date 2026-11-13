@@ -20,7 +20,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "BlockRoot", "theorems": ["Decode.generated_BlockRoot_seg", "Decode.generated_s37", "Decode.generated_s38", "Decode.generated_s45", "Decode.generated_s46"]}, {"field": "Index", "theorems": ["Decode.generated_s47", "Decode.generated_s48", "Decode.generated_s49"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.BlobIdentifier.Code
+open Machine Runtime Prysm.BlobIdentifier.Code
 variable [Host]
 
 open Codec

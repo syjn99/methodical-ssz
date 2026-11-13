@@ -41,7 +41,7 @@ them with unnamed 8-byte values.
 Size reject: directives 2–10, `cmp $0x80000,%rcx; jne L_7b` taken, 30–35.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.HistoricalBatch.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.HistoricalBatch.Code
 variable [Host]
 
 namespace Prysm.HistoricalBatch

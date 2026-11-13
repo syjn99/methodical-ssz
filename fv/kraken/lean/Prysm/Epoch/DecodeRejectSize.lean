@@ -1,6 +1,7 @@
 import Runtime.Contracts
 import Machine.Frame
-import TestTarget.ListU64DecodeRejectCall
+import Machine.StoreLemmas
+import Runtime.StaticBoxLemmas
 import Prysm.Checkpoint.DecodeAccept
 import Prysm.ElfData.CheckpointAndEpoch
 
@@ -17,22 +18,22 @@ array at rsp − 40 (two `movups %xmm15`, then `type:int`, `&8` (static box
 39–42 epilogue. Contracts: `ConvT64C Heap S` and the `FmtErrorfDDC` instance
 with the format `ElfData.CheckpointAndEpoch.e2eEpFmt` (40 bytes) and the type word
 `ElfData.CheckpointAndEpoch.e2eIntType_addr` (`type:int` of the Go 1.26.10 ELF); existing forms only.
-`StaticBox` uses the table `TestTarget.Data.staticuint64s` at `TestTarget.Data.staticuint64s_addr` (the existing
-contract form reads the TestTarget.Data namespace); `Decode.reject_static_table` shows that the Go 1.26.10 ELF's table
+`StaticBox` uses the table `Runtime.Data.staticuint64s` at `Runtime.Data.staticuint64s_addr` (the existing
+contract form reads the Runtime.Data namespace); `Decode.reject_static_table` shows that the Go 1.26.10 ELF's table
 (`e2eStaticuint64s`) has the same bytes and `Decode.reject_static_addr` that the two addresses are the same
 term.
 Standalone obligation: from `Checkpoint.UnmarshalSSZ` this path is unreachable.
 -/
 
-open Machine Runtime TestTarget Prysm.Epoch.Code
+open Machine Runtime Prysm.Epoch.Code
 variable [Host]
 
 namespace Prysm.Epoch
 
 set_option maxRecDepth 100000 in
-theorem Decode.reject_static_table : ElfData.CheckpointAndEpoch.e2eStaticuint64s = TestTarget.Data.staticuint64s := by rfl
+theorem Decode.reject_static_table : ElfData.CheckpointAndEpoch.e2eStaticuint64s = Runtime.Data.staticuint64s := by rfl
 -- The address that `Runtime.StaticBox` reads is the Go 1.26.10 label `runtime.staticuint64s`.
-theorem Decode.reject_static_addr : ElfData.CheckpointAndEpoch.e2eStaticuint64s_addr = TestTarget.Data.staticuint64s_addr := rfl
+theorem Decode.reject_static_addr : ElfData.CheckpointAndEpoch.e2eStaticuint64s_addr = Runtime.Data.staticuint64s_addr := rfl
 theorem Decode.reject_eight_bytes : ElfData.CheckpointAndEpoch.e2eEight = Int.toBytes 8 (8 : BitVec 64).toInt := by decide
 theorem Decode.reject_fmt_len : ElfData.CheckpointAndEpoch.e2eEpFmt.length = 40 := by decide
 theorem Decode.reject_eq (x : BitVec 64) (h : x - 8#64 = 0#64) : x = 8 := by bv_omega
@@ -132,17 +133,17 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 8#64 - 72 + 40 = rsp.toBitVec - 40 by bv_omega]
-  apply store_avx_step _ _ _ _ a40 _ _ (by ecancel) (by exact ha40) (by decide)
+  apply Machine.store_avx_step _ _ _ _ a40 _ _ (by ecancel) (by exact ha40) (by decide)
   intro m3 H3
   kunfold
   kat hk unmarshalSSZ 13
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 40 + 16 = rsp.toBitVec - 24 by bv_omega]
-  apply store_avx_step _ _ _ _ a24 _ _ (by ecancel) (by exact ha24) (by decide)
+  apply Machine.store_avx_step _ _ _ _ a24 _ _ (by ecancel) (by exact ha24) (by decide)
   intro m4 H4
   kunfold
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 40), lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 24),
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 40), Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 24),
     show rsp.toBitVec - 40 + 8 = rsp.toBitVec - 32 by bv_omega,
     show rsp.toBitVec - 24 + 8 = rsp.toBitVec - 16 by bv_omega] at H4
   kat hk unmarshalSSZ 14

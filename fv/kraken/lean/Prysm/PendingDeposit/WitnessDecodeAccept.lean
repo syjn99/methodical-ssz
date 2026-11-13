@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `Decode.accept_from_generated_steps` (PendingDeposit decoder accept path; hold-out, full-proof type)
 
-Hand-written (the text of `WitSmA.lean` with the PendingDeposit host and layout).
+Hand-written (the text of `Prysm/SyncCommitteeMessage/WitnessDecodeAccept.lean` with the PendingDeposit host and layout).
 It shows that the premises of the independent hand statement `Prysm.PendingDeposit.Decode.accept_statement` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.PendingDeposit).UnmarshalSSZ` (index 9),
 `(*primitives.Slot).UnmarshalSSZ` (191), the 1-byte bump `runtime.makeslice` (254, `bump_makeslice1`) and
@@ -22,7 +22,7 @@ every old pointer word every premise holds and the decoder returns nil. The rece
 `v1alpha1.PendingDeposit`.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.AttestationData.Code Codec Prysm.PendingDeposit.Code
+open Machine Runtime Machine.Witness Prysm.AttestationData.Code Codec Prysm.PendingDeposit.Code
 
 namespace Prysm.PendingDeposit.Witness.DecodeAccept
 

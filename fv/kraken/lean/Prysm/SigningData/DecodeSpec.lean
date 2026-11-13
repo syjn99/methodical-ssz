@@ -4,7 +4,7 @@ import Prysm.SigningData.Spec
 /-!
 # Spec alignment of the real SigningData decoder
 
-Built on the GENERATED theorems of `Gen5SdDec.lean` (`p2dec --gen5`; raw output, not edited):
+Built on the GENERATED theorems of `Prysm/SigningData/GeneratedDecodeAccept.lean` (`p2dec --gen5`; raw output, not edited):
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
   The statement is the generated accept statement (kind instance) with the input chunks replaced by the
@@ -16,7 +16,7 @@ Built on the GENERATED theorems of `Gen5SdDec.lean` (`p2dec --gen5`; raw output,
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 64`.
 -/
 
-open Machine Runtime TestTarget Codec Prysm.SigningData.Code EthLib.Serialization.Ssz
+open Machine Runtime Codec Prysm.SigningData.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.SigningData

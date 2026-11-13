@@ -7,7 +7,7 @@ import Prysm.DepositMessage.DecodeFieldSegmentOffsetZero
 # The existing 32-byte / 48-byte lemmas and kinds are instances of the size-parametric ones
 
 Every theorem here is a definitional identity (`rfl`); none is a stated equivalence. The existing files
-(`P2Dec.lean`, `P2DecZ.lean`, `DmSeg0.lean`, `Kind.lean`, `KindZ.lean`) are unchanged and their lemmas are not
+(`Codec/Bytes32Decode.lean`, `Codec/Bytes32DecodeOffsetZero.lean`, `Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`, `Codec/Kind/FieldPatterns.lean`, `Codec/Kind/Bytes32DecodeOffsetZero.lean`) are unchanged and their lemmas are not
 re-proved from the new ones: the new lemmas run the same proof text again.
 
 * templates: `rootDecHead = bytesDecHead 32`, `rootDecMid = bytesDecMid 32`, `rootDecMidZ = bytesDecMidZ 32`,
@@ -19,7 +19,7 @@ re-proved from the new ones: the new lemmas run the same proof text again.
   transparency: the template definitions unfold).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 open Codec
 namespace Codec

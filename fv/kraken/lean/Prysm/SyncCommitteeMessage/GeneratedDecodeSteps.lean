@@ -12,7 +12,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "Slot", "theorems": ["Decode.generated_step_s15", "Decode.generated_step_s16", "Decode.generated_step_Slot_call"]}, {"field": "BlockRoot", "theorems": ["Decode.generated_step_BlockRoot_seg", "Decode.generated_step_s72", "Decode.generated_step_s73", "Decode.generated_step_s80", "Decode.generated_step_s81"]}, {"field": "ValidatorIndex", "theorems": ["Decode.generated_step_s82", "Decode.generated_step_s83", "Decode.generated_step_s84", "Decode.generated_step_s85", "Decode.generated_step_s86", "Decode.generated_step_s87", "Decode.generated_step_ValidatorIndex_call"]}, {"field": "Signature", "theorems": ["Decode.generated_step_s118", "Decode.generated_step_s119", "Decode.generated_step_Signature_seg", "Decode.generated_step_s146", "Decode.generated_step_s147", "Decode.generated_step_s154", "Decode.generated_step_s155"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.SyncCommitteeMessage.Code
+open Machine Runtime Prysm.SyncCommitteeMessage.Code
 variable [Host]
 
 open Codec

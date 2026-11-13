@@ -14,7 +14,7 @@ zero), and the 8n column bytes at pc = 0x10124 + 8n. Frame `R`: the receiver wor
 The root and column bytes are arbitrary lists of the right length; the `example`s instantiate them.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
 
 namespace Prysm.DataColumnsByRootIdentifier.Witness.EncodeFastPath
 

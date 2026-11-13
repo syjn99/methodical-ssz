@@ -17,7 +17,7 @@ Two instances: empty prefix with `cap = 16`, and a 3-byte prefix with 5 spare by
 Balance every premise of the kind instance `encFastKindN marshalSSZTo Encode.example_layout [.u64, .u64]` holds.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.ValidatorBalance.Code
+open Machine Runtime Machine.Witness Codec Prysm.ValidatorBalance.Code
 
 namespace Prysm.ValidatorBalance.Witness.EncodeFastPath
 

@@ -6,18 +6,18 @@ import Prysm.PendingDeposit.Statements
 /-!
 # `(*v1alpha1.PowBlock).UnmarshalSSZ`, accept path from the GENERATED `p2dec --gen4` chains (hold-out, full-proof type)
 
-Hand-written AFTER the raw generator output (`Gen4H6PbDec.lean`, `p2dec --gen4`, exit 0,
+Hand-written AFTER the raw generator output (`Prysm/PowBlock/GeneratedDecodeSteps.lean`, `p2dec --gen4`, exit 0,
 3/3 walker-covered) was committed. Statement = the pre-committed hand statement `Prysm.PowBlock.Decode.accept_statement`
-(`H6Stmt.lean`, unchanged). `--gen4 --compose` refuses by design, so every field composition is HAND text
+(`Prysm/PendingDeposit/Statements.lean`, unchanged). `--gen4 --compose` refuses by design, so every field composition is HAND text
 (`pb_gg_*_field`) over the GENERATED theorems, used as emitted:
-* head 0–12: `dechead_seg` (`Compose.lean`, frame `0x20`, size 96);
+* head 0–12: `dechead_seg` (`Codec/DecoderHeadEpilogue.lean`, frame `0x20`, size 96);
 * BlockHash 13–46: generated segment (offset-0 form) + generated tail steps 37, 38, 45, 46;
 * ParentHash 47–82: generated segment + generated tail steps 73, 74, 81, 82;
 * TotalDifficulty 83–118: generated segment + generated tail steps 109, 110, 117, 118;
-* epilogue 119–123: `decepi_seg` (`Compose.lean`).
+* epilogue 119–123: `decepi_seg` (`Codec/DecoderHeadEpilogue.lean`).
 -/
 
-open Machine Runtime TestTarget Prysm.PowBlock.Code Codec
+open Machine Runtime Prysm.PowBlock.Code Codec
 variable [Host]
 
 namespace Prysm.PowBlock

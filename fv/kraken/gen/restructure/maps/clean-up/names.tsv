@@ -1,0 +1,41 @@
+# kind	old name	new name	scope	fifth column (see ../../README.md section 2)
+# type: the namespace of one type (here only to run the tool in reference mode)
+# declaration: old full name, new full name, library, new module (the module after the hand-edit cut)
+# Kept until the link sets merge (SPEC 8.4): staticuint64s, staticuint64s_addr (names of the data file staticuint64s.data).
+type	Prysm.Checkpoint	-	-	-
+declaration	TestTarget.luElems	Codec.readUint64List	Codec	Codec.ReadUint64List
+declaration	TestTarget.luElems.eq_1	Codec.readUint64List.eq_1	Codec	Codec.ReadUint64List
+declaration	TestTarget.luElems.eq_2	Codec.readUint64List.eq_2	Codec	Codec.ReadUint64List
+declaration	TestTarget.luElems.eq_def	Codec.readUint64List.eq_def	Codec	Codec.ReadUint64List
+declaration	TestTarget.luElems.match_1	Codec.readUint64List.match_1	Codec	Codec.ReadUint64List
+declaration	TestTarget.luElems_length	Codec.readUint64List_length	Codec	Codec.ReadUint64List
+declaration	TestTarget.u64Bytes_luElems	Codec.u64Bytes_readUint64List	Codec	Codec.ReadUint64List
+declaration	TestTarget.u64Bytes_luElems.match_1_1	Codec.u64Bytes_readUint64List.match_1_1	Codec	Codec.ReadUint64List
+declaration	Codec.Segment.hbA_join'	Codec.Segment.array_join_historical_batch	Codec	Codec.Segment.ByteSliceListInstances
+declaration	Codec.Segment.hbA_split'	Codec.Segment.array_split_historical_batch	Codec	Codec.Segment.ByteSliceListInstances
+declaration	Codec.Segment.hbIn_split'	Codec.Segment.input_split_historical_batch	Codec	Codec.Segment.ByteSliceListInstances
+declaration	Codec.Segment.hb_flatten_length'	Codec.Segment.flatten_length_historical_batch	Codec	Codec.Segment.ByteSliceListInstances
+declaration	Codec.Segment.lv_flatten_length'	Codec.Segment.flatten_length_sync_committee	Codec	Codec.Segment.ByteSliceListInstances
+declaration	Codec.Segment.scA_join'	Codec.Segment.array_join_sync_committee	Codec	Codec.Segment.ByteSliceListInstances
+declaration	Codec.Segment.scA_split'	Codec.Segment.array_split_sync_committee	Codec	Codec.Segment.ByteSliceListInstances
+declaration	Codec.Segment.scIn_split'	Codec.Segment.input_split_sync_committee	Codec	Codec.Segment.ByteSliceListInstances
+declaration	Codec.Segment.hbL	Codec.Segment.historicalBatchLabel	Codec	Codec.Segment.Bytes32LoopHistoricalBatch
+declaration	Codec.Segment.hb_loop1_g	Codec.Segment.historical_batch_block_roots_loop	Codec	Codec.Segment.Bytes32LoopHistoricalBatch
+declaration	Codec.Segment.hb_loop2_g	Codec.Segment.historical_batch_state_roots_loop	Codec	Codec.Segment.Bytes32LoopHistoricalBatch
+declaration	Codec.Segment.hbN	Codec.Segment.historicalBatchSymbol	Codec	Codec.Segment.SizeRejectInstances
+declaration	Codec.Segment.hb_reject_size_g	Codec.Segment.historical_batch_reject_size	Codec	Codec.Segment.SizeRejectInstances
+declaration	Codec.Segment.scN	Codec.Segment.syncCommitteeSymbol	Codec	Codec.Segment.SizeRejectInstances
+declaration	Codec.Segment.sc_reject_size_g	Codec.Segment.sync_committee_reject_size	Codec	Codec.Segment.SizeRejectInstances
+declaration	Codec.Segment.scL	Codec.Segment.syncCommitteeLabel	Codec	Codec.Segment.TripleLoopSyncCommittee
+declaration	Codec.Segment.sc_loop_g	Codec.Segment.sync_committee_loop	Codec	Codec.Segment.TripleLoopSyncCommittee
+declaration	add8_neg8	Machine.add8_neg8	Machine	Machine.StoreLemmas
+declaration	lr_split16	Machine.at_split16	Machine	Machine.StoreLemmas
+declaration	store_avx_step	Machine.store_avx_step	Machine	Machine.StoreLemmas
+declaration	Prysm.Checkpoint.Encode.fast_path_mul	Codec.add_mul_one	Prysm	Prysm.Checkpoint.EncodeFastPath
+declaration	Prysm.Checkpoint.Encode.reject_length_eq	Codec.eq_32_of_sub_eq_zero	Prysm	Prysm.Checkpoint.EncodeRejectLength
+declaration	TestTarget.Data.staticuint64s_addr.eq_1	Runtime.Data.staticuint64s_addr.eq_1	Prysm	Prysm.Epoch.WitnessDecodeRejectSize
+declaration	TestTarget.NewobjectC	Runtime.NewobjectC	Runtime	Runtime.NewobjectContract
+declaration	staticBox_congr	Runtime.staticBox_congr	Runtime	Runtime.StaticBoxLemmas
+declaration	TestTarget.Data.staticuint64s	Runtime.Data.staticuint64s	Runtime	Runtime.StaticUint64s
+declaration	TestTarget.Data.staticuint64s_addr	Runtime.Data.staticuint64s_addr	Runtime	Runtime.StaticUint64s
+declaration	TestTarget.Data.staticuint64s_table	Runtime.Data.staticuint64s_table	Runtime	Runtime.StaticUint64s

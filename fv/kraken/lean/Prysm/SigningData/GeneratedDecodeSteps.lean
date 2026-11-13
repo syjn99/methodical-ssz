@@ -13,7 +13,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "ObjectRoot", "theorems": ["Decode.generated_step_ObjectRoot_seg", "Decode.generated_step_s37", "Decode.generated_step_s38", "Decode.generated_step_s45", "Decode.generated_step_s46"]}, {"field": "Domain", "theorems": ["Decode.generated_step_Domain_seg", "Decode.generated_step_s73", "Decode.generated_step_s74", "Decode.generated_step_s81", "Decode.generated_step_s82"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.SigningData.Code
+open Machine Runtime Prysm.SigningData.Code
 variable [Host]
 
 open Codec

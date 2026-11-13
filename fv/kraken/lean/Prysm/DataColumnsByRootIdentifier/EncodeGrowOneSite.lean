@@ -11,7 +11,7 @@ garbage empty) or not taken (16–28 as the first-site grow path, `growslice` of
 `hone`; the old block joins the garbage frame), then `Encode.grow_tail` (sites 2 and 3 fit or grow, `Prysm/DataColumnsByRootIdentifier/EncodeTailGrow.lean`).
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

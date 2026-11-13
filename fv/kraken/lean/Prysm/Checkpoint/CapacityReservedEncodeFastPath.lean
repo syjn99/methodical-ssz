@@ -19,7 +19,7 @@ reject path, `z'` = bytes 8–39 of the zeroed `z`, existential because X15 is n
 reaches the two `growslice` calls of the original appends (directives 66 and 88).
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.CapacityReserved.Code
+open Machine Runtime Prysm.Checkpoint.CapacityReserved.Code
 variable [Host]
 
 namespace Prysm.Checkpoint.CapacityReserved

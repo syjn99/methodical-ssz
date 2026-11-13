@@ -37,7 +37,7 @@ this with a fake child (no Lean). Before the first case, `lake build --no-build 
 must exit 0 (audit AU-05: `lake env lean` does not check traces); otherwise no case runs and the exit code is 2.
 The precheck argv and exit code are appended to "prechecks" of <result.json>.
 Old results whose id is not in <cases.json> are dropped from <result.json>. A <case-id> that matches no
-case is a usage error: nothing runs and the exit code is 2 (review fix-r1 S7).
+case is a usage error: nothing runs and the exit code is 2.
 Writes <result.json> and, per case, <work-dir>/<id>/{mut.lean, mut.S?, diff, log}. Python 3 stdlib only.
 """
 import difflib
@@ -56,7 +56,7 @@ LEAN = KR / "lean"
 NORM = KR / "prysm" / "go1.26.10" / "e2e" / "link" / "norm"
 MEMCAP = KR / "gen" / "tools" / "memcap.py"
 CAP = str(6 * 2 ** 30)
-CASE_TIMEOUT = 300  # seconds per case (review e2e-r1 S7; INBOX 007: 300 s)
+CASE_TIMEOUT = 300  # seconds per case
 HEARTBEAT = "(deterministic) timeout"
 RECDEPTH = "maximum recursion depth has been reached"
 # audit AU-04: a first error that is a parse error or a name-resolution error says nothing about the
@@ -240,7 +240,7 @@ def run_capped(argv, cwd, timeout):
     try:
         out, err = p.communicate(timeout=timeout)
         return out + err, p.returncode, False, []
-    except subprocess.TimeoutExpired:  # its own class (review e2e-r1 S7): never a pass
+    except subprocess.TimeoutExpired:  # its own class: never a pass
         reaped = kill_tree(p.pid)
         out, err = p.communicate()
         return (out or "") + (err or ""), None, True, reaped
@@ -296,7 +296,7 @@ def run_case(c, work):
     killed = "killed=True" in log
     errl = [l for l in log.splitlines() if ": error" in l]
     later = next((l for l in errl[1:] if HEARTBEAT in l or RECDEPTH in l), None)
-    # review fix-r1 S4: no absolute work-dir path in the committed result file
+    # no absolute work-dir path in the committed result file
     first, later = [x.replace(str(work), "<work>") if x else x for x in (first, later)]
     r = {"id": c["id"], "kind": c["kind"], "module": c["module"], "theorem": c["theorem"],
          "range": [lo, hi], "error_lines": errs, "first_error": first, "rc": rc,
@@ -381,7 +381,7 @@ def main(cases, work, out, *ids):
     if ids:
         missing = sorted(set(ids) - {c["id"] for c in cs})
         cs = [c for c in cs if c["id"] in ids]
-        if missing or not cs:  # review fix-r1 S7: an id that matches no case is a usage error, not 0 cases run
+        if missing or not cs:  # an id that matches no case is a usage error, not 0 cases run
             print("NO SUCH CASE:", missing, "; no case run", flush=True)
             return 2
     work = pathlib.Path(work).resolve()

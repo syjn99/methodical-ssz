@@ -15,7 +15,7 @@ import Machine.WitnessHost
   stack slots this path does not write.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
 
 namespace Prysm.DataColumnsByRootIdentifier.Witness.EncodeRejectLength
 

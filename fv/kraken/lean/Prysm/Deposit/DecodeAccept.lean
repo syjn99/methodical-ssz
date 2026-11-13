@@ -15,7 +15,7 @@ import Prysm.Deposit.Statements
 Statement: the frozen `Prysm.Deposit.Decode.accept_statement`.
 -/
 
-open Machine Runtime TestTarget Codec.Segment Prysm.Deposit.Code
+open Machine Runtime Codec.Segment Prysm.Deposit.Code
 
 namespace Prysm.Deposit
 

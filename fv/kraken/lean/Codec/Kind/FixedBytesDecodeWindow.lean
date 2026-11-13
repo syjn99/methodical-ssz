@@ -4,14 +4,14 @@ import Machine.Labels
 /-!
 # GEN4: statement kind of the fixed-bytes decode segment over windows
 
-`bytesDecSegKindWindow n C rY j1 jm e dR dB dS fP fL fC src` is the conclusion of `bytesdec_seg_window` (`SegReg.lean`)
+`bytesDecSegKindWindow n C rY j1 jm e dR dB dS fP fL fC src` is the conclusion of `bytesdec_seg_window` (`Codec/FixedBytesDecodeWindow.lean`)
 for the decoder `C`: the segment starts at `k + j1`, the `callq runtime.memmove` is at `k + jm`, the segment
 ends at `k + e`, and the register `rY` holds the receiver at the end. The register `rX`, the label index and
 the positions of nops are not in the statement, so they are not kind parameters. `bytesDecSegKindWindow_of`
 proves the kind from the lemma and the window facts of an instance.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

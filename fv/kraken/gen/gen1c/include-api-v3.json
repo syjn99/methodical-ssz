@@ -30,7 +30,7 @@
    "TestTarget.Data.uint64Type_size_kind",
    "TestTarget.Data.errorStringPtrType_shape",
    "TestTarget.Data.errorStringItab_shape",
-   "TestTarget.Data.staticuint64s_table",
+   "Runtime.Data.staticuint64s_table",
    "Runtime.staticuint64s_entry",
    "Runtime.staticBox_of_lt"
   ]

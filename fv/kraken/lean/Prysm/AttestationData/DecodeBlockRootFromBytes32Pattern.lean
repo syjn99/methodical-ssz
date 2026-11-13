@@ -13,7 +13,7 @@ directives by hand: 112 `mov 0x68(%rsp),%rbx`, 113 `jmp L_208`, then `L_208` (di
 `Decode.block_root_from_bytes32_pattern_same_statement` checks that the statements are the same proposition.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code
+open Machine Runtime Prysm.AttestationData.Code
 variable [Host]
 
 open Codec

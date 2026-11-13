@@ -19,7 +19,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "Index", "theorems": ["Decode.generated_s14", "Decode.generated_s15", "Decode.generated_Index_call"]}, {"field": "Balance", "theorems": ["Decode.generated_s48", "Decode.generated_s49", "Decode.generated_s50", "Decode.generated_s51"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.ValidatorBalance.Code
+open Machine Runtime Prysm.ValidatorBalance.Code
 variable [Host]
 
 open Codec

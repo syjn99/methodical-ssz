@@ -17,7 +17,7 @@ edited):
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 24`.
 -/
 
-open Machine Runtime TestTarget Codec Prysm.BeaconBlocksByRangeRequest.Code EthLib.Serialization.Ssz
+open Machine Runtime Codec Prysm.BeaconBlocksByRangeRequest.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.BeaconBlocksByRangeRequest

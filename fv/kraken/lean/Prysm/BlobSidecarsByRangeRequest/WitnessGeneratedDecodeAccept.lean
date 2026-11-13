@@ -17,7 +17,7 @@ at rax = 0x10020 (protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout: `st
 returns nil. The receiver is a Go value of `v1alpha1.BlobSidecarsByRangeRequest` (all zero).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.BlobSidecarsByRangeRequest.Code
+open Machine Runtime Machine.Witness Codec Prysm.BlobSidecarsByRangeRequest.Code
 
 namespace Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept
 

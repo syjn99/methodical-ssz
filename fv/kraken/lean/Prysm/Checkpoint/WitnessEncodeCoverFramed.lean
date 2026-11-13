@@ -3,9 +3,9 @@ import Prysm.Checkpoint.WitnessEncodeCover
 import Machine.WitnessSplit
 
 /-!
-# Witness of `Encode.cover_framed`: every capacity range on the `WitCpW` host
+# Witness of `Encode.cover_framed`: every capacity range on the `Prysm/Checkpoint/WitnessEncodeCover.lean` host
 
-Same host, block, registers and instances as `Prysm/Checkpoint/WitnessEncodeCover.lean` (the `WitCpW` Host is the only one in
+Same host, block, registers and instances as `Prysm/Checkpoint/WitnessEncodeCover.lean` (the `Prysm/Checkpoint/WitnessEncodeCover.lean` Host is the only one in
 scope, because two `Host` instances in one file make instance resolution unfold both programs): len 30, cap 30 + n (n ≤ 64), and nil `dst`. The witness conclusion names the capacity range
 that the run takes (the range conjunct of each disjunct of the framed cover decides it):
 n ≥ 40: disjunct (1), returned in place (`rax = dst`, `rcx = cap`); 8 ≤ n < 40: disjunct (2), returned
@@ -18,7 +18,7 @@ capacity and the remaining heap that the runtime returns (it gives only bounds).
 of the theorem. The second-growth path (3B) on real Go 1.26.10 is differential only.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
 
 namespace Prysm.Checkpoint.Witness.EncodeCoverFramed
 

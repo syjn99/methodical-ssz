@@ -5,12 +5,12 @@ import Prysm.Deposit.StatementsSpec
 # Spec bridge for the real Prysm `v1alpha1.Deposit`
 
 The order of `Prysm.HistoricalBatch.Spec`. Imported, not copied: the `Vector[Bytes32, n]` lemmas for any n (`Codec.Segment.Bytes32VectorSpec`), the
-32-byte element lemmas (`Prysm.HistoricalBatch.Spec`), the Deposit_Data spec bridge (`E2e.pdd_*`, `Prysm/Deposit_Data/Spec.lean`). New here:
+32-byte element lemmas (`Prysm.HistoricalBatch.Spec`), the Deposit_Data spec bridge (`Prysm.Deposit_Data.SszValue.*`, `Prysm/Deposit_Data/Spec.lean`). New here:
 the two-field container lemmas (one vector field, one nested container field).
 -/
 
 namespace Prysm.Deposit
-open EthLib.Serialization.Ssz Spec TestTarget Codec.Segment
+open EthLib.Serialization.Ssz Spec Codec.Segment
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem desc_fixedSize : desc.fixedSize = some 1240 := by rfl

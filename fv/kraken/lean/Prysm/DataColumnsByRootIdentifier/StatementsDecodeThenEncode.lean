@@ -14,7 +14,7 @@ them (`g24 … g64`) with `dst`. The encoder's return slot x − 144 is the firs
 area; its scratch is the decoder's scratch and return slot (`S + 8` bytes).
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

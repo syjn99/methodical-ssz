@@ -33,7 +33,7 @@ path (in `R`); callee return slot rsp − 112; `lo` = the `S + 8` bytes below it
 its top word). Runtime calls get `S + 8` stack bytes below their return slot.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.BeaconBlockHeader.Code Codec
+open Machine Runtime Prysm.AttestationData.Code Prysm.BeaconBlockHeader.Code Codec
 variable [Host]
 
 namespace Prysm.BeaconBlockHeader

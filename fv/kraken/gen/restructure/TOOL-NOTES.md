@@ -30,7 +30,7 @@ The shared-layer map has no `type` row and keeps the old behaviour.
 
 Maps compose in order: `shared-layer`, `checkpoint-and-epoch`, `attestation-data`, `sync-and-indexed-attestation`,
 `historical-batch-and-deposit`, `data-columns-by-root-identifier`,
-`flat-types`, then the next step.
+`flat-types`, `clean-up`, then the next step.
 To undo, run the inverse of the last map first.
 The forward run of a step needs nothing from the earlier maps.
 The inverse of the map of a step alone must give the tree from which the step started.
@@ -195,6 +195,8 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   `e2cemit.py` was changed in the flat-types step.
 - A generator writes its `--prefix` into a comment (the `GEN6-JSON` line), and an evidence tool writes old names into
   comments. The tool does not rewrite such text: give `manual-edits.tsv` rows, made by rule from a trial tree.
+- The tool rewrites a declaring line only in a moved module. A map that renames a declaration of a module that
+  does not move gives `manual-edits.tsv` rows for its declaring lines (the clean-up map does so).
 - List generated names (`.mk`, fields, `.eq_1`) as declaration rows.
   Else a body inside `theorem SszValue.x` sees `SszValue.g` as declared for every local `g`.
 - Do not make declaration rows from a regular-expression list of the source files.

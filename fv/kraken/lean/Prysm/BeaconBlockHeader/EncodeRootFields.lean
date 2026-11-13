@@ -1,4 +1,5 @@
-import TestTarget.ListU64DecodeRejectCall
+import Machine.StoreLemmas
+import Runtime.StaticBoxLemmas
 import Prysm.Checkpoint.EncodeFastPath
 import Prysm.BeaconBlockHeader.Code
 
@@ -21,7 +22,7 @@ only the memory it touches; the rest is the frame `R`. `rsp` is the entry rsp of
 `recv` (receiver), `dst` (slice pointer), `v` (length before the block) and `cap` are parameters.
 -/
 
-open Machine Runtime TestTarget Prysm.BeaconBlockHeader.Code
+open Machine Runtime Prysm.BeaconBlockHeader.Code
 variable [Host]
 
 namespace Prysm.BeaconBlockHeader
@@ -111,7 +112,7 @@ theorem Encode.enc_b (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
   simp only [Width.bytes, Width.bits] at H4
   kunfold
   rw [Encode.slot] at *
-  rw [Prysm.Checkpoint.Encode.fast_path_mul] at *
+  rw [Codec.add_mul_one] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 89 + 1)) r1 e1 scratch _
     (by rw [hr1]; rfl) (by rw [hr1, he1]) hsc (by dsimp only; ecancel)) ?_
   rintro ⟨e1', pc1⟩ ⟨hpc1, hrsp1, hr141, hrbp1, stk1, hstk1, Hm1⟩

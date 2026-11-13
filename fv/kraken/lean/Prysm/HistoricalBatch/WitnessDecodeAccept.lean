@@ -21,7 +21,7 @@ For every input of 2 × 8192 blocks of 32 bytes and every old pointer word every
 returns nil.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.HistoricalBatch.Code
+open Machine Runtime Machine.Witness Prysm.HistoricalBatch.Code
 
 namespace Prysm.HistoricalBatch.Witness.DecodeAccept
 
@@ -92,7 +92,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump]; exact hm⟩) h
 
 -- Threshold measured on this module (one run each): 200000 (default) and 400000 fail at `whnf`;
--- 1000000 and 2000000 pass. Value 2000000 = twice the lowest passing value (the margin of `WitScA`).
+-- 1000000 and 2000000 pass. Value 2000000 = twice the lowest passing value (the margin of `Prysm/SyncCommittee/WitnessDecodeAccept.lean`).
 -- Cause (profiler): `simp` 11.8 s of the declaration (two calls, 9.5 s and 2.23 s): the memory premise is
 -- closed by `simp` AC-normalization of the separating conjunction (24 chunks), as in `Prysm.SyncCommittee.Witness.DecodeAccept.runs`.
 set_option maxHeartbeats 2000000 in

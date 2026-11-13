@@ -10,10 +10,10 @@ Hand text: `Prysm.Epoch.Decode.reject_size` with the code constant `EpUnmarshal`
 `unmarshalSSZ`. The two `.S` files are identical modulo labels, including the format operand
 `go_string._+110057` (the Go linker keeps one copy of the string), so the `FmtErrorfDDC` instance with
 `ElfData.CheckpointAndEpoch.e2eEpFmt` and `ElfData.CheckpointAndEpoch.e2eIntType_addr` is the same instance; `ConvT64C` likewise.
-No new contract form. The helper lemmas `E2e.epr_*` and `Prysm.Epoch.Decode.reject_eight_bytes` / `Prysm.Epoch.Decode.reject_fmt_len` are reused.
+No new contract form. The helper lemmas `Prysm.Epoch.Decode.reject_*` and `Prysm.Epoch.Decode.reject_eight_bytes` / `Prysm.Epoch.Decode.reject_fmt_len` are reused.
 -/
 
-open Machine Runtime TestTarget Prysm.ValidatorIndex.Code
+open Machine Runtime Prysm.ValidatorIndex.Code
 variable [Host]
 
 namespace Prysm.ValidatorIndex
@@ -95,17 +95,17 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 8#64 - 72 + 40 = rsp.toBitVec - 40 by bv_omega]
-  apply store_avx_step _ _ _ _ a40 _ _ (by ecancel) (by exact ha40) (by decide)
+  apply Machine.store_avx_step _ _ _ _ a40 _ _ (by ecancel) (by exact ha40) (by decide)
   intro m3 H3
   kunfold
   kat hk unmarshalSSZ 13
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 40 + 16 = rsp.toBitVec - 24 by bv_omega]
-  apply store_avx_step _ _ _ _ a24 _ _ (by ecancel) (by exact ha24) (by decide)
+  apply Machine.store_avx_step _ _ _ _ a24 _ _ (by ecancel) (by exact ha24) (by decide)
   intro m4 H4
   kunfold
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 40), lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 24),
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 40), Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 24),
     show rsp.toBitVec - 40 + 8 = rsp.toBitVec - 32 by bv_omega,
     show rsp.toBitVec - 24 + 8 = rsp.toBitVec - 16 by bv_omega] at H4
   kat hk unmarshalSSZ 14

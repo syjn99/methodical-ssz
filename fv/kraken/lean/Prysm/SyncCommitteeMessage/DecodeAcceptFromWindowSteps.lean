@@ -7,8 +7,8 @@ import Prysm.SyncCommitteeMessage.Statements
 /-!
 # `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path, re-derived with the window and step mechanisms
 
-`Decode.accept_from_window_steps : Decode.accept_statement` (the pre-committed hand statement, `H5Stmt.lean`, unchanged). The text of
-`SmAccept.lean` with the two fields that the hold-out run missed taken from the window and step mechanisms:
+`Decode.accept_from_window_steps : Decode.accept_statement` (the pre-committed hand statement, `Prysm/SyncCommitteeMessage/Statements.lean`, unchanged). The text of
+`Prysm/SyncCommitteeMessage/DecodeAccept.lean` with the two fields that the hold-out run missed taken from the window and step mechanisms:
 
 * BlockRoot 47–81: `Decode.example_step_BlockRoot_field` (byte segment over windows with the receiver register
   `rY = rax`, then the tail as four steps) instead of the hand lemma `bytes32dec_seg_rax` and hand steps;
@@ -16,13 +16,13 @@ import Prysm.SyncCommitteeMessage.Statements
   instead of the hand lemma `Decode.validator_index_arg` and a hand-applied `calldec_seg`;
 * Signature 120–145: `Decode.example_step_Signature_seg` (window; the padding `nop` before `callq runtime.makeslice` is inside it) instead of the `p2dec --gen3`
   `pad` instance.
-Unchanged: `Decode.head0` and `Decode.spill2` (hand, `SmSeg.lean`), the generated Slot theorems (`Gen3SmDecPartial.lean`),
-the hand steps 146–160. `SmSeg.lean` is imported for `Decode.head0` / `Decode.spill2` only; `G4DepCheck.lean` checks by
+Unchanged: `Decode.head0` and `Decode.spill2` (hand, `Prysm/SyncCommitteeMessage/DecodeSegments.lean`), the generated Slot theorems (`Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean`),
+the hand steps 146–160. `Prysm/SyncCommitteeMessage/DecodeSegments.lean` is imported for `Decode.head0` / `Decode.spill2` only; `Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` checks by
 program that this proof does not reach `bytes32dec_seg_rax`, `Decode.validator_index_arg` or `calldec_nop_seg`.
 In-sample (the type is development data since its hold-out evaluation); no transfer claim.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.SyncCommitteeMessage.Code Codec
+open Machine Runtime Prysm.AttestationData.Code Prysm.SyncCommitteeMessage.Code Codec
 variable [Host]
 
 namespace Prysm.SyncCommitteeMessage
@@ -41,7 +41,7 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
-  have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Prysm.BeaconBlockHeader.Decode.generated_head_guard _ _ hguard
+  have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Prysm.BeaconBlockHeader.Decode.accept_guard _ _ hguard
   have hlS : (lo.take S).length = S := by simp [hlo]
   have hl8 : (lo.drop S).length = 8 := by simp [hlo]
   have hlos : Eq (lo.At (rsp.toBitVec - 120 - BitVec.ofNat 64 S)) =

@@ -18,7 +18,7 @@ Hand-written (not generator output): the text of `Prysm/CommitteeIndex/WitnessDe
 names replaced (`sed`); the machine theorem used is the generated `Decode.generated_accept`.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.ValidatorIndex.Code
+open Machine Runtime Machine.Witness Codec Prysm.ValidatorIndex.Code
 
 namespace Prysm.ValidatorIndex.Witness.DecodeAccept
 

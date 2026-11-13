@@ -19,7 +19,7 @@ receiver need not be a Go value (the theorem does not read the capacity word or 
 The frame `R` is every piece of the block that the theorem does not name.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.BeaconBlockHeader.Code
+open Machine Runtime Machine.Witness Codec Prysm.BeaconBlockHeader.Code
 
 namespace Prysm.BeaconBlockHeader.Witness.EncodeRejectLength
 

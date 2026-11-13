@@ -1,7 +1,7 @@
 import Prysm.Checkpoint.Spec
 import Prysm.Checkpoint.SpecEquivalence
 import Prysm.AttestationData.Spec
-import TestTarget.ListU64RejectSpec
+import Codec.ReadUint64List
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import Prysm.IndexedAttestation.SpecDefinitions
@@ -9,13 +9,13 @@ import Prysm.IndexedAttestation.SpecDefinitions
 /-!
 # Spec bridge for the real Prysm `v1alpha1.IndexedAttestation`
 
-The order of `DdSpec.lean` / `Prysm/SyncAggregate/Spec.lean` with one variable field. The list part reuses the Go 1.26.3 ListU64 lemmas
-(`Spec.serializeEach_u64`, `Fv1.inl_*`, `TestTarget.luElems`, `TestTarget.u64Bytes_luElems`, `Spec.allFit_u64(_inv)`); the data part
-reuses `E2e.pad_*` (AttestationData). `decodeChecks` are the four checks of the Go decoder in its order.
+The order of `Prysm/Deposit_Data/Spec.lean` / `Prysm/SyncAggregate/Spec.lean` with one variable field. The list part reuses the Go 1.26.3 ListU64 lemmas
+(`Spec.serializeEach_u64`, `Spec.inl_*`, `Codec.readUint64List`, `Codec.u64Bytes_readUint64List`, `Spec.allFit_u64(_inv)`); the data part
+reuses `Prysm.AttestationData.SszValue.*`. `decodeChecks` are the four checks of the Go decoder in its order.
 -/
 
 namespace Prysm.IndexedAttestation
-open EthLib.Serialization.Ssz Spec TestTarget
+open EthLib.Serialization.Ssz Spec
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 
@@ -93,7 +93,7 @@ theorem decodeChecks_encode (bs : Array UInt8) (h : decodeChecks bs) : ∃ g : S
   have hsz : bs.size = 228 + 8 * n := by omega
   obtain ⟨vd, hvd⟩ := (Prysm.AttestationData.SszValue.spec_accepts_iff (bs.extract 4 132)).mpr (by simp; omega)
   obtain ⟨d, -, hd⟩ := Prysm.AttestationData.SszValue.accepted_is_encoding hvd
-  refine ⟨⟨luElems bs 228 n, by simp [luElems_length]; omega, d, ⟨bs.extract 132 228, by simp; omega⟩⟩, ?_⟩
+  refine ⟨⟨Codec.readUint64List bs 228 n, by simp [Codec.readUint64List_length]; omega, d, ⟨bs.extract 132 228, by simp; omega⟩⟩, ?_⟩
   have h4 : bs.extract 0 4 = offsetBytes.toArray := by
     apply Array.toList_inj.mp
     simp only [Array.toList_extract, List.extract, Nat.sub_zero, List.drop_zero, hoff]
@@ -101,7 +101,7 @@ theorem decodeChecks_encode (bs : Array UInt8) (h : decodeChecks bs) : ∃ g : S
   have e1 : bs.extract 0 132 ++ bs.extract 132 228 = bs.extract 0 228 := extract_join bs (by omega) (by omega)
   have e2 : bs.extract 0 228 ++ bs.extract 228 (228 + 8 * n) = bs.extract 0 bs.size := by
     rw [extract_join bs (by omega) (by omega), ← hsz]
-  simp only [SszValue.encode, ← h4, ← hd, u64Bytes_luElems bs n 228 (by omega)]
+  simp only [SszValue.encode, ← h4, ← hd, Codec.u64Bytes_readUint64List bs n 228 (by omega)]
   rw [e0, e1, e2]; simp
 
 /-- **EthLib accepts exactly the inputs that pass the four checks.** -/

@@ -5,8 +5,8 @@ import Prysm.Checkpoint.WitnessEncodeRejectLengthCover
 /-!
 # Go-value element for the encoder cover witnesses
 
-`WitCpW` (cover witness): the receiver is at offset 9016 of the block (rax = 0x12338),
-`Root` = (0x12380, 32, 32). `WitCpWR` (reject cover witness): the receiver is at offset 9032
+`Prysm/Checkpoint/WitnessEncodeCover.lean` (cover witness): the receiver is at offset 9016 of the block (rax = 0x12338),
+`Root` = (0x12380, 32, 32). `Prysm/Checkpoint/WitnessEncodeRejectLengthCover.lean` (reject cover witness): the receiver is at offset 9032
 (rax = 0x12348), `Root` = (0x5000, rl, 48).
 
 `Witness.EncodeRejectLengthCover.runs` is stated for every `rl ≠ 32`. Only `rl ≤ 48` (= cap of the Root header) gives a Go

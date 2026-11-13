@@ -16,7 +16,7 @@ second call and the rest when the caller supplies its budget (first append fitte
 `Encode.grow_second_site`).
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code
+open Machine Runtime Prysm.Checkpoint.Code
 variable [Host]
 
 namespace Prysm.Checkpoint

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Proof of use of the E2eSeg lemmas: call graph and link set of the real v1alpha1.Deposit UnmarshalSSZ on the Go 1.26.10 ELF
+"""Proof of use of the `Codec/Segment/` lemmas: call graph and link set of the real v1alpha1.Deposit UnmarshalSSZ on the Go 1.26.10 ELF
 (the same ELF as prysm/go1.26.10/e2e/link and lv/link, sha256 c6403c02...911e). A new file. It reuses `lvlink.py`, `e2elink.py`
 and `adlink.py` by import; none of them is changed.
 

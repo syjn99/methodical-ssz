@@ -16,7 +16,7 @@ returns nil with the receiver = the input (`runs`); three epoch values
 below (0, a representative value, 2^64 − 1).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Epoch.Code
+open Machine Runtime Machine.Witness Prysm.Epoch.Code
 
 namespace Prysm.Epoch.Witness.DecodeAccept
 

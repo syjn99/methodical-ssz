@@ -1,7 +1,8 @@
 import Codec.DecoderPrologue
 import Codec.StackGuard
 import Codec.EncodeMemmove
-import TestTarget.ListU64DecodeRejectCall
+import Machine.StoreLemmas
+import Runtime.StaticBoxLemmas
 
 /-!
 # ENC2 L2: step lemmas for the encoder fast path (window form, registers as parameters)
@@ -16,17 +17,17 @@ whose premise is the fact that decides the branch; a `runtime.growslice` directi
 * `kstep_lenchk rB d n l` — `cmpq $n,d(%rB); jne l` when the slot holds `n`: control falls through (the length
   reject is at `l`).
 
-Straight-line forms not in `StepK.lean`: `kstep_lea_idx` (`lea (%rB,%rI,1),%rD`), `kstep_add_rr`
+Straight-line forms not in `Codec/WindowSteps.lean`: `kstep_lea_idx` (`lea (%rB,%rI,1),%rD`), `kstep_add_rr`
 (`add %rS,%rD`), `kstep_st_idx` (`mov %rS,d(%rB,%rI,1)`), `kstep_movups15` (`movups %xmm15,d(%rB)`),
 `kstep_xor32` (`xor %eD,%eD`), `kstep_sub_i` (`sub $i,%rD`).
 Frame: `encpro_s` (small stack guard) and `encpro_l` (large-frame guard `lea -N(%rsp),%r12`): labels, guard,
 `push %rbp`, `mov %rsp,%rbp`; the frame allocation and the spills are steps. `encn_call`: the
 `callq runtime.memmove` block for any length (`enc32_call` is the 32-byte case), contract `MemmoveC` in its
-existing form. The return is `decret_seg` (`HeadN.lean`).
-All lemmas are in the continuation form of `StepK.lean`; nops may be anywhere in a window.
+existing form. The return is `decret_seg` (`Codec/DecoderPrologue.lean`).
+All lemmas are in the continuation form of `Codec/WindowSteps.lean`; nops may be anywhere in a window.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 
@@ -310,7 +311,7 @@ theorem kstep_movups15 (rB : Reg64) (disp : Int64) (q : Program) (j e : Nat)
   kunf
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunf
-  refine store_avx_step _ (s.regs.get64 rB + disp.toBitVec) _ _ bs _ _ hm (by exact hbs) (by decide) ?_
+  refine Machine.store_avx_step _ (s.regs.get64 rB + disp.toBitVec) _ _ bs _ _ hm (by exact hbs) (by decide) ?_
   intro m' H
   try kunf
   kwend hq he 0 hend

@@ -10,12 +10,12 @@ import Prysm.HistoricalSummary.EncodeFastPathExample
 
 | module | type | guard | frame | fields | epilogue | statement |
 | --- | --- | --- | --- | --- | --- | --- |
-| `Enc2ExCp` | Checkpoint | small | `sub $0x68` | uint64 (stack temp), bytes 32 | reloads | kind instance; `Prysm.Checkpoint.Encode.fast_path`'s statement by `Encode.fast_path_of_kind` |
-| `Enc2ExBh` | BeaconBlockHeader | large, 32 | `sub $0x98` | uint64 (temp) twice, bytes 32 three times | reloads | kind instance = `Prysm.BeaconBlockHeader.Encode.fast_path`'s statement (`rfl`) |
-| `Enc2ExE1` | Eth1Data | large, 8 | `add $-0x80` | bytes 32, uint64, bytes 32 | reloads, `sub $-0x80` | kind instance = `Prysm.Eth1Data.Encode.fast_path`'s statement (`rfl`) |
-| `Enc2ExVb` | ValidatorBalance | small | `sub $0x68` | uint64 (temp), uint64 | register moves, no `memmove` | kind instance (no hand statement) |
-| `Enc2ExDm` | DepositMessage | large, 8 | `add $-0x80` | bytes 48, bytes 32, uint64; no `state` word | no reload | kind instance (no hand statement) |
-| `Enc2ExHs` | HistoricalSummary | small | `sub $0x50` | bytes 32 twice | frame test (`EncFrameTest.lean`), reloads | kind instance (no hand statement) |
+| `Prysm/Checkpoint/EncodeFastPathExample.lean` | Checkpoint | small | `sub $0x68` | uint64 (stack temp), bytes 32 | reloads | kind instance; `Prysm.Checkpoint.Encode.fast_path`'s statement by `Encode.fast_path_of_kind` |
+| `Prysm/BeaconBlockHeader/EncodeFastPathExample.lean` | BeaconBlockHeader | large, 32 | `sub $0x98` | uint64 (temp) twice, bytes 32 three times | reloads | kind instance = `Prysm.BeaconBlockHeader.Encode.fast_path`'s statement (`rfl`) |
+| `Prysm/Eth1Data/EncodeFastPathExample.lean` | Eth1Data | large, 8 | `add $-0x80` | bytes 32, uint64, bytes 32 | reloads, `sub $-0x80` | kind instance = `Prysm.Eth1Data.Encode.fast_path`'s statement (`rfl`) |
+| `Prysm/ValidatorBalance/EncodeFastPathExample.lean` | ValidatorBalance | small | `sub $0x68` | uint64 (temp), uint64 | register moves, no `memmove` | kind instance (no hand statement) |
+| `Prysm/DepositMessage/EncodeFastPathExample.lean` | DepositMessage | large, 8 | `add $-0x80` | bytes 48, bytes 32, uint64; no `state` word | no reload | kind instance (no hand statement) |
+| `Prysm/HistoricalSummary/EncodeFastPathExample.lean` | HistoricalSummary | small | `sub $0x50` | bytes 32 twice | frame test (`Codec/EncodeFrameTest.lean`), reloads | kind instance (no hand statement) |
 
 Each module: `*_g6_head` (`encHeadKindN`), `*_g6_f<i>` per field (`encFieldKindN`), `*_g6_epi`
 (`encEpiKindN`), `*_e2e_marshal_g6` (`encFastKindN`), each with its `_kind` line, and, where a hand theorem
@@ -26,13 +26,13 @@ length. No `runtime.growslice` directive is stepped. Not covered: growslice bran
 
 The texts were produced from the `.S` files and the IR by a scratch emitter of the lemma unit (not in the
 repository; it is not the generator). They are development data (in-sample). The independent checks of the
-statements are the ties of `EncTies.lean`.
+statements are the ties of `Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean`.
 
 `Encode.example_fast_all` collects the six theorems under their kinds. `Encode.example_bytes32_call_of_size`: the committed block
 `enc32_call` (statement as committed) follows from `encn_call`.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 open Codec
 namespace Prysm.Checkpoint

@@ -7,7 +7,7 @@ import Prysm.Checkpoint.Code
 
 Text produced from the `.S` file and the IR by the recipe of the lemma hand-over (a scratch emitter of the
 lemma work, not the generator): a symbolic walk of the fast path, one application of a step lemma per directive
-(`StepK.lean`, `EncSteps.lean`; windows with the nops erased), boundary states between the fields. Every
+(`Codec/WindowSteps.lean`, `Codec/EncodeSteps.lean`; windows with the nops erased), boundary states between the fields. Every
 theorem has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKindN`).
 **Fast path only**: `len(dst) + 40 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
@@ -15,7 +15,7 @@ growslice branches, the length rejects, the morestack path.
 The committed hand statement `Prysm.Checkpoint.Encode.fast_path` follows by `Encode.fast_path_of_kind` (`Encode.example_fast_same_statement`).
 -/
 
-open Machine Runtime TestTarget Codec Prysm.Checkpoint.Code
+open Machine Runtime Codec Prysm.Checkpoint.Code
 variable [Host]
 
 namespace Prysm.Checkpoint
@@ -208,7 +208,7 @@ theorem Encode.example_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog
   apply kstep_movups15 Reg64.r9 16 _ (k + 15) (k + 16) (win hk 15 1) (by rfl) (by rfl)
     (rsp.toBitVec - 64) (rsp.toBitVec - 48) (by eb) t48 ht48 _ _ _ (by rfl) (by ecancel)
   intro m4 H4; kn; try dsimp only at H4
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 64), show (rsp.toBitVec - 64) + 8 = (rsp.toBitVec - 56) by bv_omega] at H4
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 64), show (rsp.toBitVec - 64) + 8 = (rsp.toBitVec - 56) by bv_omega] at H4
   apply kstep_st Reg64.r8 Reg64.rsp 48 _ (k + 16) (k + 17) (win hk 16 1) (by rfl) (by rfl)
     (rsp.toBitVec - 112) (rsp.toBitVec - 64) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
   intro m5 H5; kn; simp only [Reg64s.get64] at H5

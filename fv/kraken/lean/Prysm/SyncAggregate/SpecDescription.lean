@@ -1,4 +1,5 @@
 import Prysm.Checkpoint.Spec
+import Prysm.SyncCommittee.SpecDescription
 
 /-!
 # Independent hand `Desc` of `v1alpha1.SyncAggregate` and `v1alpha1.SyncCommittee`
@@ -15,6 +16,7 @@ the checker records in `gen/desc/results/main.result.json`) are compared with th
     class SyncCommittee(Container):
         pubkeys: Vector[BLSPubkey, SYNC_COMMITTEE_SIZE]   # BLSPubkey = Bytes48
         aggregate_pubkey: BLSPubkey
+After the split of this module, the declarations of the other types are in `Prysm/SyncCommittee/SpecDescription.lean`.
 -/
 
 namespace Prysm.SyncAggregate
@@ -23,9 +25,5 @@ open EthLib.Serialization.Ssz
 /-- consensus-specs altair `SyncAggregate` (mainnet). -/
 def desc : Desc := .container ["sync_committee_bits", "sync_committee_signature"]
   [.bitVector 512, .byteVector 96]
-
-/-- consensus-specs altair `SyncCommittee` (mainnet). -/
-def _root_.Prysm.SyncCommittee.desc : Desc := .container ["pubkeys", "aggregate_pubkey"]
-  [.vector (.byteVector 48) 512, .byteVector 48]
 
 end Prysm.SyncAggregate

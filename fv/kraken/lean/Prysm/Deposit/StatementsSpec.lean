@@ -17,7 +17,7 @@ Frozen at their commit. The hand `Desc` below is written from consensus-specs ph
 Shapes: `Prysm.HistoricalBatch.Decode.accept_spec_statement`, `Prysm.HistoricalBatch.Decode.reject_size_spec_statement`, `Prysm.HistoricalBatch.Decode.reject_complete_statement`.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.Deposit.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.Deposit.Code
 variable [Host]
 
 namespace Prysm.Deposit

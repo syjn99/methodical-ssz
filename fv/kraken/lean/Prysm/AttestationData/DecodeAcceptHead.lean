@@ -28,7 +28,7 @@ rsp − 128; their saved rbp at rsp − 136 and their rbx spill at rsp − 112 (
 0x8(%rsp) of this function).
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code
+open Machine Runtime Prysm.AttestationData.Code
 variable [Host]
 
 namespace Prysm.AttestationData

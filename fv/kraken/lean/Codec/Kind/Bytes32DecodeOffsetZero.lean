@@ -3,7 +3,7 @@ import Codec.Bytes32DecodeOffsetZero
 /-!
 # Statement kind of the generated offset-0 decode segments (SG-1 extension)
 
-Added after both hold-outs were opened (FINDINGS SG-1, `scal/CONTAMINATION.md` §8). `Kind.lean` is not
+Added after both hold-outs were opened (FINDINGS SG-1, `scal/CONTAMINATION.md` §8). `Codec/Kind/FieldPatterns.lean` is not
 changed (its frozen blob `3c9b95b1…` stays). `rootDecSegZKind` is the text of `rootDecSegKind` with the
 `add`-form parts removed: no `src`, no `aSrc` / `hSrc`, the source bytes at `bf`, end pc `k + j2 + 11`,
 memmove return address `k + j2 + 5 + 1`. `rootDecSegZKind_of` proves the kind from the lemma
@@ -11,7 +11,7 @@ memmove return address `k + j2 + 5 + 1`. `rootDecSegZKind_of` proves the kind fr
 it only with this file at its pinned blob.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

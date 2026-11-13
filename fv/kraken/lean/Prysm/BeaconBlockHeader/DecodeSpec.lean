@@ -14,10 +14,10 @@ statement).
 - `Decode.reject_size_spec`: `bs.size ≠ 112` → EthLib rejects, and the machine code (with `rcx = bs.size`)
   returns the two words of `ssz.ErrSize`.
 - `Decode.reject_complete`: every input that EthLib rejects has `size ≠ 112`, the path condition of the one
-  reachable reject site. The two `fmt.Errorf` wraps are not reached on 112-byte inputs (`BhReject.lean`).
+  reachable reject site. The two `fmt.Errorf` wraps are not reached on 112-byte inputs (`Prysm/BeaconBlockHeader/DecodeRejectSize.lean`).
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.BeaconBlockHeader.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Prysm.AttestationData.Code Prysm.BeaconBlockHeader.Code Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.BeaconBlockHeader

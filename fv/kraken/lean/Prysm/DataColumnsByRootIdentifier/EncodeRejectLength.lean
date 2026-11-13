@@ -15,7 +15,7 @@ import Prysm.DataColumnsByRootIdentifier.EncodeTail
   `Encode.tail_fit` with this frame), 55 `jg L_fc` taken (`128 < n < 2^63`), 61–69 the two words of `ssz.ErrListTooBig`.
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

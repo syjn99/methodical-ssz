@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `Decode.accept` (DepositMessage decoder accept path, hold-out)
 
-Hand-written (the text of `WitE1A.lean` with the DepositMessage host and layout).
+Hand-written (the text of `Prysm/Eth1Data/WitnessDecodeAccept.lean` with the DepositMessage host and layout).
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.DepositMessage).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (118, `bump_makeslice1`) and `RtCopy` (124, `rt_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 80-byte heap, guard word, the 88 input
@@ -20,7 +20,7 @@ For every input and every old pointer word every premise holds and the decoder r
 The receiver is a Go value of `v1alpha1.DepositMessage` (zero-length slices, zero Amount).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.DepositMessage.Code
+open Machine Runtime Machine.Witness Codec Prysm.DepositMessage.Code
 
 namespace Prysm.DepositMessage.Witness.DecodeAccept
 

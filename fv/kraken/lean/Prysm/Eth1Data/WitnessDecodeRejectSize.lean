@@ -6,14 +6,14 @@ import Machine.WitnessHost
 # Witness of `Decode.reject_size` (hold-out)
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.Eth1Data).UnmarshalSSZ`
-(index 1). Hand-written: the text of `WitBhR.lean` with the Eth1Data decoder.
+(index 1). Hand-written: the text of `Prysm/BeaconBlockHeader/WitnessDecodeRejectSize.lean` with the Eth1Data decoder.
 Memory at `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a
 data word `0x2a`, stand-ins: the real values are set by the runtime's init and are not read from the ELF),
 the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill
 slot. For every length `≠ 72` (instances 71, 73, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Eth1Data.Code
+open Machine Runtime Machine.Witness Prysm.Eth1Data.Code
 
 namespace Prysm.Eth1Data.Witness.DecodeRejectSize
 

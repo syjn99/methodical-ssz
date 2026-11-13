@@ -10,7 +10,7 @@ import Prysm.DataColumnsByRootIdentifier.EncodeLoopGrowAnySite
 `GrowsliceC`; the old block joins the garbage frame `G`), then `Encode.grow_tail50`.
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

@@ -1,4 +1,5 @@
-import TestTarget.ListU64DecodeRejectCall
+import Machine.StoreLemmas
+import Runtime.StaticBoxLemmas
 import Prysm.Checkpoint.EncodeFastPath
 import Prysm.BeaconBlockHeader.Code
 import Codec.StackGuard
@@ -27,7 +28,7 @@ the rest is the frame `R`. X15 is not assumed to be zero: the bytes 8–31 of ea
 the conclusions. `rsp` below is the entry rsp.
 -/
 
-open Machine Runtime TestTarget Prysm.BeaconBlockHeader.Code
+open Machine Runtime Prysm.BeaconBlockHeader.Code
 variable [Host]
 
 open Codec
@@ -113,17 +114,17 @@ theorem Encode.enc_a1 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : 
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 8#64 - 152 + 104 = rsp.toBitVec - 56 by bv_omega]
-  apply store_avx_step _ _ _ _ t1a _ _ (by ecancel) (by exact ht1a) (by decide)
+  apply Machine.store_avx_step _ _ _ _ t1a _ _ (by ecancel) (by exact ht1a) (by decide)
   intro m3 H3
   kunfold
   kat hk marshalSSZTo 17
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 56 + 16 = rsp.toBitVec - 40 by bv_omega]
-  apply store_avx_step _ _ _ _ t1b _ _ (by ecancel) (by exact ht1b) (by decide)
+  apply Machine.store_avx_step _ _ _ _ t1b _ _ (by ecancel) (by exact ht1b) (by decide)
   intro m4 H4
   kunfold
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 56),
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 56),
     show rsp.toBitVec - 56 + 8 = rsp.toBitVec - 48 by bv_omega] at H4
   kat hk marshalSSZTo 18
   apply store_step_at _ _ (rsp.toBitVec - 56) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
@@ -143,7 +144,7 @@ theorem Encode.enc_a1 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : 
   apply load_step_at _ _ (rsp.toBitVec - 56) _ _ sl _ _ (by eaddr) (by ecancel) (by exact hsl)
   kunfold
   kat hk marshalSSZTo 35
-  rw [Prysm.Checkpoint.Encode.fast_path_mul]
+  rw [Codec.add_mul_one]
   apply store_step _ _ _ _ _ d0 _ _ (by ecancel) (by exact hd0)
   intro m6 H6
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl sl hsl] at H6
@@ -205,17 +206,17 @@ theorem Encode.enc_a2 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : 
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 8#64 - 152 + 72 = rsp.toBitVec - 88 by bv_omega]
-  apply store_avx_step _ _ _ _ t2a _ _ (by ecancel) (by exact ht2a) (by decide)
+  apply Machine.store_avx_step _ _ _ _ t2a _ _ (by ecancel) (by exact ht2a) (by decide)
   intro m7 H7
   kunfold
   kat hk marshalSSZTo 43
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 88 + 16 = rsp.toBitVec - 72 by bv_omega]
-  apply store_avx_step _ _ _ _ t2b _ _ (by ecancel) (by exact ht2b) (by decide)
+  apply Machine.store_avx_step _ _ _ _ t2b _ _ (by ecancel) (by exact ht2b) (by decide)
   intro m8 H8
   kunfold
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 88),
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 88),
     show rsp.toBitVec - 88 + 8 = rsp.toBitVec - 80 by bv_omega] at H8
   kat hk marshalSSZTo 44
   apply store_step_at _ _ (rsp.toBitVec - 88) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)

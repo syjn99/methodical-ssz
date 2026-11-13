@@ -183,7 +183,7 @@
   "old": "(hoff : off \u2260 offsetBytes)",
   "new": "(hoff : off \u2260 [0xe5, 0, 0, 0])",
   "stmt_module": "Prysm/IndexedAttestation/Statements.lean",
-  "module": "Prysm/IndexedAttestation/DecodeRejectSize.lean",
+  "module": "Prysm/IndexedAttestation/DecodeRejectOffset.lean",
   "theorem": "Prysm.IndexedAttestation.Decode.reject_offset"
  }
 ]

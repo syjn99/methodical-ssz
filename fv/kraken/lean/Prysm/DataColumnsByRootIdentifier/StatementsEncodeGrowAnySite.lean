@@ -19,7 +19,7 @@ The fast path and the first-site grow path (site 1 only) of
   existential in the conclusion.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

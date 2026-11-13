@@ -19,7 +19,7 @@ Two instances: empty prefix with `cap = 112`, and a 3-byte prefix with 5 spare b
 ProposerIndex and root contents every premise of the theorem holds.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.BeaconBlockHeader.Code
+open Machine Runtime Machine.Witness Codec Prysm.BeaconBlockHeader.Code
 
 namespace Prysm.BeaconBlockHeader.Witness.EncodeFastPath
 

@@ -31,7 +31,7 @@ runtime call return slot x − 152, scratch `S` below it. The last call on the a
 The alignment reject and the overflow reject run after the BlockRoot allocation and stores; their statements are not in this file.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

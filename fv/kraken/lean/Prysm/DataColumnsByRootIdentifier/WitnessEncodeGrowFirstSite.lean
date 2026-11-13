@@ -14,7 +14,7 @@ Host: data labels, the real Go 1.26.10 `(*v1alpha1.DataColumnsByRootIdentifier).
 Frame `R`: the receiver words not read, the stack gaps at rsp − 96 (32 bytes) and rsp − 48, and the spare bytes.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
 
 namespace Prysm.DataColumnsByRootIdentifier.Witness.EncodeGrowFirstSite
 

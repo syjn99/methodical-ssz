@@ -9,10 +9,10 @@ import Prysm.DepositMessage.DecodeFieldSegmentOffsetZero
 # Real Prysm `(*v1alpha1.DepositMessage).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
 
 Hand-written after the hold-out was opened. The WithdrawalCredentials segment is the
-raw generator theorem `Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg` (`GenDmDec.lean`, unedited). The
-PublicKey segment (48 bytes, source offset 0) is the hand lemma `Prysm.DepositMessage.bytes48dec_seg_z` (`DmSeg0.lean`):
+raw generator theorem `Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg` (`Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean`, unedited). The
+PublicKey segment (48 bytes, source offset 0) is the hand lemma `Prysm.DepositMessage.bytes48dec_seg_z` (`Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`):
 the generator does not read 48-byte fields. Amount (inline uint64) is by hand. The head and the composition
-are the text of `E1Accept.lean`; `e1addr` and `Prysm.Eth1Data.Decode.stack_low_eq` are reused from it.
+are the text of `Prysm/Eth1Data/DecodeAccept.lean`; `e1addr` and `Prysm.Eth1Data.Decode.stack_low_eq` are reused from it.
 
     func (d *DepositMessage) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 88 { return ssz.ErrSize }
@@ -29,10 +29,10 @@ Directive indices of `Prysm.DepositMessage.Code.unmarshalSSZ` (index = line − 
 4–7 prologue, 8 `nop`, 9–10 `cmp $0x58,%rcx; jne L_17d`, 11–12 spills; 13–36 the PublicKey segment (hand);
 37–38 + `L_c4` 45–46 pointer reload (`%rdi`) and store; 47–72 the WithdrawalCredentials segment (generated);
 73–74 + `L_162` 81–82 pointer reload and store; 83–85 Amount (`buf[80:88]` to receiver + 48); epilogue 86–90.
-Stack as in `E1Accept.lean`.
+Stack as in `Prysm/Eth1Data/DecodeAccept.lean`.
 -/
 
-open Machine Runtime TestTarget Codec Prysm.DepositMessage.Code
+open Machine Runtime Codec Prysm.DepositMessage.Code
 variable [Host]
 
 namespace Prysm.DepositMessage
@@ -177,7 +177,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
-  -- PublicKey (hand: 48-byte offset-0 segment, DmSeg0), 13 → 37
+  -- PublicKey (hand: 48-byte offset-0 segment, `Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`), 13 → 37
   have hA1 := Codec.infix_sub (q := Prysm.DepositMessage.bytesDecHead48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" 48 8 16) 13 hk
     (by simp only [unmarshalSSZ, Prysm.DepositMessage.bytesDecHead48, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hB1 := Codec.infix_sub (q := Prysm.DepositMessage.bytesDecMidZ48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_b0" 48 56 24 0 8 16) 26 hk
@@ -219,7 +219,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   kunfold
-  -- WithdrawalCredentials: the generated segment theorem (raw scalgen output, GenDmDec), 47 → 73
+  -- WithdrawalCredentials: the generated segment theorem (raw scalgen output, `Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean`), 47 → 73
   refine eventually_trans _ _ _ _ (Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg k hk hf
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)

@@ -19,7 +19,7 @@ runtime calls get the 24-byte argument area at rsp0 − 120 and the `S + 96` sta
 `lo` below their return slot rsp0 − 128 (`MakesliceC` / `MemmoveC` with stack `S + 96`).
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code
+open Machine Runtime Prysm.AttestationData.Code
 variable [Host]
 
 namespace Prysm.AttestationData

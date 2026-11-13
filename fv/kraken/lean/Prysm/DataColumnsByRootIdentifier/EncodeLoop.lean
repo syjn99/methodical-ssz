@@ -4,7 +4,7 @@ import Machine.Frame
 import Prysm.DataColumnsByRootIdentifier.CodeMarshalSSZTo
 import Prysm.SyncCommittee.DecodeLoopLemmas
 import Runtime.CopyModel
-import TestTarget.FixedVecEncode
+import Machine.StoreLemmas
 
 /-!
 # `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: the Columns loop (capacity sufficient)
@@ -19,7 +19,7 @@ rdx = column pointer `pc`, rsi = i, r8 = n. The block from `bp + L` holds `cb.ta
 8i column bytes, then the 8(n − i) bytes not written yet. The shape of `Prysm.IndexedAttestation.Decode.iter` / `Prysm.IndexedAttestation.Decode.exit` / `Prysm.IndexedAttestation.Decode.loop`.
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier
@@ -60,7 +60,7 @@ theorem Encode.loop_join (cb w : List UInt8) (n i : Nat) (hcb : cb.length = 8 * 
 
 theorem Encode.loop_addr (x y : BitVec 64) (L i : Nat) (h : y.toNat = L + 8 * i) (hL : L + 8 * i < 2 ^ 64) :
     8 + y + x * 1#64 + -8 = x + BitVec.ofNat 64 L + BitVec.ofNat 64 (8 * i) := by
-  rw [add8_neg8, BitVec.add_assoc]; congr 1
+  rw [Machine.add8_neg8, BitVec.add_assoc]; congr 1
   apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add]; omega
 
 omit [Host] in

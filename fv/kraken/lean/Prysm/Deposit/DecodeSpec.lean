@@ -9,7 +9,7 @@ The text of `Prysm.HistoricalBatch.DecodeSpec` with the Deposit statement. The s
 `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement` (`Prysm/Deposit/StatementsSpec.lean`).
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.Deposit.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.Deposit.Code
 variable [Host]
 
 namespace Prysm.Deposit

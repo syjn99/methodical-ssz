@@ -6,8 +6,8 @@ import Prysm.PowBlock.SpecChecker
 /-!
 # Spec bridge for the real Prysm `v1alpha1.PowBlock` (hold-out, full-proof type)
 
-Hand-written (the shape of `DdSpec.lean`).
-`desc` (`PbDesc.lean`) is the independent hand `Desc` from consensus-specs bellatrix; it was committed
+Hand-written (the shape of `Prysm/Deposit_Data/Spec.lean`).
+`desc` (`Prysm/PowBlock/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs bellatrix; it was committed
 before `checkerDesc` was rendered and printed. The two Descs DIFFER in one field kind:
 consensus-specs `total_difficulty: uint256` (`.uint 32`), the producer (Prysm, `TotalDifficulty []byte`,
 `ssz-size:"32"`) `.byteVector 32`. So the codec equality of the earlier types (same values) does not hold here.

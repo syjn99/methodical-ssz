@@ -6,7 +6,7 @@ import Codec.Kind.FieldPatterns
 (sha256 `0b9dc57f630babfd55c1faf389be146d20c1ce5915425e398f5c641fee55f6b2`); P1 parameters: frame 0x48, spill 0x60, accept label at directive 43. Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code
+open Machine Runtime Prysm.AttestationData.Code
 variable [Host]
 
 open Codec

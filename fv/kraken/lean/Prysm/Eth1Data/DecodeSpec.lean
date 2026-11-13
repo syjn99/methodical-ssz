@@ -5,7 +5,7 @@ import Prysm.Eth1Data.Spec
 /-!
 # Spec alignment of the real Eth1Data decoder (hold-out)
 
-Hand-written (the text of `BhSpecK.lean` with the Eth1Data statement).
+Hand-written (the text of `Prysm/BeaconBlockHeader/DecodeSpec.lean` with the Eth1Data statement).
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`, the independent consensus-specs Desc)
   as `v`, there is `g : SszValue` with `g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g`
   the machine code returns nil and the receiver holds `g` (the two roots at fresh `p1 p2` with
@@ -16,7 +16,7 @@ Hand-written (the text of `BhSpecK.lean` with the Eth1Data statement).
   reject site of the decoder (it has no other error return).
 -/
 
-open Machine Runtime TestTarget Prysm.Eth1Data.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Prysm.Eth1Data.Code Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.Eth1Data

@@ -21,7 +21,7 @@ Not covered: a decoder that keeps the receiver in another register than rdx (not
 without the reload from the spill slot.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

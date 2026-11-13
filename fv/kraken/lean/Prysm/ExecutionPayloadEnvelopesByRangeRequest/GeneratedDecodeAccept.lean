@@ -19,7 +19,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "StartSlot", "theorems": ["Decode.generated_s14", "Decode.generated_s15", "Decode.generated_StartSlot_call"]}, {"field": "Count", "theorems": ["Decode.generated_s48", "Decode.generated_s49", "Decode.generated_s50", "Decode.generated_s51"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code
+open Machine Runtime Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code
 variable [Host]
 
 open Codec

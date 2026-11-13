@@ -5,7 +5,7 @@ import Codec.FieldFrame
 # ENC2 L2: helpers of the generated-style field proofs of encoders
 
 A field theorem of a generated-style encoder proof is a list of step applications on a state with literal
-registers (`StepK.lean`, `EncSteps.lean`). Two helpers keep the text independent of the syntactic form a
+registers (`Codec/WindowSteps.lean`, `Codec/EncodeSteps.lean`). Two helpers keep the text independent of the syntactic form a
 step leaves behind:
 
 * `kreg_eq r v`: replace the value of register `r` by an equal term `v` (the normal form the emitter writes:
@@ -15,7 +15,7 @@ step leaves behind:
   unfolded first). The value equation of `kreg_eq` is closed by `show (actual : BitVec 64) = v; bv_omega`.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 variable [Host]

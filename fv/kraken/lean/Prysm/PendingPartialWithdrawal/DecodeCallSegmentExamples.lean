@@ -9,7 +9,7 @@ import Prysm.Checkpoint.Code
 # Hand-written example instances of the `p2dec --gen3` lemmas on the development sites
 
 One theorem and one `_kind` line per lemma per site, in the shape a generated theorem is to have (the idiom
-of `Gen2Examples.lean`). Examples for the generator unit; not generator output (the text was produced by a
+of `Prysm/DepositMessage/DecodeFieldSegmentExamples.lean`). Examples for the generator unit; not generator output (the text was produced by a
 scratch script from the `.S` files and the kind texts). Sites: the seven `uint64`-overlay callee fields of
 the development decoders (PendingPartialWithdrawal `Index`, `WithdrawableEpoch`; BeaconBlockHeader `Slot`,
 `ProposerIndex`; AttestationData `Slot`, `CommitteeIndex`; Checkpoint `Epoch`) with their argument set-ups,
@@ -18,7 +18,7 @@ the two-directive inline uint64 read (PendingPartialWithdrawal `Amount`) and the
 The callee specification stays a hypothesis `U64CalleeAcc "<callee label>"` of each call-block theorem.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 variable [Host]
 
 open Codec

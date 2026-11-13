@@ -1,5 +1,6 @@
 import Machine.Block
 import Machine.Labels
+import TestTarget.Code
 
 /-!
 # FixedVec.UnmarshalSSZ element loop (W [4]uint64), on Kraken main

@@ -26,7 +26,7 @@ through exactly this step). The Go-source reject site stays in the list; this
 row does not count as reject coverage.
 -/
 
-open Machine TestTarget Prysm.Checkpoint.Code
+open Machine Prysm.Checkpoint.Code
 variable [Host]
 
 namespace Prysm.Checkpoint

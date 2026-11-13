@@ -25,7 +25,7 @@ reached on a 112-byte input: `Decode.accept` passes from directive 19 to 46 and 
 the code jumps over the wrap with registers and memory unchanged.
 -/
 
-open Machine TestTarget Prysm.BeaconBlockHeader.Code
+open Machine Prysm.BeaconBlockHeader.Code
 variable [Host]
 
 namespace Prysm.BeaconBlockHeader

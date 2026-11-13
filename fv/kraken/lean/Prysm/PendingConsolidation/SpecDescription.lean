@@ -5,7 +5,7 @@ import Prysm.Checkpoint.Spec
 
 Hand-written from consensus-specs electra (`specs/electra/beacon-chain.md`),
 BEFORE the Desc checker's Desc of `(v1alpha1, PendingConsolidation)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).
-This file is committed before `PcSpecChecker.lean` exists.
+This file is committed before `Prysm/PendingConsolidation/SpecChecker.lean` exists.
 
     class PendingConsolidation(Container):
         source_index: ValidatorIndex        # uint64

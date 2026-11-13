@@ -8,13 +8,13 @@ import Prysm.Checkpoint.DecodeRejectSize
 /-!
 # Real Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`: size reject (hold-out, type B)
 
-Hand-written: the text of `DmReject.lean` with the PendingPartialWithdrawal indices
+Hand-written: the text of `Prysm/DepositMessage/DecodeRejectSize.lean` with the PendingPartialWithdrawal indices
 and frame (`sub $0x48`). `Decode.reject_size` (`len(buf) ≠ 24`, `return ssz.ErrSize`): directives 2–7, 9–10
 `cmp $0x18,%rcx; jne L_15f` taken, `L_15f` (92), loads of `ssz.ErrSize` (93–94), epilogue 95–97.
 Not covered here: the two callee error paths (`fmt.errorf` wraps); under `len(buf) = 24` each callee gets 8 bytes.
 -/
 
-open Machine TestTarget Prysm.PendingPartialWithdrawal.Code
+open Machine Prysm.PendingPartialWithdrawal.Code
 variable [Host]
 
 namespace Prysm.PendingPartialWithdrawal

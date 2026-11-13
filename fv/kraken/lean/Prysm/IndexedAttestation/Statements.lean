@@ -1,5 +1,5 @@
 import Runtime.Contracts
-import TestTarget.FunctionSpecs
+import Runtime.NewobjectContract
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
@@ -43,7 +43,7 @@ return slot x − 184; scratch `S` below it. On the accept path the AttestationD
 Return addresses at the end: alignment reject errorf call 116 → `k + 117`; overflow reject errorf call 79 → `k + 80`; accept last memmove 240 → `k + 241`.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
 variable [Host]
 
 namespace Prysm.IndexedAttestation

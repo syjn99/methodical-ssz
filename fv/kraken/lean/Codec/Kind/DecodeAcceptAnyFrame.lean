@@ -13,7 +13,7 @@ import Codec.Kind.DecodeAcceptComposition
   for a decoder without `makeslice` / `memmove`), the stack-guard addend (`gd`), the `state` word (`st`).
 
 The input chunks, the receiver words before and after, the heap chunks and the sizes are computed from
-`fields` by the GEN3 functions of `KindAccept.lean` (unchanged). The stack part is a parameter: the kind does
+`fields` by the GEN3 functions of `Codec/Kind/DecodeAcceptComposition.lean` (unchanged). The stack part is a parameter: the kind does
 not check that `L` is the frame of the code; a proof of an instance does (a wrong slot does not close).
 The kind does not check that `L.callees` are the callees of the fields: that is a rule of the generator.
 
@@ -25,10 +25,10 @@ accept proof (GEN5 L2). These are stated over the WHOLE accept memory in entry-s
 A boundary state `StDesc` gives the directive index, the number of decoded fields, register facts and the
 stack slots; `decStP` renders it. The accept proof chains the theorems with `eventually_trans` only.
 
-Ties to the hand statements: `AcceptTies.lean`.
+Ties to the hand statements: `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 open Codec
 namespace Codec

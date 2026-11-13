@@ -5,7 +5,7 @@ import Codec.NopWindow
 
 The hold-outs H4 and H5 missed fields whose argument set-up used another register or another order of
 `mov` / `lea` / `add` than the GEN3 set-up templates. Here every straight-line directive form of the surveyed
-set-ups has ONE lemma, parametric in its registers, over a window (`NopView.lean`: nops allowed anywhere):
+set-ups has ONE lemma, parametric in its registers, over a window (`Codec/NopWindow.lean`: nops allowed anywhere):
 
     kstep_X params q j e hq he hend … : Eventually final ⟨post s, addrOf e⟩ → Eventually final ⟨s, addrOf j⟩
 
@@ -16,7 +16,7 @@ conditions are checked by Lean on the computed state. The tactic `kn` normalises
 No runtime contract is used. Not here: `test %al,(%rax)` (only in function heads).
 -/
 
-open Machine TestTarget
+open Machine
 
 namespace Codec
 

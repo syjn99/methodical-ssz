@@ -11,7 +11,7 @@ UNCOVERED-JSON: [{"field": "Source", "reason": "field kind pointer (*Checkpoint,
 (sha256 `70ca7f6820ce748263b71a4fc44468ab01bd69bc9665008ad540469b2fa62081`) and `prysm/ir/ir-mainnet.json` (sha256 `c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a`, type `v1alpha1.AttestationData`); GEN3 coverage (`p2dec --gen3`): 3 of 5 fields. Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code
+open Machine Runtime Prysm.AttestationData.Code
 variable [Host]
 
 open Codec

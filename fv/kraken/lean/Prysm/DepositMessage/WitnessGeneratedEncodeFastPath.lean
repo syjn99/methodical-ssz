@@ -15,7 +15,7 @@ Two instances: empty prefix with `cap = 88`; prefix `[0xaa, 0xbb, 0xcc]` with 5 
 field value of the stated lengths every premise of `Encode.generated_fast` holds (non-vacuity of the fast path).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.DepositMessage.Code
+open Machine Runtime Machine.Witness Codec Prysm.DepositMessage.Code
 
 namespace Prysm.DepositMessage.Witness.GeneratedEncodeFastPath
 

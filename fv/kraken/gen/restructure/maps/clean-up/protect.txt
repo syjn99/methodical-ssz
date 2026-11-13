@@ -1,0 +1,23 @@
+# Repository-relative glob patterns (fnmatch: `*` also matches `/`). rename.py does not change the text of these files.
+# Link check results and build identities: records of a run on the ELF.
+fv/kraken/*RESULT
+fv/kraken/*build-ids.txt
+# Converted code and data of the ELF.
+*.S
+*.data
+*.objdump
+*.nm
+# Frozen lists and inventories: they need a regeneration with tools that need the Prysm ELF.
+fv/kraken/gen/frozen/*.json
+fv/kraken/prysm/inventory.json
+fv/kraken/prysm/proof-inventory.json
+fv/kraken/prysm/proof-inventory.md
+# Review sources whose sha256 values gen/desc/review/SOURCES.sha256 records.
+fv/kraken/gen/desc/review/*
+# The Lake configuration: written by hand for this step (new lean_lib and input_dir blocks).
+fv/kraken/lean/lakefile.toml
+# Generator command lists of this step: rewritten by the hand-edit script from their base text.
+fv/kraken/gen/scal/gen.sh
+fv/kraken/prysm/go1.26.10/e2e/f24/gen/part1.sh
+# Record of a generator run (the command as it ran then).
+fv/kraken/prysm/go1.26.10/e2e/e1/gen-e1dec.raw.txt

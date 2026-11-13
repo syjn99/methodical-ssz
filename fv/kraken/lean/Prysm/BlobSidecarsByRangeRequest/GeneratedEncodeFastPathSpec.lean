@@ -12,7 +12,7 @@ Shape of `Prysm.BeaconBlockHeader.Encode.fast_path_spec`. Encoder fast path only
 lengths). Emitted by the unit's evidence tool `e2cemit.py`, then built and kernel-checked.
 -/
 
-open Machine Runtime TestTarget Codec Prysm.BlobSidecarsByRangeRequest.Code EthLib.Serialization.Ssz
+open Machine Runtime Codec Prysm.BlobSidecarsByRangeRequest.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.BlobSidecarsByRangeRequest

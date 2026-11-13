@@ -1,6 +1,7 @@
 import TestTarget.FixedVecDecodeLoop
 import Machine.Flags
 import Runtime.Contracts
+import TestTarget.Code
 
 /-!
 # FixedVec.UnmarshalSSZ, accept path, on Kraken main

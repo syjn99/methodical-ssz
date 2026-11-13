@@ -13,19 +13,19 @@ The kinds are hand text, written once, and do not depend on a hand theorem of th
 `u64DecAcceptKind_of` and `rootDecSegKind_of` prove each kind from the code facts of its lemma, so the kind
 body is kernel-checked against the lemma conclusion. They are `abbrev`s: `with_reducible rfl` unfolds
 them, but not `Int.toBytes` or other semireducible definitions. A wrong literal fails fast and does not run
-into a long unfolding (review fix-r1 S2).
-The anchors in `Prysm/Slot/Uint64DecoderKindAnchors.lean` show that the P1 kind is the statement of the reviewed hand
+into a long unfolding.
+The anchors in `Prysm/Slot/Uint64DecoderKindAnchors.lean` show that the uint64 decoder kind is the statement of the reviewed hand
 theorems `Prysm.Slot.Decode.accept` and `Prysm.CommitteeIndex.Decode.accept`.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 
 variable [Host]
 
 set_option linter.unusedVariables false in
-/-- P1 statement kind: the accept path of a uint64 primitive `UnmarshalSSZ` whose code constant is `C`.
+/-- Statement kind of the uint64 decoder pattern: the accept path of a uint64 primitive `UnmarshalSSZ` whose code constant is `C`.
 The text is the statement of `Prysm.Slot.Decode.accept` with `SlUnmarshal` replaced by `C` and
 every binder after the colon. -/
 abbrev u64DecAcceptKind (C : Program) : Prop :=
@@ -48,7 +48,7 @@ abbrev u64DecAcceptKind (C : Program) : Prop :=
           ⋆ Eq (e8.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At s.regs.rax.toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- The P1 kind follows from `u64dec_accept` and the code facts of a P1 instance (kernel check that the
+/-- The uint64 decoder kind follows from `u64dec_accept` and the code facts of an instance (kernel check that the
 kind body is the lemma conclusion at `j := k`). -/
 theorem u64DecAcceptKind_of (C : Program) (fn l0 lcc lbb : String) (fs dsp : Int64)
     (hdsp : dsp.toBitVec = fs.toBitVec + 24) (jb : Nat)

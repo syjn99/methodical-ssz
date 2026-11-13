@@ -10,7 +10,7 @@ import Prysm.PendingDeposit.GeneratedDecodeSteps
 `F`, `dB`, `sz` and the directive indices of `lerr:`, `add`, `pop` from the `.S` file.
 -/
 
-open Machine Runtime TestTarget Prysm.PendingDeposit.Code
+open Machine Runtime Prysm.PendingDeposit.Code
 variable [Host]
 
 open Codec

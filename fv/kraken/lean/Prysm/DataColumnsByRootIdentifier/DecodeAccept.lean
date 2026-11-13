@@ -15,7 +15,7 @@ and `memmove(pb, buf, 32)`, 48–63 len/cap 32 and the barrier branch, 64–71 a
 the element loop `Decode.loop` (185 → 204), 204–209 nil and the epilogue. Statement: the frozen `Decode.accept_statement`.
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

@@ -22,7 +22,7 @@ old Source / Target word (nil = zero, or any other bytes) every premise holds an
 returns nil.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.AttestationData.Code
+open Machine Runtime Machine.Witness Prysm.AttestationData.Code
 
 namespace Prysm.AttestationData.Witness.DecodeAccept
 

@@ -2,18 +2,18 @@ import Codec.FixedBytesDecode
 import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 
 /-!
-# Segment lemmas for the SyncAggregate field widths (new file; `SegN.lean` and `DdSegNop.lean` are unchanged)
+# Segment lemmas for the SyncAggregate field widths (new file; `Codec/FixedBytesDecode.lean` and `Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean` are unchanged)
 
 - `bytesdec_seg_z64`: the statement of `Codec.bytesdec_seg_z` with `hn : n = 64` (SyncCommitteeBits, offset 0).
-  `SegN.lean` covers n ∈ {32, 48, 96}; its `hn` is a limit of the proof method (literal immediates).
-  The proof is SegN's local macro `bytesdec_z`, copied here as `lvbytesdec_z` with its text unchanged, at n = 64.
+  `Codec/FixedBytesDecode.lean` covers n ∈ {32, 48, 96}; its `hn` is a limit of the proof method (literal immediates).
+  The proof is `Codec/FixedBytesDecode.lean`'s local macro `bytesdec_z`, copied here as `lvbytesdec_z` with its text unchanged, at n = 64.
 - `bytesDecHeadNop96`, `bytes96dec_seg_nop`: `Prysm.Deposit_Data.bytesDecHeadNop` / `bytes32dec_seg_nop` with the size
   literal 32 replaced by 96 (SyncCommitteeSignature has a `nop` between `mov $0x60,%ecx` and the makeslice call,
   directive 50). Every other token of the text is unchanged.
 Contracts: `MakesliceC`, `MemmoveC`, as in the model lemmas.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Prysm.SyncAggregate
 

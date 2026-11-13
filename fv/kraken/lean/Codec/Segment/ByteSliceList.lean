@@ -12,7 +12,7 @@ Side conditions: the input bytes and the backing array fit in the address space 
 `Prysm.SyncCommittee.flatten_split`) are imported, not restated.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec.Segment
 

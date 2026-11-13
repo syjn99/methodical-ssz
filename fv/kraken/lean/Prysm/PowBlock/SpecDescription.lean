@@ -5,7 +5,7 @@ import Prysm.Checkpoint.Spec
 
 Hand-written from consensus-specs bellatrix (`specs/bellatrix/fork-choice.md`),
 BEFORE the Desc checker's Desc of `(v1alpha1, PowBlock)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).
-This file is committed before `PbSpecChecker.lean` exists.
+This file is committed before `Prysm/PowBlock/SpecChecker.lean` exists.
 
     class PowBlock(Container):
         block_hash: Hash32                  # Bytes32
@@ -14,7 +14,7 @@ This file is committed before `PbSpecChecker.lean` exists.
 
 The spec types `total_difficulty` as `uint256` (32 bytes, little-endian). The hold-out selection inventory lists
 Prysm's field as a 32-byte vector (b32); the wire size is the same (32 bytes). The Desc below keeps the
-spec type. How it relates to the producer's Desc is a theorem of `PbSpec.lean`, not an assumption here.
+spec type. How it relates to the producer's Desc is a theorem of `Prysm/PowBlock/Spec.lean`, not an assumption here.
 -/
 
 namespace Prysm.PowBlock

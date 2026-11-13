@@ -2,7 +2,7 @@ import Prysm.Checkpoint.CapacityReservedEncodeFastPath
 
 /-! # OPT-R1 reserve encoder: the grow path (`len ≤ cap < len + 40`), valid and invalid root. See `Prysm.Checkpoint.CapacityReservedEncodeFastPath`. -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.CapacityReserved.Code
+open Machine Runtime Prysm.Checkpoint.CapacityReserved.Code
 variable [Host]
 
 namespace Prysm.Checkpoint.CapacityReserved

@@ -14,7 +14,7 @@ pointer, 10–11 `cmpq $0x20,0x10(%rax); jne` not taken, 12 rax spill to x + 8, 
 taken, then `Encode.tail_fit` (directive 29 to the return).
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

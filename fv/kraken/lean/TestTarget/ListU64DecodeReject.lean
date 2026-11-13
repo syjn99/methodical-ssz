@@ -1,6 +1,7 @@
 import Machine.Labels
 import Machine.Flags
 import Machine.Bytes
+import TestTarget.Code
 
 /-!
 # ListU64.UnmarshalSSZ reject paths without calls, on Kraken main

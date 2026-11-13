@@ -4,18 +4,18 @@ import Codec.NopWindow
 /-!
 # GEN4: the callee-decoder call block over a window (padding anywhere)
 
-`calldec_seg_w` is `calldec_seg` (`CallDec.lean`) with the dense template hypothesis replaced by a window:
+`calldec_seg_w` is `calldec_seg` (`Codec/CalleeDecode.lean`) with the dense template hypothesis replaced by a window:
 `eraseNop q = callDec fn lok`. A `nop` may stand before the `callq`, between the `callq` and the `test`
 (PendingConsolidation.TargetIndex, the H5 miss P-H5-3) or between `test` and `je`. `jc` is the index of the
 `callq` (`j + nopPos q 0`): the return slot holds the address of directive `jc + 1`, which is the nop when
 there is one. Callee specification: `U64CalleeAcc fn`, the existing form, unchanged. The entry registers
 (rax = destination, rbx = source, rcx = 8) are fixed by the Go register ABI of that specification; the
-set-up that establishes them is free (`StepK.lean`).
+set-up that establishes them is free (`Codec/WindowSteps.lean`).
 
 `calldec_seg_dense`: the GEN3 lemma `calldec_seg` is the instance `q := callDec fn lok` (statement equal).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 open Codec
 namespace Codec

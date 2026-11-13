@@ -8,7 +8,7 @@ import Codec.Kind.Bytes32DecodeOffsetZero
 (sha256 `5b02b0cc5f24ce7a31f8d3c2c963181dd2f0c7bfff6b43b500dd041a8a6494e0`) and `prysm/ir/ir-mainnet.json` (sha256 `c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a`, type `v1alpha1.BlobIdentifier`). Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Machine Runtime TestTarget Prysm.BlobIdentifier.Code
+open Machine Runtime Prysm.BlobIdentifier.Code
 variable [Host]
 
 open Codec

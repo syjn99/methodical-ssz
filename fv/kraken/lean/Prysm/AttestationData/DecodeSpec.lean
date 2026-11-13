@@ -15,10 +15,10 @@ import Prysm.AttestationData.Spec
 - `Decode.reject_complete` (obligation `reject_complete`): every input that EthLib rejects
   has `size ≠ 128`, the path condition of the one reachable reject site (`return
   ssz.ErrSize`). The four `fmt.Errorf` wrap sites are `unreachable_mc` rows
-  (`AdReject.lean`); they are not needed for the join and are not reject coverage.
+  (`Prysm/AttestationData/DecodeRejectSize.lean`); they are not needed for the join and are not reject coverage.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code EthLib.Serialization.Ssz
+open Machine Runtime Prysm.AttestationData.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.AttestationData

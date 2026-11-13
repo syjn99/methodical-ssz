@@ -4,7 +4,7 @@ import Codec.DecoderPrologue
 /-!
 # GEN5 L2: lemmas for the field theorems of a generated accept proof
 
-A generated field theorem is stated over the whole accept memory in entry-state terms (`KindAcceptN.lean`).
+A generated field theorem is stated over the whole accept memory in entry-state terms (`Codec/Kind/DecodeAcceptAnyFrame.lean`).
 Its proof uses the generated GEN4 chain of the field and these frame-parametric facts:
 - `frame_j3`: the 24-byte spill area of the runtime calls is three 8-byte slots (a callee decoder spills its
   `rbx` into the middle one);
@@ -14,7 +14,7 @@ Its proof uses the generated GEN4 chain of the field and these frame-parametric 
 They are the frame-parametric forms of the per-type hand lemmas `pd_j3`, `pd_lo8`, `pd_lo`, `e1_lo`, `pd_epi`.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

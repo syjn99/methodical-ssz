@@ -16,7 +16,7 @@ bytes `e2eEpFmt`; the fillers between them and the unused rax spill slot are the
 frame `R`. With `len(buf) = 7` the decoder returns a non-nil error.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Epoch.Code
+open Machine Runtime Machine.Witness Prysm.Epoch.Code
 
 namespace Prysm.Epoch.Witness.DecodeRejectSize
 
@@ -90,7 +90,7 @@ theorem runs (zmms : RegZmms) (flags : StatusFlags) :
         Std.ExtHashMap.sep_comm_l (Eq ((z 47).At _)) (Eq ((z 8280).At _))] at H
       have H2 := lift_heap H
       rw [staticBox_of_lt (v := 8) (by decide), staticBox_of_lt (v := (cs0 zmms flags).regs.rcx.toBitVec) (by simp [cs0])]
-      simp only [cs0, R0, w, TestTarget.Data.staticuint64s_addr, ElfData.CheckpointAndEpoch.e2eEpFmt_addr, ElfData.CheckpointAndEpoch.e2eEight_addr, label_gs,
+      simp only [cs0, R0, w, Runtime.Data.staticuint64s_addr, ElfData.CheckpointAndEpoch.e2eEpFmt_addr, ElfData.CheckpointAndEpoch.e2eEight_addr, label_gs,
         label_gc, label_st, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         BitVec.reduceMul] at H2 ⊢
@@ -144,7 +144,7 @@ theorem runs (zmms : RegZmms) (flags : StatusFlags) :
         Std.ExtHashMap.sep_comm_l (Eq ((z 55).At _)) (Eq ((z 8280).At _))] at H
       have H2 := lift_heap H
       rw [staticBox_of_lt (v := 8) (by decide), staticBox_of_lt (v := (cs0 zmms flags).regs.rcx.toBitVec) (by simp [cs0])]
-      simp only [cs0, R0, w, TestTarget.Data.staticuint64s_addr, ElfData.CheckpointAndEpoch.e2eEpFmt_addr, ElfData.CheckpointAndEpoch.e2eEight_addr, label_gs,
+      simp only [cs0, R0, w, Runtime.Data.staticuint64s_addr, ElfData.CheckpointAndEpoch.e2eEpFmt_addr, ElfData.CheckpointAndEpoch.e2eEight_addr, label_gs,
         label_gc, label_st, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         BitVec.reduceMul] at H2 ⊢
@@ -190,7 +190,7 @@ theorem runs (zmms : RegZmms) (flags : StatusFlags) :
         Std.ExtHashMap.sep_comm_l (Eq ((z 55).At _)) (Eq ((z 8280).At _))] at H
       have H2 := lift_heap H
       rw [staticBox_of_lt (v := 8) (by decide), staticBox_big (cs0 zmms flags).regs.rcx.toBitVec (by simp [cs0])]
-      simp only [cs0, R0, w, TestTarget.Data.staticuint64s_addr, ElfData.CheckpointAndEpoch.e2eEpFmt_addr, ElfData.CheckpointAndEpoch.e2eEight_addr, label_gs,
+      simp only [cs0, R0, w, Runtime.Data.staticuint64s_addr, ElfData.CheckpointAndEpoch.e2eEpFmt_addr, ElfData.CheckpointAndEpoch.e2eEight_addr, label_gs,
         label_gc, label_st, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         BitVec.reduceMul] at H2 ⊢

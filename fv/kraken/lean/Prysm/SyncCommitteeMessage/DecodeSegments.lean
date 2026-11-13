@@ -6,9 +6,9 @@ import Prysm.SyncCommitteeMessage.Code
 # SyncCommitteeMessage hand lemmas (hold-out, class C; hand work after the raw generator output)
 
 Hand-written for the directives of `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`
-that the generator did not cover (`Gen3SmDecPartial.lean`: Slot and Signature covered; BlockRoot and
+that the generator did not cover (`Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean`: Slot and Signature covered; BlockRoot and
 ValidatorIndex not). No contract, no new hypothesis form; the runtime callees use `MakesliceC` / `MemmoveC` as
-in `SegN.lean`.
+in `Codec/FixedBytesDecode.lean`.
 
 * `Decode.head0`: directives 0–14 (the text of `Prysm.BeaconBlockHeader.Decode.head0`; the frame `sub $0x60` and the spill order are the same,
   the length immediate is `0x90`).
@@ -19,7 +19,7 @@ in `SegN.lean`.
 * `Decode.spill2`: the two nil-error spills 118–119 (the text of `Prysm.BeaconBlockHeader.Decode.spill2`).
 -/
 
-open Machine Runtime TestTarget Prysm.SyncCommitteeMessage.Code Codec
+open Machine Runtime Prysm.SyncCommitteeMessage.Code Codec
 
 namespace Prysm.SyncCommitteeMessage
 
@@ -180,7 +180,7 @@ theorem Decode.spill2 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   apply Eventually.done
   exact ⟨rfl, rfl, rfl, rfl, by ecancel⟩
 
-/-- Closing step of the set-up lemma: register equations (the text of `callarg_close`, `CallDec.lean`). -/
+/-- Closing step of the set-up lemma: register equations (the text of `callarg_close`, `Codec/CalleeDecode.lean`). -/
 local macro "smarg_close" : tactic => `(tactic| (
   all_goals first
     | rfl
@@ -228,7 +228,7 @@ theorem Decode.validator_index_arg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- `bytesdec_seg` (`SegN.lean`) for `n = 32` with the second block `bytesDecMidA`: the same pre / post except
+/-- `bytesdec_seg` (`Codec/FixedBytesDecode.lean`) for `n = 32` with the second block `bytesDecMidA`: the same pre / post except
 that rax (not rdx) holds the receiver at the end. Proof: the text of `bytesdec_add 32` with the three changed
 directives. -/
 theorem bytes32dec_seg_rax (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)

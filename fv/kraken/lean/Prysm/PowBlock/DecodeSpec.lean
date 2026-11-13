@@ -5,8 +5,8 @@ import Prysm.PowBlock.Spec
 /-!
 # Spec alignment of the real PowBlock decoder (hold-out, full-proof type)
 
-Hand-written: the shape of `DdSpecK.lean` with the PowBlock statement
-(`Decode.accept_statement`, `H6Stmt.lean`; the input chunks are those of the `g` that EthLib decodes).
+Hand-written: the shape of `Prysm/Deposit_Data/DecodeSpec.lean` with the PowBlock statement
+(`Decode.accept_statement`, `Prysm/PendingDeposit/Statements.lean`; the input chunks are those of the `g` that EthLib decodes).
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
 - `Decode.reject_size_spec`: `bs.size ≠ 96` → EthLib rejects, and the machine code returns `ssz.ErrSize`.
@@ -14,7 +14,7 @@ Hand-written: the shape of `DdSpecK.lean` with the PowBlock statement
   size reject site. The decoder has no other error return.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.PowBlock.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Prysm.AttestationData.Code Prysm.PowBlock.Code Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.PowBlock

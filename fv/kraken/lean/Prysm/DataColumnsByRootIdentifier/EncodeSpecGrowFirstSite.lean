@@ -8,7 +8,7 @@ import Runtime.CopyModel
 From `Encode.grow_first_site`: the new block starts with `pre ‖ serialize desc g.toValue`.
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code EthLib.Serialization.Ssz
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

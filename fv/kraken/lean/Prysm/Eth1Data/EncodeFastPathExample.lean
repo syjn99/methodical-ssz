@@ -7,7 +7,7 @@ import Prysm.Eth1Data.Code
 
 Text produced from the `.S` file and the IR by the recipe of the lemma hand-over (a scratch emitter of the
 lemma work, not the generator): a symbolic walk of the fast path, one application of a step lemma per directive
-(`StepK.lean`, `EncSteps.lean`; windows with the nops erased), boundary states between the fields. Every
+(`Codec/WindowSteps.lean`, `Codec/EncodeSteps.lean`; windows with the nops erased), boundary states between the fields. Every
 theorem has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKindN`).
 **Fast path only**: `len(dst) + 72 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
@@ -15,7 +15,7 @@ growslice branches, the length rejects, the morestack path.
 The statement is the declared type of the committed hand theorem `Encode.fast_path` (`Encode.example_fast_same_statement`).
 -/
 
-open Machine Runtime TestTarget Codec Prysm.Eth1Data.Code
+open Machine Runtime Codec Prysm.Eth1Data.Code
 variable [Host]
 
 namespace Prysm.Eth1Data

@@ -10,22 +10,22 @@ import Prysm.Checkpoint.Code
 # Example instances of the window and step mechanisms on the development sites
 
 One theorem and one `_kind` line per emitted unit, in the shape a generated theorem is to have (the idiom of
-`Gen3Examples.lean`). Examples for the generator unit; not generator output (the text was produced by a
+`Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean`). Examples for the generator unit; not generator output (the text was produced by a
 scratch script from the `.S` files and the kind texts; directive index = `.S` line − 1). The code constants are written
 without their namespaces (`open` below), as in the generated modules, so that the negative suite can swap them.
 
-* a step theorem per set-up directive (`<type>_g4_s<index>`, kinds of `KindStep.lean`);
+* a step theorem per set-up directive (`<type>_g4_s<index>`, kinds of `Codec/Kind/WindowSteps.lean`);
 * a call-block theorem per callee field (`…_call`, `callDecSegKindG4`); the window starts where the set-up
   steps end, so a padding `nop` before the `callq` (Checkpoint, BeaconBlockHeader) or after it
   (PendingConsolidation) is inside the window;
 * a byte-segment theorem (`…_seg`, `bytesDecSegKindWindow`) over two windows;
 * the two fully worked compositions: a whole call field (`Decode.example_step_ValidatorIndex_field`, `Prysm.PendingConsolidation.Decode.example_step_TargetIndex_field`)
   and a whole byte field (`Decode.example_step_BlockRoot_field`). These have no kind: they only apply kinded theorems, and
-  their statements are checked by the accept proofs that use them (`SmAcceptG4.lean`, `PcAcceptG4.lean`).
+  their statements are checked by the accept proofs that use them (`Prysm/SyncCommitteeMessage/DecodeAcceptFromWindowSteps.lean`, `Prysm/PendingConsolidation/DecodeAcceptFromWindowSteps.lean`).
 The callee specification stays a hypothesis `U64CalleeAcc "<callee label>"` of each call-block theorem.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code
+open Machine Runtime Prysm.Checkpoint.Code
 variable [Host]
 
 open Codec

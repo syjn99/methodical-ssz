@@ -31,7 +31,8 @@ globs = ["Machine.+"]
 # Runtime: the contracts of the Go runtime callees and their models. The models are the .S files of
 # Runtime/; `include_x64_rt` reads them, so they are inputs of the library (Rebuild tracking: con-agua
 # ConAgua/AsmFile/Include.lean; a `needs` entry puts the file contents into the input hash of every module of
-# the library, so Lake rebuilds the proofs when a .S file changes).
+# the library, so Lake rebuilds the proofs when a .S file changes). `Runtime/StaticUint64s.lean` reads the data file
+# staticuint64s.data of link/out (the input_dir test_target_data below).
 [[input_dir]]
 name = "runtime_lean_S"
 path = "Runtime"
@@ -41,9 +42,9 @@ filter = {extension = ["S"]}
 [[lean_lib]]
 name = "Runtime"
 globs = ["Runtime.+"]
-needs = ["runtime_lean_S"]
+needs = ["runtime_lean_S", "test_target_data"]
 
-# TestTarget: proofs and code of the small Go 1.26.3 test target ELF (link/out) that the Prysm proofs reuse.
+# TestTarget: proofs and code of the small Go 1.26.3 test target ELF (link/out). No other library imports it.
 # The converted .S files and the data files of link/out are inputs of the library.
 [[input_dir]]
 name = "test_target_norm_S"

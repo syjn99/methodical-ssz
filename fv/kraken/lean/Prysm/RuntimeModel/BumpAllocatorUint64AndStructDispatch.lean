@@ -1,6 +1,6 @@
 import Runtime.BumpAllocator
 import Runtime.BumpAllocatorVariants
-import TestTarget.FunctionSpecs
+import Runtime.NewobjectContract
 import Prysm.ElfData.IndexedAttestation
 import Prysm.ElfData.AttestationData
 
@@ -17,7 +17,7 @@ with the dispatch steps. Abstract models for non-vacuity only, not a Go refineme
 files are in the Lake `input_dir` `runtime_model_S` (all `.S` files of `Prysm/RuntimeModel/`).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Prysm.RuntimeModel
 

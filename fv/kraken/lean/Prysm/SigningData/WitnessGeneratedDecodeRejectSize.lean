@@ -6,14 +6,14 @@ import Machine.WitnessHost
 # Witness of the generated `Decode.generated_reject`
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.SigningData).UnmarshalSSZ` (index 1).
-The text of `WitPcR.lean` with the SigningData decoder and the generated
-size-reject theorem of `Gen5SdDec.lean`. Memory at `0x10000`: the two words of `ssz.ErrSize` after package init
+The text of `Prysm/PendingConsolidation/WitnessDecodeRejectSize.lean` with the SigningData decoder and the generated
+size-reject theorem of `Prysm/SigningData/GeneratedDecodeAccept.lean`. Memory at `0x10000`: the two words of `ssz.ErrSize` after package init
 (a non-zero itab word `0x10e8` and a data word `0x2a`, stand-ins: the real values are set by the runtime's init
 and are not read from the ELF), the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame
 `R`) and the rbx spill slot. For every length `≠ 64` (instances 63, 65, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.SigningData.Code
+open Machine Runtime Machine.Witness Prysm.SigningData.Code
 
 open Codec
 namespace Prysm.SigningData.Witness.GeneratedDecodeRejectSize

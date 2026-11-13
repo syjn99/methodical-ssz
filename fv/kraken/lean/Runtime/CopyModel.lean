@@ -8,7 +8,7 @@ import Machine.Bytes
 `RtCopy` (Runtime/RtCopy.S) has three parts:
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Runtime
 def RtCopy : Program := include_x64_rt "Runtime/RtCopy.S"

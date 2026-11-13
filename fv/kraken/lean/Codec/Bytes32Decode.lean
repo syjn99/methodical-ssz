@@ -31,7 +31,7 @@ argument area at `sp`, the return slot at `aRet = sp − 8` and `St` stack bytes
 (`MakesliceC` / `MemmoveC` with stack `St`).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

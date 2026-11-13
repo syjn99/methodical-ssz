@@ -16,7 +16,7 @@ k ∈ {3, 4, 5} (w ∈ {24, 48, 96}), and the proof is one text (`vtri_iter_body
 `Codec.FixedBytesDecode`. The count `n`, the frame and the labels stay variables.
 -/
 
-open Machine Runtime TestTarget Prysm.HistoricalBatch
+open Machine Runtime Prysm.HistoricalBatch
 
 namespace Codec.Segment
 

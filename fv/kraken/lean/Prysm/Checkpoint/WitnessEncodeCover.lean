@@ -18,7 +18,7 @@ so the run with `cap < len + 8` takes the left disjunct; the right disjunct (a s
 first) needs a runtime that returns a smaller capacity and is not exercised here (Go differential only).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
 
 namespace Prysm.Checkpoint.Witness.EncodeCover
 

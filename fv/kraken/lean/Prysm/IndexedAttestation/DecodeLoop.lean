@@ -15,7 +15,7 @@ not taken; `i·8 ≤ (i+1)·8`: the `jb L_470` (panicBounds 264) is not taken; t
 8-byte store to `A + 8i`; rax = i + 1.
 -/
 
-open Machine Runtime TestTarget Prysm.IndexedAttestation.Code
+open Machine Runtime Prysm.IndexedAttestation.Code
 variable [Host]
 
 namespace Prysm.IndexedAttestation

@@ -11,7 +11,7 @@ names, so the two `Desc`s accept the same inputs with the same values.
 -/
 
 namespace Prysm.Deposit
-open EthLib.Serialization.Ssz Spec TestTarget Codec.Segment
+open EthLib.Serialization.Ssz Spec Codec.Segment
 
 theorem desc_checker :
     desc = .container ["proof", "data"] [.vector (.byteVector 32) 33, .container

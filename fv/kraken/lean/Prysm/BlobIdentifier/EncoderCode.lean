@@ -8,8 +8,8 @@ Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/enc2/link/n
 (`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code`, `Prysm.BeaconBlockHeader.Code`, `Prysm.Eth1Data.Code` and
 `Prysm.PendingDeposit.Code`; `link/check.py` (a)–(f) PASS in `../RESULT`, bundle `c08ac537…`).
 Code constants only: no theorem, no contract. Hand-written include file (not generator output;
-the text of `H6Code.lean` with the function set changed).
-Limit: the directory `enc2/link/norm` is not a Lake `input_dir` of the `E2eScal` library (a lakefile change
+the text of `Prysm/PendingDeposit/Code.lean` with the function set changed).
+Limit: the directory `enc2/link/norm` is not a Lake `input_dir` of the `Prysm` library (a lakefile change
 needs approval), so Lake does not rebuild these modules when a `.S` file changes. The `.S` files are
 bound by the link bundle hash; a cold build is the check after any change.
 -/

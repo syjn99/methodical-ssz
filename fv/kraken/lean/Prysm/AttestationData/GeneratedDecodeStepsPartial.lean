@@ -16,7 +16,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "Slot", "theorems": ["Decode.generated_step_s15", "Decode.generated_step_s16", "Decode.generated_step_Slot_call"]}, {"field": "CommitteeIndex", "theorems": ["Decode.generated_step_s48", "Decode.generated_step_s49", "Decode.generated_step_s50", "Decode.generated_step_s51", "Decode.generated_step_s52", "Decode.generated_step_s53", "Decode.generated_step_s54", "Decode.generated_step_CommitteeIndex_call"]}, {"field": "BeaconBlockRoot", "theorems": ["Decode.generated_step_BeaconBlockRoot_seg", "Decode.generated_step_s112", "Decode.generated_step_s113", "Decode.generated_step_s120", "Decode.generated_step_s121"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code
+open Machine Runtime Prysm.AttestationData.Code
 variable [Host]
 
 open Codec

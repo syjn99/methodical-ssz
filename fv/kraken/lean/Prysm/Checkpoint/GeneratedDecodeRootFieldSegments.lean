@@ -6,7 +6,7 @@ import Codec.Kind.FieldPatterns
 (sha256 `4b3fc17e5a75f8369353c5a7d937479e03667b975c93dfb4290ad7f866d006dc`) and `prysm/ir/ir-mainnet.json` (sha256 `c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a`, type `v1alpha1.Checkpoint`). Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code
+open Machine Runtime Prysm.Checkpoint.Code
 variable [Host]
 
 open Codec

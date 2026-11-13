@@ -6,14 +6,14 @@ import Machine.WitnessHost
 # Witness of `Decode.reject_size` (hold-out)
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`
-(index 1). Hand-written: the text of `WitE1R.lean` with the BlobIdentifier decoder.
+(index 1). Hand-written: the text of `Prysm/Eth1Data/WitnessDecodeRejectSize.lean` with the BlobIdentifier decoder.
 Memory at `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a
 data word `0x2a`, stand-ins: the real values are set by the runtime's init and are not read from the ELF),
 the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill
 slot. For every length `≠ 40` (instances 39, 41, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.BlobIdentifier.Code
+open Machine Runtime Machine.Witness Prysm.BlobIdentifier.Code
 
 namespace Prysm.BlobIdentifier.Witness.DecodeRejectSize
 

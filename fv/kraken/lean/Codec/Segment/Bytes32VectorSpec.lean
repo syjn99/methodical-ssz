@@ -4,12 +4,12 @@ import Prysm.HistoricalBatch.Spec
 # Spec lemmas of a `Vector[Bytes32, n]` field, for ANY count `n` (generalized once)
 
 `Prysm.HistoricalBatch.Spec` states `v32_flatten_length`, `v32_serialize`, `v32_of_bytes` for n = 8192. Here n is a variable;
-the side condition is that the field fits an SSZ offset (`32 * n < 2^32`). Proof text: `HbSpec` with 8192 → n.
+the side condition is that the field fits an SSZ offset (`32 * n < 2^32`). Proof text: `Prysm/HistoricalBatch/Spec.lean` with 8192 → n.
 The element lemmas (`toV32`, `allFit_bv32`, `serializeEach_bv32`, `concatParts_v32`) are imported.
 -/
 
 namespace Codec.Segment
-open EthLib.Serialization.Ssz Spec TestTarget Prysm.HistoricalBatch
+open EthLib.Serialization.Ssz Spec Prysm.HistoricalBatch
 
 theorem vN_flatten_length (n : Nat) (v : Vector (Vector UInt8 32) n) :
     (v.toList.map (·.toList)).flatten.length = 32 * n := by
@@ -50,7 +50,7 @@ theorem vN_of_bytes (n : Nat) (d : Array UInt8) (hd : d.size = 32 * n) :
   rw [hm, this, show n * 32 = d.size by omega]
   simp
 
-/-- The 8192 instances of `HbSpec` follow by `exact`. -/
+/-- The 8192 instances of `Prysm/HistoricalBatch/Spec.lean` follow by `exact`. -/
 example : type_of% @Prysm.HistoricalBatch.v32_serialize := vN_serialize 8192 (by decide)
 example : type_of% @Prysm.HistoricalBatch.v32_flatten_length := vN_flatten_length 8192
 example : type_of% @Prysm.HistoricalBatch.v32_of_bytes := vN_of_bytes 8192

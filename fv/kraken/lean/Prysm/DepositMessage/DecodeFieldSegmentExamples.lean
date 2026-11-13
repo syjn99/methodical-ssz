@@ -7,14 +7,14 @@ import Prysm.BlobIdentifier.Code
 # Hand-written example instances of the `p2dec --gen2` lemmas on the development sites
 
 One theorem and one `_kind` line per site, in the shape a generated theorem is to have (the text of
-`GenE1Dec.lean` with the new lemma, template and kind names). Hand-written examples for the generator unit;
+`Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean` with the new lemma, template and kind names). Hand-written examples for the generator unit;
 not generator output. Sites: `DepositMessage.PublicKey` (48 bytes, offset-0 form), the 32-byte sites of
 the three development decoders re-derived with the size-parametric lemmas, and the three inline uint64
 sites (`BlobIdentifier.Index`, `DepositMessage.Amount`, `Eth1Data.DepositCount`). Parameters are read from
 the `.S` files (directive index = line − 1) and `prysm/ir/ir-mainnet.json`.
 -/
 
-open Machine Runtime TestTarget Prysm.DepositMessage.Code
+open Machine Runtime Prysm.DepositMessage.Code
 variable [Host]
 
 open Codec

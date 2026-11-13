@@ -7,12 +7,12 @@ import Prysm.SyncCommitteeMessage.Statements
 # Real Prysm `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path, Go 1.26.10 (hold-out, class C)
 
 Hand composition, written AFTER the raw generator output was committed. The
-statement is the independent hand statement `Prysm.SyncCommitteeMessage.Decode.accept_statement` (`H5Stmt.lean`, unchanged). Chain of
+statement is the independent hand statement `Prysm.SyncCommitteeMessage.Decode.accept_statement` (`Prysm/SyncCommitteeMessage/Statements.lean`, unchanged). Chain of
 `eventually_trans` over
 
 * `Decode.head0` (hand, 0–14),
 * `Decode.generated_call_Slot_arg` (15–16) and `Decode.generated_call_Slot_call` (17–19, label 46): GENERATED
-  (`Gen3SmDecPartial.lean`, raw); `hC` discharged by the proved `Prysm.Slot.Decode.accept_function_spec_holds`,
+  (`Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean`, raw); `hC` discharged by the proved `Prysm.Slot.Decode.accept_function_spec_holds`,
 * `bytes32dec_seg_rax` (hand lemma, BlockRoot 47–71) and hand steps 72–73, label 80, 81,
 * `Decode.validator_index_arg` (hand lemma, 82–87) and `Codec.calldec_seg` (existing lemma applied by hand, 88–90,
   label 117; callee ValidatorIndex, `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`),
@@ -21,10 +21,10 @@ statement is the independent hand statement `Prysm.SyncCommitteeMessage.Decode.a
 * hand steps 146–147, label 154, 155 and the epilogue 156–160 (the text of the BeaconBlockHeader tail).
 
 Stack (rsp = entry rsp): frame `sub $0x60` as BeaconBlockHeader; the helper lemmas `Prysm.BeaconBlockHeader.Decode.stack_low_eq`, `Prysm.BeaconBlockHeader.Decode.lo8`,
-`Prysm.BeaconBlockHeader.Decode.j3`, `Prysm.BeaconBlockHeader.Decode.generated_head_guard` and the tactic `bhaddr` are reused. No contract, no new hypothesis form.
+`Prysm.BeaconBlockHeader.Decode.j3`, `Prysm.BeaconBlockHeader.Decode.accept_guard` and the tactic `bhaddr` are reused. No contract, no new hypothesis form.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.SyncCommitteeMessage.Code Codec
+open Machine Runtime Prysm.AttestationData.Code Prysm.SyncCommitteeMessage.Code Codec
 variable [Host]
 
 namespace Prysm.SyncCommitteeMessage
@@ -43,7 +43,7 @@ theorem Decode.accept : Decode.accept_statement := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
-  have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Prysm.BeaconBlockHeader.Decode.generated_head_guard _ _ hguard
+  have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Prysm.BeaconBlockHeader.Decode.accept_guard _ _ hguard
   have hlS : (lo.take S).length = S := by simp [hlo]
   have hl8 : (lo.drop S).length = 8 := by simp [hlo]
   have hlos : Eq (lo.At (rsp.toBitVec - 120 - BitVec.ofNat 64 S)) =

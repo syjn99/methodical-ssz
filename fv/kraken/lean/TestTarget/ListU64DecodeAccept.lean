@@ -1,6 +1,7 @@
 import TestTarget.ListU64DecodeLoop
 import Machine.Flags
 import Runtime.Contracts
+import TestTarget.Code
 
 /-!
 # ListU64.UnmarshalSSZ, accept path, on Kraken main (6064eec)

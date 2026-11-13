@@ -19,7 +19,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "Epoch", "theorems": ["Decode.generated_s15", "Decode.generated_s16", "Decode.generated_Epoch_call"]}, {"field": "ValidatorIndex", "theorems": ["Decode.generated_s48", "Decode.generated_s49", "Decode.generated_s50", "Decode.generated_s51", "Decode.generated_s52", "Decode.generated_s53", "Decode.generated_s54", "Decode.generated_ValidatorIndex_call"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.VoluntaryExit.Code
+open Machine Runtime Prysm.VoluntaryExit.Code
 variable [Host]
 
 open Codec

@@ -1,0 +1,4 @@
+# old path	new path	meaning (paths are relative to the repository root)
+# Clean-up step, part 1: no file moves. The hand-edit script of the step writes the new shared modules
+# Runtime/StaticUint64s.lean, Runtime/NewobjectContract.lean, Runtime/StaticBoxLemmas.lean, Machine/StoreLemmas.lean
+# and Codec/ReadUint64List.lean from the text that the tool writes into the TestTarget modules.

@@ -1,0 +1,27 @@
+import Codec.Kind.DecodeAcceptAnyFrame
+import Prysm.BeaconBlockHeader.DecodeAccept
+import Prysm.PendingPartialWithdrawal.DecodeAccept
+import Prysm.SyncCommitteeMessage.Statements
+import Prysm.PendingDeposit.Statements
+import Prysm.Checkpoint.DecodeAccept
+import Codec.Kind.DecodeAcceptAnyFrameInstances
+
+/-!
+# GEN5 L1: ties of `decAcceptKindN` to the hand accept statements: the `PendingDeposit` part
+
+The declarations of the other types of this group are in `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
+-/
+
+open Machine Runtime
+
+open Codec
+namespace Prysm.PendingDeposit
+
+/-! ## Class C: frames `0x40`, `0x60` -/
+
+theorem Decode.accept_is_kind_any_frame : ∀ (h : Host), @Prysm.PendingDeposit.Decode.accept_statement h
+    = @decAcceptKindN h Prysm.PendingDeposit.Code.unmarshalSSZ (layMix40 [Prysm.AttestationData.Code.slotUnmarshalSSZ] 131 2)
+        [.bytes 48, .bytes 32, .u64, .bytes 96, .u64] := by
+  intro h; rfl
+
+end Prysm.PendingDeposit

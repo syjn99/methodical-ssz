@@ -18,7 +18,7 @@ The return slot: the last runtime call is the memmove of the last iteration (dir
 `Decode.state_roots_loop` keep its value `k + 133` (`Decode.block_roots_loop` leaves it unnamed; the accept statement needs it).
 -/
 
-open Machine Runtime TestTarget Prysm.HistoricalBatch.Code
+open Machine Runtime Prysm.HistoricalBatch.Code
 variable [Host]
 
 namespace Prysm.HistoricalBatch

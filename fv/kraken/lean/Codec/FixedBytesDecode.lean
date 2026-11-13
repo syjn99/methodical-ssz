@@ -4,9 +4,9 @@ import Codec.Bytes32DecodeOffsetZero
 /-!
 # GEN2 L1: size-parametric fixed-bytes decode segments (`[]byte` vector field of 32, 48 or 96 bytes)
 
-Added after the H3 hold-out (FINDINGS SG-2, proposal P-H3-2). `P2Dec.lean`, `P2DecZ.lean`, `DmSeg0.lean`
+Added after the H3 hold-out (FINDINGS SG-2, proposal P-H3-2). `Codec/Bytes32Decode.lean`, `Codec/Bytes32DecodeOffsetZero.lean`, `Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`
 and the `Kind*.lean` files are unchanged. Go 1.26.10 compiles `f = append(make([]byte, 0, n), buf[src:src+n]...)`
-to the two blocks of `P2Dec.lean` with the size `n` in three (head: two) immediates. The templates here
+to the two blocks of `Codec/Bytes32Decode.lean` with the size `n` in three (head: two) immediates. The templates here
 are the texts of `rootDecHead`, `rootDecMid`, `rootDecMidZ` with each size immediate `32` replaced by the
 parameter `n : Int64`:
 
@@ -24,7 +24,7 @@ in `rootdec_seg`. `Codec/FixedBytesDecodeSizeInstances.lean` shows that the 32-b
 `n = 32` / `n = 48` instances (`rfl`).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

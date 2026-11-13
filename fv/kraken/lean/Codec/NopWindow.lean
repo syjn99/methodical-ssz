@@ -25,7 +25,7 @@ proof texts of the dense lemmas with `kwat` for `kat`), and the dense lemmas are
 Nothing here is trusted beyond `Machine.Step`.
 -/
 
-open Machine TestTarget
+open Machine
 
 namespace Codec
 

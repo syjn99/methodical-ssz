@@ -10,19 +10,19 @@ n = 512, the SyncCommittee frame slots, receiver offsets 8 and 16, src = 0) and 
 by `infix_sub` on the real program; gaps read from the `nop` directives 39, 47 and 61.
 -/
 
-open Machine Runtime TestTarget Prysm.HistoricalBatch Codec.Segment
+open Machine Runtime Prysm.HistoricalBatch Codec.Segment
 
 namespace Codec.Segment
 
 variable [Host]
 
-abbrev scL (s : String) : String := "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_" ++ s
+abbrev syncCommitteeLabel (s : String) : String := "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_" ++ s
 
-theorem sc_loop_g : type_of% @Prysm.SyncCommittee.Decode.loop := by
+theorem sync_committee_loop : type_of% @Prysm.SyncCommittee.Decode.loop := by
   intro _ k hk hf sp recv bf A pks hpks hpk rbp0 r140 S Heap R hms hmm j i ps l18 l20 l28 spl rslot lo avail s
     hij hps h18 h20 h28 hspl hrs hlo hav hrax hrsp hrbp hr14 h_mem
-  have hB1 : (tHead (OfNat.ofNat 512) (scL "a0") (scL "156") 24 (OfNat.ofNat 48)).IsInfixAt Host.prog (k + 40) :=
-    Codec.infix_sub 40 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tHead, scL, List.drop_succ_cons, List.drop_zero,
+  have hB1 : (tHead (OfNat.ofNat 512) (syncCommitteeLabel "a0") (syncCommitteeLabel "156") 24 (OfNat.ofNat 48)).IsInfixAt Host.prog (k + 40) :=
+    Codec.infix_sub 40 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tHead, syncCommitteeLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB2 : (tMid (OfNat.ofNat 4) 40 24 32 72).IsInfixAt Host.prog (k + 48) :=
     Codec.infix_sub 48 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tMid, List.drop_succ_cons, List.drop_zero,
@@ -30,14 +30,14 @@ theorem sc_loop_g : type_of% @Prysm.SyncCommittee.Decode.loop := by
   have hB3 : (tMm (OfNat.ofNat 48) 64 16 24).IsInfixAt Host.prog (k + 56) :=
     Codec.infix_sub 56 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tMm, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
-  have hB4 : (tHdr (scL "1ff") 8 32 (OfNat.ofNat 48)).IsInfixAt Host.prog (k + 62) :=
-    Codec.infix_sub 62 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tHdr, scL, List.drop_succ_cons, List.drop_zero,
+  have hB4 : (tHdr (syncCommitteeLabel "1ff") 8 32 (OfNat.ofNat 48)).IsInfixAt Host.prog (k + 62) :=
+    Codec.infix_sub 62 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tHdr, syncCommitteeLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
-  have hB5 : (tTail (scL "137") (scL "91") 40).IsInfixAt Host.prog (k + 69) :=
-    Codec.infix_sub 69 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tTail, scL, List.drop_succ_cons, List.drop_zero,
+  have hB5 : (tTail (syncCommitteeLabel "137") (syncCommitteeLabel "91") 40).IsInfixAt Host.prog (k + 69) :=
+    Codec.infix_sub 69 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tTail, syncCommitteeLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
-  have hB6 : (tBack (scL "91")).IsInfixAt Host.prog (k + 36) :=
-    Codec.infix_sub 36 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tBack, scL, List.drop_succ_cons, List.drop_zero,
+  have hB6 : (tBack (syncCommitteeLabel "91")).IsInfixAt Host.prog (k + 36) :=
+    Codec.infix_sub 36 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tBack, syncCommitteeLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have g1 : Glue (k + 40 + 7) (k + 48) := glue_of hk (a := 47)
     (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
@@ -74,8 +74,8 @@ theorem sc_loop_g : type_of% @Prysm.SyncCommittee.Decode.loop := by
       l28, spl, rslot, lo, hps, h18, h20, h28, hspl, hrs, hlo, ?_⟩
     rw [hd, hm]; simpa using h_mem
   | succ j =>
-    refine eventually_trans _ _ _ _ (vtri_loop 4 48 (Or.inr (Or.inl ⟨rfl, rfl⟩)) 512 (by decide) (scL "a0")
-      (scL "156") (scL "1ff") (scL "137") (scL "91") 24 32 40 72 64 16 8 0 (k + 40) (k + 48) (k + 56) (k + 62)
+    refine eventually_trans _ _ _ _ (vtri_loop 4 48 (Or.inr (Or.inl ⟨rfl, rfl⟩)) 512 (by decide) (syncCommitteeLabel "a0")
+      (syncCommitteeLabel "156") (syncCommitteeLabel "1ff") (syncCommitteeLabel "137") (syncCommitteeLabel "91") 24 32 40 72 64 16 8 0 (k + 40) (k + 48) (k + 56) (k + 62)
       (k + 69) (k + 36) (k + 80) hB1 hB2 hB3 hB4 hB5 hB6 g1 (Or.inl ⟨rfl, rfl⟩) g2 (Or.inl rfl) g4 hlb hle
       sp recv bf bf A (sp + 24) (sp + 32) (sp + 40) (sp + 72) (sp + 64) (recv + 16) (recv + 8)
       (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])

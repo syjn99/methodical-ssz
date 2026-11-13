@@ -5,7 +5,7 @@ import Prysm.Deposit_Data.Spec
 /-!
 # Spec alignment of the real Deposit_Data decoder (hold-out, type A)
 
-Hand-written: the text of `DmSpecK.lean` with the Deposit_Data statement
+Hand-written: the text of `Prysm/DepositMessage/DecodeSpec.lean` with the Deposit_Data statement
 (receiver `state` word `ast` and the fourth field Signature).
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
@@ -14,7 +14,7 @@ Hand-written: the text of `DmSpecK.lean` with the Deposit_Data statement
   reject site of the decoder (it has no other error return).
 -/
 
-open Machine Runtime TestTarget Prysm.Deposit_Data.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Prysm.Deposit_Data.Code Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.Deposit_Data

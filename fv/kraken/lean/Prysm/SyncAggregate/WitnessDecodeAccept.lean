@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `Decode.accept` (SyncAggregate decoder accept path)
 
-The text of `E2eScal`'s `WitDdA.lean` with the SyncAggregate host and layout. It shows that the premises of the frozen
+The text of `Prysm/Deposit_Data/WitnessDecodeAccept.lean` with the SyncAggregate host and layout. It shows that the premises of the frozen
 statement `Prysm.SyncAggregate.Decode.accept_statement` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.SyncAggregate).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (115, `bump_makeslice1`) and `RtCopy` (121, `rt_memmove`).
@@ -19,7 +19,7 @@ area, the pointer save, the saved rbp, the caller's slots (rsp = 0x101ec) and th
 the decoder returns nil. The receiver is a Go value of `v1alpha1.SyncAggregate` (zero `state`, zero-length slices).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.SyncAggregate.Code
+open Machine Runtime Machine.Witness Prysm.SyncAggregate.Code
 
 namespace Prysm.SyncAggregate.Witness.DecodeAccept
 
@@ -86,7 +86,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
 -- the 22-chunk separating conjunction (`sep_comm`, `sep_comm_l`: 7.03 s; the address `simp`: 2.08 s; simp total
 -- 9.16 s of the declaration). The default 200000 heartbeats stop at `whnf`.
 -- Thresholds measured in independent reviewer runs: 200000 and 400000 fail at `whnf`, 1000000 passes.
--- Value 2000000 (twice the reviewer's passing value; was 16000000, the value of `WitDdA.dd_accept_runs`):
+-- Value 2000000 (twice the reviewer's passing value; was 16000000, the value of ``Prysm/Deposit_Data/WitnessDecodeAccept.lean`.dd_accept_runs`):
 -- passes in the implementer's run.
 set_option maxHeartbeats 2000000 in
 /-- **Non-vacuity of `Decode.accept` (the premises of the frozen statement `Decode.accept_statement` are satisfiable).** -/

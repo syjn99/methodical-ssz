@@ -18,7 +18,7 @@ approval). The originals stay unchanged and unproved (N). The new premises are n
 ones are not implied by the new ones (the new statement allows a smaller heap and forbids a second growth).
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

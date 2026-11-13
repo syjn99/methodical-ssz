@@ -23,7 +23,7 @@ For every input of 33 blocks of 32 bytes and a Deposit_Data, and every old point
 decoder returns nil.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Deposit.Code
+open Machine Runtime Machine.Witness Prysm.Deposit.Code
 
 namespace Prysm.Deposit.Witness.DecodeAccept
 

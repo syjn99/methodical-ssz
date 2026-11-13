@@ -394,8 +394,8 @@
   "kind": "stmt",
   "module": "Prysm/Epoch/DecodeRejectSize.lean",
   "theorem": "Prysm.Epoch.Decode.reject_static_addr",
-  "old": "ElfData.CheckpointAndEpoch.e2eStaticuint64s_addr = TestTarget.Data.staticuint64s_addr",
-  "new": "ElfData.CheckpointAndEpoch.e2eStaticuint64s_addr = TestTarget.Data.staticuint64s_addr + 8",
+  "old": "ElfData.CheckpointAndEpoch.e2eStaticuint64s_addr = Runtime.Data.staticuint64s_addr",
+  "new": "ElfData.CheckpointAndEpoch.e2eStaticuint64s_addr = Runtime.Data.staticuint64s_addr + 8",
   "why": "review e2e-r2 N3: the address lemma must name the staticuint64s label"
  },
  {
@@ -686,7 +686,7 @@
  {
   "id": "ci-control",
   "kind": "control",
-  "module": "Prysm/Slot/DecodeAccept.lean",
+  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
   "theorem": "Prysm.CommitteeIndex.Decode.accept",
   "code_def": "committeeIndexUnmarshalSSZ",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
@@ -696,7 +696,7 @@
  {
   "id": "ci-cmp9",
   "kind": "code",
-  "module": "Prysm/Slot/DecodeAccept.lean",
+  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
   "theorem": "Prysm.CommitteeIndex.Decode.accept",
   "code_def": "committeeIndexUnmarshalSSZ",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
@@ -708,7 +708,7 @@
  {
   "id": "ci-load8",
   "kind": "code",
-  "module": "Prysm/Slot/DecodeAccept.lean",
+  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
   "theorem": "Prysm.CommitteeIndex.Decode.accept",
   "code_def": "committeeIndexUnmarshalSSZ",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
@@ -720,7 +720,7 @@
  {
   "id": "ci-store8",
   "kind": "code",
-  "module": "Prysm/Slot/DecodeAccept.lean",
+  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
   "theorem": "Prysm.CommitteeIndex.Decode.accept",
   "code_def": "committeeIndexUnmarshalSSZ",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
@@ -733,7 +733,7 @@
  {
   "id": "ci-stmt-rax1",
   "kind": "stmt",
-  "module": "Prysm/Slot/DecodeAccept.lean",
+  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
   "theorem": "Prysm.CommitteeIndex.Decode.accept",
   "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
   "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
@@ -755,13 +755,13 @@
  {
   "id": "spa-control-ser",
   "kind": "control",
-  "module": "Prysm/AttestationData/Spec.lean",
+  "module": "Prysm/AttestationData/SpecEquivalence.lean",
   "theorem": "Prysm.AttestationData.desc_serialize_checker"
  },
  {
   "id": "spa-stmt-ser-cp",
   "kind": "stmt",
-  "module": "Prysm/AttestationData/Spec.lean",
+  "module": "Prysm/AttestationData/SpecEquivalence.lean",
   "theorem": "Prysm.AttestationData.desc_serialize_checker",
   "old": "serialize checkerDesc v",
   "new": "serialize Prysm.Checkpoint.desc v"
@@ -769,13 +769,13 @@
  {
   "id": "spa-control-de",
   "kind": "control",
-  "module": "Prysm/AttestationData/Spec.lean",
+  "module": "Prysm/AttestationData/SpecEquivalence.lean",
   "theorem": "Prysm.AttestationData.desc_deserialize_checker"
  },
  {
   "id": "spa-stmt-de-cp",
   "kind": "stmt",
-  "module": "Prysm/AttestationData/Spec.lean",
+  "module": "Prysm/AttestationData/SpecEquivalence.lean",
   "theorem": "Prysm.AttestationData.desc_deserialize_checker",
   "old": "deserialize checkerDesc bs = .ok v",
   "new": "deserialize Prysm.Checkpoint.desc bs = .ok v"
@@ -995,7 +995,7 @@
  {
   "id": "ada-u-slot",
   "kind": "code",
-  "module": "Prysm/AttestationData/DecodeRejectSize.lean",
+  "module": "Prysm/AttestationData/DecodeErrorWrapsUnreachable.lean",
   "theorem": "Prysm.AttestationData.Decode.slot_err_unreachable",
   "code_def": "unmarshalSSZ",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
@@ -1008,7 +1008,7 @@
  {
   "id": "ada-u-target",
   "kind": "code",
-  "module": "Prysm/AttestationData/DecodeRejectSize.lean",
+  "module": "Prysm/AttestationData/DecodeErrorWrapsUnreachable.lean",
   "theorem": "Prysm.AttestationData.Decode.target_err_unreachable",
   "code_def": "unmarshalSSZ",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",

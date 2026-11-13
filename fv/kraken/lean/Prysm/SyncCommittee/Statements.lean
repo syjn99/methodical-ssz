@@ -42,7 +42,7 @@ the loop; the postcondition owns them with unnamed 8-byte values (`l18'`, `l20'`
 Size reject: directives 2–10, `cmp $0x6030,%rcx; jne L_7d` taken, 30–35.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.SyncCommittee.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.SyncCommittee.Code
 variable [Host]
 
 namespace Prysm.SyncCommittee

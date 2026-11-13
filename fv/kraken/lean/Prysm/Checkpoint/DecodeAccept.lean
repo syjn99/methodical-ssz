@@ -38,7 +38,7 @@ top 8 bytes). Untouched on this path, so in `R`: rsp − 24 … rsp − 9 and rs
 … rsp − 49.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code
+open Machine Runtime Prysm.Checkpoint.Code
 variable [Host]
 
 namespace Prysm.Checkpoint

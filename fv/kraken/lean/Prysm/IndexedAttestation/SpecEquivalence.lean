@@ -1,5 +1,6 @@
 import Prysm.IndexedAttestation.Spec
 import Prysm.IndexedAttestation.SpecChecker
+import Prysm.AttestationData.SpecEquivalence
 
 /-!
 # The hand `Desc` of IndexedAttestation and the Desc checker's `Desc`
@@ -12,7 +13,7 @@ the checker section of `Prysm/AttestationData/Spec.lean`.
 -/
 
 namespace Prysm.IndexedAttestation
-open EthLib.Serialization.Ssz Spec TestTarget
+open EthLib.Serialization.Ssz Spec
 
 theorem desc_checker :
     desc = .container ["attesting_indices", "data", "signature"]

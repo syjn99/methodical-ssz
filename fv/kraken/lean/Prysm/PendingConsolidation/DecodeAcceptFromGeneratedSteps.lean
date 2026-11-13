@@ -7,12 +7,12 @@ import Prysm.SyncCommitteeMessage.Statements
 
 `Decode.accept_from_generated_steps : Decode.accept_statement` (the pre-committed hand statement, unchanged). Both fields are HAND field
 compositions (`pc_gg_*_field`; no kind exists for a field composition) over the GENERATED theorems of
-`Gen4PcDec.lean` (`p2dec --gen4`, raw output): SourceIndex = generated steps 15, 16 + call block; TargetIndex =
+`Prysm/PendingConsolidation/GeneratedDecodeSteps.lean` (`p2dec --gen4`, raw output): SourceIndex = generated steps 15, 16 + call block; TargetIndex =
 generated steps 48–54 + the call WINDOW 55–58 with the `nop` after the `callq`. Hand text that remains: the two field
-compositions, `Decode.head`, `Decode.epi` (`PcAccept.lean`) and the glue. In-sample (development data); no transfer claim.
+compositions, `Decode.head`, `Decode.epi` (`Prysm/PendingConsolidation/DecodeAccept.lean`) and the glue. In-sample (development data); no transfer claim.
 -/
 
-open Machine Runtime TestTarget Prysm.PendingConsolidation.Code Codec
+open Machine Runtime Prysm.PendingConsolidation.Code Codec
 variable [Host]
 
 namespace Prysm.PendingConsolidation

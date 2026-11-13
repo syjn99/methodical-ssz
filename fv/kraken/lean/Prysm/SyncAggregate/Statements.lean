@@ -35,7 +35,7 @@ slot holds directive 68 at the end. Size reject: directives 2–10, `cmp $0xa0,%
 88–93 (`ssz.ErrSize` words, epilogue).
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.SyncAggregate.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.SyncAggregate.Code
 variable [Host]
 
 namespace Prysm.SyncAggregate

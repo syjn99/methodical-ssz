@@ -13,7 +13,7 @@ theorem states the output (`⋆ True` remainder of that conclusion), in the form
 `Prysm.BeaconBlockHeader.Encode.fast_path_spec`. Fast path only (`len + 72 ≤ cap`, roots of length 32).
 -/
 
-open Machine Runtime TestTarget Prysm.Eth1Data.Code EthLib.Serialization.Ssz
+open Machine Runtime Prysm.Eth1Data.Code EthLib.Serialization.Ssz
 variable [Host]
 
 open Codec

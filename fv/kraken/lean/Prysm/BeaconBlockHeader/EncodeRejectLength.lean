@@ -25,7 +25,7 @@ with a smaller capacity is NOT covered. The morestack path is not covered. The t
 premise (initialised `ssz.ErrBytesLength`).
 -/
 
-open Machine Runtime TestTarget Prysm.BeaconBlockHeader.Code
+open Machine Runtime Prysm.BeaconBlockHeader.Code
 variable [Host]
 
 open Codec
@@ -92,7 +92,7 @@ theorem Encode.rej_b (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, Width.bits] at h
-    exact hrl (UInt64.toBitVec_inj.mp (Prysm.Checkpoint.Encode.reject_length_eq _ h))
+    exact hrl (UInt64.toBitVec_inj.mp (Codec.eq_32_of_sub_eq_zero _ h))
   simp only [Effects.All]
   klabel hk hf marshalSSZTo 175
   kat hk marshalSSZTo 175
@@ -147,7 +147,7 @@ theorem Encode.rej_c (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, Width.bits] at h
-    exact hrl (UInt64.toBitVec_inj.mp (Prysm.Checkpoint.Encode.reject_length_eq _ h))
+    exact hrl (UInt64.toBitVec_inj.mp (Codec.eq_32_of_sub_eq_zero _ h))
   simp only [Effects.All]
   klabel hk hf marshalSSZTo 165
   kat hk marshalSSZTo 165
@@ -202,7 +202,7 @@ theorem Encode.rej_d (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, Width.bits] at h
-    exact hrl (UInt64.toBitVec_inj.mp (Prysm.Checkpoint.Encode.reject_length_eq _ h))
+    exact hrl (UInt64.toBitVec_inj.mp (Codec.eq_32_of_sub_eq_zero _ h))
   simp only [Effects.All]
   klabel hk hf marshalSSZTo 156
   kat hk marshalSSZTo 156

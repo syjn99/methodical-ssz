@@ -10,7 +10,7 @@ UNCOVERED-JSON: [{"field": "Slot", "reason": "delegated overlay field (Slot): co
 (sha256 `e18ac244d9dcfe0a5981de56a454c197a63511a186974b38d6a8baccf55924c5`) and `prysm/ir/ir-mainnet.json` (sha256 `c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a`, type `v1alpha1.BeaconBlockHeader`); GEN2 coverage (`p2dec --gen2`): 3 of 5 fields. Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Machine Runtime TestTarget Prysm.BeaconBlockHeader.Code
+open Machine Runtime Prysm.BeaconBlockHeader.Code
 variable [Host]
 
 open Codec

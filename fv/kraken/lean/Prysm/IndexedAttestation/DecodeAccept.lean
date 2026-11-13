@@ -18,7 +18,7 @@ import Prysm.IndexedAttestation.DecodeLoop
 Statement: the frozen `Prysm.IndexedAttestation.Decode.accept_statement`.
 -/
 
-open Machine Runtime TestTarget Prysm.IndexedAttestation.Code
+open Machine Runtime Prysm.IndexedAttestation.Code
 variable [Host]
 
 namespace Prysm.IndexedAttestation

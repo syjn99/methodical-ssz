@@ -1,13 +1,13 @@
 [
  {
   "id": "g5-tie-pd-control",
-  "module": "Codec/Kind/DecodeAcceptAnyFrameInstances.lean",
+  "module": "Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PendingDeposit.Decode.accept_is_kind_any_frame",
   "kind": "control"
  },
  {
   "id": "g5-tie-pd-kind-jret",
-  "module": "Codec/Kind/DecodeAcceptAnyFrameInstances.lean",
+  "module": "Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PendingDeposit.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
   "old": "(layMix40 [Prysm.AttestationData.Code.slotUnmarshalSSZ] 131 2)",
@@ -15,7 +15,7 @@
  },
  {
   "id": "g5-tie-pd-kind-size",
-  "module": "Codec/Kind/DecodeAcceptAnyFrameInstances.lean",
+  "module": "Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PendingDeposit.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
   "old": "[.bytes 48, .bytes 32, .u64, .bytes 96, .u64]",
@@ -23,7 +23,7 @@
  },
  {
   "id": "g5-tie-sm-kind-callees",
-  "module": "Codec/Kind/DecodeAcceptAnyFrameInstances.lean",
+  "module": "Prysm/SyncCommitteeMessage/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
   "old": "[Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1",
@@ -31,7 +31,7 @@
  },
  {
   "id": "g5-tie-bh-kind-ptr",
-  "module": "Codec/Kind/DecodeAcceptAnyFrameInstances.lean",
+  "module": "Prysm/BeaconBlockHeader/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.BeaconBlockHeader.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
   "old": "[Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 179 2",
@@ -39,7 +39,7 @@
  },
  {
   "id": "g5-tie-pb-kind-state",
-  "module": "Codec/Kind/DecodeAcceptAnyFrameInstances.lean",
+  "module": "Prysm/PowBlock/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PowBlock.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
   "old": "(layRt false 104 3)",
@@ -47,7 +47,7 @@
  },
  {
   "id": "g5-tie-pc-kind-field",
-  "module": "Codec/Kind/DecodeAcceptAnyFrameInstances.lean",
+  "module": "Prysm/PendingConsolidation/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
   "old": "(layCal [Prysm.ValidatorIndex.Code.unmarshalSSZ] 56) [.u64, .u64]",
@@ -55,13 +55,13 @@
  },
  {
   "id": "g5-tie-cp-control",
-  "module": "Codec/Kind/DecodeAcceptAnyFrameInstances.lean",
+  "module": "Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.Checkpoint.Decode.accept_of_kind",
   "kind": "control"
  },
  {
   "id": "g5-tie-cp-stmt-field",
-  "module": "Codec/Kind/DecodeAcceptAnyFrameInstances.lean",
+  "module": "Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.Checkpoint.Decode.accept_of_kind",
   "kind": "stmt",
   "old": "decodeLayout [.u64, .bytes 32]",

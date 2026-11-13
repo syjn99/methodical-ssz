@@ -16,7 +16,7 @@ CommitteeIndex, ValidatorIndex, Epoch) to an argument set-up, then
 
 `U64CalleeAcc fn` is the text of the four existing function specifications `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec`,
 `Prysm.ValidatorIndex.Decode.accept_function_spec`, `Prysm.Epoch.Decode.accept_function_spec` with the callee label as a parameter. It is the existing spec-hypothesis
-form (`CallDecRel.lean`: each existing spec is `U64CalleeAcc <its label>` by `rfl`); the proved theorems
+form (`Prysm/Slot/CalleeDecodeFunctionSpecs.lean`: each existing spec is `U64CalleeAcc <its label>` by `rfl`); the proved theorems
 `sl_uacc_holds`, `ci_uacc_holds`, `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`, `ep_uacc_holds` discharge it. No runtime contract is used.
 
 * `calldec_seg` — the reusable call block: `callDec fn lok` (3 directives) and the label `lok`.
@@ -27,7 +27,7 @@ form (`CallDecRel.lean`: each existing spec is `U64CalleeAcc <its label>` by `rf
 Not covered: any other register choice; pointer-field callees (`CpUAccC`, a different specification form).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 open Codec
 namespace Codec

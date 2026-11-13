@@ -149,6 +149,8 @@ The maps apply in this order:
 - `maps/flat-types/`: the library `E2eScal` becomes `Prysm/<GoTypeName>/` for 24 flat types; some modules go to the
   directories of earlier types, and the type-independent modules go to `Codec/` and `Codec/Kind/`.
   The step changed the emit strings of the generators and the evidence tools, `kindcheck.py`, `regen.py` and `python_checks.sh`.
+- `maps/clean-up/`: renames of the clean-up step. The TestTarget declarations that other libraries use get the names of
+  `Runtime`, `Machine` and `Codec`, and a hand edit moves their text into new modules of those libraries.
 
 Issue 10 of `syjn99/methodical-ssz` holds the list of the steps that remain.
 

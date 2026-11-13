@@ -11,11 +11,11 @@ import Prysm.PowBlock.GeneratedDecodeSteps
 
 Text produced from one description of the type (frame facts, field list, boundary states, chain theorem names)
 by the recipe of the lemma hand-over; every theorem has a `_kind` line (`decHeadKindN`, `decFieldKindN`,
-`decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`E2eScal.Gen.*`) are used as emitted.
+`decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`Decode.generated_step_*`) are used as emitted.
 Frame `0x20`: the epilogue (`xor`, `xor`, `add $0x20`, `pop`, `retq`) is the lemma `decepi_seg`.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.PowBlock.Code Codec
+open Machine Runtime Prysm.AttestationData.Code Prysm.PowBlock.Code Codec
 variable [Host]
 
 namespace Prysm.PowBlock

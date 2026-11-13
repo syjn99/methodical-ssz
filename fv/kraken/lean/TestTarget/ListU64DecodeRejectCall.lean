@@ -1,6 +1,9 @@
 import TestTarget.ListU64DecodeReject
 import Runtime.Contracts
 import Machine.Frame
+import Runtime.StaticBoxLemmas
+import Machine.StoreLemmas
+import TestTarget.Data
 
 /-!
 # ListU64.UnmarshalSSZ reject paths through `fmt.errorf`, on Kraken main
@@ -15,8 +18,6 @@ variable [Host]
 
 theorem luFmtTooBig_len : luFmtTooBig.length = 56 := by rfl
 theorem luFmtMis_len : luFmtMis.length = 68 := by rfl
-
-theorem staticBox_congr {x y : BitVec 64} (h : x = y) : StaticBox x = StaticBox y := h ▸ rfl
 
 theorem and7_ne (x : BitVec 64) (h4 : 4 ≤ x.toNat) (h : (x.toNat - 4) % 8 ≠ 0) : (-4 + x) &&& 7 ≠ 0#64 := by
   intro h0
@@ -56,24 +57,8 @@ theorem jg16_true (a : BitVec 64) (af : Bool) (h : 16 < a.toNat) (h2 : a.toNat <
   refine ⟨by simpa using hz, ?_⟩
   rw [show (a - 16#64) = a - 16 from rfl, hm, Int.bmod_eq_of_le (by omega) (by omega)]; simp
 
-/-- A 16-byte AVX store (`movups`) into a separated chunk. -/
-theorem store_avx_step (s : MachineData) (addr : BitVec 64) {w : AvxWidth} (v : w.type) (ret : MachineData → Effects)
-    (bs : List UInt8) (F : DataMem → Prop) (post : MachineState → Prop)
-    (H : (Eq (bs.At addr) ⋆ F) s.dmem) (hl : bs.length = w.bytes) (hw : w.bytes ≤ 2 ^ 64)
-    (k : ∀ m', (Eq ((Int.toBytes w.bytes v.toInt).At addr) ⋆ F) m' → (ret { s with dmem := m' }).All post) :
-    (MachineData.storeAvx s addr v ret).All post := by
-  unfold MachineData.storeAvx
-  simp only [Bool.false_and, Bool.false_eq_true, ↓reduceIte]
-  rw [Effects.All_require_write_access]
-  rw [Mem.loadInt_sep bs addr _ F s.dmem H hl hw]
-  exact k _ (Mem.storeInt_sep addr w.bytes bs F s.dmem ⟨H, hl⟩ v.toInt)
-
 theorem lr_a72 (x : BitVec 64) : -128 + (x - 8#64) + 64 = x - 72 := by bv_omega
 theorem lr_a56 (x : BitVec 64) : x - 72 + 16 = x - 56 := by bv_omega
-theorem lr_split16 (bs : List UInt8) (h : bs.length = 16) (a : BitVec 64) :
-    Eq (bs.At a) = Eq ((bs.take 8).At a) ⋆ Eq ((bs.drop 8).At (a + 8)) := by
-  conv => lhs; rw [← List.take_append_drop 8 bs]
-  rw [Mem.At_append_sep _ _ _ (by simp; omega)]; simp [h]
 theorem lr_b144 (x o : BitVec 64) : ({ toBitVec := x - 144 } + 8 : UInt64).toBitVec + o = x - 136 + o := by
   simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
 theorem lr_d72 (x : BitVec 64) : x - 72 + 8 = x - 64 := by bv_omega
@@ -204,14 +189,14 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [lr_a72]
-  apply store_avx_step _ _ _ _ a40 _ _ (by ecancel) (by exact ha40) (by decide)
+  apply Machine.store_avx_step _ _ _ _ a40 _ _ (by ecancel) (by exact ha40) (by decide)
   intro m3 H3
   kunfold
   kat hk ListU64UnmarshalSSZ 55
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [lr_a56]
-  apply store_avx_step _ _ _ _ a50 _ _ (by ecancel) (by exact ha50) (by decide)
+  apply Machine.store_avx_step _ _ _ _ a50 _ _ (by ecancel) (by exact ha50) (by decide)
   intro m4 H4
   kunfold
   kat hk ListU64UnmarshalSSZ 56
@@ -228,7 +213,7 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
   refine eventually_trans _ _ _ _ (hcv _ (Host.addrOf (k + 58 + 1)) avail scratch (spl.take 8) _ hav hsc
     (by simp [hspl]) (by
       try dsimp only
-      rw [hA, staticBox_congr (y := BitVec.ofNat 64 n) ?hv]
+      rw [hA, Runtime.staticBox_congr (y := BitVec.ofNat 64 n) ?hv]
       · ecancel
       · first | bv_omega | (apply BitVec.eq_of_toNat_eq; rw [shr3_toNat' _ _ hlen]; simp; omega))) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, stk1, sp1, hb1, av1, hstk1, hsp1, hbox1, hav1, hav1', Hm1⟩
@@ -239,7 +224,7 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
   simp only at hrsp1 Hm1
   rw [hA] at Hm1
   subst hrsp1
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 72), lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 56)] at Hm1
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 72), Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 56)] at Hm1
   rw [lr_d72, lr_d56] at Hm1
   kat hk ListU64UnmarshalSSZ 59
   kat hk ListU64UnmarshalSSZ 60
@@ -456,14 +441,14 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [lr_e40]
-  apply store_avx_step _ _ _ _ a40 _ _ (by ecancel) (by exact ha40) (by decide)
+  apply Machine.store_avx_step _ _ _ _ a40 _ _ (by ecancel) (by exact ha40) (by decide)
   intro m3 H3
   kunfold
   kat hk ListU64UnmarshalSSZ 94
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [lr_e24]
-  apply store_avx_step _ _ _ _ a50 _ _ (by ecancel) (by exact ha50) (by decide)
+  apply Machine.store_avx_step _ _ _ _ a50 _ _ (by ecancel) (by exact ha50) (by decide)
   intro m4 H4
   kunfold
   kat hk ListU64UnmarshalSSZ 95
@@ -480,21 +465,21 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
   refine eventually_trans _ _ _ _ (hcv _ (Host.addrOf (k + 97 + 1)) avail scratch (spl.take 8) _ hav hsc
     (by simp [hspl]) (by
       try dsimp only
-      rw [hA, staticBox_congr (y := rcx.toBitVec - 4) ?hv, hSB]
+      rw [hA, Runtime.staticBox_congr (y := rcx.toBitVec - 4) ?hv, hSB]
       · ecancel
       · rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg])) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, stk1, sp1, hb1, av1, hstk1, hsp1, hbox1, hav1, hav1', Hm1⟩
   dsimp only at hpc1 hrsp1 Hm1
   have hv4 : -4 + rcx.toBitVec = rcx.toBitVec - 4 := by rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg]
   rw [hv4] at hbox1
-  rw [staticBox_congr hv4, hSB] at Hm1
+  rw [Runtime.staticBox_congr hv4, hSB] at Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := d1
   simp only at hrsp1 Hm1
   rw [hA] at Hm1
   subst hrsp1
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 40), lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 24)] at Hm1
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 40), Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 24)] at Hm1
   rw [lr_f40, lr_f24] at Hm1
   kat hk ListU64UnmarshalSSZ 98
   kat hk ListU64UnmarshalSSZ 99

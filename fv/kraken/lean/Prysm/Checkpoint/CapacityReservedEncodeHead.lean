@@ -18,7 +18,7 @@ import Codec.StackGuard
   `pre ++ z ++ tail`.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.CapacityReserved.Code
+open Machine Runtime Prysm.Checkpoint.CapacityReserved.Code
 variable [Host]
 
 namespace Prysm.Checkpoint.CapacityReserved

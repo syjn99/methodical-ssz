@@ -24,7 +24,7 @@ the bytes the decoder read. The full frame accounting of the encoder call is
 single witness host for decoder and encoder. Spec level: `DecodeThenEncode.round_trip_spec`.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Prysm.Checkpoint.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.Checkpoint

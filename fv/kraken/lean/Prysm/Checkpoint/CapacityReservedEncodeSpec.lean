@@ -15,7 +15,7 @@ import Prysm.Checkpoint.EncodeCover
 Heap budget of both covers: `4·len + 8736 ≤ avail` (the baseline covers' premise).
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.CapacityReserved.Code EthLib.Serialization.Ssz
+open Machine Runtime Prysm.Checkpoint.CapacityReserved.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.Checkpoint.CapacityReserved

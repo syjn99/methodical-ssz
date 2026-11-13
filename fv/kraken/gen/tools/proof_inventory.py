@@ -121,7 +121,7 @@ def g5c(p, P, extra=""):
 
 
 def f24dec(p, P, codec):
-    """Row of the flat-type hold-out (H7): generated accept / size-reject (`Gen5F24<P>Dec`), spec alignment `F24<P>SpecK`, witnesses
+    """Row of the flat-type hold-out (H7): generated accept / size-reject (`Gen5F24<P>Dec`), spec alignment `F24<P>`Prysm/Deposit/DecodeSpec.lean``, witnesses
     `Wit<P>GA` / `Wit<P>GR`; codec None = no Desc-checker record for the type (the row stays partial)."""
     return dec(f"E2eScal.Gen.{p}_g5dec_accept", f"E2eScal.Gen.{p}_g5dec_reject", f"E2eScal.F24.{p}_e2e_accept_spec_k",
                f"E2eScal.F24.{p}_e2e_reject_size_spec", f"E2eScal.F24.{p}_e2e_reject_complete", codec,

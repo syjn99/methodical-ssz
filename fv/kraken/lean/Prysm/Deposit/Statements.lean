@@ -1,5 +1,5 @@
 import Runtime.Contracts
-import TestTarget.FunctionSpecs
+import Runtime.NewobjectContract
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
@@ -40,7 +40,7 @@ Error paths not on the accept path: `fmt.errorf` wrap (Deposit_Data accepts ever
 Size reject: directives 2–10, `cmp $0x4d8,%rcx; jne L_85` taken, 31–36.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.Deposit.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.Deposit.Code
 variable [Host]
 
 namespace Prysm.Deposit

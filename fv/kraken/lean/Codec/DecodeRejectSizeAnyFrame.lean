@@ -8,12 +8,12 @@ The size-reject path is the same code in every flat decoder: the prologue with `
 the two words of `ssz.ErrSize` into rax / rbx, `add $F,%rsp; pop %rbp; retq`. Only the frame `F`, the first
 spill displacement `dB = F + 24`, the size `sz` and the labels differ.
 - `decRejectKindN C sz`: the statement of the committed theorems `*_e2e_reject_size_main` with the code
-  constant and the size replaced (ties: `RejectTies.lean`).
-- `decrej_seg`: the proof over windows (nops anywhere): `decPro` (`HeadN.lean`), `decErrL`, then `decepi_n`.
+  constant and the size replaced (ties: `Prysm/BlobIdentifier/DecodeRejectSizeKindInstances.lean`).
+- `decrej_seg`: the proof over windows (nops anywhere): `decPro` (`Codec/DecoderPrologue.lean`), `decErrL`, then `decepi_n`.
 Not covered: callee error returns (`fmt.errorf`), `morestack`.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 open Codec
 namespace Codec

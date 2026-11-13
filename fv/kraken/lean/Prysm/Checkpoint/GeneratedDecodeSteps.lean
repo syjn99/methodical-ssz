@@ -12,7 +12,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "Epoch", "theorems": ["Decode.generated_step_s14", "Decode.generated_step_s15", "Decode.generated_step_Epoch_call"]}, {"field": "Root", "theorems": ["Decode.generated_step_s48", "Decode.generated_step_s49", "Decode.generated_step_Root_seg", "Decode.generated_step_s75", "Decode.generated_step_s77", "Decode.generated_step_s84", "Decode.generated_step_s85"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code
+open Machine Runtime Prysm.Checkpoint.Code
 variable [Host]
 
 open Codec

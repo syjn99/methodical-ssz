@@ -229,7 +229,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: two proofs spent most of their time in one `omega` side goal each.
 - Where: the `bv_omega` of the argument `hLo` of `Codec.rootenc_seg` in `lean/Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean`. The `wit_split` side goals of the Checkpoint cover witnesses.
-- State: fixed. `lean/Machine/WitnessSplit.lean` has `wit_split_n` (commit `301300f`). The `P2EncCp` step is a constant-only rewrite (commit `ab43cbb`).
+- State: fixed. `lean/Machine/WitnessSplit.lean` has `wit_split_n` (commit `301300f`). The `Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean` step is a constant-only rewrite (commit `ab43cbb`).
 
 ### Limit options without a profiled cause
 

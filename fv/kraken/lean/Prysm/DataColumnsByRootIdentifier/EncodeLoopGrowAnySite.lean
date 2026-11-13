@@ -17,7 +17,7 @@ otherwise 90–94 spill i and the word and call `growslice(bp, L + 8(i+1), cp, 8
 and `jmp L_132`, 79–81 store into the new block. The old block (the copied prefix and the old tail) joins `G`.
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

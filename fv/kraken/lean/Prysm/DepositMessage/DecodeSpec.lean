@@ -5,8 +5,8 @@ import Prysm.DepositMessage.Spec
 /-!
 # Spec alignment of the real DepositMessage decoder (hold-out)
 
-Hand-written (the text of `E1SpecK.lean` with the DepositMessage statement;
-the equation `bsA = SszValue.encode g` is kept as a hypothesis `hb` instead of `subst`, see `DmSpec.lean`).
+Hand-written (the text of `Prysm/Eth1Data/DecodeSpec.lean` with the DepositMessage statement;
+the equation `bsA = SszValue.encode g` is kept as a hypothesis `hb` instead of `subst`, see `Prysm/DepositMessage/Spec.lean`).
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`, the independent consensus-specs Desc)
   as `v`, there is `g : SszValue` with `g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g`
   the machine code returns nil and the receiver holds `g` (PublicKey at a fresh `p1` with len = cap = 48,
@@ -17,7 +17,7 @@ the equation `bsA = SszValue.encode g` is kept as a hypothesis `hb` instead of `
   reject site of the decoder (it has no other error return).
 -/
 
-open Machine Runtime TestTarget Prysm.DepositMessage.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Prysm.DepositMessage.Code Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.DepositMessage

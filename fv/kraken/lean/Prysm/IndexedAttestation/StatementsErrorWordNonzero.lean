@@ -1,5 +1,5 @@
 import Runtime.Contracts
-import TestTarget.FunctionSpecs
+import Runtime.NewobjectContract
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
@@ -19,12 +19,12 @@ The four defs below are the frozen texts of `Prysm/IndexedAttestation/Statements
 `mov ssz.Err…(%rip),%rcx; test %rcx,%rcx; je …; mov 0x8(%rcx),%rcx`; when the error's itab word is 0 the code skips the
 type-word load and passes 0 where `FmtErrorfDWC` needs `ity`. The Kraken Host places labels anywhere, so the itab label
 may be 0 and the frozen statements cannot refute that branch. The precondition is stronger than the frozen one (not
-equivalent). The originals in `Prysm/IndexedAttestation/Statements.lean` stay unchanged and unproved. Precedent: `Fk.lu_reject_misaligned_main`
+equivalent). The originals in `Prysm/IndexedAttestation/Statements.lean` stay unchanged and unproved. Precedent: `lu_reject_misaligned_main`
 (`TestTarget/ListU64DecodeRejectCall.lean`, Go 1.26.3) has the same two premises `e0 = itab` and `e0 ≠ 0`. In the real ELF `e0` is the
 itab address `0xd28520` (check (b) of `lv/link-t3/RESULT` binds `go_itab._errors.errorString_error` to it).
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
 variable [Host]
 
 namespace Prysm.IndexedAttestation

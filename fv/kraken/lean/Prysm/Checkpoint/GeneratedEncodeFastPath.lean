@@ -15,7 +15,7 @@ The statement implies the committed hand statement `Prysm.Checkpoint.Encode.fast
 GEN6-JSON: {"type": "Checkpoint", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 40, "frame": 104, "gd": 0, "rt": true, "fields": [["Epoch", "u", 8], ["Root", "b", 32]], "boundaries": [8, 36, 63], "layout": "Prysm.Checkpoint.encodeLayout", "S_sha256": "c4345527c651c0a3ff8319af3f35df1e375b8c58a6a45054762da0a0dcef1b1d", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.Checkpoint.Encode.fast_path via Prysm.Checkpoint.Encode.fast_path_of_kind", "S": "prysm/go1.26.10/e2e/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Checkpoint", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
 -/
 
-open Machine Runtime TestTarget Codec Prysm.Checkpoint.Code
+open Machine Runtime Codec Prysm.Checkpoint.Code
 variable [Host]
 
 namespace Prysm.Checkpoint
@@ -208,7 +208,7 @@ theorem Encode.generated_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   apply kstep_movups15 Reg64.r9 16 _ (k + 15) (k + 16) (win hk 15 1) (by rfl) (by rfl)
     (rsp.toBitVec - 64) (rsp.toBitVec - 48) (by eb) t48 ht48 _ _ _ (by rfl) (by ecancel)
   intro m4 H4; kn; try dsimp only at H4
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 64), show (rsp.toBitVec - 64) + 8 = (rsp.toBitVec - 56) by bv_omega] at H4
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 64), show (rsp.toBitVec - 64) + 8 = (rsp.toBitVec - 56) by bv_omega] at H4
   apply kstep_st Reg64.r8 Reg64.rsp 48 _ (k + 16) (k + 17) (win hk 16 1) (by rfl) (by rfl)
     (rsp.toBitVec - 112) (rsp.toBitVec - 64) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
   intro m5 H5; kn; simp only [Reg64s.get64] at H5

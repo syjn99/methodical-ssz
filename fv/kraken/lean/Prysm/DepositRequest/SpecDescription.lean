@@ -1,4 +1,11 @@
 import Prysm.Checkpoint.Spec
+import Prysm.BeaconBlocksByRangeRequest.SpecDescription
+import Prysm.BlobSidecarsByRangeRequest.SpecDescription
+import Prysm.BuilderDepositRequest.SpecDescription
+import Prysm.BuilderPreferences.SpecDescription
+import Prysm.ExecutionPayloadEnvelopesByRangeRequest.SpecDescription
+import Prysm.PartialDataColumnGroupID.SpecDescription
+import Prysm.ValidatorIdentity.SpecDescription
 
 /-!
 # Independent hand `Desc` of the eight types with a generated theorem
@@ -9,7 +16,7 @@ uses, read only; `proto/engine/v1/electra.proto`, `proto/engine/v1/gloas.proto`,
 Desc checker's Desc of any of these types was printed or copied into this tree (so that the hand Desc is independent of the checker output in time, not only in content).
 No consensus-specs clone is in this session's reach (other worktrees are out of bounds), so every Desc here comes from
 the producer's own source tree: it is independent of the Desc checker's output only, not of the producer's source
-(as `VbDesc.lean`). Where the proto cites a spec definition, the comment is quoted.
+(as `Prysm/ValidatorBalance/SpecDescription.lean`). Where the proto cites a spec definition, the comment is quoted.
 This file is committed before any `F24*SpecChecker` text exists. Overlay types (`cast_type` Slot, Epoch,
 ValidatorIndex, Gwei) are `uint64` in SSZ.
 
@@ -23,6 +30,7 @@ ValidatorIndex, Gwei) are `uint64` in SSZ.
     message PartialDataColumnGroupID { bytes beacon_block_root [32]; uint64 slot [Slot]; }  // "Field order follows the spec"
     message ValidatorIdentity { uint64 index [ValidatorIndex]; bytes pubkey [48]; uint64 activation_epoch [Epoch]; }
     message BuilderPreferences { uint64 max_execution_payment [Gwei]; }
+After the split of this module, the declarations of the other types are in `Prysm/BeaconBlocksByRangeRequest/SpecDescription.lean`, `Prysm/BlobSidecarsByRangeRequest/SpecDescription.lean`, `Prysm/BuilderDepositRequest/SpecDescription.lean`, `Prysm/BuilderPreferences/SpecDescription.lean`, `Prysm/ExecutionPayloadEnvelopesByRangeRequest/SpecDescription.lean`, `Prysm/PartialDataColumnGroupID/SpecDescription.lean`, `Prysm/ValidatorIdentity/SpecDescription.lean`.
 -/
 
 namespace Prysm.DepositRequest
@@ -31,33 +39,5 @@ open EthLib.Serialization.Ssz
 /-- Prysm `engine/v1.DepositRequest` (Electra deposit request). -/
 def desc : Desc := .container ["pubkey", "withdrawal_credentials", "amount", "signature", "index"]
   [.byteVector 48, .byteVector 32, .uint 8, .byteVector 96, .uint 8]
-
-/-- Prysm `engine/v1.BuilderDepositRequest` (Gloas). -/
-def _root_.Prysm.BuilderDepositRequest.desc : Desc := .container ["pubkey", "withdrawal_credentials", "amount", "signature"]
-  [.byteVector 48, .byteVector 32, .uint 8, .byteVector 96]
-
-/-- Prysm `v1alpha1.BeaconBlocksByRangeRequest`. -/
-def _root_.Prysm.BeaconBlocksByRangeRequest.desc : Desc := .container ["start_slot", "count", "step"]
-  [.uint 8, .uint 8, .uint 8]
-
-/-- Prysm `v1alpha1.BlobSidecarsByRangeRequest`. -/
-def _root_.Prysm.BlobSidecarsByRangeRequest.desc : Desc := .container ["start_slot", "count"]
-  [.uint 8, .uint 8]
-
-/-- Prysm `v1alpha1.ExecutionPayloadEnvelopesByRangeRequest`. -/
-def _root_.Prysm.ExecutionPayloadEnvelopesByRangeRequest.desc : Desc := .container ["start_slot", "count"]
-  [.uint 8, .uint 8]
-
-/-- Prysm `v1alpha1.PartialDataColumnGroupID`. -/
-def _root_.Prysm.PartialDataColumnGroupID.desc : Desc := .container ["beacon_block_root", "slot"]
-  [.byteVector 32, .uint 8]
-
-/-- Prysm `v1alpha1.ValidatorIdentity`. -/
-def _root_.Prysm.ValidatorIdentity.desc : Desc := .container ["index", "pubkey", "activation_epoch"]
-  [.uint 8, .byteVector 48, .uint 8]
-
-/-- Prysm `v1alpha1.BuilderPreferences`. -/
-def _root_.Prysm.BuilderPreferences.desc : Desc := .container ["max_execution_payment"]
-  [.uint 8]
 
 end Prysm.DepositRequest

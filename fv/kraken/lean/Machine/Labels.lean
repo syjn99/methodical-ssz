@@ -8,7 +8,6 @@ the laid-out host program (`Executable.labels`, `findSome?`), or `-1`.
 `label_eq_addrOf` turns that into `Host.addrOf j` for the first occurrence `j`.
 -/
 
-open TestTarget
 namespace Machine
 
 theorem findSome?_eq_of_first {α β : Type} (f : α → Option β) :

@@ -8,7 +8,7 @@ import Prysm.Checkpoint.DecodeRejectSize
 /-!
 # Real Prysm `(*v1alpha1.DepositMessage).UnmarshalSSZ`: size reject (hold-out)
 
-Hand-written: the text of `E1Reject.lean` with the DepositMessage indices.
+Hand-written: the text of `Prysm/Eth1Data/DecodeRejectSize.lean` with the DepositMessage indices.
 `Decode.reject_size` (`len(buf) ≠ 88`, Go source `return ssz.ErrSize`): directives 2–7 (guard,
 prologue, rbx spill), 9–10 `cmp $0x58,%rcx; jne L_17d` taken, L_17d and the two loads of `ssz.ErrSize`
 (`ElfData.CheckpointAndEpoch.e2eErrSize_addr`, the same ELF symbol as the Checkpoint decoder's; `h3link.py` asserts the operand),
@@ -16,7 +16,7 @@ epilogue. The two words `e0`, `e1` are the global's value after package init (pr
 The decoder has no `fmt.errorf` wrap and no callee error path: the size check is its only reject.
 -/
 
-open Machine TestTarget Prysm.DepositMessage.Code
+open Machine Prysm.DepositMessage.Code
 variable [Host]
 
 namespace Prysm.DepositMessage

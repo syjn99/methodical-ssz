@@ -25,7 +25,7 @@ place `j` of the head block, the place `jb` of the tail block and the address of
 hypotheses.
 -/
 
-open Machine TestTarget
+open Machine
 
 namespace Codec
 

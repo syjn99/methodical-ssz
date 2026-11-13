@@ -13,7 +13,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "DepositRoot", "theorems": ["Decode.generated_step_DepositRoot_seg", "Decode.generated_step_s37", "Decode.generated_step_s38", "Decode.generated_step_s45", "Decode.generated_step_s46"]}, {"field": "DepositCount", "theorems": ["Decode.generated_step_s47", "Decode.generated_step_s48", "Decode.generated_step_s49"]}, {"field": "BlockHash", "theorems": ["Decode.generated_step_BlockHash_seg", "Decode.generated_step_s75", "Decode.generated_step_s76", "Decode.generated_step_s84", "Decode.generated_step_s85"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.Eth1Data.Code
+open Machine Runtime Prysm.Eth1Data.Code
 variable [Host]
 
 open Codec

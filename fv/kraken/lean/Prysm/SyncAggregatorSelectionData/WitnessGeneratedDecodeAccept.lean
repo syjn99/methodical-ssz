@@ -5,7 +5,7 @@ import Machine.WitnessHost
 /-!
 # Witness of the generated `Decode.generated_accept` (SyncAggregatorSelectionData decoder accept path)
 
-The text of `WitVeA.lean` with the SyncAggregatorSelectionData host and layout. It shows that the
+The text of `Prysm/VoluntaryExit/WitnessDecodeAccept.lean` with the SyncAggregatorSelectionData host and layout. It shows that the
 premises of the generated accept theorem (statement = kind instance) are satisfiable. Host: one label, the real
 Go 1.26.10 `(*v1alpha1.SyncAggregatorSelectionData).UnmarshalSSZ` (index 1) and `primitives.Slot` (74).
 One memory block at `0x10000`: guard · input (2 × 8) · 8 unused · receiver (state, field 1, field 2, tail 32) · 8 unused · callee
@@ -16,7 +16,7 @@ frame-pointer slot (rsp − 80) · callee return slot (rsp − 72) · 8 untouche
 input every premise holds and the decoder returns nil. The receiver is a Go value of `v1alpha1.SyncAggregatorSelectionData` (all zero).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.SyncAggregatorSelectionData.Code
+open Machine Runtime Machine.Witness Codec Prysm.SyncAggregatorSelectionData.Code
 
 namespace Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeAccept
 

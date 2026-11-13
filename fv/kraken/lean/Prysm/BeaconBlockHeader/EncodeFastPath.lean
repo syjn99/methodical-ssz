@@ -19,7 +19,7 @@ frame is not touched on this path (in `R`); `memmove` return slot rsp − 168 an
 The stack guard is the large-frame form (`lea -0x20(%rsp),%r12`): premise `guard + 32 < rsp`.
 -/
 
-open Machine Runtime TestTarget Prysm.BeaconBlockHeader.Code
+open Machine Runtime Prysm.BeaconBlockHeader.Code
 variable [Host]
 
 open Codec

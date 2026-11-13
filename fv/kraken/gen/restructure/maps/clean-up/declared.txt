@@ -1,0 +1,11 @@
+# Names of the old tree (declarations and namespaces, not renamed by this step) whose last component is a
+# component of a renamed name: rename.py resolves short references against them. From a Lean dump.
+Codec
+Codec.Segment
+Lean.Data
+Lean.Doc.Data
+Lean.Expr.Data
+Lean.Level.Data
+Lean.SCC.Data
+Runtime
+TestTarget.Data

@@ -19,7 +19,7 @@ word and root, every premise holds and the decoder returns nil with the
 receiver's `Epoch` = the 8 input bytes.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code
+open Machine Runtime Machine.Witness Prysm.Checkpoint.Code
 
 namespace Prysm.Checkpoint.Witness.DecodeAccept
 

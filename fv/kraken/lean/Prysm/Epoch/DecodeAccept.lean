@@ -23,7 +23,7 @@ The rest of the frame (rsp − 0x50 … rsp − 9) and the other spill slots are
 touched on this path; they stay in the frame `R`.
 -/
 
-open Machine TestTarget Prysm.Epoch.Code
+open Machine Prysm.Epoch.Code
 variable [Host]
 
 namespace Prysm.Epoch

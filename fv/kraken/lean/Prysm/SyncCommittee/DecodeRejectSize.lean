@@ -9,11 +9,11 @@ import Prysm.SyncCommittee.Statements
 
 Directives 2–7 (guard, prologue `sub $0x30`, rbx spill), 9–10 `cmp $0x6030,%rcx; jne L_7d` taken,
 `L_7d` (30), the two loads of `ssz.ErrSize` (31–32), epilogue 33–35 (`add $0x30`).
-Proof text: `Prysm.Deposit_Data.Decode.reject_size` (`DdReject.lean`) with this decoder's directive indices
+Proof text: `Prysm.Deposit_Data.Decode.reject_size` (`Prysm/Deposit_Data/DecodeRejectSize.lean`) with this decoder's directive indices
 and frame size. The statement is the frozen `Decode.reject_size_statement`.
 -/
 
-open Machine Runtime TestTarget Prysm.SyncCommittee.Code
+open Machine Runtime Prysm.SyncCommittee.Code
 variable [Host]
 
 namespace Prysm.SyncCommittee

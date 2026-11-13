@@ -2,14 +2,13 @@ import Kraken.X64.WP
 import Kraken.X64.Sep
 import Kraken.Tactics
 import Kraken.SeparationTactics
-import TestTarget.Code
+import Kraken.X64.Parser
+import Machine.Include
 import Std.Tactic.BVDecide
 
 /-! Our glue on top of Kraken main (6064eec): one-directive steps inside a `Host`. -/
 
-open TestTarget.Code
 
-open TestTarget
 namespace Machine
 
 /-- Kraken computes `disp(%reg)` as `BitVec.ofInt 64 (reg.toInt + disp)`. -/

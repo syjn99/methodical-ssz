@@ -16,7 +16,7 @@ import Runtime.CopyModel
   of `serialize desc g.toValue`.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Prysm.Checkpoint.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.Checkpoint

@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `Decode.accept` (SyncCommitteeMessage decoder accept path; hold-out, class C)
 
-Hand-written (the text of `WitBhA.lean` with the SyncCommitteeMessage host and
+Hand-written (the text of `Prysm/BeaconBlockHeader/WitnessDecodeAccept.lean` with the SyncCommitteeMessage host and
 layout). It shows that the premises of the independent hand statement `Prysm.SyncCommitteeMessage.Decode.accept_statement` are
 satisfiable. Host: data labels, the real Go 1.26.10 `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ` (index 9),
 `(*primitives.Slot).UnmarshalSSZ` (188), `(*primitives.ValidatorIndex).UnmarshalSSZ` (251), the 1-byte bump
@@ -21,7 +21,7 @@ the untouched receiver tail (32 bytes), the untouched frame bytes rsp − 80 …
 decoder returns nil. The receiver is a Go value of `v1alpha1.SyncCommitteeMessage`.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.AttestationData.Code Codec Prysm.SyncCommitteeMessage.Code
+open Machine Runtime Machine.Witness Prysm.AttestationData.Code Codec Prysm.SyncCommitteeMessage.Code
 
 namespace Prysm.SyncCommitteeMessage.Witness.DecodeAccept
 

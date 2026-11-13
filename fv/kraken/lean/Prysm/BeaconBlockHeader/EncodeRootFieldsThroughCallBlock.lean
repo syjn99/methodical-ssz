@@ -11,7 +11,7 @@ the text of the hand proof (they differ per site); the call, the return and the 
 application of the block `enc32_call`. Fast path only.
 -/
 
-open Machine Runtime TestTarget Prysm.BeaconBlockHeader.Code
+open Machine Runtime Prysm.BeaconBlockHeader.Code
 variable [Host]
 
 open Codec
@@ -99,7 +99,7 @@ theorem Encode.enc_b_via_block (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog 
   kat hk marshalSSZTo 86
   kat hk marshalSSZTo 87
   kat hk marshalSSZTo 88
-  rw [Prysm.Checkpoint.Encode.fast_path_mul]
+  rw [Codec.add_mul_one]
   refine eventually_trans _ _ _ _ (enc32_call (k + 89) (Encode.call_at k hk).1 (rsp.toBitVec - 8#64 - 152) (dst + v) p1
     (rsp.toBitVec - 168) (rsp.toBitVec - 168 - BitVec.ofNat 64 S) S (Encode.slot _)
     (congrArg (· - BitVec.ofNat 64 S) (Encode.slot _)) r1 e1 rslot scratch hr1 he1 hrs hsc _ _

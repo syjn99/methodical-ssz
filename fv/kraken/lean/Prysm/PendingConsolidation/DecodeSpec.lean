@@ -5,8 +5,8 @@ import Prysm.PendingConsolidation.Spec
 /-!
 # Spec alignment of the real PendingConsolidation decoder (hold-out, class D)
 
-Hand-written: the text of `DdSpecK.lean` / `PwSpecK.lean`, with the statement
-`Decode.accept_statement` (`H5Stmt.lean`) and the input chunks of `g`.
+Hand-written: the text of `Prysm/Deposit_Data/DecodeSpec.lean` / `Prysm/PendingPartialWithdrawal/DecodeSpec.lean`, with the statement
+`Decode.accept_statement` (`Prysm/SyncCommitteeMessage/Statements.lean`) and the input chunks of `g`.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
 - `Decode.reject_size_spec`: `bs.size ≠ 16` → EthLib rejects, and the machine code returns `ssz.ErrSize`.
@@ -14,7 +14,7 @@ Hand-written: the text of `DdSpecK.lean` / `PwSpecK.lean`, with the statement
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 16`.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.PendingConsolidation.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Prysm.AttestationData.Code Prysm.PendingConsolidation.Code Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.PendingConsolidation

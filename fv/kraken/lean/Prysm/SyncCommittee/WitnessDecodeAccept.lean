@@ -20,7 +20,7 @@ rsp + 24. The frame `R` is the receiver's last 32 bytes and that word. For every
 every old pointer word every premise holds and the decoder returns nil.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.SyncCommittee.Code
+open Machine Runtime Machine.Witness Prysm.SyncCommittee.Code
 
 namespace Prysm.SyncCommittee.Witness.DecodeAccept
 

@@ -2,7 +2,6 @@ import Machine.Bytes
 
 /-! Splitting a byte block around an 8-byte element (for loops over arrays). -/
 
-open TestTarget
 namespace Machine
 open Std
 

@@ -20,7 +20,7 @@ return-slot address `aRa` (`aFp + 8 = aRa`). The initialised error words are a p
 `Prysm.Checkpoint.Encode.reject_length`). No runtime contract is used.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

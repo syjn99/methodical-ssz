@@ -14,7 +14,7 @@ Size reject: 9–10 `cmp $0x24,%rcx; jb L_2f9` taken, 174–179; offset reject: 
 `cmp $0x24,%rdx; jne L_2e2` taken, 168–173.
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

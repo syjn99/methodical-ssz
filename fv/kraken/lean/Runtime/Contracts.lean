@@ -1,5 +1,5 @@
 import Machine.Step
-import TestTarget.Data
+import Runtime.StaticUint64s
 
 /-!
 # Contracts of Go runtime functions (Kraken hypotheses)
@@ -8,7 +8,7 @@ A contract is a hypothesis about the code at a runtime label in the `Host`
 program.
 -/
 
-open Machine TestTarget
+open Machine
 namespace Runtime
 
 /-- Go's `maxAlloc` on linux/amd64: `1 << heapAddrBits`, heapAddrBits = 48
@@ -65,9 +65,9 @@ def MemmoveC (S : Nat) : Prop :=
 
 /-- The 8-byte entry `v` of Go's read-only `runtime.staticuint64s` table, for
 v < 256; nothing otherwise. The bytes are the included ELF table
-(`TestTarget.Data.staticuint64s`); `staticBox_of_lt` shows that the entry holds v. -/
+(`Runtime.Data.staticuint64s`); `staticBox_of_lt` shows that the entry holds v. -/
 def StaticBox (v : BitVec 64) : DataMem → Prop :=
-  if v.toNat < 256 then Eq (((Data.staticuint64s.drop (8 * v.toNat)).take 8).At (Data.staticuint64s_addr + 8 * v))
+  if v.toNat < 256 then Eq (((Runtime.Data.staticuint64s.drop (8 * v.toNat)).take 8).At (Runtime.Data.staticuint64s_addr + 8 * v))
   else Eq (([] : List UInt8).At 0)
 
 omit [Host] in
@@ -97,20 +97,20 @@ theorem flatMap_range_chunk {α : Type} (f : Nat → List α) (k : Nat) (hf : �
 omit [Host] in
 /-- The table entry v (v < 256) is the 8-byte value v. -/
 theorem staticuint64s_entry (v : BitVec 64) (h : v.toNat < 256) :
-    (Data.staticuint64s.drop (8 * v.toNat)).take 8 = Int.toBytes 8 v.toInt := by
-  rw [Data.staticuint64s_table, flatMap_range_chunk _ 8 (fun _ => Int.toBytes_length _ _) 256 _ h]
+    (Runtime.Data.staticuint64s.drop (8 * v.toNat)).take 8 = Int.toBytes 8 v.toInt := by
+  rw [Runtime.Data.staticuint64s_table, flatMap_range_chunk _ 8 (fun _ => Int.toBytes_length _ _) 256 _ h]
   congr 1
   rw [BitVec.toInt_eq_toNat_of_lt (by omega)]
 
 theorem staticBox_of_lt {v : BitVec 64} (h : v.toNat < 256) :
-    StaticBox v = Eq ((Int.toBytes 8 v.toInt).At (Data.staticuint64s_addr + 8 * v)) := by
+    StaticBox v = Eq ((Int.toBytes 8 v.toInt).At (Runtime.Data.staticuint64s_addr + 8 * v)) := by
   rw [StaticBox, if_pos h, staticuint64s_entry v h]
 
 /-- Where `convT64`'s box `bx` of the value `v` is: in the static table (`hb = []`,
 v < 256, bx = staticuint64s + 8v; the bytes are in `StaticBox v`) or in 8 heap
 bytes `hb = v` at bx. -/
 def BoxIn (bx v : BitVec 64) (hb : List UInt8) : Prop :=
-  (hb = [] ∧ v.toNat < 256 ∧ bx = Data.staticuint64s_addr + 8 * v) ∨ hb = Int.toBytes 8 v.toInt
+  (hb = [] ∧ v.toNat < 256 ∧ bx = Runtime.Data.staticuint64s_addr + 8 * v) ∨ hb = Int.toBytes 8 v.toInt
 
 /-- `runtime.convT64(v uint64) unsafe.Pointer` (rax = v; Go 1.26.3
 runtime/iface.go): returns a pointer to a box of v. For v < 256 Go returns

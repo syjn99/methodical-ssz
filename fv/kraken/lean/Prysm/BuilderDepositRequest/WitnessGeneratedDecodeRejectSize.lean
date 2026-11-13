@@ -14,7 +14,7 @@ slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill s
 (instances 183, 185, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.BuilderDepositRequest.Code
+open Machine Runtime Machine.Witness Prysm.BuilderDepositRequest.Code
 
 open Codec
 namespace Prysm.BuilderDepositRequest.Witness.GeneratedDecodeRejectSize

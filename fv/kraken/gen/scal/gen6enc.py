@@ -687,7 +687,7 @@ class Gen6:
                 if j is None or self.slots[j][2][0] != "x15" or self.slots[j][2][2] != "full":
                     raise G6Refuse(f"8-byte store at {off} into an unknown chunk")
                 z = self.slots[j][2]
-                E(f"rw [lr_split16 _ (Int.toBytes_length 16 _) {stk(off)}, "
+                E(f"rw [Machine.at_split16 _ (Int.toBytes_length 16 _) {stk(off)}, "
                   f"show {stk(off)} + 8 = {stk(off + 8)} by bv_omega] at {self.H}")
                 self.slots[j:j + 1] = [(off, 8, ("x15", z[1], "lo8", z[3])), (off + 8, 8, ("x15", z[1], "hi8", z[3]))]
             old = self.getslot(off, 8)

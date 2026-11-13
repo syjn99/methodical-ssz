@@ -17,7 +17,7 @@ receiver offsets changed; the middle is a second copy of the head steps; there i
 Statement: the frozen `Prysm.HistoricalBatch.Decode.accept_statement`.
 -/
 
-open Machine Runtime TestTarget Prysm.HistoricalBatch.Code
+open Machine Runtime Prysm.HistoricalBatch.Code
 variable [Host]
 
 namespace Prysm.HistoricalBatch

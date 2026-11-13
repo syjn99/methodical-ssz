@@ -30,7 +30,7 @@ rsp − 112; their saved rbp at rsp − 120 and their rbx spill at rsp − 96 (t
 0x8(%rsp) of this function).
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.BeaconBlockHeader.Code Codec
+open Machine Runtime Prysm.AttestationData.Code Prysm.BeaconBlockHeader.Code Codec
 variable [Host]
 
 namespace Prysm.BeaconBlockHeader

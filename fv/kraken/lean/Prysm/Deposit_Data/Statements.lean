@@ -6,6 +6,7 @@ import Prysm.ElfData.CheckpointAndEpoch
 import Prysm.Checkpoint.Code
 import Prysm.BeaconBlockHeader.Code
 import Prysm.Deposit_Data.Code
+import Prysm.PendingPartialWithdrawal.Statements
 
 /-!
 # Independent hand STATEMENTS of the two accept theorems (hold-out; statements only, no proof)
@@ -13,7 +14,7 @@ import Prysm.Deposit_Data.Code
 Hand-written BEFORE the proof generator (`gen/scal/scalgen.py`) was run on
 either type and before any generator output for them was read.
 Sources: the Go receiver layout (IR `go_fields` in `prysm/ir/ir-mainnet.json`), the SSZ layout
-(consensus-specs; `DdDesc.lean`, `PwDesc.lean`), the frame facts of the two `.S` files
+(consensus-specs; `Prysm/Deposit_Data/SpecDescription.lean`, `Prysm/PendingPartialWithdrawal/SpecDescription.lean`), the frame facts of the two `.S` files
 (`prysm/go1.26.10/e2e/h4/link/norm`), and the statement shape of the earlier hand accept theorems
 `Prysm.BlobIdentifier.Decode.accept`, `Prysm.DepositMessage.Decode.accept`, `Prysm.Eth1Data.Decode.accept` and
 (for the callee form) `Prysm.BeaconBlockHeader.Decode.accept`. These abbrevs are the targets of the
@@ -53,9 +54,10 @@ Frame (`.S`): `sub $0x48`; spills `0x58(%rsp)` = entry rsp + 8 (rax), `0x60(%rsp
 return slot at entry rsp − 88, save rbp at entry rsp − 96 (`lo`) and spill their rbx to entry rsp − 72 (`sp1`).
 The callees check the stack guard at entry rsp − 88, hence `guard + 88 < rsp`. The Epoch call is directive
 59, so the return slot holds directive 60 at the end. Error-path frame slots are untouched on this path (in `R`).
+After the split of this module, the declarations of the other types are in `Prysm/PendingPartialWithdrawal/Statements.lean`.
 -/
 
-open Machine Runtime TestTarget Prysm.Deposit_Data.Code
+open Machine Runtime Prysm.Deposit_Data.Code
 variable [Host]
 
 namespace Prysm.Deposit_Data
@@ -123,51 +125,6 @@ abbrev Decode.accept_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 96).At (s.regs.rax.toBitVec + 72)) ⋆ Eq ((Int.toBytes 8 96).At (s.regs.rax.toBitVec + 80))
           ⋆ Eq (pk.At p1) ⋆ Eq (wc.At p2) ⋆ Eq (sig.At p3)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
-      ⟨s, Host.addrOf k⟩
-
-/-- Hand statement of the accept path of `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`: on a 24-byte
-input it returns nil and the receiver holds Index = buf[0:8], Amount = buf[8:16], WithdrawableEpoch =
-buf[16:24]; input, `state`, the spills, the caller's frame `R` and the stack guard are unchanged. The two
-delegated fields go through the callees' code (`Prysm.ValidatorIndex.Code.unmarshalSSZ`, `EpUnmarshal` placed in the host). -/
-abbrev _root_.Prysm.PendingPartialWithdrawal.Decode.accept_statement : Prop :=
-  ∀ (k : Nat) (hk : Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ k)
-    (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
-    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
-    (in0 in1 in2 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8) (hin2 : in2.length = 8)
-    (s : MachineData) (ra guard : UInt64)
-    (fp s1 s2 s4 sp1 rslot lo ast a8 a16 a24 : List UInt8)
-    (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (h4 : s4.length = 8)
-    (hsp1 : sp1.length = 8) (hrs : rslot.length = 8) (hlo : lo.length = 8)
-    (hast : ast.length = 8) (ha8 : a8.length = 8) (ha16 : a16.length = 8) (ha24 : a24.length = 8)
-    (R : DataMem → Prop)
-    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
-      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s1.At (s.regs.rsp.toBitVec + 8))
-      ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16)) ⋆ Eq (s4.At (s.regs.rsp.toBitVec + 32))
-      ⋆ Eq (sp1.At (s.regs.rsp.toBitVec - 72))
-      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (lo.At (s.regs.rsp.toBitVec - 96))
-      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq (in0.At s.regs.rbx.toBitVec) ⋆ Eq (in1.At (s.regs.rbx.toBitVec + 8))
-      ⋆ Eq (in2.At (s.regs.rbx.toBitVec + 16))
-      ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (a8.At (s.regs.rax.toBitVec + 8))
-      ⋆ Eq (a16.At (s.regs.rax.toBitVec + 16)) ⋆ Eq (a24.At (s.regs.rax.toBitVec + 24)) ⋆ R)
-    (hguard : guard.toNat + 88 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 24),
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
-        ∃ (sp1' lo' : List UInt8), sp1'.length = 8 ∧ lo'.length = 8 ∧
-        (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
-          ⋆ Eq ((Int.toBytes 8 s.regs.rax.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8))
-          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 s.regs.rdi.toBitVec.toInt).At (s.regs.rsp.toBitVec + 32))
-          ⋆ Eq (sp1'.At (s.regs.rsp.toBitVec - 72))
-          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 60)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 88))
-          ⋆ Eq (lo'.At (s.regs.rsp.toBitVec - 96))
-          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq (in0.At s.regs.rbx.toBitVec) ⋆ Eq (in1.At (s.regs.rbx.toBitVec + 8))
-          ⋆ Eq (in2.At (s.regs.rbx.toBitVec + 16))
-          ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))
-          ⋆ Eq (in1.At (s.regs.rax.toBitVec + 16)) ⋆ Eq (in2.At (s.regs.rax.toBitVec + 24)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
 end Prysm.Deposit_Data

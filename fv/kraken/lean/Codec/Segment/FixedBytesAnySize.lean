@@ -11,7 +11,7 @@ the makeslice and memmove count (`mov $n,%ecx`, a 32-bit immediate: needs `n < 2
 stored length/capacity word (`movq $n`, the 64-bit sign-extended immediate).
 -/
 
-open Machine Runtime TestTarget Codec
+open Machine Runtime Codec
 
 namespace Codec.Segment
 
@@ -212,7 +212,7 @@ theorem bytesdec_seg_g (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB dS 
   exact ⟨rfl, rfl, rfl, rfl, rax3.toBitVec, spm3, stk4, hspm3, hstk4, rfl, by ecancel⟩
 
 /-- **Fixed-bytes decode segment, offset-0 form, any size `n < 2^31`**: the statement of
-`Codec.bytesdec_seg_z` with `hn : n < 2^31`. Proof text: SegN's `bytesdec_z` macro with the literal-size
+`Codec.bytesdec_seg_z` with `hn : n < 2^31`. Proof text: `Codec/FixedBytesDecode.lean`'s `bytesdec_z` macro with the literal-size
 steps replaced (see the file header). -/
 theorem bytesdec_seg_z_g (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat)
     (hA : (bytesDecHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)

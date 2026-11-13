@@ -1,6 +1,7 @@
 import TestTarget.ListU64DecodeAccept
 import Spec.TestListU64
 import Spec.DeserializeOfSerialize
+import TestTarget.Code
 
 /-!
 # ListU64.UnmarshalSSZ accept path against EthLib

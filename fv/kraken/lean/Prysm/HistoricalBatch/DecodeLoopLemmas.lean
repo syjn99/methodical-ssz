@@ -11,7 +11,7 @@ New here: the SyncCommittee lemmas whose statements fix 48-byte blocks and 512 e
 Proof text: `Prysm.SyncCommittee.DecodeLoopLemmas` with the two constants changed.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Prysm.HistoricalBatch
 

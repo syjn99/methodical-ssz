@@ -30,7 +30,7 @@ caller's array (`blk = dst`, written before the root length test); `cap < len + 
 epoch bytes are in the new block `nb` from growslice only.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Prysm.Checkpoint.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.Checkpoint

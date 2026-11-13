@@ -5,8 +5,8 @@ Usage (one gated job, Lean env, cwd anywhere):
   lvnegative.py <cases.json> <work-dir> <result.json> [<case-id>...]
 It imports `negative.py` and uses its `cut`, `classify`, `precheck` and `main` unchanged. Two functions differ:
 * run_case: the list/vector main theorems state `theorem X : <frozen stmt def>`, and the stmt defs live in another module
-  (`StmtSa.lean`, `StmtSc.lean`). A case may name "stmt_module" (path under fv/kraken/lean), or "inline", a list of
-  such modules in dependency order (for example `Desc.lean` then `Defs.lean` for a Desc mutant). The mutant file then
+  (`Prysm/SyncAggregate/Statements.lean`, `Prysm/SyncCommittee/Statements.lean`). A case may name "stmt_module" (path under fv/kraken/lean), or "inline", a list of
+  such modules in dependency order (for example `Prysm/SyncAggregate/SpecDescription.lean` then `Defs.lean` for a Desc mutant). The mutant file then
   inlines those modules' bodies (their imports are replaced by their own imports), so that the code rename
   `<code_def>` → `<code_def>Mut` also reaches the statement. A "stmt" case names "stmt_def" and mutates the text
   of that def (old → new, unique inside the def). "norm" is the .S path under fv/kraken; "code_ns" the namespace

@@ -22,9 +22,10 @@ skips 195–221, "Target: %w"). `Prysm.Slot.Decode.accept_function_spec`, `Prysm
 that `Decode.accept` makes with `len(buf) = 128` (rcx = 8, 8, 40, 40); that theorem
 passes through exactly these steps, so the wraps are absent from every execution with a
 128-byte input.
+After the split of this module, the four unreachable error wraps are in `Prysm/AttestationData/DecodeErrorWrapsUnreachable.lean`.
 -/
 
-open Machine TestTarget Prysm.AttestationData.Code
+open Machine Prysm.AttestationData.Code
 variable [Host]
 
 namespace Prysm.AttestationData
@@ -121,85 +122,5 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
          UInt64.toBitVec_ofNat, Width.bits]
        omega)
 
-
-set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
-/-- **`unreachable_mc`: the `fmt.errorf("Slot: %w")` path** (directives 20–46). -/
-theorem Decode.slot_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
-    (hf : LabelsFresh unmarshalSSZ k) (s : MachineData) (h0 : s.regs.rax = 0) :
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + 47) ∧ st.data.regs = s.regs ∧ st.data.dmem = s.dmem)
-      ⟨s, Host.addrOf (k + 18)⟩ := by
-  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
-  simp only at h0 ⊢
-  subst h0
-  kat hk unmarshalSSZ 18
-  intro _
-  kat hk unmarshalSSZ 19
-  split
-  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
-  simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 47
-  exact Eventually.done _ ⟨rfl, rfl, rfl⟩
-
-set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
-/-- **`unreachable_mc`: the `fmt.errorf("CommitteeIndex: %w")` path** (directives 58–84). -/
-theorem Decode.committee_index_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
-    (hf : LabelsFresh unmarshalSSZ k) (s : MachineData) (h0 : s.regs.rax = 0) :
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + 85) ∧ st.data.regs = s.regs ∧ st.data.dmem = s.dmem)
-      ⟨s, Host.addrOf (k + 56)⟩ := by
-  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
-  simp only at h0 ⊢
-  subst h0
-  kat hk unmarshalSSZ 56
-  intro _
-  kat hk unmarshalSSZ 57
-  split
-  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
-  simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 85
-  exact Eventually.done _ ⟨rfl, rfl, rfl⟩
-
-set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
-/-- **`unreachable_mc`: the `fmt.errorf("Source: %w")` path** (directives 145–171). -/
-theorem Decode.source_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
-    (hf : LabelsFresh unmarshalSSZ k) (s : MachineData) (h0 : s.regs.rax = 0) :
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + 172) ∧ st.data.regs = s.regs ∧ st.data.dmem = s.dmem)
-      ⟨s, Host.addrOf (k + 143)⟩ := by
-  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
-  simp only at h0 ⊢
-  subst h0
-  kat hk unmarshalSSZ 143
-  intro _
-  kat hk unmarshalSSZ 144
-  split
-  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
-  simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 172
-  exact Eventually.done _ ⟨rfl, rfl, rfl⟩
-
-set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
-/-- **`unreachable_mc`: the `fmt.errorf("Target: %w")` path** (directives 195–221). -/
-theorem Decode.target_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
-    (hf : LabelsFresh unmarshalSSZ k) (s : MachineData) (h0 : s.regs.rax = 0) :
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + 222) ∧ st.data.regs = s.regs ∧ st.data.dmem = s.dmem)
-      ⟨s, Host.addrOf (k + 193)⟩ := by
-  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
-  simp only at h0 ⊢
-  subst h0
-  kat hk unmarshalSSZ 193
-  intro _
-  kat hk unmarshalSSZ 194
-  split
-  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
-  simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 222
-  exact Eventually.done _ ⟨rfl, rfl, rfl⟩
 
 end Prysm.AttestationData

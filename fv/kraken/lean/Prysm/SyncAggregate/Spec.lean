@@ -7,13 +7,13 @@ import Prysm.SyncCommittee.SpecDefinitions
 /-!
 # Spec bridge for the real Prysm `v1alpha1.SyncAggregate`
 
-The text of `E2eScal`'s `DdSpec.lean` with the two SyncAggregate fields. The Bitvector[512] field uses two EthLib
+The text of `Prysm/Deposit_Data/Spec.lean` with the two SyncAggregate fields. The Bitvector[512] field uses two EthLib
 theorems: `unpackBits_packBits` (bits → bytes → bits) and `packBits_unpackBits` (bytes → bits → bytes; the
 padding premise is empty because 512 = 8 · 64).
 -/
 
 namespace Prysm.SyncAggregate
-open EthLib.Serialization.Ssz Spec TestTarget
+open EthLib.Serialization.Ssz Spec
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem desc_fixedSize : desc.fixedSize = some 160 := by rfl

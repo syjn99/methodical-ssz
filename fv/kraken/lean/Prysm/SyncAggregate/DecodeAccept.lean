@@ -6,7 +6,7 @@ import Prysm.SyncAggregate.Statements
 /-!
 # `(*v1alpha1.SyncAggregate).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
-Hand composition with the text of `Prysm.Deposit_Data.Decode.accept` (`DdAccept.lean`):
+Hand composition with the text of `Prysm.Deposit_Data.Decode.accept` (`Prysm/Deposit_Data/DecodeAccept.lean`):
 
 * head 0–12: `Codec.dechead_seg` (size 160);
 * SyncCommitteeBits 13–36: `Prysm.SyncAggregate.bytesdec_seg_z64` (64 bytes, offset 0); pointer tail 37–38, 45–46 (rdi);
@@ -18,7 +18,7 @@ The write-barrier blocks (22–25, 39–44, 57–60, 75–80) are skipped under 
 (inside the segment lemmas). Statement: the frozen `Prysm.SyncAggregate.Decode.accept_statement`.
 -/
 
-open Machine Runtime TestTarget Prysm.SyncAggregate.Code
+open Machine Runtime Prysm.SyncAggregate.Code
 variable [Host]
 
 namespace Prysm.SyncAggregate

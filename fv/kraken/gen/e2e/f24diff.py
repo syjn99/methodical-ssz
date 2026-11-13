@@ -18,7 +18,7 @@ import json
 import struct
 import sys
 
-# Go type -> [(Go field name, 'u' | 'b', size)] in SSZ order (F24Desc.lean; Go names from the IR go_fields)
+# Go type -> [(Go field name, 'u' | 'b', size)] in SSZ order (`Prysm/DepositRequest/SpecDescription.lean`; Go names from the IR go_fields)
 TYPES = {
     "DepositRequest": [("Pubkey", "b", 48), ("WithdrawalCredentials", "b", 32), ("Amount", "u", 8),
                        ("Signature", "b", 96), ("Index", "u", 8)],

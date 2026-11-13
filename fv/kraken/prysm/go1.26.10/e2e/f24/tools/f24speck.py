@@ -75,7 +75,7 @@ edited):
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = {N}`.
 -/
 
-open Machine Runtime TestTarget Codec Prysm.{GO_TYPE[X]}.Code EthLib.Serialization.Ssz
+open Machine Runtime Codec Prysm.{GO_TYPE[X]}.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.F24

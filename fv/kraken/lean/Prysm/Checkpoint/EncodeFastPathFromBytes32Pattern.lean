@@ -14,7 +14,7 @@ they are not part of the 32-byte field pattern). `Encode.fast_path_from_bytes32_
 same proposition.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code
+open Machine Runtime Prysm.Checkpoint.Code
 variable [Host]
 
 open Codec
@@ -120,17 +120,17 @@ theorem Encode.fast_path_from_bytes32_pattern (k : Nat) (hk : marshalSSZTo.IsInf
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 8#64 - 104 + 48 = rsp.toBitVec - 64 by bv_omega]
-  apply store_avx_step _ _ _ _ t40 _ _ (by ecancel) (by exact ht40) (by decide)
+  apply Machine.store_avx_step _ _ _ _ t40 _ _ (by ecancel) (by exact ht40) (by decide)
   intro m3 H3
   kunfold
   kat hk marshalSSZTo 15
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 64 + 16 = rsp.toBitVec - 48 by bv_omega]
-  apply store_avx_step _ _ _ _ t30 _ _ (by ecancel) (by exact ht30) (by decide)
+  apply Machine.store_avx_step _ _ _ _ t30 _ _ (by ecancel) (by exact ht30) (by decide)
   intro m4 H4
   kunfold
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 64),
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 64),
     show rsp.toBitVec - 64 + 8 = rsp.toBitVec - 56 by bv_omega] at H4
   kat hk marshalSSZTo 16
   apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
@@ -150,7 +150,7 @@ theorem Encode.fast_path_from_bytes32_pattern (k : Nat) (hk : marshalSSZTo.IsInf
   apply load_step_at _ _ (rsp.toBitVec - 64) _ _ e8 _ _ (by eaddr) (by ecancel) (by exact he8)
   kunfold
   kat hk marshalSSZTo 35
-  rw [Prysm.Checkpoint.Encode.fast_path_mul]
+  rw [Codec.add_mul_one]
   apply store_step _ _ _ _ _ d0 _ _ (by ecancel) (by exact hd0)
   intro m6 H6
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6

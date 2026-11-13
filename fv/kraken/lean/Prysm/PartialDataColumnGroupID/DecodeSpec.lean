@@ -17,7 +17,7 @@ edited):
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 40`.
 -/
 
-open Machine Runtime TestTarget Codec Prysm.PartialDataColumnGroupID.Code EthLib.Serialization.Ssz
+open Machine Runtime Codec Prysm.PartialDataColumnGroupID.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.PartialDataColumnGroupID

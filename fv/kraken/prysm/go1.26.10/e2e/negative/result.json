@@ -1057,7 +1057,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 0.9,
-   "diff": "--- orig\n+++ mut\n@@ -1 +1 @@\n-theorem reject_static_addr : ElfData.CheckpointAndEpoch.e2eStaticuint64s_addr = TestTarget.Data.staticuint64s_addr := rfl+theorem reject_static_addr : ElfData.CheckpointAndEpoch.e2eStaticuint64s_addr = TestTarget.Data.staticuint64s_addr + 8 := rfl",
+   "diff": "--- orig\n+++ mut\n@@ -1 +1 @@\n-theorem reject_static_addr : ElfData.CheckpointAndEpoch.e2eStaticuint64s_addr = Runtime.Data.staticuint64s_addr := rfl+theorem reject_static_addr : ElfData.CheckpointAndEpoch.e2eStaticuint64s_addr = Runtime.Data.staticuint64s_addr + 8 := rfl",
    "class": "inside",
    "pass": true,
    "later_resource_error": null

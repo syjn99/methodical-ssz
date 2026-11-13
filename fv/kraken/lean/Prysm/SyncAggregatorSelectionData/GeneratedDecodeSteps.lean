@@ -12,7 +12,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "Slot", "theorems": ["Decode.generated_step_s14", "Decode.generated_step_s15", "Decode.generated_step_Slot_call"]}, {"field": "SubcommitteeIndex", "theorems": ["Decode.generated_step_s48", "Decode.generated_step_s49", "Decode.generated_step_s50", "Decode.generated_step_s51"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.SyncAggregatorSelectionData.Code
+open Machine Runtime Prysm.SyncAggregatorSelectionData.Code
 variable [Host]
 
 open Codec

@@ -13,7 +13,7 @@ with `nextSliceCap (len + 40) C ≤ C2`. The old block is unchanged (it keeps `p
 new block is `pre ++ epoch ++ root ++ rest`.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code
+open Machine Runtime Prysm.Checkpoint.Code
 variable [Host]
 
 namespace Prysm.Checkpoint
@@ -101,7 +101,7 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   apply load_step_at _ _ (rsp0.toBitVec - 64) _ _ e8 _ _ (by eaddr) (by ecancel) (by exact he8)
   kunfold
   kat hk marshalSSZTo 35
-  rw [Encode.fast_path_mul]
+  rw [Codec.add_mul_one]
   apply store_step _ _ _ _ _ d0 _ _ (by ecancel) (by exact hd0)
   intro m6 H6
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6
@@ -142,11 +142,11 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   kat hk marshalSSZTo 47
   kat hk marshalSSZTo 48
   kat hk marshalSSZTo 49
-  apply store_step_at _ _ (rsp0.toBitVec - 120) _ _ _ rslot _ _ (Encode.tail_call _) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (rsp0.toBitVec - 120) _ _ _ rslot _ _ (Encode.grow_first_site_slot2 _) (by ecancel) (by exact hrs)
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
   kunfold
-  rw [Encode.tail_call] at *
+  rw [Encode.grow_first_site_slot2] at *
   refine eventually_trans _ _ _ _ (hgs _ (Host.addrOf (k + 49 + 1)) (pre ++ e8) scratch spl avail _ (by decide) rfl
     ?gnum ?gold ?gcap ?gbud hmax ?glen hsc hspl
     (by dsimp only; rw [show rsp0.toBitVec - 120 + 8 = rsp0.toBitVec - 112 by bv_omega,
@@ -168,7 +168,7 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   simp only [List.length_append, hpre, he8, Nat.one_mul] at htail hav1
   have htl : 32 ≤ tail.length := by omega
   have ht32 : (tail.take 32).length = 32 := by simp only [List.length_take]; omega
-  rw [Encode.tail_ret] at hrsp1
+  rw [Encode.fast_path_ret] at hrsp1
   subst rsp1 r141 rbp1 rbx1
   rw [Encode.tail_grow_split2 rax1.toBitVec L pre e8 tail hpre he8 htl (by omega),
     Encode.tail_grow_join rbx.toBitVec L pre e8 hpre he8 (by omega),
@@ -210,7 +210,7 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   intro m13 H13
   simp only [Width.bytes, Width.bits] at H13
   kunfold
-  try rw [Encode.tail_call] at *
+  try rw [Encode.grow_first_site_slot2] at *
   rw [Encode.fast_path_dst] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 62 + 1)) root (tail.take 32) stk1 _
     (by rw [hroot]; rfl) (by rw [hroot, ht32]) hstk1 (by dsimp only; ecancel)) ?_
@@ -220,7 +220,7 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
     zmms2, flags2, mem2⟩ := e1
   simp only at hrsp2 hr142 hrbp2 Hm2
-  rw [Encode.tail_ret] at hrsp2
+  rw [Encode.fast_path_ret] at hrsp2
   subst rsp2 r142 rbp2
   kat hk marshalSSZTo 63
   apply load_step_at _ _ (rsp0.toBitVec - 16) _ _ (Int.toBytes 8 rax1.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
@@ -313,7 +313,7 @@ theorem Encode.tail_grow_call (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k
   apply load_step_at _ _ (rsp0.toBitVec - 64) _ _ e8 _ _ (by eaddr) (by ecancel) (by exact he8)
   kunfold
   kat hk marshalSSZTo 35
-  rw [Encode.fast_path_mul]
+  rw [Codec.add_mul_one]
   apply store_step _ _ _ _ _ d0 _ _ (by ecancel) (by exact hd0)
   intro m6 H6
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6
@@ -354,11 +354,11 @@ theorem Encode.tail_grow_call (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k
   kat hk marshalSSZTo 47
   kat hk marshalSSZTo 48
   kat hk marshalSSZTo 49
-  apply store_step_at _ _ (rsp0.toBitVec - 120) _ _ _ rslot _ _ (Encode.tail_call _) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (rsp0.toBitVec - 120) _ _ _ rslot _ _ (Encode.grow_first_site_slot2 _) (by ecancel) (by exact hrs)
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
   kunfold
-  rw [Encode.tail_call] at *
+  rw [Encode.grow_first_site_slot2] at *
   apply Eventually.done
   rw [show k + 49 + 1 = k + 50 from rfl] at H9
   refine ⟨rfl, rfl, rfl, rfl, rfl, ?_, rfl, ?_, rfl, by ecancel⟩

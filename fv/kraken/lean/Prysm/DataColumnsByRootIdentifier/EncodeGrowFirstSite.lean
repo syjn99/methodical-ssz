@@ -15,7 +15,7 @@ slot x − 144); 24–28 restore rdx, rdi = newCap, r8 = len + 32, rcx = len, rb
 new block (premise `hfit`: sites 2 and 3 do not grow).
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

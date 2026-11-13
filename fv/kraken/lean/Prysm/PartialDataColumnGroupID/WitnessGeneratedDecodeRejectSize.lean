@@ -14,7 +14,7 @@ slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill s
 (instances 39, 41, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.PartialDataColumnGroupID.Code
+open Machine Runtime Machine.Witness Prysm.PartialDataColumnGroupID.Code
 
 open Codec
 namespace Prysm.PartialDataColumnGroupID.Witness.GeneratedDecodeRejectSize

@@ -23,7 +23,7 @@ Proof order: `Prysm.SyncCommittee.Decode.iter`, `Prysm.SyncCommittee.Decode.exit
 The macro `laddr` and the lemmas `jge_false512`, `Prysm.SyncCommittee.elementBlocks_snoc` are imported from the SyncCommittee proof.
 -/
 
-open Machine Runtime TestTarget Prysm.HistoricalBatch.Code
+open Machine Runtime Prysm.HistoricalBatch.Code
 variable [Host]
 
 namespace Prysm.HistoricalBatch

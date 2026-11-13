@@ -9,20 +9,20 @@ import Prysm.Deposit_Data.Statements
 
 Hand-written AFTER the raw generator outputs were committed (results (S), (C)).
 Result (C) was "refused" (`--compose needs every field covered (3 of 4)`), so the accept theorem is this hand
-composition. Its statement is the independent hand statement `Prysm.Deposit_Data.Decode.accept_statement` (`H4Stmt.lean`,
-committed before the generator ran). Proof text: the composition text of `Gen2DmAccept.lean` (generated for
+composition. Its statement is the independent hand statement `Prysm.Deposit_Data.Decode.accept_statement` (`Prysm/Deposit_Data/Statements.lean`,
+committed before the generator ran). Proof text: the composition text of `Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean` (generated for
 the in-sample DepositMessage) with the Deposit_Data indices, offsets and one more field.
 
 * head 0–12: `dechead_seg` (size 184);
-* PublicKey 13–36: GENERATED `Decode.generated_field_PublicKey_seg` (raw `Gen2DdDecPartial.lean`); pointer tail 37–38, 45–46;
-* WithdrawalCredentials 47–72: HAND `bytes32dec_seg_nop` (`DdSegNop.lean`; the generator did not match the
+* PublicKey 13–36: GENERATED `Decode.generated_field_PublicKey_seg` (raw `Prysm/Deposit_Data/GeneratedDecodeFieldSegmentsPartial.lean`); pointer tail 37–38, 45–46;
+* WithdrawalCredentials 47–72: HAND `bytes32dec_seg_nop` (`Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean`; the generator did not match the
   `nop` at 50); pointer tail 73–74, 81–82;
 * Amount 83–85: GENERATED `Decode.generated_field_Amount_seg`;
 * Signature 86–110: GENERATED `Decode.generated_field_Signature_seg`; pointer tail 111–112, 119–120;
 * epilogue 121–125: `decepi_seg`.
 -/
 
-open Machine Runtime TestTarget Prysm.Deposit_Data.Code
+open Machine Runtime Prysm.Deposit_Data.Code
 variable [Host]
 
 open Codec

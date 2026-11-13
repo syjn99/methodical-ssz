@@ -5,7 +5,7 @@ import Prysm.Checkpoint.Spec
 
 Hand-written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`),
 BEFORE the Desc checker's Desc of `(v1alpha1, Deposit_Data)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).
-This file is committed before `DdSpecChecker.lean` exists.
+This file is committed before `Prysm/Deposit_Data/SpecChecker.lean` exists.
 
     class DepositData(Container):
         pubkey: BLSPubkey                   # Bytes48

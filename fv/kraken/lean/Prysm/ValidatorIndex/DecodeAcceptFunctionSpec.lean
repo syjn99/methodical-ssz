@@ -9,7 +9,7 @@ theorem `Prysm.ValidatorIndex.Decode.generated_accept` (the proof text of `Prysm
 BeaconBlockHeader decoder uses the callee only through this specification (no contract).
 -/
 
-open Machine Runtime TestTarget Prysm.ValidatorIndex.Code
+open Machine Runtime Prysm.ValidatorIndex.Code
 variable [Host]
 
 open Codec

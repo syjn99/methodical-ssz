@@ -5,7 +5,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `Decode.accept` (PendingConsolidation decoder accept path; hold-out, class D)
 
-Hand-written (the text of `WitPwA.lean` with the PendingConsolidation host and
+Hand-written (the text of `Prysm/PendingPartialWithdrawal/WitnessDecodeAccept.lean` with the PendingConsolidation host and
 layout). It shows that the premises of the independent hand statement `Prysm.PendingConsolidation.Decode.accept_statement` are
 satisfiable. Host: one label, the real Go 1.26.10 `(*v1alpha1.PendingConsolidation).UnmarshalSSZ` (index 1)
 and `(*primitives.ValidatorIndex).UnmarshalSSZ` (108).
@@ -19,7 +19,7 @@ two untouched frame ranges and the unused slot. For every 16-byte input every pr
 returns nil. The receiver is a Go value of `v1alpha1.PendingConsolidation` (all fields zero).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.PendingConsolidation.Code
+open Machine Runtime Machine.Witness Codec Prysm.PendingConsolidation.Code
 
 namespace Prysm.PendingConsolidation.Witness.DecodeAccept
 

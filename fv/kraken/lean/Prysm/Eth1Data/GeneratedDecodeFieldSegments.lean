@@ -10,7 +10,7 @@ import Codec.Kind.InlineUint64
 (sha256 `395e0529ba10332430fb7e9353144dae7fbea672396734b95e0e5a1885ba5691`) and `prysm/ir/ir-mainnet.json` (sha256 `c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a`, type `v1alpha1.Eth1Data`); GEN2 coverage (`p2dec --gen2`): 3 of 3 fields. Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Machine Runtime TestTarget Prysm.Eth1Data.Code
+open Machine Runtime Prysm.Eth1Data.Code
 variable [Host]
 
 open Codec

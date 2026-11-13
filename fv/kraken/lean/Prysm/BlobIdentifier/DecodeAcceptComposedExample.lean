@@ -14,7 +14,7 @@ the frame instance of each step (addresses relative to the entry rsp, rax, rbx) 
 (`infix_sub`, `label_at'`). Hand-written example for the generator unit; the existing theorem is unchanged.
 -/
 
-open Machine Runtime TestTarget Codec Prysm.BlobIdentifier.Code
+open Machine Runtime Codec Prysm.BlobIdentifier.Code
 variable [Host]
 
 namespace Prysm.BlobIdentifier

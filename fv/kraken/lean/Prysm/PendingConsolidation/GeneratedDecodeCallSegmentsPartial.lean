@@ -10,7 +10,7 @@ UNCOVERED-JSON: [{"field": "TargetIndex", "reason": "callee field at Go offset 0
 (sha256 `2abcd12970d381d6f9d70627cebf313eab4ec852b93aa89bfc942115f365f381`) and `prysm/ir/ir-mainnet.json` (sha256 `c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a`, type `v1alpha1.PendingConsolidation`); GEN3 coverage (`p2dec --gen3`): 1 of 2 fields. Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Machine Runtime TestTarget Prysm.PendingConsolidation.Code
+open Machine Runtime Prysm.PendingConsolidation.Code
 variable [Host]
 
 open Codec

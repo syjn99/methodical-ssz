@@ -4,12 +4,12 @@ import Codec.InlineUint64
 # GEN2 L2: statement kind of the inline uint64 decode segments
 
 `u64DecInlineSegKind C j dB src f` is the conclusion of `u64dec_inline_seg` with `j := k + j`, after the
-binders `k hk hf` (the idiom of `Kind.lean`). The scratch register is not in the kind, because it is not in
+binders `k hk hf` (the idiom of `Codec/Kind/FieldPatterns.lean`). The scratch register is not in the kind, because it is not in
 the statement. `u64DecInlineSegKind_of` proves the kind from the lemma and the code fact of an instance, so
 the kind body is kernel-checked against the lemma conclusion.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

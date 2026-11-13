@@ -11,11 +11,11 @@ offset-0 form was observed, so only this position has a parameter.
 
 * `bytesDecHeadPad n` = `bytesDecHead n` with one `nop` after directive 2 (10 directives);
   `bytesDecHeadP pad n` selects (`false` = `bytesDecHead n`).
-* `bytesdec_seg_pad` — the statement of `bytesdec_seg` (`SegN.lean`) with the head `bytesDecHeadPad`,
-  n = 32, 48, 96. Proof text = the `SegN.lean` text with the head indices ≥ 3 shifted by one and one more
-  step (produced from `SegN.lean` by a script, as `DdSegNop.lean` was by hand).
+* `bytesdec_seg_pad` — the statement of `bytesdec_seg` (`Codec/FixedBytesDecode.lean`) with the head `bytesDecHeadPad`,
+  n = 32, 48, 96. Proof text = the `Codec/FixedBytesDecode.lean` text with the head indices ≥ 3 shifted by one and one more
+  step (produced from `Codec/FixedBytesDecode.lean` by a script, as `Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean` was by hand).
 * `bytesdec_seg_p pad` — one lemma for both heads. Its statement does not depend on `pad` except in the code
-  hypothesis `hA`, so the statement kind is the existing `bytesDecSegKind` (`KindN.lean`):
+  hypothesis `hA`, so the statement kind is the existing `bytesDecSegKind` (`Codec/Kind/FixedBytesDecode.lean`):
   `bytesDecSegKind_of_p`.
 * Relations (`rfl`): `bytesDecHeadP false = bytesDecHead`, `bytesDecHeadPad 32 = Prysm.Deposit_Data.bytesDecHeadNop`, the
   declared type of `bytesdec_seg_p false` is that of `bytesdec_seg`, the declared type of
@@ -23,7 +23,7 @@ offset-0 form was observed, so only this position has a parameter.
 Contracts: `MakesliceC`, `MemmoveC` as in `bytesdec_seg`. Not done: offset-0 form with a pad (no site).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 open Codec
 namespace Codec

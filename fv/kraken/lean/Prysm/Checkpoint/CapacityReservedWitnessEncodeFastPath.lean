@@ -16,7 +16,7 @@ Instances: empty prefix with `cap = 40` (spare exactly 40), a 3-byte prefix with
 `recv`: the receiver bytes are a Go value of `v1alpha1.Checkpoint` (`Prysm.Checkpoint.goValue`).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.CapacityReserved Prysm.Checkpoint.CapacityReserved.Code
+open Machine Runtime Machine.Witness Prysm.Checkpoint.CapacityReserved Prysm.Checkpoint.CapacityReserved.Code
 
 namespace Prysm.Checkpoint.Witness.CapacityReservedEncodeFastPath
 

@@ -9,7 +9,7 @@ The text of `Prysm.SyncCommittee.DecodeSpec` with the HistoricalBatch statement.
 `Decode.accept_spec_statement`, `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement` (`Prysm/HistoricalBatch/Statements.lean`).
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.HistoricalBatch.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.HistoricalBatch.Code
 variable [Host]
 
 namespace Prysm.HistoricalBatch

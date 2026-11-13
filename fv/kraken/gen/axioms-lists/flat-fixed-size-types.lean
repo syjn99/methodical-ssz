@@ -313,6 +313,21 @@ import Prysm.PartialDataColumnGroupID.WitnessGeneratedDecodeAccept
 import Prysm.PartialDataColumnGroupID.WitnessGeneratedDecodeRejectSize
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeAccept
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeRejectSize
+import Prysm.BlobIdentifier.DecodeAcceptAnyFrameInstances
+import Prysm.DepositMessage.DecodeAcceptAnyFrameInstances
+import Prysm.Eth1Data.DecodeAcceptAnyFrameInstances
+import Prysm.Deposit_Data.DecodeAcceptAnyFrameInstances
+import Prysm.PowBlock.DecodeAcceptAnyFrameInstances
+import Prysm.PendingPartialWithdrawal.DecodeAcceptAnyFrameInstances
+import Prysm.PendingConsolidation.DecodeAcceptAnyFrameInstances
+import Prysm.PendingDeposit.DecodeAcceptAnyFrameInstances
+import Prysm.SyncCommitteeMessage.DecodeAcceptAnyFrameInstances
+import Prysm.BeaconBlockHeader.DecodeAcceptAnyFrameInstances
+import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
+import Prysm.BlobIdentifier.DecodeAcceptComposition
+import Prysm.DepositMessage.DecodeAcceptComposition
+import Prysm.Eth1Data.DecodeAcceptComposition
+import Prysm.Deposit_Data.DecodeAcceptComposition
 
 -- Scalability: the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -670,7 +685,7 @@ import Prysm.ValidatorIdentity.WitnessGeneratedDecodeRejectSize
 #print axioms Prysm.BeaconBlockHeader.Decode.head_from_generated_call_segments_type
 #print axioms Prysm.BeaconBlockHeader.Decode.head0
 #print axioms Prysm.BeaconBlockHeader.Decode.spill2
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_head_guard
+#print axioms Prysm.BeaconBlockHeader.Decode.accept_guard
 #print axioms Prysm.BeaconBlockHeader.Decode.head_sp
 #print axioms Prysm.AttestationData.Decode.generated_call_BeaconBlockRoot_seg
 #print axioms Prysm.AttestationData.Decode.generated_call_BeaconBlockRoot_seg_kind

@@ -21,7 +21,7 @@ encoder's return address (`ra2 = 0`) stored into the return slot
 (`Mem.storeInt`).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code
+open Machine Runtime Machine.Witness Prysm.Checkpoint.Code
 
 namespace Prysm.Checkpoint.Witness.DecodeThenEncode
 

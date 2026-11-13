@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `Decode.accept` (BlobIdentifier decoder accept path, hold-out)
 
-Hand-written (the text of `WitE1A.lean` with the BlobIdentifier host and layout).
+Hand-written (the text of `Prysm/Eth1Data/WitnessDecodeAccept.lean` with the BlobIdentifier host and layout).
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.BlobIdentifier).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (81, `bump_makeslice1`) and `RtCopy` (87, `rt_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 32-byte heap, guard word, the 40 input
@@ -19,7 +19,7 @@ For every input and every old root pointer word every premise holds and the deco
 The receiver is a Go value of `v1alpha1.BlobIdentifier` (zero `state`, zero-length root slice, zero Index).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.BlobIdentifier.Code
+open Machine Runtime Machine.Witness Codec Prysm.BlobIdentifier.Code
 
 namespace Prysm.BlobIdentifier.Witness.DecodeAccept
 

@@ -16,7 +16,7 @@ UNCOVERED-JSON: [{"field": "BlockRoot", "reason": "directive 67: `mov 0x70(%rsp)
 (sha256 `87d5158eac60e879d58b1fee20347c2d353a37e04bdf88ceb28335ab8099e109`) and `prysm/ir/ir-mainnet.json` (sha256 `c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a`, type `v1alpha1.SyncCommitteeMessage`); GEN3 coverage (`p2dec --gen3`): 2 of 4 fields. Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Machine Runtime TestTarget Prysm.SyncCommitteeMessage.Code
+open Machine Runtime Prysm.SyncCommitteeMessage.Code
 variable [Host]
 
 open Codec

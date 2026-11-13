@@ -10,7 +10,7 @@ predicate `bumpHeap avail`: the 8-byte pointer at label `runtime.fvBump` holds
 `p`, and the `avail` bytes at `p` are 0.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Runtime
 def BumpAlloc : Program := include_x64_rt "Runtime/BumpAlloc.S"

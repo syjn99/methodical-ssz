@@ -7,6 +7,8 @@ import Prysm.Checkpoint.WitnessEncodeFunctionSpecAsNestedField
 import Prysm.AttestationData.DecodeSpec
 import Prysm.AttestationData.WitnessDecodeAccept
 import Prysm.AttestationData.WitnessDecodeRejectSize
+import Prysm.AttestationData.DecodeErrorWrapsUnreachable
+import Prysm.AttestationData.SpecEquivalence
 
 -- AttestationData set: the AttestationData, Slot and CommitteeIndex theorems and the Checkpoint function specifications.
 #print axioms Prysm.AttestationData.desc_checker

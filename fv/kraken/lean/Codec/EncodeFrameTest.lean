@@ -25,7 +25,7 @@ The lemma is for the frame `0x50` with these slots (the three observed functions
 own instance of the same argument.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

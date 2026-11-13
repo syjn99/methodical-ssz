@@ -1,6 +1,6 @@
 import Prysm.Checkpoint.Spec
 import Prysm.Checkpoint.SpecEquivalence
-import TestTarget.ListU64RejectSpec
+import Codec.ReadUint64List
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import Prysm.IndexedAttestation.Spec
@@ -15,7 +15,7 @@ the EthLib round trip, accepted inputs are encodings, and the three checks of th
 -/
 
 namespace Prysm.DataColumnsByRootIdentifier
-open EthLib.Serialization.Ssz Spec TestTarget
+open EthLib.Serialization.Ssz Spec
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 
@@ -63,14 +63,14 @@ theorem decodeChecks_encode (bs : Array UInt8) (h : decodeChecks bs) : ∃ g : S
   obtain ⟨h36, hoff, hmod, hn⟩ := h
   obtain ⟨n, hndef⟩ : ∃ n, n = (bs.size - 36) / 8 := ⟨_, rfl⟩
   have hsz : bs.size = 36 + 8 * n := by omega
-  refine ⟨⟨⟨bs.extract 0 32, by simp; omega⟩, luElems bs 36 n, by simp [luElems_length]; omega⟩, ?_⟩
+  refine ⟨⟨⟨bs.extract 0 32, by simp; omega⟩, Codec.readUint64List bs 36 n, by simp [Codec.readUint64List_length]; omega⟩, ?_⟩
   have h4 : bs.extract 32 36 = offsetBytes.toArray := by
     apply Array.toList_inj.mp
     simp only [Array.toList_extract, List.extract, ← hoff]
   have e0 : bs.extract 0 32 ++ bs.extract 32 36 = bs.extract 0 36 := extract_join bs (by omega) (by omega)
   have e2 : bs.extract 0 36 ++ bs.extract 36 (36 + 8 * n) = bs.extract 0 bs.size := by
     rw [extract_join bs (by omega) (by omega), ← hsz]
-  simp only [SszValue.encode, ← h4, u64Bytes_luElems bs n 36 (by omega)]
+  simp only [SszValue.encode, ← h4, Codec.u64Bytes_readUint64List bs n 36 (by omega)]
   rw [e0, e2]; simp
 
 /-- **EthLib accepts exactly the inputs that pass the checks.** -/

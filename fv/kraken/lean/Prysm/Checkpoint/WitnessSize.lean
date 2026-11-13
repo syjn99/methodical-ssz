@@ -3,7 +3,7 @@ import Machine.WitnessHost
 
 /-! # Witness of `Size.result`: the real SizeSSZ code alone; memory = the return slot. -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code
+open Machine Runtime Machine.Witness Prysm.Checkpoint.Code
 
 namespace Prysm.Checkpoint.Witness.Size
 

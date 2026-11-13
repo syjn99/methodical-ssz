@@ -8,7 +8,7 @@ import Prysm.Deposit_Data.Statements
 
 `decAcceptKind C st fields jret` is the accept statement of a protoc container decoder `C` whose fields are
 fixed byte vectors (`DecField.bytes n`: a fresh `n`-byte slice, `len = cap = n`) and inline `uint64`s
-(`DecField.u64`), in the frame of the development decoders (`sub $0x20`; `Compose.lean`). `st` says that the
+(`DecField.u64`), in the frame of the development decoders (`sub $0x20`; `Codec/DecoderHeadEpilogue.lean`). `st` says that the
 receiver has one word before the first field (the protoc `state`); `jret` is the directive whose address
 is in the runtime-call return slot at the end (the directive after the last `callq runtime.memmove`).
 The statement is computed by structural recursion on `fields`: the SSZ offsets are the running sum of the
@@ -22,9 +22,10 @@ field list): the declared types of `Prysm.BlobIdentifier.Decode.accept`, `Prysm.
 lines) and the hand statement `Prysm.Deposit_Data.Decode.accept_statement`. So a composed theorem of this shape can be
 statement-checked against `decAcceptKind` with parameters read from the IR, without a hand theorem.
 Not covered: callee-decoder fields, other frames, a first field that is not at Go offset 0 or 8.
+After the split of this module, the declarations of single types are in `Prysm/BlobIdentifier/DecodeAcceptComposition.lean`, `Prysm/DepositMessage/DecodeAcceptComposition.lean`, `Prysm/Deposit_Data/DecodeAcceptComposition.lean`, `Prysm/Eth1Data/DecodeAcceptComposition.lean`.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 open Codec
 namespace Codec
@@ -182,25 +183,5 @@ abbrev decAcceptKind (C : Program) (st : Bool) (fields : List DecField) (jret : 
                 ++ heapPost fields vs ps
                 ++ [Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec), R])) st'.data.dmem))
           ⟨s, Host.addrOf k⟩))))
-
-/-- BlobIdentifier: the hand accept theorem has the kind `[bytes 32, u64]`. -/
-theorem _root_.Prysm.BlobIdentifier.Decode.accept_is_kind : ∀ (h : Host), type_of% (@Prysm.BlobIdentifier.Decode.accept h)
-    = @decAcceptKind h Prysm.BlobIdentifier.Code.unmarshalSSZ true [.bytes 32, .u64] 32 := by
-  intro h; rfl
-
-/-- DepositMessage: the hand accept theorem has the kind `[bytes 48, bytes 32, u64]` (no `state` word). -/
-theorem _root_.Prysm.DepositMessage.Decode.accept_is_kind : ∀ (h : Host), type_of% (@Prysm.DepositMessage.Decode.accept h)
-    = @decAcceptKind h Prysm.DepositMessage.Code.unmarshalSSZ false [.bytes 48, .bytes 32, .u64] 68 := by
-  intro h; rfl
-
-/-- Eth1Data: the hand accept theorem has the kind `[bytes 32, u64, bytes 32]`. -/
-theorem _root_.Prysm.Eth1Data.Decode.accept_is_kind : ∀ (h : Host), type_of% (@Prysm.Eth1Data.Decode.accept h)
-    = @decAcceptKind h Prysm.Eth1Data.Code.unmarshalSSZ true [.bytes 32, .u64, .bytes 32] 70 := by
-  intro h; rfl
-
-/-- Deposit_Data: the hand statement is the kind `[bytes 48, bytes 32, u64, bytes 96]`. -/
-theorem _root_.Prysm.Deposit_Data.Decode.accept_is_kind : ∀ (h : Host), @Prysm.Deposit_Data.Decode.accept_statement h
-    = @decAcceptKind h Prysm.Deposit_Data.Code.unmarshalSSZ true [.bytes 48, .bytes 32, .u64, .bytes 96] 106 := by
-  intro h; rfl
 
 end Codec

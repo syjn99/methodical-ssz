@@ -14,7 +14,7 @@ decoder's scratch and the decoder's runtime-call return slot. The receiver words
 encoder's receiver premises with `nb = BitVec.ofNat 64 n`.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

@@ -1,6 +1,6 @@
 # gen5.py -- `scalgen.py p2dec --gen5`: the whole accept theorem (and the size-reject theorem) of a
 # flat fixed-size decoder, emitted from the GEN4 walk (front end) with the statement kinds of the GEN5 lemma unit's hand-over
-# (`KindAcceptN.lean`: decHeadKindN, decFieldKindN, decEpiKindN, decAcceptKindN; `RejectN.lean`: decRejectKindN).
+# (`Codec/Kind/DecodeAcceptAnyFrame.lean`: decHeadKindN, decFieldKindN, decEpiKindN, decAcceptKindN; `Codec/DecodeRejectSizeAnyFrame.lean`: decRejectKindN).
 #
 # Untrusted generator: every emitted theorem is checked by Lean; every statement has a `_kind` line; the kind
 # parameters are recomputed independently from the IR and the `.S` by `kindcheck.py`.

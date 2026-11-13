@@ -8,10 +8,10 @@ offset 0). The frozen generator reads only 32-byte `[]byte` fields (`scalgen.py`
 see this field. The Go 1.26.10 code of the field is the offset-0 form (memmove source at the buffer pointer itself) with the size 48:
 `bytesDecHead48` = the text of `Codec.rootDecHead` with `32` → `48`; `bytesDecMidZ48` = the text of
 `Codec.rootDecMidZ` with `32` → `48`; `bytes48dec_seg_z` = the statement and proof text of
-`Codec.rootdec_seg_z` with every `32` → `48`. `P2Dec.lean`, `P2DecZ.lean`, `Kind*.lean` are unchanged.
+`Codec.rootdec_seg_z` with every `32` → `48`. `Codec/Bytes32Decode.lean`, `Codec/Bytes32DecodeOffsetZero.lean`, `Kind*.lean` are unchanged.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 open Codec
 namespace Prysm.DepositMessage

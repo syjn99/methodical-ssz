@@ -14,7 +14,7 @@ growslice branches, the length rejects, the morestack path. Not a complete encod
 GEN6-JSON: {"type": "PowBlock", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 96, "frame": 80, "gd": 0, "rt": true, "fields": [["BlockHash", "b", 32], ["ParentHash", "b", 32], ["TotalDifficulty", "b", 32]], "boundaries": [8, 37, 66, 94], "layout": "Prysm.PowBlock.Encode.generated_layout", "S_sha256": "916684c4fed2239b036a8c706022dcd16c35ce7d6376fded8535e2d3fa344a1b", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.PowBlock", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
 -/
 
-open Machine Runtime TestTarget Codec Prysm.PowBlock.Code
+open Machine Runtime Codec Prysm.PowBlock.Code
 variable [Host]
 
 namespace Prysm.PowBlock

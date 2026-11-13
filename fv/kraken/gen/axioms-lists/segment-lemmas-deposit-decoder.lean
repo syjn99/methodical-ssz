@@ -11,8 +11,8 @@ import Prysm.Deposit.DecodeAccept
 #print axioms Codec.Segment.in_split
 #print axioms Codec.Segment.arr_split
 #print axioms Codec.Segment.arr_join
-#print axioms Codec.Segment.scIn_split'
-#print axioms Codec.Segment.hbA_join'
+#print axioms Codec.Segment.input_split_sync_committee
+#print axioms Codec.Segment.array_join_historical_batch
 #print axioms Codec.Segment.bytesdec_seg_g
 #print axioms Codec.Segment.bytesdec_seg_z_g
 #print axioms Codec.Segment.bytesdec_seg_nop_g
@@ -26,10 +26,10 @@ import Prysm.Deposit.DecodeAccept
 #print axioms Codec.Segment.v32_iter
 #print axioms Codec.Segment.v32_exit
 #print axioms Codec.Segment.v32_loop
-#print axioms Codec.Segment.hb_loop1_g
-#print axioms Codec.Segment.hb_loop2_g
+#print axioms Codec.Segment.historical_batch_block_roots_loop
+#print axioms Codec.Segment.historical_batch_state_roots_loop
 #print axioms Codec.Segment.rej_size_g
-#print axioms Codec.Segment.sc_reject_size_g
-#print axioms Codec.Segment.hb_reject_size_g
+#print axioms Codec.Segment.sync_committee_reject_size
+#print axioms Codec.Segment.historical_batch_reject_size
 #print axioms Prysm.Deposit.Decode.reject_size
 #print axioms Prysm.Deposit.Decode.accept

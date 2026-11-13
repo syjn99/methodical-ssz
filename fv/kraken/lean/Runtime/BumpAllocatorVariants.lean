@@ -1,5 +1,5 @@
 import Runtime.BumpAllocator
-import TestTarget.FunctionSpecs
+import Runtime.NewobjectContract
 
 /-!
 # More bump-allocator models
@@ -9,7 +9,7 @@ import TestTarget.FunctionSpecs
 24 or 32 bytes (`BumpNew24`, `BumpNew32`). All on `bumpHeap` (Runtime/BumpAllocator.lean).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Runtime
 def BumpAlloc1 : Program := include_x64_rt "Runtime/BumpAlloc1.S"

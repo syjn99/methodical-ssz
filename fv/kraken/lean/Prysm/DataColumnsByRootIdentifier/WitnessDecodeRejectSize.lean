@@ -11,7 +11,7 @@ values: the real ones are set by the runtime's init), the guard word (r14 = 0x10
 rsp + 24 (rsp = 0x10020); the offset reject adds the 4 offset bytes at buf + 32 (0x10038). Frame `R`: the rax spill slot.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
 
 namespace Prysm.DataColumnsByRootIdentifier.Witness.DecodeRejectSize
 

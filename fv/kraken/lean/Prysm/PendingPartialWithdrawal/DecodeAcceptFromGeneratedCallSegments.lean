@@ -4,15 +4,15 @@ import Prysm.PendingPartialWithdrawal.GeneratedDecodeCallSegments
 /-!
 # PendingPartialWithdrawal accept path from the GENERATED `p2dec --gen3` segments (reuse demonstration)
 
-Hand composition (not generator output): the chain of `PwAccept.lean` with every lemma instance replaced by
-the generated theorem of `Gen3PwDec.lean` (`p2dec --gen3`, raw output) whose declared type is that instance
+Hand composition (not generator output): the chain of `Prysm/PendingPartialWithdrawal/DecodeAccept.lean` with every lemma instance replaced by
+the generated theorem of `Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean` (`p2dec --gen3`, raw output) whose declared type is that instance
 (its `_kind`): `pw_g3dec_Index_arg` / `_call`, `pw_g3dec_WithdrawableEpoch_arg1`, `pw_g3dec_Amount_seg`,
 `pw_g3dec_WithdrawableEpoch_arg2` / `_call`. The code facts come from the generated theorems; head
-(`Decode.head`, 0–14) and epilogue (`Decode.epi`, 89–91) stay hand steps of `PwAccept.lean` (frame `0x48`). The
-statement is the hand statement `Decode.accept_statement` (`H4Stmt.lean`, unchanged). In-sample (development data).
+(`Decode.head`, 0–14) and epilogue (`Decode.epi`, 89–91) stay hand steps of `Prysm/PendingPartialWithdrawal/DecodeAccept.lean` (frame `0x48`). The
+statement is the hand statement `Decode.accept_statement` (`Prysm/Deposit_Data/Statements.lean`, unchanged). In-sample (development data).
 -/
 
-open Machine Runtime TestTarget Prysm.PendingPartialWithdrawal.Code Codec
+open Machine Runtime Prysm.PendingPartialWithdrawal.Code Codec
 variable [Host]
 
 namespace Prysm.PendingPartialWithdrawal

@@ -5,7 +5,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `Decode.accept` (PendingPartialWithdrawal decoder accept path)
 
-Hand-written (the text of `WitBhA.lean` without heap and runtime callees). It shows that
+Hand-written (the text of `Prysm/BeaconBlockHeader/WitnessDecodeAccept.lean` without heap and runtime callees). It shows that
 the premises of the independent hand statement `Prysm.PendingPartialWithdrawal.Decode.accept_statement` are satisfiable.
 Host: one label, the real Go 1.26.10 `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` (index 1),
 `(*primitives.ValidatorIndex).UnmarshalSSZ` (110) and `(*primitives.Epoch).UnmarshalSSZ` (173).
@@ -19,7 +19,7 @@ two untouched frame ranges and the unused slot. For every 24-byte input every pr
 returns nil. The receiver is a Go value of `v1alpha1.PendingPartialWithdrawal` (all fields zero).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.PendingPartialWithdrawal.Code
+open Machine Runtime Machine.Witness Codec Prysm.PendingPartialWithdrawal.Code
 
 namespace Prysm.PendingPartialWithdrawal.Witness.DecodeAccept
 

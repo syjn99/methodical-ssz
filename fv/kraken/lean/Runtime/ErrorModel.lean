@@ -9,7 +9,7 @@ rax = 1 otherwise; it allocates nothing. `runtime.convT64` takes 8 bytes from
 the bump heap, stores v there and returns the box (the heap case of `BoxIn`).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Runtime
 def RtErr : Program := include_x64_rt "Runtime/RtErr.S"

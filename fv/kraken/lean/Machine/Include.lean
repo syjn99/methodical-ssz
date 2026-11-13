@@ -31,7 +31,7 @@ as `include_x64_rt`) and elaborates, in the current namespace,
   (then the definition takes `[Host]`).
 
 The command is Lean text built from the file and elaborated as written; the
-file is a Lake input of the `Fk` library (`lakefile.toml`), so a change
+file is a Lake input of the library that reads it (`lakefile.toml`), so a change
 rebuilds every proof. TRUSTED like `include_x64_rt`: this reader. That the
 file is the ELF's bytes is `link/check.py`'s data check.
 -/

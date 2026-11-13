@@ -14,7 +14,7 @@ Each theorem is a prefix of `Prysm.Checkpoint.EncodeHead` followed by a tail of 
   then the code's own branch on the capacity `C1` that `growslice` returned: `len + 40 ≤ C1` →
   `Encode.tail_fit` (left disjunct, full return); `C1 < len + 40` → `Encode.tail_grow_call` (right
   disjunct: the exact state at the entry of the second growslice call; the rest of that run is NOT
-  proved, see `CpWGrowAny.lean`).
+  proved, see `Prysm/Checkpoint/EncodeGrowAnySite.lean`).
 - `Encode.reject_length_grow_first_site` — `cap < len + 8` and `len(Root) ≠ 32`: `Encode.head_grow` +
   `Encode.tail_rej`. The result is `(nil, ssz.ErrBytesLength words)`; the epoch bytes are at
   `new[len..len+8]` of the block that growslice returned (written before the root length test, here in the new block); the old
@@ -24,7 +24,7 @@ The error words `e0`, `e1` are the global's value as it is; that they are non-ni
 (no premise gives it): differential only.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code
+open Machine Runtime Prysm.Checkpoint.Code
 variable [Host]
 
 namespace Prysm.Checkpoint

@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `Decode.accept` (Deposit_Data decoder accept path, hold-out, type A)
 
-Hand-written (the text of `WitDmA.lean` with the Deposit_Data host and layout).
+Hand-written (the text of `Prysm/DepositMessage/WitnessDecodeAccept.lean` with the Deposit_Data host and layout).
 It shows that the premises of the independent hand statement `Prysm.Deposit_Data.Decode.accept_statement` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.Deposit_Data).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (152, `bump_makeslice1`) and `RtCopy` (158, `rt_memmove`).
@@ -20,7 +20,7 @@ For every input and every old pointer word every premise holds and the decoder r
 The receiver is a Go value of `v1alpha1.Deposit_Data` (zero `state`, zero-length slices, zero Amount).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.Deposit_Data.Code
+open Machine Runtime Machine.Witness Codec Prysm.Deposit_Data.Code
 
 namespace Prysm.Deposit_Data.Witness.DecodeAccept
 

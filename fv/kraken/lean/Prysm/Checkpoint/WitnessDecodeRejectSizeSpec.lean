@@ -9,7 +9,7 @@ and `0` bytes of `0x11`); EthLib rejects each (`∃ e, deserialize … = .error 
 and the machine code returns the two `ssz.ErrSize` words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
 
 namespace Prysm.Checkpoint.Witness.DecodeRejectSize
 

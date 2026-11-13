@@ -7,6 +7,7 @@ import Prysm.Checkpoint.Code
 import Prysm.AttestationData.Code
 import Prysm.BeaconBlockHeader.Code
 import Prysm.SyncCommitteeMessage.Code
+import Prysm.PendingConsolidation.Statements
 
 /-!
 # Independent hand STATEMENTS of the two accept theorems (hold-out; statements only, no proof)
@@ -14,7 +15,7 @@ import Prysm.SyncCommitteeMessage.Code
 Hand-written BEFORE the proof generator (`gen/scal/scalgen.py`) was run on
 either type and before any generator output for them was read.
 Sources: the Go receiver layout (IR `go_fields` in `prysm/ir/ir-mainnet.json`), the SSZ layout
-(consensus-specs; `SmDesc.lean`, `PcDesc.lean`), the frame facts of the two `.S` files
+(consensus-specs; `Prysm/SyncCommitteeMessage/SpecDescription.lean`, `Prysm/PendingConsolidation/SpecDescription.lean`), the frame facts of the two `.S` files
 (`prysm/go1.26.10/e2e/h5/link/norm`), and the statement shape of the earlier hand accept theorems
 `Prysm.BeaconBlockHeader.Decode.accept` (callee fields and fresh 32-byte slices in a `0x60` frame) and
 `Prysm.PendingPartialWithdrawal.Decode.accept_statement` (callee fields in a `0x48` frame). These abbrevs are the targets of the
@@ -55,9 +56,10 @@ Frame (`.S`): `sub $0x48` (as PendingPartialWithdrawal); spills `0x58(%rsp)` = e
 return slot at entry rsp − 88, saves rbp at entry rsp − 96 (`lo`) and spills its rbx to entry rsp − 72 (`sp1`).
 The callee checks the stack guard at entry rsp − 88, hence `guard + 88 < rsp`. The second call is directive 55,
 so the return slot holds directive 56 at the end. Error-path frame slots are untouched on this path (in `R`).
+After the split of this module, the declarations of the other types are in `Prysm/PendingConsolidation/Statements.lean`.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.SyncCommitteeMessage.Code
+open Machine Runtime Prysm.AttestationData.Code Prysm.SyncCommitteeMessage.Code
 variable [Host]
 
 namespace Prysm.SyncCommitteeMessage
@@ -130,48 +132,6 @@ abbrev Decode.accept_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 96).At (s.regs.rax.toBitVec + 56)) ⋆ Eq ((Int.toBytes 8 96).At (s.regs.rax.toBitVec + 64))
           ⋆ Eq (rt.At p1) ⋆ Eq (sig.At p2)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
-      ⟨s, Host.addrOf k⟩
-
-/-- Hand statement of the accept path of `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`: on a 16-byte input it
-returns nil and the receiver holds SourceIndex = buf[0:8] and TargetIndex = buf[8:16]; input, `state`, the spills,
-the caller's frame `R` and the stack guard are unchanged. Both fields go through the callee's code
-(`Prysm.ValidatorIndex.Code.unmarshalSSZ` placed in the host). -/
-abbrev _root_.Prysm.PendingConsolidation.Decode.accept_statement : Prop :=
-  ∀ (k : Nat) (hk : Prysm.PendingConsolidation.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingConsolidation.Code.unmarshalSSZ k)
-    (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
-    (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
-    (s : MachineData) (ra guard : UInt64)
-    (fp s1 s2 s4 sp1 rslot lo ast a8 a16 : List UInt8)
-    (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (h4 : s4.length = 8)
-    (hsp1 : sp1.length = 8) (hrs : rslot.length = 8) (hlo : lo.length = 8)
-    (hast : ast.length = 8) (ha8 : a8.length = 8) (ha16 : a16.length = 8)
-    (R : DataMem → Prop)
-    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
-      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s1.At (s.regs.rsp.toBitVec + 8))
-      ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16)) ⋆ Eq (s4.At (s.regs.rsp.toBitVec + 32))
-      ⋆ Eq (sp1.At (s.regs.rsp.toBitVec - 72))
-      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (lo.At (s.regs.rsp.toBitVec - 96))
-      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq (in0.At s.regs.rbx.toBitVec) ⋆ Eq (in1.At (s.regs.rbx.toBitVec + 8))
-      ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (a8.At (s.regs.rax.toBitVec + 8))
-      ⋆ Eq (a16.At (s.regs.rax.toBitVec + 16)) ⋆ R)
-    (hguard : guard.toNat + 88 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 16),
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
-        ∃ (sp1' lo' : List UInt8), sp1'.length = 8 ∧ lo'.length = 8 ∧
-        (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
-          ⋆ Eq ((Int.toBytes 8 s.regs.rax.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8))
-          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 s.regs.rdi.toBitVec.toInt).At (s.regs.rsp.toBitVec + 32))
-          ⋆ Eq (sp1'.At (s.regs.rsp.toBitVec - 72))
-          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 56)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 88))
-          ⋆ Eq (lo'.At (s.regs.rsp.toBitVec - 96))
-          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq (in0.At s.regs.rbx.toBitVec) ⋆ Eq (in1.At (s.regs.rbx.toBitVec + 8))
-          ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))
-          ⋆ Eq (in1.At (s.regs.rax.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
 end Prysm.SyncCommitteeMessage

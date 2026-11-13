@@ -9,7 +9,7 @@ import Prysm.IndexedAttestation.Spec
 decodes it into `g` (`Decode.accept` with `n = g.idx.length`). The text of `Prysm/AttestationData/DecodeSpec.lean`.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
 variable [Host]
 
 namespace Prysm.IndexedAttestation

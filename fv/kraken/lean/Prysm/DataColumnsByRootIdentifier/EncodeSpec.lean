@@ -9,7 +9,7 @@ The shape of `Prysm.Checkpoint.Encode.fast_path_spec`: for a receiver holding th
 `pre ‖ serialize desc g.toValue` at `dst.ptr`. The full frame accounting is `Encode.fast_path`.
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code EthLib.Serialization.Ssz
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

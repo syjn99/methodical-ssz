@@ -7,8 +7,8 @@ import Prysm.Eth1Data.DecodeFieldSegmentOffsetZero
 # Real Prysm `(*v1alpha1.Eth1Data).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
 
 Hand-written after the hold-out was opened (not generator output: the one generator run,
-emitted nothing). The head is the text of `BhHead.lean` without the callees; the composition
-is the text of `BhAccept.lean` with the Eth1Data indices, offsets and two segments.
+emitted nothing). The head is the text of `Prysm/BeaconBlockHeader/DecodeHead.lean` without the callees; the composition
+is the text of `Prysm/BeaconBlockHeader/DecodeAccept.lean` with the Eth1Data indices, offsets and two segments.
 
     func (e *Eth1Data) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 72 { return ssz.ErrSize }
@@ -33,7 +33,7 @@ rsp + 16 (buf.ptr); frame rsp − 40 … rsp − 9: argument area rsp − 40 …
 rsp − 16 (`l18`); the runtime callees' return slot rsp − 48 and their `S` stack bytes below it (`lo`).
 -/
 
-open Machine Runtime TestTarget Codec Prysm.Eth1Data.Code
+open Machine Runtime Codec Prysm.Eth1Data.Code
 variable [Host]
 
 namespace Prysm.Eth1Data

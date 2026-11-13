@@ -5,16 +5,16 @@ import Machine.Labels
 # GEN4: the fixed-bytes decode segment, offset-0 form, over windows with the receiver registers as parameters
 
 `f = append(make([]byte, 0, n), buf[0:n]...)` (the first SSZ field: no `add $src,%rbx`). The first block is
-`bytesDecHeadR rX …` (`SegReg.lean`); the second is `bytesDecMidZR rX rY …` = `bytesDecMidZ` (`SegN.lean`) with
+`bytesDecHeadR rX …` (`Codec/FixedBytesDecodeWindow.lean`); the second is `bytesDecMidZR rX rY …` = `bytesDecMidZ` (`Codec/FixedBytesDecode.lean`) with
 the receiver registers as parameters. Statement `BytesDecZWindow n rX rY` = the statement of `bytesdec_seg_z` over
 two windows (`jl` = index of the label, `jm` = index of `callq runtime.memmove`, `e` = end), register fact
 `regs.get64 rY = rcv`. Proof: one theorem per case (the proof text of `bytesdec_seg_z` with the window tactics).
-Same limits as `SegReg.lean` (`rX` ∈ {rdx, rsi}, `rY` ∈ {rax, rcx, rdx, rsi, rdi}, `n` ∈ {32, 48, 96}). At the
+Same limits as `Codec/FixedBytesDecodeWindow.lean` (`rX` ∈ {rdx, rsi}, `rY` ∈ {rax, rcx, rdx, rsi, rdi}, `n` ∈ {32, 48, 96}). At the
 four development sites of this form the code is dense with rdx (no observed variation): the instance of the
 GEN2 lemma is `bytesdec_seg_z_inst`.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

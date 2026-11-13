@@ -11,7 +11,7 @@ proved here). The precondition is stronger than the frozen one. The original sta
 Precedent: `Prysm.Checkpoint.DecodeThenEncode.round_trip` has the same premise `hS : S < 2 ^ 60`.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

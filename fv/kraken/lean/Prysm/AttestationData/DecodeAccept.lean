@@ -43,7 +43,7 @@ untouched on this path (in `R`); callee return slot rsp − 128; `lo` = the `S +
 below it.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code
+open Machine Runtime Prysm.AttestationData.Code
 variable [Host]
 
 namespace Prysm.AttestationData

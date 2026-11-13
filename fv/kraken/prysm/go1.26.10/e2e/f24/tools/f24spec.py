@@ -1,5 +1,5 @@
 """Evidence tool (not part of gen/scal): write <out>/Prysm/<GoTypeName>/Spec.lean, the spec bridge of each type
-(the text of SmSpec.lean / SaSpec.lean generalised to a field list: P structure, encoding, serialize, roundtrip,
+(the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean` generalised to a field list: P structure, encoding, serialize, roundtrip,
 accepts-iff-size, spec reject; codec equality with the checker Desc where a Desc-checker record exists).
 usage: python3 -I -B f24spec.py <out dir>"""
 import sys, os

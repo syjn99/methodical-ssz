@@ -5,7 +5,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `Decode.example_accept` (VoluntaryExit decoder accept path; worked example)
 
-Hand-written (the text of `WitPwA.lean` with two fields). It shows that the premises of
+Hand-written (the text of `Prysm/PendingPartialWithdrawal/WitnessDecodeAccept.lean` with two fields). It shows that the premises of
 the kind instance `decAcceptKindN unmarshalSSZ (layCal [EpUnmarshal, Prysm.ValidatorIndex.Code.unmarshalSSZ] 56) [.u64, .u64]` are
 satisfiable. Host: one label, the real Go 1.26.10 `(*v1alpha1.VoluntaryExit).UnmarshalSSZ` (index 1),
 `(*primitives.Epoch).UnmarshalSSZ` (108) and `(*primitives.ValidatorIndex).UnmarshalSSZ` (171).
@@ -19,7 +19,7 @@ bytes, the unused bytes and the untouched frame ranges. For every 16-byte input 
 decoder returns nil. The receiver is a Go value of `v1alpha1.VoluntaryExit` (all fields zero).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.VoluntaryExit.Code
+open Machine Runtime Machine.Witness Codec Prysm.VoluntaryExit.Code
 
 namespace Prysm.VoluntaryExit.Witness.DecodeAccept
 

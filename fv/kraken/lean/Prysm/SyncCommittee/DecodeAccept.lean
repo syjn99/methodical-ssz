@@ -16,7 +16,7 @@ import Prysm.SyncCommittee.Statements
 Statement: the frozen `Prysm.SyncCommittee.Decode.accept_statement`.
 -/
 
-open Machine Runtime TestTarget Prysm.SyncCommittee.Code
+open Machine Runtime Prysm.SyncCommittee.Code
 variable [Host]
 
 namespace Prysm.SyncCommittee

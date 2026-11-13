@@ -4,16 +4,16 @@ import Prysm.PendingPartialWithdrawal.Spec
 /-!
 # Spec alignment of the real PendingPartialWithdrawal decoder, accept side
 
-The accept part of `PcSpecK.lean` for PendingPartialWithdrawal, which
-`PwSpecK.lean` left out because the accept theorem was not proved then (attempt bound). The accept theorem
-`Decode.accept : Decode.accept_statement` was proved later (`PwAccept.lean`). This module adds only:
+The accept part of `Prysm/PendingConsolidation/DecodeSpec.lean` for PendingPartialWithdrawal, which
+`Prysm/PendingPartialWithdrawal/DecodeSpec.lean` left out because the accept theorem was not proved then (attempt bound). The accept theorem
+`Decode.accept : Decode.accept_statement` was proved later (`Prysm/PendingPartialWithdrawal/DecodeAccept.lean`). This module adds only:
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
-The statement text is `Decode.accept_statement` (`H4Stmt.lean`, unchanged) with the input chunks replaced by the encoding of
+The statement text is `Decode.accept_statement` (`Prysm/Deposit_Data/Statements.lean`, unchanged) with the input chunks replaced by the encoding of
 `g`. Not stated here: that the two callee error paths (`fmt.errorf` wraps) are unreachable when `size = 24`.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.PendingPartialWithdrawal.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Prysm.AttestationData.Code Prysm.PendingPartialWithdrawal.Code Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.PendingPartialWithdrawal

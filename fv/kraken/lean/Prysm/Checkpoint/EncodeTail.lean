@@ -24,14 +24,10 @@ From here the code is the same for both prefixes. Three tails, by the code's bra
 rsp0 − 8. Every directive index is the Go 1.26.10 `.S`'s (`Prysm.Checkpoint.Code.marshalSSZTo`).
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code
+open Machine Runtime Prysm.Checkpoint.Code
 variable [Host]
 
 namespace Prysm.Checkpoint
-
-theorem Encode.tail_ret (x : BitVec 64) : ({ toBitVec := x - 120 } + 8 : UInt64) = { toBitVec := x - 112 } := Encode.fast_path_ret x
-
-theorem Encode.tail_call (x : BitVec 64) : x - 112 - 8#64 = x - 120 := by bv_omega
 
 theorem Encode.tail_rsp8 (x : UInt64) : ({ toBitVec := x.toBitVec - 8 + 8#64 + 8#64 } : UInt64) = x + 8 := by
   apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
@@ -83,7 +79,7 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   apply load_step_at _ _ (rsp0.toBitVec - 64) _ _ e8 _ _ (by eaddr) (by ecancel) (by exact he8)
   kunfold
   kat hk marshalSSZTo 35
-  rw [Encode.fast_path_mul]
+  rw [Codec.add_mul_one]
   apply store_step _ _ _ _ _ d0 _ _ (by ecancel) (by exact hd0)
   intro m6 H6
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6
@@ -128,11 +124,11 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   kat hk marshalSSZTo 60
   kat hk marshalSSZTo 61
   kat hk marshalSSZTo 62
-  apply store_step_at _ _ (rsp0.toBitVec - 120) _ _ _ rslot _ _ (Encode.tail_call _) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (rsp0.toBitVec - 120) _ _ _ rslot _ _ (Encode.grow_first_site_slot2 _) (by ecancel) (by exact hrs)
   intro m10 H10
   simp only [Width.bytes, Width.bits] at H10
   kunfold
-  rw [Encode.tail_call] at *
+  rw [Encode.grow_first_site_slot2] at *
   rw [Encode.fast_path_dst] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 62 + 1)) root d1 scratch _
     (by rw [hroot]; rfl) (by rw [hroot, hd1]) hsc (by dsimp only; ecancel)) ?_
@@ -142,7 +138,7 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := e1
   simp only at hrsp1 hr141 hrbp1 Hm1
-  rw [Encode.tail_ret] at hrsp1
+  rw [Encode.fast_path_ret] at hrsp1
   subst rsp1 r141 rbp1
   kat hk marshalSSZTo 63
   apply load_step_at _ _ (rsp0.toBitVec - 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
@@ -221,7 +217,7 @@ theorem Encode.tail_rej (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   apply load_step_at _ _ (rsp0.toBitVec - 64) _ _ e8 _ _ (by eaddr) (by ecancel) (by exact he8)
   kunfold
   kat hk marshalSSZTo 35
-  rw [Encode.fast_path_mul]
+  rw [Codec.add_mul_one]
   apply store_step _ _ _ _ _ d0 _ _ (by ecancel) (by exact hd0)
   intro m6 H6
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6
@@ -239,7 +235,7 @@ theorem Encode.tail_rej (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, Width.bits] at h
-    exact hrl (UInt64.toBitVec_inj.mp (Encode.reject_length_eq _ h))
+    exact hrl (UInt64.toBitVec_inj.mp (Codec.eq_32_of_sub_eq_zero _ h))
   simp only [Effects.All]
   klabel hk hf marshalSSZTo 71
   kat hk marshalSSZTo 71

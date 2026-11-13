@@ -17,7 +17,7 @@ the input `root ‖ offsetBytes ‖ ib` (so that no address depends on `n`). cap
 frame bytes rsp − 72 … rsp − 9 (64).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
 
 namespace Prysm.DataColumnsByRootIdentifier.Witness.DecodeAccept
 

@@ -12,7 +12,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "Index", "theorems": ["Decode.generated_step_s15", "Decode.generated_step_s16", "Decode.generated_step_Index_call"]}, {"field": "Amount", "theorems": ["Decode.generated_step_s48", "Decode.generated_step_s49", "Decode.generated_step_s50", "Decode.generated_step_s51", "Decode.generated_step_s52", "Decode.generated_step_s53", "Decode.generated_step_s54", "Decode.generated_step_s55"]}, {"field": "WithdrawableEpoch", "theorems": ["Decode.generated_step_s56", "Decode.generated_step_s57", "Decode.generated_step_s58", "Decode.generated_step_WithdrawableEpoch_call"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.PendingPartialWithdrawal.Code
+open Machine Runtime Prysm.PendingPartialWithdrawal.Code
 variable [Host]
 
 open Codec

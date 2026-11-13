@@ -12,7 +12,7 @@ proposition (proof irrelevance: `rfl` succeeds only if the types are definitiona
 The hand theorem stays in the tree, unchanged.
 -/
 
-open Machine TestTarget Prysm.AttestationData.Code
+open Machine Prysm.AttestationData.Code
 variable [Host]
 
 open Codec

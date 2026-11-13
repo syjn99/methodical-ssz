@@ -6,14 +6,14 @@ import Machine.WitnessHost
 # Witness of the generated `Decode.generated_reject`
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.SyncAggregatorSelectionData).UnmarshalSSZ` (index 1).
-The text of `WitPcR.lean` with the SyncAggregatorSelectionData decoder and the generated
-size-reject theorem of `Gen5SaDec.lean`. Memory at `0x10000`: the two words of `ssz.ErrSize` after package init
+The text of `Prysm/PendingConsolidation/WitnessDecodeRejectSize.lean` with the SyncAggregatorSelectionData decoder and the generated
+size-reject theorem of `Prysm/SyncAggregatorSelectionData/GeneratedDecodeAccept.lean`. Memory at `0x10000`: the two words of `ssz.ErrSize` after package init
 (a non-zero itab word `0x10e8` and a data word `0x2a`, stand-ins: the real values are set by the runtime's init
 and are not read from the ELF), the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame
 `R`) and the rbx spill slot. For every length `≠ 16` (instances 15, 17, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.SyncAggregatorSelectionData.Code
+open Machine Runtime Machine.Witness Prysm.SyncAggregatorSelectionData.Code
 
 open Codec
 namespace Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeRejectSize

@@ -7,7 +7,7 @@ import Prysm.BeaconBlockHeader.Code
 
 Text produced from the `.S` file and the IR by the recipe of the lemma hand-over (a scratch emitter of the
 lemma work, not the generator): a symbolic walk of the fast path, one application of a step lemma per directive
-(`StepK.lean`, `EncSteps.lean`; windows with the nops erased), boundary states between the fields. Every
+(`Codec/WindowSteps.lean`, `Codec/EncodeSteps.lean`; windows with the nops erased), boundary states between the fields. Every
 theorem has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKindN`).
 **Fast path only**: `len(dst) + 112 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
@@ -15,7 +15,7 @@ growslice branches, the length rejects, the morestack path.
 The statement is the declared type of the committed hand theorem `Encode.fast_path` (`Encode.example_fast_same_statement`).
 -/
 
-open Machine Runtime TestTarget Codec Prysm.BeaconBlockHeader.Code
+open Machine Runtime Codec Prysm.BeaconBlockHeader.Code
 variable [Host]
 
 namespace Prysm.BeaconBlockHeader
@@ -271,7 +271,7 @@ theorem Encode.example_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog
   apply kstep_movups15 Reg64.r9 16 _ (k + 17) (k + 18) (win hk 17 1) (by rfl) (by rfl)
     (rsp.toBitVec - 56) (rsp.toBitVec - 40) (by eb) t40 ht40 _ _ _ (by rfl) (by ecancel)
   intro m5 H5; kn; try dsimp only at H5
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 56), show (rsp.toBitVec - 56) + 8 = (rsp.toBitVec - 48) by bv_omega] at H5
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 56), show (rsp.toBitVec - 56) + 8 = (rsp.toBitVec - 48) by bv_omega] at H5
   apply kstep_st Reg64.r8 Reg64.rsp 104 _ (k + 18) (k + 19) (win hk 18 1) (by rfl) (by rfl)
     (rsp.toBitVec - 160) (rsp.toBitVec - 56) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
   intro m6 H6; kn; simp only [Reg64s.get64] at H6
@@ -438,7 +438,7 @@ theorem Encode.example_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog
   apply kstep_movups15 Reg64.r10 16 _ (k + 43) (k + 44) (win hk 43 1) (by rfl) (by rfl)
     (rsp.toBitVec - 88) (rsp.toBitVec - 72) (by eb) t72 ht72 _ _ _ (by rfl) (by ecancel)
   intro m9 H9; kn; try dsimp only at H9
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 88), show (rsp.toBitVec - 88) + 8 = (rsp.toBitVec - 80) by bv_omega] at H9
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 88), show (rsp.toBitVec - 88) + 8 = (rsp.toBitVec - 80) by bv_omega] at H9
   apply kstep_st Reg64.r9 Reg64.rsp 72 _ (k + 44) (k + 45) (win hk 44 1) (by rfl) (by rfl)
     (rsp.toBitVec - 160) (rsp.toBitVec - 88) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
   intro m10 H10; kn; simp only [Reg64s.get64] at H10

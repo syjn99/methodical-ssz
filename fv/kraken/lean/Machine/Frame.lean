@@ -7,7 +7,6 @@ A caller gives a callee one block of stack bytes below the return slot. The
 callee's theorem names its slots.
 -/
 
-open TestTarget
 namespace Machine
 
 /-- scratch (S) · rslot (8) · gap (40) · s28 · s30 · s38 (8 each) · gap (64) · fp (8). -/

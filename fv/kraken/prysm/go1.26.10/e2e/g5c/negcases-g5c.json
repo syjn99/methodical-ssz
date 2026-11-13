@@ -269,7 +269,7 @@
  },
  {
   "id": "g5c-vb-same-stmt-other",
-  "module": "Prysm/SyncAggregatorSelectionData/GeneratedDecodeAcceptSameAsHand.lean",
+  "module": "Prysm/ValidatorBalance/GeneratedDecodeAcceptSameAsHand.lean",
   "theorem": "Prysm.ValidatorBalance.Decode.generated_accept_same_as_statement",
   "kind": "stmt",
   "old": "= @Prysm.ValidatorBalance.Decode.accept_statement h",
@@ -342,7 +342,7 @@
  },
  {
   "id": "g5c-ve-same-stmt-other",
-  "module": "Prysm/SyncAggregatorSelectionData/GeneratedDecodeAcceptSameAsHand.lean",
+  "module": "Prysm/VoluntaryExit/GeneratedDecodeAcceptSameAsHand.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.generated_accept_same_as_statement",
   "kind": "stmt",
   "old": "= @Prysm.VoluntaryExit.Decode.accept_statement h",

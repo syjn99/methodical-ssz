@@ -11,7 +11,7 @@ The block facts come from the real program by `infix_sub` (the templates equal t
 facts by reading the `nop` directives 39 and 48. This is the check that the general loop covers the hand loop.
 -/
 
-open Machine Runtime TestTarget Prysm.HistoricalBatch Prysm.HistoricalBatch.Code
+open Machine Runtime Prysm.HistoricalBatch Prysm.HistoricalBatch.Code
 
 namespace Codec.Segment
 
@@ -32,28 +32,28 @@ theorem src_of {p : Program} {k a : Nat} {src : Int64} (hk : p.IsInfixAt Host.pr
   rw [List.isInfixAt_iff_getElem?.mp hk a ha, ← List.getElem?_eq_getElem ha]; exact h
 
 /-- `nop` positions and the `cmp/jge` head need these strings. -/
-abbrev hbL (s : String) : String := "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ_" ++ s
+abbrev historicalBatchLabel (s : String) : String := "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ_" ++ s
 
-theorem hb_loop1_g : type_of% @Prysm.HistoricalBatch.Decode.block_roots_loop := by
+theorem historical_batch_block_roots_loop : type_of% @Prysm.HistoricalBatch.Decode.block_roots_loop := by
   intro _ k hk hf sp recv bf A pks hpks hpk rbp0 r140 S Heap R hms hmm j i ps l18 l20 l28 l30 spl rslot lo avail s
     hij hps h18 h20 h28 h30 hspl hrs hlo hav hrax hrsp hrbp hr14 h_mem
-  have hB1 : (v32Head (OfNat.ofNat 8192) (hbL "a0") (hbL "166")).IsInfixAt Host.prog (k + 40) :=
-    Codec.infix_sub 40 hk (by simp only [unmarshalSSZ, v32Head, hbL, List.drop_succ_cons, List.drop_zero,
+  have hB1 : (v32Head (OfNat.ofNat 8192) (historicalBatchLabel "a0") (historicalBatchLabel "166")).IsInfixAt Host.prog (k + 40) :=
+    Codec.infix_sub 40 hk (by simp only [unmarshalSSZ, v32Head, historicalBatchLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
-  have hB2 : (v32Mid (hbL "2aa") 40 32 24 48 80).IsInfixAt Host.prog (k + 49) :=
-    Codec.infix_sub 49 hk (by simp only [unmarshalSSZ, v32Mid, hbL, List.drop_succ_cons, List.drop_zero,
+  have hB2 : (v32Mid (historicalBatchLabel "2aa") 40 32 24 48 80).IsInfixAt Host.prog (k + 49) :=
+    Codec.infix_sub 49 hk (by simp only [unmarshalSSZ, v32Mid, historicalBatchLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB3 : (v32Mm 72 8 40).IsInfixAt Host.prog (k + 62) :=
     Codec.infix_sub 62 hk (by simp only [unmarshalSSZ, v32Mm, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
-  have hB4 : (v32Hdr (hbL "2a5") 0).IsInfixAt Host.prog (k + 67) :=
-    Codec.infix_sub 67 hk (by simp only [unmarshalSSZ, v32Hdr, hbL, List.drop_succ_cons, List.drop_zero,
+  have hB4 : (v32Hdr (historicalBatchLabel "2a5") 0).IsInfixAt Host.prog (k + 67) :=
+    Codec.infix_sub 67 hk (by simp only [unmarshalSSZ, v32Hdr, historicalBatchLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
-  have hB5 : (v32Tail (hbL "14c") (hbL "8f") 48).IsInfixAt Host.prog (k + 75) :=
-    Codec.infix_sub 75 hk (by simp only [unmarshalSSZ, v32Tail, hbL, List.drop_succ_cons, List.drop_zero,
+  have hB5 : (v32Tail (historicalBatchLabel "14c") (historicalBatchLabel "8f") 48).IsInfixAt Host.prog (k + 75) :=
+    Codec.infix_sub 75 hk (by simp only [unmarshalSSZ, v32Tail, historicalBatchLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
-  have hB6 : (v32Back (hbL "8f") 24).IsInfixAt Host.prog (k + 36) :=
-    Codec.infix_sub 36 hk (by simp only [unmarshalSSZ, v32Back, hbL, List.drop_succ_cons, List.drop_zero,
+  have hB6 : (v32Back (historicalBatchLabel "8f") 24).IsInfixAt Host.prog (k + 36) :=
+    Codec.infix_sub 36 hk (by simp only [unmarshalSSZ, v32Back, historicalBatchLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have g1 : Glue (k + 40 + 8) (k + 49) := glue_of hk (a := 48)
     (by simp only [unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
@@ -92,8 +92,8 @@ theorem hb_loop1_g : type_of% @Prysm.HistoricalBatch.Decode.block_roots_loop := 
       l28, l30, spl, rslot, lo, hps, h18, h20, h28, h30, hspl, hrs, hlo, ?_⟩
     rw [hd, hm]; simpa using h_mem
   | succ j =>
-    refine eventually_trans _ _ _ _ (v32_loop 8192 (by decide) (hbL "a0") (hbL "166") (hbL "2aa") (hbL "2a5")
-      (hbL "14c") (hbL "8f") 40 32 24 48 80 72 8 0 0 (k + 40) (k + 49) (k + 62) (k + 67) (k + 75) (k + 36) (k + 85)
+    refine eventually_trans _ _ _ _ (v32_loop 8192 (by decide) (historicalBatchLabel "a0") (historicalBatchLabel "166") (historicalBatchLabel "2aa") (historicalBatchLabel "2a5")
+      (historicalBatchLabel "14c") (historicalBatchLabel "8f") 40 32 24 48 80 72 8 0 0 (k + 40) (k + 49) (k + 62) (k + 67) (k + 75) (k + 36) (k + 85)
       hB1 hB2 hB3 hB4 hB5 hB6 g1 (Or.inl ⟨rfl, rfl⟩) (Or.inl rfl) g3 g4 hlb hle sp recv bf bf A (sp + 40) (sp + 32)
       (sp + 24) (sp + 48) (sp + 80) (sp + 72) (recv + 8) recv
       (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
@@ -109,26 +109,26 @@ theorem hb_loop1_g : type_of% @Prysm.HistoricalBatch.Decode.block_roots_loop := 
     rw [hd, e8192]
     ecancel
 
-theorem hb_loop2_g : type_of% @Prysm.HistoricalBatch.Decode.state_roots_loop := by
+theorem historical_batch_state_roots_loop : type_of% @Prysm.HistoricalBatch.Decode.state_roots_loop := by
   intro _ k hk hf sp recv bf A pks hpks hpk rbp0 r140 S Heap R hms hmm j i ps l18 l20 l28 l30 spl rslot lo avail s
     hij hps h18 h20 h28 h30 hspl hrs hlo hav hr0 hrax hrsp hrbp hr14 h_mem
-  have hB1 : (v32Head (OfNat.ofNat 8192) (hbL "1c0") (hbL "28c")).IsInfixAt Host.prog (k + 108) :=
-    Codec.infix_sub 108 hk (by simp only [unmarshalSSZ, v32Head, hbL, List.drop_succ_cons, List.drop_zero,
+  have hB1 : (v32Head (OfNat.ofNat 8192) (historicalBatchLabel "1c0") (historicalBatchLabel "28c")).IsInfixAt Host.prog (k + 108) :=
+    Codec.infix_sub 108 hk (by simp only [unmarshalSSZ, v32Head, historicalBatchLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
-  have hB2 : (v32Mid (hbL "29b") 40 32 24 48 80).IsInfixAt Host.prog (k + 117) :=
-    Codec.infix_sub 117 hk (by simp only [unmarshalSSZ, v32Mid, hbL, List.drop_succ_cons, List.drop_zero,
+  have hB2 : (v32Mid (historicalBatchLabel "29b") 40 32 24 48 80).IsInfixAt Host.prog (k + 117) :=
+    Codec.infix_sub 117 hk (by simp only [unmarshalSSZ, v32Mid, historicalBatchLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB3 : (v32Mm 72 32 40).IsInfixAt Host.prog (k + 131) :=
     Codec.infix_sub 131 hk (by simp only [unmarshalSSZ, v32Mm, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
-  have hB4 : (v32Hdr (hbL "296") 24).IsInfixAt Host.prog (k + 137) :=
-    Codec.infix_sub 137 hk (by simp only [unmarshalSSZ, v32Hdr, hbL, List.drop_succ_cons, List.drop_zero,
+  have hB4 : (v32Hdr (historicalBatchLabel "296") 24).IsInfixAt Host.prog (k + 137) :=
+    Codec.infix_sub 137 hk (by simp only [unmarshalSSZ, v32Hdr, historicalBatchLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
-  have hB5 : (v32Tail (hbL "272") (hbL "1b4") 48).IsInfixAt Host.prog (k + 144) :=
-    Codec.infix_sub 144 hk (by simp only [unmarshalSSZ, v32Tail, hbL, List.drop_succ_cons, List.drop_zero,
+  have hB5 : (v32Tail (historicalBatchLabel "272") (historicalBatchLabel "1b4") 48).IsInfixAt Host.prog (k + 144) :=
+    Codec.infix_sub 144 hk (by simp only [unmarshalSSZ, v32Tail, historicalBatchLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
-  have hB6 : (v32Back (hbL "1b4") 24).IsInfixAt Host.prog (k + 104) :=
-    Codec.infix_sub 104 hk (by simp only [unmarshalSSZ, v32Back, hbL, List.drop_succ_cons, List.drop_zero,
+  have hB6 : (v32Back (historicalBatchLabel "1b4") 24).IsInfixAt Host.prog (k + 104) :=
+    Codec.infix_sub 104 hk (by simp only [unmarshalSSZ, v32Back, historicalBatchLabel, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have g1 : Glue (k + 108 + 8) (k + 117) := glue_of hk (a := 116)
     (by simp only [unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
@@ -152,8 +152,8 @@ theorem hb_loop2_g : type_of% @Prysm.HistoricalBatch.Decode.state_roots_loop := 
     obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := d
     kat hk unmarshalSSZ 154
     exact Eventually.done _ ⟨rfl, rfl⟩
-  refine eventually_trans _ _ _ _ (v32_loop 8192 (by decide) (hbL "1c0") (hbL "28c") (hbL "29b") (hbL "296")
-    (hbL "272") (hbL "1b4") 40 32 24 48 80 72 32 24 262144 (k + 108) (k + 117) (k + 131) (k + 137) (k + 144)
+  refine eventually_trans _ _ _ _ (v32_loop 8192 (by decide) (historicalBatchLabel "1c0") (historicalBatchLabel "28c") (historicalBatchLabel "29b") (historicalBatchLabel "296")
+    (historicalBatchLabel "272") (historicalBatchLabel "1b4") 40 32 24 48 80 72 32 24 262144 (k + 108) (k + 117) (k + 131) (k + 137) (k + 144)
     (k + 104) (k + 154)
     hB1 hB2 hB3 hB4 hB5 hB6 g1 gs g2 (Or.inl rfl) g4 hlb hle sp recv bf (bf + 262144) A (sp + 40) (sp + 32)
     (sp + 24) (sp + 48) (sp + 80) (sp + 72) (recv + 32) (recv + 24)

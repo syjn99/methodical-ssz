@@ -19,7 +19,7 @@ Two instances: empty prefix with `cap = 72`, and a 3-byte prefix with 5 spare by
 DepositCount and root contents every premise of the theorem holds.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.Eth1Data.Code
+open Machine Runtime Machine.Witness Codec Prysm.Eth1Data.Code
 
 namespace Prysm.Eth1Data.Witness.EncodeFastPath
 

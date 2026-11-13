@@ -6,13 +6,13 @@ import Prysm.HistoricalBatch.SpecDefinitions
 
 The order of `Prysm.SyncCommittee.Spec`. Imported from it as is: `assemble_inline_ok` (any list of inline parts),
 `headWidth_inline`, `bodyWidth_inline`, and EthLib's `concatParts_size`, `concat_fixed_slices`, `deserialize_enc`,
-`accepted_is_enc` (through `Fv1`). New here: the SyncCommittee lemmas whose statements fix 48-byte elements (`toV48`,
+`accepted_is_enc` (through `Spec`). New here: the SyncCommittee lemmas whose statements fix 48-byte elements (`toV48`,
 `allFit_bv48`, `allFit_map_bv48`, `serializeEach_bv48`, `concatParts_v48`) with 32, a vector lemma stated once and
 used for both fields (`v32_serialize`, `v32_of_bytes`), and the container lemmas for two vector fields.
 -/
 
 namespace Prysm.HistoricalBatch
-open EthLib.Serialization.Ssz Spec TestTarget
+open EthLib.Serialization.Ssz Spec
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem desc_fixedSize : desc.fixedSize = some 524288 := by rfl

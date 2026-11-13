@@ -21,7 +21,7 @@ X15 is not assumed zero (bytes 8–31 of the temp are existential). Directive in
 `Prysm.Checkpoint.CapacityReserved.Code.marshalSSZTo`.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.CapacityReserved.Code
+open Machine Runtime Prysm.Checkpoint.CapacityReserved.Code
 variable [Host]
 
 namespace Prysm.Checkpoint.CapacityReserved
@@ -89,17 +89,17 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp0.toBitVec - 152 + 88 = rsp0.toBitVec - 64 by bv_omega]
-  apply store_avx_step _ _ _ _ t40 _ _ (by ecancel) (by exact ht40) (by decide)
+  apply Machine.store_avx_step _ _ _ _ t40 _ _ (by ecancel) (by exact ht40) (by decide)
   intro m3 H3
   kunfold
   kat hk marshalSSZTo 56
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp0.toBitVec - 64 + 16 = rsp0.toBitVec - 48 by bv_omega]
-  apply store_avx_step _ _ _ _ t30 _ _ (by ecancel) (by exact ht30) (by decide)
+  apply Machine.store_avx_step _ _ _ _ t30 _ _ (by ecancel) (by exact ht30) (by decide)
   intro m4 H4
   kunfold
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp0.toBitVec - 64),
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp0.toBitVec - 64),
     show rsp0.toBitVec - 64 + 8 = rsp0.toBitVec - 56 by bv_omega] at H4
   kat hk marshalSSZTo 57
   apply store_step_at _ _ (rsp0.toBitVec - 64) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
@@ -119,7 +119,7 @@ theorem Encode.tail_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   apply load_step_at _ _ (rsp0.toBitVec - 64) _ _ e8 _ _ (by eaddr) (by ecancel) (by exact he8)
   kunfold
   kat hk marshalSSZTo 74
-  rw [Encode.fast_path_mul]
+  rw [Codec.add_mul_one]
   apply store_step _ _ _ _ _ d0 _ _ (by ecancel) (by exact hd0)
   intro m6 H6
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6

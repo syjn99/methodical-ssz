@@ -12,7 +12,7 @@ receiver `c`; the receiver's Columns words at `c + 32` (pointer A) and `c + 40` 
 147–152 → 185–190, 154–157 → 191–194 (195 nop), 158–164 → 196–202, 143–146 → 180–183 (184 nop), exit 166 → 204.
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

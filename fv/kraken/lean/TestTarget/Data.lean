@@ -16,7 +16,7 @@ are facts about the data at the labels' addresses, as premises.
 
 The lemmas at the end state, about the included bytes, what the old link check (h)
 checked by regular expressions: the type descriptors' size and kind, the
-itab's type word and method, the `staticuint64s` table.
+itab's type word and method. The `staticuint64s` table is in `Runtime/StaticUint64s.lean`.
 -/
 
 namespace TestTarget.Data
@@ -39,7 +39,6 @@ data_include errorStringItab
 data_include errorStringPtrType
 data_include intType
 data_include uint64Type
-data_include staticuint64s
 -- error globals: addresses only (their values are set by the runtime's init)
 data_include ErrSize
 data_include ErrInvalidSerialization
@@ -84,11 +83,6 @@ theorem errorStringItab_shape :
   ⟨rfl, rfl⟩
 
 end
-
-/-- `runtime.staticuint64s` is the table of the uint64 values 0..255. Checked by
-the kernel (`decide +kernel`: no `Lean.ofReduceBool`, unlike `native_decide`). -/
-theorem staticuint64s_table : staticuint64s = (List.range 256).flatMap (fun i : Nat => Int.toBytes 8 (i : Int)) := by
-  decide +kernel
 
 end TestTarget.Data
 

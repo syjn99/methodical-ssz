@@ -5,10 +5,10 @@ import Codec.NopWindow
 # GEN4: the fixed-bytes decode segment over windows, parametric in the receiver registers
 
 `f = append(make([]byte, 0, n), buf[src:src+n]...)` (add form, `n` = 32, 48 or 96). The templates
-`bytesDecHeadR rX …` / `bytesDecMidR rX rY …` are `bytesDecHead` / `bytesDecMid` (`SegN.lean`) with the register
+`bytesDecHeadR rX …` / `bytesDecMidR rX rY …` are `bytesDecHead` / `bytesDecMid` (`Codec/FixedBytesDecode.lean`) with the register
 of the receiver reload as a parameter: `rX` after `callq runtime.makeslice` (rdx at all 14 development
 sites), `rY` after `callq runtime.memmove` (rdx at 13 sites, rax at SyncCommitteeMessage.BlockRoot, the H5
-miss P-H5-1). Both blocks are WINDOWS (`NopView.lean`): a `nop` may stand anywhere, for example before
+miss P-H5-1). Both blocks are WINDOWS (`Codec/NopWindow.lean`): a `nop` may stand anywhere, for example before
 `callq runtime.makeslice` (finding SG-3). `jl` is the index of the label `lff`, `jm` the index of the
 `callq runtime.memmove` (its return address stays in the return slot), `e` the end of the second window.
 
@@ -20,7 +20,7 @@ code shape: another register or size is one more case line. Contracts `Makeslice
 `bytesdec_seg`. Not here: the offset-0 form (`bytesdec_seg_z`).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

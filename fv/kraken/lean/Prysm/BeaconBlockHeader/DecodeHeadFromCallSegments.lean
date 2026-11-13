@@ -4,16 +4,16 @@ import Codec.CalleeDecode
 /-!
 # Second instance of the call-site lemmas: `Decode.head` re-derived with the call-site lemmas
 
-`Decode.head_from_call_segments` has the statement text of `Prysm.BeaconBlockHeader.Decode.head` (`BhHead.lean`, unchanged);
+`Decode.head_from_call_segments` has the statement text of `Prysm.BeaconBlockHeader.Decode.head` (`Prysm/BeaconBlockHeader/DecodeHead.lean`, unchanged);
 `Decode.head_from_call_segments_type`: the two declared types are equal by `rfl`. Proof: `Decode.head0` (hand steps, directives
 0–14, frame `sub $0x60`), then for `Slot` `callarg_first_seg` (15–16) + `calldec_seg` (17–19, label 46), for
 `ProposerIndex` `callarg_reload_seg` with the padding `nop` (47–54) + `calldec_seg` (55–57, label 85), then
 `Decode.spill2` (hand steps, 86–87: the two nil-error spills). The existing hypotheses `Prysm.Slot.Decode.accept_function_spec` / `Prysm.ValidatorIndex.Decode.accept_function_spec` are
-used as `U64CalleeAcc` (the same propositions, `CallDecRel.lean`). Hand-written example; the existing theorem
+used as `U64CalleeAcc` (the same propositions, `Prysm/Slot/CalleeDecodeFunctionSpecs.lean`). Hand-written example; the existing theorem
 is unchanged.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.BeaconBlockHeader.Code Codec
+open Machine Runtime Prysm.AttestationData.Code Prysm.BeaconBlockHeader.Code Codec
 variable [Host]
 
 namespace Prysm.BeaconBlockHeader
@@ -142,8 +142,6 @@ theorem Decode.spill2 (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
   apply Eventually.done
   exact ⟨rfl, rfl, rfl, rfl, by ecancel⟩
 
-theorem Decode.generated_head_guard (x : BitVec 64) (g : Nat) (h : g + 112 < x.toNat) : g < (x - 112).toNat := by bv_omega
-
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- Segment 1 of the BeaconBlockHeader decoder accept path, re-derived with the call-site lemmas
@@ -191,7 +189,7 @@ theorem Decode.head_from_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfix
   have hvi' : U64CalleeAcc Prysm.ValidatorIndex.Code.unmarshalLabel := hvi
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
-  have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Decode.generated_head_guard _ _ hguard
+  have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Decode.accept_guard _ _ hguard
   -- code facts
   have hF1 := Codec.infix_sub (q := Codec.callArgFirst false 8) 15 hk
     (by simp only [Code.unmarshalSSZ, Codec.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])

@@ -4,14 +4,14 @@ import Prysm.PendingPartialWithdrawal.Spec
 /-!
 # Spec alignment of the real PendingPartialWithdrawal decoder, reject side (hold-out, type B)
 
-Hand-written: the reject part of `DmSpecK.lean` for PendingPartialWithdrawal.
+Hand-written: the reject part of `Prysm/DepositMessage/DecodeSpec.lean` for PendingPartialWithdrawal.
 - `Decode.reject_size_spec`: `bs.size ≠ 24` → EthLib rejects, and the machine code returns `ssz.ErrSize`.
 - `Decode.reject_complete`: every input that EthLib rejects has `size ≠ 24` (the path condition of the size reject).
 NOT here: the accept side (`Decode.accept_spec`): the accept theorem is not proved (attempt bound).
 Not stated here: that the two callee error paths (`fmt.errorf` wraps) are unreachable when `size = 24`.
 -/
 
-open Machine TestTarget Prysm.PendingPartialWithdrawal.Code EthLib.Serialization.Ssz
+open Machine Prysm.PendingPartialWithdrawal.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.PendingPartialWithdrawal

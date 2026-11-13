@@ -10,10 +10,10 @@ import Prysm.PendingDeposit.GeneratedDecodeSteps
 
 Text produced from one description of the type (frame facts, field list, boundary states, chain theorem names)
 by the recipe of the lemma hand-over; every theorem has a `_kind` line (`decHeadKindN`, `decFieldKindN`,
-`decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`E2eScal.Gen.*`) are used as emitted.
+`decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`Decode.generated_step_*`) are used as emitted.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.PendingDeposit.Code Codec
+open Machine Runtime Prysm.AttestationData.Code Prysm.PendingDeposit.Code Codec
 variable [Host]
 
 namespace Prysm.PendingDeposit

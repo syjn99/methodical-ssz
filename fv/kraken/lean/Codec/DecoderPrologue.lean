@@ -6,19 +6,19 @@ import Codec.DecoderHeadEpilogue
 
 The prologue of every development decoder (directives 0–10) is the same up to the frame size `F`, the
 displacement `dB` of the first rbx spill, the SSZ size `sz` and the labels. The `--gen2` and `--gen3` methods had one head lemma for
-the frame `0x20` (`Compose.dechead_seg`) and one hand lemma per call-field type (`pw_head`, `bh_head0`,
+the frame `0x20` (`Codec.dechead_seg`) and one hand lemma per call-field type (`pw_head`, `bh_head0`,
 `sm_head0`, `pc_head`; epilogues `pw_epi`, `pc_epi`). Here:
 
-* `decpro_seg fn l0 lmore lerr F dB sz` — the prologue over a window (`NopView.lean`; the `nop` at directive
+* `decpro_seg fn l0 lmore lerr F dB sz` — the prologue over a window (`Codec/NopWindow.lean`; the `nop` at directive
   8 is a window nop), with `F`, `dB`, `sz` symbolic; every register except rsp / rbp is kept (register clause);
 * `kstep_nilchk rB` — the step `test %al,(%rB)`;
 * `decret_seg` — `pop %rbp; retq` over a window.
 The spills after the prologue (2–3, order differs per type) are `kstep_st` steps; the epilogue reloads and the
-`add $F,%rsp` are `kstep_ld*` / `kstep_add` steps (`StepK.lean`). `HeadRel.lean` re-proves the per-type hand
+`add $F,%rsp` are `kstep_ld*` / `kstep_add` steps (`Codec/WindowSteps.lean`). `Prysm/SyncCommitteeMessage/DecoderPrologueInstances.lean` re-proves the per-type hand
 lemmas with their committed statements from these. No runtime contract is used.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

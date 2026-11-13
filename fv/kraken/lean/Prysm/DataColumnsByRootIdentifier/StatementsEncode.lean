@@ -32,7 +32,7 @@ directive 16, grow site 1 only). Locals: x − 16 (root pointer, grow site 1 onl
 only). Callee spill area: x − 136 (40 bytes, growslice). Runtime call return slot x − 144; scratch `S` below it.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

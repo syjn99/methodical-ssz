@@ -18,9 +18,9 @@ Cases (all on the committed Eth1Data `.S` and IR; mutants are written to <work-d
 
 GEN2 cases (`p2dec --gen2`; ids `g2-*`; mutated `.S` and IR copies in <work-dir> only):
  - g2-compat-*: the default mode (no `--gen2`) on BlobIdentifier / DepositMessage still prints the committed
-   files of hold-out set H3, `GenBiDec.lean` / `GenDmDec.lean` byte for byte.
+   files of hold-out set H3, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean` / `Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean` byte for byte.
  - g2-new-*: `--gen2` on Eth1Data, BlobIdentifier, DepositMessage: exit 0 twice, identical, = the committed
-   raw files `Gen2E1Dec.lean`, `Gen2BiDec.lean`, `Gen2DmDec.lean`, with every field covered.
+   raw files `Prysm/Eth1Data/GeneratedDecodeFieldSegments.lean`, `Prysm/BlobIdentifier/GeneratedDecodeFieldSegments.lean`, `Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean`, with every field covered.
  - adversarial `.S` / IR mutants: wrong size immediates, a size other than 32 / 48 / 96, mismatched registers
    in the uint64 triple, base register not rsp / rdx, a scratch register outside the lemma's list, wrong
    displacement against the IR, truncated `.S`, swapped field order (IR and code), a delegated overlay
@@ -30,7 +30,7 @@ GEN2 cases (`p2dec --gen2`; ids `g2-*`; mutated `.S` and IR copies in <work-dir>
    (no development site has one): the theorem text has the add-form 48 shape and the parameters of the
    synthetic code. Text check only (no Lean code constant for a synthetic `.S`: not kernel-checked).
  - g2-partial: a mutant with `--partial-out`: the file is marked PARTIAL and `kindcheck.py` rejects it.
- - g2c-*: `--compose` = the committed `Gen2BiAccept.lean` / `Gen2DmAccept.lean` / `Gen2E1Accept.lean` (two runs,
+ - g2c-*: `--compose` = the committed `Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean` / `Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean` / `Prysm/Eth1Data/GeneratedDecodeAcceptComposition.lean` (two runs,
    identical; kindcheck PASS "identity-checked"); without `--same-as` the run warns on stderr and kindcheck
    rejects the file (no statement check); a field not covered, a tail store from another register and a
    shifted epilogue give exit 2 and 0 bytes.
@@ -54,9 +54,9 @@ GEN2 fix cases (ids `g2f-*`):
 
 GEN3 cases (`p2dec --gen3`; ids `g3-*`; mutated `.S` / IR copies in <work-dir> only):
  - g3-new-*: `--gen3` on PendingPartialWithdrawal, Deposit_Data, BeaconBlockHeader: exit 0 twice, identical,
-   every field covered, = the committed raw files `Gen3PwDec.lean`, `Gen3DdDec.lean`, `Gen3BhDec.lean` when they
+   every field covered, = the committed raw files `Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean`, `Prysm/Deposit_Data/GeneratedDecodeCallSegments.lean`, `Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean` when they
    exist; AttestationData: exit 3, Slot / CommitteeIndex / BeaconBlockRoot covered, Source / Target not
-   (nested containers), partial file = committed `Gen3AdDecPartial.lean` when it exists; `kindcheck.py` PASS
+   (nested containers), partial file = committed `Prysm/AttestationData/GeneratedDecodeCallSegmentsPartial.lean` when it exists; `kindcheck.py` PASS
    (`--partial`: exit 3).
  - adversarial `.S` / IR mutants per GEN3 shape: wrong callee symbol, callee without a proved spec (IR),
    `test` / `je` missing, `je` to a missing or an earlier label, set-up with an extra or a missing move, `nop` in
@@ -68,7 +68,7 @@ GEN3 cases (`p2dec --gen3`; ids `g3-*`; mutated `.S` / IR copies in <work-dir> o
    exit 2; 0 bytes on stdout whenever the exit code is not 0; `--summary` agrees.
  - g3-compose-*: `--gen3 --compose` refuses callee / two-directive types (PendingPartialWithdrawal,
    BeaconBlockHeader: exit 2, 0 bytes); Deposit_Data composes (exit 0) with the `decAcceptKind` `_kind` line
-   and the identity with `H4.dd_accept_stmt`; kindcheck PASS; = committed `Gen3DdAccept2.lean` when it exists.
+   and the identity with `H4.dd_accept_stmt`; kindcheck PASS; = committed `Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean` when it exists.
 
 GEN4 cases (`p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <work-dir> only):
  - g4-new-*: `--gen4` on the 10 development types: exit 0 twice (AttestationData: 3), identical, the expected

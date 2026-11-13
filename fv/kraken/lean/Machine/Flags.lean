@@ -4,7 +4,6 @@ import Machine.Step
 arithmetic on 64-bit literals at every use (`simp` + `omega` proof terms with
 literals near 2^64 make the kernel report deep recursion). -/
 
-open TestTarget
 namespace Machine
 
 theorem toNat_add_neg8 (x : BitVec 64) (h : 8 ≤ x.toNat) : (x + -8).toNat = x.toNat - 8 := by

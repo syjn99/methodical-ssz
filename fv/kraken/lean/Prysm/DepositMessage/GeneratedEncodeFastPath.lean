@@ -14,7 +14,7 @@ growslice branches, the length rejects, the morestack path. Not a complete encod
 GEN6-JSON: {"type": "DepositMessage", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 88, "frame": 128, "gd": 8, "rt": true, "fields": [["PublicKey", "b", 48], ["WithdrawalCredentials", "b", 32], ["Amount", "u", 8]], "boundaries": [9, 37, 65, 83], "layout": "Prysm.DepositMessage.Encode.generated_layout", "S_sha256": "e35191e9ca09807491be85e751725c784993c64668f2fee19ca337fe5b1e055c", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.DepositMessage", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
 -/
 
-open Machine Runtime TestTarget Codec Prysm.DepositMessage.Code
+open Machine Runtime Codec Prysm.DepositMessage.Code
 variable [Host]
 
 namespace Prysm.DepositMessage

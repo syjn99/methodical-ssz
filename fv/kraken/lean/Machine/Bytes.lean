@@ -2,7 +2,6 @@ import Machine.Step
 
 /-! Byte facts for the stored values. -/
 
-open TestTarget
 namespace Machine
 open Std
 

@@ -15,7 +15,7 @@ the 144-byte stack window (rsp = 0x100e8) and `dst` at 0x10100: the prefix,
 empty prefix with `cap = 40`, and a 3-byte prefix with 5 spare bytes.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code
+open Machine Runtime Machine.Witness Prysm.Checkpoint.Code
 
 namespace Prysm.Checkpoint.Witness.EncodeFastPath
 

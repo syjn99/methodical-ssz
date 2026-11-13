@@ -13,7 +13,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "PublicKey", "theorems": ["Decode.generated_step_PublicKey_seg", "Decode.generated_step_s37", "Decode.generated_step_s38", "Decode.generated_step_s45", "Decode.generated_step_s46"]}, {"field": "WithdrawalCredentials", "theorems": ["Decode.generated_step_WithdrawalCredentials_seg", "Decode.generated_step_s73", "Decode.generated_step_s74", "Decode.generated_step_s81", "Decode.generated_step_s82"]}, {"field": "Amount", "theorems": ["Decode.generated_step_s83", "Decode.generated_step_s84", "Decode.generated_step_s85"]}, {"field": "Signature", "theorems": ["Decode.generated_step_Signature_seg", "Decode.generated_step_s111", "Decode.generated_step_s112", "Decode.generated_step_s119", "Decode.generated_step_s120"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.Deposit_Data.Code
+open Machine Runtime Prysm.Deposit_Data.Code
 variable [Host]
 
 open Codec

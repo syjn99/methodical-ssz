@@ -2,7 +2,7 @@ import Prysm.Checkpoint.CapacityReservedEncodeHead
 
 /-! # OPT-R1 reserve encoder: the grow prefix (`cap − len < 40`), directives 0–47. See `Prysm.Checkpoint.CapacityReservedEncodeHead`. -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.CapacityReserved.Code
+open Machine Runtime Prysm.Checkpoint.CapacityReserved.Code
 variable [Host]
 
 namespace Prysm.Checkpoint.CapacityReserved
@@ -116,23 +116,23 @@ theorem Encode.head_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 8#64 - 144 + 40 = rsp.toBitVec - 112 by bv_omega]
-  apply store_avx_step _ _ _ _ zA _ _ (by ecancel) (by exact hzA) (by decide)
+  apply Machine.store_avx_step _ _ _ _ zA _ _ (by ecancel) (by exact hzA) (by decide)
   intro m5 H5
   kunfold
   kat hk marshalSSZTo 18
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 112 + 16 = rsp.toBitVec - 96 by bv_omega]
-  apply store_avx_step _ _ _ _ zB _ _ (by ecancel) (by exact hzB) (by decide)
+  apply Machine.store_avx_step _ _ _ _ zB _ _ (by ecancel) (by exact hzB) (by decide)
   intro m6 H6
   kunfold
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 96),
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 96),
     show rsp.toBitVec - 96 + 8 = rsp.toBitVec - 88 by bv_omega] at H6
   kat hk marshalSSZTo 19
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 112 + 24 = rsp.toBitVec - 88 by bv_omega]
-  apply store_avx_step _ _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8 ++ zC) _ _
+  apply Machine.store_avx_step _ _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8 ++ zC) _ _
     (by
       rw [at_app _ zC (b := rsp.toBitVec - 80) (by simp only [List.length_drop, Int.toBytes_length]; bv_omega)
         (by simp [hzC, Int.toBytes_length])]
@@ -212,7 +212,7 @@ theorem Encode.head_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   simp only [Width.bytes, Width.bits] at H11
   kunfold
   rw [Encode.reserve_call] at *
-  try rw [Encode.fast_path_mul] at *
+  try rw [Codec.add_mul_one] at *
   try rw [show rsp.toBitVec - 152 + 40 = rsp.toBitVec - 112 by bv_omega] at *
   have hX := Int.toBytes_length 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt
   generalize Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt = X at *

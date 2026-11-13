@@ -1,6 +1,6 @@
 import Runtime.BumpAllocator
 import Runtime.BumpAllocatorVariants
-import TestTarget.FunctionSpecs
+import Runtime.NewobjectContract
 import Prysm.ElfData.IndexedAttestation
 
 /-!
@@ -14,7 +14,7 @@ with the names changed. Abstract model for non-vacuity only, not a Go refinement
 the Lake `input_dir` `runtime_model_S`.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Prysm.RuntimeModel
 

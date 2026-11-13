@@ -1,5 +1,6 @@
 import Prysm.IndexedAttestation.DecodeRejectAlignment
 import Prysm.IndexedAttestation.Spec
+import Prysm.IndexedAttestation.DecodeRejectOverflow
 
 /-!
 # Spec alignment of the IndexedAttestation alignment reject and overflow reject
@@ -9,7 +10,7 @@ EthLib rejects (`spec_rejects`: the Go check that fails is one of `decodeChecks`
 `fmt.errorf` error (`Decode.reject_alignment_error_word_nonzero`, `Decode.reject_overflow_error_word_nonzero`). The text of `Prysm/IndexedAttestation/DecodeSpecReject.lean`.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
 variable [Host]
 
 namespace Prysm.IndexedAttestation

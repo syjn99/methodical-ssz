@@ -7,7 +7,7 @@ The accept path of a protoc container decoder with the frame of the development 
 receiver spill `0x30(%rsp)`, buffer spill `0x38(%rsp)`) is: head, then per field its decode segment
 (`bytesdec_seg` / `bytesdec_seg_z` followed by the pointer tail below, or `u64dec_inline_seg`), then the
 epilogue. This file has the three pieces that are not a field segment. Each one is a segment lemma of the
-form of `Seg.lean` (template + `IsInfixAt` hypothesis); none uses a runtime contract.
+form of `Codec/SegmentTemplate.lean` (template + `IsInfixAt` hypothesis); none uses a runtime contract.
 
 * `dechead_seg` — `decHead fn l0 lmore lerr sz` (13 directives: two labels, stack guard, prologue,
   `cmp $sz,%rcx; jne lerr`, the two spills). Statement = the statement of `Prysm.BlobIdentifier.Decode.head` with the
@@ -20,11 +20,11 @@ form of `Seg.lean` (template + `IsInfixAt` hypothesis); none uses a runtime cont
 * `decepi_seg` — `decEpi` = `xor %eax,%eax; xor %ebx,%ebx; add $0x20,%rsp; pop %rbp; retq`.
 
 A composed accept theorem is a chain of `eventually_trans` over these lemmas; the frame of each step is an
-explicit instance (`Gen2ComposeEx.lean` has one worked example). There is no generic combinator over a list
+explicit instance (`Prysm/BlobIdentifier/DecodeAcceptComposedExample.lean` has one worked example). There is no generic combinator over a list
 of segments.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

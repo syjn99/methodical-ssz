@@ -13,7 +13,7 @@ the guard word, saved-rbp slot, return slot, the unused rax spill slot (the fram
 slot. For every length `≠ 1240` (instances 1239, 1241, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Deposit.Code
+open Machine Runtime Machine.Witness Prysm.Deposit.Code
 
 namespace Prysm.Deposit.Witness.DecodeRejectSize
 

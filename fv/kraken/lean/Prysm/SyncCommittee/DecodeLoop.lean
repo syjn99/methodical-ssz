@@ -20,7 +20,7 @@ taken; 64–67 the len and cap words of header i; 68–69 writeBarrier = 0; 70�
 `rax = i + 1`.
 -/
 
-open Machine Runtime TestTarget Prysm.SyncCommittee.Code
+open Machine Runtime Prysm.SyncCommittee.Code
 variable [Host]
 
 namespace Prysm.SyncCommittee

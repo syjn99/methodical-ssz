@@ -10,6 +10,8 @@ import Prysm.IndexedAttestation.DecodeRejectAlignment
 import Prysm.IndexedAttestation.DecodeSpecRejectErrorWordNonzero
 import Prysm.IndexedAttestation.WitnessDecodeRejectAlignment
 import Prysm.IndexedAttestation.WitnessDecodeRejectSize
+import Prysm.IndexedAttestation.DecodeRejectOverflow
+import Prysm.IndexedAttestation.DecodeRejectOffset
 
 /-! Hand list of the IndexedAttestation decoder theorems for `gen/e2e/axioms_gate.py` ("must exist" names;
 every name also gets the axiom check). -/

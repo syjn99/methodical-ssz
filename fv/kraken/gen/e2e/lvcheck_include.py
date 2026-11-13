@@ -3,7 +3,7 @@
 
 Usage: lvcheck_include.py      (from any cwd; Python 3 standard library only)
 A new file with the method of `check_include.py` (not changed): compares the bodies of e2eHexByte?,
-e2eLabelTerm, e2eDataSource (E2e) with lvHexByte?, lvLabelTerm, lvDataSource (SyncAggregate and SyncCommittee reader) after renaming
+e2eLabelTerm, e2eDataSource (Checkpoint and Epoch reader) with lvHexByte?, lvLabelTerm, lvDataSource (SyncAggregate and SyncCommittee reader) after renaming
 the three names, and the elab bodies after renaming the command, the error prefix and the data path.
 Exit 1 on a difference.
 """

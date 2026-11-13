@@ -9,12 +9,12 @@ RtCopy). The input array is `SszValue.encode g0` (the consensus-specs encoding o
 with the EthLib premise `deserialize desc (SszValue.encode g0) = .ok g0.toValue`
 discharged by `SszValue.roundtrip`; the memory premise `Pm` holds for every `g` with
 `SszValue.encode g0 = SszValue.encode g` (such a `g` is `g0`: `sszValue_toValue_inj`). The examples fix
-`g0` to the three epoch × root values of `WitCpA` (input arrays `SszValue.encode g0` of
+`g0` to the three epoch × root values of `Prysm/Checkpoint/WitnessDecodeAccept.lean` (input arrays `SszValue.encode g0` of
 closed `g0`; a byte-literal equality is not stated: `decide` does not reduce
 `uintBytes`/`Vector.ofFn`, and `native_decide` is not allowed).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
 
 namespace Prysm.Checkpoint.Witness.DecodeAccept
 

@@ -3,6 +3,7 @@ import Spec.DeserializeOfSerialize
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import TestTarget.ListU64AcceptSpec
+import Codec.ReadUint64List
 
 /-!
 # ListU64: reject correspondence with EthLib
@@ -16,30 +17,12 @@ open Spec hiding readUint_lt
 namespace TestTarget
 open EthLib.Serialization.Ssz
 
-/-- The elements read back: `m` little-endian words from `start`. -/
-def luElems (bs : Array UInt8) (start : Nat) : Nat → List UInt64
-  | 0 => []
-  | m + 1 => UInt64.ofNat (readUint bs start 8) :: luElems bs (start + 8) m
-
-theorem luElems_length (bs : Array UInt8) (start m : Nat) : (luElems bs start m).length = m := by
-  induction m generalizing start <;> simp [luElems, *]
-
-theorem u64Bytes_luElems (bs : Array UInt8) : ∀ m start, start + 8 * m ≤ bs.size →
-    u64Bytes (luElems bs start m) = bs.extract start (start + 8 * m)
-  | 0, start, _ => by simp [luElems, u64Bytes]; omega
-  | m + 1, start, h => by
-    simp only [luElems, u64Bytes]
-    have hlt := readUint_lt bs start 8
-    rw [UInt64.toNat_ofNat_of_lt' (by simpa using hlt), uintBytes_readUint_slice bs start 8 (by omega),
-      u64Bytes_luElems bs m (start + 8) (by omega), Array.extract_append_extract]
-    congr 1 <;> omega
-
 theorem lu_checks_enc (bs : Array UInt8) (n : Nat) (hsz : bs.size = 4 + 8 * n) (hn : n ≤ 16)
     (hoff : readUint bs 0 4 = 4) : ∃ g : ListU64, g.ok ∧ bs = luEncode g := by
-  refine ⟨⟨luElems bs 4 n⟩, by simp [ListU64.ok, luElems_length]; omega, ?_⟩
+  refine ⟨⟨Codec.readUint64List bs 4 n⟩, by simp [ListU64.ok, Codec.readUint64List_length]; omega, ?_⟩
   have h1 := uintBytes_readUint_slice bs 0 4 (by omega)
   rw [hoff] at h1
-  simp only [luEncode, h1, u64Bytes_luElems bs n 4 (by omega), Array.extract_append_extract]
+  simp only [luEncode, h1, Codec.u64Bytes_readUint64List bs n 4 (by omega), Array.extract_append_extract]
   rw [show min 0 4 = 0 by rfl, show max (0 + 4) (4 + 8 * n) = bs.size by omega]; simp
 
 /-- Kraken's `Int.ofBytes` (the machine load) and EthLib's `readUint` read the same number. -/

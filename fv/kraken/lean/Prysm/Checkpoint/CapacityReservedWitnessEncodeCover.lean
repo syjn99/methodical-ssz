@@ -17,7 +17,7 @@ rsp − 160 … rsp + 32 (rsp = 0x12440) and `dst` at 0x12460 = a 30-byte prefix
 one growslice for newLen = 70), 40, 41 (fast path); `runs_nil`: nil `dst` (rbx = 0, len = cap = 0).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.CapacityReserved Prysm.Checkpoint.CapacityReserved.Code EthLib.Serialization.Ssz
+open Machine Runtime Machine.Witness Prysm.Checkpoint.CapacityReserved Prysm.Checkpoint.CapacityReserved.Code EthLib.Serialization.Ssz
 
 namespace Prysm.Checkpoint.Witness.CapacityReservedEncodeCover
 

@@ -3,9 +3,9 @@ import Codec.FixedBytesDecode
 /-!
 # GEN2 L1: statement kinds of the size-parametric fixed-bytes decode segments
 
-`bytesDecSegKind n` / `bytesDecSegZKind n` are the texts of `rootDecSegKind` (`Kind.lean`) and
-`rootDecSegZKind` (`KindZ.lean`) with the size `32` replaced by the parameter `n : Nat` (four places:
-`root.length = n`, `n ≤ avail`, `Heap (avail - n)`, `Int.toBytes 8 (OfNat.ofNat n)` twice). `Kind.lean` and `KindZ.lean`
+`bytesDecSegKind n` / `bytesDecSegZKind n` are the texts of `rootDecSegKind` (`Codec/Kind/FieldPatterns.lean`) and
+`rootDecSegZKind` (`Codec/Kind/Bytes32DecodeOffsetZero.lean`) with the size `32` replaced by the parameter `n : Nat` (four places:
+`root.length = n`, `n ≤ avail`, `Heap (avail - n)`, `Int.toBytes 8 (OfNat.ofNat n)` twice). `Codec/Kind/FieldPatterns.lean` and `Codec/Kind/Bytes32DecodeOffsetZero.lean`
 are unchanged. `bytesDecSegKind_of` / `bytesDecSegZKind_of` prove a kind from the lemma (`bytesdec_seg`,
 `bytesdec_seg_z`) and the code facts of an instance, so the kind body is kernel-checked against the lemma
 conclusion. The kind has no size hypothesis: for a size outside 32 / 48 / 96 it is a proposition without a
@@ -13,7 +13,7 @@ proof here. `Codec/FixedBytesDecodeSizeInstances.lean` shows `rootDecSegKind = b
 `rootDecSegZKind = bytesDecSegZKind 32` (`rfl`).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

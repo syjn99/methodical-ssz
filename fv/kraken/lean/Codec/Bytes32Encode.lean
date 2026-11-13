@@ -20,7 +20,7 @@ length `off`, rdi = capacity `cap`. Parameters: labels `lrej`, `lcf`; field disp
 `memmove` (directive `j2 + 8`).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

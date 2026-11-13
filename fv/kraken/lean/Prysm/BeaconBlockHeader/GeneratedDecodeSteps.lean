@@ -12,7 +12,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "Slot", "theorems": ["Decode.generated_step_s15", "Decode.generated_step_s16", "Decode.generated_step_Slot_call"]}, {"field": "ProposerIndex", "theorems": ["Decode.generated_step_s47", "Decode.generated_step_s48", "Decode.generated_step_s49", "Decode.generated_step_s50", "Decode.generated_step_s51", "Decode.generated_step_s52", "Decode.generated_step_s53", "Decode.generated_step_ProposerIndex_call"]}, {"field": "ParentRoot", "theorems": ["Decode.generated_step_s86", "Decode.generated_step_s87", "Decode.generated_step_ParentRoot_seg", "Decode.generated_step_s113", "Decode.generated_step_s115", "Decode.generated_step_s122", "Decode.generated_step_s123"]}, {"field": "StateRoot", "theorems": ["Decode.generated_step_StateRoot_seg", "Decode.generated_step_s149", "Decode.generated_step_s150", "Decode.generated_step_s157", "Decode.generated_step_s158"]}, {"field": "BodyRoot", "theorems": ["Decode.generated_step_BodyRoot_seg", "Decode.generated_step_s184", "Decode.generated_step_s185", "Decode.generated_step_s193", "Decode.generated_step_s194"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.BeaconBlockHeader.Code
+open Machine Runtime Prysm.BeaconBlockHeader.Code
 variable [Host]
 
 open Codec

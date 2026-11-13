@@ -1,6 +1,6 @@
 import Prysm.AttestationData.DecodeAcceptBlockRoot
 import Prysm.Checkpoint.FunctionSpecsAsNestedField
-import TestTarget.FunctionSpecs
+import Runtime.NewobjectContract
 
 /-!
 # `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 3
@@ -20,7 +20,7 @@ The Checkpoint callee is used only through `Prysm.Checkpoint.Decode.accept_funct
 slot, argument area (24), two untouched 16-byte gaps, three locals and its saved rbp.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code
+open Machine Runtime Prysm.AttestationData.Code
 variable [Host]
 
 namespace Prysm.AttestationData

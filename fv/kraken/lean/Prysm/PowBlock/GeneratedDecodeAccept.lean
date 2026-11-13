@@ -20,7 +20,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "BlockHash", "theorems": ["Decode.generated_BlockHash_seg", "Decode.generated_s37", "Decode.generated_s38", "Decode.generated_s45", "Decode.generated_s46"]}, {"field": "ParentHash", "theorems": ["Decode.generated_ParentHash_seg", "Decode.generated_s73", "Decode.generated_s74", "Decode.generated_s81", "Decode.generated_s82"]}, {"field": "TotalDifficulty", "theorems": ["Decode.generated_TotalDifficulty_seg", "Decode.generated_s109", "Decode.generated_s110", "Decode.generated_s117", "Decode.generated_s118"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.PowBlock.Code
+open Machine Runtime Prysm.PowBlock.Code
 variable [Host]
 
 open Codec

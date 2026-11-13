@@ -1,9 +1,9 @@
 """Evidence tool (not part of gen/scal): write the decoder witness modules WitnessGeneratedDecodeAccept and
 WitnessGeneratedDecodeRejectSize (lean/Prysm/<GoTypeName>/) of the seven
 generated decoders (non-vacuity of the generated accept / size-reject theorems). Texts follow the script
-`mkwit.py` (reject; callee frame 0x38) and the hand witnesses `WitDdA.lean` (frame 0x20 bytes) and `WitPdA.lean`
+`mkwit.py` (reject; callee frame 0x38) and the hand witnesses `Prysm/Deposit_Data/WitnessDecodeAccept.lean` (frame 0x20 bytes) and `Prysm/PendingDeposit/WitnessDecodeAccept.lean`
 (frame with slices and callees); the memory block of each type is laid out here from the frame facts of its `.S`
-(the same facts as `F24Stmt.lean`), with the addresses computed below.
+(the same facts as `Prysm/DepositRequest/Statements.lean`), with the addresses computed below.
 usage: python3 -I -B f24wit.py <fv/kraken> [X ...]"""
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -58,7 +58,7 @@ slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill s
 (instances {N - 1}, {N + 1}, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.BuilderDepositRequest.Code
+open Machine Runtime Machine.Witness Prysm.BuilderDepositRequest.Code
 
 open Codec
 namespace E2eScal.Wit{X}GR
@@ -170,7 +170,7 @@ at rax = 0x10020 (protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout: `st
 returns nil. The receiver is a Go value of `{ty}` (all zero).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2eScal Codec Prysm.BuilderDepositRequest.Code
+open Machine Runtime Machine.Witness E2eScal Codec Prysm.BuilderDepositRequest.Code
 
 namespace E2eScal.Wit{X}GA
 
@@ -348,7 +348,7 @@ def accbytes(X, n, frame):
                    + [('(by decide)' if f[1] == 'u' else 'rfl') for f in fs] + ['(by decide)'] * nb)
     ex2 = ' '.join([f'(List.replicate {f[2]} 0xff)' for f in fs] + ['(List.replicate 8 0xff)'] * nb
                    + ['rfl'] * (len(fs) + nb))
-    opens = 'Machine Runtime TestTarget Machine.Witness E2eScal Codec Prysm.BuilderDepositRequest.Code'
+    opens = 'Machine Runtime Machine.Witness E2eScal Codec Prysm.BuilderDepositRequest.Code'
     cdoc = ', '.join(f'`{CALLEE[c][1]}` UnmarshalSSZ' for c in callees)
     return f'''import E2eScal.Gen5F24{X}Dec
 import Runtime.CopyModel

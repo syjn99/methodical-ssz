@@ -251,6 +251,7 @@
   "module": "Prysm/SyncCommittee/Spec.lean",
   "theorem": "Prysm.SyncCommittee.desc_fixedSize",
   "inline": [
+   "Prysm/SyncCommittee/SpecDescription.lean",
    "Prysm/SyncAggregate/SpecDescription.lean",
    "Prysm/SyncCommittee/SpecDefinitions.lean"
   ],
@@ -279,6 +280,7 @@
   "module": "Prysm/SyncCommittee/Spec.lean",
   "theorem": "Prysm.SyncCommittee.toValue_fits",
   "inline": [
+   "Prysm/SyncCommittee/SpecDescription.lean",
    "Prysm/SyncAggregate/SpecDescription.lean",
    "Prysm/SyncCommittee/SpecDefinitions.lean"
   ],

@@ -19,7 +19,7 @@ caller's word at rsp + 24. For every input and every old pointer word every prem
 nil. The receiver is a Go value of `v1.DepositRequest` (zero `state`, zero-length slices, zero integers).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.DepositRequest.Code
+open Machine Runtime Machine.Witness Codec Prysm.DepositRequest.Code
 
 namespace Prysm.DepositRequest.Witness.GeneratedDecodeAccept
 

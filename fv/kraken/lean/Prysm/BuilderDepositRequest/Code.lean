@@ -9,8 +9,8 @@ Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/f24/link/no
 `link/check.py` (a)–(f) PASS in `../RESULT`, bundle `942b10be…`). The decoder and the encoder of each of the
 24 flat fixed-size types outside the development population.
 Code constants only: no theorem, no contract. Hand-written include file (not generator
-output; the text of `Enc2Code.lean` with the function set changed).
-Limit: the directory `f24/link/norm` is not a Lake `input_dir` of the `E2eScal` library (a lakefile change
+output; the text of `Prysm/BlobIdentifier/EncoderCode.lean` with the function set changed).
+Limit: the directory `f24/link/norm` is not a Lake `input_dir` of the `Prysm` library (a lakefile change
 needs approval), so Lake does not rebuild these modules when a `.S` file changes. The `.S` files are
 bound by the link bundle hash; a cold build is the check after any change.
 -/

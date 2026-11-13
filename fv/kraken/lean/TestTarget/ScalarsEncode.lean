@@ -1,5 +1,6 @@
 import Machine.Bytes
 import Machine.Labels
+import TestTarget.Code
 
 /-!
 # Scalars.MarshalSSZTo, fast path, on Kraken main (6064eec)

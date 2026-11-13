@@ -8,7 +8,7 @@ import Codec.Kind.DecodeAcceptComposition
 (sha256 `f062e0f9be56aef921ad33347d21ac292c6a02f9119e0b70b0dabd22385acae6`) and `prysm/ir/ir-mainnet.json` (sha256 `c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a`, type `v1alpha1.Deposit_Data`); composed accept theorem (`p2dec --gen3 --compose`); statement check: the kind `decAcceptKind` (`_kind`, rfl at default transparency) and the identity with `Prysm.Deposit_Data.Decode.accept_statement`. Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Machine Runtime TestTarget Prysm.Deposit_Data.Code
+open Machine Runtime Prysm.Deposit_Data.Code
 variable [Host]
 
 open Codec

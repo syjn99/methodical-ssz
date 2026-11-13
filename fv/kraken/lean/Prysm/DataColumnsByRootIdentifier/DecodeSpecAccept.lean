@@ -9,7 +9,7 @@ An input that EthLib accepts against `desc` is `SszValue.encode g` for a `g : Ss
 into `g` (`Decode.accept` with `n = g.cols.length`). The text of `Prysm/IndexedAttestation/DecodeSpecAccept.lean`.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

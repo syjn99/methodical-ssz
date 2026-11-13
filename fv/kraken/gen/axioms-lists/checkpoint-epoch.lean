@@ -1,4 +1,4 @@
--- Generated list (prysm-e2e E6): the axioms of every E2e main theorem, witness and spec lemma.
+-- Generated list: the axioms of every Checkpoint and Epoch main theorem, witness and spec lemma.
 import Prysm.Epoch.DecodeAccept
 import Prysm.Epoch.WitnessDecodeAccept
 import Prysm.Checkpoint.Spec

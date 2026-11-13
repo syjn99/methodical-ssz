@@ -1,6 +1,6 @@
 import Runtime.BumpAllocator
 import Runtime.BumpAllocatorVariants
-import TestTarget.FunctionSpecs
+import Runtime.NewobjectContract
 
 /-!
 # Bump-allocator model of `runtime.newobject` for one 72-byte object (witness only)
@@ -12,7 +12,7 @@ Go 1.26.10 ELF is 72 bytes, `adCpType` Size_ = 0x48). It is a model in a witness
 claim about the Go runtime.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Prysm.AttestationData
 

@@ -20,7 +20,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "BeaconBlockRoot", "theorems": ["Decode.generated_BeaconBlockRoot_seg", "Decode.generated_s38", "Decode.generated_s39", "Decode.generated_s47", "Decode.generated_s48"]}, {"field": "Slot", "theorems": ["Decode.generated_s49", "Decode.generated_s50", "Decode.generated_s51", "Decode.generated_s52", "Decode.generated_s53", "Decode.generated_s54", "Decode.generated_Slot_call"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.PartialDataColumnGroupID.Code
+open Machine Runtime Prysm.PartialDataColumnGroupID.Code
 variable [Host]
 
 open Codec

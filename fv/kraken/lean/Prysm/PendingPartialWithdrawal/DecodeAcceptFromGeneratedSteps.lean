@@ -4,14 +4,14 @@ import Prysm.PendingPartialWithdrawal.GeneratedDecodeSteps
 /-!
 # PendingPartialWithdrawal accept path from the GENERATED `p2dec --gen4` chains
 
-`Decode.accept_from_generated_steps : Decode.accept_statement` (the hand statement, `H4Stmt.lean`, unchanged). HAND field
-compositions over the GENERATED theorems of `Gen4PwDec.lean` (`p2dec --gen4`, raw output): Index = generated steps 15,
+`Decode.accept_from_generated_steps : Decode.accept_statement` (the hand statement, `Prysm/Deposit_Data/Statements.lean`, unchanged). HAND field
+compositions over the GENERATED theorems of `Prysm/PendingPartialWithdrawal/GeneratedDecodeSteps.lean` (`p2dec --gen4`, raw output): Index = generated steps 15,
 16 + call block; Amount and WithdrawableEpoch = generated steps 48–58 (the uint64 read 54–55 inside the call set-up)
 + the generated call block 59–61. Hand text that remains: the field compositions, `Decode.head` / `Decode.epi`
-(`PwAccept.lean`, frame `0x48`) and the glue. In-sample (development data); no transfer claim.
+(`Prysm/PendingPartialWithdrawal/DecodeAccept.lean`, frame `0x48`) and the glue. In-sample (development data); no transfer claim.
 -/
 
-open Machine Runtime TestTarget Prysm.PendingPartialWithdrawal.Code Codec
+open Machine Runtime Prysm.PendingPartialWithdrawal.Code Codec
 variable [Host]
 
 namespace Prysm.PendingPartialWithdrawal

@@ -5,7 +5,7 @@ import Machine.Bytes
 /-!
 # Scalability stage S1: shared glue of the parameterized segment lemmas
 
-A segment lemma of `E2eScal` is stated for a *code template*: a Lean function from the
+A segment lemma of `Codec` is stated for a *code template*: a Lean function from the
 parameters (labels, frame size, stack-slot and field displacements) to a list of
 directives. The lemma takes the template's place in the host program as a hypothesis
 `(tmpl params).IsInfixAt Host.prog j` (and, for a jump target, `label l = Host.addrOf j'`).

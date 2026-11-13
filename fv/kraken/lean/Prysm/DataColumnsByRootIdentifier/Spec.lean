@@ -6,12 +6,12 @@ import Prysm.DataColumnsByRootIdentifier.StatementsEncode
 # Spec bridge for the real Prysm `v1alpha1.DataColumnsByRootIdentifier`
 
 The order of `Prysm/IndexedAttestation/Spec.lean` (`pia_serialize`): the list part reuses the Go 1.26.3 ListU64 lemmas
-(`Spec.serializeEach_u64`, `Fv1.inl_*`, `Spec.u64Bytes_size`). `toValue_serialize`: EthLib's `serialize` of a `SszValue` is
+(`Spec.serializeEach_u64`, `Spec.inl_*`, `Spec.u64Bytes_size`). `toValue_serialize`: EthLib's `serialize` of a `SszValue` is
 `block_root ‖ offset 36 ‖ columns`. The two reject specs are the EthLib side of the machine bytes-length reject and too-big reject.
 -/
 
 namespace Prysm.DataColumnsByRootIdentifier
-open EthLib.Serialization.Ssz Spec TestTarget
+open EthLib.Serialization.Ssz Spec
 
 theorem offsetBytes_toArray : offsetBytes.toArray = uintBytes 4 36 := by decide
 

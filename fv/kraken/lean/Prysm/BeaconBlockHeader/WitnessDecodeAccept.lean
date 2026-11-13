@@ -20,7 +20,7 @@ every old root pointer word (nil = zero, or any other bytes) every premise holds
 The receiver is a Go value of `v1alpha1.BeaconBlockHeader` (zero `state`, zero-length root slices).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.AttestationData.Code Codec Prysm.BeaconBlockHeader.Code
+open Machine Runtime Machine.Witness Prysm.AttestationData.Code Codec Prysm.BeaconBlockHeader.Code
 
 namespace Prysm.BeaconBlockHeader.Witness.DecodeAccept
 

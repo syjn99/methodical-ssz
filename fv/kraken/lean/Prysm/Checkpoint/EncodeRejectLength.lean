@@ -1,5 +1,6 @@
 import Prysm.Checkpoint.EncodeFastPath
 import Prysm.ElfData.CheckpointAndEpoch
+import Codec.EncodeBitVecLemmas
 
 /-!
 # Real Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, reject `len(c.Root) != 32` (Go 1.26.10)
@@ -15,14 +16,13 @@ find `len(Root) ≠ 32`. Directives 71–79: `rdi, rsi` = the two words of
 The conclusion states the side effect exactly (the epoch bytes are written before the root length test): `dst[len:len+8]`
 holds the epoch bytes, everything else of `dst` is unchanged, the returned
 slice is nil. The 32-byte stack temp is named as in the fast path.
+After the split of this module, the BitVec lemma that other types use is in `Codec/EncodeBitVecLemmas.lean`.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code
+open Machine Runtime Prysm.Checkpoint.Code
 variable [Host]
 
 namespace Prysm.Checkpoint
-
-theorem Encode.reject_length_eq (x : BitVec 64) (h : x - 32#64 = 0#64) : x = 32 := by bv_omega
 
 theorem Encode.errBytesLength_addr_eq : ElfData.CheckpointAndEpoch.e2eErrBytesLength_addr = (label "ssz.ErrBytesLength").toBitVec := rfl
 
@@ -109,17 +109,17 @@ theorem Encode.reject_length (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 8#64 - 104 + 48 = rsp.toBitVec - 64 by bv_omega]
-  apply store_avx_step _ _ _ _ t40 _ _ (by ecancel) (by exact ht40) (by decide)
+  apply Machine.store_avx_step _ _ _ _ t40 _ _ (by ecancel) (by exact ht40) (by decide)
   intro m3 H3
   kunfold
   kat hk marshalSSZTo 15
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
   rw [show rsp.toBitVec - 64 + 16 = rsp.toBitVec - 48 by bv_omega]
-  apply store_avx_step _ _ _ _ t30 _ _ (by ecancel) (by exact ht30) (by decide)
+  apply Machine.store_avx_step _ _ _ _ t30 _ _ (by ecancel) (by exact ht30) (by decide)
   intro m4 H4
   kunfold
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 64),
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 64),
     show rsp.toBitVec - 64 + 8 = rsp.toBitVec - 56 by bv_omega] at H4
   kat hk marshalSSZTo 16
   apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
@@ -139,7 +139,7 @@ theorem Encode.reject_length (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
   apply load_step_at _ _ (rsp.toBitVec - 64) _ _ e8 _ _ (by eaddr) (by ecancel) (by exact he8)
   kunfold
   kat hk marshalSSZTo 35
-  rw [Encode.fast_path_mul]
+  rw [Codec.add_mul_one]
   apply store_step _ _ _ _ _ d0 _ _ (by ecancel) (by exact hd0)
   intro m6 H6
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6
@@ -157,7 +157,7 @@ theorem Encode.reject_length (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, Width.bits] at h
-    exact hrl (UInt64.toBitVec_inj.mp (Encode.reject_length_eq _ h))
+    exact hrl (UInt64.toBitVec_inj.mp (Codec.eq_32_of_sub_eq_zero _ h))
   simp only [Effects.All]
   klabel hk hf marshalSSZTo 71
   kat hk marshalSSZTo 71

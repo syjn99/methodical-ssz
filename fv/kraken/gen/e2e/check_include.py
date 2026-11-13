@@ -2,9 +2,9 @@
 """lean/Prysm/ElfData/CheckpointAndEpochReader.lean's data reader is the text of lean/Machine/Include.lean's reader.
 
 Usage: check_include.py      (from any cwd; Python 3 standard library only)
-Also compares lean/Prysm/ElfData/AttestationDataReader.lean (prefix `ad`, AttestationData data directory) with E2e's reader.
-Compares the bodies of hexByte?, labelTerm, dataSource (Fk) with e2eHexByte?, e2eLabelTerm,
-e2eDataSource (E2e) after renaming the three names, and the elab bodies after renaming the command,
+Also compares lean/Prysm/ElfData/AttestationDataReader.lean (prefix `ad`, AttestationData data directory) with the Checkpoint and Epoch reader.
+Compares the bodies of hexByte?, labelTerm, dataSource (Machine) with e2eHexByte?, e2eLabelTerm,
+e2eDataSource (Checkpoint and Epoch reader) after renaming the three names, and the elab bodies after renaming the command,
 the error prefix and the data path. Exit 1 on a difference.
 """
 import pathlib
@@ -39,7 +39,7 @@ x = x.replace("data_include", "e2e_data_include").replace("dataSource", "e2eData
 same = x == y
 ok &= same
 print(("SAME" if same else "DIFF"), "elab e2e_data_include")
-# Prysm/ElfData/AttestationDataReader.lean (AttestationData link set): the E2e reader with the prefix `ad`
+# Prysm/ElfData/AttestationDataReader.lean (AttestationData link set): the Checkpoint and Epoch reader with the prefix `ad`
 ad = (L / "Prysm" / "ElfData" / "AttestationDataReader.lean").read_text()
 for a, b in (("meta def e2eHexByte?", "meta def adHexByte?"), ("meta def e2eLabelTerm", "meta def adLabelTerm"),
              ("meta def e2eDataSource", "meta def adDataSource")):

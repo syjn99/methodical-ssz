@@ -1,5 +1,6 @@
 import Prysm.IndexedAttestation.DecodeRejectSize
 import Prysm.IndexedAttestation.Spec
+import Prysm.IndexedAttestation.DecodeRejectOffset
 
 /-!
 # Spec alignment of the IndexedAttestation decoder's size and offset rejects, and the reject cases
@@ -9,7 +10,7 @@ The statements are the frozen `Decode.reject_size_spec_statement`, `Decode.rejec
 paths with a machine theorem (the alignment and overflow rejects only under `e0 ≠ 0`, `Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean`).
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
 variable [Host]
 
 namespace Prysm.IndexedAttestation

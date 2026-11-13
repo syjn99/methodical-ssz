@@ -7,14 +7,14 @@ import Prysm.DepositMessage.DecodeAccept
 
 `Decode.accept_from_generated_field_segments` has the statement text of `Prysm.DepositMessage.Decode.accept`; `Decode.accept_from_generated_field_segments_type`
 proves that the two declared types are equal (`with_reducible rfl`). The proof is a chain of
-`eventually_trans` over `dechead_seg`, the generated segments of `Gen2DmDec.lean` (raw `scalgen.py p2dec --gen2`
+`eventually_trans` over `dechead_seg`, the generated segments of `Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean` (raw `scalgen.py p2dec --gen2`
 output: PublicKey 48 bytes offset-0 form, WithdrawalCredentials 32 bytes add form, Amount inline uint64),
 two `bytesdec_tail_seg` steps (rdi, then rsi) and `decepi_seg`. No directive is stepped by hand and neither
-`DmSeg0.lean` nor `dm_e2e_head` is used. By hand here: the statement copy, the code facts of the head /
+`Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean` nor `dm_e2e_head` is used. By hand here: the statement copy, the code facts of the head /
 tail / epilogue templates and the frame instance of each step.
 -/
 
-open Machine Runtime TestTarget Codec Prysm.DepositMessage.Code
+open Machine Runtime Codec Prysm.DepositMessage.Code
 variable [Host]
 
 namespace Prysm.DepositMessage

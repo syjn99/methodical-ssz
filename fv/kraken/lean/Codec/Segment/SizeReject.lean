@@ -17,7 +17,7 @@ equations by `bv_omega`) and the jne condition read for any `sz`. The fixed inst
 `Codec/Segment/SizeRejectInstances.lean`.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec.Segment
 

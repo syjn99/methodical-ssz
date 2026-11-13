@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `Decode.accept_from_generated_steps` (PowBlock decoder accept path, hold-out, full-proof type)
 
-Hand-written (the text of `WitDdA.lean` with the PowBlock host and layout).
+Hand-written (the text of `Prysm/Deposit_Data/WitnessDecodeAccept.lean` with the PowBlock host and layout).
 It shows that the premises of the independent hand statement `Prysm.PowBlock.Decode.accept_statement` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.PowBlock).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (150, `bump_makeslice1`) and `RtCopy` (156, `rt_memmove`).
@@ -19,7 +19,7 @@ For every input and every old pointer word every premise holds and the decoder r
 The receiver is a Go value of `v1alpha1.PowBlock` (zero-length slices).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.PowBlock.Code
+open Machine Runtime Machine.Witness Codec Prysm.PowBlock.Code
 
 namespace Prysm.PowBlock.Witness.DecodeAccept
 

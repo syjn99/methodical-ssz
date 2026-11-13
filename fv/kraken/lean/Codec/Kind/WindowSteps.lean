@@ -4,14 +4,14 @@ import Machine.Labels
 /-!
 # GEN4 L2: statement kinds of the per-instruction step lemmas
 
-Each kind is the statement of its lemma (`StepK.lean`) for a window of the decoder `C` that starts at `k + j`
-and ends at `k + e`, after the binders `k hk hf` (the idiom of `Kind.lean` / `KindCall.lean`). The registers,
+Each kind is the statement of its lemma (`Codec/WindowSteps.lean`) for a window of the decoder `C` that starts at `k + j`
+and ends at `k + e`, after the binders `k hk hf` (the idiom of `Codec/Kind/FieldPatterns.lean` / `Codec/Kind/CalleeDecode.lean`). The registers,
 the displacement and the immediate are kind parameters, because they are in the statement. A generated step
 theorem is tied to its kind by `with_reducible rfl`; the `_of` theorems prove each kind from its lemma and
 the window facts, so the kind bodies are kernel-checked against the lemma conclusions.
 -/
 
-open Machine TestTarget
+open Machine
 
 namespace Codec
 

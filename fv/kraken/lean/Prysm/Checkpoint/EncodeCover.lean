@@ -26,7 +26,7 @@ is not proved (the `GrowsliceC` contract form does not chain two calls: it bound
 of every proved path).
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Prysm.Checkpoint.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.Checkpoint

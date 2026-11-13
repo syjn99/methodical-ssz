@@ -5,7 +5,7 @@ import Prysm.Checkpoint.Spec
 
 Hand-written from consensus-specs altair (`specs/altair/validator.md`),
 BEFORE the Desc checker's Desc of `(v1alpha1, SyncCommitteeMessage)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).
-This file is committed before `SmSpecChecker.lean` exists.
+This file is committed before `Prysm/SyncCommitteeMessage/SpecChecker.lean` exists.
 
     class SyncCommitteeMessage(Container):
         slot: Slot                          # uint64

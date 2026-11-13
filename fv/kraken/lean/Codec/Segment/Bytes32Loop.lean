@@ -22,7 +22,7 @@ operands replaced by parameters; each use shows the equality with the real progr
 `rfl`/`decide` (`Codec/Segment/Bytes32LoopHistoricalBatch.lean`, `Prysm/Deposit/DecodeAccept.lean`).
 -/
 
-open Machine Runtime TestTarget Prysm.HistoricalBatch
+open Machine Runtime Prysm.HistoricalBatch
 
 namespace Codec.Segment
 

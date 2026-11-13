@@ -7,16 +7,16 @@ import Codec.Kind.FixedBytesDecodeWindow
 `f = append(make([]byte, 0, 20), buf[src:src+20]...)` (Ethereum execution addresses: SourceAddress,
 ToExecutionAddress, FeeRecipient, …). The code shape is that of the 32 / 48 / 96-byte fields with the size
 immediate `0x14` (`mov $0x14,%ecx` before `callq runtime.makeslice` and `callq runtime.memmove`,
-`movq $0x14,fC(%rdx)`, `movq $0x14,fL(%rdx)`). The statements `BytesDecWindow n rX rY` (`SegReg.lean`) and
-`BytesDecZWindow n rX rY` (`SegRegZ.lean`) are already parametric in `n`; their collectors `bytesdec_seg_window` /
+`movq $0x14,fC(%rdx)`, `movq $0x14,fL(%rdx)`). The statements `BytesDecWindow n rX rY` (`Codec/FixedBytesDecodeWindow.lean`) and
+`BytesDecZWindow n rX rY` (`Codec/FixedBytesDecodeWindowOffsetZero.lean`) are already parametric in `n`; their collectors `bytesdec_seg_window` /
 `bytesdec_seg_z_window` take `hn : n = 32 ∨ n = 48 ∨ n = 96` because each case runs the proof with a literal
 immediate (a limit of the proof method, not of the statement). This module adds the case `n = 20`:
 
 * `bytesdec_g4_20_rX_rY` / `bytesdec_g4z_20_rX_rY`: one theorem per register pair (the same register sets),
-  each proved by the proof text of `SegReg.lean` / `SegRegZ.lean` copied verbatim into a local macro (the
+  each proved by the proof text of `Codec/FixedBytesDecodeWindow.lean` / `Codec/FixedBytesDecodeWindowOffsetZero.lean` copied verbatim into a local macro (the
   model macros are `local`); only the literal size differs.
 * `bytesdec_seg_window_b20`, `bytesdec_seg_z_window_b20`: the collectors at `n = 20`.
-* `bytesDecSegKindWindow_of_b20`, `bytesDecSegZKindWindow_of_b20`: the kinds (`KindSegReg.lean`, `SegRegZ.lean`,
+* `bytesDecSegKindWindow_of_b20`, `bytesDecSegZKindWindow_of_b20`: the kinds (`Codec/Kind/FixedBytesDecodeWindow.lean`, `Codec/FixedBytesDecodeWindowOffsetZero.lean`,
   unchanged, already parametric in `n`) proved from the collectors, as `bytesDecSegKindWindow_of`.
 
 Contracts exactly as in the models: `MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 St` at count 20 (the count is a
@@ -24,7 +24,7 @@ bound variable of the contract) and `MemmoveC St` (the byte count is `src.length
 existing module is changed. Heartbeat options = the model theorems' (16000000 add form, 4000000 offset-0 form).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 

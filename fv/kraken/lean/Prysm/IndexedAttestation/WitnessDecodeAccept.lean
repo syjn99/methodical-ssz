@@ -23,7 +23,7 @@ return slot, the frame (rsp = 0x143c4), the caller's slots and the caller's word
 (32 bytes), the untouched frame bytes rsp − 96 … rsp − 17 (80) and the caller's word.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.IndexedAttestation.Code
+open Machine Runtime Machine.Witness Prysm.IndexedAttestation.Code
 
 namespace Prysm.IndexedAttestation.Witness.DecodeAccept
 

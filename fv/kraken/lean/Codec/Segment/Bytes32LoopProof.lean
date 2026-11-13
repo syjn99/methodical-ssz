@@ -8,7 +8,7 @@ offsets, the frame slots and receiver words are parameters with address equation
 The return slot keeps the value of the last `memmove` return address (`jS + 2`), as in `Decode.state_roots_loop`.
 -/
 
-open Machine Runtime TestTarget Prysm.HistoricalBatch
+open Machine Runtime Prysm.HistoricalBatch
 
 namespace Codec.Segment
 

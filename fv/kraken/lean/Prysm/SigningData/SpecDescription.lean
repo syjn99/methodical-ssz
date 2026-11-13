@@ -5,7 +5,7 @@ import Prysm.Checkpoint.Spec
 
 Hand-written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`, local clone at commit `aa16bb4`),
 BEFORE the Desc checker's Desc of `(v1alpha1, SigningData)` was printed or copied into this tree (so that the hand Desc is independent of the checker output in time, not only in content).
-This file is committed before `SdSpecChecker.lean` exists.
+This file is committed before `Prysm/SigningData/SpecChecker.lean` exists.
 
     class SigningData(Container):
         object_root: Root                   # Bytes32

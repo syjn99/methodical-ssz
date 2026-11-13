@@ -13,7 +13,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "BlockSummaryRoot", "theorems": ["Decode.generated_step_BlockSummaryRoot_seg", "Decode.generated_step_s37", "Decode.generated_step_s38", "Decode.generated_step_s45", "Decode.generated_step_s46"]}, {"field": "StateSummaryRoot", "theorems": ["Decode.generated_step_StateSummaryRoot_seg", "Decode.generated_step_s72", "Decode.generated_step_s73", "Decode.generated_step_s80", "Decode.generated_step_s81"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.HistoricalSummary.Code
+open Machine Runtime Prysm.HistoricalSummary.Code
 variable [Host]
 
 open Codec

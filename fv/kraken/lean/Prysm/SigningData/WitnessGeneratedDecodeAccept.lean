@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of the generated `Decode.generated_accept` (SigningData decoder accept path)
 
-The text of `WitPbA.lean` with the SigningData host and layout (two 32-byte fields).
+The text of `Prysm/PowBlock/WitnessDecodeAccept.lean` with the SigningData host and layout (two 32-byte fields).
 It shows that the premises of the generated accept theorem (statement = kind instance) are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.SigningData).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (114, `bump_makeslice1`) and `RtCopy` (120, `rt_memmove`).
@@ -19,7 +19,7 @@ For every input and every old pointer word every premise holds and the decoder r
 The receiver is a Go value of `v1alpha1.SigningData` (zero-length slices).
 -/
 
-open Machine Runtime TestTarget Machine.Witness Codec Prysm.SigningData.Code
+open Machine Runtime Machine.Witness Codec Prysm.SigningData.Code
 
 namespace Prysm.SigningData.Witness.GeneratedDecodeAccept
 

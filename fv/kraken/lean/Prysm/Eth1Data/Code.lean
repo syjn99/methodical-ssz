@@ -8,7 +8,7 @@ Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/e1/link/nor
 (`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code` and `Prysm.BeaconBlockHeader.Code`; `link/check.py`
 (a)–(f) PASS in `../RESULT`, bundle `d5cc804d…`).
 Hand-written include file (not generator output).
-Limit: the directory `e1/link/norm` is not a Lake `input_dir` of the `E2eScal` library (a lakefile change
+Limit: the directory `e1/link/norm` is not a Lake `input_dir` of the `Prysm` library (a lakefile change
 needs approval), so Lake does not rebuild these modules when a `.S` file changes. The `.S` files are
 bound by the link bundle hash; a cold build is the check after any change.
 -/

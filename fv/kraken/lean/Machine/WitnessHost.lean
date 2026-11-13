@@ -11,7 +11,7 @@ runtime models. `labelsFresh_of` turns a Boolean label check into
 `LabelsFresh`; `mk_label` resolves a label to its address.
 -/
 
-open Machine TestTarget
+open Machine
 
 namespace Machine.Witness
 

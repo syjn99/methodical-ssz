@@ -15,7 +15,7 @@ je L_3a7`, 222 `L_3a7`, 223–225 epilogue and `retq` with the callee's nil erro
 The text is segment 3's with the Target offsets and the epilogue.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code
+open Machine Runtime Prysm.AttestationData.Code
 variable [Host]
 
 namespace Prysm.AttestationData

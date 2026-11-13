@@ -21,7 +21,7 @@ Inputs (environment):
                     printed and written into the result
 * `DESC_BATCH`      test tooling: lines `id<TAB>list<TAB>result`, one closed-world run per line
 
-Closed world. The expected key set is the checker's own table (9 hand types, Fv1 spec Desc and
+Closed world. The expected key set is the checker's own table (9 hand types, `Spec` Desc and
 21 Go field names) plus the (package, type) keys of the committed inventory (135). It never
 comes from the producer's output. The originals must equal this set exactly: a missing, extra,
 unkeyed or duplicate key, a duplicate path, or any failing original makes the verdict FAIL.
@@ -40,7 +40,7 @@ Per file (any failure = FAIL):
 * `names`       every field name at every level is an ASCII Go identifier
 * `parse`, `wf`, `fixed`, `nfields`, `width`, `variable`, `offset`, `kind`, `length`, `limit`,
   `elem`, `name`, `index`, `head`, `order`, `probe`: claims against EthLib functions
-* table keys (status SPEC): `ref-claim` (the table's reference), `ref` (Fv1 spec Desc up to
+* table keys (status SPEC): `ref-claim` (the table's reference), `ref` (`Spec` Desc up to
   names), `go-names` (exact term with the checker's Go field names at every level)
 * other keys (status NONE): `ref-claim` (no reference) and `inventory`: field names, head
   widths, variable flags, field kinds and fixed size equal the committed inventory. This binds a
@@ -110,8 +110,8 @@ def rn (ns : List String) : Desc → Desc
   | d => d
 
 /-! Checker-owned Go field names of the 9 hand types (21 names). The Go-named terms
-are the Fv1 spec terms with the Go field names at every container level; a self-check
-in `main` requires them to equal the Fv1 terms up to names. -/
+are the `Spec` terms with the Go field names at every container level; a self-check
+in `main` requires them to equal the `Spec` terms up to names. -/
 def scGo : Desc := rn ["A", "B", "C", "D", "E"] Spec.scDesc
 def luGo : Desc := rn ["L"] Spec.luDesc
 def fvGo : Desc := rn ["R", "W"] Spec.fvDesc
@@ -129,7 +129,7 @@ def adGo : Desc := match Spec.adDesc with
     .container ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"] [a, b, c, cpGo, cpGo]
   | d => d
 
-/-- Checker-owned spec table: (package, type) -> (reference name, Fv1 spec Desc, Go-named Desc). -/
+/-- Checker-owned spec table: (package, type) -> (reference name, `Spec` Desc, Go-named Desc). -/
 def refs : List ((String × String) × (String × Desc × Desc)) :=
   [((tgt, "Scalars"), ("Spec.scDesc", Spec.scDesc, scGo)), ((tgt, "FixedVec"), ("Spec.fvDesc", Spec.fvDesc, fvGo)),
    ((tgt, "ListU64"), ("Spec.luDesc", Spec.luDesc, luGo)), ((tgt, "BitVec"), ("Spec.bvDesc", Spec.bvDesc, bvGo)),
@@ -605,7 +605,7 @@ def checkFile (ctx : Ctx) (path : String) : IO FileRes := do
     | some _ =>
       let mism := invMatch ctx.inv (pk, ty) d 16
       out := out ++ [("inventory", mism.isEmpty, s!"names/sizes/kinds/fixed vs inventory, delegated containers recursively: {mism}")]
-      -- the two excepted Prysm types must have the hand spec shape (Fv1) up to names
+      -- the two excepted Prysm types must have the hand spec shape (`Spec`) up to names
       if handNameExceptions.contains (pk, ty) then
         match refs.find? (fun (k, _) => k.2 == ty) with
         | some (_, (rname, rd, _)) =>

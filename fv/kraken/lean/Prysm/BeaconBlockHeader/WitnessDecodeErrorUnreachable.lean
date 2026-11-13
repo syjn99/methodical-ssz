@@ -9,11 +9,11 @@ freshness and `rax = 0`. `cs0 112 …` with `rax` replaced by 0 satisfies all of
 The run starts at directive 18 or 56 (after the callee's return), not at the function entry.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Prysm.BeaconBlockHeader.Witness.DecodeErrorUnreachable
 
-/-- The `WitBhR` state with a nil callee error (`rax = 0`). -/
+/-- The `Prysm/BeaconBlockHeader/WitnessDecodeRejectSize.lean` state with a nil callee error (`rax = 0`). -/
 def s0 (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0, 0x10200, 112, 0, 0, 0, 0x10020, 0, 0, 0, 0, 0, 0, 0, 0x10000, 0⟩, zmms, flags, DecodeRejectSize.mem⟩
 

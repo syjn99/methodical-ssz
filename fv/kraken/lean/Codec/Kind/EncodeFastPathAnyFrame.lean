@@ -28,10 +28,10 @@ generated-style proof, stated over the WHOLE memory in entry-state terms (the GE
 - `encFieldKindN C L fields d d'`: boundary state `d` → boundary state `d'` (one field);
 - `encEpiKindN C L fields d`: boundary state `d` → the post-state.
 A boundary state `EncSt` gives the directive index, the number of encoded fields, register facts and the
-stack slots; `encStP` renders it. Ties to the hand statements: `EncTies.lean`.
+stack slots; `encStP` renders it. Ties to the hand statements: `Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean`.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 open Codec
 namespace Codec

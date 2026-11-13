@@ -15,7 +15,7 @@ Proof text: `Runtime.bump_makeslice1` with the dispatch steps added. The `.S` fi
 of the `Prysm` library, so Lake rebuilds the library when it changes.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Prysm.RuntimeModel
 

@@ -17,7 +17,7 @@ window (rsp = 0x12180) and `dst` at 0x121a0 = a 30-byte prefix with capacity 36
 `R`: the 8-byte frame gap at rsp − 72 and the 6 spare bytes.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code
+open Machine Runtime Machine.Witness Prysm.Checkpoint.Code
 
 namespace Prysm.Checkpoint.Witness.EncodeGrowFirstSite
 

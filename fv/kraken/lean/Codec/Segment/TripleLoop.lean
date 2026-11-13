@@ -11,7 +11,7 @@ differ in length and in the registers), so this is a second general loop. The bl
 `k` and the element size `w` as parameters; the gaps (`Glue`, `GlueSrc`) and the `nop` are those of `Codec.Segment.Bytes32Loop`.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec.Segment
 

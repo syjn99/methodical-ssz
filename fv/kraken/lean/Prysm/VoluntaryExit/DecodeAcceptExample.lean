@@ -10,12 +10,12 @@ import Prysm.VoluntaryExit.GeneratedDecodeSteps
 
 Text produced from one description of the type (frame facts, field list, boundary states, chain theorem names)
 by the recipe of the lemma hand-over; every theorem has a `_kind` line (`decHeadKindN`, `decFieldKindN`,
-`decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`E2eScal.Gen.*`) are used as emitted.
+`decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`Decode.generated_step_*`) are used as emitted.
 This type has no hand accept statement: the statement is the kind instance of the frame class of
 PendingConsolidation / PendingPartialWithdrawal (`layCal`), whose two hand statements are `rfl`-tied.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.VoluntaryExit.Code Codec
+open Machine Runtime Prysm.AttestationData.Code Prysm.VoluntaryExit.Code Codec
 variable [Host]
 
 namespace Prysm.VoluntaryExit

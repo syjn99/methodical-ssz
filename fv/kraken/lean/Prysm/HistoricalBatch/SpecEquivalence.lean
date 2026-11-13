@@ -11,7 +11,7 @@ same inputs with the same values.
 -/
 
 namespace Prysm.HistoricalBatch
-open EthLib.Serialization.Ssz Spec TestTarget
+open EthLib.Serialization.Ssz Spec
 
 theorem desc_checker :
     desc = .container ["block_roots", "state_roots"] [.vector (.byteVector 32) 8192, .vector (.byteVector 32) 8192]

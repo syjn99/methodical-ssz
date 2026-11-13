@@ -21,7 +21,7 @@ import Prysm.Checkpoint.Spec
   needed for the join and is not counted as reject coverage.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Prysm.Checkpoint.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.Checkpoint

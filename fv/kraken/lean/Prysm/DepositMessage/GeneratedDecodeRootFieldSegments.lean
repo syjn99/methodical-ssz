@@ -7,7 +7,7 @@ import Codec.Kind.FieldPatterns
 (sha256 `13cdd1a3b22bdd83488fe130d4e5b5ea296f61e0688585bdc7afe73d383cf581`) and `prysm/ir/ir-mainnet.json` (sha256 `c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a`, type `v1alpha1.DepositMessage`). Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Machine Runtime TestTarget Prysm.DepositMessage.Code
+open Machine Runtime Prysm.DepositMessage.Code
 variable [Host]
 
 open Codec

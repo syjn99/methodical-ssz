@@ -23,7 +23,7 @@ premise of the second call is not derivable. The return in (C) is differential o
 Idea of the proof: the probe `r3_grow_any_sharp` (registers only); re-proved here with the frame.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code
+open Machine Runtime Prysm.Checkpoint.Code
 variable [Host]
 
 namespace Prysm.Checkpoint

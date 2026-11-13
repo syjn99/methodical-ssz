@@ -5,16 +5,16 @@ import Prysm.BeaconBlockHeader.GeneratedDecodeCallSegments
 /-!
 # BeaconBlockHeader accept path from the GENERATED `p2dec --gen3` theorems (reuse demonstration)
 
-Hand composition (not generator output). `Decode.head_from_generated_call_segments`: the chain of `BhHeadG3.lean` with the four
-call-site lemma instances replaced by the generated theorems of `Gen3BhDec.lean` (`p2dec --gen3`, raw output):
+Hand composition (not generator output). `Decode.head_from_generated_call_segments`: the chain of `Prysm/BeaconBlockHeader/DecodeHeadFromCallSegments.lean` with the four
+call-site lemma instances replaced by the generated theorems of `Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean` (`p2dec --gen3`, raw output):
 `bh_g3dec_Slot_arg` / `_call`, `bh_g3dec_ProposerIndex_arg` / `_call`; `Decode.head0` (0–14) and `Decode.spill2`
-(86–87) stay hand steps. `Decode.accept_from_generated_call_segments`: the proof text of `BhAccept.lean` with `Decode.head` replaced
+(86–87) stay hand steps. `Decode.accept_from_generated_call_segments`: the proof text of `Prysm/BeaconBlockHeader/DecodeAccept.lean` with `Decode.head` replaced
 by `Decode.head_from_generated_call_segments` and the three hand root segments by the generated ones (`bh_g3dec_*_seg`, same statements); the
 instance directives between the roots and the epilogue stay hand steps. Both declared types equal the existing
 hand theorems by `rfl` (`_type`). In-sample (development data).
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.BeaconBlockHeader.Code Codec
+open Machine Runtime Prysm.AttestationData.Code Prysm.BeaconBlockHeader.Code Codec
 variable [Host]
 
 namespace Prysm.BeaconBlockHeader
@@ -66,7 +66,7 @@ theorem Decode.head_from_generated_call_segments (k : Nat) (hk : Code.unmarshalS
   have hvi' : U64CalleeAcc Prysm.ValidatorIndex.Code.unmarshalLabel := hvi
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
-  have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Decode.generated_head_guard _ _ hguard
+  have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Decode.accept_guard _ _ hguard
   -- head: entry → directive 15
   refine eventually_trans _ _ _ _ (Decode.head0 k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
     (by dsimp only; ecancel) (Nat.lt_of_le_of_lt (Nat.le_add_right _ 112) hguard) hlen) ?_

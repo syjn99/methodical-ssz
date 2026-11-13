@@ -6,7 +6,7 @@ import Codec.Kind.CalleeDecode
 (sha256 `cc2ed8cb5235994c08e76f81da16755f2aa0ee6f7aea3b12bf0cb2f6a3b70434`) and `prysm/ir/ir-mainnet.json` (sha256 `c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a`, type `v1alpha1.PendingPartialWithdrawal`); GEN3 coverage (`p2dec --gen3`): 3 of 3 fields. Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Machine Runtime TestTarget Prysm.PendingPartialWithdrawal.Code
+open Machine Runtime Prysm.PendingPartialWithdrawal.Code
 variable [Host]
 
 open Codec

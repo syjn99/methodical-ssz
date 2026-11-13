@@ -12,7 +12,7 @@ above). Host: data labels, the real Go 1.26.10 `(*v1alpha1.DataColumnsByRootIden
 old block `pre ‖ spare`. Frame `R`: the receiver words the code does not read and the 24-byte gap at rsp − 96.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
 
 namespace Prysm.DataColumnsByRootIdentifier.Witness.EncodeGrowOneSite
 

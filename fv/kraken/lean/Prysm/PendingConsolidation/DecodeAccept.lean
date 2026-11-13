@@ -6,12 +6,12 @@ import Prysm.SyncCommitteeMessage.Statements
 # Real Prysm `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`, accept path, Go 1.26.10 (hold-out, class D)
 
 Hand composition, written AFTER the raw generator output was committed. The
-statement is the independent hand statement `Prysm.PendingConsolidation.Decode.accept_statement` (`H5Stmt.lean`, unchanged). Chain of
+statement is the independent hand statement `Prysm.PendingConsolidation.Decode.accept_statement` (`Prysm/SyncCommitteeMessage/Statements.lean`, unchanged). Chain of
 `eventually_trans` over
 
 * `Decode.head` (hand steps, directives 0–14; the text of `pw_head` with the two spills at 12 / 13 in the PendingConsolidation order),
 * `Decode.generated_call_SourceIndex_arg` (15–16) and `Decode.generated_call_SourceIndex_call` (17–19, label 47): GENERATED
-  (`Gen3PcDecPartial.lean`, raw); the `_call` theorem is conditional on `hC : U64CalleeAcc`, discharged here by
+  (`Prysm/PendingConsolidation/GeneratedDecodeCallSegmentsPartial.lean`, raw); the `_call` theorem is conditional on `hC : U64CalleeAcc`, discharged here by
   the proved `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`,
 * `Codec.callarg_reload_seg false 96 8 112 (-8) 88 16` (48–54; existing lemma, applied by hand: the
   generator did not emit TargetIndex),
@@ -23,7 +23,7 @@ The callee is used only through `U64CalleeAcc` (= the existing `Prysm.ValidatorI
 contract, no new hypothesis form.
 -/
 
-open Machine Runtime TestTarget Prysm.PendingConsolidation.Code Codec
+open Machine Runtime Prysm.PendingConsolidation.Code Codec
 variable [Host]
 
 namespace Prysm.PendingConsolidation
@@ -40,7 +40,7 @@ def callDecNop (fn lok : String) : Program :=
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- `calldec_seg` (`CallDec.lean`) for the block `callDecNop`: the same pre / post, one more step. -/
+/-- `calldec_seg` (`Codec/CalleeDecode.lean`) for the block `callDecNop`: the same pre / post, one more step. -/
 theorem calldec_nop_seg (fn lok : String) (j j2 : Nat)
     (hA : (callDecNop fn lok).IsInfixAt Host.prog j) (hB : (callDecL lok).IsInfixAt Host.prog j2)
     (hl : label lok = Host.addrOf j2) (hC : U64CalleeAcc fn)

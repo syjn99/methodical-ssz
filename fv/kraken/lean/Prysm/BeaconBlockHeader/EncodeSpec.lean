@@ -13,7 +13,7 @@ independent consensus-specs Desc of `Prysm/BeaconBlockHeader/Spec.lean`). The fu
 of `Prysm.Checkpoint.Encode.fast_path_spec`. Fast path only (`len + 112 ≤ cap`, roots of length 32).
 -/
 
-open Machine Runtime TestTarget Prysm.BeaconBlockHeader.Code EthLib.Serialization.Ssz
+open Machine Runtime Prysm.BeaconBlockHeader.Code EthLib.Serialization.Ssz
 variable [Host]
 
 open Codec

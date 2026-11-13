@@ -13,7 +13,7 @@ Proof text: `Prysm.SyncCommittee.Decode.reject_size` (`Prysm/SyncCommittee/Decod
 changed (the directive indices are the same). The statement is the frozen `Decode.reject_size_statement`.
 -/
 
-open Machine Runtime TestTarget Prysm.HistoricalBatch.Code
+open Machine Runtime Prysm.HistoricalBatch.Code
 variable [Host]
 
 namespace Prysm.HistoricalBatch

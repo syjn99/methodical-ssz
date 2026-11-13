@@ -13,7 +13,7 @@ import Prysm.SyncCommittee.SpecDefinitions
 - `jge_false512`: `cmp $0x200, a; jge` is not taken when a < 512 (the text of `Machine.jge_false` with a wider bound).
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Prysm.SyncCommittee
 

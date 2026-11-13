@@ -7,13 +7,13 @@ import Prysm.SyncCommittee.SpecDefinitions
 /-!
 # Spec bridge for the real Prysm `v1alpha1.SyncCommittee`
 
-The order of `E2eScal`'s `DdSpec.lean`. The Vector[Bytes48, 512] field is not unfolded element by element: the
+The order of `Prysm/Deposit_Data/Spec.lean`. The Vector[Bytes48, 512] field is not unfolded element by element: the
 lemmas below are stated for any list of 48-byte vectors (`serializeEach_bv48`, `assemble_inline_ok`,
 `concatParts_v48`) and use EthLib's `headOf_inline`, `bodiesOf_inline` and `concat_fixed_slices`.
 -/
 
 namespace Prysm.SyncCommittee
-open EthLib.Serialization.Ssz Spec TestTarget
+open EthLib.Serialization.Ssz Spec
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem desc_fixedSize : desc.fixedSize = some 24624 := by rfl

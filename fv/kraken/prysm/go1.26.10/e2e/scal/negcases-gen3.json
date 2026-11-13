@@ -237,13 +237,13 @@
  },
  {
   "id": "g3-kindacc-control",
-  "module": "Codec/Kind/DecodeAcceptComposition.lean",
+  "module": "Prysm/Eth1Data/DecodeAcceptComposition.lean",
   "theorem": "Prysm.Eth1Data.Decode.accept_is_kind",
   "kind": "control"
  },
  {
   "id": "g3-kindacc-stmt-jret",
-  "module": "Codec/Kind/DecodeAcceptComposition.lean",
+  "module": "Prysm/BlobIdentifier/DecodeAcceptComposition.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept_is_kind",
   "kind": "stmt",
   "old": "[.bytes 32, .u64] 32",
@@ -251,7 +251,7 @@
  },
  {
   "id": "g3-kindacc-stmt-order",
-  "module": "Codec/Kind/DecodeAcceptComposition.lean",
+  "module": "Prysm/DepositMessage/DecodeAcceptComposition.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept_is_kind",
   "kind": "stmt",
   "old": "[.bytes 48, .bytes 32, .u64] 68",
@@ -259,7 +259,7 @@
  },
  {
   "id": "g3-kindacc-stmt-state",
-  "module": "Codec/Kind/DecodeAcceptComposition.lean",
+  "module": "Prysm/Eth1Data/DecodeAcceptComposition.lean",
   "theorem": "Prysm.Eth1Data.Decode.accept_is_kind",
   "kind": "stmt",
   "old": "Prysm.Eth1Data.Code.unmarshalSSZ true",
@@ -267,7 +267,7 @@
  },
  {
   "id": "g3-kindacc-stmt-size",
-  "module": "Codec/Kind/DecodeAcceptComposition.lean",
+  "module": "Prysm/Deposit_Data/DecodeAcceptComposition.lean",
   "theorem": "Prysm.Deposit_Data.Decode.accept_is_kind",
   "kind": "stmt",
   "old": ".bytes 96] 106",

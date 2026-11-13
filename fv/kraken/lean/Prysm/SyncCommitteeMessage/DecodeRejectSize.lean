@@ -8,13 +8,13 @@ import Prysm.Checkpoint.DecodeRejectSize
 /-!
 # Real Prysm `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`: size reject (hold-out, class C)
 
-Hand-written: the text of `BhReject.lean` (`bh_e2e_reject_size_main`) with the
+Hand-written: the text of `Prysm/BeaconBlockHeader/DecodeRejectSize.lean` (`bh_e2e_reject_size_main`) with the
 SyncCommitteeMessage indices (frame `sub $0x60` as BeaconBlockHeader). `Decode.reject_size`
 (`len(buf) ≠ 144`, `return ssz.ErrSize`): directives 2–7, 9–10 `cmp $0x90,%rcx; jne L_29d` taken, `L_29d` (161),
 loads of `ssz.ErrSize` (162–163), epilogue 164–166. Not covered here: the two callee error paths.
 -/
 
-open Machine TestTarget Prysm.SyncCommitteeMessage.Code
+open Machine Prysm.SyncCommitteeMessage.Code
 variable [Host]
 
 namespace Prysm.SyncCommitteeMessage

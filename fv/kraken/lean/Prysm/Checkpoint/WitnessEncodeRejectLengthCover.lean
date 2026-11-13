@@ -16,7 +16,7 @@ bytes. Frame `R` = `emp`. Instances: n = 0 (cap = len: first growslice, then the
 (cap = len + 8: no growth), 40; nil `dst`.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
 
 namespace Prysm.Checkpoint.Witness.EncodeRejectLengthCover
 

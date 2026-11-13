@@ -1,4 +1,5 @@
 import TestTarget.FixedVecDecodeAccept
+import Machine.StoreLemmas
 
 /-!
 # FixedVec.MarshalSSZTo, fast path, on Kraken main
@@ -23,13 +24,9 @@ theorem idx8 (x y : BitVec 64) (i : Nat) (h : y.toNat = i) (hi : i < 4) :
     x + y * 8#64 = x + BitVec.ofNat 64 (8 * i) := by
   apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_mul]; omega
 
-theorem add8_neg8 (x y : BitVec 64) : 8 + y + x * 1#64 + -8 = x + y := by
-  rw [BitVec.mul_one, BitVec.add_assoc, BitVec.add_assoc, BitVec.add_comm 8, BitVec.add_assoc, BitVec.add_assoc]
-  rw [show (-8 : BitVec 64) + 8 = 0 by decide, Machine.add_lit_zero, BitVec.add_comm]
-
 theorem fvm_addr (x y : BitVec 64) (L i : Nat) (h : y.toNat = L + 32 + 8 * i) (hL : L + 64 < 2 ^ 63) :
     8 + y + x * 1#64 + -8 = x + BitVec.ofNat 64 (L + 32) + BitVec.ofNat 64 (8 * i) := by
-  rw [add8_neg8, BitVec.add_assoc]; congr 1
+  rw [Machine.add8_neg8, BitVec.add_assoc]; congr 1
   apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add]; omega
 
 theorem fvm_room (y z : BitVec 64) (L i cap : Nat) (h : y.toNat = L + 32 + 8 * i) (hi : i < 4)

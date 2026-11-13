@@ -14,7 +14,7 @@ growslice branches, the length rejects, the morestack path. Not a complete encod
 GEN6-JSON: {"type": "ValidatorIdentity", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 64, "frame": 144, "gd": 24, "rt": true, "fields": [["Index", "u", 8], ["Pubkey", "b", 48], ["ActivationEpoch", "u", 8]], "boundaries": [10, 36, 64, 92], "layout": "Prysm.ValidatorIdentity.Encode.generated_layout", "S_sha256": "cdfd21b3d578e12dc28267992dc650230ca9c15b2e3ec1a13b66fccd337e77f7", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/e2e/f24/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.ValidatorIdentity", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
 -/
 
-open Machine Runtime TestTarget Codec Prysm.ValidatorIdentity.Code
+open Machine Runtime Codec Prysm.ValidatorIdentity.Code
 variable [Host]
 
 namespace Prysm.ValidatorIdentity
@@ -244,7 +244,7 @@ theorem Encode.generated_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   apply kstep_movups15 Reg64.r9 16 _ (k + 17) (k + 18) (win hk 17 1) (by rfl) (by rfl)
     (rsp.toBitVec - 56) (rsp.toBitVec - 40) (by eb) t40 ht40 _ _ _ (by rfl) (by ecancel)
   intro m5 H5; kn; try dsimp only at H5
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 56), show (rsp.toBitVec - 56) + 8 = (rsp.toBitVec - 48) by bv_omega] at H5
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 56), show (rsp.toBitVec - 56) + 8 = (rsp.toBitVec - 48) by bv_omega] at H5
   apply kstep_st Reg64.r8 Reg64.rsp 96 _ (k + 18) (k + 19) (win hk 18 1) (by rfl) (by rfl)
     (rsp.toBitVec - 152) (rsp.toBitVec - 56) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
   intro m6 H6; kn; simp only [Reg64s.get64] at H6
@@ -541,7 +541,7 @@ theorem Encode.generated_f2 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   apply kstep_movups15 Reg64.rdi 16 _ (k + 73) (k + 74) (win hk 73 1) (by rfl) (by rfl)
     (rsp.toBitVec - 88) (rsp.toBitVec - 72) (by eb) t72 ht72 _ _ _ (by rfl) (by ecancel)
   intro m12 H12; kn; try dsimp only at H12
-  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 88), show (rsp.toBitVec - 88) + 8 = (rsp.toBitVec - 80) by bv_omega] at H12
+  rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 88), show (rsp.toBitVec - 88) + 8 = (rsp.toBitVec - 80) by bv_omega] at H12
   apply kstep_st Reg64.rsi Reg64.rsp 64 _ (k + 74) (k + 75) (win hk 74 1) (by rfl) (by rfl)
     (rsp.toBitVec - 152) (rsp.toBitVec - 88) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
   intro m13 H13; kn; simp only [Reg64s.get64] at H13

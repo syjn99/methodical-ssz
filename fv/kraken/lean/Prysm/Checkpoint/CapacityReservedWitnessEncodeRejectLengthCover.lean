@@ -15,7 +15,7 @@ and `dst` at 0x12450 = a 30-byte prefix and `n` spare bytes. Frame `R`: the 8-by
 rsp − 32. Instances: n = 0, 7, 8, 39 (grow path), 40, 41 (fast path); nil `dst`.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.CapacityReserved Prysm.Checkpoint.CapacityReserved.Code
+open Machine Runtime Machine.Witness Prysm.Checkpoint.CapacityReserved Prysm.Checkpoint.CapacityReserved.Code
 
 namespace Prysm.Checkpoint.Witness.CapacityReservedEncodeRejectLengthCover
 

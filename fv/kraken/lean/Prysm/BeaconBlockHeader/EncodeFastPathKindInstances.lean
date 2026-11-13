@@ -18,7 +18,7 @@ import Prysm.Checkpoint.EncodeFastPath
 The hand statements and theorems are used as committed.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 open Codec
 namespace Prysm.BeaconBlockHeader

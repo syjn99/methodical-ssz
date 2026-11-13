@@ -9,7 +9,7 @@ The text of `Prysm/SyncAggregate/DecodeSpec.lean` with the SyncCommittee stateme
 `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement` (`Prysm/SyncCommittee/Statements.lean`).
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.SyncCommittee.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.SyncCommittee.Code
 variable [Host]
 
 namespace Prysm.SyncCommittee

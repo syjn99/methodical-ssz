@@ -1,4 +1,5 @@
-import TestTarget.ListU64DecodeRejectCall
+import Machine.StoreLemmas
+import Runtime.StaticBoxLemmas
 import Prysm.Checkpoint.EncodeFastPath
 import Prysm.Eth1Data.Code
 import Codec.StackGuard
@@ -35,7 +36,7 @@ before them are stepped here (they differ per site). Receiver (gc amd64 layout, 
 entry rsp; the frame base is rsp − 136; the `memmove` return slot is rsp − 144.
 -/
 
-open Machine Runtime TestTarget Prysm.Eth1Data.Code
+open Machine Runtime Prysm.Eth1Data.Code
 variable [Host]
 
 open Codec
@@ -163,7 +164,7 @@ theorem Encode.enc_a (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
   kat hk marshalSSZTo 33
   kat hk marshalSSZTo 34
   kat hk marshalSSZTo 35
-  rw [Prysm.Checkpoint.Encode.fast_path_mul]
+  rw [Codec.add_mul_one]
   refine eventually_trans _ _ _ _ (enc32_call (k + 36) (Encode.call_at k hk).1 (-128 + (rsp.toBitVec - 8#64))
     (rbx.toBitVec + rcx.toBitVec) p1 (rsp.toBitVec - 144) (rsp.toBitVec - 144 - BitVec.ofNat 64 S) S
     (by eaddr) (by first | (exact congrArg (· - BitVec.ofNat 64 S) (by eaddr)) | eaddr)
@@ -252,7 +253,7 @@ theorem Encode.enc_m (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
   klabel hk hf marshalSSZTo 54
   kat hk marshalSSZTo 54
   kat hk marshalSSZTo 55
-  rw [Prysm.Checkpoint.Encode.fast_path_mul, Encode.offset_comm_cancel8]
+  rw [Codec.add_mul_one, Encode.offset_comm_cancel8]
   apply store_step _ _ _ _ _ d1 _ _ (by ecancel) (by exact hd1)
   intro m1 H1
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl dc hdc] at H1

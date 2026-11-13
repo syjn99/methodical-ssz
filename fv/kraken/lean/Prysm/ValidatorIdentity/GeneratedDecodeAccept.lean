@@ -19,7 +19,7 @@ Do not edit by hand (manual edits are measured against the committed raw output)
 FIELDS-JSON: [{"field": "Index", "theorems": ["Decode.generated_s15", "Decode.generated_s16", "Decode.generated_Index_call"]}, {"field": "Pubkey", "theorems": ["Decode.generated_Pubkey_seg", "Decode.generated_s73", "Decode.generated_s74", "Decode.generated_s82", "Decode.generated_s83"]}, {"field": "ActivationEpoch", "theorems": ["Decode.generated_s84", "Decode.generated_s85", "Decode.generated_s86", "Decode.generated_s87", "Decode.generated_s88", "Decode.generated_s89", "Decode.generated_ActivationEpoch_call"]}]
 -/
 
-open Machine Runtime TestTarget Prysm.ValidatorIdentity.Code
+open Machine Runtime Prysm.ValidatorIdentity.Code
 variable [Host]
 
 open Codec

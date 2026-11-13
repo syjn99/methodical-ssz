@@ -5,7 +5,7 @@ import Prysm.SyncAggregate.Spec
 /-!
 # Spec alignment of the real SyncAggregate decoder
 
-The text of `E2eScal`'s `DdSpecK.lean` with the SyncAggregate statement. The statements are the frozen
+The text of `Prysm/Deposit_Data/DecodeSpec.lean` with the SyncAggregate statement. The statements are the frozen
 `Decode.accept_spec_statement`, `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement` (`Prysm/SyncAggregate/Statements.lean`).
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
@@ -13,7 +13,7 @@ The text of `E2eScal`'s `DdSpecK.lean` with the SyncAggregate statement. The sta
 - `Decode.reject_complete`: every input that EthLib rejects has `size ≠ 160`.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.SyncAggregate.Code
+open Machine Runtime EthLib.Serialization.Ssz Prysm.SyncAggregate.Code
 variable [Host]
 
 namespace Prysm.SyncAggregate

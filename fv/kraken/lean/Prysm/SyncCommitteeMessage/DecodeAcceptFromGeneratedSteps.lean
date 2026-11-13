@@ -6,19 +6,19 @@ import Prysm.SyncCommitteeMessage.Statements
 /-!
 # `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path from the GENERATED `p2dec --gen4` chains
 
-`Decode.accept_from_generated_steps : Decode.accept_statement` (the pre-committed hand statement, `H5Stmt.lean`, unchanged). Every field
+`Decode.accept_from_generated_steps : Decode.accept_statement` (the pre-committed hand statement, `Prysm/SyncCommitteeMessage/Statements.lean`, unchanged). Every field
 is a HAND field composition (`sm_gg_*_field`; no kind exists for a field composition, so its statement is checked
-only through this accept theorem) over the GENERATED theorems of `Gen4SmDec.lean` (`p2dec --gen4`, raw output):
+only through this accept theorem) over the GENERATED theorems of `Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean` (`p2dec --gen4`, raw output):
 * Slot 15–46: generated steps 15, 16 + generated call block (`Decode.generated_step_Slot_call`);
 * BlockRoot 47–81: generated segment (`Decode.generated_step_BlockRoot_seg`, rY = rax) + generated tail steps 72, 73, 80, 81;
 * ValidatorIndex 82–117: generated steps 82–87 + generated call block;
 * Signature 120–155: generated segment (the padding `nop` inside its window) + generated tail steps 146, 147, 154, 155.
-Hand text that remains: the field compositions, the head `Decode.head0` and the spills `Decode.spill2` (`SmSeg.lean`; the
+Hand text that remains: the field compositions, the head `Decode.head0` and the spills `Decode.spill2` (`Prysm/SyncCommitteeMessage/DecodeSegments.lean`; the
 generated steps 118 / 119 are not used), the epilogue 156–160 and the accept proof's glue. In-sample (development
 data); no transfer claim.
 -/
 
-open Machine Runtime TestTarget Prysm.AttestationData.Code Prysm.SyncCommitteeMessage.Code Codec
+open Machine Runtime Prysm.AttestationData.Code Prysm.SyncCommitteeMessage.Code Codec
 variable [Host]
 
 namespace Prysm.SyncCommitteeMessage
@@ -261,7 +261,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
-  have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Prysm.BeaconBlockHeader.Decode.generated_head_guard _ _ hguard
+  have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Prysm.BeaconBlockHeader.Decode.accept_guard _ _ hguard
   have hlS : (lo.take S).length = S := by simp [hlo]
   have hl8 : (lo.drop S).length = 8 := by simp [hlo]
   have hlos : Eq (lo.At (rsp.toBitVec - 120 - BitVec.ofNat 64 S)) =

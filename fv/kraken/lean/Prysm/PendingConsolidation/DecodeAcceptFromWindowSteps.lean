@@ -4,18 +4,18 @@ import Prysm.SyncCommitteeMessage.DecodeStepExamples
 /-!
 # `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`, accept path, re-derived with the window and step mechanisms
 
-`Decode.accept_from_window_steps : Decode.accept_statement` (the pre-committed hand statement, `H5Stmt.lean`, unchanged). The text of
-`PcAccept.lean` with the field that the hold-out run missed taken from the window and step mechanisms:
+`Decode.accept_from_window_steps : Decode.accept_statement` (the pre-committed hand statement, `Prysm/SyncCommitteeMessage/Statements.lean`, unchanged). The text of
+`Prysm/PendingConsolidation/DecodeAccept.lean` with the field that the hold-out run missed taken from the window and step mechanisms:
 
 * TargetIndex 48–85: `Decode.example_step_TargetIndex_field` (seven step theorems, then the call-block WINDOW
   `callq; nop; test; je`) instead of a hand-applied `callarg_reload_seg` and the hand lemma `calldec_nop_seg`.
-Unchanged: `Decode.head`, `Decode.epi` (hand, `PcAccept.lean`), the generated SourceIndex theorems
-(`Gen3PcDecPartial.lean`). `PcAccept.lean` is imported for `Decode.head` / `Decode.epi` only; `G4DepCheck.lean` checks by
+Unchanged: `Decode.head`, `Decode.epi` (hand, `Prysm/PendingConsolidation/DecodeAccept.lean`), the generated SourceIndex theorems
+(`Prysm/PendingConsolidation/GeneratedDecodeCallSegmentsPartial.lean`). `Prysm/PendingConsolidation/DecodeAccept.lean` is imported for `Decode.head` / `Decode.epi` only; `Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` checks by
 program that this proof does not reach `calldec_nop_seg`, `bytes32dec_seg_rax` or `Prysm.SyncCommitteeMessage.Decode.validator_index_arg`.
 In-sample (the type is development data since its hold-out evaluation); no transfer claim.
 -/
 
-open Machine Runtime TestTarget Prysm.PendingConsolidation.Code Codec
+open Machine Runtime Prysm.PendingConsolidation.Code Codec
 variable [Host]
 
 namespace Prysm.PendingConsolidation

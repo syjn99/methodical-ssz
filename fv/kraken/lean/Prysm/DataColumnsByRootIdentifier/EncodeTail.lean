@@ -16,7 +16,7 @@ at bp + len + 32); 52–55 n from c + 40, `jg` not taken (n ≤ 128); 56–60 n 
 rsi = 0, `jmp L_13a`; the loop (`Encode.loop`); 100–105 rdi = rsi = 0, epilogue, `ret`.
 -/
 
-open Machine Runtime TestTarget Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

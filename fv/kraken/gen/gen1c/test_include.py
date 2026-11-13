@@ -10,7 +10,7 @@ Python side, per item of the approved API (api_version 2, 22 items):
     of the item (adapter render of the at-line);
   - rodata-string items: the adapter's render of the ELF bytes at (label, offset, length) has the
     same directives as the real file (comments ignored);
-  - every item: TestTarget/Data.lean has the line the adapter's LEAN_INCLUDE gives.
+  - every item: TestTarget/Data.lean or Runtime/StaticUint64s.lean has the line the adapter's LEAN_INCLUDE gives.
 Lean side (IncludeCheck.lean, run in the gate): for every item, the adapter's address term equals
 `<id>_addr` by rfl; for rodata strings the ELF bytes equal the adapter's bytes name by rfl.
 Control (IncludeControl.lean): the first rodata item with its last byte + 1 and the first address
@@ -29,6 +29,8 @@ import elf as elfmod  # noqa: E402
 import include_adapter as inc  # noqa: E402
 
 KRAKEN = os.path.normpath(os.path.join(HERE, "..", ".."))
+# namespace of an item that is not in TestTarget/Data.lean
+DATA_NS = {"staticuint64s": "Runtime.Data"}
 REPO = os.path.normpath(os.path.join(KRAKEN, "..", ".."))
 
 
@@ -43,8 +45,8 @@ def prepare(work):
     nm = elfmod.read_nm(f"{KRAKEN}/link/out/p1bin-amd64.nm")
     gs_addr, gs_size = elfmod.extent(nm, inc.RODATA_SYMBOL)
     gs = e.read(gs_addr, gs_size)
-    data_lean = open(f"{KRAKEN}/lean/TestTarget/Data.lean").read()
-    rows, lean = [], ["import TestTarget.Data", "", "open Fk", "", "set_option maxRecDepth 100000", ""]
+    data_lean = open(f"{KRAKEN}/lean/TestTarget/Data.lean").read() + open(f"{KRAKEN}/lean/Runtime/StaticUint64s.lean").read()
+    rows, lean = [], ["import TestTarget.Data\nimport Runtime.StaticUint64s", "", "open Fk", "", "set_option maxRecDepth 100000", ""]
     for it in api["items"]:
         iid, label, off = it["id"], it["label"], it["offset"]
         path = os.path.join(REPO, inc.DATA_DIR_IN_REPO, inc.file_name(iid))
@@ -53,9 +55,9 @@ def prepare(work):
         r["checks"]["file exists"] = ok_file
         real = directives(open(path).read()) if ok_file else []
         r["checks"]["at-line = adapter render"] = bool(real) and real[0] == directives(inc.render(iid, label, off))[0]
-        r["checks"]["TestTarget/Data.lean includes it"] = re.search(r"^" + re.escape(inc.LEAN_INCLUDE.format(id=iid)) + r"$",
+        r["checks"]["TestTarget/Data.lean or Runtime/StaticUint64s.lean includes it"] = re.search(r"^" + re.escape(inc.LEAN_INCLUDE.format(id=iid)) + r"$",
                                                              data_lean, re.M) is not None
-        lean.append(f"example [Host] : TestTarget.Data.{iid}_addr = {inc.addr_term(label, off)} := rfl")
+        lean.append(f"example [Host] : {DATA_NS.get(iid, 'TestTarget.Data')}.{iid}_addr = {inc.addr_term(label, off)} := rfl")
         if it["kind"] == "rodata-string":
             bs = gs[off:off + it["length"]]
             r["checks"]["bytes: adapter render of ELF = file"] = directives(inc.render(iid, label, off, bs)) == real

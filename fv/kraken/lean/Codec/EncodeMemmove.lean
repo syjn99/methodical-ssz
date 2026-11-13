@@ -21,7 +21,7 @@ stack-guard fact of the large-frame prologue is `Codec.lea_cmp_be_false` (`Stack
 stated over the displacement.
 -/
 
-open Machine Runtime TestTarget
+open Machine Runtime
 
 namespace Codec
 
