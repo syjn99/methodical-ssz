@@ -211,8 +211,8 @@ def Decode.reject_overflow_statement : Prop :=
 def Decode.accept_statement : Prop :=
   ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (kA : Nat) (hkA : Prysm.AttestationData.Code.unmarshalSSZ.IsInfixAt Host.prog kA) (hfA : LabelsFresh Prysm.AttestationData.Code.unmarshalSSZ kA)
-    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
-    (kI : Nat) (hkI : Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ.IsInfixAt Host.prog kI) (hfI : LabelsFresh Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ kI)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
+    (kI : Nat) (hkI : Prysm.CommitteeIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kI) (hfI : LabelsFresh Prysm.CommitteeIndex.Code.unmarshalSSZ kI)
     (kC : Nat) (hkC : Prysm.Checkpoint.Code.unmarshalSSZ.IsInfixAt Host.prog kC) (hfC : LabelsFresh Prysm.Checkpoint.Code.unmarshalSSZ kC)
     (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (n : Nat) (hn : n ≤ 2048) (in0 in1 root se sroot te troot sig ib : List UInt8)
@@ -512,8 +512,8 @@ def Decode.reject_overflow_spec_statement : Prop :=
 def Decode.accept_spec_statement : Prop :=
   ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (kA : Nat) (hkA : Prysm.AttestationData.Code.unmarshalSSZ.IsInfixAt Host.prog kA) (hfA : LabelsFresh Prysm.AttestationData.Code.unmarshalSSZ kA)
-    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
-    (kI : Nat) (hkI : Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ.IsInfixAt Host.prog kI) (hfI : LabelsFresh Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ kI)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
+    (kI : Nat) (hkI : Prysm.CommitteeIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kI) (hfI : LabelsFresh Prysm.CommitteeIndex.Code.unmarshalSSZ kI)
     (kC : Nat) (hkC : Prysm.Checkpoint.Code.unmarshalSSZ.IsInfixAt Host.prog kC) (hfC : LabelsFresh Prysm.Checkpoint.Code.unmarshalSSZ kC)
     (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (bsA : Array UInt8) (v : Value) (hd : deserialize desc bsA = .ok v)

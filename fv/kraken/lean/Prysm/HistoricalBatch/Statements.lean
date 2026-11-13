@@ -102,7 +102,7 @@ def Decode.accept_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 8)) ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 A2.toInt).At (s.regs.rax.toBitVec + 24))
           ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 32)) ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 40))
-          ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps1).At A1) ⋆ Prysm.SyncCommittee.elementBlocks ps1 brs ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps2).At A2) ⋆ Prysm.SyncCommittee.elementBlocks ps2 srs
+          ⋆ Eq ((Codec.sliceHeaders 32 ps1).At A1) ⋆ Codec.elementBlocks ps1 brs ⋆ Eq ((Codec.sliceHeaders 32 ps2).At A2) ⋆ Codec.elementBlocks ps2 srs
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
@@ -186,7 +186,7 @@ def Decode.accept_spec_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 8)) ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 A2.toInt).At (s.regs.rax.toBitVec + 24))
           ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 32)) ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 40))
-          ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps1).At A1) ⋆ Prysm.SyncCommittee.elementBlocks ps1 g.brs ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps2).At A2) ⋆ Prysm.SyncCommittee.elementBlocks ps2 g.srs
+          ⋆ Eq ((Codec.sliceHeaders 32 ps1).At A1) ⋆ Codec.elementBlocks ps1 g.brs ⋆ Eq ((Codec.sliceHeaders 32 ps2).At A2) ⋆ Codec.elementBlocks ps2 g.srs
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 

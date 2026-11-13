@@ -5,7 +5,7 @@ import Prysm.CommitteeIndex.Uint64DecoderKindAnchors
 /-!
 # Anchors of the uint64 decoder statement kind
 
-The uint64 decoder kind `Codec.u64DecAcceptKind C` is, for `C = slotUnmarshalSSZ` and `C = committeeIndexUnmarshalSSZ`, the full declared
+The uint64 decoder kind `Codec.u64DecAcceptKind C` is, for `C = Code.unmarshalSSZ` and `C = Prysm.CommitteeIndex.Code.unmarshalSSZ`, the full declared
 type of the reviewed hand theorem (binders before the colon included). So the frozen kind is the hand
 statement kind, not new text. P2 decode has no hand theorem of the segment shape; its kind is tied to the
 lemma by `Codec.rootDecSegKind_of` only.
@@ -18,7 +18,7 @@ open Codec
 namespace Prysm.Slot
 
 theorem Decode.accept_kind_anchor : ∀ (h : Host), type_of% (@Prysm.Slot.Decode.accept h)
-    = @u64DecAcceptKind h slotUnmarshalSSZ := by
+    = @u64DecAcceptKind h Code.unmarshalSSZ := by
   intro h; with_reducible rfl
 
 end Prysm.Slot

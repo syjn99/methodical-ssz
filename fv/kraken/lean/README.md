@@ -34,8 +34,8 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
 - `Prysm/Epoch/`: the decoder of the hand-written `primitives.Epoch` method and its function specification.
   Its program constant is `Prysm.Epoch.Code.unmarshalSSZ` (`Prysm/Epoch/Code.lean`).
 - `Prysm/AttestationData/`: the `v1alpha1.AttestationData` decoder (accept path in four parts, size reject, EthLib
-  alignment), its hand specification and witnesses. `Code.lean` also holds the programs of the Slot and
-  CommitteeIndex decoders (shared module).
+  alignment), its hand specification and witnesses. The Slot and CommitteeIndex
+  decoders of its link set are in `Prysm/Slot/Code.lean` and `Prysm/CommitteeIndex/Code.lean`.
 - `Prysm/Slot/` and `Prysm/CommitteeIndex/`: the decoders of the hand-written `primitives.Slot` and
   `primitives.CommitteeIndex` methods and their function specifications.
 - `Prysm/Checkpoint/*AsNestedField.lean`: the function specifications of the Checkpoint decoder and encoder for a

@@ -39,8 +39,8 @@ theorem desc_checker :
     ∃ fs, desc = .container ["epoch", "root"] fs ∧ checkerDesc = .container ["Epoch", "Root"] fs :=
   ⟨_, rfl, rfl⟩
 
-/-- The reduced hand case `Spec.cpDesc` is structurally the same term (cited, not used). -/
-theorem desc_eq_hand : desc = Spec.cpDesc := rfl
+/-- The reduced hand case `Spec.checkpointDesc` is structurally the same term (cited, not used). -/
+theorem desc_eq_hand : desc = Spec.checkpointDesc := rfl
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem desc_fixedSize : desc.fixedSize = some 40 := by rfl

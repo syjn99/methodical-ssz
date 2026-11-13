@@ -19,8 +19,8 @@ open Codec
 namespace Prysm.Slot
 
 set_option maxRecDepth 100000 in
-theorem Decode.accept_from_uint64_pattern (k : Nat) (hk : slotUnmarshalSSZ.IsInfixAt Host.prog k)
-    (hf : LabelsFresh slotUnmarshalSSZ k)
+theorem Decode.accept_from_uint64_pattern (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh Code.unmarshalSSZ k)
     (e8 : List UInt8) (he8 : e8.length = 8)
     (s : MachineData) (ra guard : UInt64) (fp s2 c0 : List UInt8)
     (hfp : fp.length = 8) (h2 : s2.length = 8) (hc0 : c0.length = 8) (R : DataMem → Prop)
@@ -43,15 +43,15 @@ theorem Decode.accept_from_uint64_pattern (k : Nat) (hk : slotUnmarshalSSZ.IsInf
     "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ_0"
     "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ_cc"
     "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ_bb" 72 96) 0 hk
-    (by simp only [slotUnmarshalSSZ, u64DecHead, List.drop_zero, List.length_cons, List.length_nil,
+    (by simp only [Code.unmarshalSSZ, u64DecHead, List.drop_zero, List.length_cons, List.length_nil,
       List.take_succ_cons, List.take_zero])
   have hB := infix_sub (q := u64DecTail
     "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ_bb" 72) 43 hk
-    (by simp only [slotUnmarshalSSZ, u64DecTail, List.drop_succ_cons, List.drop_zero, List.length_cons,
+    (by simp only [Code.unmarshalSSZ, u64DecTail, List.drop_succ_cons, List.drop_zero, List.length_cons,
       List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 43)
-    (by simp only [slotUnmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
-    (by simp only [slotUnmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+    (by simp only [Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+    (by simp only [Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   exact u64dec_accept _ _ _ _ 72 96 (by decide) k (k + 43) hA hB hl e8 he8 s ra guard fp s2 c0 hfp h2 hc0 R
     h_mem hguard hlen
 

@@ -34,8 +34,8 @@ def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.AttestationData.Code.slotUnmarshalSSZ
-  ++ Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocUint64Dispatch ++ RtCopy ++ Prysm.RuntimeModel.BumpNewStructDispatch
+def P : Program := dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ
+  ++ Prysm.CommitteeIndex.Code.unmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocUint64Dispatch ++ RtCopy ++ Prysm.RuntimeModel.BumpNewStructDispatch
 
 -- Measured cause: `rfl` on the 884-directive host program stops with "maximum recursion depth" at
 -- the default (512) in `P_len` and the prefix-length facts `hk288` … `hk869` only. `hk288` passes at 1024; `P_len`
@@ -48,49 +48,49 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : unmarshalSSZ.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels (Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.AttestationData.Code.slotUnmarshalSSZ ++ Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ
+  infixAt_of dataLabels (Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ
     ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocUint64Dispatch ++ RtCopy ++ Prysm.RuntimeModel.BumpNewStructDispatch)
     (by simp [prog_eq, P, List.append_assoc]) rfl
 set_option maxRecDepth 1024 in
 theorem hk288 : Prysm.AttestationData.Code.unmarshalSSZ.IsInfixAt Host.prog 288 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ) (Prysm.AttestationData.Code.slotUnmarshalSSZ ++ Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ
+  infixAt_of (dataLabels ++ unmarshalSSZ) (Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ
     ++ Prysm.Epoch.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocUint64Dispatch ++ RtCopy ++ Prysm.RuntimeModel.BumpNewStructDispatch) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2048 in
-theorem hk531 : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog 531 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ) (Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ
+theorem hk531 : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog 531 :=
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ) (Prysm.CommitteeIndex.Code.unmarshalSSZ ++ Prysm.Checkpoint.Code.unmarshalSSZ
     ++ Prysm.Epoch.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocUint64Dispatch ++ RtCopy ++ Prysm.RuntimeModel.BumpNewStructDispatch) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2048 in
-theorem hk594 : Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ.IsInfixAt Host.prog 594 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.AttestationData.Code.slotUnmarshalSSZ) (Prysm.Checkpoint.Code.unmarshalSSZ
+theorem hk594 : Prysm.CommitteeIndex.Code.unmarshalSSZ.IsInfixAt Host.prog 594 :=
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ) (Prysm.Checkpoint.Code.unmarshalSSZ
     ++ Prysm.Epoch.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocUint64Dispatch ++ RtCopy ++ Prysm.RuntimeModel.BumpNewStructDispatch) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2048 in
 theorem hk657 : Prysm.Checkpoint.Code.unmarshalSSZ.IsInfixAt Host.prog 657 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.AttestationData.Code.slotUnmarshalSSZ ++ Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ)
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ)
     (Prysm.Epoch.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocUint64Dispatch ++ RtCopy ++ Prysm.RuntimeModel.BumpNewStructDispatch) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2048 in
 theorem hk765 : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog 765 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.AttestationData.Code.slotUnmarshalSSZ ++ Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ
     ++ Prysm.Checkpoint.Code.unmarshalSSZ) (Prysm.RuntimeModel.BumpAllocUint64Dispatch ++ RtCopy ++ Prysm.RuntimeModel.BumpNewStructDispatch) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2048 in
 theorem hk828 : Prysm.RuntimeModel.BumpAllocUint64Dispatch.IsInfixAt Host.prog 828 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.AttestationData.Code.slotUnmarshalSSZ ++ Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ
     ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ) (RtCopy ++ Prysm.RuntimeModel.BumpNewStructDispatch) (by simp [prog_eq, P, List.append_assoc])
     (by rfl)
 set_option maxRecDepth 2048 in
 theorem hk843 : RtCopy.IsInfixAt Host.prog 843 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.AttestationData.Code.slotUnmarshalSSZ ++ Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ
     ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocUint64Dispatch) Prysm.RuntimeModel.BumpNewStructDispatch (by simp [prog_eq, P, List.append_assoc])
     (by rfl)
 set_option maxRecDepth 2048 in
 theorem hk869 : Prysm.RuntimeModel.BumpNewStructDispatch.IsInfixAt Host.prog 869 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.AttestationData.Code.slotUnmarshalSSZ ++ Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.AttestationData.Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ Prysm.CommitteeIndex.Code.unmarshalSSZ
     ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocUint64Dispatch ++ RtCopy) [] (by simp [prog_eq, P, List.append_assoc])
     (by rfl)
 
 theorem hf9 : LabelsFresh unmarshalSSZ 9 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf288 : LabelsFresh Prysm.AttestationData.Code.unmarshalSSZ 288 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf531 : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ 531 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf594 : LabelsFresh Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ 594 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf531 : LabelsFresh Prysm.Slot.Code.unmarshalSSZ 531 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf594 : LabelsFresh Prysm.CommitteeIndex.Code.unmarshalSSZ 594 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf657 : LabelsFresh Prysm.Checkpoint.Code.unmarshalSSZ 657 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf765 : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ 765 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf828 : LabelsFresh Prysm.RuntimeModel.BumpAllocUint64Dispatch 828 := labelsFresh_of (by rw [prog_eq]; decide)

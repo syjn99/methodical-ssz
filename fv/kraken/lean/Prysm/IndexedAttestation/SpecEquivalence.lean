@@ -30,7 +30,7 @@ theorem desc_serialize_checker (v : Value) : serialize desc v = serialize checke
   cases v <;> simp only [serialize]
   rename_i vs
   simp only [serializeStruct]
-  rw [Prysm.AttestationData.serializeFields_congr _ [.list (.uint 8) 2048, Prysm.AttestationData.checkerDesc, .byteVector 96] vs
+  rw [Codec.serializeFields_congr _ [.list (.uint 8) 2048, Prysm.AttestationData.checkerDesc, .byteVector 96] vs
     (.cons (fun _ => rfl) (.cons Prysm.AttestationData.desc_serialize_checker (.cons (fun _ => rfl) .nil)))]
   rfl
 

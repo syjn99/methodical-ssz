@@ -26,13 +26,13 @@ theorem vN_serialize (n : Nat) (hn : 32 * n < 2 ^ 32) (v : Vector (Vector UInt8 
     serializeEach_bv32, bind, Except.bind]
   rw [show (v.toList.map (·.toArray)).map (fun _ => Desc.isFixed (.byteVector 32))
       = (v.toList.map (·.toArray)).map (fun _ => true) from rfl,
-    Prysm.SyncCommittee.assemble_inline_ok _ (by rw [hs]; simp; omega), concatParts_v32]
+    Codec.assemble_inline_ok _ (by rw [hs]; simp; omega), concatParts_v32]
 
 /-- Every `32 n`-byte array is the end-to-end layout of some `Vector[Bytes32, n]`. -/
 theorem vN_of_bytes (n : Nat) (d : Array UInt8) (hd : d.size = 32 * n) :
     ∃ v : Vector (Vector UInt8 32) n, (v.toList.map (·.toList)).flatten.toArray = d := by
   let chunks : List (Vector UInt8 32) := (List.range n).map fun i =>
-    toV32 (.bytes (d.extract (i * 32) ((i + 1) * 32)))
+    toByteVector32 (.bytes (d.extract (i * 32) ((i + 1) * 32)))
   refine ⟨⟨chunks.toArray, by simp [chunks]⟩, ?_⟩
   have hm : chunks.map (·.toArray) = (List.range n).map (fun i => d.extract (i * 32) ((i + 1) * 32)) := by
     simp only [chunks, List.map_map]
@@ -41,8 +41,8 @@ theorem vN_of_bytes (n : Nat) (d : Array UInt8) (hd : d.size = 32 * n) :
     simp only [List.mem_range] at hi
     have hsz : (d.extract (i * 32) ((i + 1) * 32)).size = 32 := by
       simp; rw [Nat.min_eq_left (by rw [hd]; have := Nat.mul_le_mul_left 32 (show i + 1 ≤ n by omega); omega)]; omega
-    show (toV32 (.bytes (d.extract (i * 32) ((i + 1) * 32)))).toArray = _
-    simp only [toV32]
+    show (toByteVector32 (.bytes (d.extract (i * 32) ((i + 1) * 32)))).toArray = _
+    simp only [toByteVector32]
     rw [dif_pos hsz]
   rw [← concatParts_v32]
   have := concat_fixed_slices d 32 n (by omega)

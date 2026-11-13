@@ -17,7 +17,7 @@ open Machine Runtime
 open Codec
 namespace Prysm.Slot
 
-theorem Decode.accept_function_spec_is_callee_accept : ∀ (h : Host), @Prysm.Slot.Decode.accept_function_spec h = @U64CalleeAcc h Prysm.AttestationData.Code.slotUnmarshalLabel := by
+theorem Decode.accept_function_spec_is_callee_accept : ∀ (h : Host), @Prysm.Slot.Decode.accept_function_spec h = @U64CalleeAcc h Prysm.Slot.Code.unmarshalSSZLabel := by
   intro h; rfl
 
 end Prysm.Slot

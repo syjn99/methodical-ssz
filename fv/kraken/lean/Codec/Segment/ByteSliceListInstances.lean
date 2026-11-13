@@ -29,31 +29,31 @@ theorem input_split_historical_batch (bf : BitVec 64) (pks : List (List UInt8)) 
   in_split 32 8192 (by decide) bf pks hpks hpk i hi
 
 theorem array_split_sync_committee (A : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 512) (hps : ps.length = i) :
-    Eq ((Prysm.SyncCommittee.sliceHeaders 48 ps ++ Prysm.SyncCommittee.zz (24 * (512 - i))).At A) = Eq ((Prysm.SyncCommittee.sliceHeaders 48 ps).At A)
-      ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
-      ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
-      ⋆ Eq ((Prysm.SyncCommittee.zz (24 * (512 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
+    Eq ((Codec.sliceHeaders 48 ps ++ Codec.zeroBytes (24 * (512 - i))).At A) = Eq ((Codec.sliceHeaders 48 ps).At A)
+      ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
+      ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
+      ⋆ Eq ((Codec.zeroBytes (24 * (512 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
   arr_split 512 (by decide) 48 A ps i hi hps
 theorem array_split_historical_batch (A : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 8192) (hps : ps.length = i) :
-    Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps ++ Prysm.SyncCommittee.zz (24 * (8192 - i))).At A) = Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps).At A)
-      ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
-      ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
-      ⋆ Eq ((Prysm.SyncCommittee.zz (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
+    Eq ((Codec.sliceHeaders 32 ps ++ Codec.zeroBytes (24 * (8192 - i))).At A) = Eq ((Codec.sliceHeaders 32 ps).At A)
+      ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
+      ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
+      ⋆ Eq ((Codec.zeroBytes (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
   arr_split 8192 (by decide) 32 A ps i hi hps
 
 theorem array_join_sync_committee (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 512) (hps : ps.length = i) :
-    Eq ((Prysm.SyncCommittee.sliceHeaders 48 (ps ++ [p]) ++ Prysm.SyncCommittee.zz (24 * (512 - (i + 1)))).At A) = Eq ((Prysm.SyncCommittee.sliceHeaders 48 ps).At A)
+    Eq ((Codec.sliceHeaders 48 (ps ++ [p]) ++ Codec.zeroBytes (24 * (512 - (i + 1)))).At A) = Eq ((Codec.sliceHeaders 48 ps).At A)
       ⋆ Eq ((Int.toBytes 8 p.toInt).At (A + BitVec.ofNat 64 (24 * i)))
       ⋆ Eq ((Int.toBytes 8 48).At (A + BitVec.ofNat 64 (24 * i) + 8))
       ⋆ Eq ((Int.toBytes 8 48).At (A + BitVec.ofNat 64 (24 * i) + 16))
-      ⋆ Eq ((Prysm.SyncCommittee.zz (24 * (512 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
+      ⋆ Eq ((Codec.zeroBytes (24 * (512 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
   arr_join 512 (by decide) 48 A p ps i hi hps
 theorem array_join_historical_batch (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 8192) (hps : ps.length = i) :
-    Eq ((Prysm.SyncCommittee.sliceHeaders 32 (ps ++ [p]) ++ Prysm.SyncCommittee.zz (24 * (8192 - (i + 1)))).At A) = Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps).At A)
+    Eq ((Codec.sliceHeaders 32 (ps ++ [p]) ++ Codec.zeroBytes (24 * (8192 - (i + 1)))).At A) = Eq ((Codec.sliceHeaders 32 ps).At A)
       ⋆ Eq ((Int.toBytes 8 p.toInt).At (A + BitVec.ofNat 64 (24 * i)))
       ⋆ Eq ((Int.toBytes 8 32).At (A + BitVec.ofNat 64 (24 * i) + 8))
       ⋆ Eq ((Int.toBytes 8 32).At (A + BitVec.ofNat 64 (24 * i) + 16))
-      ⋆ Eq ((Prysm.SyncCommittee.zz (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
+      ⋆ Eq ((Codec.zeroBytes (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
   arr_join 8192 (by decide) 32 A p ps i hi hps
 
 /-- The statements are the hand ones: each hand lemma follows from its instance by `exact`. -/

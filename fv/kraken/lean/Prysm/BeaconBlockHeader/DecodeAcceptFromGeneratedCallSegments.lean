@@ -62,7 +62,7 @@ theorem Decode.head_from_generated_call_segments (k : Nat) (hk : Code.unmarshalS
           ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq (in1.At (s.regs.rax.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hsl' : U64CalleeAcc slotUnmarshalLabel := hsl
+  have hsl' : U64CalleeAcc Prysm.Slot.Code.unmarshalSSZLabel := hsl
   have hvi' : U64CalleeAcc Prysm.ValidatorIndex.Code.unmarshalLabel := hvi
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
@@ -138,7 +138,7 @@ set_option maxRecDepth 100000 in
 /-- Accept path of `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ` from the GENERATED `p2dec --gen3` theorems (all five
 fields); statement text of `Decode.accept`. -/
 theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
     (in0 in1 r1 r2 r3 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
     (hr1 : r1.length = 32) (hr2 : r2.length = 32) (hr3 : r3.length = 32)

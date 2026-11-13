@@ -145,8 +145,8 @@ theorem Decode.accept : Decode.accept_statement := by
         show rsp.toBitVec - 64 + 24 = rsp.toBitVec - 40 by laddr, show rsp.toBitVec - 64 + 32 = rsp.toBitVec - 32 by laddr,
         show rsp.toBitVec - 64 + 40 = rsp.toBitVec - 24 by laddr, show rsp.toBitVec - 64 + 48 = rsp.toBitVec - 16 by laddr,
         show rsp.toBitVec - 64 - 8 = rsp.toBitVec - 72 by laddr]
-      simp only [show Prysm.SyncCommittee.sliceHeaders 32 [] ++ Prysm.SyncCommittee.zz (24 * (8192 - 0)) = List.replicate (24 * 8192) 0 from rfl, List.take_zero,
-        show Prysm.SyncCommittee.elementBlocks [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
+      simp only [show Codec.sliceHeaders 32 [] ++ Codec.zeroBytes (24 * (8192 - 0)) = List.replicate (24 * 8192) 0 from rfl, List.take_zero,
+        show Codec.elementBlocks [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
       ecancel)) ?_
   rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, hrbp4, hr144, ps1, l18', l20', l28', l30', spl', rslot', lo', hps1, g18, g20, g28,
     g30, gspl, grs, glo, Hm4⟩
@@ -223,8 +223,8 @@ theorem Decode.accept : Decode.accept_statement := by
     rfl rfl rfl
     (by
       dsimp only
-      simp only [show Prysm.SyncCommittee.sliceHeaders 32 [] ++ Prysm.SyncCommittee.zz (24 * (8192 - 0)) = List.replicate (24 * 8192) 0 from rfl, List.take_zero,
-        show Prysm.SyncCommittee.elementBlocks [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
+      simp only [show Codec.sliceHeaders 32 [] ++ Codec.zeroBytes (24 * (8192 - 0)) = List.replicate (24 * 8192) 0 from rfl, List.take_zero,
+        show Codec.elementBlocks [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
       ecancel)) ?_
   rintro ⟨d6, pc6⟩ ⟨hpc6, hrsp6, hrbp6, hr146, ps2, m18, m20, m28, m30, mspl, mlo, hps2, q18, q20, q28, q30, qspl,
     qlo, Hm6⟩
@@ -255,7 +255,7 @@ theorem Decode.accept : Decode.accept_statement := by
     show rsp.toBitVec - 64 + 40 = rsp.toBitVec - 24 by laddr, show rsp.toBitVec - 64 + 48 = rsp.toBitVec - 16 by laddr,
     show rsp.toBitVec - 64 - 8 = rsp.toBitVec - 72 by laddr,
     show avail - 24 * 8192 - 32 * 8192 - 24 * 8192 - 32 * 8192 = avail - 917504 by omega,
-    show Prysm.SyncCommittee.zz (24 * (8192 - 8192)) = [] from rfl, List.append_nil, List.append_nil,
+    show Codec.zeroBytes (24 * (8192 - 8192)) = [] from rfl, List.append_nil, List.append_nil,
     List.take_of_length_le (by omega : brs.length ≤ 8192), List.take_of_length_le (by omega : srs.length ≤ 8192)]
     at Hm6
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, rax3.toBitVec, rax5.toBitVec, ps1, ps2, m18, m20, m28, m30, mspl, mlo, hps1, hps2,

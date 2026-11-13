@@ -38,8 +38,8 @@ open Spec hiding encode readUint_lt
 def desc : Desc := .container ["slot", "index", "beacon_block_root", "source", "target"]
   [.uint 8, .uint 8, .byteVector 32, Prysm.Checkpoint.desc, Prysm.Checkpoint.desc]
 
-/-- The reduced hand case `Spec.adDesc` is the same term (cited, not used). -/
-theorem desc_eq_hand : desc = Spec.adDesc := rfl
+/-- The reduced hand case `Spec.attestationDataDesc` is the same term (cited, not used). -/
+theorem desc_eq_hand : desc = Spec.attestationDataDesc := rfl
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem desc_fixedSize : desc.fixedSize = some 128 := by rfl

@@ -49,7 +49,7 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
       ⋆ Eq (rslot.At (sp - 8)) ⋆ Eq (lo.At (sp - 8 - BitVec.ofNat 64 S)) ⋆ Heap avail
       ⋆ Eq (pks.flatten.At bf)
       ⋆ Eq ((Int.toBytes 8 A.toInt).At (recv + 8)) ⋆ Eq ((Int.toBytes 8 512).At (recv + 16))
-      ⋆ Eq ((sliceHeaders 48 ps ++ zz (24 * (512 - i))).At A) ⋆ elementBlocks ps (pks.take i)
+      ⋆ Eq ((Codec.sliceHeaders 48 ps ++ Codec.zeroBytes (24 * (512 - i))).At A) ⋆ Codec.elementBlocks ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
@@ -62,7 +62,7 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
           ⋆ Eq (rslot'.At (sp - 8)) ⋆ Eq (lo'.At (sp - 8 - BitVec.ofNat 64 S)) ⋆ Heap (avail - 48)
           ⋆ Eq (pks.flatten.At bf)
           ⋆ Eq ((Int.toBytes 8 A.toInt).At (recv + 8)) ⋆ Eq ((Int.toBytes 8 512).At (recv + 16))
-          ⋆ Eq ((sliceHeaders 48 (ps ++ [p]) ++ zz (24 * (512 - (i + 1)))).At A) ⋆ elementBlocks (ps ++ [p]) (pks.take (i + 1))
+          ⋆ Eq ((Codec.sliceHeaders 48 (ps ++ [p]) ++ Codec.zeroBytes (24 * (512 - (i + 1)))).At A) ⋆ Codec.elementBlocks (ps ++ [p]) (pks.take (i + 1))
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 40)⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -79,7 +79,7 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.signed] at h
-    exact jge_false512 _ _ (by simp) (by simp; omega) h
+    exact Codec.jge_false_of_lt _ _ (by simp) (by simp; omega) h
   simp only [Effects.All]
   kat hk unmarshalSSZ 43
   apply store_step_at _ _ (sp + 24) _ _ _ l18 _ _ (by kaddr) (by ecancel) (by exact h18)
@@ -191,12 +191,12 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk unmarshalSSZ 66
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (zz 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
   kunfold
   kat hk unmarshalSSZ 67
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (zz 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
   intro m8 H8
   simp only [Width.bytes, Width.bits] at H8
   kunfold
@@ -217,7 +217,7 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
   klabel hk hf unmarshalSSZ 36
   kat hk unmarshalSSZ 36
   kat hk unmarshalSSZ 37
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (zz 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
   kunfold
@@ -234,7 +234,7 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
     simp [BitVec.toNat_add]; omega
   · dsimp only
     rw [Decode.input_split bf pks hpks hpk i hi, Decode.array_join A rax3.toBitVec ps i hi hps,
-      List.take_succ_eq_append_getElem hlt, elementBlocks_snoc ps (List.take i pks) _ _ (by simp [hps]; omega)]
+      List.take_succ_eq_append_getElem hlt, Codec.elementBlocks_snoc ps (List.take i pks) _ _ (by simp [hps]; omega)]
     simp only [hE]
     ecancel
 
@@ -272,7 +272,7 @@ theorem Decode.loop (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
       ⋆ Eq (rslot.At (sp - 8)) ⋆ Eq (lo.At (sp - 8 - BitVec.ofNat 64 S)) ⋆ Heap (avail)
       ⋆ Eq (pks.flatten.At bf)
       ⋆ Eq ((Int.toBytes 8 A.toInt).At (recv + 8)) ⋆ Eq ((Int.toBytes 8 512).At (recv + 16))
-      ⋆ Eq ((sliceHeaders 48 ps ++ zz (24 * (512 - i))).At A) ⋆ elementBlocks ps (pks.take i)
+      ⋆ Eq ((Codec.sliceHeaders 48 ps ++ Codec.zeroBytes (24 * (512 - i))).At A) ⋆ Codec.elementBlocks ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) →
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 81) ∧ st.data.regs.rsp = { toBitVec := sp } ∧ st.data.regs.rbp = rbp0
@@ -285,7 +285,7 @@ theorem Decode.loop (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
       ⋆ Eq (rslot'.At (sp - 8)) ⋆ Eq (lo'.At (sp - 8 - BitVec.ofNat 64 S)) ⋆ Heap (avail - 48 * j)
       ⋆ Eq (pks.flatten.At bf)
       ⋆ Eq ((Int.toBytes 8 A.toInt).At (recv + 8)) ⋆ Eq ((Int.toBytes 8 512).At (recv + 16))
-      ⋆ Eq ((sliceHeaders 48 ps' ++ zz (24 * (512 - 512))).At A) ⋆ elementBlocks ps' (pks.take 512)
+      ⋆ Eq ((Codec.sliceHeaders 48 ps' ++ Codec.zeroBytes (24 * (512 - 512))).At A) ⋆ Codec.elementBlocks ps' (pks.take 512)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 40)⟩ := by
   intro j

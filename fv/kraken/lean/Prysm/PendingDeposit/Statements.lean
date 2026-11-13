@@ -71,10 +71,10 @@ namespace Prysm.PendingDeposit
 returns nil and the receiver holds fresh PublicKey (48) / WithdrawalCredentials (32) / Signature (96) slices
 equal to buf[0:48] / buf[48:80] / buf[88:184] (len = cap), Amount = buf[80:88] and Slot = buf[184:192]; input,
 `state`, the spills, the caller's frame `R` and the stack guard are unchanged; 176 heap bytes are used. The
-delegated field goes through the callee's code (`slotUnmarshalSSZ` placed in the host). -/
+delegated field goes through the callee's code (`Prysm.Slot.Code.unmarshalSSZ` placed in the host). -/
 abbrev Decode.accept_statement : Prop :=
   ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (pk wc amt sig sl : List UInt8) (hpk : pk.length = 48) (hwc : wc.length = 32) (hamt : amt.length = 8)
     (hsig : sig.length = 96) (hsl : sl.length = 8)
     (s : MachineData) (ra guard : UInt64)

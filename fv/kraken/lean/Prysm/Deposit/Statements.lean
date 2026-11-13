@@ -135,7 +135,7 @@ def Decode.accept_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 A.toInt).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 33).At (s.regs.rax.toBitVec + 16)) ⋆ Eq ((Int.toBytes 8 33).At (s.regs.rax.toBitVec + 24))
           ⋆ Eq ((Int.toBytes 8 po.toInt).At (s.regs.rax.toBitVec + 32))
-          ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps).At A) ⋆ Prysm.SyncCommittee.elementBlocks ps proofs
+          ⋆ Eq ((Codec.sliceHeaders 32 ps).At A) ⋆ Codec.elementBlocks ps proofs
           ⋆ Eq ((List.replicate 8 0).At po)
           ⋆ Eq ((Int.toBytes 8 p1.toInt).At (po + 8))
           ⋆ Eq ((Int.toBytes 8 48).At (po + 16)) ⋆ Eq ((Int.toBytes 8 48).At (po + 24))

@@ -26,7 +26,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Accept side: the generated accept statement for the input chunks of the `g` that EthLib decodes. -/
 theorem Decode.accept_spec : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
-    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (bsA : Array UInt8) (v : Value) (hd : deserialize desc bsA = .ok v)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 sp1 rslot lo ast aN0 aN1 aN2 : List UInt8)

@@ -50,7 +50,7 @@ theorem Decode.input_pointer_mask (ib : List UInt8) (n : Nat) (hib : ib.length =
     subst this
     simp only [List.At, List.mapIdx_nil]
   · have hd := Decode.sub36 c (by omega)
-    rw [Prysm.IndexedAttestation.Decode.sar63 _ (by omega) (by omega), Decode.mask_ones]
+    rw [Codec.sshiftRight_neg_63_eq_allOnes _ (by omega) (by omega), Decode.mask_ones]
 
 -- Measured: heartbeats: the default 200000 fails (`whnf` timeout at the loop call), 400000 passes;
 -- recursion depth: the default fails at `klabel` (directive 185, the `simp` that unfolds the program literal), 1024 passes.

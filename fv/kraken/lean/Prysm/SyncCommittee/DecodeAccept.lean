@@ -191,8 +191,8 @@ theorem Decode.accept : Decode.accept_statement := by
       rw [show rsp.toBitVec - 56 + 64 = rsp.toBitVec + 8 by laddr, show rsp.toBitVec - 56 + 72 = rsp.toBitVec + 16 by laddr,
         show rsp.toBitVec - 56 + 24 = rsp.toBitVec - 32 by laddr, show rsp.toBitVec - 56 + 32 = rsp.toBitVec - 24 by laddr,
         show rsp.toBitVec - 56 + 40 = rsp.toBitVec - 16 by laddr, show rsp.toBitVec - 56 - 8 = rsp.toBitVec - 64 by laddr]
-      simp only [show sliceHeaders 48 [] ++ zz (24 * (512 - 0)) = List.replicate (24 * 512) 0 from rfl, List.take_zero,
-        show elementBlocks [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
+      simp only [show Codec.sliceHeaders 48 [] ++ Codec.zeroBytes (24 * (512 - 0)) = List.replicate (24 * 512) 0 from rfl, List.take_zero,
+        show Codec.elementBlocks [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
       ecancel)) ?_
   rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, hrbp4, hr144, ps', l18', l20', l28', spl', rslot', lo', hps', g18, g20, g28, gspl,
     grs, glo, Hm4⟩
@@ -253,7 +253,7 @@ theorem Decode.accept : Decode.accept_statement := by
     show rsp.toBitVec - 56 + 72 = rsp.toBitVec + 16 by laddr, show rsp.toBitVec - 56 + 24 = rsp.toBitVec - 32 by laddr,
     show rsp.toBitVec - 56 + 32 = rsp.toBitVec - 24 by laddr, show rsp.toBitVec - 56 - 8 = rsp.toBitVec - 64 by laddr,
     show k + 94 + 6 + 1 = k + 101 from rfl, show avail - 24 * 512 - 48 * 512 - 48 = avail - 36912 by omega,
-    show zz (24 * (512 - 512)) = [] from rfl, List.append_nil, List.take_of_length_le (by omega : pks.length ≤ 512)]
+    show Codec.zeroBytes (24 * (512 - 512)) = [] from rfl, List.append_nil, List.take_of_length_le (by omega : pks.length ≤ 512)]
     at Hm6
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, rax3.toBitVec, pA, ps', l18', l20', spl5, lo5, hps', g18, g20, hspl5, hlo5, ?_⟩
   rotate_right

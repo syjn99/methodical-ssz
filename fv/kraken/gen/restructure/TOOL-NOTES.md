@@ -30,7 +30,7 @@ The shared-layer map has no `type` row and keeps the old behaviour.
 
 Maps compose in order: `shared-layer`, `checkpoint-and-epoch`, `attestation-data`, `sync-and-indexed-attestation`,
 `historical-batch-and-deposit`, `data-columns-by-root-identifier`,
-`flat-types`, `clean-up`, then the next step.
+`flat-types`, `clean-up`, `shared-names`, then the next step.
 To undo, run the inverse of the last map first.
 The forward run of a step needs nothing from the earlier maps.
 The inverse of the map of a step alone must give the tree from which the step started.

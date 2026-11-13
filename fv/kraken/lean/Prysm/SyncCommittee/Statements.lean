@@ -106,7 +106,7 @@ def Decode.accept_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 512).At (s.regs.rax.toBitVec + 16)) ⋆ Eq ((Int.toBytes 8 512).At (s.regs.rax.toBitVec + 24))
           ⋆ Eq ((Int.toBytes 8 pA.toInt).At (s.regs.rax.toBitVec + 32))
           ⋆ Eq ((Int.toBytes 8 48).At (s.regs.rax.toBitVec + 40)) ⋆ Eq ((Int.toBytes 8 48).At (s.regs.rax.toBitVec + 48))
-          ⋆ Eq ((sliceHeaders 48 ps).At A) ⋆ elementBlocks ps pks ⋆ Eq (agg.At pA)
+          ⋆ Eq ((Codec.sliceHeaders 48 ps).At A) ⋆ Codec.elementBlocks ps pks ⋆ Eq (agg.At pA)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
@@ -192,7 +192,7 @@ def Decode.accept_spec_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 512).At (s.regs.rax.toBitVec + 16)) ⋆ Eq ((Int.toBytes 8 512).At (s.regs.rax.toBitVec + 24))
           ⋆ Eq ((Int.toBytes 8 pA.toInt).At (s.regs.rax.toBitVec + 32))
           ⋆ Eq ((Int.toBytes 8 48).At (s.regs.rax.toBitVec + 40)) ⋆ Eq ((Int.toBytes 8 48).At (s.regs.rax.toBitVec + 48))
-          ⋆ Eq ((sliceHeaders 48 ps).At A) ⋆ elementBlocks ps g.pks ⋆ Eq (g.aggregatePubkey.toList.At pA)
+          ⋆ Eq ((Codec.sliceHeaders 48 ps).At A) ⋆ Codec.elementBlocks ps g.pks ⋆ Eq (g.aggregatePubkey.toList.At pA)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 

@@ -39,7 +39,7 @@ theorem serialize_checker (g : SszValue) : serialize checkerDesc g.toValue = .ok
 theorem toValue_fits_checker (g : SszValue) : Value.fits checkerDesc g.toValue = true := by
   have h := Prysm.Deposit_Data.SszValue.toValue_fits_checker g.data
   simp only [Prysm.Deposit_Data.checkerDesc] at h
-  simp [checkerDesc, SszValue.toValue, Value.fits, Value.fieldsFit, Prysm.HistoricalBatch.allFit_map_bv32, h]
+  simp [checkerDesc, SszValue.toValue, Value.fits, Value.fieldsFit, Codec.allFit_map_byteVector32, h]
 
 theorem toValue_surjective_checker (v : Value) (h : Value.fits checkerDesc v = true) :
     ∃ g : SszValue, g.toValue = v := by

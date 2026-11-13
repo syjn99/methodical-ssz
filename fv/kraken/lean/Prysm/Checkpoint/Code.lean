@@ -20,4 +20,8 @@ def unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/e2e/link/norm/g
 def marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
 /-- `(*v1alpha1.Checkpoint).SizeSSZ`. -/
 def sizeSSZ : Program := include_x64_rt "../prysm/go1.26.10/e2e/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ.S"
+
+abbrev unmarshalSSZLabel : String := "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ"
+abbrev marshalSSZToLabel : String := "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo"
+
 end Prysm.Checkpoint.Code

@@ -3,6 +3,7 @@ import Codec.StackGuard
 import Prysm.IndexedAttestation.AddressTactic
 import Prysm.IndexedAttestation.Statements
 import Prysm.IndexedAttestation.DecodeLoop
+import Codec.BitVecShiftLemmas
 
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
@@ -22,20 +23,6 @@ open Machine Runtime Prysm.IndexedAttestation.Code
 variable [Host]
 
 namespace Prysm.IndexedAttestation
-
-omit [Host] in
-/-- `sar $0x3f` of a negated positive value below 2⁶³ (directive 21). -/
-theorem Decode.sar63 (d : BitVec 64) (h0 : d.toNat ≠ 0) (h1 : d.toNat < 2 ^ 63) :
-    BitVec.sshiftRight (-d) 63 = BitVec.allOnes 64 := by
-  apply BitVec.eq_of_toInt_eq
-  rw [BitVec.toInt_sshiftRight, BitVec.toInt_allOnes]
-  have hn : (-d).toInt = -(d.toNat : Int) := by
-    rw [BitVec.toInt_neg_of_ne_intMin]
-    · rw [BitVec.toInt_eq_toNat_of_lt (by omega)]
-    · intro h; have := congrArg BitVec.toNat h; simp [BitVec.toNat_intMin] at this; omega
-  rw [hn, Int.shiftRight_eq_div_pow]
-  simp only [Nat.reducePow]
-  omega
 
 omit [Host] in
 theorem Decode.mask_ones :
@@ -77,7 +64,7 @@ theorem Decode.input_pointer_mask (ib : List UInt8) (n : Nat) (hib : ib.length =
     subst this
     simp only [List.At, List.mapIdx_nil]
   · have hd := Decode.sub228 c (by omega)
-    rw [Decode.sar63 _ (by omega) (by omega), Decode.mask_ones]
+    rw [Codec.sshiftRight_neg_63_eq_allOnes _ (by omega) (by omega), Decode.mask_ones]
 
 omit [Host] in
 /-- `cmp $0x800, a; jg` is not taken when `a ≤ 2048` (the text of `Machine.jg16_false`). -/

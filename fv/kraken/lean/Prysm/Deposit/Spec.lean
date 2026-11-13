@@ -22,7 +22,7 @@ theorem encode_size (g : SszValue) : (SszValue.encode g).size = 1240 := by
 
 theorem toValue_fits (g : SszValue) : Value.fits desc g.toValue = true := by
   have h := Prysm.Deposit_Data.SszValue.toValue_fits g.data
-  simp [desc, SszValue.toValue, Value.fits, Value.fieldsFit, Prysm.HistoricalBatch.allFit_map_bv32, h]
+  simp [desc, SszValue.toValue, Value.fits, Value.fieldsFit, Codec.allFit_map_byteVector32, h]
 
 theorem toValue_surjective (v : Value) (h : Value.fits desc v = true) : ∃ g : SszValue, g.toValue = v := by
   obtain ⟨vs, rfl, hf⟩ := fits_container h
@@ -34,9 +34,9 @@ theorem toValue_surjective (v : Value) (h : Value.fits desc v = true) : ∃ g : 
     obtain ⟨es, rfl, hes, hall⟩ : ∃ es, v0 = .seq es ∧ es.length = 33 ∧ Value.allFit (.byteVector 32) es = true := by
       cases v0 <;> simp [Value.fits] at h0 ⊢; exact h0
     obtain ⟨d, rfl⟩ := Prysm.Deposit_Data.SszValue.toValue_surjective' v1 h1
-    refine ⟨⟨⟨(es.map Prysm.HistoricalBatch.toV32).toArray, by simp [hes]⟩, d⟩, ?_⟩
+    refine ⟨⟨⟨(es.map Codec.toByteVector32).toArray, by simp [hes]⟩, d⟩, ?_⟩
     simp only [SszValue.toValue, Vector.toList_mk, List.toList_toArray]
-    rw [Prysm.HistoricalBatch.allFit_bv32 es hall]
+    rw [Codec.allFit_byteVector32 es hall]
 
 /-- **`serialize g = proof[0] ‖ … ‖ proof[32] ‖ data`.** -/
 theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszValue.encode g) := by

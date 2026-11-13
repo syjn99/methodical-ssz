@@ -301,7 +301,7 @@ theorem Encode.grow_first_site (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog 
   kunfold
   try rw [Encode.grow_first_site_slot2] at *
   try rw [Encode.fast_path_slot] at *
-  rw [Encode.fast_path_dst] at *
+  rw [Codec.add_add_8_mul_one] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 62 + 1)) root ((tail.drop 8).take 32) stk1 _
     (by rw [hroot]; rfl) (by rw [hroot, ht32]) hstk1 (by dsimp only; ecancel)) ?_
   rintro ⟨e1, pc2⟩ ⟨hpc2, hrsp2, hr142, hrbp2, stk2, hstk2, Hm2⟩

@@ -3,13 +3,14 @@ import Prysm.Checkpoint.SpecEquivalence
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import Prysm.SyncCommittee.SpecDefinitions
+import Codec.SerializeInline
 
 /-!
 # Spec bridge for the real Prysm `v1alpha1.SyncCommittee`
 
 The order of `Prysm/Deposit_Data/Spec.lean`. The Vector[Bytes48, 512] field is not unfolded element by element: the
-lemmas below are stated for any list of 48-byte vectors (`serializeEach_bv48`, `assemble_inline_ok`,
-`concatParts_v48`) and use EthLib's `headOf_inline`, `bodiesOf_inline` and `concat_fixed_slices`.
+lemmas below are stated for any list of 48-byte vectors (`serializeEach_bv48`, `concatParts_v48`,
+and `Codec.assemble_inline_ok` in `Codec/SerializeInline.lean`) and use EthLib's `headOf_inline`, `bodiesOf_inline` and `concat_fixed_slices`.
 -/
 
 namespace Prysm.SyncCommittee
@@ -45,25 +46,6 @@ theorem serializeEach_bv48 : ∀ (l : List (Vector UInt8 48)),
     simp only [List.map_cons, serializeEach, serializeEach_bv48 l]
     simp (config := {decide := true}) [serialize, bind, Except.bind, pure, Except.pure, bytesPerOffset]
 
-theorem headWidth_inline : ∀ (parts : List Bytes),
-    headWidth ((parts.map fun _ => true).zip parts) = (concatParts parts).size
-  | [] => rfl
-  | p :: ps => by simp [headWidth, concatParts, headWidth_inline ps]
-
-theorem bodyWidth_inline : ∀ (parts : List Bytes), bodyWidth ((parts.map fun _ => true).zip parts) = 0
-  | [] => rfl
-  | p :: ps => by simp [bodyWidth, bodyWidth_inline ps]
-
-theorem assemble_inline_ok (parts : List Bytes) (h : (concatParts parts).size < 2 ^ 32) :
-    assemble (parts.map fun _ => true) parts = .ok (concatParts parts) := by
-  have h1 := headWidth_inline parts
-  have h2 := bodyWidth_inline parts
-  have h3 := headOf_inline parts
-  have h4 := bodiesOf_inline parts
-  simp only [assemble, h1, h2, bytesPerOffset]
-  simp only [Nat.add_zero, show ¬ (concatParts parts).size ≥ 2 ^ (8 * 4) by omega, ↓reduceIte, pure, Except.pure]
-  rw [h3, h4, Array.append_empty]
-
 theorem concatParts_v48 : ∀ (l : List (Vector UInt8 48)),
     concatParts (l.map (·.toArray)) = (l.map (·.toList)).flatten.toArray
   | [] => rfl
@@ -88,7 +70,7 @@ theorem seq_serialize (g : SszValue) :
     serializeEach_bv48, bind, Except.bind]
   rw [show (g.pubkeys.toList.map (·.toArray)).map (fun _ => Desc.isFixed (.byteVector 48))
       = (g.pubkeys.toList.map (·.toArray)).map (fun _ => true) from rfl,
-    assemble_inline_ok _ (by rw [hs]; simp), concatParts_v48]
+    Codec.assemble_inline_ok _ (by rw [hs]; simp), concatParts_v48]
   rfl
 
 theorem toValue_fits (g : SszValue) : Value.fits desc g.toValue = true := by

@@ -25,7 +25,7 @@ namespace Prysm.BeaconBlockHeader
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 theorem Decode.accept_spec (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
     (bsA : Array UInt8) (v : Value) (hd : deserialize desc bsA = .ok v)
     (s : MachineData) (ra guard : UInt64)

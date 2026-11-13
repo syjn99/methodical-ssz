@@ -32,7 +32,7 @@ def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := dataLabels ++ Code.unmarshalSSZ ++ slotUnmarshalSSZ ++ BumpAlloc1 ++ RtCopy
+def P : Program := dataLabels ++ Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy
 
 theorem P_len : P.length = 286 := by rfl
 
@@ -41,19 +41,19 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : Code.unmarshalSSZ.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels (slotUnmarshalSSZ ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hk191 : slotUnmarshalSSZ.IsInfixAt Host.prog 191 :=
+  infixAt_of dataLabels (Prysm.Slot.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
+theorem hk191 : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog 191 :=
   infixAt_of (dataLabels ++ Code.unmarshalSSZ) (BumpAlloc1 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk254 : BumpAlloc1.IsInfixAt Host.prog 254 :=
-  infixAt_of (dataLabels ++ Code.unmarshalSSZ ++ slotUnmarshalSSZ) RtCopy
+  infixAt_of (dataLabels ++ Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ) RtCopy
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk260 : RtCopy.IsInfixAt Host.prog 260 :=
-  infixAt_of (dataLabels ++ Code.unmarshalSSZ ++ slotUnmarshalSSZ ++ BumpAlloc1) []
+  infixAt_of (dataLabels ++ Code.unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ ++ BumpAlloc1) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf9 : LabelsFresh Code.unmarshalSSZ 9 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf191 : LabelsFresh slotUnmarshalSSZ 191 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf191 : LabelsFresh Prysm.Slot.Code.unmarshalSSZ 191 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf260 : LabelsFresh RtCopy 260 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf254 : ∀ i < 254, Host.prog[i]? ≠ some (.label "runtime.makeslice") :=
   notLabel_of (by rw [prog_eq]; decide)

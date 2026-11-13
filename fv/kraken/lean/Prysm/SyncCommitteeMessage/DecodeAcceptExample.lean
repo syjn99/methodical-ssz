@@ -22,7 +22,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Head: directives 0–14 (prologue, spills, nil check); entry → boundary state 0. -/
 theorem Decode.example_head : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
     (in0 rt in1 sig : List UInt8) (hin0 : in0.length = 8) (hrt : rt.length = 32) (hin1 : in1.length = 8) (hsig : sig.length = 96)
     (s : MachineData) (ra guard : UInt64)
@@ -143,7 +143,7 @@ theorem Decode.example_head : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Ho
   rw [hcs]; simp only [Std.ExtHashMap.sep_assoc]
   ecancel
 theorem Decode.example_head_kind : ∀ (h : Host), type_of% (@Decode.example_head h)
-    = @Codec.decHeadKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
+    = @Codec.decHeadKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
     ⟨15, 0, [(.rax, .rcv), (.rbx, .bf)],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 104) (.orig 4), .at (.dn 96) (.orig 5), .at (.dn 88) (.orig 6), .at (.dn 64) (.orig 7), .at (.dn 56) (.orig 8), .at (.dn 48) (.orig 9), .at (.dn 112) (.orig 10), .lo (.orig 11)],
       []⟩ := by
@@ -153,7 +153,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 1 `Slot` (call): boundary state 0 (directive 15) → boundary state 1 (directive 47). -/
 theorem Decode.example_f1 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
     (in0 rt in1 sig : List UInt8) (hin0 : in0.length = 8) (hrt : rt.length = 32) (hin1 : in1.length = 8) (hsig : sig.length = 96)
     (s : MachineData) (ra guard : UInt64)
@@ -275,7 +275,7 @@ theorem Decode.example_f1 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host
   rw [show k + 17 + 1 = k + 18 from rfl] at Hm'
   ecancel
 theorem Decode.example_f1_kind : ∀ (h : Host), type_of% (@Decode.example_f1 h)
-    = @Codec.decFieldKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
+    = @Codec.decFieldKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
     ⟨15, 0, [(.rax, .rcv), (.rbx, .bf)],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 104) (.orig 4), .at (.dn 96) (.orig 5), .at (.dn 88) (.orig 6), .at (.dn 64) (.orig 7), .at (.dn 56) (.orig 8), .at (.dn 48) (.orig 9), .at (.dn 112) (.orig 10), .lo (.orig 11)],
       []⟩
@@ -288,7 +288,7 @@ set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- Field 2 `BlockRoot` (bytes): boundary state 1 (directive 47) → boundary state 2 (directive 82). -/
 theorem Decode.example_f2 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
     (in0 rt in1 sig : List UInt8) (hin0 : in0.length = 8) (hrt : rt.length = 32) (hin1 : in1.length = 8) (hsig : sig.length = 96)
     (s : MachineData) (ra guard : UInt64)
@@ -407,7 +407,7 @@ theorem Decode.example_f2 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host
   rw [show k + 66 + 1 = k + 67 from rfl] at H
   ecancel
 theorem Decode.example_f2_kind : ∀ (h : Host), type_of% (@Decode.example_f2 h)
-    = @Codec.decFieldKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
+    = @Codec.decFieldKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
     ⟨47, 1, [],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 104) (.orig 4), .at (.dn 96) (.ex 0), .at (.dn 88) (.orig 6), .at (.dn 64) (.orig 7), .at (.dn 56) (.orig 8), .at (.dn 48) (.orig 9), .at (.dn 112) (.ret 18), .lo (.ex 1)],
       [.n 8, .lo]⟩
@@ -420,7 +420,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 3 `ValidatorIndex` (call): boundary state 2 (directive 82) → boundary state 3 (directive 118). -/
 theorem Decode.example_f3 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
     (in0 rt in1 sig : List UInt8) (hin0 : in0.length = 8) (hrt : rt.length = 32) (hin1 : in1.length = 8) (hsig : sig.length = 96)
     (s : MachineData) (ra guard : UInt64)
@@ -553,7 +553,7 @@ theorem Decode.example_f3 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host
   rw [show k + 88 + 1 = k + 89 from rfl] at Hm'
   ecancel
 theorem Decode.example_f3_kind : ∀ (h : Host), type_of% (@Decode.example_f3 h)
-    = @Codec.decFieldKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
+    = @Codec.decFieldKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
     ⟨82, 2, [(.rax, .rcv)],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 104) (.ex 0), .at (.dn 64) (.orig 7), .at (.dn 56) (.orig 8), .at (.dn 48) (.ptr 0), .at (.dn 112) (.ret 67), .lo (.ex 1)],
       [.n 24, .lo]⟩
@@ -566,7 +566,7 @@ set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- Field 4 `Signature` (bytes): boundary state 3 (directive 118) → boundary state 4 (directive 156). -/
 theorem Decode.example_f4 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
     (in0 rt in1 sig : List UInt8) (hin0 : in0.length = 8) (hrt : rt.length = 32) (hin1 : in1.length = 8) (hsig : sig.length = 96)
     (s : MachineData) (ra guard : UInt64)
@@ -696,7 +696,7 @@ theorem Decode.example_f4 : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host
   rw [show avail - 32 - 96 = avail - 128 by omega] at H
   ecancel
 theorem Decode.example_f4_kind : ∀ (h : Host), type_of% (@Decode.example_f4 h)
-    = @Codec.decFieldKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
+    = @Codec.decFieldKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
     ⟨118, 3, [(.rax, .zero), (.rbx, .zero)],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 104) (.ex 0), .at (.dn 64) (.orig 7), .at (.dn 56) (.orig 8), .at (.dn 48) (.ptr 0), .at (.dn 112) (.ret 89), .lo (.ex 1)],
       [.n 24, .lo]⟩
@@ -709,7 +709,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Epilogue: boundary state 4 (directive 156) → return. -/
 theorem Decode.example_epi : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
     (in0 rt in1 sig : List UInt8) (hin0 : in0.length = 8) (hrt : rt.length = 32) (hin1 : in1.length = 8) (hsig : sig.length = 96)
     (s : MachineData) (ra guard : UInt64)
@@ -816,7 +816,7 @@ theorem Decode.example_epi : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Hos
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
   · dsimp only; rw [hmem']; ecancel
 theorem Decode.example_epi_kind : ∀ (h : Host), type_of% (@Decode.example_epi h)
-    = @Codec.decEpiKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
+    = @Codec.decEpiKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
     ⟨156, 4, [],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 104) (.ex 0), .at (.dn 64) .zero, .at (.dn 56) .zero, .at (.dn 48) (.ptr 1), .at (.dn 112) (.ret 141), .lo (.ex 1)],
       [.n 24, .lo]⟩ := by
@@ -827,7 +827,7 @@ set_option maxRecDepth 100000 in
 /-- **Accept path of `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ` (Go 1.26.10), generated-style proof**: head, one theorem per
 field, epilogue, chained by `eventually_trans`. Statement = the kind instance (`_kind`). -/
 theorem Decode.example_accept : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
-    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
+    (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
     (in0 rt in1 sig : List UInt8) (hin0 : in0.length = 8) (hrt : rt.length = 32) (hin1 : in1.length = 8) (hsig : sig.length = 96)
     (s : MachineData) (ra guard : UInt64)
@@ -915,7 +915,7 @@ theorem Decode.example_accept : ∀ (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt 
   intro st4 h4
   exact Decode.example_epi k hk hf kS hkS hfS kV hkV hfV in0 rt in1 sig hin0 hrt hin1 hsig s ra guard fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast aN0 aP1 aL1 aC1 aN2 aP3 aL3 aC3 hfp hs1 hs2 hs4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrslot hast haN0 haP1 haL1 haC1 haN2 haP3 haL3 haC3 R S hS hlo Heap avail st4 h4
 theorem Decode.example_accept_kind : ∀ (h : Host), type_of% (@Decode.example_accept h)
-    = @Codec.decAcceptKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96] := by
+    = @Codec.decAcceptKindN h Code.unmarshalSSZ (Codec.layMix60 [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96] := by
   intro h; rfl
 
 /-- The generated-style theorem proves the committed hand statement `Prysm.SyncCommitteeMessage.Decode.accept_statement` (unchanged). -/

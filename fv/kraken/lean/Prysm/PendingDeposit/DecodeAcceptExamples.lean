@@ -37,10 +37,10 @@ variable [Host]
 
 /-- The four generated-style accept theorems, stated by their kinds. -/
 theorem Decode.example_accept_all :
-    decAcceptKindN Prysm.PendingDeposit.Code.unmarshalSSZ (layMix40 [Prysm.AttestationData.Code.slotUnmarshalSSZ] 131 2)
+    decAcceptKindN Prysm.PendingDeposit.Code.unmarshalSSZ (layMix40 [Prysm.Slot.Code.unmarshalSSZ] 131 2)
         [.bytes 48, .bytes 32, .u64, .bytes 96, .u64]
     ∧ decAcceptKindN Prysm.SyncCommitteeMessage.Code.unmarshalSSZ
-        (layMix60 [Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
+        (layMix60 [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
     ∧ decAcceptKindN Prysm.VoluntaryExit.Code.unmarshalSSZ
         (layCal [Prysm.Epoch.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 56) [.u64, .u64]
     ∧ decAcceptKindN Prysm.PowBlock.Code.unmarshalSSZ (layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32] :=

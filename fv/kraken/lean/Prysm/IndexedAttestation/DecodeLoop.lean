@@ -53,7 +53,7 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
-    exact Prysm.SyncCommittee.jge_false512 _ _ (by simp; omega) (by simp; omega) h
+    exact Codec.jge_false_of_lt _ _ (by simp; omega) (by simp; omega) h
   simp only [Effects.All]
   kat hk unmarshalSSZ 150
   kat hk unmarshalSSZ 151

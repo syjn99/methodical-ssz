@@ -20,7 +20,7 @@ namespace Prysm.PendingDeposit
 /-! ## Class C: frames `0x40`, `0x60` -/
 
 theorem Decode.accept_is_kind_any_frame : ∀ (h : Host), @Prysm.PendingDeposit.Decode.accept_statement h
-    = @decAcceptKindN h Prysm.PendingDeposit.Code.unmarshalSSZ (layMix40 [Prysm.AttestationData.Code.slotUnmarshalSSZ] 131 2)
+    = @decAcceptKindN h Prysm.PendingDeposit.Code.unmarshalSSZ (layMix40 [Prysm.Slot.Code.unmarshalSSZ] 131 2)
         [.bytes 48, .bytes 32, .u64, .bytes 96, .u64] := by
   intro h; rfl
 

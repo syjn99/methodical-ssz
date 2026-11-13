@@ -8,8 +8,8 @@ import Prysm.SyncCommittee.DecodeLoopLemmas
 Generalized once from `Prysm.SyncCommittee.DecodeLoopLemmas` (w = 48, n = 512) and `Prysm.HistoricalBatch.DecodeLoopLemmas` (w = 32, n = 8192).
 Side conditions: the input bytes and the backing array fit in the address space (`w * n ≤ 2^64`,
 `24 * n ≤ 2^64`); the SyncCommittee / HistoricalBatch instances discharge them by `decide`/`omega`. The fixed instances are re-derived in
-`Codec/Segment/ByteSliceListInstances.lean`. The size-free SyncCommittee lemmas (`Prysm.SyncCommittee.elementBlocks_snoc`, `Prysm.SyncCommittee.sliceHeaders_length`, `Prysm.SyncCommittee.sliceHeaders_snoc`,
-`Prysm.SyncCommittee.flatten_split`) are imported, not restated.
+`Codec/Segment/ByteSliceListInstances.lean`. The size-free SyncCommittee lemmas (`Codec.elementBlocks_snoc`, `Codec.sliceHeaders_length`, `Codec.sliceHeaders_snoc`,
+`Codec.flatten_split`) are imported, not restated.
 -/
 
 open Machine Runtime
@@ -40,7 +40,7 @@ theorem in_split (w n : Nat) (hsz : w * n ≤ 2 ^ 64) (bf : BitVec 64) (pks : Li
     obtain ⟨m, hm⟩ : ∃ m, n = i + 1 + m := ⟨n - (i + 1), by omega⟩
     subst hm
     rw [show i + 1 + m - (i + 1) = m by omega, Nat.mul_add, Nat.mul_add, Nat.mul_one]; omega
-  rw [Prysm.SyncCommittee.flatten_split pks i hlt,
+  rw [Codec.flatten_split pks i hlt,
     at_app _ _ (b := bf + BitVec.ofNat 64 (w * i)) (by rw [ht]) (by simp only [List.length_append, ht, hp, hd]; omega),
     at_app _ _ (b := bf + BitVec.ofNat 64 (w * i) + BitVec.ofNat 64 w) (by rw [hp])
       (by rw [hp, hd]; omega)]
@@ -49,13 +49,13 @@ theorem in_split (w n : Nat) (hsz : w * n ≤ 2 ^ 64) (bf : BitVec 64) (pks : Li
 /-- The backing array (headers of the first i elements, then zeros) around element i, before the three stores. -/
 theorem arr_split (n : Nat) (hsz : 24 * n ≤ 2 ^ 64) (w : Int) (A : BitVec 64) (ps : List (BitVec 64)) (i : Nat)
     (hi : i < n) (hps : ps.length = i) :
-    Eq ((Prysm.SyncCommittee.sliceHeaders w ps ++ Prysm.SyncCommittee.zz (24 * (n - i))).At A) = Eq ((Prysm.SyncCommittee.sliceHeaders w ps).At A)
-      ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
-      ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
-      ⋆ Eq ((Prysm.SyncCommittee.zz (24 * (n - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) := by
-  have hl := Prysm.SyncCommittee.sliceHeaders_length w ps
-  rw [show Prysm.SyncCommittee.zz (24 * (n - i)) = Prysm.SyncCommittee.zz 8 ++ (Prysm.SyncCommittee.zz 8 ++ (Prysm.SyncCommittee.zz 8 ++ Prysm.SyncCommittee.zz (24 * (n - (i + 1))))) by
-      simp only [Prysm.SyncCommittee.zz, List.replicate_append_replicate]; congr 1; omega,
+    Eq ((Codec.sliceHeaders w ps ++ Codec.zeroBytes (24 * (n - i))).At A) = Eq ((Codec.sliceHeaders w ps).At A)
+      ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
+      ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
+      ⋆ Eq ((Codec.zeroBytes (24 * (n - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) := by
+  have hl := Codec.sliceHeaders_length w ps
+  rw [show Codec.zeroBytes (24 * (n - i)) = Codec.zeroBytes 8 ++ (Codec.zeroBytes 8 ++ (Codec.zeroBytes 8 ++ Codec.zeroBytes (24 * (n - (i + 1))))) by
+      simp only [Codec.zeroBytes, List.replicate_append_replicate]; congr 1; omega,
     at_app _ _ (b := A + BitVec.ofNat 64 (24 * i)) (by rw [hl, hps]) (by simp [hl, hps]; omega),
     at_app _ _ (b := A + BitVec.ofNat 64 (24 * i) + 8) (by simp) (by simp; omega),
     at_app _ _ (b := A + BitVec.ofNat 64 (24 * i) + 16) (by simp; bv_omega) (by simp; omega),
@@ -65,13 +65,13 @@ theorem arr_split (n : Nat) (hsz : 24 * n ≤ 2 ^ 64) (w : Int) (A : BitVec 64) 
 /-- The backing array after the three stores of iteration i (header `(p, w, w)`). -/
 theorem arr_join (n : Nat) (hsz : 24 * n ≤ 2 ^ 64) (w : Int) (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat)
     (hi : i < n) (hps : ps.length = i) :
-    Eq ((Prysm.SyncCommittee.sliceHeaders w (ps ++ [p]) ++ Prysm.SyncCommittee.zz (24 * (n - (i + 1)))).At A) = Eq ((Prysm.SyncCommittee.sliceHeaders w ps).At A)
+    Eq ((Codec.sliceHeaders w (ps ++ [p]) ++ Codec.zeroBytes (24 * (n - (i + 1)))).At A) = Eq ((Codec.sliceHeaders w ps).At A)
       ⋆ Eq ((Int.toBytes 8 p.toInt).At (A + BitVec.ofNat 64 (24 * i)))
       ⋆ Eq ((Int.toBytes 8 w).At (A + BitVec.ofNat 64 (24 * i) + 8))
       ⋆ Eq ((Int.toBytes 8 w).At (A + BitVec.ofNat 64 (24 * i) + 16))
-      ⋆ Eq ((Prysm.SyncCommittee.zz (24 * (n - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) := by
-  have hl := Prysm.SyncCommittee.sliceHeaders_length w ps
-  rw [Prysm.SyncCommittee.sliceHeaders_snoc, List.append_assoc, List.append_assoc, List.append_assoc,
+      ⋆ Eq ((Codec.zeroBytes (24 * (n - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) := by
+  have hl := Codec.sliceHeaders_length w ps
+  rw [Codec.sliceHeaders_snoc, List.append_assoc, List.append_assoc, List.append_assoc,
     at_app _ _ (b := A + BitVec.ofNat 64 (24 * i)) (by rw [hl, hps])
       (by simp [hl, hps, Int.toBytes_length]; omega),
     at_app _ _ (b := A + BitVec.ofNat 64 (24 * i) + 8) (by simp [Int.toBytes_length])

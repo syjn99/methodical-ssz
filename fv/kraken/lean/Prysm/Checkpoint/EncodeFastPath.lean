@@ -51,9 +51,6 @@ theorem Encode.fast_path_len40 (x : UInt64) (h : x.toNat + 40 < 2 ^ 64) :
   show (x.toBitVec + 8 + 32).toNat = x.toBitVec.toNat + 40
   bv_omega
 
-theorem Encode.fast_path_dst (x y : BitVec 64) : x + (y + 8) * 1#64 = x + y + 8 := by
-  rw [BitVec.mul_one, BitVec.add_assoc]
-
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem Encode.fast_path (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
@@ -225,7 +222,7 @@ theorem Encode.fast_path (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   simp only [Width.bytes, Width.bits] at H10
   kunfold
   rw [Encode.fast_path_slot] at *
-  rw [Encode.fast_path_dst] at *
+  rw [Codec.add_add_8_mul_one] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 62 + 1)) root d1 scratch _
     (by rw [hroot]; rfl) (by rw [hroot, hd1]) hsc (by dsimp only; ecancel)) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hr141, hrbp1, stk1, hstk1, Hm1⟩

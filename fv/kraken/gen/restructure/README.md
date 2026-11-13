@@ -152,6 +152,9 @@ The maps apply in this order:
   The step changed the emit strings of the generators and the evidence tools, `kindcheck.py`, `regen.py` and `python_checks.sh`.
 - `maps/clean-up/`: renames of the clean-up step. The declarations of the test-target library that other libraries used get the names of
   `Runtime`, `Machine` and `Codec`, and a hand edit moves their text into new modules of those libraries.
+- `maps/shared-names/`: names of declarations that other types use. The Slot and CommitteeIndex programs of the
+  AttestationData link set get the names of their types, and type-independent lemmas get `Codec` names.
+  A cut script then moves their text into the modules of their new names.
 
 Issue 10 of `syjn99/methodical-ssz` holds the list of the steps that remain.
 

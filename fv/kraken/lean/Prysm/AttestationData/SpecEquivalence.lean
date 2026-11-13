@@ -2,6 +2,7 @@ import Prysm.Checkpoint.Spec
 import Prysm.Checkpoint.SpecEquivalence
 import Prysm.AttestationData.SpecChecker
 import Prysm.AttestationData.Spec
+import Codec.SerializeFieldsCongruence
 
 /-!
 # The hand `Desc` of `v1alpha1.AttestationData` and the Desc checker's `Desc`
@@ -26,21 +27,6 @@ theorem desc_checker :
         .container ["Epoch", "Root"] [.uint 8, .byteVector 32]] :=
   ⟨rfl, rfl⟩
 
-/-- Two field lists whose fields encode every value the same way. -/
-inductive SameEnc : List Desc → List Desc → Prop
-  | nil : SameEnc [] []
-  | cons {a b : Desc} {as bs : List Desc} : (∀ v, serialize a v = serialize b v) → SameEnc as bs →
-      SameEnc (a :: as) (b :: bs)
-
-/-- `serializeFields` only reads `serialize` of each field: field lists with the same encoders agree. -/
-theorem serializeFields_congr : ∀ (fs gs : List Desc) (vs : List Value),
-    SameEnc fs gs → serializeFields fs vs = serializeFields gs vs
-  | [], [], [], _ => rfl
-  | [], [], _ :: _, _ => by simp [serializeFields]
-  | _ :: _, _ :: _, [], _ => by simp [serializeFields]
-  | f :: fs, g :: gs, v :: vs, .cons h hs => by
-    simp only [serializeFields, h v, serializeFields_congr fs gs vs hs]
-
 /-- EthLib's `serialize` ignores container names, also nested ones: the hand Desc and the
 checker Desc encode every value the same way. -/
 theorem desc_serialize_checker (v : Value) : serialize desc v = serialize checkerDesc v := by
@@ -50,7 +36,7 @@ theorem desc_serialize_checker (v : Value) : serialize desc v = serialize checke
   have hc : ∀ w, serialize Prysm.Checkpoint.desc w = serialize (.container ["Epoch", "Root"] [.uint 8, .byteVector 32]) w :=
     Prysm.Checkpoint.desc_serialize_checker
   simp only [serializeStruct]
-  rw [serializeFields_congr _ [.uint 8, .uint 8, .byteVector 32, .container ["Epoch", "Root"] [.uint 8, .byteVector 32],
+  rw [Codec.serializeFields_congr _ [.uint 8, .uint 8, .byteVector 32, .container ["Epoch", "Root"] [.uint 8, .byteVector 32],
       .container ["Epoch", "Root"] [.uint 8, .byteVector 32]] vs
     (.cons (fun _ => rfl) (.cons (fun _ => rfl) (.cons (fun _ => rfl) (.cons hc (.cons hc .nil)))))]
   rfl
