@@ -91,13 +91,13 @@ LT="--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.l
 for row in "Checkpoint link Prysm.Checkpoint.Code --hand-layout=Prysm.Checkpoint.encodeLayout $LT --same-as=Prysm.Checkpoint.Encode.fast_path --same-as-via=Prysm.Checkpoint.Encode.fast_path_of_kind" \
   "BeaconBlockHeader bh/link Prysm.BeaconBlockHeader.Code --hand-layout=Prysm.BeaconBlockHeader.encodeLayout $LT --same-as=Prysm.BeaconBlockHeader.Encode.fast_path" \
   "Eth1Data e1/link Prysm.Eth1Data.Code --hand-layout=Prysm.Eth1Data.encodeLayout $LT --same-as=Prysm.Eth1Data.Encode.fast_path" \
-  "BlobIdentifier enc2/link Prysm.BlobIdentifier.EncoderCode" "DepositMessage enc2/link Prysm.BlobIdentifier.EncoderCode" \
-  "Deposit_Data enc2/link Prysm.BlobIdentifier.EncoderCode" "PendingPartialWithdrawal enc2/link Prysm.BlobIdentifier.EncoderCode" \
-  "SyncCommitteeMessage enc2/link Prysm.BlobIdentifier.EncoderCode" "PendingConsolidation enc2/link Prysm.BlobIdentifier.EncoderCode" \
-  "PendingDeposit enc2/link Prysm.BlobIdentifier.EncoderCode" "PowBlock enc2/link Prysm.BlobIdentifier.EncoderCode" \
-  "HistoricalSummary enc2/link Prysm.BlobIdentifier.EncoderCode" "SigningData enc2/link Prysm.BlobIdentifier.EncoderCode" \
-  "SyncAggregatorSelectionData enc2/link Prysm.BlobIdentifier.EncoderCode" "ValidatorBalance enc2/link Prysm.BlobIdentifier.EncoderCode" \
-  "VoluntaryExit enc2/link Prysm.BlobIdentifier.EncoderCode"; do
+  "BlobIdentifier enc2/link Prysm.BlobIdentifier.EncoderCode" "DepositMessage enc2/link Prysm.DepositMessage.EncoderCode" \
+  "Deposit_Data enc2/link Prysm.Deposit_Data.EncoderCode" "PendingPartialWithdrawal enc2/link Prysm.PendingPartialWithdrawal.EncoderCode" \
+  "SyncCommitteeMessage enc2/link Prysm.SyncCommitteeMessage.EncoderCode" "PendingConsolidation enc2/link Prysm.PendingConsolidation.EncoderCode" \
+  "PendingDeposit enc2/link Prysm.PendingDeposit.EncoderCode" "PowBlock enc2/link Prysm.PowBlock.EncoderCode" \
+  "HistoricalSummary enc2/link Prysm.HistoricalSummary.EncoderCode" "SigningData enc2/link Prysm.SigningData.EncoderCode" \
+  "SyncAggregatorSelectionData enc2/link Prysm.SyncAggregatorSelectionData.EncoderCode" "ValidatorBalance enc2/link Prysm.ValidatorBalance.EncoderCode" \
+  "VoluntaryExit enc2/link Prysm.VoluntaryExit.EncoderCode"; do
   set -- $row
   t=$1; d=$2; o=$3; shift 3
   $G p2enc --gen6 --S $E/$d/norm/$PP.$t.MarshalSSZTo.S --const marshalSSZTo --ir prysm/ir/ir-mainnet.json --type v1alpha1.$t --prefix Encode.generated --imports $o --open Prysm.$t.Code "$@" > lean/Prysm/$t/GeneratedEncodeFastPath.lean

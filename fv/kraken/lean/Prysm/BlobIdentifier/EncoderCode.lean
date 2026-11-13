@@ -1,5 +1,17 @@
 import Kraken.X64.Parser
 import Machine.Include
+import Prysm.DepositMessage.EncoderCode
+import Prysm.Deposit_Data.EncoderCode
+import Prysm.HistoricalSummary.EncoderCode
+import Prysm.PendingConsolidation.EncoderCode
+import Prysm.PendingDeposit.EncoderCode
+import Prysm.PendingPartialWithdrawal.EncoderCode
+import Prysm.PowBlock.EncoderCode
+import Prysm.SigningData.EncoderCode
+import Prysm.SyncAggregatorSelectionData.EncoderCode
+import Prysm.SyncCommitteeMessage.EncoderCode
+import Prysm.ValidatorBalance.EncoderCode
+import Prysm.VoluntaryExit.EncoderCode
 
 /-!
 # Code of the flat encoder set (Go 1.26.10 ELF `c6403c02…911e`)
@@ -12,35 +24,12 @@ the text of `Prysm/PendingDeposit/Code.lean` with the function set changed).
 Limit: the directory `enc2/link/norm` is not a Lake `input_dir` of the `Prysm` library (a lakefile change
 needs approval), so Lake does not rebuild these modules when a `.S` file changes. The `.S` files are
 bound by the link bundle hash; a cold build is the check after any change.
+After the split of this module, the declarations of the other types are in `Prysm/DepositMessage/EncoderCode.lean`, `Prysm/Deposit_Data/EncoderCode.lean`, `Prysm/HistoricalSummary/EncoderCode.lean`, `Prysm/PendingConsolidation/EncoderCode.lean`, `Prysm/PendingDeposit/EncoderCode.lean`, `Prysm/PendingPartialWithdrawal/EncoderCode.lean`, `Prysm/PowBlock/EncoderCode.lean`, `Prysm/SigningData/EncoderCode.lean`, `Prysm/SyncAggregatorSelectionData/EncoderCode.lean`, `Prysm/SyncCommitteeMessage/EncoderCode.lean`, `Prysm/ValidatorBalance/EncoderCode.lean`, `Prysm/VoluntaryExit/EncoderCode.lean`.
 -/
 
 namespace Prysm.BlobIdentifier
 
 /-- `(*v1alpha1.BlobIdentifier).MarshalSSZTo`. -/
 def Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.MarshalSSZTo.S"
-/-- `(*v1alpha1.DepositMessage).MarshalSSZTo`. -/
-def _root_.Prysm.DepositMessage.Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo.S"
-/-- `(*v1alpha1.Deposit_Data).MarshalSSZTo`. -/
-def _root_.Prysm.Deposit_Data.Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.MarshalSSZTo.S"
-/-- `(*v1alpha1.PendingPartialWithdrawal).MarshalSSZTo`. -/
-def _root_.Prysm.PendingPartialWithdrawal.Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.MarshalSSZTo.S"
-/-- `(*v1alpha1.SyncCommitteeMessage).MarshalSSZTo`. -/
-def _root_.Prysm.SyncCommitteeMessage.Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.MarshalSSZTo.S"
-/-- `(*v1alpha1.PendingConsolidation).MarshalSSZTo`. -/
-def _root_.Prysm.PendingConsolidation.Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.MarshalSSZTo.S"
-/-- `(*v1alpha1.PendingDeposit).MarshalSSZTo`. -/
-def _root_.Prysm.PendingDeposit.Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.MarshalSSZTo.S"
-/-- `(*v1alpha1.PowBlock).MarshalSSZTo`. -/
-def _root_.Prysm.PowBlock.Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.MarshalSSZTo.S"
-/-- `(*v1alpha1.HistoricalSummary).MarshalSSZTo`. -/
-def _root_.Prysm.HistoricalSummary.Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S"
-/-- `(*v1alpha1.SigningData).MarshalSSZTo`. -/
-def _root_.Prysm.SigningData.Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.MarshalSSZTo.S"
-/-- `(*v1alpha1.SyncAggregatorSelectionData).MarshalSSZTo`. -/
-def _root_.Prysm.SyncAggregatorSelectionData.Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.MarshalSSZTo.S"
-/-- `(*v1alpha1.ValidatorBalance).MarshalSSZTo`. -/
-def _root_.Prysm.ValidatorBalance.Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S"
-/-- `(*v1alpha1.VoluntaryExit).MarshalSSZTo`. -/
-def _root_.Prysm.VoluntaryExit.Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.MarshalSSZTo.S"
 
 end Prysm.BlobIdentifier

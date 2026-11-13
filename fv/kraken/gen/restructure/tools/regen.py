@@ -172,7 +172,7 @@ for kind, go_type, px in rows:
         cmd = ['python3', '-I', '-B', 'gen/scal/scalgen.py', g, tag, '--S', f'{NORM}/{PK}.{go_type}.{meth}.S', '--const',
                'unmarshalSSZ' if g == 'p2dec' else 'marshalSSZTo', '--ir', 'prysm/ir/ir-mainnet.json', '--type',
                f'{kind}.{go_type}', '--prefix', 'Decode.generated' if g == 'p2dec' else 'Encode.generated', '--imports',
-               'Prysm.BuilderDepositRequest.Code', '--open', f'Prysm.{go_type}.Code',
+               f'Prysm.{go_type}.Code', '--open', f'Prysm.{go_type}.Code',
                '--summary', os.path.join(work, f'{X}.{tag}.summary.json')]
         r = run(cmd, COPY_KRAKEN)
         cmp('f24 part1 rc=%d' % r.returncode, tr, r.stdout)

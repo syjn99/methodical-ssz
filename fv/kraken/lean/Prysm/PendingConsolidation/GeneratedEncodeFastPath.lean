@@ -1,6 +1,6 @@
 import Prysm.BeaconBlockHeader.EncodeFastPathKindInstances
 import Codec.EncodeFrameTest
-import Prysm.BlobIdentifier.EncoderCode
+import Prysm.PendingConsolidation.EncoderCode
 
 /-!
 # GEN6 (`p2enc --gen6`, unit E2-G): encoder fast path of `(*v1alpha1.PendingConsolidation).MarshalSSZTo`

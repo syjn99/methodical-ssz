@@ -34,7 +34,7 @@ ROWS = [  # type, link dir, const, code module, prefix, extra args, output file
      "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean", "--same-as=Prysm.BeaconBlockHeader.Encode.fast_path"], "Gen6BhEnc"),
     ("Eth1Data", "e1/link", "marshalSSZTo", "Prysm.Eth1Data.Code", "e1", ["--hand-layout=Prysm.Eth1Data.encodeLayout",
      "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Eth1Data.Encode.fast_path"], "Gen6E1Enc"),
-] + [(t, "enc2/link", c, "Prysm.BlobIdentifier.EncoderCode", p, [], f"Gen6{p.capitalize()}Enc") for t, c, p in [
+] + [(t, "enc2/link", c, f"Prysm.{t}.EncoderCode", p, [], f"Gen6{p.capitalize()}Enc") for t, c, p in [
     ("BlobIdentifier", "marshalSSZTo", "bi"), ("DepositMessage", "marshalSSZTo", "dm"), ("Deposit_Data", "marshalSSZTo", "dd"),
     ("PendingPartialWithdrawal", "marshalSSZTo", "pw"), ("SyncCommitteeMessage", "marshalSSZTo", "sc"),
     ("PendingConsolidation", "marshalSSZTo", "pc"), ("PendingDeposit", "marshalSSZTo", "pd"), ("PowBlock", "marshalSSZTo", "pb"),

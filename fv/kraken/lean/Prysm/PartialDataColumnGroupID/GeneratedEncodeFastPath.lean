@@ -1,6 +1,6 @@
 import Prysm.BeaconBlockHeader.EncodeFastPathKindInstances
 import Codec.EncodeFrameTest
-import Prysm.BuilderDepositRequest.Code
+import Prysm.PartialDataColumnGroupID.Code
 
 /-!
 # GEN6 (`p2enc --gen6`, unit E2-G): encoder fast path of `(*v1alpha1.PartialDataColumnGroupID).MarshalSSZTo`

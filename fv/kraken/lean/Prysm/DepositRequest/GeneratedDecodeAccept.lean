@@ -1,4 +1,4 @@
-import Prysm.BuilderDepositRequest.Code
+import Prysm.DepositRequest.Code
 import Codec.Kind.DecodeAcceptAnyFrameInstances
 import Codec.FieldFrame
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec
