@@ -10,7 +10,7 @@ callee field to
     mov src(%rbx),%rX     -- the 8 source bytes; the buffer pointer is already in rbx
     mov %rX,f(%rax)       -- store to the field at Go offset f; the receiver is in rax
 
-(`rX` = r8 at the one development site). `u64DecRR rX src f` is this template; it differs from
+(`rX` = r8 at the one development site). `u64DecScratchRegister rX src f` is this template; it differs from
 `u64DecInline` (`Codec/InlineUint64.lean`: reload from the spill slot, receiver in rdx, one scratch register for
 both roles). The lemma holds for every scratch register except rax, rbx (the bases), rsp, rbp, r14; `hX`
 lists the eleven others. Every register except `rX` is kept (the neighbouring set-up directives hold live
@@ -23,7 +23,7 @@ open Machine Runtime
 namespace Codec
 
 /-- The two-directive inline uint64 decode template, scratch register `rX`. -/
-def u64DecRR (rX : Reg64) (src f : Int64) : Program :=
+def u64DecScratchRegister (rX : Reg64) (src f : Int64) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.reg (Reg.low rX Width.W64))
        (Operand.regOrMem (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rbx)) none (ConstExpr.int64 src)))))),
@@ -31,24 +31,24 @@ def u64DecRR (rX : Reg64) (src f : Int64) : Program :=
      (Operation.mov (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rax)) none (ConstExpr.int64 f)))
        (Operand.regOrMem (RegOrMem.reg (Reg.low rX Width.W64)))))]
 
-/-- The scratch registers of `u64dec_rr_seg`: every register except rax, rbx, rsp, rbp, r14. -/
-abbrev U64RRReg (rX : Reg64) : Prop :=
+/-- The scratch registers of `u64dec_scratch_register_seg`: every register except rax, rbx, rsp, rbp, r14. -/
+abbrev U64ScratchRegister (rX : Reg64) : Prop :=
   rX = Reg64.rcx ∨ rX = Reg64.rdx ∨ rX = Reg64.rsi ∨ rX = Reg64.rdi ∨ rX = Reg64.r8 ∨ rX = Reg64.r9
     ∨ rX = Reg64.r10 ∨ rX = Reg64.r11 ∨ rX = Reg64.r12 ∨ rX = Reg64.r13 ∨ rX = Reg64.r15
 
 variable [Host]
 
 set_option hygiene false in
-/-- Proof text of one register case of `u64dec_rr_seg` (binders of the lemma). Local to this file. -/
+/-- Proof text of one register case of `u64dec_scratch_register_seg` (binders of the lemma). Local to this file. -/
 local macro "uint64_register_case" : tactic => `(tactic| (
-  kat hA u64DecRR 0
+  step_directive hA u64DecScratchRegister 0
   apply load_step_at _ _ aSrc _ _ v _ _ (by rw [← hSrc, ← hrbx]) (by ecancel) (by exact hv)
-  kunfold
-  kat hA u64DecRR 1
+  unfold_step
+  step_directive hA u64DecScratchRegister 1
   apply store_step_at _ _ aF _ _ _ vF _ _ (by rw [← hF, ← hrax]) (by ecancel) (by exact hvF)
   intro m1' H1
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl v hv] at H1
-  kunfold
+  unfold_step
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, ?_, by ecancel⟩
   intro r hr
@@ -60,8 +60,8 @@ set_option maxRecDepth 100000 in
 `bf` in rbx, the receiver `rcv` in rax, the 8 source bytes `v` at `aSrc = bf + src`, the field slot
 `aF = rcv + f` gets `v`; the source and the frame `R` are unchanged; every register except the scratch
 register `rX` is kept (rsp, rbp, r14, rax, rbx are listed; the others by the last register clause). -/
-theorem u64dec_rr_seg (rX : Reg64) (hX : U64RRReg rX) (src f : Int64) (j : Nat)
-    (hA : (u64DecRR rX src f).IsInfixAt Host.prog j)
+theorem u64dec_scratch_register_seg (rX : Reg64) (hX : U64ScratchRegister rX) (src f : Int64) (j : Nat)
+    (hA : (u64DecScratchRegister rX src f).IsInfixAt Host.prog j)
     (bf rcv aSrc aF : BitVec 64) (hSrc : bf + src.toBitVec = aSrc) (hF : rcv + f.toBitVec = aF)
     (v vF : List UInt8) (hv : v.length = 8) (hvF : vF.length = 8)
     (R : DataMem → Prop)

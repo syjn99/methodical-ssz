@@ -22,14 +22,14 @@ name = "Spec"
 globs = ["Spec.+"]
 
 # Machine: helpers on the Kraken machine model (steps, frames, bytes, labels, flags), the commands that read
-# code and data files (`include_x64_rt`, `data_include`) and the witness host tactics. No module of this library
+# code and data files (`include_x64_code`, `data_include`) and the witness host tactics. No module of this library
 # reads a code or data file itself.
 [[lean_lib]]
 name = "Machine"
 globs = ["Machine.+"]
 
 # Runtime: the contracts of the Go runtime callees and their models. The models are the .S files of
-# Runtime/; `include_x64_rt` reads them, so they are inputs of the library. A `needs` entry puts the file
+# Runtime/; `include_x64_code` reads them, so they are inputs of the library. A `needs` entry puts the file
 # contents into the input hash of every module of the library, so Lake rebuilds the proofs when a .S file changes.
 # `Runtime/StaticUint64s.lean` reads the data file staticuint64s.data of link/out (the input_dir test_target_data below).
 [[input_dir]]
@@ -71,7 +71,7 @@ name = "prysm_target_data"
 path = "../prysm/go1.26.10/link-set/data"
 text = true
 
-# witness-only runtime model: the 72-byte bump newobject Prysm/AttestationData/BumpNew72.S
+# witness-only runtime model: the 72-byte bump newobject Prysm/AttestationData/BumpNewobject72.S
 [[input_dir]]
 name = "attestation_data_runtime_model_S"
 path = "Prysm/AttestationData"
@@ -92,7 +92,7 @@ path = "Prysm/RuntimeModel"
 text = true
 filter = {extension = ["S"]}
 
-# witness-only runtime model of the Deposit witness: the 120-byte bump newobject Prysm/Deposit/BumpNew120.S
+# witness-only runtime model of the Deposit witness: the 120-byte bump newobject Prysm/Deposit/BumpNewobject120.S
 [[input_dir]]
 name = "deposit_lean_S"
 path = "Prysm/Deposit"

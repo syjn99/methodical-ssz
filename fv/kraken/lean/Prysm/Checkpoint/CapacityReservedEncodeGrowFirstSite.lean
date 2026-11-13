@@ -45,7 +45,7 @@ theorem Encode.grow_first_site (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog 
       ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 24 < s.regs.rsp.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 40)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
+    (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40
         ∧ nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat ≤ st.data.regs.rcx.toNat
@@ -136,7 +136,7 @@ theorem Encode.reject_length_grow_first_site (k : Nat) (hk : marshalSSZTo.IsInfi
       ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 24 < s.regs.rsp.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 40)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
+    (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e0 ∧ st.data.regs.rsi = e1
@@ -182,7 +182,7 @@ theorem Encode.reject_length_grow_first_site (k : Nat) (hk : marshalSSZTo.IsInfi
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrcx1 hnc1 hub1 htail hav1 Hm1
   subst hpc1
   rw [Encode.reserve_split8 z (d.regs.rbx.toBitVec + rcx.toBitVec) hz] at Hm1
-  refine eventually_mono (Encode.tail_rej k hk hf rsp r14 rbp ra rcx d.regs.rdx e0 e1 rl hrl rax.toBitVec d.regs.rbx.toBitVec p
+  refine eventually_mono (Encode.tail_reject k hk hf rsp r14 rbp ra rcx d.regs.rdx e0 e1 rl hrl rax.toBitVec d.regs.rbx.toBitVec p
     e8 pre (z.take 8) t40 t30 he8 (by simp [hz]) ht40 ht30 _ d hrsp1 hrbp1 hr141 (by rw [hrax1]) rfl hrcx1 rfl
     (by ecancel) (by omega)) ?_
   rintro st ⟨e1', e2, e3, e4, e5, e6, e7, e8', e9, t, u, ht, hu, Hm⟩

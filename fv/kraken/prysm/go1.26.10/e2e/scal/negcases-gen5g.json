@@ -132,8 +132,8 @@
   "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.PowBlock.Decode.generated_reject",
   "kind": "stmt",
-  "old": "decRejectKindN h unmarshalSSZ 96 ",
-  "new": "decRejectKindN h unmarshalSSZ 64 "
+  "old": "decRejectKindAnyFrame h unmarshalSSZ 96 ",
+  "new": "decRejectKindAnyFrame h unmarshalSSZ 64 "
  },
  {
   "id": "g5g-dm-acc-kind-fields",

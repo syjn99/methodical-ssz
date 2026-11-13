@@ -11,8 +11,8 @@ The constants include `.S` files of `fv/kraken/prysm/go1.26.10/link-set/norm`.
 namespace Prysm.ValidatorRegistrationV1
 
 /-- `(*v1alpha1.ValidatorRegistrationV1).UnmarshalSSZ`. -/
-def Code.unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.UnmarshalSSZ.S"
+def Code.unmarshalSSZ : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.UnmarshalSSZ.S"
 /-- `(*v1alpha1.ValidatorRegistrationV1).MarshalSSZTo`. -/
-def Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.MarshalSSZTo.S"
+def Code.marshalSSZTo : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.MarshalSSZTo.S"
 
 end Prysm.ValidatorRegistrationV1

@@ -25,45 +25,45 @@ namespace Prysm.PendingPartialWithdrawal.Witness.DecodeAccept
 
 set_option maxRecDepth 100000
 
-def P : Program := [.label "pad0"] ++ unmarshalSSZ ++ Prysm.ValidatorIndex.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ
+def program : Program := [.label "pad0"] ++ unmarshalSSZ ++ Prysm.ValidatorIndex.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ
 
-theorem P_len : P.length = 236 := by rfl
+theorem program_length : program.length = 236 := by rfl
 
-instance host : Host := mkHost P (by rw [P_len]; decide)
+instance host : Host := mkHost program (by rw [program_length]; decide)
 
-theorem prog_eq : Host.prog = P := rfl
+theorem host_program_eq : Host.prog = program := rfl
 
-theorem hk1 : unmarshalSSZ.IsInfixAt Host.prog 1 :=
-  infixAt_of [.label "pad0"] (Prysm.ValidatorIndex.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ) (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hk110 : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog 110 :=
+theorem placed_at_1 : unmarshalSSZ.IsInfixAt Host.prog 1 :=
+  infixAt_of [.label "pad0"] (Prysm.ValidatorIndex.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ) (by simp [host_program_eq, program, List.append_assoc]) rfl
+theorem placed_at_110 : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog 110 :=
   infixAt_of ([.label "pad0"] ++ unmarshalSSZ) Prysm.Epoch.Code.unmarshalSSZ
-    (by simp [prog_eq, P, List.append_assoc]) (by rfl)
-theorem hk173 : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog 173 :=
+    (by simp [host_program_eq, program, List.append_assoc]) (by rfl)
+theorem placed_at_173 : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog 173 :=
   infixAt_of ([.label "pad0"] ++ unmarshalSSZ ++ Prysm.ValidatorIndex.Code.unmarshalSSZ) []
-    (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+    (by simp [host_program_eq, program, List.append_assoc]) (by rfl)
 
-theorem hf1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf110 : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ 110 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf173 : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ 173 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem labels_fresh_at_1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by rw [host_program_eq]; decide)
+theorem labels_fresh_at_110 : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ 110 := labelsFresh_of (by rw [host_program_eq]; decide)
+theorem labels_fresh_at_173 : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ 173 := labelsFresh_of (by rw [host_program_eq]; decide)
 
-abbrev z (k : Nat) : List UInt8 := List.replicate k 0
-abbrev w0 : List UInt8 := Int.toBytes 8 (0 : UInt64).toBitVec.toInt
+abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
+abbrev zero_word_bytes : List UInt8 := Int.toBytes 8 (0 : UInt64).toBitVec.toInt
 
 /-- guard · input (3 × 8) · receiver (state, Index, Amount, WithdrawableEpoch, tail 32) · callee frame-pointer
 slot · callee return slot · 8 untouched · callee rbx spill · 56 untouched · saved rbp · return slot · spill rax ·
 spill rbx · unused slot · spill rdi. -/
 def block (in0 in1 in2 : List UInt8) : List UInt8 :=
-  w0 ++ (in0 ++ (in1 ++ (in2 ++ (z 8 ++ (z 8 ++ (z 8 ++ (z 8 ++ (z 32 ++ (z 8 ++ (z 8 ++ (z 8 ++ (z 8 ++ (z 56 ++ (z 8 ++ (w0 ++ (z 8 ++ (z 8 ++ (z 8 ++ z 8))))))))))))))))))
+  zero_word_bytes ++ (in0 ++ (in1 ++ (in2 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 32 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 56 ++ (zeros 8 ++ (zero_word_bytes ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ zeros 8))))))))))))))))))
 
 def mem (in0 in1 in2 : List UInt8) : DataMem := (block in0 in1 in2).At (0x10000 : BitVec 64)
 
-def cs0 (in0 in1 in2 : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
+def initial_state (in0 in1 in2 : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10020, 0x10008, 24, 0, 0, 24, 0x100c0, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem in0 in1 in2⟩
 
 /-- The frame of the witness: the receiver tail, the two untouched frame ranges and the unused slot rsp + 24. -/
-def R0 : DataMem → Prop :=
-  Eq ((z 32).At (0x10040 : BitVec 64)) ⋆ Eq ((z 8).At (0x10070 : BitVec 64)) ⋆ Eq ((z 56).At (0x10080 : BitVec 64))
-    ⋆ Eq ((z 8).At (0x100d8 : BitVec 64))
+def frame_rest : DataMem → Prop :=
+  Eq ((zeros 32).At (0x10040 : BitVec 64)) ⋆ Eq ((zeros 8).At (0x10070 : BitVec 64)) ⋆ Eq ((zeros 56).At (0x10080 : BitVec 64))
+    ⋆ Eq ((zeros 8).At (0x100d8 : BitVec 64))
 
 set_option maxHeartbeats 16000000 in
 /-- **Non-vacuity of `Decode.accept`** (premises of `Decode.accept_statement`). -/
@@ -71,25 +71,25 @@ theorem runs (in0 in1 in2 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.leng
     (hin2 : in2.length = 8) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
-      ⟨cs0 in0 in1 in2 zmms flags, Host.addrOf 1⟩ :=
-  eventually_mono (Decode.accept 1 hk1 hf1 110 hk110 hf110 173 hk173 hf173
-    in0 in1 in2 hin0 hin1 hin2 (cs0 in0 in1 in2 zmms flags)
-    0 0 (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8)
+      ⟨initial_state in0 in1 in2 zmms flags, Host.addrOf 1⟩ :=
+  eventually_mono (Decode.accept 1 placed_at_1 labels_fresh_at_1 110 placed_at_110 labels_fresh_at_110 173 placed_at_173 labels_fresh_at_173
+    in0 in1 in2 hin0 hin1 hin2 (initial_state in0 in1 in2 zmms flags)
+    0 0 (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8)
     rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl
-    R0
+    frame_rest
     (by
       have H : Eq ((block in0 in1 in2).At (0x10000 : BitVec 64)) (mem in0 in1 in2) := rfl
-      wit_split [hin0, hin1, hin2]
-      simp only [cs0, R0, w0, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
+      witness_split [hin0, hin1, hin2]
+      simp only [initial_state, frame_rest, zero_word_bytes, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
       exact H)
-    (by simp [cs0]) rfl)
+    (by simp [initial_state]) rfl)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
 /-- Zero input; a representative input; all-0xff input. -/
-example (z' : RegZmms) (f : StatusFlags) := runs (z 8) (z 8) (z 8) rfl rfl rfl z' f
+example (z' : RegZmms) (f : StatusFlags) := runs (zeros 8) (zeros 8) (zeros 8) rfl rfl rfl z' f
 example (z' : RegZmms) (f : StatusFlags) :=
   runs (Int.toBytes 8 0x0123456789abcdef) (Int.toBytes 8 32000000000) (Int.toBytes 8 7)
     (by decide) (by decide) (by decide) z' f

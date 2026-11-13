@@ -47,7 +47,7 @@ theorem in_split (w n : Nat) (hsz : w * n ≤ 2 ^ 64) (bf : BitVec 64) (pks : Li
   simp only [Std.ExtHashMap.sep_assoc]
 
 /-- The backing array (headers of the first i elements, then zeros) around element i, before the three stores. -/
-theorem arr_split (n : Nat) (hsz : 24 * n ≤ 2 ^ 64) (w : Int) (A : BitVec 64) (ps : List (BitVec 64)) (i : Nat)
+theorem backing_array_split (n : Nat) (hsz : 24 * n ≤ 2 ^ 64) (w : Int) (A : BitVec 64) (ps : List (BitVec 64)) (i : Nat)
     (hi : i < n) (hps : ps.length = i) :
     Eq ((Codec.sliceHeaders w ps ++ Codec.zeroBytes (24 * (n - i))).At A) = Eq ((Codec.sliceHeaders w ps).At A)
       ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
@@ -63,7 +63,7 @@ theorem arr_split (n : Nat) (hsz : 24 * n ≤ 2 ^ 64) (w : Int) (A : BitVec 64) 
   simp only [Std.ExtHashMap.sep_assoc]
 
 /-- The backing array after the three stores of iteration i (header `(p, w, w)`). -/
-theorem arr_join (n : Nat) (hsz : 24 * n ≤ 2 ^ 64) (w : Int) (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat)
+theorem backing_array_join (n : Nat) (hsz : 24 * n ≤ 2 ^ 64) (w : Int) (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat)
     (hi : i < n) (hps : ps.length = i) :
     Eq ((Codec.sliceHeaders w (ps ++ [p]) ++ Codec.zeroBytes (24 * (n - (i + 1)))).At A) = Eq ((Codec.sliceHeaders w ps).At A)
       ⋆ Eq ((Int.toBytes 8 p.toInt).At (A + BitVec.ofNat 64 (24 * i)))

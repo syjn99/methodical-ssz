@@ -11,8 +11,8 @@ The constants include `.S` files of `fv/kraken/prysm/go1.26.10/link-set/norm`.
 namespace Prysm.Builder
 
 /-- `(*v1alpha1.Builder).UnmarshalSSZ`. -/
-def Code.unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.UnmarshalSSZ.S"
+def Code.unmarshalSSZ : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.UnmarshalSSZ.S"
 /-- `(*v1alpha1.Builder).MarshalSSZTo`. -/
-def Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.MarshalSSZTo.S"
+def Code.marshalSSZTo : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.MarshalSSZTo.S"
 
 end Prysm.Builder

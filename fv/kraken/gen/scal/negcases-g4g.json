@@ -74,8 +74,8 @@
   "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_step_s54",
   "kind": "stmt",
-  "old": "Codec.setR s Reg64.r8 (BitVec.ofInt",
-  "new": "Codec.setR s Reg64.r9 (BitVec.ofInt"
+  "old": "Codec.setRegister s Reg64.r8 (BitVec.ofInt",
+  "new": "Codec.setRegister s Reg64.r9 (BitVec.ofInt"
  },
  {
   "id": "g4g-smgg-slot-stmt-pc",

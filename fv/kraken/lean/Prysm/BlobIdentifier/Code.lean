@@ -17,5 +17,5 @@ After the split of this module, the declarations of the other types are in `Prys
 namespace Prysm.BlobIdentifier
 
 /-- `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`. -/
-def Code.unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
+def Code.unmarshalSSZ : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
 end Prysm.BlobIdentifier

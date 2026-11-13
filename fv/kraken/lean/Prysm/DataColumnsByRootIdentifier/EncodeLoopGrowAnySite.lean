@@ -13,7 +13,7 @@ growth-only slots x − 48, x − 72, the 40-byte spill area x − 136, the retu
 `G`; `Heap av` with `(n − i)·K ≤ av`, K = 4·(L + 8n) + 8576.
 
 One iteration (`Encode.grow_iter`): 82–89 as `Encode.iter`; if `cp ≥ L + 8(i+1)` the `jae` is taken (79–81, as `Encode.iter`);
-otherwise 90–94 spill i and the word and call `growslice(bp, L + 8(i+1), cp, 8, uint8)` (`GrowsliceC`), 95–99 reload
+otherwise 90–94 spill i and the word and call `growslice(bp, L + 8(i+1), cp, 8, uint8)` (`GrowsliceContract`), 95–99 reload
 and `jmp L_132`, 79–81 store into the new block. The old block (the copied prefix and the old tail) joins `G`.
 -/
 
@@ -59,7 +59,7 @@ theorem Encode.grow_loop_join (Pfx cb t : List UInt8) (bp : BitVec 64) (n i L : 
 theorem Encode.grow_iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (cb Pfx : List UInt8) (n i L : Nat) (hcb : cb.length = 8 * n) (hP : Pfx.length = L) (hn : n ≤ 128)
     (hi : i < n) (x pc nb : BitVec 64) (hnb : nb.toNat = n) (S : Nat) (Heap : Nat → DataMem → Prop)
-    (R : DataMem → Prop) (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S)
+    (R : DataMem → Prop) (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S)
     (bp : BitVec 64) (cp : Nat) (tail : List UInt8) (htl : tail.length + (L + 8 * i) = cp) (G : DataMem → Prop)
     (cap0 av : Nat) (hC : L + 8 * n ≤ cp ∨ (cp = cap0 ∧ 4 * (L + 8 * n) + 8576 ≤ av)) (hmax : av ≤ maxAlloc)
     (hLm : L + 8 * n < 2 ^ 47) (hone : ∀ m, m ≤ L + 8 * n → cap0 < m → L + 8 * n ≤ nextSliceCap m cap0)
@@ -95,22 +95,22 @@ theorem Encode.grow_iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   have hlen : cb.length < 2 ^ 64 := by omega
   have hA : (Pfx ++ cb.take (8 * i)).length = L + 8 * i := by simp [hP]; omega
   rw [block_split cb rdx.toBitVec (8 * i) (by omega) hlen] at h_mem
-  kat hk marshalSSZTo 82
-  kat hk marshalSSZTo 83
-  kat hk marshalSSZTo 84
+  step_directive hk marshalSSZTo 82
+  step_directive hk marshalSSZTo 83
+  step_directive hk marshalSSZTo 84
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
     exact Codec.jge_false_of_lt _ _ (by simp; omega) (by simp; omega) h
   simp only [Effects.All]
-  kat hk marshalSSZTo 85
-  kat hk marshalSSZTo 86
+  step_directive hk marshalSSZTo 85
+  step_directive hk marshalSSZTo 86
   rw [Encode.loop_idx _ _ i (by simpa using hrsi) (by omega)]
   apply load_step _ _ _ _ ((cb.drop (8 * i)).take 8) _ _ (by ecancel) (by simp; omega)
-  kunfold
-  kat hk marshalSSZTo 87
-  kat hk marshalSSZTo 88
-  kat hk marshalSSZTo 89
+  unfold_step
+  step_directive hk marshalSSZTo 87
+  step_directive hk marshalSSZTo 88
+  step_directive hk marshalSSZTo 89
   have e1 := Encode.loop_rbx rbx.toBitVec L i (by simpa using hrbx) (by omega)
   split
   · -- the capacity holds the word: `jae L_132` taken (the text of `Encode.iter`)
@@ -121,20 +121,20 @@ theorem Encode.grow_iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
     have ht8 : 8 ≤ tail.length := by omega
     rw [Encode.grow_loop_split _ tail rax.toBitVec L i hA ht8 (by omega)] at h_mem
     simp only [Effects.All]
-    klabel hk hf marshalSSZTo 79
-    kat hk marshalSSZTo 79
-    kat hk marshalSSZTo 80
+    label_address hk hf marshalSSZTo 79
+    step_directive hk marshalSSZTo 79
+    step_directive hk marshalSSZTo 80
     rw [Encode.loop_addr _ _ L i (by simpa using hrbx) (by omega)]
     apply store_step _ _ _ _ _ (tail.take 8) _ _ (by ecancel) (by simp; omega)
     intro m1 H1
     simp only [Width.bytes, Width.bits,
       toBytes_ofInt_ofBytes 64 8 rfl _ (show ((cb.drop (8 * i)).take 8).length = 8 by simp; omega)] at H1
-    kunfold
-    kat hk marshalSSZTo 81
+    unfold_step
+    step_directive hk marshalSSZTo 81
     apply Eventually.done
     refine ⟨rfl, rax.toBitVec, cp, tail.drop 8, G, av, l48, l72, spl, rslot, scr, by simp; omega,
       hC, Nat.le_refl _, hl48, hl72, hspl, hrs, hsc, rfl,
-      Encode.loop_rbx _ L i (by simpa using hrbx) (by omega), hrcx, rfl, Encode.loop_inc _ i (by simpa using hrsi) (by omega), hr8, rfl,
+      Encode.loop_rbx _ L i (by simpa using hrbx) (by omega), hrcx, rfl, Encode.loop_increment _ i (by simpa using hrsi) (by omega), hr8, rfl,
       rfl, rfl, ?_⟩
     dsimp only
     rw [← Encode.grow_loop_join Pfx cb (tail.drop 8) rax.toBitVec n i L hP hcb hi (by simp; omega),
@@ -154,24 +154,24 @@ theorem Encode.grow_iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
     rw [at_app (Pfx ++ cb.take (8 * i)) tail (b := rax.toBitVec + BitVec.ofNat 64 (L + 8 * i)) (by rw [hA])
       (by rw [hA]; omega)] at h_mem
     simp only [Effects.All]
-    kat hk marshalSSZTo 90
+    step_directive hk marshalSSZTo 90
     apply store_step_at _ _ (x - 48) _ _ _ l48 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl48)
     intro m1 H1
     simp only [Width.bytes, Width.bits] at H1
-    kunfold
-    kat hk marshalSSZTo 91
+    unfold_step
+    step_directive hk marshalSSZTo 91
     apply store_step_at _ _ (x - 72) _ _ _ l72 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl72)
     intro m2 H2
     simp only [Width.bytes, Width.bits,
       toBytes_ofInt_ofBytes 64 8 rfl _ (show ((cb.drop (8 * i)).take 8).length = 8 by simp; omega)] at H2
-    kunfold
-    kat hk marshalSSZTo 92
-    kat hk marshalSSZTo 93
-    kat hk marshalSSZTo 94
+    unfold_step
+    step_directive hk marshalSSZTo 92
+    step_directive hk marshalSSZTo 93
+    step_directive hk marshalSSZTo 94
     apply store_step_at _ _ (x - 144) _ _ _ rslot _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hrs)
     intro m3 H3
     simp only [Width.bytes, Width.bits] at H3
-    kunfold
+    unfold_step
     rw [show x - 136 - 8#64 = x - 144 by bv_omega]
     have hnsc := nextSliceCap_le (L + 8 * (i + 1)) cp (by omega)
     have e8 : ({ toBitVec := BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : BitVec 64)) } : UInt64).toNat = 8 := by
@@ -201,32 +201,32 @@ theorem Encode.grow_iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
     have ht2 : 8 ≤ tail2.length := by have := nextSliceCap_ge (L + 8 * (i + 1)) cp; omega
     rw [Encode.grow_loop_split _ tail2 rax1.toBitVec L i hA ht2 (by have := rcx1.toNat_lt_size; simp only [UInt64.size] at this; omega)]
       at Hm1
-    kat hk marshalSSZTo 95
+    step_directive hk marshalSSZTo 95
     apply load_step_at _ _ (x - 24) _ _ (Int.toBytes 8 rdx.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
       (by exact Int.toBytes_length 8 _)
-    kunfold
-    kat hk marshalSSZTo 96
+    unfold_step
+    step_directive hk marshalSSZTo 96
     apply load_step_at _ _ (x - 48) _ _ (Int.toBytes 8 rsi.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
       (by exact Int.toBytes_length 8 _)
-    kunfold
-    kat hk marshalSSZTo 97
+    unfold_step
+    step_directive hk marshalSSZTo 97
     apply load_step_at _ _ (x - 40) _ _ (Int.toBytes 8 nb.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
       (by exact Int.toBytes_length 8 _)
-    kunfold
-    kat hk marshalSSZTo 98
+    unfold_step
+    step_directive hk marshalSSZTo 98
     apply load_step_at _ _ (x - 72) _ _ ((cb.drop (8 * i)).take 8) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by simp; omega)
-    kunfold
-    kat hk marshalSSZTo 99
-    klabel hk hf marshalSSZTo 79
-    kat hk marshalSSZTo 79
-    kat hk marshalSSZTo 80
+    unfold_step
+    step_directive hk marshalSSZTo 99
+    label_address hk hf marshalSSZTo 79
+    step_directive hk marshalSSZTo 79
+    step_directive hk marshalSSZTo 80
     rw [Encode.loop_addr _ _ L i (by simpa using hrbx) (by omega)]
     apply store_step _ _ _ _ _ (tail2.take 8) _ _ (by ecancel) (by simp; omega)
     intro m4 H4
     simp only [Width.bytes, Width.bits,
       toBytes_ofInt_ofBytes 64 8 rfl _ (show ((cb.drop (8 * i)).take 8).length = 8 by simp; omega)] at H4
-    kunfold
-    kat hk marshalSSZTo 81
+    unfold_step
+    step_directive hk marshalSSZTo 81
     apply Eventually.done
     have hc1 : rcx1.toNat ≤ 4 * (L + 8 * n) + 8576 := by omega
     rw [hA] at htail
@@ -239,7 +239,7 @@ theorem Encode.grow_iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
       av1, Int.toBytes 8 rsi.toBitVec.toInt, (cb.drop (8 * i)).take 8, spl1,
       Int.toBytes 8 (Host.addrOf (k + 94 + 1)).toBitVec.toInt, stk1, hb3, hb1, hb2,
       Int.toBytes_length 8 _, by simp; omega, hspl1, Int.toBytes_length 8 _, hstk1, rfl, e1, rfl, rfl,
-      Encode.loop_inc _ i (by simpa using hrsi) (by omega), by simpa using hnb, rfl, rfl, rfl, ?_⟩
+      Encode.loop_increment _ i (by simpa using hrsi) (by omega), by simpa using hnb, rfl, rfl, rfl, ?_⟩
     dsimp only
     rw [← Encode.grow_loop_join Pfx cb (tail2.drop 8) rax1.toBitVec n i L hP hcb hi
         (by have := rcx1.toNat_lt_size; simp only [UInt64.size] at this; simp; omega),
@@ -251,7 +251,7 @@ theorem Encode.grow_iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
 theorem Encode.grow_loop (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (cb Pfx : List UInt8) (n L : Nat) (hcb : cb.length = 8 * n) (hP : Pfx.length = L) (hn : n ≤ 128)
     (x pc nb : BitVec 64) (hnb : nb.toNat = n) (S : Nat) (Heap : Nat → DataMem → Prop)
-    (R : DataMem → Prop) (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (cap0 : Nat)
+    (R : DataMem → Prop) (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (cap0 : Nat)
     (hLm : L + 8 * n < 2 ^ 47) (hone : ∀ m, m ≤ L + 8 * n → cap0 < m → L + 8 * n ≤ nextSliceCap m cap0)
     (bpv r14v : UInt64) :
     ∀ j i (bp : BitVec 64) (cp : Nat) (tail : List UInt8) (G : DataMem → Prop) (av : Nat)

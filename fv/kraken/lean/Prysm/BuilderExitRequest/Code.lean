@@ -11,8 +11,8 @@ The constants include `.S` files of `fv/kraken/prysm/go1.26.10/link-set/norm`.
 namespace Prysm.BuilderExitRequest
 
 /-- `(*v1.BuilderExitRequest).UnmarshalSSZ`. -/
-def Code.unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderExitRequest.UnmarshalSSZ.S"
+def Code.unmarshalSSZ : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderExitRequest.UnmarshalSSZ.S"
 /-- `(*v1.BuilderExitRequest).MarshalSSZTo`. -/
-def Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderExitRequest.MarshalSSZTo.S"
+def Code.marshalSSZTo : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderExitRequest.MarshalSSZTo.S"
 
 end Prysm.BuilderExitRequest

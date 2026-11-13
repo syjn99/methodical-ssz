@@ -51,7 +51,7 @@ theorem DecodeThenEncode.scr (x : BitVec 64) (S : Nat) (h : 24 ≤ S) (hS : S < 
   have e3 : x - 96 - BitVec.ofNat 64 S = x - 120 - BitVec.ofNat 64 (S - 24) := by checkpoint_addr
   rw [e1, e2, e3, Std.ExtHashMap.sep_assoc]
 
-theorem DecodeThenEncode.t30 (x : BitVec 64) :
+theorem DecodeThenEncode.zero_words_split (x : BitVec 64) :
     Eq ((Int.toBytes 8 0 ++ Int.toBytes 8 0).At (x - 48)) =
       Eq ((Int.toBytes 8 0).At (x - 48)) ⋆ Eq ((Int.toBytes 8 0).At (x - 40)) :=
   at_app _ _ (by rw [Int.toBytes_length]; bv_omega) (by simp [Int.toBytes_length])
@@ -100,7 +100,7 @@ theorem DecodeThenEncode.round_trip (kd : Nat) (hkd : unmarshalSSZ.IsInfixAt Hos
         ⋆ Eq (d1.At (dptr.toBitVec + dlen.toBitVec + 8)) ⋆ R0))
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
     (hlen : s.regs.rcx = 40) (hav : 32 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) (hmm2 : MemmoveC (S - 24)) :
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) (hmm2 : MemmoveContract (S - 24)) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
         ∀ (mem2 : DataMem) (zm : RegZmms) (fl : StatusFlags),
@@ -131,7 +131,7 @@ theorem DecodeThenEncode.round_trip (kd : Nat) (hkd : unmarshalSSZ.IsInfixAt Hos
     (by simp [Int.toBytes_length]) (by simp [hscr]; try omega) _ (S - 24) (scr.take (S - 24)) (by simp [hscr]; try omega)
     (by
       dsimp only
-      rw [hr14, DecodeThenEncode.t30]
+      rw [hr14, DecodeThenEncode.zero_words_split]
       ecancel)
     (by dsimp only; omega) (by dsimp only; omega) (by dsimp only; omega) (by dsimp only; exact hcap63) hmm2) ?_
   intro st' hh

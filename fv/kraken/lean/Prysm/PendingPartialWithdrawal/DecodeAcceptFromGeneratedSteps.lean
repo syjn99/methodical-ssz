@@ -7,7 +7,7 @@ import Prysm.PendingPartialWithdrawal.GeneratedDecodeSteps
 `Decode.accept_from_generated_steps : Decode.accept_statement` (the hand statement, `Prysm/Deposit_Data/Statements.lean`, unchanged). HAND field
 compositions over the GENERATED theorems of `Prysm/PendingPartialWithdrawal/GeneratedDecodeSteps.lean` (`decoder --steps`, raw output): Index = generated steps 15,
 16 + call block; Amount and WithdrawableEpoch = generated steps 48–58 (the uint64 read 54–55 inside the call set-up)
-+ the generated call block 59–61. Hand text that remains: the field compositions, `Decode.head` / `Decode.epi`
++ the generated call block 59–61. Hand text that remains: the field compositions, `Decode.head` / `Decode.epilogue`
 (`Prysm/PendingPartialWithdrawal/DecodeAccept.lean`, frame `0x48`) and the glue. In-sample (development data); no transfer claim.
 -/
 
@@ -20,7 +20,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Index`: the WHOLE call field 15–47 (generated steps 15, 16 and the generated call block 17–19, label 47). -/
 theorem Decode.from_generated_steps_Index_field (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAcc "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
+    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
     (sp rcv bf aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -46,9 +46,9 @@ theorem Decode.from_generated_steps_Index_field (k : Nat) (hk : unmarshalSSZ.IsI
   simp only at hrsp hrbp hr14 hrax hrbx h_mem ⊢
   subst rsp rbp r14 hrax hrbx
   apply Decode.generated_step_s15 k hk hf
-  intro fl1; kn
+  intro fl1; normalize_registers
   apply Decode.generated_step_s16 k hk hf
-  kn
+  normalize_registers
   refine eventually_trans _ _ _ _ (Decode.generated_step_Index_call k hk hf hC sp (rax.toBitVec + 8) rbx.toBitVec aRet aFp aS2 hRet hFp hS2 rbp0 r140 guard e8 rslot
     fp s2 c0 he8 hrs hfp hs2 hc0 hguard _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl) (by first | rfl | decide)
     (by ecancel)) ?_
@@ -64,7 +64,7 @@ set_option maxRecDepth 100000 in
 /-- `Amount` and `WithdrawableEpoch`: the two fields 48–88 (the uint64 read of Amount, 54–55, lies inside the set-up
 of WithdrawableEpoch): generated steps 48–58 and the generated call block 59–61, label 88. -/
 theorem Decode.from_generated_steps_Amount_WithdrawableEpoch_fields (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAcc "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ")
+    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ")
     (sp rcv bf aRet aFp aS2 aB aD aR : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (hB : sp + (96 : Int64).toBitVec = aB) (hD : sp + (112 : Int64).toBitVec = aD) (hR : sp + (88 : Int64).toBitVec = aR)
@@ -96,29 +96,29 @@ theorem Decode.from_generated_steps_Amount_WithdrawableEpoch_fields (k : Nat) (h
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14
   apply Decode.generated_step_s48 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s49 k hk hf
-  kn
+  normalize_registers
   apply Decode.generated_step_s50 k hk hf sp aD hD vD hvD _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s51 k hk hf
-  intro fl1; kn
+  intro fl1; normalize_registers
   apply Decode.generated_step_s52 k hk hf sp aR rcv hR _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s53 k hk hf
-  kn
+  normalize_registers
   apply Decode.generated_step_s54 k hk hf bf (bf + 8) (by simp only [Int64.toBitVec_ofNat]) v hv _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s55 k hk hf rcv (rcv + 16) (by simp only [Int64.toBitVec_ofNat]) vF hvF _ _ _ (by rfl) (by ecancel)
   intro m' H
-  kn
+  normalize_registers
   simp only [Reg64s.get64, toBytes_ofInt_ofBytes 64 8 rfl v hv] at H
   apply Decode.generated_step_s56 k hk hf
-  kn
+  normalize_registers
   apply Decode.generated_step_s57 k hk hf
-  kn
+  normalize_registers
   apply Decode.generated_step_s58 k hk hf
-  kn
+  normalize_registers
   refine eventually_trans _ _ _ _ (Decode.generated_step_WithdrawableEpoch_call k hk hf hC sp (rcv + 24) (bf + 16) aRet aFp aS2 hRet hFp hS2 rbp0 r140
     guard e8 rslot fp s2 c0 he8 hrs hfp hs2 hc0 hguard _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl)
     (by first | rfl | decide) (by ecancel)) ?_
@@ -136,8 +136,8 @@ statement = the hand statement `Decode.accept_statement` (unchanged). -/
 theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   intro k hk hf kV hkV hfV kE hkE hfE in0 in1 in2 hin0 hin1 hin2 s ra guard
     fp s1 s2 s4 sp1 rslot lo ast a8 a16 a24 hfp h1 h2 h4 hsp1 hrs hlo hast ha8 ha16 ha24 R h_mem hguard hlen
-  have hvi : U64CalleeAcc Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
-  have hep : U64CalleeAcc Prysm.Epoch.Code.unmarshalSSZLabel := Prysm.Epoch.Decode.accept_function_spec_holds kE hkE hfE
+  have hvi : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hep : U64CalleeAccept Prysm.Epoch.Code.unmarshalSSZLabel := Prysm.Epoch.Decode.accept_function_spec_holds kE hkE hfE
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 88).toNat := Decode.accept_guard _ _ hguard
@@ -172,7 +172,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   dsimp only at hpc7 hrax7 hrbx7 hrsp7 hrbp7 hr147 Hm7
   subst hpc7
   -- epilogue 89–91
-  refine eventually_trans _ _ _ _ (Decode.epi k hk (rsp.toBitVec - 80) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.epilogue k hk (rsp.toBitVec - 80) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra _ d7 hrsp7 (by ecancel)) ?_
   rintro ⟨d8, pc8⟩ ⟨hpc8, hrax8, hrbx8, hrsp8, hrbp8, hr148, hmem8⟩
   dsimp only at hpc8 hrax8 hrbx8 hrsp8 hrbp8 hr148 hmem8

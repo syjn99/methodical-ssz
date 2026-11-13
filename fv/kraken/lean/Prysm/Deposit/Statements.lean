@@ -105,10 +105,10 @@ def Decode.accept_statement : Prop :=
       ⋆ Eq (aC.At (s.regs.rax.toBitVec + 24)) ⋆ Eq (aD.At (s.regs.rax.toBitVec + 32))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 104 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 1240) (hav : 2144 ≤ avail)
-    (hmsA : MakesliceC Heap ElfData.PrysmTarget.typeUint8Slice_addr 24 (Sd + 48))
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (Sd + 48)) (hmm : MemmoveC (Sd + 48))
-    (hno : NewobjectC Heap ElfData.PrysmTarget.typeDeposit_Data_addr 120 (Sd + 48))
-    (hmsD : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 Sd) (hmmD : MemmoveC Sd),
+    (hmsA : MakesliceContract Heap ElfData.PrysmTarget.typeUint8Slice_addr 24 (Sd + 48))
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 (Sd + 48)) (hmm : MemmoveContract (Sd + 48))
+    (hno : NewobjectContract Heap ElfData.PrysmTarget.typeDeposit_Data_addr 120 (Sd + 48))
+    (hmsD : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 Sd) (hmmD : MemmoveContract Sd),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

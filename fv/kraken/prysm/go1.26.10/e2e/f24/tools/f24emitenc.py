@@ -90,7 +90,7 @@ def parse(lean_dir, X):
     for g in gs:
         names, ty = g.split(' : ', 1)
         binders.append((names.split(), ty.strip()))
-    mst = re.search(r'\n  st := (true|false)', src)
+    mst = re.search(r'\n  stateWord := (true|false)', src)
     st = (mst.group(1) == 'true') if mst else None
     nex = 0
     mex = re.search(r'∃ \(([\w ]+) : List UInt8\)', rest)
@@ -240,7 +240,7 @@ def emit_wit(X, info, cl, gsize):
     wb = a
     rsp = wb + F + 16
     dst = rsp + 24
-    blk = ['w 0']   # guard at 0x10000
+    blk = ['word_bytes 0']   # guard at 0x10000
     R = []
     # receiver cells
     o = 0
@@ -249,15 +249,15 @@ def emit_wit(X, info, cl, gsize):
             v = rcv[o]
             r = role.get(v)
             if r and r[0] == 'ast':
-                blk.append('z 8')
+                blk.append('zeros 8')
             elif r and r[0] == 'u':
                 blk.append(v)
             elif r and r[0] == 'cap':
-                blk.append('w %d' % fields[r[1]][2])
+                blk.append('word_bytes %d' % fields[r[1]][2])
             else:
                 m = re.match(r'^Int\.toBytes 8 (\w+)\.toInt$', v)
                 if m and m.group(1) in cont_addr:
-                    blk.append('w 0x%x' % cont_addr[m.group(1)])
+                    blk.append('word_bytes 0x%x' % cont_addr[m.group(1)])
                 elif re.match(r'^Int\.toBytes 8 \d+$', v):
                     blk.append(v)
                 else:
@@ -267,7 +267,7 @@ def emit_wit(X, info, cl, gsize):
             g0 = o
             while o < gsize and o not in rcv:
                 o += 8
-            blk.append('z %d' % (o - g0))
+            blk.append('zeros %d' % (o - g0))
             R.append((base + g0, o - g0))
     for pn, val in content_order:
         blk.append(val)
@@ -282,16 +282,16 @@ def emit_wit(X, info, cl, gsize):
     o = lo
     while o < hi:
         if o == 0:
-            blk.append('w 0')
+            blk.append('word_bytes 0')
             o += 8
         elif o in stack:
-            blk.append('z %d' % stklen[o])
+            blk.append('zeros %d' % stklen[o])
             o += stklen[o]
         else:
             g0 = o
             while o < hi and o not in stack and o != 0:
                 o += 8
-            blk.append('z %d' % (o - g0))
+            blk.append('zeros %d' % (o - g0))
             R.append((rsp + g0, o - g0))
     # check stack chunks do not overlap
     occ = set()
@@ -303,7 +303,7 @@ def emit_wit(X, info, cl, gsize):
     # dst
     blk.append('pre')
     for k, f in enumerate(fields):
-        blk.append('z %d' % f[2])
+        blk.append('zeros %d' % f[2])
     blk.append('spare')
     uparams = [n for n in cl['xs'] if role[n][0] == 'u']
     bparams = [n for n in cl['xs'] if role[n][0] == 'cont']
@@ -331,7 +331,7 @@ def emit_wit(X, info, cl, gsize):
     w('')
     w('Emitted by the unit\'s evidence tool `e2cemit.py` (not the generator) from the committed statement text and')
     w('the IR; then built and kernel-checked. Host: the real Go 1.26.10 `MarshalSSZTo` (index 0)%s.' %
-      (' and `RtCopy` (index %d, `rt_memmove`, S = 0)' % Pl if rt else '; no call on the fast path'))
+      (' and `MemmoveGrowsliceModel` (index %d, `model_memmove`, S = 0)' % Pl if rt else '; no call on the fast path'))
     w('One memory block at `0x10000`: guard word (r14 = 0xfff0); the receiver at 0x10008 (`prysm/ir/ir-mainnet.json`')
     w('gc amd64 layout, %d bytes; byte fields = (pointer, n, n) with the n bytes after the receiver; unexported tail' % gsize)
     w('zero); the stack window (rsp = 0x%x: rsp − %d … rsp + 23); `dst` at 0x%x: the prefix, the old output' % (rsp, F + 16, dst))
@@ -347,46 +347,46 @@ def emit_wit(X, info, cl, gsize):
     w('set_option maxRecDepth 100000')
     w('')
     if rt:
-        w('def P : Program := %s ++ RtCopy' % C)
+        w('def program : Program := %s ++ MemmoveGrowsliceModel' % C)
         w('')
-        w('theorem P_len : P.length = %d := by rfl' % (Pl + RTCOPY_LEN))
+        w('theorem program_length : program.length = %d := by rfl' % (Pl + RTCOPY_LEN))
     else:
-        w('def P : Program := %s' % C)
+        w('def program : Program := %s' % C)
         w('')
-        w('theorem P_len : P.length = %d := by rfl' % Pl)
+        w('theorem program_length : program.length = %d := by rfl' % Pl)
     w('')
-    w('instance host : Host := mkHost P (by rw [P_len]; decide)')
+    w('instance host : Host := mkHost program (by rw [program_length]; decide)')
     w('')
     if rt:
-        w('theorem hk0 : %s.IsInfixAt Host.prog 0 := infixAt_of [] RtCopy (by simp [Host.prog, mkHost, P]) rfl' % C)
-        w('theorem hkR : RtCopy.IsInfixAt Host.prog %d := infixAt_of %s [] (by simp [Host.prog, mkHost, P]) (by rfl)' % (Pl, C))
-        w('theorem hf0 : LabelsFresh %s 0 := fun i hi => absurd hi (Nat.not_lt_zero _)' % C)
-        w('theorem hfR : LabelsFresh RtCopy %d := labelsFresh_of (by decide)' % Pl)
+        w('theorem placed_at_0 : %s.IsInfixAt Host.prog 0 := infixAt_of [] MemmoveGrowsliceModel (by simp [Host.prog, mkHost, program]) rfl' % C)
+        w('theorem placed_copy_model : MemmoveGrowsliceModel.IsInfixAt Host.prog %d := infixAt_of %s [] (by simp [Host.prog, mkHost, program]) (by rfl)' % (Pl, C))
+        w('theorem labels_fresh_at_0 : LabelsFresh %s 0 := fun i hi => absurd hi (Nat.not_lt_zero _)' % C)
+        w('theorem labels_fresh_copy_model : LabelsFresh MemmoveGrowsliceModel %d := labelsFresh_of (by decide)' % Pl)
     else:
-        w('theorem hk0 : %s.IsInfixAt Host.prog 0 := infixAt_of [] [] (by simp [Host.prog, mkHost, P]) rfl' % C)
-        w('theorem hf0 : LabelsFresh %s 0 := fun i hi => absurd hi (Nat.not_lt_zero _)' % C)
+        w('theorem placed_at_0 : %s.IsInfixAt Host.prog 0 := infixAt_of [] [] (by simp [Host.prog, mkHost, program]) rfl' % C)
+        w('theorem labels_fresh_at_0 : LabelsFresh %s 0 := fun i hi => absurd hi (Nat.not_lt_zero _)' % C)
     w('')
-    w('abbrev z (k : Nat) : List UInt8 := List.replicate k 0')
-    w('abbrev w (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt')
+    w('abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0')
+    w('abbrev word_bytes (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt')
     w('')
     w('def block (%s pre spare : List UInt8) : List UInt8 :=' % plist)
     w('  ' + nest(blk))
     w('')
     w('def mem (%s pre spare : List UInt8) : DataMem := (block %s pre spare).At (0x10000 : BitVec 64)' % (plist, plist))
     w('')
-    w('def cs0 (%s pre spare : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=' % plist)
+    w('def initial_state (%s pre spare : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=' % plist)
     w('  ⟨⟨0x10008, 0x%x, UInt64.ofNat pre.length, 0, 0, UInt64.ofNat (pre.length + %d + spare.length), 0x%x, 0,' % (dst, size, rsp))
     w('    0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem %s pre spare⟩' % plist)
     w('')
 
     def inst(name, doc, pre, spare_n):
-        spare = '(z %d)' % spare_n if spare_n else '[]'
+        spare = '(zeros %d)' % spare_n if spare_n else '[]'
         npre = len(pre)
         prel = '[' + ', '.join('0x%02x' % b for b in pre) + ']'
         pres = prel if pre else '[]'
-        Rs = ['Eq ((z %d).At (0x%x : BitVec 64))' % (n, a0) for a0, n in R]
+        Rs = ['Eq ((zeros %d).At (0x%x : BitVec 64))' % (n, a0) for a0, n in R]
         if spare_n:
-            Rs.append('Eq ((z %d).At (0x%x : BitVec 64))' % (spare_n, dst + npre + size))
+            Rs.append('Eq ((zeros %d).At (0x%x : BitVec 64))' % (spare_n, dst + npre + size))
         Rexpr = ' ⋆ '.join(Rs) if Rs else 'Std.ExtHashMap.emp'
         args = []
         for names, ty in info['binders']:
@@ -394,27 +394,27 @@ def emit_wit(X, info, cl, gsize):
                 if n == 'k':
                     args.append('0')
                 elif n == 'hk':
-                    args.append('hk0')
+                    args.append('placed_at_0')
                 elif n == 'hf':
-                    args.append('hf0')
+                    args.append('labels_fresh_at_0')
                 elif n in role:
                     r = role[n]
                     if r[0] == 'ast':
-                        args.append('(z 8)')
+                        args.append('(zeros 8)')
                     elif r[0] in ('u', 'cont'):
                         args.append(n)
                     elif r[0] == 'cap':
-                        args.append('(w %d)' % fields[r[1]][2])
+                        args.append('(word_bytes %d)' % fields[r[1]][2])
                     elif r[0] == 'pre':
                         args.append(pres)
                     elif r[0] == 'd':
-                        args.append('(z %d)' % fields[r[1]][2])
+                        args.append('(zeros %d)' % fields[r[1]][2])
                     elif r[0] == 'ptr':
                         args.append('(0x%x : BitVec 64)' % cont_addr[n])
                 elif n in cl['stk']:
-                    args.append('(z %s)' % cl['lens'][n])
+                    args.append('(zeros %s)' % cl['lens'][n])
                 elif n == 's':
-                    args.append('(cs0 %s %s %s zmms flags)' % (plist, pres, spare))
+                    args.append('(initial_state %s %s %s zmms flags)' % (plist, pres, spare))
                 elif n in ('ra', 'guard'):
                     args.append('0')
                 elif n == 'hpre':
@@ -430,9 +430,9 @@ def emit_wit(X, info, cl, gsize):
                 elif n == 'h_mem':
                     args.append('HMEM')
                 elif n in ('hguard', 'hsp', 'hcap', 'hcap63'):
-                    args.append('(by simp [cs0])')
+                    args.append('(by simp [initial_state])')
                 elif n == 'hmm':
-                    args.append('(rt_memmove %d hkR hfR 0)' % Pl)
+                    args.append('(model_memmove %d placed_copy_model labels_fresh_copy_model 0)' % Pl)
                 elif re.match(r'^h\w+$', n):
                     m = re.match(r'^(\w+)\.length = ', ty)
                     tgt = m.group(1) if m else None
@@ -445,8 +445,8 @@ def emit_wit(X, info, cl, gsize):
         hm = ['(by',
               '      have H : Eq ((block %s %s %s).At (0x10000 : BitVec 64))' % (plist, pres, spare),
               '        (mem %s %s %s) := rfl' % (plist, pres, spare),
-              '      wit_split [%s]' % ', '.join('h_' + q for q in params),
-              '      simp only [cs0, w, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,',
+              '      witness_split [%s]' % ', '.join('h_' + q for q in params),
+              '      simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,',
               '        BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil, List.length_cons,',
               '        List.length_replicate, show (UInt64.ofNat %d).toBitVec = %d#64 from rfl] at H ⊢' % (npre, npre),
               '      simp only [Std.ExtHashMap.sep_assoc] at H ⊢',
@@ -462,7 +462,7 @@ def emit_wit(X, info, cl, gsize):
         w('    Eventually (step1 Host.exe)')
         w('      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x%x' % dst)
         w('        ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0)')
-        w('      ⟨cs0 %s %s %s zmms flags, Host.addrOf 0⟩ :=' % (plist, pres, spare))
+        w('      ⟨initial_state %s %s %s zmms flags, Host.addrOf 0⟩ :=' % (plist, pres, spare))
         line = '  eventually_mono (%s_fast %s)' % (p, ' '.join(args))
         line = line.replace('HMEM', '\n    ' + '\n'.join(hm) + '\n   ')
         w(line)

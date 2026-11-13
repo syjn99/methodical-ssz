@@ -3,14 +3,14 @@ import Codec.FixedBytesDecode
 /-!
 # Statement kinds of the size-parametric fixed-bytes decode segments
 
-`bytesDecSegKind n` / `bytesDecSegZKind n` are the texts of `rootDecSegKind` (`Codec/Kind/FieldPatterns.lean`) and
-`rootDecSegZKind` (`Codec/Kind/Bytes32DecodeOffsetZero.lean`) with the size `32` replaced by the parameter `n : Nat` (four places:
+`bytesDecSegKind n` / `bytesDecSegOffsetZeroKind n` are the texts of `rootDecSegKind` (`Codec/Kind/FieldPatterns.lean`) and
+`rootDecSegOffsetZeroKind` (`Codec/Kind/Bytes32DecodeOffsetZero.lean`) with the size `32` replaced by the parameter `n : Nat` (four places:
 `root.length = n`, `n ≤ avail`, `Heap (avail - n)`, `Int.toBytes 8 (OfNat.ofNat n)` twice). `Codec/Kind/FieldPatterns.lean` and `Codec/Kind/Bytes32DecodeOffsetZero.lean`
-are unchanged. `bytesDecSegKind_of` / `bytesDecSegZKind_of` prove a kind from the lemma (`bytesdec_seg`,
-`bytesdec_seg_z`) and the code facts of an instance, so the kind body is kernel-checked against the lemma
+are unchanged. `bytesDecSegKind_of` / `bytesDecSegOffsetZeroKind_of` prove a kind from the lemma (`bytesdec_seg`,
+`bytesdec_seg_offset_zero`) and the code facts of an instance, so the kind body is kernel-checked against the lemma
 conclusion. The kind has no size hypothesis: for a size outside 32 / 48 / 96 it is a proposition without a
 proof here. `Codec/FixedBytesDecodeSizeInstances.lean` shows `rootDecSegKind = bytesDecSegKind 32` and
-`rootDecSegZKind = bytesDecSegZKind 32` (`rfl`).
+`rootDecSegOffsetZeroKind = bytesDecSegOffsetZeroKind 32` (`rfl`).
 -/
 
 open Machine Runtime
@@ -44,7 +44,7 @@ abbrev bytesDecSegKind (n : Nat) (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC 
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + j2 + 12) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -74,8 +74,8 @@ theorem bytesDecSegKind_of (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (C : Pr
 
 set_option linter.unusedVariables false in
 /-- Fixed-bytes decode statement kind, offset-0 form: as `bytesDecSegKind` without `src`, source bytes at
-`bf`, second block `bytesDecMidZ` (11 directives). The text is the conclusion of `bytesdec_seg_z`. -/
-abbrev bytesDecSegZKind (n : Nat) (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC : Int64) : Prop :=
+`bf`, second block `bytesDecMidOffsetZero` (11 directives). The text is the conclusion of `bytesdec_seg_offset_zero`. -/
+abbrev bytesDecSegOffsetZeroKind (n : Nat) (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC : Int64) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)
     (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
@@ -94,7 +94,7 @@ abbrev bytesDecSegZKind (n : Nat) (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At bf)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + j2 + 11) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -112,14 +112,14 @@ abbrev bytesDecSegZKind (n : Nat) (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + j1)⟩
 
-/-- The offset-0 kind follows from `bytesdec_seg_z` and the code facts of an instance. -/
-theorem bytesDecSegZKind_of (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (C : Program) (lff lwb : String)
+/-- The offset-0 kind follows from `bytesdec_seg_offset_zero` and the code facts of an instance. -/
+theorem bytesDecSegOffsetZeroKind_of (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (C : Program) (lff lwb : String)
     (dR dB dS fP fL fC : Int64) (j1 j2 : Nat)
     (hA : ∀ k, C.IsInfixAt Host.prog k → (bytesDecHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog (k + j1))
     (hB : ∀ k, C.IsInfixAt Host.prog k →
-      (bytesDecMidZ (OfNat.ofNat n) lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog (k + j2))
+      (bytesDecMidOffsetZero (OfNat.ofNat n) lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog (k + j2))
     (hl : ∀ k, C.IsInfixAt Host.prog k → LabelsFresh C k → label lff = Host.addrOf (k + j2)) :
-    bytesDecSegZKind n C j1 j2 dR dB dS fP fL fC :=
-  fun k hk hf => bytesdec_seg_z n hn lff lwb dR dB dS fP fL fC (k + j1) (k + j2) (hA k hk) (hB k hk) (hl k hk hf)
+    bytesDecSegOffsetZeroKind n C j1 j2 dR dB dS fP fL fC :=
+  fun k hk hf => bytesdec_seg_offset_zero n hn lff lwb dR dB dS fP fL fC (k + j1) (k + j2) (hA k hk) (hB k hk) (hl k hk hf)
 
 end Codec

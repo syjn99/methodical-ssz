@@ -21,7 +21,7 @@ block, the guard word, `Heap`, `R`).
 | (3C) | `cap < len + 8`, `C1 < len + 40`, heap left < budget | `Encode.grow_any_site_three_cases` (C) | unchanged; **not a return** |
 
 (3C) is the entry of the second `runtime.growslice` call with the remaining heap below that call's
-budget premise: the existing `GrowsliceC` form gives no lower bound on the remaining heap.
+budget premise: the existing `GrowsliceContract` form gives no lower bound on the remaining heap.
 Its return is differential only. In (1), (2), (3A), (3B) the returned block is `pre ++ bs` with
 `serialize desc g.toValue = .ok bs` (EthLib).
 
@@ -65,7 +65,7 @@ theorem Encode.cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) 
       ⋆ Eq ((pre ++ spare).At s.regs.rbx.toBitVec) ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
     (hbud : 4 * s.regs.rcx.toNat + 8736 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
+    (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) :
     ∃ bs : Array UInt8, serialize desc g.toValue = .ok bs ∧ bs.toList = e8 ++ g.root.toList ∧
     Eventually (step1 Host.exe)
       (fun st =>
@@ -319,7 +319,7 @@ theorem Encode.reject_length_cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
     (hbud : 4 * s.regs.rcx.toNat + 8736 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) :
+    (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e0 ∧ st.data.regs.rsi = e1

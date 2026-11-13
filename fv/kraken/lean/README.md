@@ -91,7 +91,7 @@ A new type gets its own directory `Prysm/<GoTypeName>/`. Do not change a reviewe
 ## 2. How machine code enters Lean
 
 1. `../link/conv.py` converts the disassembly of one function into a labeled `.S` file.
-2. `include_x64_rt "<path>.S"` (`Machine/Include.lean`) parses the file with the Kraken parser when Lean elaborates it. The result is a `Program` constant, for example `Prysm.SyncAggregate.Code.unmarshalSSZ`.
+2. `include_x64_code "<path>.S"` (`Machine/Include.lean`) parses the file with the Kraken parser when Lean elaborates it. The result is a `Program` constant, for example `Prysm.SyncAggregate.Code.unmarshalSSZ`.
 3. A data file holds the bytes or the address of one ELF data item, for example a format string or a type descriptor.
    `data_include <id>` (`Machine/Include.lean`) and its copy `prysm_data_include` for the Prysm link set define `<id> : List UInt8` and `<id>_addr : BitVec 64`. No byte or offset is written by hand.
 4. `../link/check.py` compares the `.S` files and the data files with the ELF.
@@ -146,7 +146,7 @@ Line by line:
 - The final memory names every fragment of the premise again. Only the two stack slots changed. `R` is unchanged, and there is no `⋆ True`.
 
 A specification theorem extends a machine theorem. For example, `Prysm.SyncAggregate.Decode.reject_size_spec_statement` adds the premise `rcx = bs.size` and the conclusion that EthLib `deserialize` returns an error.
-An accept theorem adds the contract hypotheses (for example `MakesliceC`, `MemmoveC`), the heap budget `Heap avail`, the receiver fragments and a stack window `S` for the callees.
+An accept theorem adds the contract hypotheses (for example `MakesliceContract`, `MemmoveContract`), the heap budget `Heap avail`, the receiver fragments and a stack window `S` for the callees.
 
 ## 4. Contracts and function specifications
 
@@ -157,12 +157,12 @@ The forms are in `Runtime/Contracts.lean` and `Runtime/NewobjectContract.lean` (
 
 | Contract | Callee |
 | --- | --- |
-| `MakesliceC` | `runtime.makeslice`: a zero block of `esz · cnt` bytes from the heap |
-| `NewobjectC` | `runtime.newobject`: a zero block of `sz` bytes |
-| `GrowsliceC` | `runtime.growslice`: a new block that holds the old bytes |
-| `MemmoveC` | `runtime.memmove`: copy between disjoint ranges only |
-| `ConvT64C` | `runtime.convT64`: an 8-byte box, or an entry of the static table for values below 256 |
-| `FmtErrorfNilC`, `FmtErrorfWC`, `FmtErrorfDWC`, `FmtErrorfDDC` | `fmt.Errorf` with no argument, `%w`, `%d %w` and `%d %d` |
+| `MakesliceContract` | `runtime.makeslice`: a zero block of `esz · cnt` bytes from the heap |
+| `NewobjectContract` | `runtime.newobject`: a zero block of `sz` bytes |
+| `GrowsliceContract` | `runtime.growslice`: a new block that holds the old bytes |
+| `MemmoveContract` | `runtime.memmove`: copy between disjoint ranges only |
+| `ConvT64Contract` | `runtime.convT64`: an 8-byte box, or an entry of the static table for values below 256 |
+| `FmtErrorfNilContract`, `FmtErrorfWrapContract`, `FmtErrorfDecimalWrapContract`, `FmtErrorfDecimalDecimalContract` | `fmt.Errorf` with no argument, `%w`, `%d %w` and `%d %d` |
 
 A hand-written callee, for example `(*primitives.Epoch).UnmarshalSSZ`, gets a function specification of the same form.
 Examples are `Prysm.Epoch.Decode.accept_function_spec` and `Prysm.Slot.Decode.accept_function_spec`. A theorem about the callee code (`*_holds`) proves the specification.
@@ -220,17 +220,17 @@ The structure `Prysm.<GoTypeName>.SszValue` holds the SSZ content of a type.
 Short names and labels remain in the places below. Each one stays because it is derived from a file id, because a
 generator writes it, or because it is a record. The table after the list gives the meaning of the type abbreviations.
 
-- Runtime model files: `Runtime/*.S` and `Prysm/*/*.S` (`BumpAlloc*.S`, `BumpNew*.S`, `RtCopy.S`, `RtErr.S`).
-  `include_x64_rt` reads them by path, and the code constants take their labels.
-- Statement kind structures of `Codec/Kind/` (their doc strings give the meaning): `SOff` stack offset, `SVal` /
-  `EVal` content of a stack slot (decoder / encoder), `RV` / `ERV` what a register holds at a field boundary,
-  `ExLen` length of an existential chunk, `RtCfg` runtime configuration, `StDesc` / `EncSt` boundary state,
-  `ExCh` / `ExBV` existential chunks / pointers, `Imps` a chain of implications, `layRt` / `layCal` the frame layouts
-  with runtime calls / callee calls, `decPro` / `encProL` decoder / encoder prologue templates, `iCmpMI` the
-  directive `cmpq $imm,disp(%rB)`, `stepLdvKind` / `stepLdbKind` the kinds of `kstep_ldv` / `kstep_ldb`
+- Runtime model files: `Runtime/*.S` and `Prysm/*/*.S` (`BumpMakeslice*.S`, `BumpNewobject*.S`, `MemmoveGrowsliceModel.S`, `ErrorfConvT64Model.S`).
+  `include_x64_code` reads them by path, and the code constants take their labels.
+- Statement kind structures of `Codec/Kind/` (their doc strings give the meaning): `StackOffset` stack offset, `StackValue` /
+  `EncodeStackValue` content of a stack slot (decoder / encoder), `DecodeRegisterValue` / `EncodeRegisterValue` what a register holds at a field boundary,
+  `ExistentialLength` length of an existential chunk, `RuntimeConfig` runtime configuration, `DecodeBoundaryState` / `EncodeBoundaryState` boundary state,
+  `ExistsChunks` / `ExistsWords` existential chunks / pointers, `Implications` a chain of implications, `layoutRuntimeCalls` / `layoutCalleeCalls` the frame layouts
+  with runtime calls / callee calls, `decoderPrologue` / `encoderPrologueLargeFrame` decoder / encoder prologue templates, `instrCompareMemoryImmediate` the
+  directive `cmpq $imm,disp(%rB)`, `stepLoadValueKind` / `stepLoadBytesKind` the kinds of `step_load_value` / `step_load_bytes`
   (`mov disp(%rB),%rD`, value / bytes form). Generated files and `../gen/scal/kindcheck.py` name them.
-- Short tactic names (local or module macros): `vtri_iter_body`, `rstep`, `eb`, `kn`, `kunf`, `kwat`, `kwin`, `kwnx`,
-  `kwend`, `rej_infix`, `imm32`, and the notation `shl5`. Their doc strings say what each does.
+- Short tactic names (local or module macros): `triple_loop_iteration`, `step_literal_directive`, `encoder_address_equation`, `normalize_registers`, `unfold_step_keep_registers`, `window_step_directive`, `window_skip_leading_nops`, `window_skip_nops`,
+  `window_skip_to_end`, `size_reject_infix`, `immediate32_count`, and the notation `shift_left5`. Their doc strings say what each does.
 - Directory labels under `../prysm/go1.26.10/e2e/` (`ad`, `bh`, `e1`, `f24`, `g5c`, `h3` to `h6`, `lv`, `scal`), the
   link and differential scripts `../gen/e2e/*link.py`, `../gen/e2e/*diff.py`, and the negative case files
   `*negcases*.json`: records of the work steps; generated headers and tests name these paths.

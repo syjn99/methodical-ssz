@@ -38,12 +38,12 @@ theorem _root_.Prysm.VoluntaryExit.Decode.example_reject : ∀ (k : Nat) (hk : P
   have hl := Machine.label_at' hk hf (j := 89)
     (by simp only [Prysm.VoluntaryExit.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.VoluntaryExit.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  exact decrej_seg _ _ _ _ 72 96 16 _ k (win hk 0 11) (by rfl) (by decide)
-    _ (k + 89) (k + 92) (win hk 89 3) (by rfl) (by rfl) hl
-    _ (k + 93) (win hk 92 1) (by rfl) (by rfl) _ (win hk 93 2) (by rfl)
+  exact decrej_seg _ _ _ _ 72 96 16 _ k (window_infix_at hk 0 11) (by rfl) (by decide)
+    _ (k + 89) (k + 92) (window_infix_at hk 89 3) (by rfl) (by rfl) hl
+    _ (k + 93) (window_infix_at hk 92 1) (by rfl) (by rfl) _ (window_infix_at hk 93 2) (by rfl)
     s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard (fun h => hlen (h.trans (by rfl)))
 theorem _root_.Prysm.VoluntaryExit.Decode.example_reject_kind : ∀ (h : Host), type_of% (@Prysm.VoluntaryExit.Decode.example_reject h)
-    = @Codec.decRejectKindN h Prysm.VoluntaryExit.Code.unmarshalSSZ 16 := by
+    = @Codec.decRejectKindAnyFrame h Prysm.VoluntaryExit.Code.unmarshalSSZ 16 := by
   intro h; with_reducible rfl
 
 end Prysm.VoluntaryExit

@@ -25,10 +25,10 @@ Checks, per file (text only):
     `t_kind` whose whole header is
         theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.u64DecAcceptKind h C := by
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.rootDecSegKind h C n1 … n9 := by
-    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.rootDecSegZKind h C n1 … n8 := by
+    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.rootDecSegOffsetZeroKind h C n1 … n8 := by
         (offset-0 kind of the generator extension, `lean/Codec/Kind/Bytes32DecodeOffsetZero.lean`)
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.bytesDecSegKind h n C n1 … n9 := by
-    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.bytesDecSegZKind h n C n1 … n8 := by
+    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.bytesDecSegOffsetZeroKind h n C n1 … n8 := by
         (field-segment size-parametric kinds, n = 32, 48 or 96)
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.u64DecInlineSegKind h C n1 … n4 := by
         (field-segment inline uint64 kind)
@@ -70,7 +70,7 @@ Checks, per file (text only):
         @Codec.callArgReloadKind h C pad dB src dD c dR f j     (Int64 literals: n or (-n))
         @Codec.callArgLeaKind h C dB src dD c dR f j
         @Codec.callArgMovKind h C j
-        @Codec.u64DecRRSegKind h C Reg64.rX src f j    rX one of the registers of `U64RRReg`
+        @Codec.u64DecScratchRegisterSegKind h C Reg64.rX src f j    rX one of the registers of `U64ScratchRegister`
     (kinds of `lean/Codec/Kind/CalleeDecode.lean`). A composed accept theorem
     (rule 6a) may instead carry the composed-statement kind of `lean/Codec/Kind/DecodeAcceptComposition.lean`:
         set_option maxHeartbeats 200000 in
@@ -86,16 +86,16 @@ Checks, per file (text only):
     and no field of `UNCOVERED-JSON` may have a theorem.
 
 10. step (`scalgen.py decoder --steps`): further `_kind` right-hand sides:
-        @Codec.stepMovRRKind h C Reg64.rD Reg64.rS j e          @Codec.stepAddKind h C Reg64.rD imm j e
-        @Codec.stepLdvKind / stepLdbKind / stepStKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
-        @Codec.stepMovIKind h C Reg64.rD imm j e                @Codec.stepJmpKind h C "l" j jl
+        @Codec.stepMoveRegisterKind h C Reg64.rD Reg64.rS j e          @Codec.stepAddKind h C Reg64.rD imm j e
+        @Codec.stepLoadValueKind / stepLoadBytesKind / stepStoreKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
+        @Codec.stepMoveImmediateKind h C Reg64.rD imm j e                @Codec.stepJumpKind h C "l" j jl
         @Codec.stepLabelKind h C "l" j e                        @Codec.stepNopsKind h C j e
         @Codec.callDecSegKindWindow h C "fn" "lok" j jc j2         (fn in CALLEES)
         @Codec.bytesDecSegKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC src
-        @Codec.bytesDecSegZKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC
+        @Codec.bytesDecSegOffsetZeroKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC
     (n = 32 | 48 | 96; rY one of rax, rcx, rdx, rsi, rdi; registers `Reg64.<one of the 16>`).
     10b. The proof of `t` (comments and string literals removed) uses the lemma of its kind
-         (`kstep_mov_rr`, `kstep_ldv`, …, `calldec_seg_w`, `bytesdec_seg_window`, `bytesdec_seg_z_window`) and no other
+         (`step_move_register`, `step_load_value`, …, `calldec_seg_window`, `bytesdec_seg_window`, `bytesdec_seg_offset_zero_window`) and no other
          step lemma: a theorem whose proof and kind name different lemmas fails.
     10c. A step file (header `step coverage (…): n of m fields`, or any step kind) carries exactly one line
          `FIELDS-JSON: [{"field": F, "theorems": [...]}, …]`: every theorem with a step kind is listed in exactly
@@ -117,23 +117,23 @@ Checks, per file (text only):
     now also marks it `UNCHECKED STATEMENT` (rule 6c).
 12. whole-accept (`scalgen.py decoder --whole-accept`): a whole-accept file is checked in two parts. The text before the whole-accept
     block (`/-! Whole accept (`decoder --whole-accept`…`) by rules 1-11 as a step file; the whole-accept part by rule 12 (12a removed: it was
-    a git-blob pin; 12b the exact theorem list with the kinds decHeadKindN / decFieldKindN / decEpiKindN /
-    decAcceptKindN / decRejectKindN; 12c the kind parameters `L`, `fields`, boundary `pc` / `done` and the reject size
+    a git-blob pin; 12b the exact theorem list with the kinds decHeadKindAnyFrame / decFieldKindAnyFrame / decEpilogueKindAnyFrame /
+    decAcceptKindAnyFrame / decRejectKindAnyFrame; 12c the kind parameters `L`, `fields`, boundary `pc` / `done` and the reject size
     RECOMPUTED from the `.S` and the IR named in the header (sha256 checked); 12d the accept proof chains every
     theorem; 12e the identity with a hand statement, if any, names no generated theorem). See the section `Rule 12`.
     A file with a whole-accept kind and no whole-accept block fails (rule 12: 0 whole-accept blocks). `--partial` never accepts a whole-accept file.
 13. fast-path (`scalgen.py encoder --fast-path`, encoder fast path): a file with `FAST-PATH-JSON:` or an encoder kind
-    (encHeadKindN / encFieldKindN / encEpiKindN / encFastKindN) is checked by rule 13 only: 13a removed (a git-blob pin); 13b
+    (encHeadKindAnyFrame / encFieldKindAnyFrame / encEpilogueKindAnyFrame / encFastPathKindAnyFrame) is checked by rule 13 only: 13a removed (a git-blob pin); 13b
     structure (one layout def or a pinned hand layout; the exact theorem list, each with its kind; the code constant);
     13c every kind line equals, as whole text, the line rendered from an OWN recomputation (this file's interpreter,
     not the generator) of the fields, the layout and every boundary state from the `.S` and the IR named in FAST-PATH-JSON
-    (sha256 checked), and C is bound to that `.S` by `include_x64_rt` in an imported code module; 13d the fast-path
+    (sha256 checked), and C is bound to that `.S` by `include_x64_code` in an imported code module; 13d the fast-path
     proof chains every theorem once; 13e the identity `_statement` names no generated theorem (implication lemma only from
     GEN6_VIA). See the section `rule 13`. `--partial` never accepts a fast-path file.
     The hand example modules `Prysm/*/DecodeAcceptExample.lean` of the lemmas are not generator output; they fail rule 12 (no whole-accept
     block) and no recorded command runs `kindcheck.py` on them.
 
-Limits (not checked here): step label strings in `stepLabelKind`, `stepJmpKind` and `callDecSegKindWindow` (`lok`) are
+Limits (not checked here): step label strings in `stepLabelKind`, `stepJumpKind` and `callDecSegKindWindow` (`lok`) are
 phantom kind parameters (they do not occur in the kind body; `stepLabelKind C l j e` is
 `stepNopsKind C j e` by `rfl`), so a label name in a kind line is NOT checked by this program or by the `_kind`
 line; the label is checked only by the proof's code fact (`he`, `hl`). Also not checked: that the kind parameters (C, indices, displacements, offsets) are the right
@@ -166,10 +166,10 @@ COMPOSED = ("(Codec.dechead_seg ", "(Codec.decepi_seg ")  # rule 6a
 UNCHECKED = "UNCHECKED STATEMENT"  # rule 6c
 
 # field-segment kinds (`lean/Codec/Kind/FixedBytesDecode.lean`, `lean/Codec/Kind/InlineUint64.lean`)
-GEN2_KINDS = ("bytesDecSegKind", "bytesDecSegZKind", "u64DecInlineSegKind")
+GEN2_KINDS = ("bytesDecSegKind", "bytesDecSegOffsetZeroKind", "u64DecInlineSegKind")
 # call-segment kinds (`lean/Codec/Kind/CalleeDecode.lean`, `lean/Codec/Kind/DecodeAcceptComposition.lean`)
 GEN3_KINDS = ("callDecSegKind", "callArgFirstKind", "callArgReloadKind", "callArgLeaKind", "callArgMovKind",
-              "u64DecRRSegKind", "decAcceptKind")
+              "u64DecScratchRegisterSegKind", "decAcceptKind")
 CALLEES = tuple(f'"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"'
                 for n in ("Slot", "CommitteeIndex", "ValidatorIndex", "Epoch"))
 INT = r"(?:0|[1-9][0-9]*|\(-[1-9][0-9]*\))"  # an Int64 literal as the generator writes it
@@ -181,29 +181,29 @@ G4RY = r"Reg64\.(?:rax|rcx|rdx|rsi|rdi)"
 # `lean/Codec/FixedBytesDecodeWindow*.lean`); the call-block kind is in Codec (`lean/Codec/Kind/CalleeDecode.lean`,
 # `lean/Codec/CalleeDecodeWindow.lean`).
 GEN4_KINDS = {
-    "stepMovRRKind": ("{C} G4REG G4REG NAT NAT", "Codec", "kstep_mov_rr"),
-    "stepLdvKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "kstep_ldv"),
-    "stepLdbKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "kstep_ldb"),
-    "stepStKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "kstep_st"),
-    "stepLeaKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "kstep_lea"),
-    "stepAddKind": ("{C} G4REG INT NAT NAT", "Codec", "kstep_add"),
-    "stepMovIKind": ("{C} G4REG INT NAT NAT", "Codec", "kstep_movi"),
-    "stepJmpKind": ("{C} LBL NAT NAT", "Codec", "kstep_jmp"),
-    "stepLabelKind": ("{C} LBL NAT NAT", "Codec", "kstep_label"),
-    "stepNopsKind": ("{C} NAT NAT", "Codec", "kstep_nops"),
-    "callDecSegKindWindow": ("{C} LBL LBL NAT NAT NAT", "Codec", "calldec_seg_w"),
+    "stepMoveRegisterKind": ("{C} G4REG G4REG NAT NAT", "Codec", "step_move_register"),
+    "stepLoadValueKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "step_load_value"),
+    "stepLoadBytesKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "step_load_bytes"),
+    "stepStoreKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "step_store"),
+    "stepLeaKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "step_lea"),
+    "stepAddKind": ("{C} G4REG INT NAT NAT", "Codec", "step_add_immediate"),
+    "stepMoveImmediateKind": ("{C} G4REG INT NAT NAT", "Codec", "step_move_immediate"),
+    "stepJumpKind": ("{C} LBL NAT NAT", "Codec", "step_jump"),
+    "stepLabelKind": ("{C} LBL NAT NAT", "Codec", "step_label"),
+    "stepNopsKind": ("{C} NAT NAT", "Codec", "step_nops"),
+    "callDecSegKindWindow": ("{C} LBL LBL NAT NAT NAT", "Codec", "calldec_seg_window"),
     "bytesDecSegKindWindow": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT INT", "Codec", "bytesdec_seg_window"),
-    "bytesDecSegZKindWindow": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT", "Codec", "bytesdec_seg_z_window"),
+    "bytesDecSegOffsetZeroKindWindow": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT", "Codec", "bytesdec_seg_offset_zero_window"),
 }
 G4_LEMMAS = {v[2]: v[1] for v in GEN4_KINDS.values()}   # lemma -> namespace
-G4_BLOCK = {"callDecSegKindWindow": "call", "bytesDecSegKindWindow": "seg", "bytesDecSegZKindWindow": "seg"}
+G4_BLOCK = {"callDecSegKindWindow": "call", "bytesDecSegKindWindow": "seg", "bytesDecSegOffsetZeroKindWindow": "seg"}
 BOOL = r"(?:true|false)"
 LBL = r'"[^"\\\s]+"'
 RRREG = r"Reg64\.(?:rcx|rdx|rsi|rdi|r8|r9|r10|r11|r12|r13|r15)"
 DECF = r"\.(?:bytes (?:32|48|96)|u64)"
 COVER = re.compile(r"(field segment|call segment|step) coverage \(`decoder --(?:field-segments|call-segments|steps)`\): (\d+) of (\d+) fields")
 STEM = re.compile(r"^(.*)_(seg|arg|arg1|arg2|call)$")
-SIZE = r"(?:32|48|96)"  # the sizes of the hypothesis `hn` of bytesdec_seg / bytesdec_seg_z
+SIZE = r"(?:32|48|96)"  # the sizes of the hypothesis `hn` of bytesdec_seg / bytesdec_seg_offset_zero
 
 PARTIAL = "PARTIAL OUTPUT"  # header of scalgen.py decoder --partial-out (exit 3)
 TOP_OK = re.compile(r"^(import |open |variable |namespace |end\b|set_option \S+ \S+ in$|theorem |/-|--|$|\s)")
@@ -418,15 +418,15 @@ def check_text(text, gnames=None, partial=False, rule11=True):
             continue
         want = (rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
                 rf"(?:@Codec\.(?:u64DecAcceptKind h {C}|rootDecSegKind h {C}(?: {NAT}){{9}}"
-                rf"|rootDecSegZKind h {C}(?: {NAT}){{8}}"
-                rf"|bytesDecSegKind h {SIZE} {C}(?: {NAT}){{9}}|bytesDecSegZKind h {SIZE} {C}(?: {NAT}){{8}}"
+                rf"|rootDecSegOffsetZeroKind h {C}(?: {NAT}){{8}}"
+                rf"|bytesDecSegKind h {SIZE} {C}(?: {NAT}){{9}}|bytesDecSegOffsetZeroKind h {SIZE} {C}(?: {NAT}){{8}}"
                 rf"|u64DecInlineSegKind h {C}(?: {NAT}){{4}})"
                 rf"|@Codec\.(?:callDecSegKind h {C} {LBL} {LBL} {NAT} {NAT}"
                 rf"|callArgFirstKind h {C} {BOOL} {INT} {NAT}"
                 rf"|callArgReloadKind h {C} {BOOL}(?: {INT}){{6}} {NAT}"
                 rf"|callArgLeaKind h {C}(?: {INT}){{6}} {NAT}"
                 rf"|callArgMovKind h {C} {NAT}"
-                rf"|u64DecRRSegKind h {C} {RRREG}(?: {INT}){{2}} {NAT})) := by")
+                rf"|u64DecScratchRegisterSegKind h {C} {RRREG}(?: {INT}){{2}} {NAT})) := by")
         if any(f"@Codec.{kn} " in lines[j] for kn in GEN2_KINDS) or any(f"@Codec.{kn} " in lines[j] for kn in GEN3_KINDS):
             newkind.add(t)
         if not re.fullmatch(want, lines[j]):
@@ -535,7 +535,7 @@ def main(files, partial=False):
         text = pathlib.Path(f).read_text().replace("\ntheorem _root_.", "\ntheorem ")
         hand = pathlib.Path(f).resolve() in {(KR / x).resolve() for x in HAND_EXAMPLES}
         g5 = G5_MARK in text or "WHOLE-ACCEPT-JSON" in text or any(f"@Codec.{k} " in text for k in (
-            "decHeadKindN", "decFieldKindN", "decEpiKindN", "decAcceptKindN", "decRejectKindN"))
+            "decHeadKindAnyFrame", "decFieldKindAnyFrame", "decEpilogueKindAnyFrame", "decAcceptKindAnyFrame", "decRejectKindAnyFrame"))
         g6 = "FAST-PATH-JSON" in text or any(f"@Codec.{k} " in text for k in GEN6_KINDS)
         if g6 and not partial:
             # rule 13: a fast-path file is checked by rule 13 only; a whole-accept / older kind in it fails 13c
@@ -599,7 +599,7 @@ theorem s_kind : ∀ (h : Host), type_of% (@s h) = @Codec.rootDecSegKind h Prysm
 theorem z (k : Nat) (hk : Prysm.Eth1Data.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.Eth1Data.Code.unmarshalSSZ k) :
     Z := by
   with_reducible exact baz
-theorem z_kind : ∀ (h : Host), type_of% (@z h) = @Codec.rootDecSegZKind h Prysm.Eth1Data.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by
+theorem z_kind : ∀ (h : Host), type_of% (@z h) = @Codec.rootDecSegOffsetZeroKind h Prysm.Eth1Data.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by
   intro h; with_reducible rfl
 
 theorem t_same : @Prysm.Fixture.x = @t := rfl
@@ -625,8 +625,8 @@ def selftest():
         ("same_not_identity", GOOD.replace("@Prysm.Fixture.x = @t := rfl", "True := trivial"), False),
         ("orphan_kind", GOOD + "theorem q_kind : True := trivial\n", False),
     ]
-    # offset-0 kind of the generator extension (rootDecSegZKind, 8 parameters)
-    zk = "= @Codec.rootDecSegZKind h Prysm.Eth1Data.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by"
+    # offset-0 kind of the generator extension (rootDecSegOffsetZeroKind, 8 parameters)
+    zk = "= @Codec.rootDecSegOffsetZeroKind h Prysm.Eth1Data.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by"
     assert zk in GOOD
     cases = cases + [
         ("z_degenerate_rhs_self", GOOD.replace(zk, "= type_of% (@z h) := by"), False),
@@ -634,7 +634,7 @@ def selftest():
         ("z_nine_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 24 0 :=")), False),
         ("z_seven_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 :=")), False),
         ("z_other_const", GOOD.replace(zk, zk.replace("Prysm.Eth1Data.Code.unmarshalSSZ", "Prysm.BeaconBlockHeader.Code.unmarshalSSZ")), False),
-        ("z_as_add_kind", GOOD.replace(zk, zk.replace("rootDecSegZKind", "rootDecSegKind")), False),
+        ("z_as_add_kind", GOOD.replace(zk, zk.replace("rootDecSegOffsetZeroKind", "rootDecSegKind")), False),
         # a --partial-out file (header text as scalgen.py writes it) must fail, even if
         # every theorem it has is well kinded
         ("partial_output_header", GOOD.replace("/-! generated -/", "/-! PARTIAL OUTPUT (scalgen exit 3): 1 of 2 "
@@ -689,8 +689,8 @@ set_option maxRecDepth 100000 in
 /-- `PublicKey` (48 bytes, SSZ offset 0, Go offset 0): decode segment, directives 13–36. -/
 theorem a (k : Nat) (hk : Prysm.DepositMessage.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) :
     A := by
-  with_reducible exact Codec.bytesdec_seg_z 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
-theorem a_kind : ∀ (h : Host), type_of% (@a h) = @Codec.bytesDecSegZKind h 48 Prysm.DepositMessage.Code.unmarshalSSZ 13 26 48 56 24 0 8 16 := by
+  with_reducible exact Codec.bytesdec_seg_offset_zero 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
+theorem a_kind : ∀ (h : Host), type_of% (@a h) = @Codec.bytesDecSegOffsetZeroKind h 48 Prysm.DepositMessage.Code.unmarshalSSZ 13 26 48 56 24 0 8 16 := by
   intro h; with_reducible rfl
 
 theorem b (k : Nat) (hk : XyUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh XyUnmarshal k) :
@@ -742,7 +742,7 @@ end Prysm.Fixture
 
 
 def gen2_cases():
-    za = "= @Codec.bytesDecSegZKind h 48 Prysm.DepositMessage.Code.unmarshalSSZ 13 26 48 56 24 0 8 16 := by"
+    za = "= @Codec.bytesDecSegOffsetZeroKind h 48 Prysm.DepositMessage.Code.unmarshalSSZ 13 26 48 56 24 0 8 16 := by"
     ab = "= @Codec.bytesDecSegKind h 96 XyUnmarshal 47 61 48 56 24 24 32 40 48 := by"
     uc = "= @Codec.u64DecInlineSegKind h Prysm.DepositMessage.Code.unmarshalSSZ 83 56 80 48 := by"
     for x in (za, ab, uc):
@@ -762,7 +762,7 @@ def gen2_cases():
         ("g2_u64_three_params", GOOD2.replace(uc, uc.replace(" 80 48 :=", " 80 :=")), False, False),
         ("g2_u64_register_param", GOOD2.replace(uc, uc.replace(" h Prysm.DepositMessage.Code.unmarshalSSZ", " h Reg64.rcx Prysm.DepositMessage.Code.unmarshalSSZ")), False, False),
         ("g2_u64_other_const", GOOD2.replace(uc, uc.replace("Prysm.DepositMessage.Code.unmarshalSSZ", "Prysm.BlobIdentifier.Code.unmarshalSSZ")), False, False),
-        ("g2_add_as_z_kind", GOOD2.replace(ab, ab.replace("bytesDecSegKind", "bytesDecSegZKind")), False, False),
+        ("g2_add_as_z_kind", GOOD2.replace(ab, ab.replace("bytesDecSegKind", "bytesDecSegOffsetZeroKind")), False, False),
         ("g2_partial_output", GOOD2.replace("/-! Generated", "/-! PARTIAL OUTPUT (scalgen exit 3): 2 of 3 fields "
                                             "of `v1alpha1.DepositMessage` (--field-segments); NOT generated: Amount. -/\n/-! Generated"), False, False),
         ("g2_proof_not_rfl", GOOD2.replace(uc + "\n  intro h; with_reducible rfl", uc + "\n  intro h; rfl"), False, False),
@@ -829,7 +829,7 @@ FN_EP = '"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.Unma
 G3K = {
     "pw_Index_arg": "@Codec.callArgFirstKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ false 8 15",
     "pw_Index_call": f'@Codec.callDecSegKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {FN_VI} "L_pw_b9" 17 47',
-    "pw_Amount_seg": "@Codec.u64DecRRSegKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 8 16 54",
+    "pw_Amount_seg": "@Codec.u64DecScratchRegisterSegKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 8 16 54",
     "pw_WithdrawableEpoch_arg1": "@Codec.callArgLeaKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 96 16 112 (-16) 88 24 48",
     "pw_WithdrawableEpoch_arg2": "@Codec.callArgMovKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 56",
     "pw_WithdrawableEpoch_call": f'@Codec.callDecSegKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {FN_EP} "L_pw_159" 59 88',
@@ -837,8 +837,8 @@ G3K = {
     "bh_ProposerIndex_call": f'@Codec.callDecSegKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {FN_VI} "L_bh_154" 55 85',
     "dd_WithdrawalCredentials_seg": "@Codec.bytesDecSegKind h 32 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 47 61 48 56 24 32 40 48 48",
 }
-G3PROOF = {"pw_Amount_seg": "  have hX : Codec.U64RRReg Reg64.r8 := by decide\n  with_reducible exact Codec.u64dec_rr_seg Reg64.r8 hX _ _ (k + 54) hA\n",
-           "dd_WithdrawalCredentials_seg": "  with_reducible exact Codec.bytesdec_seg_p true 32 (Or.inl rfl) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl\n"}
+G3PROOF = {"pw_Amount_seg": "  have hX : Codec.U64ScratchRegister Reg64.r8 := by decide\n  with_reducible exact Codec.u64dec_scratch_register_seg Reg64.r8 hX _ _ (k + 54) hA\n",
+           "dd_WithdrawalCredentials_seg": "  with_reducible exact Codec.bytesdec_seg_optional_padding true 32 (Or.inl rfl) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl\n"}
 
 
 def g3_block(t, kind):
@@ -946,21 +946,21 @@ def g3_cases():
 
 # step controls: kind lines and proof lemma as `scalgen.py decoder --steps` writes them
 G4K = {
-    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s50": ("@Codec.stepLdbKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rbx 8 50 51", "kstep_ldb Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
-    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51": ("@Codec.stepStKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rax 16 51 52", "kstep_st Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
-    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s52": ("@Codec.stepAddKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdi (-16) 52 53", "kstep_add Reg64.rdi (-16) _ (k + 52) (k + 53) hq he hend"),
-    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53": ("@Codec.stepMovIKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rcx 8 53 55", "kstep_movi Reg64.rcx 8 _ (k + 53) (k + 55) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s50": ("@Codec.stepLoadBytesKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rbx 8 50 51", "step_load_bytes Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rax 16 51 52", "step_store Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s52": ("@Codec.stepAddKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdi (-16) 52 53", "step_add_immediate Reg64.rdi (-16) _ (k + 52) (k + 53) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53": ("@Codec.stepMoveImmediateKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rcx 8 53 55", "step_move_immediate Reg64.rcx 8 _ (k + 53) (k + 55) hq he hend"),
     "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call": (f'@Codec.callDecSegKindWindow h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {FN_VI} "L_pw_b9" 55 56 88',
-                            "calldec_seg_w _ _ _ (k + 55) (k + 56) (k + 88) hq he hjc hB hl"),
+                            "calldec_seg_window _ _ _ (k + 55) (k + 56) (k + 88) hq he hjc hB hl"),
     "pw_g4dec_Root_seg": ("@Codec.bytesDecSegKindWindow h 32 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rax 89 108 114 112 120 56 24 32 40 16",
                           "bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 89) (k + 102) (k + 102) (k + 108) (k + 114) hqA heA hqB heB hjl hl hjm hend"),
-    "pw_g4dec_s115": ("@Codec.stepJmpKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pw_200\" 115 130", 'kstep_jmp "L_pw_200" _ (k + 115) (k + 130) hq he hl'),
-    "pw_g4dec_s130": ("@Codec.stepLabelKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pw_200\" 130 131", 'kstep_label "L_pw_200" _ (k + 130) (k + 131) hq he hend'),
-    "pw_g4dec_s131": ("@Codec.stepStKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rax 24 131 132", "kstep_st Reg64.rsi Reg64.rax 24 _ (k + 131) (k + 132) hq he hend"),
-    "pw_g4dec_Sig_seg": ("@Codec.bytesDecSegZKindWindow h 96 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdx 132 150 156 112 120 56 48 56 64",
-                         "bytesdec_seg_z_window 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 132) (k + 145) (k + 145) (k + 150) (k + 156) hqA heA hqB heB hjl hl hjm hend"),
-    "pw_g4dec_s156": ("@Codec.stepLdvKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rsp 56 156 157", "kstep_ldv Reg64.rsi Reg64.rsp 56 _ (k + 156) (k + 157) hq he hend"),
-    "pw_g4dec_s157": ("@Codec.stepStKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rdx 48 157 158", "kstep_st Reg64.rsi Reg64.rdx 48 _ (k + 157) (k + 158) hq he hend"),
+    "pw_g4dec_s115": ("@Codec.stepJumpKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pw_200\" 115 130", 'step_jump "L_pw_200" _ (k + 115) (k + 130) hq he hl'),
+    "pw_g4dec_s130": ("@Codec.stepLabelKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pw_200\" 130 131", 'step_label "L_pw_200" _ (k + 130) (k + 131) hq he hend'),
+    "pw_g4dec_s131": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rax 24 131 132", "step_store Reg64.rsi Reg64.rax 24 _ (k + 131) (k + 132) hq he hend"),
+    "pw_g4dec_Sig_seg": ("@Codec.bytesDecSegOffsetZeroKindWindow h 96 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdx 132 150 156 112 120 56 48 56 64",
+                         "bytesdec_seg_offset_zero_window 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 132) (k + 145) (k + 145) (k + 150) (k + 156) hqA heA hqB heB hjl hl hjm hend"),
+    "pw_g4dec_s156": ("@Codec.stepLoadValueKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rsp 56 156 157", "step_load_value Reg64.rsi Reg64.rsp 56 _ (k + 156) (k + 157) hq he hend"),
+    "pw_g4dec_s157": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rdx 48 157 158", "step_store Reg64.rsi Reg64.rdx 48 _ (k + 157) (k + 158) hq he hend"),
 }
 G4F = [("Amount", ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51"]), ("Index", ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]),
        ("Root", ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]),
@@ -970,7 +970,7 @@ G4F = [("Amount", ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "
 def g4_block(t, kind, proof):
     return ("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
             f"/-- Directive `x`. -/\ntheorem {t} (k : Nat) (hk : Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ k) :\n"
-            f"    T := by\n  have hq := Codec.win hk 1 1\n  with_reducible exact {G4_LEMMAS[proof.split()[0]]}.{proof}\n"
+            f"    T := by\n  have hq := Codec.window_infix_at hk 1 1\n  with_reducible exact {G4_LEMMAS[proof.split()[0]]}.{proof}\n"
             f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h) = {kind} := by\n  intro h; with_reducible rfl\n\n")
 
 
@@ -1028,10 +1028,10 @@ def g4_cases():
         ("g4_seg_size_64", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace(" h 32 ", " h 64 ")), False, False),
         ("g4_seg_missing_src", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace(" 40 16", " 40")), False, False),
         ("g4_segz_with_src", kchg("pw_g4dec_Sig_seg", G4K["pw_g4dec_Sig_seg"][0] + " 0"), False, False),
-        ("g4_lemma_kind_mismatch", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "  with_reducible exact Codec.kstep_ldv Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"), False, False),
-        ("g4_lemma_only_in_string", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", '  have x := "Codec.kstep_ldb "\n  with_reducible exact foo\n'), False, False),
-        ("g4_lemma_only_in_comment", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "  -- Codec.kstep_ldb\n  with_reducible exact foo\n"), False, False),
-        ("g4_two_lemmas", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "  with_reducible exact Codec.kstep_ldb (Codec.kstep_st x)\n"), False, False),
+        ("g4_lemma_kind_mismatch", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "  with_reducible exact Codec.step_load_value Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"), False, False),
+        ("g4_lemma_only_in_string", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", '  have x := "Codec.step_load_bytes "\n  with_reducible exact foo\n'), False, False),
+        ("g4_lemma_only_in_comment", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "  -- Codec.step_load_bytes\n  with_reducible exact foo\n"), False, False),
+        ("g4_two_lemmas", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "  with_reducible exact Codec.step_load_bytes (Codec.step_store x)\n"), False, False),
         ("g4_fields_json_missing", GOOD4.replace("FIELDS-JSON: ", "FIELDS: "), False, False),
         ("g4_fields_json_two_lines", GOOD4.replace("FIELDS-JSON: ", "FIELDS-JSON: []\nFIELDS-JSON: "), False, False),
         ("g4_theorem_not_listed", g4_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s50"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'), False, False),
@@ -1079,7 +1079,7 @@ def s4_exit_cases():
 #  12b. the whole-accept theorems are exactly, in this order: P_head, P_f1 … P_fn, P_epi, P_accept, [P_accept_statement |
 #       P_accept_same], P_reject (P = the WHOLE-ACCEPT-JSON prefix, n = the IR field count), each but the identity followed by
 #       its `_kind` theorem `theorem T_kind : ∀ (h : Host), type_of% (@T h)` / `    = @Codec.K h C …` with
-#       K = decHeadKindN / decFieldKindN / decEpiKindN / decAcceptKindN / decRejectKindN and the proof line
+#       K = decHeadKindAnyFrame / decFieldKindAnyFrame / decEpilogueKindAnyFrame / decAcceptKindAnyFrame / decRejectKindAnyFrame and the proof line
 #       `  intro h; rfl` (`  intro h; with_reducible rfl` for the reject kind); every `hk` binder names C;
 #  12c. the kind parameters are RECOMPUTED here, independently of the generator, from the `.S` file and the IR JSON
 #       named (with sha256) in the file header: the field list (`.bytes n` / `.u64`, IR order, IR SSZ / Go offsets
@@ -1265,20 +1265,20 @@ def g5_expect(dirs, fields, sz):
     area = [0] if has_rt and not has_call else ([0, 8, 16] if has_rt else [8])
     stack += [("at", -frame + a) for a in area] + [("at", -frame + o) for o in sorted(written)]
     stack += [("at", -(frame + 8)), ("lo",) if has_rt else ("at", -(frame + 16))]
-    sl = lambda c, v: (".lo " + v) if c[0] == "lo" else f".at ({'.up' if c[1] > 0 else '.dn'} {abs(c[1])}) {v}"
-    pre = [sl(c, f"(.orig {k})") for k, c in enumerate(stack)]
+    sl = lambda c, v: (".low " + v) if c[0] == "lo" else f".at ({'.above' if c[1] > 0 else '.below'} {abs(c[1])}) {v}"
+    pre = [sl(c, f"(.original {k})") for k, c in enumerate(stack)]
     lens = [f"({k}, {24 if (has_rt and not has_call and c == ('at', -frame)) else 8})"
             for k, c in enumerate(stack) if c != ("lo",)]
     rt = (f"some ⟨{'true' if has_call else 'false'}, {8 if has_call else 0}, {len(stack) - 1}, "
           f"{frame + 8 + (8 if has_call else 0)}⟩") if has_rt else "none"
     post = [sl(("at", -8), "(.reg .rbp)")] + [sl(("at", o), f"(.reg .{spills[o]})") for o in sorted(spills)]
-    post.append(sl(("at", -frame if has_rt else -frame + 8), "(.ex 0)"))
+    post.append(sl(("at", -frame if has_rt else -frame + 8), "(.existential 0)"))
     for o in sorted(written):
         v = written[o]
         post.append(sl(("at", -frame + o), ".zero" if v == ("zero",) else f"(.ptr {v[1]})"))
-    post += [sl(("at", -(frame + 8)), f"(.ret {last_call + 1})"), sl(stack[-1], "(.ex 1)")]
-    exs = "[.n 24, .lo]" if has_rt else "[.n 8, .n 8]"
-    L = (f"(Codec.DecLayout.mk [{', '.join(callees)}] {len(stack)} [{', '.join(lens)}] [{', '.join(pre)}] ({rt}) "
+    post += [sl(("at", -(frame + 8)), f"(.ret {last_call + 1})"), sl(stack[-1], "(.existential 1)")]
+    exs = "[.fixed 24, .low]" if has_rt else "[.fixed 8, .fixed 8]"
+    L = (f"(Codec.DecoderFrameLayout.mk [{', '.join(callees)}] {len(stack)} [{', '.join(lens)}] [{', '.join(pre)}] ({rt}) "
          f"{frame + 8 if has_call else 0} {'true' if st else 'false'} {exs} [{', '.join(post)}] {frame})")
     return dict(L=L, fields="[" + ", ".join(f[1] for f in fields) + "]", pcs=pcs, sz=sz)
 
@@ -1362,8 +1362,8 @@ def check_gen5(text, gnames=frozenset(), kr=None, expect=None):
             errs.append(f"whole-accept line {i}: top-level form not allowed: {l.strip()[:80]}")
     thms = [(i, m.group(1)) for i, l in enumerate(lines) if (m := THM.match(l))]
     names = [t for _, t in thms]
-    kinds = [(f"{P}_head", "decHeadKindN", 1), *[(f"{P}_f{k + 1}", "decFieldKindN", 2) for k in range(n)],
-             (f"{P}_epi", "decEpiKindN", 1), (f"{P}_accept", "decAcceptKindN", 0), (f"{P}_reject", "decRejectKindN", None)]
+    kinds = [(f"{P}_head", "decHeadKindAnyFrame", 1), *[(f"{P}_f{k + 1}", "decFieldKindAnyFrame", 2) for k in range(n)],
+             (f"{P}_epi", "decEpilogueKindAnyFrame", 1), (f"{P}_accept", "decAcceptKindAnyFrame", 0), (f"{P}_reject", "decRejectKindAnyFrame", None)]
     ident = [x for x in names if x in (f"{P}_accept_statement", f"{P}_accept_same")]
     want = []
     for t, _, _ in kinds:
@@ -1412,8 +1412,8 @@ def check_gen5(text, gnames=frozenset(), kr=None, expect=None):
             ds.append((int(dm.group(1)), int(dm.group(2))) if dm else None)
         if rest:
             errs.append(f"rule 12b: {t}_kind: extra parameters `{rest[:60]}`")
-        k = int(t.rsplit("_f", 1)[1]) if kn == "decFieldKindN" else None
-        exp = {"decHeadKindN": [0], "decFieldKindN": [k - 1, k] if k else [], "decEpiKindN": [n], "decAcceptKindN": []}[kn]
+        k = int(t.rsplit("_f", 1)[1]) if kn == "decFieldKindAnyFrame" else None
+        exp = {"decHeadKindAnyFrame": [0], "decFieldKindAnyFrame": [k - 1, k] if k else [], "decEpilogueKindAnyFrame": [n], "decAcceptKindAnyFrame": []}[kn]
         for dd, b in zip(ds, exp):
             if dd != (expect["pcs"][b], b):
                 errs.append(f"rule 12c: {t}_kind: boundary state (pc, done) = {dd}, recomputed {(expect['pcs'][b], b)}")
@@ -1446,33 +1446,33 @@ def check_gen5(text, gnames=frozenset(), kr=None, expect=None):
 # ---- rule 12 selftest controls
 G5_VE = ("prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
          "v1alpha1.VoluntaryExit")
-# the layouts of the whole-accept lemmas (`Codec/Kind/DecodeAcceptAnyFrameInstances.lean`: layCal, layMix40, layRt, layMix60), transcribed by hand as
+# the layouts of the whole-accept lemmas (`Codec/Kind/DecodeAcceptAnyFrameInstances.lean`: layoutCalleeCalls, layoutMixedFrame40, layoutRuntimeCalls, layoutMixedFrame60), transcribed by hand as
 # constructor text; the recomputation from the real `.S` / IR must give exactly these
 G5_HAND = {
-    "VoluntaryExit": ("h6", "(Codec.DecLayout.mk [Prysm.Epoch.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 7 [(0, 8), (1, 8), (2, 8), "
-                      "(3, 8), (4, 8), (5, 8), (6, 8)] [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), "
-                      ".at (.up 32) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 88) (.orig 5), .at (.dn 96) (.orig 6)] (none) 88 "
-                      "true [.n 8, .n 8] [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) "
-                      "(.reg .rdi), .at (.dn 72) (.ex 0), .at (.dn 88) (.ret 56), .at (.dn 96) (.ex 1)] 80)"),
-    "PendingDeposit": ("h6", "(Codec.DecLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10 [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), "
-                       "(6, 8), (7, 8), (8, 8)] [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) "
-                       "(.orig 3), .at (.dn 72) (.orig 4), .at (.dn 64) (.orig 5), .at (.dn 56) (.orig 6), .at (.dn 32) (.orig 7), "
-                       ".at (.dn 80) (.orig 8), .lo (.orig 9)] (some ⟨true, 8, 9, 88⟩) 80 true [.n 24, .lo] [.at (.dn 8) (.reg "
-                       ".rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 72) (.ex 0), "
-                       ".at (.dn 32) (.ptr 2), .at (.dn 80) (.ret 131), .lo (.ex 1)] 72)"),
-    "PowBlock": ("h6", "(Codec.DecLayout.mk [] 7 [(0, 8), (1, 8), (2, 8), (3, 24), (4, 8), (5, 8)] [.at (.dn 8) (.orig 0), "
-                 ".at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.dn 40) (.orig 3), .at (.dn 16) (.orig 4), .at (.dn 48) "
-                 "(.orig 5), .lo (.orig 6)] (some ⟨false, 0, 6, 48⟩) 0 false [.n 24, .lo] [.at (.dn 8) (.reg .rbp), .at (.up 8) "
-                 "(.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.ex 0), .at (.dn 16) (.ptr 2), .at (.dn 48) (.ret 104), "
-                 ".lo (.ex 1)] 40)"),
-    "SyncCommitteeMessage": ("h5", "(Codec.DecLayout.mk [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 12 [(0, 8), (1, 8), "
-                             "(2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8), (9, 8), (10, 8)] [.at (.dn 8) (.orig 0), .at "
-                             "(.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 104) (.orig 4), .at (.dn "
-                             "96) (.orig 5), .at (.dn 88) (.orig 6), .at (.dn 64) (.orig 7), .at (.dn 56) (.orig 8), .at (.dn 48) "
-                             "(.orig 9), .at (.dn 112) (.orig 10), .lo (.orig 11)] (some ⟨true, 8, 11, 120⟩) 112 true [.n 24, .lo] "
-                             "[.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), "
-                             ".at (.dn 104) (.ex 0), .at (.dn 64) .zero, .at (.dn 56) .zero, .at (.dn 48) (.ptr 1), .at (.dn 112) "
-                             "(.ret 141), .lo (.ex 1)] 104)"),
+    "VoluntaryExit": ("h6", "(Codec.DecoderFrameLayout.mk [Prysm.Epoch.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 7 [(0, 8), (1, 8), (2, 8), "
+                      "(3, 8), (4, 8), (5, 8), (6, 8)] [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), "
+                      ".at (.above 32) (.original 3), .at (.below 72) (.original 4), .at (.below 88) (.original 5), .at (.below 96) (.original 6)] (none) 88 "
+                      "true [.fixed 8, .fixed 8] [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) "
+                      "(.reg .rdi), .at (.below 72) (.existential 0), .at (.below 88) (.ret 56), .at (.below 96) (.existential 1)] 80)"),
+    "PendingDeposit": ("h6", "(Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10 [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), "
+                       "(6, 8), (7, 8), (8, 8)] [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) "
+                       "(.original 3), .at (.below 72) (.original 4), .at (.below 64) (.original 5), .at (.below 56) (.original 6), .at (.below 32) (.original 7), "
+                       ".at (.below 80) (.original 8), .low (.original 9)] (some ⟨true, 8, 9, 88⟩) 80 true [.fixed 24, .low] [.at (.below 8) (.reg "
+                       ".rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), "
+                       ".at (.below 32) (.ptr 2), .at (.below 80) (.ret 131), .low (.existential 1)] 72)"),
+    "PowBlock": ("h6", "(Codec.DecoderFrameLayout.mk [] 7 [(0, 8), (1, 8), (2, 8), (3, 24), (4, 8), (5, 8)] [.at (.below 8) (.original 0), "
+                 ".at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.below 40) (.original 3), .at (.below 16) (.original 4), .at (.below 48) "
+                 "(.original 5), .low (.original 6)] (some ⟨false, 0, 6, 48⟩) 0 false [.fixed 24, .low] [.at (.below 8) (.reg .rbp), .at (.above 8) "
+                 "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.existential 0), .at (.below 16) (.ptr 2), .at (.below 48) (.ret 104), "
+                 ".low (.existential 1)] 40)"),
+    "SyncCommitteeMessage": ("h5", "(Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 12 [(0, 8), (1, 8), "
+                             "(2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8), (9, 8), (10, 8)] [.at (.below 8) (.original 0), .at "
+                             "(.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), .at (.below 104) (.original 4), .at (.below "
+                             "96) (.original 5), .at (.below 88) (.original 6), .at (.below 64) (.original 7), .at (.below 56) (.original 8), .at (.below 48) "
+                             "(.original 9), .at (.below 112) (.original 10), .low (.original 11)] (some ⟨true, 8, 11, 120⟩) 112 true [.fixed 24, .low] "
+                             "[.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), "
+                             ".at (.below 104) (.existential 0), .at (.below 64) .zero, .at (.below 56) .zero, .at (.below 48) (.ptr 1), .at (.below 112) "
+                             "(.ret 141), .low (.existential 1)] 104)"),
 }
 
 
@@ -1504,16 +1504,16 @@ def g5_good_text():
            f", type `v1alpha1.VoluntaryExit`); step coverage. -/\n\nnamespace Prysm.Fixture\nend Prysm.Fixture\n\n"
            f"{G5_MARK}): text.\nWHOLE-ACCEPT-JSON: {{\"accept\": \"{P}_accept\"}}\n-/\n\nopen Codec\n\n"
            f"namespace Prysm.Fixture\n\n")
-    out += thm(f"{P}_head", "  exact x") + kd(f"{P}_head", "decHeadKindN", [0])
+    out += thm(f"{P}_head", "  exact x") + kd(f"{P}_head", "decHeadKindAnyFrame", [0])
     for i in range(n):
-        out += thm(f"{P}_f{i + 1}", "  exact x") + kd(f"{P}_f{i + 1}", "decFieldKindN", [i, i + 1])
-    out += thm(f"{P}_epi", "  exact x") + kd(f"{P}_epi", "decEpiKindN", [n])
+        out += thm(f"{P}_f{i + 1}", "  exact x") + kd(f"{P}_f{i + 1}", "decFieldKindAnyFrame", [i, i + 1])
+    out += thm(f"{P}_epi", "  exact x") + kd(f"{P}_epi", "decEpilogueKindAnyFrame", [n])
     chain = (f"  refine eventually_trans _ _ _ _ ({P}_head a) ?_\n"
              + "".join(f"  refine eventually_trans _ _ _ _ ({P}_f{i + 1} a) ?_\n" for i in range(n)) + f"  exact {P}_epi a")
-    out += thm(f"{P}_accept", chain) + kd(f"{P}_accept", "decAcceptKindN", [])
+    out += thm(f"{P}_accept", chain) + kd(f"{P}_accept", "decAcceptKindAnyFrame", [])
     out += (f"set_option maxRecDepth 100000 in\ntheorem {P}_reject : ∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : "
             f"LabelsFresh {C} k),\n    T := by\n  exact y\ntheorem {P}_reject_kind : ∀ (h : Host), type_of% (@{P}_reject h)\n"
-            f"    = @Codec.decRejectKindN h {C} {E['sz']} := by\n  intro h; with_reducible rfl\n\n")
+            f"    = @Codec.decRejectKindAnyFrame h {C} {E['sz']} := by\n  intro h; with_reducible rfl\n\n")
     return out + "end Prysm.Fixture\n"
 
 
@@ -1540,22 +1540,22 @@ def g5_cases():
          False),
         ("g5_extra_theorem", G.replace("end Prysm.Fixture\n", "theorem extra : True := trivial\n\nend Prysm.Fixture\n")[::-1].replace(
             "end Prysm.Fixture\n"[::-1], "", 0)[::-1], False),
-        ("g5_kind_name_swapped", G.replace("= @Codec.decEpiKindN h", "= @Codec.decFieldKindN h", 1), False),
+        ("g5_kind_name_swapped", G.replace("= @Codec.decEpilogueKindAnyFrame h", "= @Codec.decFieldKindAnyFrame h", 1), False),
         ("g5_kind_proof_not_rfl", G.replace("intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem Decode.generated_f1 ",
                                             "intro h; simp\n\nset_option maxRecDepth 100000 in\ntheorem Decode.generated_f1 ", 1), False),
-        ("g5_L_frame_wrong", G.replace("(.ex 1)] 80)", "(.ex 1)] 88)"), False),
+        ("g5_L_frame_wrong", G.replace("(.existential 1)] 80)", "(.existential 1)] 88)"), False),
         ("g5_L_gd_wrong", G.replace("(none) 88 true", "(none) 80 true"), False),
         ("g5_L_callee_order", G.replace("[Prysm.Epoch.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ]", "[Prysm.ValidatorIndex.Code.unmarshalSSZ, "
                                         "Prysm.Epoch.Code.unmarshalSSZ]"), False),
         ("g5_L_post_ret", G.replace("(.ret 56)", "(.ret 55)"), False),
-        ("g5_L_slot_dropped", G.replace(".at (.up 32) (.orig 3), ", ""), False),
+        ("g5_L_slot_dropped", G.replace(".at (.above 32) (.original 3), ", ""), False),
         ("g5_fields_kind", G.replace("[.u64, .u64]", "[.u64, .bytes 32]"), False),
         ("g5_fields_extra", G.replace("[.u64, .u64]", "[.u64, .u64, .u64]"), False),
         ("g5_pc_wrong", G.replace("⟨48, 1, ", "⟨47, 1, "), False),
         ("g5_done_wrong", G.replace("⟨48, 1, ", "⟨48, 2, "), False),
-        ("g5_reject_size", G.replace("decRejectKindN h Prysm.VoluntaryExit.Code.unmarshalSSZ 16 ", "decRejectKindN h Prysm.VoluntaryExit.Code.unmarshalSSZ 24 "), False),
+        ("g5_reject_size", G.replace("decRejectKindAnyFrame h Prysm.VoluntaryExit.Code.unmarshalSSZ 16 ", "decRejectKindAnyFrame h Prysm.VoluntaryExit.Code.unmarshalSSZ 24 "), False),
         ("g5_reject_proof", G.replace("intro h; with_reducible rfl", "intro h; rfl"), False),
-        ("g5_const_other", G.replace("decAcceptKindN h Prysm.VoluntaryExit.Code.unmarshalSSZ", "decAcceptKindN h Prysm.PendingConsolidation.Code.unmarshalSSZ"), False),
+        ("g5_const_other", G.replace("decAcceptKindAnyFrame h Prysm.VoluntaryExit.Code.unmarshalSSZ", "decAcceptKindAnyFrame h Prysm.PendingConsolidation.Code.unmarshalSSZ"), False),
         ("g5_hk_other", G.replace(f"theorem {P}_epi : ∀ (k : Nat) (hk : Prysm.VoluntaryExit.Code.unmarshalSSZ", f"theorem {P}_epi : ∀ (k : Nat) (hk : Prysm.PendingConsolidation.Code.unmarshalSSZ"),
          False),
         ("g5_chain_skips_field", G.replace(f"  refine eventually_trans _ _ _ _ ({P}_f1 a) ?_\n", ""), False),
@@ -1622,10 +1622,10 @@ def g5_selftest():
 # A fast-path file (header `FAST-PATH-JSON:`, or any of the four encoder kinds) is checked by rule 13 ONLY (it has a `def` of its
 # layout, which rule 2 forbids for the older files):
 #  13a. (Removed: a git-blob pin of the kind and lemma modules of the encoder lemmas.)
-#  13b. Structure: top-level lines as rule 2 plus exactly one `def <P>_layout : EncLayout where` (none when a hand
+#  13b. Structure: top-level lines as rule 2 plus exactly one `def <P>_layout : EncoderFrameLayout where` (none when a hand
 #       layout of GEN6_HAND is named); no banned token (rule 3, comments and strings removed); the theorems are exactly
-#       P_head, P_f0 … P_f(n-1), P_epi, P_fast, each followed by its `_kind` (encHeadKindN / encFieldKindN /
-#       encEpiKindN / encFastKindN), and optionally P_statement; every theorem's `hk` binder names the same code constant C;
+#       P_head, P_f0 … P_f(n-1), P_epi, P_fast, each followed by its `_kind` (encHeadKindAnyFrame / encFieldKindAnyFrame /
+#       encEpilogueKindAnyFrame / encFastPathKindAnyFrame), and optionally P_statement; every theorem's `hk` binder names the same code constant C;
 #       `set_option` only `maxHeartbeats 4000000` / `maxRecDepth 100000`; every kind proof is `  intro h; rfl`.
 #  13c. RECOMPUTATION (an own interpreter, it does not import the generator): from the `.S` and the IR named in
 #       FAST-PATH-JSON (sha256 checked) this program recomputes the fields list, the layout (st, frame, gd, rt, nstk, lens,
@@ -1633,7 +1633,7 @@ def g5_selftest():
 #       kind line must equal, as whole normalised text, the line rendered from the recomputation. A hand layout name
 #       (GEN6_HAND, in `Prysm/<Type>/EncodeFastPathKindInstances.lean`) is accepted only if its def equals the recomputation in its own
 #       chunk order. C is bound to the `.S`: an imported code module of the file must define
-#       `def C : Program := include_x64_rt "../<S of FAST-PATH-JSON>"`.
+#       `def C : Program := include_x64_code "../<S of FAST-PATH-JSON>"`.
 #  13d. P_fast's proof uses P_head, every P_fi and P_epi exactly once.
 #  13e. P_statement, if present, is `theorem P_statement : type_of% (@X ‹Host›) :=` + `  [V ]P_fast` with X not generated and V
 #       empty or in GEN6_VIA, or `theorem P_statement : X :=` + `  P_fast` (hand Prop).
@@ -1643,12 +1643,12 @@ def g5_selftest():
 import hashlib as _g6hash
 import json as _g6json
 
-GEN6_KINDS = ("encHeadKindN", "encFieldKindN", "encEpiKindN", "encFastKindN")
+GEN6_KINDS = ("encHeadKindAnyFrame", "encFieldKindAnyFrame", "encEpilogueKindAnyFrame", "encFastPathKindAnyFrame")
 GEN6_HAND = ("Prysm.BeaconBlockHeader.encodeLayout", "Prysm.Eth1Data.encodeLayout", "Prysm.Checkpoint.encodeLayout")
 GEN6_VIA = ("Prysm.Checkpoint.Encode.fast_path_of_kind",)
 G6_R64 = "rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15".split()
 G6_R32 = dict(eax="rax", ebx="rbx", ecx="rcx", edx="rdx", esi="rsi", edi="rdi")
-G6_LAYF = ("st", "frame", "gd", "rt", "nstk", "lens", "pre", "exs", "post")
+G6_LAYF = ("stateWord", "frame", "guardAddend", "callsMemmove", "stackChunkCount", "stackChunkLengths", "pre", "existentials", "post")
 
 
 class G6Mismatch(Exception):
@@ -1728,7 +1728,7 @@ def g6_usedef(d):
 
 
 def g6_expect(dirs, fs, goffs, size, hand_pre=None):
-    """Own interpreter of the fast path. Returns dict(L={field: text}, fields=text, states=[EncSt text], pcs=[...])."""
+    """Own interpreter of the fast path. Returns dict(L={field: text}, fields=text, states=[EncodeBoundaryState text], pcs=[...])."""
     lab = {d[:-1]: i for i, d in enumerate(dirs) if d.endswith(":")}
     st = bool(goffs) and goffs[0] == 8
     soffs = [sum(n for _, n in fs[:i]) for i in range(len(fs))]
@@ -1804,7 +1804,7 @@ def g6_expect(dirs, fs, goffs, size, hand_pre=None):
         for r in live(p):
             v = R.get(r)
             if v in ("rcv", "ptr", "cap"):
-                regs.append((r, "." + v))
+                regs.append((r, "." + {"rcv": "receiver"}.get(v, v)))
             elif isinstance(v, tuple) and v[0] == "len":
                 regs.append((r, f".len {v[1]}"))
             else:
@@ -1999,15 +1999,15 @@ def g6_expect(dirs, fs, goffs, size, hand_pre=None):
 
     def vk(o, v, num):
         if v == "orig":
-            return f".orig {bindex[o]}"
+            return f".original {bindex[o]}"
         if v == "rbp":
             return ".reg .rbp"
         if v[0] == "e":
             return f".reg .{v[1]}"
         if v[0] in ("len", "fld", "ret"):
-            return f".{v[0]} {v[1]}"
+            return f".{ {'fld': 'field'}.get(v[0], v[0])} {v[1]}"
         if v[0] == "z":
-            return f".ex {num[(v[1], o)]}"
+            return f".existential {num[(v[1], o)]}"
         raise G6Mismatch(f"slot value {v}")
 
     def slots(Ms, scr):
@@ -2015,22 +2015,22 @@ def g6_expect(dirs, fs, goffs, size, hand_pre=None):
         out = []
         for o in mem:
             if o not in Ms:
-                out.append(f".at (.{'up' if o > 0 else 'dn'} {abs(o)}) (.orig {bindex[o]})")
+                out.append(f".at (.{'above' if o > 0 else 'below'} {abs(o)}) (.original {bindex[o]})")
                 continue
             parts = [o] if Ms[o][0] == firstsz[o] else [o, o + 8]
             for p in parts:
-                out.append(f".at (.{'up' if p > 0 else 'dn'} {abs(p)}) ({vk(p, Ms[p][1], num)})")
+                out.append(f".at (.{'above' if p > 0 else 'below'} {abs(p)}) ({vk(p, Ms[p][1], num)})")
         if rt:
-            out.append(".lo .scr" if scr == "scr" else f".lo (.ex {num[(scr[1], 10 ** 9)]})")
-        return "[" + ", ".join(out) + "]", "[" + ", ".join(".lo" if e == "S" else f".n {e}" for e in ex) + "]"
+            out.append(".low .scratch" if scr == "scr" else f".low (.existential {num[(scr[1], 10 ** 9)]})")
+        return "[" + ", ".join(out) + "]", "[" + ", ".join(".low" if e == "S" else f".fixed {e}" for e in ex) + "]"
 
     def norm_pre():
-        out = [f".at (.{'up' if o > 0 else 'dn'} {abs(o)}) (.orig {bindex[o]})" for o in mem]
-        return "[" + ", ".join(out + ([".lo .scr"] if rt else [])) + "]"
+        out = [f".at (.{'above' if o > 0 else 'below'} {abs(o)}) (.original {bindex[o]})" for o in mem]
+        return "[" + ", ".join(out + ([".low .scratch"] if rt else [])) + "]"
     post, exs = slots(M, scratch[0])
-    L = dict(st=str(st).lower(), frame=str(F), gd=str(gd), rt=str(rt).lower(), nstk=str(len(mem)),
-             lens="[" + ", ".join(f"({i}, {firstsz[o]})" for i, o in sorted((bindex[o], o) for o in mem)) + "]",
-             pre=norm_pre(), exs=exs, post=post)
+    L = dict(stateWord=str(st).lower(), frame=str(F), guardAddend=str(gd), callsMemmove=str(rt).lower(), stackChunkCount=str(len(mem)),
+             stackChunkLengths="[" + ", ".join(f"({i}, {firstsz[o]})" for i, o in sorted((bindex[o], o) for o in mem)) + "]",
+             pre=norm_pre(), existentials=exs, post=post)
     sts = []
     for p, dn, regs, Ms, scr in states:
         sl, ex = slots(Ms, scr)
@@ -2041,12 +2041,12 @@ def g6_expect(dirs, fs, goffs, size, hand_pre=None):
 
 
 def g6_layout_def(text, short, full=None):
-    """{field: normalised value} of `def <short> : EncLayout where` in a Lean text, or None. With `full`, a declaring line
+    """{field: normalised value} of `def <short> : EncoderFrameLayout where` in a Lean text, or None. With `full`, a declaring line
     `def _root_.<full>` (a layout of another type than the namespace block of the module) comes first, then the
     name relative to the type namespace `Prysm.<T>`."""
     m = None
     for d in ([f"_root_.{full}", full.split(".", 2)[2]] if full and full.count(".") >= 2 else []) + [short]:
-        m = m or re.search(rf"(?m)^def {re.escape(d)} : EncLayout where\n((?:  .*\n?)+)", text)
+        m = m or re.search(rf"(?m)^def {re.escape(d)} : EncoderFrameLayout where\n((?:  .*\n?)+)", text)
     if not m:
         return None
     flds, cur = {}, None
@@ -2093,11 +2093,11 @@ def check_gen6(text, gnames=frozenset(), kr=None):
         if re.match(r"^def ", l):
             ndef += 1
             in_def = True
-            if l != f"def {P}_layout : EncLayout where" or hand:
+            if l != f"def {P}_layout : EncoderFrameLayout where" or hand:
                 errs.append(f"rule 13b: top-level `{l[:60]}`")
             continue
         if in_def and l.startswith("  "):
-            if not re.match(r"  (st|frame|gd|rt|nstk|lens|pre|exs|post) := |    \S", l):
+            if not re.match(r"  (stateWord|frame|guardAddend|callsMemmove|stackChunkCount|stackChunkLengths|pre|existentials|post) := |    \S", l):
                 errs.append(f"rule 13b: layout line `{l[:60]}`")
             continue
         in_def = False
@@ -2126,8 +2126,8 @@ def check_gen6(text, gnames=frozenset(), kr=None):
             handdef = g6_layout_def(ht, LAY.split(".")[-1], LAY)
             if handdef is None:
                 raise G6Mismatch(f"hand layout {LAY} not in {hsrc}")
-            hand_pre = [(int(k) * (1 if d == "up" else -1), int(i)) for d, k, i in
-                        re.findall(r"\.at \(\.(up|dn) (\d+)\) \(\.orig (\d+)\)", handdef["pre"])]
+            hand_pre = [(int(k) * (1 if d == "above" else -1), int(i)) for d, k, i in
+                        re.findall(r"\.at \(\.(above|below) (\d+)\) \(\.original (\d+)\)", handdef["pre"])]
         dirs = [l.strip() for l in (kr / S).read_text().split("\n") if l.strip()]
         X = g6_expect(dirs, fs, goffs, size, hand_pre)
     except Exception as e:
@@ -2156,11 +2156,11 @@ def check_gen6(text, gnames=frozenset(), kr=None):
     if len(S0) != n + 1:
         errs.append(f"rule 13c: {len(S0)} boundary states for {n} fields")
         return errs, info
-    exp = {f"{P}_head": ("encHeadKindN", " " + S0[0])}
+    exp = {f"{P}_head": ("encHeadKindAnyFrame", " " + S0[0])}
     for i in range(n):
-        exp[f"{P}_f{i}"] = ("encFieldKindN", " " + S0[i] + " " + S0[i + 1])
-    exp[f"{P}_epi"] = ("encEpiKindN", " " + S0[n])
-    exp[f"{P}_fast"] = ("encFastKindN", "")
+        exp[f"{P}_f{i}"] = ("encFieldKindAnyFrame", " " + S0[i] + " " + S0[i + 1])
+    exp[f"{P}_epi"] = ("encEpilogueKindAnyFrame", " " + S0[n])
+    exp[f"{P}_fast"] = ("encFastPathKindAnyFrame", "")
     for t, (kind, sts) in exp.items():
         k = chunk[f"{t}_kind"]
         hdr, sep, rest = k.partition(":= by\n")
@@ -2180,7 +2180,7 @@ def check_gen6(text, gnames=frozenset(), kr=None):
     for imp in re.findall(r"(?m)^import (\S+)$", text):
         f = kr / "lean" / (imp.replace(".", "/") + ".lean")
         # the code module of several types declares the constants of the other types root-qualified
-        if f.exists() and any(f'def {d} : Program := include_x64_rt "../{S}"' in f.read_text()
+        if f.exists() and any(f'def {d} : Program := include_x64_code "../{S}"' in f.read_text()
                               for d in (C, f"Code.{C}", f"_root_.Prysm.{J['type']}.Code.{C}")):
             bound = True
     if not bound:
@@ -2231,22 +2231,22 @@ def g6_cases(T):
         ("g6_good_vb", V, True), ("g6_good_cp_hand_via", Cp, True), ("g6_good_hs_frametest", H, True),
         ("g6_good_bh_hand", B, True),
         ("g6_layout_frame", r(V, "  frame := 104\n", "  frame := 112\n"), False),
-        ("g6_layout_gd", r(V, "  gd := 0\n", "  gd := 8\n"), False),
-        ("g6_layout_pre_order", r(V, ".at (.dn 40) (.orig 2), .at (.dn 24) (.orig 3)]\n  exs",
-                                  ".at (.dn 24) (.orig 3), .at (.dn 40) (.orig 2)]\n  exs"), False),
-        ("g6_layout_exs", r(V, "  exs := [.n 8, .n 16]\n", "  exs := [.n 16, .n 8]\n"), False),
-        ("g6_layout_post_fld", r(V, "(.fld 0), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1)]\n\n",
-                                 "(.fld 1), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1)]\n\n"), False),
+        ("g6_layout_gd", r(V, "  guardAddend := 0\n", "  guardAddend := 8\n"), False),
+        ("g6_layout_pre_order", r(V, ".at (.below 40) (.original 2), .at (.below 24) (.original 3)]\n  existentials",
+                                  ".at (.below 24) (.original 3), .at (.below 40) (.original 2)]\n  existentials"), False),
+        ("g6_layout_exs", r(V, "  existentials := [.fixed 8, .fixed 16]\n", "  existentials := [.fixed 16, .fixed 8]\n"), False),
+        ("g6_layout_post_fld", r(V, "(.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1)]\n\n",
+                                 "(.field 1), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1)]\n\n"), False),
         ("g6_layout_lens", r(V, "(2, 16), (3, 16)]", "(2, 8), (3, 16)]"), False),
-        ("g6_fields_param", r(V, "Encode.generated_f0 h)\n    = @Codec.encFieldKindN h marshalSSZTo Prysm.ValidatorBalance.Encode.generated_layout [.u64, .u64]",
-                              "Encode.generated_f0 h)\n    = @Codec.encFieldKindN h marshalSSZTo Prysm.ValidatorBalance.Encode.generated_layout [.u64, .bytes 32]"),
+        ("g6_fields_param", r(V, "Encode.generated_f0 h)\n    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.generated_layout [.u64, .u64]",
+                              "Encode.generated_f0 h)\n    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.generated_layout [.u64, .bytes 32]"),
          False),
         ("g6_boundary_pc", r(V, "[.u64, .u64]\n    ⟨8, 0,", "[.u64, .u64]\n    ⟨9, 0,"), False),
         ("g6_boundary_done", r(V, "[.u64, .u64]\n    ⟨8, 0,", "[.u64, .u64]\n    ⟨8, 1,"), False),
-        ("g6_boundary_reg_dropped", r(V, "[.u64, .u64]\n    ⟨8, 0, [(.rax, .rcv), ", "[.u64, .u64]\n    ⟨8, 0, ["), False),
-        ("g6_kind_name_swapped", r(V, "= @Codec.encEpiKindN h", "= @Codec.encHeadKindN h"), False),
+        ("g6_boundary_reg_dropped", r(V, "[.u64, .u64]\n    ⟨8, 0, [(.rax, .receiver), ", "[.u64, .u64]\n    ⟨8, 0, ["), False),
+        ("g6_kind_name_swapped", r(V, "= @Codec.encEpilogueKindAnyFrame h", "= @Codec.encHeadKindAnyFrame h"), False),
         ("g6_kind_line_missing", r(V, "theorem Encode.generated_f1_kind :", "theorem Encode.generated_f1_kinx :"), False),
-        ("g6_kind_const", r(V, "= @Codec.encFastKindN h marshalSSZTo", "= @Codec.encFastKindN h Prysm.SyncAggregatorSelectionData.Code.marshalSSZTo"), False),
+        ("g6_kind_const", r(V, "= @Codec.encFastPathKindAnyFrame h marshalSSZTo", "= @Codec.encFastPathKindAnyFrame h Prysm.SyncAggregatorSelectionData.Code.marshalSSZTo"), False),
         ("g6_kind_proof", r(V, "  intro h; rfl\n", "  intro h; exact rfl\n"), False),
         ("g6_hk_const", r(V, "theorem Encode.generated_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt",
                           "theorem Encode.generated_f1 : ∀ (k : Nat) (hk : Prysm.SyncAggregatorSelectionData.Code.marshalSSZTo.IsInfixAt"), False),
@@ -2263,11 +2263,11 @@ def g6_cases(T):
         ("g6_stmt_generated", r(Cp, "type_of% (@Prysm.Checkpoint.Encode.fast_path ‹Host›)",
                                 "type_of% (@Prysm.Checkpoint.Encode.generated_fast ‹Host›)"), False),
         ("g6_stmt_via_unknown", r(Cp, "  Prysm.Checkpoint.Encode.fast_path_of_kind Encode.generated_fast", "  Prysm.Checkpoint.foo Encode.generated_fast"), False),
-        ("g6_hand_with_def", r(B, "namespace Prysm.BeaconBlockHeader\n", "namespace Prysm.BeaconBlockHeader\n\ndef Encode.generated_layout : EncLayout where\n  st := true\n"),
+        ("g6_hand_with_def", r(B, "namespace Prysm.BeaconBlockHeader\n", "namespace Prysm.BeaconBlockHeader\n\ndef Encode.generated_layout : EncoderFrameLayout where\n  stateWord := true\n"),
          False),
         ("g6_hs_frame_state", r(H, "  frame := 80\n", "  frame := 88\n"), False),
-        ("g6_bh_state_slot", r(B, "(.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 3)",
-                               "(.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.reg .rbx)"), False),
+        ("g6_bh_state_slot", r(B, "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3)",
+                               "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx)"), False),
     ]
 
 

@@ -15,9 +15,9 @@ CommitteeIndex, ValidatorIndex, Epoch) to an argument set-up, then
     test %rax,%rax
     je L            -- nil error: continue at L
 
-`U64CalleeAcc fn` is the text of the four existing function specifications `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec`,
+`U64CalleeAccept fn` is the text of the four existing function specifications `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec`,
 `Prysm.ValidatorIndex.Decode.accept_function_spec`, `Prysm.Epoch.Decode.accept_function_spec` with the callee label as a parameter. It is the existing spec-hypothesis
-form (`Prysm/Slot/CalleeDecodeFunctionSpecs.lean`: each existing spec is `U64CalleeAcc <its label>` by `rfl`); the proved theorems
+form (`Prysm/Slot/CalleeDecodeFunctionSpecs.lean`: each existing spec is `U64CalleeAccept <its label>` by `rfl`); the proved theorems
 `Prysm.Slot.Decode.accept_function_spec_holds`, `Prysm.CommitteeIndex.Decode.accept_function_spec_holds`, `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`, `Prysm.Epoch.Decode.accept_function_spec_holds` discharge it. No runtime contract is used.
 
 * `calldec_seg` — the reusable call block: `callDec fn lok` (3 directives) and the label `lok`.
@@ -38,7 +38,7 @@ variable [Host]
 /-- Accept-path function specification of a `uint64`-overlay `UnmarshalSSZ` at the label `fn`
 (`len(buf) = 8`): the common text of `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec`,
 `Prysm.ValidatorIndex.Decode.accept_function_spec`, `Prysm.Epoch.Decode.accept_function_spec`. -/
-def U64CalleeAcc (fn : String) : Prop :=
+def U64CalleeAccept (fn : String) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (e8 fp s2 c0 : List UInt8) (guard : UInt64) (F : DataMem → Prop),
     e8.length = 8 → fp.length = 8 → s2.length = 8 → c0.length = 8 →
     st.regs.rcx = 8 → guard.toNat < st.regs.rsp.toNat →
@@ -72,7 +72,7 @@ def callDec (fn lok : String) : Program :=
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.z lok))]
 
 /-- The continuation label of the call block. -/
-def callDecL (lok : String) : Program := [Kraken.Directive.label lok]
+def callDecContinuationLabel (lok : String) : Program := [Kraken.Directive.label lok]
 
 /-- Set-up of the first field: `add $f,%rax; mov $0x8,%ecx` (+ `nop`). -/
 def callArgFirst : Bool → Int64 → Program
@@ -162,7 +162,7 @@ def callArgMov : Program :=
      (Operation.mov (RegOrMem.reg (Reg.low Reg64.rcx Width.W32)) (Operand.imm (ConstExpr.int64 8))))]
 
 /-- Closing step of the set-up lemmas: register equations. -/
-local macro "callarg_close" : tactic => `(tactic| (
+local macro "call_argument_close" : tactic => `(tactic| (
   all_goals first
     | rfl
     | exact BitVec.add_comm _ _
@@ -179,8 +179,8 @@ With rsp = `sp`, rcx = 8, the destination `dst` in rax and the source `src` in r
 rax = rbx = 0. The return slot `aRet = sp − 8` holds the address of directive `j + 1`, the callee's frame
 pointer slot `aFp = sp − 16` the caller's rbp and its spill slot `aS2 = sp + 8` the source pointer. -/
 theorem calldec_seg (fn lok : String) (j j2 : Nat)
-    (hA : (callDec fn lok).IsInfixAt Host.prog j) (hB : (callDecL lok).IsInfixAt Host.prog j2)
-    (hl : label lok = Host.addrOf j2) (hC : U64CalleeAcc fn)
+    (hA : (callDec fn lok).IsInfixAt Host.prog j) (hB : (callDecContinuationLabel lok).IsInfixAt Host.prog j2)
+    (hl : label lok = Host.addrOf j2) (hC : U64CalleeAccept fn)
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -204,11 +204,11 @@ theorem calldec_seg (fn lok : String) (j j2 : Nat)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 hrax hrbx hrcx h_mem ⊢
   subst rsp rbp r14 rcx hRet hFp hS2 hrax hrbx
-  kat hA callDec 0
+  step_directive hA callDec 0
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
+  unfold_step
   try rw [show sp - 8#64 = sp - 8 from rfl] at *
   refine eventually_trans _ _ _ _ (hC _ (Host.addrOf (j + 0 + 1)) e8 fp s2 c0 guard _
     he8 hfp hs2 hc0 rfl hguard
@@ -224,14 +224,14 @@ theorem calldec_seg (fn lok : String) (j j2 : Nat)
   subst rax2 rbx2 rsp2 rbp2 r142
   rw [show sp - 8 - 8 = sp - 16 by bv_omega, show sp - 8 + 16 = sp + 8 by bv_omega] at Hm2
   rw [show j + 0 + 1 = j + 1 from rfl] at Hm2
-  kat hA callDec 1
+  step_directive hA callDec 1
   intro _
-  kat hA callDec 2
+  step_directive hA callDec 2
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   rw [hl]
-  kat hB callDecL 0
+  step_directive hB callDecContinuationLabel 0
   apply Eventually.done
   exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, by ecancel⟩
 
@@ -252,36 +252,36 @@ theorem callarg_first_seg (pad : Bool) (f : Int64) (j : Nat)
   simp only at hrax ⊢
   subst hrax hF
   cases pad
-  · kat hA callArgFirst 0
-    kat hA callArgFirst 1
+  · step_directive hA callArgFirst 0
+    step_directive hA callArgFirst 1
     apply Eventually.done
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-    callarg_close
-  · kat hA callArgFirst 0
-    kat hA callArgFirst 1
-    kat hA callArgFirst 2
+    call_argument_close
+  · step_directive hA callArgFirst 0
+    step_directive hA callArgFirst 1
+    step_directive hA callArgFirst 2
     apply Eventually.done
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-    callarg_close
+    call_argument_close
 
 set_option hygiene false in
 /-- Steps 0–6 of `callArgReload` (binders of the lemma below). -/
-local macro "callarg_reload_steps" : tactic => `(tactic| (
-  kat hA callArgReload 0
+local macro "call_argument_reload_steps" : tactic => `(tactic| (
+  step_directive hA callArgReload 0
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hA callArgReload 1
-  kat hA callArgReload 2
+  unfold_step
+  step_directive hA callArgReload 1
+  step_directive hA callArgReload 2
   apply load_step_at _ _ aD _ _ vD _ _ (by rw [← hD]) (by ecancel) (by exact hvD)
-  kunfold
-  kat hA callArgReload 3
-  kat hA callArgReload 4
+  unfold_step
+  step_directive hA callArgReload 3
+  step_directive hA callArgReload 4
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hA callArgReload 5
-  kat hA callArgReload 6))
+  unfold_step
+  step_directive hA callArgReload 5
+  step_directive hA callArgReload 6))
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -308,15 +308,15 @@ theorem callarg_reload_seg (pad : Bool) (dB src dD c dR f : Int64) (j : Nat)
   simp only at hrsp h_mem ⊢
   subst rsp hSrc hF
   cases pad
-  · callarg_reload_steps
+  · call_argument_reload_steps
     apply Eventually.done
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-    callarg_close
-  · callarg_reload_steps
-    kat hA callArgReload 7
+    call_argument_close
+  · call_argument_reload_steps
+    step_directive hA callArgReload 7
     apply Eventually.done
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-    callarg_close
+    call_argument_close
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -342,23 +342,23 @@ theorem callarg_lea_seg (dB src dD c dR f : Int64) (j : Nat)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp h_mem ⊢
   subst rsp hSrc hF
-  kat hA callArgLea 0
+  step_directive hA callArgLea 0
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hA callArgLea 1
-  kat hA callArgLea 2
+  unfold_step
+  step_directive hA callArgLea 1
+  step_directive hA callArgLea 2
   apply load_step_at _ _ aD _ _ vD _ _ (by rw [← hD]) (by ecancel) (by exact hvD)
-  kunfold
-  kat hA callArgLea 3
-  kat hA callArgLea 4
+  unfold_step
+  step_directive hA callArgLea 3
+  step_directive hA callArgLea 4
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hA callArgLea 5
+  unfold_step
+  step_directive hA callArgLea 5
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  callarg_close
+  call_argument_close
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -373,11 +373,11 @@ theorem callarg_mov_seg (j : Nat) (hA : callArgMov.IsInfixAt Host.prog j) (s : M
       ⟨s, Host.addrOf j⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only
-  kat hA callArgMov 0
-  kat hA callArgMov 1
-  kat hA callArgMov 2
+  step_directive hA callArgMov 0
+  step_directive hA callArgMov 1
+  step_directive hA callArgMov 2
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  callarg_close
+  call_argument_close
 
 end Codec

@@ -106,12 +106,12 @@ theorem u64dec_accept (fn l0 lcc lbb : String) (fs dsp : Int64)
   simp only at h_mem hguard hlen ⊢
   subst hlen
   have := rsp.toNat_lt_size; have := guard.toNat_lt_size; simp only [UInt64.size] at *
-  kat hA u64DecHead 0
-  kat hA u64DecHead 1
-  kat hA u64DecHead 2
+  step_directive hA u64DecHead 0
+  step_directive hA u64DecHead 1
+  step_directive hA u64DecHead 2
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hA u64DecHead 3
+  unfold_step
+  step_directive hA u64DecHead 3
   split
   · rename_i h; exfalso
     simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
@@ -119,48 +119,48 @@ theorem u64dec_accept (fn l0 lcc lbb : String) (fs dsp : Int64)
     · apply h; omega
     · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
   simp only [Effects.All]
-  kat hA u64DecHead 4
+  step_directive hA u64DecHead 4
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hA u64DecHead 5
-  kat hA u64DecHead 6
-  kat hA u64DecHead 7
+  unfold_step
+  step_directive hA u64DecHead 5
+  step_directive hA u64DecHead 6
+  step_directive hA u64DecHead 7
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by rw [hdsp]; bv_omega) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hA u64DecHead 8
-  kat hA u64DecHead 9
-  kat hA u64DecHead 10
+  unfold_step
+  step_directive hA u64DecHead 8
+  step_directive hA u64DecHead 9
+  step_directive hA u64DecHead 10
   split
   case isFalse h => exact absurd h (by decide)
   simp only [Effects.All]
   rw [hl]
-  kat hB u64DecTail 0
-  kat hB u64DecTail 1
+  step_directive hB u64DecTail 0
+  step_directive hB u64DecTail 1
   apply load_step _ _ _ _ e8 _ _ (by ecancel) (by exact he8)
-  kunfold
-  kat hB u64DecTail 2
-  kat hB u64DecTail 3
+  unfold_step
+  step_directive hB u64DecTail 2
+  step_directive hB u64DecTail 3
   apply store_step_at _ _ rax.toBitVec _ _ _ c0 _ _ (by bv_omega) (by ecancel) (by exact hc0)
   intro m3 H3
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H3
-  kunfold
-  kat hB u64DecTail 4
+  unfold_step
+  step_directive hB u64DecTail 4
   intro _
-  kat hB u64DecTail 5
+  step_directive hB u64DecTail 5
   intro _
-  kat hB u64DecTail 6
-  kat hB u64DecTail 7
+  step_directive hB u64DecTail 6
+  step_directive hB u64DecTail 7
   rw [show fs.toBitVec + (rsp.toBitVec - 8#64 - fs.toBitVec) = rsp.toBitVec - 8 by bv_omega]
   apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hB u64DecTail 8
+  unfold_step
+  step_directive hB u64DecTail 8
   rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]
   apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩

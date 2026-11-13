@@ -30,13 +30,13 @@ theorem Decode.slot_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h0 ⊢
   subst h0
-  kat hk unmarshalSSZ 18
+  step_directive hk unmarshalSSZ 18
   intro _
-  kat hk unmarshalSSZ 19
+  step_directive hk unmarshalSSZ 19
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 47
+  label_address hk hf unmarshalSSZ 47
   exact Eventually.done _ ⟨rfl, rfl, rfl⟩
 
 set_option maxHeartbeats 4000000 in
@@ -50,13 +50,13 @@ theorem Decode.committee_index_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsIn
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h0 ⊢
   subst h0
-  kat hk unmarshalSSZ 56
+  step_directive hk unmarshalSSZ 56
   intro _
-  kat hk unmarshalSSZ 57
+  step_directive hk unmarshalSSZ 57
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 85
+  label_address hk hf unmarshalSSZ 85
   exact Eventually.done _ ⟨rfl, rfl, rfl⟩
 
 set_option maxHeartbeats 4000000 in
@@ -70,13 +70,13 @@ theorem Decode.source_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Hos
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h0 ⊢
   subst h0
-  kat hk unmarshalSSZ 143
+  step_directive hk unmarshalSSZ 143
   intro _
-  kat hk unmarshalSSZ 144
+  step_directive hk unmarshalSSZ 144
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 172
+  label_address hk hf unmarshalSSZ 172
   exact Eventually.done _ ⟨rfl, rfl, rfl⟩
 
 set_option maxHeartbeats 4000000 in
@@ -90,13 +90,13 @@ theorem Decode.target_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Hos
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h0 ⊢
   subst h0
-  kat hk unmarshalSSZ 193
+  step_directive hk unmarshalSSZ 193
   intro _
-  kat hk unmarshalSSZ 194
+  step_directive hk unmarshalSSZ 194
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 222
+  label_address hk hf unmarshalSSZ 222
   exact Eventually.done _ ⟨rfl, rfl, rfl⟩
 
 end Prysm.AttestationData

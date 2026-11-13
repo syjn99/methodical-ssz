@@ -12,7 +12,7 @@ import Prysm.AttestationData.DecodeRejectSize
 import Codec.DecodeRejectSizeAnyFrame
 
 /-!
-# Ties of `decRejectKindN` to the committed size-reject theorems: the `PendingConsolidation` part
+# Ties of `decRejectKindAnyFrame` to the committed size-reject theorems: the `PendingConsolidation` part
 
 The declarations of the other types of this group are in `Prysm/BlobIdentifier/DecodeRejectSizeKindInstances.lean`.
 -/
@@ -23,7 +23,7 @@ open Codec
 namespace Prysm.PendingConsolidation
 
 theorem Decode.reject_size_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.PendingConsolidation.Decode.reject_size h)
-    = @decRejectKindN h Prysm.PendingConsolidation.Code.unmarshalSSZ 16 := by
+    = @decRejectKindAnyFrame h Prysm.PendingConsolidation.Code.unmarshalSSZ 16 := by
   intro h; with_reducible rfl
 
 end Prysm.PendingConsolidation

@@ -28,33 +28,33 @@ theorem _root_.Prysm.Checkpoint.Decode.example_step_s14 (k : Nat) (hk : unmarsha
       ⟨{ regs := s.regs.set64 Reg64.rax (s.regs.get64 Reg64.rax + (8 : Int64).toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },
         Host.addrOf (k + 15)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 14)⟩ := by
-  have hq := Codec.win hk 14 1
-  have he : Codec.eraseNop ((unmarshalSSZ.drop 14).take 1) = [Codec.iAdd Reg64.rax 8] := by rfl
+  have hq := Codec.window_infix_at hk 14 1
+  have he : Codec.eraseNop ((unmarshalSSZ.drop 14).take 1) = [Codec.instrAddImmediate Reg64.rax 8] := by rfl
   have hend : k + 14 + ((unmarshalSSZ.drop 14).take 1).length = k + 15 := by rfl
-  with_reducible exact Codec.kstep_add Reg64.rax 8 _ (k + 14) (k + 15) hq he hend
+  with_reducible exact Codec.step_add_immediate Reg64.rax 8 _ (k + 14) (k + 15) hq he hend
 theorem _root_.Prysm.Checkpoint.Decode.example_step_s14_kind : ∀ (h : Host), type_of% (@Prysm.Checkpoint.Decode.example_step_s14 h) = @Codec.stepAddKind h unmarshalSSZ Reg64.rax 8 14 15 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Directive 15 `mov $0x8,%ecx`: stepMovIKind. -/
+/-- Directive 15 `mov $0x8,%ecx`: stepMoveImmediateKind. -/
 theorem _root_.Prysm.Checkpoint.Decode.example_step_s15 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
-    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 16)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setRegister s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 16)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 15)⟩ := by
-  have hq := Codec.win hk 15 1
-  have he : Codec.eraseNop ((unmarshalSSZ.drop 15).take 1) = [Codec.iMovI Reg64.rcx 8] := by rfl
+  have hq := Codec.window_infix_at hk 15 1
+  have he : Codec.eraseNop ((unmarshalSSZ.drop 15).take 1) = [Codec.instrMoveImmediate32 Reg64.rcx 8] := by rfl
   have hend : k + 15 + ((unmarshalSSZ.drop 15).take 1).length = k + 16 := by rfl
-  with_reducible exact Codec.kstep_movi Reg64.rcx 8 _ (k + 15) (k + 16) hq he hend
-theorem _root_.Prysm.Checkpoint.Decode.example_step_s15_kind : ∀ (h : Host), type_of% (@Prysm.Checkpoint.Decode.example_step_s15 h) = @Codec.stepMovIKind h unmarshalSSZ Reg64.rcx 8 15 16 := by
+  with_reducible exact Codec.step_move_immediate Reg64.rcx 8 _ (k + 15) (k + 16) hq he hend
+theorem _root_.Prysm.Checkpoint.Decode.example_step_s15_kind : ∀ (h : Host), type_of% (@Prysm.Checkpoint.Decode.example_step_s15 h) = @Codec.stepMoveImmediateKind h unmarshalSSZ Reg64.rcx 8 15 16 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Epoch`: call block over the window 16–19 (`nop; callq; test; je`), `callq` at 17, continuation label at 47. -/
 theorem _root_.Prysm.Checkpoint.Decode.example_step_Epoch_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAcc "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ")
+    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -75,15 +75,15 @@ theorem _root_.Prysm.Checkpoint.Decode.example_step_Epoch_call (k : Nat) (hk : u
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 16)⟩ := by
-  have hq := Codec.win hk 16 4
+  have hq := Codec.window_infix_at hk 16 4
   have he : Codec.eraseNop ((unmarshalSSZ.drop 16).take 4) = Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4" := by rfl
-  have hjc : k + 16 + Codec.nopPos ((unmarshalSSZ.drop 16).take 4) 0 = k + 17 := by rfl
-  have hB := Codec.infix_sub (q := Codec.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4") 47 hk
-    (by simp only [unmarshalSSZ, Codec.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hjc : k + 16 + Codec.nonNopIndex ((unmarshalSSZ.drop 16).take 4) 0 = k + 17 := by rfl
+  have hB := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4") 47 hk
+    (by simp only [unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 47)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.calldec_seg_w _ _ _ (k + 16) (k + 17) (k + 47) hq he hjc hB hl
+  with_reducible exact Codec.calldec_seg_window _ _ _ (k + 16) (k + 17) (k + 47) hq he hjc hB hl
 theorem _root_.Prysm.Checkpoint.Decode.example_step_Epoch_call_kind : ∀ (h : Host), type_of% (@Prysm.Checkpoint.Decode.example_step_Epoch_call h) = @Codec.callDecSegKindWindow h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4" 16 17 47 := by
   intro h; with_reducible rfl
 

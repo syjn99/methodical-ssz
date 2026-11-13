@@ -15,7 +15,7 @@ import Prysm.IndexedAttestation.SpecDefinitions
 The four defs below are the frozen texts of `Prysm/IndexedAttestation/Statements.lean` with one added premise `(he0nz : e0 ≠ 0)` and the suffix
 `_nz` in the name; nothing else differs. Reason: directives 103–106 (alignment reject) and 66–69 (overflow reject) are
 `mov ssz.Err…(%rip),%rcx; test %rcx,%rcx; je …; mov 0x8(%rcx),%rcx`; when the error's itab word is 0 the code skips the
-type-word load and passes 0 where `FmtErrorfDWC` needs `ity`. The Kraken Host places labels anywhere, so the itab label
+type-word load and passes 0 where `FmtErrorfDecimalWrapContract` needs `ity`. The Kraken Host places labels anywhere, so the itab label
 may be 0 and the frozen statements cannot refute that branch. The precondition is stronger than the frozen one (not
 equivalent). The originals in `Prysm/IndexedAttestation/Statements.lean` stay unchanged and unproved. Precedent: the misaligned reject of the Go 1.26.3 test type ListU64
 (a proof that is no longer in the tree) had the same two premises `e0 = itab` and `e0 ≠ 0`. In the real ELF `e0` is the
@@ -54,7 +54,7 @@ def Decode.reject_alignment_error_word_nonzero_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : 228 ≤ s.regs.rcx.toNat) (hmis : (s.regs.rcx.toNat - 228) % 8 ≠ 0)
     (hav : ElfData.PrysmTarget.formatAttestingIndicesMisaligned.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.PrysmTarget.formatAttestingIndicesMisaligned ElfData.PrysmTarget.typeInt_addr S),
+    (hcv : ConvT64Contract Heap S) (hfe : FmtErrorfDecimalWrapContract Heap ElfData.PrysmTarget.formatAttestingIndicesMisaligned ElfData.PrysmTarget.typeInt_addr S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -108,7 +108,7 @@ def Decode.reject_overflow_error_word_nonzero_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : 228 ≤ s.regs.rcx.toNat) (hal : (s.regs.rcx.toNat - 228) % 8 = 0) (hbig : 2048 < (s.regs.rcx.toNat - 228) / 8)
     (hav : ElfData.PrysmTarget.formatAttestingIndicesTooBig.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.PrysmTarget.formatAttestingIndicesTooBig ElfData.PrysmTarget.typeInt_addr S),
+    (hcv : ConvT64Contract Heap S) (hfe : FmtErrorfDecimalWrapContract Heap ElfData.PrysmTarget.formatAttestingIndicesTooBig ElfData.PrysmTarget.typeInt_addr S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -163,7 +163,7 @@ def Decode.reject_alignment_spec_error_word_nonzero_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size)
     (hav : ElfData.PrysmTarget.formatAttestingIndicesMisaligned.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.PrysmTarget.formatAttestingIndicesMisaligned ElfData.PrysmTarget.typeInt_addr S),
+    (hcv : ConvT64Contract Heap S) (hfe : FmtErrorfDecimalWrapContract Heap ElfData.PrysmTarget.formatAttestingIndicesMisaligned ElfData.PrysmTarget.typeInt_addr S),
     (∃ e, deserialize desc bs = .error e) ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
@@ -219,7 +219,7 @@ def Decode.reject_overflow_spec_error_word_nonzero_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size)
     (hav : ElfData.PrysmTarget.formatAttestingIndicesTooBig.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.PrysmTarget.formatAttestingIndicesTooBig ElfData.PrysmTarget.typeInt_addr S),
+    (hcv : ConvT64Contract Heap S) (hfe : FmtErrorfDecimalWrapContract Heap ElfData.PrysmTarget.formatAttestingIndicesTooBig ElfData.PrysmTarget.typeInt_addr S),
     (∃ e, deserialize desc bs = .error e) ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0

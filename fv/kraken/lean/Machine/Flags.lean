@@ -64,7 +64,7 @@ theorem call_slot (x : BitVec 64) : -128 + (x - 8#64) - 8#64 = x - 144 := by
   omega
 
 /-- Data pointer of ListU64.UnmarshalSSZ: `buf + (cap-4 == 0 ? 0 : 4)` via neg/sar/and. -/
-theorem dptr4 (y : BitVec 64) (h0 : 0 < y.toNat) (h1 : y.toNat < 2 ^ 63) :
+theorem data_pointer_offset4 (y : BitVec 64) (h0 : 0 < y.toNat) (h1 : y.toNat < 2 ^ 63) :
     BitVec.zeroExtend 64 (BitVec.extractLsb' 0 32 (BitVec.sshiftRight (-y) 63) &&& BitVec.truncate 32 (4 : BitVec 64)) = 4 := by
   have hz : (-y).toInt = -(y.toNat : Int) := by
     rw [BitVec.toInt_neg, BitVec.toInt_eq_toNat_of_lt (by omega)]
@@ -88,13 +88,13 @@ theorem cap_sub4 (rdi : UInt64) (n : Nat) (hc : 4 + 8 * n ≤ rdi.toNat) :
     8 * n ≤ (rdi.toBitVec + -4).toNat := by
   rw [toNat_add_neg4 _ (by simp; omega)]; simp; omega
 
-theorem dptr_buf (rbx rdi : UInt64) (n : Nat) (hn : 0 < n) (hc : 4 + 8 * n ≤ rdi.toNat)
+theorem data_pointer_of_buffer (rbx rdi : UInt64) (n : Nat) (hn : 0 < n) (hc : 4 + 8 * n ≤ rdi.toNat)
     (h63 : rdi.toNat < 2 ^ 63) :
     rbx.toBitVec + BitVec.zeroExtend 64
       (BitVec.extractLsb' 0 32 (BitVec.sshiftRight (-(rdi.toBitVec + -4)) 63) &&& BitVec.truncate 32 (4 : BitVec 64))
       = rbx.toBitVec + 4 := by
   have := cap_sub4 rdi n hc
-  rw [dptr4 _ (by omega) (by rw [toNat_add_neg4 _ (by simp; omega)]; simp; omega)]
+  rw [data_pointer_offset4 _ (by omega) (by rw [toNat_add_neg4 _ (by simp; omega)]; simp; omega)]
 
 /-- Saved-rbp slot after the callee returned (`rsp+8`) and the frame was released. -/
 theorem pop_slot (x : BitVec 64) : ({ toBitVec := x - 144 } + 8 : UInt64).toBitVec - -128 = x - 8 := by

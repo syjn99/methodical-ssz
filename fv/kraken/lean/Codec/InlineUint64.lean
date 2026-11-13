@@ -48,19 +48,19 @@ variable [Host]
 set_option hygiene false in
 /-- Proof text of one register case of `u64dec_inline_seg` (the names are the binders of the lemma; hygiene
 is off so that they are captured). Local to this file. -/
-local macro "u64inline_case" : tactic => `(tactic| (
-  kat hA u64DecInline 0
+local macro "uint64_inline_case" : tactic => `(tactic| (
+  step_directive hA u64DecInline 0
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hA u64DecInline 1
+  unfold_step
+  step_directive hA u64DecInline 1
   apply load_step_at _ _ aSrc _ _ v _ _ (by rw [← hSrc]) (by ecancel) (by exact hv)
-  kunfold
-  kat hA u64DecInline 2
+  unfold_step
+  step_directive hA u64DecInline 2
   apply store_step_at _ _ aF _ _ _ vF _ _ (by rw [← hF, ← hrdx]) (by ecancel) (by exact hvF)
   intro m1' H1
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl v hv] at H1
-  kunfold
+  unfold_step
   apply Eventually.done
   exact ⟨rfl, rfl, rfl, rfl, hrdx, by ecancel⟩))
 
@@ -88,6 +88,6 @@ theorem u64dec_inline_seg (rX : Reg64) (hX : U64InlineReg rX) (dB src f : Int64)
   simp only at hrsp hrbp hr14 hrdx h_mem ⊢
   subst rsp rbp r14
   rcases hX with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
-  all_goals u64inline_case
+  all_goals uint64_inline_case
 
 end Codec

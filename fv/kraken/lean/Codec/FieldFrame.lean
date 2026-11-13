@@ -6,10 +6,10 @@ import Codec.DecoderPrologue
 
 A generated field theorem is stated over the whole accept memory in entry-state terms (`Codec/Kind/DecodeAcceptAnyFrame.lean`).
 Its proof uses the generated step chain of the field (`decoder --steps`) and these frame-parametric facts:
-- `frame_j3`: the 24-byte spill area of the runtime calls is three 8-byte slots (a callee decoder spills its
+- `frame_join_three_words`: the 24-byte spill area of the runtime calls is three 8-byte slots (a callee decoder spills its
   `rbx` into the middle one);
-- `frame_lo8`: the low stack of a decoder with callee calls is `S` bytes and the callee's saved-`rbp` slot;
-- `frame_lo`, `frame_lo0`: the low-stack address argument of a byte segment;
+- `frame_low_stack_split`: the low stack of a decoder with callee calls is `S` bytes and the callee's saved-`rbp` slot;
+- `frame_low_address_with_calls`, `frame_low_address_without_calls`: the low-stack address argument of a byte segment;
 - `decepi_n`: the epilogue `add $F,%rsp; pop %rbp; retq` for any frame `F`.
 They are the frame-parametric forms of the per-type hand lemmas `pd_j3`, `pd_lo8`, `pd_lo`, `e1_lo`, `pd_epi`.
 -/
@@ -19,7 +19,7 @@ open Machine Runtime
 namespace Codec
 
 /-- Three 8-byte chunks at `x`, `x + 8`, `x + 16` are one 24-byte chunk at `x`. -/
-theorem frame_j3 (x y z : BitVec 64) (a b c : List UInt8) (ha : a.length = 8) (hb : b.length = 8) (hc : c.length = 8)
+theorem frame_join_three_words (x y z : BitVec 64) (a b c : List UInt8) (ha : a.length = 8) (hb : b.length = 8) (hc : c.length = 8)
     (hy : x + 8 = y) (hz : x + 16 = z) :
     Eq ((a ++ (b ++ c)).At x) = Eq (a.At x) ⋆ Eq (b.At y) ⋆ Eq (c.At z) := by
   subst hy hz
@@ -28,13 +28,13 @@ theorem frame_j3 (x y z : BitVec 64) (a b c : List UInt8) (ha : a.length = 8) (h
   simp only [Std.ExtHashMap.sep_assoc]
 
 /-- The low stack of a decoder with callee calls: `S` bytes below the 8-byte slot at `y`. -/
-theorem frame_lo8 (y : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (a f : List UInt8) (ha : a.length = S) (hf : f.length = 8) :
+theorem frame_low_stack_split (y : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (a f : List UInt8) (ha : a.length = S) (hf : f.length = 8) :
     Eq ((a ++ f).At (y - BitVec.ofNat 64 S)) = Eq (a.At (y - BitVec.ofNat 64 S)) ⋆ Eq (f.At y) := by
   refine at_app _ _ ?_ (by simp only [ha, hf]; omega)
   rw [ha]; bv_omega
 
 /-- Low-stack address of a byte segment in a frame with callee calls (`S + 8` bytes below the return slot). -/
-theorem frame_lo (x F B : BitVec 64) (S : Nat) (h : F + 16 = B) :
+theorem frame_low_address_with_calls (x F B : BitVec 64) (S : Nat) (h : F + 16 = B) :
     x - F - 8 - BitVec.ofNat 64 (S + 8) = x - B - BitVec.ofNat 64 S := by
   subst h
   have : BitVec.ofNat 64 (S + 8) = BitVec.ofNat 64 S + 8 := by
@@ -42,7 +42,7 @@ theorem frame_lo (x F B : BitVec 64) (S : Nat) (h : F + 16 = B) :
   rw [this]; bv_omega
 
 /-- Low-stack address of a byte segment in a frame without callee calls (`S` bytes below the return slot). -/
-theorem frame_lo0 (x F B : BitVec 64) (S : Nat) (h : F + 8 = B) :
+theorem frame_low_address_without_calls (x F B : BitVec 64) (S : Nat) (h : F + 8 = B) :
     x - F - 8 - BitVec.ofNat 64 S = x - B - BitVec.ofNat 64 S := by
   subst h
   generalize BitVec.ofNat 64 S = t
@@ -56,7 +56,7 @@ set_option maxRecDepth 100000 in
 `e`). With rsp = `sp`, the saved frame pointer `fp0` at `aFp = sp + F` and the return address `ra` at
 `aRa = aFp + 8`: the pc is `ra`, rsp = `aRa + 8`, rbp = `fp0`; rax, rbx, r14 and the memory are kept. -/
 theorem decepi_n (F : Int64) (q1 : Program) (j e : Nat) (hq1 : q1.IsInfixAt Host.prog j)
-    (he1 : eraseNop q1 = [iAdd Reg64.rsp F]) (hend : j + q1.length = e)
+    (he1 : eraseNop q1 = [instrAddImmediate Reg64.rsp F]) (hend : j + q1.length = e)
     (q2 : Program) (hq2 : q2.IsInfixAt Host.prog e) (he2 : eraseNop q2 = decRet)
     (sp aFp aRa : BitVec 64) (hFp : sp + F.toBitVec = aFp) (hRa : aFp + 8 = aRa)
     (fp0 ra : UInt64) (R : DataMem → Prop)
@@ -71,8 +71,8 @@ theorem decepi_n (F : Int64) (q1 : Program) (j e : Nat) (hq1 : q1.IsInfixAt Host
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp h_mem ⊢
   subst rsp hFp hRa
-  apply kstep_add Reg64.rsp F _ j e hq1 he1 hend
-  intro fl; kn
+  apply step_add_immediate Reg64.rsp F _ j e hq1 he1 hend
+  intro fl; normalize_registers
   refine eventually_trans _ _ _ _ (decret_seg _ e hq2 he2 (sp + F.toBitVec) (sp + F.toBitVec + 8) rfl
     fp0 ra R _ (by rfl) (by ecancel)) ?_
   rintro ⟨d, pc⟩ ⟨hpc, hrsp', hrbp', hreg, hmem⟩

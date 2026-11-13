@@ -38,14 +38,14 @@ CP_U = f"{V1A1}.(*Checkpoint).UnmarshalSSZ"
 CP_M = f"{V1A1}.(*Checkpoint).MarshalSSZTo"
 CLASS = {
     "runtime.morestack_noctxt.abi0": ("c", "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"),
-    "runtime.makeslice": ("b", "MakesliceC (esz 1, uint8 type word, cnt 32)"),
-    "runtime.memmove": ("b", "MemmoveC (n = 32)"),
-    "runtime.growslice": ("b", "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"),
-    "runtime.convT64": ("b", "ConvT64C (Slot/CommitteeIndex length reject only; not on the accept specs)"),
+    "runtime.makeslice": ("b", "MakesliceContract (esz 1, uint8 type word, cnt 32)"),
+    "runtime.memmove": ("b", "MemmoveContract (n = 32)"),
+    "runtime.growslice": ("b", "GrowsliceContract (esz 1); main theorem: capacity sufficient, not called"),
+    "runtime.convT64": ("b", "ConvT64Contract (Slot/CommitteeIndex length reject only; not on the accept specs)"),
     "runtime.gcWriteBarrier2": ("c", "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"),
-    "runtime.newobject": ("b", "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil "
+    "runtime.newobject": ("b", "NewobjectContract (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil "
                                "Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"),
-    "fmt.errorf": ("b", "FmtErrorfWC (field wraps 'Slot: %w', 'CommitteeIndex: %w', 'Source: %w', 'Target: %w'); "
+    "fmt.errorf": ("b", "FmtErrorfWrapContract (field wraps 'Slot: %w', 'CommitteeIndex: %w', 'Source: %w', 'Target: %w'); "
                         "decoder: unreachable_mc under the callee specs; encoder Source/Target: reachable when "
                         "a child Root has len != 32"),
     f"{PRIM}.(*Slot).UnmarshalSSZ": ("a", "function spec Prysm.Slot.Decode.accept_function_spec, proved from machine code"),

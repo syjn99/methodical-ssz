@@ -37,7 +37,7 @@ theorem Decode.generated_root_DepositRoot_seg (k : Nat) (hk : unmarshalSSZ.IsInf
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At bf)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 26 + 11) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -56,13 +56,13 @@ theorem Decode.generated_root_DepositRoot_seg (k : Nat) (hk : unmarshalSSZ.IsInf
       ⟨s, Host.addrOf (k + 13)⟩ := by
   have hA := Codec.infix_sub (q := Codec.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" 48 16 24) 13 hk
     (by simp only [unmarshalSSZ, Codec.rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.rootDecMidZ "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_b2" 48 56 24 8 16 24) 26 hk
-    (by simp only [unmarshalSSZ, Codec.rootDecMidZ, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.rootDecMidOffsetZero "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_b2" 48 56 24 8 16 24) 26 hk
+    (by simp only [unmarshalSSZ, Codec.rootDecMidOffsetZero, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 26)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.rootdec_seg_z _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
-theorem Decode.generated_root_DepositRoot_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_root_DepositRoot_seg h) = @Codec.rootDecSegZKind h unmarshalSSZ 13 26 48 56 24 8 16 24 := by
+  with_reducible exact Codec.rootdec_seg_offset_zero _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
+theorem Decode.generated_root_DepositRoot_seg_kind : ∀ (h : Host), type_of% (@Decode.generated_root_DepositRoot_seg h) = @Codec.rootDecSegOffsetZeroKind h unmarshalSSZ 13 26 48 56 24 8 16 24 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 16000000 in
@@ -89,7 +89,7 @@ theorem Decode.generated_root_BlockHash_seg (k : Nat) (hk : unmarshalSSZ.IsInfix
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 63 + 12) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧

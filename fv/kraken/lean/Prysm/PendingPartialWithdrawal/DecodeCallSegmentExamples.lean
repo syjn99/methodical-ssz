@@ -19,7 +19,7 @@ the development decoders (PendingPartialWithdrawal `Index`, `WithdrawableEpoch`;
 `ProposerIndex`; AttestationData `Slot`, `CommitteeIndex`; Checkpoint `Epoch`) with their argument set-ups,
 the two-directive inline uint64 read (PendingPartialWithdrawal `Amount`) and the padded byte segment
 (Deposit_Data `WithdrawalCredentials`). Parameters are read from the `.S` files (directive index = line − 1).
-The callee specification stays a hypothesis `U64CalleeAcc "<callee label>"` of each call-block theorem.
+The callee specification stays a hypothesis `U64CalleeAccept "<callee label>"` of each call-block theorem.
 After the split of this module, the declarations of the other types are in `Prysm/AttestationData/DecodeCallSegmentExamples.lean`, `Prysm/BeaconBlockHeader/DecodeCallSegmentExamples.lean`, `Prysm/Checkpoint/DecodeCallSegmentExamples.lean`, `Prysm/Deposit_Data/DecodeCallSegmentExamples.lean`.
 -/
 
@@ -51,7 +51,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Index`: call block of the callee decoder, directives 17–19, continuation label at 47. -/
 theorem Decode.example_call_Index_call (k : Nat) (hk : Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAcc "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
+    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -74,8 +74,8 @@ theorem Decode.example_call_Index_call (k : Nat) (hk : Prysm.PendingPartialWithd
       ⟨s, Host.addrOf (k + 17)⟩ := by
   have hA := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 17 hk
     (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 47 hk
-    (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, Codec.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 47 hk
+    (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 47)
     (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
@@ -125,11 +125,11 @@ theorem Decode.example_call_Amount_seg (k : Nat) (hk : Prysm.PendingPartialWithd
         ∧ (∀ r : Reg64, r ≠ Reg64.r8 → st.data.regs.get64 r = s.regs.get64 r)
         ∧ (Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 54)⟩ := by
-  have hA := Codec.infix_sub (q := Codec.u64DecRR Reg64.r8 8 16) 54 hk
-    (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, Codec.u64DecRR, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hX : Codec.U64RRReg Reg64.r8 := by decide
-  with_reducible exact Codec.u64dec_rr_seg Reg64.r8 hX _ _ (k + 54) hA
-theorem Decode.example_call_Amount_seg_kind : ∀ (h : Host), type_of% (@Decode.example_call_Amount_seg h) = @Codec.u64DecRRSegKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 8 16 54 := by
+  have hA := Codec.infix_sub (q := Codec.u64DecScratchRegister Reg64.r8 8 16) 54 hk
+    (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, Codec.u64DecScratchRegister, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hX : Codec.U64ScratchRegister Reg64.r8 := by decide
+  with_reducible exact Codec.u64dec_scratch_register_seg Reg64.r8 hX _ _ (k + 54) hA
+theorem Decode.example_call_Amount_seg_kind : ∀ (h : Host), type_of% (@Decode.example_call_Amount_seg h) = @Codec.u64DecScratchRegisterSegKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 8 16 54 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -154,7 +154,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `WithdrawableEpoch`: call block of the callee decoder, directives 59–61, continuation label at 88. -/
 theorem Decode.example_call_WithdrawableEpoch_call (k : Nat) (hk : Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAcc "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ")
+    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -177,8 +177,8 @@ theorem Decode.example_call_WithdrawableEpoch_call (k : Nat) (hk : Prysm.Pending
       ⟨s, Host.addrOf (k + 59)⟩ := by
   have hA := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 59 hk
     (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 88 hk
-    (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, Codec.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 88 hk
+    (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 88)
     (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)

@@ -23,7 +23,7 @@ import Prysm.PowBlock.DecodeRejectSizeKindInstances
 import Prysm.SyncCommitteeMessage.DecodeRejectSizeKindInstances
 
 /-!
-# Ties of `decRejectKindN` to the committed size-reject theorems
+# Ties of `decRejectKindAnyFrame` to the committed size-reject theorems
 
 The declared type of each committed theorem `Prysm.<Type>.Decode.reject_size` (the 11 flat development types and
 AttestationData) is the kind instance; `with_reducible rfl` (the kind is an `abbrev` and the text is the same).
@@ -36,7 +36,7 @@ open Codec
 namespace Prysm.BlobIdentifier
 
 theorem Decode.reject_size_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.BlobIdentifier.Decode.reject_size h)
-    = @decRejectKindN h Prysm.BlobIdentifier.Code.unmarshalSSZ 40 := by
+    = @decRejectKindAnyFrame h Prysm.BlobIdentifier.Code.unmarshalSSZ 40 := by
   intro h; with_reducible rfl
 
 end Prysm.BlobIdentifier

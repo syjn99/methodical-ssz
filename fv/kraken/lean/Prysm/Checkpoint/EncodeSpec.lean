@@ -48,7 +48,7 @@ theorem Encode.fast_path_spec (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k
       ⋆ Eq (d1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8)) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 40 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
-    (hmm : MemmoveC S) :
+    (hmm : MemmoveContract S) :
     ∃ bs, serialize desc g.toValue = .ok bs ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
@@ -78,11 +78,11 @@ theorem Size.result (k : Nat) (hk : sizeSSZ.IsInfixAt Host.prog k) (s : MachineD
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem ⊢
-  kat hk sizeSSZ 0
-  kat hk sizeSSZ 1
-  kat hk sizeSSZ 2
+  step_directive hk sizeSSZ 0
+  step_directive hk sizeSSZ 1
+  step_directive hk sizeSSZ 2
   apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩

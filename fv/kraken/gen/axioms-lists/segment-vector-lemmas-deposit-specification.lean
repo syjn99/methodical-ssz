@@ -8,8 +8,8 @@ import Prysm.HistoricalBatch.WitnessDecodeRejectSize
 
 /-! Hand list for `gen/e2e/seg2axioms_gate.py` ("must exist" names; every name gets the axiom check). -/
 
-#print axioms Codec.Segment.vN_serialize
-#print axioms Codec.Segment.vN_of_bytes
+#print axioms Codec.Segment.bytes32_vector_serialize
+#print axioms Codec.Segment.bytes32_vector_of_bytes
 #print axioms Codec.Segment.vtri_iter
 #print axioms Codec.Segment.vtri_exit
 #print axioms Codec.Segment.vtri_loop

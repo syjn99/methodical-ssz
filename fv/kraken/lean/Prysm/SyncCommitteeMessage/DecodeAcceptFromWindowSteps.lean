@@ -36,8 +36,8 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
     fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 aP1 aL1 aC1 a40 aP2 aL2 aC2
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrs hast ha8 haP1 haL1 haC1 ha40 haP2 haL2 haC2
     R S hS hlo Heap avail h_mem hguard hlen hav hms hmm
-  have hsl : U64CalleeAcc Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
-  have hvi : U64CalleeAcc Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hsl : U64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
+  have hvi : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
@@ -47,7 +47,7 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
   have hlos : Eq (lo.At (rsp.toBitVec - 120 - BitVec.ofNat 64 S)) =
       Eq ((lo.take S).At (rsp.toBitVec - 120 - BitVec.ofNat 64 S)) ⋆ Eq ((lo.drop S).At (rsp.toBitVec - 120)) := by
     conv => lhs; rw [← List.take_append_drop S lo]
-    exact Prysm.BeaconBlockHeader.Decode.lo8 _ S hS _ _ hlS hl8
+    exact Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS hl8
   rw [hlos] at h_mem
   -- head: entry → directive 15
   refine eventually_trans _ _ _ _ (Decode.head0 k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
@@ -87,7 +87,7 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
     (by simp only [List.length_append, hsp0, hsp2, Int.toBytes_length]) (Int.toBytes_length 8 _)
     (by simp only [List.length_append, hlS, Int.toBytes_length]) hl38 haP1 haL1 haC1
     _ Heap avail (by omega) d3 hrsp3 hrbp3 hr143
-    (by rw [Prysm.BeaconBlockHeader.Decode.j3 _ _ _ _ hsp0 (Int.toBytes_length 8 _) hsp2, Prysm.BeaconBlockHeader.Decode.lo8 _ S hS _ _ hlS (Int.toBytes_length 8 _)]
+    (by rw [Prysm.BeaconBlockHeader.Decode.split_three_words _ _ _ _ hsp0 (Int.toBytes_length 8 _) hsp2, Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS (Int.toBytes_length 8 _)]
         ecancel) hms hmm) ?_
   rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, hrbp4, hr144, p1, spl1, lo1, hspl1, hlo1, hrax4, Hm4⟩
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrax4 Hm4
@@ -101,7 +101,7 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
   have hsp3 : spl1 = spl1.take 8 ++ ((spl1.drop 8).take 8 ++ (spl1.drop 8).drop 8) := by
     rw [List.take_append_drop, List.take_append_drop]
   have hlo3 : lo1 = lo1.take S ++ lo1.drop S := (List.take_append_drop S lo1).symm
-  rw [hsp3, hlo3, Prysm.BeaconBlockHeader.Decode.j3 _ _ _ _ hq0 hq1 hq2, Prysm.BeaconBlockHeader.Decode.lo8 _ S hS _ _ hlS1 hl81] at Hm4
+  rw [hsp3, hlo3, Prysm.BeaconBlockHeader.Decode.split_three_words _ _ _ _ hq0 hq1 hq2, Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS1 hl81] at Hm4
   -- ValidatorIndex: 82 → 118 (worked call field: six steps and the call block; hC = Prysm.ValidatorIndex.Decode.accept_function_spec_holds)
   refine eventually_trans _ _ _ _ (Prysm.SyncCommitteeMessage.Decode.example_step_ValidatorIndex_field k hk hf hvi
     (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec (rsp.toBitVec - 112) (rsp.toBitVec - 120) (rsp.toBitVec - 96)
@@ -138,7 +138,7 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
     (by simp only [List.length_append, hq0, hq2, Int.toBytes_length]) (Int.toBytes_length 8 _)
     (by simp only [List.length_append, hlS1, Int.toBytes_length]) (Int.toBytes_length 8 _) haP2 haL2 haC2
     _ Heap (avail - 32) (by omega) d7 (hrsp7.trans hrsp6) (hrbp7.trans hrbp6) (hr147.trans hr146)
-    (by rw [Prysm.BeaconBlockHeader.Decode.j3 _ _ _ _ hq0 (Int.toBytes_length 8 _) hq2, Prysm.BeaconBlockHeader.Decode.lo8 _ S hS _ _ hlS1 (Int.toBytes_length 8 _)]
+    (by rw [Prysm.BeaconBlockHeader.Decode.split_three_words _ _ _ _ hq0 (Int.toBytes_length 8 _) hq2, Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS1 (Int.toBytes_length 8 _)]
         ecancel) hms hmm) ?_
   rintro ⟨d8, pc8⟩ ⟨hpc8, hrsp8, hrbp8, hr148, p2, spl2, lo2, hspl2, hlo2, hrdx8, Hm8⟩
   dsimp only at hpc8 hrsp8 hrbp8 hr148 hrdx8 Hm8
@@ -149,36 +149,36 @@ theorem Decode.accept_from_window_steps : Decode.accept_statement := by
   replace hrdx8 : rdx8.toBitVec = rax.toBitVec := hrdx8
   subst hrsp8 hrbp8 hr148
   -- instance directives 146–147, L_289 (154), 155, epilogue 156–160
-  kat hk Code.unmarshalSSZ 146
+  step_directive hk Code.unmarshalSSZ 146
   apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p2.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 147
-  klabel hk hf Code.unmarshalSSZ 154
-  kat hk Code.unmarshalSSZ 154
-  kat hk Code.unmarshalSSZ 155
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 147
+  label_address hk hf Code.unmarshalSSZ 154
+  step_directive hk Code.unmarshalSSZ 154
+  step_directive hk Code.unmarshalSSZ 155
   apply store_step_at _ _ (rax.toBitVec + 48) _ _ _ (Int.toBytes 8 p2.toInt) _ _ (by rw [hrdx8]; try beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
-  kunfold
-  kat hk Code.unmarshalSSZ 156
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 156
   apply load_step_at _ _ (rsp.toBitVec - 64) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 157
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 157
   apply load_step_at _ _ (rsp.toBitVec - 56) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 158
-  kat hk Code.unmarshalSSZ 159
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 158
+  step_directive hk Code.unmarshalSSZ 159
   apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 160
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 160
   apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   rw [show UInt64.toBitVec 0 = 0#64 from rfl] at H5
   rw [show k + 140 + 1 = k + 141 from rfl] at H5

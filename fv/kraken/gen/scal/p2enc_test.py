@@ -222,7 +222,7 @@ def adversarial(work):
     return C
 
 
-KINDS = ("encHeadKindN", "encFieldKindN", "encEpiKindN", "encFastKindN")
+KINDS = ("encHeadKindAnyFrame", "encFieldKindAnyFrame", "encEpilogueKindAnyFrame", "encFastPathKindAnyFrame")
 
 
 def kinds_ok(out, p, nf):

@@ -67,7 +67,7 @@ def Encode.fast_path_statement : Prop :=
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R)
     (hguard : guard.toNat + 8 < s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 36 + 8 * n ≤ s.regs.rdi.toNat)
-    (hmm : MemmoveC S),
+    (hmm : MemmoveContract S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 36 + 8 * n ∧ st.data.regs.rcx = s.regs.rdi
@@ -94,7 +94,7 @@ def Encode.fast_path_statement : Prop :=
       ⟨s, Host.addrOf k⟩
 
 /-- **First-site grow path: one grow at site 1 only (machine).** `len ≤ cap < len + 32`: `append(dst, BlockRoot...)` calls
-`growslice(dst.ptr, len + 32, cap, 32, uint8)` (contract `GrowsliceC Heap typeUint8_addr 1 S`). The premise
+`growslice(dst.ptr, len + 32, cap, 32, uint8)` (contract `GrowsliceContract Heap typeUint8_addr 1 S`). The premise
 `len + 36 + 8n ≤ nextSliceCap (len + 32) cap` makes the new capacity enough for sites 2 and 3, so they do not grow.
 The encoder returns `(new, len + 36 + 8n, newCap, nil)`; the new block starts with `pre ‖ root ‖ offset 36 ‖ cb`
 (the rest `rest` is named); the old block `pre` is unchanged; the heap shrinks by `newCap`. -/
@@ -129,7 +129,7 @@ def Encode.grow_first_site_statement : Prop :=
     (hlc : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 32)
     (hfit : s.regs.rcx.toNat + 36 + 8 * n ≤ nextSliceCap (s.regs.rcx.toNat + 32) s.regs.rdi.toNat)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 32) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S),
+    (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 36 + 8 * n
@@ -220,7 +220,7 @@ def Encode.reject_too_big_statement : Prop :=
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat + 8 < s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 36 ≤ s.regs.rdi.toNat)
-    (hmm : MemmoveC S),
+    (hmm : MemmoveContract S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e0 ∧ st.data.regs.rsi = e1
@@ -274,7 +274,7 @@ def Encode.fast_path_spec_statement : Prop :=
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R)
     (hguard : guard.toNat + 8 < s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 36 + 8 * g.cols.length ≤ s.regs.rdi.toNat)
-    (hmm : MemmoveC S),
+    (hmm : MemmoveContract S),
     ∃ bs, serialize desc g.toValue = .ok bs ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
@@ -315,7 +315,7 @@ def Encode.grow_first_site_spec_statement : Prop :=
     (hlc : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 32)
     (hfit : s.regs.rcx.toNat + 36 + 8 * g.cols.length ≤ nextSliceCap (s.regs.rcx.toNat + 32) s.regs.rdi.toNat)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 32) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S),
+    (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S),
     ∃ bs, serialize desc g.toValue = .ok bs ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec

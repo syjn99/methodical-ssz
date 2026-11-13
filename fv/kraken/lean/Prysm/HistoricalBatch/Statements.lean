@@ -77,8 +77,8 @@ def Decode.accept_statement : Prop :=
       ⋆ Eq (aL2.At (s.regs.rax.toBitVec + 32)) ⋆ Eq (aC2.At (s.regs.rax.toBitVec + 40))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 524288) (hav : 917504 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S)
-    (hmsA : MakesliceC Heap ElfData.PrysmTarget.typeUint8Slice_addr 24 S) (hmm : MemmoveC S),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S)
+    (hmsA : MakesliceContract Heap ElfData.PrysmTarget.typeUint8Slice_addr 24 S) (hmm : MemmoveContract S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -131,7 +131,7 @@ def Decode.reject_size_statement : Prop :=
 
 /-- **Accept (spec).** If EthLib accepts `bsA` against `desc` as `v`, there is `g : SszValue` with
 `g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the
-receiver holds `g` (postcondition of `Decode.accept_statement` with `brs = g.brs`, `srs = g.srs`). -/
+receiver holds `g` (postcondition of `Decode.accept_statement` with `brs = g.blockRootBytes`, `srs = g.stateRootBytes`). -/
 def Decode.accept_spec_statement : Prop :=
   ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (bsA : Array UInt8) (v : Value) (hd : deserialize desc bsA = .ok v)
@@ -154,14 +154,14 @@ def Decode.accept_spec_statement : Prop :=
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 72)) ⋆ Eq (lo.At (s.regs.rsp.toBitVec - 72 - BitVec.ofNat 64 S))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Heap avail
-      ⋆ Eq (g.brs.flatten.At s.regs.rbx.toBitVec) ⋆ Eq (g.srs.flatten.At (s.regs.rbx.toBitVec + 262144))
+      ⋆ Eq (g.blockRootBytes.flatten.At s.regs.rbx.toBitVec) ⋆ Eq (g.stateRootBytes.flatten.At (s.regs.rbx.toBitVec + 262144))
       ⋆ Eq (aP1.At s.regs.rax.toBitVec) ⋆ Eq (aL1.At (s.regs.rax.toBitVec + 8))
       ⋆ Eq (aC1.At (s.regs.rax.toBitVec + 16)) ⋆ Eq (aP2.At (s.regs.rax.toBitVec + 24))
       ⋆ Eq (aL2.At (s.regs.rax.toBitVec + 32)) ⋆ Eq (aC2.At (s.regs.rax.toBitVec + 40))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size) (hav : 917504 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S)
-    (hmsA : MakesliceC Heap ElfData.PrysmTarget.typeUint8Slice_addr 24 S) (hmm : MemmoveC S),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S)
+    (hmsA : MakesliceContract Heap ElfData.PrysmTarget.typeUint8Slice_addr 24 S) (hmm : MemmoveContract S),
     ∃ g : SszValue, g.toValue = v ∧ bsA = SszValue.encode g ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
@@ -180,12 +180,12 @@ def Decode.accept_spec_statement : Prop :=
           ⋆ Eq (lo'.At (s.regs.rsp.toBitVec - 72 - BitVec.ofNat 64 S))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
           ⋆ Heap (avail - 917504)
-          ⋆ Eq (g.brs.flatten.At s.regs.rbx.toBitVec) ⋆ Eq (g.srs.flatten.At (s.regs.rbx.toBitVec + 262144))
+          ⋆ Eq (g.blockRootBytes.flatten.At s.regs.rbx.toBitVec) ⋆ Eq (g.stateRootBytes.flatten.At (s.regs.rbx.toBitVec + 262144))
           ⋆ Eq ((Int.toBytes 8 A1.toInt).At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 8)) ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 A2.toInt).At (s.regs.rax.toBitVec + 24))
           ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 32)) ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 40))
-          ⋆ Eq ((Codec.sliceHeaders 32 ps1).At A1) ⋆ Codec.elementBlocks ps1 g.brs ⋆ Eq ((Codec.sliceHeaders 32 ps2).At A2) ⋆ Codec.elementBlocks ps2 g.srs
+          ⋆ Eq ((Codec.sliceHeaders 32 ps1).At A1) ⋆ Codec.elementBlocks ps1 g.blockRootBytes ⋆ Eq ((Codec.sliceHeaders 32 ps2).At A2) ⋆ Codec.elementBlocks ps2 g.stateRootBytes
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 

@@ -10,7 +10,7 @@ import Prysm.DepositMessage.DecodeFieldSegmentOffsetZero
 
 Hand-written after the hold-out was opened. The WithdrawalCredentials segment is the
 raw generator theorem `Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg` (`Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean`, unedited). The
-PublicKey segment (48 bytes, source offset 0) is the hand lemma `Prysm.DepositMessage.bytes48dec_seg_z` (`Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`):
+PublicKey segment (48 bytes, source offset 0) is the hand lemma `Prysm.DepositMessage.bytes48dec_seg_offset_zero` (`Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`):
 the generator does not read 48-byte fields. Amount (inline uint64) is by hand. The head and the composition
 are the text of `Prysm/Eth1Data/DecodeAccept.lean`; `eth1_data_addr` and `Prysm.Eth1Data.Decode.stack_low_eq` are reused from it.
 
@@ -63,12 +63,12 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   simp only at h_mem hguard hlen ⊢
   subst hlen
   have := rsp.toNat_lt_size; have := guard.toNat_lt_size; simp only [UInt64.size] at *
-  kat hk unmarshalSSZ 0
-  kat hk unmarshalSSZ 1
-  kat hk unmarshalSSZ 2
+  step_directive hk unmarshalSSZ 0
+  step_directive hk unmarshalSSZ 1
+  step_directive hk unmarshalSSZ 2
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 3
+  unfold_step
+  step_directive hk unmarshalSSZ 3
   split
   · rename_i h; exfalso
     simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
@@ -76,35 +76,35 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     · apply h; omega
     · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
   simp only [Effects.All]
-  kat hk unmarshalSSZ 4
+  step_directive hk unmarshalSSZ 4
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk unmarshalSSZ 5
-  kat hk unmarshalSSZ 6
-  kat hk unmarshalSSZ 7
+  unfold_step
+  step_directive hk unmarshalSSZ 5
+  step_directive hk unmarshalSSZ 6
+  step_directive hk unmarshalSSZ 7
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hk unmarshalSSZ 8
-  kat hk unmarshalSSZ 9
-  kat hk unmarshalSSZ 10
+  unfold_step
+  step_directive hk unmarshalSSZ 8
+  step_directive hk unmarshalSSZ 9
+  step_directive hk unmarshalSSZ 10
   split
   case isTrue h => exact absurd h (by decide)
   simp only [Effects.All]
-  kat hk unmarshalSSZ 11
+  step_directive hk unmarshalSSZ 11
   apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by bv_omega) (by ecancel) (by exact h1)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
-  kat hk unmarshalSSZ 12
+  unfold_step
+  step_directive hk unmarshalSSZ 12
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by bv_omega) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
+  unfold_step
   apply Eventually.done
   refine ⟨rfl, ?_, ?_, rfl, rfl, rfl, ?_⟩
   rotate_right
@@ -143,7 +143,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
       ⋆ Eq (aN.At (s.regs.rax.toBitVec + 48))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 88) (hav : 80 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -180,12 +180,12 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   -- PublicKey (hand: 48-byte offset-0 segment, `Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`), 13 → 37
   have hA1 := Codec.infix_sub (q := Prysm.DepositMessage.bytesDecHead48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" 48 8 16) 13 hk
     (by simp only [unmarshalSSZ, Prysm.DepositMessage.bytesDecHead48, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB1 := Codec.infix_sub (q := Prysm.DepositMessage.bytesDecMidZ48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_b0" 48 56 24 0 8 16) 26 hk
-    (by simp only [unmarshalSSZ, Prysm.DepositMessage.bytesDecMidZ48, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB1 := Codec.infix_sub (q := Prysm.DepositMessage.bytesDecMidOffsetZero48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_b0" 48 56 24 0 8 16) 26 hk
+    (by simp only [unmarshalSSZ, Prysm.DepositMessage.bytesDecMidOffsetZero48, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl1 := Machine.label_at' hk hf (j := 26)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  refine eventually_trans _ _ _ _ (Prysm.DepositMessage.bytes48dec_seg_z _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA1 hB1 hl1
+  refine eventually_trans _ _ _ _ (Prysm.DepositMessage.bytes48dec_seg_offset_zero _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA1 hB1 hl1
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) rax.toBitVec (rax.toBitVec + 8) (rax.toBitVec + 16) S
@@ -206,19 +206,19 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   simp only at hrsp2 hrbp2 hr142 hrdx2 Hm2
   subst hrsp2 hrbp2 hr142
   -- directives 37–38, L_c4 (45), 46
-  kat hk unmarshalSSZ 37
+  step_directive hk unmarshalSSZ 37
   apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 p1.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 38
-  klabel hk hf unmarshalSSZ 45
-  kat hk unmarshalSSZ 45
-  kat hk unmarshalSSZ 46
+  unfold_step
+  step_directive hk unmarshalSSZ 38
+  label_address hk hf unmarshalSSZ 45
+  step_directive hk unmarshalSSZ 45
+  step_directive hk unmarshalSSZ 46
   apply store_step_at _ _ rax.toBitVec _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrdx2]; try eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
+  unfold_step
   -- WithdrawalCredentials: the generated segment theorem (raw scalgen output, `Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean`), 47 → 73
   refine eventually_trans _ _ _ _ (Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg k hk hf
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
@@ -240,46 +240,46 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   simp only at hrsp3 hrbp3 hr143 hrdx3 Hm3
   subst hrsp3 hrbp3 hr143
   -- directives 73–74, L_162 (81), 82; Amount 83–85 (hand: no template for an inline uint64 read)
-  kat hk unmarshalSSZ 73
+  step_directive hk unmarshalSSZ 73
   apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 p2.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 74
-  klabel hk hf unmarshalSSZ 81
-  kat hk unmarshalSSZ 81
-  kat hk unmarshalSSZ 82
+  unfold_step
+  step_directive hk unmarshalSSZ 74
+  label_address hk hf unmarshalSSZ 81
+  step_directive hk unmarshalSSZ 81
+  step_directive hk unmarshalSSZ 82
   apply store_step_at _ _ (rax.toBitVec + 24) _ _ _ (Int.toBytes 8 p2.toInt) _ _ (by rw [hrdx3]; try eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
-  kat hk unmarshalSSZ 83
+  unfold_step
+  step_directive hk unmarshalSSZ 83
   apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 84
+  unfold_step
+  step_directive hk unmarshalSSZ 84
   apply load_step_at _ _ (rbx.toBitVec + 80) _ _ amt _ _ (by eth1_data_addr) (by ecancel) (by exact hamt)
-  kunfold
-  kat hk unmarshalSSZ 85
+  unfold_step
+  step_directive hk unmarshalSSZ 85
   apply store_step_at _ _ (rax.toBitVec + 48) _ _ _ aN _ _ (by rw [hrdx3]; try eth1_data_addr) (by ecancel)
     (by exact haN)
   intro m5' H5
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl amt hamt] at H5
-  kunfold
+  unfold_step
   -- epilogue 86–90
-  kat hk unmarshalSSZ 86
+  step_directive hk unmarshalSSZ 86
   intro _
-  kat hk unmarshalSSZ 87
+  step_directive hk unmarshalSSZ 87
   intro _
-  kat hk unmarshalSSZ 88
-  kat hk unmarshalSSZ 89
+  step_directive hk unmarshalSSZ 88
+  step_directive hk unmarshalSSZ 89
   apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 90
+  unfold_step
+  step_directive hk unmarshalSSZ 90
   apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by eth1_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   rw [show k + 61 + 6 + 1 = k + 68 from rfl] at H5
   rw [show avail - 48 - 32 = avail - 80 by omega] at H5

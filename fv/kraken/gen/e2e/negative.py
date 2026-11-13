@@ -273,7 +273,7 @@ def run_case(c, work):
         k = max(i for i, l in enumerate(tl) if l.startswith("import ")) + 1
         rest = re.sub(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", name + "Mut", "\n".join(tl[k:]))
         ns = code_ns_of(c)
-        decl = f'def {ns}.{name}Mut : Program := include_x64_rt "{d / "mut.S"}"'
+        decl = f'def {ns}.{name}Mut : Program := include_x64_code "{d / "mut.S"}"'
         text = "\n".join(tl[:k] + ["", decl] + [rest])
         lo += 2
         hi += 2

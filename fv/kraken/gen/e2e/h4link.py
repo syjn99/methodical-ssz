@@ -32,9 +32,9 @@ CLASS = dict(adlink.CLASS)
 CLASS.update({
     f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (BeaconBlockHeader hold-out)"),
     f"{PRIM}.(*Epoch).UnmarshalSSZ": ("a", "function spec Prysm.Epoch.Decode.accept_function_spec, proved from machine code (prysm-e2e)"),
-    "fmt.errorf": ("b", "FmtErrorfWC (field wraps 'Index: %w', 'WithdrawableEpoch: %w'); decoder: unreachable "
+    "fmt.errorf": ("b", "FmtErrorfWrapContract (field wraps 'Index: %w', 'WithdrawableEpoch: %w'); decoder: unreachable "
                         "under the callee specs"),
-    "runtime.newobject": ("b", "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"),
+    "runtime.newobject": ("b", "NewobjectContract errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"),
 })
 
 

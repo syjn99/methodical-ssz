@@ -17,8 +17,8 @@ import Prysm.HistoricalSummary.EncodeFastPathExample
 | `Prysm/DepositMessage/EncodeFastPathExample.lean` | DepositMessage | large, 8 | `add $-0x80` | bytes 48, bytes 32, uint64; no `state` word | no reload | kind instance (no hand statement) |
 | `Prysm/HistoricalSummary/EncodeFastPathExample.lean` | HistoricalSummary | small | `sub $0x50` | bytes 32 twice | frame test (`Codec/EncodeFrameTest.lean`), reloads | kind instance (no hand statement) |
 
-Each module: `Encode.example_head` (`encHeadKindN`), `Encode.example_f<i>` per field (`encFieldKindN`), `Encode.example_epi`
-(`encEpiKindN`), `Encode.example_fast` (`encFastKindN`), each with its `_kind` line, and, where a hand theorem
+Each module: `Encode.example_head` (`encHeadKindAnyFrame`), `Encode.example_f<i>` per field (`encFieldKindAnyFrame`), `Encode.example_epi`
+(`encEpilogueKindAnyFrame`), `Encode.example_fast` (`encFastPathKindAnyFrame`), each with its `_kind` line, and, where a hand theorem
 exists, `Encode.example_fast_same_statement : type_of% <the hand theorem>`.
 
 **Fast path only** in every theorem: `len(dst) + SizeSSZ ≤ cap(dst)` and every byte-vector field of its exact
@@ -29,7 +29,7 @@ repository; it is not the generator). They are development data (in-sample). The
 statements are the ties of `Prysm/<Type>/EncodeFastPathKindInstances.lean` (BeaconBlockHeader, Eth1Data, Checkpoint).
 
 `Encode.example_fast_all` collects the six theorems under their kinds. `Encode.example_bytes32_call_of_size`: the committed block
-`enc32_call` (statement as committed) follows from `encn_call`.
+`encode32_memmove_call` (statement as committed) follows from `encode_memmove_call`.
 -/
 
 open Machine Runtime
@@ -41,19 +41,19 @@ variable [Host]
 
 /-- The six generated-style fast-path theorems, stated by their kinds. -/
 theorem Encode.example_fast_all :
-    encFastKindN Prysm.Checkpoint.Code.marshalSSZTo encodeLayout [.u64, .bytes 32]
-    ∧ encFastKindN Prysm.BeaconBlockHeader.Code.marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
-    ∧ encFastKindN Prysm.Eth1Data.Code.marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .u64, .bytes 32]
-    ∧ encFastKindN Prysm.ValidatorBalance.Code.marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.u64, .u64]
-    ∧ encFastKindN Prysm.DepositMessage.Code.marshalSSZTo Prysm.DepositMessage.Encode.example_layout [.bytes 48, .bytes 32, .u64]
-    ∧ encFastKindN Prysm.HistoricalSummary.Code.marshalSSZTo Prysm.HistoricalSummary.Encode.example_layout [.bytes 32, .bytes 32] :=
+    encFastPathKindAnyFrame Prysm.Checkpoint.Code.marshalSSZTo encodeLayout [.u64, .bytes 32]
+    ∧ encFastPathKindAnyFrame Prysm.BeaconBlockHeader.Code.marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    ∧ encFastPathKindAnyFrame Prysm.Eth1Data.Code.marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .u64, .bytes 32]
+    ∧ encFastPathKindAnyFrame Prysm.ValidatorBalance.Code.marshalSSZTo Prysm.ValidatorBalance.Encode.example_layout [.u64, .u64]
+    ∧ encFastPathKindAnyFrame Prysm.DepositMessage.Code.marshalSSZTo Prysm.DepositMessage.Encode.example_layout [.bytes 48, .bytes 32, .u64]
+    ∧ encFastPathKindAnyFrame Prysm.HistoricalSummary.Code.marshalSSZTo Prysm.HistoricalSummary.Encode.example_layout [.bytes 32, .bytes 32] :=
   ⟨Encode.example_fast, Prysm.BeaconBlockHeader.Encode.example_fast, Prysm.Eth1Data.Encode.example_fast, Prysm.ValidatorBalance.Encode.example_fast, Prysm.DepositMessage.Encode.example_fast,
     Prysm.HistoricalSummary.Encode.example_fast⟩
 
 /-- The committed 32-byte call block has the statement of the `n`-byte block at `n = 32`. -/
-theorem Encode.example_bytes32_call_of_size : type_of% (@Codec.enc32_call ‹Host›) := by
+theorem Encode.example_bytes32_call_of_size : type_of% (@Codec.encode32_memmove_call ‹Host›) := by
   intro jc hc sp d p aRet aLo S hRet hLo root e rslot scratch hroot he hrs hsc R s hrsp hrax hrbx hrcx h_mem hmm
-  exact encn_call jc hc sp d p aRet aLo S hRet hLo root e rslot scratch (by rw [he, hroot]) hrs hsc R s hrsp hrax
+  exact encode_memmove_call jc hc sp d p aRet aLo S hRet hLo root e rslot scratch (by rw [he, hroot]) hrs hsc R s hrsp hrax
     hrbx (by rw [hroot]; exact hrcx) h_mem hmm
 
 end Prysm.Checkpoint

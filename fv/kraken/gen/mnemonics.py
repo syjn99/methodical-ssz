@@ -13,7 +13,7 @@ How "Kraken supports a mnemonic" is decided (mnemonic level only):
      `parseInstr` in the pinned Kraken package (Kraken/X64/Parser/Basic.lean),
      plus the prefix forms `j<cc>`, `set<cc>`, `cmov<cc>[wlq]` with the
      condition codes of `parseCondCode?`. This is the parser that
-     `include_x64_rt` (Machine/Include.lean) runs.
+     `include_x64_code` (Machine/Include.lean) runs.
   2. A whole GNU instruction text in the NORM table of link/conv.py counts as
      "norm" (conv.py --norm rewrites it to `nop`).
   3. Anything else is "unsupported".

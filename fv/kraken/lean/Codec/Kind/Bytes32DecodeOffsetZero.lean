@@ -4,10 +4,10 @@ import Codec.Bytes32DecodeOffsetZero
 # Statement kind of the generated offset-0 decode segments
 
 Added after the hold-out types were opened, so no hold-out type tests it. `Codec/Kind/FieldPatterns.lean` is not
-changed. `rootDecSegZKind` is the text of `rootDecSegKind` with the
+changed. `rootDecSegOffsetZeroKind` is the text of `rootDecSegKind` with the
 `add`-form parts removed: no `src`, no `aSrc` / `hSrc`, the source bytes at `bf`, end pc `k + j2 + 11`,
-memmove return address `k + j2 + 5 + 1`. `rootDecSegZKind_of` proves the kind from the lemma
-`rootdec_seg_z` (kernel check that the kind body is the lemma conclusion). `gen/scal/kindcheck.py` accepts
+memmove return address `k + j2 + 5 + 1`. `rootDecSegOffsetZeroKind_of` proves the kind from the lemma
+`rootdec_seg_offset_zero` (kernel check that the kind body is the lemma conclusion). `gen/scal/kindcheck.py` accepts
 it only with this file at its pinned blob.
 -/
 
@@ -19,10 +19,10 @@ variable [Host]
 
 set_option linter.unusedVariables false in
 /-- P2 decode statement kind, offset-0 form: the decode segment of one 32-byte field at SSZ offset 0 of the
-decoder `C`, head block at `k + j1`, second block (`rootDecMidZ`) at `k + j2`, with the stack displacements
-`dR dB dS` and the Go field offsets `fP fL fC`. The text is the conclusion of `rootdec_seg_z` with
+decoder `C`, head block at `k + j1`, second block (`rootDecMidOffsetZero`) at `k + j2`, with the stack displacements
+`dR dB dS` and the Go field offsets `fP fL fC`. The text is the conclusion of `rootdec_seg_offset_zero` with
 `j1 := k + j1`, `j2 := k + j2`, after the binders `k hk hf`. -/
-abbrev rootDecSegZKind (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC : Int64) : Prop :=
+abbrev rootDecSegOffsetZeroKind (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC : Int64) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)
     (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
@@ -41,7 +41,7 @@ abbrev rootDecSegZKind (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC : Int64) :
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At bf)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + j2 + 11) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -59,13 +59,13 @@ abbrev rootDecSegZKind (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC : Int64) :
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + j1)⟩
 
-/-- The offset-0 kind follows from `rootdec_seg_z` and the code facts of an instance (kernel check that the
+/-- The offset-0 kind follows from `rootdec_seg_offset_zero` and the code facts of an instance (kernel check that the
 kind body is the lemma conclusion at `j1 := k + j1`, `j2 := k + j2`). -/
-theorem rootDecSegZKind_of (C : Program) (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat)
+theorem rootDecSegOffsetZeroKind_of (C : Program) (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat)
     (hA : ∀ k, C.IsInfixAt Host.prog k → (rootDecHead lff dR fL fC).IsInfixAt Host.prog (k + j1))
-    (hB : ∀ k, C.IsInfixAt Host.prog k → (rootDecMidZ lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog (k + j2))
+    (hB : ∀ k, C.IsInfixAt Host.prog k → (rootDecMidOffsetZero lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog (k + j2))
     (hl : ∀ k, C.IsInfixAt Host.prog k → LabelsFresh C k → label lff = Host.addrOf (k + j2)) :
-    rootDecSegZKind C j1 j2 dR dB dS fP fL fC :=
-  fun k hk hf => rootdec_seg_z lff lwb dR dB dS fP fL fC (k + j1) (k + j2) (hA k hk) (hB k hk) (hl k hk hf)
+    rootDecSegOffsetZeroKind C j1 j2 dR dB dS fP fL fC :=
+  fun k hk hf => rootdec_seg_offset_zero lff lwb dR dB dS fP fL fC (k + j1) (k + j2) (hA k hk) (hB k hk) (hl k hk hf)
 
 end Codec

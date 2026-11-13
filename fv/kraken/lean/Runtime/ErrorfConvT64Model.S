@@ -1,15 +1,15 @@
 fmt.errorf:
   test %rdi,%rdi
-  jne L_fverr_args
+  jne L_model_errorf_args
   xor %eax,%eax
   retq
-L_fverr_args:
+L_model_errorf_args:
   mov $0x1,%eax
   retq
 runtime.convT64:
-  mov runtime.fvBump(%rip),%rcx
+  mov runtime.modelBumpPointer(%rip),%rcx
   lea 0x8(%rcx),%rdx
-  mov %rdx,runtime.fvBump(%rip)
+  mov %rdx,runtime.modelBumpPointer(%rip)
   mov %rax,(%rcx)
   mov %rcx,%rax
   retq

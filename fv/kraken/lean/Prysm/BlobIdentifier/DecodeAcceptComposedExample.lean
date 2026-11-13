@@ -8,7 +8,7 @@ import Prysm.BlobIdentifier.DecodeAccept
 `Decode.accept_composed_example` has the statement text of `Prysm.BlobIdentifier.Decode.accept`
 (`Decode.accept_composed_example_type`: the two declared types are equal by `rfl`). Its proof steps no
 directive by hand: it is a chain of `eventually_trans` over `dechead_seg`, the BlockRoot segment
-(`Decode.example_field_BlockRoot_seg`, an instance of `bytesdec_seg_z 32`), `bytesdec_tail_seg`, the Index segment
+(`Decode.example_field_BlockRoot_seg`, an instance of `bytesdec_seg_offset_zero 32`), `bytesdec_tail_seg`, the Index segment
 (`Decode.example_field_Index_seg`, an instance of `u64dec_inline_seg`) and `decepi_seg`. What stays per type is
 the frame instance of each step (addresses relative to the entry rsp, rax, rbx) and the code facts
 (`infix_sub`, `label_at'`). Hand-written example for the generator; the existing theorem is unchanged.
@@ -48,7 +48,7 @@ theorem Decode.accept_composed_example (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
       ⋆ Eq (aC1.At (s.regs.rax.toBitVec + 24)) ⋆ Eq (aN.At (s.regs.rax.toBitVec + 32))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 40) (hav : 32 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -79,13 +79,13 @@ theorem Decode.accept_composed_example (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
     (by simp only [unmarshalSSZ, Codec.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hT1 := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_c7" 24) 37 hk
     (by simp only [unmarshalSSZ, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hT2 := Codec.infix_sub (q := Codec.bytesDecTailB Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_c7" 8) 45 hk
-    (by simp only [unmarshalSSZ, Codec.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hT2 := Codec.infix_sub (q := Codec.bytesDecTailPointerStore Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_c7" 8) 45 hk
+    (by simp only [unmarshalSSZ, Codec.bytesDecTailPointerStore, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hlT := Machine.label_at' hk hf (j := 45)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hE := Codec.infix_sub (q := Codec.decEpi) 50 hk
-    (by simp only [unmarshalSSZ, Codec.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hE := Codec.infix_sub (q := Codec.decEpilogue) 50 hk
+    (by simp only [unmarshalSSZ, Codec.decEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hY : Codec.U64InlineReg Reg64.rsi := by decide
   -- head: entry → directive 13
   refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ 40 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _

@@ -34,8 +34,8 @@
   "module": "Codec/CalleeDecode.lean",
   "theorem": "Codec.calldec_seg",
   "kind": "stmt",
-  "old": "(hC : U64CalleeAcc fn)",
-  "new": "(hC : U64CalleeAcc lok)"
+  "old": "(hC : U64CalleeAccept fn)",
+  "new": "(hC : U64CalleeAccept lok)"
  },
  {
   "id": "g3-first-control",
@@ -78,21 +78,21 @@
  {
   "id": "g3-u64rr-control",
   "module": "Codec/InlineUint64RegisterBase.lean",
-  "theorem": "u64dec_rr_seg",
+  "theorem": "u64dec_scratch_register_seg",
   "kind": "control"
  },
  {
   "id": "g3-u64rr-stmt-reg",
   "module": "Codec/InlineUint64RegisterBase.lean",
-  "theorem": "u64dec_rr_seg",
+  "theorem": "u64dec_scratch_register_seg",
   "kind": "stmt",
-  "old": "(hX : U64RRReg rX)",
+  "old": "(hX : U64ScratchRegister rX)",
   "new": "(hX : rX = Reg64.rax ∨ rX = Reg64.rcx)"
  },
  {
   "id": "g3-u64rr-stmt-field",
   "module": "Codec/InlineUint64RegisterBase.lean",
-  "theorem": "u64dec_rr_seg",
+  "theorem": "u64dec_scratch_register_seg",
   "kind": "stmt",
   "old": "(Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem",
   "new": "(Eq (v.At aSrc) ⋆ Eq (vF.At aF) ⋆ R) st.data.dmem"
@@ -100,7 +100,7 @@
  {
   "id": "g3-u64rr-stmt-frame",
   "module": "Codec/InlineUint64RegisterBase.lean",
-  "theorem": "u64dec_rr_seg",
+  "theorem": "u64dec_scratch_register_seg",
   "kind": "stmt",
   "old": "(∀ r : Reg64, r ≠ rX → st.data.regs.get64 r = s.regs.get64 r)",
   "new": "(∀ r : Reg64, st.data.regs.get64 r = s.regs.get64 r)"
@@ -167,7 +167,7 @@
  {
   "id": "g3-pwepi-code-frame",
   "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.epi",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.epilogue",
   "kind": "code",
   "line": 90,
   "old": "  add $0x48,%rsp",
@@ -210,16 +210,16 @@
   "module": "Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.example_call_Amount_seg",
   "kind": "stmt",
-  "old": "(q := Codec.u64DecRR Reg64.r8 8 16)",
-  "new": "(q := Codec.u64DecRR Reg64.r9 8 16)"
+  "old": "(q := Codec.u64DecScratchRegister Reg64.r8 8 16)",
+  "new": "(q := Codec.u64DecScratchRegister Reg64.r9 8 16)"
  },
  {
   "id": "g3-ex-wc-stmt-nopad",
   "module": "Prysm/Deposit_Data/DecodeCallSegmentExamples.lean",
   "theorem": "Prysm.Deposit_Data.Decode.example_call_WithdrawalCredentials_seg",
   "kind": "stmt",
-  "old": "(q := Codec.bytesDecHeadP true 32",
-  "new": "(q := Codec.bytesDecHeadP false 32"
+  "old": "(q := Codec.bytesDecHeadOptionalPadding true 32",
+  "new": "(q := Codec.bytesDecHeadOptionalPadding false 32"
  },
  {
   "id": "g3-bh-control",
@@ -292,7 +292,7 @@
   "module": "Prysm/PendingPartialWithdrawal/WitnessDecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs",
   "kind": "stmt",
-  "old": "0 0 (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8)",
-  "new": "0 0x10040 (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8)"
+  "old": "0 0 (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8)",
+  "new": "0 0x10040 (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8)"
  }
 ]

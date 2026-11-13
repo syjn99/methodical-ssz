@@ -24,7 +24,7 @@ variable [Host]
 namespace Prysm.IndexedAttestation
 
 
--- Measured cause: `kat` unfolds the 279-directive program literal `unmarshalSSZ` with `simp`; at the
+-- Measured cause: `step_directive` unfolds the 279-directive program literal `unmarshalSSZ` with `simp`; at the
 -- default `maxRecDepth` (512) that `simp` stops with "maximum recursion depth has been reached"; 1024 passes.
 set_option maxRecDepth 1024 in
 theorem Decode.reject_size : Decode.reject_size_statement := by
@@ -34,54 +34,54 @@ theorem Decode.reject_size : Decode.reject_size_statement := by
   dsimp only
   have hz1 := rsp.toNat_lt_size; have hz2 := guard.toNat_lt_size; have hz3 := rcx.toNat_lt_size
   simp only [UInt64.size] at hz1 hz2 hz3
-  kat hk unmarshalSSZ 0
-  kat hk unmarshalSSZ 1
-  kat hk unmarshalSSZ 2
-  kat hk unmarshalSSZ 3
+  step_directive hk unmarshalSSZ 0
+  step_directive hk unmarshalSSZ 1
+  step_directive hk unmarshalSSZ 2
+  step_directive hk unmarshalSSZ 3
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 4
+  unfold_step
+  step_directive hk unmarshalSSZ 4
   split
   case isTrue h =>
     exfalso
     rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 48 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
-  kat hk unmarshalSSZ 5
+  step_directive hk unmarshalSSZ 5
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by indexed_attestation_addr) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk unmarshalSSZ 6
-  kat hk unmarshalSSZ 7
-  kat hk unmarshalSSZ 8
+  unfold_step
+  step_directive hk unmarshalSSZ 6
+  step_directive hk unmarshalSSZ 7
+  step_directive hk unmarshalSSZ 8
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by indexed_attestation_addr) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hk unmarshalSSZ 9
-  kat hk unmarshalSSZ 10
+  unfold_step
+  step_directive hk unmarshalSSZ 9
+  step_directive hk unmarshalSSZ 10
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega
   simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 137
-  kat hk unmarshalSSZ 137
-  kat hk unmarshalSSZ 138
+  label_address hk hf unmarshalSSZ 137
+  step_directive hk unmarshalSSZ 137
+  step_directive hk unmarshalSSZ 138
   apply load_step _ _ _ _ (Int.toBytes 8 e0.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 139
+  unfold_step
+  step_directive hk unmarshalSSZ 139
   apply load_step _ _ _ _ (Int.toBytes 8 e1.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 140
-  kat hk unmarshalSSZ 141
+  unfold_step
+  step_directive hk unmarshalSSZ 140
+  step_directive hk unmarshalSSZ 141
   apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by indexed_attestation_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 142
+  unfold_step
+  step_directive hk unmarshalSSZ 142
   apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by indexed_attestation_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   try simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩

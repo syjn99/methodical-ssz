@@ -8,7 +8,7 @@ inline uint64 read
 Each kind is the conclusion of its lemma (`Codec/CalleeDecode.lean`, `Codec/InlineUint64RegisterBase.lean`) with `j := k + j` (`j2 := k + j2`),
 after the binders `k hk hf` (the idiom of `Codec/Kind/FieldPatterns.lean`). The `_of` theorems prove a kind from the lemma and
 the code facts of an instance, so the kind body is kernel-checked against the lemma conclusion. The callee
-specification `U64CalleeAcc fn` is a hypothesis of `callDecSegKind` (discharged at the composition by the
+specification `U64CalleeAccept fn` is a hypothesis of `callDecSegKind` (discharged at the composition by the
 proved `Prysm.<Type>.Decode.accept_function_spec_holds` theorems). The scratch register of the uint64 read is in its kind, because it is in
 the statement (the register clause).
 -/
@@ -21,9 +21,9 @@ namespace Codec
 variable [Host]
 
 set_option linter.unusedVariables false in
-/-- Call-block statement kind: `callq fn; test; je lok` at `k + j`, `lok:` at `k + j2` of the decoder `C`, callee specification `U64CalleeAcc fn` as a hypothesis. -/
+/-- Call-block statement kind: `callq fn; test; je lok` at `k + j`, `lok:` at `k + j2` of the decoder `C`, callee specification `U64CalleeAccept fn` as a hypothesis. -/
 abbrev callDecSegKind (C : Program) (fn lok : String) (j j2 : Nat) : Prop :=
-  ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k) (hC : U64CalleeAcc fn)
+  ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k) (hC : U64CalleeAccept fn)
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -48,7 +48,7 @@ abbrev callDecSegKind (C : Program) (fn lok : String) (j j2 : Nat) : Prop :=
 /-- `callDecSegKind` follows from `calldec_seg` and the code facts of an instance. -/
 theorem callDecSegKind_of (C : Program) (fn lok : String) (j j2 : Nat)
     (hA : ∀ k, C.IsInfixAt Host.prog k → (callDec fn lok).IsInfixAt Host.prog (k + j))
-    (hB : ∀ k, C.IsInfixAt Host.prog k → (callDecL lok).IsInfixAt Host.prog (k + j2))
+    (hB : ∀ k, C.IsInfixAt Host.prog k → (callDecContinuationLabel lok).IsInfixAt Host.prog (k + j2))
     (hl : ∀ k, C.IsInfixAt Host.prog k → LabelsFresh C k → label lok = Host.addrOf (k + j2)) :
     callDecSegKind C fn lok j j2 :=
   fun k hk hf hC => calldec_seg fn lok (k + j) (k + j2) (hA k hk) (hB k hk) (hl k hk hf) hC
@@ -140,7 +140,7 @@ theorem callArgMovKind_of (C : Program) (j : Nat)
 
 set_option linter.unusedVariables false in
 /-- Two-directive inline uint64 decode statement kind: `mov src(%rbx),%rX; mov %rX,f(%rax)` at `k + j`. -/
-abbrev u64DecRRSegKind (C : Program) (rX : Reg64) (src f : Int64) (j : Nat) : Prop :=
+abbrev u64DecScratchRegisterSegKind (C : Program) (rX : Reg64) (src f : Int64) (j : Nat) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)
     (bf rcv aSrc aF : BitVec 64) (hSrc : bf + src.toBitVec = aSrc) (hF : rcv + f.toBitVec = aF)
     (v vF : List UInt8) (hv : v.length = 8) (hvF : vF.length = 8)
@@ -155,10 +155,10 @@ abbrev u64DecRRSegKind (C : Program) (rX : Reg64) (src f : Int64) (j : Nat) : Pr
         ∧ (Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + j)⟩
 
-/-- `u64DecRRSegKind` follows from `u64dec_rr_seg` and the code facts of an instance. -/
-theorem u64DecRRSegKind_of (C : Program) (rX : Reg64) (src f : Int64) (j : Nat) (hX : U64RRReg rX)
-    (hA : ∀ k, C.IsInfixAt Host.prog k → (u64DecRR rX src f).IsInfixAt Host.prog (k + j)) :
-    u64DecRRSegKind C rX src f j :=
-  fun k hk _ => u64dec_rr_seg rX hX src f (k + j) (hA k hk)
+/-- `u64DecScratchRegisterSegKind` follows from `u64dec_scratch_register_seg` and the code facts of an instance. -/
+theorem u64DecScratchRegisterSegKind_of (C : Program) (rX : Reg64) (src f : Int64) (j : Nat) (hX : U64ScratchRegister rX)
+    (hA : ∀ k, C.IsInfixAt Host.prog k → (u64DecScratchRegister rX src f).IsInfixAt Host.prog (k + j)) :
+    u64DecScratchRegisterSegKind C rX src f j :=
+  fun k hk _ => u64dec_scratch_register_seg rX hX src f (k + j) (hA k hk)
 
 end Codec

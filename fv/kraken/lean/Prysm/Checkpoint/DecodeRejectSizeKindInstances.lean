@@ -12,7 +12,7 @@ import Prysm.AttestationData.DecodeRejectSize
 import Codec.DecodeRejectSizeAnyFrame
 
 /-!
-# Ties of `decRejectKindN` to the committed size-reject theorems: the `Checkpoint` part
+# Ties of `decRejectKindAnyFrame` to the committed size-reject theorems: the `Checkpoint` part
 
 The declarations of the other types of this group are in `Prysm/BlobIdentifier/DecodeRejectSizeKindInstances.lean`.
 -/
@@ -23,7 +23,7 @@ open Codec
 namespace Prysm.Checkpoint
 
 theorem Decode.reject_size_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.Checkpoint.Decode.reject_size h)
-    = @decRejectKindN h Prysm.Checkpoint.Code.unmarshalSSZ 40 := by
+    = @decRejectKindAnyFrame h Prysm.Checkpoint.Code.unmarshalSSZ 40 := by
   intro h; with_reducible rfl
 
 end Prysm.Checkpoint

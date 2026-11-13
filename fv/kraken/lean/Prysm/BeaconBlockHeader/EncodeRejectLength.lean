@@ -10,17 +10,17 @@ Go source: `if size := len(b.ParentRoot); size != 32 { return nil, ssz.ErrBytesL
 StateRoot and BodyRoot). Directive indices of `Prysm.BeaconBlockHeader.Code.marshalSSZTo`: the three `jne` are 65, 93 and
 121; the tails are `L_2e1` (175; body 176–183), `L_2c2` (165; body 166–174, with a `nop` before `retq`)
 and `L_2a4` (156; body 157–164). Each tail is one instance of the reject block `enc_reject_tail`
-(`Encode.rej_at`: the code facts).
+(`Encode.reject_tails_at`: the code facts).
 
-* `Encode.rej_b` (from 62), `Encode.rej_c` (from 90), `Encode.rej_d` (from 118): the length test of one root with a
+* `Encode.reject_parent_root` (from 62), `Encode.reject_state_root` (from 90), `Encode.reject_body_root` (from 118): the length test of one root with a
   length word `rl ≠ 32`, the taken `jne`, the label, the block. Memory is unchanged.
 * `Encode.reject_length_parent_root`, `Encode.reject_length_state_root`, `Encode.reject_length_body_root`: the function from its entry, by composition with the unchanged
-  fast-path segments `Encode.enc_a1`, `Encode.enc_a2`, `Encode.enc_b`, `Encode.enc_c`. The code writes Slot and
+  fast-path segments `Encode.encode_slot`, `Encode.encode_proposer_index`, `Encode.encode_parent_root`, `Encode.encode_state_root`. The code writes Slot and
   ProposerIndex (and the earlier roots) to `dst[len:]` before it finds the bad length; the conclusions
   state these bytes (the encoder writes the earlier fields into the caller's spare capacity before it tests a root length). The returned slice is nil.
 
 Limits. No `runtime.growslice` branch: the premise is `len(dst) + 112 ≤ cap(dst)`, which is what the reused
-segments `Encode.enc_a1` / `Encode.enc_a2` state; the code needs less on these paths (16, 48 and 80 bytes). A reject
+segments `Encode.encode_slot` / `Encode.encode_proposer_index` state; the code needs less on these paths (16, 48 and 80 bytes). A reject
 with a smaller capacity is NOT covered. The morestack path is not covered. The two error words are a
 premise (initialised `ssz.ErrBytesLength`).
 -/
@@ -33,19 +33,19 @@ namespace Prysm.BeaconBlockHeader
 
 set_option maxRecDepth 100000 in
 /-- Code facts of the reject block: the three tails. -/
-theorem Encode.rej_at (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) :
-    (rejTail false false 152).IsInfixAt Host.prog (k + 176)
-      ∧ (rejTail false true 152).IsInfixAt Host.prog (k + 166)
-      ∧ (rejTail false false 152).IsInfixAt Host.prog (k + 157) := by
+theorem Encode.reject_tails_at (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) :
+    (rejectTail false false 152).IsInfixAt Host.prog (k + 176)
+      ∧ (rejectTail false true 152).IsInfixAt Host.prog (k + 166)
+      ∧ (rejectTail false false 152).IsInfixAt Host.prog (k + 157) := by
   refine ⟨infix_sub 176 hk ?_, infix_sub 166 hk ?_, infix_sub 157 hk ?_⟩ <;>
-    simp only [marshalSSZTo, rejTail, relRsp, nopOpt, List.cons_append, List.nil_append, List.drop_succ_cons,
+    simp only [marshalSSZTo, rejectTail, releaseRsp, optionalNop, List.cons_append, List.nil_append, List.drop_succ_cons,
       List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero]
 
-theorem Encode.reject_fp (x : BitVec 64) : relAddr false 152 (x - 8#64 - 152) = x - 8 := by
+theorem Encode.reject_frame_pointer (x : BitVec 64) : releaseAddress false 152 (x - 8#64 - 152) = x - 8 := by
   show x - 8#64 - 152 + (152 : BitVec 64) = x - 8
   bv_omega
 
-theorem Encode.reject_ra (x : BitVec 64) : x - 8 + 8 = x := by bv_omega
+theorem Encode.reject_return_address (x : BitVec 64) : x - 8 + 8 = x := by bv_omega
 
 theorem Encode.reject_rsp (r x : UInt64) (h : r.toBitVec = x.toBitVec + 8) : r = x + 8 := by
   apply UInt64.toBitVec_inj.mp; rw [h]; simp
@@ -54,7 +54,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Reject segment from directive 62: the length word `rl` of the root at receiver + 24 is not 32;
 the function returns `(nil, ssz.ErrBytesLength)`. Memory unchanged. -/
-theorem Encode.rej_b (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.reject_parent_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (s : MachineData) (rsp ra rbp0 e0 e1 rl : UInt64) (hrl : rl ≠ 32) (recv p1 : BitVec 64)
     (R : DataMem → Prop)
     (hrsp : s.regs.rsp = { toBitVec := rsp.toBitVec - 8#64 - 152 })
@@ -80,24 +80,24 @@ theorem Encode.rej_b (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rspc, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrax h_mem ⊢
   subst hrsp hrax
-  kat hk marshalSSZTo 62
+  step_directive hk marshalSSZTo 62
   apply load_step_at _ _ (recv + 24) _ _ (Int.toBytes 8 p1.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 63
+  unfold_step
+  step_directive hk marshalSSZTo 63
   apply load_step_at _ _ (recv + 32) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
-  kunfold
-  kat hk marshalSSZTo 64
-  kat hk marshalSSZTo 65
+  unfold_step
+  step_directive hk marshalSSZTo 64
+  step_directive hk marshalSSZTo 65
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, Width.bits] at h
     exact hrl (UInt64.toBitVec_inj.mp (Codec.eq_32_of_sub_eq_zero _ h))
   simp only [Effects.All]
-  klabel hk hf marshalSSZTo 175
-  kat hk marshalSSZTo 175
-  refine eventually_mono (enc_reject_tail false false 152 (k + 176) (Encode.rej_at k hk).1
-    (rsp.toBitVec - 8#64 - 152) (rsp.toBitVec - 8) rsp.toBitVec (Encode.reject_fp _) (Encode.reject_ra _) ra rbp0 e0 e1 _ _
+  label_address hk hf marshalSSZTo 175
+  step_directive hk marshalSSZTo 175
+  refine eventually_mono (enc_reject_tail false false 152 (k + 176) (Encode.reject_tails_at k hk).1
+    (rsp.toBitVec - 8#64 - 152) (rsp.toBitVec - 8) rsp.toBitVec (Encode.reject_frame_pointer _) (Encode.reject_return_address _) ra rbp0 e0 e1 _ _
     (by rfl) (by ecancel)) ?_
   rintro st ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp', hr14', hm⟩
   exact ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', Encode.reject_rsp _ _ hrsp', hrbp', hr14', by ecancel⟩
@@ -106,7 +106,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Reject segment from directive 90: the length word `rl` of the root at receiver + 48 is not 32;
 the function returns `(nil, ssz.ErrBytesLength)`. Memory unchanged. -/
-theorem Encode.rej_c (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.reject_state_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (s : MachineData) (rsp ra rbp0 e0 e1 rl : UInt64) (hrl : rl ≠ 32) (recv p2 : BitVec 64)
     (R : DataMem → Prop)
     (hrsp : s.regs.rsp = { toBitVec := rsp.toBitVec - 8#64 - 152 })
@@ -133,26 +133,26 @@ theorem Encode.rej_c (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rspc, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp h_mem ⊢
   subst hrsp
-  kat hk marshalSSZTo 90
+  step_directive hk marshalSSZTo 90
   apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 recv.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 91
+  unfold_step
+  step_directive hk marshalSSZTo 91
   apply load_step_at _ _ (recv + 48) _ _ (Int.toBytes 8 p2.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 92
+  unfold_step
+  step_directive hk marshalSSZTo 92
   apply load_step_at _ _ (recv + 56) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
-  kunfold
-  kat hk marshalSSZTo 93
+  unfold_step
+  step_directive hk marshalSSZTo 93
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, Width.bits] at h
     exact hrl (UInt64.toBitVec_inj.mp (Codec.eq_32_of_sub_eq_zero _ h))
   simp only [Effects.All]
-  klabel hk hf marshalSSZTo 165
-  kat hk marshalSSZTo 165
-  refine eventually_mono (enc_reject_tail false true 152 (k + 166) (Encode.rej_at k hk).2.1
-    (rsp.toBitVec - 8#64 - 152) (rsp.toBitVec - 8) rsp.toBitVec (Encode.reject_fp _) (Encode.reject_ra _) ra rbp0 e0 e1 _ _
+  label_address hk hf marshalSSZTo 165
+  step_directive hk marshalSSZTo 165
+  refine eventually_mono (enc_reject_tail false true 152 (k + 166) (Encode.reject_tails_at k hk).2.1
+    (rsp.toBitVec - 8#64 - 152) (rsp.toBitVec - 8) rsp.toBitVec (Encode.reject_frame_pointer _) (Encode.reject_return_address _) ra rbp0 e0 e1 _ _
     (by rfl) (by ecancel)) ?_
   rintro st ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp', hr14', hm⟩
   exact ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', Encode.reject_rsp _ _ hrsp', hrbp', hr14', by ecancel⟩
@@ -161,7 +161,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Reject segment from directive 118: the length word `rl` of the root at receiver + 72 is not 32;
 the function returns `(nil, ssz.ErrBytesLength)`. Memory unchanged. -/
-theorem Encode.rej_d (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.reject_body_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (s : MachineData) (rsp ra rbp0 e0 e1 rl : UInt64) (hrl : rl ≠ 32) (recv p3 : BitVec 64)
     (R : DataMem → Prop)
     (hrsp : s.regs.rsp = { toBitVec := rsp.toBitVec - 8#64 - 152 })
@@ -188,32 +188,32 @@ theorem Encode.rej_d (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : L
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rspc, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp h_mem ⊢
   subst hrsp
-  kat hk marshalSSZTo 118
+  step_directive hk marshalSSZTo 118
   apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 recv.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 119
+  unfold_step
+  step_directive hk marshalSSZTo 119
   apply load_step_at _ _ (recv + 72) _ _ (Int.toBytes 8 p3.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 120
+  unfold_step
+  step_directive hk marshalSSZTo 120
   apply load_step_at _ _ (recv + 80) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
-  kunfold
-  kat hk marshalSSZTo 121
+  unfold_step
+  step_directive hk marshalSSZTo 121
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, Width.bits] at h
     exact hrl (UInt64.toBitVec_inj.mp (Codec.eq_32_of_sub_eq_zero _ h))
   simp only [Effects.All]
-  klabel hk hf marshalSSZTo 156
-  kat hk marshalSSZTo 156
-  refine eventually_mono (enc_reject_tail false false 152 (k + 157) (Encode.rej_at k hk).2.2
-    (rsp.toBitVec - 8#64 - 152) (rsp.toBitVec - 8) rsp.toBitVec (Encode.reject_fp _) (Encode.reject_ra _) ra rbp0 e0 e1 _ _
+  label_address hk hf marshalSSZTo 156
+  step_directive hk marshalSSZTo 156
+  refine eventually_mono (enc_reject_tail false false 152 (k + 157) (Encode.reject_tails_at k hk).2.2
+    (rsp.toBitVec - 8#64 - 152) (rsp.toBitVec - 8) rsp.toBitVec (Encode.reject_frame_pointer _) (Encode.reject_return_address _) ra rbp0 e0 e1 _ _
     (by rfl) (by ecancel)) ?_
   rintro st ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp', hr14', hm⟩
   exact ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', Encode.reject_rsp _ _ hrsp', hrbp', hr14', by ecancel⟩
 
-theorem Encode.reject_v48 (y : BitVec 64) : y + 48 = y + 8 + 8 + 32 := by bv_omega
-theorem Encode.reject_v80 (y : BitVec 64) : y + 80 = y + 8 + 8 + 32 + 32 := by bv_omega
+theorem Encode.reject_sum48_as_fields (y : BitVec 64) : y + 48 = y + 8 + 8 + 32 := by bv_omega
+theorem Encode.reject_sum80_as_fields (y : BitVec 64) : y + 80 = y + 8 + 8 + 32 + 32 := by bv_omega
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -273,13 +273,13 @@ theorem Encode.reject_length_parent_root (k : Nat) (hk : marshalSSZTo.IsInfixAt 
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   -- Slot segment, directives 0–35
-  refine eventually_trans _ _ _ _ (Encode.enc_a1 k hk hf sl d0 hsl hd0 s guard fp s1 s2 t1a t1b hfp h1 h2 ht1a ht1b _
+  refine eventually_trans _ _ _ _ (Encode.encode_slot k hk hf sl d0 hsl hd0 s guard fp s1 s2 t1a t1b hfp h1 h2 ht1a ht1b _
     (by ecancel) hguard hsp hcap hcap63) ?_
   rintro ⟨x1, pc1⟩ ⟨hpc1, hrax1, hrbx1, hrcx1, hrdx1, hrdi1, hrsp1, hrbp1, hr141, t1, u1, ht1, hu1, Hm1⟩
   dsimp only at hpc1 hrax1 hrbx1 hrcx1 hrdx1 hrdi1 hrsp1 hrbp1 hr141 Hm1
   subst hpc1
   -- ProposerIndex segment, directives 36–61
-  refine eventually_trans _ _ _ _ (Encode.enc_a2 k hk hf pi d1 hpi hd1 x1 s.regs.rsp t2a t2b ht2a ht2b _
+  refine eventually_trans _ _ _ _ (Encode.encode_proposer_index k hk hf pi d1 hpi hd1 x1 s.regs.rsp t2a t2b ht2a ht2b _
     hrsp1 (by rw [hrdx1, hrcx1]) (by rw [hrax1, hrbx1, hrcx1]; ecancel)
     (by rw [hrcx1, hrdi1]; exact hcap) (by rw [hrdi1]; exact hcap63)) ?_
   rintro ⟨x2, pc2⟩ ⟨hpc2, hrax2, hrbx2, hr82, hrdi2, hrsp2, hrbp2, hr142, t2, u2, ht2, hu2, Hm2⟩
@@ -287,7 +287,7 @@ theorem Encode.reject_length_parent_root (k : Nat) (hk : marshalSSZTo.IsInfixAt 
   subst hpc2
   rw [hrax1, hrbx1, hrcx1] at Hm2
   -- reject: 62–65, L_2e1
-  refine eventually_mono (Encode.rej_b k hk hf x2 s.regs.rsp ra s.regs.rbp e0 e1 rl hrl s.regs.rax.toBitVec p1 _
+  refine eventually_mono (Encode.reject_parent_root k hk hf x2 s.regs.rsp ra s.regs.rbp e0 e1 rl hrl s.regs.rax.toBitVec p1 _
     (hrsp2.trans hrsp1) (hrax2.trans hrax1) (by ecancel)) ?_
   rintro st ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp', hr14', hm⟩
   exact ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp', hr14'.trans (hr142.trans hr141),
@@ -336,7 +336,7 @@ theorem Encode.reject_length_state_root (k : Nat) (hk : marshalSSZTo.IsInfixAt H
       ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "ssz.ErrBytesLength").toBitVec)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat + 32 < s.regs.rsp.toNat) (hsp : 168 ≤ s.regs.rsp.toNat)
-    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S) :
+    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e0 ∧ st.data.regs.rsi = e1
@@ -373,15 +373,15 @@ theorem Encode.reject_length_state_root (k : Nat) (hk : marshalSSZTo.IsInfixAt H
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨hcB, hcC, hcD⟩ := Encode.capacity_le s.regs.rcx.toBitVec s.regs.rdi.toBitVec hcap hcap63
   have hc63 : s.regs.rdi.toBitVec.toNat < 2 ^ 63 := hcap63
-  rw [Encode.o16 s.regs.rbx.toBitVec s.regs.rcx.toBitVec] at h_mem
+  rw [Encode.offset16_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec] at h_mem
   -- Slot segment, directives 0–35
-  refine eventually_trans _ _ _ _ (Encode.enc_a1 k hk hf sl d0 hsl hd0 s guard fp s1 s2 t1a t1b hfp h1 h2 ht1a ht1b _
+  refine eventually_trans _ _ _ _ (Encode.encode_slot k hk hf sl d0 hsl hd0 s guard fp s1 s2 t1a t1b hfp h1 h2 ht1a ht1b _
     (by ecancel) hguard hsp hcap hcap63) ?_
   rintro ⟨x1, pc1⟩ ⟨hpc1, hrax1, hrbx1, hrcx1, hrdx1, hrdi1, hrsp1, hrbp1, hr141, t1, u1, ht1, hu1, Hm1⟩
   dsimp only at hpc1 hrax1 hrbx1 hrcx1 hrdx1 hrdi1 hrsp1 hrbp1 hr141 Hm1
   subst hpc1
   -- ProposerIndex segment, directives 36–61
-  refine eventually_trans _ _ _ _ (Encode.enc_a2 k hk hf pi d1 hpi hd1 x1 s.regs.rsp t2a t2b ht2a ht2b _
+  refine eventually_trans _ _ _ _ (Encode.encode_proposer_index k hk hf pi d1 hpi hd1 x1 s.regs.rsp t2a t2b ht2a ht2b _
     hrsp1 (by rw [hrdx1, hrcx1]) (by rw [hrax1, hrbx1, hrcx1]; ecancel)
     (by rw [hrcx1, hrdi1]; exact hcap) (by rw [hrdi1]; exact hcap63)) ?_
   rintro ⟨x2, pc2⟩ ⟨hpc2, hrax2, hrbx2, hr82, hrdi2, hrsp2, hrbp2, hr142, t2, u2, ht2, hu2, Hm2⟩
@@ -391,7 +391,7 @@ theorem Encode.reject_length_state_root (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   have hr8' : x2.regs.r8 = { toBitVec := s.regs.rcx.toBitVec + 8 + 8 } := by
     apply UInt64.toBitVec_inj.mp; rw [hr82, hrcx1]
   -- ParentRoot segment, directives 62–89, memmove
-  refine eventually_trans _ _ _ _ (Encode.enc_b k hk hf r1 d2 hr1 hd2 x2 s.regs.rsp s.regs.rax.toBitVec
+  refine eventually_trans _ _ _ _ (Encode.encode_parent_root k hk hf r1 d2 hr1 hd2 x2 s.regs.rsp s.regs.rax.toBitVec
     s.regs.rbx.toBitVec (s.regs.rcx.toBitVec + 8 + 8) s.regs.rdi.toBitVec p1 l16 l96 l104 rslot scratch
     hl16 hl96 hl104 hrs S hsc _ (hrsp2.trans hrsp1) (hrax2.trans hrax1) (hrbx2.trans hrbx1) hr8'
     (hrdi2.trans hrdi1) (by ecancel) hcB hc63 hmm) ?_
@@ -399,12 +399,12 @@ theorem Encode.reject_length_state_root (k : Nat) (hk : marshalSSZTo.IsInfixAt H
   dsimp only at hpc3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
   -- reject: 90–93, L_2c2
-  refine eventually_mono (Encode.rej_c k hk hf x3 s.regs.rsp ra s.regs.rbp e0 e1 rl hrl s.regs.rax.toBitVec p2 _
+  refine eventually_mono (Encode.reject_state_root k hk hf x3 s.regs.rsp ra s.regs.rbp e0 e1 rl hrl s.regs.rax.toBitVec p2 _
     (hrsp3.trans (hrsp2.trans hrsp1)) (by ecancel)) ?_
   rintro st ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp', hr14', hm⟩
   refine ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp', hr14'.trans (hr143.trans (hr142.trans hr141)),
     t1, u1, t2, u2, scr1, ht1, hu1, ht2, hu2, hscr1, ?_⟩
-  rw [Encode.o16 s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.reject_v48 s.regs.rcx.toBitVec]
+  rw [Encode.offset16_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.reject_sum48_as_fields s.regs.rcx.toBitVec]
   ecancel
 
 set_option maxHeartbeats 4000000 in
@@ -454,7 +454,7 @@ theorem Encode.reject_length_body_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
       ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "ssz.ErrBytesLength").toBitVec)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat + 32 < s.regs.rsp.toNat) (hsp : 168 ≤ s.regs.rsp.toNat)
-    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S) :
+    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e0 ∧ st.data.regs.rsi = e1
@@ -495,15 +495,15 @@ theorem Encode.reject_length_body_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨hcB, hcC, hcD⟩ := Encode.capacity_le s.regs.rcx.toBitVec s.regs.rdi.toBitVec hcap hcap63
   have hc63 : s.regs.rdi.toBitVec.toNat < 2 ^ 63 := hcap63
-  rw [Encode.o16 s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.o48 s.regs.rbx.toBitVec s.regs.rcx.toBitVec] at h_mem
+  rw [Encode.offset16_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.offset48_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec] at h_mem
   -- Slot segment, directives 0–35
-  refine eventually_trans _ _ _ _ (Encode.enc_a1 k hk hf sl d0 hsl hd0 s guard fp s1 s2 t1a t1b hfp h1 h2 ht1a ht1b _
+  refine eventually_trans _ _ _ _ (Encode.encode_slot k hk hf sl d0 hsl hd0 s guard fp s1 s2 t1a t1b hfp h1 h2 ht1a ht1b _
     (by ecancel) hguard hsp hcap hcap63) ?_
   rintro ⟨x1, pc1⟩ ⟨hpc1, hrax1, hrbx1, hrcx1, hrdx1, hrdi1, hrsp1, hrbp1, hr141, t1, u1, ht1, hu1, Hm1⟩
   dsimp only at hpc1 hrax1 hrbx1 hrcx1 hrdx1 hrdi1 hrsp1 hrbp1 hr141 Hm1
   subst hpc1
   -- ProposerIndex segment, directives 36–61
-  refine eventually_trans _ _ _ _ (Encode.enc_a2 k hk hf pi d1 hpi hd1 x1 s.regs.rsp t2a t2b ht2a ht2b _
+  refine eventually_trans _ _ _ _ (Encode.encode_proposer_index k hk hf pi d1 hpi hd1 x1 s.regs.rsp t2a t2b ht2a ht2b _
     hrsp1 (by rw [hrdx1, hrcx1]) (by rw [hrax1, hrbx1, hrcx1]; ecancel)
     (by rw [hrcx1, hrdi1]; exact hcap) (by rw [hrdi1]; exact hcap63)) ?_
   rintro ⟨x2, pc2⟩ ⟨hpc2, hrax2, hrbx2, hr82, hrdi2, hrsp2, hrbp2, hr142, t2, u2, ht2, hu2, Hm2⟩
@@ -513,7 +513,7 @@ theorem Encode.reject_length_body_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   have hr8' : x2.regs.r8 = { toBitVec := s.regs.rcx.toBitVec + 8 + 8 } := by
     apply UInt64.toBitVec_inj.mp; rw [hr82, hrcx1]
   -- ParentRoot segment, directives 62–89, memmove
-  refine eventually_trans _ _ _ _ (Encode.enc_b k hk hf r1 d2 hr1 hd2 x2 s.regs.rsp s.regs.rax.toBitVec
+  refine eventually_trans _ _ _ _ (Encode.encode_parent_root k hk hf r1 d2 hr1 hd2 x2 s.regs.rsp s.regs.rax.toBitVec
     s.regs.rbx.toBitVec (s.regs.rcx.toBitVec + 8 + 8) s.regs.rdi.toBitVec p1 l16 l96 l104 rslot scratch
     hl16 hl96 hl104 hrs S hsc _ (hrsp2.trans hrsp1) (hrax2.trans hrax1) (hrbx2.trans hrbx1) hr8'
     (hrdi2.trans hrdi1) (by ecancel) hcB hc63 hmm) ?_
@@ -521,7 +521,7 @@ theorem Encode.reject_length_body_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   dsimp only at hpc3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
   -- StateRoot segment, directives 90–117, memmove
-  refine eventually_trans _ _ _ _ (Encode.enc_c k hk hf r2 d3 hr2 hd3 x3 s.regs.rsp s.regs.rax.toBitVec
+  refine eventually_trans _ _ _ _ (Encode.encode_state_root k hk hf r2 d3 hr2 hd3 x3 s.regs.rsp s.regs.rax.toBitVec
     s.regs.rbx.toBitVec (s.regs.rcx.toBitVec + 8 + 8 + 32) s.regs.rdi.toBitVec p2
     (Int.toBytes 8 (Host.addrOf (k + 90)).toBitVec.toInt) scr1 (Int.toBytes_length 8 _) S hscr1 _
     (hrsp3.trans (hrsp2.trans hrsp1)) (by ecancel) hcC hc63 hmm) ?_
@@ -529,14 +529,14 @@ theorem Encode.reject_length_body_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Ho
   dsimp only at hpc4 hrsp4 hrbp4 hr144 Hm4
   subst hpc4
   -- reject: 118–121, L_2a4
-  refine eventually_mono (Encode.rej_d k hk hf x4 s.regs.rsp ra s.regs.rbp e0 e1 rl hrl s.regs.rax.toBitVec p3 _
+  refine eventually_mono (Encode.reject_body_root k hk hf x4 s.regs.rsp ra s.regs.rbp e0 e1 rl hrl s.regs.rax.toBitVec p3 _
     (hrsp4.trans (hrsp3.trans (hrsp2.trans hrsp1))) (by ecancel)) ?_
   rintro st ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp', hr14', hm⟩
   refine ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp',
     hr14'.trans (hr144.trans (hr143.trans (hr142.trans hr141))),
     t1, u1, t2, u2, scr2, ht1, hu1, ht2, hu2, hscr2, ?_⟩
-  rw [Encode.o16 s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.o48 s.regs.rbx.toBitVec s.regs.rcx.toBitVec,
-    Encode.reject_v80 s.regs.rcx.toBitVec]
+  rw [Encode.offset16_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.offset48_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec,
+    Encode.reject_sum80_as_fields s.regs.rcx.toBitVec]
   ecancel
 
 end Prysm.BeaconBlockHeader

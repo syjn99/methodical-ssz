@@ -16,7 +16,7 @@ Each theorem is a prefix of `Prysm.Checkpoint.EncodeHead` followed by a tail of 
   disjunct: the exact state at the entry of the second growslice call; the rest of that run is NOT
   proved, see `Prysm/Checkpoint/EncodeGrowAnySite.lean`).
 - `Encode.reject_length_grow_first_site` — `cap < len + 8` and `len(Root) ≠ 32`: `Encode.head_grow` +
-  `Encode.tail_rej`. The result is `(nil, ssz.ErrBytesLength words)`; the epoch bytes are at
+  `Encode.tail_reject`. The result is `(nil, ssz.ErrBytesLength words)`; the epoch bytes are at
   `new[len..len+8]` of the block that growslice returned (written before the root length test, here in the new block); the old
   block is unchanged; the new block is not returned (its pointer is in the dead frame slot only).
 
@@ -57,7 +57,7 @@ theorem Encode.grow_second_site (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
     (hlo : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat) (hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 40)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
+    (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40

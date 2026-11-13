@@ -26,8 +26,8 @@ states the new pointers `ps`, `pt` and the full 72-byte content of each new obje
 function specifications `Prysm.Slot.Decode.accept_function_spec_holds`, `Prysm.CommitteeIndex.Decode.accept_function_spec_holds`, `Prysm.Checkpoint.Decode.accept_function_spec_holds` (the code places
 `kS`, `kI`, `kC`, `kE` in the host); the statement has no hypothesis about their behaviour.
 The runtime contract forms (`Runtime/Contracts.lean`, `Runtime/NewobjectContract.lean`) stay visible: the
-Checkpoint callee's `MakesliceC … S` / `MemmoveC S` (what `Prysm.Checkpoint.Decode.accept_function_spec_holds` needs) and this
-function's own `MakesliceC … (S + 96)`, `MemmoveC (S + 96)`, `NewobjectC typeCheckpoint 72 (S + 96)`
+Checkpoint callee's `MakesliceContract … S` / `MemmoveContract S` (what `Prysm.Checkpoint.Decode.accept_function_spec_holds` needs) and this
+function's own `MakesliceContract … (S + 96)`, `MemmoveContract (S + 96)`, `NewobjectContract typeCheckpoint 72 (S + 96)`
 (its runtime calls get the `S + 96` stack bytes below their return slot, which contain the
 Checkpoint callee's frame and its own `S` scratch bytes).
 
@@ -48,7 +48,7 @@ variable [Host]
 
 namespace Prysm.AttestationData
 
-theorem Decode.accept_lo88 (x : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (a f : List UInt8) (ha : a.length = S + 88)
+theorem Decode.accept_low_stack_split (x : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (a f : List UInt8) (ha : a.length = S + 88)
     (hf : f.length = 8) :
     Eq ((a ++ f).At (x - 224 - BitVec.ofNat 64 S)) = Eq (a.At (x - 224 - BitVec.ofNat 64 S)) ⋆ Eq (f.At (x - 136)) := by
   refine at_app _ _ ?_ (by simp only [ha, hf]; omega)
@@ -56,20 +56,20 @@ theorem Decode.accept_lo88 (x : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (a f : Li
   have : BitVec.ofNat 64 (S + 88) = BitVec.ofNat 64 S + 88 := by apply BitVec.eq_of_toNat_eq; simp
   rw [this]; bv_omega
 
-theorem Decode.accept_j3 (x : BitVec 64) (a b c : List UInt8) (ha : a.length = 8) (hb : b.length = 8) (hc : c.length = 8) :
+theorem Decode.accept_split_three_words (x : BitVec 64) (a b c : List UInt8) (ha : a.length = 8) (hb : b.length = 8) (hc : c.length = 8) :
     Eq ((a ++ (b ++ c)).At (x - 120)) = Eq (a.At (x - 120)) ⋆ Eq (b.At (x - 112)) ⋆ Eq (c.At (x - 104)) := by
   rw [at_app _ _ (b := x - 112) (by rw [ha]; bv_omega) (by simp [ha, hb, hc]),
     at_app _ _ (b := x - 104) (by rw [hb]; bv_omega) (by simp [hb, hc])]
   simp only [Std.ExtHashMap.sep_assoc]
 
-theorem Decode.accept_s3 (x : BitVec 64) (w : List UInt8) (h : w.length = 24) :
+theorem Decode.accept_split_spill_words (x : BitVec 64) (w : List UInt8) (h : w.length = 24) :
     Eq (w.At (x - 120)) = Eq ((w.take 8).At (x - 120)) ⋆ Eq (((w.drop 8).take 8).At (x - 112))
       ⋆ Eq ((w.drop 16).At (x - 104)) := by
   have e : w = w.take 8 ++ (((w.drop 8).take 8) ++ w.drop 16) := by
     conv => lhs; rw [← List.take_append_drop 8 w, ← List.take_append_drop 8 (w.drop 8)]
     simp only [List.drop_drop]
   conv => lhs; rw [e]
-  exact Decode.accept_j3 x _ _ _ (by simp [h]) (by simp [h]) (by simp [h])
+  exact Decode.accept_split_three_words x _ _ _ (by simp [h]) (by simp [h]) (by simp [h])
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -112,9 +112,9 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
       ⋆ Eq (aS.At (s.regs.rax.toBitVec + 48)) ⋆ Eq (aT.At (s.regs.rax.toBitVec + 56))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 224 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 128) (hav : 240 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S)
-    (hms' : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 96)) (hmm' : MemmoveC (S + 96))
-    (hno : NewobjectC Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 (S + 96)) :
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S)
+    (hms' : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 96)) (hmm' : MemmoveContract (S + 96))
+    (hno : NewobjectContract Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 (S + 96)) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -160,7 +160,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   have hlos : Eq (lo.At (rsp.toBitVec - 224 - BitVec.ofNat 64 S)) =
       Eq ((lo.take (S + 88)).At (rsp.toBitVec - 224 - BitVec.ofNat 64 S)) ⋆ Eq ((lo.drop (S + 88)).At (rsp.toBitVec - 136)) := by
     conv => lhs; rw [← List.take_append_drop (S + 88) lo]
-    exact Decode.accept_lo88 _ S hS _ _ hl88 hl8
+    exact Decode.accept_low_stack_split _ S hS _ _ hl88 hl8
   rw [hlos] at h_mem
   -- segment 1: entry → L_167 (Slot, CommitteeIndex)
   refine eventually_trans _ _ _ _ (Decode.head k hk hf hsl hci in0 in1 hin0 hin1 _ ra guard fp s1 s2 s4 sp1 rslot
@@ -176,12 +176,12 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
     (by simp only [List.length_append, hl88, Int.toBytes_length]) Heap avail (by omega)
     d1 (by rw [hrsp1]; first | rfl | (apply UInt64.toBitVec_inj.mp; simp))
     (by rw [hrbp1]; first | rfl | (apply UInt64.toBitVec_inj.mp; simp)) hr141
-    (by rw [Decode.accept_j3 _ _ _ _ hsp0 (Int.toBytes_length 8 _) hsp2, Decode.accept_lo88 _ S hS _ _ hl88 (Int.toBytes_length 8 _)]
+    (by rw [Decode.accept_split_three_words _ _ _ _ hsp0 (Int.toBytes_length 8 _) hsp2, Decode.accept_low_stack_split _ S hS _ _ hl88 (Int.toBytes_length 8 _)]
         ecancel) hms' hmm') ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, p, spl, lo2, hspl, hlo2, hrbx2, hrdx2, Hm2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hrdx2 Hm2
   subst hpc2
-  rw [Decode.accept_s3 _ _ hspl] at Hm2
+  rw [Decode.accept_split_spill_words _ _ hspl] at Hm2
   -- segment 3: L_208 → L_2d9 (Source)
   refine eventually_trans _ _ _ _ (Decode.source k hk hf rsp r14 guard rax.toBitVec rbx.toBitVec p se sroot hse hsroot
     (Int.toBytes 8 rdi.toBitVec.toInt) (spl.take 8) ((spl.drop 8).take 8)

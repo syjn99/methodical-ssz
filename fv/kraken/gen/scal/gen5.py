@@ -1,6 +1,6 @@
 # gen5.py -- `scalgen.py decoder --whole-accept`: the whole accept theorem (and the size-reject theorem) of a
 # flat fixed-size decoder, emitted from the step walk (front end) with the statement kinds of the whole-accept lemmas
-# (`Codec/Kind/DecodeAcceptAnyFrame.lean`: decHeadKindN, decFieldKindN, decEpiKindN, decAcceptKindN; `Codec/DecodeRejectSizeAnyFrame.lean`: decRejectKindN).
+# (`Codec/Kind/DecodeAcceptAnyFrame.lean`: decHeadKindAnyFrame, decFieldKindAnyFrame, decEpilogueKindAnyFrame, decAcceptKindAnyFrame; `Codec/DecodeRejectSizeAnyFrame.lean`: decRejectKindAnyFrame).
 #
 # Untrusted generator: every emitted theorem is checked by Lean; every statement has a `_kind` line; the kind
 # parameters are recomputed independently from the IR and the `.S` by `kindcheck.py`.
@@ -25,7 +25,7 @@ G5_IMPORTS = ['Codec.Kind.DecodeAcceptAnyFrameInstances', 'Codec.FieldFrame', 'P
               'Codec.DecoderHeadEpilogue', 'Prysm.BlobIdentifier.DecodeRejectSizeKindInstances']
 G5_OPENS = 'Codec'
 # the statement kinds of the whole-accept lemmas (kindcheck.py pins their modules)
-G5_KINDS = ('decHeadKindN', 'decFieldKindN', 'decEpiKindN', 'decAcceptKindN', 'decRejectKindN')
+G5_KINDS = ('decHeadKindAnyFrame', 'decFieldKindAnyFrame', 'decEpilogueKindAnyFrame', 'decAcceptKindAnyFrame', 'decRejectKindAnyFrame')
 
 
 class G5Refuse(Exception):
@@ -102,21 +102,21 @@ class T:
 
     def vlean(self, v):
         k = v[0]
-        if k == 'orig': return f'(.orig {self.cs.index(v[1])})'
+        if k == 'orig': return f'(.original {self.cs.index(v[1])})'
         if k == 'reg': return f'(.reg .{v[1]})'
         if k == 'zero': return '.zero'
-        if k in ('ex', 'ptr', 'ret'): return f'(.{k} {v[1]})'
+        if k in ('ex', 'ptr', 'ret'): return f'(.{ {"ex": "existential"}.get(k, k)} {v[1]})'
         refuse(f'gen5: no slot-language form for {v}')
 
     def sllean(self, sl):
-        if sl[0] == 'lo': return f'.lo {self.vlean(sl[1])}'
-        return f".at ({'.up' if sl[1] > 0 else '.dn'} {abs(sl[1])}) {self.vlean(sl[2])}"
+        if sl[0] == 'lo': return f'.low {self.vlean(sl[1])}'
+        return f".at ({'.above' if sl[1] > 0 else '.below'} {abs(sl[1])}) {self.vlean(sl[2])}"
 
     def exlean(self, exs):
-        return '[' + ', '.join('.lo' if e == 'lo' else f'.n {e}' for e in exs) + ']'
+        return '[' + ', '.join('.low' if e == 'lo' else f'.fixed {e}' for e in exs) + ']'
 
     def dlean(self, d):
-        regs = '[' + ', '.join(f'(.{r}, .{v})' for r, v in d['regs']) + ']'
+        regs = '[' + ', '.join(f'(.{r}, .{ {"rcv": "receiver", "bf": "buffer"}.get(v, v)})' for r, v in d['regs']) + ']'
         stk = '[' + ', '.join(self.sllean(s) for s in d['stk']) + ']'
         return f"⟨{d['pc']}, {d['done']}, {regs},\n      {stk},\n      {self.exlean(d['exs'])}⟩"
 
@@ -124,12 +124,12 @@ class T:
         return '[' + ', '.join(f'.bytes {f[2]}' if f[1] == 'bytes' else '.u64' for f in self.fields) + ']'
 
     def layout(self):
-        """The `DecLayout` literal (kind parameter `L`), from the derived frame facts."""
+        """The `DecoderFrameLayout` literal (kind parameter `L`), from the derived frame facts."""
         lens = [(self.cs.index(n), l) for n, l, _ in self.stack if l is not None]
         rt = 'none' if not self.rt else (f"some ⟨{'true' if self.rt['hS'] else 'false'}, {self.rt['x']}, "
                                           f"{self.cs.index(self.lo_name)}, {self.rt['loB']}⟩")
-        # explicit constructor (field order of `DecLayout`: callees nstk lens pre rt gd st exs post frame)
-        return ("(Codec.DecLayout.mk [" + ', '.join(c[0] for c in self.callees) + "] " + str(len(self.stack))
+        # explicit constructor (field order of `DecoderFrameLayout`: callees nstk lens pre rt gd st exs post frame)
+        return ("(Codec.DecoderFrameLayout.mk [" + ', '.join(c[0] for c in self.callees) + "] " + str(len(self.stack))
                 + "\n      [" + ', '.join(f'({i}, {l})' for i, l in lens) + "]\n      ["
                 + ', '.join(self.sllean(s) for s in self.pre) + "]\n      (" + rt + ") " + str(self.gd)
                 + " " + ('true' if self.st else 'false') + " " + self.exlean(self.exs)
@@ -200,8 +200,8 @@ class T:
 
     def rthyps(self):
         if not self.rt: return ''
-        return (f" (hav : {self.heap(len(self.fields))} ≤ avail)\n    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 "
-                f"{'S' if self.rt['x'] == 0 else '(' + self.Sx + ')'}) (hmm : MemmoveC {'S' if self.rt['x'] == 0 else '(' + self.Sx + ')'})")
+        return (f" (hav : {self.heap(len(self.fields))} ≤ avail)\n    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 "
+                f"{'S' if self.rt['x'] == 0 else '(' + self.Sx + ')'}) (hmm : MemmoveContract {'S' if self.rt['x'] == 0 else '(' + self.Sx + ')'})")
 
     def rtnames(self): return ' hav hms hmm' if self.rt else ''
 
@@ -293,7 +293,7 @@ class T:
         hg = 'hguard' if self.gd == 0 else f'(Nat.lt_of_le_of_lt (Nat.le_add_right _ {self.gd}) hguard)'
         fpn = self.slot_at({'stk': self.pre}, -8)[1]
         s2n = self.slot_at({'stk': self.pre}, 16)[1]
-        s += (f"  refine eventually_trans _ _ _ _ (decpro_seg _ _ _ _ {h['F']} {h['dB']} {self.ssz()} _ k (k + 11) (win hk 0 11) (by rfl) (by rfl)\n"
+        s += (f"  refine eventually_trans _ _ _ _ (decpro_seg _ _ _ _ {h['F']} {h['dB']} {self.ssz()} _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)\n"
               f"    s ra guard (s.regs.rsp.toBitVec - {self.frame}) (s.regs.rsp.toBitVec + 16)\n    {ADDR} {ADDR}\n"
               f"    {fpn} {s2n} h{fpn} h{s2n} _ (by ecancel) {hg} (by rw [hlen]; rfl)) ?_\n"
               "  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hreg1, Hm1⟩\n  dsimp only at hpc1 hrsp1 hrbp1 hreg1 Hm1\n  subst hpc1\n")
@@ -305,20 +305,20 @@ class T:
         for r, disp in h['spills']:
             o = disp - self.frame
             old, hold = ('(Int.toBytes 8 s.regs.rbx.toBitVec.toInt)', LEN) if r == 'rbx' else self.vterm(self.slot_at({'stk': self.pre}, o), [])
-            s += (f"  apply kstep_st Reg64.{r} Reg64.rsp {disp} _ (k + {i}) (k + {i + 1}) (win hk {i} 1) (by rfl) (by rfl)\n"
+            s += (f"  apply step_store Reg64.{r} Reg64.rsp {disp} _ (k + {i}) (k + {i + 1}) (window_infix_at hk {i} 1) (by rfl) (by rfl)\n"
                   f"    (s.regs.rsp.toBitVec - {self.frame}) {soff(o)} {ADDR}\n    {old} {hold} _ _ _ (by rfl) (by ecancel)\n"
-                  f"  intro m{i} H{i}; kn; simp only [Reg64s.get64] at H{i}\n")
+                  f"  intro m{i} H{i}; normalize_registers; simp only [Reg64s.get64] at H{i}\n")
             i += 1
         if h.get('nil') is not None:
-            s += (f"  apply kstep_nilchk Reg64.rax _ (k + {i}) (k + {i + 1}) (win hk {i} 1) (by rfl) (by rfl)\n"
-                  "    s.regs.rax.toBitVec (ast.take 1) (by simp [hast]) _ _ _ (by rfl) (by ecancel)\n  intro fl; kn\n")
+            s += (f"  apply step_nil_check Reg64.rax _ (k + {i}) (k + {i + 1}) (window_infix_at hk {i} 1) (by rfl) (by rfl)\n"
+                  "    s.regs.rax.toBitVec (ast.take 1) (by simp [hast]) _ _ _ (by rfl) (by ecancel)\n  intro fl; normalize_registers\n")
             i += 1
         if i != d0['pc']:
             refuse(f'gen5 head: rendered up to directive {i}, boundary state 0 at {d0["pc"]}')
         s += "  apply Eventually.done\n  refine ⟨rfl, rfl, rfl, rfl, " + ''.join('rfl, ' for _ in d0['regs']) + "?_⟩\n  dsimp only\n"
         if h.get('nil') is not None: s += "  rw [hcs]; simp only [Std.ExtHashMap.sep_assoc]\n"
         s += "  ecancel\n"
-        return s + self.kind(name, 'decHeadKindN', f"\n    {self.dlean(d0)}")
+        return s + self.kind(name, 'decHeadKindAnyFrame', f"\n    {self.dlean(d0)}")
 
     # ---- field theorems
     def field(self, i):
@@ -330,7 +330,7 @@ class T:
               f"    ({self.stp(d, 'st0')}) →\n    Eventually (step1 Host.exe)\n      (fun st => {self.stp(d2)})\n      st0 := by\n")
         hy = ' hguard' + self.rtnames()
         s += {'u64': self.f_u64, 'bytes': self.f_bytes, 'call': self.f_call}[f['shape']](i, d, d2, f, hy)
-        return s + self.kind(name, 'decFieldKindN', f"\n    {self.dlean(d)}\n    {self.dlean(d2)}")
+        return s + self.kind(name, 'decFieldKindAnyFrame', f"\n    {self.dlean(d)}\n    {self.dlean(d2)}")
 
     def f_u64(self, i, d, d2, f, hy):
         s = self.prefix(d, hy)
@@ -359,12 +359,12 @@ class T:
             tr = [self.vterm(self.slot_at(d, -fr + 8 * j), xs) for j in range(3)]
             spl = f'({tr[0][0]} ++ ({tr[1][0]} ++ {tr[2][0]}))'
             hspl = '(by simp only [List.length_append, Int.toBytes_length, ' + ', '.join(h for _, h in tr if h != LEN) + '])'
-            memp = (f"(by rw [frame_j3 {soff(-fr)} {soff(-fr + 8)} {soff(-fr + 16)} _ _ _ {tr[0][1]} {tr[1][1]} {tr[2][1]} (by bv_omega) (by bv_omega)]; ecancel)")
+            memp = (f"(by rw [frame_join_three_words {soff(-fr)} {soff(-fr + 8)} {soff(-fr + 16)} _ _ _ {tr[0][1]} {tr[1][1]} {tr[2][1]} (by bv_omega) (by bv_omega)]; ecancel)")
         rs, hrs = self.vterm(self.slot_at(d, aret), xs)
         lo, hlo = self.vterm(self.lo_val(d), xs)
         ls, hls = self.vterm(self.slot_at(d, f['dS'] - fr), xs)
         x = self.rt['x']
-        hLo = f"(frame_lo _ {fr} {self.rt['loB']} S (by decide))" if x == 8 else f"(frame_lo0 _ {fr} {self.rt['loB']} S (by decide))"
+        hLo = f"(frame_low_address_with_calls _ {fr} {self.rt['loB']} S (by decide))" if x == 8 else f"(frame_low_address_without_calls _ {fr} {self.rt['loB']} S (by decide))"
         St = '(S + 8)' if x == 8 else 'S'
         h0 = self.heap(i)
         av = 'avail' if h0 == 0 else f'(avail - {h0})'
@@ -385,10 +385,10 @@ class T:
         s += (f"  rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hr14', {pn}, spl', lo', hspl', hlo', hrY, Hm'⟩\n"
               "  dsimp only at hpc' hrsp' hrbp' hr14' hrY Hm'\n  subst hpc'\n" + destr("d'", '2') +
               "  simp only at hrsp' hrbp' hr14' hrY Hm'\n  subst rsp2 rbp2 r142\n")
-        s += P(f"  apply {self.ns}_s{t[0]} k hk hf (s.regs.rsp.toBitVec - {fr}) {soff(f['dS'] - fr)} {pn} {ADDR} _ _ _ (by rfl) (by ecancel)\n  kn\n"
+        s += P(f"  apply {self.ns}_s{t[0]} k hk hf (s.regs.rsp.toBitVec - {fr}) {soff(f['dS'] - fr)} {pn} {ADDR} _ _ _ (by rfl) (by ecancel)\n  normalize_registers\n"
                f"  apply {self.ns}_s{t[1]} k hk hf\n  apply {self.ns}_s{t[2]} k hk hf\n"
                f"  apply {self.ns}_s{t[3]} k hk hf {rc} {off(rc, g)} {ADDR0 if g == 0 else ADDR} (Int.toBytes 8 {pn}.toInt) {LEN} _ _ _\n"
-               "    (by exact hrY) (by ecancel)\n  intro m' H\n  kn\n  simp only [Reg64s.get64] at H\n")
+               "    (by exact hrY) (by ecancel)\n  intro m' H\n  normalize_registers\n  simp only [Reg64s.get64] at H\n")
         if d2['exs'] != [24, 'lo']:
             refuse(f'gen5 field {i + 1}: post state existentials {d2["exs"]} (byte recipe: [24, lo])')
         regp = ''.join('hrY, ' for _ in d2['regs'])
@@ -433,8 +433,8 @@ class T:
             s += (f"  have hlS : ({lo}.take S).length = S := by simp [{hlo}]\n"
                   f"  have hl8 : ({lo}.drop S).length = 8 := by simp [{hlo}]\n"
                   f"  have hLs : {lo} = {lo}.take S ++ {lo}.drop S := (List.take_append_drop S {lo}).symm\n")
-            j3 = P(f"frame_j3 {soff(-fr)} {soff(-fr + 8)} {soff(-fr + 16)} _ _ _")
-            lo8 = P(f"frame_lo8 (s.regs.rsp.toBitVec - {self.rt['loB']}) S hS _ _")
+            j3 = P(f"frame_join_three_words {soff(-fr)} {soff(-fr + 8)} {soff(-fr + 16)} _ _ _")
+            lo8 = P(f"frame_low_stack_split (s.regs.rsp.toBitVec - {self.rt['loB']}) S hS _ _")
             if merged:
                 s += f"  rw [hXs, hLs, {j3} hq0 hq1 hq2 (by bv_omega) (by bv_omega), {lo8} hlS hl8] at Hm\n"
                 post_x.append((f"({X}.take 8 ++ (Int.toBytes 8 {src}.toInt ++ ({X}.drop 8).drop 8))",
@@ -490,19 +490,19 @@ class T:
         a = e['add']
         if e['form'] == 'e20':
             s += self.prefix(d, '', destructure=False)
-            s += (f"  have hE := Codec.infix_sub (q := Codec.decEpi) {a} hk\n"
-                  f"    (by simp only [{self.Cq}, Codec.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])\n")
+            s += (f"  have hE := Codec.infix_sub (q := Codec.decEpilogue) {a} hk\n"
+                  f"    (by simp only [{self.Cq}, Codec.decEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])\n")
             s += P(f"  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + {a}) hE (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
                    "    (by bv_omega) (by bv_omega) rbp ra r14 _ d hrsp hr14 (by ecancel)) ?_\n")
             s += tail + "  · dsimp only; ecancel\n"
         else:
             s += self.prefix(d, '')
             s += ''.join(P(l) + '\n' for l in e.get('pre', []))
-            s += P(f"  refine eventually_trans _ _ _ _ (decepi_n {e['F']} _ (k + {a}) (k + {a + 1}) (win hk {a} 1) (by rfl) (by rfl)\n"
-                   f"    _ (win hk {a + 1} 2) (by rfl) (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
+            s += P(f"  refine eventually_trans _ _ _ _ (decepi_n {e['F']} _ (k + {a}) (k + {a + 1}) (window_infix_at hk {a} 1) (by rfl) (by rfl)\n"
+                   f"    _ (window_infix_at hk {a + 1} 2) (by rfl) (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
                    f"    {ADDR} (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_\n")
             s += tail + "  · dsimp only; rw [hmem']; ecancel\n"
-        return s + self.kind(name, 'decEpiKindN', f"\n    {self.dlean(d)}")
+        return s + self.kind(name, 'decEpilogueKindAnyFrame', f"\n    {self.dlean(d)}")
 
     # ---- accept
     def accept(self):
@@ -518,7 +518,7 @@ class T:
         for i in range(n):
             s += f"  refine eventually_trans _ _ _ _ ({self.ns}_f{i + 1} {a} hguard{self.rtnames()} st{i} h{i}) ?_\n  intro st{i + 1} h{i + 1}\n"
         s += f"  exact {self.ns}_epi {a} st{n} h{n}\n"
-        s += self.kind(name, 'decAcceptKindN', '')
+        s += self.kind(name, 'decAcceptKindAnyFrame', '')
         if self.same_as_prop:
             s += (f"/-- Statement check: the generated theorem proves the independently written hand statement `{self.same_as_prop}`. -/\n"
                   f"theorem {name}_statement : {self.same_as_prop} := {name}\n\n")
@@ -557,12 +557,12 @@ class T:
              f"  have hl := Machine.label_at' hk hf (j := {r['jl']})\n"
              f"    (by simp only [{C}, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)\n"
              f"    (by simp only [{C}, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)\n"
-             f"  exact decrej_seg _ _ _ _ {r['F']} {r['dB']} {self.ssz()} _ k (win hk 0 11) (by rfl) (by decide)\n"
-             f"    _ (k + {r['jl']}) (k + {r['jl'] + 3}) (win hk {r['jl']} 3) (by rfl) (by rfl) hl\n"
-             f"    _ (k + {r['jl'] + 4}) (win hk {r['jl'] + 3} 1) (by rfl) (by rfl) _ (win hk {r['jl'] + 4} {r['nret']}) (by rfl)\n"
+             f"  exact decrej_seg _ _ _ _ {r['F']} {r['dB']} {self.ssz()} _ k (window_infix_at hk 0 11) (by rfl) (by decide)\n"
+             f"    _ (k + {r['jl']}) (k + {r['jl'] + 3}) (window_infix_at hk {r['jl']} 3) (by rfl) (by rfl) hl\n"
+             f"    _ (k + {r['jl'] + 4}) (window_infix_at hk {r['jl'] + 3} 1) (by rfl) (by rfl) _ (window_infix_at hk {r['jl'] + 4} {r['nret']}) (by rfl)\n"
              "    s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard (fun h => hlen (h.trans (by rfl)))\n")
-        self.kinds_emitted.append((name, 'decRejectKindN'))
-        s += (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @Codec.decRejectKindN h {C} {self.ssz()} := by\n"
+        self.kinds_emitted.append((name, 'decRejectKindAnyFrame'))
+        s += (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @Codec.decRejectKindAnyFrame h {C} {self.ssz()} := by\n"
               "  intro h; with_reducible rfl\n\n")
         return s
 
@@ -585,7 +585,7 @@ def _hx(s):
 
 
 def g5_head_spec(dirs, head_end, F, st):
-    """The decPro prologue (fixed positions, the `nop` at 8), dB = F + 24, then the spills of rax / rbx / rdi to their
+    """The decoderPrologue prologue (fixed positions, the `nop` at 8), dB = F + 24, then the spills of rax / rbx / rdi to their
     home slots (entry rsp + 8 / 16 / 32) and the optional nil check. Anything else: refuse."""
     want = [None, None, r"cmp 0x10\(%r14\),%rsp", r"jbe \S+", r"push %rbp", r"mov %rsp,%rbp", r"sub \$(0x[0-9a-f]+),%rsp",
             r"mov %rbx,(0x[0-9a-f]+)\(%rsp\)", r"nop", r"cmp \$(0x[0-9a-f]+),%rcx", r"jne (\S+)"]
@@ -931,9 +931,9 @@ def g5_derive(dirs, fields, head_end, F, done, end, args, label_index):
             if getslot(stk, d - frame) != ('zero',):
                 refuse(f"gen5 epilogue: `mov {d:#x}(%rsp),%{r}` reads a slot that is not zero")
         Z = '(0 : UInt64).toBitVec'
-        epi['pre'] = [f"  apply kstep_ldv Reg64.{r} Reg64.rsp {d} _ (k + {epi['start'] + j}) (k + {epi['start'] + j + 1}) "
-                      f"(win hk {epi['start'] + j} 1) (by rfl) (by rfl)\n    (s.regs.rsp.toBitVec - {frame}) "
-                      f"{soff(d - frame)} {Z} {ADDR} _ _ _ (by rfl) (by ecancel)\n  kn"
+        epi['pre'] = [f"  apply step_load_value Reg64.{r} Reg64.rsp {d} _ (k + {epi['start'] + j}) (k + {epi['start'] + j + 1}) "
+                      f"(window_infix_at hk {epi['start'] + j} 1) (by rfl) (by rfl)\n    (s.regs.rsp.toBitVec - {frame}) "
+                      f"{soff(d - frame)} {Z} {ADDR} _ _ _ (by rfl) (by ecancel)\n  normalize_registers"
                       for j, (r, d) in enumerate(epi['loads'])]
     post = freeze(stk)
     rej = g5_reject_spec(dirs, head, label_index)
@@ -999,10 +999,10 @@ def g5_step(u, regs, stk, frame, pfx, fl, cur, fields):
                 if vt is None:
                     refuse(f"gen5: directive {u['jd']} `{u['text']}`: value load of slot {v}")
                 regs[rD] = vt[1]
-                return (f"  apply {nm} k hk hf (s.regs.rsp.toBitVec - {frame}) {soff(o)} {vt[0]} {ADDR} _ _ _ (by rfl) (by ecancel)\n  kn")
+                return (f"  apply {nm} k hk hf (s.regs.rsp.toBitVec - {frame}) {soff(o)} {vt[0]} {ADDR} _ _ _ (by rfl) (by ecancel)\n  normalize_registers")
             bs, hbs = _vterm_plain(v)
             regs[rD] = ('OPQ',)
-            return (f"  apply {nm} k hk hf (s.regs.rsp.toBitVec - {frame}) {soff(o)} {ADDR} {bs} {hbs} _ _ _ (by rfl) (by ecancel)\n  kn")
+            return (f"  apply {nm} k hk hf (s.regs.rsp.toBitVec - {frame}) {soff(o)} {ADDR} {bs} {hbs} _ _ _ (by rfl) (by ecancel)\n  normalize_registers")
         bt, bv = base_term(rB)
         if bv[0] != 'BF' or u['form'] != 'b':
             refuse(f"gen5: directive {u['jd']} `{u['text']}`: load through {rB} = {bv}")
@@ -1011,7 +1011,7 @@ def g5_step(u, regs, stk, frame, pfx, fl, cur, fields):
             refuse(f"gen5: directive {u['jd']} `{u['text']}`: input load at SSZ offset {a}, field {fields[cur][0]} at {fields[cur][1]}")
         var = fl[cur][0]
         regs[rD] = ('IN', cur)
-        return (f"  apply {nm} k hk hf {bt} {off('s.regs.rbx.toBitVec', a)} {ADDR0 if d == 0 else ADDR} {var} h{var} _ _ _ (by rfl) (by ecancel)\n  kn")
+        return (f"  apply {nm} k hk hf {bt} {off('s.regs.rbx.toBitVec', a)} {ADDR0 if d == 0 else ADDR} {var} h{var} _ _ _ (by rfl) (by ecancel)\n  normalize_registers")
     if k == 'st':
         rS, rB, d = u['rS'], u['rB'], u['disp']
         v = regs.get(rS, ('UNK',))
@@ -1025,7 +1025,7 @@ def g5_step(u, regs, stk, frame, pfx, fl, cur, fields):
             sl[2] = nv
             n = u['jd']
             return (f"  apply {nm} k hk hf (s.regs.rsp.toBitVec - {frame}) {soff(o)} {ADDR} {bs} {hbs} _ _ _ (by rfl) (by ecancel)\n"
-                    f"  intro m{n} H{n}; kn; simp only [Reg64s.get64] at H{n}")
+                    f"  intro m{n} H{n}; normalize_registers; simp only [Reg64s.get64] at H{n}")
         bt, bv = base_term(rB)
         if bv[0] != 'RCV':
             refuse(f"gen5: directive {u['jd']} `{u['text']}`: store through {rB} = {bv}")
@@ -1035,24 +1035,24 @@ def g5_step(u, regs, stk, frame, pfx, fl, cur, fields):
                    f"{fields[cur][0]}: Go offset {fields[cur][2]})")
         var = fl[cur][0]
         return (f"  apply {nm} k hk hf {bt} {off('s.regs.rax.toBitVec', a)} {ADDR0 if d == 0 else ADDR} aN{cur} haN{cur} _ _ _\n"
-                "    (by rfl) (by ecancel)\n  intro m' H\n  kn\n"
+                "    (by rfl) (by ecancel)\n  intro m' H\n  normalize_registers\n"
                 f"  simp only [Reg64s.get64, toBytes_ofInt_ofBytes 64 8 rfl {var} h{var}] at H")
     if k == 'add':
         v = regs.get(u['rD'], ('UNK',))
         regs[u['rD']] = (v[0], v[1] + u['imm']) if v[0] in ('RCV', 'BF') else ('OPQ',)
-        return f"  apply {nm} k hk hf\n  intro fl{u['jd']}; kn"
+        return f"  apply {nm} k hk hf\n  intro fl{u['jd']}; normalize_registers"
     if k == 'lea':
         if u['rB'] == 'rsp':
             refuse(f"gen5: directive {u['jd']} `{u['text']}`: address of a stack slot")
         v = regs.get(u['rB'], ('UNK',))
         regs[u['rD']] = (v[0], v[1] + u['disp']) if v[0] in ('RCV', 'BF') else ('OPQ',)
-        return f"  apply {nm} k hk hf\n  kn"
+        return f"  apply {nm} k hk hf\n  normalize_registers"
     if k == 'movrr':
         regs[u['rD']] = regs.get(u['rS'], ('UNK',))
-        return f"  apply {nm} k hk hf\n  kn"
+        return f"  apply {nm} k hk hf\n  normalize_registers"
     if k == 'movi':
         regs[u['rD']] = ('IMM', u['imm'] & 0xffffffff)
-        return f"  apply {nm} k hk hf\n  kn"
+        return f"  apply {nm} k hk hf\n  normalize_registers"
     if k in ('jmp', 'label'):
         return f"  apply {nm} k hk hf"
     refuse(f"gen5: directive {u['jd']}: unit kind {k}")

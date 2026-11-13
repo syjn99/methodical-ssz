@@ -18,7 +18,7 @@
  "complete_does_not_include": [
   "morestack paths (the `jbe` to `runtime.morestack_noctxt` at entry)",
   "`runtime.writeBarrier` != 0 (every accept theorem assumes the flag word is 0)",
-  "runtime callee bodies (makeslice / memmove / growslice / newobject / fmt.errorf: contract hypotheses, MakesliceC / MemmoveC / ...)",
+  "runtime callee bodies (makeslice / memmove / growslice / newobject / fmt.errorf: contract hypotheses, MakesliceContract / MemmoveContract / ...)",
   "callee error returns (the `fmt.Errorf` wrap paths of delegated fields; `reject_complete` covers the size path condition only)",
   "growslice (encoder capacity growth beyond the listed theorems; FINDINGS.md: \"Growslice contract gives no lower bound on the remaining heap\")",
   "x86-64 hardware execution (semantics = Kraken's model of the amd64 instructions; no hardware run)"
@@ -5468,7 +5468,7 @@
    "witness": true,
    "not_proved": [
     "growslice branches (5 capacity tests)",
-    "length rejects with cap < len + 112 (with len + 16 \u2264 cap < len + 112 a ParentRoot reject is reached without a growslice call) [3 byte fields; proved only: reject_length_parent_root (len + 112 \u2264 cap), reject_length_state_root (len + 112 \u2264 cap, MemmoveC), reject_length_body_root (len + 112 \u2264 cap, MemmoveC)]",
+    "length rejects with cap < len + 112 (with len + 16 \u2264 cap < len + 112 a ParentRoot reject is reached without a growslice call) [3 byte fields; proved only: reject_length_parent_root (len + 112 \u2264 cap), reject_length_state_root (len + 112 \u2264 cap, MemmoveContract), reject_length_body_root (len + 112 \u2264 cap, MemmoveContract)]",
     "morestack"
    ]
   },
@@ -8745,8 +8745,8 @@
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
    "witness": true,
    "not_proved": [
-    "growslice branches outside the GrowsliceC / MemmoveC contracts and the heap budget, and the run after the second growslice call when the heap left by the first call is below the second call's budget (FINDINGS.md: \"Growslice contract gives no lower bound on the remaining heap\"; checked by the differential test only) [2 capacity tests; proved only: grow_first_site (cap < len + 8, len + 40 \u2264 nextSliceCap(len + 8, cap), GrowsliceC + MemmoveC contracts + heap budget), grow_second_site (len + 8 \u2264 cap < len + 40, GrowsliceC + MemmoveC contracts + heap budget), grow_any_site (cap < len + 8, GrowsliceC + MemmoveC contracts + heap budget: returns or reaches the second growslice call)]",
-    "length rejects with cap < len + 8 outside the GrowsliceC contract or the heap budget [1 byte fields; proved only: reject_length (len + 8 \u2264 cap), reject_length_cover (every cap, GrowsliceC contract + heap budget 4\u00b7len + 8736 \u2264 avail \u2264 maxAlloc)]",
+    "growslice branches outside the GrowsliceContract / MemmoveContract contracts and the heap budget, and the run after the second growslice call when the heap left by the first call is below the second call's budget (FINDINGS.md: \"Growslice contract gives no lower bound on the remaining heap\"; checked by the differential test only) [2 capacity tests; proved only: grow_first_site (cap < len + 8, len + 40 \u2264 nextSliceCap(len + 8, cap), GrowsliceContract + MemmoveContract contracts + heap budget), grow_second_site (len + 8 \u2264 cap < len + 40, GrowsliceContract + MemmoveContract contracts + heap budget), grow_any_site (cap < len + 8, GrowsliceContract + MemmoveContract contracts + heap budget: returns or reaches the second growslice call)]",
+    "length rejects with cap < len + 8 outside the GrowsliceContract contract or the heap budget [1 byte fields; proved only: reject_length (len + 8 \u2264 cap), reject_length_cover (every cap, GrowsliceContract contract + heap budget 4\u00b7len + 8736 \u2264 avail \u2264 maxAlloc)]",
     "morestack"
    ]
   },

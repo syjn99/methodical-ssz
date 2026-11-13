@@ -10,7 +10,7 @@ import Prysm.DataColumnsByRootIdentifier.EncodeTail
 
 `Encode.grow_first_site : Encode.grow_first_site_statement`. Directives 2–14 as the fast path; 15 `jae L_7c` not taken
 (cap < len + 32); 16–17 rcx to x + 24, rdx (BlockRoot pointer) to x − 16; 18–23
-`growslice(dst.ptr, len + 32, cap, 32, uint8)` under `GrowsliceC Heap typeUint8_addr 1 S` (spill area x − 136, return
+`growslice(dst.ptr, len + 32, cap, 32, uint8)` under `GrowsliceContract Heap typeUint8_addr 1 S` (spill area x − 136, return
 slot x − 144); 24–28 restore rdx, rdi = newCap, r8 = len + 32, rcx = len, rbx = new pointer; then `Encode.tail_fit` with the
 new block (premise `hfit`: sites 2 and 3 do not grow).
 -/
@@ -55,75 +55,75 @@ theorem Encode.grow_first_site : Encode.grow_first_site_statement := by
   have enl : ({ toBitVec := rcx.toBitVec + 32 } : UInt64).toNat = rcx.toNat + 32 := by
     show (rcx.toBitVec + 32).toNat = _; simp [BitVec.toNat_add]; omega
   have erd : ({ toBitVec := rdi.toBitVec } : UInt64).toNat = rdi.toNat := rfl
-  kat hk marshalSSZTo 0
-  kat hk marshalSSZTo 1
-  kat hk marshalSSZTo 2
-  kat hk marshalSSZTo 3
+  step_directive hk marshalSSZTo 0
+  step_directive hk marshalSSZTo 1
+  step_directive hk marshalSSZTo 2
+  step_directive hk marshalSSZTo 3
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 4
+  unfold_step
+  step_directive hk marshalSSZTo 4
   split
   case isTrue h =>
     exfalso
     rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 8 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
-  kat hk marshalSSZTo 5
+  step_directive hk marshalSSZTo 5
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk marshalSSZTo 6
-  kat hk marshalSSZTo 7
-  kat hk marshalSSZTo 8
+  unfold_step
+  step_directive hk marshalSSZTo 6
+  step_directive hk marshalSSZTo 7
+  step_directive hk marshalSSZTo 8
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hk marshalSSZTo 9
+  unfold_step
+  step_directive hk marshalSSZTo 9
   apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 pr.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 10
+  unfold_step
+  step_directive hk marshalSSZTo 10
   apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 32) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by rfl)
   simp only [show Int.ofBytes (Int.toBytes 8 32) = 32 by decide]
-  kunfold
-  kat hk marshalSSZTo 11
+  unfold_step
+  step_directive hk marshalSSZTo 11
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  kat hk marshalSSZTo 12
+  step_directive hk marshalSSZTo 12
   apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h1)
   intro m3 H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
-  kat hk marshalSSZTo 13
-  kat hk marshalSSZTo 14
-  kat hk marshalSSZTo 15
+  unfold_step
+  step_directive hk marshalSSZTo 13
+  step_directive hk marshalSSZTo 14
+  step_directive hk marshalSSZTo 15
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega
   simp only [Effects.All]
-  kat hk marshalSSZTo 16
+  step_directive hk marshalSSZTo 16
   apply store_step_at _ _ (rsp.toBitVec + 24) _ _ _ s3 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h3)
   intro m4 H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
-  kat hk marshalSSZTo 17
+  unfold_step
+  step_directive hk marshalSSZTo 17
   apply store_step_at _ _ (rsp.toBitVec - 16) _ _ _ l16 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hl16)
   intro m5 H5
   simp only [Width.bytes, Width.bits] at H5
-  kunfold
-  kat hk marshalSSZTo 18
-  kat hk marshalSSZTo 19
-  kat hk marshalSSZTo 20
-  kat hk marshalSSZTo 21
-  kat hk marshalSSZTo 22
-  kat hk marshalSSZTo 23
+  unfold_step
+  step_directive hk marshalSSZTo 18
+  step_directive hk marshalSSZTo 19
+  step_directive hk marshalSSZTo 20
+  step_directive hk marshalSSZTo 21
+  step_directive hk marshalSSZTo 22
+  step_directive hk marshalSSZTo 23
   apply store_step_at _ _ (rsp.toBitVec - 144) _ _ _ rslot _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hrs)
   intro m6 H6
   simp only [Width.bytes, Width.bits] at H6
-  kunfold
+  unfold_step
   rw [show -128 + (rsp.toBitVec - 8#64) - 8#64 = rsp.toBitVec - 144 by bv_omega]
   refine eventually_trans _ _ _ _ (hgs _ (Host.addrOf (k + 23 + 1)) pre scratch spl avail _ (by decide) rfl
     ?gnum ?gold ?gcap ?gbud hmax ?glen hsc hspl
@@ -143,17 +143,17 @@ theorem Encode.grow_first_site : Encode.grow_first_site_statement := by
   have htl : 36 + 8 * n ≤ tail.length := by omega
   rw [Encode.grow_first_site_split rax1.toBitVec rcx.toBitVec pre tail (36 + 8 * n) hpre htl (by omega),
     show rsp.toBitVec - 144 + 8 = rsp.toBitVec - 136 by bv_omega] at Hm1
-  kat hk marshalSSZTo 24
+  step_directive hk marshalSSZTo 24
   apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 pr.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 25
-  kat hk marshalSSZTo 26
-  kat hk marshalSSZTo 27
+  unfold_step
+  step_directive hk marshalSSZTo 25
+  step_directive hk marshalSSZTo 26
+  step_directive hk marshalSSZTo 27
   apply load_step_at _ _ (rsp.toBitVec + 24) _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 28
+  unfold_step
+  step_directive hk marshalSSZTo 28
   refine eventually_mono (Encode.tail_fit k hk hf rsp.toBitVec rax.toBitVec pr pc nb rax1.toBitVec ra rbp n rcx1.toNat hnb hn
     root cb (tail.take (36 + 8 * n)) hroot hcb (by rw [List.length_take, Nat.min_eq_left htl]) l24 l32 l40 l56 l64
     (Int.toBytes 8 (Host.addrOf (k + 23 + 1)).toBitVec.toInt) hl24 hl32 hl40 hl56 hl64 (Int.toBytes_length 8 _)

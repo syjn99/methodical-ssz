@@ -29,7 +29,7 @@ theorem serialize_checker (g : SszValue) : serialize checkerDesc g.toValue = .ok
   rw [← desc_serialize_checker]; exact toValue_serialize g
 
 theorem toValue_fits_checker (g : SszValue) : Value.fits checkerDesc g.toValue = true := by
-  simp [checkerDesc, SszValue.toValue, Value.fits, Value.fieldsFit, allFit_map_bv48]
+  simp [checkerDesc, SszValue.toValue, Value.fits, Value.fieldsFit, allFit_map_byteVector48]
 
 theorem toValue_surjective_checker (v : Value) (h : Value.fits checkerDesc v = true) :
     ∃ g : SszValue, g.toValue = v := by

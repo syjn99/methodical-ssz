@@ -168,6 +168,10 @@ The maps apply in this order:
   The data names `ElfData.PrysmTarget.<id>`, `<id>_addr` and `<id>_addr_eq` take the new ids, and
   `Prysm.Deposit.Code.depDataType_addr` becomes the data include `ElfData.PrysmTarget.typeDeposit_Data_addr`.
   A script renames the data files (`prysm/go1.26.10/link-set/data-ids-old-new.tsv`) and the item tables of the link scripts.
+- `maps/plain-lean-names/`: plain names inside the Lean libraries (kind structures and their constructors and fields,
+  directive builders, step lemmas, tactics, runtime contracts and models, witness helpers, opaque lemma names).
+  This step was applied by a script; the map directory holds only the name table (`names.tsv`) and the moved
+  runtime model files (`files.tsv`).
 
 Some steps were applied by scripts, not by maps. The inverse mode of `rename.py` does not undo them.
 The commit message of each such step lists its edits:

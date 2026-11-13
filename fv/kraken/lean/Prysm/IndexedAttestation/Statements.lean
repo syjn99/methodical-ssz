@@ -14,7 +14,7 @@ import Prysm.IndexedAttestation.SpecDefinitions
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
 Statement shape: `Prysm/SyncAggregate/Statements.lean` / `Prysm/SyncCommittee/Statements.lean` (exact frame, contracts as hypotheses, input and receiver kept) and, for
-the two `fmt.errorf` rejects, the contract forms `ConvT64C` and `FmtErrorfDWC` (`Runtime/Contracts.lean`).
+the two `fmt.errorf` rejects, the contract forms `ConvT64Contract` and `FmtErrorfDecimalWrapContract` (`Runtime/Contracts.lean`).
 
     func (c *IndexedAttestation) UnmarshalSSZ(buf []byte) error {        // phase0.ssz.go:2819
         if size < 228 { return ssz.ErrSize }                                                  // size reject
@@ -126,7 +126,7 @@ def Decode.reject_alignment_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : 228 ≤ s.regs.rcx.toNat) (hmis : (s.regs.rcx.toNat - 228) % 8 ≠ 0)
     (hav : ElfData.PrysmTarget.formatAttestingIndicesMisaligned.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.PrysmTarget.formatAttestingIndicesMisaligned ElfData.PrysmTarget.typeInt_addr S),
+    (hcv : ConvT64Contract Heap S) (hfe : FmtErrorfDecimalWrapContract Heap ElfData.PrysmTarget.formatAttestingIndicesMisaligned ElfData.PrysmTarget.typeInt_addr S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -179,7 +179,7 @@ def Decode.reject_overflow_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : 228 ≤ s.regs.rcx.toNat) (hal : (s.regs.rcx.toNat - 228) % 8 = 0) (hbig : 2048 < (s.regs.rcx.toNat - 228) / 8)
     (hav : ElfData.PrysmTarget.formatAttestingIndicesTooBig.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.PrysmTarget.formatAttestingIndicesTooBig ElfData.PrysmTarget.typeInt_addr S),
+    (hcv : ConvT64Contract Heap S) (hfe : FmtErrorfDecimalWrapContract Heap ElfData.PrysmTarget.formatAttestingIndicesTooBig ElfData.PrysmTarget.typeInt_addr S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -264,12 +264,12 @@ def Decode.accept_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 408 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = 228 + 8 * n)
     (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hav : 8 * n + 432 ≤ avail)
-    (hmsU : MakesliceC Heap ElfData.PrysmTarget.typeUint64_addr 8 (Sd + 224))
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (Sd + 224)) (hmm : MemmoveC (Sd + 224))
-    (hno : NewobjectC Heap ElfData.PrysmTarget.typeAttestationData_addr 96 (Sd + 224))
-    (hmsD : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 Sd) (hmmD : MemmoveC Sd)
-    (hmsD' : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (Sd + 96)) (hmmD' : MemmoveC (Sd + 96))
-    (hnoD : NewobjectC Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 (Sd + 96)),
+    (hmsU : MakesliceContract Heap ElfData.PrysmTarget.typeUint64_addr 8 (Sd + 224))
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 (Sd + 224)) (hmm : MemmoveContract (Sd + 224))
+    (hno : NewobjectContract Heap ElfData.PrysmTarget.typeAttestationData_addr 96 (Sd + 224))
+    (hmsD : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 Sd) (hmmD : MemmoveContract Sd)
+    (hmsD' : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 (Sd + 96)) (hmmD' : MemmoveContract (Sd + 96))
+    (hnoD : NewobjectContract Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 (Sd + 96)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -424,7 +424,7 @@ def Decode.reject_alignment_spec_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size)
     (hav : ElfData.PrysmTarget.formatAttestingIndicesMisaligned.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.PrysmTarget.formatAttestingIndicesMisaligned ElfData.PrysmTarget.typeInt_addr S),
+    (hcv : ConvT64Contract Heap S) (hfe : FmtErrorfDecimalWrapContract Heap ElfData.PrysmTarget.formatAttestingIndicesMisaligned ElfData.PrysmTarget.typeInt_addr S),
     (∃ e, deserialize desc bs = .error e) ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
@@ -479,7 +479,7 @@ def Decode.reject_overflow_spec_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size)
     (hav : ElfData.PrysmTarget.formatAttestingIndicesTooBig.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.PrysmTarget.formatAttestingIndicesTooBig ElfData.PrysmTarget.typeInt_addr S),
+    (hcv : ConvT64Contract Heap S) (hfe : FmtErrorfDecimalWrapContract Heap ElfData.PrysmTarget.formatAttestingIndicesTooBig ElfData.PrysmTarget.typeInt_addr S),
     (∃ e, deserialize desc bs = .error e) ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
@@ -563,12 +563,12 @@ def Decode.accept_spec_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 408 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size)
     (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hav : bsA.size - 228 + 432 ≤ avail)
-    (hmsU : MakesliceC Heap ElfData.PrysmTarget.typeUint64_addr 8 (Sd + 224))
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (Sd + 224)) (hmm : MemmoveC (Sd + 224))
-    (hno : NewobjectC Heap ElfData.PrysmTarget.typeAttestationData_addr 96 (Sd + 224))
-    (hmsD : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 Sd) (hmmD : MemmoveC Sd)
-    (hmsD' : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (Sd + 96)) (hmmD' : MemmoveC (Sd + 96))
-    (hnoD : NewobjectC Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 (Sd + 96)),
+    (hmsU : MakesliceContract Heap ElfData.PrysmTarget.typeUint64_addr 8 (Sd + 224))
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 (Sd + 224)) (hmm : MemmoveContract (Sd + 224))
+    (hno : NewobjectContract Heap ElfData.PrysmTarget.typeAttestationData_addr 96 (Sd + 224))
+    (hmsD : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 Sd) (hmmD : MemmoveContract Sd)
+    (hmsD' : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 (Sd + 96)) (hmmD' : MemmoveContract (Sd + 96))
+    (hnoD : NewobjectContract Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 (Sd + 96)),
     ∃ g : SszValue, g.toValue = v ∧ bsA = SszValue.encode g ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0

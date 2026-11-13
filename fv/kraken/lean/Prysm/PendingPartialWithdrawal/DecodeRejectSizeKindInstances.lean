@@ -12,7 +12,7 @@ import Prysm.AttestationData.DecodeRejectSize
 import Codec.DecodeRejectSizeAnyFrame
 
 /-!
-# Ties of `decRejectKindN` to the committed size-reject theorems: the `PendingPartialWithdrawal` part
+# Ties of `decRejectKindAnyFrame` to the committed size-reject theorems: the `PendingPartialWithdrawal` part
 
 The declarations of the other types of this group are in `Prysm/BlobIdentifier/DecodeRejectSizeKindInstances.lean`.
 -/
@@ -23,7 +23,7 @@ open Codec
 namespace Prysm.PendingPartialWithdrawal
 
 theorem Decode.reject_size_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.PendingPartialWithdrawal.Decode.reject_size h)
-    = @decRejectKindN h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 24 := by
+    = @decRejectKindAnyFrame h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 24 := by
   intro h; with_reducible rfl
 
 end Prysm.PendingPartialWithdrawal

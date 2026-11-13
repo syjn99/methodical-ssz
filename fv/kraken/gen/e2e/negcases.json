@@ -791,8 +791,8 @@
   "kind": "stmt",
   "module": "Prysm/Checkpoint/FunctionSpecsAsNestedField.lean",
   "theorem": "Prysm.Checkpoint.Decode.accept_function_spec_holds",
-  "old": "(hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) : Decode.accept_function_spec Heap S",
-  "new": "(hms : True) (hmm : MemmoveC S) : Decode.accept_function_spec Heap S",
+  "old": "(hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) : Decode.accept_function_spec Heap S",
+  "new": "(hms : True) (hmm : MemmoveContract S) : Decode.accept_function_spec Heap S",
   "why": "audit AU-04: the makeslice hypothesis keeps its name with type True (was: binder deleted, unknown identifier); without the makeslice contract the decoder spec cannot be derived"
  },
  {
@@ -806,7 +806,7 @@
   "kind": "stmt",
   "module": "Prysm/Checkpoint/FunctionSpecsAsNestedField.lean",
   "theorem": "Prysm.Checkpoint.Encode.fast_path_function_spec_holds",
-  "old": "(S : Nat) (hmm : MemmoveC S) : Encode.fast_path_function_spec S",
+  "old": "(S : Nat) (hmm : MemmoveContract S) : Encode.fast_path_function_spec S",
   "new": "(S : Nat) (hmm : True) : Encode.fast_path_function_spec S",
   "why": "audit AU-04: the memmove hypothesis keeps its name with type True (was: binder deleted, unknown identifier); without the memmove contract the encoder spec cannot be derived"
  },
@@ -1056,8 +1056,8 @@
   "kind": "stmt",
   "module": "Prysm/AttestationData/DecodeAccept.lean",
   "theorem": "Prysm.AttestationData.Decode.accept",
-  "old": "(hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S)",
-  "new": "(hms : True) (hmm : MemmoveC S)",
+  "old": "(hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S)",
+  "new": "(hms : True) (hmm : MemmoveContract S)",
   "why": "audit AU-04: the Checkpoint callee's makeslice hypothesis keeps its name with type True (was: binder deleted, unknown identifier); without it Prysm.Checkpoint.Decode.accept_function_spec cannot be discharged"
  },
  {
@@ -1098,7 +1098,7 @@
   "id": "cpw-tr-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/EncodeTail.lean",
-  "theorem": "Prysm.Checkpoint.Encode.tail_rej",
+  "theorem": "Prysm.Checkpoint.Encode.tail_reject",
   "code_def": "marshalSSZTo",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
  },
@@ -1106,7 +1106,7 @@
   "id": "cpw-tr-err1",
   "kind": "code",
   "module": "Prysm/Checkpoint/EncodeTail.lean",
-  "theorem": "Prysm.Checkpoint.Encode.tail_rej",
+  "theorem": "Prysm.Checkpoint.Encode.tail_reject",
   "code_def": "marshalSSZTo",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  mov ssz.ErrBytesLength+8(%rip),%rsi",

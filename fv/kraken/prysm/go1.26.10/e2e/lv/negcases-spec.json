@@ -3,7 +3,7 @@
   "module": "Prysm/HistoricalBatch/NegativeSuiteTargets.lean",
   "id": "hb-spec-control",
   "kind": "control",
-  "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.spec_chk"
+  "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.spec_check"
  },
  {
   "module": "Prysm/HistoricalBatch/NegativeSuiteTargets.lean",
@@ -15,7 +15,7 @@
   "module": "Prysm/HistoricalBatch/NegativeSuiteTargets.lean",
   "id": "hb-spec-size524287",
   "kind": "stmt",
-  "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.spec_chk",
+  "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.spec_check",
   "stmt_def": "spec_prop",
   "old": "(hbs : bs.size ≠ 524288)",
   "new": "(hbs : bs.size ≠ 524287)"
@@ -33,7 +33,7 @@
   "module": "Prysm/Deposit/NegativeSuiteTargets.lean",
   "id": "dep-spec-control",
   "kind": "control",
-  "theorem": "Prysm.Deposit.NegativeSuiteTargets.spec_chk"
+  "theorem": "Prysm.Deposit.NegativeSuiteTargets.spec_check"
  },
  {
   "module": "Prysm/Deposit/NegativeSuiteTargets.lean",
@@ -45,7 +45,7 @@
   "module": "Prysm/Deposit/NegativeSuiteTargets.lean",
   "id": "dep-spec-size1239",
   "kind": "stmt",
-  "theorem": "Prysm.Deposit.NegativeSuiteTargets.spec_chk",
+  "theorem": "Prysm.Deposit.NegativeSuiteTargets.spec_check",
   "stmt_def": "spec_prop",
   "old": "(hbs : bs.size ≠ 1240)",
   "new": "(hbs : bs.size ≠ 1239)"

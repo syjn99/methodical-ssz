@@ -65,7 +65,7 @@ def rootEncTail (lcf : String) (dCap dLen dPtr : Int64) : Program :=
 
 variable [Host]
 
-theorem penc_mul (x y : BitVec 64) : x + y * 1#64 = x + y := by rw [BitVec.mul_one]
+theorem bytes32_encode_add_mul_one (x y : BitVec 64) : x + y * 1#64 = x + y := by rw [BitVec.mul_one]
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -93,7 +93,7 @@ theorem rootenc_seg (lrej lcf : String) (fP fL dCap dLen dPtr : Int64) (j1 j2 : 
       ⋆ Eq (vCap.At aCap) ⋆ Eq (vLen.At aLen) ⋆ Eq (vPtr.At aPtr)
       ⋆ Eq (rslot.At aRet) ⋆ Eq (scratch.At aLo)
       ⋆ Eq (root.At p) ⋆ Eq (d1.At aDst) ⋆ R)
-    (hmm : MemmoveC St) :
+    (hmm : MemmoveContract St) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (j2 + 7 + 1) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -110,52 +110,52 @@ theorem rootenc_seg (lrej lcf : String) (fP fL dCap dLen dPtr : Int64) (j1 j2 : 
   have := rdi.toNat_lt_size; have := rdx.toNat_lt_size
   simp only [UInt64.size] at *
   try simp only [UInt64.toNat_toBitVec] at hfit
-  kat hA rootEncHead 0
+  step_directive hA rootEncHead 0
   apply load_step_at _ _ aP _ _ (Int.toBytes 8 p.toInt) _ _ (by rw [← hP]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hA rootEncHead 1
+  unfold_step
+  step_directive hA rootEncHead 1
   apply load_step_at _ _ aL _ _ (Int.toBytes 8 32) _ _ (by rw [← hL]) (by ecancel) (by rfl)
   simp only [show Int.ofBytes (Int.toBytes 8 32) = 32 by decide]
-  kunfold
-  kat hA rootEncHead 2
+  unfold_step
+  step_directive hA rootEncHead 2
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  kat hA rootEncHead 3
-  kat hA rootEncHead 4
-  kat hA rootEncHead 5
+  step_directive hA rootEncHead 3
+  step_directive hA rootEncHead 4
+  step_directive hA rootEncHead 5
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega
   simp only [Effects.All]
   rw [hl]
-  kat hB rootEncTail 0
-  kat hB rootEncTail 1
+  step_directive hB rootEncTail 0
+  step_directive hB rootEncTail 1
   apply store_step_at _ _ aCap _ _ _ vCap _ _ (by rw [← hCap]) (by ecancel) (by exact hvCap)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hB rootEncTail 2
+  unfold_step
+  step_directive hB rootEncTail 2
   apply store_step_at _ _ aLen _ _ _ vLen _ _ (by rw [← hLen]) (by ecancel) (by exact hvLen)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hB rootEncTail 3
+  unfold_step
+  step_directive hB rootEncTail 3
   apply store_step_at _ _ aPtr _ _ _ vPtr _ _ (by rw [← hPtr]) (by ecancel) (by exact hvPtr)
   intro m3 H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
-  kat hB rootEncTail 4
-  kat hB rootEncTail 5
-  kat hB rootEncTail 6
-  kat hB rootEncTail 7
+  unfold_step
+  step_directive hB rootEncTail 4
+  step_directive hB rootEncTail 5
+  step_directive hB rootEncTail 6
+  step_directive hB rootEncTail 7
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m4 H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
+  unfold_step
   try rw [show sp - 8#64 = sp - 8 from rfl] at *
-  rw [penc_mul, hDst] at *
+  rw [bytes32_encode_add_mul_one, hDst] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (j2 + 7 + 1)) root d1 scratch _
     (by rw [hroot]; rfl) (by rw [hroot, hd1]) hsc (by dsimp only; ecancel)) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hr141, hrbp1, stk1, hstk1, Hm1⟩

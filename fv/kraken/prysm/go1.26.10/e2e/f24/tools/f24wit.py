@@ -64,31 +64,31 @@ namespace Prysm.{X}.Witness.GeneratedDecodeRejectSize
 
 set_option maxRecDepth 100000
 
-def P : Program := [.label "ssz.ErrSize"] ++ unmarshalSSZ
+def program : Program := [.label "ssz.ErrSize"] ++ unmarshalSSZ
 
-theorem P_len : P.length = {L} := by rfl
+theorem program_length : program.length = {L} := by rfl
 
-instance host : Host := mkHost P (by rw [P_len]; decide)
+instance host : Host := mkHost program (by rw [program_length]; decide)
 
-theorem hk1 : unmarshalSSZ.IsInfixAt Host.prog 1 := infixAt_of [.label "ssz.ErrSize"] [] (by simp [Host.prog, mkHost, P]) rfl
+theorem placed_at_1 : unmarshalSSZ.IsInfixAt Host.prog 1 := infixAt_of [.label "ssz.ErrSize"] [] (by simp [Host.prog, mkHost, program]) rfl
 
-theorem hf1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)
+theorem labels_fresh_at_1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)
 
-theorem label_err : label "ssz.ErrSize" = 0x10000 :=
-  mk_label P _ 0 _ (by simp [P]) (by simp [labs])
+theorem label_err_size : label "ssz.ErrSize" = 0x10000 :=
+  mk_label program _ 0 _ (by simp [program]) (by simp [labs])
 
-abbrev z (k : Nat) : List UInt8 := List.replicate k 0
-abbrev w (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
+abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
+abbrev word_bytes (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
 
 /-- ErrSize word 0 · word 1 · guard (r14 = 0x10000) · saved rbp · return slot (rsp = 0x10020) · spill rax · spill rbx. -/
-def block : List UInt8 := w 0x10e8 ++ (w 0x2a ++ (w 0 ++ (z 8 ++ (w 0 ++ (z 8 ++ z 8)))))
+def block : List UInt8 := word_bytes 0x10e8 ++ (word_bytes 0x2a ++ (word_bytes 0 ++ (zeros 8 ++ (word_bytes 0 ++ (zeros 8 ++ zeros 8)))))
 
 def mem : DataMem := block.At (0x10000 : BitVec 64)
 
-def cs0 (len : UInt64) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
+def initial_state (len : UInt64) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10100, 0x10200, len, 0, 0, 0, 0x10020, 0, 0, 0, 0, 0, 0, 0, 0x10000, 0⟩, zmms, flags, mem⟩
 
-def R0 : DataMem → Prop := Eq ((z 8).At (0x10028 : BitVec 64))
+def frame_rest : DataMem → Prop := Eq ((zeros 8).At (0x10028 : BitVec 64))
 
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of the generated `Decode.generated_reject`.** -/
@@ -96,17 +96,17 @@ theorem runs (len : UInt64) (hlen : len ≠ {N}) (zmms : RegZmms) (flags : Statu
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10e8
         ∧ st.data.regs.rbx = 0x2a)
-      ⟨cs0 len zmms flags, Host.addrOf 1⟩ :=
-  eventually_mono (Prysm.{X}.Decode.generated_reject 1 hk1 hf1 (cs0 len zmms flags) 0 0 0x10e8 0x2a (z 8) (z 8) rfl rfl R0
+      ⟨initial_state len zmms flags, Host.addrOf 1⟩ :=
+  eventually_mono (Prysm.{X}.Decode.generated_reject 1 placed_at_1 labels_fresh_at_1 (initial_state len zmms flags) 0 0 0x10e8 0x2a (zeros 8) (zeros 8) rfl rfl frame_rest
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
-      wit_split []
-      simp only [cs0, R0, w, ElfData.PrysmTarget.sszErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      witness_split []
+      simp only [initial_state, frame_rest, word_bytes, ElfData.PrysmTarget.sszErrSize_addr, label_err_size, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
       exact H)
-    (by simp [cs0]) hlen)
+    (by simp [initial_state]) hlen)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
 example (z' : RegZmms) (f : StatusFlags) := runs {N - 1} (by decide) z' f
@@ -132,19 +132,19 @@ def acc38(X, n):
     tail = rcv + 8 + N
     tail_len = 32 + (8 if nf == 2 else 0)   # Sa: tail 32 + 8 unused = 40
     assert tail + tail_len == 0x10060
-    blk = ['w0'] + ins + (['z 8'] if gap else []) + ['z 8'] * (1 + nf) + [f'z {tail_len}'] + \
-        ['z 8', 'z 8', 'z 8', 'z 8', 'z 40', 'z 8', 'w0', 'z 8', 'z 8']
-    R0 = (f'Eq ((z {tail_len}).At ({hexs(tail)} : BitVec 64)) ⋆ Eq ((z 8).At (0x10070 : BitVec 64))\n'
-          '    ⋆ Eq ((z 40).At (0x10080 : BitVec 64))')
+    blk = ['zero_word_bytes'] + ins + (['zeros 8'] if gap else []) + ['zeros 8'] * (1 + nf) + [f'zeros {tail_len}'] + \
+        ['zeros 8', 'zeros 8', 'zeros 8', 'zeros 8', 'zeros 40', 'zeros 8', 'zero_word_bytes', 'zeros 8', 'zeros 8']
+    R0 = (f'Eq ((zeros {tail_len}).At ({hexs(tail)} : BitVec 64)) ⋆ Eq ((zeros 8).At (0x10070 : BitVec 64))\n'
+          '    ⋆ Eq ((zeros 40).At (0x10080 : BitVec 64))')
     if gap:
-        R0 = 'Eq ((z 8).At (0x10018 : BitVec 64)) ⋆ ' + R0
+        R0 = 'Eq ((zeros 8).At (0x10018 : BitVec 64)) ⋆ ' + R0
     nlist = 7 + nf
-    zs = ' '.join(['(z 8)'] * nlist)
+    zs = ' '.join(['(zeros 8)'] * nlist)
     rfls = ' '.join(['rfl'] * nlist)
     hins = ' '.join(f'(hin{i} : in{i}.length = 8)' for i in range(nf))
     insp = ' '.join(ins)
     hinsn = ' '.join(f'hin{i}' for i in range(nf))
-    z8s = ' '.join(['(z 8)'] * nf)
+    z8s = ' '.join(['(zeros 8)'] * nf)
     rr = ' '.join(['rfl'] * nf)
     reps = ' '.join(f'(Int.toBytes 8 {v})' for v in ['0x0123456789abcdef', '7', '0x40'][:nf])
     decs = ' '.join(['(by decide)'] * nf)
@@ -174,35 +174,35 @@ namespace Prysm.{X}.Witness.GeneratedDecodeAccept
 
 set_option maxRecDepth 100000
 
-def P : Program := [.label "pad0"] ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ
+def program : Program := [.label "pad0"] ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ
 
-theorem P_len : P.length = {plen} := by rfl
+theorem program_length : program.length = {plen} := by rfl
 
-instance host : Host := mkHost P (by rw [P_len]; decide)
+instance host : Host := mkHost program (by rw [program_length]; decide)
 
-theorem prog_eq : Host.prog = P := rfl
+theorem host_program_eq : Host.prog = program := rfl
 
-theorem hk1 : unmarshalSSZ.IsInfixAt Host.prog 1 :=
-  infixAt_of [.label "pad0"] (Prysm.Slot.Code.unmarshalSSZ) (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hf1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hk{1 + n} : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog {1 + n} :=
+theorem placed_at_1 : unmarshalSSZ.IsInfixAt Host.prog 1 :=
+  infixAt_of [.label "pad0"] (Prysm.Slot.Code.unmarshalSSZ) (by simp [host_program_eq, program, List.append_assoc]) rfl
+theorem labels_fresh_at_1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by rw [host_program_eq]; decide)
+theorem placed_at_{1 + n} : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog {1 + n} :=
   infixAt_of ([.label "pad0"] ++ unmarshalSSZ) ([])
-    (by simp [prog_eq, P, List.append_assoc]) (by rfl)
-theorem hf{1 + n} : LabelsFresh Prysm.Slot.Code.unmarshalSSZ {1 + n} := labelsFresh_of (by rw [prog_eq]; decide)
+    (by simp [host_program_eq, program, List.append_assoc]) (by rfl)
+theorem labels_fresh_at_{1 + n} : LabelsFresh Prysm.Slot.Code.unmarshalSSZ {1 + n} := labelsFresh_of (by rw [host_program_eq]; decide)
 
-abbrev z (k : Nat) : List UInt8 := List.replicate k 0
-abbrev w0 : List UInt8 := Int.toBytes 8 (0 : UInt64).toBitVec.toInt
+abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
+abbrev zero_word_bytes : List UInt8 := Int.toBytes 8 (0 : UInt64).toBitVec.toInt
 
 def block ({insp} : List UInt8) : List UInt8 :=
   {nest(blk)}
 
 def mem ({insp} : List UInt8) : DataMem := (block {insp}).At (0x10000 : BitVec 64)
 
-def cs0 ({insp} : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
+def initial_state ({insp} : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10020, 0x10008, {N}, 0, 0, {N}, 0x100b0, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem {insp}⟩
 
 /-- The frame of the witness: unused bytes, the receiver tail and the untouched frame ranges. -/
-def R0 : DataMem → Prop :=
+def frame_rest : DataMem → Prop :=
   {R0}
 
 set_option maxHeartbeats 16000000 in
@@ -211,21 +211,21 @@ theorem runs ({insp} : List UInt8) {hins}
     (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
-      ⟨cs0 {insp} zmms flags, Host.addrOf 1⟩ :=
-  eventually_mono (Prysm.{X}.Decode.generated_accept 1 hk1 hf1 {1 + n} hk{1 + n} hf{1 + n}
-    {insp} {hinsn} (cs0 {insp} zmms flags)
+      ⟨initial_state {insp} zmms flags, Host.addrOf 1⟩ :=
+  eventually_mono (Prysm.{X}.Decode.generated_accept 1 placed_at_1 labels_fresh_at_1 {1 + n} placed_at_{1 + n} labels_fresh_at_{1 + n}
+    {insp} {hinsn} (initial_state {insp} zmms flags)
     0 0 {zs}
     {rfls}
-    R0
+    frame_rest
     (by
       have H : Eq ((block {insp}).At (0x10000 : BitVec 64)) (mem {insp}) := rfl
-      wit_split [{', '.join(f'hin{i}' for i in range(nf))}]
-      simp only [cs0, R0, w0, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
+      witness_split [{', '.join(f'hin{i}' for i in range(nf))}]
+      simp only [initial_state, frame_rest, zero_word_bytes, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
       exact H)
-    (by simp [cs0]) rfl)
+    (by simp [initial_state]) rfl)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
 /-- Zero input; a representative input; all-0xff input. -/
@@ -256,15 +256,15 @@ def accbytes(X, n, frame):
     rbx = guard + 8
     rax = rbx + N
     # receiver words (state at 0; per field: u64 word or (ptr, len, cap))
-    rwords, rnames = ['z 8'], []
+    rwords, rnames = ['zeros 8'], []
     j = 0
     for f in fs:
         if f[1] == 'u':
-            rwords.append('z 8')
-            rnames.append('(z 8)')
+            rwords.append('zeros 8')
+            rnames.append('(zeros 8)')
         else:
-            rwords += [ops[j], 'z 8', 'z 8']
-            rnames += [ops[j], '(z 8)', '(z 8)']
+            rwords += [ops[j], 'zeros 8', 'zeros 8']
+            rnames += [ops[j], '(zeros 8)', '(zeros 8)']
             j += 1
     rlen = 8 * len(rwords)
     tail = gsize - rlen
@@ -275,9 +275,9 @@ def accbytes(X, n, frame):
         F_lo = endr                      # lo (S bytes) = rsp - 48 - S
         rsp = F_lo + 48 + S
         # lo 16 · rslot · spl 24 · l18 · fp · ret · s1 · s2 · caller word
-        stack = ['z 16', 'z 8', 'z 24', 'z 8', 'z 8', 'w0', 'z 8', 'z 8', 'z 8']
-        R0 = f'Eq ((z 32).At ({hexs(rax + rlen)} : BitVec 64)) ⋆ Eq ((z 8).At ({hexs(rsp + 24)} : BitVec 64))'
-        lists = ['(z 8)', '(z 8)', '(z 8)', '(z 24)', '(z 8)', '(z 8)', '(z 16)', '(z 8)'] + rnames
+        stack = ['zeros 16', 'zeros 8', 'zeros 24', 'zeros 8', 'zeros 8', 'zero_word_bytes', 'zeros 8', 'zeros 8', 'zeros 8']
+        R0 = f'Eq ((zeros 32).At ({hexs(rax + rlen)} : BitVec 64)) ⋆ Eq ((zeros 8).At ({hexs(rsp + 24)} : BitVec 64))'
+        lists = ['(zeros 8)', '(zeros 8)', '(zeros 8)', '(zeros 24)', '(zeros 8)', '(zeros 8)', '(zeros 16)', '(zeros 8)'] + rnames
         lens = ['rfl'] * 7
         Sarg = '16 rfl'
         callargs = ''
@@ -294,11 +294,11 @@ def accbytes(X, n, frame):
         gap1_len = (rsp - lsave) - gap1
         gap2 = rsp - lsave + 8
         gap2_len = (rsp - 8) - gap2
-        stack = ['z 16', 'z 8', 'z 8', 'z 8', 'z 8', f'z {gap1_len}', 'z 8', f'z {gap2_len}', 'z 8', 'w0', 'z 8', 'z 8',
-                 'z 8', 'z 8']
-        R0 = (f'Eq ((z 32).At ({hexs(rax + rlen)} : BitVec 64)) ⋆ Eq ((z {gap1_len}).At ({hexs(gap1)} : BitVec 64))'
-              f' ⋆ Eq ((z {gap2_len}).At ({hexs(gap2)} : BitVec 64))\n    ⋆ Eq ((z 8).At ({hexs(rsp + 24)} : BitVec 64))')
-        lists = ['(z 8)'] * 9 + ['(z 16)', '(z 8)'] + rnames
+        stack = ['zeros 16', 'zeros 8', 'zeros 8', 'zeros 8', 'zeros 8', f'zeros {gap1_len}', 'zeros 8', f'zeros {gap2_len}', 'zeros 8', 'zero_word_bytes', 'zeros 8', 'zeros 8',
+                 'zeros 8', 'zeros 8']
+        R0 = (f'Eq ((zeros 32).At ({hexs(rax + rlen)} : BitVec 64)) ⋆ Eq ((zeros {gap1_len}).At ({hexs(gap1)} : BitVec 64))'
+              f' ⋆ Eq ((zeros {gap2_len}).At ({hexs(gap2)} : BitVec 64))\n    ⋆ Eq ((zeros 8).At ({hexs(rsp + 24)} : BitVec 64))')
+        lists = ['(zeros 8)'] * 9 + ['(zeros 16)', '(zeros 8)'] + rnames
         lens = ['rfl'] * 10
         Sarg = '8 (by decide) rfl'
     lens2 = []
@@ -309,20 +309,20 @@ def accbytes(X, n, frame):
         else:
             lens2 += [f'h{j + 1}', 'rfl', 'rfl']
             j += 1
-    blk = ['Int.toBytes 8 (0x1000c : BitVec 64).toInt', '[0, 0, 0, 0]', f'z {heap}', 'w0'] + ins + rwords + ['z 32'] + stack
-    blk = [b if b in params or b in ('w0',) else f'({b})' for b in blk]
+    blk = ['Int.toBytes 8 (0x1000c : BitVec 64).toInt', '[0, 0, 0, 0]', f'zeros {heap}', 'zero_word_bytes'] + ins + rwords + ['zeros 32'] + stack
+    blk = [b if b in params or b in ('zero_word_bytes',) else f'({b})' for b in blk]
     # program
     b0 = 9 + n
     idx, prog, hks = b0, f'dataLabels ++ unmarshalSSZ', []
     cl = [CALLEE[c][0] for c in callees]
-    tailp = cl + ['BumpAlloc1', 'RtCopy']
+    tailp = cl + ['BumpMakeslice1', 'MemmoveGrowsliceModel']
     calls = []
     for c in cl:
         rest = ' ++ '.join(tailp[tailp.index(c) + 1:]) or '[]'
-        hks.append(f'theorem hk{idx} : {c}.IsInfixAt Host.prog {idx} :=\n  infixAt_of ({prog}) ({rest})\n'
-                   f'    (by simp [prog_eq, P, List.append_assoc]) (by rfl)\n'
-                   f'theorem hf{idx} : LabelsFresh {c} {idx} := labelsFresh_of (by rw [prog_eq]; decide)')
-        calls.append(f'{idx} hk{idx} hf{idx}')
+        hks.append(f'theorem placed_at_{idx} : {c}.IsInfixAt Host.prog {idx} :=\n  infixAt_of ({prog}) ({rest})\n'
+                   f'    (by simp [host_program_eq, program, List.append_assoc]) (by rfl)\n'
+                   f'theorem labels_fresh_at_{idx} : LabelsFresh {c} {idx} := labelsFresh_of (by rw [host_program_eq]; decide)')
+        calls.append(f'{idx} placed_at_{idx} labels_fresh_at_{idx}')
         prog += f' ++ {c}'
         idx += CLEN
     bi, ri = idx, idx + BUMPLEN
@@ -334,13 +334,13 @@ def accbytes(X, n, frame):
     wl = ', '.join([f'h{p}' for p in ins] + [f'h{j + 1}' for j in range(nb)])
     # examples
     def zero(f):
-        return f'(z {f[2]})'
+        return f'(zeros {f[2]})'
 
     def rep(i, f):
         if f[1] == 'u':
             return f'(Int.toBytes 8 0x0123456789abcde{i})'
         return f'((List.range {f[2]}).map (fun i => UInt8.ofNat (i + {10 * i})))'
-    ex0 = ' '.join([zero(f) for f in fs] + ['(z 8)'] * nb + ['rfl'] * (len(fs) + nb))
+    ex0 = ' '.join([zero(f) for f in fs] + ['(zeros 8)'] * nb + ['rfl'] * (len(fs) + nb))
     ex1 = ' '.join([rep(i, f) for i, f in enumerate(fs)] + [f'(Int.toBytes 8 0x{2 + j}0000)' for j in range(nb)]
                    + [('(by decide)' if f[1] == 'u' else 'rfl') for f in fs] + ['(by decide)'] * nb)
     ex2 = ' '.join([f'(List.replicate {f[2]} 0xff)' for f in fs] + ['(List.replicate 8 0xff)'] * nb
@@ -358,7 +358,7 @@ import Machine.WitnessHost
 Written by the evidence script `f24wit.py`: the text of `{'Prysm/Deposit_Data/WitnessDecodeAccept.lean' if frame == '20' else 'Prysm/PendingDeposit/WitnessDecodeAccept.lean'}` with the
 {ty} host and layout. It shows that the premises of the generated accept theorem (statement = kind instance)
 are satisfiable. Host: data labels, the real Go 1.26.10 `(*{ty}).UnmarshalSSZ` (index 9){', ' + cdoc if cdoc else ''},
-the 1-byte bump `runtime.makeslice` ({bi}, `bump_makeslice1`) and `RtCopy` ({ri}, `rt_memmove`).
+the 1-byte bump `runtime.makeslice` ({bi}, `bump_makeslice1`) and `MemmoveGrowsliceModel` ({ri}, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the {heap}-byte heap, guard word, the {N} input bytes,
 the {gsize}-byte receiver (`prysm/ir/ir-mainnet.json` gc amd64 layout: `state`, per byte field a slice header with an
 old pointer word and len = cap = 0, per uint64 field a zero word, then 32 untouched tail bytes), the callee block
@@ -375,40 +375,40 @@ namespace Prysm.{X}.Witness.GeneratedDecodeAccept
 set_option maxRecDepth 100000
 
 def dataLabels : Program :=
-  [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
+  [.label "runtime.modelBumpPointer", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := {prog} ++ BumpAlloc1 ++ RtCopy
+def program : Program := {prog} ++ BumpMakeslice1 ++ MemmoveGrowsliceModel
 
-theorem P_len : P.length = {plen} := by rfl
+theorem program_length : program.length = {plen} := by rfl
 
-instance host : Host := mkHost P (by rw [P_len]; decide)
+instance host : Host := mkHost program (by rw [program_length]; decide)
 
-theorem prog_eq : Host.prog = P := rfl
+theorem host_program_eq : Host.prog = program := rfl
 
-theorem hk9 : unmarshalSSZ.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels ({' ++ '.join(tailp)}) (by simp [prog_eq, P, List.append_assoc]) rfl
+theorem placed_at_9 : unmarshalSSZ.IsInfixAt Host.prog 9 :=
+  infixAt_of dataLabels ({' ++ '.join(tailp)}) (by simp [host_program_eq, program, List.append_assoc]) rfl
 {chr(10).join(hks)}
-theorem hk{bi} : BumpAlloc1.IsInfixAt Host.prog {bi} :=
-  infixAt_of ({prog}) RtCopy
-    (by simp [prog_eq, P, List.append_assoc]) (by rfl)
-theorem hk{ri} : RtCopy.IsInfixAt Host.prog {ri} :=
-  infixAt_of ({prog} ++ BumpAlloc1) []
-    (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+theorem placed_at_{bi} : BumpMakeslice1.IsInfixAt Host.prog {bi} :=
+  infixAt_of ({prog}) MemmoveGrowsliceModel
+    (by simp [host_program_eq, program, List.append_assoc]) (by rfl)
+theorem placed_at_{ri} : MemmoveGrowsliceModel.IsInfixAt Host.prog {ri} :=
+  infixAt_of ({prog} ++ BumpMakeslice1) []
+    (by simp [host_program_eq, program, List.append_assoc]) (by rfl)
 
-theorem hf9 : LabelsFresh unmarshalSSZ 9 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf{ri} : LabelsFresh RtCopy {ri} := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf{bi} : ∀ i < {bi}, Host.prog[i]? ≠ some (.label "runtime.makeslice") :=
-  notLabel_of (by rw [prog_eq]; decide)
+theorem labels_fresh_at_9 : LabelsFresh unmarshalSSZ 9 := labelsFresh_of (by rw [host_program_eq]; decide)
+theorem labels_fresh_at_{ri} : LabelsFresh MemmoveGrowsliceModel {ri} := labelsFresh_of (by rw [host_program_eq]; decide)
+theorem labels_fresh_at_{bi} : ∀ i < {bi}, Host.prog[i]? ≠ some (.label "runtime.makeslice") :=
+  notLabel_of (by rw [host_program_eq]; decide)
 
-theorem label_bump : label "runtime.fvBump" = 0x10000 :=
-  mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
+theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10000 :=
+  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [labs])
 
-theorem label_wb : label "runtime.writeBarrier" = 0x10008 :=
-  mk_label P _ 8 _ (by simp [P, dataLabels]) (by decide)
+theorem label_write_barrier : label "runtime.writeBarrier" = 0x10008 :=
+  mk_label program _ 8 _ (by simp [program, dataLabels]) (by decide)
 
-abbrev z (k : Nat) : List UInt8 := List.replicate k 0
-abbrev w0 : List UInt8 := Int.toBytes 8 (0 : UInt64).toBitVec.toInt
+abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
+abbrev zero_word_bytes : List UInt8 := Int.toBytes 8 (0 : UInt64).toBitVec.toInt
 
 def block ({pp} : List UInt8) : List UInt8 :=
   {nest(blk)}
@@ -416,19 +416,19 @@ def block ({pp} : List UInt8) : List UInt8 :=
 def mem ({pp} : List UInt8) : DataMem :=
   (block {pp}).At (0x10000 : BitVec 64)
 
-def cs0 ({pp} : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
+def initial_state ({pp} : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨{hexs(rax)}, {hexs(rbx)}, {N}, 0, 0, {N}, {hexs(rsp)}, 0, 0, 0, 0, 0, 0, 0, {hexs(guard - 16)}, 0⟩, zmms, flags,
     mem {pp}⟩
 
 /-- The frame of the witness. -/
-def R0 : DataMem → Prop :=
+def frame_rest : DataMem → Prop :=
   {R0}
 
 theorem lift_heap {{X : DataMem → Prop}} {{m : DataMem}}
     (h : (Eq ((Int.toBytes 8 (0x1000c : BitVec 64).toInt).At (0x10000 : BitVec 64))
-      ⋆ (Eq ((z {heap}).At (0x1000c : BitVec 64)) ⋆ X)) m) : (bumpHeap {heap} ⋆ X) m := by
+      ⋆ (Eq ((zeros {heap}).At (0x1000c : BitVec 64)) ⋆ X)) m) : (bumpHeap {heap} ⋆ X) m := by
   rw [← Std.ExtHashMap.sep_assoc] at h
-  exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump]; exact hm⟩) h
+  exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
 set_option maxHeartbeats 16000000 in
 /-- **Non-vacuity of the generated `Decode.generated_accept`** (premises of the kind instance are satisfiable). -/
@@ -436,23 +436,23 @@ theorem runs ({pp} : List UInt8) {hparams}
     (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
-      ⟨cs0 {pp} zmms flags, Host.addrOf 9⟩ :=
-  eventually_mono (Prysm.{X}.Decode.generated_accept 9 hk9 hf9 {' '.join(calls)}
-    {' '.join(ins)} {hin} (cs0 {pp} zmms flags)
+      ⟨initial_state {pp} zmms flags, Host.addrOf 9⟩ :=
+  eventually_mono (Prysm.{X}.Decode.generated_accept 9 placed_at_9 labels_fresh_at_9 {' '.join(calls)}
+    {' '.join(ins)} {hin} (initial_state {pp} zmms flags)
     0 0 {' '.join(lists)}
     {' '.join(lens + lens2)}
-    R0 {Sarg} bumpHeap {heap}
+    frame_rest {Sarg} bumpHeap {heap}
     (by
       have H : Eq ((block {pp}).At (0x10000 : BitVec 64)) (mem {pp}) := rfl
-      wit_split [{wl}]
-      rw [Std.ExtHashMap.sep_comm_l (Eq (([0, 0, 0, 0] : List UInt8).At _)) (Eq ((z {heap}).At _))] at H
+      witness_split [{wl}]
+      rw [Std.ExtHashMap.sep_comm_l (Eq (([0, 0, 0, 0] : List UInt8).At _)) (Eq ((zeros {heap}).At _))] at H
       have H2 := lift_heap H
-      simp only [cs0, R0, w0, label_wb, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
+      simp only [initial_state, frame_rest, zero_word_bytes, label_write_barrier, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
       exact H2)
-    (by simp [cs0]) rfl (Nat.le_refl _) (bump_makeslice1 {bi} hk{bi} hf{bi} _) (rt_memmove {ri} hk{ri} hf{ri} _))
+    (by simp [initial_state]) rfl (Nat.le_refl _) (bump_makeslice1 {bi} placed_at_{bi} labels_fresh_at_{bi} _) (model_memmove {ri} placed_at_{ri} labels_fresh_at_{ri} _))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
 /-- Zero input with nil slices; a representative input with non-nil old pointer words; all-0xff input. -/

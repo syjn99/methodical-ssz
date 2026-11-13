@@ -37,5 +37,5 @@ theorem infix_sub {α : Type} {p l q : List α} {k : Nat} (a : Nat) (h : p.IsInf
 
 end Codec
 
--- A template is stepped with `kat hA tmpl n` (`Machine/Step.lean`): its `simp only [tmpl, ...]`
+-- A template is stepped with `step_directive hA tmpl n` (`Machine/Step.lean`): its `simp only [tmpl, ...]`
 -- unfolds the template application by its equation lemma.

@@ -44,7 +44,7 @@ theorem Decode.from_generated_steps_BlockHash_field (k : Nat) (hk : unmarshalSSZ
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At bf)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 47) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -70,12 +70,12 @@ theorem Decode.from_generated_steps_BlockHash_field (k : Nat) (hk : unmarshalSSZ
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
   apply Decode.generated_step_s37 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s38 k hk hf
   apply Decode.generated_step_s45 k hk hf
   apply Decode.generated_step_s46 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
-  kn
+  normalize_registers
   simp only [Reg64s.get64] at H
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, p, spl', lo', hspl', hlo', hrY, ?_⟩
@@ -105,7 +105,7 @@ theorem Decode.from_generated_steps_ParentHash_field (k : Nat) (hk : unmarshalSS
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 83) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -131,12 +131,12 @@ theorem Decode.from_generated_steps_ParentHash_field (k : Nat) (hk : unmarshalSS
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
   apply Decode.generated_step_s73 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s74 k hk hf
   apply Decode.generated_step_s81 k hk hf
   apply Decode.generated_step_s82 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
-  kn
+  normalize_registers
   simp only [Reg64s.get64] at H
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, p, spl', lo', hspl', hlo', hrY, ?_⟩
@@ -166,7 +166,7 @@ theorem Decode.from_generated_steps_TotalDifficulty_field (k : Nat) (hk : unmars
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 119) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -192,12 +192,12 @@ theorem Decode.from_generated_steps_TotalDifficulty_field (k : Nat) (hk : unmars
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
   apply Decode.generated_step_s109 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s110 k hk hf
   apply Decode.generated_step_s117 k hk hf
   apply Decode.generated_step_s118 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
-  kn
+  normalize_registers
   simp only [Reg64s.get64] at H
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, p, spl', lo', hspl', hlo', hrY, ?_⟩
@@ -218,8 +218,8 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
   have hH := Codec.infix_sub (q := Codec.decHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ_224" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ_210" 96) 0 hk
     (by simp only [unmarshalSSZ, Codec.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hE := Codec.infix_sub (q := Codec.decEpi) 119 hk
-    (by simp only [unmarshalSSZ, Codec.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hE := Codec.infix_sub (q := Codec.decEpilogue) 119 hk
+    (by simp only [unmarshalSSZ, Codec.decEpilogue, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   -- head: entry → directive 13
   refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ 96 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
     (by dsimp only; ecancel) hguard (by rw [hlen]; rfl)) ?_

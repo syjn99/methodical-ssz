@@ -87,7 +87,7 @@ import Prysm.Checkpoint.GoValueWitness
 #print axioms Prysm.Checkpoint.Witness.DecodeAccept.runs_spec
 #print axioms Prysm.Checkpoint.Witness.DecodeRejectSize.runs_spec
 #print axioms Prysm.Checkpoint.Encode.tail_fit
-#print axioms Prysm.Checkpoint.Encode.tail_rej
+#print axioms Prysm.Checkpoint.Encode.tail_reject
 #print axioms Prysm.Checkpoint.Encode.tail_grow
 #print axioms Prysm.Checkpoint.Encode.tail_grow_call
 #print axioms Prysm.Checkpoint.Encode.head_fit

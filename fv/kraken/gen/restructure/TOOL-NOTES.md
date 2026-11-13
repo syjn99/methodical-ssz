@@ -185,7 +185,7 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   Keep witness names and code names in the namespace of the type.
   Only a build shows such a failure.
   It is not a name error.
-- `wit_split` (`Machine/WitnessHost.lean`) refers to the identifier `block` of the current namespace.
+- `witness_split` (`Machine/WitnessHost.lean`) refers to the identifier `block` of the current namespace.
   A witness file that uses the host of another witness file must stay in the namespace of that file.
   Example: `Prysm/Checkpoint/WitnessDecodeAcceptSpec.lean` stays in `Prysm.Checkpoint.Witness.DecodeAccept` (theorem `runs_spec`).
 - A generator template can write `open ... E2e ...` for all types.

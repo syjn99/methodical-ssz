@@ -11,15 +11,15 @@ statement is the independent hand statement `Prysm.PendingConsolidation.Decode.a
 
 * `Decode.head` (hand steps, directives 0–14; the text of `pw_head` with the two spills at 12 / 13 in the PendingConsolidation order),
 * `Decode.generated_call_SourceIndex_arg` (15–16) and `Decode.generated_call_SourceIndex_call` (17–19, label 47): GENERATED
-  (`Prysm/PendingConsolidation/GeneratedDecodeCallSegmentsPartial.lean`, raw); the `_call` theorem is conditional on `hC : U64CalleeAcc`, discharged here by
+  (`Prysm/PendingConsolidation/GeneratedDecodeCallSegmentsPartial.lean`, raw); the `_call` theorem is conditional on `hC : U64CalleeAccept`, discharged here by
   the proved `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`,
 * `Codec.callarg_reload_seg false 96 8 112 (-8) 88 16` (48–54; existing lemma, applied by hand: the
   generator did not emit TargetIndex),
 * `calldec_nop_seg` (hand lemma below, 55–58 + label 85: the call block with a `nop` between `callq` and
   `test`, the reason the generator gave for TargetIndex),
-* `Decode.epi` (hand steps, 86–88).
+* `Decode.epilogue` (hand steps, 86–88).
 
-The callee is used only through `U64CalleeAcc` (= the existing `Prysm.ValidatorIndex.Decode.accept_function_spec`, proved by `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`). No
+The callee is used only through `U64CalleeAccept` (= the existing `Prysm.ValidatorIndex.Decode.accept_function_spec`, proved by `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`). No
 contract, no new hypothesis form.
 -/
 
@@ -42,8 +42,8 @@ set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `calldec_seg` (`Codec/CalleeDecode.lean`) for the block `callDecNop`: the same pre / post, one more step. -/
 theorem calldec_nop_seg (fn lok : String) (j j2 : Nat)
-    (hA : (callDecNop fn lok).IsInfixAt Host.prog j) (hB : (callDecL lok).IsInfixAt Host.prog j2)
-    (hl : label lok = Host.addrOf j2) (hC : U64CalleeAcc fn)
+    (hA : (callDecNop fn lok).IsInfixAt Host.prog j) (hB : (callDecContinuationLabel lok).IsInfixAt Host.prog j2)
+    (hl : label lok = Host.addrOf j2) (hC : U64CalleeAccept fn)
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -67,11 +67,11 @@ theorem calldec_nop_seg (fn lok : String) (j j2 : Nat)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 hrax hrbx hrcx h_mem ⊢
   subst rsp rbp r14 rcx hRet hFp hS2 hrax hrbx
-  kat hA callDecNop 0
+  step_directive hA callDecNop 0
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
+  unfold_step
   try rw [show sp - 8#64 = sp - 8 from rfl] at *
   refine eventually_trans _ _ _ _ (hC _ (Host.addrOf (j + 0 + 1)) e8 fp s2 c0 guard _
     he8 hfp hs2 hc0 rfl hguard
@@ -87,15 +87,15 @@ theorem calldec_nop_seg (fn lok : String) (j j2 : Nat)
   subst rax2 rbx2 rsp2 rbp2 r142
   rw [show sp - 8 - 8 = sp - 16 by bv_omega, show sp - 8 + 16 = sp + 8 by bv_omega] at Hm2
   rw [show j + 0 + 1 = j + 1 from rfl] at Hm2
-  kat hA callDecNop 1
-  kat hA callDecNop 2
+  step_directive hA callDecNop 1
+  step_directive hA callDecNop 2
   intro _
-  kat hA callDecNop 3
+  step_directive hA callDecNop 3
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   rw [hl]
-  kat hB callDecL 0
+  step_directive hB callDecContinuationLabel 0
   apply Eventually.done
   exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, by ecancel⟩
 
@@ -132,12 +132,12 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     conv => lhs; rw [← List.take_append_drop 1 ast]
     exact at_app _ _ (by rw [List.length_take, hast]; rfl) (by simp [hast])
   rw [hcs] at h_mem
-  kat hk unmarshalSSZ 0
-  kat hk unmarshalSSZ 1
-  kat hk unmarshalSSZ 2
+  step_directive hk unmarshalSSZ 0
+  step_directive hk unmarshalSSZ 1
+  step_directive hk unmarshalSSZ 2
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 3
+  unfold_step
+  step_directive hk unmarshalSSZ 3
   split
   · rename_i h; exfalso
     simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
@@ -145,43 +145,43 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     · apply h; omega
     · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
   simp only [Effects.All]
-  kat hk unmarshalSSZ 4
+  step_directive hk unmarshalSSZ 4
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk unmarshalSSZ 5
-  kat hk unmarshalSSZ 6
-  kat hk unmarshalSSZ 7
+  unfold_step
+  step_directive hk unmarshalSSZ 5
+  step_directive hk unmarshalSSZ 6
+  step_directive hk unmarshalSSZ 7
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hk unmarshalSSZ 8
-  kat hk unmarshalSSZ 9
-  kat hk unmarshalSSZ 10
+  unfold_step
+  step_directive hk unmarshalSSZ 8
+  step_directive hk unmarshalSSZ 9
+  step_directive hk unmarshalSSZ 10
   split
   case isTrue h => exact absurd h (by decide)
   simp only [Effects.All]
-  kat hk unmarshalSSZ 11
+  step_directive hk unmarshalSSZ 11
   apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by bv_omega) (by ecancel) (by exact h1)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
-  kat hk unmarshalSSZ 12
+  unfold_step
+  step_directive hk unmarshalSSZ 12
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by bv_omega) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
-  kunfold
-  kat hk unmarshalSSZ 13
+  unfold_step
+  step_directive hk unmarshalSSZ 13
   apply store_step_at _ _ (rsp.toBitVec + 32) _ _ _ s4 _ _ (by bv_omega) (by ecancel) (by exact h4)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
-  kat hk unmarshalSSZ 14
+  unfold_step
+  step_directive hk unmarshalSSZ 14
   apply load_step _ _ _ _ (ast.take 1) _ _ (by ecancel) (by simp [hast])
-  kunfold
+  unfold_step
   intro _
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
@@ -189,12 +189,12 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   · rw [hcs]; simp only [Std.ExtHashMap.sep_assoc]; ecancel
   all_goals first
     | rfl
-    | exact congrArg UInt64.ofBitVec (Prysm.PendingPartialWithdrawal.Decode.head_sp _)
+    | exact congrArg UInt64.ofBitVec (Prysm.PendingPartialWithdrawal.Decode.head_stack_pointer _)
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Epilogue, directives 86–88: `add $0x48,%rsp; pop %rbp; retq`. -/
-theorem Decode.epi (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
+theorem Decode.epilogue (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     (sp aFp aRa : BitVec 64) (hFp : sp + 72 = aFp) (hRa : sp + 80 = aRa)
     (fp0 ra : UInt64) (R : DataMem → Prop)
     (s : MachineData) (hrsp : s.regs.rsp = { toBitVec := sp })
@@ -208,15 +208,15 @@ theorem Decode.epi (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp h_mem ⊢
   subst rsp hFp hRa
-  kat hk unmarshalSSZ 86
-  kat hk unmarshalSSZ 87
+  step_directive hk unmarshalSSZ 86
+  step_directive hk unmarshalSSZ 87
   apply load_step_at _ _ (sp + 72) _ _ (Int.toBytes 8 fp0.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 88
+  unfold_step
+  step_directive hk unmarshalSSZ 88
   apply load_step_at _ _ (sp + 80) _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   all_goals first
@@ -234,7 +234,7 @@ hand statement `Decode.accept_statement` (unchanged), from the generated SourceI
 theorem Decode.accept : Decode.accept_statement := by
   intro k hk hf kV hkV hfV in0 in1 hin0 hin1 s ra guard
     fp s1 s2 s4 sp1 rslot lo ast a8 a16 hfp h1 h2 h4 hsp1 hrs hlo hast ha8 ha16 R h_mem hguard hlen
-  have hvi : U64CalleeAcc Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hvi : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 88).toNat := Prysm.PendingPartialWithdrawal.Decode.accept_guard _ _ hguard
@@ -243,8 +243,8 @@ theorem Decode.accept : Decode.accept_statement := by
     (by simp only [unmarshalSSZ, Codec.callArgReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hC2 := Codec.infix_sub (q := callDecNop "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 55 hk
     (by simp only [unmarshalSSZ, callDecNop, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL2 := Codec.infix_sub (q := Codec.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 85 hk
-    (by simp only [unmarshalSSZ, Codec.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hL2 := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 85 hk
+    (by simp only [unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl2 := Machine.label_at' hk hf (j := 85)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
@@ -296,7 +296,7 @@ theorem Decode.accept : Decode.accept_statement := by
   dsimp only at hpc5 hrax5 hrbx5 hrsp5 hrbp5 hr145 Hm5
   subst hpc5
   -- epilogue 86–88
-  refine eventually_trans _ _ _ _ (Decode.epi k hk (rsp.toBitVec - 80) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.epilogue k hk (rsp.toBitVec - 80) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra _ d5 hrsp5 (by ecancel)) ?_
   rintro ⟨d6, pc6⟩ ⟨hpc6, hrax6, hrbx6, hrsp6, hrbp6, hr146, hmem6⟩
   dsimp only at hpc6 hrax6 hrbx6 hrsp6 hrbp6 hr146 hmem6

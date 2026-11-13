@@ -20,8 +20,8 @@ variable [Host]
 
 namespace Prysm.IndexedAttestation
 
--- Measured cause: as in `Prysm/IndexedAttestation/DecodeRejectSize.lean`, `kat` unfolds the 279-directive program literal
--- `unmarshalSSZ`; without this option the first `kat` (directive 147) fails with "maximum recursion depth"; 1024 passes.
+-- Measured cause: as in `Prysm/IndexedAttestation/DecodeRejectSize.lean`, `step_directive` unfolds the 279-directive program literal
+-- `unmarshalSSZ`; without this option the first `step_directive` (directive 147) fails with "maximum recursion depth"; 1024 passes.
 set_option maxRecDepth 1024 in
 theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (ib : List UInt8) (n i : Nat) (hib : ib.length = 8 * n) (hn : n ≤ 2048) (hi : i < n)
@@ -47,21 +47,21 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
   rw [block_split ib rbx.toBitVec (8 * i) (by omega) hlen, out_next ib n i hib hi,
     Mem.At_append_sep _ _ _ (by simp; omega), Mem.At_append_sep _ _ _ (by simp; omega)] at h_mem
   simp only [List.length_take, List.length_replicate, hib, Nat.min_eq_left (show 8 * i ≤ 8 * n by omega)] at h_mem
-  kat hk unmarshalSSZ 147
-  kat hk unmarshalSSZ 148
-  kat hk unmarshalSSZ 149
+  step_directive hk unmarshalSSZ 147
+  step_directive hk unmarshalSSZ 148
+  step_directive hk unmarshalSSZ 149
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
     exact Codec.jge_false_of_lt _ _ (by simp; omega) (by simp; omega) h
   simp only [Effects.All]
-  kat hk unmarshalSSZ 150
-  kat hk unmarshalSSZ 151
-  kat hk unmarshalSSZ 152
-  kshl64 3
-  kat hk unmarshalSSZ 153
-  kat hk unmarshalSSZ 154
-  kat hk unmarshalSSZ 155
+  step_directive hk unmarshalSSZ 150
+  step_directive hk unmarshalSSZ 151
+  step_directive hk unmarshalSSZ 152
+  shift_left64 3
+  step_directive hk unmarshalSSZ 153
+  step_directive hk unmarshalSSZ 154
+  step_directive hk unmarshalSSZ 155
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
@@ -69,46 +69,46 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
     obtain ⟨h1, h2⟩ := h; apply h2; apply BitVec.eq_of_toNat_eq
     simp [BitVec.toNat_sub, BitVec.toNat_shiftLeft, Nat.shiftLeft_eq, BitVec.toNat_add]; omega
   simp only [Effects.All]
-  kat hk unmarshalSSZ 156
-  kat hk unmarshalSSZ 157
-  kshl64 3
-  kat hk unmarshalSSZ 158
-  kat hk unmarshalSSZ 159
+  step_directive hk unmarshalSSZ 156
+  step_directive hk unmarshalSSZ 157
+  shift_left64 3
+  step_directive hk unmarshalSSZ 158
+  step_directive hk unmarshalSSZ 159
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
     (try simp only [Nat.shiftLeft_eq, Int.shiftLeft_eq] at h); omega
   simp only [Effects.All]
-  kat hk unmarshalSSZ 160
+  step_directive hk unmarshalSSZ 160
   apply load_step_at _ _ (rsi.toBitVec + 16) _ _ (Int.toBytes 8 nb.toInt) _ _ (by bv_omega) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 161
-  kat hk unmarshalSSZ 162
+  unfold_step
+  step_directive hk unmarshalSSZ 161
+  step_directive hk unmarshalSSZ 162
   rw [show rbx.toBitVec + rax.toBitVec * 8#64 = rbx.toBitVec + BitVec.ofNat 64 (8 * i) by
     apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_mul]; omega]
   apply load_step _ _ _ _ ((ib.drop (8 * i)).take 8) _ _ (by ecancel) (by simp; omega)
-  kunfold
-  kat hk unmarshalSSZ 163
-  kat hk unmarshalSSZ 164
+  unfold_step
+  step_directive hk unmarshalSSZ 163
+  step_directive hk unmarshalSSZ 164
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega
   simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 143
-  kat hk unmarshalSSZ 143
-  kat hk unmarshalSSZ 144
+  label_address hk hf unmarshalSSZ 143
+  step_directive hk unmarshalSSZ 143
+  step_directive hk unmarshalSSZ 144
   apply load_step_at _ _ (rsi.toBitVec + 8) _ _ (Int.toBytes 8 A.toInt) _ _ (by bv_omega) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 145
+  unfold_step
+  step_directive hk unmarshalSSZ 145
   rw [show A + rax.toBitVec * 8#64 = A + BitVec.ofNat 64 (8 * i) by
     apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_mul]; omega]
   apply store_step _ _ _ _ _ (List.replicate 8 0) _ _ (by ecancel) (by simp)
   intro m1 H1
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl _ (show ((ib.drop (8 * i)).take 8).length = 8 by simp; omega)] at H1
-  kunfold
-  kat hk unmarshalSSZ 146
+  unfold_step
+  step_directive hk unmarshalSSZ 146
   apply Eventually.done
   refine ⟨rfl, ?_, hrdx, hrcx, rfl, rfl, rfl, rfl, rfl, ?_⟩
   · show (rax.toBitVec + 1).toNat = i + 1; simp [BitVec.toNat_add]; omega
@@ -120,7 +120,7 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
     (try simp only [BitVec.ofNat_eq_ofNat] at H1 ⊢)
     ecancel
 
--- Measured cause: as for `Decode.iter`; without this option the first `kat` fails with "maximum recursion depth".
+-- Measured cause: as for `Decode.iter`; without this option the first `step_directive` fails with "maximum recursion depth".
 set_option maxRecDepth 1024 in
 theorem Decode.exit (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (ib : List UInt8) (n : Nat) (hib : ib.length = 8 * n) (_hn : n ≤ 2048)
@@ -139,13 +139,13 @@ theorem Decode.exit (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
   subst hrsp hrbp hr14
   have hrr : rax = rdx := UInt64.toNat_inj.mp (by omega)
   subst hrr
-  kat hk unmarshalSSZ 147
-  kat hk unmarshalSSZ 148
-  kat hk unmarshalSSZ 149
+  step_directive hk unmarshalSSZ 147
+  step_directive hk unmarshalSSZ 148
+  step_directive hk unmarshalSSZ 149
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
   simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 166
+  label_address hk hf unmarshalSSZ 166
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, ?_⟩
   rw [Nat.sub_self, Nat.mul_zero, List.replicate_zero, List.append_nil, List.take_of_length_le (by omega)] at h_mem

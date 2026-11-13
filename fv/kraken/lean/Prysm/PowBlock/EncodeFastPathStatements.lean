@@ -68,7 +68,7 @@ abbrev Encode.fast_path_statement : Prop :=
       ⋆ Eq (d2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 64)) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 96 ≤ s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 96 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
-    (hmm : MemmoveC S),
+    (hmm : MemmoveContract S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 96 ∧ st.data.regs.rcx = s.regs.rdi

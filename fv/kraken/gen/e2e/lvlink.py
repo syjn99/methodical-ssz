@@ -41,14 +41,14 @@ FUNCS = [f"{V1A1}.(*SyncAggregate).UnmarshalSSZ", f"{V1A1}.(*SyncCommittee).Unma
 SCOPE = {FUNCS[0]: "in (LV T1 decoder)", FUNCS[1]: "in (LV T2 decoder)", FUNCS[2]: "in (LV T3 decoder, if time)"}
 CLASS = dict(adlink.CLASS)
 CLASS.update({
-    "runtime.makeslice": ("b", "MakesliceC: esz 1 (uint8 type word, cnt 48/64/96), esz 24 (SyncCommittee "
+    "runtime.makeslice": ("b", "MakesliceContract: esz 1 (uint8 type word, cnt 48/64/96), esz 24 (SyncCommittee "
                                "[][]byte, cnt 512), esz 8 (IndexedAttestation []uint64, cnt = numElem)"),
-    "runtime.memmove": ("b", "MemmoveC (n = 48, 64, 96)"),
+    "runtime.memmove": ("b", "MemmoveContract (n = 48, 64, 96)"),
     "runtime.panicBounds": ("a", "bounds check proved not taken in every loop iteration (fv_iter / lu_iter idiom)"),
-    "runtime.convT64": ("b", "ConvT64C (IndexedAttestation misaligned / ssz-max rejects only)"),
-    "runtime.newobject": ("b", "NewobjectC: IndexedAttestation Data (AttestationData type word); after "
+    "runtime.convT64": ("b", "ConvT64Contract (IndexedAttestation misaligned / ssz-max rejects only)"),
+    "runtime.newobject": ("b", "NewobjectContract: IndexedAttestation Data (AttestationData type word); after "
                                "fmt.errorf: the nil-result branch, excluded by rax != 0"),
-    "fmt.errorf": ("b", "IndexedAttestation only: FmtErrorfDWC (two '%d ... %w' formats), FmtErrorfWC "
+    "fmt.errorf": ("b", "IndexedAttestation only: FmtErrorfDecimalWrapContract (two '%d ... %w' formats), FmtErrorfWrapContract "
                         "('Data: %w')"),
     f"{V1A1}.(*AttestationData).UnmarshalSSZ": ("a", "machine code in the host (Prysm.AttestationData.Decode.accept); "
                                                     "no AttestationData function-spec form exists"),

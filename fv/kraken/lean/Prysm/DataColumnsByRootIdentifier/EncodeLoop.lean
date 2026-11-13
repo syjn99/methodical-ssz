@@ -74,7 +74,7 @@ theorem Encode.loop_rbx (y : BitVec 64) (L i : Nat) (h : y.toNat = L + 8 * i) (h
   simp [BitVec.toNat_add]; omega
 
 omit [Host] in
-theorem Encode.loop_inc (x : BitVec 64) (i : Nat) (h : x.toNat = i) (hi : i < 128) : (x + 1).toNat = i + 1 := by
+theorem Encode.loop_increment (x : BitVec 64) (i : Nat) (h : x.toNat = i) (hi : i < 128) : (x + 1).toNat = i + 1 := by
   simp [BitVec.toNat_add]; omega
 
 omit [Host] in
@@ -106,42 +106,42 @@ theorem Encode.iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : La
   have hlen : cb.length < 2 ^ 64 := by omega
   rw [Encode.loop_split cb w n i hcb hw hi _ (by omega),
     block_split cb rdx.toBitVec (8 * i) (by omega) hlen] at h_mem
-  kat hk marshalSSZTo 82
-  kat hk marshalSSZTo 83
-  kat hk marshalSSZTo 84
+  step_directive hk marshalSSZTo 82
+  step_directive hk marshalSSZTo 83
+  step_directive hk marshalSSZTo 84
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
     exact Codec.jge_false_of_lt _ _ (by simp; omega) (by simp; omega) h
   simp only [Effects.All]
-  kat hk marshalSSZTo 85
-  kat hk marshalSSZTo 86
+  step_directive hk marshalSSZTo 85
+  step_directive hk marshalSSZTo 86
   rw [Encode.loop_idx _ _ i (by simpa using hrsi) (by omega)]
   apply load_step _ _ _ _ ((cb.drop (8 * i)).take 8) _ _ (by ecancel) (by simp; omega)
-  kunfold
-  kat hk marshalSSZTo 87
-  kat hk marshalSSZTo 88
-  kat hk marshalSSZTo 89
+  unfold_step
+  step_directive hk marshalSSZTo 87
+  step_directive hk marshalSSZTo 88
+  step_directive hk marshalSSZTo 89
   split
   case isFalse h =>
     exfalso; simp only [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
     have := Encode.loop_room rbx.toBitVec rcx.toBitVec L n i cp (by simpa using hrbx) hi (by simpa using hrcx) hcp hcp64
     simp at h; omega
   simp only [Effects.All]
-  klabel hk hf marshalSSZTo 79
-  kat hk marshalSSZTo 79
-  kat hk marshalSSZTo 80
+  label_address hk hf marshalSSZTo 79
+  step_directive hk marshalSSZTo 79
+  step_directive hk marshalSSZTo 80
   rw [Encode.loop_addr _ _ L i (by simpa using hrbx) (by omega)]
   apply store_step _ _ _ _ _ ((w.drop (8 * i)).take 8) _ _ (by ecancel) (by simp; omega)
   intro m1 H1
   simp only [Width.bytes, Width.bits,
     toBytes_ofInt_ofBytes 64 8 rfl _ (show ((cb.drop (8 * i)).take 8).length = 8 by simp; omega)] at H1
-  kunfold
-  kat hk marshalSSZTo 81
+  unfold_step
+  step_directive hk marshalSSZTo 81
   apply Eventually.done
   refine ⟨rfl, rfl, ?_, hrcx, rfl, ?_, hr8, rfl, rfl, rfl, ?_⟩
   · exact Encode.loop_rbx _ L i (by simpa using hrbx) (by omega)
-  · exact Encode.loop_inc _ i (by simpa using hrsi) (by omega)
+  · exact Encode.loop_increment _ i (by simpa using hrsi) (by omega)
   · dsimp only
     rw [← Encode.loop_join cb w n i hcb hw hi _ (by omega), block_split cb rdx.toBitVec (8 * i) (by omega) hlen]
     (try simp only [BitVec.ofNat_eq_ofNat] at H1 ⊢)
@@ -157,13 +157,13 @@ theorem Encode.exit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : La
   simp only at h_mem hrsi hr8
   have hrr : rsi = r8 := UInt64.toNat_inj.mp (by omega)
   subst hrr
-  kat hk marshalSSZTo 82
-  kat hk marshalSSZTo 83
-  kat hk marshalSSZTo 84
+  step_directive hk marshalSSZTo 82
+  step_directive hk marshalSSZTo 83
+  step_directive hk marshalSSZTo 84
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
   simp only [Effects.All]
-  klabel hk hf marshalSSZTo 100
+  label_address hk hf marshalSSZTo 100
   apply Eventually.done
   exact ⟨rfl, rfl, h_mem⟩
 

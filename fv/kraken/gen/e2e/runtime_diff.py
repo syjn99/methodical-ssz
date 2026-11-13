@@ -14,13 +14,13 @@ import sys
 G3, G10, OUT = sys.argv[1:4]
 # contract -> [(file, function or None for the whole file)]
 ROWS = {
-    "MakesliceC (esz 1)": [("src/runtime/slice.go", "makeslice"), ("src/runtime/malloc.go", "mallocgc")],
-    "GrowsliceC (esz 1)": [("src/runtime/slice.go", "growslice"), ("src/runtime/slice.go", "nextslicecap"),
+    "MakesliceContract (esz 1)": [("src/runtime/slice.go", "makeslice"), ("src/runtime/malloc.go", "mallocgc")],
+    "GrowsliceContract (esz 1)": [("src/runtime/slice.go", "growslice"), ("src/runtime/slice.go", "nextslicecap"),
                            ("src/runtime/malloc.go", "mallocgc"), ("src/runtime/msize.go", "roundupsize")],
-    "MemmoveC": [("src/runtime/memmove_amd64.s", None)],
-    "NewobjectC": [("src/runtime/malloc.go", "newobject"), ("src/runtime/malloc.go", "mallocgc")],
-    "ConvT64C": [("src/runtime/iface.go", "convT64"), ("src/runtime/malloc.go", "mallocgc")],
-    "FmtErrorfWC / FmtErrorfDDC (fmt.errorf)": [("src/fmt/errors.go", None), ("src/fmt/print.go", None),
+    "MemmoveContract": [("src/runtime/memmove_amd64.s", None)],
+    "NewobjectContract": [("src/runtime/malloc.go", "newobject"), ("src/runtime/malloc.go", "mallocgc")],
+    "ConvT64Contract": [("src/runtime/iface.go", "convT64"), ("src/runtime/malloc.go", "mallocgc")],
+    "FmtErrorfWrapContract / FmtErrorfDecimalDecimalContract (fmt.errorf)": [("src/fmt/errors.go", None), ("src/fmt/print.go", None),
                                                 ("src/fmt/format.go", None), ("src/errors/errors.go", None)],
     "writeBarrier = 0 (gcWriteBarrier2 excluded)": [("src/runtime/mbarrier.go", None), ("src/runtime/mwbbuf.go", None),
                                                    ("src/runtime/asm_amd64.s", None)],

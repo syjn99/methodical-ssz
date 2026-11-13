@@ -14,7 +14,7 @@ the data item `prysm/go1.26.10/link-set/data/typeDeposit_Data.data` (checked aga
 namespace Prysm.Deposit.Code
 
 /-- `(*v1alpha1.Deposit).UnmarshalSSZ` (protoc type, `phase0.ssz.go:2059`). -/
-def unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S"
+def unmarshalSSZ : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S"
 
 
 end Prysm.Deposit.Code

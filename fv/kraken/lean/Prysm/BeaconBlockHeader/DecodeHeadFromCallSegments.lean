@@ -9,7 +9,7 @@ import Codec.CalleeDecode
 0–14, frame `sub $0x60`), then for `Slot` `callarg_first_seg` (15–16) + `calldec_seg` (17–19, label 46), for
 `ProposerIndex` `callarg_reload_seg` with the padding `nop` (47–54) + `calldec_seg` (55–57, label 85), then
 `Decode.spill2` (hand steps, 86–87: the two nil-error spills). The existing hypotheses `Prysm.Slot.Decode.accept_function_spec` / `Prysm.ValidatorIndex.Decode.accept_function_spec` are
-used as `U64CalleeAcc` (the same propositions, `Prysm/Slot/CalleeDecodeFunctionSpecs.lean`). Hand-written example; the existing theorem
+used as `U64CalleeAccept` (the same propositions, `Prysm/Slot/CalleeDecodeFunctionSpecs.lean`). Hand-written example; the existing theorem
 is unchanged.
 -/
 
@@ -18,7 +18,7 @@ variable [Host]
 
 namespace Prysm.BeaconBlockHeader
 
-theorem Decode.head_sp (x : BitVec 64) : x - 8#64 - 96 = x - 104 := by bv_omega
+theorem Decode.head_stack_pointer (x : BitVec 64) : x - 8#64 - 96 = x - 104 := by bv_omega
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -53,12 +53,12 @@ theorem Decode.head0 (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
     conv => lhs; rw [← List.take_append_drop 1 ast]
     exact at_app _ _ (by rw [List.length_take, hast]; rfl) (by simp [hast])
   rw [hcs] at h_mem
-  kat hk Code.unmarshalSSZ 0
-  kat hk Code.unmarshalSSZ 1
-  kat hk Code.unmarshalSSZ 2
+  step_directive hk Code.unmarshalSSZ 0
+  step_directive hk Code.unmarshalSSZ 1
+  step_directive hk Code.unmarshalSSZ 2
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 3
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 3
   split
   · rename_i h; exfalso
     simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
@@ -66,43 +66,43 @@ theorem Decode.head0 (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
     · apply h; omega
     · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
   simp only [Effects.All]
-  kat hk Code.unmarshalSSZ 4
+  step_directive hk Code.unmarshalSSZ 4
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk Code.unmarshalSSZ 5
-  kat hk Code.unmarshalSSZ 6
-  kat hk Code.unmarshalSSZ 7
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 5
+  step_directive hk Code.unmarshalSSZ 6
+  step_directive hk Code.unmarshalSSZ 7
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hk Code.unmarshalSSZ 8
-  kat hk Code.unmarshalSSZ 9
-  kat hk Code.unmarshalSSZ 10
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 8
+  step_directive hk Code.unmarshalSSZ 9
+  step_directive hk Code.unmarshalSSZ 10
   split
   case isTrue h => exact absurd h (by decide)
   simp only [Effects.All]
-  kat hk Code.unmarshalSSZ 11
+  step_directive hk Code.unmarshalSSZ 11
   apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by bv_omega) (by ecancel) (by exact h1)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
-  kat hk Code.unmarshalSSZ 12
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 12
   apply store_step_at _ _ (rsp.toBitVec + 32) _ _ _ s4 _ _ (by bv_omega) (by ecancel) (by exact h4)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
-  kat hk Code.unmarshalSSZ 13
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 13
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by bv_omega) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
-  kunfold
-  kat hk Code.unmarshalSSZ 14
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 14
   apply load_step _ _ _ _ (ast.take 1) _ _ (by ecancel) (by simp [hast])
-  kunfold
+  unfold_step
   intro _
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
@@ -110,7 +110,7 @@ theorem Decode.head0 (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
   · rw [hcs]; simp only [Std.ExtHashMap.sep_assoc]; ecancel
   all_goals first
     | rfl
-    | exact congrArg UInt64.ofBitVec (Decode.head_sp _)
+    | exact congrArg UInt64.ofBitVec (Decode.head_stack_pointer _)
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -129,16 +129,16 @@ theorem Decode.spill2 (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp h_mem ⊢
   subst rsp h28 h30
-  kat hk Code.unmarshalSSZ 86
+  step_directive hk Code.unmarshalSSZ 86
   apply store_step_at _ _ (sp + 48) _ _ _ s30 _ _ (by segment_addr) (by ecancel) (by exact hs30)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk Code.unmarshalSSZ 87
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 87
   apply store_step_at _ _ (sp + 40) _ _ _ s28 _ _ (by segment_addr) (by ecancel) (by exact hs28)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
+  unfold_step
   apply Eventually.done
   exact ⟨rfl, rfl, rfl, rfl, by ecancel⟩
 
@@ -185,8 +185,8 @@ theorem Decode.head_from_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfix
           ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq (in1.At (s.regs.rax.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hsl' : U64CalleeAcc Prysm.Slot.Code.unmarshalSSZLabel := hsl
-  have hvi' : U64CalleeAcc Prysm.ValidatorIndex.Code.unmarshalLabel := hvi
+  have hsl' : U64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := hsl
+  have hvi' : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := hvi
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Decode.accept_guard _ _ hguard
@@ -195,8 +195,8 @@ theorem Decode.head_from_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfix
     (by simp only [Code.unmarshalSSZ, Codec.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hC1 := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 17 hk
     (by simp only [Code.unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL1 := Codec.infix_sub (q := Codec.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 46 hk
-    (by simp only [Code.unmarshalSSZ, Codec.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hL1 := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 46 hk
+    (by simp only [Code.unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl1 := Machine.label_at' hk hf (j := 46)
     (by simp only [Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
@@ -204,8 +204,8 @@ theorem Decode.head_from_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfix
     (by simp only [Code.unmarshalSSZ, Codec.callArgReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hC2 := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 55 hk
     (by simp only [Code.unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL2 := Codec.infix_sub (q := Codec.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
-    (by simp only [Code.unmarshalSSZ, Codec.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hL2 := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
+    (by simp only [Code.unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl2 := Machine.label_at' hk hf (j := 85)
     (by simp only [Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)

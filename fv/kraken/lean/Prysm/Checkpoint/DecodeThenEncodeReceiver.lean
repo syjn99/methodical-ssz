@@ -56,7 +56,7 @@ theorem DecodeThenEncode.encode_decoded_receiver (km : Nat) (hkm : marshalSSZTo.
       -- an empty dst with capacity ≥ 40
       ⋆ Eq (d0.At s.regs.rbx.toBitVec) ⋆ Eq (d1.At (s.regs.rbx.toBitVec + 8)) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
-    (hcap : 40 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S) :
+    (hcap : 40 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
         ∧ st.data.regs.rbx.toNat = 40 ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0

@@ -92,7 +92,7 @@ def main():
     w("How we decide \"does Kraken accept it\":")
     w("")
     w(f"- Mnemonic level: the {len(fn['kraken_accepted_names'])} branch strings of `parseInstr` in `Kraken/X64/Parser/Basic.lean` of the fixed Kraken, and `j`/`set`/`cmov` + {len(fn['kraken_condition_codes'])} `parseCondCode?` condition codes. The {len(fn['conv_norm_forms'])} `conv.py` NORM forms count as `nop`.")
-    w("- Real parser level: we ran `Kraken.X64.Parser.parse`, which `include_x64_rt` uses, on each file (log copy `go1.26.10/kparse-log.txt`). This is the verdict criterion.")
+    w("- Real parser level: we ran `Kraken.X64.Parser.parse`, which `include_x64_code` uses, on each file (log copy `go1.26.10/kparse-log.txt`). This is the verdict criterion.")
     w("- We did not examine the semantics level (`kstep` and theorems). This table is a classification, not a proof.")
     w("")
     w("## 4. Numbers")

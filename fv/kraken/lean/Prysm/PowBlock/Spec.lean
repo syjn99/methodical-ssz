@@ -45,7 +45,7 @@ def SszValue.toValue (g : SszValue) : Value :=
   .seq [.bytes g.blockHash.toArray, .bytes g.parentHash.toArray, .uint g.totalDifficulty.val]
 
 /-- Value under the checker (Prysm) Desc: the third field is the 32 little-endian bytes of the number. -/
-def SszValue.toValueC (g : SszValue) : Value :=
+def SszValue.toValueChecker (g : SszValue) : Value :=
   .seq [.bytes g.blockHash.toArray, .bytes g.parentHash.toArray, .bytes (uintBytes 32 g.totalDifficulty.val)]
 
 /-- `blockHash ++ parentHash ++ uintBytes 32 totalDifficulty`. -/
@@ -59,8 +59,8 @@ theorem SszValue.toValue_fits (g : SszValue) : Value.fits desc g.toValue = true 
   have := g.totalDifficulty.isLt
   simp [desc, SszValue.toValue, Value.fits, Value.fieldsFit]
 
-theorem SszValue.toValueC_fits (g : SszValue) : Value.fits checkerDesc g.toValueC = true := by
-  simp [checkerDesc, SszValue.toValueC, Value.fits, Value.fieldsFit, Spec.uintBytes_size]
+theorem SszValue.toValueChecker_fits (g : SszValue) : Value.fits checkerDesc g.toValueChecker = true := by
+  simp [checkerDesc, SszValue.toValueChecker, Value.fits, Value.fieldsFit, Spec.uintBytes_size]
 
 theorem SszValue.toValue_injective (g h : SszValue) (e : g.toValue = h.toValue) : g = h := by
   obtain ⟨p, r, a⟩ := g; obtain ⟨p', r', a'⟩ := h
@@ -69,9 +69,9 @@ theorem SszValue.toValue_injective (g h : SszValue) (e : g.toValue = h.toValue) 
   obtain ⟨e0, e1, e2⟩ := e
   rw [Vector.toArray_inj.mp e0, Vector.toArray_inj.mp e1, Fin.ext e2]
 
-theorem SszValue.toValueC_injective (g h : SszValue) (e : g.toValueC = h.toValueC) : g = h := by
+theorem SszValue.toValueChecker_injective (g h : SszValue) (e : g.toValueChecker = h.toValueChecker) : g = h := by
   obtain ⟨p, r, a⟩ := g; obtain ⟨p', r', a'⟩ := h
-  simp only [SszValue.toValueC, Value.seq.injEq, List.cons.injEq, Value.bytes.injEq, and_true] at e
+  simp only [SszValue.toValueChecker, Value.seq.injEq, List.cons.injEq, Value.bytes.injEq, and_true] at e
   obtain ⟨e0, e1, e2⟩ := e
   have ha : a.val = a'.val := by
     have h1 := readUint_uintBytes 32 a.val (by simpa using a.isLt)
@@ -93,8 +93,8 @@ theorem SszValue.toValue_surjective' (v : Value) (h : Value.fits desc v = true) 
     obtain ⟨a, rfl, ha⟩ := fits_uint h2
     exact ⟨⟨⟨q, hq⟩, ⟨d, hd⟩, ⟨a, by simpa using ha⟩⟩, by simp [SszValue.toValue]⟩
 
-theorem SszValue.toValueC_surjective' (v : Value) (h : Value.fits checkerDesc v = true) :
-    ∃ g : SszValue, g.toValueC = v := by
+theorem SszValue.toValueChecker_surjective' (v : Value) (h : Value.fits checkerDesc v = true) :
+    ∃ g : SszValue, g.toValueChecker = v := by
   obtain ⟨vs, rfl, hf⟩ := fits_container h
   have hl := fieldsFit_length hf
   match vs, hl with
@@ -110,7 +110,7 @@ theorem SszValue.toValueC_surjective' (v : Value) (h : Value.fits checkerDesc v 
     have r := readUint_lt c 0 32
     have hu : uintBytes 32 (readUint c 0 32) = c := by
       rw [uintBytes_readUint_slice c 0 32 (by omega)]; simp [← hc]
-    exact ⟨⟨⟨q, hq⟩, ⟨d, hd⟩, ⟨readUint c 0 32, by simpa using r⟩⟩, by simp [SszValue.toValueC, hu]⟩
+    exact ⟨⟨⟨q, hq⟩, ⟨d, hd⟩, ⟨readUint c 0 32, by simpa using r⟩⟩, by simp [SszValue.toValueChecker, hu]⟩
 
 /-- **`serialize g = blockHash ‖ parentHash ‖ uintBytes 32 totalDifficulty`** (hand Desc). -/
 theorem SszValue.serialize_eq (g : SszValue) : serialize desc g.toValue = .ok (SszValue.encode g) := by
@@ -122,9 +122,9 @@ theorem SszValue.serialize_eq (g : SszValue) : serialize desc g.toValue = .ok (S
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- The same bytes under the checker Desc. -/
-theorem SszValue.serialize_eq_checker (g : SszValue) : serialize checkerDesc g.toValueC = .ok (SszValue.encode g) := by
+theorem SszValue.serialize_eq_checker (g : SszValue) : serialize checkerDesc g.toValueChecker = .ok (SszValue.encode g) := by
   obtain ⟨⟨q, hq⟩, ⟨r, hr⟩, a⟩ := g
-  simp only [checkerDesc, SszValue.toValueC, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hq, hr]
+  simp only [checkerDesc, SszValue.toValueChecker, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hq, hr]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
     headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, SszValue.encode,
     Desc.fieldsFixedSize, Array.append_assoc]
@@ -134,9 +134,9 @@ theorem SszValue.roundtrip (g : SszValue) : deserialize desc (SszValue.encode g)
   deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
     SszValue.toValue_fits g
 
-theorem SszValue.roundtrip_checker (g : SszValue) : deserialize checkerDesc (SszValue.encode g) = .ok g.toValueC :=
-  deserialize_encoding (G := SszValue) (toV := SszValue.toValueC) (enc := SszValue.encode) checker_wellFormed SszValue.serialize_eq_checker
-    SszValue.toValueC_fits g
+theorem SszValue.roundtrip_checker (g : SszValue) : deserialize checkerDesc (SszValue.encode g) = .ok g.toValueChecker :=
+  deserialize_encoding (G := SszValue) (toV := SszValue.toValueChecker) (enc := SszValue.encode) checker_wellFormed SszValue.serialize_eq_checker
+    SszValue.toValueChecker_fits g
 
 theorem SszValue.accepted_is_encoding {bs : Array UInt8} {v : Value} (h : deserialize desc bs = .ok v) :
     ∃ g : SszValue, v = g.toValue ∧ bs = SszValue.encode g :=
@@ -144,9 +144,9 @@ theorem SszValue.accepted_is_encoding {bs : Array UInt8} {v : Value} (h : deseri
     SszValue.toValue_surjective' h
 
 theorem SszValue.accepted_is_encoding_checker {bs : Array UInt8} {v : Value} (h : deserialize checkerDesc bs = .ok v) :
-    ∃ g : SszValue, v = g.toValueC ∧ bs = SszValue.encode g :=
-  accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValueC) (enc := SszValue.encode) checker_wellFormed SszValue.serialize_eq_checker
-    SszValue.toValueC_surjective' h
+    ∃ g : SszValue, v = g.toValueChecker ∧ bs = SszValue.encode g :=
+  accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValueChecker) (enc := SszValue.encode) checker_wellFormed SszValue.serialize_eq_checker
+    SszValue.toValueChecker_surjective' h
 
 /-- **EthLib accepts exactly the 96-byte inputs** (hand Desc). -/
 theorem SszValue.spec_accepts_iff (bs : Array UInt8) : (∃ v, deserialize desc bs = .ok v) ↔ bs.size = 96 := by
@@ -186,15 +186,15 @@ theorem Decode.accepts_same (bs : Array UInt8) :
     exact ⟨_, hb ▸ SszValue.roundtrip g⟩
 
 /-- **Codec correspondence**: on every input, the hand Desc decodes to `g.toValue` (total difficulty a number)
-exactly when the checker Desc decodes to `g.toValueC` (its 32 little-endian bytes). -/
+exactly when the checker Desc decodes to `g.toValueChecker` (its 32 little-endian bytes). -/
 theorem Decode.codec_checker (bs : Array UInt8) (g : SszValue) :
-    deserialize desc bs = .ok g.toValue ↔ deserialize checkerDesc bs = .ok g.toValueC := by
+    deserialize desc bs = .ok g.toValue ↔ deserialize checkerDesc bs = .ok g.toValueChecker := by
   constructor
   · intro h
     obtain ⟨g', e, hb⟩ := SszValue.accepted_is_encoding h
     rw [SszValue.toValue_injective _ _ e, hb]; exact SszValue.roundtrip_checker g'
   · intro h
     obtain ⟨g', e, hb⟩ := SszValue.accepted_is_encoding_checker h
-    rw [SszValue.toValueC_injective _ _ e, hb]; exact SszValue.roundtrip g'
+    rw [SszValue.toValueChecker_injective _ _ e, hb]; exact SszValue.roundtrip g'
 
 end Prysm.PowBlock

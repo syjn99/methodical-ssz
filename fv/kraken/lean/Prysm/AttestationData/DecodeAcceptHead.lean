@@ -42,7 +42,7 @@ theorem Decode.accept_ret (x : BitVec 64) : ({ toBitVec := x - 128 } + 8 : UInt6
 
 theorem Decode.accept_guard (x : BitVec 64) (g : Nat) (h : g + 224 < x.toNat) : g < (x - 128).toNat := by bv_omega
 
-/-- Address equation by `toNat` and `omega` (as `kaddr`, with `Width.bits` reduced). -/
+/-- Address equation by `toNat` and `omega` (as `address_equation`, with `Width.bits` reduced). -/
 macro "attestation_data_addr" : tactic => `(tactic| (
   apply BitVec.eq_of_toNat_eq
   simp only [BitVec.toNat_add, BitVec.toNat_sub, BitVec.toNat_neg, BitVec.toNat_ofNat, BitVec.ofNat_eq_ofNat,
@@ -96,12 +96,12 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
     conv => lhs; rw [← List.take_append_drop 1 ast]
     exact at_app _ _ (by rw [List.length_take, hast]; rfl) (by simp [hast])
   rw [hcs] at h_mem
-  kat hk unmarshalSSZ 0
-  kat hk unmarshalSSZ 1
-  kat hk unmarshalSSZ 2
+  step_directive hk unmarshalSSZ 0
+  step_directive hk unmarshalSSZ 1
+  step_directive hk unmarshalSSZ 2
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 3
+  unfold_step
+  step_directive hk unmarshalSSZ 3
   split
   · rename_i h; exfalso
     simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
@@ -109,51 +109,51 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
     · apply h; omega
     · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
   simp only [Effects.All]
-  kat hk unmarshalSSZ 4
+  step_directive hk unmarshalSSZ 4
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk unmarshalSSZ 5
-  kat hk unmarshalSSZ 6
-  kat hk unmarshalSSZ 7
+  unfold_step
+  step_directive hk unmarshalSSZ 5
+  step_directive hk unmarshalSSZ 6
+  step_directive hk unmarshalSSZ 7
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hk unmarshalSSZ 8
-  kat hk unmarshalSSZ 9
-  kat hk unmarshalSSZ 10
+  unfold_step
+  step_directive hk unmarshalSSZ 8
+  step_directive hk unmarshalSSZ 9
+  step_directive hk unmarshalSSZ 10
   split
   case isTrue h => exact absurd h (by decide)
   simp only [Effects.All]
-  kat hk unmarshalSSZ 11
+  step_directive hk unmarshalSSZ 11
   apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by bv_omega) (by ecancel) (by exact h1)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
-  kat hk unmarshalSSZ 12
+  unfold_step
+  step_directive hk unmarshalSSZ 12
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by bv_omega) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
-  kat hk unmarshalSSZ 13
+  unfold_step
+  step_directive hk unmarshalSSZ 13
   apply store_step_at _ _ (rsp.toBitVec + 32) _ _ _ s4 _ _ (by bv_omega) (by ecancel) (by exact h4)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
-  kunfold
-  kat hk unmarshalSSZ 14
+  unfold_step
+  step_directive hk unmarshalSSZ 14
   apply load_step _ _ _ _ (ast.take 1) _ _ (by ecancel) (by simp [hast])
-  kunfold
+  unfold_step
   intro _
-  kat hk unmarshalSSZ 15
-  kat hk unmarshalSSZ 16
-  kat hk unmarshalSSZ 17
+  step_directive hk unmarshalSSZ 15
+  step_directive hk unmarshalSSZ 16
+  step_directive hk unmarshalSSZ 17
   apply store_step_at _ _ (rsp.toBitVec - 128) _ _ _ rslot _ _ (Decode.accept_slot _) (by ecancel) (by exact hrs)
   intro m6' H6
   simp only [Width.bytes, Width.bits] at H6
-  kunfold
+  unfold_step
   rw [Decode.accept_slot] at *
   rw [show (8 : BitVec 64) + rax.toBitVec = rax.toBitVec + 8 from BitVec.add_comm _ _]
   refine eventually_trans _ _ _ _ (hsl _ (Host.addrOf (k + 17 + 1)) in0 lf sp1 a8 guard _
@@ -170,36 +170,36 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
   subst rax2 rbx2 rsp2 rbp2 r142
   rw [show rsp.toBitVec - 128 - 8 = rsp.toBitVec - 136 by bv_omega,
     show rsp.toBitVec - 128 + 16 = rsp.toBitVec - 112 by bv_omega] at Hm2
-  kat hk unmarshalSSZ 18
+  step_directive hk unmarshalSSZ 18
   intro _
-  kat hk unmarshalSSZ 19
+  step_directive hk unmarshalSSZ 19
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 47
-  kat hk unmarshalSSZ 47
-  kat hk unmarshalSSZ 48
+  label_address hk hf unmarshalSSZ 47
+  step_directive hk unmarshalSSZ 47
+  step_directive hk unmarshalSSZ 48
   apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by attestation_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 49
-  kat hk unmarshalSSZ 50
+  unfold_step
+  step_directive hk unmarshalSSZ 49
+  step_directive hk unmarshalSSZ 50
   apply load_step_at _ _ (rsp.toBitVec + 32) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by attestation_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 51
-  kat hk unmarshalSSZ 52
+  unfold_step
+  step_directive hk unmarshalSSZ 51
+  step_directive hk unmarshalSSZ 52
   apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by attestation_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 53
-  kat hk unmarshalSSZ 54
-  kat hk unmarshalSSZ 55
+  unfold_step
+  step_directive hk unmarshalSSZ 53
+  step_directive hk unmarshalSSZ 54
+  step_directive hk unmarshalSSZ 55
   apply store_step_at _ _ (rsp.toBitVec - 128) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 17 + 1)).toBitVec.toInt) _ _
     (Decode.accept_call _) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m7' H7
   simp only [Width.bytes, Width.bits] at H7
-  kunfold
+  unfold_step
   rw [Decode.accept_call] at *
   rw [show (8 : BitVec 64) + rbx.toBitVec = rbx.toBitVec + 8 from BitVec.add_comm _ _,
     show (16 : BitVec 64) + rax.toBitVec = rax.toBitVec + 16 from BitVec.add_comm _ _]
@@ -220,13 +220,13 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
   subst rax3 rbx3 rsp3 rbp3 r143
   rw [show rsp.toBitVec - 128 - 8 = rsp.toBitVec - 136 by bv_omega,
     show rsp.toBitVec - 128 + 16 = rsp.toBitVec - 112 by bv_omega] at Hm3
-  kat hk unmarshalSSZ 56
+  step_directive hk unmarshalSSZ 56
   intro _
-  kat hk unmarshalSSZ 57
+  step_directive hk unmarshalSSZ 57
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 85
+  label_address hk hf unmarshalSSZ 85
   apply Eventually.done
   rw [show k + 55 + 1 = k + 56 from rfl] at Hm3
   rw [show Eq ((Int.toBytes 8 (rsp.toBitVec - 8#64).toInt).At (rsp.toBitVec - 136))

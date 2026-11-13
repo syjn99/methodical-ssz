@@ -24,7 +24,7 @@
  {
   "id": "g2-segnz-stmt-len",
   "module": "Codec/FixedBytesDecode.lean",
-  "theorem": "bytesdec_seg_z",
+  "theorem": "bytesdec_seg_offset_zero",
   "kind": "stmt",
   "old": "Eq ((Int.toBytes 8 (OfNat.ofNat n)).At aL)",
   "new": "Eq ((Int.toBytes 8 0).At aL)"

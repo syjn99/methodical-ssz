@@ -145,7 +145,7 @@
   "id": "o-tail-rej-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeTailReject.lean",
-  "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.tail_rej"
+  "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.tail_reject"
  },
  {
   "code_def": "marshalSSZTo",
@@ -155,7 +155,7 @@
   "id": "o-tail-rej-err",
   "kind": "code",
   "module": "Prysm/Checkpoint/CapacityReservedEncodeTailReject.lean",
-  "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.tail_rej",
+  "theorem": "Prysm.Checkpoint.CapacityReserved.Encode.tail_reject",
   "old": "  mov ssz.ErrBytesLength+8(%rip),%rsi",
   "new": "  mov ssz.ErrBytesLength(%rip),%rsi"
  },

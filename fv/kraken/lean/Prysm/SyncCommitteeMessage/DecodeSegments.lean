@@ -7,12 +7,12 @@ import Prysm.SyncCommitteeMessage.Code
 
 Hand-written for the directives of `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`
 that the generator did not cover (`Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean`: Slot and Signature covered; BlockRoot and
-ValidatorIndex not). No contract, no new hypothesis form; the runtime callees use `MakesliceC` / `MemmoveC` as
+ValidatorIndex not). No contract, no new hypothesis form; the runtime callees use `MakesliceContract` / `MemmoveContract` as
 in `Codec/FixedBytesDecode.lean`.
 
 * `Decode.head0`: directives 0–14 (the text of `Prysm.BeaconBlockHeader.Decode.head0`; the frame `sub $0x60` and the spill order are the same,
   the length immediate is `0x90`).
-* `bytesDecMidA` / `bytes32dec_seg_rax`: BlockRoot (47–71). The second block reloads the receiver into rax, not
+* `bytesDecMidRax` / `bytes32dec_seg_rax`: BlockRoot (47–71). The second block reloads the receiver into rax, not
   rdx (the generator's reason for BlockRoot); otherwise `bytesdec_seg` with `n = 32`.
 * `Decode.validator_index_arg`: ValidatorIndex argument set-up 82–87 (the receiver stays in rax; the generator read it as the
   first-field form).
@@ -25,7 +25,7 @@ namespace Prysm.SyncCommitteeMessage
 
 /-- `bytesDecMid` with the receiver reloaded into rax (directives 7–9: `mov dR(%rsp),%rax; movq $n,fL(%rax);
 movq $n,fC(%rax)`), as SyncCommitteeMessage.BlockRoot is compiled. -/
-def bytesDecMidA (n : Int64) (lff lwb : String) (dR dB dS fP fL fC src : Int64) : Program :=
+def bytesDecMidRax (n : Int64) (lff lwb : String) (dR dB dS fP fL fC src : Int64) : Program :=
   [Kraken.Directive.label lff,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rsp)) none (ConstExpr.int64 dS)))
@@ -91,12 +91,12 @@ theorem Decode.head0 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     conv => lhs; rw [← List.take_append_drop 1 ast]
     exact at_app _ _ (by rw [List.length_take, hast]; rfl) (by simp [hast])
   rw [hcs] at h_mem
-  kat hk unmarshalSSZ 0
-  kat hk unmarshalSSZ 1
-  kat hk unmarshalSSZ 2
+  step_directive hk unmarshalSSZ 0
+  step_directive hk unmarshalSSZ 1
+  step_directive hk unmarshalSSZ 2
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 3
+  unfold_step
+  step_directive hk unmarshalSSZ 3
   split
   · rename_i h; exfalso
     simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
@@ -104,43 +104,43 @@ theorem Decode.head0 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     · apply h; omega
     · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
   simp only [Effects.All]
-  kat hk unmarshalSSZ 4
+  step_directive hk unmarshalSSZ 4
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk unmarshalSSZ 5
-  kat hk unmarshalSSZ 6
-  kat hk unmarshalSSZ 7
+  unfold_step
+  step_directive hk unmarshalSSZ 5
+  step_directive hk unmarshalSSZ 6
+  step_directive hk unmarshalSSZ 7
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hk unmarshalSSZ 8
-  kat hk unmarshalSSZ 9
-  kat hk unmarshalSSZ 10
+  unfold_step
+  step_directive hk unmarshalSSZ 8
+  step_directive hk unmarshalSSZ 9
+  step_directive hk unmarshalSSZ 10
   split
   case isTrue h => exact absurd h (by decide)
   simp only [Effects.All]
-  kat hk unmarshalSSZ 11
+  step_directive hk unmarshalSSZ 11
   apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by bv_omega) (by ecancel) (by exact h1)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
-  kat hk unmarshalSSZ 12
+  unfold_step
+  step_directive hk unmarshalSSZ 12
   apply store_step_at _ _ (rsp.toBitVec + 32) _ _ _ s4 _ _ (by bv_omega) (by ecancel) (by exact h4)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
-  kat hk unmarshalSSZ 13
+  unfold_step
+  step_directive hk unmarshalSSZ 13
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by bv_omega) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
-  kunfold
-  kat hk unmarshalSSZ 14
+  unfold_step
+  step_directive hk unmarshalSSZ 14
   apply load_step _ _ _ _ (ast.take 1) _ _ (by ecancel) (by simp [hast])
-  kunfold
+  unfold_step
   intro _
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
@@ -148,7 +148,7 @@ theorem Decode.head0 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   · rw [hcs]; simp only [Std.ExtHashMap.sep_assoc]; ecancel
   all_goals first
     | rfl
-    | exact congrArg UInt64.ofBitVec (Prysm.BeaconBlockHeader.Decode.head_sp _)
+    | exact congrArg UInt64.ofBitVec (Prysm.BeaconBlockHeader.Decode.head_stack_pointer _)
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -167,20 +167,20 @@ theorem Decode.spill2 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp h_mem ⊢
   subst rsp h28 h30
-  kat hk unmarshalSSZ 118
+  step_directive hk unmarshalSSZ 118
   apply store_step_at _ _ (sp + 48) _ _ _ s30 _ _ (by segment_addr) (by ecancel) (by exact hs30)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk unmarshalSSZ 119
+  unfold_step
+  step_directive hk unmarshalSSZ 119
   apply store_step_at _ _ (sp + 40) _ _ _ s28 _ _ (by segment_addr) (by ecancel) (by exact hs28)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
+  unfold_step
   apply Eventually.done
   exact ⟨rfl, rfl, rfl, rfl, by ecancel⟩
 
-/-- Closing step of the set-up lemma: register equations (the text of `callarg_close`, `Codec/CalleeDecode.lean`). -/
+/-- Closing step of the set-up lemma: register equations (the text of `call_argument_close`, `Codec/CalleeDecode.lean`). -/
 local macro "setup_argument_close" : tactic => `(tactic| (
   all_goals first
     | rfl
@@ -211,29 +211,29 @@ theorem Decode.validator_index_arg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.p
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrax h_mem ⊢
   subst rsp hSrc hF hrax
-  kat hk unmarshalSSZ 82
+  step_directive hk unmarshalSSZ 82
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']; rfl) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 83
-  kat hk unmarshalSSZ 84
+  unfold_step
+  step_directive hk unmarshalSSZ 83
+  step_directive hk unmarshalSSZ 84
   apply load_step_at _ _ aD _ _ vD _ _ (by rw [← hD]; rfl) (by ecancel) (by exact hvD)
-  kunfold
-  kat hk unmarshalSSZ 85
-  kat hk unmarshalSSZ 86
-  kat hk unmarshalSSZ 87
+  unfold_step
+  step_directive hk unmarshalSSZ 85
+  step_directive hk unmarshalSSZ 86
+  step_directive hk unmarshalSSZ 87
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   setup_argument_close
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- `bytesdec_seg` (`Codec/FixedBytesDecode.lean`) for `n = 32` with the second block `bytesDecMidA`: the same pre / post except
-that rax (not rdx) holds the receiver at the end. Proof: the text of `bytesdec_add 32` with the three changed
+/-- `bytesdec_seg` (`Codec/FixedBytesDecode.lean`) for `n = 32` with the second block `bytesDecMidRax`: the same pre / post except
+that rax (not rdx) holds the receiver at the end. Proof: the text of `bytes_decode_add_case 32` with the three changed
 directives. -/
 theorem bytes32dec_seg_rax (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
     (hA : (bytesDecHead 32 lff dR fL fC).IsInfixAt Host.prog j1)
-    (hB : (bytesDecMidA 32 lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)
+    (hB : (bytesDecMidRax 32 lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)
     (hl : label lff = Host.addrOf j2)
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
@@ -253,7 +253,7 @@ theorem bytes32dec_seg_rax (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St) :
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (j2 + 12) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -273,15 +273,15 @@ theorem bytes32dec_seg_rax (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14 hRet hLo
-  kat hA bytesDecHead 0
-  kat hA bytesDecHead 1
+  step_directive hA bytesDecHead 0
+  step_directive hA bytesDecHead 1
   intro _
-  kat hA bytesDecHead 2
-  kat hA bytesDecHead 3
+  step_directive hA bytesDecHead 2
+  step_directive hA bytesDecHead 3
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
+  unfold_step
   try rw [show sp - 8#64 = sp - 8 from rfl] at *
   refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (j1 + 3 + 1)) 32 avail lo spl _
     rfl (by simp) (by rfl) (by omega) (by unfold maxAlloc; omega) (by omega) hlo hspl
@@ -297,52 +297,52 @@ theorem bytes32dec_seg_rax (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j
   subst hrsp3 hr143 hrbp3
   rw [show sp - 8 + 8 = sp by bv_omega] at Hm3
   simp only [Nat.one_mul] at Hm3
-  kat hA bytesDecHead 4
+  step_directive hA bytesDecHead 4
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hA bytesDecHead 5
+  unfold_step
+  step_directive hA bytesDecHead 5
   apply store_step_at _ _ aL _ _ _ vL _ _ (by rw [← hL]) (by ecancel) (by exact hvL)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hA bytesDecHead 6
+  unfold_step
+  step_directive hA bytesDecHead 6
   apply store_step_at _ _ aC _ _ _ vC _ _ (by rw [← hC]) (by ecancel) (by exact hvC)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
-  kat hA bytesDecHead 7
+  unfold_step
+  step_directive hA bytesDecHead 7
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
-  kunfold
-  kat hA bytesDecHead 8
+  unfold_step
+  step_directive hA bytesDecHead 8
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   rw [hl]
-  kat hB bytesDecMidA 0
-  kat hB bytesDecMidA 1
+  step_directive hB bytesDecMidRax 0
+  step_directive hB bytesDecMidRax 1
   apply store_step_at _ _ aS _ _ _ lS _ _ (by rw [← hS]) (by ecancel) (by exact hlS)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
-  kat hB bytesDecMidA 2
+  unfold_step
+  step_directive hB bytesDecMidRax 2
   apply store_step_at _ _ aP _ _ _ vP _ _ (by rw [← hP]) (by ecancel) (by exact hvP)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
-  kunfold
-  kat hB bytesDecMidA 3
+  unfold_step
+  step_directive hB bytesDecMidRax 3
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hB bytesDecMidA 4
-  kat hB bytesDecMidA 5
-  kat hB bytesDecMidA 6
+  unfold_step
+  step_directive hB bytesDecMidRax 4
+  step_directive hB bytesDecMidRax 5
+  step_directive hB bytesDecMidRax 6
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 3 + 1)).toBitVec.toInt) _ _
     (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6' H6
   simp only [Width.bytes, Width.bits] at H6
-  kunfold
+  unfold_step
   try rw [show sp - 8#64 = sp - 8 from rfl] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (j2 + 6 + 1)) root (List.replicate 32 0) stk3 _
     (by rw [hroot]; rfl) (by simp [hroot]) hstk3
@@ -357,27 +357,27 @@ theorem bytes32dec_seg_rax (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j
     apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega] at hrsp4
   subst hrsp4 hr144 hrbp4
   rw [show src.toBitVec + bf = aSrc by rw [← hSrc]; exact BitVec.add_comm _ _] at Hm4
-  kat hB bytesDecMidA 7
+  step_directive hB bytesDecMidRax 7
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hB bytesDecMidA 8
+  unfold_step
+  step_directive hB bytesDecMidRax 8
   apply store_step_at _ _ aL _ _ _ (Int.toBytes 8 (BitVec.toInt (0 : BitVec 64))) _ _ (by rw [← hL])
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m7' H7
   simp only [Width.bytes, Width.bits] at H7
-  kunfold
-  kat hB bytesDecMidA 9
+  unfold_step
+  step_directive hB bytesDecMidRax 9
   apply store_step_at _ _ aC _ _ _ (Int.toBytes 8 (BitVec.toInt (32 : BitVec 64))) _ _ (by rw [← hC])
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m8' H8
   simp only [Width.bytes, Width.bits] at H8
-  kunfold
-  kat hB bytesDecMidA 10
+  unfold_step
+  step_directive hB bytesDecMidRax 10
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
-  kunfold
-  kat hB bytesDecMidA 11
+  unfold_step
+  step_directive hB bytesDecMidRax 11
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]

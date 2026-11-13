@@ -28,12 +28,12 @@ structure SszValue where
   aggregatePubkey : Vector UInt8 48
 
 /-- The 512 pubkeys as byte lists, in order. -/
-def SszValue.pks (g : SszValue) : List (List UInt8) := g.pubkeys.toList.map (·.toList)
+def SszValue.pubkeyBytes (g : SszValue) : List (List UInt8) := g.pubkeys.toList.map (·.toList)
 
 def SszValue.toValue (g : SszValue) : Value :=
   .seq [.seq (g.pubkeys.toList.map fun p => .bytes p.toArray), .bytes g.aggregatePubkey.toArray]
 
 /-- `pubkeys[0] ‖ … ‖ pubkeys[511] ‖ aggregatePubkey`. -/
-def SszValue.encode (g : SszValue) : Array UInt8 := g.pks.flatten.toArray ++ g.aggregatePubkey.toArray
+def SszValue.encode (g : SszValue) : Array UInt8 := g.pubkeyBytes.flatten.toArray ++ g.aggregatePubkey.toArray
 
 end Prysm.SyncCommittee

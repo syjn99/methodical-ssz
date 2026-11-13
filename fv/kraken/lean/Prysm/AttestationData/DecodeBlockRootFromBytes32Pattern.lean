@@ -38,7 +38,7 @@ theorem Decode.block_root_from_bytes32_pattern (k : Nat) (hk : unmarshalSSZ.IsIn
       ⋆ Eq (aP.At (rcv + 24)) ⋆ Eq (aL.At (rcv + 32)) ⋆ Eq (aC.At (rcv + 40))
       ⋆ Eq (root.At (bf + 16))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 96)) (hmm : MemmoveC (S + 96)) :
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 96)) (hmm : MemmoveContract (S + 96)) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 120) ∧ st.data.regs.rsp = { toBitVec := rsp0.toBitVec - 120 }
         ∧ st.data.regs.rbp = { toBitVec := rsp0.toBitVec - 8#64 } ∧ st.data.regs.r14 = r140 ∧
@@ -72,14 +72,14 @@ theorem Decode.block_root_from_bytes32_pattern (k : Nat) (hk : unmarshalSSZ.IsIn
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14
-  kat hk unmarshalSSZ 85
+  step_directive hk unmarshalSSZ 85
   refine eventually_trans _ _ _ _ (rootdec_seg _ _ 128 136 104 24 32 40 16 (k + 86) (k + 100) hA hB hl
     (rsp0.toBitVec - 120) rcv bf (rsp0.toBitVec + 8) (rsp0.toBitVec + 16) (rsp0.toBitVec - 16)
     (rsp0.toBitVec - 128) (rsp0.toBitVec - 224 - BitVec.ofNat 64 S) (rcv + 24) (rcv + 32) (rcv + 40) (bf + 16)
     (S + 96)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega)
-    (by rw [show rsp0.toBitVec - 120 - 8 = rsp0.toBitVec - 128 by bv_omega]; exact Prysm.AttestationData.Decode.accept_lo _ _ hS)
+    (by rw [show rsp0.toBitVec - 120 - 8 = rsp0.toBitVec - 128 by bv_omega]; exact Prysm.AttestationData.Decode.accept_low_address _ _ hS)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     { toBitVec := rsp0.toBitVec - 8#64 } r140 root hroot spl rslot lo l68 aP aL aC hspl hrs hlo hl68 haP haL haC
@@ -94,11 +94,11 @@ theorem Decode.block_root_from_bytes32_pattern (k : Nat) (hk : unmarshalSSZ.IsIn
   have hl208 := Machine.label_at' hk hf (j := 120)
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  kat hk unmarshalSSZ 112
+  step_directive hk unmarshalSSZ 112
   apply load_step_at _ _ (rsp0.toBitVec - 16) _ _ (Int.toBytes 8 p.toInt) _ _ (by attestation_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 113
+  unfold_step
+  step_directive hk unmarshalSSZ 113
   rw [hl208]
   apply Eventually.done
   rw [show k + 100 + 6 + 1 = k + 107 from rfl] at Hm3

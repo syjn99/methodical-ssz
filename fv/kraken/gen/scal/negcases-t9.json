@@ -2,7 +2,7 @@
  {
   "id": "t9-a1-control",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_a1",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "control",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -12,7 +12,7 @@
  {
   "id": "t9-a1-guard-lea",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_a1",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -24,7 +24,7 @@
  {
   "id": "t9-a1-slot-field",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_a1",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -36,7 +36,7 @@
  {
   "id": "t9-a1-frame",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_a1",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -48,7 +48,7 @@
  {
   "id": "t9-a1-stmt-guard",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_a1",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "stmt",
   "old": "(hguard : guard.toNat + 32 < s.regs.rsp.toNat)",
   "new": "(hguard : guard.toNat < s.regs.rsp.toNat)"
@@ -56,7 +56,7 @@
  {
   "id": "t9-a1-stmt-dst-unchanged",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_a1",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "stmt",
   "old": "⋆ Eq (sl.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R) st.data.dmem)",
   "new": "⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R) st.data.dmem)"
@@ -64,7 +64,7 @@
  {
   "id": "t9-a2-control",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_a2",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
   "kind": "control",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -74,7 +74,7 @@
  {
   "id": "t9-a2-pi-field",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_a2",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -86,7 +86,7 @@
  {
   "id": "t9-a2-newlen",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_a2",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -98,7 +98,7 @@
  {
   "id": "t9-b-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_b",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
   "kind": "control",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -108,7 +108,7 @@
  {
   "id": "t9-b-len33",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_b",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -120,7 +120,7 @@
  {
   "id": "t9-b-root-ptr",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_b",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -132,7 +132,7 @@
  {
   "id": "t9-b-newlen",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_b",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -145,7 +145,7 @@
  {
   "id": "t9-c-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_c",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
   "kind": "control",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -155,7 +155,7 @@
  {
   "id": "t9-c-root-ptr",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_c",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -167,7 +167,7 @@
  {
   "id": "t9-c-len31",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_c",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -179,7 +179,7 @@
  {
   "id": "t9-c-dst-off",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_c",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -191,7 +191,7 @@
  {
   "id": "t9-d-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_d",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_body_root",
   "kind": "control",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -201,7 +201,7 @@
  {
   "id": "t9-d-root-ptr",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_d",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_body_root",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -213,7 +213,7 @@
  {
   "id": "t9-d-memmove31",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_d",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_body_root",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -226,7 +226,7 @@
  {
   "id": "t9-e-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_e",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_return",
   "kind": "control",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -236,7 +236,7 @@
  {
   "id": "t9-e-len-slot",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_e",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_return",
   "kind": "code",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -248,7 +248,7 @@
  {
   "id": "t9-e-stmt-rdi1",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.enc_e",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_return",
   "kind": "stmt",
   "old": "st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0",
   "new": "st.data.regs.rdi = 1 ∧ st.data.regs.rsi = 0"
@@ -318,8 +318,8 @@
   "module": "Prysm/BeaconBlockHeader/WitnessEncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty",
   "kind": "stmt",
-  "old": "0x10088 0x100a8 0x100c8 (cs0",
-  "new": "0x10088 0x100a8 0x100c9 (cs0"
+  "old": "0x10088 0x100a8 0x100c8 (initial_state",
+  "new": "0x10088 0x100a8 0x100c9 (initial_state"
  },
  {
   "id": "t9-wit-stmt-rax",

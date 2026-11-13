@@ -7,11 +7,11 @@ import Prysm.PendingPartialWithdrawal.EncoderCode
 
 Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a
 step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem
-has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKindN`).
+has a `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueKindAnyFrame`, `encFastPathKindAnyFrame`).
 **Fast path only**: `len(dst) + 24 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
-FAST-PATH-JSON: {"type": "PendingPartialWithdrawal", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 24, "frame": 144, "gd": 24, "rt": false, "fields": [["Index", "u", 8], ["Amount", "u", 8], ["WithdrawableEpoch", "u", 8]], "boundaries": [10, 36, 54, 79], "layout": "Prysm.PendingPartialWithdrawal.Encode.generated_layout", "S_sha256": "a07abdd277fcd8bfbc134c52fbb9a82839003da6df2e7a21afefa821f4a2b8fe", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.PendingPartialWithdrawal", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
+FAST-PATH-JSON: {"type": "PendingPartialWithdrawal", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 24, "frame": 144, "gd": 24, "rt": false, "fields": [["Index", "u", 8], ["Amount", "u", 8], ["WithdrawableEpoch", "u", 8]], "boundaries": [10, 36, 54, 79], "layout": "Prysm.PendingPartialWithdrawal.Encode.generated_layout", "S_sha256": "a07abdd277fcd8bfbc134c52fbb9a82839003da6df2e7a21afefa821f4a2b8fe", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.PendingPartialWithdrawal", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindAnyFrame"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_epi", "kind": "encEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encFastPathKindAnyFrame"}]}
 -/
 
 open Machine Runtime Codec Prysm.PendingPartialWithdrawal.Code
@@ -21,16 +21,16 @@ namespace Prysm.PendingPartialWithdrawal
 
 /-- The frame facts of `marshalSSZTo` (read from the `.S` file by the walk): frame `0x90`, stack chunks
 `fp s1 s2 t40 t24 t72 t56`. -/
-def Encode.generated_layout : EncLayout where
-  st := true
+def Encode.generated_layout : EncoderFrameLayout where
+  stateWord := true
   frame := 144
-  gd := 24
-  rt := false
-  nstk := 7
-  lens := [(0, 8), (1, 8), (2, 8), (3, 16), (4, 16), (5, 16), (6, 16)]
-  pre := [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.dn 40) (.orig 3), .at (.dn 24) (.orig 4), .at (.dn 72) (.orig 5), .at (.dn 56) (.orig 6)]
-  exs := [.n 8, .n 16, .n 8, .n 16]
-  post := [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.fld 0), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1), .at (.dn 72) (.fld 2), .at (.dn 64) (.ex 2), .at (.dn 56) (.ex 3)]
+  guardAddend := 24
+  callsMemmove := false
+  stackChunkCount := 7
+  stackChunkLengths := [(0, 8), (1, 8), (2, 8), (3, 16), (4, 16), (5, 16), (6, 16)]
+  pre := [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.below 40) (.original 3), .at (.below 24) (.original 4), .at (.below 72) (.original 5), .at (.below 56) (.original 6)]
+  existentials := [.fixed 8, .fixed 16, .fixed 8, .fixed 16]
+  post := [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1), .at (.below 72) (.field 2), .at (.below 64) (.existential 2), .at (.below 56) (.existential 3)]
 
 
 set_option maxHeartbeats 4000000 in
@@ -93,25 +93,25 @@ theorem Encode.generated_head : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hcap hcap63 hpre ⊢
   have hcap' : rcx.toBitVec.toNat + 24 ≤ rdi.toBitVec.toNat := hcap
-  apply encpro_l _ _ _ (-24) 24 _ k (k + 7) (win hk 0 7) (by rfl) (by rfl) (by rfl) guard fp hfp _ _ _ (by dsimp only; ecancel) hguard
-  intro m1 H1 fl1; kn; dsimp only at H1
-  apply kstep_sub_i Reg64.rsp 144 _ (k + 7) (k + 8) (win hk 7 1) (by rfl) (by rfl)
-  intro fl; kn
-  apply kreg_eq Reg64.rsp (rsp.toBitVec - 152) _ _ _ (by show ((rsp.toBitVec - 8) - 144 : BitVec 64) = (rsp.toBitVec - 152); bv_omega)
-  kn
-  apply kstep_st Reg64.rbx Reg64.rsp 168 _ (k + 8) (k + 9) (win hk 8 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 152) (rsp.toBitVec + 16) (by eb) s2 hs2 _ _ _ (by rfl) (by ecancel)
-  intro m2 H2; kn; simp only [Reg64s.get64] at H2
-  apply kstep_st Reg64.rax Reg64.rsp 160 _ (k + 9) (k + 10) (win hk 9 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 152) (rsp.toBitVec + 8) (by eb) s1 hs1 _ _ _ (by rfl) (by ecancel)
-  intro m3 H3; kn; simp only [Reg64s.get64] at H3
+  apply encoder_prologue_large_frame _ _ _ (-24) 24 _ k (k + 7) (window_infix_at hk 0 7) (by rfl) (by rfl) (by rfl) guard fp hfp _ _ _ (by dsimp only; ecancel) hguard
+  intro m1 H1 fl1; normalize_registers; dsimp only at H1
+  apply step_sub_immediate Reg64.rsp 144 _ (k + 7) (k + 8) (window_infix_at hk 7 1) (by rfl) (by rfl)
+  intro fl; normalize_registers
+  apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 152) _ _ _ (by show ((rsp.toBitVec - 8) - 144 : BitVec 64) = (rsp.toBitVec - 152); bv_omega)
+  normalize_registers
+  apply step_store Reg64.rbx Reg64.rsp 168 _ (k + 8) (k + 9) (window_infix_at hk 8 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 152) (rsp.toBitVec + 16) (by encoder_address_equation) s2 hs2 _ _ _ (by rfl) (by ecancel)
+  intro m2 H2; normalize_registers; simp only [Reg64s.get64] at H2
+  apply step_store Reg64.rax Reg64.rsp 160 _ (k + 9) (k + 10) (window_infix_at hk 9 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 152) (rsp.toBitVec + 8) (by encoder_address_equation) s1 hs1 _ _ _ (by rfl) (by ecancel)
+  intro m3 H3; normalize_registers; simp only [Reg64s.get64] at H3
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_head_kind : ∀ (h : Host), type_of% (@Encode.generated_head h)
-    = @Codec.encHeadKindN h marshalSSZTo Prysm.PendingPartialWithdrawal.Encode.generated_layout [.u64, .u64, .u64]
-    ⟨10, 0, [(.rax, .rcv), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.orig 3), .at (.dn 24) (.orig 4), .at (.dn 72) (.orig 5), .at (.dn 56) (.orig 6)],
+    = @Codec.encHeadKindAnyFrame h marshalSSZTo Prysm.PendingPartialWithdrawal.Encode.generated_layout [.u64, .u64, .u64]
+    ⟨10, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.original 3), .at (.below 24) (.original 4), .at (.below 72) (.original 5), .at (.below 56) (.original 6)],
       []⟩ := by
   intro h; rfl
 
@@ -195,52 +195,52 @@ theorem Encode.generated_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   obtain rfl : rcx = rcx1 := (UInt64.toBitVec_inj.mp hrrcx).symm
   obtain rfl : rdi = rdi1 := (UInt64.toBitVec_inj.mp hrrdi).symm
   have hcap' : rcx.toBitVec.toNat + 24 ≤ rdi.toBitVec.toNat := hcap
-  apply kstep_lea Reg64.rdx Reg64.rcx 8 _ (k + 10) (k + 11) (win hk 10 1) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.rdx (rcx.toBitVec + 8) _ _ _ (by show (rcx.toBitVec + 8 : BitVec 64) = (rcx.toBitVec + 8); bv_omega)
-  kn
-  apply kstep_ldb Reg64.r8 Reg64.rax 8 _ (k + 11) (k + 12) (win hk 11 1) (by rfl) (by rfl)
-    rax.toBitVec (rax.toBitVec + 8) (by eb) v0 hv0 _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_lea Reg64.r9 Reg64.rsp 112 _ (k + 12) (k + 16) (win hk 12 4) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.r9 (rsp.toBitVec - 40) _ _ _ (by show ((rsp.toBitVec - 152) + 112 : BitVec 64) = (rsp.toBitVec - 40); bv_omega)
-  kn
-  apply kstep_movups15 Reg64.r9 0 _ (k + 16) (k + 17) (win hk 16 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 40) (rsp.toBitVec - 40) (by eb) t40 ht40 _ _ _ (by rfl) (by ecancel)
-  intro m4 H4; kn; try dsimp only at H4
-  apply kstep_movups15 Reg64.r9 16 _ (k + 17) (k + 18) (win hk 17 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 40) (rsp.toBitVec - 24) (by eb) t24 ht24 _ _ _ (by rfl) (by ecancel)
-  intro m5 H5; kn; try dsimp only at H5
+  apply step_lea Reg64.rdx Reg64.rcx 8 _ (k + 10) (k + 11) (window_infix_at hk 10 1) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.rdx (rcx.toBitVec + 8) _ _ _ (by show (rcx.toBitVec + 8 : BitVec 64) = (rcx.toBitVec + 8); bv_omega)
+  normalize_registers
+  apply step_load_bytes Reg64.r8 Reg64.rax 8 _ (k + 11) (k + 12) (window_infix_at hk 11 1) (by rfl) (by rfl)
+    rax.toBitVec (rax.toBitVec + 8) (by encoder_address_equation) v0 hv0 _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_lea Reg64.r9 Reg64.rsp 112 _ (k + 12) (k + 16) (window_infix_at hk 12 4) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.r9 (rsp.toBitVec - 40) _ _ _ (by show ((rsp.toBitVec - 152) + 112 : BitVec 64) = (rsp.toBitVec - 40); bv_omega)
+  normalize_registers
+  apply step_store_xmm15 Reg64.r9 0 _ (k + 16) (k + 17) (window_infix_at hk 16 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 40) (rsp.toBitVec - 40) (by encoder_address_equation) t40 ht40 _ _ _ (by rfl) (by ecancel)
+  intro m4 H4; normalize_registers; try dsimp only at H4
+  apply step_store_xmm15 Reg64.r9 16 _ (k + 17) (k + 18) (window_infix_at hk 17 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 40) (rsp.toBitVec - 24) (by encoder_address_equation) t24 ht24 _ _ _ (by rfl) (by ecancel)
+  intro m5 H5; normalize_registers; try dsimp only at H5
   rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 40), show (rsp.toBitVec - 40) + 8 = (rsp.toBitVec - 32) by bv_omega] at H5
-  apply kstep_st Reg64.r8 Reg64.rsp 112 _ (k + 18) (k + 19) (win hk 18 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 152) (rsp.toBitVec - 40) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
-  intro m6 H6; kn; simp only [Reg64s.get64] at H6
+  apply step_store Reg64.r8 Reg64.rsp 112 _ (k + 18) (k + 19) (window_infix_at hk 18 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 152) (rsp.toBitVec - 40) (by encoder_address_equation) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
+  intro m6 H6; normalize_registers; simp only [Reg64s.get64] at H6
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v0 hv0] at H6
   have hl33 := Machine.label_at' hk hf (j := 33)
     (by simp only [marshalSSZTo, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [marshalSSZTo, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 19) (k + 33) (win hk 19 2) (by rfl) hl33 _ _ (by show ((rcx.toBitVec + 8) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
-  intro fl; kn
-  apply kstep_label _ _ (k + 33) (k + 34) (win hk 33 1) (by rfl) (by rfl)
-  apply kstep_ldb Reg64.r8 Reg64.rsp 112 _ (k + 34) (k + 35) (win hk 34 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 152) (rsp.toBitVec - 40) (by eb) v0 hv0 _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_st_idx Reg64.r8 Reg64.rbx Reg64.rcx 0 _ (k + 35) (k + 36) (win hk 35 1) (by rfl) (by rfl)
-    rbx.toBitVec rcx.toBitVec (rbx.toBitVec + rcx.toBitVec) (by eb) d0 hd0 _ _ _ (by rfl) (by rfl) (by ecancel)
-  intro m7 H7; kn; simp only [Reg64s.get64] at H7
+  apply step_cmp_jae_taken Reg64.rdi Reg64.rdx _ _ (k + 19) (k + 33) (window_infix_at hk 19 2) (by rfl) hl33 _ _ (by show ((rcx.toBitVec + 8) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
+  intro fl; normalize_registers
+  apply step_label _ _ (k + 33) (k + 34) (window_infix_at hk 33 1) (by rfl) (by rfl)
+  apply step_load_bytes Reg64.r8 Reg64.rsp 112 _ (k + 34) (k + 35) (window_infix_at hk 34 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 152) (rsp.toBitVec - 40) (by encoder_address_equation) v0 hv0 _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_store_indexed Reg64.r8 Reg64.rbx Reg64.rcx 0 _ (k + 35) (k + 36) (window_infix_at hk 35 1) (by rfl) (by rfl)
+    rbx.toBitVec rcx.toBitVec (rbx.toBitVec + rcx.toBitVec) (by encoder_address_equation) d0 hd0 _ _ _ (by rfl) (by rfl) (by ecancel)
+  intro m7 H7; normalize_registers; simp only [Reg64s.get64] at H7
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v0 hv0] at H7
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_f0_kind : ∀ (h : Host), type_of% (@Encode.generated_f0 h)
-    = @Codec.encFieldKindN h marshalSSZTo Prysm.PendingPartialWithdrawal.Encode.generated_layout [.u64, .u64, .u64]
-    ⟨10, 0, [(.rax, .rcv), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.orig 3), .at (.dn 24) (.orig 4), .at (.dn 72) (.orig 5), .at (.dn 56) (.orig 6)],
+    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.PendingPartialWithdrawal.Encode.generated_layout [.u64, .u64, .u64]
+    ⟨10, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.original 3), .at (.below 24) (.original 4), .at (.below 72) (.original 5), .at (.below 56) (.original 6)],
       []⟩
-    ⟨36, 1, [(.rax, .rcv), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.fld 0), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1), .at (.dn 72) (.orig 5), .at (.dn 56) (.orig 6)],
-      [.n 8, .n 16]⟩ := by
+    ⟨36, 1, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1), .at (.below 72) (.original 5), .at (.below 56) (.original 6)],
+      [.fixed 8, .fixed 16]⟩ := by
   intro h; rfl
 
 set_option maxHeartbeats 4000000 in
@@ -325,34 +325,34 @@ theorem Encode.generated_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   obtain rfl : rdx1 = { toBitVec := rcx.toBitVec + 8 } := UInt64.toBitVec_inj.mp hrrdx
   obtain rfl : rdi = rdi1 := (UInt64.toBitVec_inj.mp hrrdi).symm
   have hcap' : rcx.toBitVec.toNat + 24 ≤ rdi.toBitVec.toNat := hcap
-  apply kstep_add Reg64.rdx 8 _ (k + 36) (k + 37) (win hk 36 1) (by rfl) (by rfl)
-  intro fl; kn
-  apply kreg_eq Reg64.rdx (rcx.toBitVec + 16) _ _ _ (by show ((rcx.toBitVec + 8) + 8 : BitVec 64) = (rcx.toBitVec + 16); bv_omega)
-  kn
-  apply kstep_ldb Reg64.r8 Reg64.rax 16 _ (k + 37) (k + 38) (win hk 37 1) (by rfl) (by rfl)
-    rax.toBitVec (rax.toBitVec + 16) (by eb) v1 hv1 _ _ _ (by rfl) (by ecancel)
-  kn
+  apply step_add_immediate Reg64.rdx 8 _ (k + 36) (k + 37) (window_infix_at hk 36 1) (by rfl) (by rfl)
+  intro fl; normalize_registers
+  apply register_value_rewrite Reg64.rdx (rcx.toBitVec + 16) _ _ _ (by show ((rcx.toBitVec + 8) + 8 : BitVec 64) = (rcx.toBitVec + 16); bv_omega)
+  normalize_registers
+  apply step_load_bytes Reg64.r8 Reg64.rax 16 _ (k + 37) (k + 38) (window_infix_at hk 37 1) (by rfl) (by rfl)
+    rax.toBitVec (rax.toBitVec + 16) (by encoder_address_equation) v1 hv1 _ _ _ (by rfl) (by ecancel)
+  normalize_registers
   have hl52 := Machine.label_at' hk hf (j := 52)
     (by simp only [marshalSSZTo, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [marshalSSZTo, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 38) (k + 52) (win hk 38 2) (by rfl) hl52 _ _ (by show ((rcx.toBitVec + 16) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
-  intro fl; kn
-  apply kstep_label _ _ (k + 52) (k + 53) (win hk 52 1) (by rfl) (by rfl)
-  apply kstep_st_idx Reg64.r8 Reg64.rdx Reg64.rbx (-8) _ (k + 53) (k + 54) (win hk 53 1) (by rfl) (by rfl)
-    (rcx.toBitVec + 16) rbx.toBitVec (rbx.toBitVec + rcx.toBitVec + 8) (by eb) d1 hd1 _ _ _ (by rfl) (by rfl) (by ecancel)
-  intro m8 H8; kn; simp only [Reg64s.get64] at H8
+  apply step_cmp_jae_taken Reg64.rdi Reg64.rdx _ _ (k + 38) (k + 52) (window_infix_at hk 38 2) (by rfl) hl52 _ _ (by show ((rcx.toBitVec + 16) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
+  intro fl; normalize_registers
+  apply step_label _ _ (k + 52) (k + 53) (window_infix_at hk 52 1) (by rfl) (by rfl)
+  apply step_store_indexed Reg64.r8 Reg64.rdx Reg64.rbx (-8) _ (k + 53) (k + 54) (window_infix_at hk 53 1) (by rfl) (by rfl)
+    (rcx.toBitVec + 16) rbx.toBitVec (rbx.toBitVec + rcx.toBitVec + 8) (by encoder_address_equation) d1 hd1 _ _ _ (by rfl) (by rfl) (by ecancel)
+  intro m8 H8; normalize_registers; simp only [Reg64s.get64] at H8
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v1 hv1] at H8
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, x0, x1, hx0, hx1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_f1_kind : ∀ (h : Host), type_of% (@Encode.generated_f1 h)
-    = @Codec.encFieldKindN h marshalSSZTo Prysm.PendingPartialWithdrawal.Encode.generated_layout [.u64, .u64, .u64]
-    ⟨36, 1, [(.rax, .rcv), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.fld 0), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1), .at (.dn 72) (.orig 5), .at (.dn 56) (.orig 6)],
-      [.n 8, .n 16]⟩
-    ⟨54, 2, [(.rax, .rcv), (.rbx, .ptr), (.rdx, .len 16), (.rdi, .cap)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.fld 0), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1), .at (.dn 72) (.orig 5), .at (.dn 56) (.orig 6)],
-      [.n 8, .n 16]⟩ := by
+    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.PendingPartialWithdrawal.Encode.generated_layout [.u64, .u64, .u64]
+    ⟨36, 1, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1), .at (.below 72) (.original 5), .at (.below 56) (.original 6)],
+      [.fixed 8, .fixed 16]⟩
+    ⟨54, 2, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 16), (.rdi, .cap)],
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1), .at (.below 72) (.original 5), .at (.below 56) (.original 6)],
+      [.fixed 8, .fixed 16]⟩ := by
   intro h; rfl
 
 set_option maxHeartbeats 4000000 in
@@ -437,52 +437,52 @@ theorem Encode.generated_f2 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   obtain rfl : rdx1 = { toBitVec := rcx.toBitVec + 16 } := UInt64.toBitVec_inj.mp hrrdx
   obtain rfl : rdi = rdi1 := (UInt64.toBitVec_inj.mp hrrdi).symm
   have hcap' : rcx.toBitVec.toNat + 24 ≤ rdi.toBitVec.toNat := hcap
-  apply kstep_lea Reg64.r8 Reg64.rdx 8 _ (k + 54) (k + 55) (win hk 54 1) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.r8 (rcx.toBitVec + 24) _ _ _ (by show ((rcx.toBitVec + 16) + 8 : BitVec 64) = (rcx.toBitVec + 24); bv_omega)
-  kn
-  apply kstep_ldb Reg64.r9 Reg64.rax 24 _ (k + 55) (k + 56) (win hk 55 1) (by rfl) (by rfl)
-    rax.toBitVec (rax.toBitVec + 24) (by eb) v2 hv2 _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_lea Reg64.r10 Reg64.rsp 80 _ (k + 56) (k + 60) (win hk 56 4) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.r10 (rsp.toBitVec - 72) _ _ _ (by show ((rsp.toBitVec - 152) + 80 : BitVec 64) = (rsp.toBitVec - 72); bv_omega)
-  kn
-  apply kstep_movups15 Reg64.r10 0 _ (k + 60) (k + 61) (win hk 60 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 72) (rsp.toBitVec - 72) (by eb) t72 ht72 _ _ _ (by rfl) (by ecancel)
-  intro m9 H9; kn; try dsimp only at H9
-  apply kstep_movups15 Reg64.r10 16 _ (k + 61) (k + 62) (win hk 61 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 72) (rsp.toBitVec - 56) (by eb) t56 ht56 _ _ _ (by rfl) (by ecancel)
-  intro m10 H10; kn; try dsimp only at H10
+  apply step_lea Reg64.r8 Reg64.rdx 8 _ (k + 54) (k + 55) (window_infix_at hk 54 1) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.r8 (rcx.toBitVec + 24) _ _ _ (by show ((rcx.toBitVec + 16) + 8 : BitVec 64) = (rcx.toBitVec + 24); bv_omega)
+  normalize_registers
+  apply step_load_bytes Reg64.r9 Reg64.rax 24 _ (k + 55) (k + 56) (window_infix_at hk 55 1) (by rfl) (by rfl)
+    rax.toBitVec (rax.toBitVec + 24) (by encoder_address_equation) v2 hv2 _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_lea Reg64.r10 Reg64.rsp 80 _ (k + 56) (k + 60) (window_infix_at hk 56 4) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.r10 (rsp.toBitVec - 72) _ _ _ (by show ((rsp.toBitVec - 152) + 80 : BitVec 64) = (rsp.toBitVec - 72); bv_omega)
+  normalize_registers
+  apply step_store_xmm15 Reg64.r10 0 _ (k + 60) (k + 61) (window_infix_at hk 60 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 72) (rsp.toBitVec - 72) (by encoder_address_equation) t72 ht72 _ _ _ (by rfl) (by ecancel)
+  intro m9 H9; normalize_registers; try dsimp only at H9
+  apply step_store_xmm15 Reg64.r10 16 _ (k + 61) (k + 62) (window_infix_at hk 61 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 72) (rsp.toBitVec - 56) (by encoder_address_equation) t56 ht56 _ _ _ (by rfl) (by ecancel)
+  intro m10 H10; normalize_registers; try dsimp only at H10
   rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 72), show (rsp.toBitVec - 72) + 8 = (rsp.toBitVec - 64) by bv_omega] at H10
-  apply kstep_st Reg64.r9 Reg64.rsp 80 _ (k + 62) (k + 63) (win hk 62 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 152) (rsp.toBitVec - 72) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
-  intro m11 H11; kn; simp only [Reg64s.get64] at H11
+  apply step_store Reg64.r9 Reg64.rsp 80 _ (k + 62) (k + 63) (window_infix_at hk 62 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 152) (rsp.toBitVec - 72) (by encoder_address_equation) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
+  intro m11 H11; normalize_registers; simp only [Reg64s.get64] at H11
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v2 hv2] at H11
   have hl76 := Machine.label_at' hk hf (j := 76)
     (by simp only [marshalSSZTo, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [marshalSSZTo, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  apply kstep_cmp_jae_t Reg64.rdi Reg64.r8 _ _ (k + 63) (k + 76) (win hk 63 2) (by rfl) hl76 _ _ (by show ((rcx.toBitVec + 24) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
-  intro fl; kn
-  apply kstep_label _ _ (k + 76) (k + 77) (win hk 76 1) (by rfl) (by rfl)
-  apply kstep_ldb Reg64.r9 Reg64.rsp 80 _ (k + 77) (k + 78) (win hk 77 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 152) (rsp.toBitVec - 72) (by eb) v2 hv2 _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_st_idx Reg64.r9 Reg64.rbx Reg64.rdx 0 _ (k + 78) (k + 79) (win hk 78 1) (by rfl) (by rfl)
-    rbx.toBitVec (rcx.toBitVec + 16) (rbx.toBitVec + rcx.toBitVec + 16) (by eb) d2 hd2 _ _ _ (by rfl) (by rfl) (by ecancel)
-  intro m12 H12; kn; simp only [Reg64s.get64] at H12
+  apply step_cmp_jae_taken Reg64.rdi Reg64.r8 _ _ (k + 63) (k + 76) (window_infix_at hk 63 2) (by rfl) hl76 _ _ (by show ((rcx.toBitVec + 24) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
+  intro fl; normalize_registers
+  apply step_label _ _ (k + 76) (k + 77) (window_infix_at hk 76 1) (by rfl) (by rfl)
+  apply step_load_bytes Reg64.r9 Reg64.rsp 80 _ (k + 77) (k + 78) (window_infix_at hk 77 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 152) (rsp.toBitVec - 72) (by encoder_address_equation) v2 hv2 _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_store_indexed Reg64.r9 Reg64.rbx Reg64.rdx 0 _ (k + 78) (k + 79) (window_infix_at hk 78 1) (by rfl) (by rfl)
+    rbx.toBitVec (rcx.toBitVec + 16) (rbx.toBitVec + rcx.toBitVec + 16) (by encoder_address_equation) d2 hd2 _ _ _ (by rfl) (by rfl) (by ecancel)
+  intro m12 H12; normalize_registers; simp only [Reg64s.get64] at H12
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v2 hv2] at H12
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, x0, x1, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), hx0, hx1, (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_f2_kind : ∀ (h : Host), type_of% (@Encode.generated_f2 h)
-    = @Codec.encFieldKindN h marshalSSZTo Prysm.PendingPartialWithdrawal.Encode.generated_layout [.u64, .u64, .u64]
-    ⟨54, 2, [(.rax, .rcv), (.rbx, .ptr), (.rdx, .len 16), (.rdi, .cap)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.fld 0), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1), .at (.dn 72) (.orig 5), .at (.dn 56) (.orig 6)],
-      [.n 8, .n 16]⟩
+    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.PendingPartialWithdrawal.Encode.generated_layout [.u64, .u64, .u64]
+    ⟨54, 2, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 16), (.rdi, .cap)],
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1), .at (.below 72) (.original 5), .at (.below 56) (.original 6)],
+      [.fixed 8, .fixed 16]⟩
     ⟨79, 3, [(.rbx, .ptr), (.rdi, .cap), (.r8, .len 24)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.fld 0), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1), .at (.dn 72) (.fld 2), .at (.dn 64) (.ex 2), .at (.dn 56) (.ex 3)],
-      [.n 8, .n 16, .n 8, .n 16]⟩ := by
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1), .at (.below 72) (.field 2), .at (.below 64) (.existential 2), .at (.below 56) (.existential 3)],
+      [.fixed 8, .fixed 16, .fixed 8, .fixed 16]⟩ := by
   intro h; rfl
 
 set_option maxHeartbeats 4000000 in
@@ -568,21 +568,21 @@ theorem Encode.generated_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.p
   obtain rfl : rdi = rdi1 := (UInt64.toBitVec_inj.mp hrrdi).symm
   obtain rfl : r81 = { toBitVec := rcx.toBitVec + 24 } := UInt64.toBitVec_inj.mp hrr8
   have hcap' : rcx.toBitVec.toNat + 24 ≤ rdi.toBitVec.toNat := hcap
-  apply kstep_mov_rr Reg64.rax Reg64.rbx _ (k + 79) (k + 80) (win hk 79 1) (by rfl) (by rfl)
-  kn
-  apply kstep_mov_rr Reg64.rbx Reg64.r8 _ (k + 80) (k + 81) (win hk 80 1) (by rfl) (by rfl)
-  kn
-  apply kstep_mov_rr Reg64.rcx Reg64.rdi _ (k + 81) (k + 82) (win hk 81 1) (by rfl) (by rfl)
-  kn
-  apply kstep_xor32 Reg64.rdi _ (k + 82) (k + 83) (win hk 82 1) (by rfl) (by rfl)
-  intro fl; kn
-  apply kstep_xor32 Reg64.rsi _ (k + 83) (k + 84) (win hk 83 1) (by rfl) (by rfl)
-  intro fl; kn
-  apply kstep_add Reg64.rsp 144 _ (k + 84) (k + 85) (win hk 84 1) (by rfl) (by rfl)
-  intro fl; kn
-  apply kreg_eq Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 152) + 144 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
-  kn
-  refine eventually_trans _ _ _ _ (decret_seg _ (k + 85) (win hk 85 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  apply step_move_register Reg64.rax Reg64.rbx _ (k + 79) (k + 80) (window_infix_at hk 79 1) (by rfl) (by rfl)
+  normalize_registers
+  apply step_move_register Reg64.rbx Reg64.r8 _ (k + 80) (k + 81) (window_infix_at hk 80 1) (by rfl) (by rfl)
+  normalize_registers
+  apply step_move_register Reg64.rcx Reg64.rdi _ (k + 81) (k + 82) (window_infix_at hk 81 1) (by rfl) (by rfl)
+  normalize_registers
+  apply step_xor32 Reg64.rdi _ (k + 82) (k + 83) (window_infix_at hk 82 1) (by rfl) (by rfl)
+  intro fl; normalize_registers
+  apply step_xor32 Reg64.rsi _ (k + 83) (k + 84) (window_infix_at hk 83 1) (by rfl) (by rfl)
+  intro fl; normalize_registers
+  apply step_add_immediate Reg64.rsp 144 _ (k + 84) (k + 85) (window_infix_at hk 84 1) (by rfl) (by rfl)
+  intro fl; normalize_registers
+  apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 152) + 144 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
+  normalize_registers
+  refine eventually_trans _ _ _ _ (decret_seg _ (k + 85) (window_infix_at hk 85 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -601,10 +601,10 @@ theorem Encode.generated_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.p
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
 theorem Encode.generated_epi_kind : ∀ (h : Host), type_of% (@Encode.generated_epi h)
-    = @Codec.encEpiKindN h marshalSSZTo Prysm.PendingPartialWithdrawal.Encode.generated_layout [.u64, .u64, .u64]
+    = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.PendingPartialWithdrawal.Encode.generated_layout [.u64, .u64, .u64]
     ⟨79, 3, [(.rbx, .ptr), (.rdi, .cap), (.r8, .len 24)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.fld 0), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1), .at (.dn 72) (.fld 2), .at (.dn 64) (.ex 2), .at (.dn 56) (.ex 3)],
-      [.n 8, .n 16, .n 8, .n 16]⟩ := by
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1), .at (.below 72) (.field 2), .at (.below 64) (.existential 2), .at (.below 56) (.existential 3)],
+      [.fixed 8, .fixed 16, .fixed 8, .fixed 16]⟩ := by
   intro h; rfl
 
 set_option maxHeartbeats 4000000 in
@@ -680,7 +680,7 @@ theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   intro st3 h3
   exact Encode.generated_epi k hk hf ast v0 v1 v2 pre d0 d1 d2 hast hv0 hv1 hv2 hd0 hd1 hd2 s ra guard hpre fp s1 s2 t40 t24 t72 t56 hfp hs1 hs2 ht40 ht24 ht72 ht56 R hsp hcap hcap63 st3 h3
 theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated_fast h)
-    = @Codec.encFastKindN h marshalSSZTo Prysm.PendingPartialWithdrawal.Encode.generated_layout [.u64, .u64, .u64] := by
+    = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.PendingPartialWithdrawal.Encode.generated_layout [.u64, .u64, .u64] := by
   intro h; rfl
 
 end Prysm.PendingPartialWithdrawal

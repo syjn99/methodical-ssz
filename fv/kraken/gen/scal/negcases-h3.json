@@ -142,13 +142,13 @@
  {
   "id": "dm-seg0-control",
   "module": "Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean",
-  "theorem": "Prysm.DepositMessage.bytes48dec_seg_z",
+  "theorem": "Prysm.DepositMessage.bytes48dec_seg_offset_zero",
   "kind": "control"
  },
  {
   "id": "dm-seg0-stmt-heap",
   "module": "Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean",
-  "theorem": "Prysm.DepositMessage.bytes48dec_seg_z",
+  "theorem": "Prysm.DepositMessage.bytes48dec_seg_offset_zero",
   "kind": "stmt",
   "old": "⋆ Heap (avail - 48)",
   "new": "⋆ Heap (avail - 32)"
@@ -156,7 +156,7 @@
  {
   "id": "dm-seg0-stmt-len",
   "module": "Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean",
-  "theorem": "Prysm.DepositMessage.bytes48dec_seg_z",
+  "theorem": "Prysm.DepositMessage.bytes48dec_seg_offset_zero",
   "kind": "stmt",
   "old": "Eq ((Int.toBytes 8 48).At aL)",
   "new": "Eq ((Int.toBytes 8 32).At aL)"

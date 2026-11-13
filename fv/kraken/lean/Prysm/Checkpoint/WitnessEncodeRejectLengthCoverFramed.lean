@@ -25,30 +25,30 @@ theorem runs (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl : rl ≠
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = 0x10e8 ∧ st.data.regs.rsi = 0x2b)
-      ⟨cs0 e8 rl (pre30 ++ z n) 0x12428 30 (UInt64.ofNat (30 + n)) zmms flags, Host.addrOf 9⟩ := by
+      ⟨initial_state e8 rl (pre30 ++ zeros n) 0x12428 30 (UInt64.ofNat (30 + n)) zmms flags, Host.addrOf 9⟩ := by
   have hc : (UInt64.ofNat (30 + n)).toNat = 30 + n := by simp; omega
-  refine eventually_mono (Encode.reject_length_cover_framed 9 hk9 hf9 (z 8) e8 (w 48) (z 32) pre30 (z n) rfl he8 rfl rfl
-    0x5000 rl 0x10e8 0x2b hrl (cs0 e8 rl (pre30 ++ z n) 0x12428 30 (UInt64.ofNat (30 + n)) zmms flags) 0 0 rfl (by simp only [cs0, hc]; simp [pre30])
-    (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 16) (z 16) (z 8) (z 40) (z 8)
+  refine eventually_mono (Encode.reject_length_cover_framed 9 placed_at_9 labels_fresh_at_9 (zeros 8) e8 (word_bytes 48) (zeros 32) pre30 (zeros n) rfl he8 rfl rfl
+    0x5000 rl 0x10e8 0x2b hrl (initial_state e8 rl (pre30 ++ zeros n) 0x12428 30 (UInt64.ofNat (30 + n)) zmms flags) 0 0 rfl (by simp only [initial_state, hc]; simp [pre30])
+    (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 16) (zeros 16) (zeros 8) (zeros 40) (zeros 8)
     rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl
     Std.ExtHashMap.emp 0 [] rfl bumpHeap 9000
     (by
-      have H : Eq ((block e8 rl (pre30 ++ z n)).At (0x10000 : BitVec 64)) (mem e8 rl (pre30 ++ z n)) := rfl
-      wit_split_n [he8, show pre30.length = 30 from rfl]
-      rw [Std.ExtHashMap.sep_comm_l (Eq ((w 0x2b).At _)) (Eq ((z 9000).At _)),
-        Std.ExtHashMap.sep_comm_l (Eq ((w 0x10e8).At _)) (Eq ((z 9000).At _))] at H
+      have H : Eq ((block e8 rl (pre30 ++ zeros n)).At (0x10000 : BitVec 64)) (mem e8 rl (pre30 ++ zeros n)) := rfl
+      witness_split_n [he8, show pre30.length = 30 from rfl]
+      rw [Std.ExtHashMap.sep_comm_l (Eq ((word_bytes 0x2b).At _)) (Eq ((zeros 9000).At _)),
+        Std.ExtHashMap.sep_comm_l (Eq ((word_bytes 0x10e8).At _)) (Eq ((zeros 9000).At _))] at H
       have H2 := lift_heap H
-      rw [at_app pre30 (z n) rfl (by simp [pre30]; omega)]
-      simp only [cs0, w, nil_At_emp, List.nil_append, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep,
-        show pre30.length = 30 from rfl, ElfData.PrysmTarget.sszErrBytesLength_addr, label_ebl,
+      rw [at_app pre30 (zeros n) rfl (by simp [pre30]; omega)]
+      simp only [initial_state, word_bytes, nil_At_emp, List.nil_append, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep,
+        show pre30.length = 30 from rfl, ElfData.PrysmTarget.sszErrBytesLength_addr, label_err_bytes_length,
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         List.length_nil] at H2 ⊢
       generalize e8 = e8' at H2 ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
       exact H2)
-    (by simp [cs0]) (by simp [cs0]) (by simp [cs0]; try omega) (by unfold maxAlloc; omega)
-    (rt_growslice 100 hk100 hf100 _ 0)) ?_
+    (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]; try omega) (by unfold maxAlloc; omega)
+    (model_growslice 100 placed_at_100 labels_fresh_at_100 _ 0)) ?_
   rintro st ⟨f1, f2, f3, f4, f5, f6, -⟩
   exact ⟨f1, f2, f3, f4, f5, f6⟩
 
@@ -59,28 +59,28 @@ theorem runs_nil (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl : rl
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = 0x10e8 ∧ st.data.regs.rsi = 0x2b)
-      ⟨cs0 e8 rl [] 0 0 0 zmms flags, Host.addrOf 9⟩ := by
-  refine eventually_mono (Encode.reject_length_cover_framed 9 hk9 hf9 (z 8) e8 (w 48) (z 32) [] [] rfl he8 rfl rfl
-    0x5000 rl 0x10e8 0x2b hrl (cs0 e8 rl [] 0 0 0 zmms flags) 0 0 rfl rfl
-    (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 16) (z 16) (z 8) (z 40) (z 8)
+      ⟨initial_state e8 rl [] 0 0 0 zmms flags, Host.addrOf 9⟩ := by
+  refine eventually_mono (Encode.reject_length_cover_framed 9 placed_at_9 labels_fresh_at_9 (zeros 8) e8 (word_bytes 48) (zeros 32) [] [] rfl he8 rfl rfl
+    0x5000 rl 0x10e8 0x2b hrl (initial_state e8 rl [] 0 0 0 zmms flags) 0 0 rfl rfl
+    (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 16) (zeros 16) (zeros 8) (zeros 40) (zeros 8)
     rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl
     Std.ExtHashMap.emp 0 [] rfl bumpHeap 9000
     (by
       have H : Eq ((block e8 rl []).At (0x10000 : BitVec 64)) (mem e8 rl []) := rfl
-      wit_split_n [he8]
-      rw [Std.ExtHashMap.sep_comm_l (Eq ((w 0x2b).At _)) (Eq ((z 9000).At _)),
-        Std.ExtHashMap.sep_comm_l (Eq ((w 0x10e8).At _)) (Eq ((z 9000).At _))] at H
+      witness_split_n [he8]
+      rw [Std.ExtHashMap.sep_comm_l (Eq ((word_bytes 0x2b).At _)) (Eq ((zeros 9000).At _)),
+        Std.ExtHashMap.sep_comm_l (Eq ((word_bytes 0x10e8).At _)) (Eq ((zeros 9000).At _))] at H
       have H2 := lift_heap H
-      simp only [cs0, w, nil_At_emp, List.nil_append, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep,
-        show pre30.length = 30 from rfl, ElfData.PrysmTarget.sszErrBytesLength_addr, label_ebl,
+      simp only [initial_state, word_bytes, nil_At_emp, List.nil_append, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep,
+        show pre30.length = 30 from rfl, ElfData.PrysmTarget.sszErrBytesLength_addr, label_err_bytes_length,
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         List.length_nil] at H2 ⊢
       generalize e8 = e8' at H2 ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
       exact H2)
-    (by simp [cs0]) (by simp [cs0]) (by simp [cs0]) (by unfold maxAlloc; omega)
-    (rt_growslice 100 hk100 hf100 _ 0)) ?_
+    (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (by unfold maxAlloc; omega)
+    (model_growslice 100 placed_at_100 labels_fresh_at_100 _ 0)) ?_
   rintro st ⟨f1, f2, f3, f4, f5, f6, -⟩
   exact ⟨f1, f2, f3, f4, f5, f6⟩
 

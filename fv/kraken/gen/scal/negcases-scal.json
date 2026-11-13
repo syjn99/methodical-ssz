@@ -130,8 +130,8 @@
   "kind": "stmt",
   "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
   "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
-  "old": "(hmm : MemmoveC St),",
-  "new": "(hmm : MemmoveC St) (hextra : (1 : Nat) = 2),",
+  "old": "(hmm : MemmoveContract St),",
+  "new": "(hmm : MemmoveContract St) (hextra : (1 : Nat) = 2),",
   "why": "audit AU-08: an extra false hypothesis in the generated statement must fail (the statement is kernel-checked against the rootdec_seg instance); with the old fixed-text statement this mutant compiled (rc 0)"
  },
  {
@@ -157,8 +157,8 @@
   "kind": "stmt",
   "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
   "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_seg",
-  "old": "(hmm : MemmoveC St),",
-  "new": "(hmm : MemmoveC St) (hextra : (1 : Nat) = 2),",
+  "old": "(hmm : MemmoveContract St),",
+  "new": "(hmm : MemmoveContract St) (hextra : (1 : Nat) = 2),",
   "why": "audit AU-08: an extra false hypothesis in the generated statement must fail (the statement is kernel-checked against the rootdec_seg instance); with the old fixed-text statement this mutant compiled (rc 0)"
  },
  {

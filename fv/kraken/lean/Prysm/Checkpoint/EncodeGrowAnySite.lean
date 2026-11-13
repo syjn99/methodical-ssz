@@ -9,8 +9,8 @@ exact disjunction of the two branches. Left: the block from the first growth hol
 (`Encode.tail_fit`, return with `dst ++ epoch ++ root`). Right: the code reaches the entry of the second
 `runtime.growslice` call (directive 49) in the exact state that `Encode.tail_grow_call` states (first new
 block `pre ++ epoch ++ mid`, `rbx = len + 40`, `rcx = C1 < len + 40`, `rdi = 32`). **The run after that
-call is not proved**: `GrowsliceC`'s result gives only `avail' + newCap ≤ avail` for the remaining heap
-(an upper bound), so the budget premise of a second `GrowsliceC` application cannot be derived; the
+call is not proved**: `GrowsliceContract`'s result gives only `avail' + newCap ≤ avail` for the remaining heap
+(an upper bound), so the budget premise of a second `GrowsliceContract` application cannot be derived; the
 existing contract form does not chain two growslice calls. `Encode.tail_grow` proves the
 second call and the rest when the caller supplies its budget (first append fitted:
 `Encode.grow_second_site`).
@@ -61,7 +61,7 @@ theorem Encode.grow_any_site (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
     (hlc : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
+    (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st => (st.pc = Int64.ofBitVec ra.toBitVec
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0
@@ -207,7 +207,7 @@ theorem Encode.reject_length_grow_first_site (k : Nat) (hk : marshalSSZTo.IsInfi
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
     (hlc : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) :
+    (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e0 ∧ st.data.regs.rsi = e1
@@ -254,7 +254,7 @@ theorem Encode.reject_length_grow_first_site (k : Nat) (hk : marshalSSZTo.IsInfi
   have htl : 8 ≤ tail.length := by omega
   have ht8 : (tail.take 8).length = 8 := by simp only [List.length_take]; omega
   rw [Encode.grow_any_site_split8 d1.regs.rbx.toBitVec rcx pre tail hpre htl (by omega)] at Hm1
-  refine eventually_mono (Encode.tail_rej k hk hf rsp r14 rbp ra rcx d1.regs.rdi e0 e1 rl hrl rax.toBitVec
+  refine eventually_mono (Encode.tail_reject k hk hf rsp r14 rbp ra rcx d1.regs.rdi e0 e1 rl hrl rax.toBitVec
     d1.regs.rbx.toBitVec p e8 pre (tail.take 8) he8 ht8 _ d1 hrsp1 hrbp1 hr141 (by rw [hrax1]) rfl hrcx1
     (by ecancel)) ?_
   rintro st ⟨e1', e2', e3', e4', e5', e6', e7', e8', e9', Hm⟩

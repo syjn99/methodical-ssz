@@ -2,13 +2,13 @@
  {
   "id": "enc-block-control",
   "module": "Codec/EncodeMemmove.lean",
-  "theorem": "enc32_call",
+  "theorem": "encode32_memmove_call",
   "kind": "control"
  },
  {
   "id": "enc-block-stmt-rcx",
   "module": "Codec/EncodeMemmove.lean",
-  "theorem": "enc32_call",
+  "theorem": "encode32_memmove_call",
   "kind": "stmt",
   "old": "(hrcx : s.regs.rcx.toNat = 32)",
   "new": "(hrcx : s.regs.rcx.toNat = 31)"
@@ -16,7 +16,7 @@
  {
   "id": "enc-block-stmt-dst-unchanged",
   "module": "Codec/EncodeMemmove.lean",
-  "theorem": "enc32_call",
+  "theorem": "encode32_memmove_call",
   "kind": "stmt",
   "old": "⋆ Eq (root.At p) ⋆ Eq (root.At d) ⋆ R) st.data.dmem)",
   "new": "⋆ Eq (root.At p) ⋆ Eq (e.At d) ⋆ R) st.data.dmem)"
@@ -24,7 +24,7 @@
  {
   "id": "enc-block-stmt-no-src",
   "module": "Codec/EncodeMemmove.lean",
-  "theorem": "enc32_call",
+  "theorem": "encode32_memmove_call",
   "kind": "stmt",
   "old": "(h_mem : s.dmem =⋆ Eq (rslot.At aRet) ⋆ Eq (scratch.At aLo) ⋆ Eq (root.At p) ⋆ Eq (e.At d) ⋆ R)",
   "new": "(h_mem : s.dmem =⋆ Eq (rslot.At aRet) ⋆ Eq (scratch.At aLo) ⋆ Eq (e.At d) ⋆ R)"
@@ -137,7 +137,7 @@
  {
   "id": "enc-e1-m-control",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
-  "theorem": "Prysm.Eth1Data.Encode.enc_m",
+  "theorem": "Prysm.Eth1Data.Encode.encode_deposit_count_block_hash",
   "kind": "control",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.Eth1Data.Code",
@@ -147,7 +147,7 @@
  {
   "id": "enc-e1-m-count-field",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
-  "theorem": "Prysm.Eth1Data.Encode.enc_m",
+  "theorem": "Prysm.Eth1Data.Encode.encode_deposit_count_block_hash",
   "kind": "code",
   "old": "  mov 0x20(%rdx),%rsi",
   "new": "  mov 0x28(%rdx),%rsi",
@@ -159,7 +159,7 @@
  {
   "id": "enc-e1-m-store-disp",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
-  "theorem": "Prysm.Eth1Data.Encode.enc_m",
+  "theorem": "Prysm.Eth1Data.Encode.encode_deposit_count_block_hash",
   "kind": "code",
   "old": "  mov %rsi,-0x8(%rbx,%rax,1)",
   "new": "  mov %rsi,-0x10(%rbx,%rax,1)",
@@ -208,13 +208,13 @@
   "module": "Codec/EncodeRejectTail.lean",
   "theorem": "enc_reject_tail",
   "kind": "stmt",
-  "old": "(hFp : relAddr sub c sp = aFp) (hRa : aFp + 8 = aRa)",
-  "new": "(hFp : relAddr sub c sp = aFp) (hRa : aFp + 16 = aRa)"
+  "old": "(hFp : releaseAddress sub c sp = aFp) (hRa : aFp + 8 = aRa)",
+  "new": "(hFp : releaseAddress sub c sp = aFp) (hRa : aFp + 16 = aRa)"
  },
  {
   "id": "enc-bh-rejat-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.rej_at",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_tails_at",
   "kind": "control",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -224,7 +224,7 @@
  {
   "id": "enc-bh-rejat-frame",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.rej_at",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_tails_at",
   "kind": "code",
   "old": "  add $0x98,%rsp",
   "new": "  add $0x90,%rsp",
@@ -237,7 +237,7 @@
  {
   "id": "enc-bh-rej-b-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.rej_b",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_parent_root",
   "kind": "control",
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.BeaconBlockHeader.Code",
@@ -247,7 +247,7 @@
  {
   "id": "enc-bh-rej-b-len-field",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Encode.rej_b",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_parent_root",
   "kind": "code",
   "old": "  cmpq $0x20,0x20(%rax)",
   "new": "  cmpq $0x20,0x28(%rax)",

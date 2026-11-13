@@ -27,7 +27,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Slot`: the WHOLE call field 15–46 (generated steps 15, 16 and the generated call block 17–19, label 46). -/
 theorem Decode.from_generated_steps_Slot_field (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAcc "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ")
+    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ")
     (sp rcv bf aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
@@ -53,9 +53,9 @@ theorem Decode.from_generated_steps_Slot_field (k : Nat) (hk : Code.unmarshalSSZ
   simp only at hrsp hrbp hr14 hrax hrbx h_mem ⊢
   subst rsp rbp r14 hrax hrbx
   apply Decode.generated_step_s15 k hk hf
-  intro fl1; kn
+  intro fl1; normalize_registers
   apply Decode.generated_step_s16 k hk hf
-  kn
+  normalize_registers
   refine eventually_trans _ _ _ _ (Decode.generated_step_Slot_call k hk hf hC sp (rax.toBitVec + 8) rbx.toBitVec aRet aFp aS2 hRet hFp hS2 rbp0 r140 guard e8 rslot
     fp s2 c0 he8 hrs hfp hs2 hc0 hguard _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl) (by first | rfl | decide)
     (by ecancel)) ?_
@@ -91,7 +91,7 @@ theorem Decode.from_generated_steps_BlockRoot_field (k : Nat) (hk : Code.unmarsh
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 82) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -117,12 +117,12 @@ theorem Decode.from_generated_steps_BlockRoot_field (k : Nat) (hk : Code.unmarsh
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
   apply Decode.generated_step_s72 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s73 k hk hf
   apply Decode.generated_step_s80 k hk hf
   apply Decode.generated_step_s81 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
-  kn
+  normalize_registers
   simp only [Reg64s.get64] at H
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, p, spl', lo', hspl', hlo', hrY, ?_⟩
@@ -136,7 +136,7 @@ step theorems of its set-up and the call-block theorem (worked example of the `d
 conditions of the call block (rax = `rcv + 40`, rbx = `bf + 40`, rcx = 8) are closed by `rfl` on the state
 that the steps computed. -/
 theorem Decode.from_generated_steps_ValidatorIndex_field (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAcc "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
+    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ")
     (sp rcv bf aRet aFp aS2 aB aD : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (hB : sp + (120 : Int64).toBitVec = aB) (hD : sp + (136 : Int64).toBitVec = aD)
@@ -165,17 +165,17 @@ theorem Decode.from_generated_steps_ValidatorIndex_field (k : Nat) (hk : Code.un
   simp only at hrsp hrbp hr14 hrax h_mem ⊢
   subst rsp rbp r14 hrax
   apply Decode.generated_step_s82 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s83 k hk hf
-  intro fl1; kn
+  intro fl1; normalize_registers
   apply Decode.generated_step_s84 k hk hf sp aD hD vD hvD _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s85 k hk hf
-  intro fl2; kn
+  intro fl2; normalize_registers
   apply Decode.generated_step_s86 k hk hf
-  intro fl3; kn
+  intro fl3; normalize_registers
   apply Decode.generated_step_s87 k hk hf
-  kn
+  normalize_registers
   refine eventually_trans _ _ _ _ (Decode.generated_step_ValidatorIndex_call k hk hf hC sp (rax.toBitVec + 40) (bf + 40) aRet aFp aS2 hRet hFp hS2 rbp0 r140 guard e8 rslot
     fp s2 c0 he8 hrs hfp hs2 hc0 hguard _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl) (by first | rfl | decide)
     (by ecancel)) ?_
@@ -209,7 +209,7 @@ theorem Decode.from_generated_steps_Signature_field (k : Nat) (hk : Code.unmarsh
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 156) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -235,12 +235,12 @@ theorem Decode.from_generated_steps_Signature_field (k : Nat) (hk : Code.unmarsh
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
   apply Decode.generated_step_s146 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s147 k hk hf
   apply Decode.generated_step_s154 k hk hf
   apply Decode.generated_step_s155 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
-  kn
+  normalize_registers
   simp only [Reg64s.get64] at H
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, p, spl', lo', hspl', hlo', hrY, ?_⟩
@@ -256,8 +256,8 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
     fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 aP1 aL1 aC1 a40 aP2 aL2 aC2
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrs hast ha8 haP1 haL1 haC1 ha40 haP2 haL2 haC2
     R S hS hlo Heap avail h_mem hguard hlen hav hms hmm
-  have hsl : U64CalleeAcc Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
-  have hvi : U64CalleeAcc Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hsl : U64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
+  have hvi : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
@@ -267,7 +267,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   have hlos : Eq (lo.At (rsp.toBitVec - 120 - BitVec.ofNat 64 S)) =
       Eq ((lo.take S).At (rsp.toBitVec - 120 - BitVec.ofNat 64 S)) ⋆ Eq ((lo.drop S).At (rsp.toBitVec - 120)) := by
     conv => lhs; rw [← List.take_append_drop S lo]
-    exact Prysm.BeaconBlockHeader.Decode.lo8 _ S hS _ _ hlS hl8
+    exact Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS hl8
   rw [hlos] at h_mem
   -- head: entry → directive 15
   refine eventually_trans _ _ _ _ (Decode.head0 k hk _ ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast _
@@ -300,7 +300,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
     (by simp only [List.length_append, hsp0, hsp2, Int.toBytes_length]) (Int.toBytes_length 8 _)
     (by simp only [List.length_append, hlS, Int.toBytes_length]) hl38 haP1 haL1 haC1
     _ Heap avail (by omega) d3 hrsp3 hrbp3 hr143
-    (by rw [Prysm.BeaconBlockHeader.Decode.j3 _ _ _ _ hsp0 (Int.toBytes_length 8 _) hsp2, Prysm.BeaconBlockHeader.Decode.lo8 _ S hS _ _ hlS (Int.toBytes_length 8 _)]
+    (by rw [Prysm.BeaconBlockHeader.Decode.split_three_words _ _ _ _ hsp0 (Int.toBytes_length 8 _) hsp2, Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS (Int.toBytes_length 8 _)]
         ecancel) hms hmm) ?_
   rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, hrbp4, hr144, p1, spl1, lo1, hspl1, hlo1, hrax4, Hm4⟩
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrax4 Hm4
@@ -314,7 +314,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   have hsp3 : spl1 = spl1.take 8 ++ ((spl1.drop 8).take 8 ++ (spl1.drop 8).drop 8) := by
     rw [List.take_append_drop, List.take_append_drop]
   have hlo3 : lo1 = lo1.take S ++ lo1.drop S := (List.take_append_drop S lo1).symm
-  rw [hsp3, hlo3, Prysm.BeaconBlockHeader.Decode.j3 _ _ _ _ hq0 hq1 hq2, Prysm.BeaconBlockHeader.Decode.lo8 _ S hS _ _ hlS1 hl81] at Hm4
+  rw [hsp3, hlo3, Prysm.BeaconBlockHeader.Decode.split_three_words _ _ _ _ hq0 hq1 hq2, Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS1 hl81] at Hm4
   -- ValidatorIndex: 82 → 118 (hand field composition: generated steps 82–87 + generated call block; hC = Prysm.ValidatorIndex.Decode.accept_function_spec_holds)
   refine eventually_trans _ _ _ _ (Decode.from_generated_steps_ValidatorIndex_field k hk hf hvi
     (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec (rsp.toBitVec - 112) (rsp.toBitVec - 120) (rsp.toBitVec - 96)
@@ -351,7 +351,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
     (by simp only [List.length_append, hq0, hq2, Int.toBytes_length]) (Int.toBytes_length 8 _)
     (by simp only [List.length_append, hlS1, Int.toBytes_length]) (Int.toBytes_length 8 _) haP2 haL2 haC2
     _ Heap (avail - 32) (by omega) d7 (hrsp7.trans hrsp6) (hrbp7.trans hrbp6) (hr147.trans hr146)
-    (by rw [Prysm.BeaconBlockHeader.Decode.j3 _ _ _ _ hq0 (Int.toBytes_length 8 _) hq2, Prysm.BeaconBlockHeader.Decode.lo8 _ S hS _ _ hlS1 (Int.toBytes_length 8 _)]
+    (by rw [Prysm.BeaconBlockHeader.Decode.split_three_words _ _ _ _ hq0 (Int.toBytes_length 8 _) hq2, Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS1 (Int.toBytes_length 8 _)]
         ecancel) hms hmm) ?_
   rintro ⟨d8, pc8⟩ ⟨hpc8, hrsp8, hrbp8, hr148, p2, spl2, lo2, hspl2, hlo2, hrdx8, Hm8⟩
   dsimp only at hpc8 hrsp8 hrbp8 hr148 hrdx8 Hm8
@@ -362,23 +362,23 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   replace hrdx8 : rdx8.toBitVec = rax.toBitVec := hrdx8
   subst hrsp8 hrbp8 hr148
   -- epilogue 156–160 (hand steps)
-  kat hk Code.unmarshalSSZ 156
+  step_directive hk Code.unmarshalSSZ 156
   apply load_step_at _ _ (rsp.toBitVec - 64) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 157
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 157
   apply load_step_at _ _ (rsp.toBitVec - 56) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 158
-  kat hk Code.unmarshalSSZ 159
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 158
+  step_directive hk Code.unmarshalSSZ 159
   apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 160
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 160
   apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   rw [show UInt64.toBitVec 0 = 0#64 from rfl] at Hm8
   rw [show k + 140 + 1 = k + 141 from rfl] at Hm8

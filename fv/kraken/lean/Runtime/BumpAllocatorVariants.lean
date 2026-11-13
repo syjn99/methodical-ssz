@@ -4,25 +4,25 @@ import Runtime.NewobjectContract
 /-!
 # More bump-allocator models
 
-`bump_makeslice1`: `runtime.makeslice` for 1-byte elements (`BumpAlloc1`).
+`bump_makeslice1`: `runtime.makeslice` for 1-byte elements (`BumpMakeslice1`).
 `bump_newobject24`, `bump_newobject32`: `runtime.newobject` for one object of
-24 or 32 bytes (`BumpNew24`, `BumpNew32`). All on `bumpHeap` (Runtime/BumpAllocator.lean).
+24 or 32 bytes (`BumpNewobject24`, `BumpNewobject32`). All on `bumpHeap` (Runtime/BumpAllocator.lean).
 -/
 
 open Machine Runtime
 
 namespace Runtime
-def BumpAlloc1 : Program := include_x64_rt "Runtime/BumpAlloc1.S"
-def BumpNew24 : Program := include_x64_rt "Runtime/BumpNew24.S"
-def BumpNew16 : Program := include_x64_rt "Runtime/BumpNew16.S"
-def BumpNew32 : Program := include_x64_rt "Runtime/BumpNew32.S"
+def BumpMakeslice1 : Program := include_x64_code "Runtime/BumpMakeslice1.S"
+def BumpNewobject24 : Program := include_x64_code "Runtime/BumpNewobject24.S"
+def BumpNewobject16 : Program := include_x64_code "Runtime/BumpNewobject16.S"
+def BumpNewobject32 : Program := include_x64_code "Runtime/BumpNewobject32.S"
 
 variable [Host]
 
 set_option maxHeartbeats 4000000 in
-theorem bump_makeslice1 (j : Nat) (hj : BumpAlloc1.IsInfixAt Host.prog j)
+theorem bump_makeslice1 (j : Nat) (hj : BumpMakeslice1.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.makeslice")) (ty : BitVec 64) {S : Nat} :
-    MakesliceC bumpHeap ty 1 S := by
+    MakesliceContract bumpHeap ty 1 S := by
   intro st ret cnt avail stk spill F _hty _hrbx hrcx hav _hmax _hcnt hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
@@ -31,24 +31,24 @@ theorem bump_makeslice1 (j : Nat) (hj : BumpAlloc1.IsInfixAt Host.prog j)
   have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
       ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ F)) mem := by ecancel
   obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
-    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.fvBump").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
+    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.modelBumpPointer").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
   obtain ⟨hpa, hp⟩ := sep_pure_left hp
   have hk := hj
-  simp only [BumpAlloc1] at hk
-  kat hj BumpAlloc1 0
-  kat hj BumpAlloc1 1
+  simp only [BumpMakeslice1] at hk
+  step_directive hj BumpMakeslice1 0
+  step_directive hj BumpMakeslice1 1
   apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hj BumpAlloc1 2
-  kat hj BumpAlloc1 3
+  unfold_step
+  step_directive hj BumpMakeslice1 2
+  step_directive hj BumpMakeslice1 3
   apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hj BumpAlloc1 4
-  kat hj BumpAlloc1 5
+  unfold_step
+  step_directive hj BumpMakeslice1 4
+  step_directive hj BumpMakeslice1 5
   apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   have hq : (p + rcx.toBitVec * 1#64).toNat = p.toNat + 1 * cnt := by
     simp only [BitVec.toNat_add, BitVec.toNat_mul, BitVec.toNat_ofNat, UInt64.toNat_toBitVec]; omega
@@ -58,7 +58,7 @@ theorem bump_makeslice1 (j : Nat) (hj : BumpAlloc1.IsInfixAt Host.prog j)
     rw [List.replicate_append_replicate]; congr 1; omega
   rw [hsplit, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
   simp only [List.length_replicate, hq'] at H1
-  have H2 : ((Eq ((Int.toBytes 8 (p + rcx.toBitVec * 1#64).toInt).At (label "runtime.fvBump").toBitVec)
+  have H2 : ((Eq ((Int.toBytes 8 (p + rcx.toBitVec * 1#64).toInt).At (label "runtime.modelBumpPointer").toBitVec)
       ⋆ Eq ((List.replicate (avail - 1 * cnt) 0).At (p + rcx.toBitVec * 1#64)))
       ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
         ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((List.replicate (1 * cnt) 0).At p) ⋆ F)) m1 := by ecancel
@@ -68,9 +68,9 @@ theorem bump_makeslice1 (j : Nat) (hj : BumpAlloc1.IsInfixAt Host.prog j)
   · apply UInt64.toBitVec_inj.mp; simp
   · dsimp only; ecancel
 set_option maxHeartbeats 4000000 in
-theorem bump_newobject24 (j : Nat) (hj : BumpNew24.IsInfixAt Host.prog j)
+theorem bump_newobject24 (j : Nat) (hj : BumpNewobject24.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.newobject")) (ty : BitVec 64) {S : Nat} :
-    NewobjectC bumpHeap ty 24 S := by
+    NewobjectContract bumpHeap ty 24 S := by
   intro st ret avail stk spill F _hty hav hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
@@ -79,24 +79,24 @@ theorem bump_newobject24 (j : Nat) (hj : BumpNew24.IsInfixAt Host.prog j)
   have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
       ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ F)) mem := by ecancel
   obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
-    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.fvBump").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
+    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.modelBumpPointer").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
   obtain ⟨hpa, hp⟩ := sep_pure_left hp
   have hk := hj
-  simp only [BumpNew24] at hk
-  kat hj BumpNew24 0
-  kat hj BumpNew24 1
+  simp only [BumpNewobject24] at hk
+  step_directive hj BumpNewobject24 0
+  step_directive hj BumpNewobject24 1
   apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hj BumpNew24 2
-  kat hj BumpNew24 3
+  unfold_step
+  step_directive hj BumpNewobject24 2
+  step_directive hj BumpNewobject24 3
   apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hj BumpNew24 4
-  kat hj BumpNew24 5
+  unfold_step
+  step_directive hj BumpNewobject24 4
+  step_directive hj BumpNewobject24 5
   apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   have h24 : (24 : BitVec 64).toNat = 24 := rfl
   have hq : (p + (24 : BitVec 64)).toNat = p.toNat + 24 := by
@@ -106,7 +106,7 @@ theorem bump_newobject24 (j : Nat) (hj : BumpNew24.IsInfixAt Host.prog j)
     rw [List.replicate_append_replicate]; congr 1; omega
   rw [hsplit, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
   simp only [List.length_replicate, hq'] at H1
-  have H2 : ((Eq ((Int.toBytes 8 (p + (24 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
+  have H2 : ((Eq ((Int.toBytes 8 (p + (24 : BitVec 64)).toInt).At (label "runtime.modelBumpPointer").toBitVec)
       ⋆ Eq ((List.replicate (avail - 24) 0).At (p + (24 : BitVec 64))))
       ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
         ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((List.replicate (24) 0).At p) ⋆ F)) m1 := by ecancel
@@ -117,9 +117,9 @@ theorem bump_newobject24 (j : Nat) (hj : BumpNew24.IsInfixAt Host.prog j)
   · dsimp only; ecancel
 set_option maxHeartbeats 4000000 in
 /-- The 16-byte bump `runtime.newobject`. -/
-theorem bump_newobject16 (j : Nat) (hj : BumpNew16.IsInfixAt Host.prog j)
+theorem bump_newobject16 (j : Nat) (hj : BumpNewobject16.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.newobject")) (ty : BitVec 64) {S : Nat} :
-    NewobjectC bumpHeap ty 16 S := by
+    NewobjectContract bumpHeap ty 16 S := by
   intro st ret avail stk spill F _hty hav hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
@@ -128,24 +128,24 @@ theorem bump_newobject16 (j : Nat) (hj : BumpNew16.IsInfixAt Host.prog j)
   have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
       ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ F)) mem := by ecancel
   obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
-    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.fvBump").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
+    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.modelBumpPointer").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
   obtain ⟨hpa, hp⟩ := sep_pure_left hp
   have hk := hj
-  simp only [BumpNew16] at hk
-  kat hj BumpNew16 0
-  kat hj BumpNew16 1
+  simp only [BumpNewobject16] at hk
+  step_directive hj BumpNewobject16 0
+  step_directive hj BumpNewobject16 1
   apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hj BumpNew16 2
-  kat hj BumpNew16 3
+  unfold_step
+  step_directive hj BumpNewobject16 2
+  step_directive hj BumpNewobject16 3
   apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hj BumpNew16 4
-  kat hj BumpNew16 5
+  unfold_step
+  step_directive hj BumpNewobject16 4
+  step_directive hj BumpNewobject16 5
   apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   have h16 : (16 : BitVec 64).toNat = 16 := rfl
   have hq : (p + (16 : BitVec 64)).toNat = p.toNat + 16 := by
@@ -155,7 +155,7 @@ theorem bump_newobject16 (j : Nat) (hj : BumpNew16.IsInfixAt Host.prog j)
     rw [List.replicate_append_replicate]; congr 1; omega
   rw [hsplit, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
   simp only [List.length_replicate, hq'] at H1
-  have H2 : ((Eq ((Int.toBytes 8 (p + (16 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
+  have H2 : ((Eq ((Int.toBytes 8 (p + (16 : BitVec 64)).toInt).At (label "runtime.modelBumpPointer").toBitVec)
       ⋆ Eq ((List.replicate (avail - 16) 0).At (p + (16 : BitVec 64))))
       ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
         ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((List.replicate (16) 0).At p) ⋆ F)) m1 := by ecancel
@@ -165,9 +165,9 @@ theorem bump_newobject16 (j : Nat) (hj : BumpNew16.IsInfixAt Host.prog j)
   · apply UInt64.toBitVec_inj.mp; simp
   · dsimp only; ecancel
 set_option maxHeartbeats 4000000 in
-theorem bump_newobject32 (j : Nat) (hj : BumpNew32.IsInfixAt Host.prog j)
+theorem bump_newobject32 (j : Nat) (hj : BumpNewobject32.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.newobject")) (ty : BitVec 64) {S : Nat} :
-    NewobjectC bumpHeap ty 32 S := by
+    NewobjectContract bumpHeap ty 32 S := by
   intro st ret avail stk spill F _hty hav hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
@@ -176,24 +176,24 @@ theorem bump_newobject32 (j : Nat) (hj : BumpNew32.IsInfixAt Host.prog j)
   have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
       ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ F)) mem := by ecancel
   obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
-    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.fvBump").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
+    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.modelBumpPointer").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
   obtain ⟨hpa, hp⟩ := sep_pure_left hp
   have hk := hj
-  simp only [BumpNew32] at hk
-  kat hj BumpNew32 0
-  kat hj BumpNew32 1
+  simp only [BumpNewobject32] at hk
+  step_directive hj BumpNewobject32 0
+  step_directive hj BumpNewobject32 1
   apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hj BumpNew32 2
-  kat hj BumpNew32 3
+  unfold_step
+  step_directive hj BumpNewobject32 2
+  step_directive hj BumpNewobject32 3
   apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hj BumpNew32 4
-  kat hj BumpNew32 5
+  unfold_step
+  step_directive hj BumpNewobject32 4
+  step_directive hj BumpNewobject32 5
   apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   have h32 : (32 : BitVec 64).toNat = 32 := rfl
   have hq : (p + (32 : BitVec 64)).toNat = p.toNat + 32 := by
@@ -203,7 +203,7 @@ theorem bump_newobject32 (j : Nat) (hj : BumpNew32.IsInfixAt Host.prog j)
     rw [List.replicate_append_replicate]; congr 1; omega
   rw [hsplit, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
   simp only [List.length_replicate, hq'] at H1
-  have H2 : ((Eq ((Int.toBytes 8 (p + (32 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
+  have H2 : ((Eq ((Int.toBytes 8 (p + (32 : BitVec 64)).toInt).At (label "runtime.modelBumpPointer").toBitVec)
       ⋆ Eq ((List.replicate (avail - 32) 0).At (p + (32 : BitVec 64))))
       ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
         ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((List.replicate (32) 0).At p) ⋆ F)) m1 := by ecancel

@@ -56,7 +56,7 @@ Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `
 How we decide "does Kraken accept it":
 
 - Mnemonic level: the 186 branch strings of `parseInstr` in `Kraken/X64/Parser/Basic.lean` of the fixed Kraken, and `j`/`set`/`cmov` + 30 `parseCondCode?` condition codes. The 10 `conv.py` NORM forms count as `nop`.
-- Real parser level: we ran `Kraken.X64.Parser.parse`, which `include_x64_rt` uses, on each file (log copy `go1.26.10/kparse-log.txt`). This is the verdict criterion.
+- Real parser level: we ran `Kraken.X64.Parser.parse`, which `include_x64_code` uses, on each file (log copy `go1.26.10/kparse-log.txt`). This is the verdict criterion.
 - We did not examine the semantics level (`kstep` and theorems). This table is a classification, not a proof.
 
 ## 4. Numbers

@@ -12,6 +12,6 @@ import Machine.Include
 namespace Prysm.HistoricalBatch.Code
 
 /-- `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (native struct, `phase0.ssz.go:2693`). -/
-def unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S"
+def unmarshalSSZ : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S"
 
 end Prysm.HistoricalBatch.Code

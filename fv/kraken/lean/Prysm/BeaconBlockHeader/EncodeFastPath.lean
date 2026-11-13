@@ -4,8 +4,8 @@ import Prysm.BeaconBlockHeader.EncodeRootFields
 /-!
 # Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, fast path, Go 1.26.10 machine code (hold-out)
 
-Hand proof by composition of the segments of `Prysm.BeaconBlockHeader.EncodeHead` (`Encode.enc_a1`, `Encode.enc_a2`) and
-`Prysm.BeaconBlockHeader.EncodeRootFields` (`Encode.enc_b`, `Encode.enc_c`, `Encode.enc_d`, `Encode.enc_e`). Statement shape of
+Hand proof by composition of the segments of `Prysm.BeaconBlockHeader.EncodeHead` (`Encode.encode_slot`, `Encode.encode_proposer_index`) and
+`Prysm.BeaconBlockHeader.EncodeRootFields` (`Encode.encode_parent_root`, `Encode.encode_state_root`, `Encode.encode_body_root`, `Encode.encode_return`). Statement shape of
 `Prysm.Checkpoint.Encode.fast_path`. **Fast path only**: `len(dst) + 112 ≤ cap(dst)` and all three roots of length 32.
 The `runtime.growslice` branches and the three length rejects are not covered by this theorem.
 
@@ -25,10 +25,10 @@ variable [Host]
 open Codec
 namespace Prysm.BeaconBlockHeader
 
-theorem Encode.o16 (x y : BitVec 64) : x + y + 16 = x + (y + 8 + 8) := by bv_omega
-theorem Encode.o48 (x y : BitVec 64) : x + y + 48 = x + (y + 8 + 8 + 32) := by bv_omega
-theorem Encode.o80 (x y : BitVec 64) : x + y + 80 = x + (y + 8 + 8 + 32 + 32) := by bv_omega
-theorem Encode.v112 (y : BitVec 64) : y + 112 = y + 8 + 8 + 32 + 32 + 32 := by bv_omega
+theorem Encode.offset16_regroup (x y : BitVec 64) : x + y + 16 = x + (y + 8 + 8) := by bv_omega
+theorem Encode.offset48_regroup (x y : BitVec 64) : x + y + 48 = x + (y + 8 + 8 + 32) := by bv_omega
+theorem Encode.offset80_regroup (x y : BitVec 64) : x + y + 80 = x + (y + 8 + 8 + 32 + 32) := by bv_omega
+theorem Encode.sum112_as_fields (y : BitVec 64) : y + 112 = y + 8 + 8 + 32 + 32 + 32 := by bv_omega
 
 theorem Encode.capacity_le (a b : BitVec 64) (h : a.toNat + 112 ≤ b.toNat) (h63 : b.toNat < 2 ^ 63) :
     (a + 8 + 8).toNat + 32 ≤ b.toNat ∧ (a + 8 + 8 + 32).toNat + 32 ≤ b.toNat
@@ -85,7 +85,7 @@ theorem Encode.fast_path (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
       ⋆ Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80)) ⋆ R)
     (hguard : guard.toNat + 32 < s.regs.rsp.toNat) (hsp : 168 ≤ s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
-    (hmm : MemmoveC S) :
+    (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 112 ∧ st.data.regs.rcx = s.regs.rdi
@@ -126,16 +126,16 @@ theorem Encode.fast_path (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   simp only [UInt64.size] at hC
   obtain ⟨hcB, hcC, hcD⟩ := Encode.capacity_le s.regs.rcx.toBitVec s.regs.rdi.toBitVec hcap hcap63
   have hc63 : s.regs.rdi.toBitVec.toNat < 2 ^ 63 := hcap63
-  rw [Encode.o16 s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.o48 s.regs.rbx.toBitVec s.regs.rcx.toBitVec,
-    Encode.o80 s.regs.rbx.toBitVec s.regs.rcx.toBitVec] at h_mem
+  rw [Encode.offset16_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.offset48_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec,
+    Encode.offset80_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec] at h_mem
   -- Slot segment, directives 0–35
-  refine eventually_trans _ _ _ _ (Encode.enc_a1 k hk hf sl d0 hsl hd0 s guard fp s1 s2 t1a t1b hfp h1 h2 ht1a ht1b _
+  refine eventually_trans _ _ _ _ (Encode.encode_slot k hk hf sl d0 hsl hd0 s guard fp s1 s2 t1a t1b hfp h1 h2 ht1a ht1b _
     (by ecancel) hguard hsp hcap hcap63) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrax1, hrbx1, hrcx1, hrdx1, hrdi1, hrsp1, hrbp1, hr141, t1, u1, ht1, hu1, Hm1⟩
   dsimp only at hpc1 hrax1 hrbx1 hrcx1 hrdx1 hrdi1 hrsp1 hrbp1 hr141 Hm1
   subst hpc1
   -- ProposerIndex segment, directives 36–61
-  refine eventually_trans _ _ _ _ (Encode.enc_a2 k hk hf pi d1 hpi hd1 e1 s.regs.rsp t2a t2b ht2a ht2b _
+  refine eventually_trans _ _ _ _ (Encode.encode_proposer_index k hk hf pi d1 hpi hd1 e1 s.regs.rsp t2a t2b ht2a ht2b _
     hrsp1 (by rw [hrdx1, hrcx1]) (by rw [hrax1, hrbx1, hrcx1]; ecancel)
     (by rw [hrcx1, hrdi1]; exact hcap) (by rw [hrdi1]; exact hcap63)) ?_
   rintro ⟨e2, pc2⟩ ⟨hpc2, hrax2, hrbx2, hr82, hrdi2, hrsp2, hrbp2, hr142, t2, u2, ht2, hu2, Hm2⟩
@@ -145,7 +145,7 @@ theorem Encode.fast_path (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   have hr8' : e2.regs.r8 = { toBitVec := s.regs.rcx.toBitVec + 8 + 8 } := by
     apply UInt64.toBitVec_inj.mp; rw [hr82, hrcx1]
   -- ParentRoot segment, directives 62–89, memmove
-  refine eventually_trans _ _ _ _ (Encode.enc_b k hk hf r1 d2 hr1 hd2 e2 s.regs.rsp s.regs.rax.toBitVec
+  refine eventually_trans _ _ _ _ (Encode.encode_parent_root k hk hf r1 d2 hr1 hd2 e2 s.regs.rsp s.regs.rax.toBitVec
     s.regs.rbx.toBitVec (s.regs.rcx.toBitVec + 8 + 8) s.regs.rdi.toBitVec p1 l16 l96 l104 rslot scratch
     hl16 hl96 hl104 hrs S hsc _ (hrsp2.trans hrsp1) (hrax2.trans hrax1) (hrbx2.trans hrbx1) hr8'
     (hrdi2.trans hrdi1) (by ecancel) hcB hc63 hmm) ?_
@@ -153,7 +153,7 @@ theorem Encode.fast_path (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   dsimp only at hpc3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
   -- StateRoot segment, directives 90–117, memmove
-  refine eventually_trans _ _ _ _ (Encode.enc_c k hk hf r2 d3 hr2 hd3 e3 s.regs.rsp s.regs.rax.toBitVec
+  refine eventually_trans _ _ _ _ (Encode.encode_state_root k hk hf r2 d3 hr2 hd3 e3 s.regs.rsp s.regs.rax.toBitVec
     s.regs.rbx.toBitVec (s.regs.rcx.toBitVec + 8 + 8 + 32) s.regs.rdi.toBitVec p2
     (Int.toBytes 8 (Host.addrOf (k + 90)).toBitVec.toInt) scr1 (Int.toBytes_length 8 _) S hscr1 _
     (hrsp3.trans (hrsp2.trans hrsp1)) (by ecancel) hcC hc63 hmm) ?_
@@ -161,7 +161,7 @@ theorem Encode.fast_path (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   dsimp only at hpc4 hrsp4 hrbp4 hr144 Hm4
   subst hpc4
   -- BodyRoot segment, directives 118–147, memmove
-  refine eventually_trans _ _ _ _ (Encode.enc_d k hk hf r3 d4 hr3 hd4 e4 s.regs.rsp s.regs.rax.toBitVec
+  refine eventually_trans _ _ _ _ (Encode.encode_body_root k hk hf r3 d4 hr3 hd4 e4 s.regs.rsp s.regs.rax.toBitVec
     s.regs.rbx.toBitVec (s.regs.rcx.toBitVec + 8 + 8 + 32 + 32) s.regs.rdi.toBitVec p3
     (Int.toBytes 8 (Host.addrOf (k + 118)).toBitVec.toInt) scr2 (Int.toBytes_length 8 _) S hscr2 _
     (hrsp4.trans (hrsp3.trans (hrsp2.trans hrsp1))) (by ecancel) hcD hc63 hmm) ?_
@@ -169,7 +169,7 @@ theorem Encode.fast_path (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   dsimp only at hpc5 hrsp5 hrbp5 hr145 Hm5
   subst hpc5
   -- Return segment, directives 148–155
-  refine eventually_trans _ _ _ _ (Encode.enc_e k hk e5 s.regs.rsp ra s.regs.rbp s.regs.rbx.toBitVec
+  refine eventually_trans _ _ _ _ (Encode.encode_return k hk e5 s.regs.rsp ra s.regs.rbp s.regs.rbx.toBitVec
     (s.regs.rcx.toBitVec + 8 + 8 + 32 + 32 + 32) s.regs.rdi.toBitVec _
     (hrsp5.trans (hrsp4.trans (hrsp3.trans (hrsp2.trans hrsp1)))) (by ecancel)) ?_
   rintro ⟨e6, pc6⟩ ⟨hpc6, hrax6, hrbx6, hrcx6, hrdi6, hrsi6, hrsp6, hrbp6, hr146, Hm6⟩
@@ -180,8 +180,8 @@ theorem Encode.fast_path (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   case grbx => exact (congrArg UInt64.toNat hrbx6).trans (Encode.len112 s.regs.rcx (by omega))
   case gr14 => exact hr146.trans (hr145.trans (hr144.trans (hr143.trans (hr142.trans hr141))))
   case hmem =>
-    rw [Encode.o16 s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.o48 s.regs.rbx.toBitVec s.regs.rcx.toBitVec,
-      Encode.o80 s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.v112 s.regs.rcx.toBitVec]
+    rw [Encode.offset16_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.offset48_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec,
+      Encode.offset80_regroup s.regs.rbx.toBitVec s.regs.rcx.toBitVec, Encode.sum112_as_fields s.regs.rcx.toBitVec]
     first | ecancel | (simp only [Std.ExtHashMap.sep_emp] at Hm6; ecancel)
 
 end Prysm.BeaconBlockHeader

@@ -5,9 +5,9 @@ import Runtime.NewobjectContract
 /-!
 # Bump-allocator model of `runtime.newobject` for one 72-byte object (witness only)
 
-`BumpNew72` (`Prysm/AttestationData/BumpNew72.S`) is `Runtime/BumpNew32.S` with the object size 0x48; the theorem
+`BumpNewobject72` (`Prysm/AttestationData/BumpNewobject72.S`) is `Runtime/BumpNewobject32.S` with the object size 0x48; the theorem
 is the text of `Runtime.bump_newobject32` with 32 replaced by 72. It discharges
-`NewobjectC bumpHeap ty 72 S` in the AttestationData witnesses (the Checkpoint object of the
+`NewobjectContract bumpHeap ty 72 S` in the AttestationData witnesses (the Checkpoint object of the
 Go 1.26.10 ELF is 72 bytes, `typeCheckpoint` Size_ = 0x48). It is a model in a witness host, not a
 claim about the Go runtime.
 -/
@@ -16,14 +16,14 @@ open Machine Runtime
 
 namespace Prysm.AttestationData
 
-def BumpNew72 : Program := include_x64_rt "Prysm/AttestationData/BumpNew72.S"
+def BumpNewobject72 : Program := include_x64_code "Prysm/AttestationData/BumpNewobject72.S"
 
 variable [Host]
 
 set_option maxHeartbeats 4000000 in
-theorem bump_newobject72 (j : Nat) (hj : BumpNew72.IsInfixAt Host.prog j)
+theorem bump_newobject72 (j : Nat) (hj : BumpNewobject72.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.newobject")) (ty : BitVec 64) {S : Nat} :
-    NewobjectC bumpHeap ty 72 S := by
+    NewobjectContract bumpHeap ty 72 S := by
   intro st ret avail stk spill F _hty hav hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
@@ -32,24 +32,24 @@ theorem bump_newobject72 (j : Nat) (hj : BumpNew72.IsInfixAt Host.prog j)
   have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
       ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ F)) mem := by ecancel
   obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
-    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.fvBump").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
+    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.modelBumpPointer").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
   obtain ⟨hpa, hp⟩ := sep_pure_left hp
   have hk := hj
-  simp only [BumpNew72] at hk
-  kat hj BumpNew72 0
-  kat hj BumpNew72 1
+  simp only [BumpNewobject72] at hk
+  step_directive hj BumpNewobject72 0
+  step_directive hj BumpNewobject72 1
   apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hj BumpNew72 2
-  kat hj BumpNew72 3
+  unfold_step
+  step_directive hj BumpNewobject72 2
+  step_directive hj BumpNewobject72 3
   apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hj BumpNew72 4
-  kat hj BumpNew72 5
+  unfold_step
+  step_directive hj BumpNewobject72 4
+  step_directive hj BumpNewobject72 5
   apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   have h72 : (72 : BitVec 64).toNat = 72 := rfl
   have hq : (p + (72 : BitVec 64)).toNat = p.toNat + 72 := by
@@ -59,7 +59,7 @@ theorem bump_newobject72 (j : Nat) (hj : BumpNew72.IsInfixAt Host.prog j)
     rw [List.replicate_append_replicate]; congr 1; omega
   rw [hsplit, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
   simp only [List.length_replicate, hq'] at H1
-  have H2 : ((Eq ((Int.toBytes 8 (p + (72 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
+  have H2 : ((Eq ((Int.toBytes 8 (p + (72 : BitVec 64)).toInt).At (label "runtime.modelBumpPointer").toBitVec)
       ⋆ Eq ((List.replicate (avail - 72) 0).At (p + (72 : BitVec 64))))
       ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
         ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((List.replicate (72) 0).At p) ⋆ F)) m1 := by ecancel

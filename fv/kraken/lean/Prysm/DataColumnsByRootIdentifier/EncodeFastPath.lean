@@ -27,56 +27,56 @@ theorem Encode.fast_path : Encode.fast_path_statement := by
   have hz1 := rsp.toNat_lt_size; have hz2 := guard.toNat_lt_size; have hz3 := rcx.toNat_lt_size
   have hz4 := rdi.toNat_lt_size
   simp only [UInt64.size] at hz1 hz2 hz3 hz4
-  kat hk marshalSSZTo 0
-  kat hk marshalSSZTo 1
-  kat hk marshalSSZTo 2
-  kat hk marshalSSZTo 3
+  step_directive hk marshalSSZTo 0
+  step_directive hk marshalSSZTo 1
+  step_directive hk marshalSSZTo 2
+  step_directive hk marshalSSZTo 3
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 4
+  unfold_step
+  step_directive hk marshalSSZTo 4
   split
   case isTrue h =>
     exfalso
     rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 8 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
-  kat hk marshalSSZTo 5
+  step_directive hk marshalSSZTo 5
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk marshalSSZTo 6
-  kat hk marshalSSZTo 7
-  kat hk marshalSSZTo 8
+  unfold_step
+  step_directive hk marshalSSZTo 6
+  step_directive hk marshalSSZTo 7
+  step_directive hk marshalSSZTo 8
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hk marshalSSZTo 9
+  unfold_step
+  step_directive hk marshalSSZTo 9
   apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 pr.toInt) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 10
+  unfold_step
+  step_directive hk marshalSSZTo 10
   apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 32) _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by rfl)
   simp only [show Int.ofBytes (Int.toBytes 8 32) = 32 by decide]
-  kunfold
-  kat hk marshalSSZTo 11
+  unfold_step
+  step_directive hk marshalSSZTo 11
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  kat hk marshalSSZTo 12
+  step_directive hk marshalSSZTo 12
   apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by data_columns_by_root_identifier_encode_addr) (by ecancel) (by exact h1)
   intro m3 H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
-  kat hk marshalSSZTo 13
-  kat hk marshalSSZTo 14
-  kat hk marshalSSZTo 15
+  unfold_step
+  step_directive hk marshalSSZTo 13
+  step_directive hk marshalSSZTo 14
+  step_directive hk marshalSSZTo 15
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega
   simp only [Effects.All]
-  klabel hk hf marshalSSZTo 29
+  label_address hk hf marshalSSZTo 29
   refine eventually_mono (Encode.tail_fit k hk hf rsp.toBitVec rax.toBitVec pr pc nb rbx.toBitVec ra rbp n rdi.toNat hnb hn
     root cb d hroot hcb hd l24 l32 l40 l56 l64 rslot hl24 hl32 hl40 hl56 hl64 hrs S scratch hsc _ _
     (by show -128 + (rsp.toBitVec - 8#64) = rsp.toBitVec - 136; bv_omega) rfl rfl rfl rfl hcap (by ecancel) hmm) ?_

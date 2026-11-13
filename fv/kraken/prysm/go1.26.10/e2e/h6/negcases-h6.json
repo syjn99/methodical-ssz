@@ -79,7 +79,7 @@
  {
   "id": "pd-epi-code-frame",
   "module": "Prysm/PendingDeposit/DecodeAccept.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.epi",
+  "theorem": "Prysm.PendingDeposit.Decode.epilogue",
   "kind": "code",
   "line": 162,
   "old": "  add $0x40,%rsp",
@@ -301,7 +301,7 @@
   "module": "Prysm/PowBlock/Spec.lean",
   "theorem": "Prysm.PowBlock.Decode.codec_checker",
   "kind": "stmt",
-  "old": "deserialize checkerDesc bs = .ok g.toValueC",
+  "old": "deserialize checkerDesc bs = .ok g.toValueChecker",
   "new": "deserialize checkerDesc bs = .ok g.toValue"
  },
  {

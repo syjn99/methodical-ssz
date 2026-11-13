@@ -39,7 +39,7 @@ abbrev bytesDecSegKindWindow (n : Nat) (C : Program) (rY : Reg64) (j1 jm e : Nat
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + e) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -63,12 +63,12 @@ theorem bytesDecSegKindWindow_of (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (
     (hY : rY = Reg64.rax ∨ rY = Reg64.rcx ∨ rY = Reg64.rdx ∨ rY = Reg64.rsi ∨ rY = Reg64.rdi)
     (j1 j2 jl jm e : Nat) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (qA qB : Program)
     (hqA : ∀ k, C.IsInfixAt Host.prog k → qA.IsInfixAt Host.prog (k + j1))
-    (heA : eraseNop qA = bytesDecHeadR rX (OfNat.ofNat n) lff dR fL fC)
+    (heA : eraseNop qA = bytesDecHeadRegister rX (OfNat.ofNat n) lff dR fL fC)
     (hqB : ∀ k, C.IsInfixAt Host.prog k → qB.IsInfixAt Host.prog (k + j2))
-    (heB : eraseNop qB = bytesDecMidR rX rY (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src)
-    (hjl : j2 + nopPos qB 0 = jl)
+    (heB : eraseNop qB = bytesDecMidRegisters rX rY (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src)
+    (hjl : j2 + nonNopIndex qB 0 = jl)
     (hl : ∀ k, C.IsInfixAt Host.prog k → LabelsFresh C k → label lff = Host.addrOf (k + jl))
-    (hjm : j2 + nopPos qB 6 = jm) (hend : j2 + qB.length = e) :
+    (hjm : j2 + nonNopIndex qB 6 = jm) (hend : j2 + qB.length = e) :
     bytesDecSegKindWindow n C rY j1 jm e dR dB dS fP fL fC src :=
   fun k hk hf => bytesdec_seg_window n hn rX rY hX hY lff lwb dR dB dS fP fL fC src qA qB (k + j1) (k + j2) (k + jl)
     (k + jm) (k + e) (hqA k hk) heA (hqB k hk) heB (by omega) (hl k hk hf) (by omega) (by omega)

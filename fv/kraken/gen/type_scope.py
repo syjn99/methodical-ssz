@@ -35,7 +35,7 @@ NEW_PATTERN = {
 }
 COVERED_CALLS = {"makeslice", "growslice", "memmove", "newobject", "convT64", "ValidateBitlist", "ValidateBitvector",
                  "generated method", "panic*", "write barrier", "morestack_noctxt", "fmt"}
-FMT_CONTRACT = {"": "FmtErrorfNilC", "%w": "FmtErrorfWC", "%d%w": "FmtErrorfDWC"}
+FMT_CONTRACT = {"": "FmtErrorfNilContract", "%w": "FmtErrorfWrapContract", "%d%w": "FmtErrorfDecimalWrapContract"}
 ORDER = ["tool gap", "missing contract", "new pattern (automation)", "none known"]
 
 

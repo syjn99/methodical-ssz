@@ -62,8 +62,8 @@ theorem Decode.head_from_generated_call_segments (k : Nat) (hk : Code.unmarshalS
           ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq (in1.At (s.regs.rax.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hsl' : U64CalleeAcc Prysm.Slot.Code.unmarshalSSZLabel := hsl
-  have hvi' : U64CalleeAcc Prysm.ValidatorIndex.Code.unmarshalLabel := hvi
+  have hsl' : U64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := hsl
+  have hvi' : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := hvi
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 112).toNat := Decode.accept_guard _ _ hguard
@@ -176,7 +176,7 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
       ⋆ Eq (aC3.At (s.regs.rax.toBitVec + 88))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 112 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 112) (hav : 96 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) :
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 8)) (hmm : MemmoveContract (S + 8)) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -218,7 +218,7 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
   have hlos : Eq (lo.At (rsp.toBitVec - 120 - BitVec.ofNat 64 S)) =
       Eq ((lo.take S).At (rsp.toBitVec - 120 - BitVec.ofNat 64 S)) ⋆ Eq ((lo.drop S).At (rsp.toBitVec - 120)) := by
     conv => lhs; rw [← List.take_append_drop S lo]
-    exact Decode.lo8 _ S hS _ _ hlS hl8
+    exact Decode.low_stack_split _ S hS _ _ hlS hl8
   rw [hlos] at h_mem
   -- segment 1: entry → directive 88 (length check, Slot, ValidatorIndex, error spills)
   refine eventually_trans _ _ _ _ (Decode.head_from_generated_call_segments k hk hf hsl hvi in0 in1 hin0 hin1 _ ra guard fp s1 s2 s4 sp1 rslot
@@ -244,7 +244,7 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
     _ Heap avail (by omega) d1
     (by rw [hrsp1]; first | rfl | (apply UInt64.toBitVec_inj.mp; simp))
     (by rw [hrbp1]) hr141
-    (by rw [Decode.j3 _ _ _ _ hsp0 (Int.toBytes_length 8 _) hsp2, Decode.lo8 _ S hS _ _ hlS (Int.toBytes_length 8 _)]
+    (by rw [Decode.split_three_words _ _ _ _ hsp0 (Int.toBytes_length 8 _) hsp2, Decode.low_stack_split _ S hS _ _ hlS (Int.toBytes_length 8 _)]
         ecancel) hms hmm) ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, p1, spl1, lo1, hspl1, hlo1, hrdx2, Hm2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrdx2 Hm2
@@ -254,20 +254,20 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
   simp only at hrsp2 hrbp2 hr142 hrdx2 Hm2
   subst hrsp2 hrbp2 hr142
   -- instance directives 113–115, L_1f7 (122), 123
-  kat hk Code.unmarshalSSZ 113
+  step_directive hk Code.unmarshalSSZ 113
   apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p1.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 114
-  kat hk Code.unmarshalSSZ 115
-  klabel hk hf Code.unmarshalSSZ 122
-  kat hk Code.unmarshalSSZ 122
-  kat hk Code.unmarshalSSZ 123
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 114
+  step_directive hk Code.unmarshalSSZ 115
+  label_address hk hf Code.unmarshalSSZ 122
+  step_directive hk Code.unmarshalSSZ 122
+  step_directive hk Code.unmarshalSSZ 123
   apply store_step_at _ _ (rax.toBitVec + 24) _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrdx2]; try beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
+  unfold_step
   -- segment 3: StateRoot (generated), 124 → 149
   refine eventually_trans _ _ _ _ (Decode.generated_call_StateRoot_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
@@ -288,19 +288,19 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
   simp only at hrsp3 hrbp3 hr143 hrdx3 Hm3
   subst hrsp3 hrbp3 hr143
   -- instance directives 149–150, L_292 (157), 158
-  kat hk Code.unmarshalSSZ 149
+  step_directive hk Code.unmarshalSSZ 149
   apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p2.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 150
-  klabel hk hf Code.unmarshalSSZ 157
-  kat hk Code.unmarshalSSZ 157
-  kat hk Code.unmarshalSSZ 158
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 150
+  label_address hk hf Code.unmarshalSSZ 157
+  step_directive hk Code.unmarshalSSZ 157
+  step_directive hk Code.unmarshalSSZ 158
   apply store_step_at _ _ (rax.toBitVec + 48) _ _ _ (Int.toBytes 8 p2.toInt) _ _ (by rw [hrdx3]; try beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
+  unfold_step
   -- segment 4: BodyRoot (generated), 159 → 184
   refine eventually_trans _ _ _ _ (Decode.generated_call_BodyRoot_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
@@ -321,36 +321,36 @@ theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarsha
   simp only at hrsp4 hrbp4 hr144 hrdx4 Hm4
   subst hrsp4 hrbp4 hr144
   -- instance directives 184–185, L_331 (193), 194, epilogue 195–199
-  kat hk Code.unmarshalSSZ 184
+  step_directive hk Code.unmarshalSSZ 184
   apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p3.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 185
-  klabel hk hf Code.unmarshalSSZ 193
-  kat hk Code.unmarshalSSZ 193
-  kat hk Code.unmarshalSSZ 194
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 185
+  label_address hk hf Code.unmarshalSSZ 193
+  step_directive hk Code.unmarshalSSZ 193
+  step_directive hk Code.unmarshalSSZ 194
   apply store_step_at _ _ (rax.toBitVec + 72) _ _ _ (Int.toBytes 8 p3.toInt) _ _ (by rw [hrdx4]; try beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
-  kunfold
-  kat hk Code.unmarshalSSZ 195
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 195
   apply load_step_at _ _ (rsp.toBitVec - 64) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 196
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 196
   apply load_step_at _ _ (rsp.toBitVec - 56) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 197
-  kat hk Code.unmarshalSSZ 198
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 197
+  step_directive hk Code.unmarshalSSZ 198
   apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 199
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 199
   apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   rw [show UInt64.toBitVec 0 = 0#64 from rfl] at H5
   rw [show k + 172 + 6 + 1 = k + 179 from rfl] at H5

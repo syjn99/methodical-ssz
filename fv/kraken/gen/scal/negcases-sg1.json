@@ -23,8 +23,8 @@
   "module": "Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean",
   "theorem": "Prysm.Eth1Data.Decode.generated_root_DepositRoot_seg",
   "kind": "stmt",
-  "old": "(hmm : MemmoveC St),",
-  "new": "(hmm : MemmoveC St) (hextra : (1 : Nat) = 2),",
+  "old": "(hmm : MemmoveContract St),",
+  "new": "(hmm : MemmoveContract St) (hextra : (1 : Nat) = 2),",
   "why": "false hypothesis after the colon"
  },
  {
@@ -72,14 +72,14 @@
   "id": "sg1-r1-z-control",
   "kind": "control",
   "module": "Codec/Bytes32DecodeOffsetZero.lean",
-  "theorem": "rootdec_seg_z",
+  "theorem": "rootdec_seg_offset_zero",
   "why": "unmutated control (review sg1-r1 case r1-z-control, S3)"
  },
  {
   "id": "sg1-r1-z-endpc",
   "kind": "stmt",
   "module": "Codec/Bytes32DecodeOffsetZero.lean",
-  "theorem": "rootdec_seg_z",
+  "theorem": "rootdec_seg_offset_zero",
   "old": "st.pc = Host.addrOf (j2 + 11)",
   "new": "st.pc = Host.addrOf (j2 + 12)",
   "why": "template lemma: end pc (review sg1-r1 case r1-z-endpc, S3)"
@@ -88,7 +88,7 @@
   "id": "sg1-r1-z-rdx",
   "kind": "stmt",
   "module": "Codec/Bytes32DecodeOffsetZero.lean",
-  "theorem": "rootdec_seg_z",
+  "theorem": "rootdec_seg_offset_zero",
   "old": "st.data.regs.rdx.toBitVec = rcv",
   "new": "st.data.regs.rdx.toBitVec = bf",
   "why": "template lemma: register post (review sg1-r1 case r1-z-rdx, S3)"
@@ -97,7 +97,7 @@
   "id": "sg1-r1-z-nohroot",
   "kind": "stmt",
   "module": "Codec/Bytes32DecodeOffsetZero.lean",
-  "theorem": "rootdec_seg_z",
+  "theorem": "rootdec_seg_offset_zero",
   "old": "(hroot : root.length = 32)",
   "new": "(hroot : root.length = 16)",
   "why": "template lemma: source length hypothesis (review sg1-r1 case r1-z-nohroot, S3)"
@@ -106,7 +106,7 @@
   "id": "sg1-r1-z-dst",
   "kind": "stmt",
   "module": "Codec/Bytes32DecodeOffsetZero.lean",
-  "theorem": "rootdec_seg_z",
+  "theorem": "rootdec_seg_offset_zero",
   "old": "⋆ Eq ((Int.toBytes 8 32).At aC) ⋆ Eq (root.At p)",
   "new": "⋆ Eq ((Int.toBytes 8 32).At aC) ⋆ Eq (root.At bf)",
   "why": "template lemma: copied bytes at the wrong address (review sg1-r1 case r1-z-dst, S3)"

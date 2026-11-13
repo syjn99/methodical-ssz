@@ -21,24 +21,24 @@ namespace Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath
 
 set_option maxRecDepth 100000
 
-def P : Program := marshalSSZTo
+def program : Program := marshalSSZTo
 
-theorem P_len : P.length = 79 := by rfl
+theorem program_length : program.length = 79 := by rfl
 
-instance host : Host := mkHost P (by rw [P_len]; decide)
+instance host : Host := mkHost program (by rw [program_length]; decide)
 
-theorem hk0 : marshalSSZTo.IsInfixAt Host.prog 0 := infixAt_of [] [] (by simp [Host.prog, mkHost, P]) rfl
-theorem hf0 : LabelsFresh marshalSSZTo 0 := fun i hi => absurd hi (Nat.not_lt_zero _)
+theorem placed_at_0 : marshalSSZTo.IsInfixAt Host.prog 0 := infixAt_of [] [] (by simp [Host.prog, mkHost, program]) rfl
+theorem labels_fresh_at_0 : LabelsFresh marshalSSZTo 0 := fun i hi => absurd hi (Nat.not_lt_zero _)
 
-abbrev z (k : Nat) : List UInt8 := List.replicate k 0
-abbrev w (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
+abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
+abbrev word_bytes (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
 
 def block (v0 v1 pre spare : List UInt8) : List UInt8 :=
-  (w 0) ++ ((z 8) ++ (v0 ++ (v1 ++ ((z 32) ++ ((z 56) ++ ((z 16) ++ ((z 16) ++ ((z 16) ++ ((z 16) ++ ((z 8) ++ ((w 0) ++ ((z 8) ++ ((z 8) ++ (pre ++ ((z 8) ++ ((z 8) ++ (spare)))))))))))))))))
+  (word_bytes 0) ++ ((zeros 8) ++ (v0 ++ (v1 ++ ((zeros 32) ++ ((zeros 56) ++ ((zeros 16) ++ ((zeros 16) ++ ((zeros 16) ++ ((zeros 16) ++ ((zeros 8) ++ ((word_bytes 0) ++ ((zeros 8) ++ ((zeros 8) ++ (pre ++ ((zeros 8) ++ ((zeros 8) ++ (spare)))))))))))))))))
 
 def mem (v0 v1 pre spare : List UInt8) : DataMem := (block v0 v1 pre spare).At (0x10000 : BitVec 64)
 
-def cs0 (v0 v1 pre spare : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
+def initial_state (v0 v1 pre spare : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10008, 0x100d8, UInt64.ofNat pre.length, 0, 0, UInt64.ofNat (pre.length + 16 + spare.length), 0x100c0, 0,
     0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem v0 v1 pre spare⟩
 
@@ -50,19 +50,19 @@ theorem runs_empty (v0 : List UInt8) (v1 : List UInt8)
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x100d8
         ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0)
-      ⟨cs0 v0 v1 [] [] zmms flags, Host.addrOf 0⟩ :=
-  eventually_mono (Encode.generated_fast 0 hk0 hf0 (z 8) v0 v1 [] (z 8) (z 8) rfl h_v0 h_v1 rfl rfl (cs0 v0 v1 [] [] zmms flags) 0 0 rfl (z 8) (z 8) (z 16) (z 16) (z 16) (z 16) rfl rfl rfl rfl rfl rfl (Eq ((z 32).At (0x10020 : BitVec 64)) ⋆ Eq ((z 56).At (0x10040 : BitVec 64)) ⋆ Eq ((z 8).At (0x100c8 : BitVec 64))) 
+      ⟨initial_state v0 v1 [] [] zmms flags, Host.addrOf 0⟩ :=
+  eventually_mono (Encode.generated_fast 0 placed_at_0 labels_fresh_at_0 (zeros 8) v0 v1 [] (zeros 8) (zeros 8) rfl h_v0 h_v1 rfl rfl (initial_state v0 v1 [] [] zmms flags) 0 0 rfl (zeros 8) (zeros 8) (zeros 16) (zeros 16) (zeros 16) (zeros 16) rfl rfl rfl rfl rfl rfl (Eq ((zeros 32).At (0x10020 : BitVec 64)) ⋆ Eq ((zeros 56).At (0x10040 : BitVec 64)) ⋆ Eq ((zeros 8).At (0x100c8 : BitVec 64))) 
     (by
       have H : Eq ((block v0 v1 [] []).At (0x10000 : BitVec 64))
         (mem v0 v1 [] []) := rfl
-      wit_split [h_v0, h_v1]
-      simp only [cs0, w, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
+      witness_split [h_v0, h_v1]
+      simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil, List.length_cons,
         List.length_replicate, show (UInt64.ofNat 0).toBitVec = 0#64 from rfl] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
       exact H)
-    (by simp [cs0]) (by simp [cs0]) (by simp [cs0]) (by simp [cs0]))
+    (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 
 set_option maxHeartbeats 16000000 in
@@ -73,19 +73,19 @@ theorem runs_prefix (v0 : List UInt8) (v1 : List UInt8)
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x100d8
         ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0)
-      ⟨cs0 v0 v1 [0xaa, 0xbb, 0xcc] (z 5) zmms flags, Host.addrOf 0⟩ :=
-  eventually_mono (Encode.generated_fast 0 hk0 hf0 (z 8) v0 v1 [0xaa, 0xbb, 0xcc] (z 8) (z 8) rfl h_v0 h_v1 rfl rfl (cs0 v0 v1 [0xaa, 0xbb, 0xcc] (z 5) zmms flags) 0 0 rfl (z 8) (z 8) (z 16) (z 16) (z 16) (z 16) rfl rfl rfl rfl rfl rfl (Eq ((z 32).At (0x10020 : BitVec 64)) ⋆ Eq ((z 56).At (0x10040 : BitVec 64)) ⋆ Eq ((z 8).At (0x100c8 : BitVec 64)) ⋆ Eq ((z 5).At (0x100eb : BitVec 64))) 
+      ⟨initial_state v0 v1 [0xaa, 0xbb, 0xcc] (zeros 5) zmms flags, Host.addrOf 0⟩ :=
+  eventually_mono (Encode.generated_fast 0 placed_at_0 labels_fresh_at_0 (zeros 8) v0 v1 [0xaa, 0xbb, 0xcc] (zeros 8) (zeros 8) rfl h_v0 h_v1 rfl rfl (initial_state v0 v1 [0xaa, 0xbb, 0xcc] (zeros 5) zmms flags) 0 0 rfl (zeros 8) (zeros 8) (zeros 16) (zeros 16) (zeros 16) (zeros 16) rfl rfl rfl rfl rfl rfl (Eq ((zeros 32).At (0x10020 : BitVec 64)) ⋆ Eq ((zeros 56).At (0x10040 : BitVec 64)) ⋆ Eq ((zeros 8).At (0x100c8 : BitVec 64)) ⋆ Eq ((zeros 5).At (0x100eb : BitVec 64))) 
     (by
-      have H : Eq ((block v0 v1 [0xaa, 0xbb, 0xcc] (z 5)).At (0x10000 : BitVec 64))
-        (mem v0 v1 [0xaa, 0xbb, 0xcc] (z 5)) := rfl
-      wit_split [h_v0, h_v1]
-      simp only [cs0, w, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
+      have H : Eq ((block v0 v1 [0xaa, 0xbb, 0xcc] (zeros 5)).At (0x10000 : BitVec 64))
+        (mem v0 v1 [0xaa, 0xbb, 0xcc] (zeros 5)) := rfl
+      witness_split [h_v0, h_v1]
+      simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil, List.length_cons,
         List.length_replicate, show (UInt64.ofNat 3).toBitVec = 3#64 from rfl] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
       exact H)
-    (by simp [cs0]) (by simp [cs0]) (by simp [cs0]) (by simp [cs0]))
+    (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 
 example (z' : RegZmms) (f : StatusFlags) :=

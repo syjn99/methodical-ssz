@@ -21,7 +21,7 @@ open Machine Runtime
 
 namespace Codec.Segment
 
-def rejHead (fnl l0 lmore : String) (F fB : Int64) : Program :=
+def sizeRejectHead (fnl l0 lmore : String) (F fB : Int64) : Program :=
   [Kraken.Directive.label fnl,
    Kraken.Directive.label l0,
    Kraken.Directive.instr (Instr.regular (Width.W64) (Width.W64) (Operation.cmp (RegOrMem.reg (Reg.low (Reg64.rsp) (Width.W64))) (Operand.regOrMem (RegOrMem.mem { base := some (RegOrRip.reg (Reg64.r14)), idx := none, disp := ConstExpr.int64 16 })))),
@@ -31,11 +31,11 @@ def rejHead (fnl l0 lmore : String) (F fB : Int64) : Program :=
    Kraken.Directive.instr (Instr.regular (Width.W64) (Width.W64) (Operation.sub (RegOrMem.reg (Reg.low (Reg64.rsp) (Width.W64))) (Operand.imm (ConstExpr.int64 F)))),
    Kraken.Directive.instr (Instr.regular (Width.W64) (Width.W64) (Operation.mov (RegOrMem.mem { base := some (RegOrRip.reg (Reg64.rsp)), idx := none, disp := ConstExpr.int64 fB }) (Operand.regOrMem (RegOrMem.reg (Reg.low (Reg64.rbx) (Width.W64))))))]
 
-def rejCmp (sz : Int64) (lerr : String) : Program :=
+def sizeRejectCompare (sz : Int64) (lerr : String) : Program :=
   [Kraken.Directive.instr (Instr.regular (Width.W64) (Width.W64) (Operation.cmp (RegOrMem.reg (Reg.low (Reg64.rcx) (Width.W64))) (Operand.imm (ConstExpr.int64 sz)))),
    Kraken.Directive.instr (Instr.regular (Width.W64) (Width.W64) (Operation.jcc (CondCode.nz) lerr))]
 
-def rejErr (lerr : String) (F : Int64) : Program :=
+def sizeRejectError (lerr : String) (F : Int64) : Program :=
   [Kraken.Directive.label lerr,
    Kraken.Directive.instr (Instr.regular (Width.W64) (Width.W64) (Operation.mov (RegOrMem.reg (Reg.low (Reg64.rax) (Width.W64))) (Operand.regOrMem (RegOrMem.mem { base := some (RegOrRip.rip), idx := none, disp := ConstExpr.sub (ConstExpr.label "ssz.ErrSize") (ConstExpr.after_current_instruction) })))),
    Kraken.Directive.instr (Instr.regular (Width.W64) (Width.W64) (Operation.mov (RegOrMem.reg (Reg.low (Reg64.rbx) (Width.W64))) (Operand.regOrMem (RegOrMem.mem { base := some (RegOrRip.rip), idx := none, disp := ConstExpr.sub (ConstExpr.add (ConstExpr.label "ssz.ErrSize") (ConstExpr.int64 8)) (ConstExpr.after_current_instruction) })))),
@@ -47,10 +47,10 @@ variable [Host]
 
 /-- **Size reject (machine), any frame and size**: `len(buf) ≠ sz`: the decoder returns the two words `e0`, `e1`
 of `ssz.ErrSize`; the statement of `sc_reject_size_stmt` with the frame size `F` and the size `sz`. -/
-theorem rej_size_g (F sz : Nat) (hF : F < 2 ^ 31) (hsz : sz < 2 ^ 31) (fnl l0 lmore lerr : String) (k jC jE : Nat)
-    (hA : (rejHead fnl l0 lmore (OfNat.ofNat F) (OfNat.ofNat (F + 24))).IsInfixAt Host.prog k)
-    (g : Glue (k + 8) jC) (hC : (rejCmp (OfNat.ofNat sz) lerr).IsInfixAt Host.prog jC)
-    (hE : (rejErr lerr (OfNat.ofNat F)).IsInfixAt Host.prog jE) (hle : label lerr = Host.addrOf jE)
+theorem reject_size_any_frame (F sz : Nat) (hF : F < 2 ^ 31) (hsz : sz < 2 ^ 31) (fnl l0 lmore lerr : String) (k jC jE : Nat)
+    (hA : (sizeRejectHead fnl l0 lmore (OfNat.ofNat F) (OfNat.ofNat (F + 24))).IsInfixAt Host.prog k)
+    (g : Glue (k + 8) jC) (hC : (sizeRejectCompare (OfNat.ofNat sz) lerr).IsInfixAt Host.prog jC)
+    (hE : (sizeRejectError lerr (OfNat.ofNat F)).IsInfixAt Host.prog jE) (hle : label lerr = Host.addrOf jE)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
     (R : DataMem → Prop)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -73,12 +73,12 @@ theorem rej_size_g (F sz : Nat) (hF : F < 2 ^ 31) (hsz : sz < 2 ^ 31) (fnl l0 lm
   simp only [ElfData.PrysmTarget.sszErrSize_addr_eq] at h_mem hguard hlen ⊢
   have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; simp only [UInt64.size] at *
   have hFv : (OfNat.ofNat F : BitVec 64).toNat = F := by show (BitVec.ofNat 64 F).toNat = F; simp; omega
-  kat hA rejHead 0
-  kat hA rejHead 1
-  kat hA rejHead 2
+  step_directive hA sizeRejectHead 0
+  step_directive hA sizeRejectHead 1
+  step_directive hA sizeRejectHead 2
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hA rejHead 3
+  unfold_step
+  step_directive hA sizeRejectHead 3
   split
   · rename_i h; exfalso
     simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
@@ -86,21 +86,21 @@ theorem rej_size_g (F sz : Nat) (hF : F < 2 ^ 31) (hsz : sz < 2 ^ 31) (fnl l0 lm
     · apply h; omega
     · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
   simp only [Effects.All]
-  kat hA rejHead 4
+  step_directive hA sizeRejectHead 4
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hA rejHead 5
-  kat hA rejHead 6
-  kat hA rejHead 7
+  unfold_step
+  step_directive hA sizeRejectHead 5
+  step_directive hA sizeRejectHead 6
+  step_directive hA sizeRejectHead 7
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
+  unfold_step
   apply glue_nop g
-  kat hC rejCmp 0
-  kat hC rejCmp 1
+  step_directive hC sizeRejectCompare 0
+  step_directive hC sizeRejectCompare 1
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
@@ -108,22 +108,22 @@ theorem rej_size_g (F sz : Nat) (hF : F < 2 ^ 31) (hsz : sz < 2 ^ 31) (fnl l0 lm
     have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this ⊢; omega
   simp only [Effects.All]
   rw [hle]
-  kat hE rejErr 0
-  kat hE rejErr 1
+  step_directive hE sizeRejectError 0
+  step_directive hE sizeRejectError 1
   apply load_step _ _ _ _ (Int.toBytes 8 e0.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hE rejErr 2
+  unfold_step
+  step_directive hE sizeRejectError 2
   apply load_step _ _ _ _ (Int.toBytes 8 e1.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hE rejErr 3
-  kat hE rejErr 4
+  unfold_step
+  step_directive hE sizeRejectError 3
+  step_directive hE sizeRejectError 4
   apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_sub, hFv]; omega) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hE rejErr 5
+  unfold_step
+  step_directive hE sizeRejectError 5
   apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_sub, hFv]; omega)
     (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩

@@ -95,10 +95,10 @@ theorem u64_toBitVec_ofNat (n : Nat) : (UInt64.ofNat n).toBitVec = BitVec.ofNat 
 /-- Split `H : Eq ((block ..).At a) m` into one `Eq (chunk.At addr)` per chunk and
 normalize the addresses; the terms are the length hypotheses of the chunks.
 Hygiene is off: `H` and `block` are the witness file's names. -/
-syntax "wit_split" (" [" term,* "]")? : tactic
+syntax "witness_split" (" [" term,* "]")? : tactic
 set_option hygiene false in
 macro_rules
-  | `(tactic| wit_split $[[$hs,*]]?) => do
+  | `(tactic| witness_split $[[$hs,*]]?) => do
     let hs := (hs.map (·.getElems)).getD #[]
     let ls ← hs.mapM fun h => `(Lean.Parser.Tactic.simpLemma| $h:term)
     let l1 := #[← `(Lean.Parser.Tactic.simpLemma| List.length_append), ← `(Lean.Parser.Tactic.simpLemma| List.length_replicate),

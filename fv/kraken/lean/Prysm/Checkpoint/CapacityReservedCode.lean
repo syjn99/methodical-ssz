@@ -19,6 +19,6 @@ clean rebuild of the `Prysm.Checkpoint.CapacityReserved` modules; its sha256 is 
 namespace Prysm.Checkpoint.CapacityReserved.Code
 
 /-- `(*v1alpha1.Checkpoint).MarshalSSZTo` with the 40-byte reserve (`phase0.ssz.go:1959`). -/
-def marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/opt-r1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+def marshalSSZTo : Program := include_x64_code "../prysm/go1.26.10/opt-r1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
 
 end Prysm.Checkpoint.CapacityReserved.Code

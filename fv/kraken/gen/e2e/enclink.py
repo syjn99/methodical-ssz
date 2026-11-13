@@ -38,8 +38,8 @@ CANDS = [TARGET, f"{V1A1}.(*DataColumnSidecarsByRangeRequest).MarshalSSZTo",
          f"{V1A1}.(*IndexedAttestation).MarshalSSZTo"]
 CLASS = dict(lvlink.CLASS)
 CLASS.update({
-    "runtime.growslice": ("b", "GrowsliceC Heap typeUint8_addr 1 S (esz 1; num 32, 4, 8)"),
-    "runtime.memmove": ("b", "MemmoveC S (n = 32)"),
+    "runtime.growslice": ("b", "GrowsliceContract Heap typeUint8_addr 1 S (esz 1; num 32, 4, 8)"),
+    "runtime.memmove": ("b", "MemmoveContract S (n = 32)"),
     "runtime.morestack_noctxt.abi0": ("c", "premise guard < rsp - 8"),
     f"{V1A1}.(*AttestationData).MarshalSSZTo": ("FORBIDDEN", "forbidden target (task brief)"),
 })

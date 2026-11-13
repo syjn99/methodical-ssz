@@ -41,7 +41,7 @@ theorem _root_.Prysm.Deposit_Data.Decode.example_step_WithdrawalCredentials_seg 
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 73) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -58,15 +58,15 @@ theorem _root_.Prysm.Deposit_Data.Decode.example_step_WithdrawalCredentials_seg 
           ⋆ Eq (root.At aSrc)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 47)⟩ := by
-  have hqA := Codec.win hk 47 10
-  have heA : Codec.eraseNop ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 47).take 10) = Codec.bytesDecHeadR Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" 48 40 48 := by rfl
-  have hqB := Codec.win hk 61 12
-  have heB : Codec.eraseNop ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 61).take 12) = Codec.bytesDecMidR Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_154" 48 56 24 32 40 48 48 := by rfl
-  have hjl : k + 61 + Codec.nopPos ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 61).take 12) 0 = k + 61 := by rfl
+  have hqA := Codec.window_infix_at hk 47 10
+  have heA : Codec.eraseNop ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 47).take 10) = Codec.bytesDecHeadRegister Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" 48 40 48 := by rfl
+  have hqB := Codec.window_infix_at hk 61 12
+  have heB : Codec.eraseNop ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 61).take 12) = Codec.bytesDecMidRegisters Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_154" 48 56 24 32 40 48 48 := by rfl
+  have hjl : k + 61 + Codec.nonNopIndex ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 61).take 12) 0 = k + 61 := by rfl
   have hl := Machine.label_at' hk hf (j := 61)
     (by simp only [Prysm.Deposit_Data.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.Deposit_Data.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hjm : k + 61 + Codec.nopPos ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 61).take 12) 6 = k + 67 := by rfl
+  have hjm : k + 61 + Codec.nonNopIndex ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 61).take 12) 6 = k + 67 := by rfl
   have hend : k + 61 + ((Prysm.Deposit_Data.Code.unmarshalSSZ.drop 61).take 12).length = k + 73 := by rfl
   with_reducible exact Codec.bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) (k + 61) (k + 67) (k + 73) hqA heA hqB heB hjl hl hjm hend
 theorem _root_.Prysm.Deposit_Data.Decode.example_step_WithdrawalCredentials_seg_kind : ∀ (h : Host), type_of% (@Prysm.Deposit_Data.Decode.example_step_WithdrawalCredentials_seg h) = @Codec.bytesDecSegKindWindow h 32 Prysm.Deposit_Data.Code.unmarshalSSZ Reg64.rdx 47 67 73 48 56 24 32 40 48 48 := by

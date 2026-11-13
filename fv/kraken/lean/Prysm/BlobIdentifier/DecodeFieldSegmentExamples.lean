@@ -38,7 +38,7 @@ theorem _root_.Prysm.BlobIdentifier.Decode.example_field_BlockRoot_seg (k : Nat)
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At bf)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 26 + 11) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -57,13 +57,13 @@ theorem _root_.Prysm.BlobIdentifier.Decode.example_field_BlockRoot_seg (k : Nat)
       ⟨s, Host.addrOf (k + 13)⟩ := by
   have hA := Codec.infix_sub (q := Codec.bytesDecHead 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_75" 48 16 24) 13 hk
     (by simp only [Prysm.BlobIdentifier.Code.unmarshalSSZ, Codec.bytesDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := Codec.infix_sub (q := Codec.bytesDecMidZ 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_b2" 48 56 24 8 16 24) 26 hk
-    (by simp only [Prysm.BlobIdentifier.Code.unmarshalSSZ, Codec.bytesDecMidZ, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.bytesDecMidOffsetZero 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_b2" 48 56 24 8 16 24) 26 hk
+    (by simp only [Prysm.BlobIdentifier.Code.unmarshalSSZ, Codec.bytesDecMidOffsetZero, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 26)
     (by simp only [Prysm.BlobIdentifier.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Prysm.BlobIdentifier.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact Codec.bytesdec_seg_z 32 (Or.inl rfl) _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
-theorem _root_.Prysm.BlobIdentifier.Decode.example_field_BlockRoot_seg_kind : ∀ (h : Host), type_of% (@Prysm.BlobIdentifier.Decode.example_field_BlockRoot_seg h) = @Codec.bytesDecSegZKind h 32 Prysm.BlobIdentifier.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by
+  with_reducible exact Codec.bytesdec_seg_offset_zero 32 (Or.inl rfl) _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
+theorem _root_.Prysm.BlobIdentifier.Decode.example_field_BlockRoot_seg_kind : ∀ (h : Host), type_of% (@Prysm.BlobIdentifier.Decode.example_field_BlockRoot_seg h) = @Codec.bytesDecSegOffsetZeroKind h 32 Prysm.BlobIdentifier.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in

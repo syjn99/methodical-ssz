@@ -32,15 +32,15 @@ structure SszValue where
   stateRoots : Vector (Vector UInt8 32) 8192
 
 /-- The 8192 block roots as byte lists, in order. -/
-def SszValue.brs (g : SszValue) : List (List UInt8) := g.blockRoots.toList.map (·.toList)
+def SszValue.blockRootBytes (g : SszValue) : List (List UInt8) := g.blockRoots.toList.map (·.toList)
 /-- The 8192 state roots as byte lists, in order. -/
-def SszValue.srs (g : SszValue) : List (List UInt8) := g.stateRoots.toList.map (·.toList)
+def SszValue.stateRootBytes (g : SszValue) : List (List UInt8) := g.stateRoots.toList.map (·.toList)
 
 def SszValue.toValue (g : SszValue) : Value :=
   .seq [.seq (g.blockRoots.toList.map fun p => .bytes p.toArray),
         .seq (g.stateRoots.toList.map fun p => .bytes p.toArray)]
 
 /-- `blockRoots[0] ‖ … ‖ blockRoots[8191] ‖ stateRoots[0] ‖ … ‖ stateRoots[8191]`. -/
-def SszValue.encode (g : SszValue) : Array UInt8 := g.brs.flatten.toArray ++ g.srs.flatten.toArray
+def SszValue.encode (g : SszValue) : Array UInt8 := g.blockRootBytes.flatten.toArray ++ g.stateRootBytes.flatten.toArray
 
 end Prysm.HistoricalBatch

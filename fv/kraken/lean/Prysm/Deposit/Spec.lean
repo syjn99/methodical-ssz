@@ -15,7 +15,7 @@ open EthLib.Serialization.Ssz Spec Codec.Segment
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem desc_fixedSize : desc.fixedSize = some 1240 := by rfl
 
-theorem proofs_flatten_length (g : SszValue) : g.proofs.flatten.length = 1056 := vN_flatten_length 33 g.proof
+theorem proofs_flatten_length (g : SszValue) : g.proofs.flatten.length = 1056 := bytes32_vector_flatten_length 33 g.proof
 
 theorem encode_size (g : SszValue) : (SszValue.encode g).size = 1240 := by
   rw [SszValue.encode, Array.size_append, List.size_toArray, proofs_flatten_length, Prysm.Deposit_Data.SszValue.enc_size]
@@ -41,8 +41,8 @@ theorem toValue_surjective (v : Value) (h : Value.fits desc v = true) : ∃ g : 
 /-- **`serialize g = proof[0] ‖ … ‖ proof[32] ‖ data`.** -/
 theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszValue.encode g) := by
   obtain ⟨pr, d⟩ := g
-  have hl1 := vN_flatten_length 33 pr
-  have hs1 := vN_serialize 33 (by decide) pr
+  have hl1 := bytes32_vector_flatten_length 33 pr
+  have hs1 := bytes32_vector_serialize 33 (by decide) pr
   have hs2 := Prysm.Deposit_Data.SszValue.serialize_eq d
   have hl2 := Prysm.Deposit_Data.SszValue.enc_size d
   simp only [desc, SszValue.toValue, serialize, serializeStruct, serializeFields] at hs1 ⊢
@@ -69,7 +69,7 @@ theorem spec_accepts_iff (bs : Array UInt8) : (∃ v, deserialize desc bs = .ok 
     obtain ⟨g, rfl, hb⟩ := accepted_is_encode hd
     rw [hb]; exact encode_size g
   · intro h
-    obtain ⟨pr, hpr⟩ := vN_of_bytes 33 (bs.extract 0 1056) (by simp; omega)
+    obtain ⟨pr, hpr⟩ := bytes32_vector_of_bytes 33 (bs.extract 0 1056) (by simp; omega)
     obtain ⟨vd, hvd⟩ := (Prysm.Deposit_Data.SszValue.spec_accepts_iff (bs.extract 1056 1240)).mpr (by simp; omega)
     obtain ⟨d, -, hd⟩ := Prysm.Deposit_Data.SszValue.accepted_is_encoding hvd
     have e : bs = SszValue.encode ⟨pr, d⟩ := by

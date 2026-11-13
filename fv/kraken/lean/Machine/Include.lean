@@ -4,7 +4,7 @@ public meta import Kraken.X64.Parser
 public meta import Lean
 
 /-!
-`include_x64_rt "file.S"`: elaborate a file with Kraken's runtime parser and
+`include_x64_code "file.S"`: elaborate a file with Kraken's runtime parser and
 turn the result into a term with the `Lean.ToExpr` instances that Kraken derives
 for `Directive`.
 
@@ -13,7 +13,7 @@ Our wrapper, not a Kraken change.
 
 open Lean Elab Term
 
-elab "include_x64_rt" path:str : term => do
+elab "include_x64_code" path:str : term => do
   let s ← IO.FS.readFile path.getString
   match Kraken.X64.Parser.parse (Kraken.Parser.stripDirectives s) with
   | .ok p => return toExpr p
@@ -22,7 +22,7 @@ elab "include_x64_rt" path:str : term => do
 /-!
 `data_include id`: the ELF data item `id` (`link/data.py`, format in
 `link/README.md` section 5). Reads `../link/out/data/<id>.data` (relative to `fv/kraken/lean`,
-as `include_x64_rt`) and elaborates, in the current namespace,
+as `include_x64_code`) and elaborates, in the current namespace,
 
 - `def <id>_addr [Host] : BitVec 64 := (label "<label>" + <off>).toBitVec`
   (without `+ 0` for offset 0);
@@ -32,7 +32,7 @@ as `include_x64_rt`) and elaborates, in the current namespace,
 
 The command is Lean text built from the file and elaborated as written; the
 file is a Lake input of the library that reads it (`lakefile.toml`), so a change
-rebuilds every proof. TRUSTED like `include_x64_rt`: this reader. That the
+rebuilds every proof. TRUSTED like `include_x64_code`: this reader. That the
 file is the ELF's bytes is `link/check.py`'s data check.
 -/
 

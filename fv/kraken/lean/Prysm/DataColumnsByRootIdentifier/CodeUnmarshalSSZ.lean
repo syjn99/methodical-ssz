@@ -13,6 +13,6 @@ The directory is a Lake `input_dir` of the `Prysm` library (`lakefile.toml`).
 namespace Prysm.DataColumnsByRootIdentifier.Code
 
 /-- `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ` (protoc type, `fulu.ssz.go:1778`). -/
-def unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S"
+def unmarshalSSZ : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S"
 
 end Prysm.DataColumnsByRootIdentifier.Code

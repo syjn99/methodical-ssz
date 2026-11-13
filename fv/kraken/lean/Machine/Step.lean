@@ -30,7 +30,7 @@ theorem rip_addr' (u l : Int64) :
   rw [← this, Int64.toInt_sub]
 
 /-- `disp(%base,%index,scale)`. -/
-theorem ofInt_sib (x y : BitVec 64) (c : Nat) (d : Int64) :
+theorem ofInt_base_index_scale (x y : BitVec 64) (c : Nat) (d : Int64) :
     BitVec.ofInt 64 (x.toInt + y.toInt * (c : Int) + d.toInt) = x + y * BitVec.ofNat 64 c + d.toBitVec := by
   rw [BitVec.ofInt_add, BitVec.ofInt_add, BitVec.ofInt_mul, BitVec.ofInt_toInt, BitVec.ofInt_toInt,
     Int64.toInt, BitVec.ofInt_toInt, BitVec.ofInt_natCast]
@@ -118,26 +118,26 @@ theorem estep {k : Nat} {d : Directive} {p : Program} (hdp : (d :: p).IsInfixAt 
 end Machine
 
 /-- Unfold one instruction and normalize addresses; stops at `MachineData.load`/`store`. -/
-macro "kunfold" : tactic => `(tactic| simp only [Directive.interp, Instr.interp, Operation.interp,
+macro "unfold_step" : tactic => `(tactic| simp only [Directive.interp, Instr.interp, Operation.interp,
   Operand.interp, RegOrMem.interp, RelRegOrMem.interp, Machine.jmp_rel, ShiftCountExpr.interpMasked, ShiftCountExpr.interp, AddrExpr.interp, ConstExpr.interp, MachineData.set,
   MachineData.setReg, Effects.All, Width.bits, Width.bytes, Width.bytesv, Int.add_zero, BitVec.setWidth_eq,
   Reg64s.get, Reg64s.get64, Reg64s.set, Reg64s.set64, Reg.base, Reg.offset, BitVec.toAddressSize,
-  BitVec.take, BitVec.drop, BitVec.signed, Machine.ofInt_sib, Machine.ofInt_ofBytes_toBytes64, Machine.ofInt_toInt_add, Machine.ofInt_int64, Machine.extractLsb'_full,
+  BitVec.take, BitVec.drop, BitVec.signed, Machine.ofInt_base_index_scale, Machine.ofInt_ofBytes_toBytes64, Machine.ofInt_toInt_add, Machine.ofInt_int64, Machine.extractLsb'_full,
   Nat.sub_zero, Int64.toBitVec_ofNat, Int64.toBitVec_neg, UInt64.toBitVec_ofNat, BitVec.add_zero, Machine.add_ofNat_zero, Machine.add_lit_zero, Machine.add_ofInt_zero, Machine.add_int64_zero, Machine.rip_addr, Machine.rip_addr'])
 
 /-- Step directive `n` of fragment `prog` (at index `k`, fact `hk`): the fragment
 suffix is computed by `simp` (definitional unfolding of `List.drop` on a long
 literal list exceeds the recursion limit near n = 44). -/
-macro "kat " hk:term:max prog:ident n:num : tactic => `(tactic| (
+macro "step_directive " hk:term:max prog:ident n:num : tactic => `(tactic| (
   have hkat := Machine.isInfixAt_drop $hk $n
   simp only [$prog:ident, List.drop_succ_cons, List.drop_zero] at hkat
   apply Machine.estep hkat
   clear hkat
-  kunfold))
+  unfold_step))
 
-/-- `shl $n` on a 64-bit register after `kunfold`: decide the count, introduce the
+/-- `shl $n` on a 64-bit register after `unfold_step`: decide the count, introduce the
 undefined AF and OF flags. -/
-macro "kshl64 " n:num : tactic => `(tactic| (
+macro "shift_left64 " n:num : tactic => `(tactic| (
   split
   case isTrue h => exact absurd h (by decide)
   intro _
@@ -147,7 +147,7 @@ macro "kshl64 " n:num : tactic => `(tactic| (
 
 /-- Address equation by `toNat` and `omega`, looking at the goal only (`bv_omega`
 simplifies every hypothesis and hits the recursion limit on large memory facts). -/
-macro "kaddr" : tactic => `(tactic| (
+macro "address_equation" : tactic => `(tactic| (
   apply BitVec.eq_of_toNat_eq
   simp only [BitVec.toNat_add, BitVec.toNat_sub, BitVec.toNat_neg, BitVec.toNat_ofNat, BitVec.ofNat_eq_ofNat,
     UInt64.toNat_toBitVec, UInt64.toBitVec_add, UInt64.toBitVec_ofNat]

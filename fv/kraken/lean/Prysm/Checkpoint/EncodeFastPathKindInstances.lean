@@ -2,7 +2,7 @@ import Codec.Kind.EncodeFastPathAnyFrame
 import Prysm.Checkpoint.EncodeFastPath
 
 /-!
-# Tie of `encFastKindN` to the hand-written encoder fast-path statement of Checkpoint
+# Tie of `encFastPathKindAnyFrame` to the hand-written encoder fast-path statement of Checkpoint
 
 `encodeLayout` is the layout of the hand statement `Encode.fast_path`, with the stack chunks in its order.
 `Encode.fast_path_of_kind`: the kind instance implies the hand statement; the converse does not hold as stated.
@@ -15,19 +15,19 @@ namespace Prysm.Checkpoint
 
 /-- Checkpoint `MarshalSSZTo`: frame `0x68`, small guard. Stack chunks `fp s2 l16 l24 l32 t40 t30 rslot` (the
 order of the hand statement). -/
-def encodeLayout : EncLayout where
-  st := true
+def encodeLayout : EncoderFrameLayout where
+  stateWord := true
   frame := 104
-  gd := 0
-  rt := true
-  nstk := 8
-  lens := [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 16), (6, 16), (7, 8)]
-  pre := [.at (.dn 8) (.orig 0), .at (.up 16) (.orig 1), .at (.dn 16) (.orig 2), .at (.dn 24) (.orig 3),
-    .at (.dn 32) (.orig 4), .at (.dn 48) (.orig 6), .at (.dn 64) (.orig 5), .at (.dn 120) (.orig 7), .lo .scr]
-  exs := [.n 8, .n 16, .lo]
-  post := [.at (.dn 8) (.reg .rbp), .at (.up 16) (.reg .rbx), .at (.dn 16) (.reg .rbx), .at (.dn 24) (.reg .rdi),
-    .at (.dn 32) (.len 40), .at (.dn 48) (.ex 1), .at (.dn 64) (.fld 0), .at (.dn 56) (.ex 0),
-    .at (.dn 120) (.ret 63), .lo (.ex 2)]
+  guardAddend := 0
+  callsMemmove := true
+  stackChunkCount := 8
+  stackChunkLengths := [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 16), (6, 16), (7, 8)]
+  pre := [.at (.below 8) (.original 0), .at (.above 16) (.original 1), .at (.below 16) (.original 2), .at (.below 24) (.original 3),
+    .at (.below 32) (.original 4), .at (.below 48) (.original 6), .at (.below 64) (.original 5), .at (.below 120) (.original 7), .low .scratch]
+  existentials := [.fixed 8, .fixed 16, .low]
+  post := [.at (.below 8) (.reg .rbp), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 24) (.reg .rdi),
+    .at (.below 32) (.len 40), .at (.below 48) (.existential 1), .at (.below 64) (.field 0), .at (.below 56) (.existential 0),
+    .at (.below 120) (.ret 63), .low (.existential 2)]
 
 variable [Host]
 
@@ -37,7 +37,7 @@ set_option maxRecDepth 100000 in
 names a 32-byte chunk `ctl` at `rax + 40` (in the kind it is part of `R`). The kind instance is the stronger
 statement; the converse does not hold as stated. -/
 theorem Encode.fast_path_of_kind
-    (H : encFastKindN Prysm.Checkpoint.Code.marshalSSZTo Prysm.Checkpoint.encodeLayout [.u64, .bytes 32]) :
+    (H : encFastPathKindAnyFrame Prysm.Checkpoint.Code.marshalSSZTo Prysm.Checkpoint.encodeLayout [.u64, .bytes 32]) :
     type_of% (@Prysm.Checkpoint.Encode.fast_path ‹Host›) := by
   intro k hk hf cst e8 cC ctl root pre d0 d1 hcst he8 hcC hctl hroot hd0 hd1 p s ra guard hpre
     fp s2 l16 l24 l32 t40 t30 rslot hfp h2 hl16 hl24 hl32 ht40 ht30 hrs R S scratch hsc

@@ -4,17 +4,17 @@ import Machine.Frame
 /-!
 # The contract form of `runtime.newobject`
 
-`NewobjectC Heap ty sz S` is the hypothesis about the code at the label `runtime.newobject`, in the form of
-`MakesliceC` (`Runtime/Contracts.lean`).
+`NewobjectContract Heap ty sz S` is the hypothesis about the code at the label `runtime.newobject`, in the form of
+`MakesliceContract` (`Runtime/Contracts.lean`).
 -/
 
 open Machine Runtime
 variable [Host]
 
-/-- `runtime.newobject(typ *_type) unsafe.Pointer`: like `MakesliceC` for one
+/-- `runtime.newobject(typ *_type) unsafe.Pointer`: like `MakesliceContract` for one
 object of `sz` bytes (zeroed, carved from the heap); the spill area is the
 8-byte slot of its one register argument; r14 and rbp are kept. -/
-def _root_.Runtime.NewobjectC (Heap : Nat → DataMem → Prop) (ty : BitVec 64) (sz S : Nat) : Prop :=
+def _root_.Runtime.NewobjectContract (Heap : Nat → DataMem → Prop) (ty : BitVec 64) (sz S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (avail : Nat) (stk spill : List UInt8) (F : DataMem → Prop),
     st.regs.rax.toBitVec = ty → sz ≤ avail → stk.length = S → spill.length = 8 →
     (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)

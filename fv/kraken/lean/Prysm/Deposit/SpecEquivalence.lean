@@ -24,8 +24,8 @@ theorem checker_wellFormed : checkerDesc.wellFormed = .ok () := by rfl
 
 theorem serialize_checker (g : SszValue) : serialize checkerDesc g.toValue = .ok (SszValue.encode g) := by
   obtain ⟨pr, d⟩ := g
-  have hl1 := vN_flatten_length 33 pr
-  have hs1 := vN_serialize 33 (by decide) pr
+  have hl1 := bytes32_vector_flatten_length 33 pr
+  have hs1 := bytes32_vector_serialize 33 (by decide) pr
   have hs2 := Prysm.Deposit_Data.SszValue.serialize_eq_checker d
   have hl2 := Prysm.Deposit_Data.SszValue.enc_size d
   simp only [Prysm.Deposit_Data.checkerDesc] at hs2

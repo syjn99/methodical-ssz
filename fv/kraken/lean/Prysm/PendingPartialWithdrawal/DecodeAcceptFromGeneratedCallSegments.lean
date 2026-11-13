@@ -8,7 +8,7 @@ Hand composition (not generator output): the chain of `Prysm/PendingPartialWithd
 the generated theorem of `Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean` (`decoder --call-segments`, raw output) whose declared type is that instance
 (its `_kind`): `pw_g3dec_Index_arg` / `_call`, `pw_g3dec_WithdrawableEpoch_arg1`, `pw_g3dec_Amount_seg`,
 `pw_g3dec_WithdrawableEpoch_arg2` / `_call`. The code facts come from the generated theorems; head
-(`Decode.head`, 0–14) and epilogue (`Decode.epi`, 89–91) stay hand steps of `Prysm/PendingPartialWithdrawal/DecodeAccept.lean` (frame `0x48`). The
+(`Decode.head`, 0–14) and epilogue (`Decode.epilogue`, 89–91) stay hand steps of `Prysm/PendingPartialWithdrawal/DecodeAccept.lean` (frame `0x48`). The
 statement is the hand statement `Decode.accept_statement` (`Prysm/Deposit_Data/Statements.lean`, unchanged). In-sample (development data).
 -/
 
@@ -24,8 +24,8 @@ statement = the hand statement `Decode.accept_statement` (unchanged). -/
 theorem Decode.accept_from_generated_call_segments : Decode.accept_statement := by
   intro k hk hf kV hkV hfV kE hkE hfE in0 in1 in2 hin0 hin1 hin2 s ra guard
     fp s1 s2 s4 sp1 rslot lo ast a8 a16 a24 hfp h1 h2 h4 hsp1 hrs hlo hast ha8 ha16 ha24 R h_mem hguard hlen
-  have hvi : U64CalleeAcc Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
-  have hep : U64CalleeAcc Prysm.Epoch.Code.unmarshalSSZLabel := Prysm.Epoch.Decode.accept_function_spec_holds kE hkE hfE
+  have hvi : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hep : U64CalleeAccept Prysm.Epoch.Code.unmarshalSSZLabel := Prysm.Epoch.Decode.accept_function_spec_holds kE hkE hfE
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 88).toNat := Decode.accept_guard _ _ hguard
@@ -93,7 +93,7 @@ theorem Decode.accept_from_generated_call_segments : Decode.accept_statement := 
   dsimp only at hpc7 hrax7 hrbx7 hrsp7 hrbp7 hr147 Hm7
   subst hpc7
   -- epilogue 89–91
-  refine eventually_trans _ _ _ _ (Decode.epi k hk (rsp.toBitVec - 80) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.epilogue k hk (rsp.toBitVec - 80) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra _ d7 hrsp7 (by ecancel)) ?_
   rintro ⟨d8, pc8⟩ ⟨hpc8, hrax8, hrbx8, hrsp8, hrbp8, hr148, hmem8⟩
   dsimp only at hpc8 hrax8 hrbx8 hrsp8 hrbp8 hr148 hmem8

@@ -4,7 +4,7 @@ Interface: the encoder lemmas; the reference texts are `lean/Prysm/*/EncodeFastP
 dataflow walk over the fast path of the `.S` file (head; per IR field its length test not taken, its capacity test
 passed with the growslice site SKIPPED, never stepped; the store / `memmove` commit; the epilogue with the frame
 test where present) produces ONE module: the head theorem, one theorem per IR field, the epilogue theorem, the
-fast-path theorem, each with its `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKindN`),
+fast-path theorem, each with its `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueKindAnyFrame`, `encFastPathKindAnyFrame`),
 and, on request, the identity with a hand statement (`_statement`).
 
 **Fast path only**: the premises are `len(dst) + SizeSSZ ≤ cap(dst)` and every byte-vector field of its exact
@@ -91,12 +91,12 @@ def read_S(path, tname):
 
 
 def parse_layout(src, name):
-    """A hand layout `def <name> : EncLayout where …` from a Lean source: the memory order of the `pre` stack chunks
+    """A hand layout `def <name> : EncoderFrameLayout where …` from a Lean source: the memory order of the `pre` stack chunks
     (offsets from the entry rsp) and their binder indices, plus the whole literal text of the def (normalised)."""
     short = name.rsplit(".", 1)[-1]
     txt = pathlib.Path(src).read_text()
-    m = (re.search(rf"\ndef _root_\.{re.escape(name)} : EncLayout where\n((?:  .*\n|    .*\n)+)", txt)
-         or re.search(rf"\ndef {re.escape(short)} : EncLayout where\n((?:  .*\n|    .*\n)+)", txt))
+    m = (re.search(rf"\ndef _root_\.{re.escape(name)} : EncoderFrameLayout where\n((?:  .*\n|    .*\n)+)", txt)
+         or re.search(rf"\ndef {re.escape(short)} : EncoderFrameLayout where\n((?:  .*\n|    .*\n)+)", txt))
     if not m:
         raise G6Refuse(f"hand layout {name} not found in {src}")
     body = m[1]
@@ -110,8 +110,8 @@ def parse_layout(src, name):
         elif l.startswith("    ") and cur:
             flds[cur] += " " + l.strip()
     pre = flds.get("pre", "")
-    order = [(int(n) * (1 if d == "up" else -1), int(i)) for d, n, i in
-             re.findall(r"\.at \(\.(up|dn) (\d+)\) \(\.orig (\d+)\)", pre)]
+    order = [(int(n) * (1 if d == "above" else -1), int(i)) for d, n, i in
+             re.findall(r"\.at \(\.(above|below) (\d+)\) \(\.original (\d+)\)", pre)]
     if not order:
         raise G6Refuse(f"hand layout {name}: no stack chunks parsed")
     norm = {k: re.sub(r"\s+", " ", v).strip() for k, v in flds.items()}
@@ -171,17 +171,17 @@ def v_len(v):
 def v_kind(v):
     k = v[0]
     if k == "orig":
-        return f".orig {v[2]}"
+        return f".original {v[2]}"
     if k == "reg":
         return f".reg .{v[1]}"
     if k == "ex":
-        return f".ex {v[2]}"
+        return f".existential {v[2]}"
     if k == "fld":
-        return f".fld {v[2]}"
+        return f".field {v[2]}"
     if k in ("len", "ret"):
         return f".{k} {v[1]}"
     if k == "scr":
-        return ".scr"
+        return ".scratch"
     raise G6Refuse(f"slot value {v} has no kind form")
 
 
@@ -225,7 +225,7 @@ def s_statement(v):
 
 def s_kind(v):
     if v[0] in ("rcv", "ptr", "cap"):
-        return "." + v[0]
+        return "." + {"rcv": "receiver"}.get(v[0], v[0])
     if v[0] == "len":
         return f".len {v[1]}"
     raise G6Refuse(f"live register value {v} has no kind form")
@@ -328,7 +328,7 @@ class Gen6:
     def win(self, i, n=1):
         a = i - self.pend
         self.pend = 0
-        return a, f"(k + {a}) (k + {i + n}) (win hk {a} {i + n - a}) (by rfl) (by rfl)"
+        return a, f"(k + {a}) (k + {i + n}) (window_infix_at hk {a} {i + n - a}) (by rfl) (by rfl)"
 
     def E(self, s):
         if self.emit:
@@ -342,8 +342,8 @@ class Gen6:
 
     def setreg(self, r, v, actual, tac="bv_omega"):
         self.reg[r] = v
-        self.E(f"apply kreg_eq Reg64.{r} {s_pf(v)} _ _ _ (by show ({actual} : BitVec 64) = {s_pf(v)}; {tac})")
-        self.E("kn")
+        self.E(f"apply register_value_rewrite Reg64.{r} {s_pf(v)} _ _ _ (by show ({actual} : BitVec 64) = {s_pf(v)}; {tac})")
+        self.E("normalize_registers")
 
     def slot_at(self, off, size):
         for i, (o, sz, v) in enumerate(self.slots):
@@ -432,7 +432,7 @@ class Gen6:
         if self.hand:
             mine = self.layout_fields()
             theirs = self.hand[2]
-            for k in ("st", "frame", "gd", "rt", "nstk", "lens", "pre", "exs", "post"):
+            for k in ("stateWord", "frame", "guardAddend", "callsMemmove", "stackChunkCount", "stackChunkLengths", "pre", "existentials", "post"):
                 if mine[k] != theirs.get(k):
                     raise G6Refuse(f"hand layout {self.hand[0]}: field {k} is {theirs.get(k)!r}, walked {mine[k]!r}")
 
@@ -464,17 +464,17 @@ class Gen6:
         n = self.npro
         self.H = "h_mem"
         self.mem_ = "mem"
-        pro = "encpro_s _ _ _" if self.gd == 0 else f"encpro_l _ _ _ ({-self.gd}) {self.gd}"
+        pro = "encoder_prologue_small_frame _ _ _" if self.gd == 0 else f"encoder_prologue_large_frame _ _ _ ({-self.gd}) {self.gd}"
         extra = "" if self.gd == 0 else " (by rfl)"
-        self.E(f"apply {pro} _ k (k + {n}) (win hk 0 {n}) (by rfl) (by rfl){extra} guard fp hfp _ _ _ "
+        self.E(f"apply {pro} _ k (k + {n}) (window_infix_at hk 0 {n}) (by rfl) (by rfl){extra} guard fp hfp _ _ _ "
                "(by dsimp only; ecancel) hguard")
         m, H = self.newH()
-        self.E(f"intro {m} {H} fl{self.hn}; kn; dsimp only at {H}")
+        self.E(f"intro {m} {H} fl{self.hn}; normalize_registers; dsimp only at {H}")
         self.setslot(-8, 8, ("reg", "rbp"))
         a = self.ins(n)
         _, w = self.win(n)
-        self.E(f"apply {'kstep_sub_i' if a[0] == 'subi' else 'kstep_add'} Reg64.rsp {lit(a[2])} _ {w}")
-        self.E("intro fl; kn")
+        self.E(f"apply {'step_sub_immediate' if a[0] == 'subi' else 'step_add_immediate'} Reg64.rsp {lit(a[2])} _ {w}")
+        self.E("intro fl; normalize_registers")
         self.reg["rsp"] = ("stk", -8)
         self.setreg("rsp", ("stk", -(F + 8)), f"(rsp.toBitVec - 8) {'-' if a[0] == 'subi' else '+'} {lit(a[2])}")
         i = n + 1
@@ -558,7 +558,7 @@ class Gen6:
         emit = self.emit
         if k == "label":
             _, w = self.win(i)
-            E(f"apply kstep_label _ _ {w}")
+            E(f"apply step_label _ _ {w}")
             return i + 1
         if k == "movrr":
             _, rd, rs = a
@@ -566,15 +566,15 @@ class Gen6:
             if rd in ("rsp", "rbp") or rs in ("rsp", "rbp"):
                 raise G6Refuse(f"move of {rs} to {rd} (frame registers)")
             _, w = self.win(i)
-            E(f"apply kstep_mov_rr Reg64.{rd} Reg64.{rs} _ {w}")
-            E("kn")
+            E(f"apply step_move_register Reg64.{rd} Reg64.{rs} _ {w}")
+            E("normalize_registers")
             self.reg[rd] = v
             return i + 1
         if k == "movi":
             _, rd, im = a
             _, w = self.win(i)
-            E(f"apply kstep_movi Reg64.{rd} {im} _ {w}")
-            E("kn")
+            E(f"apply step_move_immediate Reg64.{rd} {im} _ {w}")
+            E("normalize_registers")
             self.setreg(rd, ("imm", im), f"BitVec.zeroExtend 64 (BitVec.truncate 32 ({im} : BitVec 64))", "decide")
             return i + 1
         if k == "lea":
@@ -591,8 +591,8 @@ class Gen6:
             else:
                 raise G6Refuse(f"lea base {rb} = {v}")
             _, w = self.win(i)
-            E(f"apply kstep_lea Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
-            E("kn")
+            E(f"apply step_lea Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
+            E("normalize_registers")
             self.setreg(rd, nv, f"{s_pf(v)} + {lit(d)}")
             return i + 1
         if k == "addi":
@@ -604,8 +604,8 @@ class Gen6:
             if rd == "rsp" and (nv != ("stk", -8) or self.done != len(self.fields)):
                 raise G6Refuse("rsp changed other than by the frame release after the last field")
             _, w = self.win(i)
-            E(f"apply kstep_add Reg64.{rd} {lit(d)} _ {w}")
-            E("intro fl; kn")
+            E(f"apply step_add_immediate Reg64.{rd} {lit(d)} _ {w}")
+            E("intro fl; normalize_registers")
             self.setreg(rd, nv, f"{s_pf(v)} + {lit(d)}")
             return i + 1
         if k == "subi":
@@ -617,8 +617,8 @@ class Gen6:
             if rd == "rsp" and (nv != ("stk", -8) or self.done != len(self.fields)):
                 raise G6Refuse("rsp changed other than by the frame release after the last field")
             _, w = self.win(i)
-            E(f"apply kstep_sub_i Reg64.{rd} {lit(d)} _ {w}")
-            E("intro fl; kn")
+            E(f"apply step_sub_immediate Reg64.{rd} {lit(d)} _ {w}")
+            E("intro fl; normalize_registers")
             self.setreg(rd, nv, f"{s_pf(v)} - {lit(d)}")
             return i + 1
         if k in ("leaidx", "addrr"):
@@ -636,11 +636,11 @@ class Gen6:
             nv = ("dst", (v1 if v1[0] == "len" else v2)[1])
             _, w = self.win(i)
             if k == "leaidx":
-                E(f"apply kstep_lea_idx Reg64.{rd} Reg64.{r1} Reg64.{r2} _ {w}")
-                E("kn")
+                E(f"apply step_lea_indexed Reg64.{rd} Reg64.{r1} Reg64.{r2} _ {w}")
+                E("normalize_registers")
             else:
-                E(f"apply kstep_add_rr Reg64.{rd} Reg64.{r2} _ {w}")
-                E("intro fl; kn")
+                E(f"apply step_add_registers Reg64.{rd} Reg64.{r2} _ {w}")
+                E("intro fl; normalize_registers")
             self.setreg(rd, nv, f"{s_pf(v1)} + {s_pf(v2)}")
             return i + 1
         if k == "subrr":
@@ -656,14 +656,14 @@ class Gen6:
             else:
                 raise G6Refuse(f"sub from {rd} = {vd}")
             _, w = self.win(i)
-            E(f"apply kstep_sub_rr Reg64.{rd} Reg64.{rs} _ {w}")
-            E("intro fl; kn")
+            E(f"apply step_sub_registers Reg64.{rd} Reg64.{rs} _ {w}")
+            E("intro fl; normalize_registers")
             self.setreg(rd, nv, f"{s_pf(vd)} - {stk(sp)}")
             return i + 1
         if k == "xor":
             _, w = self.win(i)
-            E(f"apply kstep_xor32 Reg64.{a[1]} _ {w}")
-            E("intro fl; kn")
+            E(f"apply step_xor32 Reg64.{a[1]} _ {w}")
+            E("intro fl; normalize_registers")
             self.reg[a[1]] = ("imm", 0)
             return i + 1
         if k == "st":
@@ -692,10 +692,10 @@ class Gen6:
                 self.slots[j:j + 1] = [(off, 8, ("x15", z[1], "lo8", z[3])), (off + 8, 8, ("x15", z[1], "hi8", z[3]))]
             old = self.getslot(off, 8)
             _, w = self.win(i)
-            E(f"apply kstep_st Reg64.{rs} Reg64.{rb} {lit(d)} _ {w}")
-            E(f"  {s_pf(self.reg[rb])} {stk(off)} (by eb) {v_pf(old)} {v_len(old)} _ _ _ (by rfl) (by ecancel)")
+            E(f"apply step_store Reg64.{rs} Reg64.{rb} {lit(d)} _ {w}")
+            E(f"  {s_pf(self.reg[rb])} {stk(off)} (by encoder_address_equation) {v_pf(old)} {v_len(old)} _ _ _ (by rfl) (by ecancel)")
             m, H = self.newH()
-            E(f"intro {m} {H}; kn; simp only [Reg64s.get64] at {H}")
+            E(f"intro {m} {H}; normalize_registers; simp only [Reg64s.get64] at {H}")
             if v[0] == "fval":
                 E(f"simp only [toBytes_ofInt_ofBytes 64 8 rfl {v[1]} h{v[1]}] at {H}")
             self.setslot(off, 8, sv)
@@ -710,10 +710,10 @@ class Gen6:
                 self.touch(off, 16)
             old = self.getslot(off, 16)
             _, w = self.win(i)
-            E(f"apply kstep_movups15 Reg64.{rb} {lit(d)} _ {w}")
-            E(f"  {s_pf(self.reg[rb])} {stk(off)} (by eb) {v_pf(old)} {v_len(old)} _ _ _ (by rfl) (by ecancel)")
+            E(f"apply step_store_xmm15 Reg64.{rb} {lit(d)} _ {w}")
+            E(f"  {s_pf(self.reg[rb])} {stk(off)} (by encoder_address_equation) {v_pf(old)} {v_len(old)} _ _ _ (by rfl) (by ecancel)")
             m, H = self.newH()
-            E(f"intro {m} {H}; kn; try dsimp only at {H}")
+            E(f"intro {m} {H}; normalize_registers; try dsimp only at {H}")
             self.exseq += 1
             self.setslot(off, 16, ("x15", self.zm, "full", self.exseq))
             return i + 1
@@ -729,15 +729,15 @@ class Gen6:
                     if sv[0] == "reg" else ("len", sv[1]) if sv[0] == "len" else None
                 _, w = self.win(i)
                 if val is not None:
-                    E(f"apply kstep_ldv Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
-                    E(f"  {s_pf(self.reg[rb])} {stk(off)} {s_pf(val)} (by eb) _ _ _ (by rfl) (by ecancel)")
+                    E(f"apply step_load_value Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
+                    E(f"  {s_pf(self.reg[rb])} {stk(off)} {s_pf(val)} (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)")
                 elif sv[0] == "fld":
                     val = ("fval", sv[1], sv[2])
-                    E(f"apply kstep_ldb Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
-                    E(f"  {s_pf(self.reg[rb])} {stk(off)} (by eb) {sv[1]} h{sv[1]} _ _ _ (by rfl) (by ecancel)")
+                    E(f"apply step_load_bytes Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
+                    E(f"  {s_pf(self.reg[rb])} {stk(off)} (by encoder_address_equation) {sv[1]} h{sv[1]} _ _ _ (by rfl) (by ecancel)")
                 else:
                     raise G6Refuse(f"load of a slot whose value is not usable: {sv}")
-                E("kn")
+                E("normalize_registers")
                 self.reg[rd] = val
                 return i + 1
             go = ad[1]
@@ -750,13 +750,13 @@ class Gen6:
             _, w = self.win(i)
             if fk == "u":
                 val = ("fval", self.vn[fi], fi)
-                E(f"apply kstep_ldb Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
-                E(f"  rax.toBitVec {ra} (by eb) {self.vn[fi]} h{self.vn[fi]} _ _ _ (by rfl) (by ecancel)")
+                E(f"apply step_load_bytes Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
+                E(f"  rax.toBitVec {ra} (by encoder_address_equation) {self.vn[fi]} h{self.vn[fi]} _ _ _ (by rfl) (by ecancel)")
             else:
                 val = ("fptr", self.pn[fi], fi)
-                E(f"apply kstep_ldv Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
-                E(f"  rax.toBitVec {ra} {self.pn[fi]} (by eb) _ _ _ (by rfl) (by ecancel)")
-            E("kn")
+                E(f"apply step_load_value Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
+                E(f"  rax.toBitVec {ra} {self.pn[fi]} (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)")
+            E("normalize_registers")
             self.reg[rd] = val
             return i + 1
         if k == "cmpmi":
@@ -775,10 +775,10 @@ class Gen6:
                 raise G6Refuse("length test is not the current field's length word against its IR size")
             if emit:
                 _, w = self.win(i, j - i + 1)
-                E(f"apply kstep_lenchk Reg64.{rb} {lit(d)} {im} _ _ {w}")
-                E(f"  rax.toBitVec (rax.toBitVec + {ad[1]}) (by eb) (Int.toBytes 8 {im}) (by rfl) (by decide) "
+                E(f"apply step_length_check Reg64.{rb} {lit(d)} {im} _ _ {w}")
+                E(f"  rax.toBitVec (rax.toBitVec + {ad[1]}) (by encoder_address_equation) (Int.toBytes 8 {im}) (by rfl) (by decide) "
                   "_ _ _ (by rfl) (by ecancel)")
-                E("intro fl; kn")
+                E("intro fl; normalize_registers")
             else:
                 self.pend = 0
             self.lenok.add(fi)
@@ -810,9 +810,9 @@ class Gen6:
                 hl = self.label_hyp(jl)
                 a0 = i - self.pend
                 self.pend = 0
-                E(f"apply kstep_cmp_jae_t Reg64.{rc} Reg64.{rn} _ _ (k + {a0}) (k + {jl}) "
-                  f"(win hk {a0} {j + 1 - a0}) (by rfl) {hl} _ _ {hle}")
-                E("intro fl; kn")
+                E(f"apply step_cmp_jae_taken Reg64.{rc} Reg64.{rn} _ _ (k + {a0}) (k + {jl}) "
+                  f"(window_infix_at hk {a0} {j + 1 - a0}) (by rfl) {hl} _ _ {hle}")
+                E("intro fl; normalize_registers")
                 self.capok = fi
                 return jl
             if b[:2] == ("jcc", "jb"):
@@ -820,8 +820,8 @@ class Gen6:
                 if not any(self.L[x] == "callq runtime.growslice" for x in range(jl, min(jl + 12, len(self.L)))):
                     raise G6Refuse("capacity test (jb) target is not a growslice block")
                 _, w = self.win(i, j - i + 1)
-                E(f"apply kstep_cmp_jb_f Reg64.{rc} Reg64.{rn} _ _ {w} _ _ {hle}")
-                E("intro fl; kn")
+                E(f"apply step_cmp_jb_not_taken Reg64.{rc} Reg64.{rn} _ _ {w} _ _ {hle}")
+                E("intro fl; normalize_registers")
                 self.capok = fi
                 return j + 1
             raise G6Refuse("capacity test branch form unknown")
@@ -832,7 +832,7 @@ class Gen6:
             hl = self.label_hyp(jl)
             a0 = i - self.pend
             self.pend = 0
-            E(f"apply kstep_jmp _ _ (k + {a0}) (k + {jl}) (win hk {a0} {i + 1 - a0}) (by rfl) {hl}")
+            E(f"apply step_jump _ _ (k + {a0}) (k + {jl}) (window_infix_at hk {a0} {i + 1 - a0}) (by rfl) {hl}")
             return jl
         if k == "stidx":
             _, rs, rb, ri, d = a
@@ -848,10 +848,10 @@ class Gen6:
             if self.capok != fi:
                 raise G6Refuse(f"output store of field {fi} without its capacity test")
             _, w = self.win(i)
-            E(f"apply kstep_st_idx Reg64.{rs} Reg64.{rb} Reg64.{ri} {lit(d)} _ {w}")
-            E(f"  {s_pf(vb)} {s_pf(vi)} {s_pf(('dst', o))} (by eb) d{fi} hd{fi} _ _ _ (by rfl) (by rfl) (by ecancel)")
+            E(f"apply step_store_indexed Reg64.{rs} Reg64.{rb} Reg64.{ri} {lit(d)} _ {w}")
+            E(f"  {s_pf(vb)} {s_pf(vi)} {s_pf(('dst', o))} (by encoder_address_equation) d{fi} hd{fi} _ _ _ (by rfl) (by rfl) (by ecancel)")
             m, H = self.newH()
-            E(f"intro {m} {H}; kn; simp only [Reg64s.get64] at {H}")
+            E(f"intro {m} {H}; normalize_registers; simp only [Reg64s.get64] at {H}")
             E(f"simp only [toBytes_ofInt_ofBytes 64 8 rfl {v[1]} h{v[1]}] at {H}")
             self.outv[fi] = ("v", fi)
             self.done += 1
@@ -875,15 +875,15 @@ class Gen6:
             if not emit:
                 self.touch(rs, 8, call=True)
             if self.pend:
-                E(f"apply kstep_nops _ (k + {i - self.pend}) (k + {i}) (win hk {i - self.pend} {self.pend}) (by rfl) (by rfl)")
+                E(f"apply step_nops _ (k + {i - self.pend}) (k + {i}) (window_infix_at hk {i - self.pend} {self.pend}) (by rfl) (by rfl)")
                 self.pend = 0
             old, lo = self.getslot(rs, 8), self.getslot("lo", "S")
             self.ncall += 1
             c = self.ncall
-            E(f"refine eventually_trans _ _ _ _ (encn_call (k + {i}) (win hk {i} 1) {stk(-(F + 8))} "
+            E(f"refine eventually_trans _ _ _ _ (encode_memmove_call (k + {i}) (window_infix_at hk {i} 1) {stk(-(F + 8))} "
               f"{s_pf(('dst', self.soff[fi]))} {self.pn[fi]}")
             E(f"  {stk(rs)} ({stk(rs)[1:-1]} - BitVec.ofNat 64 S) S (by bv_omega) "
-              f"(Codec.frame_lo0 rsp.toBitVec {F + 8} {F + 16} S (by decide))")
+              f"(Codec.frame_low_address_without_calls rsp.toBitVec {F + 8} {F + 16} S (by decide))")
             E(f"  {self.vn[fi]} d{fi} {v_pf(old)} {v_pf(lo)} (by rw [hd{fi}, h{self.vn[fi]}]) {v_len(old)} {v_len(lo)}")
             E(f"  _ _ (by rfl) (by rfl) (by rfl) (by rw [h{self.vn[fi]}]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_")
             E(f"rintro ⟨e{c}, pc{c}⟩ ⟨hpc{c}, hrsp{c}, hrbp{c}, hr14{c}, scr{c}, hscr{c}, Hc{c}⟩")
@@ -911,7 +911,7 @@ class Gen6:
 
     def frametest(self, i, j, b, rc, rn, vc, vn):
         """`cmp %W,%(ptr - rsp); jb L` in the epilogue: not taken, from the separation of the output and the frame
-        (`frame50_ptr_far`: frame 0x50, >= 64 output bytes, whole 8-byte slots -40, -32, -16, -8)."""
+        (`frame50_pointer_apart`: frame 0x50, >= 64 output bytes, whole 8-byte slots -40, -32, -16, -8)."""
         F = self.F
         if not (F == 80 and vn == ("imm", F + 16) and vc == ("pfr", -(F + 8)) and b[:2] == ("jcc", "jb")
                 and self.done == len(self.fields) and self.size >= 64):
@@ -945,12 +945,12 @@ class Gen6:
                           f"(by simp only [List.length_append, {lens}]; omega)")
             E("  rw [" + ",\n    ".join(rw) + "]")
             E("have hfar : 96 ≤ (rbx.toBitVec - (rsp.toBitVec - 88)).toNat :=")
-            E(f"  frame50_ptr_far ({cat}) " + " ".join(y[0] for y in ys) + f" rbx.toBitVec rsp.toBitVec _ {self.mem_}")
+            E(f"  frame50_pointer_apart ({cat}) " + " ".join(y[0] for y in ys) + f" rbx.toBitVec rsp.toBitVec _ {self.mem_}")
             E(f"    (by rw [hO]; ecancel) (by simp only [List.length_append, {lens}]; omega) " + " ".join(y[1] for y in ys))
             _, w = self.win(i, j - i + 1)
-            E(f"apply kstep_cmp_jb_f Reg64.{rc} Reg64.{rn} _ _ {w} _ _ "
+            E(f"apply step_cmp_jb_not_taken Reg64.{rc} Reg64.{rn} _ _ {w} _ _ "
               f"(by show (96 : BitVec 64).toNat ≤ (rbx.toBitVec - (rsp.toBitVec - 88)).toNat; exact hfar)")
-            E("intro fl; kn")
+            E("intro fl; normalize_registers")
         else:
             self.pend = 0
         self.frametested = True
@@ -1054,7 +1054,7 @@ class Gen6:
             raise G6Refuse("return form (pop %rbp; retq)")
         a0 = i - self.pend
         self.pend = 0
-        E(f"refine eventually_trans _ _ _ _ (decret_seg _ (k + {a0}) (win hk {a0} {i + 2 - a0}) (by rfl) "
+        E(f"refine eventually_trans _ _ _ _ (decret_seg _ (k + {a0}) (window_infix_at hk {a0} {i + 2 - a0}) (by rfl) "
           "(rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_")
         E("rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩")
         E("dsimp only at hpc' hrsp' hrbp' hreg' hmem'")
@@ -1160,28 +1160,28 @@ class Gen6:
         o = []
         for off, sz, v in slots:
             if off == "lo":
-                o.append(f".lo ({v_kind(v)})" if v[0] != "scr" else ".lo .scr")
+                o.append(f".low ({v_kind(v)})" if v[0] != "scr" else ".low .scratch")
             else:
-                o.append(f".at (.{'up' if off > 0 else 'dn'} {abs(off)}) ({v_kind(v)})")
+                o.append(f".at (.{'above' if off > 0 else 'below'} {abs(off)}) ({v_kind(v)})")
         return "[" + ", ".join(o) + "]"
 
     def exk(self, exs):
-        return "[" + ", ".join(".lo" if e == "S" else f".n {e}" for e in exs) + "]"
+        return "[" + ", ".join(".low" if e == "S" else f".fixed {e}" for e in exs) + "]"
 
     def layout(self):
         return self.layname or f"Prysm.{self.t}.{self.px}_layout"
 
     def layout_fields(self):
         pre = self.pre + ([("lo", "S", ("scr",))] if self.rt else [])
-        return dict(st=str(self.st).lower(), frame=str(self.F), gd=str(self.gd), rt=str(self.rt).lower(),
-                    nstk=str(len(self.bind)), lens="[" + ", ".join(f"({i}, {x[1]})" for i, x in enumerate(self.bind)) + "]",
-                    pre=self.slotk(pre), exs=self.exk(self.final["exs"]), post=self.slotk(self.final["slots"]))
+        return dict(stateWord=str(self.st).lower(), frame=str(self.F), guardAddend=str(self.gd), callsMemmove=str(self.rt).lower(),
+                    stackChunkCount=str(len(self.bind)), stackChunkLengths="[" + ", ".join(f"({i}, {x[1]})" for i, x in enumerate(self.bind)) + "]",
+                    pre=self.slotk(pre), existentials=self.exk(self.final["exs"]), post=self.slotk(self.final["slots"]))
 
     def laydef(self):
         f = self.layout_fields()
         return (f"/-- The frame facts of `{self.C}` (read from the `.S` file by the walk): frame `{self.F:#x}`, stack chunks\n`"
-                + " ".join(x[2] for x in self.bind) + f"`. -/\ndef {self.px}_layout : EncLayout where\n"
-                + "".join(f"  {k} := {f[k]}\n" for k in ("st", "frame", "gd", "rt", "nstk", "lens", "pre", "exs", "post")) + "\n")
+                + " ".join(x[2] for x in self.bind) + f"`. -/\ndef {self.px}_layout : EncoderFrameLayout where\n"
+                + "".join(f"  {k} := {f[k]}\n" for k in ("stateWord", "frame", "guardAddend", "callsMemmove", "stackChunkCount", "stackChunkLengths", "pre", "existentials", "post")) + "\n")
 
     def fieldsk(self):
         return "[" + ", ".join(".u64" if f[1] == "u" else f".bytes {f[2]}" for f in self.fields) + "]"
@@ -1197,7 +1197,7 @@ class Gen6:
         bl, names = self.binders()
         B = "\n    ".join(bl)
         hg, hrest = self.prem()
-        hmm = " (hmm : MemmoveC S)" if self.rt else ""
+        hmm = " (hmm : MemmoveContract S)" if self.rt else ""
         nm = " ".join(names)
         hmn = " hmm" if self.rt else ""
         ob = "  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s"
@@ -1222,7 +1222,7 @@ class Gen6:
         o.append("  simp only at h_mem hguard hsp hcap hcap63 hpre ⊢")
         o.append(f"  have hcap' : rcx.toBitVec.toNat + {self.size} ≤ rdi.toBitVec.toNat := hcap")
         o += self.thms[0]
-        o.append(kline(f"{px}_head", "encHeadKindN", f"\n    {self.stk_(b0)}"))
+        o.append(kline(f"{px}_head", "encHeadKindAnyFrame", f"\n    {self.stk_(b0)}"))
         for i in range(nf):
             b, b2 = self.bstate[i], self.bstate[i + 1]
             f = self.fields[i]
@@ -1235,7 +1235,7 @@ class Gen6:
             o.append("  simp only at hsp hcap hcap63 hpre ⊢")
             o += self.entry(b)
             o += self.thms[i + 1]
-            o.append(kline(f"{px}_f{i}", "encFieldKindN", f"\n    {self.stk_(b)}\n    {self.stk_(b2)}"))
+            o.append(kline(f"{px}_f{i}", "encFieldKindAnyFrame", f"\n    {self.stk_(b)}\n    {self.stk_(b2)}"))
         b = self.bstate[nf]
         o.append(f"{OPT}/-- Epilogue: directives {b['pc']}–return; boundary state {nf} → the fast-path post-state. -/")
         o.append(f"theorem {px}_epi : ∀ {B}\n    {hrest} (st0 : MachineState),\n    ("
@@ -1246,7 +1246,7 @@ class Gen6:
         o.append("  simp only at hsp hcap hcap63 hpre ⊢")
         o += self.entry(b)
         o += self.thms[nf + 1]
-        o.append(kline(f"{px}_epi", "encEpiKindN", f"\n    {self.stk_(b)}"))
+        o.append(kline(f"{px}_epi", "encEpilogueKindAnyFrame", f"\n    {self.stk_(b)}"))
         o.append(f"{OPT}/-- **Encoder fast path of `(*v1alpha1.{self.t}).MarshalSSZTo` (Go 1.26.10), generated** (`encoder --fast-path`):\n"
                  f"head, one theorem per field, epilogue, chained by `eventually_trans`. Premises: `len + {self.size} ≤ cap`,\n"
                  "every byte-vector field of its exact length. Statement = the kind instance (`_kind`). Fast path only. -/")
@@ -1259,7 +1259,7 @@ class Gen6:
             o.append(f"  refine eventually_trans _ _ _ _ ({px}_f{i} {nm} hsp hcap hcap63{hmn} st{i} h{i}) ?_")
             o.append(f"  intro st{i + 1} h{i + 1}")
         o.append(f"  exact {px}_epi {nm} hsp hcap hcap63 st{nf} h{nf}")
-        o.append(kline(f"{px}_fast", "encFastKindN", ""))
+        o.append(kline(f"{px}_fast", "encFastPathKindAnyFrame", ""))
         return "\n".join(o), kinds
 
     def entry(self, b):

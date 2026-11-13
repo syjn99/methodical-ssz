@@ -24,43 +24,43 @@ namespace Prysm.ValidatorIndex.Witness.DecodeAccept
 
 set_option maxRecDepth 100000
 
-def P : Program := unmarshalSSZ
+def program : Program := unmarshalSSZ
 
-theorem P_len : P.length = 63 := by rfl
+theorem program_length : program.length = 63 := by rfl
 
-instance host : Host := mkHost P (by rw [P_len]; decide)
+instance host : Host := mkHost program (by rw [program_length]; decide)
 
-theorem hk0 : unmarshalSSZ.IsInfixAt Host.prog 0 := ⟨[], by simp [Host.prog, mkHost, P]⟩
+theorem placed_at_0 : unmarshalSSZ.IsInfixAt Host.prog 0 := ⟨[], by simp [Host.prog, mkHost, program]⟩
 
-theorem hf0 : LabelsFresh unmarshalSSZ 0 := fun i hi => absurd hi (Nat.not_lt_zero _)
+theorem labels_fresh_at_0 : LabelsFresh unmarshalSSZ 0 := fun i hi => absurd hi (Nat.not_lt_zero _)
 
-abbrev z (k : Nat) : List UInt8 := List.replicate k 0
+abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
 
 /-- guard · input · receiver (old value `old`) · saved rbp · return slot · spill rsp+8 · spill rsp+16. -/
 def block (e8 old : List UInt8) : List UInt8 :=
-  Int.toBytes 8 (0 : UInt64).toBitVec.toInt ++ (e8 ++ (old ++ (z 8
-    ++ (Int.toBytes 8 (0 : UInt64).toBitVec.toInt ++ (z 8 ++ z 8)))))
+  Int.toBytes 8 (0 : UInt64).toBitVec.toInt ++ (e8 ++ (old ++ (zeros 8
+    ++ (Int.toBytes 8 (0 : UInt64).toBitVec.toInt ++ (zeros 8 ++ zeros 8)))))
 
 def mem (e8 old : List UInt8) : DataMem := (block e8 old).At (0x10000 : BitVec 64)
 
-def cs0 (e8 old : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
+def initial_state (e8 old : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10010, 0x10008, 8, 0, 0, 0, 0x10020, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem e8 old⟩
 
 /-- The frame `R` of the witness: exactly the unused spill slot. -/
-def R0 : DataMem → Prop := Eq ((z 8).At (0x10028 : BitVec 64))
+def frame_rest : DataMem → Prop := Eq ((zeros 8).At (0x10028 : BitVec 64))
 
 set_option maxHeartbeats 4000000 in
 theorem witness_mem (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.length = 8)
     (zmms : RegZmms) (flags : StatusFlags) :
-    let s := cs0 e8 old zmms flags
+    let s := initial_state e8 old zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
-      ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 16))
+      ⋆ Eq ((zeros 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((zeros 8).At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq (e8.At s.regs.rbx.toBitVec) ⋆ Eq (old.At s.regs.rax.toBitVec) ⋆ R0 := by
+      ⋆ Eq (e8.At s.regs.rbx.toBitVec) ⋆ Eq (old.At s.regs.rax.toBitVec) ⋆ frame_rest := by
   intro s
   have H : Eq ((block e8 old).At (0x10000 : BitVec 64)) (mem e8 old) := rfl
-  wit_split [he8, hold]
-  simp only [s, cs0, R0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
+  witness_split [he8, hold]
+  simp only [s, initial_state, frame_rest, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
   simp only [Std.ExtHashMap.sep_assoc] at H ⊢
   simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
   exact H
@@ -73,21 +73,21 @@ theorem runs (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.length = 8)
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ (Eq (e8.At (0x10010 : BitVec 64)) ⋆ fun _ => True) st.data.dmem)
-      ⟨cs0 e8 old zmms flags, Host.addrOf 0⟩ :=
-  eventually_mono (Decode.generated_accept 0 hk0 hf0 e8 he8 (cs0 e8 old zmms flags) 0 0 (z 8) (z 8) old
-    rfl rfl hold R0 (witness_mem e8 old he8 hold zmms flags) (by simp [cs0]) rfl)
+      ⟨initial_state e8 old zmms flags, Host.addrOf 0⟩ :=
+  eventually_mono (Decode.generated_accept 0 placed_at_0 labels_fresh_at_0 e8 he8 (initial_state e8 old zmms flags) 0 0 (zeros 8) (zeros 8) old
+    rfl rfl hold frame_rest (witness_mem e8 old he8 hold zmms flags) (by simp [initial_state]) rfl)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1, by
       have hm := h.2.2.2.2.2.2
-      rw [show (cs0 e8 old zmms flags).regs.rax.toBitVec = (0x10010 : BitVec 64) from rfl] at hm
+      rw [show (initial_state e8 old zmms flags).regs.rax.toBitVec = (0x10010 : BitVec 64) from rfl] at hm
       exact sep_true (P := Eq (e8.At (0x10010 : BitVec 64))) (by ecancel)⟩)
 
 /-- The specification `Decode.accept_function_spec` holds on this host (from the machine code). This is a spec instance, not premise
 satisfiability; the non-vacuity witness is the run theorem above. -/
-theorem runs_function_spec : Decode.accept_function_spec := Decode.accept_function_spec_holds 0 hk0 hf0
+theorem runs_function_spec : Decode.accept_function_spec := Decode.accept_function_spec_holds 0 placed_at_0 labels_fresh_at_0
 
 /-- value 0, a representative value (0x0123456789abcdef), and 2^64 − 1. -/
-example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 0) (z 8) (by decide) rfl z' f
-example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 0x0123456789abcdef) (z 8) (by decide) rfl z' f
-example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 (2 ^ 64 - 1)) (z 8) (by decide) rfl z' f
+example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 0) (zeros 8) (by decide) rfl z' f
+example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 0x0123456789abcdef) (zeros 8) (by decide) rfl z' f
+example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 (2 ^ 64 - 1)) (zeros 8) (by decide) rfl z' f
 
 end Prysm.ValidatorIndex.Witness.DecodeAccept

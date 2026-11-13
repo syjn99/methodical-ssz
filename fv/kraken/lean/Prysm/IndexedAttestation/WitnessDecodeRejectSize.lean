@@ -27,61 +27,61 @@ def dataLabels : Program :=
    .label "pad7", .label "pad8", .label "pad9", .label "pad10", .label "pad11", .label "pad12", .label "pad13",
    .label "pad14", .label "pad15", .label "ssz.ErrInvalidVariableOffset"]
 
-def P : Program := dataLabels ++ unmarshalSSZ
+def program : Program := dataLabels ++ unmarshalSSZ
 
 -- Measured cause: `rfl` on the length of the 296-directive program stops with "maximum recursion depth"
 -- at the default (512); 1024 passes. The other host facts need no option.
 set_option maxRecDepth 1024 in
-theorem P_len : P.length = 296 := by rfl
+theorem program_length : program.length = 296 := by rfl
 
-instance host : Host := mkHost P (by rw [P_len]; decide)
+instance host : Host := mkHost program (by rw [program_length]; decide)
 
-theorem prog_eq : Host.prog = P := rfl
+theorem host_program_eq : Host.prog = program := rfl
 
-theorem hk17 : unmarshalSSZ.IsInfixAt Host.prog 17 :=
-  infixAt_of dataLabels [] (by simp [prog_eq, P]) rfl
+theorem placed_at_17 : unmarshalSSZ.IsInfixAt Host.prog 17 :=
+  infixAt_of dataLabels [] (by simp [host_program_eq, program]) rfl
 
-theorem hf17 : LabelsFresh unmarshalSSZ 17 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem labels_fresh_at_17 : LabelsFresh unmarshalSSZ 17 := labelsFresh_of (by rw [host_program_eq]; decide)
 
-theorem label_err : label "ssz.ErrSize" = 0x10000 :=
-  mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
-theorem label_ivo : label "ssz.ErrInvalidVariableOffset" = 0x10010 :=
-  mk_label P _ 16 _ (by simp [P, dataLabels]) (by decide)
+theorem label_err_size : label "ssz.ErrSize" = 0x10000 :=
+  mk_label program _ 0 _ (by simp [program, dataLabels]) (by simp [labs])
+theorem label_err_invalid_variable_offset : label "ssz.ErrInvalidVariableOffset" = 0x10010 :=
+  mk_label program _ 16 _ (by simp [program, dataLabels]) (by decide)
 
-abbrev z (k : Nat) : List UInt8 := List.replicate k 0
-abbrev w (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
+abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
+abbrev word_bytes (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
 
 /-- ErrSize word 0 · word 1 · ErrInvalidVariableOffset word 0 · word 1 · guard · saved rbp · return slot ·
 caller word · spill rbx · offset bytes. -/
 def block : List UInt8 :=
-  w 0x10e8 ++ (w 0x2a ++ (w 0x10f0 ++ (w 0x2b ++ (w 0 ++ (z 8 ++ (w 0 ++ (z 8 ++ (z 8 ++ [0xe5, 0, 0, 0]))))))))
+  word_bytes 0x10e8 ++ (word_bytes 0x2a ++ (word_bytes 0x10f0 ++ (word_bytes 0x2b ++ (word_bytes 0 ++ (zeros 8 ++ (word_bytes 0 ++ (zeros 8 ++ (zeros 8 ++ [0xe5, 0, 0, 0]))))))))
 
 def mem : DataMem := block.At (0x10000 : BitVec 64)
 
-def cs0 (len : UInt64) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
+def initial_state (len : UInt64) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10100, 0x10048, len, 0, 0, len, 0x10030, 0, 0, 0, 0, 0, 0, 0, 0x10010, 0⟩, zmms, flags, mem⟩
 
 /-- Size reject frame: the ErrInvalidVariableOffset words, the caller's word and the offset bytes. -/
-def R1 : DataMem → Prop :=
-  Eq ((w 0x10f0).At (0x10010 : BitVec 64)) ⋆ Eq ((w 0x2b).At (0x10018 : BitVec 64))
-    ⋆ Eq ((z 8).At (0x10038 : BitVec 64)) ⋆ Eq (([0xe5, 0, 0, 0] : List UInt8).At (0x10048 : BitVec 64))
+def size_reject_frame_rest : DataMem → Prop :=
+  Eq ((word_bytes 0x10f0).At (0x10010 : BitVec 64)) ⋆ Eq ((word_bytes 0x2b).At (0x10018 : BitVec 64))
+    ⋆ Eq ((zeros 8).At (0x10038 : BitVec 64)) ⋆ Eq (([0xe5, 0, 0, 0] : List UInt8).At (0x10048 : BitVec 64))
 
 /-- Offset reject frame: the ErrSize words and the caller's word. -/
-def R2 : DataMem → Prop :=
-  Eq ((w 0x10e8).At (0x10000 : BitVec 64)) ⋆ Eq ((w 0x2a).At (0x10008 : BitVec 64))
-    ⋆ Eq ((z 8).At (0x10038 : BitVec 64))
+def offset_reject_frame_rest : DataMem → Prop :=
+  Eq ((word_bytes 0x10e8).At (0x10000 : BitVec 64)) ⋆ Eq ((word_bytes 0x2a).At (0x10008 : BitVec 64))
+    ⋆ Eq ((zeros 8).At (0x10038 : BitVec 64))
 
 /-- **Non-vacuity of `Decode.reject_size` (size reject)** for every len < 228. -/
 theorem runs_size (len : UInt64) (hlen : len.toNat < 228) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10e8
         ∧ st.data.regs.rbx = 0x2a)
-      ⟨cs0 len zmms flags, Host.addrOf 17⟩ :=
-  eventually_mono (Decode.reject_size 17 hk17 hf17 (cs0 len zmms flags) 0 0 0x10e8 0x2a (z 8) (z 8) rfl rfl R1
+      ⟨initial_state len zmms flags, Host.addrOf 17⟩ :=
+  eventually_mono (Decode.reject_size 17 placed_at_17 labels_fresh_at_17 (initial_state len zmms flags) 0 0 0x10e8 0x2a (zeros 8) (zeros 8) rfl rfl size_reject_frame_rest
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
-      wit_split []
-      simp only [cs0, R1, w, ElfData.PrysmTarget.sszErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      witness_split []
+      simp only [initial_state, size_reject_frame_rest, word_bytes, ElfData.PrysmTarget.sszErrSize_addr, label_err_size, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm_l] at H ⊢
@@ -97,13 +97,13 @@ theorem runs_offset (len : UInt64) (hlen : 228 ≤ len.toNat) (zmms : RegZmms) (
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10f0
         ∧ st.data.regs.rbx = 0x2b)
-      ⟨cs0 len zmms flags, Host.addrOf 17⟩ :=
-  eventually_mono (Decode.reject_offset 17 hk17 hf17 (cs0 len zmms flags) 0 0 0x10f0 0x2b (z 8) (z 8) rfl rfl
-    [0xe5, 0, 0, 0] rfl (by decide) R2
+      ⟨initial_state len zmms flags, Host.addrOf 17⟩ :=
+  eventually_mono (Decode.reject_offset 17 placed_at_17 labels_fresh_at_17 (initial_state len zmms flags) 0 0 0x10f0 0x2b (zeros 8) (zeros 8) rfl rfl
+    [0xe5, 0, 0, 0] rfl (by decide) offset_reject_frame_rest
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
-      wit_split []
-      simp only [cs0, R2, w, ElfData.PrysmTarget.sszErrInvalidVariableOffset_addr, label_ivo, UInt64.toBitVec_ofNat,
+      witness_split []
+      simp only [initial_state, offset_reject_frame_rest, word_bytes, ElfData.PrysmTarget.sszErrInvalidVariableOffset_addr, label_err_invalid_variable_offset, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢

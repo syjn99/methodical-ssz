@@ -11,9 +11,9 @@ import Prysm.PendingPartialWithdrawal.DecoderPrologueInstances
 # The per-type hand head / epilogue / spill lemmas are instances of the frame-parametric mechanism
 
 Each theorem has the TYPE of a per-type hand lemma (`type_of%`: the committed statement) and is proved from
-`decpro_seg`, `decret_seg`, `kstep_nilchk` (`Codec/DecoderPrologue.lean`) and the step lemmas (`Codec/WindowSteps.lean`) only:
+`decpro_seg`, `decret_seg`, `step_nil_check` (`Codec/DecoderPrologue.lean`) and the step lemmas (`Codec/WindowSteps.lean`) only:
 heads `Decode.head0`, `Prysm.PendingConsolidation.Decode.head`, `Prysm.PendingPartialWithdrawal.Decode.head`, `Prysm.BeaconBlockHeader.Decode.head0` (frames `0x60`, `0x48`, `0x48`, `0x60`; three
-spill orders); epilogues `Prysm.PendingConsolidation.Decode.epi`, `Prysm.PendingPartialWithdrawal.Decode.epi`; nil-error spills `Decode.spill2`, `Prysm.BeaconBlockHeader.Decode.spill2`.
+spill orders); epilogues `Prysm.PendingConsolidation.Decode.epilogue`, `Prysm.PendingPartialWithdrawal.Decode.epilogue`; nil-error spills `Decode.spill2`, `Prysm.BeaconBlockHeader.Decode.spill2`.
 The proof texts were produced by a scratch script from the `.S` files (directive index = line − 1); the only
 per-type data are `F`, `dB`, `sz`, the spill order and the directive indices.
 After the split of this module, the declarations of the other types are in `Prysm/BeaconBlockHeader/DecoderPrologueInstances.lean`, `Prysm/PendingConsolidation/DecoderPrologueInstances.lean`, `Prysm/PendingPartialWithdrawal/DecoderPrologueInstances.lean`.
@@ -30,7 +30,7 @@ variable [Host]
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `Decode.head0` (SyncCommitteeMessage head, frame `0x60`, size 144) from `decpro_seg`, the spills as `kstep_st` steps and `kstep_nilchk`. -/
+/-- `Decode.head0` (SyncCommitteeMessage head, frame `0x60`, size 144) from `decpro_seg`, the spills as `step_store` steps and `step_nil_check`. -/
 theorem Decode.head0_inst : type_of% (@Decode.head0 ‹Host›) := by
   intro k hk s ra guard fp s1 s2 s4 ast hfp h1 h2 h4 hast R h_mem hguard hlen
   have hcs : Eq (ast.At s.regs.rax.toBitVec) =
@@ -38,7 +38,7 @@ theorem Decode.head0_inst : type_of% (@Decode.head0 ‹Host›) := by
     conv => lhs; rw [← List.take_append_drop 1 ast]
     exact at_app _ _ (by rw [List.length_take, hast]; rfl) (by simp [hast])
   rw [hcs] at h_mem
-  refine eventually_trans _ _ _ _ (decpro_seg _ _ _ _ 96 120 144 _ k (k + 11) (win hk 0 11) (by rfl) (by rfl)
+  refine eventually_trans _ _ _ _ (decpro_seg _ _ _ _ 96 120 144 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
     s ra guard (s.regs.rsp.toBitVec - 104) (s.regs.rsp.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     fp s2 hfp h2 _ (by ecancel) hguard (by rw [hlen]; rfl)) ?_
@@ -53,21 +53,21 @@ theorem Decode.head0_inst : type_of% (@Decode.head0 ‹Host›) := by
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩, zmms1, flags1, mem1⟩ := d1
   simp only at hrsp1 hrbp1 hrax1 hrbx1 hrdi1 hr141 Hm1
   subst hrsp1 hrbp1 hrax1 hrbx1 hrdi1 hr141
-  apply kstep_st Reg64.rax Reg64.rsp 112 _ (k + 11) (k + 12) (win hk 11 1) (by rfl) (by rfl)
+  apply step_store Reg64.rax Reg64.rsp 112 _ (k + 11) (k + 12) (window_infix_at hk 11 1) (by rfl) (by rfl)
     (s.regs.rsp.toBitVec - 104) (s.regs.rsp.toBitVec + 8) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     s1 h1 _ _ _ (by rfl) (by ecancel)
-  intro m1 H1; kn; simp only [Reg64s.get64] at H1
-  apply kstep_st Reg64.rdi Reg64.rsp 136 _ (k + 12) (k + 13) (win hk 12 1) (by rfl) (by rfl)
+  intro m1 H1; normalize_registers; simp only [Reg64s.get64] at H1
+  apply step_store Reg64.rdi Reg64.rsp 136 _ (k + 12) (k + 13) (window_infix_at hk 12 1) (by rfl) (by rfl)
     (s.regs.rsp.toBitVec - 104) (s.regs.rsp.toBitVec + 32) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     s4 h4 _ _ _ (by rfl) (by ecancel)
-  intro m2 H2; kn; simp only [Reg64s.get64] at H2
-  apply kstep_st Reg64.rbx Reg64.rsp 120 _ (k + 13) (k + 14) (win hk 13 1) (by rfl) (by rfl)
+  intro m2 H2; normalize_registers; simp only [Reg64s.get64] at H2
+  apply step_store Reg64.rbx Reg64.rsp 120 _ (k + 13) (k + 14) (window_infix_at hk 13 1) (by rfl) (by rfl)
     (s.regs.rsp.toBitVec - 104) (s.regs.rsp.toBitVec + 16) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     (Int.toBytes 8 s.regs.rbx.toBitVec.toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
-  intro m3 H3; kn; simp only [Reg64s.get64] at H3
-  apply kstep_nilchk Reg64.rax _ (k + 14) (k + 15) (win hk 14 1) (by rfl) (by rfl)
+  intro m3 H3; normalize_registers; simp only [Reg64s.get64] at H3
+  apply step_nil_check Reg64.rax _ (k + 14) (k + 15) (window_infix_at hk 14 1) (by rfl) (by rfl)
     s.regs.rax.toBitVec (ast.take 1) (by simp [hast]) _ _ _ (by rfl) (by ecancel)
-  intro fl; kn
+  intro fl; normalize_registers
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   dsimp only
@@ -75,18 +75,18 @@ theorem Decode.head0_inst : type_of% (@Decode.head0 ‹Host›) := by
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `Decode.spill2` (SyncCommitteeMessage nil-error spills 118–119) from two `kstep_st` steps. -/
+/-- `Decode.spill2` (SyncCommitteeMessage nil-error spills 118–119) from two `step_store` steps. -/
 theorem Decode.spill2_inst : type_of% (@Decode.spill2 ‹Host›) := by
   intro k hk sp a28 a30 h28 h30 s28 s30 hs28 hs30 R s hrsp h_mem
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp h_mem ⊢
   subst rsp h28 h30
-  apply kstep_st Reg64.rbx Reg64.rsp 48 _ (k + 118) (k + 119) (win hk 118 1) (by rfl) (by rfl)
+  apply step_store Reg64.rbx Reg64.rsp 48 _ (k + 118) (k + 119) (window_infix_at hk 118 1) (by rfl) (by rfl)
     sp (sp + 48) (by simp only [Int64.toBitVec_ofNat]) s30 hs30 _ _ _ (by rfl) (by ecancel)
-  intro m1 H1; kn; simp only [Reg64s.get64] at H1
-  apply kstep_st Reg64.rax Reg64.rsp 40 _ (k + 119) (k + 120) (win hk 119 1) (by rfl) (by rfl)
+  intro m1 H1; normalize_registers; simp only [Reg64s.get64] at H1
+  apply step_store Reg64.rax Reg64.rsp 40 _ (k + 119) (k + 120) (window_infix_at hk 119 1) (by rfl) (by rfl)
     sp (sp + 40) (by simp only [Int64.toBitVec_ofNat]) s28 hs28 _ _ _ (by rfl) (by ecancel)
-  intro m2 H2; kn; simp only [Reg64s.get64] at H2
+  intro m2 H2; normalize_registers; simp only [Reg64s.get64] at H2
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, ?_⟩
   dsimp only

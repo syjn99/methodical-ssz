@@ -120,7 +120,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: the Kraken parser rejects the SIB index `%riz` and multi-byte padding `nop` forms. The `include_x64` elaborator rejects some condition codes.
 - Where: 13 generated functions had `%riz`.
-- State: worked around. `link/conv.py --norm` drops `%riz` and writes padding as `nop`. `include_x64_rt` (`lean/Machine/Include.lean`) uses the runtime parser.
+- State: worked around. `link/conv.py --norm` drops `%riz` and writes padding as `nop`. `include_x64_code` (`lean/Machine/Include.lean`) uses the runtime parser.
 
 ### Converter wrote a negative 32-bit displacement as a large positive number
 
@@ -142,7 +142,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Growslice contract gives no lower bound on the remaining heap
 
-- What: `GrowsliceC` gives the remaining heap only as an upper bound. A second growth call needs a lower bound as its budget premise.
+- What: `GrowsliceContract` gives the remaining heap only as an upper bound. A second growth call needs a lower bound as its budget premise.
 - Where: `lean/Runtime/Contracts.lean`. It affects every encoder growth path.
 - How it shows: in `Prysm.Checkpoint.Encode.grow_any_site_three_cases`, one case ends at the entry of the second growth call. The run after that state is not proved.
 - State: blocked until a user decision on a new contract form. That case has only Go differential checks. The growth branches of the other encoders are not proved.
@@ -154,7 +154,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Other tactic gaps
 
-- `kaddr` (`lean/Machine/Step.lean`) does not reduce `Width.W64.bits`. The macro `checkpoint_addr` (`lean/Prysm/Checkpoint/DecodeAccept.lean`) is used instead.
+- `address_equation` (`lean/Machine/Step.lean`) does not reduce `Width.W64.bits`. The macro `checkpoint_addr` (`lean/Prysm/Checkpoint/DecodeAccept.lean`) is used instead.
 - A `grind` timeout inside `kstep` cannot be caught. `load_step` and `store_step` are used instead.
 - Closing register goals with symbolic `BitVec` by `trivial` or `rfl` inside `first` used more than 6 GiB. The decoder proof is split, and the goals close with `exact trivial`, `with_reducible rfl` or `toBitVec_inj`.
 - Two witness `Host` instances in one file make instance resolution choose the wrong host. Each file has one witness host.
@@ -163,12 +163,12 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Format string content is not checked
 
-- What: Lean binds a format string only by its length and the absence of `%`. The agreement of its verbs with the contracts `FmtErrorfWC`, `FmtErrorfDWC` and `FmtErrorfDDC` is a contract hypothesis.
+- What: Lean binds a format string only by its length and the absence of `%`. The agreement of its verbs with the contracts `FmtErrorfWrapContract`, `FmtErrorfDecimalWrapContract` and `FmtErrorfDecimalDecimalContract` is a contract hypothesis.
 - State: open.
 
 ### Allocation type argument is not connected to the element size
 
-- What: the type descriptor argument of `MakesliceC` and `NewobjectC` is not connected to the element size or object size in the contract.
+- What: the type descriptor argument of `MakesliceContract` and `NewobjectContract` is not connected to the element size or object size in the contract.
   For example, the object size 120 of the `Deposit_Data` allocation is a premise of the statement. No theorem ties it to the data file.
 - State: accepted contract hypothesis.
 
@@ -204,7 +204,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Kind checks do not bind every parameter
 
-- What: the accept kind `decAcceptKindN` does not read the frame of its layout. An accept kind line with a wrong frame still elaborates.
+- What: the accept kind `decAcceptKindAnyFrame` does not read the frame of its layout. An accept kind line with a wrong frame still elaborates.
   `gen/scal/kindcheck.py` does not bind the code constant to the `.S` file of the header. It does not check the `.S` label against the IR type.
 - How it shows: a negative test with a wrong frame in the kind line gives no error. The head, field and epilogue kinds fix the frame.
 - State: open. A kind change needs a new lemma unit.
@@ -266,8 +266,8 @@ How to handle a new finding is in `../README.md` section 7.
 ### Slow proof steps
 
 - What: two proofs spent most of their time in one `omega` side goal each.
-- Where: the `bv_omega` of the argument `hLo` of `Codec.rootenc_seg` in `lean/Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean`. The `wit_split` side goals of the Checkpoint cover witnesses.
-- State: fixed. `lean/Machine/WitnessSplit.lean` has `wit_split_n` (commit `301300f`). The `Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean` step is a constant-only rewrite (commit `ab43cbb`).
+- Where: the `bv_omega` of the argument `hLo` of `Codec.rootenc_seg` in `lean/Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean`. The `witness_split` side goals of the Checkpoint cover witnesses.
+- State: fixed. `lean/Machine/WitnessSplit.lean` has `witness_split_n` (commit `301300f`). The `Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean` step is a constant-only rewrite (commit `ab43cbb`).
 
 ### Limit options without a profiled cause
 
@@ -329,7 +329,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Open checker items of the flat encoder generator
 
-- The macro `eb` is declared at the root level (`lean/Codec/EncodeFieldHelpers.lean`).
+- The macro `encoder_address_equation` is declared at the root level (`lean/Codec/EncodeFieldHelpers.lean`).
 - A broken checker copy fails with a `KeyError`, not with a check result.
 - The IR reader of the encoder generator accepts any untagged 8-byte field as `uint64`.
 - The negative tests that compare the IR with the code change one theorem only. There are no whole-file mutants.

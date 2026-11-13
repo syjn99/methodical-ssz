@@ -51,7 +51,7 @@ theorem Encode.fast_path (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
       ⋆ Eq (d1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8)) ⋆ R)
     (hguard : guard.toNat + 24 < s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 40 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
-    (hmm : MemmoveC S) :
+    (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 ∧ st.data.regs.rcx = s.regs.rdi
@@ -142,7 +142,7 @@ theorem Encode.reject_length (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
   rintro ⟨d, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, hrcx1, hrdx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 hrcx1 hrdx1 Hm1
   subst hpc1
-  refine eventually_mono (Encode.tail_rej k hk hf rsp r14 rbp ra rcx rdi e0 e1 rl hrl rax.toBitVec rbx.toBitVec p
+  refine eventually_mono (Encode.tail_reject k hk hf rsp r14 rbp ra rcx rdi e0 e1 rl hrl rax.toBitVec rbx.toBitVec p
     e8 pre d0 t40 t30 he8 hd0 ht40 ht30 _ d hrsp1 hrbp1 hr141 (by rw [hrax1]) (by rw [hrbx1]) hrcx1 hrdx1
     (by ecancel) (by omega)) ?_
   rintro st ⟨e1', e2, e3, e4, e5, e6, e7, e8', e9, t, u, ht, hu, Hm⟩

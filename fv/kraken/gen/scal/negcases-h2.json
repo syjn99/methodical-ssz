@@ -1,13 +1,13 @@
 [
  {
   "module": "Prysm/Eth1Data/DecodeFieldSegmentOffsetZero.lean",
-  "theorem": "Prysm.Eth1Data.rootdec_seg0",
+  "theorem": "Prysm.Eth1Data.rootdec_seg_source_offset_zero",
   "kind": "control",
   "id": "e1-seg0-control"
  },
  {
   "module": "Prysm/Eth1Data/DecodeFieldSegmentOffsetZero.lean",
-  "theorem": "Prysm.Eth1Data.rootdec_seg0",
+  "theorem": "Prysm.Eth1Data.rootdec_seg_source_offset_zero",
   "kind": "stmt",
   "old": "st.pc = Host.addrOf (j2 + 11)",
   "new": "st.pc = Host.addrOf (j2 + 12)",
@@ -15,7 +15,7 @@
  },
  {
   "module": "Prysm/Eth1Data/DecodeFieldSegmentOffsetZero.lean",
-  "theorem": "Prysm.Eth1Data.rootdec_seg0",
+  "theorem": "Prysm.Eth1Data.rootdec_seg_source_offset_zero",
   "kind": "stmt",
   "old": "⋆ Heap (avail - 32)",
   "new": "⋆ Heap (avail - 31)",

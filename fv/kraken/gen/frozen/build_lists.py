@@ -287,7 +287,7 @@ def main():
         "rule": "A generated theorem may use only these premise classes. A premise outside this list is a new trust assumption: stop and report.",
         "revision": "2: review phase1c-r1 S2 (Go 1.26.10 re-check condition, model per instance, API version). Revision 1 = 0532cbd",
         "classes": [
-            {"id": "callee-contract", "what": "runtime callee as a hypothesis in Kraken form (CONTRACTS.md section 2): MakesliceC, MemmoveC, GrowsliceC, NewobjectC, ConvT64C, FmtErrorfNilC, FmtErrorfWC, FmtErrorfDWC, ValidateBitlistC, ValidateBitlistErrC",
+            {"id": "callee-contract", "what": "runtime callee as a hypothesis in Kraken form (CONTRACTS.md section 2): MakesliceContract, MemmoveContract, GrowsliceContract, NewobjectContract, ConvT64Contract, FmtErrorfNilContract, FmtErrorfWrapContract, FmtErrorfDecimalWrapContract, ValidateBitlistC, ValidateBitlistErrC",
              "conditions": "quantified over all states, return addresses and frames; argument conditions, budgets, scratch S and spill as in CONTRACTS.md; joint satisfiability (joint_models)",
              "go_version": "CONTRACTS.md reads every contract against Go 1.26.3 (ABIInternal, nextslicecap, fmt allocation, budgets). In the Go 1.26.10 namespace (fv/kraken/prysm/go1.26.10) each contract is an UNCONFIRMED ASSUMPTION until it is re-read against the Go 1.26.10 runtime source and the re-reading is recorded; until then a theorem that uses it states that",
              "model_per_instance": "a model and a witness are needed per contract instance (each element size esz, object size sz, fmt format string and argument types, type descriptor), as in the hand case (bump_newobject16/24/32). An instance without a model is classed 'missing contract'",

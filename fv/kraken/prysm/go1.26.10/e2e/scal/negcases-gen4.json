@@ -2,7 +2,7 @@
  {
   "id": "g4-nv-wat-control",
   "module": "Codec/NopWindow.lean",
-  "theorem": "wat",
+  "theorem": "window_directive_at",
   "kind": "control"
  },
  {
@@ -10,27 +10,27 @@
   "module": "Codec/NopWindow.lean",
   "theorem": "wskip",
   "kind": "stmt",
-  "old": "⟨s, Host.addrOf (j + nopPos q i + 1)⟩",
-  "new": "⟨s, Host.addrOf (j + nopPos q i)⟩"
+  "old": "⟨s, Host.addrOf (j + nonNopIndex q i + 1)⟩",
+  "new": "⟨s, Host.addrOf (j + nonNopIndex q i)⟩"
  },
  {
   "id": "g4-sk-ldv-control",
   "module": "Codec/WindowSteps.lean",
-  "theorem": "kstep_ldv",
+  "theorem": "step_load_value",
   "kind": "control"
  },
  {
   "id": "g4-sk-ldv-stmt-reg",
   "module": "Codec/WindowSteps.lean",
-  "theorem": "kstep_ldv",
+  "theorem": "step_load_value",
   "kind": "stmt",
-  "old": "⟨setR s rD v, Host.addrOf e⟩",
-  "new": "⟨setR s rB v, Host.addrOf e⟩"
+  "old": "⟨setRegister s rD v, Host.addrOf e⟩",
+  "new": "⟨setRegister s rB v, Host.addrOf e⟩"
  },
  {
   "id": "g4-sk-add-stmt-op",
   "module": "Codec/WindowSteps.lean",
-  "theorem": "kstep_add",
+  "theorem": "step_add_immediate",
   "kind": "stmt",
   "old": "(s.regs.get64 rD + imm.toBitVec), zmms",
   "new": "(s.regs.get64 rD - imm.toBitVec), zmms"
@@ -38,7 +38,7 @@
  {
   "id": "g4-sk-st-stmt-src",
   "module": "Codec/WindowSteps.lean",
-  "theorem": "kstep_st",
+  "theorem": "step_store",
   "kind": "stmt",
   "old": "(@BitVec.toInt 64 (s.regs.get64 rS))",
   "new": "(@BitVec.toInt 64 (s.regs.get64 rB))"
@@ -46,7 +46,7 @@
  {
   "id": "g4-sk-movi-stmt-width",
   "module": "Codec/WindowSteps.lean",
-  "theorem": "kstep_movi",
+  "theorem": "step_move_immediate",
   "kind": "stmt",
   "old": "BitVec.truncate 32 imm.toBitVec",
   "new": "BitVec.truncate 16 imm.toBitVec"
@@ -54,7 +54,7 @@
  {
   "id": "g4-sk-jmp-stmt-target",
   "module": "Codec/WindowSteps.lean",
-  "theorem": "kstep_jmp",
+  "theorem": "step_jump",
   "kind": "stmt",
   "old": "(hk : Eventually (step1 Host.exe) final ⟨s, Host.addrOf jl⟩)",
   "new": "(hk : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (jl + 1)⟩)"
@@ -62,15 +62,15 @@
  {
   "id": "g4-sk-movrr-stmt-src",
   "module": "Codec/WindowSteps.lean",
-  "theorem": "kstep_mov_rr",
+  "theorem": "step_move_register",
   "kind": "stmt",
-  "old": "⟨setR s rD (s.regs.get64 rS), Host.addrOf e⟩",
-  "new": "⟨setR s rD (s.regs.get64 rD), Host.addrOf e⟩"
+  "old": "⟨setRegister s rD (s.regs.get64 rS), Host.addrOf e⟩",
+  "new": "⟨setRegister s rD (s.regs.get64 rD), Host.addrOf e⟩"
  },
  {
   "id": "g4-sk-lea-stmt-disp",
   "module": "Codec/WindowSteps.lean",
-  "theorem": "kstep_lea",
+  "theorem": "step_lea",
   "kind": "stmt",
   "old": "(s.regs.get64 rB + disp.toBitVec)",
   "new": "(s.regs.get64 rB)"
@@ -78,13 +78,13 @@
  {
   "id": "g4-cr-callw-control",
   "module": "Codec/CalleeDecodeWindow.lean",
-  "theorem": "Codec.calldec_seg_w",
+  "theorem": "Codec.calldec_seg_window",
   "kind": "control"
  },
  {
   "id": "g4-cr-callw-stmt-ret",
   "module": "Codec/CalleeDecodeWindow.lean",
-  "theorem": "Codec.calldec_seg_w",
+  "theorem": "Codec.calldec_seg_window",
   "kind": "stmt",
   "old": "Host.addrOf (jc + 1)).toBitVec.toInt).At aRet",
   "new": "Host.addrOf (j + 1)).toBitVec.toInt).At aRet"
@@ -92,10 +92,10 @@
  {
   "id": "g4-cr-callw-stmt-jc",
   "module": "Codec/CalleeDecodeWindow.lean",
-  "theorem": "Codec.calldec_seg_w",
+  "theorem": "Codec.calldec_seg_window",
   "kind": "stmt",
-  "old": "(hjc : j + nopPos q 0 = jc)",
-  "new": "(hjc : j + nopPos q 1 = jc)"
+  "old": "(hjc : j + nonNopIndex q 0 = jc)",
+  "new": "(hjc : j + nonNopIndex q 1 = jc)"
  },
  {
   "id": "g4-sr-bytes-control",
@@ -319,7 +319,7 @@
  {
   "id": "g4-hn-nil-control",
   "module": "Codec/DecoderPrologue.lean",
-  "theorem": "kstep_nilchk",
+  "theorem": "step_nil_check",
   "kind": "control"
  },
  {

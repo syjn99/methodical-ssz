@@ -40,7 +40,7 @@ theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
       ⋆ Eq ((Int.toBytes 8 A.toInt).At (recv + 24)) ⋆ Eq ((Int.toBytes 8 8192).At (recv + 32))
       ⋆ Eq ((Codec.sliceHeaders 32 ps ++ Codec.zeroBytes (24 * (8192 - i))).At A) ⋆ Codec.elementBlocks ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 108) ∧ st.data.regs.rax.toNat = i + 1
         ∧ st.data.regs.rsp = { toBitVec := sp } ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -62,25 +62,25 @@ theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
   have hpi : pks[i].length = 32 := hpk _ (List.getElem_mem hlt)
   rw [Decode.input_split (bf + 262144) pks hpks hpk i hi, Decode.array_split A ps i hi hps] at h_mem
   generalize hE : pks[i] = e at h_mem hpi
-  kat hk unmarshalSSZ 108
-  kat hk unmarshalSSZ 109
-  kat hk unmarshalSSZ 110
+  step_directive hk unmarshalSSZ 108
+  step_directive hk unmarshalSSZ 109
+  step_directive hk unmarshalSSZ 110
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.signed] at h
     exact Codec.jge_false_of_lt _ _ (by simp) (by simp; omega) h
   simp only [Effects.All]
   -- 43 rsi = i; 44 rax = 32i; 45 rdi = i + 1; 46 r8 = i + 1; 47 rdi = 32(i + 1); 48 nop; 49–50 jb not taken
-  kat hk unmarshalSSZ 111
-  kat hk unmarshalSSZ 112
-  kshl64 5
-  kat hk unmarshalSSZ 113
-  kat hk unmarshalSSZ 114
-  kat hk unmarshalSSZ 115
-  kshl64 5
-  kat hk unmarshalSSZ 116
-  kat hk unmarshalSSZ 117
-  kat hk unmarshalSSZ 118
+  step_directive hk unmarshalSSZ 111
+  step_directive hk unmarshalSSZ 112
+  shift_left64 5
+  step_directive hk unmarshalSSZ 113
+  step_directive hk unmarshalSSZ 114
+  step_directive hk unmarshalSSZ 115
+  shift_left64 5
+  step_directive hk unmarshalSSZ 116
+  step_directive hk unmarshalSSZ 117
+  step_directive hk unmarshalSSZ 118
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
@@ -88,31 +88,31 @@ theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
     simp [BitVec.toNat_add, BitVec.toNat_shiftLeft, Nat.shiftLeft_eq] at h; omega
   simp only [Effects.All]
   -- 51 save i; 52 save 32i; 53 save i + 1
-  kat hk unmarshalSSZ 119
-  apply store_step_at _ _ (sp + 40) _ _ _ l28 _ _ (by kaddr) (by ecancel) (by exact h28)
+  step_directive hk unmarshalSSZ 119
+  apply store_step_at _ _ (sp + 40) _ _ _ l28 _ _ (by address_equation) (by ecancel) (by exact h28)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk unmarshalSSZ 120
-  apply store_step_at _ _ (sp + 32) _ _ _ l20 _ _ (by kaddr) (by ecancel) (by exact h20)
+  unfold_step
+  step_directive hk unmarshalSSZ 120
+  apply store_step_at _ _ (sp + 32) _ _ _ l20 _ _ (by address_equation) (by ecancel) (by exact h20)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hk unmarshalSSZ 121
-  apply store_step_at _ _ (sp + 24) _ _ _ l18 _ _ (by kaddr) (by ecancel) (by exact h18)
+  unfold_step
+  step_directive hk unmarshalSSZ 121
+  apply store_step_at _ _ (sp + 24) _ _ _ l18 _ _ (by address_equation) (by ecancel) (by exact h18)
   intro m3 H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
+  unfold_step
   -- 54–57 makeslice(uint8, 0, 32)
-  kat hk unmarshalSSZ 122
-  kat hk unmarshalSSZ 123
+  step_directive hk unmarshalSSZ 122
+  step_directive hk unmarshalSSZ 123
   intro _
-  kat hk unmarshalSSZ 124
-  kat hk unmarshalSSZ 125
-  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by kaddr) (by ecancel) (by exact hrs)
+  step_directive hk unmarshalSSZ 124
+  step_directive hk unmarshalSSZ 125
+  apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by address_equation) (by ecancel) (by exact hrs)
   intro m4 H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
+  unfold_step
   try rw [show sp - 8#64 = sp - 8 from rfl] at *
   refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 125 + 1)) 32 avail lo spl _
     rfl (by simp) (by rfl) (by omega) (by unfold maxAlloc; omega) (by omega) hlo hspl
@@ -129,30 +129,30 @@ theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
   rw [show sp - 8 + 8 = sp by bv_omega] at Hm3
   simp only [Nat.one_mul] at Hm3
   -- 58 save p; 59 load 32i; 60 load buf; 61 rbx = buf + 32i; 62 rcx = 32; 63 memmove
-  kat hk unmarshalSSZ 126
-  apply store_step_at _ _ (sp + 48) _ _ _ l30 _ _ (by kaddr) (by ecancel) (by exact h30)
+  step_directive hk unmarshalSSZ 126
+  apply store_step_at _ _ (sp + 48) _ _ _ l30 _ _ (by address_equation) (by ecancel) (by exact h30)
   intro m5 H5
   simp only [Width.bytes, Width.bits] at H5
-  kunfold
-  kat hk unmarshalSSZ 127
-  apply load_step_at _ _ (sp + 32) _ _ (Int.toBytes 8 (shl5 rax.toBitVec).toInt) _ _ (by kaddr) (by ecancel)
+  unfold_step
+  step_directive hk unmarshalSSZ 127
+  apply load_step_at _ _ (sp + 32) _ _ (Int.toBytes 8 (shift_left5 rax.toBitVec).toInt) _ _ (by address_equation) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   try simp only [ofInt_ofBytes_toBytes64]
-  kat hk unmarshalSSZ 128
-  apply load_step_at _ _ (sp + 80) _ _ (Int.toBytes 8 bf.toInt) _ _ (by kaddr) (by ecancel)
+  step_directive hk unmarshalSSZ 128
+  apply load_step_at _ _ (sp + 80) _ _ (Int.toBytes 8 bf.toInt) _ _ (by address_equation) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   try simp only [ofInt_ofBytes_toBytes64]
-  kat hk unmarshalSSZ 129
-  kat hk unmarshalSSZ 130
-  kat hk unmarshalSSZ 131
-  kat hk unmarshalSSZ 132
+  step_directive hk unmarshalSSZ 129
+  step_directive hk unmarshalSSZ 130
+  step_directive hk unmarshalSSZ 131
+  step_directive hk unmarshalSSZ 132
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 125 + 1)).toBitVec.toInt) _ _
-    (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by address_equation) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6 H6
   simp only [Width.bytes, Width.bits] at H6
-  kunfold
+  unfold_step
   try rw [show sp - 8#64 = sp - 8 from rfl] at *
   rw [show bf + (rax.toBitVec <<< 5) * 1#64 + 262144 = bf + 262144 + BitVec.ofNat 64 (32 * i) by address_with_products]
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 132 + 1)) e (List.replicate 32 0) stk3 _
@@ -167,78 +167,78 @@ theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
     apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega] at hrsp4
   subst hrsp4 hr144 hrbp4
   -- 64 load recv; 65 load len = 8192; 66 load i; 67–68 bounds check (not taken)
-  kat hk unmarshalSSZ 133
-  apply load_step_at _ _ (sp + 72) _ _ (Int.toBytes 8 recv.toInt) _ _ (by kaddr) (by ecancel)
+  step_directive hk unmarshalSSZ 133
+  apply load_step_at _ _ (sp + 72) _ _ (Int.toBytes 8 recv.toInt) _ _ (by address_equation) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   try simp only [ofInt_ofBytes_toBytes64]
-  kat hk unmarshalSSZ 134
-  apply load_step_at _ _ (recv + 32) _ _ (Int.toBytes 8 8192) _ _ (by kaddr) (by ecancel)
+  step_directive hk unmarshalSSZ 134
+  apply load_step_at _ _ (recv + 32) _ _ (Int.toBytes 8 8192) _ _ (by address_equation) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 135
-  apply load_step_at _ _ (sp + 40) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by kaddr) (by ecancel)
+  unfold_step
+  step_directive hk unmarshalSSZ 135
+  apply load_step_at _ _ (sp + 40) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by address_equation) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   try simp only [ofInt_ofBytes_toBytes64]
-  kat hk unmarshalSSZ 136
-  kat hk unmarshalSSZ 137
-  kat hk unmarshalSSZ 138
+  step_directive hk unmarshalSSZ 136
+  step_directive hk unmarshalSSZ 137
+  step_directive hk unmarshalSSZ 138
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
     rw [show Int.ofBytes (Int.toBytes 8 8192) = 8192 by decide] at h; omega
   simp only [Effects.All]
   -- 69 rsi = 3i; 70 load A; 71–72 len and cap of header i; 73–75 writeBarrier; 76 load p; 77 jmp L_8f
-  kat hk unmarshalSSZ 139
-  kat hk unmarshalSSZ 140
-  apply load_step_at _ _ (recv + 24) _ _ (Int.toBytes 8 A.toInt) _ _ (by kaddr) (by ecancel)
+  step_directive hk unmarshalSSZ 139
+  step_directive hk unmarshalSSZ 140
+  apply load_step_at _ _ (recv + 24) _ _ (Int.toBytes 8 A.toInt) _ _ (by address_equation) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   try simp only [ofInt_ofBytes_toBytes64]
-  kat hk unmarshalSSZ 141
+  step_directive hk unmarshalSSZ 141
   apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (Codec.zeroBytes 8) _ _ (by address_with_products) (by ecancel) (by rfl)
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
-  kunfold
-  kat hk unmarshalSSZ 142
+  unfold_step
+  step_directive hk unmarshalSSZ 142
   apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (Codec.zeroBytes 8) _ _ (by address_with_products) (by ecancel) (by rfl)
   intro m8 H8
   simp only [Width.bytes, Width.bits] at H8
-  kunfold
-  kat hk unmarshalSSZ 143
+  unfold_step
+  step_directive hk unmarshalSSZ 143
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
-  kunfold
-  kat hk unmarshalSSZ 144
+  unfold_step
+  step_directive hk unmarshalSSZ 144
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  kat hk unmarshalSSZ 145
-  apply load_step_at _ _ (sp + 48) _ _ (Int.toBytes 8 rax3.toBitVec.toInt) _ _ (by kaddr) (by ecancel)
+  step_directive hk unmarshalSSZ 145
+  apply load_step_at _ _ (sp + 48) _ _ (Int.toBytes 8 rax3.toBitVec.toInt) _ _ (by address_equation) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   try simp only [ofInt_ofBytes_toBytes64]
-  kat hk unmarshalSSZ 146
-  klabel hk hf unmarshalSSZ 104
-  kat hk unmarshalSSZ 104
-  kat hk unmarshalSSZ 105
+  step_directive hk unmarshalSSZ 146
+  label_address hk hf unmarshalSSZ 104
+  step_directive hk unmarshalSSZ 104
+  step_directive hk unmarshalSSZ 105
   apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (Codec.zeroBytes 8) _ _ (by address_with_products) (by ecancel) (by rfl)
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
-  kunfold
-  kat hk unmarshalSSZ 106
-  apply load_step_at _ _ (sp + 24) _ _ (Int.toBytes 8 (rax.toBitVec + 1).toInt) _ _ (by kaddr) (by ecancel)
+  unfold_step
+  step_directive hk unmarshalSSZ 106
+  apply load_step_at _ _ (sp + 24) _ _ (Int.toBytes 8 (rax.toBitVec + 1).toInt) _ _ (by address_equation) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   try simp only [ofInt_ofBytes_toBytes64]
-  kat hk unmarshalSSZ 107
+  step_directive hk unmarshalSSZ 107
   apply Eventually.done
   have e32 : Int.toBytes 8 (BitVec.toInt (32 : BitVec 64)) = Int.toBytes 8 32 := by decide
   simp only [e32] at H9
   rw [show k + 132 + 1 = k + 133 from rfl] at H9
   refine ⟨rfl, ?_, rfl, rfl, rfl, rax3.toBitVec, Int.toBytes 8 (rax.toBitVec + 1).toInt,
-    Int.toBytes 8 (shl5 rax.toBitVec).toInt, Int.toBytes 8 rax.toBitVec.toInt, Int.toBytes 8 rax3.toBitVec.toInt,
+    Int.toBytes 8 (shift_left5 rax.toBitVec).toInt, Int.toBytes 8 rax.toBitVec.toInt, Int.toBytes 8 rax3.toBitVec.toInt,
     spm3, stk4, Int.toBytes_length 8 _,
     Int.toBytes_length 8 _, Int.toBytes_length 8 _, Int.toBytes_length 8 _, hspm3, hstk4, ?_⟩
   · show (rax.toBitVec + 1).toNat = i + 1
@@ -258,14 +258,14 @@ theorem Decode.state_roots_exit (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
   simp only at hrax hP ⊢
   have h8192 : rax = 8192 := UInt64.toNat_inj.mp (by rw [hrax]; rfl)
   subst h8192
-  kat hk unmarshalSSZ 108
-  kat hk unmarshalSSZ 109
-  kat hk unmarshalSSZ 110
+  step_directive hk unmarshalSSZ 108
+  step_directive hk unmarshalSSZ 109
+  step_directive hk unmarshalSSZ 110
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.signed] at h
   simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 154
-  kat hk unmarshalSSZ 154
+  label_address hk hf unmarshalSSZ 154
+  step_directive hk unmarshalSSZ 154
   exact Eventually.done _ (hP _)
 
 /-- **The BlockRoots loop**: from `L_a0` with i elements done (`i + j = 8192`) to directive 86 with all 8192 done. -/
@@ -273,7 +273,7 @@ theorem Decode.state_roots_loop (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
     (sp recv bf A : BitVec 64) (pks : List (List UInt8)) (hpks : pks.length = 8192)
     (hpk : ∀ e ∈ pks, e.length = 32) (rbp0 r140 : UInt64) (S : Nat)
     (Heap : Nat → DataMem → Prop) (R : DataMem → Prop)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) :
     ∀ (j i : Nat) (ps : List (BitVec 64)) (l18 l20 l28 l30 spl rslot lo : List UInt8) (avail : Nat)
       (s : MachineData),
     i + j = 8192 → ps.length = i → l18.length = 8 → l20.length = 8 → l28.length = 8 → l30.length = 8 →

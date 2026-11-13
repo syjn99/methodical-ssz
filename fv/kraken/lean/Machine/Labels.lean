@@ -96,7 +96,7 @@ end Machine
 /-- Rewrite `label l` (the label at directive `j` of fragment `prog`) to `Host.addrOf (k + j)`.
 Side conditions are computed by `simp` (not `decide`/`rfl`, whose proof terms
 exceed the recursion limit for long fragments). -/
-macro "klabel " hk:term:max hf:term:max prog:ident j:num : tactic => `(tactic| (
+macro "label_address " hk:term:max hf:term:max prog:ident j:num : tactic => `(tactic| (
   have hkl := Machine.label_at' $hk $hf (j := $j)
     (by simp only [$prog:ident, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [$prog:ident, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)

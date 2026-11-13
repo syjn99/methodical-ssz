@@ -6,10 +6,10 @@ import Prysm.ElfData.PrysmTarget
 /-!
 # Type-dispatching bump models of `runtime.makeslice` and `runtime.newobject` for the IndexedAttestation witness host
 
-The IndexedAttestation accept path needs four `MakesliceC` instances (esz 8 for `typeUint64_addr`, esz 1 for the uint8 type word, at
-three stack sizes) and two `NewobjectC` instances (96 bytes for `typeAttestationData_addr`, 72 for `typeCheckpoint_addr`). A Host has
+The IndexedAttestation accept path needs four `MakesliceContract` instances (esz 8 for `typeUint64_addr`, esz 1 for the uint8 type word, at
+three stack sizes) and two `NewobjectContract` instances (96 bytes for `typeAttestationData_addr`, 72 for `typeCheckpoint_addr`). A Host has
 one `runtime.makeslice` and one `runtime.newobject`, so each model dispatches on the type word in rax:
-`Prysm/RuntimeModel/BumpAllocT3.S` bumps by 8·cnt for `type__+387456` and by cnt otherwise; `Prysm/RuntimeModel/BumpNewT3.S` bumps by 96
+`Prysm/RuntimeModel/BumpMakesliceUint64Dispatch.S` bumps by 8·cnt for `type__+387456` and by cnt otherwise; `Prysm/RuntimeModel/BumpNewobjectStructDispatch.S` bumps by 96
 for `type__+1464512` and by 72 otherwise. The offsets are those of `prysm/go1.26.10/link-set/data/typeUint64.data` and
 `typeAttestationData.data`. The proof texts are `Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1` / `Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24` (`Prysm/RuntimeModel/BumpAllocatorByteSliceDispatch.lean`) and `Prysm.AttestationData.bump_newobject72`
 with the dispatch steps. Abstract models for non-vacuity only, not a Go refinement. Both `.S`
@@ -20,16 +20,16 @@ open Machine Runtime
 
 namespace Prysm.RuntimeModel
 
-def BumpAllocUint64Dispatch : Program := include_x64_rt "Prysm/RuntimeModel/BumpAllocT3.S"
-def BumpNewStructDispatch : Program := include_x64_rt "Prysm/RuntimeModel/BumpNewT3.S"
+def BumpMakesliceUint64Dispatch : Program := include_x64_code "Prysm/RuntimeModel/BumpMakesliceUint64Dispatch.S"
+def BumpNewobjectStructDispatch : Program := include_x64_code "Prysm/RuntimeModel/BumpNewobjectStructDispatch.S"
 
 variable [Host]
 
 /-- The esz-1 branch: any type word other than `typeUint64_addr`. -/
-theorem bump_makeslice_uint64_dispatch_size1 (j : Nat) (hj : BumpAllocUint64Dispatch.IsInfixAt Host.prog j)
+theorem bump_makeslice_uint64_dispatch_size1 (j : Nat) (hj : BumpMakesliceUint64Dispatch.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.makeslice")) (ty : BitVec 64)
     (hne : ty ≠ ElfData.PrysmTarget.typeUint64_addr) {S : Nat} :
-    MakesliceC bumpHeap ty 1 S := by
+    MakesliceContract bumpHeap ty 1 S := by
   intro st ret cnt avail stk spill F _hty _hrbx hrcx hav _hmax _hcnt hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
@@ -38,12 +38,12 @@ theorem bump_makeslice_uint64_dispatch_size1 (j : Nat) (hj : BumpAllocUint64Disp
   have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
       ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ F)) mem := by ecancel
   obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
-    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.fvBump").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
+    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.modelBumpPointer").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
   obtain ⟨hpa, hp⟩ := sep_pure_left hp
-  kat hj BumpAllocUint64Dispatch 0
-  kat hj BumpAllocUint64Dispatch 1
-  kat hj BumpAllocUint64Dispatch 2
-  kat hj BumpAllocUint64Dispatch 3
+  step_directive hj BumpMakesliceUint64Dispatch 0
+  step_directive hj BumpMakesliceUint64Dispatch 1
+  step_directive hj BumpMakesliceUint64Dispatch 2
+  step_directive hj BumpMakesliceUint64Dispatch 3
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
@@ -54,19 +54,19 @@ theorem bump_makeslice_uint64_dispatch_size1 (j : Nat) (hj : BumpAllocUint64Disp
     simp only [BitVec.sub_add_cancel, BitVec.zero_add] at h2
     exact h2
   simp only [Effects.All]
-  kat hj BumpAllocUint64Dispatch 4
+  step_directive hj BumpMakesliceUint64Dispatch 4
   apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hj BumpAllocUint64Dispatch 5
-  kat hj BumpAllocUint64Dispatch 6
+  unfold_step
+  step_directive hj BumpMakesliceUint64Dispatch 5
+  step_directive hj BumpMakesliceUint64Dispatch 6
   apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hj BumpAllocUint64Dispatch 7
-  kat hj BumpAllocUint64Dispatch 8
+  unfold_step
+  step_directive hj BumpMakesliceUint64Dispatch 7
+  step_directive hj BumpMakesliceUint64Dispatch 8
   apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   have hq : (p + rcx.toBitVec * 1#64).toNat = p.toNat + 1 * cnt := by
     simp only [BitVec.toNat_add, BitVec.toNat_mul, BitVec.toNat_ofNat, UInt64.toNat_toBitVec]; omega
@@ -76,7 +76,7 @@ theorem bump_makeslice_uint64_dispatch_size1 (j : Nat) (hj : BumpAllocUint64Disp
     rw [List.replicate_append_replicate]; congr 1; omega
   rw [hsplit, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
   simp only [List.length_replicate, hq'] at H1
-  have H2 : ((Eq ((Int.toBytes 8 (p + rcx.toBitVec * 1#64).toInt).At (label "runtime.fvBump").toBitVec)
+  have H2 : ((Eq ((Int.toBytes 8 (p + rcx.toBitVec * 1#64).toInt).At (label "runtime.modelBumpPointer").toBitVec)
       ⋆ Eq ((List.replicate (avail - 1 * cnt) 0).At (p + rcx.toBitVec * 1#64)))
       ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
         ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((List.replicate (1 * cnt) 0).At p) ⋆ F)) m1 := by ecancel
@@ -87,9 +87,9 @@ theorem bump_makeslice_uint64_dispatch_size1 (j : Nat) (hj : BumpAllocUint64Disp
   · dsimp only; ecancel
 
 /-- The esz-8 branch: the type word `typeUint64_addr`. -/
-theorem bump_makeslice_uint64_dispatch_size8 (j : Nat) (hj : BumpAllocUint64Dispatch.IsInfixAt Host.prog j)
-    (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.makeslice")) (hfl : LabelsFresh BumpAllocUint64Dispatch j) {S : Nat} :
-    MakesliceC bumpHeap ElfData.PrysmTarget.typeUint64_addr 8 S := by
+theorem bump_makeslice_uint64_dispatch_size8 (j : Nat) (hj : BumpMakesliceUint64Dispatch.IsInfixAt Host.prog j)
+    (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.makeslice")) (hfl : LabelsFresh BumpMakesliceUint64Dispatch j) {S : Nat} :
+    MakesliceContract bumpHeap ElfData.PrysmTarget.typeUint64_addr 8 S := by
   intro st ret cnt avail stk spill F _hty _hrbx hrcx hav _hmax _hcnt hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
@@ -98,12 +98,12 @@ theorem bump_makeslice_uint64_dispatch_size8 (j : Nat) (hj : BumpAllocUint64Disp
   have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
       ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ F)) mem := by ecancel
   obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
-    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.fvBump").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
+    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.modelBumpPointer").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
   obtain ⟨hpa, hp⟩ := sep_pure_left hp
-  kat hj BumpAllocUint64Dispatch 0
-  kat hj BumpAllocUint64Dispatch 1
-  kat hj BumpAllocUint64Dispatch 2
-  kat hj BumpAllocUint64Dispatch 3
+  step_directive hj BumpMakesliceUint64Dispatch 0
+  step_directive hj BumpMakesliceUint64Dispatch 1
+  step_directive hj BumpMakesliceUint64Dispatch 2
+  step_directive hj BumpMakesliceUint64Dispatch 3
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
@@ -112,21 +112,21 @@ theorem bump_makeslice_uint64_dispatch_size8 (j : Nat) (hj : BumpAllocUint64Disp
     simp only [ElfData.PrysmTarget.typeUint64_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
     exact BitVec.sub_self _
   simp only [Effects.All]
-  klabel hj hfl BumpAllocUint64Dispatch 9
-  kat hj BumpAllocUint64Dispatch 9
-  kat hj BumpAllocUint64Dispatch 10
+  label_address hj hfl BumpMakesliceUint64Dispatch 9
+  step_directive hj BumpMakesliceUint64Dispatch 9
+  step_directive hj BumpMakesliceUint64Dispatch 10
   apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hj BumpAllocUint64Dispatch 11
-  kat hj BumpAllocUint64Dispatch 12
+  unfold_step
+  step_directive hj BumpMakesliceUint64Dispatch 11
+  step_directive hj BumpMakesliceUint64Dispatch 12
   apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hj BumpAllocUint64Dispatch 13
-  kat hj BumpAllocUint64Dispatch 14
+  unfold_step
+  step_directive hj BumpMakesliceUint64Dispatch 13
+  step_directive hj BumpMakesliceUint64Dispatch 14
   apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   have hq : (p + rcx.toBitVec * 8#64).toNat = p.toNat + 8 * cnt := by
     simp only [BitVec.toNat_add, BitVec.toNat_mul, BitVec.toNat_ofNat, UInt64.toNat_toBitVec]; omega
@@ -136,7 +136,7 @@ theorem bump_makeslice_uint64_dispatch_size8 (j : Nat) (hj : BumpAllocUint64Disp
     rw [List.replicate_append_replicate]; congr 1; omega
   rw [hsplit, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
   simp only [List.length_replicate, hq'] at H1
-  have H2 : ((Eq ((Int.toBytes 8 (p + rcx.toBitVec * 8#64).toInt).At (label "runtime.fvBump").toBitVec)
+  have H2 : ((Eq ((Int.toBytes 8 (p + rcx.toBitVec * 8#64).toInt).At (label "runtime.modelBumpPointer").toBitVec)
       ⋆ Eq ((List.replicate (avail - 8 * cnt) 0).At (p + rcx.toBitVec * 8#64)))
       ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
         ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((List.replicate (8 * cnt) 0).At p) ⋆ F)) m1 := by ecancel
@@ -147,10 +147,10 @@ theorem bump_makeslice_uint64_dispatch_size8 (j : Nat) (hj : BumpAllocUint64Disp
   · dsimp only; ecancel
 
 /-- The 72-byte branch: any type word other than `typeAttestationData_addr`. -/
-theorem bump_newobject_struct_dispatch_size72 (j : Nat) (hj : BumpNewStructDispatch.IsInfixAt Host.prog j)
+theorem bump_newobject_struct_dispatch_size72 (j : Nat) (hj : BumpNewobjectStructDispatch.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.newobject")) (ty : BitVec 64)
     (hne : ty ≠ ElfData.PrysmTarget.typeAttestationData_addr) {S : Nat} :
-    NewobjectC bumpHeap ty 72 S := by
+    NewobjectContract bumpHeap ty 72 S := by
   intro st ret avail stk spill F _hty hav hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
@@ -159,14 +159,14 @@ theorem bump_newobject_struct_dispatch_size72 (j : Nat) (hj : BumpNewStructDispa
   have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
       ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ F)) mem := by ecancel
   obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
-    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.fvBump").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
+    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.modelBumpPointer").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
   obtain ⟨hpa, hp⟩ := sep_pure_left hp
   have hk := hj
-  simp only [BumpNewStructDispatch] at hk
-  kat hj BumpNewStructDispatch 0
-  kat hj BumpNewStructDispatch 1
-  kat hj BumpNewStructDispatch 2
-  kat hj BumpNewStructDispatch 3
+  simp only [BumpNewobjectStructDispatch] at hk
+  step_directive hj BumpNewobjectStructDispatch 0
+  step_directive hj BumpNewobjectStructDispatch 1
+  step_directive hj BumpNewobjectStructDispatch 2
+  step_directive hj BumpNewobjectStructDispatch 3
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
@@ -177,19 +177,19 @@ theorem bump_newobject_struct_dispatch_size72 (j : Nat) (hj : BumpNewStructDispa
     simp only [BitVec.sub_add_cancel, BitVec.zero_add] at h2
     exact h2
   simp only [Effects.All]
-  kat hj BumpNewStructDispatch 4
+  step_directive hj BumpNewobjectStructDispatch 4
   apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hj BumpNewStructDispatch 5
-  kat hj BumpNewStructDispatch 6
+  unfold_step
+  step_directive hj BumpNewobjectStructDispatch 5
+  step_directive hj BumpNewobjectStructDispatch 6
   apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hj BumpNewStructDispatch 7
-  kat hj BumpNewStructDispatch 8
+  unfold_step
+  step_directive hj BumpNewobjectStructDispatch 7
+  step_directive hj BumpNewobjectStructDispatch 8
   apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   have h72 : (72 : BitVec 64).toNat = 72 := rfl
   have hq : (p + (72 : BitVec 64)).toNat = p.toNat + 72 := by
@@ -199,7 +199,7 @@ theorem bump_newobject_struct_dispatch_size72 (j : Nat) (hj : BumpNewStructDispa
     rw [List.replicate_append_replicate]; congr 1; omega
   rw [hsplit, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
   simp only [List.length_replicate, hq'] at H1
-  have H2 : ((Eq ((Int.toBytes 8 (p + (72 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
+  have H2 : ((Eq ((Int.toBytes 8 (p + (72 : BitVec 64)).toInt).At (label "runtime.modelBumpPointer").toBitVec)
       ⋆ Eq ((List.replicate (avail - 72) 0).At (p + (72 : BitVec 64))))
       ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
         ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((List.replicate (72) 0).At p) ⋆ F)) m1 := by ecancel
@@ -209,9 +209,9 @@ theorem bump_newobject_struct_dispatch_size72 (j : Nat) (hj : BumpNewStructDispa
   · apply UInt64.toBitVec_inj.mp; simp
   · dsimp only; ecancel
 /-- The 96-byte branch: the type word `typeAttestationData_addr`. -/
-theorem bump_newobject_struct_dispatch_size96 (j : Nat) (hj : BumpNewStructDispatch.IsInfixAt Host.prog j)
-    (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.newobject")) (hfl : LabelsFresh BumpNewStructDispatch j) {S : Nat} :
-    NewobjectC bumpHeap ElfData.PrysmTarget.typeAttestationData_addr 96 S := by
+theorem bump_newobject_struct_dispatch_size96 (j : Nat) (hj : BumpNewobjectStructDispatch.IsInfixAt Host.prog j)
+    (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.newobject")) (hfl : LabelsFresh BumpNewobjectStructDispatch j) {S : Nat} :
+    NewobjectContract bumpHeap ElfData.PrysmTarget.typeAttestationData_addr 96 S := by
   intro st ret avail stk spill F _hty hav hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
@@ -220,14 +220,14 @@ theorem bump_newobject_struct_dispatch_size96 (j : Nat) (hj : BumpNewStructDispa
   have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
       ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ F)) mem := by ecancel
   obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
-    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.fvBump").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
+    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.modelBumpPointer").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
   obtain ⟨hpa, hp⟩ := sep_pure_left hp
   have hk := hj
-  simp only [BumpNewStructDispatch] at hk
-  kat hj BumpNewStructDispatch 0
-  kat hj BumpNewStructDispatch 1
-  kat hj BumpNewStructDispatch 2
-  kat hj BumpNewStructDispatch 3
+  simp only [BumpNewobjectStructDispatch] at hk
+  step_directive hj BumpNewobjectStructDispatch 0
+  step_directive hj BumpNewobjectStructDispatch 1
+  step_directive hj BumpNewobjectStructDispatch 2
+  step_directive hj BumpNewobjectStructDispatch 3
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
@@ -236,21 +236,21 @@ theorem bump_newobject_struct_dispatch_size96 (j : Nat) (hj : BumpNewStructDispa
     simp only [ElfData.PrysmTarget.typeAttestationData_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
     exact BitVec.sub_self _
   simp only [Effects.All]
-  klabel hj hfl BumpNewStructDispatch 9
-  kat hj BumpNewStructDispatch 9
-  kat hj BumpNewStructDispatch 10
+  label_address hj hfl BumpNewobjectStructDispatch 9
+  step_directive hj BumpNewobjectStructDispatch 9
+  step_directive hj BumpNewobjectStructDispatch 10
   apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hj BumpNewStructDispatch 11
-  kat hj BumpNewStructDispatch 12
+  unfold_step
+  step_directive hj BumpNewobjectStructDispatch 11
+  step_directive hj BumpNewobjectStructDispatch 12
   apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hj BumpNewStructDispatch 13
-  kat hj BumpNewStructDispatch 14
+  unfold_step
+  step_directive hj BumpNewobjectStructDispatch 13
+  step_directive hj BumpNewobjectStructDispatch 14
   apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   have h96 : (96 : BitVec 64).toNat = 96 := rfl
   have hq : (p + (96 : BitVec 64)).toNat = p.toNat + 96 := by
@@ -260,7 +260,7 @@ theorem bump_newobject_struct_dispatch_size96 (j : Nat) (hj : BumpNewStructDispa
     rw [List.replicate_append_replicate]; congr 1; omega
   rw [hsplit, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
   simp only [List.length_replicate, hq'] at H1
-  have H2 : ((Eq ((Int.toBytes 8 (p + (96 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
+  have H2 : ((Eq ((Int.toBytes 8 (p + (96 : BitVec 64)).toInt).At (label "runtime.modelBumpPointer").toBitVec)
       ⋆ Eq ((List.replicate (avail - 96) 0).At (p + (96 : BitVec 64))))
       ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
         ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((List.replicate (96) 0).At p) ⋆ F)) m1 := by ecancel

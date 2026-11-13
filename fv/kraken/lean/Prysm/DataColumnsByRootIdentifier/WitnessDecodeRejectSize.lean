@@ -15,27 +15,27 @@ open Machine Runtime Machine.Witness Prysm.DataColumnsByRootIdentifier.Code
 
 namespace Prysm.DataColumnsByRootIdentifier.Witness.DecodeRejectSize
 
-abbrev z (k : Nat) : List UInt8 := List.replicate k 0
-abbrev bw (v : BitVec 64) : List UInt8 := Int.toBytes 8 v.toInt
+abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
+abbrev bitvec_word_bytes (v : BitVec 64) : List UInt8 := Int.toBytes 8 v.toInt
 
 namespace RejectSize
 
-def P : Program := [.label "ssz.ErrSize"] ++ unmarshalSSZ
+def program : Program := [.label "ssz.ErrSize"] ++ unmarshalSSZ
 
-theorem P_len : P.length = 230 := by rfl
+theorem program_length : program.length = 230 := by rfl
 
-instance host : Host := mkHost P (by rw [P_len]; decide)
+instance host : Host := mkHost program (by rw [program_length]; decide)
 
-theorem hk1 : unmarshalSSZ.IsInfixAt Host.prog 1 := infixAt_of [.label "ssz.ErrSize"] [] (by simp [Host.prog, mkHost, P]) rfl
-theorem hf1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)
+theorem placed_at_1 : unmarshalSSZ.IsInfixAt Host.prog 1 := infixAt_of [.label "ssz.ErrSize"] [] (by simp [Host.prog, mkHost, program]) rfl
+theorem labels_fresh_at_1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)
 
-theorem label_es : label "ssz.ErrSize" = 0x10000 :=
-  mk_label P _ 0 _ (by simp [P]) (by simp [labs])
+theorem label_err_size : label "ssz.ErrSize" = 0x10000 :=
+  mk_label program _ 0 _ (by simp [program]) (by simp [labs])
 
 /-- error words · guard · fp · return address · spill rax · spill rbx. -/
-def block : List UInt8 := bw 0x10e8 ++ (bw 0x2b ++ (bw 0 ++ (z 8 ++ (bw 0 ++ (z 8 ++ z 8)))))
+def block : List UInt8 := bitvec_word_bytes 0x10e8 ++ (bitvec_word_bytes 0x2b ++ (bitvec_word_bytes 0 ++ (zeros 8 ++ (bitvec_word_bytes 0 ++ (zeros 8 ++ zeros 8)))))
 
-def cs0 (L : Nat) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
+def initial_state (L : Nat) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10018, 0x20000, UInt64.ofNat L, 0, 0, 0, 0x10020, 0, 0, 0, 0, 0, 0, 0, 0x10000, 0⟩, zmms, flags,
     block.At (0x10000 : BitVec 64)⟩
 
@@ -43,13 +43,13 @@ def cs0 (L : Nat) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
 theorem runs (L : Nat) (hL : L < 36) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10e8 ∧ st.data.regs.rbx = 0x2b)
-      ⟨cs0 L zmms flags, Host.addrOf 1⟩ :=
-  eventually_mono (Decode.reject_size 1 hk1 hf1 (cs0 L zmms flags) 0 0 0x10e8 0x2b (z 8) (z 8) rfl rfl
-    (Eq ((z 8).At (0x10028 : BitVec 64)))
+      ⟨initial_state L zmms flags, Host.addrOf 1⟩ :=
+  eventually_mono (Decode.reject_size 1 placed_at_1 labels_fresh_at_1 (initial_state L zmms flags) 0 0 0x10e8 0x2b (zeros 8) (zeros 8) rfl rfl
+    (Eq ((zeros 8).At (0x10028 : BitVec 64)))
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) (block.At (0x10000 : BitVec 64)) := rfl
-      wit_split
-      simp only [cs0, bw, ElfData.PrysmTarget.sszErrSize_addr, label_es, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      witness_split
+      simp only [initial_state, bitvec_word_bytes, ElfData.PrysmTarget.sszErrSize_addr, label_err_size, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         show (UInt64.ofNat 0).toBitVec = 0#64 from rfl] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
@@ -66,24 +66,24 @@ end RejectSize
 
 namespace RejectOffset
 
-def P : Program := [.label "ssz.ErrInvalidVariableOffset"] ++ unmarshalSSZ
+def program : Program := [.label "ssz.ErrInvalidVariableOffset"] ++ unmarshalSSZ
 
-theorem P_len : P.length = 230 := by rfl
+theorem program_length : program.length = 230 := by rfl
 
-instance host : Host := mkHost P (by rw [P_len]; decide)
+instance host : Host := mkHost program (by rw [program_length]; decide)
 
-theorem hk1 : unmarshalSSZ.IsInfixAt Host.prog 1 :=
-  infixAt_of [.label "ssz.ErrInvalidVariableOffset"] [] (by simp [Host.prog, mkHost, P]) rfl
-theorem hf1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)
+theorem placed_at_1 : unmarshalSSZ.IsInfixAt Host.prog 1 :=
+  infixAt_of [.label "ssz.ErrInvalidVariableOffset"] [] (by simp [Host.prog, mkHost, program]) rfl
+theorem labels_fresh_at_1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)
 
-theorem label_eo : label "ssz.ErrInvalidVariableOffset" = 0x10000 :=
-  mk_label P _ 0 _ (by simp [P]) (by simp [labs])
+theorem label_err_invalid_variable_offset : label "ssz.ErrInvalidVariableOffset" = 0x10000 :=
+  mk_label program _ 0 _ (by simp [program]) (by simp [labs])
 
 /-- error words · guard · fp · return address · spill rax · spill rbx · the offset bytes at buf + 32. -/
 def block (off : List UInt8) : List UInt8 :=
-  bw 0x10e8 ++ (bw 0x2b ++ (bw 0 ++ (z 8 ++ (bw 0 ++ (z 8 ++ (z 8 ++ off))))))
+  bitvec_word_bytes 0x10e8 ++ (bitvec_word_bytes 0x2b ++ (bitvec_word_bytes 0 ++ (zeros 8 ++ (bitvec_word_bytes 0 ++ (zeros 8 ++ (zeros 8 ++ off))))))
 
-def cs0 (L : Nat) (off : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
+def initial_state (L : Nat) (off : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10018, 0x10018, UInt64.ofNat L, 0, 0, 0, 0x10020, 0, 0, 0, 0, 0, 0, 0, 0x10000, 0⟩, zmms, flags,
     (block off).At (0x10000 : BitVec 64)⟩
 
@@ -92,13 +92,13 @@ theorem runs (L : Nat) (hL : 36 ≤ L) (hL' : L < 2 ^ 63) (off : List UInt8) (ho
     (hoff : off ≠ offsetBytes) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10e8 ∧ st.data.regs.rbx = 0x2b)
-      ⟨cs0 L off zmms flags, Host.addrOf 1⟩ :=
-  eventually_mono (Decode.reject_offset 1 hk1 hf1 (cs0 L off zmms flags) 0 0 0x10e8 0x2b (z 8) (z 8) rfl rfl
-    off hoff4 hoff (Eq ((z 8).At (0x10028 : BitVec 64)))
+      ⟨initial_state L off zmms flags, Host.addrOf 1⟩ :=
+  eventually_mono (Decode.reject_offset 1 placed_at_1 labels_fresh_at_1 (initial_state L off zmms flags) 0 0 0x10e8 0x2b (zeros 8) (zeros 8) rfl rfl
+    off hoff4 hoff (Eq ((zeros 8).At (0x10028 : BitVec 64)))
     (by
       have H : Eq ((block off).At (0x10000 : BitVec 64)) ((block off).At (0x10000 : BitVec 64)) := rfl
-      wit_split [hoff4]
-      simp only [cs0, bw, ElfData.PrysmTarget.sszErrInvalidVariableOffset_addr, label_eo, UInt64.toBitVec_ofNat,
+      witness_split [hoff4]
+      simp only [initial_state, bitvec_word_bytes, ElfData.PrysmTarget.sszErrInvalidVariableOffset_addr, label_err_invalid_variable_offset, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         show (UInt64.ofNat 0).toBitVec = 0#64 from rfl] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢

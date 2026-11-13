@@ -141,7 +141,8 @@ These decisions are binding for every step.
    `<Role>` is in CamelCase: the role of the theorem that the witness satisfies, for example `Witness.DecodeAccept`.
    The main witness theorem is `runs`, with a plain qualifier for the case (`runs_empty`, `runs_one_element`, `runs_maximum`).
    Full name: `Prysm.Checkpoint.Witness.DecodeAccept.runs`.
-   Helper declarations of a witness file (`P`, `host`, `z`, `w`, `label_err`) keep their short names in that namespace.
+   Helper declarations of a witness file have plain names in that namespace (`program`, `host`, `zeros`, `word_bytes`,
+   `label_err_size`; the placement facts `placed_at_<n>`, `labels_fresh_at_<n>`, `no_label_before_<n>`).
 4. The link sets of the Prysm ELF are merged into one link set, `prysm/go1.26.10/link-set`, with one data reader.
    The data module is `Prysm/ElfData/PrysmTarget.lean` (namespace `ElfData.PrysmTarget`).
    The reader is `Prysm/ElfData/PrysmTargetReader.lean` with the command `prysm_data_include`.

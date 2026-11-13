@@ -94,7 +94,7 @@ def run_case(c, work):
         (d / "mut.S").write_text(S2)
         name = c["code_def"]
         rest = re.sub(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", name + "Mut", rest)
-        decl = f'def {n.code_ns_of(c)}.{name}Mut : Program := include_x64_rt "{d / "mut.S"}"'
+        decl = f'def {n.code_ns_of(c)}.{name}Mut : Program := include_x64_code "{d / "mut.S"}"'
         rest = decl + "\n\n" + rest
     if c["kind"] == "stmt":
         rl = rest.split("\n")

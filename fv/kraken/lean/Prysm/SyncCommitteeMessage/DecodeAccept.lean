@@ -20,8 +20,8 @@ statement is the independent hand statement `Prysm.SyncCommitteeMessage.Decode.a
 * `Decode.generated_call_Signature_seg` (120–145): GENERATED,
 * hand steps 146–147, label 154, 155 and the epilogue 156–160 (the text of the BeaconBlockHeader tail).
 
-Stack (rsp = entry rsp): frame `sub $0x60` as BeaconBlockHeader; the helper lemmas `Prysm.BeaconBlockHeader.Decode.stack_low_eq`, `Prysm.BeaconBlockHeader.Decode.lo8`,
-`Prysm.BeaconBlockHeader.Decode.j3`, `Prysm.BeaconBlockHeader.Decode.accept_guard` and the tactic `beacon_block_header_addr` are reused. No contract, no new hypothesis form.
+Stack (rsp = entry rsp): frame `sub $0x60` as BeaconBlockHeader; the helper lemmas `Prysm.BeaconBlockHeader.Decode.stack_low_eq`, `Prysm.BeaconBlockHeader.Decode.low_stack_split`,
+`Prysm.BeaconBlockHeader.Decode.split_three_words`, `Prysm.BeaconBlockHeader.Decode.accept_guard` and the tactic `beacon_block_header_addr` are reused. No contract, no new hypothesis form.
 -/
 
 open Machine Runtime Prysm.AttestationData.Code Prysm.SyncCommitteeMessage.Code Codec
@@ -38,8 +38,8 @@ theorem Decode.accept : Decode.accept_statement := by
     fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 aP1 aL1 aC1 a40 aP2 aL2 aC2
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrs hast ha8 haP1 haL1 haC1 ha40 haP2 haL2 haC2
     R S hS hlo Heap avail h_mem hguard hlen hav hms hmm
-  have hsl : U64CalleeAcc Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
-  have hvi : U64CalleeAcc Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hsl : U64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
+  have hvi : U64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
@@ -49,20 +49,20 @@ theorem Decode.accept : Decode.accept_statement := by
   have hlos : Eq (lo.At (rsp.toBitVec - 120 - BitVec.ofNat 64 S)) =
       Eq ((lo.take S).At (rsp.toBitVec - 120 - BitVec.ofNat 64 S)) ⋆ Eq ((lo.drop S).At (rsp.toBitVec - 120)) := by
     conv => lhs; rw [← List.take_append_drop S lo]
-    exact Prysm.BeaconBlockHeader.Decode.lo8 _ S hS _ _ hlS hl8
+    exact Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS hl8
   rw [hlos] at h_mem
   -- code facts of the hand-applied blocks
   have hRA := Codec.infix_sub (q := Codec.bytesDecHead 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" 112 24 32) 47 hk
     (by simp only [Code.unmarshalSSZ, Codec.bytesDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hRB := Codec.infix_sub (q := bytesDecMidA 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_13e" 112 120 56 16 24 32 8) 60 hk
-    (by simp only [Code.unmarshalSSZ, bytesDecMidA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hRB := Codec.infix_sub (q := bytesDecMidRax 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_13e" 112 120 56 16 24 32 8) 60 hk
+    (by simp only [Code.unmarshalSSZ, bytesDecMidRax, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hRl := Machine.label_at' hk hf (j := 60)
     (by simp only [Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hC2 := Codec.infix_sub (q := Codec.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 88 hk
     (by simp only [Code.unmarshalSSZ, Codec.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL2 := Codec.infix_sub (q := Codec.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 117 hk
-    (by simp only [Code.unmarshalSSZ, Codec.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hL2 := Codec.infix_sub (q := Codec.callDecContinuationLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 117 hk
+    (by simp only [Code.unmarshalSSZ, Codec.callDecContinuationLabel, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl2 := Machine.label_at' hk hf (j := 117)
     (by simp only [Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
@@ -104,7 +104,7 @@ theorem Decode.accept : Decode.accept_statement := by
     (by simp only [List.length_append, hsp0, hsp2, Int.toBytes_length]) (Int.toBytes_length 8 _)
     (by simp only [List.length_append, hlS, Int.toBytes_length]) hl38 haP1 haL1 haC1
     _ Heap avail (by omega) d3 hrsp3 hrbp3 hr143
-    (by rw [Prysm.BeaconBlockHeader.Decode.j3 _ _ _ _ hsp0 (Int.toBytes_length 8 _) hsp2, Prysm.BeaconBlockHeader.Decode.lo8 _ S hS _ _ hlS (Int.toBytes_length 8 _)]
+    (by rw [Prysm.BeaconBlockHeader.Decode.split_three_words _ _ _ _ hsp0 (Int.toBytes_length 8 _) hsp2, Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS (Int.toBytes_length 8 _)]
         ecancel) hms hmm) ?_
   rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, hrbp4, hr144, p1, spl1, lo1, hspl1, hlo1, hrax4, Hm4⟩
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrax4 Hm4
@@ -114,19 +114,19 @@ theorem Decode.accept : Decode.accept_statement := by
   simp only at hrsp4 hrbp4 hr144 hrax4 Hm4
   subst hrsp4 hrbp4 hr144
   -- instance directives 72–73, L_153 (80), 81
-  kat hk Code.unmarshalSSZ 72
+  step_directive hk Code.unmarshalSSZ 72
   apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p1.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 73
-  klabel hk hf Code.unmarshalSSZ 80
-  kat hk Code.unmarshalSSZ 80
-  kat hk Code.unmarshalSSZ 81
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 73
+  label_address hk hf Code.unmarshalSSZ 80
+  step_directive hk Code.unmarshalSSZ 80
+  step_directive hk Code.unmarshalSSZ 81
   apply store_step_at _ _ (rax.toBitVec + 16) _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrax4]; try beacon_block_header_addr)
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
+  unfold_step
   -- split the spill area and the low stack for the ValidatorIndex callee
   have hq0 : (spl1.take 8).length = 8 := by simp [hspl1]
   have hq1 : ((spl1.drop 8).take 8).length = 8 := by simp [hspl1]
@@ -136,7 +136,7 @@ theorem Decode.accept : Decode.accept_statement := by
   have hsp3 : spl1 = spl1.take 8 ++ ((spl1.drop 8).take 8 ++ (spl1.drop 8).drop 8) := by
     rw [List.take_append_drop, List.take_append_drop]
   have hlo3 : lo1 = lo1.take S ++ lo1.drop S := (List.take_append_drop S lo1).symm
-  rw [hsp3, hlo3, Prysm.BeaconBlockHeader.Decode.j3 _ _ _ _ hq0 hq1 hq2, Prysm.BeaconBlockHeader.Decode.lo8 _ S hS _ _ hlS1 hl81] at H3
+  rw [hsp3, hlo3, Prysm.BeaconBlockHeader.Decode.split_three_words _ _ _ _ hq0 hq1 hq2, Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS1 hl81] at H3
   -- ValidatorIndex: set-up 82–87 (hand lemma)
   refine eventually_trans _ _ _ _ (Decode.validator_index_arg k hk (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 16) (rsp.toBitVec + 32) (rbx.toBitVec + 40) (rax.toBitVec + 40)
@@ -180,7 +180,7 @@ theorem Decode.accept : Decode.accept_statement := by
     (by simp only [List.length_append, hq0, hq2, Int.toBytes_length]) (Int.toBytes_length 8 _)
     (by simp only [List.length_append, hlS1, Int.toBytes_length]) (Int.toBytes_length 8 _) haP2 haL2 haC2
     _ Heap (avail - 32) (by omega) d7 (hrsp7.trans hrsp6) (hrbp7.trans hrbp6) (hr147.trans hr146)
-    (by rw [Prysm.BeaconBlockHeader.Decode.j3 _ _ _ _ hq0 (Int.toBytes_length 8 _) hq2, Prysm.BeaconBlockHeader.Decode.lo8 _ S hS _ _ hlS1 (Int.toBytes_length 8 _)]
+    (by rw [Prysm.BeaconBlockHeader.Decode.split_three_words _ _ _ _ hq0 (Int.toBytes_length 8 _) hq2, Prysm.BeaconBlockHeader.Decode.low_stack_split _ S hS _ _ hlS1 (Int.toBytes_length 8 _)]
         ecancel) hms hmm) ?_
   rintro ⟨d8, pc8⟩ ⟨hpc8, hrsp8, hrbp8, hr148, p2, spl2, lo2, hspl2, hlo2, hrdx8, Hm8⟩
   dsimp only at hpc8 hrsp8 hrbp8 hr148 hrdx8 Hm8
@@ -190,36 +190,36 @@ theorem Decode.accept : Decode.accept_statement := by
   simp only at hrsp8 hrbp8 hr148 hrdx8 Hm8
   subst hrsp8 hrbp8 hr148
   -- instance directives 146–147, L_289 (154), 155, epilogue 156–160
-  kat hk Code.unmarshalSSZ 146
+  step_directive hk Code.unmarshalSSZ 146
   apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p2.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 147
-  klabel hk hf Code.unmarshalSSZ 154
-  kat hk Code.unmarshalSSZ 154
-  kat hk Code.unmarshalSSZ 155
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 147
+  label_address hk hf Code.unmarshalSSZ 154
+  step_directive hk Code.unmarshalSSZ 154
+  step_directive hk Code.unmarshalSSZ 155
   apply store_step_at _ _ (rax.toBitVec + 48) _ _ _ (Int.toBytes 8 p2.toInt) _ _ (by rw [hrdx8]; try beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
-  kunfold
-  kat hk Code.unmarshalSSZ 156
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 156
   apply load_step_at _ _ (rsp.toBitVec - 64) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 157
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 157
   apply load_step_at _ _ (rsp.toBitVec - 56) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 158
-  kat hk Code.unmarshalSSZ 159
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 158
+  step_directive hk Code.unmarshalSSZ 159
   apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk Code.unmarshalSSZ 160
+  unfold_step
+  step_directive hk Code.unmarshalSSZ 160
   apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
+  unfold_step
   apply Eventually.done
   rw [show UInt64.toBitVec 0 = 0#64 from rfl] at H5
   rw [show k + 134 + 6 + 1 = k + 141 from rfl] at H5

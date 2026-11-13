@@ -10,8 +10,8 @@
   "module": "Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PendingDeposit.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
-  "old": "(layMix40 [Prysm.Slot.Code.unmarshalSSZ] 131 2)",
-  "new": "(layMix40 [Prysm.Slot.Code.unmarshalSSZ] 130 2)"
+  "old": "(layoutMixedFrame40 [Prysm.Slot.Code.unmarshalSSZ] 131 2)",
+  "new": "(layoutMixedFrame40 [Prysm.Slot.Code.unmarshalSSZ] 130 2)"
  },
  {
   "id": "g5-tie-pd-kind-size",
@@ -42,16 +42,16 @@
   "module": "Prysm/PowBlock/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PowBlock.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
-  "old": "(layRt false 104 3)",
-  "new": "(layRt true 104 3)"
+  "old": "(layoutRuntimeCalls false 104 3)",
+  "new": "(layoutRuntimeCalls true 104 3)"
  },
  {
   "id": "g5-tie-pc-kind-field",
   "module": "Prysm/PendingConsolidation/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
-  "old": "(layCal [Prysm.ValidatorIndex.Code.unmarshalSSZ] 56) [.u64, .u64]",
-  "new": "(layCal [Prysm.ValidatorIndex.Code.unmarshalSSZ] 56) [.u64, .u64, .u64]"
+  "old": "(layoutCalleeCalls [Prysm.ValidatorIndex.Code.unmarshalSSZ] 56) [.u64, .u64]",
+  "new": "(layoutCalleeCalls [Prysm.ValidatorIndex.Code.unmarshalSSZ] 56) [.u64, .u64, .u64]"
  },
  {
   "id": "g5-tie-cp-control",
@@ -70,13 +70,13 @@
  {
   "id": "g5-fc-j3-control",
   "module": "Codec/FieldFrame.lean",
-  "theorem": "frame_j3",
+  "theorem": "frame_join_three_words",
   "kind": "control"
  },
  {
   "id": "g5-fc-j3-stmt-off",
   "module": "Codec/FieldFrame.lean",
-  "theorem": "frame_j3",
+  "theorem": "frame_join_three_words",
   "kind": "stmt",
   "old": "(hz : x + 16 = z)",
   "new": "(hz : x + 24 = z)"

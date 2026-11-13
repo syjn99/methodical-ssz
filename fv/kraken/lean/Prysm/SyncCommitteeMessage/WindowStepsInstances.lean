@@ -29,18 +29,18 @@ theorem Decode.validator_index_arg_inst : type_of% (@Prysm.SyncCommitteeMessage.
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrax h_mem ⊢
   subst rsp hSrc hF hrax
-  apply kstep_ldv Reg64.rbx Reg64.rsp 120 _ (k + 82) (k + 83) (win hk 82 1) (by rfl) (by rfl) sp aB bf hB' _ _ _ rfl (by ecancel)
-  kn
-  apply kstep_add Reg64.rbx 40 _ (k + 83) (k + 84) (win hk 83 1) (by rfl) (by rfl)
-  intro fl1; kn
-  apply kstep_ldb Reg64.rdi Reg64.rsp 136 _ (k + 84) (k + 85) (win hk 84 1) (by rfl) (by rfl) sp aD hD vD hvD _ _ _ rfl (by ecancel)
-  kn
-  apply kstep_add Reg64.rdi (-40) _ (k + 85) (k + 86) (win hk 85 1) (by rfl) (by rfl)
-  intro fl2; kn
-  apply kstep_add Reg64.rax 40 _ (k + 86) (k + 87) (win hk 86 1) (by rfl) (by rfl)
-  intro fl3; kn
-  apply kstep_movi Reg64.rcx 8 _ (k + 87) (k + 88) (win hk 87 1) (by rfl) (by rfl)
-  kn
+  apply step_load_value Reg64.rbx Reg64.rsp 120 _ (k + 82) (k + 83) (window_infix_at hk 82 1) (by rfl) (by rfl) sp aB bf hB' _ _ _ rfl (by ecancel)
+  normalize_registers
+  apply step_add_immediate Reg64.rbx 40 _ (k + 83) (k + 84) (window_infix_at hk 83 1) (by rfl) (by rfl)
+  intro fl1; normalize_registers
+  apply step_load_bytes Reg64.rdi Reg64.rsp 136 _ (k + 84) (k + 85) (window_infix_at hk 84 1) (by rfl) (by rfl) sp aD hD vD hvD _ _ _ rfl (by ecancel)
+  normalize_registers
+  apply step_add_immediate Reg64.rdi (-40) _ (k + 85) (k + 86) (window_infix_at hk 85 1) (by rfl) (by rfl)
+  intro fl2; normalize_registers
+  apply step_add_immediate Reg64.rax 40 _ (k + 86) (k + 87) (window_infix_at hk 86 1) (by rfl) (by rfl)
+  intro fl3; normalize_registers
+  apply step_move_immediate Reg64.rcx 8 _ (k + 87) (k + 88) (window_infix_at hk 87 1) (by rfl) (by rfl)
+  normalize_registers
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> first | rfl | decide
 

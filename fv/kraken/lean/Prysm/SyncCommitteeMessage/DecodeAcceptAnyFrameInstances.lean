@@ -7,7 +7,7 @@ import Prysm.Checkpoint.DecodeAccept
 import Codec.Kind.DecodeAcceptAnyFrameInstances
 
 /-!
-# Ties of `decAcceptKindN` to the hand accept statements: the `SyncCommitteeMessage` part
+# Ties of `decAcceptKindAnyFrame` to the hand accept statements: the `SyncCommitteeMessage` part
 
 The declarations of the other types of this group are in `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 -/
@@ -18,8 +18,8 @@ open Codec
 namespace Prysm.SyncCommitteeMessage
 
 theorem Decode.accept_is_kind_any_frame : ∀ (h : Host), @Prysm.SyncCommitteeMessage.Decode.accept_statement h
-    = @decAcceptKindN h Prysm.SyncCommitteeMessage.Code.unmarshalSSZ
-        (layMix60 [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1)
+    = @decAcceptKindAnyFrame h Prysm.SyncCommitteeMessage.Code.unmarshalSSZ
+        (layoutMixedFrame60 [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1)
         [.u64, .bytes 32, .u64, .bytes 96] := by
   intro h; rfl
 

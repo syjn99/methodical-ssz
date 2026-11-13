@@ -74,7 +74,7 @@ theorem Decode.frame_lens (stk : List UInt8) (S : Nat) (h : stk.length = S + 96)
   simp only [List.length_take, List.length_drop, h]; omega
 
 /-- The 24-byte argument area as its three words (the Checkpoint spec names them). -/
-theorem Decode.accept_mm3 (x : BitVec 64) (mm : List UInt8) (h : mm.length = 24) :
+theorem Decode.accept_split_argument_words (x : BitVec 64) (mm : List UInt8) (h : mm.length = 24) :
     Eq (mm.At (x - 216)) = Eq ((mm.take 8).At (x - 216)) ⋆ Eq (((mm.drop 8).take 8).At (x - 208))
       ⋆ Eq ((mm.drop 16).At (x - 200)) := by
   have e : mm = mm.take 8 ++ (((mm.drop 8).take 8) ++ mm.drop 16) := by
@@ -86,7 +86,7 @@ theorem Decode.accept_mm3 (x : BitVec 64) (mm : List UInt8) (h : mm.length = 24)
   simp only [Std.ExtHashMap.sep_assoc]
 
 /-- A fresh 72-byte Checkpoint object as the receiver chunks of `Prysm.Checkpoint.Decode.accept_function_spec`. -/
-theorem Decode.accept_obj72 (p : BitVec 64) :
+theorem Decode.accept_fresh_object72 (p : BitVec 64) :
     Eq ((List.replicate 72 (0 : UInt8)).At p) = Eq ((List.replicate 8 0).At p) ⋆ Eq ((List.replicate 8 0).At (p + 8))
       ⋆ Eq ((List.replicate 8 0).At (p + 16)) ⋆ Eq ((List.replicate 8 0).At (p + 24))
       ⋆ Eq ((List.replicate 8 0).At (p + 32)) ⋆ Eq ((List.replicate 32 0).At (p + 40)) := by
@@ -102,7 +102,7 @@ theorem Decode.accept_guard96 (x : BitVec 64) (g : Nat) (h : g + 224 < x.toNat) 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- Segment 3: from `L_208` (directive 120) to `L_2d9` (directive 172): `Root.ptr`, a new
-Source object (`NewobjectC`), and the Source decoder through `Prysm.Checkpoint.Decode.accept_function_spec`. -/
+Source object (`NewobjectContract`), and the Source decoder through `Prysm.Checkpoint.Decode.accept_function_spec`. -/
 theorem Decode.source (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (rsp0 r140 guard : UInt64) (rcv bf pb : BitVec 64) (se sroot : List UInt8) (hse : se.length = 8)
     (hsroot : sroot.length = 32)
@@ -124,7 +124,7 @@ theorem Decode.source (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
       ⋆ Eq (se.At (bf + 48)) ⋆ Eq (sroot.At (bf + 56))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 224 < rsp0.toNat)
-    (hno : NewobjectC Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 (S + 96)) (hcp : Prysm.Checkpoint.Decode.accept_function_spec Heap S) :
+    (hno : NewobjectContract Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 (S + 96)) (hcp : Prysm.Checkpoint.Decode.accept_function_spec Heap S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 172) ∧ st.data.regs.rsp = { toBitVec := rsp0.toBitVec - 120 }
         ∧ st.data.regs.rbp = { toBitVec := rsp0.toBitVec - 8#64 } ∧ st.data.regs.r14 = r140 ∧
@@ -149,21 +149,21 @@ theorem Decode.source (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   simp only at hrsp hrbp hr14 hrdx hrbx h_mem ⊢
   subst rsp rbp r14 hrdx hrbx
   have := rsp0.toNat_lt_size; have := guard.toNat_lt_size; simp only [UInt64.size] at *
-  kat hk unmarshalSSZ 120
-  kat hk unmarshalSSZ 121
+  step_directive hk unmarshalSSZ 120
+  step_directive hk unmarshalSSZ 121
   apply store_step_at _ _ (rdx.toBitVec + 24) _ _ _ aP _ _ (by attestation_data_addr) (by ecancel) (by exact haP)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk unmarshalSSZ 122
-  kat hk unmarshalSSZ 123
+  unfold_step
+  step_directive hk unmarshalSSZ 122
+  step_directive hk unmarshalSSZ 123
   apply store_step_at _ _ (rsp0.toBitVec - 128) _ _ _ rslot _ _ (Decode.accept_call _) (by ecancel) (by exact hrs)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
+  unfold_step
   rw [Decode.accept_call] at *
   refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 123 + 1)) avail lo q0 _ rfl (by omega) hlo hq0
-    (by dsimp only; rw [Decode.accept_lo _ _ hS, show rsp0.toBitVec - 128 + 8 = rsp0.toBitVec - 120 by bv_omega]; ecancel)) ?_
+    (by dsimp only; rw [Decode.accept_low_address _ _ hS, show rsp0.toBitVec - 128 + 8 = rsp0.toBitVec - 120 by bv_omega]; ecancel)) ?_
   rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, hrbp3, stk3, sp3, hstk3, hsp3, Hm3⟩
   dsimp only at hpc3 hrsp3 hr143 hrbp3 Hm3
   subst hpc3
@@ -172,50 +172,50 @@ theorem Decode.source (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   simp only at hrsp3 hr143 hrbp3 Hm3
   rw [Decode.accept_ret] at hrsp3
   subst hrsp3 hr143 hrbp3
-  rw [Decode.accept_lo _ _ hS, show rsp0.toBitVec - 128 + 8 = rsp0.toBitVec - 120 by bv_omega, Decode.accept_obj72] at Hm3
-  kat hk unmarshalSSZ 124
+  rw [Decode.accept_low_address _ _ hS, show rsp0.toBitVec - 128 + 8 = rsp0.toBitVec - 120 by bv_omega, Decode.accept_fresh_object72] at Hm3
+  step_directive hk unmarshalSSZ 124
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
-  kunfold
-  kat hk unmarshalSSZ 125
-  kat hk unmarshalSSZ 126
+  unfold_step
+  step_directive hk unmarshalSSZ 125
+  step_directive hk unmarshalSSZ 126
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  kat hk unmarshalSSZ 127
+  step_directive hk unmarshalSSZ 127
   apply load_step_at _ _ (rsp0.toBitVec + 8) _ _ (Int.toBytes 8 rdx.toBitVec.toInt) _ _ (by attestation_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 128
-  klabel hk hf unmarshalSSZ 135
-  kat hk unmarshalSSZ 135
-  kat hk unmarshalSSZ 136
+  unfold_step
+  step_directive hk unmarshalSSZ 128
+  label_address hk hf unmarshalSSZ 135
+  step_directive hk unmarshalSSZ 135
+  step_directive hk unmarshalSSZ 136
   apply store_step_at _ _ (rdx.toBitVec + 48) _ _ _ aS _ _ (by attestation_data_addr) (by ecancel) (by exact haS)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
-  kat hk unmarshalSSZ 137
+  unfold_step
+  step_directive hk unmarshalSSZ 137
   apply load_step_at _ _ (rsp0.toBitVec + 16) _ _ (Int.toBytes 8 bf.toInt) _ _ (by attestation_data_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk unmarshalSSZ 138
-  kat hk unmarshalSSZ 139
+  unfold_step
+  step_directive hk unmarshalSSZ 138
+  step_directive hk unmarshalSSZ 139
   apply load_step_at _ _ (rsp0.toBitVec + 32) _ _ s4 _ _ (by attestation_data_addr) (by ecancel) (by exact h4)
-  kunfold
-  kat hk unmarshalSSZ 140
-  kat hk unmarshalSSZ 141
-  kat hk unmarshalSSZ 142
+  unfold_step
+  step_directive hk unmarshalSSZ 140
+  step_directive hk unmarshalSSZ 141
+  step_directive hk unmarshalSSZ 142
   apply store_step_at _ _ (rsp0.toBitVec - 128) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 123 + 1)).toBitVec.toInt) _ _
     (Decode.accept_call _) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
+  unfold_step
   rw [Decode.accept_call] at *
   -- the callee frame in the S + 96 stack bytes
   obtain ⟨l0, l1, l2, l3, l4, l5, l6, l7, l8⟩ := Decode.frame_lens stk3 S hstk3
   rw [Decode.frame_slices stk3 S] at H4
   try dsimp only at H4
-  rw [Decode.frame_sep _ S hS _ _ _ _ _ _ _ _ _ l0 l1 l2 l3 l4 l5 l6 l7 l8, Decode.accept_mm3 _ _ l2] at H4
+  rw [Decode.frame_sep _ S hS _ _ _ _ _ _ _ _ _ l0 l1 l2 l3 l4 l5 l6 l7 l8, Decode.accept_split_argument_words _ _ l2] at H4
   rw [show (48 : BitVec 64) + bf = bf + 48 from BitVec.add_comm _ _]
   rw [show bf + 56 = bf + 48 + 8 by bv_omega] at H4
   refine eventually_trans _ _ _ _ (hcp _ (Host.addrOf (k + 142 + 1)) guard (avail - 72) se sroot _ sp3 q1 _ _ _
@@ -256,13 +256,13 @@ theorem Decode.source (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
     show rsp0.toBitVec - 128 - 88 = rsp0.toBitVec - 216 by bv_omega,
     show rsp0.toBitVec - 128 - 96 = rsp0.toBitVec - 224 by bv_omega,
     show bf + 48 + 8 = bf + 56 by bv_omega] at Hm5
-  kat hk unmarshalSSZ 143
+  step_directive hk unmarshalSSZ 143
   intro _
-  kat hk unmarshalSSZ 144
+  step_directive hk unmarshalSSZ 144
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  klabel hk hf unmarshalSSZ 172
+  label_address hk hf unmarshalSSZ 172
   apply Eventually.done
   rw [show k + 142 + 1 = k + 143 from rfl] at Hm5
   exact ⟨rfl, rfl, rfl, rfl, rax3.toBitVec, p1, Decode.frame scr rs' mm _ (Int.toBytes 8 0) (Int.toBytes 8 0)

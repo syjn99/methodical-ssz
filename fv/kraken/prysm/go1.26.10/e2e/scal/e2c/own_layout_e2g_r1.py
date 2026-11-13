@@ -3,7 +3,7 @@
 #   python3 -I -B prysm/go1.26.10/e2e/scal/e2c/own_layout_e2g_r1.py
 
 """Third, reviewer-written recomputation of the free layout parameters (G1) from the `.S` and the directive windows
-that the Lean proofs step (`win hk a n`): frame, gd, rt, and the set of first-touch stack regions (pre) with sizes.
+that the Lean proofs step (`window_infix_at hk a n`): frame, gd, rt, and the set of first-touch stack regions (pre) with sizes.
 Reads the layout def of the generated file or the pinned hand layout. No import of generator or kindcheck."""
 import json, re, glob, pathlib
 bad = 0
@@ -13,14 +13,14 @@ for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
     J = json.loads([x for x in t.split("\n") if x.startswith("FAST-PATH-JSON: ")][0][len("FAST-PATH-JSON: "):])
     D = [l.strip() for l in pathlib.Path(J["S"]).read_text().split("\n") if l.strip()]
     cov = set()
-    for a, n in re.findall(r"win hk (\d+) (\d+)", t):
+    for a, n in re.findall(r"window_infix_at hk (\d+) (\d+)", t):
         cov.update(range(int(a), int(a) + int(n)))
     lay = J["layout"].split(".")[-1]
     src = ties(J["layout"].split(".")[1]) if J["layout"].endswith(".encodeLayout") else t
     # the def line: root-qualified (a layout of another type than the block), relative to Prysm.<T>, or the last component
     full, m = J["layout"], None
     for d in (f"_root_.{full}", full.split(".", 2)[2], lay):
-        m = m or re.search(rf"\ndef {re.escape(d)} : EncLayout where\n((?:  .*\n)+)", src)
+        m = m or re.search(rf"\ndef {re.escape(d)} : EncoderFrameLayout where\n((?:  .*\n)+)", src)
     L, cur = {}, None
     for l in m[1].split("\n"):
         mm = re.match(r"  (\w+) := (.*)", l)
@@ -53,12 +53,12 @@ for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
         m3 = re.fullmatch(r"(?:mov|lea|add|sub|xor) .*,%(\w+)", d)
         if m3 and m3[1] in reg and not m1: del reg[m3[1]]      # the register no longer holds a frame address
     rt = any(D[i] == "callq runtime.memmove" for i in cov)
-    pre = re.findall(r"\.at \(\.(up|dn) (\d+)\) \(\.orig (\d+)\)", L["pre"])
-    lens = dict((int(a), int(b)) for a, b in re.findall(r"\((\d+), (\d+)\)", L["lens"]))
+    pre = re.findall(r"\.at \(\.(above|below) (\d+)\) \(\.original (\d+)\)", L["pre"])
+    lens = dict((int(a), int(b)) for a, b in re.findall(r"\((\d+), (\d+)\)", L["stackChunkLengths"]))
     mine = sorted(touched.items())
-    theirs = sorted(((int(n) if u == "up" else -int(n)), lens[int(i)]) for u, n, i in pre)
-    ok = (mine == theirs and int(L["frame"]) == F and int(L["gd"]) == gd and (L["rt"] == "true") == rt and int(L["nstk"]) == len(pre)
-          and (".lo .scr" in L["pre"]) == rt and len({i for _, _, i in pre}) == len(pre))
+    theirs = sorted(((int(n) if u == "above" else -int(n)), lens[int(i)]) for u, n, i in pre)
+    ok = (mine == theirs and int(L["frame"]) == F and int(L["guardAddend"]) == gd and (L["callsMemmove"] == "true") == rt and int(L["stackChunkCount"]) == len(pre)
+          and (".low .scratch" in L["pre"]) == rt and len({i for _, _, i in pre}) == len(pre))
     # disjointness of the pre regions and of the fixed chunks: return slot [0, 8), scratch below -(F+16)
     regs = sorted(theirs + [(0, 8)])
     disj = all(regs[k][0] + regs[k][1] <= regs[k + 1][0] for k in range(len(regs) - 1)) and all(o >= -(F + 16) for o, _ in theirs)

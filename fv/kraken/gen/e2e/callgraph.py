@@ -21,13 +21,13 @@ SCOPE = {FUNCS[0]: "in", FUNCS[1]: "in", FUNCS[2]: "in", FUNCS[3]: "in (callee, 
 # hypothesis), c = path excluded by a theorem premise
 CLASS = {
     "runtime.morestack_noctxt.abi0": ("c", "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"),
-    "runtime.makeslice": ("b", "MakesliceC (esz 1, uint8 type word)"),
-    "runtime.memmove": ("b", "MemmoveC"),
-    "runtime.growslice": ("b", "GrowsliceC (esz 1)"),
+    "runtime.makeslice": ("b", "MakesliceContract (esz 1, uint8 type word)"),
+    "runtime.memmove": ("b", "MemmoveContract"),
+    "runtime.growslice": ("b", "GrowsliceContract (esz 1)"),
     "runtime.gcWriteBarrier2": ("c", "writeBarrier = 0 premise: the cmpl/je is proved to skip the call"),
-    "runtime.convT64": ("b", "ConvT64C"),
+    "runtime.convT64": ("b", "ConvT64Contract"),
     "runtime.newobject": ("c", "nil-result branch after fmt.errorf: excluded by the contract's rax != 0"),
-    "fmt.errorf": ("b", "FmtErrorfWC ('Epoch: %w', Checkpoint) / FmtErrorfDDC ('expected buffer of length %d received %d', Epoch)"),
+    "fmt.errorf": ("b", "FmtErrorfWrapContract ('Epoch: %w', Checkpoint) / FmtErrorfDecimalDecimalContract ('expected buffer of length %d received %d', Epoch)"),
     f"{PRIM}.(*Epoch).UnmarshalSSZ": ("a", "function spec Prysm.Epoch.Decode.accept_function_spec, proved from machine code (Prysm.Epoch.Decode.accept_function_spec_holds)"),
 }
 

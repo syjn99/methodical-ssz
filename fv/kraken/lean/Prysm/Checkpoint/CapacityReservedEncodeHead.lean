@@ -11,8 +11,8 @@ import Codec.StackGuard
 - `head_grow` (`len ≤ cap < len + 40`): directives 0–47: the reserve. `z` (40 bytes at rsp0 − 112) is
   zeroed with three `movups %xmm15` (X15 is not assumed zero: `z`'s bytes are existential), the
   `jae` at 22 is not taken, one `runtime.growslice(old = dst.ptr, newLen = len + 40, oldCap = cap,
-  num = 40, et = uint8)` (`GrowsliceC Heap typeUint8_addr 1 S`, the existing form), `memmove(new +
-  len, &z, 40)` (`MemmoveC S`), the `[:len(dst)]` bounds check `cmp %rdx,%rbx; ja panicBounds` not
+  num = 40, et = uint8)` (`GrowsliceContract Heap typeUint8_addr 1 S`, the existing form), `memmove(new +
+  len, &z, 40)` (`MemmoveContract S`), the `[:len(dst)]` bounds check `cmp %rdx,%rbx; ja panicBounds` not
   taken (`Encode.reserve_ja_false`, from `newLen ≤ newCap` of the contract), reload of rax, rcx, rbx. The caller's
   block keeps `pre` (it is the growslice source) and is not written. The new block is
   `pre ++ z ++ tail`.
@@ -56,20 +56,20 @@ theorem Encode.reserve_ja_false (a b : BitVec 64) (af of' : Bool) (h : a.toNat �
     simp [CondCode.interp, StatusFlags.from_result]
 
 omit [Host] in
-theorem Encode.reserve_sub40a (rcx rdi : UInt64) (h : rcx.toNat + 40 ≤ rdi.toNat) :
+theorem Encode.reserve_sub40_at_least (rcx rdi : UInt64) (h : rcx.toNat + 40 ≤ rdi.toNat) :
     (40 : BitVec 64).toNat ≤ (rdi.toBitVec - rcx.toBitVec).toNat := by
   have h' : rcx.toBitVec.toNat + 40 ≤ rdi.toBitVec.toNat := h
   bv_omega
 
 omit [Host] in
-theorem Encode.reserve_sub40b (rcx rdi : UInt64) (h : rcx.toNat + 40 ≤ rdi.toNat) (h2 : rdi.toNat < 2 ^ 63) :
+theorem Encode.reserve_sub40_below_half (rcx rdi : UInt64) (h : rcx.toNat + 40 ≤ rdi.toNat) (h2 : rdi.toNat < 2 ^ 63) :
     (rdi.toBitVec - rcx.toBitVec).toNat < 2 ^ 63 := by
   have h' : rcx.toBitVec.toNat + 40 ≤ rdi.toBitVec.toNat := h
   have h2' : rdi.toBitVec.toNat < 2 ^ 63 := h2
   bv_omega
 
 omit [Host] in
-theorem Encode.reserve_sub40c (rcx rdi : UInt64) (h1 : rcx.toNat ≤ rdi.toNat) (h : rdi.toNat < rcx.toNat + 40) :
+theorem Encode.reserve_sub40_short (rcx rdi : UInt64) (h1 : rcx.toNat ≤ rdi.toNat) (h : rdi.toNat < rcx.toNat + 40) :
     (rdi.toBitVec - rcx.toBitVec).toNat < (40 : BitVec 64).toNat := by
   have h1' : rcx.toBitVec.toNat ≤ rdi.toBitVec.toNat := h1
   have h' : rdi.toBitVec.toNat < rcx.toBitVec.toNat + 40 := h
@@ -94,11 +94,11 @@ theorem Encode.reserve_lt (x y : BitVec 64) (cf af : Bool) (hlt : x.toNat < y.to
   rfl
 
 omit [Host] in
-theorem Encode.reserve_e40 : ({ toBitVec := BitVec.zeroExtend 64 (BitVec.truncate 32 (40 : BitVec 64)) } : UInt64).toNat = 40 := by
+theorem Encode.reserve_zero_extend40 : ({ toBitVec := BitVec.zeroExtend 64 (BitVec.truncate 32 (40 : BitVec 64)) } : UInt64).toNat = 40 := by
   decide
 
 omit [Host] in
-theorem Encode.reserve_n40 (x : UInt64) (h : x.toNat + 40 < 2 ^ 64) :
+theorem Encode.reserve_add40_toNat (x : UInt64) (h : x.toNat + 40 < 2 ^ 64) :
     ({ toBitVec := x.toBitVec + 40 } : UInt64).toNat = x.toNat + 40 := by
   have h' : x.toBitVec.toNat + 40 < 2 ^ 64 := h
   show (x.toBitVec + 40).toNat = x.toBitVec.toNat + 40
@@ -147,55 +147,55 @@ theorem Encode.head_fast (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   simp only at h_mem hguard hcap hcap63 ⊢
   have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size
   simp only [UInt64.size] at *
-  kat hk marshalSSZTo 0
-  kat hk marshalSSZTo 1
-  kat hk marshalSSZTo 2
-  kat hk marshalSSZTo 3
+  step_directive hk marshalSSZTo 0
+  step_directive hk marshalSSZTo 1
+  step_directive hk marshalSSZTo 2
+  step_directive hk marshalSSZTo 3
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 4
+  unfold_step
+  step_directive hk marshalSSZTo 4
   split
   case isTrue h =>
     exfalso
     rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 24 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
-  kat hk marshalSSZTo 5
+  step_directive hk marshalSSZTo 5
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk marshalSSZTo 6
-  kat hk marshalSSZTo 7
-  kat hk marshalSSZTo 8
+  unfold_step
+  step_directive hk marshalSSZTo 6
+  step_directive hk marshalSSZTo 7
+  step_directive hk marshalSSZTo 8
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hk marshalSSZTo 9
+  unfold_step
+  step_directive hk marshalSSZTo 9
   apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by bv_omega) (by ecancel) (by exact h1)
   intro m3 H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
-  kat hk marshalSSZTo 10
+  unfold_step
+  step_directive hk marshalSSZTo 10
   apply store_step_at _ _ (rsp.toBitVec + 24) _ _ _ s3 _ _ (by bv_omega) (by ecancel) (by exact h3)
   intro m4 H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
-  kat hk marshalSSZTo 11
-  kat hk marshalSSZTo 12
-  kat hk marshalSSZTo 13
-  kat hk marshalSSZTo 14
-  kat hk marshalSSZTo 15
+  unfold_step
+  step_directive hk marshalSSZTo 11
+  step_directive hk marshalSSZTo 12
+  step_directive hk marshalSSZTo 13
+  step_directive hk marshalSSZTo 14
+  step_directive hk marshalSSZTo 15
   split
   case isFalse h =>
     exfalso
     rw [Encode.reserve_ge _ _ _ _ ?g1 ?g2] at h
     · exact h rfl
-    · exact Encode.reserve_sub40a rcx rdi hcap
-    · exact Encode.reserve_sub40b rcx rdi hcap hcap63
+    · exact Encode.reserve_sub40_at_least rcx rdi hcap
+    · exact Encode.reserve_sub40_below_half rcx rdi hcap hcap63
   simp only [Effects.All]
-  klabel hk hf marshalSSZTo 48
+  label_address hk hf marshalSSZTo 48
   apply Eventually.done
   refine ⟨rfl, ?_, ?_, rfl, ?_, ?_, ?_, ?_, ?hmem⟩
   case hmem => ecancel

@@ -10,7 +10,7 @@ import Prysm.DataColumnsByRootIdentifier.StatementsEncodeGrowAnySite
 - `hone`: for every new length `m ≤ L` above `cap`, `L ≤ nextSliceCap m cap` (L = len + 36 + 8n). So the first site that
   grows (any of the n + 2) gets a capacity that holds the whole output, and no second growth happens.
 
-Reason (attempt 1 of `Prysm/DataColumnsByRootIdentifier/EncodeLoopGrowAnySite.lean`): `GrowsliceC` bounds the heap after a call only from above
+Reason (attempt 1 of `Prysm/DataColumnsByRootIdentifier/EncodeLoopGrowAnySite.lean`): `GrowsliceContract` bounds the heap after a call only from above
 (`avail' + esz·newCap ≤ avail`). After one growth nothing bounds the remaining heap from below, so the budget premise of
 a second `growslice` call cannot be discharged: `Encode.grow_any_site_statement` does not follow from the contract forms of
 `Runtime/Contracts.lean` (a form with a lower bound, e.g. `avail' + esz·newCap = avail`, is missing; a new form needs user
@@ -58,7 +58,7 @@ def Encode.grow_one_site_statement : Prop :=
     (hbud : 4 * (s.regs.rcx.toNat + 36 + 8 * n) + 8576 ≤ avail) (hmax : avail ≤ maxAlloc)
     (hone : ∀ m, m ≤ s.regs.rcx.toNat + 36 + 8 * n → s.regs.rdi.toNat < m →
       s.regs.rcx.toNat + 36 + 8 * n ≤ nextSliceCap m s.regs.rdi.toNat)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S),
+    (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 36 + 8 * n
@@ -129,7 +129,7 @@ def Encode.grow_one_site_spec_statement : Prop :=
     (hbud : 4 * (s.regs.rcx.toNat + 36 + 8 * g.cols.length) + 8576 ≤ avail)
     (hone : ∀ m, m ≤ s.regs.rcx.toNat + 36 + 8 * g.cols.length → s.regs.rdi.toNat < m →
       s.regs.rcx.toNat + 36 + 8 * g.cols.length ≤ nextSliceCap m s.regs.rdi.toNat) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S),
+    (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S),
     ∃ bs, serialize desc g.toValue = .ok bs ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec

@@ -22,8 +22,8 @@ Directive indices of `Prysm.BeaconBlockHeader.Code.marshalSSZTo` on the fast pat
 roots of length 32). This module: 2–4 stack guard (`lea -0x20(%rsp),%r12; cmp 0x10(%r14),%r12; jbe`, closed
 with `Codec.lea_cmp_be_false`), 5–9 prologue (`sub $0x98`, rbx and rax spills to rsp + 16 and rsp + 8),
 10 `lea 0x8(%rcx),%rdx`, 11 Slot load, 15–18 the first 32-byte stack temp (two `movups %xmm15`, Slot word at
-rsp − 56), 19–20 capacity, 33–35 store the Slot bytes (`Encode.enc_a1`, 0–35); 36–44 the ProposerIndex temp at
-rsp − 88, 45–46 capacity, 59–61 store (`Encode.enc_a2`, 36–61). Each segment names only the memory it touches;
+rsp − 56), 19–20 capacity, 33–35 store the Slot bytes (`Encode.encode_slot`, 0–35); 36–44 the ProposerIndex temp at
+rsp − 88, 45–46 capacity, 59–61 store (`Encode.encode_proposer_index`, 36–61). Each segment names only the memory it touches;
 the rest is the frame `R`. X15 is not assumed to be zero: the bytes 8–31 of each temp are existential in
 the conclusions. `rsp` below is the entry rsp.
 -/
@@ -37,7 +37,7 @@ namespace Prysm.BeaconBlockHeader
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Slot segment: entry to directive 36 (stack guard passed, frame set up, Slot bytes stored). -/
-theorem Encode.enc_a1 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.encode_slot (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (sl d0 : List UInt8) (hsl : sl.length = 8) (hd0 : d0.length = 8)
     (s : MachineData) (guard : UInt64)
     (fp s1 s2 t1a t1b : List UInt8)
@@ -72,83 +72,83 @@ theorem Encode.enc_a1 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : 
   simp only at h_mem hguard hsp hcap hcap63 ⊢
   have := rsp.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size
   simp only [UInt64.size] at *
-  kat hk marshalSSZTo 0
-  kat hk marshalSSZTo 1
-  kat hk marshalSSZTo 2
-  kat hk marshalSSZTo 3
+  step_directive hk marshalSSZTo 0
+  step_directive hk marshalSSZTo 1
+  step_directive hk marshalSSZTo 2
+  step_directive hk marshalSSZTo 3
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hk marshalSSZTo 4
+  unfold_step
+  step_directive hk marshalSSZTo 4
   split
   case isTrue h =>
     exfalso
     rw [lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 32 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
-  kat hk marshalSSZTo 5
+  step_directive hk marshalSSZTo 5
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
-  kat hk marshalSSZTo 6
-  kat hk marshalSSZTo 7
-  kat hk marshalSSZTo 8
+  unfold_step
+  step_directive hk marshalSSZTo 6
+  step_directive hk marshalSSZTo 7
+  step_directive hk marshalSSZTo 8
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hk marshalSSZTo 9
+  unfold_step
+  step_directive hk marshalSSZTo 9
   apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by bv_omega) (by ecancel) (by exact h1)
   intro m2' H2'
   simp only [Width.bytes, Width.bits] at H2'
-  kunfold
-  kat hk marshalSSZTo 10
-  kat hk marshalSSZTo 11
+  unfold_step
+  step_directive hk marshalSSZTo 10
+  step_directive hk marshalSSZTo 11
   apply load_step _ _ _ _ sl _ _ (by ecancel) (by exact hsl)
-  kunfold
-  kat hk marshalSSZTo 12
-  kat hk marshalSSZTo 13
-  kat hk marshalSSZTo 14
-  kat hk marshalSSZTo 15
-  kat hk marshalSSZTo 16
+  unfold_step
+  step_directive hk marshalSSZTo 12
+  step_directive hk marshalSSZTo 13
+  step_directive hk marshalSSZTo 14
+  step_directive hk marshalSSZTo 15
+  step_directive hk marshalSSZTo 16
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
-  kunfold
+  unfold_step
   rw [show rsp.toBitVec - 8#64 - 152 + 104 = rsp.toBitVec - 56 by bv_omega]
   apply Machine.store_avx_step _ _ _ _ t1a _ _ (by ecancel) (by exact ht1a) (by decide)
   intro m3 H3
-  kunfold
-  kat hk marshalSSZTo 17
+  unfold_step
+  step_directive hk marshalSSZTo 17
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
-  kunfold
+  unfold_step
   rw [show rsp.toBitVec - 56 + 16 = rsp.toBitVec - 40 by bv_omega]
   apply Machine.store_avx_step _ _ _ _ t1b _ _ (by ecancel) (by exact ht1b) (by decide)
   intro m4 H4
-  kunfold
+  unfold_step
   rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 56),
     show rsp.toBitVec - 56 + 8 = rsp.toBitVec - 48 by bv_omega] at H4
-  kat hk marshalSSZTo 18
+  step_directive hk marshalSSZTo 18
   apply store_step_at _ _ (rsp.toBitVec - 56) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
     _ _ (by checkpoint_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
   intro m5 H5
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl sl hsl] at H5
-  kunfold
-  kat hk marshalSSZTo 19
-  kat hk marshalSSZTo 20
+  unfold_step
+  step_directive hk marshalSSZTo 19
+  step_directive hk marshalSSZTo 20
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega
   simp only [Effects.All]
-  klabel hk hf marshalSSZTo 33
-  kat hk marshalSSZTo 33
-  kat hk marshalSSZTo 34
+  label_address hk hf marshalSSZTo 33
+  step_directive hk marshalSSZTo 33
+  step_directive hk marshalSSZTo 34
   apply load_step_at _ _ (rsp.toBitVec - 56) _ _ sl _ _ (by checkpoint_addr) (by ecancel) (by exact hsl)
-  kunfold
-  kat hk marshalSSZTo 35
+  unfold_step
+  step_directive hk marshalSSZTo 35
   rw [Codec.add_mul_one]
   apply store_step _ _ _ _ _ d0 _ _ (by ecancel) (by exact hd0)
   intro m6 H6
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl sl hsl] at H6
-  kunfold
+  unfold_step
   apply Eventually.done
   refine ⟨?gpc, ?grax, ?grbx, ?grcx, ?grdx, ?grdi, ?grsp, ?grbp, ?gr14,
     (Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8,
@@ -169,7 +169,7 @@ theorem Encode.enc_a1 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- ProposerIndex segment: directive 36 to directive 62 (ProposerIndex bytes stored). Only the atoms it touches. -/
-theorem Encode.enc_a2 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+theorem Encode.encode_proposer_index (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (pi d1 : List UInt8) (hpi : pi.length = 8) (hd1 : d1.length = 8)
     (s : MachineData) (rsp : UInt64) (t2a t2b : List UInt8)
     (ht2a : t2a.length = 16) (ht2b : t2b.length = 16) (R : DataMem → Prop)
@@ -194,53 +194,53 @@ theorem Encode.enc_a2 (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : 
   subst hrsp hrdx
   have := rcx.toNat_lt_size; have := rdi.toNat_lt_size
   simp only [UInt64.size] at *
-  kat hk marshalSSZTo 36
-  kat hk marshalSSZTo 37
+  step_directive hk marshalSSZTo 36
+  step_directive hk marshalSSZTo 37
   apply load_step_at _ _ (rax.toBitVec + 16) _ _ pi _ _ (by checkpoint_addr) (by ecancel) (by exact hpi)
-  kunfold
-  kat hk marshalSSZTo 38
-  kat hk marshalSSZTo 39
-  kat hk marshalSSZTo 40
-  kat hk marshalSSZTo 41
-  kat hk marshalSSZTo 42
+  unfold_step
+  step_directive hk marshalSSZTo 38
+  step_directive hk marshalSSZTo 39
+  step_directive hk marshalSSZTo 40
+  step_directive hk marshalSSZTo 41
+  step_directive hk marshalSSZTo 42
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
-  kunfold
+  unfold_step
   rw [show rsp.toBitVec - 8#64 - 152 + 72 = rsp.toBitVec - 88 by bv_omega]
   apply Machine.store_avx_step _ _ _ _ t2a _ _ (by ecancel) (by exact ht2a) (by decide)
   intro m7 H7
-  kunfold
-  kat hk marshalSSZTo 43
+  unfold_step
+  step_directive hk marshalSSZTo 43
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
-  kunfold
+  unfold_step
   rw [show rsp.toBitVec - 88 + 16 = rsp.toBitVec - 72 by bv_omega]
   apply Machine.store_avx_step _ _ _ _ t2b _ _ (by ecancel) (by exact ht2b) (by decide)
   intro m8 H8
-  kunfold
+  unfold_step
   rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 88),
     show rsp.toBitVec - 88 + 8 = rsp.toBitVec - 80 by bv_omega] at H8
-  kat hk marshalSSZTo 44
+  step_directive hk marshalSSZTo 44
   apply store_step_at _ _ (rsp.toBitVec - 88) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
     _ _ (by checkpoint_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
   intro m9 H9
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl pi hpi] at H9
-  kunfold
-  kat hk marshalSSZTo 45
-  kat hk marshalSSZTo 46
+  unfold_step
+  step_directive hk marshalSSZTo 45
+  step_directive hk marshalSSZTo 46
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega
   simp only [Effects.All]
-  klabel hk hf marshalSSZTo 59
-  kat hk marshalSSZTo 59
-  kat hk marshalSSZTo 60
+  label_address hk hf marshalSSZTo 59
+  step_directive hk marshalSSZTo 59
+  step_directive hk marshalSSZTo 60
   apply load_step_at _ _ (rsp.toBitVec - 88) _ _ pi _ _ (by checkpoint_addr) (by ecancel) (by exact hpi)
-  kunfold
-  kat hk marshalSSZTo 61
+  unfold_step
+  step_directive hk marshalSSZTo 61
   rw [Codec.add_add_8_mul_one]
   apply store_step _ _ _ _ _ d1 _ _ (by ecancel) (by exact hd1)
   intro m10 H10
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl pi hpi] at H10
-  kunfold
+  unfold_step
   apply Eventually.done
   refine ⟨?gpc, ?grax, ?grbx, ?gr8, ?grdi, ?grsp, ?grbp, ?gr14,
     (Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8,

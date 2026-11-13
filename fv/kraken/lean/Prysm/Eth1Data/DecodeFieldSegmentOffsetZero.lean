@@ -7,8 +7,8 @@ import Prysm.Eth1Data.Code
 Hand text, written after the hold-out was opened. The one generator run
 stopped with exit 2 on this field: its memmove source is `buf + 0`, so the code has no `add $src,%rbx`
 and does not match the frozen template `rootDecMid`. This file is NOT part of the frozen method
-(`Codec/Kind/FieldPatterns.lean`, `scalgen.py`, the uint64 decoder and 32-byte field segment lemmas are unchanged): `rootDecMid0` is `rootDecMid` without the
-`add` directive, and `rootdec_seg0` is the statement and proof text of `Codec.rootdec_seg`
+(`Codec/Kind/FieldPatterns.lean`, `scalgen.py`, the uint64 decoder and 32-byte field segment lemmas are unchanged): `rootDecMidSourceOffsetZero` is `rootDecMid` without the
+`add` directive, and `rootdec_seg_source_offset_zero` is the statement and proof text of `Codec.rootdec_seg`
 (`Codec/Bytes32Decode.lean`) with the `add` step removed (copied text, written after the Eth1Data hold-out was opened).
 -/
 
@@ -21,7 +21,7 @@ open Codec
 
 /-- Second block of the DepositRoot decode segment (from `lff:` to `jne lwb`): `rootDecMid` without the
 `add $src,%rbx` (the source offset is 0). Hand text; not a frozen template. -/
-def rootDecMid0 (lff lwb : String) (dR dB dS fP fL fC : Int64) : Program :=
+def rootDecMidSourceOffsetZero (lff lwb : String) (dR dB dS fP fL fC : Int64) : Program :=
   [Kraken.Directive.label lff,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rsp)) none (ConstExpr.int64 dS)))
@@ -55,11 +55,11 @@ variable [Host]
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- DepositRoot decode segment of `Eth1Data.UnmarshalSSZ` (source offset 0): the statement of
-`Codec.rootdec_seg` with `rootDecMid0` and `aSrc = bf`; the proof is the text of `rootdec_seg` with the
+`Codec.rootdec_seg` with `rootDecMidSourceOffsetZero` and `aSrc = bf`; the proof is the text of `rootdec_seg` with the
 `add` step removed and the later `rootDecMid` indices lowered by one. -/
-theorem rootdec_seg0 (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat)
+theorem rootdec_seg_source_offset_zero (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat)
     (hA : (rootDecHead lff dR fL fC).IsInfixAt Host.prog j1)
-    (hB : (rootDecMid0 lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog j2)
+    (hB : (rootDecMidSourceOffsetZero lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog j2)
     (hl : label lff = Host.addrOf j2)
     (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
@@ -78,7 +78,7 @@ theorem rootdec_seg0 (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At bf)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St) :
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (j2 + 11) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -98,15 +98,15 @@ theorem rootdec_seg0 (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14 hRet hLo
-  kat hA rootDecHead 0
-  kat hA rootDecHead 1
+  step_directive hA rootDecHead 0
+  step_directive hA rootDecHead 1
   intro _
-  kat hA rootDecHead 2
-  kat hA rootDecHead 3
+  step_directive hA rootDecHead 2
+  step_directive hA rootDecHead 3
   apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
-  kunfold
+  unfold_step
   try rw [show sp - 8#64 = sp - 8 from rfl] at *
   refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (j1 + 3 + 1)) 32 avail lo spl _
     rfl (by simp) (by rfl) (by omega) (by unfold maxAlloc; omega) (by omega) hlo hspl
@@ -122,51 +122,51 @@ theorem rootdec_seg0 (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat
   subst hrsp3 hr143 hrbp3
   rw [show sp - 8 + 8 = sp by bv_omega] at Hm3
   simp only [Nat.one_mul] at Hm3
-  kat hA rootDecHead 4
+  step_directive hA rootDecHead 4
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hA rootDecHead 5
+  unfold_step
+  step_directive hA rootDecHead 5
   apply store_step_at _ _ aL _ _ _ vL _ _ (by rw [← hL]) (by ecancel) (by exact hvL)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
-  kunfold
-  kat hA rootDecHead 6
+  unfold_step
+  step_directive hA rootDecHead 6
   apply store_step_at _ _ aC _ _ _ vC _ _ (by rw [← hC]) (by ecancel) (by exact hvC)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
-  kunfold
-  kat hA rootDecHead 7
+  unfold_step
+  step_directive hA rootDecHead 7
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
-  kunfold
-  kat hA rootDecHead 8
+  unfold_step
+  step_directive hA rootDecHead 8
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   rw [hl]
-  kat hB rootDecMid0 0
-  kat hB rootDecMid0 1
+  step_directive hB rootDecMidSourceOffsetZero 0
+  step_directive hB rootDecMidSourceOffsetZero 1
   apply store_step_at _ _ aS _ _ _ lS _ _ (by rw [← hS]) (by ecancel) (by exact hlS)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
-  kunfold
-  kat hB rootDecMid0 2
+  unfold_step
+  step_directive hB rootDecMidSourceOffsetZero 2
   apply store_step_at _ _ aP _ _ _ vP _ _ (by rw [← hP]) (by ecancel) (by exact hvP)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
-  kunfold
-  kat hB rootDecMid0 3
+  unfold_step
+  step_directive hB rootDecMidSourceOffsetZero 3
   apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hB rootDecMid0 4
-  kat hB rootDecMid0 5
+  unfold_step
+  step_directive hB rootDecMidSourceOffsetZero 4
+  step_directive hB rootDecMidSourceOffsetZero 5
   apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + 3 + 1)).toBitVec.toInt) _ _
     (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m6' H6
   simp only [Width.bytes, Width.bits] at H6
-  kunfold
+  unfold_step
   try rw [show sp - 8#64 = sp - 8 from rfl] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (j2 + 5 + 1)) root (List.replicate 32 0) stk3 _
     (by rw [hroot]; rfl) (by simp [hroot]) hstk3
@@ -180,27 +180,27 @@ theorem rootdec_seg0 (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat
   rw [show ({ toBitVec := sp - 8 } + 8 : UInt64) = { toBitVec := sp } by
     apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega] at hrsp4
   subst hrsp4 hr144 hrbp4
-  kat hB rootDecMid0 6
+  step_directive hB rootDecMidSourceOffsetZero 6
   apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
     (by exact Int.toBytes_length 8 _)
-  kunfold
-  kat hB rootDecMid0 7
+  unfold_step
+  step_directive hB rootDecMidSourceOffsetZero 7
   apply store_step_at _ _ aL _ _ _ (Int.toBytes 8 (BitVec.toInt (0 : BitVec 64))) _ _ (by rw [← hL])
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m7' H7
   simp only [Width.bytes, Width.bits] at H7
-  kunfold
-  kat hB rootDecMid0 8
+  unfold_step
+  step_directive hB rootDecMidSourceOffsetZero 8
   apply store_step_at _ _ aC _ _ _ (Int.toBytes 8 (BitVec.toInt (32 : BitVec 64))) _ _ (by rw [← hC])
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m8' H8
   simp only [Width.bytes, Width.bits] at H8
-  kunfold
-  kat hB rootDecMid0 9
+  unfold_step
+  step_directive hB rootDecMidSourceOffsetZero 9
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
-  kunfold
-  kat hB rootDecMid0 10
+  unfold_step
+  step_directive hB rootDecMidSourceOffsetZero 10
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]

@@ -4,7 +4,7 @@ import Prysm.Deposit.DecodeSpec
 # Negative-suite targets for the spec companions of the Deposit decoder
 
 `spec_prop` and `complete_prop` are copies of the frozen `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement`
-(equal by `rfl`, the `example`s at the end). `spec_chk` and `complete_chk` prove them again from the spec lemmas with
+(equal by `rfl`, the `example`s at the end). `spec_check` and `complete_chk` prove them again from the spec lemmas with
 the proof text of the companions. A mutant changes the size constant inside a copy: the EthLib rejection property and
 the completeness property then no longer hold for that size, so the proof must fail inside the theorem
 (`lv/negcases-spec.json`). The `example`s lie after the theorems; the negative runner cuts the module at the target.
@@ -38,7 +38,7 @@ def spec_prop : Prop :=
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-theorem spec_chk : spec_prop := by
+theorem spec_check : spec_prop := by
   intro k hk hf bs hbs s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen
   exact ⟨spec_rejects bs hbs, Decode.reject_size k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
     (fun h => hbs (by rw [← hlen, h]; rfl))⟩

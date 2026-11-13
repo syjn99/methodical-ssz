@@ -12,10 +12,10 @@ before `retq`:
     xor %eax,%eax; xor %ebx,%ebx; mov %rbx,%rcx
     add $c,%rsp | sub $c,%rsp;  pop %rbp;  [nop;]  retq
 
-`rejTail sub nop c` is that template (after the label). `enc_reject_tail` is the block: from the first
+`rejectTail sub nop c` is that template (after the label). `enc_reject_tail` is the block: from the first
 `mov` it returns to the caller with `rax = rbx = rcx = 0` (nil slice), `rdi, rsi` = the two words of
 `ssz.ErrBytesLength`, the saved rbp restored, memory unchanged. Parameters: the two template flags, `c`,
-the place `j`, rsp at the block `sp`, the saved-rbp address `aFp` (`relAddr sub c sp = aFp`) and the
+the place `j`, rsp at the block `sp`, the saved-rbp address `aFp` (`releaseAddress sub c sp = aFp`) and the
 return-slot address `aRa` (`aFp + 8 = aRa`). The initialised error words are a premise (as in
 `Prysm.Checkpoint.Encode.reject_length`). No runtime contract is used.
 -/
@@ -25,24 +25,24 @@ open Machine Runtime
 namespace Codec
 
 /-- Frame release of the reject tail: `add $c,%rsp` (`false`) or `sub $c,%rsp` (`true`). -/
-def relRsp : Bool → Int64 → Directive
+def releaseRsp : Bool → Int64 → Directive
   | false, c => Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
       (Operation.add (RegOrMem.reg (Reg.low Reg64.rsp Width.W64)) (Operand.imm (ConstExpr.int64 c))))
   | true, c => Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
       (Operation.sub (RegOrMem.reg (Reg.low Reg64.rsp Width.W64)) (Operand.imm (ConstExpr.int64 c))))
 
 /-- The optional `nop` before `retq`. -/
-def nopOpt : Bool → Program
+def optionalNop : Bool → Program
   | false => []
   | true => [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.nop 1))]
 
 /-- rsp after the frame release. -/
-def relAddr : Bool → Int64 → BitVec 64 → BitVec 64
+def releaseAddress : Bool → Int64 → BitVec 64 → BitVec 64
   | false, c, sp => sp + c.toBitVec
   | true, c, sp => sp - c.toBitVec
 
 /-- The reject tail after its label. -/
-def rejTail (sub nop : Bool) (c : Int64) : Program :=
+def rejectTail (sub nop : Bool) (c : Int64) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.reg (Reg.low Reg64.rdi Width.W64))
        (Operand.regOrMem (RegOrMem.mem (AddrExpr.mk (some RegOrRip.rip) none
@@ -60,30 +60,30 @@ def rejTail (sub nop : Bool) (c : Int64) : Program :=
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.reg (Reg.low Reg64.rcx Width.W64))
        (Operand.regOrMem (RegOrMem.reg (Reg.low Reg64.rbx Width.W64))))),
-   relRsp sub c,
+   releaseRsp sub c,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.pop (RegOrMem.reg (Reg.low Reg64.rbp Width.W64))))]
-  ++ nopOpt nop
+  ++ optionalNop nop
   ++ [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 Operation.ret)]
 
 variable [Host]
 
 /-- Step directive `n` of a fragment fact `h` whose list is already a literal. -/
-local macro "rstep " h:ident n:num : tactic => `(tactic| (
+local macro "step_literal_directive " h:ident n:num : tactic => `(tactic| (
   have hkat := Machine.isInfixAt_drop $h $n
   simp only [List.drop_succ_cons, List.drop_zero] at hkat
   apply Machine.estep hkat
   clear hkat
-  kunfold))
+  unfold_step))
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **Reject block**: the tail `rejTail sub nop c` at `j` returns `(nil, ssz.ErrBytesLength)`: pc = the
+/-- **Reject block**: the tail `rejectTail sub nop c` at `j` returns `(nil, ssz.ErrBytesLength)`: pc = the
 return address `ra`, `rax = rbx = rcx = 0`, `rdi = e0`, `rsi = e1`, rsp = `aRa + 8`, rbp = the saved
 `rbp0`, r14 kept, memory unchanged. -/
 theorem enc_reject_tail (sub nop : Bool) (c : Int64) (j : Nat)
-    (hA : (rejTail sub nop c).IsInfixAt Host.prog j)
-    (sp aFp aRa : BitVec 64) (hFp : relAddr sub c sp = aFp) (hRa : aFp + 8 = aRa)
+    (hA : (rejectTail sub nop c).IsInfixAt Host.prog j)
+    (sp aFp aRa : BitVec 64) (hFp : releaseAddress sub c sp = aFp) (hRa : aFp + 8 = aRa)
     (ra rbp0 e0 e1 : UInt64) (R : DataMem → Prop) (s : MachineData)
     (hrsp : s.regs.rsp = { toBitVec := sp })
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At aRa)
@@ -104,31 +104,31 @@ theorem enc_reject_tail (sub nop : Bool) (c : Int64) (j : Nat)
   simp only at hrsp h_mem ⊢
   subst hrsp
   cases sub <;> cases nop <;>
-    simp only [rejTail, relRsp, nopOpt, relAddr, List.cons_append, List.nil_append] at hA hFp
+    simp only [rejectTail, releaseRsp, optionalNop, releaseAddress, List.cons_append, List.nil_append] at hA hFp
   all_goals (
-    rstep hA 0
+    step_literal_directive hA 0
     apply load_step _ _ _ _ (Int.toBytes 8 e0.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-    kunfold
-    rstep hA 1
+    unfold_step
+    step_literal_directive hA 1
     apply load_step _ _ _ _ (Int.toBytes 8 e1.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-    kunfold
-    rstep hA 2
+    unfold_step
+    step_literal_directive hA 2
     intro _
-    rstep hA 3
+    step_literal_directive hA 3
     intro _
-    rstep hA 4
-    rstep hA 5
-    rstep hA 6
+    step_literal_directive hA 4
+    step_literal_directive hA 5
+    step_literal_directive hA 6
     apply load_step_at _ _ aFp _ _ (Int.toBytes 8 rbp0.toBitVec.toInt) _ _
       (by first | exact hFp | (rw [← hFp]; exact BitVec.add_comm _ _) | (rw [← hFp]; segment_addr))
       (by ecancel) (by exact Int.toBytes_length 8 _)
-    kunfold
-    rstep hA 7
-    try (rstep hA 8)
+    unfold_step
+    step_literal_directive hA 7
+    try (step_literal_directive hA 8)
     apply load_step_at _ _ aRa _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _
       (by rw [← hRa, ← hFp]; first | rfl | segment_addr)
       (by ecancel) (by exact Int.toBytes_length 8 _)
-    kunfold
+    unfold_step
     apply Eventually.done
     try simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?grsp, ?_, ?_, h_mem⟩

@@ -5,7 +5,7 @@ import Codec.NopWindow
 # The fixed-bytes decode segment over windows, parametric in the receiver registers
 
 `f = append(make([]byte, 0, n), buf[src:src+n]...)` (add form, `n` = 32, 48 or 96). The templates
-`bytesDecHeadR rX …` / `bytesDecMidR rX rY …` are `bytesDecHead` / `bytesDecMid` (`Codec/FixedBytesDecode.lean`) with the register
+`bytesDecHeadRegister rX …` / `bytesDecMidRegisters rX rY …` are `bytesDecHead` / `bytesDecMid` (`Codec/FixedBytesDecode.lean`) with the register
 of the receiver reload as a parameter: `rX` after `callq runtime.makeslice` (rdx at all 14 development
 sites), `rY` after `callq runtime.memmove` (rdx at 13 sites, rax at SyncCommitteeMessage.BlockRoot, a field
 that the generator missed in the hold-out test of PendingConsolidation and SyncCommitteeMessage). Both blocks are WINDOWS (`Codec/NopWindow.lean`): a `nop` may stand anywhere, for example before
@@ -16,8 +16,8 @@ Statement `BytesDecWindow n rX rY` = the statement of `bytesdec_seg` with these 
 `regs.get64 rY = rcv`. Proof: one theorem per case (the proof text of `bytesdec_seg` with the window tactics);
 `bytesdec_seg_window` collects them. The register sets (`rX` ∈ {rdx, rsi}, `rY` ∈ {rax, rcx, rdx, rsi, rdi}) and
 the sizes are limits of the proof method (literal registers and immediates in the machine steps), not of the
-code shape: another register or size is one more case line. Contracts `MakesliceC`, `MemmoveC` exactly as in
-`bytesdec_seg`. Not here: the offset-0 form (`bytesdec_seg_z`).
+code shape: another register or size is one more case line. Contracts `MakesliceContract`, `MemmoveContract` exactly as in
+`bytesdec_seg`. Not here: the offset-0 form (`bytesdec_seg_offset_zero`).
 -/
 
 open Machine Runtime
@@ -25,7 +25,7 @@ open Machine Runtime
 namespace Codec
 
 /-- First block: `bytesDecHead` with the receiver register `rX`. -/
-def bytesDecHeadR (rX : Reg64) (n : Int64) (lff : String) (dR fL fC : Int64) : Program :=
+def bytesDecHeadRegister (rX : Reg64) (n : Int64) (lff : String) (dR fL fC : Int64) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.lea (Reg.low Reg64.rax Width.W64)
        (AddrExpr.mk (some RegOrRip.rip) none (((ConstExpr.label "type__").add (ConstExpr.int64 387072)).sub ConstExpr.after_current_instruction)))),
@@ -51,7 +51,7 @@ def bytesDecHeadR (rX : Reg64) (n : Int64) (lff : String) (dR fL fC : Int64) : P
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.z lff))]
 
 /-- Second block, add form: `bytesDecMid` with the receiver registers `rX` (before the copy) and `rY` (after). -/
-def bytesDecMidR (rX rY : Reg64) (n : Int64) (lff lwb : String) (dR dB dS fP fL fC src : Int64) : Program :=
+def bytesDecMidRegisters (rX rY : Reg64) (n : Int64) (lff lwb : String) (dR dB dS fP fL fC src : Int64) : Program :=
   [Kraken.Directive.label lff,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rsp)) none (ConstExpr.int64 dS)))
@@ -87,11 +87,11 @@ variable [Host]
 /-- Statement of the fixed-bytes decode segment over two windows with the receiver registers `rX`, `rY`. -/
 abbrev BytesDecWindow (n : Nat) (rX rY : Reg64) : Prop :=
   ∀ (lff lwb : String) (dR dB dS fP fL fC src : Int64) (qA qB : Program) (j1 j2 jl jm e : Nat)
-    (hqA : qA.IsInfixAt Host.prog j1) (heA : eraseNop qA = bytesDecHeadR rX (OfNat.ofNat n) lff dR fL fC)
+    (hqA : qA.IsInfixAt Host.prog j1) (heA : eraseNop qA = bytesDecHeadRegister rX (OfNat.ofNat n) lff dR fL fC)
     (hqB : qB.IsInfixAt Host.prog j2)
-    (heB : eraseNop qB = bytesDecMidR rX rY (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src)
-    (hjl : j2 + nopPos qB 0 = jl) (hl : label lff = Host.addrOf jl)
-    (hjm : j2 + nopPos qB 6 = jm) (hend : j2 + qB.length = e)
+    (heB : eraseNop qB = bytesDecMidRegisters rX rY (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src)
+    (hjl : j2 + nonNopIndex qB 0 = jl) (hl : label lff = Host.addrOf jl)
+    (hjm : j2 + nonNopIndex qB 6 = jm) (hend : j2 + qB.length = e)
     (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
     (hRet : sp - 8 = aRet) (hLo : sp - 8 - BitVec.ofNat 64 St = aLo)
@@ -110,7 +110,7 @@ abbrev BytesDecWindow (n : Nat) (rX rY : Reg64) : Prop :=
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf e ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -130,28 +130,28 @@ abbrev BytesDecWindow (n : Nat) (rX rY : Reg64) : Prop :=
 
 set_option hygiene false in
 /-- Proof text of one case (size, registers literal); the names are the binders of `BytesDecWindow`. -/
-local macro "bytesdec_window_case " n:num rX:term:max rY:term:max : tactic => `(tactic| (
-    replace heA : eraseNop qA = bytesDecHeadR $rX ($n : Int64) lff dR fL fC := heA
-    replace heB : eraseNop qB = bytesDecMidR $rX $rY ($n : Int64) lff lwb dR dB dS fP fL fC src := heB
+local macro "bytes_decode_window_case " n:num rX:term:max rY:term:max : tactic => `(tactic| (
+    replace heA : eraseNop qA = bytesDecHeadRegister $rX ($n : Int64) lff dR fL fC := heA
+    replace heB : eraseNop qB = bytesDecMidRegisters $rX $rY ($n : Int64) lff lwb dR dB dS fP fL fC src := heB
     rw [show (OfNat.ofNat ($n : Nat) : Int) = ($n : Int) from rfl]
     obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
     simp only at hrsp hrbp hr14 h_mem ⊢
     subst rsp rbp r14 hRet hLo hjl hjm
-    kwin hqA
-    kwat hqA heA bytesDecHeadR 0
-    kwnx hqA heA 0
-    kwat hqA heA bytesDecHeadR 1
+    window_skip_leading_nops hqA
+    window_step_directive hqA heA bytesDecHeadRegister 0
+    window_skip_nops hqA heA 0
+    window_step_directive hqA heA bytesDecHeadRegister 1
     intro _
-    kwnx hqA heA 1
-    kwat hqA heA bytesDecHeadR 2
-    kwnx hqA heA 2
-    kwat hqA heA bytesDecHeadR 3
+    window_skip_nops hqA heA 1
+    window_step_directive hqA heA bytesDecHeadRegister 2
+    window_skip_nops hqA heA 2
+    window_step_directive hqA heA bytesDecHeadRegister 3
     apply store_step_at _ _ (sp - 8) _ _ _ rslot _ _ (by segment_addr) (by ecancel) (by exact hrs)
     intro m1' H1
     simp only [Width.bytes, Width.bits] at H1
-    kunfold
+    unfold_step
     try rw [show sp - 8#64 = sp - 8 from rfl] at *
-    refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (j1 + nopPos qA 3 + 1)) $n avail lo spl _
+    refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (j1 + nonNopIndex qA 3 + 1)) $n avail lo spl _
       rfl (by simp) (by rfl) (by omega) (by unfold maxAlloc; omega) (by omega) hlo hspl
       (by dsimp only; rw [show sp - 8 + 8 = sp by bv_omega]; ecancel)) ?_
     rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, hrbp3, stk3, spm3, hstk3, hspm3, Hm3⟩
@@ -165,65 +165,65 @@ local macro "bytesdec_window_case " n:num rX:term:max rY:term:max : tactic => `(
     subst hrsp3 hr143 hrbp3
     rw [show sp - 8 + 8 = sp by bv_omega] at Hm3
     simp only [Nat.one_mul] at Hm3
-    kwnx hqA heA 3
-    kwat hqA heA bytesDecHeadR 4
+    window_skip_nops hqA heA 3
+    window_step_directive hqA heA bytesDecHeadRegister 4
     apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
       (by exact Int.toBytes_length 8 _)
-    kunfold
-    kwnx hqA heA 4
-    kwat hqA heA bytesDecHeadR 5
+    unfold_step
+    window_skip_nops hqA heA 4
+    window_step_directive hqA heA bytesDecHeadRegister 5
     apply store_step_at _ _ aL _ _ _ vL _ _ (by rw [← hL]) (by ecancel) (by exact hvL)
     intro m2' H2
     simp only [Width.bytes, Width.bits] at H2
-    kunfold
-    kwnx hqA heA 5
-    kwat hqA heA bytesDecHeadR 6
+    unfold_step
+    window_skip_nops hqA heA 5
+    window_step_directive hqA heA bytesDecHeadRegister 6
     apply store_step_at _ _ aC _ _ _ vC _ _ (by rw [← hC]) (by ecancel) (by exact hvC)
     intro m3' H3
     simp only [Width.bytes, Width.bits] at H3
-    kunfold
-    kwnx hqA heA 6
-    kwat hqA heA bytesDecHeadR 7
+    unfold_step
+    window_skip_nops hqA heA 6
+    window_step_directive hqA heA bytesDecHeadRegister 7
     apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
     simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
-    kunfold
-    kwnx hqA heA 7
-    kwat hqA heA bytesDecHeadR 8
+    unfold_step
+    window_skip_nops hqA heA 7
+    window_step_directive hqA heA bytesDecHeadRegister 8
     split
     case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
     simp only [Effects.All]
     rw [hl]
-    kwat hqB heB bytesDecMidR 0
-    kwnx hqB heB 0
-    kwat hqB heB bytesDecMidR 1
+    window_step_directive hqB heB bytesDecMidRegisters 0
+    window_skip_nops hqB heB 0
+    window_step_directive hqB heB bytesDecMidRegisters 1
     apply store_step_at _ _ aS _ _ _ lS _ _ (by rw [← hS]) (by ecancel) (by exact hlS)
     intro m4' H4
     simp only [Width.bytes, Width.bits] at H4
-    kunfold
-    kwnx hqB heB 1
-    kwat hqB heB bytesDecMidR 2
+    unfold_step
+    window_skip_nops hqB heB 1
+    window_step_directive hqB heB bytesDecMidRegisters 2
     apply store_step_at _ _ aP _ _ _ vP _ _ (by rw [← hP]) (by ecancel) (by exact hvP)
     intro m5' H5
     simp only [Width.bytes, Width.bits] at H5
-    kunfold
-    kwnx hqB heB 2
-    kwat hqB heB bytesDecMidR 3
+    unfold_step
+    window_skip_nops hqB heB 2
+    window_step_directive hqB heB bytesDecMidRegisters 3
     apply load_step_at _ _ aB _ _ (Int.toBytes 8 bf.toInt) _ _ (by rw [← hB']) (by ecancel)
       (by exact Int.toBytes_length 8 _)
-    kunfold
-    kwnx hqB heB 3
-    kwat hqB heB bytesDecMidR 4
-    kwnx hqB heB 4
-    kwat hqB heB bytesDecMidR 5
-    kwnx hqB heB 5
-    kwat hqB heB bytesDecMidR 6
-    apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + nopPos qA 3 + 1)).toBitVec.toInt) _ _
+    unfold_step
+    window_skip_nops hqB heB 3
+    window_step_directive hqB heB bytesDecMidRegisters 4
+    window_skip_nops hqB heB 4
+    window_step_directive hqB heB bytesDecMidRegisters 5
+    window_skip_nops hqB heB 5
+    window_step_directive hqB heB bytesDecMidRegisters 6
+    apply store_step_at _ _ (sp - 8) _ _ _ (Int.toBytes 8 (Host.addrOf (j1 + nonNopIndex qA 3 + 1)).toBitVec.toInt) _ _
       (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
     intro m6' H6
     simp only [Width.bytes, Width.bits] at H6
-    kunfold
+    unfold_step
     try rw [show sp - 8#64 = sp - 8 from rfl] at *
-    refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (j2 + nopPos qB 6 + 1)) root (List.replicate $n 0) stk3 _
+    refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (j2 + nonNopIndex qB 6 + 1)) root (List.replicate $n 0) stk3 _
       (by rw [hroot]; rfl) (by simp [hroot]) hstk3
       (by dsimp only; rw [show src.toBitVec + bf = aSrc by rw [← hSrc]; exact BitVec.add_comm _ _]; ecancel)) ?_
     rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, hr144, hrbp4, stk4, hstk4, Hm4⟩
@@ -236,36 +236,36 @@ local macro "bytesdec_window_case " n:num rX:term:max rY:term:max : tactic => `(
       apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega] at hrsp4
     subst hrsp4 hr144 hrbp4
     rw [show src.toBitVec + bf = aSrc by rw [← hSrc]; exact BitVec.add_comm _ _] at Hm4
-    kwnx hqB heB 6
-    kwat hqB heB bytesDecMidR 7
+    window_skip_nops hqB heB 6
+    window_step_directive hqB heB bytesDecMidRegisters 7
     apply load_step_at _ _ aR _ _ (Int.toBytes 8 rcv.toInt) _ _ (by rw [← hR]) (by ecancel)
       (by exact Int.toBytes_length 8 _)
-    kunfold
-    kwnx hqB heB 7
-    kwat hqB heB bytesDecMidR 8
+    unfold_step
+    window_skip_nops hqB heB 7
+    window_step_directive hqB heB bytesDecMidRegisters 8
     apply store_step_at _ _ aL _ _ _ (Int.toBytes 8 (BitVec.toInt (0 : BitVec 64))) _ _ (by rw [← hL])
       (by ecancel) (by exact Int.toBytes_length 8 _)
     intro m7' H7
     simp only [Width.bytes, Width.bits] at H7
-    kunfold
-    kwnx hqB heB 8
-    kwat hqB heB bytesDecMidR 9
+    unfold_step
+    window_skip_nops hqB heB 8
+    window_step_directive hqB heB bytesDecMidRegisters 9
     apply store_step_at _ _ aC _ _ _ (Int.toBytes 8 (BitVec.toInt ($n : BitVec 64))) _ _ (by rw [← hC])
       (by ecancel) (by exact Int.toBytes_length 8 _)
     intro m8' H8
     simp only [Width.bytes, Width.bits] at H8
-    kunfold
-    kwnx hqB heB 9
-    kwat hqB heB bytesDecMidR 10
+    unfold_step
+    window_skip_nops hqB heB 9
+    window_step_directive hqB heB bytesDecMidRegisters 10
     apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
     simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
-    kunfold
-    kwnx hqB heB 10
-    kwat hqB heB bytesDecMidR 11
+    unfold_step
+    window_skip_nops hqB heB 10
+    window_step_directive hqB heB bytesDecMidRegisters 11
     split
     case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
     simp only [Effects.All]
-    kwend hqB heB 11 hend
+    window_skip_to_end hqB heB 11 hend
     apply Eventually.done
     simp only [show Int.toBytes 8 (BitVec.toInt ($n : BitVec 64)) = Int.toBytes 8 $n by decide] at H8
     exact ⟨rfl, rfl, rfl, rfl, rax3.toBitVec, spm3, stk4, hspm3, hstk4, rfl, by ecancel⟩))
@@ -274,181 +274,181 @@ set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_32_rdx_rax : BytesDecWindow 32 Reg64.rdx Reg64.rax := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 32 Reg64.rdx Reg64.rax
+  bytes_decode_window_case 32 Reg64.rdx Reg64.rax
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_32_rdx_rcx : BytesDecWindow 32 Reg64.rdx Reg64.rcx := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 32 Reg64.rdx Reg64.rcx
+  bytes_decode_window_case 32 Reg64.rdx Reg64.rcx
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_32_rdx_rdx : BytesDecWindow 32 Reg64.rdx Reg64.rdx := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 32 Reg64.rdx Reg64.rdx
+  bytes_decode_window_case 32 Reg64.rdx Reg64.rdx
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_32_rdx_rsi : BytesDecWindow 32 Reg64.rdx Reg64.rsi := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 32 Reg64.rdx Reg64.rsi
+  bytes_decode_window_case 32 Reg64.rdx Reg64.rsi
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_32_rdx_rdi : BytesDecWindow 32 Reg64.rdx Reg64.rdi := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 32 Reg64.rdx Reg64.rdi
+  bytes_decode_window_case 32 Reg64.rdx Reg64.rdi
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_32_rsi_rax : BytesDecWindow 32 Reg64.rsi Reg64.rax := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 32 Reg64.rsi Reg64.rax
+  bytes_decode_window_case 32 Reg64.rsi Reg64.rax
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_32_rsi_rcx : BytesDecWindow 32 Reg64.rsi Reg64.rcx := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 32 Reg64.rsi Reg64.rcx
+  bytes_decode_window_case 32 Reg64.rsi Reg64.rcx
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_32_rsi_rdx : BytesDecWindow 32 Reg64.rsi Reg64.rdx := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 32 Reg64.rsi Reg64.rdx
+  bytes_decode_window_case 32 Reg64.rsi Reg64.rdx
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_32_rsi_rsi : BytesDecWindow 32 Reg64.rsi Reg64.rsi := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 32 Reg64.rsi Reg64.rsi
+  bytes_decode_window_case 32 Reg64.rsi Reg64.rsi
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_32_rsi_rdi : BytesDecWindow 32 Reg64.rsi Reg64.rdi := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 32 Reg64.rsi Reg64.rdi
+  bytes_decode_window_case 32 Reg64.rsi Reg64.rdi
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_48_rdx_rax : BytesDecWindow 48 Reg64.rdx Reg64.rax := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 48 Reg64.rdx Reg64.rax
+  bytes_decode_window_case 48 Reg64.rdx Reg64.rax
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_48_rdx_rcx : BytesDecWindow 48 Reg64.rdx Reg64.rcx := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 48 Reg64.rdx Reg64.rcx
+  bytes_decode_window_case 48 Reg64.rdx Reg64.rcx
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_48_rdx_rdx : BytesDecWindow 48 Reg64.rdx Reg64.rdx := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 48 Reg64.rdx Reg64.rdx
+  bytes_decode_window_case 48 Reg64.rdx Reg64.rdx
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_48_rdx_rsi : BytesDecWindow 48 Reg64.rdx Reg64.rsi := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 48 Reg64.rdx Reg64.rsi
+  bytes_decode_window_case 48 Reg64.rdx Reg64.rsi
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_48_rdx_rdi : BytesDecWindow 48 Reg64.rdx Reg64.rdi := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 48 Reg64.rdx Reg64.rdi
+  bytes_decode_window_case 48 Reg64.rdx Reg64.rdi
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_48_rsi_rax : BytesDecWindow 48 Reg64.rsi Reg64.rax := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 48 Reg64.rsi Reg64.rax
+  bytes_decode_window_case 48 Reg64.rsi Reg64.rax
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_48_rsi_rcx : BytesDecWindow 48 Reg64.rsi Reg64.rcx := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 48 Reg64.rsi Reg64.rcx
+  bytes_decode_window_case 48 Reg64.rsi Reg64.rcx
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_48_rsi_rdx : BytesDecWindow 48 Reg64.rsi Reg64.rdx := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 48 Reg64.rsi Reg64.rdx
+  bytes_decode_window_case 48 Reg64.rsi Reg64.rdx
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_48_rsi_rsi : BytesDecWindow 48 Reg64.rsi Reg64.rsi := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 48 Reg64.rsi Reg64.rsi
+  bytes_decode_window_case 48 Reg64.rsi Reg64.rsi
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_48_rsi_rdi : BytesDecWindow 48 Reg64.rsi Reg64.rdi := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 48 Reg64.rsi Reg64.rdi
+  bytes_decode_window_case 48 Reg64.rsi Reg64.rdi
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_96_rdx_rax : BytesDecWindow 96 Reg64.rdx Reg64.rax := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 96 Reg64.rdx Reg64.rax
+  bytes_decode_window_case 96 Reg64.rdx Reg64.rax
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_96_rdx_rcx : BytesDecWindow 96 Reg64.rdx Reg64.rcx := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 96 Reg64.rdx Reg64.rcx
+  bytes_decode_window_case 96 Reg64.rdx Reg64.rcx
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_96_rdx_rdx : BytesDecWindow 96 Reg64.rdx Reg64.rdx := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 96 Reg64.rdx Reg64.rdx
+  bytes_decode_window_case 96 Reg64.rdx Reg64.rdx
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_96_rdx_rsi : BytesDecWindow 96 Reg64.rdx Reg64.rsi := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 96 Reg64.rdx Reg64.rsi
+  bytes_decode_window_case 96 Reg64.rdx Reg64.rsi
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_96_rdx_rdi : BytesDecWindow 96 Reg64.rdx Reg64.rdi := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 96 Reg64.rdx Reg64.rdi
+  bytes_decode_window_case 96 Reg64.rdx Reg64.rdi
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_96_rsi_rax : BytesDecWindow 96 Reg64.rsi Reg64.rax := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 96 Reg64.rsi Reg64.rax
+  bytes_decode_window_case 96 Reg64.rsi Reg64.rax
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_96_rsi_rcx : BytesDecWindow 96 Reg64.rsi Reg64.rcx := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 96 Reg64.rsi Reg64.rcx
+  bytes_decode_window_case 96 Reg64.rsi Reg64.rcx
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_96_rsi_rdx : BytesDecWindow 96 Reg64.rsi Reg64.rdx := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 96 Reg64.rsi Reg64.rdx
+  bytes_decode_window_case 96 Reg64.rsi Reg64.rdx
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_96_rsi_rsi : BytesDecWindow 96 Reg64.rsi Reg64.rsi := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 96 Reg64.rsi Reg64.rsi
+  bytes_decode_window_case 96 Reg64.rsi Reg64.rsi
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 theorem bytesdec_window_96_rsi_rdi : BytesDecWindow 96 Reg64.rsi Reg64.rdi := by
   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
-  bytesdec_window_case 96 Reg64.rsi Reg64.rdi
+  bytes_decode_window_case 96 Reg64.rsi Reg64.rdi
 
 /-- **Fixed-bytes decode segment over windows, receiver registers as parameters** (add form). -/
 theorem bytesdec_seg_window (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (rX rY : Reg64)

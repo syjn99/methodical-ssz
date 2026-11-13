@@ -10,13 +10,13 @@ Hand-written AFTER the raw generator output (`Prysm/PendingDeposit/GeneratedDeco
 5/5 walker-covered) was committed. Statement = the pre-committed hand statement `Prysm.PendingDeposit.Decode.accept_statement`
 (`Prysm/PendingDeposit/Statements.lean`, unchanged). `--steps --compose` refuses by design, so every field composition is HAND text
 (`pd_gg_*_field`) over the GENERATED theorems, used as emitted:
-* head 0–13: `Decode.head` (hand; `decpro_seg` with F = 64, dB = 88, size 192, then the spills 11–13 as `kstep_st`);
+* head 0–13: `Decode.head` (hand; `decpro_seg` with F = 64, dB = 88, size 192, then the spills 11–13 as `step_store`);
 * PublicKey 14–48: generated segment (offset-0 form) + generated tail steps 38, 39, 47, 48;
 * WithdrawalCredentials 49–84: generated segment + generated tail steps 74, 75, 83, 84;
 * Amount 85–87: generated steps 85, 86, 87;
 * Signature 88–122: generated segment + generated tail steps 113, 114, 121, 122;
 * Slot 123–160: generated steps 123–128 + generated call block (`hC` discharged by the proved `Prysm.Slot.Decode.accept_function_spec_holds`);
-* epilogue 161–163: `Decode.epi` (hand; `kstep_add` and `decret_seg`).
+* epilogue 161–163: `Decode.epilogue` (hand; `step_add_immediate` and `decret_seg`).
 -/
 
 open Machine Runtime Prysm.AttestationData.Code Prysm.PendingDeposit.Code Codec
@@ -29,12 +29,12 @@ theorem Decode.stack_low_eq (x : BitVec 64) (S : Nat) : x - 72 - 8 - BitVec.ofNa
     apply BitVec.eq_of_toNat_eq; simp
   rw [this]; bv_omega
 
-theorem Decode.lo8 (x : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (a f : List UInt8) (ha : a.length = S) (hf : f.length = 8) :
+theorem Decode.low_stack_split (x : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (a f : List UInt8) (ha : a.length = S) (hf : f.length = 8) :
     Eq ((a ++ f).At (x - 88 - BitVec.ofNat 64 S)) = Eq (a.At (x - 88 - BitVec.ofNat 64 S)) ⋆ Eq (f.At (x - 88)) := by
   refine at_app _ _ ?_ (by simp only [ha, hf]; omega)
   rw [ha]; bv_omega
 
-theorem Decode.j3 (x : BitVec 64) (a b c : List UInt8) (ha : a.length = 8) (hb : b.length = 8) (hc : c.length = 8) :
+theorem Decode.split_three_words (x : BitVec 64) (a b c : List UInt8) (ha : a.length = 8) (hb : b.length = 8) (hc : c.length = 8) :
     Eq ((a ++ (b ++ c)).At (x - 72)) = Eq (a.At (x - 72)) ⋆ Eq (b.At (x - 64)) ⋆ Eq (c.At (x - 56)) := by
   rw [at_app _ _ (b := x - 64) (by rw [ha]; bv_omega) (by simp [ha, hb, hc]),
     at_app _ _ (b := x - 56) (by rw [hb]; bv_omega) (by simp [hb, hc])]
@@ -45,7 +45,7 @@ theorem Decode.guard_lt (x : BitVec 64) (g : Nat) (h : g + 80 < x.toNat) : g < (
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- PendingDeposit head 0–13 (frame `0x40`, size 192): `decpro_seg`, then the spills rax → `0x50(%rsp)`,
-rdi → `0x68(%rsp)`, rbx → `0x58(%rsp)` as `kstep_st` steps (no nil check in this decoder). -/
+rdi → `0x68(%rsp)`, rbx → `0x58(%rsp)` as `step_store` steps (no nil check in this decoder). -/
 theorem Decode.head (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
     (s : MachineData) (ra guard : UInt64) (fp s1 s2 s4 : List UInt8)
     (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (h4 : s4.length = 8)
@@ -66,7 +66,7 @@ theorem Decode.head (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
           ⋆ Eq ((Int.toBytes 8 s.regs.rdi.toBitVec.toInt).At (s.regs.rsp.toBitVec + 32))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  refine eventually_trans _ _ _ _ (decpro_seg _ _ _ _ 64 88 192 _ k (k + 11) (win hk 0 11) (by rfl) (by rfl)
+  refine eventually_trans _ _ _ _ (decpro_seg _ _ _ _ 64 88 192 _ k (k + 11) (window_infix_at hk 0 11) (by rfl) (by rfl)
     s ra guard (s.regs.rsp.toBitVec - 72) (s.regs.rsp.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     fp s2 hfp h2 _ (by ecancel) hguard (by rw [hlen]; rfl)) ?_
@@ -81,18 +81,18 @@ theorem Decode.head (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩, zmms1, flags1, mem1⟩ := d1
   simp only at hrsp1 hrbp1 hrax1 hrbx1 hrdi1 hr141 Hm1
   subst hrsp1 hrbp1 hrax1 hrbx1 hrdi1 hr141
-  apply kstep_st Reg64.rax Reg64.rsp 80 _ (k + 11) (k + 12) (win hk 11 1) (by rfl) (by rfl)
+  apply step_store Reg64.rax Reg64.rsp 80 _ (k + 11) (k + 12) (window_infix_at hk 11 1) (by rfl) (by rfl)
     (s.regs.rsp.toBitVec - 72) (s.regs.rsp.toBitVec + 8) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     s1 h1 _ _ _ (by rfl) (by ecancel)
-  intro m1 H1; kn; simp only [Reg64s.get64] at H1
-  apply kstep_st Reg64.rdi Reg64.rsp 104 _ (k + 12) (k + 13) (win hk 12 1) (by rfl) (by rfl)
+  intro m1 H1; normalize_registers; simp only [Reg64s.get64] at H1
+  apply step_store Reg64.rdi Reg64.rsp 104 _ (k + 12) (k + 13) (window_infix_at hk 12 1) (by rfl) (by rfl)
     (s.regs.rsp.toBitVec - 72) (s.regs.rsp.toBitVec + 32) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     s4 h4 _ _ _ (by rfl) (by ecancel)
-  intro m2 H2; kn; simp only [Reg64s.get64] at H2
-  apply kstep_st Reg64.rbx Reg64.rsp 88 _ (k + 13) (k + 14) (win hk 13 1) (by rfl) (by rfl)
+  intro m2 H2; normalize_registers; simp only [Reg64s.get64] at H2
+  apply step_store Reg64.rbx Reg64.rsp 88 _ (k + 13) (k + 14) (window_infix_at hk 13 1) (by rfl) (by rfl)
     (s.regs.rsp.toBitVec - 72) (s.regs.rsp.toBitVec + 16) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     (Int.toBytes 8 s.regs.rbx.toBitVec.toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
-  intro m3 H3; kn; simp only [Reg64s.get64] at H3
+  intro m3 H3; normalize_registers; simp only [Reg64s.get64] at H3
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   dsimp only
@@ -100,8 +100,8 @@ theorem Decode.head (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- PendingDeposit epilogue 161–163 (frame `0x40`): `add $0x40,%rsp` as `kstep_add`, then `decret_seg`. -/
-theorem Decode.epi (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
+/-- PendingDeposit epilogue 161–163 (frame `0x40`): `add $0x40,%rsp` as `step_add_immediate`, then `decret_seg`. -/
+theorem Decode.epilogue (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
     (sp aFp aRa : BitVec 64) (hFp : sp + 64 = aFp) (hRa : sp + 72 = aRa)
     (fp0 ra : UInt64) (R : DataMem → Prop)
     (s : MachineData) (hrsp : s.regs.rsp = { toBitVec := sp })
@@ -115,9 +115,9 @@ theorem Decode.epi (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp h_mem ⊢
   subst rsp hFp hRa
-  apply kstep_add Reg64.rsp 64 _ (k + 161) (k + 162) (win hk 161 1) (by rfl) (by rfl)
-  intro fl; kn
-  refine eventually_trans _ _ _ _ (decret_seg _ (k + 162) (win hk 162 2) (by rfl) (sp + 64) (sp + 72) (by bv_omega)
+  apply step_add_immediate Reg64.rsp 64 _ (k + 161) (k + 162) (window_infix_at hk 161 1) (by rfl) (by rfl)
+  intro fl; normalize_registers
+  refine eventually_trans _ _ _ _ (decret_seg _ (k + 162) (window_infix_at hk 162 2) (by rfl) (sp + 64) (sp + 72) (by bv_omega)
     fp0 ra R _ (by rfl) (by ecancel)) ?_
   rintro ⟨d, pc⟩ ⟨hpc, hrsp', hrbp', hreg, hmem⟩
   dsimp only at hpc hrsp' hrbp' hreg hmem
@@ -150,7 +150,7 @@ theorem Decode.from_generated_steps_PublicKey_field (k : Nat) (hk : Code.unmarsh
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At bf)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 49) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -176,12 +176,12 @@ theorem Decode.from_generated_steps_PublicKey_field (k : Nat) (hk : Code.unmarsh
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
   apply Decode.generated_step_s38 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s39 k hk hf
   apply Decode.generated_step_s47 k hk hf
   apply Decode.generated_step_s48 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
-  kn
+  normalize_registers
   simp only [Reg64s.get64] at H
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, p, spl', lo', hspl', hlo', hrY, ?_⟩
@@ -211,7 +211,7 @@ theorem Decode.from_generated_steps_WithdrawalCredentials_field (k : Nat) (hk : 
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 85) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -237,12 +237,12 @@ theorem Decode.from_generated_steps_WithdrawalCredentials_field (k : Nat) (hk : 
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
   apply Decode.generated_step_s74 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s75 k hk hf
   apply Decode.generated_step_s83 k hk hf
   apply Decode.generated_step_s84 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
-  kn
+  normalize_registers
   simp only [Reg64s.get64] at H
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, p, spl', lo', hspl', hlo', hrY, ?_⟩
@@ -269,13 +269,13 @@ theorem Decode.from_generated_steps_Amount_field (k : Nat) (hk : Code.unmarshalS
   simp only [Reg64s.get64] at hrsp hrbp hr14 hrdx h_mem ⊢
   subst rsp rbp r14 hrdx
   apply Decode.generated_step_s85 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s86 k hk hf bf (bf + 80) (by simp only [Int64.toBitVec_ofNat]) v hv _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s87 k hk hf rdx.toBitVec (rdx.toBitVec + 56) (by simp only [Int64.toBitVec_ofNat]) vF hvF _ _ _
     (by rfl) (by ecancel)
   intro m' H
-  kn
+  normalize_registers
   simp only [Reg64s.get64, toBytes_ofInt_ofBytes 64 8 rfl v hv] at H
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, ?_⟩
@@ -305,7 +305,7 @@ theorem Decode.from_generated_steps_Signature_field (k : Nat) (hk : Code.unmarsh
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 123) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -331,12 +331,12 @@ theorem Decode.from_generated_steps_Signature_field (k : Nat) (hk : Code.unmarsh
   simp only at hrsp' hrbp' hr14' hrY Hm
   subst hrsp' hrbp' hr14'
   apply Decode.generated_step_s113 k hk hf sp aS p hS _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s114 k hk hf
   apply Decode.generated_step_s121 k hk hf
   apply Decode.generated_step_s122 k hk hf rcv aP hP (Int.toBytes 8 p.toInt) (Int.toBytes_length 8 _) _ _ _ (by exact hrY) (by ecancel)
   intro m' H
-  kn
+  normalize_registers
   simp only [Reg64s.get64] at H
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, p, spl', lo', hspl', hlo', hrY, ?_⟩
@@ -348,7 +348,7 @@ set_option maxRecDepth 100000 in
 /-- `Slot` (callee decoder field, Go offset 88, SSZ offset 184): the WHOLE call field 123–160 (generated steps
 123–128 and the generated call block 129–132, continuation label 160). -/
 theorem Decode.from_generated_steps_Slot_field (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k) :
-    ∀ (hC : U64CalleeAcc "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ")
+    ∀ (hC : U64CalleeAccept "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ")
     (sp rcv bf aRet aFp aS2 aB aD : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
     (hB : sp + (88 : Int64).toBitVec = aB) (hD : sp + (104 : Int64).toBitVec = aD)
@@ -377,17 +377,17 @@ theorem Decode.from_generated_steps_Slot_field (k : Nat) (hk : Code.unmarshalSSZ
   simp only at hrsp hrbp hr14 hrax h_mem ⊢
   subst rsp rbp r14 hrax
   apply Decode.generated_step_s123 k hk hf sp aB bf hB _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s124 k hk hf
-  intro fl1; kn
+  intro fl1; normalize_registers
   apply Decode.generated_step_s125 k hk hf sp aD hD vD hvD _ _ _ (by rfl) (by ecancel)
-  kn
+  normalize_registers
   apply Decode.generated_step_s126 k hk hf
-  intro fl2; kn
+  intro fl2; normalize_registers
   apply Decode.generated_step_s127 k hk hf
-  intro fl3; kn
+  intro fl3; normalize_registers
   apply Decode.generated_step_s128 k hk hf
-  kn
+  normalize_registers
   refine eventually_trans _ _ _ _ (Decode.generated_step_Slot_call k hk hf hC sp (rax.toBitVec + 88) (bf + 184) aRet aFp aS2 hRet hFp hS2 rbp0 r140 guard e8 rslot
     fp s2 c0 he8 hrs hfp hs2 hc0 hguard _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl) (by first | rfl | decide)
     (by ecancel)) ?_
@@ -407,7 +407,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
     fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aP1 aL1 aC1 aP2 aL2 aC2 aN aP3 aL3 aC3 aSl
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hl28 hrs hast haP1 haL1 haC1 haP2 haL2 haC2 haN haP3 haL3 haC3 haSl
     R S hS hlo Heap avail h_mem hguard hlen hav hms hmm
-  have hslc : U64CalleeAcc Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
+  have hslc : U64CalleeAccept Prysm.Slot.Code.unmarshalSSZLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
@@ -431,7 +431,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
     (sp0 ++ (sp1 ++ sp2)) rslot lo l28 aP1 aL1 aC1
     (by simp only [List.length_append, hsp0, hsp1, hsp2]) hrs hlo hl28 haP1 haL1 haC1
     _ Heap avail (by omega) d1 hrsp1 hrbp1 hr141
-    (by rw [Decode.j3 _ _ _ _ hsp0 hsp1 hsp2]; ecancel) hms hmm) ?_
+    (by rw [Decode.split_three_words _ _ _ _ hsp0 hsp1 hsp2]; ecancel) hms hmm) ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, p1, spl1, lo1, hspl1, hlo1, hrdx2, Hm2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrdx2 Hm2
   subst hpc2
@@ -484,7 +484,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   have hsp3 : spl3 = spl3.take 8 ++ ((spl3.drop 8).take 8 ++ (spl3.drop 8).drop 8) := by
     rw [List.take_append_drop, List.take_append_drop]
   have hlo3' : lo3 = lo3.take S ++ lo3.drop S := (List.take_append_drop S lo3).symm
-  rw [hsp3, hlo3', Decode.j3 _ _ _ _ hq0 hq1 hq2, Decode.lo8 _ S hS _ _ hlS3 hl83] at Hm5
+  rw [hsp3, hlo3', Decode.split_three_words _ _ _ _ hq0 hq1 hq2, Decode.low_stack_split _ S hS _ _ hlS3 hl83] at Hm5
   -- Slot: 123 → 161 (hand field composition: generated steps 123–128 + generated call block; hC = Prysm.Slot.Decode.accept_function_spec_holds)
   refine eventually_trans _ _ _ _ (Decode.from_generated_steps_Slot_field k hk hf hslc
     (rsp.toBitVec - 72) rax.toBitVec rbx.toBitVec (rsp.toBitVec - 80) (rsp.toBitVec - 88) (rsp.toBitVec - 64)
@@ -499,7 +499,7 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   dsimp only at hpc6 hrax6 hrbx6 hrsp6 hrbp6 hr146 Hm6
   subst hpc6
   -- epilogue 161–163
-  refine eventually_trans _ _ _ _ (Decode.epi k hk (rsp.toBitVec - 72) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Decode.epilogue k hk (rsp.toBitVec - 72) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra _ d6 hrsp6 (by ecancel)) ?_
   rintro ⟨d7, pc7⟩ ⟨hpc7, hrax7, hrbx7, hrsp7, hrbp7, hr147, hmem7⟩
   dsimp only at hpc7 hrax7 hrbx7 hrsp7 hrbp7 hr147 hmem7
@@ -513,8 +513,8 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
     (by simp only [List.length_append, hlS3, Int.toBytes_length]), ?_⟩
   · dsimp only; rw [hrsp7]; apply UInt64.toBitVec_inj.mp
     simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
-  · dsimp only; rw [hmem7, Decode.j3 _ _ _ _ hq0 (Int.toBytes_length 8 _) hq2,
-      Decode.lo8 _ S hS _ _ hlS3 (Int.toBytes_length 8 _)]
+  · dsimp only; rw [hmem7, Decode.split_three_words _ _ _ _ hq0 (Int.toBytes_length 8 _) hq2,
+      Decode.low_stack_split _ S hS _ _ hlS3 (Int.toBytes_length 8 _)]
     ecancel
 
 end Prysm.PendingDeposit

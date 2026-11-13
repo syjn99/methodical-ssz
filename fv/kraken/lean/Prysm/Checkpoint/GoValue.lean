@@ -53,7 +53,7 @@ theorem witness_decode_accept_recv_pre : goValue (recvAt (block (Int.toBytes 8 0
 is the list of the receiver fragments that the conclusion of `Decode.accept` names at
 `rax .. rax + 72` (`cst` = the before bytes 0..8, `e8` at +8, `p` at +16, 32 at +24 and +32, `ctl` = the
 before bytes 40..72). `after_decode_goValue` holds for every before receiver that is a Go value, every
-8 input bytes and every `p ≠ 0`. `MakesliceC` does not state `p ≠ 0` (Go's makeslice with cap 32 never
+8 input bytes and every `p ≠ 0`. `MakesliceContract` does not state `p ≠ 0` (Go's makeslice with cap 32 never
 returns nil, but that is not in the contract form); so the after-state Go value is conditional on
 `p ≠ 0` (the witness bump allocator returns 0x1000c). -/
 

@@ -13,12 +13,12 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 Each theorem below has the TYPE of an earlier lemma (`type_of%`, so the statement is the committed one) and
 is proved from the window and step lemmas only. No earlier proof is used.
 
-* Window mechanism: `bytesdec_seg` (dense), `bytesdec_seg_p` (`pad` flag: the padding `nop`
+* Window mechanism: `bytesdec_seg` (dense), `bytesdec_seg_optional_padding` (`pad` flag: the padding `nop`
   before `callq runtime.makeslice`), `Prysm.Deposit_Data.bytes32dec_seg_nop` (hand lemma), `Prysm.SyncCommitteeMessage.bytes32dec_seg_rax` (hand
   lemma, receiver in rax after the copy), `Prysm.PendingConsolidation.calldec_nop_seg` (hand lemma, `nop` after the callee call):
-  each is `bytesdec_seg_window` / `calldec_seg_w` at one window (`q :=` the dense template; `he` by `rfl`).
+  each is `bytesdec_seg_window` / `calldec_seg_window` at one window (`q :=` the dense template; `he` by `rfl`).
 * Step mechanism: the set-up lemmas `callarg_first_seg`, `callarg_reload_seg` (both with their `pad`
-  flag), `callarg_lea_seg`, `callarg_mov_seg`, the two-directive read `u64dec_rr_seg` at r8, and the hand
+  flag), `callarg_lea_seg`, `callarg_mov_seg`, the two-directive read `u64dec_scratch_register_seg` at r8, and the hand
   set-up `Prysm.SyncCommitteeMessage.Decode.validator_index_arg`: each is a sequence of `kstep_*` applications.
 (`calldec_seg` itself: `calldec_seg_dense` in `Codec/CalleeDecodeWindow.lean`.)
 After the split of this module, the declarations of single types are in `Prysm/SyncCommitteeMessage/WindowStepsInstances.lean`.
@@ -39,8 +39,8 @@ theorem bytesdec_seg_inst : type_of% (@bytesdec_seg ‹Host›) := by
   exact bytesdec_seg_window n hn Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
     lff lwb dR dB dS fP fL fC src _ _ j1 j2 j2 (j2 + 6) (j2 + 12) hA rfl hB rfl rfl hl rfl rfl
 
-/-- `bytesdec_seg_p` (`pad` flag) from the window lemma: the pad is a nop of the first window. -/
-theorem bytesdec_seg_p_inst : type_of% (@bytesdec_seg_p ‹Host›) := by
+/-- `bytesdec_seg_optional_padding` (`pad` flag) from the window lemma: the pad is a nop of the first window. -/
+theorem bytesdec_seg_optional_padding_inst : type_of% (@bytesdec_seg_optional_padding ‹Host›) := by
   intro pad n hn lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl
   cases pad
   · exact bytesdec_seg_window n hn Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
@@ -63,7 +63,7 @@ theorem bytes32dec_seg_rax_inst : type_of% (@Prysm.SyncCommitteeMessage.bytes32d
 /-- `Prysm.PendingConsolidation.calldec_nop_seg` (hand lemma) from the window lemma: the nop is in the window. -/
 theorem calldec_nop_seg_inst : type_of% (@Prysm.PendingConsolidation.calldec_nop_seg ‹Host›) := by
   intro fn lok j j2 hA hB hl hC
-  exact calldec_seg_w fn lok _ j j j2 hA rfl rfl hB hl hC
+  exact calldec_seg_window fn lok _ j j j2 hA rfl rfl hB hl hC
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -74,17 +74,17 @@ theorem callarg_first_seg_inst : type_of% (@callarg_first_seg ‹Host›) := by
   simp only at hrax ⊢
   subst hrax hF
   cases pad
-  · apply kstep_add Reg64.rax f _ j (j + 1) (win hA 0 1) rfl rfl
-    intro fl1; kn
-    apply kstep_movi Reg64.rcx 8 _ (j + 1) (j + 2) (win hA 1 1) rfl rfl
-    kn
+  · apply step_add_immediate Reg64.rax f _ j (j + 1) (window_infix_at hA 0 1) rfl rfl
+    intro fl1; normalize_registers
+    apply step_move_immediate Reg64.rcx 8 _ (j + 1) (j + 2) (window_infix_at hA 1 1) rfl rfl
+    normalize_registers
     apply Eventually.done
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> first | rfl | decide
-  · apply kstep_add Reg64.rax f _ j (j + 1) (win hA 0 1) rfl rfl
-    intro fl1; kn
-    apply kstep_movi Reg64.rcx 8 _ (j + 1) (j + 2) (win hA 1 1) rfl rfl
-    kn
-    apply kstep_nops _ (j + 2) (j + 3) (win hA 2 1) rfl rfl
+  · apply step_add_immediate Reg64.rax f _ j (j + 1) (window_infix_at hA 0 1) rfl rfl
+    intro fl1; normalize_registers
+    apply step_move_immediate Reg64.rcx 8 _ (j + 1) (j + 2) (window_infix_at hA 1 1) rfl rfl
+    normalize_registers
+    apply step_nops _ (j + 2) (j + 3) (window_infix_at hA 2 1) rfl rfl
     apply Eventually.done
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> first | rfl | decide
 
@@ -97,37 +97,37 @@ theorem callarg_reload_seg_inst : type_of% (@callarg_reload_seg ‹Host›) := b
   simp only at hrsp h_mem ⊢
   subst rsp hSrc hF
   cases pad
-  · apply kstep_ldv Reg64.rbx Reg64.rsp dB _ j (j + 1) (win hA 0 1) rfl rfl sp aB bf hB' _ _ _ rfl (by ecancel)
-    kn
-    apply kstep_add Reg64.rbx src _ (j + 1) (j + 2) (win hA 1 1) rfl rfl
-    intro fl1; kn
-    apply kstep_ldb Reg64.rdi Reg64.rsp dD _ (j + 2) (j + 3) (win hA 2 1) rfl rfl sp aD hD vD hvD _ _ _ rfl (by ecancel)
-    kn
-    apply kstep_add Reg64.rdi c _ (j + 3) (j + 4) (win hA 3 1) rfl rfl
-    intro fl2; kn
-    apply kstep_ldv Reg64.rax Reg64.rsp dR _ (j + 4) (j + 5) (win hA 4 1) rfl rfl sp aR rcv hR _ _ _ rfl (by ecancel)
-    kn
-    apply kstep_add Reg64.rax f _ (j + 5) (j + 6) (win hA 5 1) rfl rfl
-    intro fl3; kn
-    apply kstep_movi Reg64.rcx 8 _ (j + 6) (j + 7) (win hA 6 1) rfl rfl
-    kn
+  · apply step_load_value Reg64.rbx Reg64.rsp dB _ j (j + 1) (window_infix_at hA 0 1) rfl rfl sp aB bf hB' _ _ _ rfl (by ecancel)
+    normalize_registers
+    apply step_add_immediate Reg64.rbx src _ (j + 1) (j + 2) (window_infix_at hA 1 1) rfl rfl
+    intro fl1; normalize_registers
+    apply step_load_bytes Reg64.rdi Reg64.rsp dD _ (j + 2) (j + 3) (window_infix_at hA 2 1) rfl rfl sp aD hD vD hvD _ _ _ rfl (by ecancel)
+    normalize_registers
+    apply step_add_immediate Reg64.rdi c _ (j + 3) (j + 4) (window_infix_at hA 3 1) rfl rfl
+    intro fl2; normalize_registers
+    apply step_load_value Reg64.rax Reg64.rsp dR _ (j + 4) (j + 5) (window_infix_at hA 4 1) rfl rfl sp aR rcv hR _ _ _ rfl (by ecancel)
+    normalize_registers
+    apply step_add_immediate Reg64.rax f _ (j + 5) (j + 6) (window_infix_at hA 5 1) rfl rfl
+    intro fl3; normalize_registers
+    apply step_move_immediate Reg64.rcx 8 _ (j + 6) (j + 7) (window_infix_at hA 6 1) rfl rfl
+    normalize_registers
     apply Eventually.done
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> first | rfl | decide
-  · apply kstep_ldv Reg64.rbx Reg64.rsp dB _ j (j + 1) (win hA 0 1) rfl rfl sp aB bf hB' _ _ _ rfl (by ecancel)
-    kn
-    apply kstep_add Reg64.rbx src _ (j + 1) (j + 2) (win hA 1 1) rfl rfl
-    intro fl1; kn
-    apply kstep_ldb Reg64.rdi Reg64.rsp dD _ (j + 2) (j + 3) (win hA 2 1) rfl rfl sp aD hD vD hvD _ _ _ rfl (by ecancel)
-    kn
-    apply kstep_add Reg64.rdi c _ (j + 3) (j + 4) (win hA 3 1) rfl rfl
-    intro fl2; kn
-    apply kstep_ldv Reg64.rax Reg64.rsp dR _ (j + 4) (j + 5) (win hA 4 1) rfl rfl sp aR rcv hR _ _ _ rfl (by ecancel)
-    kn
-    apply kstep_add Reg64.rax f _ (j + 5) (j + 6) (win hA 5 1) rfl rfl
-    intro fl3; kn
-    apply kstep_movi Reg64.rcx 8 _ (j + 6) (j + 7) (win hA 6 1) rfl rfl
-    kn
-    apply kstep_nops _ (j + 7) (j + 8) (win hA 7 1) rfl rfl
+  · apply step_load_value Reg64.rbx Reg64.rsp dB _ j (j + 1) (window_infix_at hA 0 1) rfl rfl sp aB bf hB' _ _ _ rfl (by ecancel)
+    normalize_registers
+    apply step_add_immediate Reg64.rbx src _ (j + 1) (j + 2) (window_infix_at hA 1 1) rfl rfl
+    intro fl1; normalize_registers
+    apply step_load_bytes Reg64.rdi Reg64.rsp dD _ (j + 2) (j + 3) (window_infix_at hA 2 1) rfl rfl sp aD hD vD hvD _ _ _ rfl (by ecancel)
+    normalize_registers
+    apply step_add_immediate Reg64.rdi c _ (j + 3) (j + 4) (window_infix_at hA 3 1) rfl rfl
+    intro fl2; normalize_registers
+    apply step_load_value Reg64.rax Reg64.rsp dR _ (j + 4) (j + 5) (window_infix_at hA 4 1) rfl rfl sp aR rcv hR _ _ _ rfl (by ecancel)
+    normalize_registers
+    apply step_add_immediate Reg64.rax f _ (j + 5) (j + 6) (window_infix_at hA 5 1) rfl rfl
+    intro fl3; normalize_registers
+    apply step_move_immediate Reg64.rcx 8 _ (j + 6) (j + 7) (window_infix_at hA 6 1) rfl rfl
+    normalize_registers
+    apply step_nops _ (j + 7) (j + 8) (window_infix_at hA 7 1) rfl rfl
     apply Eventually.done
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> first | rfl | decide
 
@@ -139,18 +139,18 @@ theorem callarg_lea_seg_inst : type_of% (@callarg_lea_seg ‹Host›) := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp h_mem ⊢
   subst rsp hSrc hF
-  apply kstep_ldv Reg64.rbx Reg64.rsp dB _ j (j + 1) (win hA 0 1) rfl rfl sp aB bf hB' _ _ _ rfl (by ecancel)
-  kn
-  apply kstep_lea Reg64.rdx Reg64.rbx src _ (j + 1) (j + 2) (win hA 1 1) rfl rfl
-  kn
-  apply kstep_ldb Reg64.rdi Reg64.rsp dD _ (j + 2) (j + 3) (win hA 2 1) rfl rfl sp aD hD vD hvD _ _ _ rfl (by ecancel)
-  kn
-  apply kstep_add Reg64.rdi c _ (j + 3) (j + 4) (win hA 3 1) rfl rfl
-  intro fl1; kn
-  apply kstep_ldv Reg64.rax Reg64.rsp dR _ (j + 4) (j + 5) (win hA 4 1) rfl rfl sp aR rcv hR _ _ _ rfl (by ecancel)
-  kn
-  apply kstep_lea Reg64.rsi Reg64.rax f _ (j + 5) (j + 6) (win hA 5 1) rfl rfl
-  kn
+  apply step_load_value Reg64.rbx Reg64.rsp dB _ j (j + 1) (window_infix_at hA 0 1) rfl rfl sp aB bf hB' _ _ _ rfl (by ecancel)
+  normalize_registers
+  apply step_lea Reg64.rdx Reg64.rbx src _ (j + 1) (j + 2) (window_infix_at hA 1 1) rfl rfl
+  normalize_registers
+  apply step_load_bytes Reg64.rdi Reg64.rsp dD _ (j + 2) (j + 3) (window_infix_at hA 2 1) rfl rfl sp aD hD vD hvD _ _ _ rfl (by ecancel)
+  normalize_registers
+  apply step_add_immediate Reg64.rdi c _ (j + 3) (j + 4) (window_infix_at hA 3 1) rfl rfl
+  intro fl1; normalize_registers
+  apply step_load_value Reg64.rax Reg64.rsp dR _ (j + 4) (j + 5) (window_infix_at hA 4 1) rfl rfl sp aR rcv hR _ _ _ rfl (by ecancel)
+  normalize_registers
+  apply step_lea Reg64.rsi Reg64.rax f _ (j + 5) (j + 6) (window_infix_at hA 5 1) rfl rfl
+  normalize_registers
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> first | rfl | decide
 
@@ -161,21 +161,21 @@ theorem callarg_mov_seg_inst : type_of% (@callarg_mov_seg ‹Host›) := by
   intro j hA s
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only
-  apply kstep_mov_rr Reg64.rax Reg64.rsi _ j (j + 1) (win hA 0 1) rfl rfl
-  kn
-  apply kstep_mov_rr Reg64.rbx Reg64.rdx _ (j + 1) (j + 2) (win hA 1 1) rfl rfl
-  kn
-  apply kstep_movi Reg64.rcx 8 _ (j + 2) (j + 3) (win hA 2 1) rfl rfl
-  kn
+  apply step_move_register Reg64.rax Reg64.rsi _ j (j + 1) (window_infix_at hA 0 1) rfl rfl
+  normalize_registers
+  apply step_move_register Reg64.rbx Reg64.rdx _ (j + 1) (j + 2) (window_infix_at hA 1 1) rfl rfl
+  normalize_registers
+  apply step_move_immediate Reg64.rcx 8 _ (j + 2) (j + 3) (window_infix_at hA 2 1) rfl rfl
+  normalize_registers
   apply Eventually.done
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> first | rfl | decide
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- The two-directive inline uint64 read `u64dec_rr_seg` at its development register r8, from the
+/-- The two-directive inline uint64 read `u64dec_scratch_register_seg` at its development register r8, from the
 load and store steps. The step lemmas hold for every base / scratch register. -/
-theorem u64dec_rr_seg_r8_inst (src f : Int64) (j : Nat)
-    (hA : (u64DecRR Reg64.r8 src f).IsInfixAt Host.prog j)
+theorem u64dec_scratch_register_seg_r8_inst (src f : Int64) (j : Nat)
+    (hA : (u64DecScratchRegister Reg64.r8 src f).IsInfixAt Host.prog j)
     (bf rcv aSrc aF : BitVec 64) (hSrc : bf + src.toBitVec = aSrc) (hF : rcv + f.toBitVec = aF)
     (v vF : List UInt8) (hv : v.length = 8) (hvF : vF.length = 8)
     (R : DataMem → Prop)
@@ -190,11 +190,11 @@ theorem u64dec_rr_seg_r8_inst (src f : Int64) (j : Nat)
       ⟨s, Host.addrOf j⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrbx hrax h_mem ⊢
-  apply kstep_ldb Reg64.r8 Reg64.rbx src _ j (j + 1) (win hA 0 1) rfl rfl bf aSrc hSrc v hv _ _ _ (by exact hrbx) (by ecancel)
-  kn
-  apply kstep_st Reg64.r8 Reg64.rax f _ (j + 1) (j + 2) (win hA 1 1) rfl rfl rcv aF hF vF hvF _ _ _ (by exact hrax) (by ecancel)
+  apply step_load_bytes Reg64.r8 Reg64.rbx src _ j (j + 1) (window_infix_at hA 0 1) rfl rfl bf aSrc hSrc v hv _ _ _ (by exact hrbx) (by ecancel)
+  normalize_registers
+  apply step_store Reg64.r8 Reg64.rax f _ (j + 1) (j + 2) (window_infix_at hA 1 1) rfl rfl rcv aF hF vF hvF _ _ _ (by exact hrax) (by ecancel)
   intro m' H
-  kn
+  normalize_registers
   simp only [Reg64s.get64, toBytes_ofInt_ofBytes 64 8 rfl v hv] at H
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, ?_, by ecancel⟩

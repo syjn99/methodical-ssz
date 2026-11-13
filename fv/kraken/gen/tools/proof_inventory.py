@@ -12,7 +12,7 @@
       (the DUMPED subset: the functions with a `.S` text), `prysm/ir/ir-mainnet.json` (field shapes, for the flat
       population), <axioms-gate.json> (the JSON of `gen/e2e/axioms_gate.py run` on the built tree of the same commit;
       its verdict must be PASS; the table records its header, declaration, theorem and module counts), the code
-      constants of `lean/Prysm/**` (`def X : Program := include_x64_rt "…S"`, keyed by full declared name, whatever
+      constants of `lean/Prysm/**` (`def X : Program := include_x64_code "…S"`, keyed by full declared name, whatever
       module declares them), the link tables `prysm/go1.26.10/**/RESULT`, and <decls.tsv> (output of
       `gen/tools/inventory_decls.lean` for the names above, run on the built tree of the same commit), and write the
       table. The committed record `prysm/go1.26.10/e2e/axioms-gate.json` (a past run, old names) is not read.
@@ -150,26 +150,26 @@ SIZE_FORM = dict(main=["Size.result"], witness=["Witness.Size.runs"])
 # Encoder theorems outside the fast path need a premise text (what the theorem assumes beyond the fast-path frame
 # premises) and a text of what stays NOT proved in their path class: these texts are hand-written (review of the
 # statements), keyed by the present full names. A type without an entry has its path classes listed as NOT proved.
-CP_GROW = "GrowsliceC + MemmoveC contracts + heap budget"
+CP_GROW = "GrowsliceContract + MemmoveContract contracts + heap budget"
 ENC_EXTRA = {
     "Checkpoint": dict(
         rejects=[("Prysm.Checkpoint.Encode.reject_length", "len + 8 ≤ cap"),
                  ("Prysm.Checkpoint.Encode.reject_length_cover",
-                  "every cap, GrowsliceC contract + heap budget 4·len + 8736 ≤ avail ≤ maxAlloc")],
+                  "every cap, GrowsliceContract contract + heap budget 4·len + 8736 ≤ avail ≤ maxAlloc")],
         grow=[("Prysm.Checkpoint.Encode.grow_first_site", f"cap < len + 8, len + 40 ≤ nextSliceCap(len + 8, cap), {CP_GROW}"),
               ("Prysm.Checkpoint.Encode.grow_second_site", f"len + 8 ≤ cap < len + 40, {CP_GROW}"),
               ("Prysm.Checkpoint.Encode.grow_any_site",
                f"cap < len + 8, {CP_GROW}: returns or reaches the second growslice call")],
         other_witness=["Prysm.Checkpoint.Witness.EncodeRejectLength.runs", "Prysm.Checkpoint.Witness.EncodeGrowFirstSite.runs"],
-        left={"length rejects": "with cap < len + 8 outside the GrowsliceC contract or the heap budget",
-              "growslice branches": "outside the GrowsliceC / MemmoveC contracts and the heap budget, and the run after "
+        left={"length rejects": "with cap < len + 8 outside the GrowsliceContract contract or the heap budget",
+              "growslice branches": "outside the GrowsliceContract / MemmoveContract contracts and the heap budget, and the run after "
                                     "the second growslice call when the heap left by the first call is below the "
                                     "second call's budget (FINDINGS.md: \"Growslice contract gives no lower bound "
                                     "on the remaining heap\"; checked by the differential test only)"}),
     "BeaconBlockHeader": dict(
         rejects=[("Prysm.BeaconBlockHeader.Encode.reject_length_parent_root", "len + 112 ≤ cap"),
-                 ("Prysm.BeaconBlockHeader.Encode.reject_length_state_root", "len + 112 ≤ cap, MemmoveC"),
-                 ("Prysm.BeaconBlockHeader.Encode.reject_length_body_root", "len + 112 ≤ cap, MemmoveC")],
+                 ("Prysm.BeaconBlockHeader.Encode.reject_length_state_root", "len + 112 ≤ cap, MemmoveContract"),
+                 ("Prysm.BeaconBlockHeader.Encode.reject_length_body_root", "len + 112 ≤ cap, MemmoveContract")],
         left={"length rejects": "with cap < len + 112 (with len + 16 ≤ cap < len + 112 a ParentRoot reject is "
                                 "reached without a growslice call)"}),
 }
@@ -277,7 +277,7 @@ WHAT_COMPLETE_EXCLUDES = [
     "morestack paths (the `jbe` to `runtime.morestack_noctxt` at entry)",
     "`runtime.writeBarrier` != 0 (every accept theorem assumes the flag word is 0)",
     "runtime callee bodies (makeslice / memmove / growslice / newobject / fmt.errorf: contract hypotheses, "
-    "MakesliceC / MemmoveC / ...)",
+    "MakesliceContract / MemmoveContract / ...)",
     "callee error returns (the `fmt.Errorf` wrap paths of delegated fields; `reject_complete` covers the size path "
     "condition only)",
     "growslice (encoder capacity growth beyond the listed theorems; FINDINGS.md: \"Growslice contract gives no lower "
@@ -301,7 +301,7 @@ CANNOT_DETECT = [
 
 PIN_S = re.compile(r"^\.\./prysm/go1\.26\.10/((?:[\w-]+/)*[\w-]+)/norm/([^/]+)\.S$")
 CODE_DEF = re.compile(r'^\s*(?:@\[[^\]]*\]\s*)?(?:private\s+|protected\s+|noncomputable\s+)*def\s+(\S+)\s*:\s*Program\s*:=\s*'
-                      r'include_x64_rt\s+"([^"]+)"', re.M)
+                      r'include_x64_code\s+"([^"]+)"', re.M)
 
 
 def link_tables():

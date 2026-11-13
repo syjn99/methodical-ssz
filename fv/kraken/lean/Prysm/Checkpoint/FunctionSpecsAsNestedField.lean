@@ -12,7 +12,7 @@ every machine state, return address and frame `F`. The only change to the statem
 callee's own `makeslice` return-slot word at rsp − 96 (`Host.addrOf (k + 70)` in the theorem) is an
 existential `rs'` of 8 bytes, so that the specification does not name the callee's place.
 `Decode.accept_function_spec_holds` proves it from the machine code (`Prysm.Checkpoint.Decode.accept`, with `Prysm.Epoch.Decode.accept_function_spec_holds`
-inside); the runtime contracts the callee needs (`MakesliceC Heap uint8 1 S`, `MemmoveC S`) are
+inside); the runtime contracts the callee needs (`MakesliceContract Heap uint8 1 S`, `MemmoveContract S`) are
 hypotheses of `Decode.accept_function_spec_holds`, so they stay visible in every caller's statement. Nothing new is
 assumed. `Encode.fast_path_function_spec` (encoder) follows the same rule (below).
 -/
@@ -74,7 +74,7 @@ def Decode.accept_function_spec (Heap : Nat → DataMem → Prop) (S : Nat) : Pr
 theorem Decode.accept_function_spec_holds (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (Heap : Nat → DataMem → Prop) (S : Nat)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) : Decode.accept_function_spec Heap S := by
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) : Decode.accept_function_spec Heap S := by
   intro st ret guard avail e8 root fp s1 s2 l20 l28 l30 m0 m1 m2 rslot cst c0 cP cL cC ctl scratch F
     he8 hroot hfp h1 h2 hl20 hl28 hl30 hm0 hm1 hm2 hrs hcst hc0 hcP hcL hcC hctl hS8 hS hsc hguard hlen hav hm
   rw [show label Prysm.Checkpoint.Code.unmarshalSSZLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]
@@ -87,7 +87,7 @@ theorem Decode.accept_function_spec_holds (k : Nat) (hk : unmarshalSSZ.IsInfixAt
 /-- **Function specification of `(*Checkpoint).MarshalSSZTo`, fast path** (capacity for 40 more bytes,
 `len(Root) = 32`): the statement of `Prysm.Checkpoint.Encode.fast_path` at the label, for every state, return
 address and frame; the callee's return-slot word at rsp − 120 (`Host.addrOf (k + 63)`) is an
-existential `rs'`. `Encode.fast_path_function_spec_holds` proves it; `MemmoveC S` is its hypothesis. -/
+existential `rs'`. `Encode.fast_path_function_spec_holds` proves it; `MemmoveContract S` is its hypothesis. -/
 def Encode.fast_path_function_spec (S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (guard : UInt64) (p : BitVec 64)
     (cst e8 cC ctl root pre d0 d1 fp s2 l16 l24 l32 t40 t30 rslot scratch : List UInt8) (F : DataMem → Prop),
@@ -135,7 +135,7 @@ def Encode.fast_path_function_spec (S : Nat) : Prop :=
       ⟨st, label Prysm.Checkpoint.Code.marshalSSZToLabel⟩
 
 theorem Encode.fast_path_function_spec_holds (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
-    (S : Nat) (hmm : MemmoveC S) : Encode.fast_path_function_spec S := by
+    (S : Nat) (hmm : MemmoveContract S) : Encode.fast_path_function_spec S := by
   intro st ret guard p cst e8 cC ctl root pre d0 d1 fp s2 l16 l24 l32 t40 t30 rslot scratch F
     hcst he8 hcC hctl hroot hd0 hd1 hpre hfp h2 hl16 hl24 hl32 ht40 ht30 hrs hsc hguard hsp hcap hcap63 hm
   rw [show label Prysm.Checkpoint.Code.marshalSSZToLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]

@@ -7,12 +7,12 @@ import Prysm.BeaconBlockHeader.Code
 
 Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a
 step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem
-has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKindN`).
+has a `_kind` line (`encHeadKindAnyFrame`, `encFieldKindAnyFrame`, `encEpilogueKindAnyFrame`, `encFastPathKindAnyFrame`).
 **Fast path only**: `len(dst) + 112 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
 The statement is the declared type of the committed hand theorem `Prysm.BeaconBlockHeader.Encode.fast_path`.
-FAST-PATH-JSON: {"type": "BeaconBlockHeader", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 112, "frame": 152, "gd": 32, "rt": true, "fields": [["Slot", "u", 8], ["ProposerIndex", "u", 8], ["ParentRoot", "b", 32], ["StateRoot", "b", 32], ["BodyRoot", "b", 32]], "boundaries": [10, 36, 62, 90, 118, 148], "layout": "Prysm.BeaconBlockHeader.encodeLayout", "S_sha256": "c76a57703af0f5d5889921baf6b3844b81d043b466b5e17df02a8b5d218124f3", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.BeaconBlockHeader.Encode.fast_path", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.BeaconBlockHeader", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f3", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f4", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
+FAST-PATH-JSON: {"type": "BeaconBlockHeader", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 112, "frame": 152, "gd": 32, "rt": true, "fields": [["Slot", "u", 8], ["ProposerIndex", "u", 8], ["ParentRoot", "b", 32], ["StateRoot", "b", 32], ["BodyRoot", "b", 32]], "boundaries": [10, 36, 62, 90, 118, 148], "layout": "Prysm.BeaconBlockHeader.encodeLayout", "S_sha256": "c76a57703af0f5d5889921baf6b3844b81d043b466b5e17df02a8b5d218124f3", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.BeaconBlockHeader.Encode.fast_path", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.BeaconBlockHeader", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindAnyFrame"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_f3", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_f4", "kind": "encFieldKindAnyFrame"}, {"theorem": "Encode.generated_epi", "kind": "encEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encFastPathKindAnyFrame"}]}
 -/
 
 open Machine Runtime Codec Prysm.BeaconBlockHeader.Code
@@ -65,7 +65,7 @@ theorem Encode.generated_head : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
       ⋆ Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80))
       ⋆ R)
     (hguard : guard.toNat + 32 < s.regs.rsp.toNat) (hsp : 168 ≤ s.regs.rsp.toNat)
-    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S),
+    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveContract S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 10)
         ∧ st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 160 }
@@ -116,25 +116,25 @@ theorem Encode.generated_head : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hcap hcap63 hpre ⊢
   have hcap' : rcx.toBitVec.toNat + 112 ≤ rdi.toBitVec.toNat := hcap
-  apply encpro_l _ _ _ (-32) 32 _ k (k + 7) (win hk 0 7) (by rfl) (by rfl) (by rfl) guard fp hfp _ _ _ (by dsimp only; ecancel) hguard
-  intro m1 H1 fl1; kn; dsimp only at H1
-  apply kstep_sub_i Reg64.rsp 152 _ (k + 7) (k + 8) (win hk 7 1) (by rfl) (by rfl)
-  intro fl; kn
-  apply kreg_eq Reg64.rsp (rsp.toBitVec - 160) _ _ _ (by show ((rsp.toBitVec - 8) - 152 : BitVec 64) = (rsp.toBitVec - 160); bv_omega)
-  kn
-  apply kstep_st Reg64.rbx Reg64.rsp 176 _ (k + 8) (k + 9) (win hk 8 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec + 16) (by eb) s2 hs2 _ _ _ (by rfl) (by ecancel)
-  intro m2 H2; kn; simp only [Reg64s.get64] at H2
-  apply kstep_st Reg64.rax Reg64.rsp 168 _ (k + 9) (k + 10) (win hk 9 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec + 8) (by eb) s1 hs1 _ _ _ (by rfl) (by ecancel)
-  intro m3 H3; kn; simp only [Reg64s.get64] at H3
+  apply encoder_prologue_large_frame _ _ _ (-32) 32 _ k (k + 7) (window_infix_at hk 0 7) (by rfl) (by rfl) (by rfl) guard fp hfp _ _ _ (by dsimp only; ecancel) hguard
+  intro m1 H1 fl1; normalize_registers; dsimp only at H1
+  apply step_sub_immediate Reg64.rsp 152 _ (k + 7) (k + 8) (window_infix_at hk 7 1) (by rfl) (by rfl)
+  intro fl; normalize_registers
+  apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 160) _ _ _ (by show ((rsp.toBitVec - 8) - 152 : BitVec 64) = (rsp.toBitVec - 160); bv_omega)
+  normalize_registers
+  apply step_store Reg64.rbx Reg64.rsp 176 _ (k + 8) (k + 9) (window_infix_at hk 8 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec + 16) (by encoder_address_equation) s2 hs2 _ _ _ (by rfl) (by ecancel)
+  intro m2 H2; normalize_registers; simp only [Reg64s.get64] at H2
+  apply step_store Reg64.rax Reg64.rsp 168 _ (k + 9) (k + 10) (window_infix_at hk 9 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec + 8) (by encoder_address_equation) s1 hs1 _ _ _ (by rfl) (by ecancel)
+  intro m3 H3; normalize_registers; simp only [Reg64s.get64] at H3
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_head_kind : ∀ (h : Host), type_of% (@Encode.generated_head h)
-    = @Codec.encHeadKindN h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
-    ⟨10, 0, [(.rax, .rcv), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 3), .at (.dn 96) (.orig 4), .at (.dn 104) (.orig 5), .at (.dn 56) (.orig 6), .at (.dn 40) (.orig 7), .at (.dn 88) (.orig 8), .at (.dn 72) (.orig 9), .at (.dn 168) (.orig 10), .lo .scr],
+    = @Codec.encHeadKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    ⟨10, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 96) (.original 4), .at (.below 104) (.original 5), .at (.below 56) (.original 6), .at (.below 40) (.original 7), .at (.below 88) (.original 8), .at (.below 72) (.original 9), .at (.below 168) (.original 10), .low .scratch],
       []⟩ := by
   intro h; rfl
 
@@ -147,7 +147,7 @@ theorem Encode.generated_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
     (fp s1 s2 l16 l96 l104 t56 t40 t88 t72 rslot : List UInt8) (hfp : fp.length = 8) (hs1 : s1.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl96 : l96.length = 8) (hl104 : l104.length = 8) (ht56 : t56.length = 16) (ht40 : t40.length = 16) (ht88 : t88.length = 16) (ht72 : t72.length = 16) (hrslot : rslot.length = 8)
     (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
     (hsp : 168 ≤ s.regs.rsp.toNat)
-    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S) (st0 : MachineState),
+    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveContract S) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 10)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 160 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -254,52 +254,52 @@ theorem Encode.generated_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   obtain rfl : rcx = rcx1 := (UInt64.toBitVec_inj.mp hrrcx).symm
   obtain rfl : rdi = rdi1 := (UInt64.toBitVec_inj.mp hrrdi).symm
   have hcap' : rcx.toBitVec.toNat + 112 ≤ rdi.toBitVec.toNat := hcap
-  apply kstep_lea Reg64.rdx Reg64.rcx 8 _ (k + 10) (k + 11) (win hk 10 1) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.rdx (rcx.toBitVec + 8) _ _ _ (by show (rcx.toBitVec + 8 : BitVec 64) = (rcx.toBitVec + 8); bv_omega)
-  kn
-  apply kstep_ldb Reg64.r8 Reg64.rax 8 _ (k + 11) (k + 12) (win hk 11 1) (by rfl) (by rfl)
-    rax.toBitVec (rax.toBitVec + 8) (by eb) v0 hv0 _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_lea Reg64.r9 Reg64.rsp 104 _ (k + 12) (k + 16) (win hk 12 4) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.r9 (rsp.toBitVec - 56) _ _ _ (by show ((rsp.toBitVec - 160) + 104 : BitVec 64) = (rsp.toBitVec - 56); bv_omega)
-  kn
-  apply kstep_movups15 Reg64.r9 0 _ (k + 16) (k + 17) (win hk 16 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 56) (rsp.toBitVec - 56) (by eb) t56 ht56 _ _ _ (by rfl) (by ecancel)
-  intro m4 H4; kn; try dsimp only at H4
-  apply kstep_movups15 Reg64.r9 16 _ (k + 17) (k + 18) (win hk 17 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 56) (rsp.toBitVec - 40) (by eb) t40 ht40 _ _ _ (by rfl) (by ecancel)
-  intro m5 H5; kn; try dsimp only at H5
+  apply step_lea Reg64.rdx Reg64.rcx 8 _ (k + 10) (k + 11) (window_infix_at hk 10 1) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.rdx (rcx.toBitVec + 8) _ _ _ (by show (rcx.toBitVec + 8 : BitVec 64) = (rcx.toBitVec + 8); bv_omega)
+  normalize_registers
+  apply step_load_bytes Reg64.r8 Reg64.rax 8 _ (k + 11) (k + 12) (window_infix_at hk 11 1) (by rfl) (by rfl)
+    rax.toBitVec (rax.toBitVec + 8) (by encoder_address_equation) v0 hv0 _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_lea Reg64.r9 Reg64.rsp 104 _ (k + 12) (k + 16) (window_infix_at hk 12 4) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.r9 (rsp.toBitVec - 56) _ _ _ (by show ((rsp.toBitVec - 160) + 104 : BitVec 64) = (rsp.toBitVec - 56); bv_omega)
+  normalize_registers
+  apply step_store_xmm15 Reg64.r9 0 _ (k + 16) (k + 17) (window_infix_at hk 16 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 56) (rsp.toBitVec - 56) (by encoder_address_equation) t56 ht56 _ _ _ (by rfl) (by ecancel)
+  intro m4 H4; normalize_registers; try dsimp only at H4
+  apply step_store_xmm15 Reg64.r9 16 _ (k + 17) (k + 18) (window_infix_at hk 17 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 56) (rsp.toBitVec - 40) (by encoder_address_equation) t40 ht40 _ _ _ (by rfl) (by ecancel)
+  intro m5 H5; normalize_registers; try dsimp only at H5
   rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 56), show (rsp.toBitVec - 56) + 8 = (rsp.toBitVec - 48) by bv_omega] at H5
-  apply kstep_st Reg64.r8 Reg64.rsp 104 _ (k + 18) (k + 19) (win hk 18 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 56) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
-  intro m6 H6; kn; simp only [Reg64s.get64] at H6
+  apply step_store Reg64.r8 Reg64.rsp 104 _ (k + 18) (k + 19) (window_infix_at hk 18 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 56) (by encoder_address_equation) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
+  intro m6 H6; normalize_registers; simp only [Reg64s.get64] at H6
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v0 hv0] at H6
   have hl33 := Machine.label_at' hk hf (j := 33)
     (by simp only [marshalSSZTo, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [marshalSSZTo, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 19) (k + 33) (win hk 19 2) (by rfl) hl33 _ _ (by show ((rcx.toBitVec + 8) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
-  intro fl; kn
-  apply kstep_label _ _ (k + 33) (k + 34) (win hk 33 1) (by rfl) (by rfl)
-  apply kstep_ldb Reg64.r8 Reg64.rsp 104 _ (k + 34) (k + 35) (win hk 34 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 56) (by eb) v0 hv0 _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_st_idx Reg64.r8 Reg64.rbx Reg64.rcx 0 _ (k + 35) (k + 36) (win hk 35 1) (by rfl) (by rfl)
-    rbx.toBitVec rcx.toBitVec (rbx.toBitVec + rcx.toBitVec) (by eb) d0 hd0 _ _ _ (by rfl) (by rfl) (by ecancel)
-  intro m7 H7; kn; simp only [Reg64s.get64] at H7
+  apply step_cmp_jae_taken Reg64.rdi Reg64.rdx _ _ (k + 19) (k + 33) (window_infix_at hk 19 2) (by rfl) hl33 _ _ (by show ((rcx.toBitVec + 8) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
+  intro fl; normalize_registers
+  apply step_label _ _ (k + 33) (k + 34) (window_infix_at hk 33 1) (by rfl) (by rfl)
+  apply step_load_bytes Reg64.r8 Reg64.rsp 104 _ (k + 34) (k + 35) (window_infix_at hk 34 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 56) (by encoder_address_equation) v0 hv0 _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_store_indexed Reg64.r8 Reg64.rbx Reg64.rcx 0 _ (k + 35) (k + 36) (window_infix_at hk 35 1) (by rfl) (by rfl)
+    rbx.toBitVec rcx.toBitVec (rbx.toBitVec + rcx.toBitVec) (by encoder_address_equation) d0 hd0 _ _ _ (by rfl) (by rfl) (by ecancel)
+  intro m7 H7; normalize_registers; simp only [Reg64s.get64] at H7
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v0 hv0] at H7
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_f0_kind : ∀ (h : Host), type_of% (@Encode.generated_f0 h)
-    = @Codec.encFieldKindN h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
-    ⟨10, 0, [(.rax, .rcv), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 3), .at (.dn 96) (.orig 4), .at (.dn 104) (.orig 5), .at (.dn 56) (.orig 6), .at (.dn 40) (.orig 7), .at (.dn 88) (.orig 8), .at (.dn 72) (.orig 9), .at (.dn 168) (.orig 10), .lo .scr],
+    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    ⟨10, 0, [(.rax, .receiver), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 96) (.original 4), .at (.below 104) (.original 5), .at (.below 56) (.original 6), .at (.below 40) (.original 7), .at (.below 88) (.original 8), .at (.below 72) (.original 9), .at (.below 168) (.original 10), .low .scratch],
       []⟩
-    ⟨36, 1, [(.rax, .rcv), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 3), .at (.dn 96) (.orig 4), .at (.dn 104) (.orig 5), .at (.dn 56) (.fld 0), .at (.dn 48) (.ex 0), .at (.dn 40) (.ex 1), .at (.dn 88) (.orig 8), .at (.dn 72) (.orig 9), .at (.dn 168) (.orig 10), .lo .scr],
-      [.n 8, .n 16]⟩ := by
+    ⟨36, 1, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 96) (.original 4), .at (.below 104) (.original 5), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.original 8), .at (.below 72) (.original 9), .at (.below 168) (.original 10), .low .scratch],
+      [.fixed 8, .fixed 16]⟩ := by
   intro h; rfl
 
 set_option maxHeartbeats 4000000 in
@@ -311,7 +311,7 @@ theorem Encode.generated_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
     (fp s1 s2 l16 l96 l104 t56 t40 t88 t72 rslot : List UInt8) (hfp : fp.length = 8) (hs1 : s1.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl96 : l96.length = 8) (hl104 : l104.length = 8) (ht56 : t56.length = 16) (ht40 : t40.length = 16) (ht88 : t88.length = 16) (ht72 : t72.length = 16) (hrslot : rslot.length = 8)
     (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
     (hsp : 168 ≤ s.regs.rsp.toNat)
-    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S) (st0 : MachineState),
+    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveContract S) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 36)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 160 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -421,52 +421,52 @@ theorem Encode.generated_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   obtain rfl : rdx1 = { toBitVec := rcx.toBitVec + 8 } := UInt64.toBitVec_inj.mp hrrdx
   obtain rfl : rdi = rdi1 := (UInt64.toBitVec_inj.mp hrrdi).symm
   have hcap' : rcx.toBitVec.toNat + 112 ≤ rdi.toBitVec.toNat := hcap
-  apply kstep_lea Reg64.r8 Reg64.rdx 8 _ (k + 36) (k + 37) (win hk 36 1) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.r8 (rcx.toBitVec + 16) _ _ _ (by show ((rcx.toBitVec + 8) + 8 : BitVec 64) = (rcx.toBitVec + 16); bv_omega)
-  kn
-  apply kstep_ldb Reg64.r9 Reg64.rax 16 _ (k + 37) (k + 38) (win hk 37 1) (by rfl) (by rfl)
-    rax.toBitVec (rax.toBitVec + 16) (by eb) v1 hv1 _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_lea Reg64.r10 Reg64.rsp 72 _ (k + 38) (k + 42) (win hk 38 4) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.r10 (rsp.toBitVec - 88) _ _ _ (by show ((rsp.toBitVec - 160) + 72 : BitVec 64) = (rsp.toBitVec - 88); bv_omega)
-  kn
-  apply kstep_movups15 Reg64.r10 0 _ (k + 42) (k + 43) (win hk 42 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 88) (rsp.toBitVec - 88) (by eb) t88 ht88 _ _ _ (by rfl) (by ecancel)
-  intro m8 H8; kn; try dsimp only at H8
-  apply kstep_movups15 Reg64.r10 16 _ (k + 43) (k + 44) (win hk 43 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 88) (rsp.toBitVec - 72) (by eb) t72 ht72 _ _ _ (by rfl) (by ecancel)
-  intro m9 H9; kn; try dsimp only at H9
+  apply step_lea Reg64.r8 Reg64.rdx 8 _ (k + 36) (k + 37) (window_infix_at hk 36 1) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.r8 (rcx.toBitVec + 16) _ _ _ (by show ((rcx.toBitVec + 8) + 8 : BitVec 64) = (rcx.toBitVec + 16); bv_omega)
+  normalize_registers
+  apply step_load_bytes Reg64.r9 Reg64.rax 16 _ (k + 37) (k + 38) (window_infix_at hk 37 1) (by rfl) (by rfl)
+    rax.toBitVec (rax.toBitVec + 16) (by encoder_address_equation) v1 hv1 _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_lea Reg64.r10 Reg64.rsp 72 _ (k + 38) (k + 42) (window_infix_at hk 38 4) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.r10 (rsp.toBitVec - 88) _ _ _ (by show ((rsp.toBitVec - 160) + 72 : BitVec 64) = (rsp.toBitVec - 88); bv_omega)
+  normalize_registers
+  apply step_store_xmm15 Reg64.r10 0 _ (k + 42) (k + 43) (window_infix_at hk 42 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 88) (rsp.toBitVec - 88) (by encoder_address_equation) t88 ht88 _ _ _ (by rfl) (by ecancel)
+  intro m8 H8; normalize_registers; try dsimp only at H8
+  apply step_store_xmm15 Reg64.r10 16 _ (k + 43) (k + 44) (window_infix_at hk 43 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 88) (rsp.toBitVec - 72) (by encoder_address_equation) t72 ht72 _ _ _ (by rfl) (by ecancel)
+  intro m9 H9; normalize_registers; try dsimp only at H9
   rw [Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 88), show (rsp.toBitVec - 88) + 8 = (rsp.toBitVec - 80) by bv_omega] at H9
-  apply kstep_st Reg64.r9 Reg64.rsp 72 _ (k + 44) (k + 45) (win hk 44 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 88) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
-  intro m10 H10; kn; simp only [Reg64s.get64] at H10
+  apply step_store Reg64.r9 Reg64.rsp 72 _ (k + 44) (k + 45) (window_infix_at hk 44 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 88) (by encoder_address_equation) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
+  intro m10 H10; normalize_registers; simp only [Reg64s.get64] at H10
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v1 hv1] at H10
   have hl59 := Machine.label_at' hk hf (j := 59)
     (by simp only [marshalSSZTo, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [marshalSSZTo, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  apply kstep_cmp_jae_t Reg64.rdi Reg64.r8 _ _ (k + 45) (k + 59) (win hk 45 2) (by rfl) hl59 _ _ (by show ((rcx.toBitVec + 16) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
-  intro fl; kn
-  apply kstep_label _ _ (k + 59) (k + 60) (win hk 59 1) (by rfl) (by rfl)
-  apply kstep_ldb Reg64.r9 Reg64.rsp 72 _ (k + 60) (k + 61) (win hk 60 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 88) (by eb) v1 hv1 _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_st_idx Reg64.r9 Reg64.rbx Reg64.rdx 0 _ (k + 61) (k + 62) (win hk 61 1) (by rfl) (by rfl)
-    rbx.toBitVec (rcx.toBitVec + 8) (rbx.toBitVec + rcx.toBitVec + 8) (by eb) d1 hd1 _ _ _ (by rfl) (by rfl) (by ecancel)
-  intro m11 H11; kn; simp only [Reg64s.get64] at H11
+  apply step_cmp_jae_taken Reg64.rdi Reg64.r8 _ _ (k + 45) (k + 59) (window_infix_at hk 45 2) (by rfl) hl59 _ _ (by show ((rcx.toBitVec + 16) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
+  intro fl; normalize_registers
+  apply step_label _ _ (k + 59) (k + 60) (window_infix_at hk 59 1) (by rfl) (by rfl)
+  apply step_load_bytes Reg64.r9 Reg64.rsp 72 _ (k + 60) (k + 61) (window_infix_at hk 60 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 88) (by encoder_address_equation) v1 hv1 _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_store_indexed Reg64.r9 Reg64.rbx Reg64.rdx 0 _ (k + 61) (k + 62) (window_infix_at hk 61 1) (by rfl) (by rfl)
+    rbx.toBitVec (rcx.toBitVec + 8) (rbx.toBitVec + rcx.toBitVec + 8) (by encoder_address_equation) d1 hd1 _ _ _ (by rfl) (by rfl) (by ecancel)
+  intro m11 H11; normalize_registers; simp only [Reg64s.get64] at H11
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v1 hv1] at H11
   apply Eventually.done
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, x0, x1, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), hx0, hx1, (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_f1_kind : ∀ (h : Host), type_of% (@Encode.generated_f1 h)
-    = @Codec.encFieldKindN h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
-    ⟨36, 1, [(.rax, .rcv), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 3), .at (.dn 96) (.orig 4), .at (.dn 104) (.orig 5), .at (.dn 56) (.fld 0), .at (.dn 48) (.ex 0), .at (.dn 40) (.ex 1), .at (.dn 88) (.orig 8), .at (.dn 72) (.orig 9), .at (.dn 168) (.orig 10), .lo .scr],
-      [.n 8, .n 16]⟩
-    ⟨62, 2, [(.rax, .rcv), (.rbx, .ptr), (.rdi, .cap), (.r8, .len 16)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 3), .at (.dn 96) (.orig 4), .at (.dn 104) (.orig 5), .at (.dn 56) (.fld 0), .at (.dn 48) (.ex 0), .at (.dn 40) (.ex 1), .at (.dn 88) (.fld 1), .at (.dn 80) (.ex 2), .at (.dn 72) (.ex 3), .at (.dn 168) (.orig 10), .lo .scr],
-      [.n 8, .n 16, .n 8, .n 16]⟩ := by
+    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    ⟨36, 1, [(.rax, .receiver), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 96) (.original 4), .at (.below 104) (.original 5), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.original 8), .at (.below 72) (.original 9), .at (.below 168) (.original 10), .low .scratch],
+      [.fixed 8, .fixed 16]⟩
+    ⟨62, 2, [(.rax, .receiver), (.rbx, .ptr), (.rdi, .cap), (.r8, .len 16)],
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 96) (.original 4), .at (.below 104) (.original 5), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.field 1), .at (.below 80) (.existential 2), .at (.below 72) (.existential 3), .at (.below 168) (.original 10), .low .scratch],
+      [.fixed 8, .fixed 16, .fixed 8, .fixed 16]⟩ := by
   intro h; rfl
 
 set_option maxHeartbeats 4000000 in
@@ -478,7 +478,7 @@ theorem Encode.generated_f2 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
     (fp s1 s2 l16 l96 l104 t56 t40 t88 t72 rslot : List UInt8) (hfp : fp.length = 8) (hs1 : s1.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl96 : l96.length = 8) (hl104 : l104.length = 8) (ht56 : t56.length = 16) (ht40 : t40.length = 16) (ht88 : t88.length = 16) (ht72 : t72.length = 16) (hrslot : rslot.length = 8)
     (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
     (hsp : 168 ≤ s.regs.rsp.toNat)
-    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S) (st0 : MachineState),
+    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveContract S) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 62)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 160 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -585,43 +585,43 @@ theorem Encode.generated_f2 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   obtain rfl : rdi = rdi1 := (UInt64.toBitVec_inj.mp hrrdi).symm
   obtain rfl : r81 = { toBitVec := rcx.toBitVec + 16 } := UInt64.toBitVec_inj.mp hrr8
   have hcap' : rcx.toBitVec.toNat + 112 ≤ rdi.toBitVec.toNat := hcap
-  apply kstep_ldv Reg64.rdx Reg64.rax 24 _ (k + 62) (k + 63) (win hk 62 1) (by rfl) (by rfl)
-    rax.toBitVec (rax.toBitVec + 24) p2 (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_lenchk Reg64.rax 32 32 _ _ (k + 63) (k + 66) (win hk 63 3) (by rfl) (by rfl)
-    rax.toBitVec (rax.toBitVec + 32) (by eb) (Int.toBytes 8 32) (by rfl) (by decide) _ _ _ (by rfl) (by ecancel)
-  intro fl; kn
-  apply kstep_lea Reg64.r9 Reg64.r8 32 _ (k + 66) (k + 67) (win hk 66 1) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.r9 (rcx.toBitVec + 48) _ _ _ (by show ((rcx.toBitVec + 16) + 32 : BitVec 64) = (rcx.toBitVec + 48); bv_omega)
-  kn
+  apply step_load_value Reg64.rdx Reg64.rax 24 _ (k + 62) (k + 63) (window_infix_at hk 62 1) (by rfl) (by rfl)
+    rax.toBitVec (rax.toBitVec + 24) p2 (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_length_check Reg64.rax 32 32 _ _ (k + 63) (k + 66) (window_infix_at hk 63 3) (by rfl) (by rfl)
+    rax.toBitVec (rax.toBitVec + 32) (by encoder_address_equation) (Int.toBytes 8 32) (by rfl) (by decide) _ _ _ (by rfl) (by ecancel)
+  intro fl; normalize_registers
+  apply step_lea Reg64.r9 Reg64.r8 32 _ (k + 66) (k + 67) (window_infix_at hk 66 1) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.r9 (rcx.toBitVec + 48) _ _ _ (by show ((rcx.toBitVec + 16) + 32 : BitVec 64) = (rcx.toBitVec + 48); bv_omega)
+  normalize_registers
   have hl82 := Machine.label_at' hk hf (j := 82)
     (by simp only [marshalSSZTo, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [marshalSSZTo, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  apply kstep_cmp_jae_t Reg64.rdi Reg64.r9 _ _ (k + 67) (k + 82) (win hk 67 2) (by rfl) hl82 _ _ (by show ((rcx.toBitVec + 48) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
-  intro fl; kn
-  apply kstep_label _ _ (k + 82) (k + 83) (win hk 82 1) (by rfl) (by rfl)
-  apply kstep_st Reg64.rbx Reg64.rsp 144 _ (k + 83) (k + 84) (win hk 83 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 16) (by eb) l16 hl16 _ _ _ (by rfl) (by ecancel)
-  intro m12 H12; kn; simp only [Reg64s.get64] at H12
-  apply kstep_st Reg64.r9 Reg64.rsp 64 _ (k + 84) (k + 85) (win hk 84 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 96) (by eb) l96 hl96 _ _ _ (by rfl) (by ecancel)
-  intro m13 H13; kn; simp only [Reg64s.get64] at H13
-  apply kstep_st Reg64.rdi Reg64.rsp 56 _ (k + 85) (k + 86) (win hk 85 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 104) (by eb) l104 hl104 _ _ _ (by rfl) (by ecancel)
-  intro m14 H14; kn; simp only [Reg64s.get64] at H14
-  apply kstep_lea_idx Reg64.rax Reg64.rbx Reg64.r8 _ (k + 86) (k + 87) (win hk 86 1) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.rax (rbx.toBitVec + rcx.toBitVec + 16) _ _ _ (by show (rbx.toBitVec + (rcx.toBitVec + 16) : BitVec 64) = (rbx.toBitVec + rcx.toBitVec + 16); bv_omega)
-  kn
-  apply kstep_mov_rr Reg64.rbx Reg64.rdx _ (k + 87) (k + 88) (win hk 87 1) (by rfl) (by rfl)
-  kn
-  apply kstep_movi Reg64.rcx 32 _ (k + 88) (k + 89) (win hk 88 1) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.rcx 32 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (32 : BitVec 64)) : BitVec 64) = 32; decide)
-  kn
-  refine eventually_trans _ _ _ _ (encn_call (k + 89) (win hk 89 1) (rsp.toBitVec - 160) (rbx.toBitVec + rcx.toBitVec + 16) p2
-    (rsp.toBitVec - 168) (rsp.toBitVec - 168 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_lo0 rsp.toBitVec 160 168 S (by decide))
+  apply step_cmp_jae_taken Reg64.rdi Reg64.r9 _ _ (k + 67) (k + 82) (window_infix_at hk 67 2) (by rfl) hl82 _ _ (by show ((rcx.toBitVec + 48) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
+  intro fl; normalize_registers
+  apply step_label _ _ (k + 82) (k + 83) (window_infix_at hk 82 1) (by rfl) (by rfl)
+  apply step_store Reg64.rbx Reg64.rsp 144 _ (k + 83) (k + 84) (window_infix_at hk 83 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 16) (by encoder_address_equation) l16 hl16 _ _ _ (by rfl) (by ecancel)
+  intro m12 H12; normalize_registers; simp only [Reg64s.get64] at H12
+  apply step_store Reg64.r9 Reg64.rsp 64 _ (k + 84) (k + 85) (window_infix_at hk 84 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 96) (by encoder_address_equation) l96 hl96 _ _ _ (by rfl) (by ecancel)
+  intro m13 H13; normalize_registers; simp only [Reg64s.get64] at H13
+  apply step_store Reg64.rdi Reg64.rsp 56 _ (k + 85) (k + 86) (window_infix_at hk 85 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 104) (by encoder_address_equation) l104 hl104 _ _ _ (by rfl) (by ecancel)
+  intro m14 H14; normalize_registers; simp only [Reg64s.get64] at H14
+  apply step_lea_indexed Reg64.rax Reg64.rbx Reg64.r8 _ (k + 86) (k + 87) (window_infix_at hk 86 1) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.rax (rbx.toBitVec + rcx.toBitVec + 16) _ _ _ (by show (rbx.toBitVec + (rcx.toBitVec + 16) : BitVec 64) = (rbx.toBitVec + rcx.toBitVec + 16); bv_omega)
+  normalize_registers
+  apply step_move_register Reg64.rbx Reg64.rdx _ (k + 87) (k + 88) (window_infix_at hk 87 1) (by rfl) (by rfl)
+  normalize_registers
+  apply step_move_immediate Reg64.rcx 32 _ (k + 88) (k + 89) (window_infix_at hk 88 1) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.rcx 32 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (32 : BitVec 64)) : BitVec 64) = 32; decide)
+  normalize_registers
+  refine eventually_trans _ _ _ _ (encode_memmove_call (k + 89) (window_infix_at hk 89 1) (rsp.toBitVec - 160) (rbx.toBitVec + rcx.toBitVec + 16) p2
+    (rsp.toBitVec - 168) (rsp.toBitVec - 168 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_low_address_without_calls rsp.toBitVec 160 168 S (by decide))
     b2 d2 rslot scratch (by rw [hd2, hb2]) hrslot hsc
     _ _ (by rfl) (by rfl) (by rfl) (by rw [hb2]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, scr1, hscr1, Hc1⟩
@@ -635,13 +635,13 @@ theorem Encode.generated_f2 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   refine ⟨rfl, rfl, rfl, rfl, x0, x1, x2, x3, scr1, hx0, hx1, hx2, hx3, hscr1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_f2_kind : ∀ (h : Host), type_of% (@Encode.generated_f2 h)
-    = @Codec.encFieldKindN h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
-    ⟨62, 2, [(.rax, .rcv), (.rbx, .ptr), (.rdi, .cap), (.r8, .len 16)],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 3), .at (.dn 96) (.orig 4), .at (.dn 104) (.orig 5), .at (.dn 56) (.fld 0), .at (.dn 48) (.ex 0), .at (.dn 40) (.ex 1), .at (.dn 88) (.fld 1), .at (.dn 80) (.ex 2), .at (.dn 72) (.ex 3), .at (.dn 168) (.orig 10), .lo .scr],
-      [.n 8, .n 16, .n 8, .n 16]⟩
+    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    ⟨62, 2, [(.rax, .receiver), (.rbx, .ptr), (.rdi, .cap), (.r8, .len 16)],
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3), .at (.below 96) (.original 4), .at (.below 104) (.original 5), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.field 1), .at (.below 80) (.existential 2), .at (.below 72) (.existential 3), .at (.below 168) (.original 10), .low .scratch],
+      [.fixed 8, .fixed 16, .fixed 8, .fixed 16]⟩
     ⟨90, 3, [],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.reg .rbx), .at (.dn 96) (.len 48), .at (.dn 104) (.reg .rdi), .at (.dn 56) (.fld 0), .at (.dn 48) (.ex 0), .at (.dn 40) (.ex 1), .at (.dn 88) (.fld 1), .at (.dn 80) (.ex 2), .at (.dn 72) (.ex 3), .at (.dn 168) (.ret 90), .lo (.ex 4)],
-      [.n 8, .n 16, .n 8, .n 16, .lo]⟩ := by
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 96) (.len 48), .at (.below 104) (.reg .rdi), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.field 1), .at (.below 80) (.existential 2), .at (.below 72) (.existential 3), .at (.below 168) (.ret 90), .low (.existential 4)],
+      [.fixed 8, .fixed 16, .fixed 8, .fixed 16, .low]⟩ := by
   intro h; rfl
 
 set_option maxHeartbeats 4000000 in
@@ -653,7 +653,7 @@ theorem Encode.generated_f3 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
     (fp s1 s2 l16 l96 l104 t56 t40 t88 t72 rslot : List UInt8) (hfp : fp.length = 8) (hs1 : s1.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl96 : l96.length = 8) (hl104 : l104.length = 8) (ht56 : t56.length = 16) (ht40 : t40.length = 16) (ht88 : t88.length = 16) (ht72 : t72.length = 16) (hrslot : rslot.length = 8)
     (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
     (hsp : 168 ≤ s.regs.rsp.toNat)
-    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S) (st0 : MachineState),
+    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveContract S) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 90)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 160 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -752,54 +752,54 @@ theorem Encode.generated_f3 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   simp only [Reg64s.get64] at hrsp hrbp hr14  Hm
   subst rsp1 rbp1 r141
   have hcap' : rcx.toBitVec.toNat + 112 ≤ rdi.toBitVec.toNat := hcap
-  apply kstep_ldv Reg64.rdx Reg64.rsp 168 _ (k + 90) (k + 91) (win hk 90 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec + 8) rax.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_ldv Reg64.rbx Reg64.rdx 48 _ (k + 91) (k + 92) (win hk 91 1) (by rfl) (by rfl)
-    rax.toBitVec (rax.toBitVec + 48) p3 (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_lenchk Reg64.rdx 56 32 _ _ (k + 92) (k + 94) (win hk 92 2) (by rfl) (by rfl)
-    rax.toBitVec (rax.toBitVec + 56) (by eb) (Int.toBytes 8 32) (by rfl) (by decide) _ _ _ (by rfl) (by ecancel)
-  intro fl; kn
-  apply kstep_ldv Reg64.r8 Reg64.rsp 64 _ (k + 94) (k + 95) (win hk 94 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 96) (rcx.toBitVec + 48) (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_lea Reg64.r9 Reg64.r8 32 _ (k + 95) (k + 96) (win hk 95 1) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.r9 (rcx.toBitVec + 80) _ _ _ (by show ((rcx.toBitVec + 48) + 32 : BitVec 64) = (rcx.toBitVec + 80); bv_omega)
-  kn
-  apply kstep_ldv Reg64.rcx Reg64.rsp 56 _ (k + 96) (k + 97) (win hk 96 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 104) rdi.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_cmp_jb_f Reg64.rcx Reg64.r9 _ _ (k + 97) (k + 99) (win hk 97 2) (by rfl) (by rfl) _ _ (by show ((rcx.toBitVec + 80) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
-  intro fl; kn
-  apply kstep_ldv Reg64.rax Reg64.rsp 144 _ (k + 99) (k + 100) (win hk 99 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 16) rbx.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
+  apply step_load_value Reg64.rdx Reg64.rsp 168 _ (k + 90) (k + 91) (window_infix_at hk 90 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec + 8) rax.toBitVec (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_load_value Reg64.rbx Reg64.rdx 48 _ (k + 91) (k + 92) (window_infix_at hk 91 1) (by rfl) (by rfl)
+    rax.toBitVec (rax.toBitVec + 48) p3 (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_length_check Reg64.rdx 56 32 _ _ (k + 92) (k + 94) (window_infix_at hk 92 2) (by rfl) (by rfl)
+    rax.toBitVec (rax.toBitVec + 56) (by encoder_address_equation) (Int.toBytes 8 32) (by rfl) (by decide) _ _ _ (by rfl) (by ecancel)
+  intro fl; normalize_registers
+  apply step_load_value Reg64.r8 Reg64.rsp 64 _ (k + 94) (k + 95) (window_infix_at hk 94 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 96) (rcx.toBitVec + 48) (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_lea Reg64.r9 Reg64.r8 32 _ (k + 95) (k + 96) (window_infix_at hk 95 1) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.r9 (rcx.toBitVec + 80) _ _ _ (by show ((rcx.toBitVec + 48) + 32 : BitVec 64) = (rcx.toBitVec + 80); bv_omega)
+  normalize_registers
+  apply step_load_value Reg64.rcx Reg64.rsp 56 _ (k + 96) (k + 97) (window_infix_at hk 96 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 104) rdi.toBitVec (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_cmp_jb_not_taken Reg64.rcx Reg64.r9 _ _ (k + 97) (k + 99) (window_infix_at hk 97 2) (by rfl) (by rfl) _ _ (by show ((rcx.toBitVec + 80) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
+  intro fl; normalize_registers
+  apply step_load_value Reg64.rax Reg64.rsp 144 _ (k + 99) (k + 100) (window_infix_at hk 99 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 16) rbx.toBitVec (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
   have hl111 := Machine.label_at' hk hf (j := 111)
     (by simp only [marshalSSZTo, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [marshalSSZTo, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  apply kstep_jmp _ _ (k + 100) (k + 111) (win hk 100 1) (by rfl) hl111
-  apply kstep_label _ _ (k + 111) (k + 112) (win hk 111 1) (by rfl) (by rfl)
-  apply kstep_st Reg64.rcx Reg64.rsp 64 _ (k + 112) (k + 113) (win hk 112 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 96) (by eb) (Int.toBytes 8 (rcx.toBitVec + 48).toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
-  intro m15 H15; kn; simp only [Reg64s.get64] at H15
-  apply kstep_st Reg64.r9 Reg64.rsp 56 _ (k + 113) (k + 114) (win hk 113 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 104) (by eb) (Int.toBytes 8 rdi.toBitVec.toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
-  intro m16 H16; kn; simp only [Reg64s.get64] at H16
-  apply kstep_st Reg64.rax Reg64.rsp 144 _ (k + 114) (k + 115) (win hk 114 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 16) (by eb) (Int.toBytes 8 rbx.toBitVec.toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
-  intro m17 H17; kn; simp only [Reg64s.get64] at H17
-  apply kstep_add_rr Reg64.rax Reg64.r8 _ (k + 115) (k + 116) (win hk 115 1) (by rfl) (by rfl)
-  intro fl; kn
-  apply kreg_eq Reg64.rax (rbx.toBitVec + rcx.toBitVec + 48) _ _ _ (by show (rbx.toBitVec + (rcx.toBitVec + 48) : BitVec 64) = (rbx.toBitVec + rcx.toBitVec + 48); bv_omega)
-  kn
-  apply kstep_movi Reg64.rcx 32 _ (k + 116) (k + 117) (win hk 116 1) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.rcx 32 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (32 : BitVec 64)) : BitVec 64) = 32; decide)
-  kn
-  refine eventually_trans _ _ _ _ (encn_call (k + 117) (win hk 117 1) (rsp.toBitVec - 160) (rbx.toBitVec + rcx.toBitVec + 48) p3
-    (rsp.toBitVec - 168) (rsp.toBitVec - 168 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_lo0 rsp.toBitVec 160 168 S (by decide))
+  apply step_jump _ _ (k + 100) (k + 111) (window_infix_at hk 100 1) (by rfl) hl111
+  apply step_label _ _ (k + 111) (k + 112) (window_infix_at hk 111 1) (by rfl) (by rfl)
+  apply step_store Reg64.rcx Reg64.rsp 64 _ (k + 112) (k + 113) (window_infix_at hk 112 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 96) (by encoder_address_equation) (Int.toBytes 8 (rcx.toBitVec + 48).toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
+  intro m15 H15; normalize_registers; simp only [Reg64s.get64] at H15
+  apply step_store Reg64.r9 Reg64.rsp 56 _ (k + 113) (k + 114) (window_infix_at hk 113 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 104) (by encoder_address_equation) (Int.toBytes 8 rdi.toBitVec.toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
+  intro m16 H16; normalize_registers; simp only [Reg64s.get64] at H16
+  apply step_store Reg64.rax Reg64.rsp 144 _ (k + 114) (k + 115) (window_infix_at hk 114 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 16) (by encoder_address_equation) (Int.toBytes 8 rbx.toBitVec.toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
+  intro m17 H17; normalize_registers; simp only [Reg64s.get64] at H17
+  apply step_add_registers Reg64.rax Reg64.r8 _ (k + 115) (k + 116) (window_infix_at hk 115 1) (by rfl) (by rfl)
+  intro fl; normalize_registers
+  apply register_value_rewrite Reg64.rax (rbx.toBitVec + rcx.toBitVec + 48) _ _ _ (by show (rbx.toBitVec + (rcx.toBitVec + 48) : BitVec 64) = (rbx.toBitVec + rcx.toBitVec + 48); bv_omega)
+  normalize_registers
+  apply step_move_immediate Reg64.rcx 32 _ (k + 116) (k + 117) (window_infix_at hk 116 1) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.rcx 32 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (32 : BitVec 64)) : BitVec 64) = 32; decide)
+  normalize_registers
+  refine eventually_trans _ _ _ _ (encode_memmove_call (k + 117) (window_infix_at hk 117 1) (rsp.toBitVec - 160) (rbx.toBitVec + rcx.toBitVec + 48) p3
+    (rsp.toBitVec - 168) (rsp.toBitVec - 168 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_low_address_without_calls rsp.toBitVec 160 168 S (by decide))
     b3 d3 (Int.toBytes 8 (Host.addrOf (k + 90)).toBitVec.toInt) x4 (by rw [hd3, hb3]) (Int.toBytes_length 8 _) hx4
     _ _ (by rfl) (by rfl) (by rfl) (by rw [hb3]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_
   rintro ⟨e2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, scr2, hscr2, Hc2⟩
@@ -813,13 +813,13 @@ theorem Encode.generated_f3 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   refine ⟨rfl, rfl, rfl, rfl, x0, x1, x2, x3, scr2, hx0, hx1, hx2, hx3, hscr2, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_f3_kind : ∀ (h : Host), type_of% (@Encode.generated_f3 h)
-    = @Codec.encFieldKindN h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
     ⟨90, 3, [],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.reg .rbx), .at (.dn 96) (.len 48), .at (.dn 104) (.reg .rdi), .at (.dn 56) (.fld 0), .at (.dn 48) (.ex 0), .at (.dn 40) (.ex 1), .at (.dn 88) (.fld 1), .at (.dn 80) (.ex 2), .at (.dn 72) (.ex 3), .at (.dn 168) (.ret 90), .lo (.ex 4)],
-      [.n 8, .n 16, .n 8, .n 16, .lo]⟩
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 96) (.len 48), .at (.below 104) (.reg .rdi), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.field 1), .at (.below 80) (.existential 2), .at (.below 72) (.existential 3), .at (.below 168) (.ret 90), .low (.existential 4)],
+      [.fixed 8, .fixed 16, .fixed 8, .fixed 16, .low]⟩
     ⟨118, 4, [],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.reg .rbx), .at (.dn 96) (.reg .rdi), .at (.dn 104) (.len 80), .at (.dn 56) (.fld 0), .at (.dn 48) (.ex 0), .at (.dn 40) (.ex 1), .at (.dn 88) (.fld 1), .at (.dn 80) (.ex 2), .at (.dn 72) (.ex 3), .at (.dn 168) (.ret 118), .lo (.ex 4)],
-      [.n 8, .n 16, .n 8, .n 16, .lo]⟩ := by
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 96) (.reg .rdi), .at (.below 104) (.len 80), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.field 1), .at (.below 80) (.existential 2), .at (.below 72) (.existential 3), .at (.below 168) (.ret 118), .low (.existential 4)],
+      [.fixed 8, .fixed 16, .fixed 8, .fixed 16, .low]⟩ := by
   intro h; rfl
 
 set_option maxHeartbeats 4000000 in
@@ -831,7 +831,7 @@ theorem Encode.generated_f4 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
     (fp s1 s2 l16 l96 l104 t56 t40 t88 t72 rslot : List UInt8) (hfp : fp.length = 8) (hs1 : s1.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl96 : l96.length = 8) (hl104 : l104.length = 8) (ht56 : t56.length = 16) (ht40 : t40.length = 16) (ht88 : t88.length = 16) (ht72 : t72.length = 16) (hrslot : rslot.length = 8)
     (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
     (hsp : 168 ≤ s.regs.rsp.toNat)
-    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S) (st0 : MachineState),
+    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveContract S) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 118)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 160 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -930,55 +930,55 @@ theorem Encode.generated_f4 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   simp only [Reg64s.get64] at hrsp hrbp hr14  Hm
   subst rsp1 rbp1 r141
   have hcap' : rcx.toBitVec.toNat + 112 ≤ rdi.toBitVec.toNat := hcap
-  apply kstep_ldv Reg64.rdx Reg64.rsp 168 _ (k + 118) (k + 119) (win hk 118 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec + 8) rax.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_ldv Reg64.rbx Reg64.rdx 72 _ (k + 119) (k + 120) (win hk 119 1) (by rfl) (by rfl)
-    rax.toBitVec (rax.toBitVec + 72) p4 (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_lenchk Reg64.rdx 80 32 _ _ (k + 120) (k + 122) (win hk 120 2) (by rfl) (by rfl)
-    rax.toBitVec (rax.toBitVec + 80) (by eb) (Int.toBytes 8 32) (by rfl) (by decide) _ _ _ (by rfl) (by ecancel)
-  intro fl; kn
-  apply kstep_ldv Reg64.rdx Reg64.rsp 56 _ (k + 122) (k + 123) (win hk 122 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 104) (rcx.toBitVec + 80) (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_lea Reg64.r8 Reg64.rdx 32 _ (k + 123) (k + 124) (win hk 123 1) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.r8 (rcx.toBitVec + 112) _ _ _ (by show ((rcx.toBitVec + 80) + 32 : BitVec 64) = (rcx.toBitVec + 112); bv_omega)
-  kn
-  apply kstep_ldv Reg64.rcx Reg64.rsp 64 _ (k + 124) (k + 125) (win hk 124 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 96) rdi.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_cmp_jb_f Reg64.rcx Reg64.r8 _ _ (k + 125) (k + 128) (win hk 125 3) (by rfl) (by rfl) _ _ (by show ((rcx.toBitVec + 112) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
-  intro fl; kn
-  apply kstep_ldv Reg64.rax Reg64.rsp 144 _ (k + 128) (k + 129) (win hk 128 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 16) rbx.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
+  apply step_load_value Reg64.rdx Reg64.rsp 168 _ (k + 118) (k + 119) (window_infix_at hk 118 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec + 8) rax.toBitVec (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_load_value Reg64.rbx Reg64.rdx 72 _ (k + 119) (k + 120) (window_infix_at hk 119 1) (by rfl) (by rfl)
+    rax.toBitVec (rax.toBitVec + 72) p4 (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_length_check Reg64.rdx 80 32 _ _ (k + 120) (k + 122) (window_infix_at hk 120 2) (by rfl) (by rfl)
+    rax.toBitVec (rax.toBitVec + 80) (by encoder_address_equation) (Int.toBytes 8 32) (by rfl) (by decide) _ _ _ (by rfl) (by ecancel)
+  intro fl; normalize_registers
+  apply step_load_value Reg64.rdx Reg64.rsp 56 _ (k + 122) (k + 123) (window_infix_at hk 122 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 104) (rcx.toBitVec + 80) (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_lea Reg64.r8 Reg64.rdx 32 _ (k + 123) (k + 124) (window_infix_at hk 123 1) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.r8 (rcx.toBitVec + 112) _ _ _ (by show ((rcx.toBitVec + 80) + 32 : BitVec 64) = (rcx.toBitVec + 112); bv_omega)
+  normalize_registers
+  apply step_load_value Reg64.rcx Reg64.rsp 64 _ (k + 124) (k + 125) (window_infix_at hk 124 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 96) rdi.toBitVec (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_cmp_jb_not_taken Reg64.rcx Reg64.r8 _ _ (k + 125) (k + 128) (window_infix_at hk 125 3) (by rfl) (by rfl) _ _ (by show ((rcx.toBitVec + 112) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
+  intro fl; normalize_registers
+  apply step_load_value Reg64.rax Reg64.rsp 144 _ (k + 128) (k + 129) (window_infix_at hk 128 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 16) rbx.toBitVec (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
   have hl140 := Machine.label_at' hk hf (j := 140)
     (by simp only [marshalSSZTo, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [marshalSSZTo, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  apply kstep_jmp _ _ (k + 129) (k + 140) (win hk 129 1) (by rfl) hl140
-  apply kstep_label _ _ (k + 140) (k + 141) (win hk 140 1) (by rfl) (by rfl)
-  apply kstep_st Reg64.rcx Reg64.rsp 64 _ (k + 141) (k + 142) (win hk 141 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 96) (by eb) (Int.toBytes 8 rdi.toBitVec.toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
-  intro m18 H18; kn; simp only [Reg64s.get64] at H18
-  apply kstep_st Reg64.r8 Reg64.rsp 56 _ (k + 142) (k + 143) (win hk 142 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 104) (by eb) (Int.toBytes 8 (rcx.toBitVec + 80).toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
-  intro m19 H19; kn; simp only [Reg64s.get64] at H19
-  apply kstep_st Reg64.rax Reg64.rsp 144 _ (k + 143) (k + 144) (win hk 143 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 16) (by eb) (Int.toBytes 8 rbx.toBitVec.toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
-  intro m20 H20; kn; simp only [Reg64s.get64] at H20
-  apply kstep_add_rr Reg64.rax Reg64.rdx _ (k + 144) (k + 145) (win hk 144 1) (by rfl) (by rfl)
-  intro fl; kn
-  apply kreg_eq Reg64.rax (rbx.toBitVec + rcx.toBitVec + 80) _ _ _ (by show (rbx.toBitVec + (rcx.toBitVec + 80) : BitVec 64) = (rbx.toBitVec + rcx.toBitVec + 80); bv_omega)
-  kn
-  apply kstep_movi Reg64.rcx 32 _ (k + 145) (k + 146) (win hk 145 1) (by rfl) (by rfl)
-  kn
-  apply kreg_eq Reg64.rcx 32 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (32 : BitVec 64)) : BitVec 64) = 32; decide)
-  kn
-  apply kstep_nops _ (k + 146) (k + 147) (win hk 146 1) (by rfl) (by rfl)
-  refine eventually_trans _ _ _ _ (encn_call (k + 147) (win hk 147 1) (rsp.toBitVec - 160) (rbx.toBitVec + rcx.toBitVec + 80) p4
-    (rsp.toBitVec - 168) (rsp.toBitVec - 168 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_lo0 rsp.toBitVec 160 168 S (by decide))
+  apply step_jump _ _ (k + 129) (k + 140) (window_infix_at hk 129 1) (by rfl) hl140
+  apply step_label _ _ (k + 140) (k + 141) (window_infix_at hk 140 1) (by rfl) (by rfl)
+  apply step_store Reg64.rcx Reg64.rsp 64 _ (k + 141) (k + 142) (window_infix_at hk 141 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 96) (by encoder_address_equation) (Int.toBytes 8 rdi.toBitVec.toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
+  intro m18 H18; normalize_registers; simp only [Reg64s.get64] at H18
+  apply step_store Reg64.r8 Reg64.rsp 56 _ (k + 142) (k + 143) (window_infix_at hk 142 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 104) (by encoder_address_equation) (Int.toBytes 8 (rcx.toBitVec + 80).toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
+  intro m19 H19; normalize_registers; simp only [Reg64s.get64] at H19
+  apply step_store Reg64.rax Reg64.rsp 144 _ (k + 143) (k + 144) (window_infix_at hk 143 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 16) (by encoder_address_equation) (Int.toBytes 8 rbx.toBitVec.toInt) (Int.toBytes_length 8 _) _ _ _ (by rfl) (by ecancel)
+  intro m20 H20; normalize_registers; simp only [Reg64s.get64] at H20
+  apply step_add_registers Reg64.rax Reg64.rdx _ (k + 144) (k + 145) (window_infix_at hk 144 1) (by rfl) (by rfl)
+  intro fl; normalize_registers
+  apply register_value_rewrite Reg64.rax (rbx.toBitVec + rcx.toBitVec + 80) _ _ _ (by show (rbx.toBitVec + (rcx.toBitVec + 80) : BitVec 64) = (rbx.toBitVec + rcx.toBitVec + 80); bv_omega)
+  normalize_registers
+  apply step_move_immediate Reg64.rcx 32 _ (k + 145) (k + 146) (window_infix_at hk 145 1) (by rfl) (by rfl)
+  normalize_registers
+  apply register_value_rewrite Reg64.rcx 32 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (32 : BitVec 64)) : BitVec 64) = 32; decide)
+  normalize_registers
+  apply step_nops _ (k + 146) (k + 147) (window_infix_at hk 146 1) (by rfl) (by rfl)
+  refine eventually_trans _ _ _ _ (encode_memmove_call (k + 147) (window_infix_at hk 147 1) (rsp.toBitVec - 160) (rbx.toBitVec + rcx.toBitVec + 80) p4
+    (rsp.toBitVec - 168) (rsp.toBitVec - 168 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_low_address_without_calls rsp.toBitVec 160 168 S (by decide))
     b4 d4 (Int.toBytes 8 (Host.addrOf (k + 118)).toBitVec.toInt) x4 (by rw [hd4, hb4]) (Int.toBytes_length 8 _) hx4
     _ _ (by rfl) (by rfl) (by rfl) (by rw [hb4]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_
   rintro ⟨e3, pc3⟩ ⟨hpc3, hrsp3, hrbp3, hr143, scr3, hscr3, Hc3⟩
@@ -992,13 +992,13 @@ theorem Encode.generated_f4 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   refine ⟨rfl, rfl, rfl, rfl, x0, x1, x2, x3, scr3, hx0, hx1, hx2, hx3, hscr3, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem Encode.generated_f4_kind : ∀ (h : Host), type_of% (@Encode.generated_f4 h)
-    = @Codec.encFieldKindN h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    = @Codec.encFieldKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
     ⟨118, 4, [],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.reg .rbx), .at (.dn 96) (.reg .rdi), .at (.dn 104) (.len 80), .at (.dn 56) (.fld 0), .at (.dn 48) (.ex 0), .at (.dn 40) (.ex 1), .at (.dn 88) (.fld 1), .at (.dn 80) (.ex 2), .at (.dn 72) (.ex 3), .at (.dn 168) (.ret 118), .lo (.ex 4)],
-      [.n 8, .n 16, .n 8, .n 16, .lo]⟩
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 96) (.reg .rdi), .at (.below 104) (.len 80), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.field 1), .at (.below 80) (.existential 2), .at (.below 72) (.existential 3), .at (.below 168) (.ret 118), .low (.existential 4)],
+      [.fixed 8, .fixed 16, .fixed 8, .fixed 16, .low]⟩
     ⟨148, 5, [],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.reg .rbx), .at (.dn 96) (.reg .rdi), .at (.dn 104) (.len 112), .at (.dn 56) (.fld 0), .at (.dn 48) (.ex 0), .at (.dn 40) (.ex 1), .at (.dn 88) (.fld 1), .at (.dn 80) (.ex 2), .at (.dn 72) (.ex 3), .at (.dn 168) (.ret 148), .lo (.ex 4)],
-      [.n 8, .n 16, .n 8, .n 16, .lo]⟩ := by
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 96) (.reg .rdi), .at (.below 104) (.len 112), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.field 1), .at (.below 80) (.existential 2), .at (.below 72) (.existential 3), .at (.below 168) (.ret 148), .low (.existential 4)],
+      [.fixed 8, .fixed 16, .fixed 8, .fixed 16, .low]⟩ := by
   intro h; rfl
 
 set_option maxHeartbeats 4000000 in
@@ -1114,24 +1114,24 @@ theorem Encode.generated_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.p
   simp only [Reg64s.get64] at hrsp hrbp hr14  Hm
   subst rsp1 rbp1 r141
   have hcap' : rcx.toBitVec.toNat + 112 ≤ rdi.toBitVec.toNat := hcap
-  apply kstep_ldv Reg64.rax Reg64.rsp 144 _ (k + 148) (k + 149) (win hk 148 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 16) rbx.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_ldv Reg64.rbx Reg64.rsp 56 _ (k + 149) (k + 150) (win hk 149 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 104) (rcx.toBitVec + 112) (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_ldv Reg64.rcx Reg64.rsp 64 _ (k + 150) (k + 151) (win hk 150 1) (by rfl) (by rfl)
-    (rsp.toBitVec - 160) (rsp.toBitVec - 96) rdi.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
-  kn
-  apply kstep_xor32 Reg64.rdi _ (k + 151) (k + 152) (win hk 151 1) (by rfl) (by rfl)
-  intro fl; kn
-  apply kstep_xor32 Reg64.rsi _ (k + 152) (k + 153) (win hk 152 1) (by rfl) (by rfl)
-  intro fl; kn
-  apply kstep_add Reg64.rsp 152 _ (k + 153) (k + 154) (win hk 153 1) (by rfl) (by rfl)
-  intro fl; kn
-  apply kreg_eq Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 160) + 152 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
-  kn
-  refine eventually_trans _ _ _ _ (decret_seg _ (k + 154) (win hk 154 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
+  apply step_load_value Reg64.rax Reg64.rsp 144 _ (k + 148) (k + 149) (window_infix_at hk 148 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 16) rbx.toBitVec (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_load_value Reg64.rbx Reg64.rsp 56 _ (k + 149) (k + 150) (window_infix_at hk 149 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 104) (rcx.toBitVec + 112) (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_load_value Reg64.rcx Reg64.rsp 64 _ (k + 150) (k + 151) (window_infix_at hk 150 1) (by rfl) (by rfl)
+    (rsp.toBitVec - 160) (rsp.toBitVec - 96) rdi.toBitVec (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)
+  normalize_registers
+  apply step_xor32 Reg64.rdi _ (k + 151) (k + 152) (window_infix_at hk 151 1) (by rfl) (by rfl)
+  intro fl; normalize_registers
+  apply step_xor32 Reg64.rsi _ (k + 152) (k + 153) (window_infix_at hk 152 1) (by rfl) (by rfl)
+  intro fl; normalize_registers
+  apply step_add_immediate Reg64.rsp 152 _ (k + 153) (k + 154) (window_infix_at hk 153 1) (by rfl) (by rfl)
+  intro fl; normalize_registers
+  apply register_value_rewrite Reg64.rsp (rsp.toBitVec - 8) _ _ _ (by show ((rsp.toBitVec - 160) + 152 : BitVec 64) = (rsp.toBitVec - 8); bv_omega)
+  normalize_registers
+  refine eventually_trans _ _ _ _ (decret_seg _ (k + 154) (window_infix_at hk 154 2) (by rfl) (rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩
   dsimp only at hpc' hrsp' hrbp' hreg' hmem'
   apply Eventually.done
@@ -1150,10 +1150,10 @@ theorem Encode.generated_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.p
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
 theorem Encode.generated_epi_kind : ∀ (h : Host), type_of% (@Encode.generated_epi h)
-    = @Codec.encEpiKindN h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
+    = @Codec.encEpilogueKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
     ⟨148, 5, [],
-      [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.reg .rbx), .at (.dn 96) (.reg .rdi), .at (.dn 104) (.len 112), .at (.dn 56) (.fld 0), .at (.dn 48) (.ex 0), .at (.dn 40) (.ex 1), .at (.dn 88) (.fld 1), .at (.dn 80) (.ex 2), .at (.dn 72) (.ex 3), .at (.dn 168) (.ret 148), .lo (.ex 4)],
-      [.n 8, .n 16, .n 8, .n 16, .lo]⟩ := by
+      [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx), .at (.below 96) (.reg .rdi), .at (.below 104) (.len 112), .at (.below 56) (.field 0), .at (.below 48) (.existential 0), .at (.below 40) (.existential 1), .at (.below 88) (.field 1), .at (.below 80) (.existential 2), .at (.below 72) (.existential 3), .at (.below 168) (.ret 148), .low (.existential 4)],
+      [.fixed 8, .fixed 16, .fixed 8, .fixed 16, .low]⟩ := by
   intro h; rfl
 
 set_option maxHeartbeats 4000000 in
@@ -1203,7 +1203,7 @@ theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
       ⋆ Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80))
       ⋆ R)
     (hguard : guard.toNat + 32 < s.regs.rsp.toNat) (hsp : 168 ≤ s.regs.rsp.toNat)
-    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S),
+    (hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveContract S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec
         ∧ st.data.regs.rax = s.regs.rbx
@@ -1269,7 +1269,7 @@ theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
   intro st5 h5
   exact Encode.generated_epi k hk hf ast v0 v1 c2 c3 c4 b2 b3 b4 pre d0 d1 d2 d3 d4 hast hv0 hv1 hc2 hc3 hc4 hb2 hb3 hb4 hd0 hd1 hd2 hd3 hd4 p2 p3 p4 s ra guard hpre fp s1 s2 l16 l96 l104 t56 t40 t88 t72 rslot hfp hs1 hs2 hl16 hl96 hl104 ht56 ht40 ht88 ht72 hrslot R S scratch hsc hsp hcap hcap63 st5 h5
 theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated_fast h)
-    = @Codec.encFastKindN h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32] := by
+    = @Codec.encFastPathKindAnyFrame h marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout [.u64, .u64, .bytes 32, .bytes 32, .bytes 32] := by
   intro h; rfl
 
 /-- Statement check: the generated theorem proves the committed hand statement. -/
