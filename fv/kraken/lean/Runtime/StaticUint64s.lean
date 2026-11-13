@@ -7,7 +7,7 @@ import Machine.Include
 `data_include staticuint64s` (`Machine/Include.lean`) reads `link/out/data/staticuint64s.data`.
 `link/data.py` writes that file from the ELF, and `link/check.py` compares it with the ELF.
 The address is the label `runtime.staticuint64s` of the `Host` program, so the definition holds for every Go ELF.
-The text is the text of `TestTarget/Data.lean`: the contract form `StaticBox` (`Runtime/Contracts.lean`) reads the table.
+The contract form `StaticBox` (`Runtime/Contracts.lean`) reads the table.
 -/
 
 namespace Runtime.Data

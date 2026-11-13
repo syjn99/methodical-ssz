@@ -12,7 +12,7 @@ usage (from `fv/kraken/lean`, after `lake build`, under the heavy-job gate):
 
 `targets.txt` and `users.txt` hold one module name per line. Give every module of both lists as `<Module>`.
 Each output line is: target constant, its module, number of using constants, one sample user module.
-Example: the TestTarget declarations that other libraries use. Put the TestTarget modules in `targets.txt` and
+Example: the declarations of one library that other libraries use. Put the modules of that library in `targets.txt` and
 the modules of the other libraries in `users.txt`.
 -/
 

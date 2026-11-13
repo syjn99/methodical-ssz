@@ -5,7 +5,7 @@ import Machine.Frame
 # The contract form of `runtime.newobject`
 
 `NewobjectC Heap ty sz S` is the hypothesis about the code at the label `runtime.newobject`, in the form of
-`MakesliceC` (`Runtime/Contracts.lean`). The text is the text of `TestTarget/FunctionSpecs.lean`.
+`MakesliceC` (`Runtime/Contracts.lean`).
 -/
 
 open Machine Runtime

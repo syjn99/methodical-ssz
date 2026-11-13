@@ -6,7 +6,7 @@ The design principles are in `../../README.md`. The build commands are in `../RE
 
 ## 1. Libraries
 
-The libraries `Spec`, `Machine`, `Runtime`, `TestTarget` and `Codec` are the shared layer.
+The libraries `Spec`, `Machine`, `Runtime` and `Codec` are the shared layer.
 The other libraries hold the proofs of Prysm types (one library or a group of modules for each type).
 `../gen/restructure/maps/shared-layer/files.tsv` gives the earlier path of each shared module and a one-line meaning.
 
@@ -20,12 +20,6 @@ It also has the commands that read code and data files (`Machine/Include.lean`) 
 
 **`Runtime`.** The contracts of the Go runtime callees (`Runtime/Contracts.lean`) and their models.
 A model is a small assembly program (`Runtime/*.S`) with theorems that it satisfies its contract. Examples are a bump allocator, a memory copy and error formatting.
-
-**`TestTarget`.** Code, data and proofs of the small test target (Go 1.26.3, `../link/out/`), for example `TestTarget/ScalarsDecodeAccept.lean` and `TestTarget/ListU64DecodeReject.lean`.
-It also has the function specifications of the test target callees (`TestTarget/FunctionSpecs.lean`).
-No module of another library imports a module of `TestTarget`.
-The declarations that other libraries used are in `Runtime/StaticUint64s.lean`, `Runtime/NewobjectContract.lean`,
-`Runtime/StaticBoxLemmas.lean`, `Machine/StoreLemmas.lean` and `Codec/ReadUint64List.lean`.
 
 **`Codec`.** Lemmas that do not depend on one Prysm type: the `uint64` decoder pattern (`Codec/Uint64Decoder.lean`), the fixed-bytes field decoder and encoder patterns (`Codec/Bytes32*.lean`, `Codec/FixedBytesDecode*.lean`), the encoder step lemmas (`Codec/Encode*.lean`) and the statement kinds of the generated proofs (`Codec/Kind/`).
 `Codec/Segment/` holds segment and loop lemmas stated once for any size or element count, with the fixed instances of `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/` and `Prysm/HistoricalBatch/` as corollaries.
@@ -72,13 +66,12 @@ The statement kinds of the composed and whole accept theorems, of the callee cal
 The import graph has this order:
 
 ```text
-EthLib -> Spec -> Machine -> Runtime -> TestTarget -> Codec (except Codec/Segment/)
+EthLib -> Spec -> Machine -> Runtime -> Codec (except Codec/Segment/)
        -> Prysm -> Prysm (list types, HistoricalBatch) -> Codec/Segment/ -> Prysm (Deposit)
 ```
 
 The arrows give the order of the libraries in the import graph. A library imports only libraries to its left.
-Exceptions: `TestTarget` imports modules of `Codec` (`Codec/ReadUint64List.lean`) and no library imports `TestTarget`,
-and `Codec/Bytes32Decode.lean` imports `Prysm/ElfData/CheckpointAndEpoch.lean`.
+Exception: `Codec/Bytes32Decode.lean` imports `Prysm/ElfData/CheckpointAndEpoch.lean`.
 `Prysm/Checkpoint/CapacityReserved*.lean` and `Prysm/Deposit/` import modules of the flat types, and `Prysm/HistoricalBatch/` does not import them.
 Some modules of `Codec/` and `Codec/Kind/` import modules of the flat types (the kinds and lemmas that the shared layer left in a type library).
 A new type gets its own library or modules. Do not change a reviewed module to add a new type.
@@ -148,7 +141,7 @@ An accept theorem adds the contract hypotheses (for example `MakesliceC`, `Memmo
 A contract describes a callee at its label, for every machine state, return address and frame `F`.
 It gives the argument registers, the stack window of `S` scratch bytes below the return slot, and the spill slots that the callee can write.
 It also gives the heap budget and the conclusion: the result, the kept registers `rsp + 8`, `r14`, `rbp`, and an unchanged `F`.
-The forms are in `Runtime/Contracts.lean` (runtime functions) and `TestTarget/FunctionSpecs.lean` (generated callees).
+The forms are in `Runtime/Contracts.lean` and `Runtime/NewobjectContract.lean` (runtime functions).
 
 | Contract | Callee |
 | --- | --- |
@@ -241,8 +234,8 @@ Some abbreviations have two or three meanings. The namespace decides the meaning
 | `Pdc`, `Vid`, `Bpf` | `v1alpha1.PartialDataColumnGroupID`, `ValidatorIdentity`, `BuilderPreferences` |
 | `Ep`, `Sl`, `Ci`, `Vi` | `primitives.Epoch`, `Slot`, `CommitteeIndex`, `ValidatorIndex` (hand-written methods) |
 | `Lu`, `Lc`, `Bl`, `Bv` | test types `ListU64`, `ListC`, `BitL`, `BitVec` in `../target/` |
-| `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` in names of the old library `E2eScal` such as `Gen6ScEnc`, `v1alpha1.SyncCommittee` in the old library `E2eList`, and the test type `Scalars` in `TestTarget` |
+| `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` in names of the old library `E2eScal` such as `Gen6ScEnc`, `v1alpha1.SyncCommittee` in the old library `E2eList`, and the test type `Scalars` (`Spec/TestScalars.lean`) |
 | `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` in the old library `E2eScal`, and `v1alpha1.SyncAggregate` in the old library `E2eList` |
-| `Fv` | the test type `FixedVec` in `TestTarget` declaration names |
+| `Fv` | the test type `FixedVec` (`Spec/TestFixedVec.lean`) |
 | `epr` | two meanings: `ExecutionPayloadEnvelopesByRangeRequest`, and the Epoch reject witness `Prysm.Epoch.Witness.DecodeRejectSize.runs` |
 | `Pad` | `v1alpha1.PayloadAttestationData` in the generator scripts |

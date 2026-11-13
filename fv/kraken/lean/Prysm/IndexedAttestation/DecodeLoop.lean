@@ -6,7 +6,7 @@ import Prysm.SyncCommittee.DecodeLoopLemmas
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: the element loop
 
-Loop head `L_28a` (directive 147). The text of the Go 1.26.3 `lu_iter` / `lu_exit` / `lu_loop` (`TestTarget/ListU64DecodeLoop.lean`) with
+Loop head `L_28a` (directive 147). The text of the Go 1.26.3 ListU64 loop proofs (no longer in the tree) with
 this function's registers: rax = i, rdx = n, rcx = cap − 228 (bytes), rbx = the input pointer `p0` (buf + 228),
 rsi = the receiver `c`; the receiver's AttestingIndices words at `c + 8` (pointer A) and `c + 16` (len).
 One iteration (147–165, 143–146): `jge` not taken (i < n); `(i+1)·8 ≤ cap − 228`: the `ja L_475` (panicBounds 266) is

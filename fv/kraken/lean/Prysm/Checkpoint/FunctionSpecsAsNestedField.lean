@@ -7,7 +7,7 @@ import Runtime.CopyModel
 # Function specifications of the Checkpoint decoder and encoder
 
 `Decode.accept_function_spec Heap S` is the statement of `Prysm.Checkpoint.Decode.accept` as a hypothesis-shaped property of
-the code at the label `(*Checkpoint).UnmarshalSSZ` (the form of `TestTarget.ScUAccC` / `Prysm.Epoch.Decode.accept_function_spec`): for
+the code at the label `(*Checkpoint).UnmarshalSSZ` (the form of `Prysm.Epoch.Decode.accept_function_spec`): for
 every machine state, return address and frame `F`. The only change to the statement is that the
 callee's own `makeslice` return-slot word at rsp − 96 (`Host.addrOf (k + 70)` in the theorem) is an
 existential `rs'` of 8 bytes, so that the specification does not name the callee's place.

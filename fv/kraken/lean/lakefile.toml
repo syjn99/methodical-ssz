@@ -1,5 +1,5 @@
 name = "fvkraken"
-defaultTargets = ["Spec", "Machine", "Runtime", "TestTarget"]
+defaultTargets = ["Spec", "Machine", "Runtime"]
 
 [leanOptions]
 autoImplicit = false
@@ -44,22 +44,11 @@ name = "Runtime"
 globs = ["Runtime.+"]
 needs = ["runtime_lean_S", "test_target_data"]
 
-# TestTarget: proofs and code of the small Go 1.26.3 test target ELF (link/out). No other library imports it.
-# The converted .S files and the data files of link/out are inputs of the library.
-[[input_dir]]
-name = "test_target_norm_S"
-path = "../link/out/norm"
-text = true
-
+# The data files of the small Go 1.26.3 test target ELF (link/out). Runtime/StaticUint64s.lean reads staticuint64s.data.
 [[input_dir]]
 name = "test_target_data"
 path = "../link/out/data"
 text = true
-
-[[lean_lib]]
-name = "TestTarget"
-globs = ["TestTarget.+"]
-needs = ["test_target_norm_S", "test_target_data"]
 
 # Codec: lemmas that do not depend on one Prysm type: the uint64 decoder pattern, the fixed-bytes field
 # patterns, segment and loop lemmas (Codec/Segment/), the statement kinds of the generated proofs (Codec/Kind/)

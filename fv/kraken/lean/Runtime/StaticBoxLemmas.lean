@@ -1,6 +1,6 @@
 import Runtime.Contracts
 
-/-! # Congruence of the contract form `StaticBox` (text of `TestTarget/ListU64DecodeRejectCall.lean`) -/
+/-! # Congruence of the contract form `StaticBox` -/
 
 open Machine Runtime
 variable [Host]

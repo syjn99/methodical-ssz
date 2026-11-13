@@ -105,7 +105,7 @@ theorem Decode.accept (k : Nat) (hk : committeeIndexUnmarshalSSZ.IsInfixAt Host.
     | (apply UInt64.toBitVec_inj.mp; simp; bv_omega)
 
 /-- **Function specification of `(*primitives.CommitteeIndex).UnmarshalSSZ`, accept path**
-(`len(buf) = 8`), in the shape of `TestTarget.ScUAccC`: a hypothesis-shaped statement
+(`len(buf) = 8`), in the shape of a runtime contract: a hypothesis-shaped statement
 about the code at the CommitteeIndex label, for every machine state, return address and
 frame `F`. `Decode.accept_function_spec_holds` proves it from the machine code; the AttestationData
 decoder uses the callee only through this specification (no contract). -/

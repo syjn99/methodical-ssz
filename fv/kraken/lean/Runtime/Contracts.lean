@@ -176,7 +176,7 @@ def ErrStr (e sp : BitVec 64) (msg : List UInt8) : DataMem → Prop :=
 
 /-- `FmtErrorfWC Heap fs RO MsgIn S`: the internal `fmt.errorf` for one fixed format
 `fs` with one `%w` verb (the generated `"J: %w"`, `"B: %w"`; the theorems name
-the included ELF bytes `TestTarget.Data.bvFmtJ`, `TestTarget.Data.blFmtB`)
+the included ELF bytes of the Go 1.26.3 test target)
 and one argument: an `*errors.errorString` error, type word `ity` (the word at
 `itab + 8` of the errorString itab, read there by the code), data word `e`. The
 object `ErrObj e sp msg` and the message are in the footprint: `MsgIn sp msg hm`
@@ -212,8 +212,8 @@ def FmtErrorfWC (Heap : Nat → DataMem → Prop) (fs : List UInt8) (RO : DataMe
 
 /-- `FmtErrorfDWC Heap fs tw S`: the internal `fmt.errorf` for one fixed format `fs`
 with `%d` then `%w` (the two ListU64 formats) and two arguments: an `int` box
-(type word `tw`, the theorems fix it to `TestTarget.Data.intType_addr`, the ELF's
-`type:int` descriptor, `TestTarget.Data.intType_size_kind`); data word `bx`, the `convT64` box of `v`, its bytes in
+(type word `tw`, the theorems fix it to the address of the ELF's
+`type:int` descriptor); data word `bx`, the `convT64` box of `v`, its bytes in
 `StaticBox v` or `hb`: `BoxIn bx v hb`) and an `*errors.errorString` error (type
 word `ity` at `itab + 8`, data word `e`, `ErrStr e sp msg`). Budget from the
 format and the arguments: `fs.length + 20 + msg.length + 8192 ≤ avail` (at most
@@ -245,9 +245,9 @@ def FmtErrorfDWC (Heap : Nat → DataMem → Prop) (fs : List UInt8) (tw : BitVe
       ⟨st, label "fmt.errorf"⟩
 
 /-- `FmtErrorfDDC Heap fs tw S`: the internal `fmt.errorf` for one fixed
-format `fs` with two `%d` verbs (the ListC offset-order format `TestTarget.Data.lcFmtOrder`)
+format `fs` with two `%d` verbs (the ListC offset-order format of the Go 1.26.3 test target)
 and two arguments: two `uint64` boxes (type word `tw` each, the theorems fix it to
-`TestTarget.Data.uint64Type_addr`; data words `bx1`, `bx2`, the `convT64` boxes of `v1`,
+the address of the `type:uint64` descriptor; data words `bx1`, `bx2`, the `convT64` boxes of `v1`,
 `v2`, `BoxIn`). Budget from the format and the arguments: `fs.length + 40 + 8192
 ≤ avail` (at most 20 digits each). Result as `FmtErrorfWC`: rsp + 8, r14 kept,
 rax ≠ 0, every read resource unchanged, the heap shrinks, `F` unchanged. -/

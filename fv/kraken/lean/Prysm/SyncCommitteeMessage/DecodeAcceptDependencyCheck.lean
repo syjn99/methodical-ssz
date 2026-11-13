@@ -6,7 +6,7 @@ import Prysm.SyncCommitteeMessage.DecodeAccept
 # Executed dependency check of the two re-derived accept theorems (SyncCommitteeMessage, PendingConsolidation)
 
 A program (not a proof) walks the constants that the proof terms of `Decode.accept_from_window_steps` and
-`Prysm.PendingConsolidation.Decode.accept_from_window_steps` reach inside the project namespaces (`Prysm`, `Codec`, `ElfData`, `Machine`, `Runtime`, `TestTarget`) and fails the build
+`Prysm.PendingConsolidation.Decode.accept_from_window_steps` reach inside the project namespaces (`Prysm`, `Codec`, `ElfData`, `Machine`, `Runtime`) and fails the build
 if one of the hold-out hand lemmas `bytes32dec_seg_rax`, `sm_vi_arg`, `calldec_nop_seg` is among them.
 Controls: the same walk from the hold-out theorems `sm_e2e_accept_main` / `pc_e2e_accept_main` must reach them.
 Executable evidence only.
@@ -40,7 +40,7 @@ def reach (env : Environment) (root : Name) : Array Name := Id.run do
         | _ => none
       let cs := ci.type.getUsedConstants ++ (match val with | some v => v.getUsedConstants | none => #[])
       for c in cs do
-        if ((`Prysm).isPrefixOf c || (`Codec).isPrefixOf c || (`ElfData).isPrefixOf c || (`Machine).isPrefixOf c || (`Runtime).isPrefixOf c || (`TestTarget).isPrefixOf c)
+        if ((`Prysm).isPrefixOf c || (`Codec).isPrefixOf c || (`ElfData).isPrefixOf c || (`Machine).isPrefixOf c || (`Runtime).isPrefixOf c)
             && !seenSet.contains c then
           todo := todo.push c
   return seen

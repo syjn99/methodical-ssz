@@ -24,7 +24,7 @@ The project has two target binaries. Their proofs are separate, because a proof 
 
 - The Go types are in `target/`. The `main` package is `cmd/p1bin/`.
 - The ELF, its symbol listing and its disassembly are in `link/out/`. Their sha256 values are in `link/out/build-ids.txt`.
-- The `TestTarget` Lean library proves some theorems on this binary. The Prysm proofs also use some of its declarations.
+- `Runtime/StaticUint64s.lean` reads one data file of this binary (`link/out/data/staticuint64s.data`).
 - `link/build.sh` builds this ELF again from the repository root.
 
 ## 2. Pinned versions
@@ -90,11 +90,11 @@ Each item says what the command needs.
 **Lean only.** Lake fetches Kraken and EthLib at the pinned commits on the first run.
 
 ```sh
-cd fv/kraken/lean && lake build Machine Runtime Codec Spec TestTarget Prysm
+cd fv/kraken/lean && lake build Machine Runtime Codec Spec Prysm
 cd fv/kraken/lean && lake build Prysm.SyncAggregate.DecodeRejectSize    # one module
 ```
 
-`lake build` without arguments builds only the default libraries `Spec`, `Machine`, `Runtime` and `TestTarget`.
+`lake build` without arguments builds only the default libraries `Spec`, `Machine` and `Runtime`.
 After a build, `lake build --no-build <libraries>` must exit 0. `lake env lean` does not check that the build is current.
 
 **Lean and Python.** These scripts call Lean through Lake.

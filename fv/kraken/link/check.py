@@ -29,22 +29,22 @@ Checks:
      bytes as a nop (a `retq` there used to pass).
  (e) all.S has the same directives as the per-function .S files, in order
      (instructions included, not only labels).
- (f) every data file data/<id>.data that Lean includes (TestTarget/Data.lean,
-     `data_include`): its `at <label> <off>` names one ELF symbol; the file's
+ (f) every data file data/<id>.data that Lean includes (`data_include`,
+     `Machine/Include.lean`): its `at <label> <off>` names one ELF symbol; the file's
      `bytes` are the ELF file bytes there, and each `word <s> <o>` is the
      8-byte little-endian value address(s) + o at its position; every byte
      of the file is printable ASCII or a newline (the rule of data_include).
      This replaced the checks of hand-written Lean constants and of Go source
      literals. This checker does not read Lean sources (only the
-     hashes of Code.lean and AXIOMS.txt): which definitions a theorem uses is
+     hash of AXIOMS.txt): which definitions a theorem uses is
      read from the theorem statements, not checked here. Items that the
      proven code addresses with `lea` (the format strings, the int and uint64
      type words) are bound to their id by the proofs; the items that only a
      contract uses (vblMsgE/Z/B, staticuint64s) are bound by the contract
      hypothesis. This check binds neither.
 The bundle hash (sha256 over RESULT up to and including the last PASS line,
-which covers the ELF, the .S files, the data files, Code.lean and AXIOMS.txt
-hashes) is the last line.
+which covers the ELF, the .S files, the data files and the AXIOMS.txt
+hash) is the last line.
 """
 import hashlib
 import importlib.util
@@ -398,13 +398,12 @@ def main(outdir):
         log(f"FAIL {e}")
         (outdir / "RESULT").write_text("\n".join(lines) + "\n")
         return 1
-    lean = HERE.parent / "lean"
     log(f"elf sha256 {sha(outdir / 'p1bin-amd64')}")
     for p in sorted((outdir / "norm").glob("*.S")):
         log(f"S sha256 {sha(p)} {p.name}")
     for p in sorted((outdir / "data").glob("*.data")):
         log(f"data sha256 {sha(p)} {p.name}")
-    for p in [lean / "TestTarget" / "Code.lean", HERE.parent / "AXIOMS.txt"]:
+    for p in [HERE.parent / "AXIOMS.txt"]:
         if p.exists():
             log(f"file sha256 {sha(p)} {p.relative_to(HERE.parent)}")
     log("PASS all")

@@ -25,7 +25,7 @@ states the new pointers `ps`, `pt` and the full 72-byte content of each new obje
 **Callees.** Slot, CommitteeIndex and both Checkpoint calls are discharged through the proved
 function specifications `Prysm.Slot.Decode.accept_function_spec_holds`, `Prysm.CommitteeIndex.Decode.accept_function_spec_holds`, `Prysm.Checkpoint.Decode.accept_function_spec_holds` (the code places
 `kS`, `kI`, `kC`, `kE` in the host); the statement has no hypothesis about their behaviour.
-The runtime contract forms (`Runtime/Contracts.lean`, `TestTarget/FunctionSpecs.lean`) stay visible: the
+The runtime contract forms (`Runtime/Contracts.lean`, `Runtime/NewobjectContract.lean`) stay visible: the
 Checkpoint callee's `MakesliceC … S` / `MemmoveC S` (what `Prysm.Checkpoint.Decode.accept_function_spec_holds` needs) and this
 function's own `MakesliceC … (S + 96)`, `MemmoveC (S + 96)`, `NewobjectC adCpType 72 (S + 96)`
 (its runtime calls get the `S + 96` stack bytes below their return slot, which contain the

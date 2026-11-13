@@ -11,7 +11,7 @@ The design principles are in `../../README.md`.
 - The statement of a generated theorem is checked separately, by a frozen kind (section 4) or by an identity with a hand statement.
 - A generated Lean file must be equal to the output of its generator. Do not edit a generated file by hand.
   The header comment of a generated file names its generator. Some headers also give the sha256 of the inputs.
-- A generator does not write to the shared libraries (`lean/Spec`, `lean/Machine`, `lean/Runtime`, `lean/TestTarget`, `lean/Codec`), `link/` or `gen/frozen/`.
+- A generator does not write to the shared libraries (`lean/Spec`, `lean/Machine`, `lean/Runtime`, `lean/Codec`), `link/` or `gen/frozen/`.
 - The Python programs use only the standard library. Run them with `python3 -I`.
 - A generator refuses an input that it does not match. It writes nothing, or it marks a partial output as partial.
 
