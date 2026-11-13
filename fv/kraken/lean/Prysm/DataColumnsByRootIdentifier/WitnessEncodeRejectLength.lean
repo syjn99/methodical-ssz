@@ -57,7 +57,7 @@ theorem runs (bl : BitVec 64) (hbl : bl ≠ 32) (zmms : RegZmms) (flags : Status
     (by
       have H : Eq ((block bl).At (0x10000 : BitVec 64)) (mem bl) := rfl
       wit_split
-      simp only [cs0, bw, ElfData.PrysmTarget.e2eErrBytesLength_addr, label_ebl, nil_At_emp, Std.ExtHashMap.sep_emp,
+      simp only [cs0, bw, ElfData.PrysmTarget.sszErrBytesLength_addr, label_ebl, nil_At_emp, Std.ExtHashMap.sep_emp,
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, show (UInt64.ofNat 0).toBitVec = 0#64 from rfl,
         show (p : UInt64) → p.toBitVec = p.toBitVec from fun _ => rfl] at H ⊢

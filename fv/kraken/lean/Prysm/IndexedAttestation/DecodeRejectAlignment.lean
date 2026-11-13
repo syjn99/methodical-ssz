@@ -21,9 +21,9 @@ variable [Host]
 namespace Prysm.IndexedAttestation
 
 omit [Host] in
-theorem fmtMisaligned_length : ElfData.PrysmTarget.lvFmtMis.length = 83 := by rfl
+theorem fmtMisaligned_length : ElfData.PrysmTarget.formatAttestingIndicesMisaligned.length = 83 := by rfl
 omit [Host] in
-theorem fmtTooBig_length : ElfData.PrysmTarget.lvFmtTooBig.length = 73 := by rfl
+theorem fmtTooBig_length : ElfData.PrysmTarget.formatAttestingIndicesTooBig.length = 73 := by rfl
 
 omit [Host] in
 /-- `cmp $0x800, a; jg` is taken when `2048 < a < 2⁶²`. -/
@@ -55,7 +55,7 @@ theorem Decode.reject_alignment_error_word_nonzero : Decode.reject_alignment_err
   have hz1 := rsp.toNat_lt_size; have hz2 := guard.toNat_lt_size; have hz3 := rcx.toNat_lt_size
   simp only [UInt64.size] at hz1 hz2 hz3
   generalize hSB : StaticBox (rcx.toBitVec - 228) = SB at h_mem
-  rw [ElfData.PrysmTarget.lvErrIncorrectListSize_addr_eq, ElfData.PrysmTarget.lvFmtMis_addr_eq] at h_mem
+  rw [ElfData.PrysmTarget.sszErrIncorrectListSize_addr_eq, ElfData.PrysmTarget.formatAttestingIndicesMisaligned_addr_eq] at h_mem
   -- the argument array as two 16-byte chunks
   rw [← List.take_append_drop 16 aw, at_app (aw.take 16) (aw.drop 16) (b := rsp.toBitVec - 32)
     (by simp only [List.length_take, haw]; indexed_attestation_addr) (by simp [haw])] at h_mem
@@ -240,7 +240,7 @@ theorem Decode.reject_alignment_error_word_nonzero : Decode.reject_alignment_err
     (by
       dsimp only
       rw [show rsp.toBitVec - 176 + 128 = rsp.toBitVec - 48 by indexed_attestation_addr]
-      rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by indexed_attestation_addr, ElfData.PrysmTarget.e2eIntType_addr_eq,
+      rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by indexed_attestation_addr, ElfData.PrysmTarget.typeInt_addr_eq,
         Runtime.staticBox_congr hCv, hSB,
         at_app (Int.toBytes 8 (label "type__" + 387520).toBitVec.toInt ++ Int.toBytes 8 rax1.toBitVec.toInt ++ ity)
           (Int.toBytes 8 e1.toBitVec.toInt) (a := rsp.toBitVec - 48) (b := rsp.toBitVec - 24) (by simp only [List.length_append, Int.toBytes_length, hity]; indexed_attestation_addr) (by simp only [List.length_append, Int.toBytes_length, hity]; omega),
@@ -284,7 +284,7 @@ theorem Decode.reject_alignment_error_word_nonzero : Decode.reject_alignment_err
   rw [hCv] at hbox1
   refine ⟨?_, hrax2, ?_, ?_, ?_, rax1.toBitVec, hb1, sp2, stk2, av2, hsp2, hstk2, hbox1, by omega, ?_⟩
   rotate_right
-  · rw [ElfData.PrysmTarget.lvErrIncorrectListSize_addr_eq, ElfData.PrysmTarget.lvFmtMis_addr_eq, ElfData.PrysmTarget.e2eIntType_addr_eq]
+  · rw [ElfData.PrysmTarget.sszErrIncorrectListSize_addr_eq, ElfData.PrysmTarget.formatAttestingIndicesMisaligned_addr_eq, ElfData.PrysmTarget.typeInt_addr_eq]
     rw [show k + 116 + 1 = k + 117 from rfl] at Hm2
     rw [show rsp.toBitVec - 176 + 128 = rsp.toBitVec - 48 by indexed_attestation_addr] at Hm2
     rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by indexed_attestation_addr, Runtime.staticBox_congr hCv, hSB] at Hm2

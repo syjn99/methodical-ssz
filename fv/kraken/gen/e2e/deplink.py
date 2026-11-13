@@ -14,8 +14,8 @@ and the data items changed.
 
 Every operand that the HistoricalBatch proofs read equals an item of an existing link set: the uint8 type word and
 ssz.ErrSize (Checkpoint set, `Prysm.ElfData.PrysmTarget`) and the `[]uint8` element type word of the `[][]byte` backing array
-(SyncCommittee, `ElfData.PrysmTarget.lvSliceType`). The script asserts these equalities. It writes the one
-data file `lvSliceType.data` again, so that check (f) compares it with the ELF in this link set too.
+(SyncCommittee, `ElfData.PrysmTarget.typeUint8Slice`). The script asserts these equalities. It writes the one
+data file `typeUint8Slice.data` again, so that check (f) compares it with the ELF in this link set too.
 """
 import json
 import pathlib
@@ -78,8 +78,8 @@ def write_data(outdir, cpdir, lvdir):
     dty = lvlink.adlink.back_lea(hb, nobj[0])
     assert e2elink.operand(hb, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
     assert e2elink.operand(hb, wb) == e2elink.operand(sc, wb)
-    its = [("lvSliceType", st[0][0], st[0][1], 48, data.ABI_TYPE_WORDS),
-           ("depDataType", dty[0], dty[1], 48, data.ABI_TYPE_WORDS)]
+    its = [("typeUint8Slice", st[0][0], st[0][1], 48, data.ABI_TYPE_WORDS),
+           ("typeDeposit_Data", dty[0], dty[1], 48, data.ABI_TYPE_WORDS)]
     for it in its:
         print("item", it[:4])
     data.ITEMS = its

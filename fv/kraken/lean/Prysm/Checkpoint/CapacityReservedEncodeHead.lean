@@ -11,7 +11,7 @@ import Codec.StackGuard
 - `head_grow` (`len ≤ cap < len + 40`): directives 0–47: the reserve. `z` (40 bytes at rsp0 − 112) is
   zeroed with three `movups %xmm15` (X15 is not assumed zero: `z`'s bytes are existential), the
   `jae` at 22 is not taken, one `runtime.growslice(old = dst.ptr, newLen = len + 40, oldCap = cap,
-  num = 40, et = uint8)` (`GrowsliceC Heap e2eU8Type_addr 1 S`, the existing form), `memmove(new +
+  num = 40, et = uint8)` (`GrowsliceC Heap typeUint8_addr 1 S`, the existing form), `memmove(new +
   len, &z, 40)` (`MemmoveC S`), the `[:len(dst)]` bounds check `cmp %rdx,%rbx; ja panicBounds` not
   taken (`Encode.reserve_ja_false`, from `newLen ≤ newCap` of the contract), reload of rax, rcx, rbx. The caller's
   block keeps `pre` (it is the growslice source) and is not written. The new block is

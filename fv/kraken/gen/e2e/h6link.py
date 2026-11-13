@@ -89,8 +89,8 @@ def filt(outdir, objdump, elf, nm):
 
 
 def items(outdir, cpdir, addir):
-    """Per decoder: the address-only error global (`<p>ErrSize`, length 0) and the format strings of its
-    fmt.errorf wraps (`<p>Fmt<k>`, in code order). Every makeslice is asserted to take the uint8 type word of the
+    """Per decoder: the address-only error global (`sszErrSize`, length 0) and the format strings of its
+    fmt.errorf wraps (`format<Field>`, in code order). Every makeslice is asserted to take the uint8 type word of the
     Checkpoint set (the literal `type__+387072` that the step walker matches); ssz.ErrSize, writeBarrier and the
     errorString type are asserted equal to the Checkpoint / AttestationData sets' operands; no growslice."""
     spec = importlib.util.spec_from_file_location("data", LINK / "data.py")
@@ -128,9 +128,9 @@ def items(outdir, cpdir, addir):
             assert e2elink.operand(u, wb) == e2elink.operand(au, wb), t
         nn = [back(u, i) for i, l in enumerate(u) if l == "callq runtime.newobject"]
         assert all(x == estype for x in nn), (t, nn, estype)
-        its.append((f"{p}ErrSize", esz[0], 0, 0, []))
+        its.append((None, esz[0], 0, 0, []))
         for k, ((sym, off), n) in enumerate(fmts(u)):
-            its.append((f"{p}Fmt{k}", sym, off, n, []))
+            its.append((None, sym, off, n, []))
         print("type", t, "makeslice", len(mks), "newobject", len(nn), "fmt", len(fmts(u)))
     return data, its
 

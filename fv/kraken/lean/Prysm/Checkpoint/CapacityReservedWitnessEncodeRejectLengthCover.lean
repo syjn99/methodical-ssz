@@ -95,7 +95,7 @@ theorem runs (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl : rl ≠
       have H2 := lift_heap H
       rw [at_app pre30 (z n) rfl (by simp [pre30]; omega)]
       simp only [cs0, w, nil_At_emp, List.nil_append, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep,
-        show pre30.length = 30 from rfl, ElfData.PrysmTarget.e2eErrBytesLength_addr, label_ebl,
+        show pre30.length = 30 from rfl, ElfData.PrysmTarget.sszErrBytesLength_addr, label_ebl,
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd,
         BitVec.reduceSub, List.length_nil] at H2 ⊢
       generalize e8 = e8' at H2 ⊢
@@ -127,7 +127,7 @@ theorem runs_nil (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl : rl
         Std.ExtHashMap.sep_comm_l (Eq ((w 0x10e8).At _)) (Eq ((z 9000).At _))] at H
       have H2 := lift_heap H
       simp only [cs0, w, nil_At_emp, List.nil_append, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep,
-        ElfData.PrysmTarget.e2eErrBytesLength_addr, label_ebl,
+        ElfData.PrysmTarget.sszErrBytesLength_addr, label_ebl,
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd,
         BitVec.reduceSub, List.length_nil] at H2 ⊢
       generalize e8 = e8' at H2 ⊢

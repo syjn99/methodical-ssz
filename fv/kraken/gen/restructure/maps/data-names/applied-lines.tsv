@@ -1,0 +1,27 @@
+# written by rename.py forward; read by rename.py inverse. path	line	action	new text	old text
+fv/kraken/lean/Prysm/Deposit/Code.lean	10	replace	`link/conv.py --norm`, `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). `ElfData.PrysmTarget.typeDeposit_Data_addr` is the address of	`link/conv.py --norm`, `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). `depDataType_addr` is the address of
+fv/kraken/lean/Prysm/Deposit/Statements.lean	36	replace	newobject of the Deposit_Data object (`ElfData.PrysmTarget.typeDeposit_Data_addr`, 120 bytes), the Deposit_Data decoder (176 heap bytes).	newobject of the Deposit_Data object (`depDataType_addr`, 120 bytes), the Deposit_Data decoder (176 heap bytes).
+fv/kraken/lean/Prysm/Deposit/Statements.lean	110	replace	    (hno : NewobjectC Heap ElfData.PrysmTarget.typeDeposit_Data_addr 120 (Sd + 48))	    (hno : NewobjectC Heap depDataType_addr 120 (Sd + 48))
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	79	replace	    (hno : NewobjectC Heap ElfData.PrysmTarget.typeDeposit_Data_addr 120 (Sd + 48))	    (hno : NewobjectC Heap depDataType_addr 120 (Sd + 48))
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	20	replace	prysm_data_include typeUint8	prysm_data_include e2eU8Type
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	22	replace	prysm_data_include formatEpoch	prysm_data_include e2eCpFmtW
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	23	replace	prysm_data_include typeErrorString	prysm_data_include e2eErrStrType
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	24	replace	prysm_data_include itabErrorStringError	prysm_data_include e2eErrorStringItab
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	29	replace	prysm_data_include formatBufferLength	prysm_data_include e2eEpFmt
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	30	replace	prysm_data_include typeInt	prysm_data_include e2eIntType
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	31	replace	prysm_data_include boxedEight	prysm_data_include e2eEight
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	32	replace	prysm_data_include runtimeStaticuint64s	prysm_data_include e2eStaticuint64s
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	36	replace	prysm_data_include typeCheckpoint	prysm_data_include adCpType
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	38	replace	prysm_data_include formatSlot	prysm_data_include adFmtSlot
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	39	replace	prysm_data_include formatCommitteeIndex	prysm_data_include adFmtCi
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	40	replace	prysm_data_include formatSource	prysm_data_include adFmtSource
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	41	replace	prysm_data_include formatTarget	prysm_data_include adFmtTarget
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	45	replace	prysm_data_include typeUint64	prysm_data_include lvU64Type
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	47	replace	prysm_data_include typeAttestationData	prysm_data_include lvAdType
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	49	replace	prysm_data_include formatAttestingIndicesTooBig	prysm_data_include lvFmtTooBig
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	50	replace	prysm_data_include formatAttestingIndicesMisaligned	prysm_data_include lvFmtMis
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	59	replace	prysm_data_include typeUint8Slice	prysm_data_include lvSliceType
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	63	replace	prysm_data_include formatColumnsTooBig	prysm_data_include dcdFmtTooBig
+fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	65	replace	prysm_data_include formatColumnsMisaligned	prysm_data_include dcdFmtMis
+fv/kraken/lean/README.md	220	replace	  (`../prysm/go1.26.10/link-set/data/<id>.data`), for example `e2eErrSize`, `ElfData.PrysmTarget.formatSlot`, `ElfData.PrysmTarget.typeUint64`, `ElfData.PrysmTarget.formatColumnsMisaligned`.	  (`../prysm/go1.26.10/link-set/data/<id>.data`), for example `e2eErrSize`, `adFmtSlot`, `lvU64Type`, `dcdFmtMis`.
+fv/kraken/lean/README.md	222	replace	  first read the item. The lemmas `<id>_addr_eq` (for example `ElfData.PrysmTarget.sszErrSize_addr_eq`, `ElfData.PrysmTarget.formatAttestingIndicesMisaligned_addr_eq`) restate an	  first read the item. The lemmas `<id>_addr_eq` (for example `e2eErrSize_addr_eq`, `lvFmtMis_addr_eq`) restate an

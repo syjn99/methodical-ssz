@@ -12,15 +12,15 @@ import Prysm.ElfData.PrysmTarget
 
 Directives: 9–10 `cmp $0x8,%rcx; je` not taken; 11–17 the 32-byte argument
 array at rsp − 40 (two `movups %xmm15`, then `type:int`, `&8` (static box
-`e2eEight`), 18–19 `convT64(len)`, 20–22 `type:int`, box; 23–28
+`boxedEight`), 18–19 `convT64(len)`, 20–22 `type:int`, box; 23–28
 `fmt.errorf(format, args, 2, 2)`; 29–30 `test %rax,%rax; jne L_b5` taken
 (the contract gives rax ≠ 0; the `newobject` fallback 31–38 is not executed);
 39–42 epilogue. Contracts: `ConvT64C Heap S` and the `FmtErrorfDDC` instance
-with the format `ElfData.PrysmTarget.e2eEpFmt` (40 bytes) and the type word
-`ElfData.PrysmTarget.e2eIntType_addr` (`type:int` of the Go 1.26.10 ELF); existing forms only.
+with the format `ElfData.PrysmTarget.formatBufferLength` (40 bytes) and the type word
+`ElfData.PrysmTarget.typeInt_addr` (`type:int` of the Go 1.26.10 ELF); existing forms only.
 `StaticBox` uses the table `Runtime.Data.staticuint64s` at `Runtime.Data.staticuint64s_addr` (the existing
 contract form reads the Runtime.Data namespace); `Decode.reject_static_table` shows that the Go 1.26.10 ELF's table
-(`e2eStaticuint64s`) has the same bytes and `ElfData.PrysmTarget.e2eStaticuint64s_addr_eq` that the two addresses are the same
+(`runtimeStaticuint64s`) has the same bytes and `ElfData.PrysmTarget.runtimeStaticuint64s_addr_eq` that the two addresses are the same
 term.
 Standalone obligation: from `Checkpoint.UnmarshalSSZ` this path is unreachable.
 -/
@@ -31,10 +31,10 @@ variable [Host]
 namespace Prysm.Epoch
 
 set_option maxRecDepth 100000 in
-theorem Decode.reject_static_table : ElfData.PrysmTarget.e2eStaticuint64s = Runtime.Data.staticuint64s := by rfl
+theorem Decode.reject_static_table : ElfData.PrysmTarget.runtimeStaticuint64s = Runtime.Data.staticuint64s := by rfl
 -- The address that `Runtime.StaticBox` reads is the Go 1.26.10 label `runtime.staticuint64s`.
-theorem Decode.reject_eight_bytes : ElfData.PrysmTarget.e2eEight = Int.toBytes 8 (8 : BitVec 64).toInt := by decide
-theorem Decode.reject_fmt_len : ElfData.PrysmTarget.e2eEpFmt.length = 40 := by decide
+theorem Decode.reject_eight_bytes : ElfData.PrysmTarget.boxedEight = Int.toBytes 8 (8 : BitVec 64).toInt := by decide
+theorem Decode.reject_fmt_len : ElfData.PrysmTarget.formatBufferLength.length = 40 := by decide
 theorem Decode.reject_eq (x : BitVec 64) (h : x - 8#64 = 0#64) : x = 8 := by bv_omega
 theorem Decode.reject_call (x : BitVec 64) : x - 8#64 - 72 - 8#64 = x - 88 := by bv_omega
 theorem Decode.reject_call2 (x : BitVec 64) : x - 80 - 8#64 = x - 88 := by bv_omega
@@ -70,10 +70,10 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
       ⋆ Eq (sp8.At (s.regs.rsp.toBitVec - 80)) ⋆ Eq (sp32.At (s.regs.rsp.toBitVec - 72))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (stk.At (s.regs.rsp.toBitVec - 88 - BitVec.ofNat 64 S))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq (ElfData.PrysmTarget.e2eEpFmt.At ElfData.PrysmTarget.e2eEpFmt_addr) ⋆ Eq (ElfData.PrysmTarget.e2eEight.At ElfData.PrysmTarget.e2eEight_addr)
+      ⋆ Eq (ElfData.PrysmTarget.formatBufferLength.At ElfData.PrysmTarget.formatBufferLength_addr) ⋆ Eq (ElfData.PrysmTarget.boxedEight.At ElfData.PrysmTarget.boxedEight_addr)
       ⋆ StaticBox 8 ⋆ StaticBox s.regs.rcx.toBitVec ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 8) (hav : 8 + 40 + 40 + 8192 ≤ avail)
-    (hct : ConvT64C Heap S) (hdd : FmtErrorfDDC Heap ElfData.PrysmTarget.e2eEpFmt ElfData.PrysmTarget.e2eIntType_addr S) :
+    (hct : ConvT64C Heap S) (hdd : FmtErrorfDDC Heap ElfData.PrysmTarget.formatBufferLength ElfData.PrysmTarget.typeInt_addr S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -82,13 +82,13 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 ElfData.PrysmTarget.e2eIntType_addr.toInt ++ Int.toBytes 8 ElfData.PrysmTarget.e2eEight_addr.toInt
-              ++ Int.toBytes 8 ElfData.PrysmTarget.e2eIntType_addr.toInt ++ Int.toBytes 8 bx.toInt).At (s.regs.rsp.toBitVec - 40))
+          ⋆ Eq ((Int.toBytes 8 ElfData.PrysmTarget.typeInt_addr.toInt ++ Int.toBytes 8 ElfData.PrysmTarget.boxedEight_addr.toInt
+              ++ Int.toBytes 8 ElfData.PrysmTarget.typeInt_addr.toInt ++ Int.toBytes 8 bx.toInt).At (s.regs.rsp.toBitVec - 40))
           ⋆ Eq (sp'.At (s.regs.rsp.toBitVec - 80))
           ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 29)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 88))
           ⋆ Eq (stk'.At (s.regs.rsp.toBitVec - 88 - BitVec.ofNat 64 S))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq (ElfData.PrysmTarget.e2eEpFmt.At ElfData.PrysmTarget.e2eEpFmt_addr) ⋆ Eq (ElfData.PrysmTarget.e2eEight.At ElfData.PrysmTarget.e2eEight_addr)
+          ⋆ Eq (ElfData.PrysmTarget.formatBufferLength.At ElfData.PrysmTarget.formatBufferLength_addr) ⋆ Eq (ElfData.PrysmTarget.boxedEight.At ElfData.PrysmTarget.boxedEight_addr)
           ⋆ StaticBox 8 ⋆ StaticBox s.regs.rcx.toBitVec ⋆ Eq (hb.At bx) ⋆ Heap av' ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -203,14 +203,14 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   kunfold
   rw [Decode.reject_call2] at *
   rw [Decode.reject_eight_bytes] at H10
-  simp only [ElfData.PrysmTarget.e2eIntType_addr, ElfData.PrysmTarget.e2eEight_addr, ElfData.PrysmTarget.e2eEpFmt_addr] at H10 ⊢
+  simp only [ElfData.PrysmTarget.typeInt_addr, ElfData.PrysmTarget.boxedEight_addr, ElfData.PrysmTarget.formatBufferLength_addr] at H10 ⊢
   refine eventually_trans _ _ _ _ (hdd _ (Host.addrOf (k + 28 + 1)) av2 (Int.toBytes 8 (8 : BitVec 64).toInt) hb stk2
     (sp2 ++ sp32) (label "runtime.gcbits._" + 1432).toBitVec 8 rax2.toBitVec rcx.toBitVec ?F
     (by rw [Decode.reject_fmt_len]; rfl) rfl rfl (Or.inr rfl) hbox hstk2 (by simp [hsp2, hsp32])
     (by rw [Decode.reject_fmt_len]; omega) ?hpre) ?_
   case hpre =>
     dsimp only
-    simp only [ElfData.PrysmTarget.e2eIntType_addr]
+    simp only [ElfData.PrysmTarget.typeInt_addr]
     rw [show rsp.toBitVec - 80 + 40 = rsp.toBitVec - 40 by bv_omega,
       show rsp.toBitVec - 88 + 8 = rsp.toBitVec - 80 by bv_omega]
     rw [← Decode.reject_sp sp2 sp32 hsp2 hsp32 (rsp.toBitVec - 80)
@@ -220,7 +220,7 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
       (Int.toBytes_length _ _) (rsp.toBitVec - 40)
       (Eq ((Int.toBytes 8 (Host.addrOf (k + 28 + 1)).toBitVec.toInt).At (rsp.toBitVec - 88))
         ⋆ Eq (stk2.At (rsp.toBitVec - 88 - BitVec.ofNat 64 S)) ⋆ Eq (sp2.At (rsp.toBitVec - 80))
-        ⋆ Eq (sp32.At (rsp.toBitVec - 80 + 8)) ⋆ Eq (ElfData.PrysmTarget.e2eEpFmt.At (label "go_string._" + 110057).toBitVec))]
+        ⋆ Eq (sp32.At (rsp.toBitVec - 80 + 8)) ⋆ Eq (ElfData.PrysmTarget.formatBufferLength.At (label "go_string._" + 110057).toBitVec))]
     rw [show rsp.toBitVec - 80 + 8 = rsp.toBitVec - 72 by bv_omega,
       show rsp.toBitVec - 40 + 8 = rsp.toBitVec - 32 by bv_omega,
       show rsp.toBitVec - 40 + 16 = rsp.toBitVec - 24 by bv_omega,
@@ -258,7 +258,7 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   refine ⟨?_, hrax3, ?_, ?_, ?_, rax2.toBitVec, hb, stk3, sp3, av3, hstk3, hsp3, hbox, by omega, ?hmem⟩
   case hmem =>
     rw [Decode.reject_eight_bytes]
-    simp only [ElfData.PrysmTarget.e2eIntType_addr, ElfData.PrysmTarget.e2eEight_addr, ElfData.PrysmTarget.e2eEpFmt_addr] at Hm3 ⊢
+    simp only [ElfData.PrysmTarget.typeInt_addr, ElfData.PrysmTarget.boxedEight_addr, ElfData.PrysmTarget.formatBufferLength_addr] at Hm3 ⊢
     rw [show k + 28 + 1 = k + 29 from rfl] at Hm3
     rw [show rsp.toBitVec - 88 + 8 = rsp.toBitVec - 80 by bv_omega,
       show rsp.toBitVec - 80 + 40 = rsp.toBitVec - 40 by bv_omega] at Hm3

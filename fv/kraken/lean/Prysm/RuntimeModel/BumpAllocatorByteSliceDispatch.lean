@@ -5,9 +5,9 @@ import Prysm.ElfData.PrysmTarget
 # A `runtime.makeslice` that satisfies both `MakesliceC` instances of the SyncCommittee decoder in one Host (witness model)
 
 `Prysm/RuntimeModel/BumpAllocT.S` is the bump allocator of `Runtime/BumpAlloc1.S` with one dispatch on the element type word:
-if rax is `type__+337600` (the `[]uint8` type of the SyncCommittee backing array, `ElfData.PrysmTarget.lvSliceType_addr`)
+if rax is `type__+337600` (the `[]uint8` type of the SyncCommittee backing array, `ElfData.PrysmTarget.typeUint8Slice_addr`)
 it bumps by 24·cnt (`lea (%rcx,%rcx,2)`, `lea (%rdx,%rsi,8)`), otherwise by cnt. A Host has one
-`runtime.makeslice`; the SyncCommittee decoder needs `MakesliceC … lvSliceType_addr 24 S` and `MakesliceC … e2eU8Type_addr 1 S`
+`runtime.makeslice`; the SyncCommittee decoder needs `MakesliceC … typeUint8Slice_addr 24 S` and `MakesliceC … typeUint8_addr 1 S`
 together, so a model of esz 24 alone (the shape of `Runtime.bump_makeslice`) cannot sit in the same witness Host as
 `bump_makeslice1`. The real Go `makeslice` reads `et.Size_` from the type descriptor; this model compares the type
 word with one address. It is an abstract model for non-vacuity only, not a Go refinement.
@@ -23,10 +23,10 @@ def BumpAllocByteSliceDispatch : Program := include_x64_rt "Prysm/RuntimeModel/B
 
 variable [Host]
 
-/-- The esz-1 branch: any type word other than `lvSliceType_addr`. -/
+/-- The esz-1 branch: any type word other than `typeUint8Slice_addr`. -/
 theorem bump_makeslice_byte_slice_dispatch_size1 (j : Nat) (hj : BumpAllocByteSliceDispatch.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.makeslice")) (ty : BitVec 64)
-    (hne : ty ≠ ElfData.PrysmTarget.lvSliceType_addr) {S : Nat} :
+    (hne : ty ≠ ElfData.PrysmTarget.typeUint8Slice_addr) {S : Nat} :
     MakesliceC bumpHeap ty 1 S := by
   intro st ret cnt avail stk spill F _hty _hrbx hrcx hav _hmax _hcnt hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
@@ -47,7 +47,7 @@ theorem bump_makeslice_byte_slice_dispatch_size1 (j : Nat) (hj : BumpAllocByteSl
     exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
     simp only at _hty
     apply hne; rw [← _hty]
-    simp only [ElfData.PrysmTarget.lvSliceType_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+    simp only [ElfData.PrysmTarget.typeUint8Slice_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
     have h2 := congrArg (· + ((label "type__").toBitVec + 337600#64)) h
     simp only [BitVec.sub_add_cancel, BitVec.zero_add] at h2
     exact h2
@@ -84,10 +84,10 @@ theorem bump_makeslice_byte_slice_dispatch_size1 (j : Nat) (hj : BumpAllocByteSl
   · apply UInt64.toBitVec_inj.mp; simp
   · dsimp only; ecancel
 
-/-- The esz-24 branch: the type word `lvSliceType_addr`. -/
+/-- The esz-24 branch: the type word `typeUint8Slice_addr`. -/
 theorem bump_makeslice_byte_slice_dispatch_size24 (j : Nat) (hj : BumpAllocByteSliceDispatch.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.makeslice")) (hfl : LabelsFresh BumpAllocByteSliceDispatch j) {S : Nat} :
-    MakesliceC bumpHeap ElfData.PrysmTarget.lvSliceType_addr 24 S := by
+    MakesliceC bumpHeap ElfData.PrysmTarget.typeUint8Slice_addr 24 S := by
   intro st ret cnt avail stk spill F _hty _hrbx hrcx hav _hmax _hcnt hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
@@ -107,7 +107,7 @@ theorem bump_makeslice_byte_slice_dispatch_size24 (j : Nat) (hj : BumpAllocByteS
     exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
     simp only at _hty
     apply h; rw [_hty]
-    simp only [ElfData.PrysmTarget.lvSliceType_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+    simp only [ElfData.PrysmTarget.typeUint8Slice_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
     exact BitVec.sub_self _
   simp only [Effects.All]
   klabel hj hfl BumpAllocByteSliceDispatch 9

@@ -221,7 +221,7 @@ P2DEC_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (h
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + {j2} + 12) ∧ st.data.regs.rsp = {{ toBitVec := sp }}
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -290,7 +290,7 @@ P2DECZ_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At bf)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + {j2} + 11) ∧ st.data.regs.rsp = {{ toBitVec := sp }}
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -1323,7 +1323,7 @@ def compose(args, dirs, sha, irsha, fields, found):
     pre += ["Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)", "R"]
     L.append("    (h_mem : s.dmem =⋆ " + "\n      ⋆ ".join(pre) + ")")
     L.append(f"    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = {ssz}) (hav : {total} ≤ avail)")
-    L.append("    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :")
+    L.append("    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :")
     L.append("    Eventually (step1 Host.exe)")
     L.append("      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0")
     L.append("        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧")
@@ -2207,7 +2207,7 @@ G4_SEG_STMT = """theorem {name} (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf :
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At {rsrc})
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + {e}) ∧ st.data.regs.rsp = {{ toBitVec := sp }}
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧

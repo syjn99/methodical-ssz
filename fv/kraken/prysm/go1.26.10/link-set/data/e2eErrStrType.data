@@ -1,7 +1,0 @@
-# e2eErrStrType: link/data.py, p1bin-amd64 bytes [0xb55500, 0xb55530)
-at type__ 828672
-bytes 10 00 00 00 00 00 00 00 08 00 00 00 00 00 00 00
-bytes b7 00 81 8e 07 08 08 19
-word go_funcdesc 3272
-word runtime.gcbits._ 0
-bytes b6 89 01 00 c0 b2 09 00

@@ -1,0 +1,151 @@
+# Old data id (the records name it: e2e/e2e.json, negative/result.json, the RESULT files of the earlier
+# link sets in git history) -> data id of prysm/go1.26.10/link-set/data/ and the rule that gives it
+# (link/data.py `item_id`, or the item table of a gen/e2e/*link.py script for a type descriptor).
+old id	new id	rule
+adCpType	typeCheckpoint	item table
+adFmtCi	formatCommitteeIndex	item_id
+adFmtSlot	formatSlot	item_id
+adFmtSource	formatSource	item_id
+adFmtTarget	formatTarget	item_id
+bbrErrSize	sszErrSize	item_id
+bbrFmt0	formatStartSlot	item_id
+bdrErrBytesLength	sszErrBytesLength	item_id
+bdrErrSize	sszErrSize	item_id
+berErrBytesLength	sszErrBytesLength	item_id
+berErrSize	sszErrSize	item_id
+bhFmtProposer	formatProposerIndex	item_id
+bhFmtSlot	formatSlot	item_id
+biErrBytesLength	sszErrBytesLength	item_id
+biErrSize	sszErrSize	item_id
+bldErrBytesLength	sszErrBytesLength	item_id
+bldErrSize	sszErrSize	item_id
+bldFmt0	formatBalance	item_id
+bldFmt1	formatDepositEpoch	item_id
+bldFmt2	formatWithdrawableEpoch	item_id
+bpfErrSize	sszErrSize	item_id
+bpfFmt0	formatMaxExecutionPayment	item_id
+bpwErrBytesLength	sszErrBytesLength	item_id
+bpwErrSize	sszErrSize	item_id
+bpwFmt0	formatAmount	item_id
+bpwFmt1	formatBuilderIndex	item_id
+bsrErrSize	sszErrSize	item_id
+bsrFmt0	formatStartSlot	item_id
+btcErrBytesLength	sszErrBytesLength	item_id
+btcErrSize	sszErrSize	item_id
+btcFmt0	formatValidatorIndex	item_id
+cnrErrBytesLength	sszErrBytesLength	item_id
+cnrErrSize	sszErrSize	item_id
+dcdErrIncorrectListSize	sszErrIncorrectListSize	item_id
+dcdErrInvalidVariableOffset	sszErrInvalidVariableOffset	item_id
+dcdErrListTooBig	sszErrListTooBig	item_id
+dcdErrSize	sszErrSize	item_id
+dcdFmtMis	formatColumnsMisaligned	item_id
+dcdFmtTooBig	formatColumnsTooBig	item_id
+dcdIntType	typeInt	item table
+dcdU64Type	typeUint64	item table
+dcdU8Type	typeUint8	item table
+ddErrBytesLength	sszErrBytesLength	item_id
+ddErrSize	sszErrSize	item_id
+depDataType	typeDeposit_Data	item table
+dmErrBytesLength	sszErrBytesLength	item_id
+dmErrSize	sszErrSize	item_id
+dprErrBytesLength	sszErrBytesLength	item_id
+dprErrSize	sszErrSize	item_id
+e1ErrBytesLength	sszErrBytesLength	item_id
+e1ErrSize	sszErrSize	item_id
+e2eCpFmtW	formatEpoch	item_id
+e2eEight	boxedEight	item table
+e2eEpFmt	formatBufferLength	item_id
+e2eErrBytesLength	sszErrBytesLength	item_id
+e2eErrSize	sszErrSize	item_id
+e2eErrStrType	typeErrorString	item table
+e2eErrorStringItab	itabErrorStringError	item_id
+e2eIntType	typeInt	item table
+e2eStaticuint64s	runtimeStaticuint64s	item_id
+e2eU8Type	typeUint8	item table
+efiErrBytesLength	sszErrBytesLength	item_id
+efiErrSize	sszErrSize	item_id
+efiFmt0	formatNextForkEpoch	item_id
+encErrBytesLength	sszErrBytesLength	item_id
+encErrListTooBig	sszErrListTooBig	item_id
+encU8Type	typeUint8	item table
+eprErrSize	sszErrSize	item_id
+eprFmt0	formatStartSlot	item_id
+fkdErrBytesLength	sszErrBytesLength	item_id
+fkdErrSize	sszErrSize	item_id
+frkErrBytesLength	sszErrBytesLength	item_id
+frkErrSize	sszErrSize	item_id
+frkFmt0	formatEpoch	item_id
+hsErrBytesLength	sszErrBytesLength	item_id
+hsErrSize	sszErrSize	item_id
+lvAdType	typeAttestationData	item table
+lvErrIncorrectListSize	sszErrIncorrectListSize	item_id
+lvErrInvalidVariableOffset	sszErrInvalidVariableOffset	item_id
+lvErrListTooBig	sszErrListTooBig	item_id
+lvFmtData	formatData	item_id
+lvFmtMis	formatAttestingIndicesMisaligned	item_id
+lvFmtTooBig	formatAttestingIndicesTooBig	item_id
+lvSliceType	typeUint8Slice	item table
+lvU64Type	typeUint64	item table
+padErrBytesLength	sszErrBytesLength	item_id
+padErrErrInvalidSerialization	sszErrInvalidSerialization	item_id
+padErrSize	sszErrSize	item_id
+padFmt0	formatSlot	item_id
+pbErrBytesLength	sszErrBytesLength	item_id
+pbErrSize	sszErrSize	item_id
+pcErrSize	sszErrSize	item_id
+pcFmtSource	formatSourceIndex	item_id
+pcFmtTarget	formatTargetIndex	item_id
+pdErrBytesLength	sszErrBytesLength	item_id
+pdErrSize	sszErrSize	item_id
+pdFmt0	formatSlot	item_id
+pdcErrBytesLength	sszErrBytesLength	item_id
+pdcErrSize	sszErrSize	item_id
+pdcFmt0	formatSlot	item_id
+ppfErrBytesLength	sszErrBytesLength	item_id
+ppfErrSize	sszErrSize	item_id
+ppfFmt0	formatProposalSlot	item_id
+ppfFmt1	formatValidatorIndex	item_id
+pwErrSize	sszErrSize	item_id
+pwFmtEpoch	formatWithdrawableEpoch	item_id
+pwFmtIndex	formatIndex	item_id
+saErrSize	sszErrSize	item_id
+saFmt0	formatSlot	item_id
+scErrBytesLength	sszErrBytesLength	item_id
+sdErrBytesLength	sszErrBytesLength	item_id
+sdErrSize	sszErrSize	item_id
+smErrSize	sszErrSize	item_id
+smFmtSlot	formatSlot	item_id
+smFmtVi	formatValidatorIndex	item_id
+st2ErrBytesLength	sszErrBytesLength	item_id
+st2ErrSize	sszErrSize	item_id
+st2Fmt0	formatFinalizedEpoch	item_id
+st2Fmt1	formatHeadSlot	item_id
+st2Fmt2	formatEarliestAvailableSlot	item_id
+stsErrBytesLength	sszErrBytesLength	item_id
+stsErrSize	sszErrSize	item_id
+stsFmt0	formatFinalizedEpoch	item_id
+stsFmt1	formatHeadSlot	item_id
+vbErrSize	sszErrSize	item_id
+vbFmt0	formatIndex	item_id
+veErrSize	sszErrSize	item_id
+veFmt0	formatEpoch	item_id
+veFmt1	formatValidatorIndex	item_id
+vidErrBytesLength	sszErrBytesLength	item_id
+vidErrSize	sszErrSize	item_id
+vidFmt0	formatIndex	item_id
+vidFmt1	formatActivationEpoch	item_id
+vldErrBytesLength	sszErrBytesLength	item_id
+vldErrErrInvalidSerialization	sszErrInvalidSerialization	item_id
+vldErrSize	sszErrSize	item_id
+vldFmt0	formatActivationEligibilityEpoch	item_id
+vldFmt1	formatActivationEpoch	item_id
+vldFmt2	formatExitEpoch	item_id
+vldFmt3	formatWithdrawableEpoch	item_id
+vr1ErrBytesLength	sszErrBytesLength	item_id
+vr1ErrSize	sszErrSize	item_id
+wdlErrBytesLength	sszErrBytesLength	item_id
+wdlErrSize	sszErrSize	item_id
+wdlFmt0	formatValidatorIndex	item_id
+wdrErrBytesLength	sszErrBytesLength	item_id
+wdrErrSize	sszErrSize	item_id

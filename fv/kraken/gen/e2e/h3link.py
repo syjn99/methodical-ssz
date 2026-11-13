@@ -82,7 +82,7 @@ def items(outdir, cpdir, addir):
     """The two decoders have no fmt.errorf, newobject or growslice call. The shared operands (uint8 type
     word of makeslice, ssz.ErrSize, writeBarrier) are asserted equal to the Checkpoint / AttestationData
     sets' operands. check.py (f) needs one data file at least: the set writes the address-only error global
-    that each decoder names (biErrSize, dmErrSize; length 0)."""
+    that each decoder names (sszErrSize, sszErrSize; length 0)."""
     spec = importlib.util.spec_from_file_location("data", LINK / "data.py")
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
@@ -106,7 +106,7 @@ def items(outdir, cpdir, addir):
                        for l in fn), tag
         assert e2elink.operand(fn, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz, tag
         assert e2elink.operand(fn, wb) == e2elink.operand(au, wb), tag
-        its.append((f"{tag}ErrSize", esz[0], 0, 0, []))
+        its.append((None, esz[0], 0, 0, []))
     return data, its
 
 

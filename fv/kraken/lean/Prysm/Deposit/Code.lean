@@ -7,8 +7,8 @@ import Machine.Labels
 # Code and data of the Deposit decoder (Go 1.26.10 ELF `c6403c02…911e`)
 
 `unmarshalSSZ` includes the `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm` (`gen/e2e/deplink.py`,
-`link/conv.py --norm`, `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). `depDataType_addr` is the address of
-the data item `prysm/go1.26.10/link-set/data/depDataType.data` (checked against the ELF by `check.py` (f)).
+`link/conv.py --norm`, `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). `ElfData.PrysmTarget.typeDeposit_Data_addr` is the address of
+the data item `prysm/go1.26.10/link-set/data/typeDeposit_Data.data` (checked against the ELF by `check.py` (f)).
 -/
 
 namespace Prysm.Deposit.Code
@@ -16,10 +16,5 @@ namespace Prysm.Deposit.Code
 /-- `(*v1alpha1.Deposit).UnmarshalSSZ` (protoc type, `phase0.ssz.go:2059`). -/
 def unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S"
 
-/-- The abi.Type of `v1alpha1.Deposit_Data` (Size_ 0x78 = 120): the `new(Deposit_Data)` type word.
-The value is the `at type__ 1421952` line of `prysm/go1.26.10/link-set/data/depDataType.data` in the form of the data reader of `Prysm/ElfData/PrysmTargetReader.lean`
-(`labelTerm`). It is written here because the reader's helpers are private to `Prysm/ElfData/PrysmTargetReader.lean`; the operand
-is also the `.S` operand of directive 85 (`link/check.py` (b)), which the accept proof steps through. -/
-def depDataType_addr [Host] : BitVec 64 := (label "type__" + 1421952).toBitVec
 
 end Prysm.Deposit.Code

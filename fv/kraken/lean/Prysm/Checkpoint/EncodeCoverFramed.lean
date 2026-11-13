@@ -65,7 +65,7 @@ theorem Encode.cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) 
       ⋆ Eq ((pre ++ spare).At s.regs.rbx.toBitVec) ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
     (hbud : 4 * s.regs.rcx.toNat + 8736 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
     ∃ bs : Array UInt8, serialize desc g.toValue = .ok bs ∧ bs.toList = e8 ++ g.root.toList ∧
     Eventually (step1 Host.exe)
       (fun st =>
@@ -193,7 +193,7 @@ theorem Encode.cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) 
           ∧ st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 120 }
           ∧ st.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8#64 } ∧ st.data.regs.r14 = s.regs.r14
           ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 ∧ st.data.regs.rdi.toNat = 32
-          ∧ st.data.regs.rsi.toBitVec = ElfData.PrysmTarget.e2eU8Type_addr
+          ∧ st.data.regs.rsi.toBitVec = ElfData.PrysmTarget.typeUint8_addr
           ∧ nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat ≤ st.data.regs.rcx.toNat
           ∧ st.data.regs.rcx.toNat < s.regs.rcx.toNat + 40 ∧
           ∃ (t u scr spl' mid : List UInt8) (av' : Nat), t.length = 8 ∧ u.length = 16 ∧ scr.length = S
@@ -315,11 +315,11 @@ theorem Encode.reject_length_cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt
       ⋆ Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 32))
       ⋆ Eq (ctl.At (s.regs.rax.toBitVec + 40))
       ⋆ Eq ((pre ++ spare).At s.regs.rbx.toBitVec)
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrBytesLength_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrBytesLength_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
     (hbud : 4 * s.regs.rcx.toNat + 8736 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) :
+    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e0 ∧ st.data.regs.rsi = e1
@@ -344,7 +344,7 @@ theorem Encode.reject_length_cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt
             ⋆ Eq (cC.At (s.regs.rax.toBitVec + 32)) ⋆ Eq (ctl.At (s.regs.rax.toBitVec + 40))
             ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
             ⋆ Eq ((spare.drop 8).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))
-            ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrBytesLength_addr)
+            ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrBytesLength_addr)
             ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec)
             ⋆ Heap avail ⋆ R) st.data.dmem)
         -- cap < len + 8: the caller's array is unchanged; the epoch bytes are in the new block nb only
@@ -371,7 +371,7 @@ theorem Encode.reject_length_cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt
             ⋆ Eq (cC.At (s.regs.rax.toBitVec + 32)) ⋆ Eq (ctl.At (s.regs.rax.toBitVec + 40))
             ⋆ Eq ((pre ++ spare).At s.regs.rbx.toBitVec)
             ⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec)) ⋆ Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))
-            ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrBytesLength_addr)
+            ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrBytesLength_addr)
             ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec)
             ⋆ Heap av' ⋆ R) st.data.dmem)))
       ⟨s, Host.addrOf k⟩ := by

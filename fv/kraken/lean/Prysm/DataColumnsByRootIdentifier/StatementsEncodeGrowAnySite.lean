@@ -9,7 +9,7 @@ The fast path and the first-site grow path (site 1 only) of
 
 - `dst` is `(dp, len, cap)` with the old block `pre ‖ spare` (`len + |spare| = cap`).
 - Any of the n + 2 append sites (site 1 `append(BlockRoot)`, site 2 `WriteOffset`, the n `AppendUint64`) may call
-  `growslice` (contract `GrowsliceC Heap e2eU8Type_addr 1 S`). Each call needs `2·nextSliceCap + 8192` free bytes and
+  `growslice` (contract `GrowsliceC Heap typeUint8_addr 1 S`). Each call needs `2·nextSliceCap + 8192` free bytes and
   takes at most that many; with `newLen ≤ L = len + 36 + 8n`, `nextSliceCap ≤ 2·L + 192`, so `K = 4·L + 8576` per
   site suffices. The heap premise is `(n + 2)·K ≤ avail`.
 - The result block holds `pre ‖ root ‖ offset 36 ‖ cb` and a named rest. The old blocks of every growth (the copied
@@ -57,7 +57,7 @@ def Encode.grow_any_site_statement : Prop :=
       ⋆ Eq ((pre ++ spare).At s.regs.rbx.toBitVec) ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 8 < s.regs.rsp.toNat)
     (hbud : (n + 2) * (4 * (s.regs.rcx.toNat + 36 + 8 * n) + 8576) ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 36 + 8 * n
@@ -126,7 +126,7 @@ def Encode.grow_any_site_spec_statement : Prop :=
       ⋆ Eq ((pre ++ spare).At s.regs.rbx.toBitVec) ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 8 < s.regs.rsp.toNat)
     (hbud : (g.cols.length + 2) * (4 * (s.regs.rcx.toNat + 36 + 8 * g.cols.length) + 8576) ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S),
     ∃ bs, serialize desc g.toValue = .ok bs ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec

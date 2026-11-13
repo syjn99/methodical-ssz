@@ -28,7 +28,7 @@ All files here belong to one ELF. Do not mix them with the files of another ELF.
 | `ssz-methods.json` | Every SSZ method of the ELF. It is the denominator of the inventory |
 | `functions.json`, `kparse.json`, `kparse-log.txt` | The functions with a converted `.S` file, which of them the Kraken parser reads, and the parser log that `gen/kparse/summ.py` reads |
 | `link/` | A link table of 136 functions of this ELF. No current theorem includes it |
-| `link-set/` | The one link set of the proved functions: `target.objdump`, `norm/*.S`, `norm/all.S`, `data/*.data` and `RESULT`. `gen/e2e/link_set.py` writes it. Its `RESULT` replaces the `RESULT` files of the 16 earlier link sets |
+| `link-set/` | The one link set of the proved functions: `target.objdump`, `norm/*.S`, `norm/all.S`, `data/*.data` and `RESULT`. `gen/e2e/link_set.py` writes it. Its `RESULT` replaces the `RESULT` files of the 16 earlier link sets. `data-ids-old-new.tsv` maps the data ids of the earlier link sets and records to the present ids |
 | `e2e/` | The check records, negative case lists and generator records of the proved types (section 3) |
 | `opt-r1/` | A separate ELF of a generator option that reserves the encoder output once. The option is not adopted. `lean/Prysm/Checkpoint/CapacityReserved*.lean` prove theorems about it |
 

@@ -48,7 +48,7 @@ theorem Decode.generated_PublicKey_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At bf)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 38) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -171,7 +171,7 @@ theorem Decode.generated_WithdrawalCredentials_seg (k : Nat) (hk : unmarshalSSZ.
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 74) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -349,7 +349,7 @@ theorem Decode.generated_Signature_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 113) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -644,7 +644,7 @@ theorem Decode.generated_head : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 192) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 14)
         ∧ st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 72 }
@@ -740,7 +740,7 @@ theorem Decode.generated_f1 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 14)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 72 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -879,7 +879,7 @@ theorem Decode.generated_f2 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 49)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 72 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -1020,7 +1020,7 @@ theorem Decode.generated_f3 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 85)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 72 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -1148,7 +1148,7 @@ theorem Decode.generated_f4 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 88)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 72 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -1291,7 +1291,7 @@ theorem Decode.generated_f5 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.pr
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 123)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 72 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -1607,7 +1607,7 @@ theorem Decode.generated_accept : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Hos
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 192) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -1680,7 +1680,7 @@ theorem Decode.generated_reject : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Hos
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 192),
     Eventually (step1 Host.exe)
@@ -1690,7 +1690,7 @@ theorem Decode.generated_reject : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Hos
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen

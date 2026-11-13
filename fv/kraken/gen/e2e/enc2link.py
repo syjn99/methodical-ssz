@@ -92,7 +92,7 @@ def filt(outdir, objdump, elf, nm):
 
 
 def items(outdir, cpdir, e1dir):
-    """Per encoder: the address-only error global `<p>ErrBytesLength` (length 0) when its code loads it
+    """Per encoder: the address-only error global `sszErrBytesLength` (length 0) when its code loads it
     (`mov X(%rip),%rdi`). Every growslice is asserted to take the uint8 type word of the Checkpoint set in %rsi
     (the literal of `e2elink.items`); ssz.ErrBytesLength is asserted equal to the Checkpoint and Eth1Data
     encoders' operand; no makeslice, newobject or fmt.errorf."""
@@ -121,7 +121,7 @@ def items(outdir, cpdir, e1dir):
         has_ebl = any(re.fullmatch(ebp, l) for l in m)
         if has_ebl:
             assert e2elink.operand(m, ebp) == ebl, t
-            its.append((f"{p}ErrBytesLength", ebl[0], 0, 0, []))
+            its.append((None, ebl[0], 0, 0, []))
         print("type", t, "growslice", len(gs), "ErrBytesLength", has_ebl)
     return data, its
 

@@ -107,12 +107,12 @@ theorem label_bump : label "runtime.fvBump" = 0x10000 :=
 theorem label_wb : label "runtime.writeBarrier" = 0x10008 :=
   mk_label P _ 8 _ (by simp [P, dataLabels]) (by decide)
 
-theorem u8_ne_u64 : ElfData.PrysmTarget.e2eU8Type_addr ≠ ElfData.PrysmTarget.lvU64Type_addr := by
-  simp only [ElfData.PrysmTarget.e2eU8Type_addr, ElfData.PrysmTarget.lvU64Type_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+theorem u8_ne_u64 : ElfData.PrysmTarget.typeUint8_addr ≠ ElfData.PrysmTarget.typeUint64_addr := by
+  simp only [ElfData.PrysmTarget.typeUint8_addr, ElfData.PrysmTarget.typeUint64_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega
 
-theorem checkpoint_type_ne_attestation_data_type : ElfData.PrysmTarget.adCpType_addr ≠ ElfData.PrysmTarget.lvAdType_addr := by
-  simp only [ElfData.PrysmTarget.adCpType_addr, ElfData.PrysmTarget.lvAdType_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+theorem checkpoint_type_ne_attestation_data_type : ElfData.PrysmTarget.typeCheckpoint_addr ≠ ElfData.PrysmTarget.typeAttestationData_addr := by
+  simp only [ElfData.PrysmTarget.typeCheckpoint_addr, ElfData.PrysmTarget.typeAttestationData_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0

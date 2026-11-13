@@ -17,63 +17,66 @@ namespace ElfData.PrysmTarget
 
 -- Checkpoint and Epoch
 -- the uint8 element type word (makeslice in the decoder, growslice in the encoder)
-prysm_data_include e2eU8Type
+prysm_data_include typeUint8
 -- "Epoch: %w" (Checkpoint decoder, error path) and its errors.errorString type
-prysm_data_include e2eCpFmtW
-prysm_data_include e2eErrStrType
-prysm_data_include e2eErrorStringItab
+prysm_data_include formatEpoch
+prysm_data_include typeErrorString
+prysm_data_include itabErrorStringError
 -- error globals: addresses only (values are set by the runtime's package init)
-prysm_data_include e2eErrSize
-prysm_data_include e2eErrBytesLength
+prysm_data_include sszErrSize
+prysm_data_include sszErrBytesLength
 -- Epoch decoder reject: format, type:int, the static box of the constant 8, staticuint64s
-prysm_data_include e2eEpFmt
-prysm_data_include e2eIntType
-prysm_data_include e2eEight
-prysm_data_include e2eStaticuint64s
+prysm_data_include formatBufferLength
+prysm_data_include typeInt
+prysm_data_include boxedEight
+prysm_data_include runtimeStaticuint64s
 
 -- AttestationData
 -- the Checkpoint abi.Type word passed to runtime.newobject (decoder Source/Target, encoder nil fields)
-prysm_data_include adCpType
+prysm_data_include typeCheckpoint
 -- the four field wraps "Slot: %w", "CommitteeIndex: %w", "Source: %w", "Target: %w"
-prysm_data_include adFmtSlot
-prysm_data_include adFmtCi
-prysm_data_include adFmtSource
-prysm_data_include adFmtTarget
+prysm_data_include formatSlot
+prysm_data_include formatCommitteeIndex
+prysm_data_include formatSource
+prysm_data_include formatTarget
 
 -- IndexedAttestation
 -- element type word of `make([]uint64, numElem)` (makeslice esz 8): abi.Type of uint64 (Size_ 8, Kind 11)
-prysm_data_include lvU64Type
+prysm_data_include typeUint64
 -- type word of `new(AttestationData)` (newobject sz 96): abi.Type of the struct (Size_ 96, Kind 25)
-prysm_data_include lvAdType
+prysm_data_include typeAttestationData
 -- the two `fmt.Errorf` formats of the list rejects ("%d … %w")
-prysm_data_include lvFmtTooBig
-prysm_data_include lvFmtMis
+prysm_data_include formatAttestingIndicesTooBig
+prysm_data_include formatAttestingIndicesMisaligned
 -- error globals: addresses only (values are set by the runtime's package init)
-prysm_data_include lvErrListTooBig
-prysm_data_include lvErrIncorrectListSize
-prysm_data_include lvErrInvalidVariableOffset
+prysm_data_include sszErrListTooBig
+prysm_data_include sszErrIncorrectListSize
+prysm_data_include sszErrInvalidVariableOffset
 
 -- SyncAggregate and SyncCommittee
 -- the element type word of the SyncCommittee `[][]byte` backing array (`make([][]byte, 512)`,
 -- makeslice esz 24): abi.Type of `[]uint8`
-prysm_data_include lvSliceType
+prysm_data_include typeUint8Slice
 
 -- DataColumnsByRootIdentifier decoder
 -- "ssz-max exceeded: c.Columns has %d elements, ssz-max is 128: %w" (63 bytes)
-prysm_data_include dcdFmtTooBig
+prysm_data_include formatColumnsTooBig
 -- "misaligned bytes: c.Columns length is %d, which is not a multiple of 8: %w" (74 bytes)
-prysm_data_include dcdFmtMis
+prysm_data_include formatColumnsMisaligned
+
+-- Deposit decoder: the type descriptor of `v1alpha1.Deposit_Data` (newobject of 120 bytes)
+prysm_data_include typeDeposit_Data
 
 -- The address lemmas. `variable [Host]` comes after the data includes, so it binds only these lemmas.
 variable [Host]
 
-theorem e2eErrSize_addr_eq : ElfData.PrysmTarget.e2eErrSize_addr = (label "ssz.ErrSize").toBitVec := rfl
-theorem e2eErrBytesLength_addr_eq : ElfData.PrysmTarget.e2eErrBytesLength_addr = (label "ssz.ErrBytesLength").toBitVec := rfl
-theorem e2eStaticuint64s_addr_eq : ElfData.PrysmTarget.e2eStaticuint64s_addr = Runtime.Data.staticuint64s_addr := rfl
-theorem lvErrIncorrectListSize_addr_eq : ElfData.PrysmTarget.lvErrIncorrectListSize_addr = (label "ssz.ErrIncorrectListSize").toBitVec := rfl
-theorem lvErrListTooBig_addr_eq : ElfData.PrysmTarget.lvErrListTooBig_addr = (label "ssz.ErrListTooBig").toBitVec := rfl
-theorem lvFmtMis_addr_eq : ElfData.PrysmTarget.lvFmtMis_addr = (label "go_string._" + 171319).toBitVec := rfl
-theorem lvFmtTooBig_addr_eq : ElfData.PrysmTarget.lvFmtTooBig_addr = (label "go_string._" + 163839).toBitVec := rfl
-theorem e2eIntType_addr_eq : ElfData.PrysmTarget.e2eIntType_addr = (label "type__" + 387520).toBitVec := rfl
+theorem sszErrSize_addr_eq : ElfData.PrysmTarget.sszErrSize_addr = (label "ssz.ErrSize").toBitVec := rfl
+theorem sszErrBytesLength_addr_eq : ElfData.PrysmTarget.sszErrBytesLength_addr = (label "ssz.ErrBytesLength").toBitVec := rfl
+theorem runtimeStaticuint64s_addr_eq : ElfData.PrysmTarget.runtimeStaticuint64s_addr = Runtime.Data.staticuint64s_addr := rfl
+theorem sszErrIncorrectListSize_addr_eq : ElfData.PrysmTarget.sszErrIncorrectListSize_addr = (label "ssz.ErrIncorrectListSize").toBitVec := rfl
+theorem sszErrListTooBig_addr_eq : ElfData.PrysmTarget.sszErrListTooBig_addr = (label "ssz.ErrListTooBig").toBitVec := rfl
+theorem formatAttestingIndicesMisaligned_addr_eq : ElfData.PrysmTarget.formatAttestingIndicesMisaligned_addr = (label "go_string._" + 171319).toBitVec := rfl
+theorem formatAttestingIndicesTooBig_addr_eq : ElfData.PrysmTarget.formatAttestingIndicesTooBig_addr = (label "go_string._" + 163839).toBitVec := rfl
+theorem typeInt_addr_eq : ElfData.PrysmTarget.typeInt_addr = (label "type__" + 387520).toBitVec := rfl
 
 end ElfData.PrysmTarget

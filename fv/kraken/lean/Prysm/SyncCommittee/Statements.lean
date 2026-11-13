@@ -32,7 +32,7 @@ Frame (`.S`, x = entry rsp): `sub $0x30`; `0x40(%rsp)` = x + 8 (rax spill), `0x4
 also written at directive 7 before the size check); loop locals `0x18(%rsp)` = x − 32 (i), `0x20(%rsp)` = x − 24
 (3i), `0x28(%rsp)` = x − 16 (element pointer, then the AggregatePubkey pointer); `0x0…0x17(%rsp)` = x − 56
 (24 bytes, `spl`, makeslice's spill area); runtime call return slot x − 64; `lo` = the `S` scratch bytes below
-it. Calls: one makeslice of the backing array (`ElfData.PrysmTarget.lvSliceType_addr`, esz 24, len = cap = 512), 512
+it. Calls: one makeslice of the backing array (`ElfData.PrysmTarget.typeUint8Slice_addr`, esz 24, len = cap = 512), 512
 uint8 makeslice (len 0, cap 48) + memmove (48) pairs in the loop, one uint8 makeslice + memmove for
 AggregatePubkey. Heap: 24·512 + 48·512 + 48 = 36912 bytes. The last runtime call is the memmove at directive
 100, so the return slot holds directive 101 at the end. The two loop locals x − 32 and x − 24 are dead after
@@ -81,8 +81,8 @@ def Decode.accept_statement : Prop :=
       ⋆ Eq (aL2.At (s.regs.rax.toBitVec + 40)) ⋆ Eq (aC2.At (s.regs.rax.toBitVec + 48))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 24624) (hav : 36912 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S)
-    (hmsA : MakesliceC Heap ElfData.PrysmTarget.lvSliceType_addr 24 S) (hmm : MemmoveC S),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S)
+    (hmsA : MakesliceC Heap ElfData.PrysmTarget.typeUint8Slice_addr 24 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -119,7 +119,7 @@ def Decode.reject_size_statement : Prop :=
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 24624),
     Eventually (step1 Host.exe)
@@ -129,7 +129,7 @@ def Decode.reject_size_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
@@ -166,8 +166,8 @@ def Decode.accept_spec_statement : Prop :=
       ⋆ Eq (aL2.At (s.regs.rax.toBitVec + 40)) ⋆ Eq (aC2.At (s.regs.rax.toBitVec + 48))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size) (hav : 36912 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S)
-    (hmsA : MakesliceC Heap ElfData.PrysmTarget.lvSliceType_addr 24 S) (hmm : MemmoveC S),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S)
+    (hmsA : MakesliceC Heap ElfData.PrysmTarget.typeUint8Slice_addr 24 S) (hmm : MemmoveC S),
     ∃ g : SszValue, g.toValue = v ∧ bsA = SszValue.encode g ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
@@ -205,7 +205,7 @@ def Decode.reject_size_spec_statement : Prop :=
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size),
     (∃ e, deserialize desc bs = .error e) ∧
@@ -216,7 +216,7 @@ def Decode.reject_size_spec_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 

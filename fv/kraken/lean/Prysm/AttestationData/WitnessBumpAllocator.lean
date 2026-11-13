@@ -8,7 +8,7 @@ import Runtime.NewobjectContract
 `BumpNew72` (`Prysm/AttestationData/BumpNew72.S`) is `Runtime/BumpNew32.S` with the object size 0x48; the theorem
 is the text of `Runtime.bump_newobject32` with 32 replaced by 72. It discharges
 `NewobjectC bumpHeap ty 72 S` in the AttestationData witnesses (the Checkpoint object of the
-Go 1.26.10 ELF is 72 bytes, `adCpType` Size_ = 0x48). It is a model in a witness host, not a
+Go 1.26.10 ELF is 72 bytes, `typeCheckpoint` Size_ = 0x48). It is a model in a witness host, not a
 claim about the Go runtime.
 -/
 

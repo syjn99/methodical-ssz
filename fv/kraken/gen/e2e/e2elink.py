@@ -95,16 +95,16 @@ def items(outdir):
     assert lcx[0] == inttype, (lcx, inttype)
     T = data.ABI_TYPE_WORDS
     its = [
-        ("e2eU8Type", u8[0], u8[1], 48, T),
-        ("e2eCpFmtW", cpfmt[0], cpfmt[1], cpfmt_n, []),
-        ("e2eErrStrType", estype[0], estype[1], 48, T),
-        ("e2eErrorStringItab", itab[0], itab[1], 32, [0, 8, 24]),
-        ("e2eErrSize", errsize[0], 0, 0, []),
-        ("e2eErrBytesLength", errbl[0], 0, 0, []),
-        ("e2eEpFmt", epfmt[0], epfmt[1], epfmt_n, []),
-        ("e2eIntType", inttype[0], inttype[1], 48, T),
-        ("e2eEight", eight[0], eight[1], 8, []),
-        ("e2eStaticuint64s", "runtime.staticuint64s", 0, 2048, []),
+        ("typeUint8", u8[0], u8[1], 48, T),
+        (None, cpfmt[0], cpfmt[1], cpfmt_n, []),
+        ("typeErrorString", estype[0], estype[1], 48, T),
+        (None, itab[0], itab[1], 32, [0, 8, 24]),
+        (None, errsize[0], 0, 0, []),
+        (None, errbl[0], 0, 0, []),
+        (None, epfmt[0], epfmt[1], epfmt_n, []),
+        ("typeInt", inttype[0], inttype[1], 48, T),
+        ("boxedEight", eight[0], eight[1], 8, []),
+        (None, "runtime.staticuint64s", 0, 2048, []),
     ]
     return data, its
 

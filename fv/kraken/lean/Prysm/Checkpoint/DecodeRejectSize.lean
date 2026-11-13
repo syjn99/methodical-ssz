@@ -10,7 +10,7 @@ import Prysm.ElfData.PrysmTarget
 `Decode.reject_size` (`len(buf) ≠ 40`, Go source `return ssz.ErrSize`):
 directives 2–7 (guard, prologue, rbx spill), 9–10 `cmp $0x28,%rcx; jne L_16b`
 taken, 91 `L_16b`, 92–93 load the two words of `ssz.ErrSize`, 94–96 epilogue.
-The address is the data item `ElfData.PrysmTarget.e2eErrSize_addr` (its symbol checked
+The address is the data item `ElfData.PrysmTarget.sszErrSize_addr` (its symbol checked
 against the ELF by `link/check.py` (f)); the two words `e0`, `e1` are the
 global's value after package init (premise; `e0 ≠ 0` there, so the error is
 non-nil).
@@ -40,7 +40,7 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 40) :
     Eventually (step1 Host.exe)
@@ -50,11 +50,11 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
-  simp only [ElfData.PrysmTarget.e2eErrSize_addr_eq] at h_mem hguard hlen ⊢
+  simp only [ElfData.PrysmTarget.sszErrSize_addr_eq] at h_mem hguard hlen ⊢
   have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; simp only [UInt64.size] at *
   kat hk unmarshalSSZ 0
   kat hk unmarshalSSZ 1

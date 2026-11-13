@@ -1,7 +1,0 @@
-# encU8Type: link/data.py, p1bin-amd64 bytes [0xae9800, 0xae9830)
-at type__ 387072
-bytes 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-bytes 79 76 8c 6a 0f 01 01 08
-word go_funcdesc 3336
-word r5 8
-bytes 68 23 00 00 a0 4c 04 00

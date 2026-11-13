@@ -90,7 +90,7 @@ def items(outdir, cpdir, addir):
     PendingConsolidation has no makeslice; it calls the ValidatorIndex decoder twice and wraps the errors
     ("SourceIndex: %w", "TargetIndex: %w"; `bhlink.py` idiom). The shared operands (uint8 type word,
     ssz.ErrSize, writeBarrier, errorString type) are asserted equal to the Checkpoint / AttestationData sets'
-    operands. Data files: the address-only error global of each decoder (smErrSize, pcErrSize; length 0) and
+    operands. Data files: the address-only error global of each decoder (sszErrSize, sszErrSize; length 0) and
     the four format strings."""
     spec = importlib.util.spec_from_file_location("data", LINK / "data.py")
     data = importlib.util.module_from_spec(spec)
@@ -127,21 +127,21 @@ def items(outdir, cpdir, addir):
     assert e2elink.operand(su, wb) == e2elink.operand(au, wb)
     sn = [back(su, i) for i, l in enumerate(su) if l == "callq runtime.newobject"]
     assert sn == [estype, estype], (sn, estype)
-    its.append(("smErrSize", esz[0], 0, 0, []))
+    its.append((None, esz[0], 0, 0, []))
     sf = fmts(su)
     assert [n for _, n in sf] == [8, 18], sf  # "Slot: %w", "ValidatorIndex: %w"
-    its.append(("smFmtSlot", sf[0][0][0], sf[0][0][1], sf[0][1], []))
-    its.append(("smFmtVi", sf[1][0][0], sf[1][0][1], sf[1][1], []))
+    its.append((None, sf[0][0][0], sf[0][0][1], sf[0][1], []))
+    its.append((None, sf[1][0][0], sf[1][0][1], sf[1][1], []))
     # PendingConsolidation
     assert not any(l in ("callq runtime.makeslice", "callq runtime.growslice") for l in pu)
     assert e2elink.operand(pu, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
     pn = [back(pu, i) for i, l in enumerate(pu) if l == "callq runtime.newobject"]
     assert pn == [estype, estype], (pn, estype)
-    its.append(("pcErrSize", esz[0], 0, 0, []))
+    its.append((None, esz[0], 0, 0, []))
     pf = fmts(pu)
     assert [n for _, n in pf] == [15, 15], pf  # "SourceIndex: %w", "TargetIndex: %w"
-    its.append(("pcFmtSource", pf[0][0][0], pf[0][0][1], pf[0][1], []))
-    its.append(("pcFmtTarget", pf[1][0][0], pf[1][0][1], pf[1][1], []))
+    its.append((None, pf[0][0][0], pf[0][0][1], pf[0][1], []))
+    its.append((None, pf[1][0][0], pf[1][0][1], pf[1][1], []))
     return data, its
 
 

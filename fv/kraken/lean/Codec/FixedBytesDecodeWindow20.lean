@@ -19,7 +19,7 @@ immediate (a limit of the proof method, not of the statement). This module adds 
 * `bytesDecSegKindWindow_of_b20`, `bytesDecSegZKindWindow_of_b20`: the kinds (`Codec/Kind/FixedBytesDecodeWindow.lean`, `Codec/FixedBytesDecodeWindowOffsetZero.lean`,
   unchanged, already parametric in `n`) proved from the collectors, as `bytesDecSegKindWindow_of`.
 
-Contracts exactly as in the models: `MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 St` at count 20 (the count is a
+Contracts exactly as in the models: `MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St` at count 20 (the count is a
 bound variable of the contract) and `MemmoveC St` (the byte count is `src.length`). No contract, statement or
 existing module is changed. Heartbeat options = the model theorems' (16000000 add form, 4000000 offset-0 form).
 -/

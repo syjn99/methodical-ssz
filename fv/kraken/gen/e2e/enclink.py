@@ -14,7 +14,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 
 Data items are located from the converted code. The Lean statements use the existing names
-`ElfData.PrysmTarget.e2eU8Type_addr`, `ElfData.PrysmTarget.e2eErrBytesLength_addr` and `ElfData.PrysmTarget.lvErrListTooBig_addr`;
+`ElfData.PrysmTarget.typeUint8_addr`, `ElfData.PrysmTarget.sszErrBytesLength_addr` and `ElfData.PrysmTarget.sszErrListTooBig_addr`;
 `data` asserts that the operands of this .S are those items (same label and offset) and writes the
 items again under the `enc` prefix so that check (f) binds them to the ELF in this directory.
 """
@@ -38,7 +38,7 @@ CANDS = [TARGET, f"{V1A1}.(*DataColumnSidecarsByRangeRequest).MarshalSSZTo",
          f"{V1A1}.(*IndexedAttestation).MarshalSSZTo"]
 CLASS = dict(lvlink.CLASS)
 CLASS.update({
-    "runtime.growslice": ("b", "GrowsliceC Heap e2eU8Type_addr 1 S (esz 1; num 32, 4, 8)"),
+    "runtime.growslice": ("b", "GrowsliceC Heap typeUint8_addr 1 S (esz 1; num 32, 4, 8)"),
     "runtime.memmove": ("b", "MemmoveC S (n = 32)"),
     "runtime.morestack_noctxt.abi0": ("c", "premise guard < rsp - 8"),
     f"{V1A1}.(*AttestationData).MarshalSSZTo": ("FORBIDDEN", "forbidden target (task brief)"),
@@ -78,11 +78,11 @@ def write_data(outdir, cpdir, t3dir):
     errbl = e2elink.operand(m, r"mov (ssz\.ErrBytesLength)\(%rip\),%rdi()")
     assert errbl == e2elink.operand(cm, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rdi()"), errbl
     errtb = e2elink.operand(m, r"mov (ssz\.ErrListTooBig)\(%rip\),%rdi()")
-    t3 = (pathlib.Path(t3dir) / "data" / "lvErrListTooBig.data").read_text()
+    t3 = (pathlib.Path(t3dir) / "data" / "sszErrListTooBig.data").read_text()
     assert f"\nat {errtb[0]} 0\n" in t3, t3
-    its = [("encU8Type", u8[0], u8[1], 48, data.ABI_TYPE_WORDS),
-           ("encErrBytesLength", errbl[0], 0, 0, []),
-           ("encErrListTooBig", errtb[0], 0, 0, [])]
+    its = [("typeUint8", u8[0], u8[1], 48, data.ABI_TYPE_WORDS),
+           (None, errbl[0], 0, 0, []),
+           (None, errtb[0], 0, 0, [])]
     for it in its:
         print("item", it[:4])
     data.ITEMS = its

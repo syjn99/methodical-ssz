@@ -6,12 +6,12 @@ import Prysm.ElfData.PrysmTarget
 /-!
 # Type-dispatching bump models of `runtime.makeslice` and `runtime.newobject` for the IndexedAttestation witness host
 
-The IndexedAttestation accept path needs four `MakesliceC` instances (esz 8 for `lvU64Type_addr`, esz 1 for the uint8 type word, at
-three stack sizes) and two `NewobjectC` instances (96 bytes for `lvAdType_addr`, 72 for `adCpType_addr`). A Host has
+The IndexedAttestation accept path needs four `MakesliceC` instances (esz 8 for `typeUint64_addr`, esz 1 for the uint8 type word, at
+three stack sizes) and two `NewobjectC` instances (96 bytes for `typeAttestationData_addr`, 72 for `typeCheckpoint_addr`). A Host has
 one `runtime.makeslice` and one `runtime.newobject`, so each model dispatches on the type word in rax:
 `Prysm/RuntimeModel/BumpAllocT3.S` bumps by 8·cnt for `type__+387456` and by cnt otherwise; `Prysm/RuntimeModel/BumpNewT3.S` bumps by 96
-for `type__+1464512` and by 72 otherwise. The offsets are those of `prysm/go1.26.10/link-set/data/lvU64Type.data` and
-`lvAdType.data`. The proof texts are `Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1` / `Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24` (`Prysm/RuntimeModel/BumpAllocatorByteSliceDispatch.lean`) and `Prysm.AttestationData.bump_newobject72`
+for `type__+1464512` and by 72 otherwise. The offsets are those of `prysm/go1.26.10/link-set/data/typeUint64.data` and
+`typeAttestationData.data`. The proof texts are `Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1` / `Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24` (`Prysm/RuntimeModel/BumpAllocatorByteSliceDispatch.lean`) and `Prysm.AttestationData.bump_newobject72`
 with the dispatch steps. Abstract models for non-vacuity only, not a Go refinement. Both `.S`
 files are in the Lake `input_dir` `runtime_model_S` (all `.S` files of `Prysm/RuntimeModel/`).
 -/
@@ -25,10 +25,10 @@ def BumpNewStructDispatch : Program := include_x64_rt "Prysm/RuntimeModel/BumpNe
 
 variable [Host]
 
-/-- The esz-1 branch: any type word other than `lvU64Type_addr`. -/
+/-- The esz-1 branch: any type word other than `typeUint64_addr`. -/
 theorem bump_makeslice_uint64_dispatch_size1 (j : Nat) (hj : BumpAllocUint64Dispatch.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.makeslice")) (ty : BitVec 64)
-    (hne : ty ≠ ElfData.PrysmTarget.lvU64Type_addr) {S : Nat} :
+    (hne : ty ≠ ElfData.PrysmTarget.typeUint64_addr) {S : Nat} :
     MakesliceC bumpHeap ty 1 S := by
   intro st ret cnt avail stk spill F _hty _hrbx hrcx hav _hmax _hcnt hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
@@ -49,7 +49,7 @@ theorem bump_makeslice_uint64_dispatch_size1 (j : Nat) (hj : BumpAllocUint64Disp
     exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
     simp only at _hty
     apply hne; rw [← _hty]
-    simp only [ElfData.PrysmTarget.lvU64Type_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+    simp only [ElfData.PrysmTarget.typeUint64_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
     have h2 := congrArg (· + ((label "type__").toBitVec + 387456#64)) h
     simp only [BitVec.sub_add_cancel, BitVec.zero_add] at h2
     exact h2
@@ -86,10 +86,10 @@ theorem bump_makeslice_uint64_dispatch_size1 (j : Nat) (hj : BumpAllocUint64Disp
   · apply UInt64.toBitVec_inj.mp; simp
   · dsimp only; ecancel
 
-/-- The esz-8 branch: the type word `lvU64Type_addr`. -/
+/-- The esz-8 branch: the type word `typeUint64_addr`. -/
 theorem bump_makeslice_uint64_dispatch_size8 (j : Nat) (hj : BumpAllocUint64Dispatch.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.makeslice")) (hfl : LabelsFresh BumpAllocUint64Dispatch j) {S : Nat} :
-    MakesliceC bumpHeap ElfData.PrysmTarget.lvU64Type_addr 8 S := by
+    MakesliceC bumpHeap ElfData.PrysmTarget.typeUint64_addr 8 S := by
   intro st ret cnt avail stk spill F _hty _hrbx hrcx hav _hmax _hcnt hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
@@ -109,7 +109,7 @@ theorem bump_makeslice_uint64_dispatch_size8 (j : Nat) (hj : BumpAllocUint64Disp
     exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
     simp only at _hty
     apply h; rw [_hty]
-    simp only [ElfData.PrysmTarget.lvU64Type_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+    simp only [ElfData.PrysmTarget.typeUint64_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
     exact BitVec.sub_self _
   simp only [Effects.All]
   klabel hj hfl BumpAllocUint64Dispatch 9
@@ -146,10 +146,10 @@ theorem bump_makeslice_uint64_dispatch_size8 (j : Nat) (hj : BumpAllocUint64Disp
   · apply UInt64.toBitVec_inj.mp; simp
   · dsimp only; ecancel
 
-/-- The 72-byte branch: any type word other than `lvAdType_addr`. -/
+/-- The 72-byte branch: any type word other than `typeAttestationData_addr`. -/
 theorem bump_newobject_struct_dispatch_size72 (j : Nat) (hj : BumpNewStructDispatch.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.newobject")) (ty : BitVec 64)
-    (hne : ty ≠ ElfData.PrysmTarget.lvAdType_addr) {S : Nat} :
+    (hne : ty ≠ ElfData.PrysmTarget.typeAttestationData_addr) {S : Nat} :
     NewobjectC bumpHeap ty 72 S := by
   intro st ret avail stk spill F _hty hav hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
@@ -172,7 +172,7 @@ theorem bump_newobject_struct_dispatch_size72 (j : Nat) (hj : BumpNewStructDispa
     exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
     simp only at _hty
     apply hne; rw [← _hty]
-    simp only [ElfData.PrysmTarget.lvAdType_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+    simp only [ElfData.PrysmTarget.typeAttestationData_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
     have h2 := congrArg (· + ((label "type__").toBitVec + 1464512#64)) h
     simp only [BitVec.sub_add_cancel, BitVec.zero_add] at h2
     exact h2
@@ -208,10 +208,10 @@ theorem bump_newobject_struct_dispatch_size72 (j : Nat) (hj : BumpNewStructDispa
   refine ⟨by simp, ?_, rfl, rfl, stk, spill, hstk, hsp, ?_⟩
   · apply UInt64.toBitVec_inj.mp; simp
   · dsimp only; ecancel
-/-- The 96-byte branch: the type word `lvAdType_addr`. -/
+/-- The 96-byte branch: the type word `typeAttestationData_addr`. -/
 theorem bump_newobject_struct_dispatch_size96 (j : Nat) (hj : BumpNewStructDispatch.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.newobject")) (hfl : LabelsFresh BumpNewStructDispatch j) {S : Nat} :
-    NewobjectC bumpHeap ElfData.PrysmTarget.lvAdType_addr 96 S := by
+    NewobjectC bumpHeap ElfData.PrysmTarget.typeAttestationData_addr 96 S := by
   intro st ret avail stk spill F _hty hav hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
@@ -233,7 +233,7 @@ theorem bump_newobject_struct_dispatch_size96 (j : Nat) (hj : BumpNewStructDispa
     exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
     simp only at _hty
     apply h; rw [_hty]
-    simp only [ElfData.PrysmTarget.lvAdType_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+    simp only [ElfData.PrysmTarget.typeAttestationData_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
     exact BitVec.sub_self _
   simp only [Effects.All]
   klabel hj hfl BumpNewStructDispatch 9

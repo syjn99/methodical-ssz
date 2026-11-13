@@ -1,0 +1,2 @@
+# sszErrIncorrectListSize: link/data.py, p1bin-amd64 bytes [0x13a1b10, 0x13a1b10)
+at ssz.ErrIncorrectListSize 0

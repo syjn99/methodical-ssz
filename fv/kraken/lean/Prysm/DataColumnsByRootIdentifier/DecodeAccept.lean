@@ -8,10 +8,10 @@ import Prysm.DataColumnsByRootIdentifier.DecodeLoop
 # Decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`, accept path (Go 1.26.10 machine code)
 
 The order of `Prysm/IndexedAttestation/DecodeAccept.lean` (IndexedAttestation accept path): guard and prologue 0–8, size and offset checks 9–15, spills 16–19,
-BlockRoot `makeslice` 20–23 (`MakesliceC Heap e2eU8Type_addr 1 S`, len 0, cap 32), header stores 24–26, the
+BlockRoot `makeslice` 20–23 (`MakesliceC Heap typeUint8_addr 1 S`, len 0, cap 32), header stores 24–26, the
 `buf[36:]` pointer 27–35 (the mask of `Prysm/IndexedAttestation/DecodeAccept.lean` 18–24 with 36), `writeBarrier = 0` (36–37 `je` taken), 43–47 the pointer store
 and `memmove(pb, buf, 32)`, 48–63 len/cap 32 and the barrier branch, 64–71 alignment and bound checks, 72–75 Columns
-`makeslice` (`MakesliceC Heap lvU64Type_addr 8 S`, len = cap = n), 76–93 the header and pointer stores, `jmp L_320`,
+`makeslice` (`MakesliceC Heap typeUint64_addr 8 S`, len = cap = n), 76–93 the header and pointer stores, `jmp L_320`,
 the element loop `Decode.loop` (185 → 204), 204–209 nil and the epilogue. Statement: the frozen `Decode.accept_statement`.
 -/
 

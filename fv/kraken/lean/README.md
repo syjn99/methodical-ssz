@@ -55,6 +55,10 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
 - `Prysm/ElfData/`: the ELF data of the link set `../prysm/go1.26.10/link-set` (`PrysmTarget.lean`, namespace
   `ElfData.PrysmTarget`) and the command `prysm_data_include` that reads it (`PrysmTargetReader.lean`).
   The root `ElfData` keeps the order of the constant names that some `simp` proofs depend on (see `../gen/restructure/README.md`).
+  A data name is the id of its data file, and the id names the ELF item: `sszErrSize` is the address of the global
+  `ssz.ErrSize`, `typeUint8` the type descriptor of `uint8`, `formatSlot` the format string `Slot: %w`.
+  `../link/data.py` (`item_id`) gives the rule; a type descriptor gets its id in the item table of its link script.
+  The lemmas `<id>_addr_eq` restate an address. `../prysm/go1.26.10/link-set/data-ids-old-new.tsv` gives the earlier ids.
 
 The flat fixed-size types (a flat type has only fixed-size fields and no nested container) have their directories in
 `Prysm/` too, for example `Prysm/BeaconBlockHeader/` and `Prysm/DepositRequest/`. The generated files are
@@ -111,7 +115,7 @@ def Prysm.SyncAggregate.Decode.reject_size_statement : Prop :=
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 160),
     Eventually (step1 Host.exe)
@@ -121,7 +125,7 @@ def Prysm.SyncAggregate.Decode.reject_size_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 ```
@@ -216,13 +220,6 @@ The structure `Prysm.<GoTypeName>.SszValue` holds the SSZ content of a type.
 Short names and labels remain in the places below. Each one stays because it is derived from a file id, because a
 generator writes it, or because it is a record. The table after the list gives the meaning of the type abbreviations.
 
-- ELF data names: `ElfData.PrysmTarget.<id>` and `<id>_addr` take the id of the data file
-  (`../prysm/go1.26.10/link-set/data/<id>.data`), for example `e2eErrSize`, `adFmtSlot`, `lvU64Type`, `dcdFmtMis`.
-  The prefix (`e2e`, `ad`, `lv`, `lvt3`, `dcd` and the type prefixes of the table) is the link set or type that
-  first read the item. The lemmas `<id>_addr_eq` (for example `e2eErrSize_addr_eq`, `lvFmtMis_addr_eq`) restate an
-  address. A new name would need new data file ids and a new link check result.
-- `Prysm.Deposit.Code.depDataType_addr`: a hand definition of a type descriptor address (data id `depDataType`).
-  `../gen/e2e/depcheck_data.py` compares it with its data file (see `../FINDINGS.md`).
 - Runtime model files: `Runtime/*.S` and `Prysm/*/*.S` (`BumpAlloc*.S`, `BumpNew*.S`, `RtCopy.S`, `RtErr.S`).
   `include_x64_rt` reads them by path, and the code constants take their labels.
 - Statement kind structures of `Codec/Kind/` (their doc strings give the meaning): `SOff` stack offset, `SVal` /

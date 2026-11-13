@@ -157,20 +157,20 @@ def items(outdir, cpdir, addir, t3=False):
     no_calls(sc, ["fmt.errorf", "runtime.newobject", "runtime.growslice"])
     assert e2elink.operand(sc, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
     assert e2elink.operand(sc, wb) == e2elink.operand(au, wb)
-    its.append(("lvSliceType", st[0][0], st[0][1], 48, data.ABI_TYPE_WORDS))
+    its.append(("typeUint8Slice", st[0][0], st[0][1], 48, data.ABI_TYPE_WORDS))
     if not t3:
         return data, its
     # IndexedAttestation
     ia = e2elink.ins(outdir, f"{V}.IndexedAttestation.UnmarshalSSZ")
     it = mk_types(ia)
     assert len(it) == 2 and it[0] != u8 and it[1] == u8, it
-    its.append(("lvU64Type", it[0][0], it[0][1], 48, data.ABI_TYPE_WORDS))
+    its.append(("typeUint64", it[0][0], it[0][1], 48, data.ABI_TYPE_WORDS))
     no_calls(ia, ["runtime.growslice"])
     nobj = [i for i, l in enumerate(ia) if l == "callq runtime.newobject"]
     nty = [back(ia, i) for i in nobj]
     adt = [t for t in nty if t != estype]
     assert len(adt) == 1 and nty.count(estype) == 3, nty
-    its.append(("lvAdType", adt[0][0], adt[0][1], 48, data.ABI_TYPE_WORDS))
+    its.append(("typeAttestationData", adt[0][0], adt[0][1], 48, data.ABI_TYPE_WORDS))
     cvt = [i for i, l in enumerate(ia) if l == "callq runtime.convT64"]
     assert len(cvt) == 2
     for i in cvt:
@@ -191,12 +191,12 @@ def items(outdir, cpdir, addir, t3=False):
     f3 = fmts(ia)
     # "ssz-max exceeded: ... %d ... %w", "misaligned bytes: ... %d ... %w", "Data: %w" (code order)
     assert [n for _, n in f3] == [0x49, 0x53, 8], f3
-    its.append(("lvFmtTooBig", f3[0][0][0], f3[0][0][1], f3[0][1], []))
-    its.append(("lvFmtMis", f3[1][0][0], f3[1][0][1], f3[1][1], []))
-    its.append(("lvFmtData", f3[2][0][0], f3[2][0][1], f3[2][1], []))
+    its.append((None, f3[0][0][0], f3[0][0][1], f3[0][1], []))
+    its.append((None, f3[1][0][0], f3[1][0][1], f3[1][1], []))
+    its.append((None, f3[2][0][0], f3[2][0][1], f3[2][1], []))
     for g in ("ErrListTooBig", "ErrIncorrectListSize", "ErrInvalidVariableOffset"):
         assert any(re.fullmatch(rf"mov ssz\.{g}\(%rip\),%r[a-z]+", l) for l in ia), g
-        its.append((f"lv{g}", f"ssz.{g}", 0, 0, []))
+        its.append((None, f"ssz.{g}", 0, 0, []))
     return data, its
 
 

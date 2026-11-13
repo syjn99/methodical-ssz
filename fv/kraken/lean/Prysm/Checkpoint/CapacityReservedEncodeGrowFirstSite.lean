@@ -45,7 +45,7 @@ theorem Encode.grow_first_site (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog 
       ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 24 < s.regs.rsp.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 40)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40
         ∧ nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat ≤ st.data.regs.rcx.toNat
@@ -131,12 +131,12 @@ theorem Encode.reject_length_grow_first_site (k : Nat) (hk : marshalSSZTo.IsInfi
       ⋆ Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 32))
       ⋆ Eq (ctl.At (s.regs.rax.toBitVec + 40))
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (spare.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrBytesLength_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrBytesLength_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec)
       ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 24 < s.regs.rsp.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 40)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e0 ∧ st.data.regs.rsi = e1
@@ -166,7 +166,7 @@ theorem Encode.reject_length_grow_first_site (k : Nat) (hk : marshalSSZTo.IsInfi
           ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (spare.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
           ⋆ Eq (pre.At np) ⋆ Eq (e8.At (np + s.regs.rcx.toBitVec)) ⋆ Eq ((z.drop 8).At (np + s.regs.rcx.toBitVec + 8))
           ⋆ Eq (tail.At (np + s.regs.rcx.toBitVec + 40))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrBytesLength_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrBytesLength_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec)
           ⋆ Heap av' ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by

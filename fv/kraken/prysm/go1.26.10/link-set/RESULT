@@ -181,153 +181,54 @@ PASS (b) runtime.zerobase = 0x13c64e0 .noptrbss in-symbol
 PASS (b) runtime.writeBarrier = 0x13c6e40 .noptrbss in-symbol
 PASS (c) all.S: 1070 labels, each defined once; 68 external references not defined in all.S; 8 calls to target functions at their entry: ['github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ']
 PASS (e) all.S: 12560 directives equal the 105 function files in order
-PASS (f) adCpType.data: 0xbc5c60, 32 bytes and 2 words = ELF
-PASS (f) adFmtCi.data: 0xc442f5, 18 bytes and 0 words = ELF
-PASS (f) adFmtSlot.data: 0xc3d372, 8 bytes and 0 words = ELF
-PASS (f) adFmtSource.data: 0xc3ec2c, 10 bytes and 0 words = ELF
-PASS (f) adFmtTarget.data: 0xc3ec36, 10 bytes and 0 words = ELF
-PASS (f) bbrErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) bbrFmt0.data: 0xc40b33, 13 bytes and 0 words = ELF
-PASS (f) bdrErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) bdrErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) berErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) berErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) bhFmtProposer.data: 0xc435e9, 17 bytes and 0 words = ELF
-PASS (f) bhFmtSlot.data: 0xc3d372, 8 bytes and 0 words = ELF
-PASS (f) biErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) biErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) bldErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) bldErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) bldFmt0.data: 0xc3f69e, 11 bytes and 0 words = ELF
-PASS (f) bldFmt1.data: 0xc429a2, 16 bytes and 0 words = ELF
-PASS (f) bldFmt2.data: 0xc467a3, 21 bytes and 0 words = ELF
-PASS (f) bpfErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) bpfFmt0.data: 0xc47de4, 23 bytes and 0 words = ELF
-PASS (f) bpwErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) bpwErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) bpwFmt0.data: 0xc3ec18, 10 bytes and 0 words = ELF
-PASS (f) bpwFmt1.data: 0xc42992, 16 bytes and 0 words = ELF
-PASS (f) bsrErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) bsrFmt0.data: 0xc40b33, 13 bytes and 0 words = ELF
-PASS (f) btcErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) btcErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) btcFmt0.data: 0xc442ad, 18 bytes and 0 words = ELF
-PASS (f) cnrErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) cnrErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) dcdErrIncorrectListSize.data: 0x13a1b10, 0 bytes and 0 words = ELF
-PASS (f) dcdErrInvalidVariableOffset.data: 0x137fca0, 0 bytes and 0 words = ELF
-PASS (f) dcdErrListTooBig.data: 0x137fcb0, 0 bytes and 0 words = ELF
-PASS (f) dcdErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) dcdFmtMis.data: 0xc61bc4, 74 bytes and 0 words = ELF
-PASS (f) dcdFmtTooBig.data: 0xc5ea2d, 63 bytes and 0 words = ELF
-PASS (f) dcdIntType.data: 0xae99c0, 32 bytes and 2 words = ELF
-PASS (f) dcdU64Type.data: 0xae9980, 32 bytes and 2 words = ELF
-PASS (f) dcdU8Type.data: 0xae9800, 32 bytes and 2 words = ELF
-PASS (f) ddErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) ddErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) depDataType.data: 0xbe6280, 32 bytes and 2 words = ELF
-PASS (f) dmErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) dmErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) dprErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) dprErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) e1ErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) e1ErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) e2eCpFmtW.data: 0xc3dfd7, 9 bytes and 0 words = ELF
-PASS (f) e2eEight.data: 0xd232a8, 8 bytes and 0 words = ELF
-PASS (f) e2eEpFmt.data: 0xc546d1, 40 bytes and 0 words = ELF
-PASS (f) e2eErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) e2eErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) e2eErrStrType.data: 0xb55500, 32 bytes and 2 words = ELF
-PASS (f) e2eErrorStringItab.data: 0xd28520, 8 bytes and 3 words = ELF
-PASS (f) e2eIntType.data: 0xae99c0, 32 bytes and 2 words = ELF
-PASS (f) e2eStaticuint64s.data: 0xd45780, 2048 bytes and 0 words = ELF
-PASS (f) e2eU8Type.data: 0xae9800, 32 bytes and 2 words = ELF
-PASS (f) efiErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) efiErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) efiFmt0.data: 0xc43660, 17 bytes and 0 words = ELF
-PASS (f) encErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) encErrListTooBig.data: 0x137fcb0, 0 bytes and 0 words = ELF
-PASS (f) encU8Type.data: 0xae9800, 32 bytes and 2 words = ELF
-PASS (f) eprErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) eprFmt0.data: 0xc40b33, 13 bytes and 0 words = ELF
-PASS (f) fkdErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) fkdErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) frkErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) frkErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) frkFmt0.data: 0xc3dfd7, 9 bytes and 0 words = ELF
-PASS (f) hsErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) hsErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) lvAdType.data: 0xbf08c0, 32 bytes and 2 words = ELF
-PASS (f) lvErrIncorrectListSize.data: 0x13a1b10, 0 bytes and 0 words = ELF
-PASS (f) lvErrInvalidVariableOffset.data: 0x137fca0, 0 bytes and 0 words = ELF
-PASS (f) lvErrListTooBig.data: 0x137fcb0, 0 bytes and 0 words = ELF
-PASS (f) lvFmtData.data: 0xc3d38a, 8 bytes and 0 words = ELF
-PASS (f) lvFmtMis.data: 0xc6361f, 83 bytes and 0 words = ELF
-PASS (f) lvFmtTooBig.data: 0xc618e7, 73 bytes and 0 words = ELF
-PASS (f) lvSliceType.data: 0xadd6c0, 32 bytes and 2 words = ELF
-PASS (f) lvU64Type.data: 0xae9980, 32 bytes and 2 words = ELF
-PASS (f) padErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) padErrErrInvalidSerialization.data: 0x137fc90, 0 bytes and 0 words = ELF
-PASS (f) padErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) padFmt0.data: 0xc3d372, 8 bytes and 0 words = ELF
-PASS (f) pbErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) pbErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) pcErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) pcFmtSource.data: 0xc41e5a, 15 bytes and 0 words = ELF
-PASS (f) pcFmtTarget.data: 0xc41e69, 15 bytes and 0 words = ELF
-PASS (f) pdErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) pdErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) pdFmt0.data: 0xc3d372, 8 bytes and 0 words = ELF
-PASS (f) pdcErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) pdcErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) pdcFmt0.data: 0xc3d372, 8 bytes and 0 words = ELF
-PASS (f) ppfErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) ppfErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) ppfFmt0.data: 0xc429b2, 16 bytes and 0 words = ELF
-PASS (f) ppfFmt1.data: 0xc442ad, 18 bytes and 0 words = ELF
-PASS (f) pwErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) pwFmtEpoch.data: 0xc467a3, 21 bytes and 0 words = ELF
-PASS (f) pwFmtIndex.data: 0xc3dfc5, 9 bytes and 0 words = ELF
-PASS (f) saErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) saFmt0.data: 0xc3d372, 8 bytes and 0 words = ELF
-PASS (f) scErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) sdErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) sdErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) smErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) smFmtSlot.data: 0xc3d372, 8 bytes and 0 words = ELF
-PASS (f) smFmtVi.data: 0xc442ad, 18 bytes and 0 words = ELF
-PASS (f) st2ErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) st2ErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) st2Fmt0.data: 0xc442e3, 18 bytes and 0 words = ELF
-PASS (f) st2Fmt1.data: 0xc40043, 12 bytes and 0 words = ELF
-PASS (f) st2Fmt2.data: 0xc49383, 25 bytes and 0 words = ELF
-PASS (f) stsErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) stsErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) stsFmt0.data: 0xc442e3, 18 bytes and 0 words = ELF
-PASS (f) stsFmt1.data: 0xc40043, 12 bytes and 0 words = ELF
-PASS (f) vbErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) vbFmt0.data: 0xc3dfc5, 9 bytes and 0 words = ELF
-PASS (f) veErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) veFmt0.data: 0xc3dfd7, 9 bytes and 0 words = ELF
-PASS (f) veFmt1.data: 0xc442ad, 18 bytes and 0 words = ELF
-PASS (f) vidErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) vidErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) vidFmt0.data: 0xc3dfc5, 9 bytes and 0 words = ELF
-PASS (f) vidFmt1.data: 0xc44ea9, 19 bytes and 0 words = ELF
-PASS (f) vldErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) vldErrErrInvalidSerialization.data: 0x137fc90, 0 bytes and 0 words = ELF
-PASS (f) vldErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) vldFmt0.data: 0xc4d11f, 30 bytes and 0 words = ELF
-PASS (f) vldFmt1.data: 0xc44ea9, 19 bytes and 0 words = ELF
-PASS (f) vldFmt2.data: 0xc40b40, 13 bytes and 0 words = ELF
-PASS (f) vldFmt3.data: 0xc467a3, 21 bytes and 0 words = ELF
-PASS (f) vr1ErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) vr1ErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) wdlErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) wdlErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
-PASS (f) wdlFmt0.data: 0xc442ad, 18 bytes and 0 words = ELF
-PASS (f) wdrErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) wdrErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
+PASS (f) boxedEight.data: 0xd232a8, 8 bytes and 0 words = ELF
+PASS (f) formatActivationEligibilityEpoch.data: 0xc4d11f, 30 bytes and 0 words = ELF
+PASS (f) formatActivationEpoch.data: 0xc44ea9, 19 bytes and 0 words = ELF
+PASS (f) formatAmount.data: 0xc3ec18, 10 bytes and 0 words = ELF
+PASS (f) formatAttestingIndicesMisaligned.data: 0xc6361f, 83 bytes and 0 words = ELF
+PASS (f) formatAttestingIndicesTooBig.data: 0xc618e7, 73 bytes and 0 words = ELF
+PASS (f) formatBalance.data: 0xc3f69e, 11 bytes and 0 words = ELF
+PASS (f) formatBufferLength.data: 0xc546d1, 40 bytes and 0 words = ELF
+PASS (f) formatBuilderIndex.data: 0xc42992, 16 bytes and 0 words = ELF
+PASS (f) formatColumnsMisaligned.data: 0xc61bc4, 74 bytes and 0 words = ELF
+PASS (f) formatColumnsTooBig.data: 0xc5ea2d, 63 bytes and 0 words = ELF
+PASS (f) formatCommitteeIndex.data: 0xc442f5, 18 bytes and 0 words = ELF
+PASS (f) formatData.data: 0xc3d38a, 8 bytes and 0 words = ELF
+PASS (f) formatDepositEpoch.data: 0xc429a2, 16 bytes and 0 words = ELF
+PASS (f) formatEarliestAvailableSlot.data: 0xc49383, 25 bytes and 0 words = ELF
+PASS (f) formatEpoch.data: 0xc3dfd7, 9 bytes and 0 words = ELF
+PASS (f) formatExitEpoch.data: 0xc40b40, 13 bytes and 0 words = ELF
+PASS (f) formatFinalizedEpoch.data: 0xc442e3, 18 bytes and 0 words = ELF
+PASS (f) formatHeadSlot.data: 0xc40043, 12 bytes and 0 words = ELF
+PASS (f) formatIndex.data: 0xc3dfc5, 9 bytes and 0 words = ELF
+PASS (f) formatMaxExecutionPayment.data: 0xc47de4, 23 bytes and 0 words = ELF
+PASS (f) formatNextForkEpoch.data: 0xc43660, 17 bytes and 0 words = ELF
+PASS (f) formatProposalSlot.data: 0xc429b2, 16 bytes and 0 words = ELF
+PASS (f) formatProposerIndex.data: 0xc435e9, 17 bytes and 0 words = ELF
+PASS (f) formatSlot.data: 0xc3d372, 8 bytes and 0 words = ELF
+PASS (f) formatSource.data: 0xc3ec2c, 10 bytes and 0 words = ELF
+PASS (f) formatSourceIndex.data: 0xc41e5a, 15 bytes and 0 words = ELF
+PASS (f) formatStartSlot.data: 0xc40b33, 13 bytes and 0 words = ELF
+PASS (f) formatTarget.data: 0xc3ec36, 10 bytes and 0 words = ELF
+PASS (f) formatTargetIndex.data: 0xc41e69, 15 bytes and 0 words = ELF
+PASS (f) formatValidatorIndex.data: 0xc442ad, 18 bytes and 0 words = ELF
+PASS (f) formatWithdrawableEpoch.data: 0xc467a3, 21 bytes and 0 words = ELF
+PASS (f) itabErrorStringError.data: 0xd28520, 8 bytes and 3 words = ELF
+PASS (f) runtimeStaticuint64s.data: 0xd45780, 2048 bytes and 0 words = ELF
+PASS (f) sszErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
+PASS (f) sszErrIncorrectListSize.data: 0x13a1b10, 0 bytes and 0 words = ELF
+PASS (f) sszErrInvalidSerialization.data: 0x137fc90, 0 bytes and 0 words = ELF
+PASS (f) sszErrInvalidVariableOffset.data: 0x137fca0, 0 bytes and 0 words = ELF
+PASS (f) sszErrListTooBig.data: 0x137fcb0, 0 bytes and 0 words = ELF
+PASS (f) sszErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
+PASS (f) typeAttestationData.data: 0xbf08c0, 32 bytes and 2 words = ELF
+PASS (f) typeCheckpoint.data: 0xbc5c60, 32 bytes and 2 words = ELF
+PASS (f) typeDeposit_Data.data: 0xbe6280, 32 bytes and 2 words = ELF
+PASS (f) typeErrorString.data: 0xb55500, 32 bytes and 2 words = ELF
+PASS (f) typeInt.data: 0xae99c0, 32 bytes and 2 words = ELF
+PASS (f) typeUint64.data: 0xae9980, 32 bytes and 2 words = ELF
+PASS (f) typeUint8.data: 0xae9800, 32 bytes and 2 words = ELF
+PASS (f) typeUint8Slice.data: 0xadd6c0, 32 bytes and 2 words = ELF
 DIFF (d) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ 0x69e2b7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
 DIFF (d) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ 0x69ecf7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
 DIFF (d) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ 0x69f9d7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
@@ -642,152 +543,53 @@ S sha256 111850ffd00f7188a34bce524ab2b6c46806d250bb91b13060924f977b4448db github
 S sha256 f0e2bf0a7e902b2aa2af067b0f5e2747102adbf47c2b00d551a25194be5a5505 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.UnmarshalSSZ.S
 S sha256 bd095ba28de869327ec6b2aa03921ae4f3a4bbfcedfaf723460d8b1931ba8b72 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.MarshalSSZTo.S
 S sha256 31c930db64b0b1f3d1a7f081d4a40062a56c6abfb7c9256257eb1cb5a14bf726 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S
-data sha256 f88667a2dff44ad70b5479f8ceb6efd8a05e347e8f6030d6db94a0e22a2983f9 adCpType.data
-data sha256 60feeaf7b16dd43b486e1acba59b5b1b909da92cfc3f1b05edbc9b3251fda52c adFmtCi.data
-data sha256 0d31de648d797bfdbda38a0d79b17aaab2dc8b1c7a6e032ab0a12911796347a3 adFmtSlot.data
-data sha256 48bc3690cf06faaf66c098c0b09eee99207ab7275339d317eae45498ea99e27a adFmtSource.data
-data sha256 67c04be7c142fa6ae06d34e88af04c8782ec94480e8997ad378daa7d69d79bc6 adFmtTarget.data
-data sha256 1262c36706976bd0225e26b7ec14a360097db678b8b54d31e1edefb2d8a29700 bbrErrSize.data
-data sha256 562bcc6a7cf14066a457941daf571b5cbf6fe25b9426c849dabf73b8d6afce81 bbrFmt0.data
-data sha256 9991b33495eb888b0dbeb434c33246080279a992958b1703c4410566012966e8 bdrErrBytesLength.data
-data sha256 a86c85927bf47c83344c339baa87ce1a35bd3c68ddba765b57a9360922f904a7 bdrErrSize.data
-data sha256 54c9f3f43bc4b6431784bd14f4dc2eadab76c7dea517bad3dd1056fdf1002ca9 berErrBytesLength.data
-data sha256 2490e666f43587f19ff1e7f8f8cb34b4ea7259b721037490466b56175ae292aa berErrSize.data
-data sha256 7138e78f5b5b0803e243926c3e9fc85690a8ad66e3c07cb7ec0218ff825d2338 bhFmtProposer.data
-data sha256 1a23656f714bf406febf29ec82cec103328697858a94634d117977ce1446e47a bhFmtSlot.data
-data sha256 6142172718b59cf3fe59b83e0531e06bf0d178400628413b482499dc0ba253fb biErrBytesLength.data
-data sha256 0cb90895ae617a4a5be7258459d368ef9934cc17dc54933a61bd446dc19ce80f biErrSize.data
-data sha256 63099101a891a9f75085c9d85c59b18937ac9e1aec507778e222845f6ce48f9e bldErrBytesLength.data
-data sha256 f9ec31bf35cbe028b01a41cf0ba9962c000c36f05f7d5626a26fede8675d6da7 bldErrSize.data
-data sha256 0732f89b49f17fc3f44a7c07f3597e4a28a91e9eab7727e648fad7ba387d2b19 bldFmt0.data
-data sha256 3477f484097ab9a4a8ba25d154f341ac93ae6058032695d8d0c2e1996400ca03 bldFmt1.data
-data sha256 b48fd229b48dc3bdf5a97e8abf0e59ee20d87b3386453b1204dd7ba6e1596ae1 bldFmt2.data
-data sha256 ee03c0b982fda2346c3d0ebb21e7c86560805dfe000585179a2e377442b903eb bpfErrSize.data
-data sha256 1932fd9245104aba332ab690a98005d904137b533f698657023bf4cabfbc9b82 bpfFmt0.data
-data sha256 cbc228dbf1683920f6141a860ffd27dcd281a0358ff0584dab7ba4e41a15b01e bpwErrBytesLength.data
-data sha256 e1de280fc466d912c24d52caf5706b854f4a4e320e045b35fe11e368bae0cfac bpwErrSize.data
-data sha256 b4d787383f32cf482d634f8917cd6c3ad7447890a5833c91d3a4098e9f750af6 bpwFmt0.data
-data sha256 8838e0607d0677c68262a8c618798ab7544a3ba3f2fbbde9a7562ec5b28d15a5 bpwFmt1.data
-data sha256 b59e595ff8f7d025b619610b922afc31a7e0711c9ee8625ecc186fd008ef2379 bsrErrSize.data
-data sha256 58092a5520885a24d92c3169c51dbf1b8bf9dc110b388514e3562d0afe5a8f9d bsrFmt0.data
-data sha256 ff45587203953fa8c11b8ce7da1442b4162d42cffc9b9da66c62d739bdeeff37 btcErrBytesLength.data
-data sha256 7bb21aaf58534dafdd196e96fef89fe650be9bb051143804d9caccababdcdfc6 btcErrSize.data
-data sha256 be2ee82d9a02cb94a4be3fc38bbbd36891bcf8a9429fb470b0fd786c73f88bf4 btcFmt0.data
-data sha256 49ec35dbed3e722d1ce7d52e7c3a1a00e18c5a9374a586dd15edf2ec8b087f39 cnrErrBytesLength.data
-data sha256 385687cd967ca063a69e51a17a3604d8063241350d0eea643515e3be359455c7 cnrErrSize.data
-data sha256 56124fb960a66f776039d0c2a8c1a0505ea227c7ff042845078af6ac3eee5eb6 dcdErrIncorrectListSize.data
-data sha256 2ae6ed715d797bae0994b39f883a937ce79e0ca8dac15eb023e41b563e15b687 dcdErrInvalidVariableOffset.data
-data sha256 78ec7b5584c9f927c2533de3315fd164da4c97694b117a99e1d8be26966e90da dcdErrListTooBig.data
-data sha256 af1ce548074c0c1733d0597d7d30de2740ab9ade82908a9b7e6aa9cecfb3402e dcdErrSize.data
-data sha256 da21d6d3aa66cd81348bf1ab808ea5f27be2d51f45a176cd13c7ea4ce8e460f2 dcdFmtMis.data
-data sha256 326992a8787a0169e82883339546e68cd554acbd4b84c7a544b59aba81c84730 dcdFmtTooBig.data
-data sha256 990383f6b7e71cb6fffb2b2359c32e19914d2b1c0ba28c2c2efb5459b78d625a dcdIntType.data
-data sha256 7a7b9b787ae26248c03eaae8aa8b2aaa5c7fbd933521737b3ef4794651d36c7d dcdU64Type.data
-data sha256 bbdbada8c6a85b1280c8c53218ba19295f72578786e2b6cbee4dcbd9449d7cf2 dcdU8Type.data
-data sha256 2f1b15d457098ce54a3de9a9f25a86f9d4542a2f596050333ff5e0b61ae1c6e8 ddErrBytesLength.data
-data sha256 bd446e50dafb64fdaa52537a0208ade327ea68b786e13a8af7c8d6327e6afb4f ddErrSize.data
-data sha256 ed1c83eb7ef5c7e79247b4e4d330c21396f122593c495c0707c2cc3b7050f3e9 depDataType.data
-data sha256 48f90db1d62eac949ee1f473b1d6c704ccceba31411840ff137cdb2da067f654 dmErrBytesLength.data
-data sha256 ea554d743b047ddb5ec22fa44238e618ec84e3d331f5832eeba44369667551bf dmErrSize.data
-data sha256 5e254589e7197423d39863f780be2eaec336b9643d849bf397a61fc13890ba5e dprErrBytesLength.data
-data sha256 5f9d5c839c67f472a312b71d9083d7600b59bf3a28ec5690c0d4e18ebf73326c dprErrSize.data
-data sha256 b2fee99fed95571cc553ea2bb980b7c0e1bb3082370e1ea85df6ac17b05d63b0 e1ErrBytesLength.data
-data sha256 b22e751ba1c1656a5ee57396cd0ff9ad2fd7d92bd9ae99d2618d530255055f86 e1ErrSize.data
-data sha256 40d3831d488960a5ce0f6f6bb723e250e739920c679096d7fbcf28d7aa0f4262 e2eCpFmtW.data
-data sha256 7af206aaac0c8f97cf2a6f8425c9ecaf03140f7632881381c237f99caa5e645b e2eEight.data
-data sha256 8c4451da53bc729260836a653cb34a8d9c616dfa9c530b1e1b4431c94f756bf0 e2eEpFmt.data
-data sha256 0ea2c947b7c93a9a95af7305132015c5856dc85378946fb00e96f8c04b2a78a5 e2eErrBytesLength.data
-data sha256 6591287df2a9e3eea577250faa68be44ece3ff9ea01f25247b3607709e5672e5 e2eErrSize.data
-data sha256 ea90c47a3f539f259a4770d0fc8184c98e95919dab003bcf20660f7d6b6a5192 e2eErrStrType.data
-data sha256 171918d0585711704883fc091d4fdc09a5a8c687200ef8c5a63068f13c021d3b e2eErrorStringItab.data
-data sha256 46e9a720a6b421845266332cfe19ba3c592b7a304f6490720a4bc1d2b72585bd e2eIntType.data
-data sha256 a5e042b45ea0937b1f374f24828f5beafb1e99689d1344a3c38d6ff927fb76ce e2eStaticuint64s.data
-data sha256 035ece5ec36158b6f9f59db39067d395ed6269429a24c44383a31b85da254787 e2eU8Type.data
-data sha256 9a54acdb026093ffd57821455c21c83ec97954951260672c0e6f16ca477321dd efiErrBytesLength.data
-data sha256 90c2141a8c319cc266dbeb4fca95436e91dba5df99216d5f33da91a978a80699 efiErrSize.data
-data sha256 911803fde7fc4ddd6d89494ce1ff9d7bad3ae3f65a0acc41a35ec6ad85ed9ad3 efiFmt0.data
-data sha256 2e4df8431d8a5289739e2c189703f0a9533c6b2f0628f6e5f204f6855ee3eddf encErrBytesLength.data
-data sha256 6cdc02602e9ea0f1f9c236e2a321209b45236506259502b7923bca2ee01d2c87 encErrListTooBig.data
-data sha256 df57f13b830ed703a2f32aa24fd10f89c649fac005247812af4a7b9bdb74e53f encU8Type.data
-data sha256 f65a0274bf7357507fbfb3a489b6c64ceb0d8b780b1941df82d97c9674be1153 eprErrSize.data
-data sha256 6c8acab5e0ecbf74df3be5c9ae8a39b1846082743e641b0ebef59a050622969e eprFmt0.data
-data sha256 8d010ccb251a2f8dfa1fa949ab4459606941a9037575ee279ff17613ff4bff36 fkdErrBytesLength.data
-data sha256 e0c33d62f27c2b006c65d771f41c38e3679ac8b7a855006ab1509db8c882a749 fkdErrSize.data
-data sha256 874d41ca0b98fba519567c75d31e5e9a4800d343f0b2b7cabb337396cfccd488 frkErrBytesLength.data
-data sha256 32ae19d5dc4b86191276fbc3817e626e7efd297584bce56b222c55b27fda4041 frkErrSize.data
-data sha256 bc031f309a8050645acd35ce0a0659c37fde4fdfaef989213e76af9d1e6593b6 frkFmt0.data
-data sha256 08d20cea51710bdc583f78b1e0c5651914d0bc4fd7f2dfbb7712b0d67df5b7cc hsErrBytesLength.data
-data sha256 7ef4c32614326f6bde2ac774803e8e412f3adae8061df36b9af1e0ed49f7758e hsErrSize.data
-data sha256 80ad9844f8ba55eb28c87e510a2b5ff647cfed01675c78adf498df2916cbee96 lvAdType.data
-data sha256 0efcec61e195e9ecded81ba6ee018455dc4de0532edb13dc7a706be3baa76025 lvErrIncorrectListSize.data
-data sha256 2c4a75cb04a529b784f4a425363c1cce069b0b85887e8ffe9b29e5815a873651 lvErrInvalidVariableOffset.data
-data sha256 5748a2125dc76980e6ef762b6efade0d2541de4694eb42f3ecd1edd98f16079e lvErrListTooBig.data
-data sha256 0f254170f281e36163a7e500d5d69c3b7fd091404aa31833aea7d2fb24b6d6f6 lvFmtData.data
-data sha256 bf3cca2a23f2b1464158d037cc18908d8a5ff2d4651cc8cb90a6e133555b97b5 lvFmtMis.data
-data sha256 18ef0f01ec68ab44b50af22e3c0f9e5f676b93a054480370269c8bd369cb55ee lvFmtTooBig.data
-data sha256 c2edcbb8177218a4461e0f5602f7bb9d0982712bc38d980f35f7bb8fc26fd830 lvSliceType.data
-data sha256 b5abc8cb9f5ae2fec788e367088f1e5e5dfeac2f6c45be0188058062b84efa6b lvU64Type.data
-data sha256 64677a725533f48f1422014442c216c04be29a46ce416f7ef291a3e72ad30708 padErrBytesLength.data
-data sha256 68ac13c876de03971abd735e25b233d02a9874088d3ac540d62e64230f82ae8e padErrErrInvalidSerialization.data
-data sha256 f7feb9c0da8fd4496c2665aad147035a46c54c87824f9f5b00bd69d37a3a2088 padErrSize.data
-data sha256 11fec36ef7bcc677c30e9a34424343cb789684d49c220737d1612ae266d1511b padFmt0.data
-data sha256 d22ae141ea538ba8bffad400245666d1930b37add45e4ef2779b066981ae19bc pbErrBytesLength.data
-data sha256 6967d0b116f679682545ede637da2744cb97f79dec422e9ed8eaf0a58b00d41b pbErrSize.data
-data sha256 216c864dc716aed9e4c8468b94e95e40054c492cac16e9772db56d6fd01df13e pcErrSize.data
-data sha256 f9cc4446fffde844ef6ad96b404eaaf4a61f1df347d0bf831a86909bfa185c6a pcFmtSource.data
-data sha256 c7c63ef71a9f1da8e4a9bd1ec4fddac1613db9f01ef3cb6a6373aaa2e1b9b133 pcFmtTarget.data
-data sha256 6a5a2d91beedfe7a6c61c4a460ce313d1e660c80dc3710813ea82fa7601cba96 pdErrBytesLength.data
-data sha256 01104a4873e640931cd415f9891c3085e1fd49a433c3a274182e611333ba3b56 pdErrSize.data
-data sha256 93a056139d90675be45e770b6ea263213f4444a6928b8bb546cc9cfd0aaeaa0d pdFmt0.data
-data sha256 1b26013b20548df09df990c8f4173562949c244663f3354af68714bee86d04eb pdcErrBytesLength.data
-data sha256 df08fa4d9663eebd94303763c527d3f9881e45a7cdeddb64f04348e1064db774 pdcErrSize.data
-data sha256 eb972b3ce441d9bdbe8d7e28b1e25ee78cc6bc7e4bbfc7c9ba6335a80f05e26e pdcFmt0.data
-data sha256 3740152e3759d76e731182cbb3113949567a2082d5ce4956a899d5771685de03 ppfErrBytesLength.data
-data sha256 7864c48b2577713b7aba211b4886f5e2ba19a799a00f5ba6ebdd713fcba2dedf ppfErrSize.data
-data sha256 49e33da5be7f1fc537e5c5d0b606e948a74e624140943079e3c5c5ac51498c3d ppfFmt0.data
-data sha256 f1941b52671f0f5c1c535bb80122ad3b55238aa2087b7b186828f7f9a2c8ab21 ppfFmt1.data
-data sha256 a1118998d4c5b85414b3b81f0fd3ac1c15adcda0548494ff87974d6dff864252 pwErrSize.data
-data sha256 131da066e4a908cc04c18080764b5e7aa18a84b9d7b32d883bb58c1e671175be pwFmtEpoch.data
-data sha256 1b9bc7fcfd0a285d152ed660fcfed400f1b7cab868f652d64e9c29aa70583f91 pwFmtIndex.data
-data sha256 dc651b8124b73a95a974c5e90696e2e7fdbab55f53e8e6abf8ab981f863f3511 saErrSize.data
-data sha256 b24d1cc2f2f786486d595b684ac9c499cb6dea776d0bb376fee1d7551ed16d2b saFmt0.data
-data sha256 3f4e272450b683035afa7b4ec14c1c863a48bc6556038c4c30665d230aca0e6c scErrBytesLength.data
-data sha256 0f79a31132aee4bf4eefb916ec78aaceec3daf41e3a69d3a78f9f6250fa33dc1 sdErrBytesLength.data
-data sha256 70db5487a6810db6b17a13df323020569271292214302f3eec54b87a22613e2c sdErrSize.data
-data sha256 767c9481a38289cc3d86ce886439090de6e3ab095d81c5c9751b7a18bdc091bb smErrSize.data
-data sha256 726065ecdf0508fa1250de14970fe2f17f03bb21d3785a1f901f70c9ce7dc487 smFmtSlot.data
-data sha256 85b303c1327bee357fbe6d822d534f8aabb0a1d5fe7a22f70d321157a6a3ed3d smFmtVi.data
-data sha256 9249c65041c738e74513063d1199a749d59753f5fe86e087f01f68f0ecae8dff st2ErrBytesLength.data
-data sha256 3d4c595d9a316f417aa0e399fbd5f58ac94c9edfa5a01f7cec7a0ec99b32490d st2ErrSize.data
-data sha256 23b3dcff4e74146452940ff3ad8f48ad219beae800a5657d6644ab2eaba30d8b st2Fmt0.data
-data sha256 134a8dc24babaf5598c03d4669456e3e461f4a7385427f027f91d26ef6dbb1c6 st2Fmt1.data
-data sha256 ea91aa17cdd45c6f558cec3c9775876e779859f25d8d1ea5a7a0a78c9cb91c52 st2Fmt2.data
-data sha256 af614d33b4a5b1a49e572ad1f2c9a47d7c068a6f998b2f542ea967896cbc71c1 stsErrBytesLength.data
-data sha256 ca6bd85ab4b81d26b4456e0848661f5af3d73f4a399ac1fa6e4535cc01bbdf8b stsErrSize.data
-data sha256 f36d884f171f022d84c367357e51ff9ba0379ca135863d6b7f426c9c659f3f71 stsFmt0.data
-data sha256 ce1e85b6ba72062b95033137ebca74c2ddcf3f9b7fb8b4d2fcae28b3234b6e17 stsFmt1.data
-data sha256 baea4aec4a91f4c79931ef50238a0e9ea4073e5975d72f36e1a041f633e640ba vbErrSize.data
-data sha256 8eb03590f70f9a0d6676009c6efa44d927d1d8a2ab2b545d8ac06cd0f7442a5c vbFmt0.data
-data sha256 ec3164b0bf87ddff63132abf171f2a46f6f1ee04d617d58058722f66501e1453 veErrSize.data
-data sha256 dee951c79ac73f8195c196161e87ad328a74a02d734a538553c366c51c3c3014 veFmt0.data
-data sha256 0a086cb78d58273554e8ce443ea147dbb5f07b7797df6bc591ec540ef82f8b9b veFmt1.data
-data sha256 58ecbd43df069202fe551d74f0c8096bd3ab29410c338a7b4e0d96a92c524206 vidErrBytesLength.data
-data sha256 248afba8cfb9c01f8ccf9008a7df740dfad9b79f515aed8dda5cf974bb5c99f5 vidErrSize.data
-data sha256 a629c8045c7232ea7d1f6359f8eed02ca592b79660598f28d0e2f5605b422bd5 vidFmt0.data
-data sha256 2bac8a385b26703aaaedc483fe66e17273b0bd5605a41a5e30d2a78b95bb2d3b vidFmt1.data
-data sha256 a3b6cefb0e0e282f801602d981603e6367d3f7be197f4e883e103f5b87551ea4 vldErrBytesLength.data
-data sha256 6de6a2d49fc0355fcf6e59169084568395188b82c1021eae6c097c06a6067139 vldErrErrInvalidSerialization.data
-data sha256 d7c60f4019202caaad52fa59634530c1fa11299f29cbaa0e652e457c7fed3d07 vldErrSize.data
-data sha256 8007b6adf1cb5820f40bfc5819cc5a80fd7cedb41437af15f9974d13d1de3489 vldFmt0.data
-data sha256 ae4a505929770da76e12eb92c32cadbf234b25d5c8d51af56db40e3ef4f8c3fc vldFmt1.data
-data sha256 870cbeefd7f0d79e0f8e7c08d681c555b2b1cab9ad9d56d8e5f2ed284f08025a vldFmt2.data
-data sha256 2105d6bc4f70cec8baf70b21f9bde15274ae7737e323fb473f3ad4102e0043e9 vldFmt3.data
-data sha256 cbad85d18e3a1dea751bf4530d3b24d665da234f676a540bac9a05f88a44b99b vr1ErrBytesLength.data
-data sha256 a11494ff0810ccc57980197672d1104a7d5142dfe42447c3d6bdaed6d7c43313 vr1ErrSize.data
-data sha256 755ec7cf52e9f99e8175cd9f63583e23c6d21bf3919537db3def6d30b5f3f619 wdlErrBytesLength.data
-data sha256 ee524266443a44c838a5c73174d8f8a817eac81cb86da86037926a0ed502a2df wdlErrSize.data
-data sha256 51eab1bf42d21903876df325e5e6887406af7c53fbdcee90d4fdf9f5c77f0fe3 wdlFmt0.data
-data sha256 55182b62d4e266ca72c0263bbbe319034a2c2482e0d55441c7667848f77705f6 wdrErrBytesLength.data
-data sha256 20e66c534d7ba53a6bdf8415fe6776900b04d2430017ff187847b1b03de96b68 wdrErrSize.data
+data sha256 2a57e86bfb7e6ea59c3bcc1528115b7bb671234bf4f5d29d75a1ae0fd51707ce boxedEight.data
+data sha256 d924f2f72e083a237e78e58d7f6775d0f571d6cebbedd166da76269c63c0a05d formatActivationEligibilityEpoch.data
+data sha256 50d25ecc23f77ec013edc520484e7ee45571502fbd16664c0bcdc0e97bf5e4ee formatActivationEpoch.data
+data sha256 e422a2550ec1bcb369f934edbd8689fa4381592abf0ff1009fe76bee9813e134 formatAmount.data
+data sha256 976dccb3ae1d15a70734828edf158716402875b0116bb992d8b8b01e11b45df4 formatAttestingIndicesMisaligned.data
+data sha256 14ba19f3b8c23006445b2ecb64c9bac17399fc0bd4e8044020cd13e7f2eeed38 formatAttestingIndicesTooBig.data
+data sha256 239a154cbc9832995b7e6d0734efaa8721d33c90577590967b6d8fcfa24011c8 formatBalance.data
+data sha256 2136b3963eaafe8f9f8322cbb359c946bdda8052dd307f36562602365f2e01cf formatBufferLength.data
+data sha256 065724638058182febeb600a71822789a58de08ad0bfb8720f17f872cbe3f0cf formatBuilderIndex.data
+data sha256 c2ea651b4e1753891cc97191bcb4809e7dcbe2f78e65a1a6d9891ecde84ae69e formatColumnsMisaligned.data
+data sha256 fa630173ea021ac2e0f9fde4f646de2e60ef04c6af886197afc25882101e0c46 formatColumnsTooBig.data
+data sha256 7c50234cbea64f8ff341d0ba7ecd659e773190cbcdcbe8ae5df677b2a0f2d7c6 formatCommitteeIndex.data
+data sha256 2de8b5cd6287a8361e68080b566364261dd2d93f36c03e207838c29997dadc75 formatData.data
+data sha256 1bf761e45ee6e032db485e382a16d2924563980065c6bb8b1c35cd370cc0ca15 formatDepositEpoch.data
+data sha256 09ec9e65b97f758db2e4a3c60cc4419bcb5e14b3f981ebc5493545afa0a86ef8 formatEarliestAvailableSlot.data
+data sha256 14a5cc59e90146090cac43469959499524b023fe78a0de430d0f554e75a77324 formatEpoch.data
+data sha256 b39c8887ada3aaf29b06a0e41deac3937c1ebc8762db11cfbb4b9031f7b5f343 formatExitEpoch.data
+data sha256 a19be977051682c6c906730196450341751259062f3ae59078440cd82c8d89aa formatFinalizedEpoch.data
+data sha256 21366a04883b0456d9287fafe81077beac619544fdca3eb7d1775d78f2b526a9 formatHeadSlot.data
+data sha256 70eff7e0c4dc251821601d623f4df148caf71361486ef1f3fced833ad84a414e formatIndex.data
+data sha256 178e1f277dcf92eaa457dbbcd407f74e36ca8db08002889dbb2b7445994c5798 formatMaxExecutionPayment.data
+data sha256 706af4bf2cbf87a81fb59ac6fb5f65ec9cfa24d42cefb01ca4f6c9d1ce7f7ad5 formatNextForkEpoch.data
+data sha256 bf6893740fa4676679745f394e465220ef7b2b60e5a605910ba71f1163d466c5 formatProposalSlot.data
+data sha256 a0d6fc3a45f78ee3933fb5f4850df082c6a3a1f99b48542f83b3cb744c87ace7 formatProposerIndex.data
+data sha256 b56511cec479a7bc6e7749669b5dc4771327bf525c44a21513ab59e1300dbf58 formatSlot.data
+data sha256 0ca87f123f67c38e84e80b5b708282a5ea3485d14d0e9cf950e64d4ea7a15526 formatSource.data
+data sha256 b44e3b9460318600a1644a2192cc9442b507495bbf941e87b38c5fc354e1033c formatSourceIndex.data
+data sha256 aeaf8de83b7d9b07390ce6d826683ef693a30df3ac1a7ff43d916e811fc82eff formatStartSlot.data
+data sha256 6b59b4af9d0bfe6869d4579cbde2c3eb83180c9548669d433866e3e5b1ad4934 formatTarget.data
+data sha256 f22308109f920d18ccbb452c9fb3b59ebbda1fbee1d9e691d5ad1ff4f13cc978 formatTargetIndex.data
+data sha256 525a60fa94c93440c97422294b4c0568865329d77f446b7989d3b2448ed4bf63 formatValidatorIndex.data
+data sha256 aa52f116899418a3f4cc86be32c7a91caedb224b2d9f84b4b6832efe6d077d28 formatWithdrawableEpoch.data
+data sha256 488ab49222ecf327f7e2eea780814b6c5021520945dd121895120830c2477b21 itabErrorStringError.data
+data sha256 056bdbfe2f8733904a63921f8daa7f937c71f9329a553285750c76382827126d runtimeStaticuint64s.data
+data sha256 a7f2ec2196828fa34d2e200b0c20cf06b7cf36fac8e261f58ae17034029207fb sszErrBytesLength.data
+data sha256 be20a44a3da23ae7c1074e6fbb1bb26a60a551ed3d92b95ee7c25cf7a186ce1d sszErrIncorrectListSize.data
+data sha256 3e4464ea522621f2e4ad0bd97e06a4baac04ad14c08d53c9421d1f24d6cb7aaf sszErrInvalidSerialization.data
+data sha256 20cebf2d1aa232828fa54cf7763ffffe5c420e8e12a8e325054ce1560209c7c7 sszErrInvalidVariableOffset.data
+data sha256 24f3c94e499238caa09113faeda1f862adc96fa6af6bfde249eb6111cd330c8c sszErrListTooBig.data
+data sha256 74dca8d98a3868428d6c22c8d01a74434a3dc895be20419c690217bc9ef21ada sszErrSize.data
+data sha256 cc67040eb2b9dcf72b4c4c41d3cde2c7a6d7f621878aadb4c70bf8a9b7f287b7 typeAttestationData.data
+data sha256 76863a1f340694f6a5e7d2d6d6d31336c93f2bb35a9ed6d7f84adf308ef4edb0 typeCheckpoint.data
+data sha256 d68af3ba3aee17955a6d76ff323abf701021868701751dd642c98d1f61a44199 typeDeposit_Data.data
+data sha256 f7d47787a0a6c58a42695c9591734e9c5822511650b178f0692020472459d8dc typeErrorString.data
+data sha256 857a56e5112b42ff33a6f06cf26a161ec04da89b699acb3215933997221f87e6 typeInt.data
+data sha256 9f71c555470eadd03a25111f4cb7941087ec95bb4a60bab7623ba9174d4d56f7 typeUint64.data
+data sha256 20dd13be241b4abef1d3b9b691bbee17fe3721451141f4ee930051b11281ab16 typeUint8.data
+data sha256 ba799bae699b5b26ff0c1377a1cf270aa6b8ae6faebaafc4637024dfcaa2f168 typeUint8Slice.data
 PASS all
-BUNDLE sha256 dcc9256ffed2eacaeb3755c4c915198c7386f5ff78bf422b035745670d48cec1
+BUNDLE sha256 fbe16f1fdac285e16cea2215ca84196264f02f13652b140530a0c9747cedb208

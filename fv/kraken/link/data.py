@@ -31,7 +31,7 @@ conv = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(conv)
 
 ABI_TYPE_WORDS = [24, 32]  # abi.Type: Equal func, GCData
-# (id, label, offset, length, pointer slots)
+# (id, label, offset, length, pointer slots); the id None takes the id of `item_id`
 ITEMS = [
     ("blFmtB", "go_string._", 526, 5, []),
     ("bvFmtJ", "go_string._", 511, 5, []),
@@ -97,6 +97,36 @@ def symbols(nm):
     return by
 
 
+def item_id(label, off, bs):
+    """The data id of an item whose table gives the id `None`, derived from the ELF item by a fixed rule.
+    - A named ELF symbol at offset 0 (`<package>.<Name>`, not a group symbol): the package, then the name with its
+      first letter upper case: `ssz.ErrSize` -> `sszErrSize`, `runtime.staticuint64s` -> `runtimeStaticuint64s`.
+    - An itab symbol `go:itab.*<package>.<Type>,<interface>` (clean name `go_itab._<package>.<Type>_<interface>`):
+      `itab`, then the type and the interface with their first letters upper case: `itabErrorStringError`.
+    - A slice of the unnamed read-only strings (`go_string._`): the word `format` and the words of its text:
+      `<Field>: %w` -> `format<Field>`; `ssz-max exceeded: c.<Field> has %d elements, ...` -> `format<Field>TooBig`;
+      `misaligned bytes: c.<Field> length is %d, ...` -> `format<Field>Misaligned`;
+      `expected buffer of length %d received %d` -> `formatBufferLength`.
+    Any other item needs an id in its table (for example a type descriptor: `typeUint8`)."""
+    up = lambda s: s[:1].upper() + s[1:]
+    m = re.fullmatch(r"([a-z]\w*)\.([A-Za-z]\w*[A-Za-z0-9])", label)
+    if m and off == 0:
+        return m[1] + up(m[2])
+    m = re.fullmatch(r"go_itab\._\w+\.(\w+)_(\w+)", label)
+    if m and off == 0:
+        return "itab" + up(m[1]) + up(m[2])
+    if label == "go_string._":
+        text = bs.decode("ascii")
+        for pat, form in ((r"(\w+): %w", "format{}"),
+                          (r"ssz-max exceeded: c\.(\w+) has %d elements, ssz-max is \d+: %w", "format{}TooBig"),
+                          (r"misaligned bytes: c\.(\w+) length is %d, which is not a multiple of \d+: %w", "format{}Misaligned"),
+                          (r"expected buffer of length %d received %d()", "formatBufferLength")):
+            m = re.fullmatch(pat, text)
+            if m:
+                return form.format(m[1])
+    raise SystemExit(f"no id rule for the item at {label}+{off}: give the id in the item table")
+
+
 def main(outdir, dest=None):
     outdir = pathlib.Path(outdir)
     b, secs = read_elf(outdir / "p1bin-amd64")
@@ -128,6 +158,8 @@ def main(outdir, dest=None):
     for ident, label, off, n, words in ITEMS:
         a = addr(label) + off
         bs = elf_bytes(b, secs, a, n) if n else b""
+        if ident is None:
+            ident = item_id(label, off, bs)
         lines = [f"# {ident}: link/data.py, p1bin-amd64 bytes [{a:#x}, {a + n:#x})", f"at {label} {off}"]
         i, raw = 0, []
 

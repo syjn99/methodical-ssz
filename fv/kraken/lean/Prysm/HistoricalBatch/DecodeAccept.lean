@@ -5,7 +5,7 @@ import Prysm.HistoricalBatch.Statements
 # `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
 * head 0–29 (hand steps): guard, prologue (`sub $0x38`), size check, spills, `makeslice` of the BlockRoots backing
-  array (`MakesliceC Heap lvSliceType_addr 24 S`, cnt 8192), len = cap = 8192, writeBarrier = 0, ptr, rax = 0,
+  array (`MakesliceC Heap typeUint8Slice_addr 24 S`, cnt 8192), len = cap = 8192, writeBarrier = 0, ptr, rax = 0,
   `jmp L_a0`;
 * BlockRoots loop 40–84, 36–39: `Decode.block_roots_loop`;
 * middle 86–103 (hand steps): `makeslice` of the StateRoots backing array, len = cap = 8192, writeBarrier = 0, ptr,

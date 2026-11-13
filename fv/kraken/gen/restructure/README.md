@@ -164,6 +164,10 @@ The maps apply in this order:
   The modules `EncodeFastPathExamples` and `DecodeAcceptExamples` become `EncodeFastPathExampleIndex` and `DecodeAcceptExampleIndex`.
   The module `Uint64DecoderKindAnchors` becomes `Uint64DecoderKindSameAsHand`.
   A script renames the tactic `bytesdec_z` to `bytesdec_offset_zero_case`, and the kind name in `kindcheck.py` and `scalgen.py`.
+- `maps/data-names/`: plain ids for the ELF data of the Prysm link set.
+  The data names `ElfData.PrysmTarget.<id>`, `<id>_addr` and `<id>_addr_eq` take the new ids, and
+  `Prysm.Deposit.Code.depDataType_addr` becomes the data include `ElfData.PrysmTarget.typeDeposit_Data_addr`.
+  A script renames the data files (`prysm/go1.26.10/link-set/data-ids-old-new.tsv`) and the item tables of the link scripts.
 
 Some steps were applied by scripts, not by maps. The inverse mode of `rename.py` does not undo them.
 The commit message of each such step lists its edits:

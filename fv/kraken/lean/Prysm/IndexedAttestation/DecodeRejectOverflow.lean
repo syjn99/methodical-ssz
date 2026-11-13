@@ -30,7 +30,7 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
   have hz1 := rsp.toNat_lt_size; have hz2 := guard.toNat_lt_size; have hz3 := rcx.toNat_lt_size
   simp only [UInt64.size] at hz1 hz2 hz3
   generalize hSB : StaticBox (BitVec.ofNat 64 ((rcx.toNat - 228) / 8)) = SB at h_mem
-  rw [ElfData.PrysmTarget.lvErrListTooBig_addr_eq, ElfData.PrysmTarget.lvFmtTooBig_addr_eq] at h_mem
+  rw [ElfData.PrysmTarget.sszErrListTooBig_addr_eq, ElfData.PrysmTarget.formatAttestingIndicesTooBig_addr_eq] at h_mem
   -- the argument array as two 16-byte chunks
   rw [← List.take_append_drop 16 aw, at_app (aw.take 16) (aw.drop 16) (b := rsp.toBitVec - 64)
     (by simp only [List.length_take, haw]; indexed_attestation_addr) (by simp [haw])] at h_mem
@@ -226,7 +226,7 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
     (by
       dsimp only
       rw [show rsp.toBitVec - 176 + 96 = rsp.toBitVec - 80 by indexed_attestation_addr]
-      rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by indexed_attestation_addr, ElfData.PrysmTarget.e2eIntType_addr_eq,
+      rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by indexed_attestation_addr, ElfData.PrysmTarget.typeInt_addr_eq,
         Runtime.staticBox_congr hQv, hSB,
         at_app (Int.toBytes 8 (label "type__" + 387520).toBitVec.toInt ++ Int.toBytes 8 rax1.toBitVec.toInt ++ ity)
           (Int.toBytes 8 e1.toBitVec.toInt) (a := rsp.toBitVec - 80) (b := rsp.toBitVec - 56) (by simp only [List.length_append, Int.toBytes_length, hity]; indexed_attestation_addr) (by simp only [List.length_append, Int.toBytes_length, hity]; omega),
@@ -270,7 +270,7 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
   rw [hQv] at hbox1
   refine ⟨?_, hrax2, ?_, ?_, ?_, rax1.toBitVec, hb1, sp2, stk2, av2, hsp2, hstk2, hbox1, by omega, ?_⟩
   rotate_right
-  · rw [ElfData.PrysmTarget.lvErrListTooBig_addr_eq, ElfData.PrysmTarget.lvFmtTooBig_addr_eq, ElfData.PrysmTarget.e2eIntType_addr_eq]
+  · rw [ElfData.PrysmTarget.sszErrListTooBig_addr_eq, ElfData.PrysmTarget.formatAttestingIndicesTooBig_addr_eq, ElfData.PrysmTarget.typeInt_addr_eq]
     rw [show k + 79 + 1 = k + 80 from rfl] at Hm2
     rw [show rsp.toBitVec - 176 + 96 = rsp.toBitVec - 80 by indexed_attestation_addr] at Hm2
     rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by indexed_attestation_addr, Runtime.staticBox_congr hQv, hSB] at Hm2

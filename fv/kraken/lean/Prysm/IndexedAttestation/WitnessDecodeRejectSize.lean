@@ -81,7 +81,7 @@ theorem runs_size (len : UInt64) (hlen : len.toNat < 228) (zmms : RegZmms) (flag
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       wit_split []
-      simp only [cs0, R1, w, ElfData.PrysmTarget.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      simp only [cs0, R1, w, ElfData.PrysmTarget.sszErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm_l] at H ⊢
@@ -103,7 +103,7 @@ theorem runs_offset (len : UInt64) (hlen : 228 ≤ len.toNat) (zmms : RegZmms) (
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       wit_split []
-      simp only [cs0, R2, w, ElfData.PrysmTarget.lvErrInvalidVariableOffset_addr, label_ivo, UInt64.toBitVec_ofNat,
+      simp only [cs0, R2, w, ElfData.PrysmTarget.sszErrInvalidVariableOffset_addr, label_ivo, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢

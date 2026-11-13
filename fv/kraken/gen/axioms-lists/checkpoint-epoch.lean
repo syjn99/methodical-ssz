@@ -64,7 +64,7 @@ import Prysm.Checkpoint.GoValueWitness
 #print axioms Prysm.Checkpoint.Witness.Size.runs
 #print axioms Prysm.Epoch.Decode.reject_size
 #print axioms Prysm.Epoch.Decode.reject_static_table
-#print axioms ElfData.PrysmTarget.e2eStaticuint64s_addr_eq
+#print axioms ElfData.PrysmTarget.runtimeStaticuint64s_addr_eq
 #print axioms Prysm.Epoch.Witness.DecodeRejectSize.runs
 #print axioms Prysm.Epoch.Witness.DecodeRejectSize.InputLength9.runs
 #print axioms Prysm.Epoch.Witness.DecodeRejectSize.InputLength300.runs

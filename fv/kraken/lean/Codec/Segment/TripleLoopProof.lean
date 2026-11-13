@@ -242,7 +242,7 @@ theorem vtri_iter (k w : Nat) (hkw : TriSize k w) (n : Nat) (hn : n < 2 ^ 31) (l
       ⋆ Eq ((Int.toBytes 8 A.toInt).At aA) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 n).toInt).At aL)
       ⋆ Eq ((Codec.sliceHeaders (OfNat.ofNat w) ps ++ Codec.zeroBytes (24 * (n - i))).At A) ⋆ Codec.elementBlocks ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf jH ∧ st.data.regs.rax.toNat = i + 1
         ∧ st.data.regs.rsp = { toBitVec := sp } ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -301,7 +301,7 @@ theorem vtri_loop (k w : Nat) (hkw : TriSize k w) (n : Nat) (hn : n < 2 ^ 31) (l
     (haL : recv + fL.toBitVec = aL) (haA : recv + fP.toBitVec = aA) (hsrc : bf + src.toBitVec = bfs)
     (pks : List (List UInt8)) (hpks : pks.length = n) (hpk : ∀ e ∈ pks, e.length = w)
     (rbp0 r140 : UInt64) (S : Nat) (Heap : Nat → DataMem → Prop) (R : DataMem → Prop)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
     ∀ (j i : Nat) (ps : List (BitVec 64)) (lI l3 lP spl rslot lo : List UInt8) (avail : Nat) (s : MachineData),
     i + j = n → ps.length = i → lI.length = 8 → l3.length = 8 → lP.length = 8 →
     spl.length = 24 → rslot.length = 8 → lo.length = S → w * j ≤ avail →

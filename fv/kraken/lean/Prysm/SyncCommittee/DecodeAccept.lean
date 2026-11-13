@@ -7,7 +7,7 @@ import Prysm.SyncCommittee.Statements
 # `(*v1alpha1.SyncCommittee).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
 * head 0–29 (hand steps): guard, prologue (`sub $0x30`), size check, spills, `makeslice` of the `[][]byte` backing
-  array (`MakesliceC Heap lvSliceType_addr 24 S`, cnt 512), Pubkeys len = cap = 512, writeBarrier = 0, Pubkeys ptr,
+  array (`MakesliceC Heap typeUint8Slice_addr 24 S`, cnt 512), Pubkeys len = cap = 512, writeBarrier = 0, Pubkeys ptr,
   rax = 0, `jmp L_a0`;
 * element loop 40–79, 36–39: `Prysm.SyncCommittee.Decode.loop` (512 iterations; each proves the `panicBounds` branch not taken);
 * AggregatePubkey 81–105: `Decode.aggregate_pubkey_seg` (the literal-size statement of `Codec.bytesdec_seg 48`, src 24576);
@@ -43,7 +43,7 @@ theorem Decode.aggregate_pubkey_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 94 + 12) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧

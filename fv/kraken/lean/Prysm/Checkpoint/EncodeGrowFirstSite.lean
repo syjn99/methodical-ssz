@@ -6,7 +6,7 @@ import Prysm.Checkpoint.EncodeFastPath
 `Encode.grow_first_site`: `cap(dst) < len(dst) + 8` (the first capacity test,
 directives 17–18, fails), so the inlined `append(dst, epoch bytes...)` calls
 `runtime.growslice(old = dst.ptr, newLen = len + 8, oldCap = cap, num = 8,
-et = uint8)` (directives 19–27, contract `GrowsliceC Heap e2eU8Type_addr 1 S`,
+et = uint8)` (directives 19–27, contract `GrowsliceC Heap typeUint8_addr 1 S`,
 an existing contract form; instance esz 1, Go 1.26.10 `growslice` /
 `nextslicecap` byte-identical to 1.26.3 in the runtime source). With the
 premise `len + 40 ≤ nextSliceCap (len + 8) cap` the new capacity is enough for
@@ -84,7 +84,7 @@ theorem Encode.grow_first_site (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog 
     (hlc : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)
     (hfit : s.regs.rcx.toNat + 40 ≤ nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40

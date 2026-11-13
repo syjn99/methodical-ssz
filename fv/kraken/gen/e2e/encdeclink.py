@@ -51,7 +51,7 @@ def write_data(outdir, cpdir, t3dir):
     u8 = e2elink.operand([cu[cu.index("callq runtime.makeslice") - 3]], lea.format("rax"))
     t3 = pathlib.Path(t3dir) / "data"
     assert tys[0] == u8 and len(tys) == 2, tys
-    assert f"\nat {tys[1][0]} {tys[1][1]}\n" in (t3 / "lvU64Type.data").read_text(), tys
+    assert f"\nat {tys[1][0]} {tys[1][1]}\n" in (t3 / "typeUint64.data").read_text(), tys
     # convT64 type word = type:int of the Epoch decoder
     inttype = [e2elink.operand([l], lea.format("rdx")) for l in eu if re.fullmatch(lea.format("rdx"), l)][0]
     cv = [i for i, l in enumerate(m) if l == "callq runtime.convT64"]
@@ -73,11 +73,11 @@ def write_data(outdir, cpdir, t3dir):
         assert any(re.fullmatch(rf"mov ssz\.{g}\(%rip\),%r[a-z]+", l) for l in m), g
         errs[g] = f"ssz.{g}"
     T = data.ABI_TYPE_WORDS
-    its = [("dcdU8Type", tys[0][0], tys[0][1], 48, T), ("dcdU64Type", tys[1][0], tys[1][1], 48, T),
-           ("dcdIntType", inttype[0], inttype[1], 48, T),
-           ("dcdFmtTooBig", fm[0][0][0], fm[0][0][1], fm[0][1], []),
-           ("dcdFmtMis", fm[1][0][0], fm[1][0][1], fm[1][1], [])]
-    its += [(f"dcd{g}", lab, 0, 0, []) for g, lab in errs.items()]
+    its = [("typeUint8", tys[0][0], tys[0][1], 48, T), ("typeUint64", tys[1][0], tys[1][1], 48, T),
+           ("typeInt", inttype[0], inttype[1], 48, T),
+           (None, fm[0][0][0], fm[0][0][1], fm[0][1], []),
+           (None, fm[1][0][0], fm[1][0][1], fm[1][1], [])]
+    its += [(None, lab, 0, 0, []) for g, lab in errs.items()]
     for it in its:
         print("item", it[:4])
     data.ITEMS = its

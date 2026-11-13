@@ -124,7 +124,7 @@ theorem Decode.source (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
       ⋆ Eq (se.At (bf + 48)) ⋆ Eq (sroot.At (bf + 56))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 224 < rsp0.toNat)
-    (hno : NewobjectC Heap ElfData.PrysmTarget.adCpType_addr 72 (S + 96)) (hcp : Prysm.Checkpoint.Decode.accept_function_spec Heap S) :
+    (hno : NewobjectC Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 (S + 96)) (hcp : Prysm.Checkpoint.Decode.accept_function_spec Heap S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 172) ∧ st.data.regs.rsp = { toBitVec := rsp0.toBitVec - 120 }
         ∧ st.data.regs.rbp = { toBitVec := rsp0.toBitVec - 8#64 } ∧ st.data.regs.r14 = r140 ∧

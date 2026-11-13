@@ -10,7 +10,7 @@ Epoch encoder runs first: with `cap ≥ len + 8` the code (directives 0–35, th
 same prefix as `Encode.fast_path`) has already written the 8 epoch bytes at
 `dst[len:len+8]` when directives 37–38 (`cmpq $0x20,0x18(%rax); jne L_108`)
 find `len(Root) ≠ 32`. Directives 71–79: `rdi, rsi` = the two words of
-`ssz.ErrBytesLength` (address = data item `e2eErrBytesLength_addr`),
+`ssz.ErrBytesLength` (address = data item `sszErrBytesLength_addr`),
 `rax = rbx = rcx = 0` (nil slice), epilogue.
 
 The conclusion states the side effect exactly (the epoch bytes are written before the root length test): `dst[len:len+8]`
@@ -43,7 +43,7 @@ theorem Encode.reject_length (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
       ⋆ Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 32))
       ⋆ Eq (ctl.At (s.regs.rax.toBitVec + 40))
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrBytesLength_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrBytesLength_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat) :
@@ -63,7 +63,7 @@ theorem Encode.reject_length (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
           ⋆ Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 32))
           ⋆ Eq (ctl.At (s.regs.rax.toBitVec + 40))
           ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrBytesLength_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrBytesLength_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -160,7 +160,7 @@ theorem Encode.reject_length (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
   klabel hk hf marshalSSZTo 71
   kat hk marshalSSZTo 71
   kat hk marshalSSZTo 72
-  rw [← ElfData.PrysmTarget.e2eErrBytesLength_addr_eq]
+  rw [← ElfData.PrysmTarget.sszErrBytesLength_addr_eq]
   apply load_step _ _ _ _ (Int.toBytes 8 e0.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 73

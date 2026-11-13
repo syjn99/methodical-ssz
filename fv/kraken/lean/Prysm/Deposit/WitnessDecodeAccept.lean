@@ -78,8 +78,8 @@ theorem label_wb : label "runtime.writeBarrier" = 0x10008 :=
   mk_label P _ 8 _ (by simp [P, dataLabels]) (by decide)
 
 /-- The text of `Prysm.SyncCommittee.Witness.DecodeAccept.u8_ne_slice` (that module declares its own `Host` instance). -/
-theorem u8_ne_slice : ElfData.PrysmTarget.e2eU8Type_addr ≠ ElfData.PrysmTarget.lvSliceType_addr := by
-  simp only [ElfData.PrysmTarget.e2eU8Type_addr, ElfData.PrysmTarget.lvSliceType_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+theorem u8_ne_slice : ElfData.PrysmTarget.typeUint8_addr ≠ ElfData.PrysmTarget.typeUint8Slice_addr := by
+  simp only [ElfData.PrysmTarget.typeUint8_addr, ElfData.PrysmTarget.typeUint8Slice_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0

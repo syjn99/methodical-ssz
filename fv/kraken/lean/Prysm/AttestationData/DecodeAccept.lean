@@ -27,7 +27,7 @@ function specifications `Prysm.Slot.Decode.accept_function_spec_holds`, `Prysm.C
 `kS`, `kI`, `kC`, `kE` in the host); the statement has no hypothesis about their behaviour.
 The runtime contract forms (`Runtime/Contracts.lean`, `Runtime/NewobjectContract.lean`) stay visible: the
 Checkpoint callee's `MakesliceC … S` / `MemmoveC S` (what `Prysm.Checkpoint.Decode.accept_function_spec_holds` needs) and this
-function's own `MakesliceC … (S + 96)`, `MemmoveC (S + 96)`, `NewobjectC adCpType 72 (S + 96)`
+function's own `MakesliceC … (S + 96)`, `MemmoveC (S + 96)`, `NewobjectC typeCheckpoint 72 (S + 96)`
 (its runtime calls get the `S + 96` stack bytes below their return slot, which contain the
 Checkpoint callee's frame and its own `S` scratch bytes).
 
@@ -112,9 +112,9 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
       ⋆ Eq (aS.At (s.regs.rax.toBitVec + 48)) ⋆ Eq (aT.At (s.regs.rax.toBitVec + 56))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 224 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 128) (hav : 240 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S)
-    (hms' : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (S + 96)) (hmm' : MemmoveC (S + 96))
-    (hno : NewobjectC Heap ElfData.PrysmTarget.adCpType_addr 72 (S + 96)) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S)
+    (hms' : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 96)) (hmm' : MemmoveC (S + 96))
+    (hno : NewobjectC Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 (S + 96)) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

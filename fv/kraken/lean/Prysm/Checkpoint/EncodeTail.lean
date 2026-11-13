@@ -14,7 +14,7 @@ From here the code is the same for both prefixes. Three tails, by the code's bra
   `(b, len + 40, C, nil)`.
 - `Encode.tail_grow` (`len(Root) = 32`, `len + 8 ≤ C < len + 40`): directives 33–41 (`jae` not
   taken), 42–49 the second `runtime.growslice(old = b, newLen = len + 40, oldCap = C, num = 32,
-  et = uint8)` (contract `GrowsliceC Heap e2eU8Type_addr 1 S`, the existing form, instance esz 1),
+  et = uint8)` (contract `GrowsliceC Heap typeUint8_addr 1 S`, the existing form, instance esz 1),
   50–54 restore, 55–70 memmove into the new block and return `(nb, len + 40, C2, nil)`. The old
   block keeps `pre ++ epoch` (it is the growslice source).
 - `Encode.tail_rej` (`len(Root) ≠ 32`): directives 33–38 (`jne L_108` taken), 71–79: the two words of
@@ -194,7 +194,7 @@ theorem Encode.tail_rej (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
       ⋆ Eq (e8.At (rsp0.toBitVec - 64))
       ⋆ Eq ((Int.toBytes 8 p.toInt).At (rcv + 16)) ⋆ Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (rcv + 24))
       ⋆ Eq (pre.At b) ⋆ Eq (d0.At (b + L.toBitVec))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrBytesLength_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrBytesLength_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ R) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
@@ -205,7 +205,7 @@ theorem Encode.tail_rej (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
           ⋆ Eq (e8.At (rsp0.toBitVec - 64))
           ⋆ Eq ((Int.toBytes 8 p.toInt).At (rcv + 16)) ⋆ Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (rcv + 24))
           ⋆ Eq (pre.At b) ⋆ Eq (e8.At (b + L.toBitVec))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrBytesLength_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrBytesLength_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 33)⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -240,7 +240,7 @@ theorem Encode.tail_rej (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   klabel hk hf marshalSSZTo 71
   kat hk marshalSSZTo 71
   kat hk marshalSSZTo 72
-  rw [← ElfData.PrysmTarget.e2eErrBytesLength_addr_eq]
+  rw [← ElfData.PrysmTarget.sszErrBytesLength_addr_eq]
   apply load_step _ _ _ _ (Int.toBytes 8 e0.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk marshalSSZTo 73

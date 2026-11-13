@@ -167,11 +167,11 @@ def items(outdir, cpdir):
     assert [n for _, n in df] == [8, 18, 10, 10] and mf == df[2:], (df, mf)
     T = data.ABI_TYPE_WORDS
     its = [
-        ("adCpType", cpt[0], cpt[1], 48, T),
-        ("adFmtSlot", df[0][0][0], df[0][0][1], df[0][1], []),
-        ("adFmtCi", df[1][0][0], df[1][0][1], df[1][1], []),
-        ("adFmtSource", df[2][0][0], df[2][0][1], df[2][1], []),
-        ("adFmtTarget", df[3][0][0], df[3][0][1], df[3][1], []),
+        ("typeCheckpoint", cpt[0], cpt[1], 48, T),
+        (None, df[0][0][0], df[0][0][1], df[0][1], []),
+        (None, df[1][0][0], df[1][0][1], df[1][1], []),
+        (None, df[2][0][0], df[2][0][1], df[2][1], []),
+        (None, df[3][0][0], df[3][0][1], df[3][1], []),
     ]
     return data, its
 

@@ -317,7 +317,7 @@ How to handle a new finding is in `../README.md` section 7.
 - What: `lean/Prysm/Checkpoint/CapacityReservedCode.lean` includes `.S` files from a directory that `lean/lakefile.toml` does not declare as an input.
   A change in such a file does not make Lake build the proofs again.
 - Where: `prysm/go1.26.10/opt-r1/link/norm` (the capacity-reserved test ELF). The link set `prysm/go1.26.10/link-set` is an input.
-  `Prysm.Deposit.Code.depDataType_addr` is a hand definition. `gen/e2e/depcheck_data.py` compares it with its data file.
+  `ElfData.PrysmTarget.typeDeposit_Data_addr` comes from the data include of its data file. `gen/e2e/depcheck_data.py` checks this.
 - State: open for the capacity-reserved test ELF. A `lakefile.toml` change needs user approval.
 
 ### Inventory script trusts its method list

@@ -6,7 +6,7 @@ import Prysm.Checkpoint.EncodeTail
 `Encode.tail_grow`: `len(Root) = 32` and `len + 8 ≤ C < len + 40` (the block holds the epoch bytes,
 the root does not fit). Directives 33–41 (`jae L_cf` not taken), 42–43 save `len + 8` at rsp0 − 72
 and `Root.ptr` at rsp0 − 16, 44–49 `runtime.growslice(old = b, newLen = len + 40, oldCap = C,
-num = 32, et = uint8)` with the contract `GrowsliceC Heap e2eU8Type_addr 1 S` (existing form,
+num = 32, et = uint8)` with the contract `GrowsliceC Heap typeUint8_addr 1 S` (existing form,
 instance esz 1; `old` = the first `len + 8` bytes of the block = `pre ++ epoch`), 50–54 restore,
 55–62 spills and `memmove(nb + len + 8, Root.ptr, 32)`, 63–70 return `(nb, len + 40, C2, nil)`
 with `nextSliceCap (len + 40) C ≤ C2`. The old block is unchanged (it keeps `pre ++ epoch`); the
@@ -63,7 +63,7 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
       ⋆ Eq (pre.At b) ⋆ Eq (d0.At (b + L.toBitVec)) ⋆ Heap avail ⋆ R)
     (hlo : L.toNat + 8 ≤ C.toNat) (hhi : C.toNat < L.toNat + 40)
     (hbud : 2 * nextSliceCap (L.toNat + 40) C.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hgs : GrowsliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec
         ∧ st.data.regs.rbx.toNat = L.toNat + 40 ∧ nextSliceCap (L.toNat + 40) C.toNat ≤ st.data.regs.rcx.toNat
@@ -292,7 +292,7 @@ theorem Encode.tail_grow_call (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k
       (fun st => st.pc = label "runtime.growslice" ∧ st.data.regs.rsp = { toBitVec := rsp0.toBitVec - 120 }
         ∧ st.data.regs.rbp = { toBitVec := rsp0.toBitVec - 8#64 } ∧ st.data.regs.r14 = r140
         ∧ st.data.regs.rax.toBitVec = b ∧ st.data.regs.rbx.toNat = L.toNat + 40 ∧ st.data.regs.rcx = C
-        ∧ st.data.regs.rdi.toNat = 32 ∧ st.data.regs.rsi.toBitVec = ElfData.PrysmTarget.e2eU8Type_addr ∧
+        ∧ st.data.regs.rdi.toNat = 32 ∧ st.data.regs.rsi.toBitVec = ElfData.PrysmTarget.typeUint8_addr ∧
         (Eq ((Int.toBytes 8 (Host.addrOf (k + 50)).toBitVec.toInt).At (rsp0.toBitVec - 120))
           ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp0.toBitVec)
           ⋆ Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (rsp0.toBitVec - 8))

@@ -145,8 +145,8 @@ These decisions are binding for every step.
 4. The link sets of the Prysm ELF are merged into one link set, `prysm/go1.26.10/link-set`, with one data reader.
    The data module is `Prysm/ElfData/PrysmTarget.lean` (namespace `ElfData.PrysmTarget`).
    The reader is `Prysm/ElfData/PrysmTargetReader.lean` with the command `prysm_data_include`.
-   The data names keep the ids of the `.data` files, for example `e2eErrSize_addr`.
-   A later step can rename the `.data` files and these names together.
+   The data names are the ids of the `.data` files. The step data-names gave each ELF item a plain id, for example
+   `sszErrSize_addr` (`link/data.py` `item_id`); `prysm/go1.26.10/link-set/data-ids-old-new.tsv` gives the earlier ids.
 5. A module that holds two types stays one module (for example the Slot and CommitteeIndex decoders in one file).
    Each namespace block of that module goes to the namespace of its own type.
    The module goes under the type of the first block.

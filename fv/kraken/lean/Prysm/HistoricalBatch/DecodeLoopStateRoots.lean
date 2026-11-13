@@ -40,7 +40,7 @@ theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
       ⋆ Eq ((Int.toBytes 8 A.toInt).At (recv + 24)) ⋆ Eq ((Int.toBytes 8 8192).At (recv + 32))
       ⋆ Eq ((Codec.sliceHeaders 32 ps ++ Codec.zeroBytes (24 * (8192 - i))).At A) ⋆ Codec.elementBlocks ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 108) ∧ st.data.regs.rax.toNat = i + 1
         ∧ st.data.regs.rsp = { toBitVec := sp } ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -273,7 +273,7 @@ theorem Decode.state_roots_loop (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
     (sp recv bf A : BitVec 64) (pks : List (List UInt8)) (hpks : pks.length = 8192)
     (hpk : ∀ e ∈ pks, e.length = 32) (rbp0 r140 : UInt64) (S : Nat)
     (Heap : Nat → DataMem → Prop) (R : DataMem → Prop)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) :
     ∀ (j i : Nat) (ps : List (BitVec 64)) (l18 l20 l28 l30 spl rslot lo : List UInt8) (avail : Nat)
       (s : MachineData),
     i + j = 8192 → ps.length = i → l18.length = 8 → l20.length = 8 → l28.length = 8 → l30.length = 8 →

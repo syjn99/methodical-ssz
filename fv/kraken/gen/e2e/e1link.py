@@ -83,7 +83,7 @@ def items(outdir, cpdir, addir):
     """Eth1Data has no fmt.errorf and no newobject call. The shared operands (uint8 type word of makeslice
     and growslice, ssz.ErrSize, ssz.ErrBytesLength, writeBarrier) are asserted equal to the Checkpoint /
     AttestationData sets' operands. check.py (f) needs one data file at least: the set writes the two
-    address-only error globals that its own code names (e1ErrSize, e1ErrBytesLength; length 0)."""
+    address-only error globals that its own code names (sszErrSize, sszErrBytesLength; length 0)."""
     spec = importlib.util.spec_from_file_location("data", LINK / "data.py")
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
@@ -110,7 +110,7 @@ def items(outdir, cpdir, addir):
     assert ebl == e2elink.operand(cm, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rdi()"), ebl
     wb = r"cmpl \$0x0,([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\)"
     assert e2elink.operand(du, wb) == e2elink.operand(au, wb)
-    its = [("e1ErrSize", esz[0], 0, 0, []), ("e1ErrBytesLength", ebl[0], 0, 0, [])]
+    its = [(None, esz[0], 0, 0, []), (None, ebl[0], 0, 0, [])]
     return data, its
 
 

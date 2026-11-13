@@ -1,0 +1,3 @@
+# old path	new path	meaning (paths are relative to the repository root)
+# Step data-names: no Lean module moves. The hand-edit script renames the data files of
+# fv/kraken/prysm/go1.26.10/link-set/data/ (fv/kraken/prysm/go1.26.10/link-set/data-ids-old-new.tsv).

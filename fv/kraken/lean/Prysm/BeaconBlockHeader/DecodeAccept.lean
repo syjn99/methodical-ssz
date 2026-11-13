@@ -99,7 +99,7 @@ theorem Decode.accept (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (
       ⋆ Eq (aC3.At (s.regs.rax.toBitVec + 88))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 112 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 112) (hav : 96 ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

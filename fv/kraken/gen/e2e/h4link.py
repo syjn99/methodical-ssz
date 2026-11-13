@@ -90,8 +90,8 @@ def items(outdir, cpdir, addir):
     in `h3link.py`). PendingPartialWithdrawal has no makeslice; it calls the ValidatorIndex and Epoch decoders
     and wraps their errors with fmt.errorf ("Index: %w", "WithdrawableEpoch: %w"; `bhlink.py` idiom). The shared
     operands (uint8 type word, ssz.ErrSize, writeBarrier, errorString type) are asserted equal to the Checkpoint /
-    AttestationData sets' operands. Data files: the address-only error global of each decoder (ddErrSize,
-    pwErrSize; length 0) and the two format strings of PendingPartialWithdrawal."""
+    AttestationData sets' operands. Data files: the address-only error global of each decoder (sszErrSize,
+    sszErrSize; length 0) and the two format strings of PendingPartialWithdrawal."""
     spec = importlib.util.spec_from_file_location("data", LINK / "data.py")
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
@@ -114,7 +114,7 @@ def items(outdir, cpdir, addir):
     assert not any(l in ("callq fmt.errorf", "callq runtime.newobject", "callq runtime.growslice") for l in du)
     assert e2elink.operand(du, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
     assert e2elink.operand(du, wb) == e2elink.operand(au, wb)
-    its.append(("ddErrSize", esz[0], 0, 0, []))
+    its.append((None, esz[0], 0, 0, []))
     # PendingPartialWithdrawal
     assert not any(l in ("callq runtime.makeslice", "callq runtime.growslice") for l in pu)
     assert e2elink.operand(pu, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
@@ -122,7 +122,7 @@ def items(outdir, cpdir, addir):
     estype = back(cu, cu.index("callq runtime.newobject"))
     pn = [back(pu, i) for i, l in enumerate(pu) if l == "callq runtime.newobject"]
     assert pn == [estype, estype], (pn, estype)
-    its.append(("pwErrSize", esz[0], 0, 0, []))
+    its.append((None, esz[0], 0, 0, []))
 
     def fmts(lines):
         out = []
@@ -134,8 +134,8 @@ def items(outdir, cpdir, addir):
         return out
     pf = fmts(pu)
     assert [n for _, n in pf] == [9, 21], pf  # "Index: %w", "WithdrawableEpoch: %w"
-    its.append(("pwFmtIndex", pf[0][0][0], pf[0][0][1], pf[0][1], []))
-    its.append(("pwFmtEpoch", pf[1][0][0], pf[1][0][1], pf[1][1], []))
+    its.append((None, pf[0][0][0], pf[0][0][1], pf[0][1], []))
+    its.append((None, pf[1][0][0], pf[1][0][1], pf[1][1], []))
     return data, its
 
 

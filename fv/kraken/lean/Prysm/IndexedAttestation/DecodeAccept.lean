@@ -10,9 +10,9 @@ import Codec.BitVecShiftLemmas
 
 * head 0–56 (hand steps): guard, prologue (`sub $0xa8`), size check, offset check, slice header of `buf[228:]`
   (18–24, the pointer mask), alignment and bound checks, spills, `makeslice` of AttestingIndices
-  (`MakesliceC Heap lvU64Type_addr 8 (Sd + 224)`, cnt n), len = cap = n, writeBarrier = 0, ptr, rax = 0, `jmp L_28a`;
+  (`MakesliceC Heap typeUint64_addr 8 (Sd + 224)`, cnt n), len = cap = n, writeBarrier = 0, ptr, rax = 0, `jmp L_28a`;
 * element loop 147–165, 143–146: `Decode.loop` (each iteration proves the three panicBounds branches not taken);
-* Data 166–189: `newobject` (`NewobjectC Heap lvAdType_addr 96 (Sd + 224)`), the pointer store, the call of
+* Data 166–189: `newobject` (`NewobjectC Heap typeAttestationData_addr 96 (Sd + 224)`), the pointer store, the call of
   `AttestationData.UnmarshalSSZ` on buf[4:132] discharged by `Prysm.AttestationData.Decode.accept` (its entry rsp = x − 184,
   scratch `Sd`), `je L_39c` taken (rax = 0);
 * Signature 217–260: `makeslice` (esz 1, cap 96), the header stores, `memmove` of buf[132:228], the epilogue.

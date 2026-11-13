@@ -393,16 +393,16 @@
   "id": "epr-stmt-addr",
   "kind": "stmt",
   "module": "Prysm/ElfData/PrysmTarget.lean",
-  "theorem": "ElfData.PrysmTarget.e2eStaticuint64s_addr_eq",
-  "old": "ElfData.PrysmTarget.e2eStaticuint64s_addr = Runtime.Data.staticuint64s_addr",
-  "new": "ElfData.PrysmTarget.e2eStaticuint64s_addr = Runtime.Data.staticuint64s_addr + 8",
+  "theorem": "ElfData.PrysmTarget.runtimeStaticuint64s_addr_eq",
+  "old": "ElfData.PrysmTarget.runtimeStaticuint64s_addr = Runtime.Data.staticuint64s_addr",
+  "new": "ElfData.PrysmTarget.runtimeStaticuint64s_addr = Runtime.Data.staticuint64s_addr + 8",
   "why": "review e2e-r2 N3: the address lemma must name the staticuint64s label"
  },
  {
   "id": "epr-control-addr",
   "kind": "control",
   "module": "Prysm/ElfData/PrysmTarget.lean",
-  "theorem": "ElfData.PrysmTarget.e2eStaticuint64s_addr_eq"
+  "theorem": "ElfData.PrysmTarget.runtimeStaticuint64s_addr_eq"
  },
  {
   "id": "gv-control",
@@ -791,7 +791,7 @@
   "kind": "stmt",
   "module": "Prysm/Checkpoint/FunctionSpecsAsNestedField.lean",
   "theorem": "Prysm.Checkpoint.Decode.accept_function_spec_holds",
-  "old": "(hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) : Decode.accept_function_spec Heap S",
+  "old": "(hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S) : Decode.accept_function_spec Heap S",
   "new": "(hms : True) (hmm : MemmoveC S) : Decode.accept_function_spec Heap S",
   "why": "audit AU-04: the makeslice hypothesis keeps its name with type True (was: binder deleted, unknown identifier); without the makeslice contract the decoder spec cannot be derived"
  },
@@ -1056,7 +1056,7 @@
   "kind": "stmt",
   "module": "Prysm/AttestationData/DecodeAccept.lean",
   "theorem": "Prysm.AttestationData.Decode.accept",
-  "old": "(hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S)",
+  "old": "(hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveC S)",
   "new": "(hms : True) (hmm : MemmoveC S)",
   "why": "audit AU-04: the Checkpoint callee's makeslice hypothesis keeps its name with type True (was: binder deleted, unknown identifier); without it Prysm.Checkpoint.Decode.accept_function_spec cannot be discharged"
  },

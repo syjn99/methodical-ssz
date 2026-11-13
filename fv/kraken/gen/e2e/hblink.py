@@ -13,8 +13,8 @@ Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 
 Every operand that the HistoricalBatch proofs read equals an item of an existing link set: the uint8 type word and
 ssz.ErrSize (Checkpoint set, `Prysm.ElfData.PrysmTarget`) and the `[]uint8` element type word of the `[][]byte` backing array
-(SyncCommittee, `ElfData.PrysmTarget.lvSliceType`). The script asserts these equalities. It writes the one
-data file `lvSliceType.data` again, so that check (f) compares it with the ELF in this link set too.
+(SyncCommittee, `ElfData.PrysmTarget.typeUint8Slice`). The script asserts these equalities. It writes the one
+data file `typeUint8Slice.data` again, so that check (f) compares it with the ELF in this link set too.
 """
 import json
 import pathlib
@@ -74,7 +74,7 @@ def write_data(outdir, cpdir, lvdir):
         assert f"callq {n}" not in hb, n
     assert e2elink.operand(hb, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
     assert e2elink.operand(hb, wb) == e2elink.operand(sc, wb)
-    its = [("lvSliceType", st[0][0], st[0][1], 48, data.ABI_TYPE_WORDS)]
+    its = [("typeUint8Slice", st[0][0], st[0][1], 48, data.ABI_TYPE_WORDS)]
     for it in its:
         print("item", it[:4])
     data.ITEMS = its

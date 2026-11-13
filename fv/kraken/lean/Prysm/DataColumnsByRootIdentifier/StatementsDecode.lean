@@ -43,7 +43,7 @@ def Decode.reject_size_statement : Prop :=
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8))
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 16 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat < 36),
@@ -54,7 +54,7 @@ def Decode.reject_size_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec)
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
@@ -70,7 +70,7 @@ def Decode.reject_offset_statement : Prop :=
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Eq (off.At (s.regs.rbx.toBitVec + 32))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrInvalidVariableOffset_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrInvalidVariableOffset_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrInvalidVariableOffset" + 8).toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 16 < s.regs.rsp.toNat) (hlen : 36 ≤ s.regs.rcx.toNat),
@@ -82,7 +82,7 @@ def Decode.reject_offset_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
           ⋆ Eq (off.At (s.regs.rbx.toBitVec + 32))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrInvalidVariableOffset_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrInvalidVariableOffset_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrInvalidVariableOffset" + 8).toBitVec)
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
@@ -116,7 +116,7 @@ def Decode.accept_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 16 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = 36 + 8 * n)
     (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hav : 32 + 8 * n ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmsU : MakesliceC Heap ElfData.PrysmTarget.lvU64Type_addr 8 S)
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmsU : MakesliceC Heap ElfData.PrysmTarget.typeUint64_addr 8 S)
     (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
@@ -176,7 +176,7 @@ def Decode.accept_spec_statement : Prop :=
     (hguard : guard.toNat + 16 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size)
     (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
     (hav : 32 + 8 * ((bsA.size - 36) / 8) ≤ avail)
-    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmsU : MakesliceC Heap ElfData.PrysmTarget.lvU64Type_addr 8 S)
+    (hms : MakesliceC Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmsU : MakesliceC Heap ElfData.PrysmTarget.typeUint64_addr 8 S)
     (hmm : MemmoveC S),
     ∃ g : SszValue, g.toValue = v ∧ bsA = SszValue.encode g ∧
     Eventually (step1 Host.exe)

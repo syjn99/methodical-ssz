@@ -10,7 +10,7 @@ import Prysm.DataColumnsByRootIdentifier.EncodeTail
 
 `Encode.grow_first_site : Encode.grow_first_site_statement`. Directives 2–14 as the fast path; 15 `jae L_7c` not taken
 (cap < len + 32); 16–17 rcx to x + 24, rdx (BlockRoot pointer) to x − 16; 18–23
-`growslice(dst.ptr, len + 32, cap, 32, uint8)` under `GrowsliceC Heap e2eU8Type_addr 1 S` (spill area x − 136, return
+`growslice(dst.ptr, len + 32, cap, 32, uint8)` under `GrowsliceC Heap typeUint8_addr 1 S` (spill area x − 136, return
 slot x − 144); 24–28 restore rdx, rdi = newCap, r8 = len + 32, rcx = len, rbx = new pointer; then `Encode.tail_fit` with the
 new block (premise `hfit`: sites 2 and 3 do not grow).
 -/

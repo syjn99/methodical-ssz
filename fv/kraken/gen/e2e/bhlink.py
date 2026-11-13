@@ -130,8 +130,8 @@ def items(outdir, cpdir, addir):
     df = fmts(du)
     assert [n for _, n in df] == [8, 17], df  # "Slot: %w", "ProposerIndex: %w"
     its = [
-        ("bhFmtSlot", df[0][0][0], df[0][0][1], df[0][1], []),
-        ("bhFmtProposer", df[1][0][0], df[1][0][1], df[1][1], []),
+        (None, df[0][0][0], df[0][0][1], df[0][1], []),
+        (None, df[1][0][0], df[1][0][1], df[1][1], []),
     ]
     return data, its
 

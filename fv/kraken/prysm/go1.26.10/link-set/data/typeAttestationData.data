@@ -1,0 +1,7 @@
+# typeAttestationData: link/data.py, p1bin-amd64 bytes [0xbf08c0, 0xbf08f0)
+at type__ 1464512
+bytes 60 00 00 00 00 00 00 00 48 00 00 00 00 00 00 00
+bytes 7f 3f 31 b2 07 08 08 19
+word go.go 0
+word runtime.gcbits._ 504
+bytes 4e a1 01 00 a0 c9 17 00

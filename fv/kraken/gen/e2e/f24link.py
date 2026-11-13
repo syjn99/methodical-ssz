@@ -109,10 +109,10 @@ def filt(outdir, objdump, elf, nm):
 
 
 def items(outdir, cpdir, addir, e1dir):
-    """Per decoder: every address-only error global loaded into rax (`<p>ErrSize` for ssz.ErrSize, else
-    `<p>Err<Name>`, length 0) and the format
-    strings of its fmt.errorf wraps (`<p>Fmt<k>`, in code order). Per encoder: the address-only
-    `<p>ErrBytesLength` when its code loads it. Every makeslice / growslice is checked for the uint8 type word of
+    """Per decoder: every address-only error global loaded into rax (`sszErrSize` for ssz.ErrSize, else the id
+    of its symbol by `link/data.py` `item_id`, length 0) and the format
+    strings of its fmt.errorf wraps (`format<Field>`, in code order). Per encoder: the address-only
+    `sszErrBytesLength` when its code loads it. Every makeslice / growslice is checked for the uint8 type word of
     the Checkpoint set (`type__+387072`) and the result is printed per function (no assertion: a type whose
     literal differs is a fact for Part 1, not a link failure). ssz.ErrSize / ssz.ErrBytesLength / writeBarrier /
     errorString are asserted equal to the Checkpoint / AttestationData / Eth1Data operands where present."""
@@ -157,15 +157,15 @@ def items(outdir, cpdir, addir, e1dir):
         gl = sorted({re.fullmatch(eszp, l)[1] for l in u if re.fullmatch(eszp, l)})
         for g in gl:
             if g == esz[0]:
-                its.append((f"{p}ErrSize", esz[0], 0, 0, []))
+                its.append((None, esz[0], 0, 0, []))
             else:
-                its.append((f"{p}Err{g.split('.')[-1]}", g, 0, 0, []))
+                its.append((None, g, 0, 0, []))
         if mks:
             assert e2elink.operand(u, wb) == e2elink.operand(au, wb), t
         nn = [back(u, i) for i, l in enumerate(u) if l == "callq runtime.newobject"]
         assert all(x == estype for x in nn), (t, nn, estype)
         for j, ((sym, off), n) in enumerate(fmts(u)):
-            its.append((f"{p}Fmt{j}", sym, off, n, []))
+            its.append((None, sym, off, n, []))
         print("dec", t, "makeslice", len(mks), "u8 literal", mk_u8, "newobject", len(nn), "fmt", len(fmts(u)),
               "error globals", gl)
         m = e2elink.ins(outdir, sname(k, t, "MarshalSSZTo"))
@@ -176,7 +176,7 @@ def items(outdir, cpdir, addir, e1dir):
         has_ebl = any(re.fullmatch(ebp, l) for l in m)
         if has_ebl:
             assert e2elink.operand(m, ebp) == ebl, t
-            its.append((f"{p}ErrBytesLength", ebl[0], 0, 0, []))
+            its.append((None, ebl[0], 0, 0, []))
         print("enc", t, "growslice", len(gs), "u8 literal", gs_u8, "ErrBytesLength", has_ebl)
     return data, its
 
