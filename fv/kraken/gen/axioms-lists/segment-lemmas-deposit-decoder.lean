@@ -2,8 +2,8 @@ import Codec.Segment.ByteSliceListInstances
 import Codec.Segment.FixedBytesAnySizeInstances
 import Codec.Segment.Bytes32LoopHistoricalBatch
 import Codec.Segment.SizeRejectInstances
-import E2eDep.Reject
-import E2eDep.Accept
+import Prysm.Deposit.DecodeRejectSize
+import Prysm.Deposit.DecodeAccept
 
 /-! Hand list for `gen/e2e/segaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
 
@@ -31,5 +31,5 @@ import E2eDep.Accept
 #print axioms Codec.Segment.rej_size_g
 #print axioms Codec.Segment.sc_reject_size_g
 #print axioms Codec.Segment.hb_reject_size_g
-#print axioms E2eDep.dep_e2e_reject_size_main
-#print axioms E2eDep.dep_e2e_accept_main
+#print axioms Prysm.Deposit.Decode.reject_size
+#print axioms Prysm.Deposit.Decode.accept

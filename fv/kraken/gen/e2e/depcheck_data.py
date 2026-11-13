@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""lean/E2eDep/Code.lean's hand definition `depDataType_addr` equals the address that the list/vector data
+"""lean/Prysm/Deposit/Code.lean's hand definition `depDataType_addr` equals the address that the list/vector data
 reader would produce from prysm/go1.26.10/e2e/lv/link-dep/data/depDataType.data.
 
 Usage: depcheck_data.py [--selftest]      (from any cwd; Python 3 standard library only)
@@ -15,7 +15,7 @@ import sys
 
 KR = pathlib.Path(__file__).resolve().parents[2]
 DATA = KR / "prysm/go1.26.10/e2e/lv/link-dep/data/depDataType.data"
-CODE = KR / "lean/E2eDep/Code.lean"
+CODE = KR / "lean/Prysm/Deposit/Code.lean"
 
 
 def label_term(lab, off):

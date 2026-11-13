@@ -2,7 +2,7 @@ import Runtime.Contracts
 import Machine.Step
 import Machine.Labels
 import Prysm.ElfData.CheckpointAndEpoch
-import E2eHb.HbLoop1
+import Prysm.HistoricalBatch.DecodeLoopBlockRoots
 import Codec.Segment.ByteSliceList
 
 /-!
@@ -19,10 +19,10 @@ The element size is fixed at 32: other sizes compile to other sequences (48: `le
 `shl $5` is stepped with `kshl64 5` (a literal count).
 The templates are the Kraken terms of `lv/link-hb` directives 36–77 (printed with `repr`) with the varying
 operands replaced by parameters; each use shows the equality with the real program by `infix_sub` and
-`rfl`/`decide` (`Codec/Segment/Bytes32LoopHistoricalBatch.lean`, `E2eDep/Accept.lean`).
+`rfl`/`decide` (`Codec/Segment/Bytes32LoopHistoricalBatch.lean`, `Prysm/Deposit/DecodeAccept.lean`).
 -/
 
-open Machine Runtime TestTarget E2eHb
+open Machine Runtime TestTarget Prysm.HistoricalBatch
 
 namespace Codec.Segment
 

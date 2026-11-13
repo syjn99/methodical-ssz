@@ -266,7 +266,7 @@ How to handle a new finding is in `../README.md` section 7.
 - What: `E2eScal` and `lean/Prysm/Checkpoint/CapacityReservedCode.lean` include `.S` files from directories that `lean/lakefile.toml` does not declare as inputs.
   A change in such a file does not make Lake build the proofs again.
 - Where: the `norm` directories of the link sets `bh`, `e1`, `enc2`, `f24`, `h3`, `h4`, `h5` and `h6` under `prysm/go1.26.10/e2e/`, and `prysm/go1.26.10/opt-r1/link/norm`.
-  The declared input `lv_dep_data` is not read by any Lean file. `E2eDep.Code.depDataType_addr` is a hand definition. `gen/e2e/depcheck_data.py` compares it with its data file.
+  The declared input `lv_dep_data` is not read by any Lean file. `Prysm.Deposit.Code.depDataType_addr` is a hand definition. `gen/e2e/depcheck_data.py` compares it with its data file.
 - State: open. A `lakefile.toml` change needs user approval.
 
 ### Inventory script trusts its method list

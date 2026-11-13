@@ -1,22 +1,22 @@
-import E2eHb.HbReject
-import E2eHb.HbAccept
-import E2eHb.HbSpecK
-import E2eHb.HbDescEq
-import E2eHb.WitHbA
+import Prysm.HistoricalBatch.DecodeRejectSize
+import Prysm.HistoricalBatch.DecodeAccept
+import Prysm.HistoricalBatch.DecodeSpec
+import Prysm.HistoricalBatch.SpecEquivalence
+import Prysm.HistoricalBatch.WitnessDecodeAccept
 
 /-! Hand list for `gen/e2e/hbaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
 
-#print axioms E2eHb.hb_e2e_reject_size_main
-#print axioms E2eHb.hb_iter1
-#print axioms E2eHb.hb_exit1
-#print axioms E2eHb.hb_loop1
-#print axioms E2eHb.hb_iter2
-#print axioms E2eHb.hb_exit2
-#print axioms E2eHb.hb_loop2
-#print axioms E2eHb.hb_e2e_accept_main
-#print axioms E2eHb.hb_e2e_accept_spec_k
-#print axioms E2eHb.hb_e2e_reject_size_spec
-#print axioms E2eHb.hb_e2e_reject_complete
-#print axioms E2eHb.phb_spec_accepts_iff
-#print axioms E2eHb.prysmHbDesc_deserialize_checker
-#print axioms E2eHb.WitHbA.hb_accept_runs
+#print axioms Prysm.HistoricalBatch.Decode.reject_size
+#print axioms Prysm.HistoricalBatch.Decode.block_roots_iter
+#print axioms Prysm.HistoricalBatch.Decode.block_roots_exit
+#print axioms Prysm.HistoricalBatch.Decode.block_roots_loop
+#print axioms Prysm.HistoricalBatch.Decode.state_roots_iter
+#print axioms Prysm.HistoricalBatch.Decode.state_roots_exit
+#print axioms Prysm.HistoricalBatch.Decode.state_roots_loop
+#print axioms Prysm.HistoricalBatch.Decode.accept
+#print axioms Prysm.HistoricalBatch.Decode.accept_spec
+#print axioms Prysm.HistoricalBatch.Decode.reject_size_spec
+#print axioms Prysm.HistoricalBatch.Decode.reject_complete
+#print axioms Prysm.HistoricalBatch.spec_accepts_iff
+#print axioms Prysm.HistoricalBatch.desc_deserialize_checker
+#print axioms Prysm.HistoricalBatch.Witness.DecodeAccept.runs

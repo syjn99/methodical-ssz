@@ -63,7 +63,7 @@ needs = ["test_target_norm_S", "test_target_data"]
 # Codec: lemmas that do not depend on one Prysm type: the uint64 decoder pattern, the fixed-bytes field
 # patterns, segment and loop lemmas (Codec/Segment/), the statement kinds of the generated proofs (Codec/Kind/)
 # and the encoder step lemmas. No module of this library reads a code or data file itself. Some modules of
-# Codec/Segment/ import modules of the Prysm and E2eHb libraries.
+# Codec/Segment/ import modules of the Prysm library.
 [[lean_lib]]
 name = "Codec"
 globs = ["Codec.+"]
@@ -105,7 +105,8 @@ filter = {extension = ["S"]}
 name = "Prysm"
 globs = ["Prysm.+"]
 needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S",
-  "lv_data", "lv_t3_norm_S", "lv_t3_data", "runtime_model_S"]
+  "lv_data", "lv_t3_norm_S", "lv_t3_data", "runtime_model_S", "lv_hb_norm_S", "lv_dep_norm_S", "lv_dep_data",
+  "deposit_lean_S"]
 
 # Generated and hand proofs of the flat fixed-size types: their segment instances, accept and reject theorems,
 # witnesses and specifications. The parameterized lemmas that they use are in Codec. Build one module at a time.
@@ -145,20 +146,15 @@ path = "Prysm/RuntimeModel"
 text = true
 filter = {extension = ["S"]}
 
-# Port of the SyncCommittee proof to the real v1alpha1.HistoricalBatch decoder (same Go 1.26.10 ELF).
-# Own library; it imports the SyncCommittee modules of Prysm and does not change them. The .S file of prysm/go1.26.10/e2e/lv/link-hb is an input.
+# The link set lv/link-hb (the v1alpha1.HistoricalBatch decoder on the same Go 1.26.10 ELF): an input of the
+# Prysm library (Prysm/HistoricalBatch/).
 [[input_dir]]
 name = "lv_hb_norm_S"
 path = "../prysm/go1.26.10/e2e/lv/link-hb/norm"
 text = true
 
-[[lean_lib]]
-name = "E2eHb"
-globs = ["E2eHb.+"]
-needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data",
-  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S"]
-
-# Proof of use: the real v1alpha1.Deposit decoder, proved with the general lemmas of Codec/Segment/.
+# The link set lv/link-dep (the v1alpha1.Deposit decoder, proved with the general lemmas of Codec/Segment/): an
+# input of the Prysm library (Prysm/Deposit/).
 [[input_dir]]
 name = "lv_dep_norm_S"
 path = "../prysm/go1.26.10/e2e/lv/link-dep/norm"
@@ -169,24 +165,12 @@ name = "lv_dep_data"
 path = "../prysm/go1.26.10/e2e/lv/link-dep/data"
 text = true
 
-[[lean_lib]]
-name = "E2eDep"
-globs = ["E2eDep.+"]
-needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data",
-  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S", "lv_dep_norm_S", "lv_dep_data"]
-
-# Deposit witnesses and their runtime model (the 120-byte bump newobject E2eDepW/BumpNew120.S)
+# witness-only runtime model of the Deposit witness: the 120-byte bump newobject Prysm/Deposit/BumpNew120.S
 [[input_dir]]
-name = "lv_dep_lean_S"
-path = "E2eDepW"
+name = "deposit_lean_S"
+path = "Prysm/Deposit"
 text = true
 filter = {extension = ["S"]}
-
-[[lean_lib]]
-name = "E2eDepW"
-globs = ["E2eDepW.+"]
-needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data",
-  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S", "lv_dep_norm_S", "lv_dep_data", "lv_dep_lean_S"]
 
 # First variable-length encoder hand proof: real v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo on
 # the same Go 1.26.10 ELF. Own library: the Prysm / E2eScal modules do not change. Build one module

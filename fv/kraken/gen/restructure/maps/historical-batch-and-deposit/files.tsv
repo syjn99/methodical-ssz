@@ -1,0 +1,31 @@
+# old path	new path	meaning (paths are relative to the repository root)
+# Step historical-batch-and-deposit: the libraries E2eHb (HistoricalBatch decoder), E2eDep and E2eDepW (Deposit decoder and witnesses).
+fv/kraken/lean/E2eHb/Code.lean	fv/kraken/lean/Prysm/HistoricalBatch/Code.lean	program constant of v1alpha1.HistoricalBatch.UnmarshalSSZ from link set lv/link-hb
+fv/kraken/lean/E2eHb/Defs.lean	fv/kraken/lean/Prysm/HistoricalBatch/SpecDefinitions.lean	hand Desc of HistoricalBatch from consensus-specs phase0, SSZ content structure, toValue and encoding
+fv/kraken/lean/E2eHb/StmtHb.lean	fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	frozen statements of the HistoricalBatch decoder (machine and EthLib)
+fv/kraken/lean/E2eHb/HbLemmas.lean	fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopLemmas.lean	list and memory-chunk lemmas of the HistoricalBatch element loops (role not in the table; Codec/Segment uses them)
+fv/kraken/lean/E2eHb/HbLoop1.lean	fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	HistoricalBatch decoder: the 8192-iteration BlockRoots loop, and the notation shl5 (Codec/Segment uses both)
+fv/kraken/lean/E2eHb/HbLoop2.lean	fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	HistoricalBatch decoder: the 8192-iteration StateRoots loop
+fv/kraken/lean/E2eHb/HbAccept.lean	fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	HistoricalBatch decoder accept path
+fv/kraken/lean/E2eHb/HbReject.lean	fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	HistoricalBatch decoder size reject
+fv/kraken/lean/E2eHb/HbSpec.lean	fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	HistoricalBatch bridge lemmas to EthLib, and the Vector[Bytes32, 8192] lemmas that Deposit and Codec/Segment use
+fv/kraken/lean/E2eHb/HbSpecChecker.lean	fv/kraken/lean/Prysm/HistoricalBatch/SpecChecker.lean	generated Desc-checker Desc of HistoricalBatch (gen/e2e/lvdescterm.py)
+fv/kraken/lean/E2eHb/HbDescEq.lean	fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	hand Desc and Desc-checker Desc of HistoricalBatch give the same serialize and deserialize
+fv/kraken/lean/E2eHb/HbSpecK.lean	fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	HistoricalBatch decoder against EthLib: accept, size reject, reject completeness
+fv/kraken/lean/E2eHb/NegSpec.lean	fv/kraken/lean/Prysm/HistoricalBatch/NegativeSuiteTargets.lean	copies of two frozen HistoricalBatch EthLib statements and their proofs, the targets of lv/negcases-spec.json (role not in the table)
+fv/kraken/lean/E2eHb/WitHbA.lean	fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	witness of the HistoricalBatch decoder accept path
+fv/kraken/lean/E2eHb/WitHbR.lean	fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	witness of the HistoricalBatch decoder size reject
+fv/kraken/lean/E2eDep/Code.lean	fv/kraken/lean/Prysm/Deposit/Code.lean	program constant of v1alpha1.Deposit.UnmarshalSSZ from link set lv/link-dep, and the hand address of the Deposit_Data type word (depDataType_addr, name of its data file kept)
+fv/kraken/lean/E2eDep/Stmt.lean	fv/kraken/lean/Prysm/Deposit/Statements.lean	frozen statements of the Deposit decoder (machine)
+fv/kraken/lean/E2eDep/SpecStmt.lean	fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	frozen EthLib statements of the Deposit decoder; also the hand Desc from consensus-specs phase0, the SSZ content structure and its encoding (mixed module, main role Statements)
+fv/kraken/lean/E2eDep/Accept.lean	fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	Deposit decoder accept path, proved with the lemmas of Codec/Segment
+fv/kraken/lean/E2eDep/Reject.lean	fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	Deposit decoder size reject, from the general lemma Codec.Segment.rej_size_g
+fv/kraken/lean/E2eDep/Spec.lean	fv/kraken/lean/Prysm/Deposit/Spec.lean	Deposit bridge lemmas to EthLib
+fv/kraken/lean/E2eDep/SpecChecker.lean	fv/kraken/lean/Prysm/Deposit/SpecChecker.lean	generated Desc-checker Desc of Deposit (gen/e2e/lvdescterm.py)
+fv/kraken/lean/E2eDep/DescEq.lean	fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	hand Desc and Desc-checker Desc of Deposit give the same serialize and deserialize
+fv/kraken/lean/E2eDep/SpecK.lean	fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	Deposit decoder against EthLib: accept, size reject, reject completeness
+fv/kraken/lean/E2eDep/NegSpec.lean	fv/kraken/lean/Prysm/Deposit/NegativeSuiteTargets.lean	copies of two frozen Deposit EthLib statements and their proofs, the targets of lv/negcases-spec.json (role not in the table)
+fv/kraken/lean/E2eDepW/BumpNew120.lean	fv/kraken/lean/Prysm/Deposit/WitnessBumpAllocator.lean	bump allocator model of runtime.newobject for one 120-byte object, for the Deposit witness only (no role of the table fits; the place of the AttestationData model BumpNew72)
+fv/kraken/lean/E2eDepW/BumpNew120.S	fv/kraken/lean/Prysm/Deposit/BumpNew120.S	assembly of the 120-byte bump newobject model (file name kept: .S files are not renamed)
+fv/kraken/lean/E2eDepW/WitA.lean	fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	witness of the Deposit decoder accept path
+fv/kraken/lean/E2eDepW/WitR.lean	fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	witness of the Deposit decoder size reject

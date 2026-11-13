@@ -1,0 +1,688 @@
+# written by rename.py forward; read by rename.py inverse. path	line	action	new text	old text
+fv/kraken/lean/Codec/Segment/Bytes32Loop.lean	25	replace	open Machine Runtime TestTarget Prysm.HistoricalBatch	open Machine Runtime TestTarget E2eHb
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	8	replace	The theorem below has the type of the hand lemma `Decode.block_roots_loop` (`type_of%`); its proof instantiates `v32_loop`	The theorem below has the type of the hand lemma `hb_loop1` (`type_of%`); its proof instantiates `v32_loop`
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	14	replace	open Machine Runtime TestTarget Prysm.HistoricalBatch Prysm.HistoricalBatch.Code	open Machine Runtime TestTarget E2eHb E2eHb.Code
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	41	replace	    Codec.infix_sub 40 hk (by simp only [unmarshalSSZ, v32Head, hbL, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 40 hk (by simp only [HbUnmarshal, v32Head, hbL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	44	replace	    Codec.infix_sub 49 hk (by simp only [unmarshalSSZ, v32Mid, hbL, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 49 hk (by simp only [HbUnmarshal, v32Mid, hbL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	47	replace	    Codec.infix_sub 62 hk (by simp only [unmarshalSSZ, v32Mm, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 62 hk (by simp only [HbUnmarshal, v32Mm, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	50	replace	    Codec.infix_sub 67 hk (by simp only [unmarshalSSZ, v32Hdr, hbL, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 67 hk (by simp only [HbUnmarshal, v32Hdr, hbL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	53	replace	    Codec.infix_sub 75 hk (by simp only [unmarshalSSZ, v32Tail, hbL, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 75 hk (by simp only [HbUnmarshal, v32Tail, hbL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	56	replace	    Codec.infix_sub 36 hk (by simp only [unmarshalSSZ, v32Back, hbL, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 36 hk (by simp only [HbUnmarshal, v32Back, hbL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	59	replace	    (by simp only [unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])	    (by simp only [HbUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	61	replace	    (by simp only [unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])	    (by simp only [HbUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	63	replace	    (by simp only [unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])	    (by simp only [HbUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	65	replace	    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)	    (by simp only [HbUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	66	replace	    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)	    (by simp only [HbUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	68	replace	    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)	    (by simp only [HbUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	69	replace	    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)	    (by simp only [HbUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	77	replace	    kat hk unmarshalSSZ 85	    kat hk HbUnmarshal 85
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	116	replace	    Codec.infix_sub 108 hk (by simp only [unmarshalSSZ, v32Head, hbL, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 108 hk (by simp only [HbUnmarshal, v32Head, hbL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	119	replace	    Codec.infix_sub 117 hk (by simp only [unmarshalSSZ, v32Mid, hbL, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 117 hk (by simp only [HbUnmarshal, v32Mid, hbL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	122	replace	    Codec.infix_sub 131 hk (by simp only [unmarshalSSZ, v32Mm, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 131 hk (by simp only [HbUnmarshal, v32Mm, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	125	replace	    Codec.infix_sub 137 hk (by simp only [unmarshalSSZ, v32Hdr, hbL, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 137 hk (by simp only [HbUnmarshal, v32Hdr, hbL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	128	replace	    Codec.infix_sub 144 hk (by simp only [unmarshalSSZ, v32Tail, hbL, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 144 hk (by simp only [HbUnmarshal, v32Tail, hbL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	131	replace	    Codec.infix_sub 104 hk (by simp only [unmarshalSSZ, v32Back, hbL, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 104 hk (by simp only [HbUnmarshal, v32Back, hbL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	134	replace	    (by simp only [unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])	    (by simp only [HbUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	136	replace	    (by simp only [unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])	    (by simp only [HbUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	138	replace	    (by simp only [unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])	    (by simp only [HbUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	140	replace	    (by simp only [unmarshalSSZ, v32LeaSrc, List.getElem?_cons_succ, List.getElem?_cons_zero])	    (by simp only [HbUnmarshal, v32LeaSrc, List.getElem?_cons_succ, List.getElem?_cons_zero])
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	142	replace	    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)	    (by simp only [HbUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	143	replace	    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)	    (by simp only [HbUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	145	replace	    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)	    (by simp only [HbUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	146	replace	    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)	    (by simp only [HbUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	153	replace	    kat hk unmarshalSSZ 154	    kat hk HbUnmarshal 154
+fv/kraken/lean/Codec/Segment/Bytes32LoopProof.lean	6	replace	Generalized once from `Prysm.HistoricalBatch.Decode.block_roots_iter`/`Decode.state_roots_iter`/`Decode.state_roots_loop` (same proof steps; the directive indices are block	Generalized once from `E2eHb.hb_iter1`/`hb_iter2`/`hb_loop2` (same proof steps; the directive indices are block
+fv/kraken/lean/Codec/Segment/Bytes32LoopProof.lean	8	replace	The return slot keeps the value of the last `memmove` return address (`jS + 2`), as in `Decode.state_roots_loop`.	The return slot keeps the value of the last `memmove` return address (`jS + 2`), as in `hb_loop2`.
+fv/kraken/lean/Codec/Segment/Bytes32LoopProof.lean	11	replace	open Machine Runtime TestTarget Prysm.HistoricalBatch	open Machine Runtime TestTarget E2eHb
+fv/kraken/lean/Codec/Segment/Bytes32VectorSpec.lean	12	replace	open EthLib.Serialization.Ssz Spec TestTarget Prysm.HistoricalBatch	open EthLib.Serialization.Ssz Spec TestTarget E2eHb
+fv/kraken/lean/Codec/Segment/SizeRejectInstances.lean	9	replace	Each theorem has the frozen statement as its type (`Prysm.SyncCommittee.Decode.reject_size_statement`, `Decode.reject_size_statement`); the proof is one	Each theorem has the frozen statement as its type (`Prysm.SyncCommittee.Decode.reject_size_statement`, `hb_reject_size_stmt`); the proof is one
+fv/kraken/lean/Codec/Segment/SizeRejectInstances.lean	14	replace	open Machine Runtime TestTarget Prysm.HistoricalBatch Prysm.HistoricalBatch.Code	open Machine Runtime TestTarget E2eHb E2eHb.Code
+fv/kraken/lean/Codec/Segment/SizeRejectInstances.lean	38	replace	theorem hb_reject_size_g : Decode.reject_size_statement := by	theorem hb_reject_size_g : hb_reject_size_stmt := by
+fv/kraken/lean/Codec/Segment/SizeRejectInstances.lean	41	replace	    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)	    (by simp only [HbUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+fv/kraken/lean/Codec/Segment/SizeRejectInstances.lean	42	replace	    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)	    (by simp only [HbUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+fv/kraken/lean/Codec/Segment/SizeRejectInstances.lean	44	replace	    ("L_" ++ hbN "_7b") k (k + 9) (k + 30) (rej_infix hk unmarshalSSZ 0 rejHead)	    ("L_" ++ hbN "_7b") k (k + 9) (k + 30) (rej_infix hk HbUnmarshal 0 rejHead)
+fv/kraken/lean/Codec/Segment/SizeRejectInstances.lean	45	replace	    (glue_of hk (a := 8) (by simp only [unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero]))	    (glue_of hk (a := 8) (by simp only [HbUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero]))
+fv/kraken/lean/Codec/Segment/SizeRejectInstances.lean	46	replace	    (rej_infix hk unmarshalSSZ 9 rejCmp) (rej_infix hk unmarshalSSZ 30 rejErr) hle s ra guard e0 e1 fp s2 hfp h2 R	    (rej_infix hk HbUnmarshal 9 rejCmp) (rej_infix hk HbUnmarshal 30 rejErr) hle s ra guard e0 e1 fp s2 hfp h2 R
+fv/kraken/lean/Codec/Segment/TripleLoopProof.lean	19	replace	open Machine Runtime TestTarget Prysm.HistoricalBatch	open Machine Runtime TestTarget E2eHb
+fv/kraken/lean/Codec/Segment/TripleLoopSyncCommittee.lean	13	replace	open Machine Runtime TestTarget Prysm.HistoricalBatch Codec.Segment	open Machine Runtime TestTarget E2eHb Codec.Segment
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	18	replace	open Machine Runtime TestTarget Codec.Segment Prysm.Deposit.Code	open Machine Runtime TestTarget E2eHb Codec.Segment E2eDep.Code
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	20	replace	namespace Prysm.Deposit	namespace E2eDep
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	30	replace	theorem Decode.scratch_as_data_frame (y : BitVec 64) (Sd : Nat) (hSd : Sd < 2 ^ 60) (a b c d e : List UInt8) (ha : a.length = Sd)	theorem dep_lo (y : BitVec 64) (Sd : Nat) (hSd : Sd < 2 ^ 60) (a b c d e : List UInt8) (ha : a.length = Sd)
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	44	replace	theorem Decode.data_object_words (p : BitVec 64) :	theorem dep_obj120 (p : BitVec 64) :
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	63	replace	abbrev Decode.localLabel (s : String) : String := "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ_" ++ s	abbrev depL (s : String) : String := "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ_" ++ s
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	70	replace	theorem Decode.accept : Decode.accept_statement := by	theorem dep_e2e_accept_main : dep_accept_stmt := by
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	78	replace	  kat hk unmarshalSSZ 0	  kat hk DepUnmarshal 0
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	79	replace	  kat hk unmarshalSSZ 1	  kat hk DepUnmarshal 1
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	80	replace	  kat hk unmarshalSSZ 2	  kat hk DepUnmarshal 2
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	83	replace	  kat hk unmarshalSSZ 3	  kat hk DepUnmarshal 3
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	91	replace	  kat hk unmarshalSSZ 4	  kat hk DepUnmarshal 4
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	96	replace	  kat hk unmarshalSSZ 5	  kat hk DepUnmarshal 5
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	97	replace	  kat hk unmarshalSSZ 6	  kat hk DepUnmarshal 6
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	98	replace	  kat hk unmarshalSSZ 7	  kat hk DepUnmarshal 7
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	103	replace	  kat hk unmarshalSSZ 8	  kat hk DepUnmarshal 8
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	104	replace	  kat hk unmarshalSSZ 9	  kat hk DepUnmarshal 9
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	105	replace	  kat hk unmarshalSSZ 10	  kat hk DepUnmarshal 10
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	109	replace	  kat hk unmarshalSSZ 11	  kat hk DepUnmarshal 11
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	114	replace	  kat hk unmarshalSSZ 12	  kat hk DepUnmarshal 12
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	119	replace	  kat hk unmarshalSSZ 13	  kat hk DepUnmarshal 13
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	125	replace	  kat hk unmarshalSSZ 14	  kat hk DepUnmarshal 14
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	126	replace	  kat hk unmarshalSSZ 15	  kat hk DepUnmarshal 15
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	127	replace	  kat hk unmarshalSSZ 16	  kat hk DepUnmarshal 16
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	128	replace	  kat hk unmarshalSSZ 17	  kat hk DepUnmarshal 17
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	148	replace	  kat hk unmarshalSSZ 18	  kat hk DepUnmarshal 18
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	153	replace	  kat hk unmarshalSSZ 19	  kat hk DepUnmarshal 19
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	158	replace	  kat hk unmarshalSSZ 20	  kat hk DepUnmarshal 20
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	163	replace	  kat hk unmarshalSSZ 21	  kat hk DepUnmarshal 21
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	167	replace	  kat hk unmarshalSSZ 22	  kat hk DepUnmarshal 22
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	171	replace	  klabel hk hf unmarshalSSZ 27	  klabel hk hf DepUnmarshal 27
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	172	replace	  kat hk unmarshalSSZ 27	  kat hk DepUnmarshal 27
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	173	replace	  kat hk unmarshalSSZ 28	  kat hk DepUnmarshal 28
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	178	replace	  kat hk unmarshalSSZ 29	  kat hk DepUnmarshal 29
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	180	replace	  kat hk unmarshalSSZ 30	  kat hk DepUnmarshal 30
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	181	replace	  klabel hk hf unmarshalSSZ 40	  klabel hk hf DepUnmarshal 40
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	185	replace	  have hB1 : (v32Head (OfNat.ofNat 33) (Decode.localLabel "a2") (Decode.localLabel "166")).IsInfixAt Host.prog (k + 40) :=	  have hB1 : (v32Head (OfNat.ofNat 33) (depL "a2") (depL "166")).IsInfixAt Host.prog (k + 40) :=
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	186	replace	    Codec.infix_sub 40 hk (by simp only [unmarshalSSZ, v32Head, Decode.localLabel, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 40 hk (by simp only [DepUnmarshal, v32Head, depL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	188	replace	  have hB2 : (v32Mid (Decode.localLabel "23f") 56 48 40 64 112).IsInfixAt Host.prog (k + 49) :=	  have hB2 : (v32Mid (depL "23f") 56 48 40 64 112).IsInfixAt Host.prog (k + 49) :=
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	189	replace	    Codec.infix_sub 49 hk (by simp only [unmarshalSSZ, v32Mid, Decode.localLabel, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 49 hk (by simp only [DepUnmarshal, v32Mid, depL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	192	replace	    Codec.infix_sub 62 hk (by simp only [unmarshalSSZ, v32Mm, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 62 hk (by simp only [DepUnmarshal, v32Mm, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	194	replace	  have hB4 : (v32Hdr (Decode.localLabel "23a") 8).IsInfixAt Host.prog (k + 67) :=	  have hB4 : (v32Hdr (depL "23a") 8).IsInfixAt Host.prog (k + 67) :=
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	195	replace	    Codec.infix_sub 67 hk (by simp only [unmarshalSSZ, v32Hdr, Decode.localLabel, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 67 hk (by simp only [DepUnmarshal, v32Hdr, depL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	197	replace	  have hB5 : (v32Tail (Decode.localLabel "14c") (Decode.localLabel "99") 64).IsInfixAt Host.prog (k + 74) :=	  have hB5 : (v32Tail (depL "14c") (depL "99") 64).IsInfixAt Host.prog (k + 74) :=
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	198	replace	    Codec.infix_sub 74 hk (by simp only [unmarshalSSZ, v32Tail, Decode.localLabel, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 74 hk (by simp only [DepUnmarshal, v32Tail, depL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	200	replace	  have hB6 : (v32Back (Decode.localLabel "99") 40).IsInfixAt Host.prog (k + 37) :=	  have hB6 : (v32Back (depL "99") 40).IsInfixAt Host.prog (k + 37) :=
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	201	replace	    Codec.infix_sub 37 hk (by simp only [unmarshalSSZ, v32Back, Decode.localLabel, List.drop_succ_cons, List.drop_zero,	    Codec.infix_sub 37 hk (by simp only [DepUnmarshal, v32Back, depL, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	204	replace	    (by simp only [unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])	    (by simp only [DepUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	206	replace	    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)	    (by simp only [DepUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	207	replace	    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)	    (by simp only [DepUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	209	replace	    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)	    (by simp only [DepUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	210	replace	    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)	    (by simp only [DepUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	211	replace	  refine eventually_trans _ _ _ _ (v32_loop 33 (by decide) (Decode.localLabel "a2") (Decode.localLabel "166") (Decode.localLabel "23f") (Decode.localLabel "23a")	  refine eventually_trans _ _ _ _ (v32_loop 33 (by decide) (depL "a2") (depL "166") (depL "23f") (depL "23a")
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	212	replace	    (Decode.localLabel "14c") (Decode.localLabel "99") 56 48 40 64 112 104 16 8 0 (k + 40) (k + 49) (k + 62) (k + 67) (k + 74) (k + 37)	    (depL "14c") (depL "99") 56 48 40 64 112 104 16 8 0 (k + 40) (k + 49) (k + 62) (k + 67) (k + 74) (k + 37)
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	246	replace	  kat hk unmarshalSSZ 84	  kat hk DepUnmarshal 84
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	247	replace	  kat hk unmarshalSSZ 85	  kat hk DepUnmarshal 85
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	248	replace	  kat hk unmarshalSSZ 86	  kat hk DepUnmarshal 86
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	269	replace	  kat hk unmarshalSSZ 87	  kat hk DepUnmarshal 87
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	273	replace	  kat hk unmarshalSSZ 88	  kat hk DepUnmarshal 88
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	277	replace	  kat hk unmarshalSSZ 89	  kat hk DepUnmarshal 89
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	282	replace	  kat hk unmarshalSSZ 90	  kat hk DepUnmarshal 90
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	283	replace	  klabel hk hf unmarshalSSZ 97	  klabel hk hf DepUnmarshal 97
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	284	replace	  kat hk unmarshalSSZ 97	  kat hk DepUnmarshal 97
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	285	replace	  kat hk unmarshalSSZ 98	  kat hk DepUnmarshal 98
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	291	replace	  kat hk unmarshalSSZ 99	  kat hk DepUnmarshal 99
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	296	replace	  kat hk unmarshalSSZ 100	  kat hk DepUnmarshal 100
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	298	replace	  kat hk unmarshalSSZ 101	  kat hk DepUnmarshal 101
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	303	replace	  kat hk unmarshalSSZ 102	  kat hk DepUnmarshal 102
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	305	replace	  kat hk unmarshalSSZ 103	  kat hk DepUnmarshal 103
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	306	replace	  kat hk unmarshalSSZ 104	  kat hk DepUnmarshal 104
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	307	replace	  kat hk unmarshalSSZ 105	  kat hk DepUnmarshal 105
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	325	replace	  rw [Decode.scratch_as_data_frame (rsp.toBitVec - 104) Sd hSd fa fb fc fd fe hfa hfb hfc hfd8 hfe', Decode.data_object_words rax5.toBitVec] at H11	  rw [dep_lo (rsp.toBitVec - 104) Sd hSd fa fb fc fd fe hfa hfb hfc hfd8 hfe', dep_obj120 rax5.toBitVec] at H11
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	373	replace	  kat hk unmarshalSSZ 106	  kat hk DepUnmarshal 106
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	375	replace	  kat hk unmarshalSSZ 107	  kat hk DepUnmarshal 107
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	379	replace	  klabel hk hf unmarshalSSZ 135	  klabel hk hf DepUnmarshal 135
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	380	replace	  kat hk unmarshalSSZ 135	  kat hk DepUnmarshal 135
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	381	replace	  kat hk unmarshalSSZ 136	  kat hk DepUnmarshal 136
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	382	replace	  kat hk unmarshalSSZ 137	  kat hk DepUnmarshal 137
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	386	replace	  kat hk unmarshalSSZ 138	  kat hk DepUnmarshal 138
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	406	replace	      Decode.scratch_as_data_frame (rsp.toBitVec - 104) Sd hSd _ _ _ _ _ hlo6 (Int.toBytes_length 8 _) hspl6 (Int.toBytes_length 8 _) hvb]	      dep_lo (rsp.toBitVec - 104) Sd hSd _ _ _ _ _ hlo6 (Int.toBytes_length 8 _) hspl6 (Int.toBytes_length 8 _) hvb]
+fv/kraken/lean/Prysm/Deposit/DecodeAccept.lean	417	replace	end Prysm.Deposit	end E2eDep
+fv/kraken/lean/Prysm/Deposit/Code.lean	9	replace	`unmarshalSSZ` includes the `.S` file of `fv/kraken/prysm/go1.26.10/e2e/lv/link-dep/norm` (`gen/e2e/deplink.py`,	`DepUnmarshal` includes the `.S` file of `fv/kraken/prysm/go1.26.10/e2e/lv/link-dep/norm` (`gen/e2e/deplink.py`,
+fv/kraken/lean/Prysm/Deposit/Code.lean	17	replace	def unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/e2e/lv/link-dep/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S"	def DepUnmarshal : Program := include_x64_rt "../prysm/go1.26.10/e2e/lv/link-dep/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S"
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	9	replace	`desc`; only the field names differ (also in the nested Deposit_Data container). EthLib's codec ignores the	`prysmDepDesc`; only the field names differ (also in the nested Deposit_Data container). EthLib's codec ignores the
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	13	replace	namespace Prysm.Deposit	namespace E2eDep
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	14	replace	open EthLib.Serialization.Ssz Spec TestTarget E2e Codec.Segment	open EthLib.Serialization.Ssz Spec TestTarget E2e E2eList E2eHb Codec.Segment
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	16	replace	theorem desc_checker :	theorem prysmDepDesc_checker :
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	17	replace	    desc = .container ["proof", "data"] [.vector (.byteVector 32) 33, .container	    prysmDepDesc = .container ["proof", "data"] [.vector (.byteVector 32) 33, .container
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	19	replace	    ∧ checkerDesc = .container ["Proof", "Data"] [.vector (.byteVector 32) 33, .container	    ∧ depCheckerDesc = .container ["Proof", "Data"] [.vector (.byteVector 32) 33, .container
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	23	replace	theorem checker_wellFormed : checkerDesc.wellFormed = .ok () := by rfl	theorem depChecker_wellFormed : depCheckerDesc.wellFormed = .ok () := by rfl
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	25	replace	theorem serialize_checker (g : SszValue) : serialize checkerDesc g.toValue = .ok (SszValue.encode g) := by	theorem dep_serialize_checker (g : PDep) : serialize depCheckerDesc g.toValue = .ok (depEnc g) := by
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	32	replace	  simp only [checkerDesc, SszValue.toValue, serialize, serializeStruct, serializeFields] at hs1 ⊢	  simp only [depCheckerDesc, PDep.toValue, serialize, serializeStruct, serializeFields] at hs1 ⊢
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	36	replace	    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, bytesPerOffset, SszValue.encode, SszValue.proofs, Desc.fieldsFixedSize,	    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, bytesPerOffset, depEnc, PDep.proofs, Desc.fieldsFixedSize,
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	39	replace	theorem toValue_fits_checker (g : SszValue) : Value.fits checkerDesc g.toValue = true := by	theorem dep_toValue_fits_checker (g : PDep) : Value.fits depCheckerDesc g.toValue = true := by
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	42	replace	  simp [checkerDesc, SszValue.toValue, Value.fits, Value.fieldsFit, Prysm.HistoricalBatch.allFit_map_bv32, h]	  simp [depCheckerDesc, PDep.toValue, Value.fits, Value.fieldsFit, allFit_map_bv32, h]
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	44	replace	theorem toValue_surjective_checker (v : Value) (h : Value.fits checkerDesc v = true) :	theorem dep_toValue_surjective_checker (v : Value) (h : Value.fits depCheckerDesc v = true) :
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	45	replace	    ∃ g : SszValue, g.toValue = v := by	    ∃ g : PDep, g.toValue = v := by
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	51	replace	  have h' : Value.fits desc v = true := by	  have h' : Value.fits prysmDepDesc v = true := by
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	52	replace	    cases v <;> simp_all [desc, checkerDesc, prysmDdDesc, Value.fits]	    cases v <;> simp_all [prysmDepDesc, depCheckerDesc, prysmDdDesc, Value.fits]
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	55	replace	  exact toValue_surjective v h'	  exact dep_toValue_surjective v h'
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	58	replace	theorem desc_deserialize_checker (bs : Array UInt8) (v : Value) :	theorem prysmDepDesc_deserialize_checker (bs : Array UInt8) (v : Value) :
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	59	replace	    deserialize desc bs = .ok v ↔ deserialize checkerDesc bs = .ok v := by	    deserialize prysmDepDesc bs = .ok v ↔ deserialize depCheckerDesc bs = .ok v := by
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	62	replace	    obtain ⟨g, rfl, hb⟩ := accepted_is_encode h	    obtain ⟨g, rfl, hb⟩ := dep_accepted_is_enc h
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	64	replace	    exact deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed	    exact deserialize_enc (G := PDep) (toV := PDep.toValue) (enc := depEnc) depChecker_wellFormed
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	65	replace	      serialize_checker toValue_fits_checker g	      dep_serialize_checker dep_toValue_fits_checker g
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	67	replace	    obtain ⟨g, rfl, hb⟩ := accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed	    obtain ⟨g, rfl, hb⟩ := accepted_is_enc (G := PDep) (toV := PDep.toValue) (enc := depEnc) depChecker_wellFormed
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	68	replace	      serialize_checker toValue_surjective_checker h	      dep_serialize_checker dep_toValue_surjective_checker h
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	69	replace	    rw [hb]; exact encode_roundtrip g	    rw [hb]; exact dep_roundtrip g
+fv/kraken/lean/Prysm/Deposit/SpecEquivalence.lean	71	replace	end Prysm.Deposit	end E2eDep
+fv/kraken/lean/Prysm/Deposit/NegativeSuiteTargets.lean	6	replace	`spec_prop` and `complete_prop` are copies of the frozen `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement`	`spec_prop` and `complete_prop` are copies of the frozen `dep_reject_size_spec_stmt` and `dep_reject_complete_stmt`
+fv/kraken/lean/Prysm/Deposit/NegativeSuiteTargets.lean	19	replace	  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	  ∀ (k : Nat) (hk : DepUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DepUnmarshal k)
+fv/kraken/lean/Prysm/Deposit/NegativeSuiteTargets.lean	29	replace	    (∃ e, deserialize desc bs = .error e) ∧	    (∃ e, deserialize prysmDepDesc bs = .error e) ∧
+fv/kraken/lean/Prysm/Deposit/NegativeSuiteTargets.lean	43	replace	  exact ⟨spec_rejects bs hbs, Decode.reject_size k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard	  exact ⟨dep_spec_rejects bs hbs, dep_e2e_reject_size_main k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
+fv/kraken/lean/Prysm/Deposit/NegativeSuiteTargets.lean	47	replace	  ∀ bs : Array UInt8, (¬ ∃ v, deserialize desc bs = .ok v) → bs.size ≠ 1240	  ∀ bs : Array UInt8, (¬ ∃ v, deserialize prysmDepDesc bs = .ok v) → bs.size ≠ 1240
+fv/kraken/lean/Prysm/Deposit/NegativeSuiteTargets.lean	50	replace	  fun bs h h' => h ((spec_accepts_iff bs).mpr h')	  fun bs h h' => h ((dep_spec_accepts_iff bs).mpr h')
+fv/kraken/lean/Prysm/Deposit/NegativeSuiteTargets.lean	52	replace	example : spec_prop = Decode.reject_size_spec_statement := rfl	example : spec_prop = dep_reject_size_spec_stmt := rfl
+fv/kraken/lean/Prysm/Deposit/NegativeSuiteTargets.lean	53	replace	example : complete_prop = Decode.reject_complete_statement := rfl	example : complete_prop = dep_reject_complete_stmt := rfl
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	5	replace	`Decode.reject_size_statement`. -/	`dep_reject_size_stmt`. -/
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	9	replace	namespace Prysm.Deposit	namespace E2eDep
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	13	replace	abbrev Decode.functionSymbol (s : String) : String := "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ" ++ s	abbrev depN (s : String) : String := "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ" ++ s
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	15	replace	theorem Decode.reject_size : Decode.reject_size_statement := by	theorem dep_e2e_reject_size_main : dep_reject_size_stmt := by
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	18	replace	    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)	    (by simp only [DepUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	19	replace	    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)	    (by simp only [DepUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	20	replace	  exact rej_size_g 88 1240 (by decide) (by decide) (Decode.functionSymbol "") ("L_" ++ Decode.functionSymbol "_0") ("L_" ++ Decode.functionSymbol "_246")	  exact rej_size_g 88 1240 (by decide) (by decide) (depN "") ("L_" ++ depN "_0") ("L_" ++ depN "_246")
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	21	replace	    ("L_" ++ Decode.functionSymbol "_85") k (k + 9) (k + 31)	    ("L_" ++ depN "_85") k (k + 9) (k + 31)
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	22	replace	    (Codec.infix_sub 0 hk (by simp only [unmarshalSSZ, rejHead, Decode.functionSymbol, List.drop_succ_cons, List.drop_zero,	    (Codec.infix_sub 0 hk (by simp only [DepUnmarshal, rejHead, depN, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	24	replace	    (glue_of hk (a := 8) (by simp only [unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero]))	    (glue_of hk (a := 8) (by simp only [DepUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero]))
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	25	replace	    (Codec.infix_sub 9 hk (by simp only [unmarshalSSZ, rejCmp, Decode.functionSymbol, List.drop_succ_cons, List.drop_zero,	    (Codec.infix_sub 9 hk (by simp only [DepUnmarshal, rejCmp, depN, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	27	replace	    (Codec.infix_sub 31 hk (by simp only [unmarshalSSZ, rejErr, Decode.functionSymbol, List.drop_succ_cons, List.drop_zero,	    (Codec.infix_sub 31 hk (by simp only [DepUnmarshal, rejErr, depN, List.drop_succ_cons, List.drop_zero,
+fv/kraken/lean/Prysm/Deposit/DecodeRejectSize.lean	31	replace	end Prysm.Deposit	end E2eDep
+fv/kraken/lean/Prysm/Deposit/Spec.lean	12	replace	namespace Prysm.Deposit	namespace E2eDep
+fv/kraken/lean/Prysm/Deposit/Spec.lean	13	replace	open EthLib.Serialization.Ssz Spec TestTarget E2e Codec.Segment	open EthLib.Serialization.Ssz Spec TestTarget E2e E2eHb Codec.Segment
+fv/kraken/lean/Prysm/Deposit/Spec.lean	15	replace	theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl	theorem prysmDepDesc_wellFormed : prysmDepDesc.wellFormed = .ok () := by rfl
+fv/kraken/lean/Prysm/Deposit/Spec.lean	16	replace	theorem desc_fixedSize : desc.fixedSize = some 1240 := by rfl	theorem prysmDepDesc_fixedSize : prysmDepDesc.fixedSize = some 1240 := by rfl
+fv/kraken/lean/Prysm/Deposit/Spec.lean	18	replace	theorem proofs_flatten_length (g : SszValue) : g.proofs.flatten.length = 1056 := vN_flatten_length 33 g.proof	theorem dep_proofs_flatten_length (g : PDep) : g.proofs.flatten.length = 1056 := vN_flatten_length 33 g.proof
+fv/kraken/lean/Prysm/Deposit/Spec.lean	20	replace	theorem encode_size (g : SszValue) : (SszValue.encode g).size = 1240 := by	theorem dep_enc_size (g : PDep) : (depEnc g).size = 1240 := by
+fv/kraken/lean/Prysm/Deposit/Spec.lean	21	replace	  rw [SszValue.encode, Array.size_append, List.size_toArray, proofs_flatten_length, pdd_enc_size]	  rw [depEnc, Array.size_append, List.size_toArray, dep_proofs_flatten_length, pdd_enc_size]
+fv/kraken/lean/Prysm/Deposit/Spec.lean	23	replace	theorem toValue_fits (g : SszValue) : Value.fits desc g.toValue = true := by	theorem dep_toValue_fits (g : PDep) : Value.fits prysmDepDesc g.toValue = true := by
+fv/kraken/lean/Prysm/Deposit/Spec.lean	25	replace	  simp [desc, SszValue.toValue, Value.fits, Value.fieldsFit, Prysm.HistoricalBatch.allFit_map_bv32, h]	  simp [prysmDepDesc, PDep.toValue, Value.fits, Value.fieldsFit, allFit_map_bv32, h]
+fv/kraken/lean/Prysm/Deposit/Spec.lean	27	replace	theorem toValue_surjective (v : Value) (h : Value.fits desc v = true) : ∃ g : SszValue, g.toValue = v := by	theorem dep_toValue_surjective (v : Value) (h : Value.fits prysmDepDesc v = true) : ∃ g : PDep, g.toValue = v := by
+fv/kraken/lean/Prysm/Deposit/Spec.lean	37	replace	    refine ⟨⟨⟨(es.map Prysm.HistoricalBatch.toV32).toArray, by simp [hes]⟩, d⟩, ?_⟩	    refine ⟨⟨⟨(es.map toV32).toArray, by simp [hes]⟩, d⟩, ?_⟩
+fv/kraken/lean/Prysm/Deposit/Spec.lean	38	replace	    simp only [SszValue.toValue, Vector.toList_mk, List.toList_toArray]	    simp only [PDep.toValue, Vector.toList_mk, List.toList_toArray]
+fv/kraken/lean/Prysm/Deposit/Spec.lean	39	replace	    rw [Prysm.HistoricalBatch.allFit_bv32 es hall]	    rw [allFit_bv32 es hall]
+fv/kraken/lean/Prysm/Deposit/Spec.lean	42	replace	theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszValue.encode g) := by	theorem dep_serialize (g : PDep) : serialize prysmDepDesc g.toValue = .ok (depEnc g) := by
+fv/kraken/lean/Prysm/Deposit/Spec.lean	48	replace	  simp only [desc, SszValue.toValue, serialize, serializeStruct, serializeFields] at hs1 ⊢	  simp only [prysmDepDesc, PDep.toValue, serialize, serializeStruct, serializeFields] at hs1 ⊢
+fv/kraken/lean/Prysm/Deposit/Spec.lean	52	replace	    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, bytesPerOffset, SszValue.encode, SszValue.proofs, Desc.fieldsFixedSize,	    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, bytesPerOffset, depEnc, PDep.proofs, Desc.fieldsFixedSize,
+fv/kraken/lean/Prysm/Deposit/Spec.lean	56	replace	theorem encode_roundtrip (g : SszValue) : deserialize desc (SszValue.encode g) = .ok g.toValue :=	theorem dep_roundtrip (g : PDep) : deserialize prysmDepDesc (depEnc g) = .ok g.toValue :=
+fv/kraken/lean/Prysm/Deposit/Spec.lean	57	replace	  deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize	  deserialize_enc (G := PDep) (toV := PDep.toValue) (enc := depEnc) prysmDepDesc_wellFormed dep_serialize
+fv/kraken/lean/Prysm/Deposit/Spec.lean	58	replace	    toValue_fits g	    dep_toValue_fits g
+fv/kraken/lean/Prysm/Deposit/Spec.lean	60	replace	theorem accepted_is_encode {bs : Array UInt8} {v : Value} (h : deserialize desc bs = .ok v) :	theorem dep_accepted_is_enc {bs : Array UInt8} {v : Value} (h : deserialize prysmDepDesc bs = .ok v) :
+fv/kraken/lean/Prysm/Deposit/Spec.lean	61	replace	    ∃ g : SszValue, v = g.toValue ∧ bs = SszValue.encode g :=	    ∃ g : PDep, v = g.toValue ∧ bs = depEnc g :=
+fv/kraken/lean/Prysm/Deposit/Spec.lean	62	replace	  accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize	  accepted_is_enc (G := PDep) (toV := PDep.toValue) (enc := depEnc) prysmDepDesc_wellFormed dep_serialize
+fv/kraken/lean/Prysm/Deposit/Spec.lean	63	replace	    toValue_surjective h	    dep_toValue_surjective h
+fv/kraken/lean/Prysm/Deposit/Spec.lean	66	replace	theorem spec_accepts_iff (bs : Array UInt8) : (∃ v, deserialize desc bs = .ok v) ↔ bs.size = 1240 := by	theorem dep_spec_accepts_iff (bs : Array UInt8) : (∃ v, deserialize prysmDepDesc bs = .ok v) ↔ bs.size = 1240 := by
+fv/kraken/lean/Prysm/Deposit/Spec.lean	69	replace	    obtain ⟨g, rfl, hb⟩ := accepted_is_encode hd	    obtain ⟨g, rfl, hb⟩ := dep_accepted_is_enc hd
+fv/kraken/lean/Prysm/Deposit/Spec.lean	70	replace	    rw [hb]; exact encode_size g	    rw [hb]; exact dep_enc_size g
+fv/kraken/lean/Prysm/Deposit/Spec.lean	75	replace	    have e : bs = SszValue.encode ⟨pr, d⟩ := by	    have e : bs = depEnc ⟨pr, d⟩ := by
+fv/kraken/lean/Prysm/Deposit/Spec.lean	76	replace	      simp only [SszValue.encode, SszValue.proofs, hpr, ← hd]	      simp only [depEnc, PDep.proofs, hpr, ← hd]
+fv/kraken/lean/Prysm/Deposit/Spec.lean	80	replace	    exact ⟨_, encode_roundtrip _⟩	    exact ⟨_, dep_roundtrip _⟩
+fv/kraken/lean/Prysm/Deposit/Spec.lean	83	replace	theorem spec_rejects (bs : Array UInt8) (h : bs.size ≠ 1240) : ∃ e, deserialize desc bs = .error e := by	theorem dep_spec_rejects (bs : Array UInt8) (h : bs.size ≠ 1240) : ∃ e, deserialize prysmDepDesc bs = .error e := by
+fv/kraken/lean/Prysm/Deposit/Spec.lean	84	replace	  cases hd : deserialize desc bs with	  cases hd : deserialize prysmDepDesc bs with
+fv/kraken/lean/Prysm/Deposit/Spec.lean	86	replace	  | ok v => exact absurd ((spec_accepts_iff bs).mp ⟨v, hd⟩) h	  | ok v => exact absurd ((dep_spec_accepts_iff bs).mp ⟨v, hd⟩) h
+fv/kraken/lean/Prysm/Deposit/Spec.lean	88	replace	end Prysm.Deposit	end E2eDep
+fv/kraken/lean/Prysm/Deposit/SpecChecker.lean	8	replace	namespace Prysm.Deposit	namespace E2eList
+fv/kraken/lean/Prysm/Deposit/SpecChecker.lean	11	replace	def checkerDesc : Desc := .container ["Proof", "Data"] [.vector (.byteVector 32) 33, .container ["PublicKey", "WithdrawalCredentials", "Amount", "Signature"] [.byteVector 48, .byteVector 32, .uint 8, .byteVector 96]]	def depCheckerDesc : Desc := .container ["Proof", "Data"] [.vector (.byteVector 32) 33, .container ["PublicKey", "WithdrawalCredentials", "Amount", "Signature"] [.byteVector 48, .byteVector 32, .uint 8, .byteVector 96]]
+fv/kraken/lean/Prysm/Deposit/SpecChecker.lean	13	replace	end Prysm.Deposit	end E2eList
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	8	replace	The text of `Prysm.HistoricalBatch.DecodeSpec` with the Deposit statement. The statements are the frozen `Decode.accept_spec_statement`,	The text of `E2eHb.HbSpecK` with the Deposit statement. The statements are the frozen `dep_accept_spec_stmt`,
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	9	replace	`Decode.reject_size_spec_statement` and `Decode.reject_complete_statement` (`SpecStmt.lean`).	`dep_reject_size_spec_stmt` and `dep_reject_complete_stmt` (`SpecStmt.lean`).
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	15	replace	namespace Prysm.Deposit	namespace E2eDep
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	17	replace	theorem proofs_length (g : SszValue) : g.proofs.length = 33 := by simp [SszValue.proofs]	theorem dep_proofs_length (g : PDep) : g.proofs.length = 33 := by simp [PDep.proofs]
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	19	replace	theorem proofs_elem (g : SszValue) : ∀ e ∈ g.proofs, e.length = 32 := by	theorem dep_proofs_elem (g : PDep) : ∀ e ∈ g.proofs, e.length = 32 := by
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	21	replace	  simp only [SszValue.proofs, List.mem_map] at he	  simp only [PDep.proofs, List.mem_map] at he
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	25	replace	theorem Decode.accept_spec : Decode.accept_spec_statement := by	theorem dep_e2e_accept_spec_k : dep_accept_spec_stmt := by
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	29	replace	  obtain ⟨g, rfl, hb⟩ := accepted_is_encode hd	  obtain ⟨g, rfl, hb⟩ := dep_accepted_is_enc hd
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	32	replace	    apply UInt64.toNat_inj.mp; rw [hlen, hb, encode_size]; rfl	    apply UInt64.toNat_inj.mp; rw [hlen, hb, dep_enc_size]; rfl
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	33	replace	  exact Decode.accept k hk hf kd hkd hfd g.proofs (proofs_length g) (proofs_elem g)	  exact dep_e2e_accept_main k hk hf kd hkd hfd g.proofs (dep_proofs_length g) (dep_proofs_elem g)
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	40	replace	theorem Decode.reject_size_spec : Decode.reject_size_spec_statement := by	theorem dep_e2e_reject_size_spec : dep_reject_size_spec_stmt := by
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	42	replace	  exact ⟨spec_rejects bs hbs, Decode.reject_size k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard	  exact ⟨dep_spec_rejects bs hbs, dep_e2e_reject_size_main k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	45	replace	theorem Decode.reject_complete : Decode.reject_complete_statement :=	theorem dep_e2e_reject_complete : dep_reject_complete_stmt :=
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	46	replace	  fun bs h h1240 => h ((spec_accepts_iff bs).mpr h1240)	  fun bs h h1240 => h ((dep_spec_accepts_iff bs).mpr h1240)
+fv/kraken/lean/Prysm/Deposit/DecodeSpec.lean	48	replace	end Prysm.Deposit	end E2eDep
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	15	replace	`DepositData` is the hand `Desc` `E2e.prysmDdDesc` (imported). `SszValue` is the SSZ content of a Go	`DepositData` is the hand `Desc` `E2e.prysmDdDesc` (imported). `PDep` is the SSZ content of a Go
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	16	replace	`v1alpha1.Deposit` whose byte fields have the spec lengths; `SszValue.encode` is its 1240-byte SSZ encoding.	`v1alpha1.Deposit` whose byte fields have the spec lengths; `depEnc` is its 1240-byte SSZ encoding.
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	23	replace	namespace Prysm.Deposit	namespace E2eDep
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	26	replace	def desc : Desc := .container ["proof", "data"] [.vector (.byteVector 32) 33, prysmDdDesc]	def prysmDepDesc : Desc := .container ["proof", "data"] [.vector (.byteVector 32) 33, prysmDdDesc]
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	29	replace	structure SszValue where	structure PDep where
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	34	replace	def SszValue.proofs (g : SszValue) : List (List UInt8) := g.proof.toList.map (·.toList)	def PDep.proofs (g : PDep) : List (List UInt8) := g.proof.toList.map (·.toList)
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	36	replace	def SszValue.toValue (g : SszValue) : Value :=	def PDep.toValue (g : PDep) : Value :=
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	40	replace	def SszValue.encode (g : SszValue) : Array UInt8 := g.proofs.flatten.toArray ++ pddEnc g.data	def depEnc (g : PDep) : Array UInt8 := g.proofs.flatten.toArray ++ pddEnc g.data
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	42	replace	/-- **Deposit accept (spec).** If EthLib accepts `bsA` against `desc` as `v`, there is `g : SszValue` with	/-- **Deposit accept (spec).** If EthLib accepts `bsA` against `prysmDepDesc` as `v`, there is `g : PDep` with
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	43	replace	`g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the	`g.toValue = v` and `bsA = depEnc g`; with the input chunks of that `g` the machine code returns nil and the
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	44	replace	receiver holds `g` (postcondition of `Decode.accept_statement`). -/	receiver holds `g` (postcondition of `dep_accept_stmt`). -/
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	45	replace	def Decode.accept_spec_statement : Prop :=	def dep_accept_spec_stmt : Prop :=
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	46	replace	  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	  ∀ (k : Nat) (hk : DepUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DepUnmarshal k)
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	49	replace	    (bsA : Array UInt8) (v : Value) (hd : deserialize desc bsA = .ok v)	    (bsA : Array UInt8) (v : Value) (hd : deserialize prysmDepDesc bsA = .ok v)
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	58	replace	    (Pm : ∀ g : SszValue, bsA = SszValue.encode g →	    (Pm : ∀ g : PDep, bsA = depEnc g →
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	81	replace	    ∃ g : SszValue, g.toValue = v ∧ bsA = SszValue.encode g ∧	    ∃ g : PDep, g.toValue = v ∧ bsA = depEnc g ∧
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	123	replace	def Decode.reject_size_spec_statement : Prop :=	def dep_reject_size_spec_stmt : Prop :=
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	124	replace	  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	  ∀ (k : Nat) (hk : DepUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DepUnmarshal k)
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	134	replace	    (∃ e, deserialize desc bs = .error e) ∧	    (∃ e, deserialize prysmDepDesc bs = .error e) ∧
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	148	replace	def Decode.reject_complete_statement : Prop :=	def dep_reject_complete_stmt : Prop :=
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	149	replace	  ∀ bs : Array UInt8, (¬ ∃ v, deserialize desc bs = .ok v) → bs.size ≠ 1240	  ∀ bs : Array UInt8, (¬ ∃ v, deserialize prysmDepDesc bs = .ok v) → bs.size ≠ 1240
+fv/kraken/lean/Prysm/Deposit/StatementsSpec.lean	151	replace	end Prysm.Deposit	end E2eDep
+fv/kraken/lean/Prysm/Deposit/Statements.lean	46	replace	namespace Prysm.Deposit	namespace E2eDep
+fv/kraken/lean/Prysm/Deposit/Statements.lean	49	replace	def Decode.reject_size_statement : Prop :=	def dep_reject_size_stmt : Prop :=
+fv/kraken/lean/Prysm/Deposit/Statements.lean	50	replace	  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	  ∀ (k : Nat) (hk : DepUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DepUnmarshal k)
+fv/kraken/lean/Prysm/Deposit/Statements.lean	76	replace	def Decode.accept_statement : Prop :=	def dep_accept_stmt : Prop :=
+fv/kraken/lean/Prysm/Deposit/Statements.lean	77	replace	  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	  ∀ (k : Nat) (hk : DepUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DepUnmarshal k)
+fv/kraken/lean/Prysm/Deposit/Statements.lean	152	replace	end Prysm.Deposit	end E2eDep
+fv/kraken/lean/Prysm/Deposit/WitnessBumpAllocator.lean	16	replace	namespace Prysm.Deposit	namespace E2eDepW
+fv/kraken/lean/Prysm/Deposit/WitnessBumpAllocator.lean	69	replace	end Prysm.Deposit	end E2eDepW
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	8	replace	# Witness of `Decode.accept` (Deposit decoder accept path)	# Witness of `dep_e2e_accept_main` (Deposit decoder accept path)
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	26	replace	open Machine Runtime TestTarget Machine.Witness Prysm.Deposit.Code E2eScal.H4Code	open Machine Runtime TestTarget Machine.Witness E2eDep E2eDep.Code E2eScal.H4Code E2eDepW
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	28	replace	namespace Prysm.Deposit.Witness.DecodeAccept	namespace E2eDepW.WitA
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	34	replace	def P : Program := dataLabels ++ unmarshalSSZ ++ DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120 ++ RtCopy	def P : Program := dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120 ++ RtCopy
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	46	replace	theorem hk9 : unmarshalSSZ.IsInfixAt Host.prog 9 :=	theorem hk9 : DepUnmarshal.IsInfixAt Host.prog 9 :=
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	50	replace	  infixAt_of (dataLabels ++ unmarshalSSZ) (Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120 ++ RtCopy)	  infixAt_of (dataLabels ++ DepUnmarshal) (Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120 ++ RtCopy)
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	54	replace	  infixAt_of (dataLabels ++ unmarshalSSZ ++ DdUnmarshal) (BumpNew120 ++ RtCopy)	  infixAt_of (dataLabels ++ DepUnmarshal ++ DdUnmarshal) (BumpNew120 ++ RtCopy)
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	58	replace	  infixAt_of (dataLabels ++ unmarshalSSZ ++ DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch) RtCopy	  infixAt_of (dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch) RtCopy
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	62	replace	  infixAt_of (dataLabels ++ unmarshalSSZ ++ DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120) []	  infixAt_of (dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120) []
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	65	replace	theorem hf9 : LabelsFresh unmarshalSSZ 9 := labelsFresh_of (by rw [prog_eq]; decide)	theorem hf9 : LabelsFresh DepUnmarshal 9 := labelsFresh_of (by rw [prog_eq]; decide)
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	119	replace	/-- **Non-vacuity of `Decode.accept` (the premises of the frozen statement `Decode.accept_statement` are	/-- **Non-vacuity of `dep_e2e_accept_main` (the premises of the frozen statement `dep_accept_stmt` are
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	121	replace	theorem runs (proofs : List (List UInt8)) (pk wc amt sig oP oD : List UInt8) (hps : proofs.length = 33)	theorem dep_accept_runs (proofs : List (List UInt8)) (pk wc amt sig oP oD : List UInt8) (hps : proofs.length = 33)
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	128	replace	  exact eventually_mono (Decode.accept 9 hk9 hf9 165 hk165 hf165 proofs hps hp pk wc amt sig hpk hwc hamt hsig	  exact eventually_mono (dep_e2e_accept_main 9 hk9 hf9 165 hk165 hf165 proofs hps hp pk wc amt sig hpk hwc hamt hsig
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	152	replace	  runs (List.replicate 33 (z 32)) (z 48) (z 32) (z 8) (z 96) (z 8) (z 8)	  dep_accept_runs (List.replicate 33 (z 32)) (z 48) (z 32) (z 8) (z 96) (z 8) (z 8)
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	156	replace	  runs ((List.range 33).map fun i => List.replicate 32 (UInt8.ofNat i)) ((List.range 48).map UInt8.ofNat)	  dep_accept_runs ((List.range 33).map fun i => List.replicate 32 (UInt8.ofNat i)) ((List.range 48).map UInt8.ofNat)
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	161	replace	  runs (List.replicate 33 (List.replicate 32 0xff)) (List.replicate 48 0xff) (List.replicate 32 0xff)	  dep_accept_runs (List.replicate 33 (List.replicate 32 0xff)) (List.replicate 48 0xff) (List.replicate 32 0xff)
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeAccept.lean	166	replace	end Prysm.Deposit.Witness.DecodeAccept	end E2eDepW.WitA
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	6	replace	# Witness of `Decode.reject_size` (Deposit size reject)	# Witness of `dep_e2e_reject_size_main` (Deposit size reject)
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	16	replace	open Machine Runtime TestTarget Machine.Witness Prysm.Deposit.Code	open Machine Runtime TestTarget Machine.Witness E2eDep E2eDep.Code
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	18	replace	namespace Prysm.Deposit.Witness.DecodeRejectSize	namespace E2eDepW.WitR
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	21	replace	def P : Program := [.label "ssz.ErrSize"] ++ unmarshalSSZ	def P : Program := [.label "ssz.ErrSize"] ++ DepUnmarshal
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	27	replace	theorem hk1 : unmarshalSSZ.IsInfixAt Host.prog 1 := infixAt_of [.label "ssz.ErrSize"] [] (by simp [Host.prog, mkHost, P]) rfl	theorem hk1 : DepUnmarshal.IsInfixAt Host.prog 1 := infixAt_of [.label "ssz.ErrSize"] [] (by simp [Host.prog, mkHost, P]) rfl
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	29	replace	theorem hf1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)	theorem hf1 : LabelsFresh DepUnmarshal 1 := labelsFresh_of (by decide)
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	47	replace	/-- **Non-vacuity of `Decode.reject_size`.** -/	/-- **Non-vacuity of `dep_e2e_reject_size_main`.** -/
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	48	replace	theorem runs (len : UInt64) (hlen : len ≠ 1240) (zmms : RegZmms) (flags : StatusFlags) :	theorem dep_reject_runs (len : UInt64) (hlen : len ≠ 1240) (zmms : RegZmms) (flags : StatusFlags) :
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	53	replace	  eventually_mono (Decode.reject_size 1 hk1 hf1 (cs0 len zmms flags) 0 0 0x10e8 0x2a (z 8) (z 8) rfl rfl R0	  eventually_mono (dep_e2e_reject_size_main 1 hk1 hf1 (cs0 len zmms flags) 0 0 0x10e8 0x2a (z 8) (z 8) rfl rfl R0
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	65	replace	example (z' : RegZmms) (f : StatusFlags) := runs 1239 (by decide) z' f	example (z' : RegZmms) (f : StatusFlags) := dep_reject_runs 1239 (by decide) z' f
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	66	replace	example (z' : RegZmms) (f : StatusFlags) := runs 1241 (by decide) z' f	example (z' : RegZmms) (f : StatusFlags) := dep_reject_runs 1241 (by decide) z' f
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	67	replace	example (z' : RegZmms) (f : StatusFlags) := runs 0 (by decide) z' f	example (z' : RegZmms) (f : StatusFlags) := dep_reject_runs 0 (by decide) z' f
+fv/kraken/lean/Prysm/Deposit/WitnessDecodeRejectSize.lean	69	replace	end Prysm.Deposit.Witness.DecodeRejectSize	end E2eDepW.WitR
+fv/kraken/lean/Prysm/HistoricalBatch/Code.lean	7	replace	`unmarshalSSZ` includes the `.S` file of `fv/kraken/prysm/go1.26.10/e2e/lv/link-hb/norm`	`HbUnmarshal` includes the `.S` file of `fv/kraken/prysm/go1.26.10/e2e/lv/link-hb/norm`
+fv/kraken/lean/Prysm/HistoricalBatch/Code.lean	15	replace	def unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/e2e/lv/link-hb/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S"	def HbUnmarshal : Program := include_x64_rt "../prysm/go1.26.10/e2e/lv/link-hb/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S"
+fv/kraken/lean/Prysm/HistoricalBatch/SpecDefinitions.lean	9	replace	- `desc`: hand `Desc` of consensus-specs phase0 `HistoricalBatch` (mainnet), from the spec text:	- `prysmHbDesc`: hand `Desc` of consensus-specs phase0 `HistoricalBatch` (mainnet), from the spec text:
+fv/kraken/lean/Prysm/HistoricalBatch/SpecDefinitions.lean	17	replace	- `SszValue`: the SSZ content of a Go `v1alpha1.HistoricalBatch` whose byte fields have the spec lengths	- `PHb`: the SSZ content of a Go `v1alpha1.HistoricalBatch` whose byte fields have the spec lengths
+fv/kraken/lean/Prysm/HistoricalBatch/SpecDefinitions.lean	18	replace	  (8192 × 32 each). `toValue` is the EthLib `Value`, `SszValue.encode` the 524288 bytes of the SSZ encoding.	  (8192 × 32 each). `toValue` is the EthLib `Value`, `phbEnc` the 524288 bytes of the SSZ encoding.
+fv/kraken/lean/Prysm/HistoricalBatch/SpecDefinitions.lean	23	replace	namespace Prysm.HistoricalBatch	namespace E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/SpecDefinitions.lean	26	replace	def desc : Desc := .container ["block_roots", "state_roots"]	def prysmHbDesc : Desc := .container ["block_roots", "state_roots"]
+fv/kraken/lean/Prysm/HistoricalBatch/SpecDefinitions.lean	30	replace	structure SszValue where	structure PHb where
+fv/kraken/lean/Prysm/HistoricalBatch/SpecDefinitions.lean	35	replace	def SszValue.brs (g : SszValue) : List (List UInt8) := g.blockRoots.toList.map (·.toList)	def PHb.brs (g : PHb) : List (List UInt8) := g.blockRoots.toList.map (·.toList)
+fv/kraken/lean/Prysm/HistoricalBatch/SpecDefinitions.lean	37	replace	def SszValue.srs (g : SszValue) : List (List UInt8) := g.stateRoots.toList.map (·.toList)	def PHb.srs (g : PHb) : List (List UInt8) := g.stateRoots.toList.map (·.toList)
+fv/kraken/lean/Prysm/HistoricalBatch/SpecDefinitions.lean	39	replace	def SszValue.toValue (g : SszValue) : Value :=	def PHb.toValue (g : PHb) : Value :=
+fv/kraken/lean/Prysm/HistoricalBatch/SpecDefinitions.lean	44	replace	def SszValue.encode (g : SszValue) : Array UInt8 := g.brs.flatten.toArray ++ g.srs.flatten.toArray	def phbEnc (g : PHb) : Array UInt8 := g.brs.flatten.toArray ++ g.srs.flatten.toArray
+fv/kraken/lean/Prysm/HistoricalBatch/SpecDefinitions.lean	46	replace	end Prysm.HistoricalBatch	end E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	10	replace	* BlockRoots loop 40–84, 36–39: `Decode.block_roots_loop`;	* BlockRoots loop 40–84, 36–39: `hb_loop1`;
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	13	replace	* StateRoots loop 108–153, 104–107: `Decode.state_roots_loop`;	* StateRoots loop 108–153, 104–107: `hb_loop2`;
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	23	replace	namespace Prysm.HistoricalBatch	namespace E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	26	replace	`Decode.accept_statement`. -/	`hb_accept_stmt`. -/
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	27	replace	theorem Decode.accept : Decode.accept_statement := by	theorem hb_e2e_accept_main : hb_accept_stmt := by
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	36	replace	  kat hk unmarshalSSZ 0	  kat hk HbUnmarshal 0
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	37	replace	  kat hk unmarshalSSZ 1	  kat hk HbUnmarshal 1
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	38	replace	  kat hk unmarshalSSZ 2	  kat hk HbUnmarshal 2
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	41	replace	  kat hk unmarshalSSZ 3	  kat hk HbUnmarshal 3
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	49	replace	  kat hk unmarshalSSZ 4	  kat hk HbUnmarshal 4
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	54	replace	  kat hk unmarshalSSZ 5	  kat hk HbUnmarshal 5
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	55	replace	  kat hk unmarshalSSZ 6	  kat hk HbUnmarshal 6
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	56	replace	  kat hk unmarshalSSZ 7	  kat hk HbUnmarshal 7
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	61	replace	  kat hk unmarshalSSZ 8	  kat hk HbUnmarshal 8
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	62	replace	  kat hk unmarshalSSZ 9	  kat hk HbUnmarshal 9
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	63	replace	  kat hk unmarshalSSZ 10	  kat hk HbUnmarshal 10
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	67	replace	  kat hk unmarshalSSZ 11	  kat hk HbUnmarshal 11
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	72	replace	  kat hk unmarshalSSZ 12	  kat hk HbUnmarshal 12
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	78	replace	  kat hk unmarshalSSZ 13	  kat hk HbUnmarshal 13
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	79	replace	  kat hk unmarshalSSZ 14	  kat hk HbUnmarshal 14
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	80	replace	  kat hk unmarshalSSZ 15	  kat hk HbUnmarshal 15
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	81	replace	  kat hk unmarshalSSZ 16	  kat hk HbUnmarshal 16
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	101	replace	  kat hk unmarshalSSZ 17	  kat hk HbUnmarshal 17
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	106	replace	  kat hk unmarshalSSZ 18	  kat hk HbUnmarshal 18
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	111	replace	  kat hk unmarshalSSZ 19	  kat hk HbUnmarshal 19
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	116	replace	  kat hk unmarshalSSZ 20	  kat hk HbUnmarshal 20
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	120	replace	  kat hk unmarshalSSZ 21	  kat hk HbUnmarshal 21
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	124	replace	  klabel hk hf unmarshalSSZ 26	  klabel hk hf HbUnmarshal 26
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	125	replace	  kat hk unmarshalSSZ 26	  kat hk HbUnmarshal 26
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	126	replace	  kat hk unmarshalSSZ 27	  kat hk HbUnmarshal 27
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	131	replace	  kat hk unmarshalSSZ 28	  kat hk HbUnmarshal 28
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	133	replace	  kat hk unmarshalSSZ 29	  kat hk HbUnmarshal 29
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	134	replace	  klabel hk hf unmarshalSSZ 40	  klabel hk hf HbUnmarshal 40
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	138	replace	  refine eventually_trans _ _ _ _ (Decode.block_roots_loop k hk hf (rsp.toBitVec - 64) rax.toBitVec rbx.toBitVec rax3.toBitVec brs	  refine eventually_trans _ _ _ _ (hb_loop1 k hk hf (rsp.toBitVec - 64) rax.toBitVec rbx.toBitVec rax3.toBitVec brs
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	160	replace	  kat hk unmarshalSSZ 86	  kat hk HbUnmarshal 86
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	161	replace	  kat hk unmarshalSSZ 87	  kat hk HbUnmarshal 87
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	162	replace	  kat hk unmarshalSSZ 88	  kat hk HbUnmarshal 88
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	163	replace	  kat hk unmarshalSSZ 89	  kat hk HbUnmarshal 89
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	183	replace	  kat hk unmarshalSSZ 90	  kat hk HbUnmarshal 90
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	188	replace	  kat hk unmarshalSSZ 91	  kat hk HbUnmarshal 91
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	193	replace	  kat hk unmarshalSSZ 92	  kat hk HbUnmarshal 92
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	198	replace	  kat hk unmarshalSSZ 93	  kat hk HbUnmarshal 93
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	202	replace	  kat hk unmarshalSSZ 94	  kat hk HbUnmarshal 94
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	206	replace	  klabel hk hf unmarshalSSZ 100	  klabel hk hf HbUnmarshal 100
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	207	replace	  kat hk unmarshalSSZ 100	  kat hk HbUnmarshal 100
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	208	replace	  kat hk unmarshalSSZ 101	  kat hk HbUnmarshal 101
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	213	replace	  kat hk unmarshalSSZ 102	  kat hk HbUnmarshal 102
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	215	replace	  kat hk unmarshalSSZ 103	  kat hk HbUnmarshal 103
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	216	replace	  klabel hk hf unmarshalSSZ 108	  klabel hk hf HbUnmarshal 108
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	219	replace	  refine eventually_trans _ _ _ _ (Decode.state_roots_loop k hk hf (rsp.toBitVec - 64) rax.toBitVec rbx.toBitVec rax5.toBitVec srs	  refine eventually_trans _ _ _ _ (hb_loop2 k hk hf (rsp.toBitVec - 64) rax.toBitVec rbx.toBitVec rax5.toBitVec srs
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	238	replace	  kat hk unmarshalSSZ 155	  kat hk HbUnmarshal 155
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	240	replace	  kat hk unmarshalSSZ 156	  kat hk HbUnmarshal 156
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	242	replace	  kat hk unmarshalSSZ 157	  kat hk HbUnmarshal 157
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	243	replace	  kat hk unmarshalSSZ 158	  kat hk HbUnmarshal 158
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	247	replace	  kat hk unmarshalSSZ 159	  kat hk HbUnmarshal 159
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeAccept.lean	274	replace	end Prysm.HistoricalBatch	end E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	9	replace	order as `desc`; only the field names differ. EthLib's codec ignores the names, so the two `Desc`s accept the	order as `prysmHbDesc`; only the field names differ. EthLib's codec ignores the names, so the two `Desc`s accept the
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	13	replace	namespace Prysm.HistoricalBatch	namespace E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	14	replace	open EthLib.Serialization.Ssz Spec TestTarget	open EthLib.Serialization.Ssz Spec TestTarget E2eList
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	16	replace	theorem desc_checker :	theorem prysmHbDesc_checker :
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	17	replace	    desc = .container ["block_roots", "state_roots"] [.vector (.byteVector 32) 8192, .vector (.byteVector 32) 8192]	    prysmHbDesc = .container ["block_roots", "state_roots"] [.vector (.byteVector 32) 8192, .vector (.byteVector 32) 8192]
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	18	replace	    ∧ checkerDesc = .container ["BlockRoots", "StateRoots"]	    ∧ hbCheckerDesc = .container ["BlockRoots", "StateRoots"]
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	22	replace	theorem checker_wellFormed : checkerDesc.wellFormed = .ok () := by rfl	theorem hbChecker_wellFormed : hbCheckerDesc.wellFormed = .ok () := by rfl
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	25	replace	theorem desc_serialize_checker (v : Value) : serialize desc v = serialize checkerDesc v := by	theorem prysmHbDesc_serialize_checker (v : Value) : serialize prysmHbDesc v = serialize hbCheckerDesc v := by
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	26	replace	  unfold desc checkerDesc	  unfold prysmHbDesc hbCheckerDesc
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	29	replace	theorem serialize_checker (g : SszValue) : serialize checkerDesc g.toValue = .ok (SszValue.encode g) := by	theorem phb_serialize_checker (g : PHb) : serialize hbCheckerDesc g.toValue = .ok (phbEnc g) := by
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	30	replace	  rw [← desc_serialize_checker]; exact toValue_serialize g	  rw [← prysmHbDesc_serialize_checker]; exact phb_serialize g
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	32	replace	theorem toValue_fits_checker (g : SszValue) : Value.fits checkerDesc g.toValue = true := by	theorem phb_toValue_fits_checker (g : PHb) : Value.fits hbCheckerDesc g.toValue = true := by
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	33	replace	  simp [checkerDesc, SszValue.toValue, Value.fits, Value.fieldsFit, allFit_map_bv32]	  simp [hbCheckerDesc, PHb.toValue, Value.fits, Value.fieldsFit, allFit_map_bv32]
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	35	replace	theorem toValue_surjective_checker (v : Value) (h : Value.fits checkerDesc v = true) :	theorem phb_toValue_surjective_checker (v : Value) (h : Value.fits hbCheckerDesc v = true) :
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	36	replace	    ∃ g : SszValue, g.toValue = v := by	    ∃ g : PHb, g.toValue = v := by
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	37	replace	  have h' : Value.fits desc v = true := by	  have h' : Value.fits prysmHbDesc v = true := by
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	38	replace	    cases v <;> simp_all [desc, checkerDesc, Value.fits]	    cases v <;> simp_all [prysmHbDesc, hbCheckerDesc, Value.fits]
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	39	replace	  exact toValue_surjective v h'	  exact phb_toValue_surjective v h'
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	42	replace	theorem desc_deserialize_checker (bs : Array UInt8) (v : Value) :	theorem prysmHbDesc_deserialize_checker (bs : Array UInt8) (v : Value) :
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	43	replace	    deserialize desc bs = .ok v ↔ deserialize checkerDesc bs = .ok v := by	    deserialize prysmHbDesc bs = .ok v ↔ deserialize hbCheckerDesc bs = .ok v := by
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	46	replace	    obtain ⟨g, rfl, hb⟩ := accepted_is_encode h	    obtain ⟨g, rfl, hb⟩ := phb_accepted_is_enc h
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	48	replace	    exact deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed	    exact deserialize_enc (G := PHb) (toV := PHb.toValue) (enc := phbEnc) hbChecker_wellFormed
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	49	replace	      serialize_checker toValue_fits_checker g	      phb_serialize_checker phb_toValue_fits_checker g
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	51	replace	    obtain ⟨g, rfl, hb⟩ := accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed	    obtain ⟨g, rfl, hb⟩ := accepted_is_enc (G := PHb) (toV := PHb.toValue) (enc := phbEnc) hbChecker_wellFormed
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	52	replace	      serialize_checker toValue_surjective_checker h	      phb_serialize_checker phb_toValue_surjective_checker h
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	53	replace	    rw [hb]; exact encode_roundtrip g	    rw [hb]; exact phb_roundtrip g
+fv/kraken/lean/Prysm/HistoricalBatch/SpecEquivalence.lean	55	replace	end Prysm.HistoricalBatch	end E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopLemmas.lean	16	replace	namespace Prysm.HistoricalBatch	namespace E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopLemmas.lean	18	replace	theorem flatten_length (qs : List (List UInt8)) (h : ∀ e ∈ qs, e.length = 32) :	theorem hb_flatten_length (qs : List (List UInt8)) (h : ∀ e ∈ qs, e.length = 32) :
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopLemmas.lean	26	replace	theorem Decode.input_split (bf : BitVec 64) (pks : List (List UInt8)) (hpks : pks.length = 8192)	theorem hbIn_split (bf : BitVec 64) (pks : List (List UInt8)) (hpks : pks.length = 8192)
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopLemmas.lean	32	replace	    rw [flatten_length _ (fun e he => hpk e (List.mem_of_mem_take he))]; simp; omega	    rw [hb_flatten_length _ (fun e he => hpk e (List.mem_of_mem_take he))]; simp; omega
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopLemmas.lean	35	replace	    rw [flatten_length _ (fun e he => hpk e (List.mem_of_mem_drop he))]; simp; omega	    rw [hb_flatten_length _ (fun e he => hpk e (List.mem_of_mem_drop he))]; simp; omega
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopLemmas.lean	41	replace	theorem Decode.array_split (A : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 8192) (hps : ps.length = i) :	theorem hbA_split (A : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 8192) (hps : ps.length = i) :
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopLemmas.lean	55	replace	theorem Decode.array_join (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 8192) (hps : ps.length = i) :	theorem hbA_join (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 8192) (hps : ps.length = i) :
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopLemmas.lean	73	replace	end Prysm.HistoricalBatch	end E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	16	replace	`Decode.block_roots_iter` (one iteration, directives 40–77 and 36–39): 41–42 `cmp $0x2000; jge` not taken (i < 8192);	`hb_iter1` (one iteration, directives 40–77 and 36–39): 41–42 `cmp $0x2000; jge` not taken (i < 8192);
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	29	replace	namespace Prysm.HistoricalBatch	namespace E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	37	replace	theorem Decode.block_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	theorem hb_iter1 (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh HbUnmarshal k)
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	74	replace	  rw [Decode.input_split bf pks hpks hpk i hi, Decode.array_split A ps i hi hps] at h_mem	  rw [hbIn_split bf pks hpks hpk i hi, hbA_split A ps i hi hps] at h_mem
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	76	replace	  kat hk unmarshalSSZ 40	  kat hk HbUnmarshal 40
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	77	replace	  kat hk unmarshalSSZ 41	  kat hk HbUnmarshal 41
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	78	replace	  kat hk unmarshalSSZ 42	  kat hk HbUnmarshal 42
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	85	replace	  kat hk unmarshalSSZ 43	  kat hk HbUnmarshal 43
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	86	replace	  kat hk unmarshalSSZ 44	  kat hk HbUnmarshal 44
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	88	replace	  kat hk unmarshalSSZ 45	  kat hk HbUnmarshal 45
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	89	replace	  kat hk unmarshalSSZ 46	  kat hk HbUnmarshal 46
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	90	replace	  kat hk unmarshalSSZ 47	  kat hk HbUnmarshal 47
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	92	replace	  kat hk unmarshalSSZ 48	  kat hk HbUnmarshal 48
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	93	replace	  kat hk unmarshalSSZ 49	  kat hk HbUnmarshal 49
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	94	replace	  kat hk unmarshalSSZ 50	  kat hk HbUnmarshal 50
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	102	replace	  kat hk unmarshalSSZ 51	  kat hk HbUnmarshal 51
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	107	replace	  kat hk unmarshalSSZ 52	  kat hk HbUnmarshal 52
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	112	replace	  kat hk unmarshalSSZ 53	  kat hk HbUnmarshal 53
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	118	replace	  kat hk unmarshalSSZ 54	  kat hk HbUnmarshal 54
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	119	replace	  kat hk unmarshalSSZ 55	  kat hk HbUnmarshal 55
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	121	replace	  kat hk unmarshalSSZ 56	  kat hk HbUnmarshal 56
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	122	replace	  kat hk unmarshalSSZ 57	  kat hk HbUnmarshal 57
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	143	replace	  kat hk unmarshalSSZ 58	  kat hk HbUnmarshal 58
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	148	replace	  kat hk unmarshalSSZ 59	  kat hk HbUnmarshal 59
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	153	replace	  kat hk unmarshalSSZ 60	  kat hk HbUnmarshal 60
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	158	replace	  kat hk unmarshalSSZ 61	  kat hk HbUnmarshal 61
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	159	replace	  kat hk unmarshalSSZ 62	  kat hk HbUnmarshal 62
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	160	replace	  kat hk unmarshalSSZ 63	  kat hk HbUnmarshal 63
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	180	replace	  kat hk unmarshalSSZ 64	  kat hk HbUnmarshal 64
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	185	replace	  kat hk unmarshalSSZ 65	  kat hk HbUnmarshal 65
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	189	replace	  kat hk unmarshalSSZ 66	  kat hk HbUnmarshal 66
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	194	replace	  kat hk unmarshalSSZ 67	  kat hk HbUnmarshal 67
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	195	replace	  kat hk unmarshalSSZ 68	  kat hk HbUnmarshal 68
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	202	replace	  kat hk unmarshalSSZ 69	  kat hk HbUnmarshal 69
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	203	replace	  kat hk unmarshalSSZ 70	  kat hk HbUnmarshal 70
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	208	replace	  kat hk unmarshalSSZ 71	  kat hk HbUnmarshal 71
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	213	replace	  kat hk unmarshalSSZ 72	  kat hk HbUnmarshal 72
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	218	replace	  kat hk unmarshalSSZ 73	  kat hk HbUnmarshal 73
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	222	replace	  kat hk unmarshalSSZ 74	  kat hk HbUnmarshal 74
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	223	replace	  kat hk unmarshalSSZ 75	  kat hk HbUnmarshal 75
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	227	replace	  kat hk unmarshalSSZ 76	  kat hk HbUnmarshal 76
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	232	replace	  kat hk unmarshalSSZ 77	  kat hk HbUnmarshal 77
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	233	replace	  klabel hk hf unmarshalSSZ 36	  klabel hk hf HbUnmarshal 36
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	234	replace	  kat hk unmarshalSSZ 36	  kat hk HbUnmarshal 36
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	235	replace	  kat hk unmarshalSSZ 37	  kat hk HbUnmarshal 37
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	240	replace	  kat hk unmarshalSSZ 38	  kat hk HbUnmarshal 38
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	245	replace	  kat hk unmarshalSSZ 39	  kat hk HbUnmarshal 39
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	256	replace	    rw [Decode.input_split bf pks hpks hpk i hi, Decode.array_join A rax3.toBitVec ps i hi hps,	    rw [hbIn_split bf pks hpks hpk i hi, hbA_join A rax3.toBitVec ps i hi hps,
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	262	replace	theorem Decode.block_roots_exit (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	theorem hb_exit1 (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh HbUnmarshal k)
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	270	replace	  kat hk unmarshalSSZ 40	  kat hk HbUnmarshal 40
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	271	replace	  kat hk unmarshalSSZ 41	  kat hk HbUnmarshal 41
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	272	replace	  kat hk unmarshalSSZ 42	  kat hk HbUnmarshal 42
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	276	replace	  klabel hk hf unmarshalSSZ 85	  klabel hk hf HbUnmarshal 85
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	277	replace	  kat hk unmarshalSSZ 85	  kat hk HbUnmarshal 85
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	281	replace	theorem Decode.block_roots_loop (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	theorem hb_loop1 (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh HbUnmarshal k)
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	318	replace	    exact Decode.block_roots_exit k hk hf _ s hrax fun _ => ⟨rfl, hrsp, hrbp, hr14, ps, l18, l20, l28, l30, spl, rslot, lo,	    exact hb_exit1 k hk hf _ s hrax fun _ => ⟨rfl, hrsp, hrbp, hr14, ps, l18, l20, l28, l30, spl, rslot, lo,
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	322	replace	    refine eventually_trans _ _ _ _ (Decode.block_roots_iter k hk hf sp recv bf A pks hpks hpk i (by omega) ps hps rbp0 r140	    refine eventually_trans _ _ _ _ (hb_iter1 k hk hf sp recv bf A pks hpks hpk i (by omega) ps hps rbp0 r140
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopBlockRoots.lean	337	replace	end Prysm.HistoricalBatch	end E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	12	replace	Loop head `L_1c0` (directive 108). The frame is the one of `HbLoop1.lean`. `Decode.state_roots_iter` covers directives 108–146	Loop head `L_1c0` (directive 108). The frame is the one of `HbLoop1.lean`. `hb_iter2` covers directives 108–146
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	17	replace	The return slot: the last runtime call is the memmove of the last iteration (directive 132), so `Decode.state_roots_iter` and	The return slot: the last runtime call is the memmove of the last iteration (directive 132), so `hb_iter2` and
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	18	replace	`Decode.state_roots_loop` keep its value `k + 133` (`Decode.block_roots_loop` leaves it unnamed; the accept statement needs it).	`hb_loop2` keep its value `k + 133` (`hb_loop1` leaves it unnamed; the accept statement needs it).
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	24	replace	namespace Prysm.HistoricalBatch	namespace E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	26	replace	theorem Decode.state_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	theorem hb_iter2 (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh HbUnmarshal k)
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	63	replace	  rw [Decode.input_split (bf + 262144) pks hpks hpk i hi, Decode.array_split A ps i hi hps] at h_mem	  rw [hbIn_split (bf + 262144) pks hpks hpk i hi, hbA_split A ps i hi hps] at h_mem
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	65	replace	  kat hk unmarshalSSZ 108	  kat hk HbUnmarshal 108
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	66	replace	  kat hk unmarshalSSZ 109	  kat hk HbUnmarshal 109
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	67	replace	  kat hk unmarshalSSZ 110	  kat hk HbUnmarshal 110
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	74	replace	  kat hk unmarshalSSZ 111	  kat hk HbUnmarshal 111
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	75	replace	  kat hk unmarshalSSZ 112	  kat hk HbUnmarshal 112
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	77	replace	  kat hk unmarshalSSZ 113	  kat hk HbUnmarshal 113
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	78	replace	  kat hk unmarshalSSZ 114	  kat hk HbUnmarshal 114
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	79	replace	  kat hk unmarshalSSZ 115	  kat hk HbUnmarshal 115
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	81	replace	  kat hk unmarshalSSZ 116	  kat hk HbUnmarshal 116
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	82	replace	  kat hk unmarshalSSZ 117	  kat hk HbUnmarshal 117
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	83	replace	  kat hk unmarshalSSZ 118	  kat hk HbUnmarshal 118
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	91	replace	  kat hk unmarshalSSZ 119	  kat hk HbUnmarshal 119
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	96	replace	  kat hk unmarshalSSZ 120	  kat hk HbUnmarshal 120
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	101	replace	  kat hk unmarshalSSZ 121	  kat hk HbUnmarshal 121
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	107	replace	  kat hk unmarshalSSZ 122	  kat hk HbUnmarshal 122
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	108	replace	  kat hk unmarshalSSZ 123	  kat hk HbUnmarshal 123
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	110	replace	  kat hk unmarshalSSZ 124	  kat hk HbUnmarshal 124
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	111	replace	  kat hk unmarshalSSZ 125	  kat hk HbUnmarshal 125
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	132	replace	  kat hk unmarshalSSZ 126	  kat hk HbUnmarshal 126
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	137	replace	  kat hk unmarshalSSZ 127	  kat hk HbUnmarshal 127
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	142	replace	  kat hk unmarshalSSZ 128	  kat hk HbUnmarshal 128
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	147	replace	  kat hk unmarshalSSZ 129	  kat hk HbUnmarshal 129
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	148	replace	  kat hk unmarshalSSZ 130	  kat hk HbUnmarshal 130
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	149	replace	  kat hk unmarshalSSZ 131	  kat hk HbUnmarshal 131
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	150	replace	  kat hk unmarshalSSZ 132	  kat hk HbUnmarshal 132
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	170	replace	  kat hk unmarshalSSZ 133	  kat hk HbUnmarshal 133
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	175	replace	  kat hk unmarshalSSZ 134	  kat hk HbUnmarshal 134
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	179	replace	  kat hk unmarshalSSZ 135	  kat hk HbUnmarshal 135
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	184	replace	  kat hk unmarshalSSZ 136	  kat hk HbUnmarshal 136
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	185	replace	  kat hk unmarshalSSZ 137	  kat hk HbUnmarshal 137
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	186	replace	  kat hk unmarshalSSZ 138	  kat hk HbUnmarshal 138
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	193	replace	  kat hk unmarshalSSZ 139	  kat hk HbUnmarshal 139
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	194	replace	  kat hk unmarshalSSZ 140	  kat hk HbUnmarshal 140
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	199	replace	  kat hk unmarshalSSZ 141	  kat hk HbUnmarshal 141
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	204	replace	  kat hk unmarshalSSZ 142	  kat hk HbUnmarshal 142
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	209	replace	  kat hk unmarshalSSZ 143	  kat hk HbUnmarshal 143
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	213	replace	  kat hk unmarshalSSZ 144	  kat hk HbUnmarshal 144
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	217	replace	  kat hk unmarshalSSZ 145	  kat hk HbUnmarshal 145
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	222	replace	  kat hk unmarshalSSZ 146	  kat hk HbUnmarshal 146
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	223	replace	  klabel hk hf unmarshalSSZ 104	  klabel hk hf HbUnmarshal 104
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	224	replace	  kat hk unmarshalSSZ 104	  kat hk HbUnmarshal 104
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	225	replace	  kat hk unmarshalSSZ 105	  kat hk HbUnmarshal 105
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	230	replace	  kat hk unmarshalSSZ 106	  kat hk HbUnmarshal 106
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	235	replace	  kat hk unmarshalSSZ 107	  kat hk HbUnmarshal 107
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	247	replace	    rw [Decode.input_split (bf + 262144) pks hpks hpk i hi, Decode.array_join A rax3.toBitVec ps i hi hps,	    rw [hbIn_split (bf + 262144) pks hpks hpk i hi, hbA_join A rax3.toBitVec ps i hi hps,
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	253	replace	theorem Decode.state_roots_exit (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	theorem hb_exit2 (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh HbUnmarshal k)
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	261	replace	  kat hk unmarshalSSZ 108	  kat hk HbUnmarshal 108
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	262	replace	  kat hk unmarshalSSZ 109	  kat hk HbUnmarshal 109
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	263	replace	  kat hk unmarshalSSZ 110	  kat hk HbUnmarshal 110
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	267	replace	  klabel hk hf unmarshalSSZ 154	  klabel hk hf HbUnmarshal 154
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	268	replace	  kat hk unmarshalSSZ 154	  kat hk HbUnmarshal 154
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	272	replace	theorem Decode.state_roots_loop (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	theorem hb_loop2 (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh HbUnmarshal k)
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	314	replace	    exact Decode.state_roots_exit k hk hf _ s hrax fun _ => ⟨rfl, hrsp, hrbp, hr14, ps, l18, l20, l28, l30, spl, lo,	    exact hb_exit2 k hk hf _ s hrax fun _ => ⟨rfl, hrsp, hrbp, hr14, ps, l18, l20, l28, l30, spl, lo,
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	319	replace	    refine eventually_trans _ _ _ _ (Decode.state_roots_iter k hk hf sp recv bf A pks hpks hpk i (by omega) ps hps rbp0 r140	    refine eventually_trans _ _ _ _ (hb_iter2 k hk hf sp recv bf A pks hpks hpk i (by omega) ps hps rbp0 r140
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeLoopStateRoots.lean	334	replace	end Prysm.HistoricalBatch	end E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	13	replace	changed (the directive indices are the same). The statement is the frozen `Decode.reject_size_statement`.	changed (the directive indices are the same). The statement is the frozen `hb_reject_size_stmt`.
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	19	replace	namespace Prysm.HistoricalBatch	namespace E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	21	replace	/-- **Size reject (machine)**; statement = the frozen `Decode.reject_size_statement`. -/	/-- **Size reject (machine)**; statement = the frozen `hb_reject_size_stmt`. -/
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	22	replace	theorem Decode.reject_size : Decode.reject_size_statement := by	theorem hb_e2e_reject_size_main : hb_reject_size_stmt := by
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	27	replace	  kat hk unmarshalSSZ 0	  kat hk HbUnmarshal 0
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	28	replace	  kat hk unmarshalSSZ 1	  kat hk HbUnmarshal 1
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	29	replace	  kat hk unmarshalSSZ 2	  kat hk HbUnmarshal 2
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	32	replace	  kat hk unmarshalSSZ 3	  kat hk HbUnmarshal 3
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	40	replace	  kat hk unmarshalSSZ 4	  kat hk HbUnmarshal 4
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	45	replace	  kat hk unmarshalSSZ 5	  kat hk HbUnmarshal 5
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	46	replace	  kat hk unmarshalSSZ 6	  kat hk HbUnmarshal 6
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	47	replace	  kat hk unmarshalSSZ 7	  kat hk HbUnmarshal 7
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	52	replace	  kat hk unmarshalSSZ 8	  kat hk HbUnmarshal 8
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	53	replace	  kat hk unmarshalSSZ 9	  kat hk HbUnmarshal 9
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	54	replace	  kat hk unmarshalSSZ 10	  kat hk HbUnmarshal 10
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	61	replace	  klabel hk hf unmarshalSSZ 30	  klabel hk hf HbUnmarshal 30
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	62	replace	  kat hk unmarshalSSZ 30	  kat hk HbUnmarshal 30
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	63	replace	  kat hk unmarshalSSZ 31	  kat hk HbUnmarshal 31
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	66	replace	  kat hk unmarshalSSZ 32	  kat hk HbUnmarshal 32
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	69	replace	  kat hk unmarshalSSZ 33	  kat hk HbUnmarshal 33
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	70	replace	  kat hk unmarshalSSZ 34	  kat hk HbUnmarshal 34
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	74	replace	  kat hk unmarshalSSZ 35	  kat hk HbUnmarshal 35
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeRejectSize.lean	94	replace	end Prysm.HistoricalBatch	end E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	14	replace	namespace Prysm.HistoricalBatch	namespace E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	17	replace	theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl	theorem prysmHbDesc_wellFormed : prysmHbDesc.wellFormed = .ok () := by rfl
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	18	replace	theorem desc_fixedSize : desc.fixedSize = some 524288 := by rfl	theorem prysmHbDesc_fixedSize : prysmHbDesc.fixedSize = some 524288 := by rfl
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	92	replace	theorem brs_flatten_length (g : SszValue) : g.brs.flatten.length = 262144 := v32_flatten_length g.blockRoots	theorem phb_brs_flatten_length (g : PHb) : g.brs.flatten.length = 262144 := v32_flatten_length g.blockRoots
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	93	replace	theorem srs_flatten_length (g : SszValue) : g.srs.flatten.length = 262144 := v32_flatten_length g.stateRoots	theorem phb_srs_flatten_length (g : PHb) : g.srs.flatten.length = 262144 := v32_flatten_length g.stateRoots
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	95	replace	theorem encode_size (g : SszValue) : (SszValue.encode g).size = 524288 := by	theorem phb_enc_size (g : PHb) : (phbEnc g).size = 524288 := by
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	96	replace	  rw [SszValue.encode, Array.size_append, List.size_toArray, List.size_toArray, brs_flatten_length,	  rw [phbEnc, Array.size_append, List.size_toArray, List.size_toArray, phb_brs_flatten_length,
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	97	replace	    srs_flatten_length]	    phb_srs_flatten_length]
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	99	replace	theorem toValue_fits (g : SszValue) : Value.fits desc g.toValue = true := by	theorem phb_toValue_fits (g : PHb) : Value.fits prysmHbDesc g.toValue = true := by
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	100	replace	  simp [desc, SszValue.toValue, Value.fits, Value.fieldsFit, allFit_map_bv32]	  simp [prysmHbDesc, PHb.toValue, Value.fits, Value.fieldsFit, allFit_map_bv32]
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	102	replace	theorem toValue_surjective (v : Value) (h : Value.fits desc v = true) : ∃ g : SszValue, g.toValue = v := by	theorem phb_toValue_surjective (v : Value) (h : Value.fits prysmHbDesc v = true) : ∃ g : PHb, g.toValue = v := by
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	114	replace	    simp only [SszValue.toValue, Vector.toList_mk, List.toList_toArray]	    simp only [PHb.toValue, Vector.toList_mk, List.toList_toArray]
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	118	replace	theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszValue.encode g) := by	theorem phb_serialize (g : PHb) : serialize prysmHbDesc g.toValue = .ok (phbEnc g) := by
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	124	replace	  simp only [desc, SszValue.toValue, serialize, serializeStruct, serializeFields] at hs1 hs2 ⊢	  simp only [prysmHbDesc, PHb.toValue, serialize, serializeStruct, serializeFields] at hs1 hs2 ⊢
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	128	replace	    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, bytesPerOffset, SszValue.encode, SszValue.brs, SszValue.srs, Desc.fieldsFixedSize,	    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, bytesPerOffset, phbEnc, PHb.brs, PHb.srs, Desc.fieldsFixedSize,
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	132	replace	theorem encode_roundtrip (g : SszValue) : deserialize desc (SszValue.encode g) = .ok g.toValue :=	theorem phb_roundtrip (g : PHb) : deserialize prysmHbDesc (phbEnc g) = .ok g.toValue :=
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	133	replace	  deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize	  deserialize_enc (G := PHb) (toV := PHb.toValue) (enc := phbEnc) prysmHbDesc_wellFormed phb_serialize
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	134	replace	    toValue_fits g	    phb_toValue_fits g
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	136	replace	theorem accepted_is_encode {bs : Array UInt8} {v : Value} (h : deserialize desc bs = .ok v) :	theorem phb_accepted_is_enc {bs : Array UInt8} {v : Value} (h : deserialize prysmHbDesc bs = .ok v) :
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	137	replace	    ∃ g : SszValue, v = g.toValue ∧ bs = SszValue.encode g :=	    ∃ g : PHb, v = g.toValue ∧ bs = phbEnc g :=
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	138	replace	  accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize	  accepted_is_enc (G := PHb) (toV := PHb.toValue) (enc := phbEnc) prysmHbDesc_wellFormed phb_serialize
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	139	replace	    toValue_surjective h	    phb_toValue_surjective h
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	142	replace	theorem spec_accepts_iff (bs : Array UInt8) : (∃ v, deserialize desc bs = .ok v) ↔ bs.size = 524288 := by	theorem phb_spec_accepts_iff (bs : Array UInt8) : (∃ v, deserialize prysmHbDesc bs = .ok v) ↔ bs.size = 524288 := by
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	145	replace	    obtain ⟨g, rfl, hb⟩ := accepted_is_encode hd	    obtain ⟨g, rfl, hb⟩ := phb_accepted_is_enc hd
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	146	replace	    rw [hb]; exact encode_size g	    rw [hb]; exact phb_enc_size g
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	150	replace	    have e : bs = SszValue.encode ⟨v1, v2⟩ := by	    have e : bs = phbEnc ⟨v1, v2⟩ := by
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	151	replace	      simp only [SszValue.encode, SszValue.brs, SszValue.srs, hv1, hv2]	      simp only [phbEnc, PHb.brs, PHb.srs, hv1, hv2]
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	155	replace	    exact ⟨_, encode_roundtrip _⟩	    exact ⟨_, phb_roundtrip _⟩
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	158	replace	theorem spec_rejects (bs : Array UInt8) (h : bs.size ≠ 524288) : ∃ e, deserialize desc bs = .error e := by	theorem phb_spec_rejects (bs : Array UInt8) (h : bs.size ≠ 524288) : ∃ e, deserialize prysmHbDesc bs = .error e := by
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	159	replace	  cases hd : deserialize desc bs with	  cases hd : deserialize prysmHbDesc bs with
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	161	replace	  | ok v => exact absurd ((spec_accepts_iff bs).mp ⟨v, hd⟩) h	  | ok v => exact absurd ((phb_spec_accepts_iff bs).mp ⟨v, hd⟩) h
+fv/kraken/lean/Prysm/HistoricalBatch/Spec.lean	163	replace	end Prysm.HistoricalBatch	end E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/SpecChecker.lean	8	replace	namespace Prysm.HistoricalBatch	namespace E2eList
+fv/kraken/lean/Prysm/HistoricalBatch/SpecChecker.lean	11	replace	def checkerDesc : Desc := .container ["BlockRoots", "StateRoots"] [.vector (.byteVector 32) 8192, .vector (.byteVector 32) 8192]	def hbCheckerDesc : Desc := .container ["BlockRoots", "StateRoots"] [.vector (.byteVector 32) 8192, .vector (.byteVector 32) 8192]
+fv/kraken/lean/Prysm/HistoricalBatch/SpecChecker.lean	13	replace	end Prysm.HistoricalBatch	end E2eList
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	9	replace	`Decode.accept_spec_statement`, `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement` (`StmtHb.lean`).	`hb_accept_spec_stmt`, `hb_reject_size_spec_stmt` and `hb_reject_complete_stmt` (`StmtHb.lean`).
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	15	replace	namespace Prysm.HistoricalBatch	namespace E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	17	replace	theorem v32_length (v : Vector (Vector UInt8 32) 8192) : (v.toList.map (·.toList)).length = 8192 := by simp	theorem phb_v32_length (v : Vector (Vector UInt8 32) 8192) : (v.toList.map (·.toList)).length = 8192 := by simp
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	19	replace	theorem v32_elem (v : Vector (Vector UInt8 32) 8192) : ∀ e ∈ v.toList.map (·.toList), e.length = 32 := by	theorem phb_v32_elem (v : Vector (Vector UInt8 32) 8192) : ∀ e ∈ v.toList.map (·.toList), e.length = 32 := by
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	25	replace	theorem Decode.accept_spec : Decode.accept_spec_statement := by	theorem hb_e2e_accept_spec_k : hb_accept_spec_stmt := by
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	29	replace	  obtain ⟨g, rfl, hb⟩ := accepted_is_encode hd	  obtain ⟨g, rfl, hb⟩ := phb_accepted_is_enc hd
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	32	replace	    apply UInt64.toNat_inj.mp; rw [hlen, hb, encode_size]; rfl	    apply UInt64.toNat_inj.mp; rw [hlen, hb, phb_enc_size]; rfl
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	33	replace	  exact Decode.accept k hk hf g.brs g.srs (v32_length _) (v32_elem _) (v32_length _)	  exact hb_e2e_accept_main k hk hf g.brs g.srs (phb_v32_length _) (phb_v32_elem _) (phb_v32_length _)
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	34	replace	    (v32_elem _) s ra guard fp s1 s2 l18 l20 l28 l30 spl rslot lo aP1 aL1 aC1 aP2 aL2 aC2	    (phb_v32_elem _) s ra guard fp s1 s2 l18 l20 l28 l30 spl rslot lo aP1 aL1 aC1 aP2 aL2 aC2
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	38	replace	theorem Decode.reject_size_spec : Decode.reject_size_spec_statement := by	theorem hb_e2e_reject_size_spec : hb_reject_size_spec_stmt := by
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	40	replace	  exact ⟨spec_rejects bs hbs, Decode.reject_size k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard	  exact ⟨phb_spec_rejects bs hbs, hb_e2e_reject_size_main k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	43	replace	theorem Decode.reject_complete : Decode.reject_complete_statement :=	theorem hb_e2e_reject_complete : hb_reject_complete_stmt :=
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	44	replace	  fun bs h h524288 => h ((spec_accepts_iff bs).mpr h524288)	  fun bs h h524288 => h ((phb_spec_accepts_iff bs).mpr h524288)
+fv/kraken/lean/Prysm/HistoricalBatch/DecodeSpec.lean	46	replace	end Prysm.HistoricalBatch	end E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/NegativeSuiteTargets.lean	6	replace	`spec_prop` and `complete_prop` are copies of the frozen `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement`	`spec_prop` and `complete_prop` are copies of the frozen `hb_reject_size_spec_stmt` and `hb_reject_complete_stmt`
+fv/kraken/lean/Prysm/HistoricalBatch/NegativeSuiteTargets.lean	19	replace	  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	  ∀ (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh HbUnmarshal k)
+fv/kraken/lean/Prysm/HistoricalBatch/NegativeSuiteTargets.lean	29	replace	    (∃ e, deserialize desc bs = .error e) ∧	    (∃ e, deserialize prysmHbDesc bs = .error e) ∧
+fv/kraken/lean/Prysm/HistoricalBatch/NegativeSuiteTargets.lean	43	replace	  exact ⟨spec_rejects bs hbs, Decode.reject_size k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard	  exact ⟨phb_spec_rejects bs hbs, hb_e2e_reject_size_main k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
+fv/kraken/lean/Prysm/HistoricalBatch/NegativeSuiteTargets.lean	47	replace	  ∀ bs : Array UInt8, (¬ ∃ v, deserialize desc bs = .ok v) → bs.size ≠ 524288	  ∀ bs : Array UInt8, (¬ ∃ v, deserialize prysmHbDesc bs = .ok v) → bs.size ≠ 524288
+fv/kraken/lean/Prysm/HistoricalBatch/NegativeSuiteTargets.lean	50	replace	  fun bs h h' => h ((spec_accepts_iff bs).mpr h')	  fun bs h h' => h ((phb_spec_accepts_iff bs).mpr h')
+fv/kraken/lean/Prysm/HistoricalBatch/NegativeSuiteTargets.lean	52	replace	example : spec_prop = Decode.reject_size_spec_statement := rfl	example : spec_prop = hb_reject_size_spec_stmt := rfl
+fv/kraken/lean/Prysm/HistoricalBatch/NegativeSuiteTargets.lean	53	replace	example : complete_prop = Decode.reject_complete_statement := rfl	example : complete_prop = hb_reject_complete_stmt := rfl
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	47	replace	namespace Prysm.HistoricalBatch	namespace E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	53	replace	def Decode.accept_statement : Prop :=	def hb_accept_stmt : Prop :=
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	54	replace	  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	  ∀ (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh HbUnmarshal k)
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	112	replace	def Decode.reject_size_statement : Prop :=	def hb_reject_size_stmt : Prop :=
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	113	replace	  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	  ∀ (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh HbUnmarshal k)
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	133	replace	/-- **Accept (spec).** If EthLib accepts `bsA` against `desc` as `v`, there is `g : SszValue` with	/-- **Accept (spec).** If EthLib accepts `bsA` against `prysmHbDesc` as `v`, there is `g : PHb` with
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	134	replace	`g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the	`g.toValue = v` and `bsA = phbEnc g`; with the input chunks of that `g` the machine code returns nil and the
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	135	replace	receiver holds `g` (postcondition of `Decode.accept_statement` with `brs = g.brs`, `srs = g.srs`). -/	receiver holds `g` (postcondition of `hb_accept_stmt` with `brs = g.brs`, `srs = g.srs`). -/
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	136	replace	def Decode.accept_spec_statement : Prop :=	def hb_accept_spec_stmt : Prop :=
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	137	replace	  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	  ∀ (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh HbUnmarshal k)
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	138	replace	    (bsA : Array UInt8) (v : Value) (hd : deserialize desc bsA = .ok v)	    (bsA : Array UInt8) (v : Value) (hd : deserialize prysmHbDesc bsA = .ok v)
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	148	replace	    (Pm : ∀ g : SszValue, bsA = SszValue.encode g →	    (Pm : ∀ g : PHb, bsA = phbEnc g →
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	166	replace	    ∃ g : SszValue, g.toValue = v ∧ bsA = SszValue.encode g ∧	    ∃ g : PHb, g.toValue = v ∧ bsA = phbEnc g ∧
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	194	replace	`ssz.ErrSize` (postcondition of `Decode.reject_size_statement`). -/	`ssz.ErrSize` (postcondition of `hb_reject_size_stmt`). -/
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	195	replace	def Decode.reject_size_spec_statement : Prop :=	def hb_reject_size_spec_stmt : Prop :=
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	196	replace	  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)	  ∀ (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh HbUnmarshal k)
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	206	replace	    (∃ e, deserialize desc bs = .error e) ∧	    (∃ e, deserialize prysmHbDesc bs = .error e) ∧
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	220	replace	def Decode.reject_complete_statement : Prop :=	def hb_reject_complete_stmt : Prop :=
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	221	replace	  ∀ bs : Array UInt8, (¬ ∃ v, deserialize desc bs = .ok v) → bs.size ≠ 524288	  ∀ bs : Array UInt8, (¬ ∃ v, deserialize prysmHbDesc bs = .ok v) → bs.size ≠ 524288
+fv/kraken/lean/Prysm/HistoricalBatch/Statements.lean	223	replace	end Prysm.HistoricalBatch	end E2eHb
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	7	replace	# Witness of `Decode.accept` (HistoricalBatch decoder accept path)	# Witness of `hb_e2e_accept_main` (HistoricalBatch decoder accept path)
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	24	replace	open Machine Runtime TestTarget Machine.Witness Prysm.HistoricalBatch.Code	open Machine Runtime TestTarget Machine.Witness E2eHb E2eHb.Code
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	26	replace	namespace Prysm.HistoricalBatch.Witness.DecodeAccept	namespace E2eHb.WitHbA
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	32	replace	def P : Program := dataLabels ++ unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ RtCopy	def P : Program := dataLabels ++ HbUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ RtCopy
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	40	replace	theorem hk9 : unmarshalSSZ.IsInfixAt Host.prog 9 :=	theorem hk9 : HbUnmarshal.IsInfixAt Host.prog 9 :=
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	43	replace	  infixAt_of (dataLabels ++ unmarshalSSZ) RtCopy	  infixAt_of (dataLabels ++ HbUnmarshal) RtCopy
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	46	replace	  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch) []	  infixAt_of (dataLabels ++ HbUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch) []
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	49	replace	theorem hf9 : LabelsFresh unmarshalSSZ 9 := labelsFresh_of (by rw [prog_eq]; decide)	theorem hf9 : LabelsFresh HbUnmarshal 9 := labelsFresh_of (by rw [prog_eq]; decide)
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	99	replace	/-- **Non-vacuity of `Decode.accept` (the premises of the frozen statement `Decode.accept_statement` are satisfiable).** -/	/-- **Non-vacuity of `hb_e2e_accept_main` (the premises of the frozen statement `hb_accept_stmt` are satisfiable).** -/
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	100	replace	theorem runs (brs srs : List (List UInt8)) (oP1 oP2 : List UInt8) (hbrs : brs.length = 8192)	theorem hb_accept_runs (brs srs : List (List UInt8)) (oP1 oP2 : List UInt8) (hbrs : brs.length = 8192)
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	106	replace	  have hfl1 : brs.flatten.length = 262144 := by rw [flatten_length brs hbr, hbrs]	  have hfl1 : brs.flatten.length = 262144 := by rw [hb_flatten_length brs hbr, hbrs]
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	107	replace	  have hfl2 : srs.flatten.length = 262144 := by rw [flatten_length srs hsr, hsrs]	  have hfl2 : srs.flatten.length = 262144 := by rw [hb_flatten_length srs hsr, hsrs]
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	108	replace	  exact eventually_mono (Decode.accept 9 hk9 hf9 brs srs hbrs hbr hsrs hsr	  exact eventually_mono (hb_e2e_accept_main 9 hk9 hf9 brs srs hbrs hbr hsrs hsr
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	131	replace	  runs (List.replicate 8192 (z 32)) (List.replicate 8192 (z 32)) (z 8) (z 8)	  hb_accept_runs (List.replicate 8192 (z 32)) (List.replicate 8192 (z 32)) (z 8) (z 8)
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	135	replace	  runs ((List.range 8192).map fun i => List.replicate 32 (UInt8.ofNat i))	  hb_accept_runs ((List.range 8192).map fun i => List.replicate 32 (UInt8.ofNat i))
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	139	replace	  runs (List.replicate 8192 (List.replicate 32 0xff)) (List.replicate 8192 (List.replicate 32 0xff))	  hb_accept_runs (List.replicate 8192 (List.replicate 32 0xff)) (List.replicate 8192 (List.replicate 32 0xff))
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeAccept.lean	144	replace	end Prysm.HistoricalBatch.Witness.DecodeAccept	end E2eHb.WitHbA
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	6	replace	# Witness of `Decode.reject_size` (HistoricalBatch size reject)	# Witness of `hb_e2e_reject_size_main` (HistoricalBatch size reject)
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	16	replace	open Machine Runtime TestTarget Machine.Witness Prysm.HistoricalBatch.Code	open Machine Runtime TestTarget Machine.Witness E2eHb E2eHb.Code
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	18	replace	namespace Prysm.HistoricalBatch.Witness.DecodeRejectSize	namespace E2eHb.WitHbR
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	21	replace	def P : Program := [.label "ssz.ErrSize"] ++ unmarshalSSZ	def P : Program := [.label "ssz.ErrSize"] ++ HbUnmarshal
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	27	replace	theorem hk1 : unmarshalSSZ.IsInfixAt Host.prog 1 := infixAt_of [.label "ssz.ErrSize"] [] (by simp [Host.prog, mkHost, P]) rfl	theorem hk1 : HbUnmarshal.IsInfixAt Host.prog 1 := infixAt_of [.label "ssz.ErrSize"] [] (by simp [Host.prog, mkHost, P]) rfl
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	29	replace	theorem hf1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)	theorem hf1 : LabelsFresh HbUnmarshal 1 := labelsFresh_of (by decide)
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	47	replace	/-- **Non-vacuity of `Decode.reject_size`.** -/	/-- **Non-vacuity of `hb_e2e_reject_size_main`.** -/
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	48	replace	theorem runs (len : UInt64) (hlen : len ≠ 524288) (zmms : RegZmms) (flags : StatusFlags) :	theorem hb_reject_runs (len : UInt64) (hlen : len ≠ 524288) (zmms : RegZmms) (flags : StatusFlags) :
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	53	replace	  eventually_mono (Decode.reject_size 1 hk1 hf1 (cs0 len zmms flags) 0 0 0x10e8 0x2a (z 8) (z 8) rfl rfl R0	  eventually_mono (hb_e2e_reject_size_main 1 hk1 hf1 (cs0 len zmms flags) 0 0 0x10e8 0x2a (z 8) (z 8) rfl rfl R0
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	65	replace	example (z' : RegZmms) (f : StatusFlags) := runs 524287 (by decide) z' f	example (z' : RegZmms) (f : StatusFlags) := hb_reject_runs 524287 (by decide) z' f
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	66	replace	example (z' : RegZmms) (f : StatusFlags) := runs 524289 (by decide) z' f	example (z' : RegZmms) (f : StatusFlags) := hb_reject_runs 524289 (by decide) z' f
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	67	replace	example (z' : RegZmms) (f : StatusFlags) := runs 0 (by decide) z' f	example (z' : RegZmms) (f : StatusFlags) := hb_reject_runs 0 (by decide) z' f
+fv/kraken/lean/Prysm/HistoricalBatch/WitnessDecodeRejectSize.lean	69	replace	end Prysm.HistoricalBatch.Witness.DecodeRejectSize	end E2eHb.WitHbR
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	3	replace	  "code_def": "unmarshalSSZ",	  "code_def": "DepUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	8	replace	  "theorem": "Prysm.Deposit.Decode.reject_size",	  "theorem": "dep_e2e_reject_size_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	13	replace	  "code_def": "unmarshalSSZ",	  "code_def": "DepUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	18	replace	  "theorem": "Prysm.Deposit.Decode.accept",	  "theorem": "dep_e2e_accept_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	23	replace	  "code_def": "unmarshalSSZ",	  "code_def": "DepUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	28	replace	  "theorem": "Prysm.Deposit.Decode.reject_size",	  "theorem": "dep_e2e_reject_size_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	31	replace	  "stmt_def": "Prysm.Deposit.Decode.reject_size_statement",	  "stmt_def": "dep_reject_size_stmt",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	36	replace	  "code_def": "unmarshalSSZ",	  "code_def": "DepUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	41	replace	  "theorem": "Prysm.Deposit.Decode.reject_size",	  "theorem": "dep_e2e_reject_size_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	48	replace	  "code_def": "unmarshalSSZ",	  "code_def": "DepUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	53	replace	  "theorem": "Prysm.Deposit.Decode.accept",	  "theorem": "dep_e2e_accept_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	61	replace	  "code_def": "unmarshalSSZ",	  "code_def": "DepUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	66	replace	  "theorem": "Prysm.Deposit.Decode.accept",	  "theorem": "dep_e2e_accept_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	74	replace	  "code_def": "unmarshalSSZ",	  "code_def": "DepUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	79	replace	  "theorem": "Prysm.Deposit.Decode.accept",	  "theorem": "dep_e2e_accept_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	87	replace	  "code_def": "unmarshalSSZ",	  "code_def": "DepUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	92	replace	  "theorem": "Prysm.Deposit.Decode.accept",	  "theorem": "dep_e2e_accept_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	100	replace	  "code_def": "unmarshalSSZ",	  "code_def": "DepUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	105	replace	  "theorem": "Prysm.Deposit.Decode.accept",	  "theorem": "dep_e2e_accept_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-dep.json	108	replace	  "stmt_def": "Prysm.Deposit.Decode.accept_statement",	  "stmt_def": "dep_accept_stmt",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	3	replace	  "code_def": "unmarshalSSZ",	  "code_def": "HbUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	8	replace	  "theorem": "Prysm.HistoricalBatch.Decode.reject_size",	  "theorem": "hb_e2e_reject_size_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	13	replace	  "code_def": "unmarshalSSZ",	  "code_def": "HbUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	17	replace	  "theorem": "Prysm.HistoricalBatch.Decode.block_roots_iter",	  "theorem": "hb_iter1",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	24	replace	  "theorem": "Prysm.HistoricalBatch.Decode.accept",	  "theorem": "hb_e2e_accept_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	29	replace	  "code_def": "unmarshalSSZ",	  "code_def": "HbUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	34	replace	  "theorem": "Prysm.HistoricalBatch.Decode.reject_size",	  "theorem": "hb_e2e_reject_size_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	37	replace	  "stmt_def": "Prysm.HistoricalBatch.Decode.reject_size_statement",	  "stmt_def": "hb_reject_size_stmt",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	42	replace	  "code_def": "unmarshalSSZ",	  "code_def": "HbUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	47	replace	  "theorem": "Prysm.HistoricalBatch.Decode.reject_size",	  "theorem": "hb_e2e_reject_size_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	54	replace	  "code_def": "unmarshalSSZ",	  "code_def": "HbUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	58	replace	  "theorem": "Prysm.HistoricalBatch.Decode.block_roots_iter",	  "theorem": "hb_iter1",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	66	replace	  "code_def": "unmarshalSSZ",	  "code_def": "HbUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	70	replace	  "theorem": "Prysm.HistoricalBatch.Decode.block_roots_iter",	  "theorem": "hb_iter1",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	78	replace	  "code_def": "unmarshalSSZ",	  "code_def": "HbUnmarshal",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	82	replace	  "theorem": "Prysm.HistoricalBatch.Decode.block_roots_iter",	  "theorem": "hb_iter1",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	92	replace	  "theorem": "Prysm.HistoricalBatch.Decode.accept",	  "theorem": "hb_e2e_accept_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	95	replace	  "stmt_def": "Prysm.HistoricalBatch.Decode.accept_statement",	  "stmt_def": "hb_accept_stmt",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	102	replace	  "theorem": "Prysm.HistoricalBatch.Decode.accept",	  "theorem": "hb_e2e_accept_main",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-hb.json	105	replace	  "stmt_def": "Prysm.HistoricalBatch.Decode.accept_statement",	  "stmt_def": "hb_accept_stmt",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-spec.json	6	replace	  "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.spec_chk"	  "theorem": "spec_chk"
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-spec.json	12	replace	  "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.complete_chk"	  "theorem": "complete_chk"
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-spec.json	18	replace	  "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.spec_chk",	  "theorem": "spec_chk",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-spec.json	27	replace	  "theorem": "Prysm.HistoricalBatch.NegativeSuiteTargets.complete_chk",	  "theorem": "complete_chk",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-spec.json	36	replace	  "theorem": "Prysm.Deposit.NegativeSuiteTargets.spec_chk"	  "theorem": "spec_chk"
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-spec.json	42	replace	  "theorem": "Prysm.Deposit.NegativeSuiteTargets.complete_chk"	  "theorem": "complete_chk"
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-spec.json	48	replace	  "theorem": "Prysm.Deposit.NegativeSuiteTargets.spec_chk",	  "theorem": "spec_chk",
+fv/kraken/prysm/go1.26.10/e2e/lv/negcases-spec.json	57	replace	  "theorem": "Prysm.Deposit.NegativeSuiteTargets.complete_chk",	  "theorem": "complete_chk",

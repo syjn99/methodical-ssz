@@ -3,12 +3,12 @@ import Codec.Segment.Bytes32Loop
 /-!
 # Element loop with 32-byte elements: one iteration, the exit and the whole loop, for any count `n < 2^31`
 
-Generalized once from `E2eHb.hb_iter1`/`hb_iter2`/`hb_loop2` (same proof steps; the directive indices are block
+Generalized once from `Prysm.HistoricalBatch.Decode.block_roots_iter`/`Decode.state_roots_iter`/`Decode.state_roots_loop` (same proof steps; the directive indices are block
 offsets, the frame slots and receiver words are parameters with address equations, the input is at `bfs`).
-The return slot keeps the value of the last `memmove` return address (`jS + 2`), as in `hb_loop2`.
+The return slot keeps the value of the last `memmove` return address (`jS + 2`), as in `Decode.state_roots_loop`.
 -/
 
-open Machine Runtime TestTarget E2eHb
+open Machine Runtime TestTarget Prysm.HistoricalBatch
 
 namespace Codec.Segment
 

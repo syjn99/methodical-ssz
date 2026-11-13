@@ -28,7 +28,8 @@ Read every `warning:` line (stderr).
 A map with at least one `type` row runs in reference mode (below).
 The shared-layer map has no `type` row and keeps the old behaviour.
 
-Maps compose in order: `shared-layer`, `checkpoint-and-epoch`, `attestation-data`, `sync-and-indexed-attestation`, then the next step.
+Maps compose in order: `shared-layer`, `checkpoint-and-epoch`, `attestation-data`, `sync-and-indexed-attestation`,
+`historical-batch-and-deposit`, then the next step.
 To undo, run the inverse of the last map first.
 The forward run of a step needs nothing from the earlier maps.
 The inverse of the map of a step alone must give the tree from which the step started.
@@ -244,9 +245,9 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   The script needs a rework before its next use.
 - `descterm.py` emits the namespace from the Go type name as written.
   For the Go type `Deposit_Data` the namespace is `Prysm.Deposit_Data`.
-- The `E2eList` namespace still exists in three generated checker files of types not moved yet.
-  They are `E2eHb/HbSpecChecker.lean`, `E2eDep/SpecChecker.lean` and `E2eEnc/DcSpecChecker.lean`.
-  So the `open E2eList` lines in other files stay valid until those files move.
+- The `E2eList` namespace still exists in one generated checker file of a type not moved yet: `E2eEnc/DcSpecChecker.lean`.
+  `E2eEnc/DescEq.lean` refers to it with the full name `E2eList.dcCheckerDesc`.
+  The map of a step keeps the namespace rows of `E2eList` in the scope of the moved checker modules, and `part`.
 - The lakefile: a moved `.S` file of a library directory needs a new `input_dir` for its new directory (filter `.S`).
   Put that `input_dir` into the `needs` of `Prysm`.
   Remove the old `input_dir` from every `needs` list.

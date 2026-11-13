@@ -3,8 +3,8 @@
 
 A new file with the method of `descterm.py` (not changed); it also renders `bitVector`, `vector` and `list`.
 Usage: lvdescterm.py <desc.json> <lean-name> > lean/E2eList/<X>SpecChecker.lean
-The namespace of the output is Prysm.<GoTypeName> (the `type` of the file); the HistoricalBatch, Deposit and
-DataColumnsByRootIdentifier files keep `namespace E2eList` until their move.
+The namespace of the output is Prysm.<GoTypeName> (the `type` of the file); the DataColumnsByRootIdentifier file
+keeps `namespace E2eList` until its move.
 The file is the producer's Desc that the Desc checker accepted (gen/desc/results/main.result.json, same sha256;
 copies in prysm/go1.26.10/e2e/lv/desc/). Python 3 standard library only.
 """

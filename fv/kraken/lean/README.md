@@ -26,7 +26,7 @@ It also has the function specifications of the test target callees (`TestTarget/
 Some Prysm proofs use a few of its declarations (for example `TestTarget.Data.staticuint64s_addr`, `store_avx_step`, `TestTarget.luElems`).
 
 **`Codec`.** Lemmas that do not depend on one Prysm type: the `uint64` decoder pattern (`Codec/Uint64Decoder.lean`), the fixed-bytes field decoder and encoder patterns (`Codec/Bytes32*.lean`, `Codec/FixedBytesDecode*.lean`), the encoder step lemmas (`Codec/Encode*.lean`) and the statement kinds of the generated proofs (`Codec/Kind/`).
-`Codec/Segment/` holds segment and loop lemmas stated once for any size or element count, with the fixed instances of `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/` and `E2eHb` as corollaries.
+`Codec/Segment/` holds segment and loop lemmas stated once for any size or element count, with the fixed instances of `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/` and `Prysm/HistoricalBatch/` as corollaries.
 
 **`Prysm`.** One directory for each Prysm type, `Prysm/<GoTypeName>/<Role>.lean`, namespace `Prysm.<GoTypeName>`.
 The full name of a main theorem is the name of the work, for example `Prysm.Checkpoint.Decode.reject_size`.
@@ -50,6 +50,9 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
   `../gen/restructure/maps/sync-and-indexed-attestation/files.tsv` gives the earlier path of each module.
   Three modules hold declarations of two types and need a split: `Prysm/SyncAggregate/Code.lean`,
   `Prysm/SyncAggregate/SpecDescription.lean` and `Prysm/SyncCommittee/SpecDefinitions.lean`.
+- `Prysm/HistoricalBatch/`: the `v1alpha1.HistoricalBatch` decoder.
+- `Prysm/Deposit/`: the `v1alpha1.Deposit` decoder, proved with the lemmas of `Codec/Segment/`, and its witnesses.
+  `../gen/restructure/maps/historical-batch-and-deposit/files.tsv` gives the earlier path of each module of the two types.
 - `Prysm/RuntimeModel/`: witness-only models of runtime functions that read ELF data of a link set
   (bump allocators that dispatch on a type word). The library `Runtime` does not import `Prysm`.
 - `Prysm/ElfData/`: the ELF data of a link set and the command that reads it, namespace `ElfData.<SetName>`.
@@ -59,10 +62,6 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
 The generated files are `Gen*.lean`. They use the patterns and kinds of `Codec`.
 The statement kinds of the composed accept theorems, of the callee calls and of the encoder fast path are still here (`KindAccept*.lean`, `KindCall.lean`, `KindEncN.lean`): their modules import modules of single types (see `../gen/README.md`).
 
-**`E2eHb`.** The `v1alpha1.HistoricalBatch` decoder.
-
-**`E2eDep` and `E2eDepW`.** The `v1alpha1.Deposit` decoder, proved with the lemmas of `Codec/Segment/`, and its witnesses.
-
 **`E2eEnc` and `E2eDec`.** The `v1alpha1.DataColumnsByRootIdentifier` encoder and decoder, and their composition at the machine level.
 
 ### Dependencies
@@ -71,14 +70,14 @@ The import graph has this order:
 
 ```text
 EthLib -> Spec -> Machine -> Runtime -> TestTarget -> Codec (except Codec/Segment/)
-       -> Prysm -> E2eScal -> Prysm (list types) -> E2eHb -> Codec/Segment/ -> E2eDep -> E2eDepW
+       -> Prysm -> E2eScal -> Prysm (list types, HistoricalBatch) -> Codec/Segment/ -> Prysm (Deposit)
                                      Prysm (list types) -> E2eEnc -> E2eDec
 ```
 
 The arrows give the order of the libraries in the import graph. A library imports only libraries to its left.
 Exceptions: `Machine/Step.lean` imports `TestTarget/Code.lean`, `Runtime/Contracts.lean` imports `TestTarget/Data.lean`,
 `Runtime/BumpAllocatorVariants.lean` imports `TestTarget/FunctionSpecs.lean`, and `Codec/Bytes32Decode.lean` imports `Prysm/ElfData/CheckpointAndEpoch.lean`.
-`Prysm/Checkpoint/CapacityReserved*.lean` import `E2eScal`, and `E2eHb` does not import `E2eScal`.
+`Prysm/Checkpoint/CapacityReserved*.lean` and `Prysm/Deposit/` import `E2eScal`, and `Prysm/HistoricalBatch/` does not import `E2eScal`.
 A new type gets its own library or modules. Do not change a reviewed module to add a new type.
 
 ## 2. How machine code enters Lean

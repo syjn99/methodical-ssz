@@ -10,7 +10,7 @@ n = 512, the SyncCommittee frame slots, receiver offsets 8 and 16, src = 0) and 
 by `infix_sub` on the real program; gaps read from the `nop` directives 39, 47 and 61.
 -/
 
-open Machine Runtime TestTarget E2eHb Codec.Segment
+open Machine Runtime TestTarget Prysm.HistoricalBatch Codec.Segment
 
 namespace Codec.Segment
 

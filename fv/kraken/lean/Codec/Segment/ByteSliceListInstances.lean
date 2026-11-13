@@ -1,5 +1,5 @@
 import Codec.Segment.ByteSliceList
-import E2eHb.HbLemmas
+import Prysm.HistoricalBatch.DecodeLoopLemmas
 
 /-!
 # The fixed list lemmas of SyncCommittee and HistoricalBatch as instances of `Codec.Segment.ByteSliceList`
@@ -58,10 +58,10 @@ theorem hbA_join' (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 
 
 /-- The statements are the hand ones: each hand lemma follows from its instance by `exact`. -/
 example : @Prysm.SyncCommittee.Decode.input_split = @scIn_split' := rfl
-example : @E2eHb.hbIn_split = @hbIn_split' := rfl
+example : @Prysm.HistoricalBatch.Decode.input_split = @hbIn_split' := rfl
 example : @Prysm.SyncCommittee.Decode.array_split = @scA_split' := rfl
 example : @Prysm.SyncCommittee.Decode.array_join = @scA_join' := rfl
-example : @E2eHb.hbA_split = @hbA_split' := rfl
-example : @E2eHb.hbA_join = @hbA_join' := rfl
+example : @Prysm.HistoricalBatch.Decode.array_split = @hbA_split' := rfl
+example : @Prysm.HistoricalBatch.Decode.array_join = @hbA_join' := rfl
 
 end Codec.Segment
