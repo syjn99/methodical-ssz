@@ -2,10 +2,10 @@ import Prysm.PendingPartialWithdrawal.DecodeAccept
 import Prysm.PendingPartialWithdrawal.GeneratedDecodeCallSegments
 
 /-!
-# PendingPartialWithdrawal accept path from the GENERATED `p2dec --gen3` segments (reuse demonstration)
+# PendingPartialWithdrawal accept path from the GENERATED `decoder --call-segments` segments (reuse demonstration)
 
 Hand composition (not generator output): the chain of `Prysm/PendingPartialWithdrawal/DecodeAccept.lean` with every lemma instance replaced by
-the generated theorem of `Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean` (`p2dec --gen3`, raw output) whose declared type is that instance
+the generated theorem of `Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean` (`decoder --call-segments`, raw output) whose declared type is that instance
 (its `_kind`): `pw_g3dec_Index_arg` / `_call`, `pw_g3dec_WithdrawableEpoch_arg1`, `pw_g3dec_Amount_seg`,
 `pw_g3dec_WithdrawableEpoch_arg2` / `_call`. The code facts come from the generated theorems; head
 (`Decode.head`, 0–14) and epilogue (`Decode.epi`, 89–91) stay hand steps of `Prysm/PendingPartialWithdrawal/DecodeAccept.lean` (frame `0x48`). The
@@ -19,7 +19,7 @@ namespace Prysm.PendingPartialWithdrawal
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Accept path of `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` from the GENERATED `p2dec --gen3` segments;
+/-- Accept path of `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` from the GENERATED `decoder --call-segments` segments;
 statement = the hand statement `Decode.accept_statement` (unchanged). -/
 theorem Decode.accept_from_generated_call_segments : Decode.accept_statement := by
   intro k hk hf kV hkV hfV kE hkE hfE in0 in1 in2 hin0 hin1 hin2 s ra guard

@@ -10,7 +10,7 @@ bad = 0
 ties = lambda T: pathlib.Path(f"lean/Prysm/{T}/EncodeFastPathKindInstances.lean").read_text()
 for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
     t = pathlib.Path(f).read_text()
-    J = json.loads([x for x in t.split("\n") if x.startswith("GEN6-JSON: ")][0][11:])
+    J = json.loads([x for x in t.split("\n") if x.startswith("FAST-PATH-JSON: ")][0][len("FAST-PATH-JSON: "):])
     D = [l.strip() for l in pathlib.Path(J["S"]).read_text().split("\n") if l.strip()]
     cov = set()
     for a, n in re.findall(r"win hk (\d+) (\d+)", t):

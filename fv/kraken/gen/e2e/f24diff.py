@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Flat-type hold-out (H7): Go differential of the generated decoders (UnmarshalSSZ, 7 types) and encoder fast paths
+"""Flat-type hold-out of the 24 flat types: Go differential of the generated decoders (UnmarshalSSZ, 7 types) and encoder fast paths
 (MarshalSSZTo, 8 types) closed in this unit (Python 3 standard library only; text of g5cdiff.py + e2cdiff.py).
 
   f24diff.py cases <cases.json>                      write the cases

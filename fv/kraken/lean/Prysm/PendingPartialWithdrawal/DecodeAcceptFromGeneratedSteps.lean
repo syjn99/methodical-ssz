@@ -2,10 +2,10 @@ import Prysm.PendingPartialWithdrawal.DecodeAccept
 import Prysm.PendingPartialWithdrawal.GeneratedDecodeSteps
 
 /-!
-# PendingPartialWithdrawal accept path from the GENERATED `p2dec --gen4` chains
+# PendingPartialWithdrawal accept path from the GENERATED `decoder --steps` chains
 
 `Decode.accept_from_generated_steps : Decode.accept_statement` (the hand statement, `Prysm/Deposit_Data/Statements.lean`, unchanged). HAND field
-compositions over the GENERATED theorems of `Prysm/PendingPartialWithdrawal/GeneratedDecodeSteps.lean` (`p2dec --gen4`, raw output): Index = generated steps 15,
+compositions over the GENERATED theorems of `Prysm/PendingPartialWithdrawal/GeneratedDecodeSteps.lean` (`decoder --steps`, raw output): Index = generated steps 15,
 16 + call block; Amount and WithdrawableEpoch = generated steps 48–58 (the uint64 read 54–55 inside the call set-up)
 + the generated call block 59–61. Hand text that remains: the field compositions, `Decode.head` / `Decode.epi`
 (`Prysm/PendingPartialWithdrawal/DecodeAccept.lean`, frame `0x48`) and the glue. In-sample (development data); no transfer claim.
@@ -131,7 +131,7 @@ theorem Decode.from_generated_steps_Amount_WithdrawableEpoch_fields (k : Nat) (h
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Accept path of `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` from the GENERATED `p2dec --gen4` chains;
+/-- Accept path of `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` from the GENERATED `decoder --steps` chains;
 statement = the hand statement `Decode.accept_statement` (unchanged). -/
 theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   intro k hk hf kV hkV hfV kE hkE hfE in0 in1 in2 hin0 hin1 hin2 s ra guard

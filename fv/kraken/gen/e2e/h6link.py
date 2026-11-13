@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""H6 hold-out: call graph and link tables of the real UnmarshalSSZ of the seven H6 batch types (v1alpha1
+"""hold-out of PendingDeposit and PowBlock: call graph and link tables of the real UnmarshalSSZ of the seven H6 batch types (v1alpha1
 PendingDeposit, PowBlock, HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance,
 VoluntaryExit) on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the
-H6 hold-out was opened at 2026-11-11T17:18:33Z; the text of `h5link.py` with the function set and the data items changed).
+hold-out of PendingDeposit and PowBlock was opened at 2026-11-11T17:18:33Z; the text of `h5link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   h6link.py callgraph <objdump> <out.json>          call targets with contract class
@@ -33,7 +33,7 @@ FUNCS = [f"{V1A1}.(*{t}).UnmarshalSSZ" for t, _ in TYPES]
 SCOPE = {f: "in (H6 decoder)" for f in FUNCS}
 CLASS = dict(adlink.CLASS)
 CLASS.update({
-    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (H1)"),
+    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (BeaconBlockHeader hold-out)"),
     f"{PRIM}.(*Slot).UnmarshalSSZ": ("a", "function spec Prysm.Slot.Decode.accept_function_spec, proved from machine code (Prysm/Slot/)"),
     f"{PRIM}.(*Epoch).UnmarshalSSZ": ("a", "function spec Prysm.Epoch.Decode.accept_function_spec, proved from machine code (Prysm/Epoch/)"),
     "fmt.errorf": ("b", "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"),
@@ -91,7 +91,7 @@ def filt(outdir, objdump, elf, nm):
 def items(outdir, cpdir, addir):
     """Per decoder: the address-only error global (`<p>ErrSize`, length 0) and the format strings of its
     fmt.errorf wraps (`<p>Fmt<k>`, in code order). Every makeslice is asserted to take the uint8 type word of the
-    Checkpoint set (the literal `type__+387072` that the GEN4 walker matches); ssz.ErrSize, writeBarrier and the
+    Checkpoint set (the literal `type__+387072` that the step walker matches); ssz.ErrSize, writeBarrier and the
     errorString type are asserted equal to the Checkpoint / AttestationData sets' operands; no growslice."""
     spec = importlib.util.spec_from_file_location("data", LINK / "data.py")
     data = importlib.util.module_from_spec(spec)

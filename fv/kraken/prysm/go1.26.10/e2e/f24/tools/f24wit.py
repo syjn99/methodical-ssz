@@ -4,18 +4,18 @@ generated decoders (non-vacuity of the generated accept / size-reject theorems).
 `mkwit.py` (reject; callee frame 0x38) and the hand witnesses `Prysm/Deposit_Data/WitnessDecodeAccept.lean` (frame 0x20 bytes) and `Prysm/PendingDeposit/WitnessDecodeAccept.lean`
 (frame with slices and callees); the memory block of each type is laid out here from the frame facts of its `.S`
 (the same facts as `Prysm/DepositRequest/Statements.lean`), with the addresses computed below.
-usage: python3 -I -B f24wit.py <fv/kraken> [X ...]"""
+usage: python3 -I -B f24wit.py <fv/kraken> [GoTypeName ...]"""
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from f24spec import T, GO_TYPE, new_names  # noqa: E402
+from f24spec import T  # noqa: E402
 
 NORM = 'prysm/go1.26.10/link-set/norm'
-SFILE = {'Dpr': 'engine_v1.DepositRequest', 'Bdr': 'engine_v1.BuilderDepositRequest',
-         'Bbr': 'prysm_v1alpha1.BeaconBlocksByRangeRequest', 'Bsr': 'prysm_v1alpha1.BlobSidecarsByRangeRequest',
-         'Epr': 'prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest',
-         'Pdc': 'prysm_v1alpha1.PartialDataColumnGroupID', 'Vid': 'prysm_v1alpha1.ValidatorIdentity'}
-CALLEE = {'Sl': ('Prysm.Slot.Code.unmarshalSSZ', 'primitives.Slot'), 'Vi': ('Prysm.ValidatorIndex.Code.unmarshalSSZ', 'primitives.ValidatorIndex'),
-          'Ep': ('Prysm.Epoch.Code.unmarshalSSZ', 'primitives.Epoch')}
+SFILE = {'DepositRequest': 'engine_v1.DepositRequest', 'BuilderDepositRequest': 'engine_v1.BuilderDepositRequest',
+         'BeaconBlocksByRangeRequest': 'prysm_v1alpha1.BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest': 'prysm_v1alpha1.BlobSidecarsByRangeRequest',
+         'ExecutionPayloadEnvelopesByRangeRequest': 'prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest',
+         'PartialDataColumnGroupID': 'prysm_v1alpha1.PartialDataColumnGroupID', 'ValidatorIdentity': 'prysm_v1alpha1.ValidatorIdentity'}
+CALLEE = {'Slot': ('Prysm.Slot.Code.unmarshalSSZ', 'primitives.Slot'), 'ValidatorIndex': ('Prysm.ValidatorIndex.Code.unmarshalSSZ', 'primitives.ValidatorIndex'),
+          'Epoch': ('Prysm.Epoch.Code.unmarshalSSZ', 'primitives.Epoch')}
 CLEN, BUMPLEN, RTLEN = 63, 6, 26
 
 
@@ -39,41 +39,40 @@ def hexs(a):
 # ---------------------------------------------------------------- reject witnesses (all seven; frame-independent)
 def reject(X, n):
     ty, fs, _ = T[X]
-    x = X.lower()
     N = sum(f[2] for f in fs)
     L = 1 + n
-    return f'''import E2eScal.Gen5F24{X}Dec
+    return f'''import Prysm.{X}.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of the generated `{x}_g5dec_reject` (FLAT24 / H7)
+# Witness of the generated `Decode.generated_reject` (24 flat hold-out types)
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*{ty}).UnmarshalSSZ` (index 1).
-Written by the FLAT24 evaluator with its evidence script `f24wit.py`: the text of the G5-C reject witnesses
-(`WitSaGR.lean`) with the {ty} decoder and the generated size-reject theorem of `Gen5F24{X}Dec.lean`. Memory at
+Written by the evidence script `f24wit.py`: the text of the generated size-reject witnesses
+(`Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeRejectSize.lean`) with the {ty} decoder and the generated size-reject theorem of `Prysm/{X}/GeneratedDecodeAccept.lean`. Memory at
 `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a data word `0x2a`,
 stand-ins: the real values are set by the runtime's init and are not read from the ELF), the guard word, saved-rbp
 slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill slot. For every length `≠ {N}`
 (instances {N - 1}, {N + 1}, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime Machine.Witness Prysm.BuilderDepositRequest.Code
+open Machine Runtime Machine.Witness Prysm.{X}.Code
 
 open Codec
-namespace E2eScal.Wit{X}GR
+namespace Prysm.{X}.Witness.GeneratedDecodeRejectSize
 
 set_option maxRecDepth 100000
 
-def P : Program := [.label "ssz.ErrSize"] ++ {X}Unmarshal
+def P : Program := [.label "ssz.ErrSize"] ++ unmarshalSSZ
 
 theorem P_len : P.length = {L} := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
-theorem hk1 : {X}Unmarshal.IsInfixAt Host.prog 1 := infixAt_of [.label "ssz.ErrSize"] [] (by simp [Host.prog, mkHost, P]) rfl
+theorem hk1 : unmarshalSSZ.IsInfixAt Host.prog 1 := infixAt_of [.label "ssz.ErrSize"] [] (by simp [Host.prog, mkHost, P]) rfl
 
-theorem hf1 : LabelsFresh {X}Unmarshal 1 := labelsFresh_of (by decide)
+theorem hf1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)
 
 theorem label_err : label "ssz.ErrSize" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P]) (by simp [labs])
@@ -92,13 +91,13 @@ def cs0 (len : UInt64) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
 def R0 : DataMem → Prop := Eq ((z 8).At (0x10028 : BitVec 64))
 
 set_option maxHeartbeats 4000000 in
-/-- **Non-vacuity of the generated `{x}_g5dec_reject`.** -/
-theorem {x}_reject_runs (len : UInt64) (hlen : len ≠ {N}) (zmms : RegZmms) (flags : StatusFlags) :
+/-- **Non-vacuity of the generated `Decode.generated_reject`.** -/
+theorem runs (len : UInt64) (hlen : len ≠ {N}) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10e8
         ∧ st.data.regs.rbx = 0x2a)
       ⟨cs0 len zmms flags, Host.addrOf 1⟩ :=
-  eventually_mono (E2eScal.Gen.{x}_g5dec_reject 1 hk1 hf1 (cs0 len zmms flags) 0 0 0x10e8 0x2a (z 8) (z 8) rfl rfl R0
+  eventually_mono (Prysm.{X}.Decode.generated_reject 1 hk1 hf1 (cs0 len zmms flags) 0 0 0x10e8 0x2a (z 8) (z 8) rfl rfl R0
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       wit_split []
@@ -110,11 +109,11 @@ theorem {x}_reject_runs (len : UInt64) (hlen : len ≠ {N}) (zmms : RegZmms) (fl
     (by simp [cs0]) hlen)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
-example (z' : RegZmms) (f : StatusFlags) := {x}_reject_runs {N - 1} (by decide) z' f
-example (z' : RegZmms) (f : StatusFlags) := {x}_reject_runs {N + 1} (by decide) z' f
-example (z' : RegZmms) (f : StatusFlags) := {x}_reject_runs 0 (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := runs {N - 1} (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := runs {N + 1} (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := runs 0 (by decide) z' f
 
-end E2eScal.Wit{X}GR
+end Prysm.{X}.Witness.GeneratedDecodeRejectSize
 '''
 
 
@@ -122,7 +121,6 @@ end E2eScal.Wit{X}GR
 def acc38(X, n):
     """SyncAggregatorSelectionData frame (sub $0x38; Slot call first, then in-line u64). nf input words."""
     ty, fs, _ = T[X]
-    x = X.lower()
     nf = len(fs)
     N = 8 * nf
     plen = 1 + n + CLEN
@@ -151,14 +149,14 @@ def acc38(X, n):
     reps = ' '.join(f'(Int.toBytes 8 {v})' for v in ['0x0123456789abcdef', '7', '0x40'][:nf])
     decs = ' '.join(['(by decide)'] * nf)
     ffs = ' '.join(['(List.replicate 8 0xff)'] * nf)
-    return f'''import E2eScal.Gen5F24{X}Dec
+    return f'''import Prysm.{X}.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of the generated `{x}_g5dec_accept` (`{ty}` decoder accept path; FLAT24 / H7)
+# Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path; 24 flat hold-out types)
 
-Written by the FLAT24 evaluator with its evidence script `f24wit.py`: the text of the G5-C witness `WitSaGA.lean`
+Written by the evidence script `f24wit.py`: the text of the generated accept witness `Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeAccept.lean`
 (frame `0x38`, one Slot callee) with the {ty} host and layout ({nf} input words). It shows that the premises of
 the generated accept theorem (statement = kind instance) are satisfiable. Host: one label, the real Go 1.26.10
 `(*{ty}).UnmarshalSSZ` (index 1) and `primitives.Slot` UnmarshalSSZ ({1 + n}).
@@ -170,13 +168,13 @@ at rax = 0x10020 (protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout: `st
 returns nil. The receiver is a Go value of `{ty}` (all zero).
 -/
 
-open Machine Runtime Machine.Witness E2eScal Codec Prysm.BuilderDepositRequest.Code
+open Machine Runtime Machine.Witness Codec Prysm.{X}.Code
 
-namespace E2eScal.Wit{X}GA
+namespace Prysm.{X}.Witness.GeneratedDecodeAccept
 
 set_option maxRecDepth 100000
 
-def P : Program := [.label "pad0"] ++ {X}Unmarshal ++ Prysm.Slot.Code.unmarshalSSZ
+def P : Program := [.label "pad0"] ++ unmarshalSSZ ++ Prysm.Slot.Code.unmarshalSSZ
 
 theorem P_len : P.length = {plen} := by rfl
 
@@ -184,11 +182,11 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
-theorem hk1 : {X}Unmarshal.IsInfixAt Host.prog 1 :=
+theorem hk1 : unmarshalSSZ.IsInfixAt Host.prog 1 :=
   infixAt_of [.label "pad0"] (Prysm.Slot.Code.unmarshalSSZ) (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hf1 : LabelsFresh {X}Unmarshal 1 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hk{1 + n} : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog {1 + n} :=
-  infixAt_of ([.label "pad0"] ++ {X}Unmarshal) ([])
+  infixAt_of ([.label "pad0"] ++ unmarshalSSZ) ([])
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hf{1 + n} : LabelsFresh Prysm.Slot.Code.unmarshalSSZ {1 + n} := labelsFresh_of (by rw [prog_eq]; decide)
 
@@ -208,13 +206,13 @@ def R0 : DataMem → Prop :=
   {R0}
 
 set_option maxHeartbeats 16000000 in
-/-- **Non-vacuity of the generated `{x}_g5dec_accept`** (premises of the kind instance). -/
-theorem {x}_accept_runs ({insp} : List UInt8) {hins}
+/-- **Non-vacuity of the generated `Decode.generated_accept`** (premises of the kind instance). -/
+theorem runs ({insp} : List UInt8) {hins}
     (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
       ⟨cs0 {insp} zmms flags, Host.addrOf 1⟩ :=
-  eventually_mono (E2eScal.Gen.{x}_g5dec_accept 1 hk1 hf1 {1 + n} hk{1 + n} hf{1 + n}
+  eventually_mono (Prysm.{X}.Decode.generated_accept 1 hk1 hf1 {1 + n} hk{1 + n} hf{1 + n}
     {insp} {hinsn} (cs0 {insp} zmms flags)
     0 0 {zs}
     {rfls}
@@ -231,13 +229,13 @@ theorem {x}_accept_runs ({insp} : List UInt8) {hins}
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
 /-- Zero input; a representative input; all-0xff input. -/
-example (z' : RegZmms) (f : StatusFlags) := {x}_accept_runs {z8s} {rr} z' f
+example (z' : RegZmms) (f : StatusFlags) := runs {z8s} {rr} z' f
 example (z' : RegZmms) (f : StatusFlags) :=
-  {x}_accept_runs {reps} {decs} z' f
+  runs {reps} {decs} z' f
 example (z' : RegZmms) (f : StatusFlags) :=
-  {x}_accept_runs {ffs} {rr} z' f
+  runs {ffs} {rr} z' f
 
-end E2eScal.Wit{X}GA
+end Prysm.{X}.Witness.GeneratedDecodeAccept
 '''
 
 
@@ -245,12 +243,11 @@ end E2eScal.Wit{X}GA
 def accbytes(X, n, frame):
     """frame '20': Deposit_Data frame (sub $0x20, no call; S = 16); 'pd': slices + callees (S = 8), frame F."""
     ty, fs, _ = T[X]
-    x = X.lower()
     N = sum(f[2] for f in fs)
     heap = sum(f[2] for f in fs if f[1] == 'b')
     nb = sum(1 for f in fs if f[1] == 'b')
-    gsize = {'Dpr': 128, 'Bdr': 120, 'Pdc': 72, 'Vid': 80}[X]
-    callees = {'Dpr': [], 'Bdr': [], 'Pdc': ['Sl'], 'Vid': ['Vi', 'Ep']}[X]
+    gsize = {'DepositRequest': 128, 'BuilderDepositRequest': 120, 'PartialDataColumnGroupID': 72, 'ValidatorIdentity': 80}[X]
+    callees = {'DepositRequest': [], 'BuilderDepositRequest': [], 'PartialDataColumnGroupID': ['Slot'], 'ValidatorIdentity': ['ValidatorIndex', 'Epoch']}[X]
     ins = [f'f{i}' for i in range(len(fs))]
     ops = [f'oP{j + 1}' for j in range(nb)]
     params = ins + ops
@@ -286,11 +283,11 @@ def accbytes(X, n, frame):
         callargs = ''
     else:
         S = 8
-        Fr = {'Pdc': 0x40, 'Vid': 0x50}[X]
+        Fr = {'PartialDataColumnGroupID': 0x40, 'ValidatorIdentity': 0x50}[X]
         rslot_off = Fr + 16              # return slot at rsp - (F + 16)
         F_lo = endr
         rsp = F_lo + rslot_off + 8 + S   # lo (S + 8) at rsp - rslot_off - 8 - S
-        lsave = {'Pdc': 32, 'Vid': 48}[X]
+        lsave = {'PartialDataColumnGroupID': 32, 'ValidatorIdentity': 48}[X]
         # rsp - rslot_off - 8 - S: lo (16) · rslot · sp0 sp1 sp2 · gap1 · l28 · gap2 · fp · ret · s1 · s2 · unused · s4
         sp0 = rsp - rslot_off + 8        # = rsp - (F + 8)
         gap1 = sp0 + 24
@@ -316,7 +313,7 @@ def accbytes(X, n, frame):
     blk = [b if b in params or b in ('w0',) else f'({b})' for b in blk]
     # program
     b0 = 9 + n
-    idx, prog, hks = b0, f'dataLabels ++ {X}Unmarshal', []
+    idx, prog, hks = b0, f'dataLabels ++ unmarshalSSZ', []
     cl = [CALLEE[c][0] for c in callees]
     tailp = cl + ['BumpAlloc1', 'RtCopy']
     calls = []
@@ -348,17 +345,17 @@ def accbytes(X, n, frame):
                    + [('(by decide)' if f[1] == 'u' else 'rfl') for f in fs] + ['(by decide)'] * nb)
     ex2 = ' '.join([f'(List.replicate {f[2]} 0xff)' for f in fs] + ['(List.replicate 8 0xff)'] * nb
                    + ['rfl'] * (len(fs) + nb))
-    opens = 'Machine Runtime Machine.Witness E2eScal Codec Prysm.BuilderDepositRequest.Code'
+    opens = f'Machine Runtime Machine.Witness Codec Prysm.{X}.Code'
     cdoc = ', '.join(f'`{CALLEE[c][1]}` UnmarshalSSZ' for c in callees)
-    return f'''import E2eScal.Gen5F24{X}Dec
+    return f'''import Prysm.{X}.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of the generated `{x}_g5dec_accept` (`{ty}` decoder accept path; FLAT24 / H7)
+# Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path; 24 flat hold-out types)
 
-Written by the FLAT24 evaluator with its evidence script `f24wit.py`: the text of `{'WitDdA.lean' if frame == '20' else 'WitPdA.lean'}` with the
+Written by the evidence script `f24wit.py`: the text of `{'Prysm/Deposit_Data/WitnessDecodeAccept.lean' if frame == '20' else 'Prysm/PendingDeposit/WitnessDecodeAccept.lean'}` with the
 {ty} host and layout. It shows that the premises of the generated accept theorem (statement = kind instance)
 are satisfiable. Host: data labels, the real Go 1.26.10 `(*{ty}).UnmarshalSSZ` (index 9){', ' + cdoc if cdoc else ''},
 the 1-byte bump `runtime.makeslice` ({bi}, `bump_makeslice1`) and `RtCopy` ({ri}, `rt_memmove`).
@@ -373,7 +370,7 @@ nil. The receiver is a Go value of `{ty}` (zero `state`, zero-length slices, zer
 
 open {opens}
 
-namespace E2eScal.Wit{X}GA
+namespace Prysm.{X}.Witness.GeneratedDecodeAccept
 
 set_option maxRecDepth 100000
 
@@ -389,7 +386,7 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
-theorem hk9 : {X}Unmarshal.IsInfixAt Host.prog 9 :=
+theorem hk9 : unmarshalSSZ.IsInfixAt Host.prog 9 :=
   infixAt_of dataLabels ({' ++ '.join(tailp)}) (by simp [prog_eq, P, List.append_assoc]) rfl
 {chr(10).join(hks)}
 theorem hk{bi} : BumpAlloc1.IsInfixAt Host.prog {bi} :=
@@ -399,7 +396,7 @@ theorem hk{ri} : RtCopy.IsInfixAt Host.prog {ri} :=
   infixAt_of ({prog} ++ BumpAlloc1) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
-theorem hf9 : LabelsFresh {X}Unmarshal 9 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf9 : LabelsFresh unmarshalSSZ 9 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf{ri} : LabelsFresh RtCopy {ri} := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf{bi} : ∀ i < {bi}, Host.prog[i]? ≠ some (.label "runtime.makeslice") :=
   notLabel_of (by rw [prog_eq]; decide)
@@ -434,13 +431,13 @@ theorem lift_heap {{X : DataMem → Prop}} {{m : DataMem}}
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump]; exact hm⟩) h
 
 set_option maxHeartbeats 16000000 in
-/-- **Non-vacuity of the generated `{x}_g5dec_accept`** (premises of the kind instance are satisfiable). -/
-theorem {x}_accept_runs ({pp} : List UInt8) {hparams}
+/-- **Non-vacuity of the generated `Decode.generated_accept`** (premises of the kind instance are satisfiable). -/
+theorem runs ({pp} : List UInt8) {hparams}
     (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
       ⟨cs0 {pp} zmms flags, Host.addrOf 9⟩ :=
-  eventually_mono (E2eScal.Gen.{x}_g5dec_accept 9 hk9 hf9 {' '.join(calls)}
+  eventually_mono (Prysm.{X}.Decode.generated_accept 9 hk9 hf9 {' '.join(calls)}
     {' '.join(ins)} {hin} (cs0 {pp} zmms flags)
     0 0 {' '.join(lists)}
     {' '.join(lens + lens2)}
@@ -460,28 +457,28 @@ theorem {x}_accept_runs ({pp} : List UInt8) {hparams}
 
 /-- Zero input with nil slices; a representative input with non-nil old pointer words; all-0xff input. -/
 example (z' : RegZmms) (f : StatusFlags) :=
-  {x}_accept_runs {ex0} z' f
+  runs {ex0} z' f
 example (z' : RegZmms) (f : StatusFlags) :=
-  {x}_accept_runs {ex1} z' f
+  runs {ex1} z' f
 example (z' : RegZmms) (f : StatusFlags) :=
-  {x}_accept_runs {ex2} z' f
+  runs {ex2} z' f
 
-end E2eScal.Wit{X}GA
+end Prysm.{X}.Witness.GeneratedDecodeAccept
 '''
 
 
 if __name__ == '__main__':
     kr = sys.argv[1]
-    which = sys.argv[2:] or ['Dpr', 'Bdr', 'Bbr', 'Bsr', 'Epr', 'Pdc', 'Vid']
+    which = sys.argv[2:] or ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
     for X in which:
         n = slen(kr, X)
-        d = os.path.join(kr, 'lean', 'Prysm', GO_TYPE[X])
-        open(os.path.join(d, 'WitnessGeneratedDecodeRejectSize.lean'), 'w').write(new_names(reject(X, n), X))
-        if X in ('Bbr', 'Bsr', 'Epr'):
+        d = os.path.join(kr, 'lean', 'Prysm', X)
+        open(os.path.join(d, 'WitnessGeneratedDecodeRejectSize.lean'), 'w').write(reject(X, n))
+        if X in ('BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest'):
             a = acc38(X, n)
-        elif X in ('Dpr', 'Bdr'):
+        elif X in ('DepositRequest', 'BuilderDepositRequest'):
             a = accbytes(X, n, '20')
         else:
             a = accbytes(X, n, 'pd')
-        open(os.path.join(d, 'WitnessGeneratedDecodeAccept.lean'), 'w').write(new_names(a, X))
+        open(os.path.join(d, 'WitnessGeneratedDecodeAccept.lean'), 'w').write(a)
         print(X, n)

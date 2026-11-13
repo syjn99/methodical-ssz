@@ -3,7 +3,7 @@ import Prysm.SyncCommitteeMessage.Spec
 import Runtime.CopyModel
 
 /-!
-# SyncCommitteeMessage encoder fast path (generated theorem) against the independent Desc (unit E2-C)
+# SyncCommitteeMessage encoder fast path (generated theorem) against the independent Desc
 
 `Encode.generated_fast_spec`: for a receiver holding the Go layout of `g : SszValue` (uint64 fields = `uintBytes 8`, byte
 fields = `(p, n, cap)` with the n bytes at `p`), the generated fast-path theorem `Encode.generated_fast` writes at

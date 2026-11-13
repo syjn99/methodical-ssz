@@ -3,11 +3,11 @@ import Prysm.PendingConsolidation.GeneratedDecodeSteps
 import Prysm.SyncCommitteeMessage.Statements
 
 /-!
-# `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`, accept path from the GENERATED `p2dec --gen4` chains
+# `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`, accept path from the GENERATED `decoder --steps` chains
 
 `Decode.accept_from_generated_steps : Decode.accept_statement` (the pre-committed hand statement, unchanged). Both fields are HAND field
 compositions (`pc_gg_*_field`; no kind exists for a field composition) over the GENERATED theorems of
-`Prysm/PendingConsolidation/GeneratedDecodeSteps.lean` (`p2dec --gen4`, raw output): SourceIndex = generated steps 15, 16 + call block; TargetIndex =
+`Prysm/PendingConsolidation/GeneratedDecodeSteps.lean` (`decoder --steps`, raw output): SourceIndex = generated steps 15, 16 + call block; TargetIndex =
 generated steps 48–54 + the call WINDOW 55–58 with the `nop` after the `callq`. Hand text that remains: the two field
 compositions, `Decode.head`, `Decode.epi` (`Prysm/PendingConsolidation/DecodeAccept.lean`) and the glue. In-sample (development data); no transfer claim.
 -/
@@ -63,7 +63,7 @@ theorem Decode.from_generated_steps_SourceIndex_field (k : Nat) (hk : unmarshalS
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `TargetIndex` (callee decoder field, Go offset 16, SSZ offset 8): the WHOLE call field 48–85, composed from the
-step theorems of its set-up and the call-block theorem (worked example of the `p2dec --gen4` emission recipe). The entry
+step theorems of its set-up and the call-block theorem (worked example of the `decoder --steps` emission recipe). The entry
 conditions of the call block (rax = `rcv + 16`, rbx = `bf + 8`, rcx = 8) are closed by `rfl` on the state
 that the steps computed. -/
 theorem Decode.from_generated_steps_TargetIndex_field (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
@@ -121,7 +121,7 @@ theorem Decode.from_generated_steps_TargetIndex_field (k : Nat) (hk : unmarshalS
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- **Accept path of the real `(*v1alpha1.PendingConsolidation).UnmarshalSSZ` (Go 1.26.10) from the generated `p2dec --gen4`
+/-- **Accept path of the real `(*v1alpha1.PendingConsolidation).UnmarshalSSZ` (Go 1.26.10) from the generated `decoder --steps`
 chains**; statement = the hand statement `Decode.accept_statement` (unchanged). -/
 theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   intro k hk hf kV hkV hfV in0 in1 hin0 hin1 s ra guard

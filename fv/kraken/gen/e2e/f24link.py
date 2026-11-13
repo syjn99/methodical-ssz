@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Flat-type hold-out (H7): call graph and link tables of the real UnmarshalSSZ and MarshalSSZTo of the 24 flat fixed-size
-types outside the development population (fv/kraken/prysm/proof-inventory.md at the FLAT24 freeze) on the Go 1.26.10
-ELF (the same ELF as prysm/go1.26.10/link-set; written after the H7 hold-out was opened at 2026-11-12T05:59:42Z;
+"""Flat-type hold-out of the 24 flat types: call graph and link tables of the real UnmarshalSSZ and MarshalSSZTo of the 24 flat fixed-size
+types outside the development population (fv/kraken/prysm/proof-inventory.md at the freeze of the 24 flat types) on the Go 1.26.10
+ELF (the same ELF as prysm/go1.26.10/link-set; written after the hold-out of the 24 flat types was opened at 2026-11-12T05:59:42Z;
 the text of `h6link.py` + `enc2link.py` with the function set changed and the data items made per function).
 
 Usage (Python 3 standard library only; python3 -I -B; every step runs gated):
@@ -45,10 +45,10 @@ TYPES = [("v1", "BuilderDepositRequest", "bdr"), ("v1", "BuilderExitRequest", "b
 DEC = [f"{PKG[k]}.(*{t}).UnmarshalSSZ" for k, t, _ in TYPES]
 ENC = [f"{PKG[k]}.(*{t}).MarshalSSZTo" for k, t, _ in TYPES]
 FUNCS = DEC + ENC
-SCOPE = {f: "in (FLAT24 decoder)" for f in DEC} | {f: "in (FLAT24 encoder)" for f in ENC}
+SCOPE = {f: "in (24 flat types, decoder)" for f in DEC} | {f: "in (24 flat types, encoder)" for f in ENC}
 CLASS = dict(adlink.CLASS)
 CLASS.update({
-    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (H1)"),
+    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (BeaconBlockHeader hold-out)"),
     f"{PRIM}.(*Slot).UnmarshalSSZ": ("a", "function spec Prysm.Slot.Decode.accept_function_spec, proved from machine code (Prysm/Slot/)"),
     f"{PRIM}.(*Epoch).UnmarshalSSZ": ("a", "function spec Prysm.Epoch.Decode.accept_function_spec, proved from machine code (Prysm/Epoch/)"),
     "fmt.errorf": ("b", "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"),
@@ -83,7 +83,7 @@ def callgraph(objdump, out):
         if m:
             c = CLASS.get(m[1])
             r["calls"].append({"site": hex(addr), "target": m[1], "class": c[0] if c else "d",
-                               "how": c[1] if c else "no contract in the tree; recorded only (FLAT24 link)"})
+                               "how": c[1] if c else "no contract in the tree; recorded only (link of the 24 flat types)"})
     counts = {f: {} for f in FUNCS}
     for f in FUNCS:
         for c in res[f]["calls"]:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""H5 hold-out: call graph and link tables of the real v1alpha1.SyncCommitteeMessage and v1alpha1.PendingConsolidation
+"""hold-out of PendingConsolidation and SyncCommitteeMessage: call graph and link tables of the real v1alpha1.SyncCommitteeMessage and v1alpha1.PendingConsolidation
 UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the
-H5 hold-out was opened at 2026-11-11T11:25:14Z; the text of `h4link.py` with the function set and the data items changed).
+hold-out of PendingConsolidation and SyncCommitteeMessage was opened at 2026-11-11T11:25:14Z; the text of `h4link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   h5link.py callgraph <objdump> <out.json>          call targets with contract class
@@ -30,7 +30,7 @@ FUNCS = [f"{V1A1}.(*SyncCommitteeMessage).UnmarshalSSZ", f"{V1A1}.(*PendingConso
 SCOPE = {FUNCS[0]: "in (H5 decoder)", FUNCS[1]: "in (H5 decoder)"}
 CLASS = dict(adlink.CLASS)
 CLASS.update({
-    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (H1)"),
+    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (BeaconBlockHeader hold-out)"),
     f"{PRIM}.(*Slot).UnmarshalSSZ": ("a", "function spec Prysm.Slot.Decode.accept_function_spec, proved from machine code (Prysm/Slot/)"),
     "fmt.errorf": ("b", "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"),
     "runtime.newobject": ("b", "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"),

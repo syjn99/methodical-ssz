@@ -8,7 +8,7 @@
  {
   "id": "g6-cp-stmt-control",
   "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
-  "theorem": "Prysm.Checkpoint.Encode.generated_stmt",
+  "theorem": "Prysm.Checkpoint.Encode.generated_statement",
   "kind": "control"
  },
  {
@@ -64,7 +64,7 @@
  {
   "id": "g6-e1-stmt-other-hand",
   "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
-  "theorem": "Prysm.Eth1Data.Encode.generated_stmt",
+  "theorem": "Prysm.Eth1Data.Encode.generated_statement",
   "kind": "stmt",
   "old": "type_of% (@Prysm.Eth1Data.Encode.fast_path ‹Host›)",
   "new": "type_of% (@Prysm.BeaconBlockHeader.Encode.fast_path ‹Host›)"

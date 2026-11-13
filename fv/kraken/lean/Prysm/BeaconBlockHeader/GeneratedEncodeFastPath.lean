@@ -3,7 +3,7 @@ import Codec.EncodeFrameTest
 import Prysm.BeaconBlockHeader.Code
 
 /-!
-# GEN6 (`p2enc --gen6`, unit E2-G): encoder fast path of `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`
+# Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`
 
 Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a
 step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem
@@ -12,7 +12,7 @@ has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKind
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
 The statement is the declared type of the committed hand theorem `Prysm.BeaconBlockHeader.Encode.fast_path`.
-GEN6-JSON: {"type": "BeaconBlockHeader", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 112, "frame": 152, "gd": 32, "rt": true, "fields": [["Slot", "u", 8], ["ProposerIndex", "u", 8], ["ParentRoot", "b", 32], ["StateRoot", "b", 32], ["BodyRoot", "b", 32]], "boundaries": [10, 36, 62, 90, 118, 148], "layout": "Prysm.BeaconBlockHeader.encodeLayout", "S_sha256": "c76a57703af0f5d5889921baf6b3844b81d043b466b5e17df02a8b5d218124f3", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.BeaconBlockHeader.Encode.fast_path", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.BeaconBlockHeader", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f3", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f4", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
+FAST-PATH-JSON: {"type": "BeaconBlockHeader", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 112, "frame": 152, "gd": 32, "rt": true, "fields": [["Slot", "u", 8], ["ProposerIndex", "u", 8], ["ParentRoot", "b", 32], ["StateRoot", "b", 32], ["BodyRoot", "b", 32]], "boundaries": [10, 36, 62, 90, 118, 148], "layout": "Prysm.BeaconBlockHeader.encodeLayout", "S_sha256": "c76a57703af0f5d5889921baf6b3844b81d043b466b5e17df02a8b5d218124f3", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.BeaconBlockHeader.Encode.fast_path", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.BeaconBlockHeader", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f3", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f4", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
 -/
 
 open Machine Runtime Codec Prysm.BeaconBlockHeader.Code
@@ -1158,7 +1158,7 @@ theorem Encode.generated_epi_kind : ∀ (h : Host), type_of% (@Encode.generated_
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **Encoder fast path of `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` (Go 1.26.10), generated** (`p2enc --gen6`):
+/-- **Encoder fast path of `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` (Go 1.26.10), generated** (`encoder --fast-path`):
 head, one theorem per field, epilogue, chained by `eventually_trans`. Premises: `len + 112 ≤ cap`,
 every byte-vector field of its exact length. Statement = the kind instance (`_kind`). Fast path only. -/
 theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
@@ -1273,7 +1273,7 @@ theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated
   intro h; rfl
 
 /-- Statement check: the generated theorem proves the committed hand statement. -/
-theorem Encode.generated_stmt : type_of% (@Prysm.BeaconBlockHeader.Encode.fast_path ‹Host›) :=
+theorem Encode.generated_statement : type_of% (@Prysm.BeaconBlockHeader.Encode.fast_path ‹Host›) :=
   Encode.generated_fast
 
 end Prysm.BeaconBlockHeader

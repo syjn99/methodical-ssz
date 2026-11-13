@@ -4,11 +4,11 @@ import Prysm.Eth1Data.DecodeAccept
 import Prysm.PendingDeposit.Statements
 
 /-!
-# `(*v1alpha1.PowBlock).UnmarshalSSZ`, accept path from the GENERATED `p2dec --gen4` chains (hold-out, full-proof type)
+# `(*v1alpha1.PowBlock).UnmarshalSSZ`, accept path from the GENERATED `decoder --steps` chains (hold-out, full-proof type)
 
-Hand-written AFTER the raw generator output (`Prysm/PowBlock/GeneratedDecodeSteps.lean`, `p2dec --gen4`, exit 0,
+Hand-written AFTER the raw generator output (`Prysm/PowBlock/GeneratedDecodeSteps.lean`, `decoder --steps`, exit 0,
 3/3 walker-covered) was committed. Statement = the pre-committed hand statement `Prysm.PowBlock.Decode.accept_statement`
-(`Prysm/PendingDeposit/Statements.lean`, unchanged). `--gen4 --compose` refuses by design, so every field composition is HAND text
+(`Prysm/PendingDeposit/Statements.lean`, unchanged). `--steps --compose` refuses by design, so every field composition is HAND text
 (`pb_gg_*_field`) over the GENERATED theorems, used as emitted:
 * head 0–12: `dechead_seg` (`Codec/DecoderHeadEpilogue.lean`, frame `0x20`, size 96);
 * BlockHash 13–46: generated segment (offset-0 form) + generated tail steps 37, 38, 45, 46;
@@ -206,7 +206,7 @@ theorem Decode.from_generated_steps_TotalDifficulty_field (k : Nat) (hk : unmars
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- **Accept path of the real `(*v1alpha1.PowBlock).UnmarshalSSZ` (Go 1.26.10) from the generated `p2dec --gen4` chains**;
+/-- **Accept path of the real `(*v1alpha1.PowBlock).UnmarshalSSZ` (Go 1.26.10) from the generated `decoder --steps` chains**;
 statement = the hand statement `Decode.accept_statement` (unchanged). -/
 theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   intro k hk hf bh ph td hbh hph htd s ra guard

@@ -232,20 +232,11 @@ generator writes it, or because it is a record. The table after the list gives t
   with runtime calls / callee calls, `decPro` / `encProL` decoder / encoder prologue templates, `iCmpMI` the
   directive `cmpq $imm,disp(%rB)`, `stepLdvKind` / `stepLdbKind` the kinds of `kstep_ldv` / `kstep_ldb`
   (`mov disp(%rB),%rD`, value / bytes form). Generated files and `../gen/scal/kindcheck.py` name them.
-- Generated theorem names with `_stmt` (`Decode.generated_accept_stmt`, `Encode.generated_stmt`): the generator writes
-  them.
 - Short tactic names (local or module macros): `vtri_iter_body`, `rstep`, `eb`, `kn`, `kunf`, `kwat`, `kwin`, `kwnx`,
   `kwend`, `rej_infix`, `imm32`, and the notation `shl5`. Their doc strings say what each does.
 - Directory labels under `../prysm/go1.26.10/e2e/` (`ad`, `bh`, `e1`, `f24`, `g5c`, `h3` to `h6`, `lv`, `scal`), the
   link and differential scripts `../gen/e2e/*link.py`, `../gen/e2e/*diff.py`, and the negative case files
   `*negcases*.json`: records of the work steps; generated headers and tests name these paths.
-- Generator options `--gen2` to `--gen6` of `../gen/scal/scalgen.py`: generated headers, `../gen/restructure/tools/regen.py`
-  and the generator tests name them.
-- The evidence tools of `../prysm/go1.26.10/e2e/f24/tools/` keep templates with earlier file and declaration names
-  and translate them to the present names when they write (`new_names` of `f24spec.py`).
-- Labels that the generators write into comments of generated files (header text, coverage lines that
-  `kindcheck.py` reads): `GEN2` to `GEN6`, `GEN4 coverage`, `FIELDS-JSON`, `GEN6-JSON`, `FLAT24`, `G5-C`, `G5-L`,
-  `H3`, `H4`, `H7`, `unit E2-C`, `unit E2-G`, `unit G5-G`. A change needs the generator and a fresh run of each output.
 - The test type names of `Spec/Test*.lean` and `Spec/ReducedPrysm.lean` (test types of `../target/`).
 - Negative case ids (for example `epr-control`): records that the negative check results name.
 - The records of earlier names (`../gen/restructure/maps/`).

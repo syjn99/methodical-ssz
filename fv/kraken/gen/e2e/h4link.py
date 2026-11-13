@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""H4 hold-out: call graph and link tables of the real v1alpha1.Deposit_Data and v1alpha1.PendingPartialWithdrawal
+"""hold-out of Deposit_Data and PendingPartialWithdrawal: call graph and link tables of the real v1alpha1.Deposit_Data and v1alpha1.PendingPartialWithdrawal
 UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the
-H4 hold-out was opened at 2026-11-11T08:53:45Z; the text of `h3link.py` with the function set and the data items changed).
+hold-out of Deposit_Data and PendingPartialWithdrawal was opened at 2026-11-11T08:53:45Z; the text of `h3link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   h4link.py callgraph <objdump> <out.json>          call targets with contract class
@@ -30,7 +30,7 @@ FUNCS = [f"{V1A1}.(*Deposit_Data).UnmarshalSSZ", f"{V1A1}.(*PendingPartialWithdr
 SCOPE = {FUNCS[0]: "in (H4 decoder)", FUNCS[1]: "in (H4 decoder)"}
 CLASS = dict(adlink.CLASS)
 CLASS.update({
-    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (H1)"),
+    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (BeaconBlockHeader hold-out)"),
     f"{PRIM}.(*Epoch).UnmarshalSSZ": ("a", "function spec Prysm.Epoch.Decode.accept_function_spec, proved from machine code (prysm-e2e)"),
     "fmt.errorf": ("b", "FmtErrorfWC (field wraps 'Index: %w', 'WithdrawableEpoch: %w'); decoder: unreachable "
                         "under the callee specs"),

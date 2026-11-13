@@ -10,7 +10,7 @@ import Prysm.PendingDeposit.GeneratedDecodeSteps
 
 Text produced from one description of the type (frame facts, field list, boundary states, chain theorem names)
 by a scratch emitter (not in the tree); every theorem has a `_kind` line (`decHeadKindN`, `decFieldKindN`,
-`decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`Decode.generated_step_*`) are used as emitted.
+`decEpiKindN`, `decAcceptKindN`). The `decoder --steps` chain theorems (`Decode.generated_step_*`) are used as emitted.
 -/
 
 open Machine Runtime Prysm.AttestationData.Code Prysm.PendingDeposit.Code Codec

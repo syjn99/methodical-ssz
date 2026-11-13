@@ -4,11 +4,11 @@ import Prysm.BeaconBlockHeader.DecodeAcceptFromGeneratedCallSegments
 import Prysm.PendingDeposit.Statements
 
 /-!
-# `(*v1alpha1.PendingDeposit).UnmarshalSSZ`, accept path from the GENERATED `p2dec --gen4` chains (hold-out, full-proof type)
+# `(*v1alpha1.PendingDeposit).UnmarshalSSZ`, accept path from the GENERATED `decoder --steps` chains (hold-out, full-proof type)
 
-Hand-written AFTER the raw generator output (`Prysm/PendingDeposit/GeneratedDecodeSteps.lean`, `p2dec --gen4`, exit 0,
+Hand-written AFTER the raw generator output (`Prysm/PendingDeposit/GeneratedDecodeSteps.lean`, `decoder --steps`, exit 0,
 5/5 walker-covered) was committed. Statement = the pre-committed hand statement `Prysm.PendingDeposit.Decode.accept_statement`
-(`Prysm/PendingDeposit/Statements.lean`, unchanged). `--gen4 --compose` refuses by design, so every field composition is HAND text
+(`Prysm/PendingDeposit/Statements.lean`, unchanged). `--steps --compose` refuses by design, so every field composition is HAND text
 (`pd_gg_*_field`) over the GENERATED theorems, used as emitted:
 * head 0–13: `Decode.head` (hand; `decpro_seg` with F = 64, dB = 88, size 192, then the spills 11–13 as `kstep_st`);
 * PublicKey 14–48: generated segment (offset-0 form) + generated tail steps 38, 39, 47, 48;
@@ -400,7 +400,7 @@ theorem Decode.from_generated_steps_Slot_field (k : Nat) (hk : Code.unmarshalSSZ
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- **Accept path of the real `(*v1alpha1.PendingDeposit).UnmarshalSSZ` (Go 1.26.10) from the generated `p2dec --gen4`
+/-- **Accept path of the real `(*v1alpha1.PendingDeposit).UnmarshalSSZ` (Go 1.26.10) from the generated `decoder --steps`
 chains**; statement = the hand statement `Decode.accept_statement` (unchanged). -/
 theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   intro k hk hf kS hkS hfS pk wc amt sig sl hpk hwc hamt hsig hsl s ra guard

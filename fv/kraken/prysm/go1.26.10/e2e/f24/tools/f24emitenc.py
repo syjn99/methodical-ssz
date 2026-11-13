@@ -4,7 +4,7 @@ table and the output paths changed). Emitter: per generated encoder fast-path th
 `Encode.generated_fast`, emit a witness module and a spec-corollary module:
 <out dir>/Prysm/<T>/WitnessGeneratedEncodeFastPath.lean and <out dir>/Prysm/<T>/GeneratedEncodeFastPathSpec.lean.
 
-Reads the committed Prysm/<T>/GeneratedEncodeFastPath.lean (statement text, GEN6-JSON header) and the IR (Go struct size).
+Reads the committed Prysm/<T>/GeneratedEncodeFastPath.lean (statement text, FAST-PATH-JSON header) and the IR (Go struct size).
 usage: e2cemit.py <lean dir> <out dir> [<T> ...]      (<T>: a Go type name of TYPES)
 """
 import json, re, sys, os
@@ -78,7 +78,7 @@ def split_top(s, sep):
 def parse(lean_dir, X):
     path = os.path.join(lean_dir, 'Prysm', X, 'GeneratedEncodeFastPath.lean')
     src = open(path).read()
-    hdr = json.loads(re.search(r'GEN6-JSON: (\{.*\})', src).group(1))
+    hdr = json.loads(re.search(r'FAST-PATH-JSON: (\{.*\})', src).group(1))
     opn = re.search(r'^open (.*)$', src, re.M).group(1)
     p = hdr['prefix']
     m = re.search(r'theorem %s_fast : ∀ (.*?):= by' % p, src, re.S)
@@ -327,7 +327,7 @@ def emit_wit(X, info, cl, gsize):
     w('import Machine.WitnessHost')
     w('')
     w('/-!')
-    w('# Witness of `%s_fast` (%s encoder fast path, generated theorem; FLAT24 / H7, text of the unit E2-C emitter)' % (p, hdr['type']))
+    w('# Witness of `%s_fast` (%s encoder fast path, generated theorem; 24 flat hold-out types, text of the encoder specification emitter)' % (p, hdr['type']))
     w('')
     w('Emitted by the unit\'s evidence tool `e2cemit.py` (not the generator) from the committed statement text and')
     w('the IR; then built and kernel-checked. Host: the real Go 1.26.10 `MarshalSSZTo` (index 0)%s.' %
@@ -569,7 +569,7 @@ def emit_spec(X, info, cl):
     w('import Runtime.CopyModel')
     w('')
     w('/-!')
-    w('# %s encoder fast path (generated theorem) against the independent Desc (FLAT24 / H7, text of the unit E2-C emitter)' % hdr['type'])
+    w('# %s encoder fast path (generated theorem) against the independent Desc (24 flat hold-out types, text of the encoder specification emitter)' % hdr['type'])
     w('')
     w('`Encode.generated_fast_spec`: for a receiver holding the Go layout of `g : %s` (uint64 fields = `uintBytes 8`, byte' % PS)
     w('fields = `(p, n, cap)` with the n bytes at `p`), the generated fast-path theorem `%s_fast` writes at' % p)
@@ -622,7 +622,7 @@ def emit_spec(X, info, cl):
     w('    (fun st ⟨%s⟩ =>' % pat)
     w('      ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, ?_⟩)')
     w('  rw [SszValue.encode_toList_generated, Encode.generated_fast_split %s %s]' % (' '.join(['_'] * (nfl + 1)), ' '.join('hF%d' % k for k in range(nfl))))
-    w(('  try simp only [← Std.ExtHashMap.sep_assoc]  -- one output chunk: nothing to reassociate (FLAT24 attempt 2)'
+    w(('  try simp only [← Std.ExtHashMap.sep_assoc]  -- one output chunk: nothing to reassociate (second attempt)'
        if len(hdr['fields']) == 1 else '  simp only [← Std.ExtHashMap.sep_assoc]'))
     for k, fe in enumerate(fexpr):
         w('  generalize %s = F%d at hm ⊢' % (fe[0], k))

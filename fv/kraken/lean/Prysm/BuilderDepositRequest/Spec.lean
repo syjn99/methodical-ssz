@@ -3,9 +3,9 @@ import Prysm.Checkpoint.SpecEquivalence
 import Prysm.DepositRequest.SpecDescription
 
 /-!
-# Spec bridge for the real Prysm `v1.BuilderDepositRequest` (FLAT24 / H7)
+# Spec bridge for the real Prysm `v1.BuilderDepositRequest` (24 flat hold-out types)
 
-Written by the FLAT24 evaluator with its evidence script `f24spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`
+Written by the evidence script `f24spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`
 generalised to a field list). `desc` (`Prysm/BuilderDepositRequest/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).
 No Desc-checker record exists for this type (`gen/desc/results/main.result.json`): no codec equality here.
 `SszValue` is the SSZ content of a Go `v1.BuilderDepositRequest`.

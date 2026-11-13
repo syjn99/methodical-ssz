@@ -21,7 +21,7 @@ namespace Prysm.Eth1Data
 theorem rootDecMidZ_eq_hand : @Codec.rootDecMidZ = @Prysm.Eth1Data.rootDecMid0 := rfl
 
 /-- The offset-0 template lemma has the statement of the hand lemma. -/
-theorem rootdec_seg_z_stmt_eq_hand : type_of% @Codec.rootdec_seg_z = type_of% @Prysm.Eth1Data.rootdec_seg0 := rfl
+theorem rootdec_seg_z_statement_eq_hand : type_of% @Codec.rootdec_seg_z = type_of% @Prysm.Eth1Data.rootdec_seg0 := rfl
 
 variable [Host]
 

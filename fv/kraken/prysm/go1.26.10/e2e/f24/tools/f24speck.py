@@ -1,21 +1,20 @@
 """Evidence tool (not part of gen/scal): write <dir>/Prysm/<GoTypeName>/DecodeSpec.lean from the generated accept
 statement text of <dir>/Prysm/<GoTypeName>/GeneratedDecodeAccept.lean (statement copied, input chunks replaced by the encoding of the EthLib-decoded value): the
 text of the script `mkspeck.py` generalised to n fields of uint64 / byte vectors.
-usage: python3 -I -B f24speck.py <fv/kraken/lean> [X ...]"""
+usage: python3 -I -B f24speck.py <fv/kraken/lean> [GoTypeName ...]"""
 import os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from f24spec import T, GO_TYPE, new_names  # noqa: E402
+from f24spec import T  # noqa: E402
 
-DEC = ['Dpr', 'Bdr', 'Bbr', 'Bsr', 'Epr', 'Pdc', 'Vid']
+DEC = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
 
 
 def emit(d, X):
     ty, fs, chk = T[X]
-    x = X.lower()
-    P, pe = f'P{X}', f'p{x}Enc'
+    P, pe = 'SszValue', 'SszValue.encode'
     N = sum(f[2] for f in fs)
     n = len(fs)
-    src = open(os.path.join(d, 'Prysm', GO_TYPE[X], 'GeneratedDecodeAccept.lean')).read()
+    src = open(os.path.join(d, 'Prysm', X, 'GeneratedDecodeAccept.lean')).read()
     i = src.index('theorem Decode.generated_accept : ∀ ')
     j = src.index(' := by\n', i)
     stmt = src[i + len('theorem Decode.generated_accept : '):j]
@@ -26,7 +25,7 @@ def emit(d, X):
     hyps = ' '.join(rf'\(hfv{k} : fv{k}\.length = \d+\)' for k in range(n))
     line = re.search(rf'\n    \({fvs} : List UInt8\) {hyps}\n', stmt)
     assert line, X
-    stmt = stmt.replace(line.group(0), f'\n    (bsA : Array UInt8) (v : Value) (hd : deserialize prysm{X}Desc bsA = .ok v)\n', 1)
+    stmt = stmt.replace(line.group(0), f'\n    (bsA : Array UInt8) (v : Value) (hd : deserialize desc bsA = .ok v)\n', 1)
     assert stmt.count('(h_mem : s.dmem =⋆') == 1
     stmt = stmt.replace('(h_mem : s.dmem =⋆', f'(Pm : ∀ g : {P}, bsA = {pe} g →\n      s.dmem =⋆', 1)
     assert stmt.count(f'(hlen : s.regs.rcx = {N})') == 1, X
@@ -55,45 +54,45 @@ def emit(d, X):
             args.append('hn')
         else:
             args.append(y)
-    gname = f'E2eScal.Gen.{x}_g5dec_accept'
-    return f'''import E2eScal.Gen5F24{X}Dec
-import E2eScal.F24{X}Spec
+    gname = f'Prysm.{X}.Decode.generated_accept'
+    return f'''import Prysm.{X}.GeneratedDecodeAccept
+import Prysm.{X}.Spec
 
 /-!
-# Spec alignment of the real `{ty}` decoder (FLAT24 / H7)
+# Spec alignment of the real `{ty}` decoder (24 flat hold-out types)
 
-Built on the GENERATED theorems of `Gen5F24{X}Dec.lean` (`p2dec --gen5`, one-shot run of FLAT24 Part 1; raw output, not
+Built on the GENERATED theorems of `Prysm/{X}/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `part1.sh`; raw output, not
 edited):
-- `{x}_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysm{X}Desc`) as `v`, there is `g : {P}` with `g.toValue = v`
+- `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : {P}` with `g.toValue = v`
   and `bsA = {pe} g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
   The statement is the generated accept statement (kind instance) with the input chunks replaced by the
-  encoding of `g` (text written by the FLAT24 evidence script `f24speck.py` from the generated statement; then checked
+  encoding of `g` (text written by the evidence script `f24speck.py` from the generated statement; then checked
   by Lean against `{gname}`).
-- `{x}_e2e_reject_size_spec`: `bs.size ≠ {N}` → EthLib rejects, and the machine code returns `ssz.ErrSize`
-  (generated `{x}_g5dec_reject`).
-- `{x}_e2e_reject_complete`: every input that EthLib rejects has `size ≠ {N}` (the path condition of the size reject).
+- `Decode.reject_size_spec`: `bs.size ≠ {N}` → EthLib rejects, and the machine code returns `ssz.ErrSize`
+  (generated `Decode.generated_reject`).
+- `Decode.reject_complete`: every input that EthLib rejects has `size ≠ {N}` (the path condition of the size reject).
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = {N}`.
 -/
 
-open Machine Runtime Codec Prysm.{GO_TYPE[X]}.Code EthLib.Serialization.Ssz
+open Machine Runtime Codec Prysm.{X}.Code EthLib.Serialization.Ssz
 variable [Host]
 
-namespace E2eScal.F24
+namespace Prysm.{X}
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Accept side: the generated accept statement for the input chunks of the `g` that EthLib decodes. -/
-theorem {x}_e2e_accept_spec_k : {stmt} := by
+theorem Decode.accept_spec : {stmt} := by
   intro {' '.join(names_i)}
-  obtain ⟨g, rfl, hb⟩ := p{x}_accepted_is_enc hd
+  obtain ⟨g, rfl, hb⟩ := SszValue.accepted_is_encoding hd
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = {N} := by
-    apply UInt64.toNat_inj.mp; rw [hlen, hb, p{x}_enc_size]; rfl
+    apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.enc_size]; rfl
   exact {gname} {' '.join(args)}
 
 /-- `len(buf) ≠ {N}`: EthLib rejects, and the machine code returns the two words of `ssz.ErrSize`. -/
-theorem {x}_e2e_reject_size_spec (k : Nat) (hk : {X}Unmarshal.IsInfixAt Host.prog k)
-    (hf : LabelsFresh {X}Unmarshal k) (bs : Array UInt8) (hbs : bs.size ≠ {N})
+theorem Decode.reject_size_spec (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh unmarshalSSZ k) (bs : Array UInt8) (hbs : bs.size ≠ {N})
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
     (R : DataMem → Prop)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -102,7 +101,7 @@ theorem {x}_e2e_reject_size_spec (k : Nat) (hk : {X}Unmarshal.IsInfixAt Host.pro
       ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size) :
-    (∃ e, deserialize prysm{X}Desc bs = .error e) ∧
+    (∃ e, deserialize desc bs = .error e) ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = e0 ∧ st.data.regs.rbx = e1
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
@@ -113,20 +112,20 @@ theorem {x}_e2e_reject_size_spec (k : Nat) (hk : {X}Unmarshal.IsInfixAt Host.pro
           ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ :=
-  ⟨p{x}_spec_rejects bs hbs, E2eScal.Gen.{x}_g5dec_reject k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
+  ⟨SszValue.spec_rejects bs hbs, Prysm.{X}.Decode.generated_reject k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
     (fun h => hbs (by rw [← hlen, h]; rfl))⟩
 
 /-- **`reject_complete`**: an input that EthLib rejects has `size ≠ {N}`: the path condition of the size reject.
 (The callee error returns are not covered.) -/
-theorem {x}_e2e_reject_complete (bs : Array UInt8) (h : ¬ ∃ v, deserialize prysm{X}Desc bs = .ok v) :
-    bs.size ≠ {N} := fun h{N} => h ((p{x}_spec_accepts_iff bs).mpr h{N})
+theorem Decode.reject_complete (bs : Array UInt8) (h : ¬ ∃ v, deserialize desc bs = .ok v) :
+    bs.size ≠ {N} := fun h{N} => h ((SszValue.spec_accepts_iff bs).mpr h{N})
 
-end E2eScal.F24
+end Prysm.{X}
 '''
 
 
 if __name__ == '__main__':
     d = sys.argv[1]
     for X in (sys.argv[2:] or DEC):
-        open(os.path.join(d, 'Prysm', GO_TYPE[X], 'DecodeSpec.lean'), 'w').write(new_names(emit(d, X), X))
+        open(os.path.join(d, 'Prysm', X, 'DecodeSpec.lean'), 'w').write(emit(d, X))
         print(X)

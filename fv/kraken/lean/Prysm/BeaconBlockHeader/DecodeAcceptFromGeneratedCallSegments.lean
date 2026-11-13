@@ -3,10 +3,10 @@ import Prysm.BeaconBlockHeader.DecodeHeadFromCallSegments
 import Prysm.BeaconBlockHeader.GeneratedDecodeCallSegments
 
 /-!
-# BeaconBlockHeader accept path from the GENERATED `p2dec --gen3` theorems (reuse demonstration)
+# BeaconBlockHeader accept path from the GENERATED `decoder --call-segments` theorems (reuse demonstration)
 
 Hand composition (not generator output). `Decode.head_from_generated_call_segments`: the chain of `Prysm/BeaconBlockHeader/DecodeHeadFromCallSegments.lean` with the four
-call-site lemma instances replaced by the generated theorems of `Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean` (`p2dec --gen3`, raw output):
+call-site lemma instances replaced by the generated theorems of `Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean` (`decoder --call-segments`, raw output):
 `bh_g3dec_Slot_arg` / `_call`, `bh_g3dec_ProposerIndex_arg` / `_call`; `Decode.head0` (0–14) and `Decode.spill2`
 (86–87) stay hand steps. `Decode.accept_from_generated_call_segments`: the proof text of `Prysm/BeaconBlockHeader/DecodeAccept.lean` with `Decode.head` replaced
 by `Decode.head_from_generated_call_segments` and the three hand root segments by the generated ones (`bh_g3dec_*_seg`, same statements); the
@@ -135,7 +135,7 @@ theorem Decode.head_from_generated_call_segments_type : ∀ (h : Host),
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Accept path of `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ` from the GENERATED `p2dec --gen3` theorems (all five
+/-- Accept path of `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ` from the GENERATED `decoder --call-segments` theorems (all five
 fields); statement text of `Decode.accept`. -/
 theorem Decode.accept_from_generated_call_segments (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
     (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)

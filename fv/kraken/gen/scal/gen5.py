@@ -1,5 +1,5 @@
-# gen5.py -- `scalgen.py p2dec --gen5`: the whole accept theorem (and the size-reject theorem) of a
-# flat fixed-size decoder, emitted from the GEN4 walk (front end) with the statement kinds of the GEN5 lemma unit's hand-over
+# gen5.py -- `scalgen.py decoder --whole-accept`: the whole accept theorem (and the size-reject theorem) of a
+# flat fixed-size decoder, emitted from the step walk (front end) with the statement kinds of the whole-accept lemmas
 # (`Codec/Kind/DecodeAcceptAnyFrame.lean`: decHeadKindN, decFieldKindN, decEpiKindN, decAcceptKindN; `Codec/DecodeRejectSizeAnyFrame.lean`: decRejectKindN).
 #
 # Untrusted generator: every emitted theorem is checked by Lean; every statement has a `_kind` line; the kind
@@ -7,7 +7,7 @@
 #
 # FAIL-CLOSED: `g5_derive` and the renderers raise `G5Refuse` (or any other exception) on every input they do not
 # model; `p2dec_gen5` in `scalgen.py` returns a text at ONE place only, after all success flags are set.
-# The proof recipes are the ones of the GEN5 lemma unit's hand-over (`Gen5Ex*.lean`).
+# The proof recipes are the ones of the whole-accept lemmas (`Prysm/*/DecodeAcceptExample.lean`).
 import re
 
 REGS16 = 'rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15'.split()
@@ -16,7 +16,7 @@ ADDR = '(by simp only [Int64.toBitVec_ofNat] <;> bv_omega)'
 ADDR0 = '(by simp only [Int64.toBitVec_ofNat]; exact BitVec.add_zero _)'
 RVT = {'rcv': 's.regs.rax.toBitVec', 'bf': 's.regs.rbx.toBitVec', 'zero': '0'}
 PRIM = 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.'
-# callee symbol -> (code constant, binder suffix, proved spec theorem); the four proved callees (interface of the GEN5 lemma unit)
+# callee symbol -> (code constant, binder suffix, proved spec theorem); the four proved callees (interface of the whole-accept lemmas)
 G5_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('Prysm.Slot.Code.unmarshalSSZ', 'S', 'Prysm.Slot.Decode.accept_function_spec_holds'),
               PRIM + 'CommitteeIndex.UnmarshalSSZ': ('Prysm.CommitteeIndex.Code.unmarshalSSZ', 'C', 'Prysm.CommitteeIndex.Decode.accept_function_spec_holds'),
               PRIM + 'ValidatorIndex.UnmarshalSSZ': ('Prysm.ValidatorIndex.Code.unmarshalSSZ', 'V', 'Prysm.ValidatorIndex.Decode.accept_function_spec_holds'),
@@ -24,7 +24,7 @@ G5_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('Prysm.Slot.Code.unmarshalSSZ', 'S', 
 G5_IMPORTS = ['Codec.Kind.DecodeAcceptAnyFrameInstances', 'Codec.FieldFrame', 'Prysm.ValidatorIndex.DecodeAcceptFunctionSpec', 'Prysm.Epoch.DecodeAccept', 'Prysm.Slot.DecodeAccept',
               'Codec.DecoderHeadEpilogue', 'Prysm.BlobIdentifier.DecodeRejectSizeKindInstances']
 G5_OPENS = 'Codec'
-# the statement kinds of the GEN5 lemma unit's hand-over (kindcheck.py pins their modules)
+# the statement kinds of the whole-accept lemmas (kindcheck.py pins their modules)
 G5_KINDS = ('decHeadKindN', 'decFieldKindN', 'decEpiKindN', 'decAcceptKindN', 'decRejectKindN')
 
 
@@ -508,7 +508,7 @@ class T:
     def accept(self):
         name = f'{self.ns}_accept'
         a = self.names()
-        s = self.opts(True) + (f"/-- **Accept path of `{self.go}`, generated proof** (`p2dec --gen5`): head, one theorem per\n"
+        s = self.opts(True) + (f"/-- **Accept path of `{self.go}`, generated proof** (`decoder --whole-accept`): head, one theorem per\n"
                                "field, epilogue, chained by `eventually_trans`. Statement = the kind instance (`_kind`). -/\n")
         s += (f"theorem {name} : {self.binders()}{self.entry_prem()},\n    Eventually (step1 Host.exe)\n"
               f"      (fun st => {self.final()})\n      ⟨s, Host.addrOf k⟩ := by\n")
@@ -521,7 +521,7 @@ class T:
         s += self.kind(name, 'decAcceptKindN', '')
         if self.same_as_prop:
             s += (f"/-- Statement check: the generated theorem proves the independently written hand statement `{self.same_as_prop}`. -/\n"
-                  f"theorem {name}_stmt : {self.same_as_prop} := {name}\n\n")
+                  f"theorem {name}_statement : {self.same_as_prop} := {name}\n\n")
         if self.same_as:
             s += (f"/-- Statement check: the declared type is the type of the independently written hand theorem `{self.same_as}`. -/\n"
                   f"theorem {name}_same : ∀ (h : Host), type_of% (@{name} h) = type_of% (@{self.same_as} h) := by\n  intro h; rfl\n\n")
@@ -567,7 +567,7 @@ class T:
         return s
 
     def body(self):
-        """All GEN5 theorems, in dependency order (head, fields, epilogue, accept, reject)."""
+        """All whole-accept theorems, in dependency order (head, fields, epilogue, accept, reject)."""
         self.kinds_emitted = []
         s = self.head()
         for i in range(len(self.fields)):
@@ -598,7 +598,7 @@ def g5_head_spec(dirs, head_end, F, st):
             refuse(f"gen5 head: directive {i} `{dirs[i]}` is not /{rx}/ (decpro_seg window, nop at 8)")
         ms.append(m)
     if _hx(ms[4].group(1)) != F:
-        refuse("gen5 head: frame size differs from the GEN4 head")
+        refuse("gen5 head: frame size differs from the step head")
     dB = _hx(ms[5].group(1))
     if dB != F + 24:
         refuse(f"gen5 head: rbx spill at {dB:#x}, decpro_seg needs F + 24 = {F + 24:#x}")
@@ -622,7 +622,7 @@ def g5_head_spec(dirs, head_end, F, st):
         nil = i
         i += 1
     if i != head_end:
-        refuse(f"gen5 head: directive {i} `{dirs[i]}` between the spills and the end of the GEN4 head ({head_end})")
+        refuse(f"gen5 head: directive {i} `{dirs[i]}` between the spills and the end of the step head ({head_end})")
     if len({r for r, _ in spills}) != len(spills):
         refuse("gen5 head: a register is spilled twice")
     return dict(F=F, dB=dB, spills=spills, nil=nil, jne=ms[8].group(1))
@@ -648,12 +648,12 @@ def g5_reject_spec(dirs, head, label_index):
 
 
 def g5_derive(dirs, fields, head_end, F, done, end, args, label_index):
-    """Build the description `T` of the accept proof from the GEN4 walk. `fields` are the IR fields
-    (name, SSZ offset, Go offset, class, info); `done` the GEN4 units per field (complete, IR order); `end` the
+    """Build the description `T` of the accept proof from the step walk. `fields` are the IR fields
+    (name, SSZ offset, Go offset, class, info); `done` the step units per field (complete, IR order); `end` the
     directive after the last field event. Raises G5Refuse on everything outside the recipes."""
     n = len(fields)
     if [x for x, _ in done] != list(range(n)) or n == 0:
-        refuse("gen5: the GEN4 walk did not complete every IR field in order")
+        refuse("gen5: the step walk did not complete every IR field in order")
     # ---- fields: kinds, sizes, offsets (Go offsets = the running sum of the kind)
     st = fields[0][2] == 8
     if fields[0][2] not in (0, 8):
@@ -953,7 +953,7 @@ def fl_done_ok(us, cls):
 
 
 def g5_epi_spec(dirs, i, F, has_rt, has_call):
-    """The three epilogue forms of the hand-over (contiguous, no nop): `add $F,%rsp; pop %rbp; retq` (rax = rbx = 0
+    """The three epilogue forms of the hand-written lemmas (contiguous, no nop): `add $F,%rsp; pop %rbp; retq` (rax = rbx = 0
     from the boundary facts), `mov d1(%rsp),%rax; mov d2(%rsp),%rbx` + that (two zero slots), and frame 0x20
     `xor %eax,%eax; xor %ebx,%ebx` + that (`decepi_seg`). Anything else: refuse."""
     ret = [f"add ${F:#x},%rsp", "pop %rbp", "retq"]
@@ -972,7 +972,7 @@ def g5_epi_spec(dirs, i, F, has_rt, has_call):
 
 
 def g5_step(u, regs, stk, frame, pfx, fl, cur, fields):
-    """Render one GEN4 step theorem as an application in entry terms and update the register model."""
+    """Render one step step theorem as an application in entry terms and update the register model."""
     k = u['kind']
     nm = f"{pfx}_s{u['jd']}"
     rterm = {('RCV',): lambda o: off('s.regs.rax.toBitVec', o), ('BF',): lambda o: off('s.regs.rbx.toBitVec', o)}

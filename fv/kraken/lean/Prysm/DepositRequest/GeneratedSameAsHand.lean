@@ -17,7 +17,7 @@ import Prysm.ValidatorIdentity.GeneratedSameAsHand
 with the independent hand statements of `Prysm/DepositRequest/Statements.lean`
 
 `Prysm/DepositRequest/Statements.lean` was committed before this session opened the generated modules imported here. Each line type-checks
-only if the type of the generated theorem (`p2dec --gen5` / `p2enc --gen6`, raw output of the one-shot runs on the 24 flat types) is
+only if the type of the generated theorem (`decoder --whole-accept` / `encoder --fast-path`, raw output of the one-shot runs on the 24 flat types) is
 definitionally the hand statement. Neither side is edited for this check. `maxHeartbeats 4000000` = the value of the
 model identity files (`Prysm/PowBlock/GeneratedEncodeFastPathSameAsHand.lean`).
 After the split of this module, the declarations of the other types are in `Prysm/BeaconBlocksByRangeRequest/GeneratedSameAsHand.lean`, `Prysm/BuilderPreferences/GeneratedSameAsHand.lean`, `Prysm/PartialDataColumnGroupID/GeneratedSameAsHand.lean`, `Prysm/ValidatorIdentity/GeneratedSameAsHand.lean`.

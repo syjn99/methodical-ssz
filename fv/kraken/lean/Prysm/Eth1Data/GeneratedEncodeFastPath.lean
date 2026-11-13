@@ -3,7 +3,7 @@ import Codec.EncodeFrameTest
 import Prysm.Eth1Data.Code
 
 /-!
-# GEN6 (`p2enc --gen6`, unit E2-G): encoder fast path of `(*v1alpha1.Eth1Data).MarshalSSZTo`
+# Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.Eth1Data).MarshalSSZTo`
 
 Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a
 step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem
@@ -12,7 +12,7 @@ has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKind
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
 The statement is the declared type of the committed hand theorem `Prysm.Eth1Data.Encode.fast_path`.
-GEN6-JSON: {"type": "Eth1Data", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 72, "frame": 128, "gd": 8, "rt": true, "fields": [["DepositRoot", "b", 32], ["DepositCount", "u", 8], ["BlockHash", "b", 32]], "boundaries": [9, 37, 56, 81], "layout": "Prysm.Eth1Data.encodeLayout", "S_sha256": "911a0ea1fb983c58c9be8ea72f94afdcd9bb25d9555956f7ca02f1777136b6c1", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.Eth1Data.Encode.fast_path", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Eth1Data", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
+FAST-PATH-JSON: {"type": "Eth1Data", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 72, "frame": 128, "gd": 8, "rt": true, "fields": [["DepositRoot", "b", 32], ["DepositCount", "u", 8], ["BlockHash", "b", 32]], "boundaries": [9, 37, 56, 81], "layout": "Prysm.Eth1Data.encodeLayout", "S_sha256": "911a0ea1fb983c58c9be8ea72f94afdcd9bb25d9555956f7ca02f1777136b6c1", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.Eth1Data.Encode.fast_path", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Eth1Data", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
 -/
 
 open Machine Runtime Codec Prysm.Eth1Data.Code
@@ -703,7 +703,7 @@ theorem Encode.generated_epi_kind : ∀ (h : Host), type_of% (@Encode.generated_
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **Encoder fast path of `(*v1alpha1.Eth1Data).MarshalSSZTo` (Go 1.26.10), generated** (`p2enc --gen6`):
+/-- **Encoder fast path of `(*v1alpha1.Eth1Data).MarshalSSZTo` (Go 1.26.10), generated** (`encoder --fast-path`):
 head, one theorem per field, epilogue, chained by `eventually_trans`. Premises: `len + 72 ≤ cap`,
 every byte-vector field of its exact length. Statement = the kind instance (`_kind`). Fast path only. -/
 theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
@@ -796,7 +796,7 @@ theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated
   intro h; rfl
 
 /-- Statement check: the generated theorem proves the committed hand statement. -/
-theorem Encode.generated_stmt : type_of% (@Prysm.Eth1Data.Encode.fast_path ‹Host›) :=
+theorem Encode.generated_statement : type_of% (@Prysm.Eth1Data.Encode.fast_path ‹Host›) :=
   Encode.generated_fast
 
 end Prysm.Eth1Data

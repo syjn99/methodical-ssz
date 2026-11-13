@@ -9,7 +9,7 @@ import Prysm.Checkpoint.Code
 /-!
 # Example instances of the window and step mechanisms on the development sites: the `BeaconBlockHeader` part
 
-It holds the steps and the call block of `BeaconBlockHeader.ProposerIndex` (`p2dec --gen3` reload set-up form with pad). The declarations of the other types of this group are in `Prysm/SyncCommitteeMessage/DecodeStepExamples.lean`.
+It holds the steps and the call block of `BeaconBlockHeader.ProposerIndex` (`decoder --call-segments` reload set-up form with pad). The declarations of the other types of this group are in `Prysm/SyncCommitteeMessage/DecodeStepExamples.lean`.
 -/
 
 open Machine Runtime Prysm.Checkpoint.Code

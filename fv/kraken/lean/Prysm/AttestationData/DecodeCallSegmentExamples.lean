@@ -6,7 +6,7 @@ import Prysm.AttestationData.Code
 import Prysm.Checkpoint.Code
 
 /-!
-# Hand-written example instances of the `p2dec --gen3` lemmas on the development sites: the `AttestationData` part
+# Hand-written example instances of the `decoder --call-segments` lemmas on the development sites: the `AttestationData` part
 
 It holds the argument set-ups and call blocks of `AttestationData.Slot` and `AttestationData.CommitteeIndex`. The declarations of the other types of this group are in `Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean`.
 -/

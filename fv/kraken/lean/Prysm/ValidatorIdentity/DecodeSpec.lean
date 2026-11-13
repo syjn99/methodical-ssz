@@ -2,14 +2,14 @@ import Prysm.ValidatorIdentity.GeneratedDecodeAccept
 import Prysm.ValidatorIdentity.Spec
 
 /-!
-# Spec alignment of the real `v1alpha1.ValidatorIdentity` decoder (FLAT24 / H7)
+# Spec alignment of the real `v1alpha1.ValidatorIdentity` decoder (24 flat hold-out types)
 
-Built on the GENERATED theorems of `Prysm/ValidatorIdentity/GeneratedDecodeAccept.lean` (`p2dec --gen5`, one-shot run of FLAT24 Part 1; raw output, not
+Built on the GENERATED theorems of `Prysm/ValidatorIdentity/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `part1.sh`; raw output, not
 edited):
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
   The statement is the generated accept statement (kind instance) with the input chunks replaced by the
-  encoding of `g` (text written by the FLAT24 evidence script `f24speck.py` from the generated statement; then checked
+  encoding of `g` (text written by the evidence script `f24speck.py` from the generated statement; then checked
   by Lean against `Prysm.ValidatorIdentity.Decode.generated_accept`).
 - `Decode.reject_size_spec`: `bs.size ≠ 64` → EthLib rejects, and the machine code returns `ssz.ErrSize`
   (generated `Decode.generated_reject`).

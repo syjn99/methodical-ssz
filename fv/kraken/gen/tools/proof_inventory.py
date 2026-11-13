@@ -77,14 +77,14 @@ V1A = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
 PRIM = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
 V1E = "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
 
-# The development population: the 16 flat fixed-size types with which the generated-decoder work (`scalgen.py p2dec
-# --gen5`) started (decoders; AttestationData has nested fields and is listed apart).
+# The development population: the 16 flat fixed-size types with which the generated-decoder work (`scalgen.py decoder
+# --whole-accept`) started (decoders; AttestationData has nested fields and is listed apart).
 DEVELOPMENT_TYPES = ["Checkpoint", "BeaconBlockHeader", "Eth1Data", "BlobIdentifier", "DepositMessage", "Deposit_Data",
           "PendingPartialWithdrawal", "SyncCommitteeMessage", "PendingConsolidation", "PendingDeposit", "PowBlock",
           "HistoricalSummary", "SigningData", "SyncAggregatorSelectionData", "ValidatorBalance", "VoluntaryExit"]
 NESTED = ["AttestationData"]
 # Why the generators refused a flat type outside DEVELOPMENT_TYPES (wording only, no state rule). Source: the single
-# generator runs on the flat types outside the development population (`p2dec --gen5`, `p2enc --gen6`), the class read
+# generator runs on the flat types outside the development population (`decoder --whole-accept`, `encoder --fast-path`), the class read
 # at the directive of the `.S` where the run stopped; the per-type run record is in git history only. A type or method
 # missing here was generated (exit 0) by that run. The class is a field kind or a callee the generators do not support.
 GENERATOR_REFUSED = {
@@ -778,7 +778,7 @@ def run(decls_p, gate_p, md_p, json_p):
     refused_ = {k: v for k, v in fs_.items() if flat_ns_state.get(k) == "not started"}
     if refused_:   # why the single generator run refused each not-started flat type (wording only)
         md.append(f"- Flat types outside the development population without a mapping row: {len(refused_)}; "
-                  "why the single generator run (`p2dec --gen5` / `p2enc --gen6`) refused it, a field kind or callee "
+                  "why the single generator run (`decoder --whole-accept` / `encoder --fast-path`) refused it, a field kind or callee "
                   "the generators do not support:")
         for k, v in refused_.items():
             md.append(f"  - {k}: decoder refused ({v.get('decoder_refused_by_generator', 'no record of the run')}); encoder "

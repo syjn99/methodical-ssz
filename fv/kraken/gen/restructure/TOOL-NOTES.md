@@ -193,7 +193,7 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   The tool removes it from that file, and then the generator does not reproduce that file.
   `gen5.py` (`G5_OPENS`) and `f24wit.py` were changed, because every output lost `E2e`.
   `e2cemit.py` was changed in the flat-types step.
-- A generator writes its `--prefix` into a comment (the `GEN6-JSON` line), and an evidence tool writes old names into
+- A generator writes its `--prefix` into a comment (the `FAST-PATH-JSON` line), and an evidence tool writes old names into
   comments. The tool does not rewrite such text: give `manual-edits.tsv` rows, made by rule from a trial tree.
 - The tool rewrites a declaring line only in a moved module. A map that renames a declaration of a module that
   does not move gives `manual-edits.tsv` rows for its declaring lines (the clean-up map does so).

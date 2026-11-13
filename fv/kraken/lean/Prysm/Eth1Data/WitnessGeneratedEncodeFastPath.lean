@@ -3,7 +3,7 @@ import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of `Encode.generated_fast` (Eth1Data encoder fast path, generated theorem; unit E2-C)
+# Witness of `Encode.generated_fast` (Eth1Data encoder fast path, generated theorem)
 
 Emitted by the unit's evidence tool `e2cemit.py` (not the generator) from the committed statement text and
 the IR; then built and kernel-checked. Host: the real Go 1.26.10 `MarshalSSZTo` (index 0) and `RtCopy` (index 119, `rt_memmove`, S = 0).

@@ -9,7 +9,7 @@ import Prysm.Checkpoint.Code
 /-!
 # Example instances of the window and step mechanisms on the development sites: the `Checkpoint` part
 
-It holds the steps and the call block of `Checkpoint.Epoch` (`p2dec --gen3` first-field set-up form with pad). The declarations of the other types of this group are in `Prysm/SyncCommitteeMessage/DecodeStepExamples.lean`.
+It holds the steps and the call block of `Checkpoint.Epoch` (`decoder --call-segments` first-field set-up form with pad). The declarations of the other types of this group are in `Prysm/SyncCommitteeMessage/DecodeStepExamples.lean`.
 -/
 
 open Machine Runtime Prysm.Checkpoint.Code

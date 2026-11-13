@@ -4,9 +4,14 @@ theorem (post rax), spec_k (hlen + 1), the accept witness (post rax). Per encode
 generated fast-path theorem (post rax), the spec corollary (hcap weakened by 8), the witness (post rax)."""
 import json, os, re, sys
 L = sys.argv[1]   # fv/kraken/lean
-DEC = ['Dpr', 'Bdr', 'Bbr', 'Bsr', 'Epr', 'Pdc', 'Vid']
-GO_TYPE = {'Dpr': 'DepositRequest', 'Bdr': 'BuilderDepositRequest', 'Bbr': 'BeaconBlocksByRangeRequest', 'Bsr': 'BlobSidecarsByRangeRequest', 'Epr': 'ExecutionPayloadEnvelopesByRangeRequest', 'Pdc': 'PartialDataColumnGroupID', 'Vid': 'ValidatorIdentity', 'Bpf': 'BuilderPreferences'}
-ENC = ['Bbr', 'Bdr', 'Bpf', 'Bsr', 'Dpr', 'Epr', 'Pdc', 'Vid']
+DEC = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest',
+       'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
+ENC = ['BeaconBlocksByRangeRequest', 'BuilderDepositRequest', 'BuilderPreferences', 'BlobSidecarsByRangeRequest',
+       'DepositRequest', 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
+# the key of each type in the negative case ids (`f24-<key>-...`): the results of the negative run name these ids
+CASE_KEY = {'DepositRequest': 'dpr', 'BuilderDepositRequest': 'bdr', 'BeaconBlocksByRangeRequest': 'bbr',
+            'BlobSidecarsByRangeRequest': 'bsr', 'ExecutionPayloadEnvelopesByRangeRequest': 'epr',
+            'PartialDataColumnGroupID': 'pdc', 'ValidatorIdentity': 'vid', 'BuilderPreferences': 'bpf'}
 
 
 def stmt_of(path, thm):
@@ -32,8 +37,8 @@ def case(cid, mod, thm, old=None, new=None):
 
 
 C = []
-for X in DEC:
-    x, T = X.lower(), GO_TYPE[X]
+for T in DEC:
+    x = CASE_KEY[T]
     N = int(re.search(r'\(hlen : s\.regs\.rcx = (\d+)\)', stmt_of(f'Prysm/{T}/GeneratedDecodeAccept.lean', f'Prysm.{T}.Decode.generated_accept')).group(1))
     C.append(case(f'f24-{x}-speck-control', f'Prysm/{T}/DecodeSpec.lean', f'Prysm.{T}.Decode.accept_spec'))
     C.append(case(f'f24-{x}-accept-rax', f'Prysm/{T}/GeneratedDecodeAccept.lean', f'Prysm.{T}.Decode.generated_accept',
@@ -44,8 +49,8 @@ for X in DEC:
                   '(hlen : s.regs.rcx.toNat = bsA.size)', '(hlen : s.regs.rcx.toNat = bsA.size + 1)'))
     C.append(case(f'f24-{x}-wita-rax', f'Prysm/{T}/WitnessGeneratedDecodeAccept.lean', f'Prysm.{T}.Witness.GeneratedDecodeAccept.runs',
                   'st.data.regs.rax = 0 ∧', 'st.data.regs.rax = 1 ∧'))
-for X in ENC:
-    x, T = X.lower(), GO_TYPE[X]
+for T in ENC:
+    x = CASE_KEY[T]
     sp = stmt_of(f'Prysm/{T}/GeneratedEncodeFastPathSpec.lean', f'Prysm.{T}.Encode.generated_fast_spec')
     n = int(re.search(r'\(hcap : s\.regs\.rcx\.toNat \+ (\d+) ≤ s\.regs\.rdi\.toNat\)', sp).group(1))
     wt = stmt_of(f'Prysm/{T}/WitnessGeneratedEncodeFastPath.lean', f'Prysm.{T}.Witness.GeneratedEncodeFastPath.runs_empty')

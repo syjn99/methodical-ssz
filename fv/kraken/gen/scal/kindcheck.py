@@ -6,7 +6,7 @@ kind it names: a degenerate right-hand side (for example `type_of% (@t h)` itsel
 This program is run by the evaluator on every generated file. It does not change the generator.
 
 usage: kindcheck.py <generated.lean>...      exit 0 = every file passes, 1 = a file fails, 2 = usage
-       kindcheck.py --partial <partial.lean>  a `p2dec --gen2 --partial-out` file: exit 3 = the
+       kindcheck.py --partial <partial.lean>  a `decoder --field-segments --partial-out` file: exit 3 = the
                                              kinds of the theorems that are present pass, printed together with
                                              `PARTIAL n/m fields: kinds of present theorems checked; NOT a
                                              full-coverage result`; 1 = the file fails; 2 = usage. Never 0.
@@ -14,7 +14,7 @@ usage: kindcheck.py <generated.lean>...      exit 0 = every file passes, 1 = a f
 
 Checks, per file (text only):
  0. The file is not a partial generator output: no line contains `PARTIAL OUTPUT` (the header that
-    `scalgen.py p2dec --partial-out` writes on exit 3). Checked on the raw text,
+    `scalgen.py decoder --partial-out` writes on exit 3). Checked on the raw text,
     comments included.
  1. (Removed: git-blob pins of the kind and lemma modules. They were the method freeze of an experiment that ended.)
  2. Top-level lines are only: import, open, variable, namespace, end, set_option … in, theorem, doc or
@@ -29,14 +29,14 @@ Checks, per file (text only):
         (offset-0 kind of the generator extension, `lean/Codec/Kind/Bytes32DecodeOffsetZero.lean`)
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.bytesDecSegKind h n C n1 … n9 := by
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.bytesDecSegZKind h n C n1 … n8 := by
-        (GEN2 size-parametric kinds, n = 32, 48 or 96)
+        (field-segment size-parametric kinds, n = 32, 48 or 96)
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.u64DecInlineSegKind h C n1 … n4 := by
-        (GEN2 inline uint64 kind)
+        (field-segment inline uint64 kind)
     with C the code constant of `t`'s `hk : C.IsInfixAt Host.prog k` binder and n1..n9 natural literals,
     and the next line is exactly `  intro h; with_reducible rfl`.
  5. Every `_kind` theorem belongs to a theorem of the file; every `_same` theorem has the form
     `theorem t_same : @X = @t := rfl` for a kinded `t` of the file.
- 6. GEN2 composed accept theorems (`scalgen.py p2dec --gen2 --compose`): instead of `t_kind`, a theorem `t`
+ 6. field-segment composed accept theorems (`scalgen.py decoder --field-segments --compose`): instead of `t_kind`, a theorem `t`
     may be followed by exactly
         theorem t_type : ∀ (h : Host),
             type_of% (@t h) = type_of% (@X h) := by
@@ -62,7 +62,7 @@ Checks, per file (text only):
     with `n of m fields`, and one line `UNCOVERED-JSON: [...]` (a JSON list of {field, reason}) whose length
     is m - n; the theorems present are checked by rules 1-6 as usual (no composed theorem allowed). The
     default mode rejects every partial file (rule 0, unchanged).
- 8. GEN3 (`scalgen.py p2dec --gen3`): further `_kind` right-hand sides:
+ 8. call-segment (`scalgen.py decoder --call-segments`): further `_kind` right-hand sides:
         @Codec.callDecSegKind h C "fn" "lok" j j2      fn one of the four callee labels with a proved accept
                                                          spec (CALLEES: Slot, CommitteeIndex, ValidatorIndex,
                                                          Epoch of consensus-types/primitives)
@@ -80,12 +80,12 @@ Checks, per file (text only):
     must unfold) under the default heartbeat limit written out (a timeout is a FAIL). An identity `t_type`
     (rule 6) may follow the `t_kind` of a composed theorem. A segment theorem cannot carry `decAcceptKind`.
  9. Hardening: rule 6a is read on the proof text WITHOUT comments; a file
-    with a coverage header `GEN2|GEN3 coverage (…): n of m fields` fails in the default mode when n != m;
+    with a coverage header `field-segment|call segment coverage (…): n of m fields` fails in the default mode when n != m;
     in both modes n must equal the number of fields with theorems present (theorem names
     `<prefix>_<field>_seg|_arg|_arg1|_arg2|_call`; a callee field needs `_call` and `_arg` or `_arg1` + `_arg2`),
     and no field of `UNCOVERED-JSON` may have a theorem.
 
-10. GEN4 (`scalgen.py p2dec --gen4`): further `_kind` right-hand sides:
+10. step (`scalgen.py decoder --steps`): further `_kind` right-hand sides:
         @Codec.stepMovRRKind h C Reg64.rD Reg64.rS j e          @Codec.stepAddKind h C Reg64.rD imm j e
         @Codec.stepLdvKind / stepLdbKind / stepStKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
         @Codec.stepMovIKind h C Reg64.rD imm j e                @Codec.stepJmpKind h C "l" j jl
@@ -96,14 +96,14 @@ Checks, per file (text only):
     (n = 32 | 48 | 96; rY one of rax, rcx, rdx, rsi, rdi; registers `Reg64.<one of the 16>`).
     10b. The proof of `t` (comments and string literals removed) uses the lemma of its kind
          (`kstep_mov_rr`, `kstep_ldv`, …, `calldec_seg_w`, `bytesdec_seg_window`, `bytesdec_seg_z_window`) and no other
-         GEN4 lemma: a theorem whose proof and kind name different lemmas fails.
-    10c. A GEN4 file (header `GEN4 coverage (…): n of m fields`, or any GEN4 kind) carries exactly one line
-         `FIELDS-JSON: [{"field": F, "theorems": [...]}, …]`: every theorem with a GEN4 kind is listed in exactly
+         step lemma: a theorem whose proof and kind name different lemmas fails.
+    10c. A step file (header `step coverage (…): n of m fields`, or any step kind) carries exactly one line
+         `FIELDS-JSON: [{"field": F, "theorems": [...]}, …]`: every theorem with a step kind is listed in exactly
          one field, every listed theorem is in the file, a field has at most one block theorem (`<p>_F_call` with
          `callDecSegKindWindow`, or `<p>_F_seg` with a byte kind), n = the number of listed fields; in `--partial` mode
          no field of `UNCOVERED-JSON` is listed (its entries may carry a `miss_class`).
-11. A file in which a non-composed theorem has a GEN2 / GEN3 / GEN4 kind must
-    carry the coverage header (`GEN2|GEN3|GEN4 coverage (…): n of m fields`); rule 6a also ignores string literals.
+11. A file in which a non-composed theorem has a field-segment / call-segment / step kind must
+    carry the coverage header (`field segment|call segment|step coverage (…): n of m fields`); rule 6a also ignores string literals.
     Exemption: the hand example modules listed in HAND_EXAMPLES (exact paths
     `lean/Prysm/<T>/DecodeFieldSegmentExamples.lean` for T = DepositMessage, BlobIdentifier, Eth1Data and
     `lean/Prysm/<T>/DecodeCallSegmentExamples.lean` for T = PendingPartialWithdrawal, BeaconBlockHeader, AttestationData,
@@ -113,27 +113,27 @@ Checks, per file (text only):
     hand field compositions of SyncCommitteeMessage and PendingConsolidation fail rule 4;
     no recorded command runs `kindcheck.py` on them.
     6d. A composed accept theorem with only the kind `decAcceptKind` (no
-    identity `_type` with an independent hand statement) FAILS; `scalgen.py --gen3 --compose` without `--same-as*`
+    identity `_type` with an independent hand statement) FAILS; `scalgen.py --call-segments --compose` without `--same-as*`
     now also marks it `UNCHECKED STATEMENT` (rule 6c).
-12. GEN5 (`scalgen.py p2dec --gen5`): a GEN5 file is checked in two parts. The text before the GEN5
-    block (`/-! GEN5 (`p2dec --gen5`…`) by rules 1-11 as a GEN4 file; the GEN5 part by rule 12 (12a removed: it was
+12. whole-accept (`scalgen.py decoder --whole-accept`): a whole-accept file is checked in two parts. The text before the whole-accept
+    block (`/-! Whole accept (`decoder --whole-accept`…`) by rules 1-11 as a step file; the whole-accept part by rule 12 (12a removed: it was
     a git-blob pin; 12b the exact theorem list with the kinds decHeadKindN / decFieldKindN / decEpiKindN /
     decAcceptKindN / decRejectKindN; 12c the kind parameters `L`, `fields`, boundary `pc` / `done` and the reject size
     RECOMPUTED from the `.S` and the IR named in the header (sha256 checked); 12d the accept proof chains every
     theorem; 12e the identity with a hand statement, if any, names no generated theorem). See the section `Rule 12`.
-    A file with a GEN5 kind and no GEN5 block fails (rule 12: 0 GEN5 blocks). `--partial` never accepts a GEN5 file.
-13. GEN6 (`scalgen.py p2enc --gen6`, encoder fast path): a file with `GEN6-JSON:` or an encoder kind
+    A file with a whole-accept kind and no whole-accept block fails (rule 12: 0 whole-accept blocks). `--partial` never accepts a whole-accept file.
+13. fast-path (`scalgen.py encoder --fast-path`, encoder fast path): a file with `FAST-PATH-JSON:` or an encoder kind
     (encHeadKindN / encFieldKindN / encEpiKindN / encFastKindN) is checked by rule 13 only: 13a removed (a git-blob pin); 13b
     structure (one layout def or a pinned hand layout; the exact theorem list, each with its kind; the code constant);
     13c every kind line equals, as whole text, the line rendered from an OWN recomputation (this file's interpreter,
-    not the generator) of the fields, the layout and every boundary state from the `.S` and the IR named in GEN6-JSON
+    not the generator) of the fields, the layout and every boundary state from the `.S` and the IR named in FAST-PATH-JSON
     (sha256 checked), and C is bound to that `.S` by `include_x64_rt` in an imported code module; 13d the fast-path
-    proof chains every theorem once; 13e the identity `_stmt` names no generated theorem (implication lemma only from
-    GEN6_VIA). See the section `rule 13`. `--partial` never accepts a GEN6 file.
-    The hand example modules `Gen5Ex*.lean` of the lemma unit are not generator output; they fail rule 12 (no GEN5
+    proof chains every theorem once; 13e the identity `_statement` names no generated theorem (implication lemma only from
+    GEN6_VIA). See the section `rule 13`. `--partial` never accepts a fast-path file.
+    The hand example modules `Prysm/*/DecodeAcceptExample.lean` of the lemmas are not generator output; they fail rule 12 (no whole-accept
     block) and no recorded command runs `kindcheck.py` on them.
 
-Limits (not checked here): GEN4 label strings in `stepLabelKind`, `stepJmpKind` and `callDecSegKindWindow` (`lok`) are
+Limits (not checked here): step label strings in `stepLabelKind`, `stepJmpKind` and `callDecSegKindWindow` (`lok`) are
 phantom kind parameters (they do not occur in the kind body; `stepLabelKind C l j e` is
 `stepNopsKind C j e` by `rfl`), so a label name in a kind line is NOT checked by this program or by the `_kind`
 line; the label is checked only by the proof's code fact (`he`, `hl`). Also not checked: that the kind parameters (C, indices, displacements, offsets) are the right
@@ -150,7 +150,7 @@ import tempfile
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
 PRYSM = KR / "lean" / "Prysm"   # rule 6b: the type directories with the generated and example modules
-# Rule 11 exemption: hand-written example modules of the lemma units. They have GEN2+
+# Rule 11 exemption: hand-written example modules of the generator modes. They have generator
 # kinds but are not generator output, so they have no coverage header. Only these exact paths (relative to
 # fv/kraken) skip rule 11; every other rule applies to them unchanged.
 # The modules `Prysm/<T>/DecodeStepExamples.lean` are not listed: they also fail rule 10c (no FIELDS-JSON line), and two of
@@ -165,9 +165,9 @@ DECL = re.compile(r"^(?:private |protected |noncomputable )*(?:theorem|lemma|def
 COMPOSED = ("(Codec.dechead_seg ", "(Codec.decepi_seg ")  # rule 6a
 UNCHECKED = "UNCHECKED STATEMENT"  # rule 6c
 
-# GEN2 kinds (`lean/Codec/Kind/FixedBytesDecode.lean`, `lean/Codec/Kind/InlineUint64.lean`)
+# field-segment kinds (`lean/Codec/Kind/FixedBytesDecode.lean`, `lean/Codec/Kind/InlineUint64.lean`)
 GEN2_KINDS = ("bytesDecSegKind", "bytesDecSegZKind", "u64DecInlineSegKind")
-# GEN3 kinds (`lean/Codec/Kind/CalleeDecode.lean`, `lean/Codec/Kind/DecodeAcceptComposition.lean`)
+# call-segment kinds (`lean/Codec/Kind/CalleeDecode.lean`, `lean/Codec/Kind/DecodeAcceptComposition.lean`)
 GEN3_KINDS = ("callDecSegKind", "callArgFirstKind", "callArgReloadKind", "callArgLeaKind", "callArgMovKind",
               "u64DecRRSegKind", "decAcceptKind")
 CALLEES = tuple(f'"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"'
@@ -201,11 +201,11 @@ BOOL = r"(?:true|false)"
 LBL = r'"[^"\\\s]+"'
 RRREG = r"Reg64\.(?:rcx|rdx|rsi|rdi|r8|r9|r10|r11|r12|r13|r15)"
 DECF = r"\.(?:bytes (?:32|48|96)|u64)"
-COVER = re.compile(r"GEN([234]) coverage \(`p2dec --gen[234]`\): (\d+) of (\d+) fields")
+COVER = re.compile(r"(field segment|call segment|step) coverage \(`decoder --(?:field-segments|call-segments|steps)`\): (\d+) of (\d+) fields")
 STEM = re.compile(r"^(.*)_(seg|arg|arg1|arg2|call)$")
 SIZE = r"(?:32|48|96)"  # the sizes of the hypothesis `hn` of bytesdec_seg / bytesdec_seg_z
 
-PARTIAL = "PARTIAL OUTPUT"  # header of scalgen.py p2dec --partial-out (exit 3)
+PARTIAL = "PARTIAL OUTPUT"  # header of scalgen.py decoder --partial-out (exit 3)
 TOP_OK = re.compile(r"^(import |open |variable |namespace |end\b|set_option \S+ \S+ in$|theorem |/-|--|$|\s)")
 BANNED = re.compile(r"\b(sorry|admit|native_decide|bv_decide|axiom)\b")
 THM = re.compile(r"^theorem (\S+)")
@@ -290,8 +290,8 @@ def field_stems(mains):
 
 
 def check_text(text, gnames=None, partial=False, rule11=True):
-    g4kind = {}      # theorem -> GEN4 kind name (rule 10)
-    newkind = set()  # theorems with a GEN2 / GEN3 / GEN4 kind (rule 11)
+    g4kind = {}      # theorem -> step kind name (rule 10)
+    newkind = set()  # theorems with a field-segment / call-segment / step kind (rule 11)
     gnames = gen_names() if gnames is None else gnames
     errs = []
     lines = text.split("\n")
@@ -378,7 +378,7 @@ def check_text(text, gnames=None, partial=False, rule11=True):
         acc = rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = " \
               rf"@Codec\.decAcceptKind h {C} {BOOL} \[{DECF}(?:, {DECF})*\] {NAT} := by"
         if re.fullmatch(acc, lines[j]):
-            # GEN3 composed-statement kind (rule 8): composed theorems only, default heartbeats written out
+            # call-segment composed-statement kind (rule 8): composed theorems only, default heartbeats written out
             composed.add(t)
             if not is_composed(t, j):
                 errs.append(f"{t}_kind: decAcceptKind on a theorem that is not a composed accept theorem")
@@ -408,11 +408,11 @@ def check_text(text, gnames=None, partial=False, rule11=True):
             elif kn == "callDecSegKindWindow" and g4m.group(3).split(" ")[1] not in CALLEES:
                 errs.append(f"{t}_kind: callee {g4m.group(3).split(' ')[1]} has no proved accept spec (allowed: Slot, "
                             f"CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives)")
-            # rule 10b: the proof uses the lemma of the kind and no other GEN4 lemma
+            # rule 10b: the proof uses the lemma of the kind and no other step lemma
             proof = strip_strings(strip_comments("\n".join(lines[i:j]).split(":= by", 1)[-1]))
             used = {x for x, xns in G4_LEMMAS.items() if re.search(rf"\b{xns}\.{x}\b", proof)}
             if used != {lem}:
-                errs.append(f"{t}: proof uses {sorted(used) or 'no GEN4 lemma'}, its kind {kn} is the statement of {lem}")
+                errs.append(f"{t}: proof uses {sorted(used) or 'no step lemma'}, its kind {kn} is the statement of {lem}")
             if j + 1 >= len(lines) or lines[j + 1] != "  intro h; with_reducible rfl":
                 errs.append(f"{t}_kind: proof line is not `  intro h; with_reducible rfl`")
             continue
@@ -440,16 +440,16 @@ def check_text(text, gnames=None, partial=False, rule11=True):
     cov = [COVER.search(l) for l in lines]
     cov = [c for c in cov if c]
     fjs = [l for l in lines if l.startswith("FIELDS-JSON: ")]
-    gen4 = bool(g4kind) or bool(fjs) or any(c.group(1) == "4" for c in cov)
+    gen4 = bool(g4kind) or bool(fjs) or any(c.group(1) == "step" for c in cov)
     if newkind and not cov and rule11:
-        # rule 11: a generated file with GEN2+ kinds keeps its coverage header
-        errs.append("no coverage header `GEN2|GEN3|GEN4 coverage (…): n of m fields` in a file with GEN2 / GEN3 / GEN4 "
+        # rule 11: a generated file with field-segment+ kinds keeps its coverage header
+        errs.append("no coverage header `field segment|call segment|step coverage (…): n of m fields` in a file with field-segment / call-segment / step "
                     "kinds (a dropped header hides dropped fields)")
     if gen4:
         import json
         stems = {}
         if len(fjs) != 1:
-            errs.append(f"GEN4 file: {len(fjs)} `FIELDS-JSON:` lines (expected 1)")
+            errs.append(f"step file: {len(fjs)} `FIELDS-JSON:` lines (expected 1)")
             fl = []
         else:
             try:
@@ -457,29 +457,29 @@ def check_text(text, gnames=None, partial=False, rule11=True):
                 assert isinstance(fl, list) and all(isinstance(f, dict) and set(f) == {"field", "theorems"}
                                                     and isinstance(f["theorems"], list) for f in fl)
             except (ValueError, AssertionError):
-                errs.append("GEN4 file: FIELDS-JSON is not a list of {field, theorems}")
+                errs.append("step file: FIELDS-JSON is not a list of {field, theorems}")
                 fl = []
         listed = [x for f in fl for x in f["theorems"]]
         if len(set(listed)) != len(listed):
-            errs.append("GEN4 file: a theorem is listed in two fields of FIELDS-JSON")
+            errs.append("step file: a theorem is listed in two fields of FIELDS-JSON")
         for x in listed:
             if x not in mains:
-                errs.append(f"GEN4 file: FIELDS-JSON lists {x}, not a theorem of the file")
+                errs.append(f"step file: FIELDS-JSON lists {x}, not a theorem of the file")
         for x in mains:
             if x not in composed and x not in listed:
-                errs.append(f"GEN4 file: theorem {x} is in no field of FIELDS-JSON")
+                errs.append(f"step file: theorem {x} is in no field of FIELDS-JSON")
         if any(x not in g4kind for x in listed if x in mains):
-            errs.append("GEN4 file: a listed theorem has no GEN4 kind")
+            errs.append("step file: a listed theorem has no step kind")
         for f in fl:
             blocks = [x for x in f["theorems"] if g4kind.get(x) in G4_BLOCK]
             if len(blocks) > 1:
-                errs.append(f"GEN4 field {f['field']}: {len(blocks)} block theorems (at most 1)")
+                errs.append(f"step field {f['field']}: {len(blocks)} block theorems (at most 1)")
             for x in blocks:
                 if not x.endswith(f"_{f['field']}_{G4_BLOCK[g4kind[x]]}"):
-                    errs.append(f"GEN4 field {f['field']}: block theorem {x} is not `<prefix>_{f['field']}_"
+                    errs.append(f"step field {f['field']}: block theorem {x} is not `<prefix>_{f['field']}_"
                                 f"{G4_BLOCK[g4kind[x]]}`")
             if not f["theorems"]:
-                errs.append(f"GEN4 field {f['field']}: no theorem")
+                errs.append(f"step field {f['field']}: no theorem")
             stems[f["field"]] = {"g4"}
     else:
         stems = field_stems([t for t in mains if t not in composed])
@@ -534,26 +534,26 @@ def main(files, partial=False):
     for f in files:
         text = pathlib.Path(f).read_text().replace("\ntheorem _root_.", "\ntheorem ")
         hand = pathlib.Path(f).resolve() in {(KR / x).resolve() for x in HAND_EXAMPLES}
-        g5 = G5_MARK in text or "GEN5-JSON" in text or any(f"@Codec.{k} " in text for k in (
+        g5 = G5_MARK in text or "WHOLE-ACCEPT-JSON" in text or any(f"@Codec.{k} " in text for k in (
             "decHeadKindN", "decFieldKindN", "decEpiKindN", "decAcceptKindN", "decRejectKindN"))
-        g6 = "GEN6-JSON" in text or any(f"@Codec.{k} " in text for k in GEN6_KINDS)
+        g6 = "FAST-PATH-JSON" in text or any(f"@Codec.{k} " in text for k in GEN6_KINDS)
         if g6 and not partial:
-            # rule 13: a GEN6 file is checked by rule 13 only; a GEN5 / older kind in it fails 13c
+            # rule 13: a fast-path file is checked by rule 13 only; a whole-accept / older kind in it fails 13c
             errs, info6 = check_gen6(text, gn)
             if g5:
-                errs.append("rule 13: a GEN6 file with a GEN5 kind or block")
+                errs.append("rule 13: a fast-path file with a whole-accept kind or block")
             mains = [info6]
         elif g6:
-            errs, mains = ["GEN6 output in --partial mode (a GEN6 file is never partial)"], []
+            errs, mains = ["fast-path output in --partial mode (a fast-path file is never partial)"], []
         elif g5 and not partial:
-            # rule 12: the GEN4 part by rules 1-11, the GEN5 part by rule 12
+            # rule 12: the step part by rules 1-11, the whole-accept part by rule 12
             part4 = text.split(G5_MARK, 1)[0] if text.count(G5_MARK) == 1 else text
             errs, mains = check_text(part4, gn, partial, rule11=not hand)
             e5, info5 = check_gen5(text, gn)
             errs = errs + e5
             mains = mains + [info5]
         elif g5:
-            errs, mains = ["GEN5 output in --partial mode (a GEN5 file is never partial)"], []
+            errs, mains = ["whole-accept output in --partial mode (a whole-accept file is never partial)"], []
         else:
             errs, mains = check_text(text, gn, partial, rule11=not hand)
         print(("PASS" if not errs else "FAIL"), f, "theorems:", ",".join(mains))
@@ -651,7 +651,7 @@ def selftest():
     n_exit, bad_exit = s4_exit_cases()
     bad += bad_exit
     # the rule 11 exemption removes only the coverage-header error
-    nh = GOOD2.replace("GEN2 coverage (`p2dec --gen2`): 3 of 3 fields", "generated")
+    nh = GOOD2.replace("field segment coverage (`decoder --field-segments`): 3 of 3 fields", "generated")
     e_on, _ = check_text(nh, GNAMES, False)
     e_off, _ = check_text(nh, GNAMES, False, rule11=False)
     e_sorry, _ = check_text(nh.replace("with_reducible exact", "sorry --", 1), GNAMES, False, rule11=False)
@@ -670,13 +670,13 @@ def selftest():
     return 1 if bad else 0
 
 
-# GEN2 controls: one generated-shape block per new kind (headers as `scalgen.py p2dec --gen2` writes them)
+# field-segment controls: one generated-shape block per new kind (headers as `scalgen.py decoder --field-segments` writes them)
 GOOD2 = """import Codec.FixedBytesDecode
 import Codec.Kind.FieldPatterns
 import Codec.Kind.FixedBytesDecode
 import Codec.Kind.InlineUint64
 
-/-! Generated by `gen/scal/scalgen.py p2dec`; GEN2 coverage (`p2dec --gen2`): 3 of 3 fields. -/
+/-! Generated by `gen/scal/scalgen.py decoder`; field segment coverage (`decoder --field-segments`): 3 of 3 fields. -/
 
 open Machine Runtime Prysm.BlobIdentifier.Code
 variable [Host]
@@ -715,7 +715,7 @@ end Prysm.Fixture
 COMP = """import Codec.DecoderHeadEpilogue
 import Codec.Kind.FieldPatterns
 
-/-! Generated by `gen/scal/scalgen.py p2dec`; composed accept theorem; statement check: identity. -/
+/-! Generated by `gen/scal/scalgen.py decoder`; composed accept theorem; statement check: identity. -/
 
 open Machine Runtime Prysm.BlobIdentifier.Code
 variable [Host]
@@ -764,7 +764,7 @@ def gen2_cases():
         ("g2_u64_other_const", GOOD2.replace(uc, uc.replace("Prysm.DepositMessage.Code.unmarshalSSZ", "Prysm.BlobIdentifier.Code.unmarshalSSZ")), False, False),
         ("g2_add_as_z_kind", GOOD2.replace(ab, ab.replace("bytesDecSegKind", "bytesDecSegZKind")), False, False),
         ("g2_partial_output", GOOD2.replace("/-! Generated", "/-! PARTIAL OUTPUT (scalgen exit 3): 2 of 3 fields "
-                                            "of `v1alpha1.DepositMessage` (--gen2); NOT generated: Amount. -/\n/-! Generated"), False, False),
+                                            "of `v1alpha1.DepositMessage` (--field-segments); NOT generated: Amount. -/\n/-! Generated"), False, False),
         ("g2_proof_not_rfl", GOOD2.replace(uc + "\n  intro h; with_reducible rfl", uc + "\n  intro h; rfl"), False, False),
         ("g2c_good_identity", COMP, True, False),
         ("g2c_no_identity", COMP.split("\n/-- Statement check")[0] + "\nend Prysm.Fixture\n", False, False),
@@ -794,8 +794,8 @@ def g2f_cases():
     gen_rhs = COMP.replace(rhs, "type_of% (@Prysm.BlobIdentifier.Decode.accept_generated_composition h)")  # reviewer case (ii)
     prop = COMP.replace(rhs, "@Prysm.DepositMessage.Decode.hand_statement h")
     unc = json_line([("Slot", "delegated overlay field"), ("ProposerIndex", "delegated overlay field")])
-    PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--gen2); NOT "
-          "generated: Slot, ProposerIndex. Not a complete p2dec output.\n" + unc + "\n-/\n")
+    PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--field-segments); NOT "
+          "generated: Slot, ProposerIndex. Not a complete decoder output.\n" + unc + "\n-/\n")
     part = GOOD2.replace("\n/-! Generated", "\n" + PH + "/-! Generated").replace(" 3 of 3 fields", " 3 of 5 fields")
     assert part.count(PARTIAL) == 1
     return [
@@ -823,7 +823,7 @@ def g2f_cases():
     ]
 
 
-# GEN3 controls: generated-shape blocks with the kind lines as `scalgen.py p2dec --gen3` writes them
+# call-segment controls: generated-shape blocks with the kind lines as `scalgen.py decoder --call-segments` writes them
 FN_VI = '"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ"'
 FN_EP = '"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ"'
 G3K = {
@@ -849,11 +849,11 @@ def g3_block(t, kind):
 
 
 GOOD3 = ("import Codec.Kind.CalleeDecode\nimport Codec.FixedBytesDecodePadding\nimport Codec.Kind.FieldPatterns\nimport Codec.Kind.FixedBytesDecode\n\n"
-         "/-! Generated by `gen/scal/scalgen.py p2dec`; GEN3 coverage (`p2dec --gen3`): 5 of 5 fields. -/\n\n"
+         "/-! Generated by `gen/scal/scalgen.py decoder`; call segment coverage (`decoder --call-segments`): 5 of 5 fields. -/\n\n"
          "open Machine Runtime Prysm.Deposit_Data.Code\nvariable [Host]\n\nopen Codec\nnamespace Prysm.Fixture\n\n"
          + "".join(g3_block(t, k) for t, k in G3K.items()) + "end Prysm.Fixture\n")
 
-COMP3 = COMP.replace("composed accept theorem; statement check: identity", "composed accept theorem (`p2dec --gen3 --compose`)").replace(
+COMP3 = COMP.replace("composed accept theorem; statement check: identity", "composed accept theorem (`decoder --call-segments --compose`)").replace(
     "\n/-- Statement check: the declared type is that of the hand theorem",
     "\n-- Statement check: kind.\nset_option maxHeartbeats 200000 in\n"
     "theorem d_kind : ∀ (h : Host), type_of% (@d h) = @Codec.decAcceptKind h Prysm.DepositMessage.Code.unmarshalSSZ false [.bytes 48, .bytes 32, .u64] 68 := by\n"
@@ -861,7 +861,7 @@ COMP3 = COMP.replace("composed accept theorem; statement check: identity", "comp
 
 
 def g3_cases():
-    """Controls of rule 8 (GEN3 kinds, callee list, decAcceptKind) and rule 9."""
+    """Controls of rule 8 (call-segment kinds, callee list, decAcceptKind) and rule 9."""
 
     def kchg(t, new):
         old = f"type_of% (@{t} h) = {G3K[t]} := by"
@@ -885,8 +885,8 @@ def g3_cases():
     k04b = k04.replace("  -- (Codec.dechead_seg x) (Codec.decepi_seg y)\n", "  /- (Codec.dechead_seg x) (Codec.decepi_seg y) -/\n")
     # k22-k24 (partial / coverage counts)
     unc = json_line([("Slot", "delegated overlay field"), ("ProposerIndex", "delegated overlay field")])
-    PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--gen2); NOT "
-          "generated: Slot, ProposerIndex. Not a complete p2dec output.\n" + unc + "\n-/\n")
+    PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--field-segments); NOT "
+          "generated: Slot, ProposerIndex. Not a complete decoder output.\n" + unc + "\n-/\n")
     part = GOOD2.replace("\n/-! Generated", "\n" + PH + "/-! Generated").replace(" 3 of 3 fields", " 3 of 5 fields")
     k22 = part.split("set_option maxHeartbeats 4000000")[0] + "end Prysm.Fixture\n"
     k24 = GOOD2.replace(" 3 of 3 fields", " 3 of 5 fields")
@@ -930,7 +930,7 @@ def g3_cases():
         ("s2_n26b_string_literal", k04.replace("  -- (Codec.dechead_seg x) (Codec.decepi_seg y)\n",
                                                '  have s := "(Codec.dechead_seg x) (Codec.decepi_seg y)"\n')
          .replace(" 3 of 3 fields", " 2 of 2 fields"), False, False),
-        # rule 6d with the generator's new marker (`--gen3 --compose` without `--same-as*`)
+        # rule 6d with the generator's new marker (`--call-segments --compose` without `--same-as*`)
         ("g3c_kind_only_marked", comp_only.replace("(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k)\n",
                                                    "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) -- UNCHECKED STATEMENT\n"), False, False),
         ("s2_k22_theorem_removed_partial", k22, False, True),
@@ -944,7 +944,7 @@ def g3_cases():
     ]
 
 
-# GEN4 controls: kind lines and proof lemma as `scalgen.py p2dec --gen4` writes them
+# step controls: kind lines and proof lemma as `scalgen.py decoder --steps` writes them
 G4K = {
     "Prysm.PendingPartialWithdrawal.Decode.generated_step_s50": ("@Codec.stepLdbKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rbx 8 50 51", "kstep_ldb Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
     "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51": ("@Codec.stepStKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rax 16 51 52", "kstep_st Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
@@ -980,8 +980,8 @@ def g4_text(fields=G4F, kinds=G4K, n=None, m=None, fj=None):
     m = n if m is None else m
     fj = json.dumps([dict(field=f, theorems=ts) for f, ts in fields]) if fj is None else fj
     return ("import Codec.Kind.WindowSteps\nimport Codec.Kind.FixedBytesDecodeWindow\nimport Codec.CalleeDecodeWindow\nimport Codec.FixedBytesDecodeWindowOffsetZero\n\n"
-            f"/-! Generated by `gen/scal/scalgen.py p2dec`; GEN4 coverage (`p2dec --gen4`): {n} of {m} fields. -/\n\n"
-            f"/-! GEN4 fields (machine-readable, read by `kindcheck.py`):\nFIELDS-JSON: {fj}\n-/\n\n"
+            f"/-! Generated by `gen/scal/scalgen.py decoder`; step coverage (`decoder --steps`): {n} of {m} fields. -/\n\n"
+            f"/-! Step chain fields (machine-readable, read by `kindcheck.py`):\nFIELDS-JSON: {fj}\n-/\n\n"
             "open Machine Runtime Prysm.Deposit_Data.Code\nvariable [Host]\n\nopen Codec\nnamespace Prysm.Fixture\n\n"
             + "".join(g4_block(t, *kinds[t]) for _, ts in fields for t in ts) + "end Prysm.Fixture\n")
 
@@ -1003,8 +1003,8 @@ def g4_cases():
         return GOOD4.replace(old, new)
     unc = json_line([("Tail", "x")])[:-1] + "]"
     unc = 'UNCOVERED-JSON: [{"field": "Tail", "reason": "walk stopped", "miss_class": "register"}]'
-    PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 4 of 5 fields of `v1alpha1.X` (--gen4); NOT generated: Tail. "
-          "Not a complete p2dec output.\n" + unc + "\n-/\n")
+    PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 4 of 5 fields of `v1alpha1.X` (--steps); NOT generated: Tail. "
+          "Not a complete decoder output.\n" + unc + "\n-/\n")
     part = g4_text(m=5).replace("\n\n/-! Generated", "\n\n" + PH + "/-! Generated", 1)
     assert part.count(PARTIAL) == 1
     st = G4K["Prysm.PendingPartialWithdrawal.Decode.generated_step_s51"][0]
@@ -1041,8 +1041,8 @@ def g4_cases():
         ("g4_block_name_other_field", g4_text(fields=[("Amount", G4F[0][1]), ("Idx", G4F[1][1]), G4F[2], G4F[3]]), False, False),
         ("g4_count_edited_dropped_field", g4_text(fields=G4F[:3], n=4), False, False),
         ("g4_n_ne_m_default", g4_text(m=5), False, False),
-        ("s2_n29_header_removed_field_dropped", g4_text(fields=G4F[:3]).replace("GEN4 coverage (`p2dec --gen4`): 3 of 3 fields", "generated"), False, False),
-        ("s2_n29_gen2_header_removed", GOOD2.replace("GEN2 coverage (`p2dec --gen2`): 3 of 3 fields", "generated"), False, False),
+        ("s2_n29_header_removed_field_dropped", g4_text(fields=G4F[:3]).replace("step coverage (`decoder --steps`): 3 of 3 fields", "generated"), False, False),
+        ("s2_n29_gen2_header_removed", GOOD2.replace("field segment coverage (`decoder --field-segments`): 3 of 3 fields", "generated"), False, False),
         ("g4_partial_good", part, True, True),
         ("g4_partial_default_rejects", part, False, False),
         ("g4_partial_uncovered_listed", part.replace('"Tail"', '"Sig"').replace("NOT generated: Tail", "NOT generated: Sig"), False, True),
@@ -1054,8 +1054,8 @@ def s4_exit_cases():
     """main() exit codes on a temporary partial file (pins read from the tree)."""
     import contextlib, io, os
     unc = json_line([("Slot", "delegated overlay field"), ("ProposerIndex", "delegated overlay field")])
-    PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--gen2); NOT "
-          "generated: Slot, ProposerIndex. Not a complete p2dec output.\n" + unc + "\n-/\n")
+    PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--field-segments); NOT "
+          "generated: Slot, ProposerIndex. Not a complete decoder output.\n" + unc + "\n-/\n")
     part = GOOD2.replace("\n/-! Generated", "\n" + PH + "/-! Generated").replace(" 3 of 3 fields", " 3 of 5 fields")
     badp = part.replace(" 83 56 80 48 := by", " 83 56 80 := by")
     out = []
@@ -1073,11 +1073,11 @@ def s4_exit_cases():
 
 
 # ------------------------------------------------------------------------------------------------------------------
-# Rule 12 (`scalgen.py p2dec --gen5`). A GEN5 file is a GEN4 file (checked by rules 1-11 up to the GEN5
-# block) followed by one block `/-! GEN5 (`p2dec --gen5` … GEN5-JSON: {…} -/` and the GEN5 theorems:
+# Rule 12 (`scalgen.py decoder --whole-accept`). A whole-accept file is a step file (checked by rules 1-11 up to the whole-accept
+# block) followed by one block `/-! Whole accept (`decoder --whole-accept` … WHOLE-ACCEPT-JSON: {…} -/` and the whole-accept theorems:
 #  12a. (removed: a git-blob pin of the kind and lemma modules);
-#  12b. the GEN5 theorems are exactly, in this order: P_head, P_f1 … P_fn, P_epi, P_accept, [P_accept_stmt |
-#       P_accept_same], P_reject (P = the GEN5-JSON prefix, n = the IR field count), each but the identity followed by
+#  12b. the whole-accept theorems are exactly, in this order: P_head, P_f1 … P_fn, P_epi, P_accept, [P_accept_statement |
+#       P_accept_same], P_reject (P = the WHOLE-ACCEPT-JSON prefix, n = the IR field count), each but the identity followed by
 #       its `_kind` theorem `theorem T_kind : ∀ (h : Host), type_of% (@T h)` / `    = @Codec.K h C …` with
 #       K = decHeadKindN / decFieldKindN / decEpiKindN / decAcceptKindN / decRejectKindN and the proof line
 #       `  intro h; rfl` (`  intro h; with_reducible rfl` for the reject kind); every `hk` binder names C;
@@ -1085,19 +1085,19 @@ def s4_exit_cases():
 #       named (with sha256) in the file header: the field list (`.bytes n` / `.u64`, IR order, IR SSZ / Go offsets
 #       equal to the kind's running sums), the layout `L` (callees in order of first `callq`, stack chunks, lengths,
 #       runtime configuration, guard addend, state word, post-state slots and existentials, frame) by the rules of the
-#       GEN5 lemma unit's hand-over, the `pc` and `done` of every boundary state (head end, the end of each field event along the
+#       hand-written whole-accept lemmas, the `pc` and `done` of every boundary state (head end, the end of each field event along the
 #       accept path), and the reject size; a file whose kind parameters differ FAILS. This is the statement check of
 #       a generated accept theorem when no hand statement exists;
 #  12d. the accept proof chains P_head, every P_f<i> and P_epi;
-#  12e. an identity `P_accept_stmt : X := P_accept` or `P_accept_same : … type_of% (@P_accept h) = type_of% (@X h)`
+#  12e. an identity `P_accept_statement : X := P_accept` or `P_accept_same : … type_of% (@P_accept h) = type_of% (@X h)`
 #       names a hand statement X (not generated, rule 6b); without it the PASS line says "kind instance only".
 # Not checked here: the register facts, stack slots and existentials of the boundary states (the kernel checks that
 # they chain); that the file builds; that X is independent of the generator (a human confirms it).
-G5_MARK = "/-! GEN5 (`p2dec --gen5`"
+G5_MARK = "/-! Whole accept (`decoder --whole-accept`"
 G5_PRIM = "github.com_OffchainLabs_prysm_v7_consensus_types_primitives."
 G5_CONST = {"Slot": "Prysm.Slot.Code.unmarshalSSZ", "CommitteeIndex": "Prysm.CommitteeIndex.Code.unmarshalSSZ",
             "ValidatorIndex": "Prysm.ValidatorIndex.Code.unmarshalSSZ", "Epoch": "Prysm.Epoch.Code.unmarshalSSZ"}
-G5_HDR = re.compile(r"Generated by `gen/scal/scalgen\.py p2dec` from `([^`]+)`\n\(sha256 `([0-9a-f]{64})`\) and `([^`]+)` "
+G5_HDR = re.compile(r"Generated by `gen/scal/scalgen\.py decoder` from `([^`]+)`\n\(sha256 `([0-9a-f]{64})`\) and `([^`]+)` "
                     r"\(sha256 `([0-9a-f]{64})`, type `([^`]+)`\)")
 
 
@@ -1128,7 +1128,7 @@ def g5_ir(ir_text, tname):
                 and (v.get("underlying") or {}).get("k") == "uint" and (v.get("underlying") or {}).get("bits") == 64:
             kd, cal = ".u64", v["name"]
         else:
-            raise G5Mismatch(f"field {f['key']}: IR kind {v.get('k')} ({v.get('go_type')}) is not a GEN5 field kind")
+            raise G5Mismatch(f"field {f['key']}: IR kind {v.get('k')} ({v.get('go_type')}) is not a whole-accept field kind")
         out.append((f["key"], kd, cal, so, goff.get(f["key"])))
         so += v["fixed_size"]
     if t["ir"].get("fixed_size") != so:
@@ -1137,7 +1137,7 @@ def g5_ir(ir_text, tname):
 
 
 def g5_expect(dirs, fields, sz):
-    """Independent recomputation of the GEN5 kind parameters from the directives (`.S`, nonblank lines stripped)
+    """Independent recomputation of the whole-accept kind parameters from the directives (`.S`, nonblank lines stripped)
     and the IR fields. Returns dict(L=text, fields=text, pcs=[pc_0 … pc_n], sz)."""
     lab = lambda d: d[:-1] if d.endswith(":") and " " not in d else None
     idx = {lab(d): i for i, d in enumerate(dirs) if lab(d)}
@@ -1260,7 +1260,7 @@ def g5_expect(dirs, fields, sz):
         raise G5Mismatch(f"field events not in IR order: {pcs}")
     if last_call is None:
         raise G5Mismatch("no call on the accept path")
-    # the layout by the rules of the GEN5 lemma unit's hand-over
+    # the layout by the rules of the whole-accept lemmas
     stack = [("at", -8)] + [("at", o) for o in sorted(spills)]
     area = [0] if has_rt and not has_call else ([0, 8, 16] if has_rt else [8])
     stack += [("at", -frame + a) for a in area] + [("at", -frame + o) for o in sorted(written)]
@@ -1315,23 +1315,23 @@ def g5_balanced(s, open_, close):
 
 
 def check_gen5(text, gnames=frozenset(), kr=None, expect=None):
-    """Rule 12 on the GEN5 part of `text`. `expect` (for the selftest) replaces the recomputation from the files."""
+    """Rule 12 on the whole-accept part of `text`. `expect` (for the selftest) replaces the recomputation from the files."""
     import hashlib
     import json
     kr = KR if kr is None else kr
     errs, info = [], ""
     if text.count(G5_MARK) != 1:
-        return errs + [f"rule 12: {text.count(G5_MARK)} GEN5 blocks (expected 1)"], info
+        return errs + [f"rule 12: {text.count(G5_MARK)} whole-accept blocks (expected 1)"], info
     head, g5 = text.split(G5_MARK, 1)
     lines = (G5_MARK + g5).split("\n")
-    gj = [l for l in lines if l.startswith("GEN5-JSON: ")]
+    gj = [l for l in lines if l.startswith("WHOLE-ACCEPT-JSON: ")]
     try:
         assert len(gj) == 1
-        J = json.loads(gj[0][len("GEN5-JSON: "):])
+        J = json.loads(gj[0][len("WHOLE-ACCEPT-JSON: "):])
         P = J["accept"][:-len("_accept")]
         assert J["accept"] == P + "_accept" and P
     except Exception:
-        return errs + ["rule 12: no single valid `GEN5-JSON:` line with the accept theorem name"], info
+        return errs + ["rule 12: no single valid `WHOLE-ACCEPT-JSON:` line with the accept theorem name"], info
     # the inputs named in the header; the kind parameters recomputed from them
     if expect is None:
         hm = G5_HDR.search(head)
@@ -1350,28 +1350,28 @@ def check_gen5(text, gnames=frozenset(), kr=None, expect=None):
         except (G5Mismatch, KeyError, IndexError, ValueError) as e:
             return errs + [f"rule 12c: recomputation refused: {type(e).__name__}: {e}"], info
     n = len(expect["pcs"]) - 1
-    # rules 2 / 3 on the GEN5 part
+    # rules 2 / 3 on the whole-accept part
     in_block = 0
     for i, l in enumerate(lines, 1):
         if in_block or l.lstrip().startswith("/-"):
             in_block += l.count("/-") - l.count("-/")
             continue
         if BANNED.search(l.split("--", 1)[0]):
-            errs.append(f"GEN5 line {i}: banned token: {l.strip()}")
+            errs.append(f"whole-accept line {i}: banned token: {l.strip()}")
         if not TOP_OK.match(l):
-            errs.append(f"GEN5 line {i}: top-level form not allowed: {l.strip()[:80]}")
+            errs.append(f"whole-accept line {i}: top-level form not allowed: {l.strip()[:80]}")
     thms = [(i, m.group(1)) for i, l in enumerate(lines) if (m := THM.match(l))]
     names = [t for _, t in thms]
     kinds = [(f"{P}_head", "decHeadKindN", 1), *[(f"{P}_f{k + 1}", "decFieldKindN", 2) for k in range(n)],
              (f"{P}_epi", "decEpiKindN", 1), (f"{P}_accept", "decAcceptKindN", 0), (f"{P}_reject", "decRejectKindN", None)]
-    ident = [x for x in names if x in (f"{P}_accept_stmt", f"{P}_accept_same")]
+    ident = [x for x in names if x in (f"{P}_accept_statement", f"{P}_accept_same")]
     want = []
     for t, _, _ in kinds:
         want += [t, t + "_kind"]
         if t == f"{P}_accept":
             want += ident[:1]
     if names != want or len(ident) > 1:
-        return errs + [f"rule 12b: GEN5 theorems {names}, expected {want}"], info
+        return errs + [f"rule 12b: whole-accept theorems {names}, expected {want}"], info
     pos = {t: i for i, t in thms}
     C = None
     for t, kn, nd in kinds:
@@ -1425,8 +1425,8 @@ def check_gen5(text, gnames=frozenset(), kr=None, expect=None):
     # 12e: the statement identity
     if ident:
         l = lines[pos[ident[0]]]
-        if ident[0].endswith("_stmt"):
-            m = re.fullmatch(rf"theorem {P}_accept_stmt : (Prysm(?:\.\w+)+) := {P}_accept", l)
+        if ident[0].endswith("_statement"):
+            m = re.fullmatch(rf"theorem {P}_accept_statement : (Prysm(?:\.\w+)+) := {P}_accept", l)
         else:
             m = re.fullmatch(rf"theorem {P}_accept_same : ∀ \(h : Host\), type_of% \(@{P}_accept h\) = "
                              rf"type_of% \(@(Prysm(?:\.\w+)+) h\) := by", l)
@@ -1446,7 +1446,7 @@ def check_gen5(text, gnames=frozenset(), kr=None, expect=None):
 # ---- rule 12 selftest controls
 G5_VE = ("prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
          "v1alpha1.VoluntaryExit")
-# the layouts of the GEN5 lemma unit's hand-over (`Codec/Kind/DecodeAcceptAnyFrameInstances.lean`: layCal, layMix40, layRt, layMix60), transcribed by hand as
+# the layouts of the whole-accept lemmas (`Codec/Kind/DecodeAcceptAnyFrameInstances.lean`: layCal, layMix40, layRt, layMix60), transcribed by hand as
 # constructor text; the recomputation from the real `.S` / IR must give exactly these
 G5_HAND = {
     "VoluntaryExit": ("h6", "(Codec.DecLayout.mk [Prysm.Epoch.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 7 [(0, 8), (1, 8), (2, 8), "
@@ -1483,7 +1483,7 @@ def g5_inputs(tname, sdir):
 
 
 def g5_good_text():
-    """A GEN5 file for VoluntaryExit in the generator's layout (theorem bodies abbreviated), with the kind
+    """A whole-accept file for VoluntaryExit in the generator's layout (theorem bodies abbreviated), with the kind
     parameters from the recomputation; header with the real input paths and sha256."""
     import hashlib
     sp, sraw, iraw = g5_inputs("VoluntaryExit", "h6")
@@ -1499,10 +1499,10 @@ def g5_good_text():
         return (f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h)\n    = @Codec.{k} h {C} {L} {F}"
                 + "".join(f"\n    ⟨{E['pcs'][d]}, {d}, [], [], []⟩" for d in ds) + f" := by\n{proof}\n\n")
     n = len(E["pcs"]) - 1
-    out = (f"import Prysm.PendingDeposit.Code\n\n/-! Generated by `gen/scal/scalgen.py p2dec` from `{sp}`\n(sha256 "
+    out = (f"import Prysm.PendingDeposit.Code\n\n/-! Generated by `gen/scal/scalgen.py decoder` from `{sp}`\n(sha256 "
            f"`{hashlib.sha256(sraw).hexdigest()}`) and `prysm/ir/ir-mainnet.json` (sha256 `{hashlib.sha256(iraw).hexdigest()}`"
-           f", type `v1alpha1.VoluntaryExit`); GEN4 coverage. -/\n\nnamespace Prysm.Fixture\nend Prysm.Fixture\n\n"
-           f"{G5_MARK}, unit G5-G): text.\nGEN5-JSON: {{\"accept\": \"{P}_accept\"}}\n-/\n\nopen Codec\n\n"
+           f", type `v1alpha1.VoluntaryExit`); step coverage. -/\n\nnamespace Prysm.Fixture\nend Prysm.Fixture\n\n"
+           f"{G5_MARK}): text.\nWHOLE-ACCEPT-JSON: {{\"accept\": \"{P}_accept\"}}\n-/\n\nopen Codec\n\n"
            f"namespace Prysm.Fixture\n\n")
     out += thm(f"{P}_head", "  exact x") + kd(f"{P}_head", "decHeadKindN", [0])
     for i in range(n):
@@ -1522,7 +1522,7 @@ def g5_cases():
     G = g5_good_text()
     P = "Decode.generated"
     stmt = G.replace(f"intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem {P}_reject ",
-                     f"intro h; rfl\n\ntheorem {P}_accept_stmt : Prysm.VoluntaryExit.Decode.hand_statement := {P}_accept\n\n"
+                     f"intro h; rfl\n\ntheorem {P}_accept_statement : Prysm.VoluntaryExit.Decode.hand_statement := {P}_accept\n\n"
                      f"set_option maxRecDepth 100000 in\ntheorem {P}_reject ", 1)
     same = G.replace(f"intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem {P}_reject ",
                      f"intro h; rfl\n\ntheorem {P}_accept_same : ∀ (h : Host), type_of% (@{P}_accept h) = type_of% "
@@ -1532,7 +1532,7 @@ def g5_cases():
     acc_k = f"theorem {P}_accept_kind : ∀ (h : Host), type_of% (@{P}_accept h)"
     return [
         ("g5_good", G, True),
-        ("g5_good_stmt", stmt, True),
+        ("g5_good_statement", stmt, True),
         ("g5_good_same", same, True),
         ("g5_accept_kind_missing", G.replace(acc_k, acc_k.replace("_accept_kind", "_accept_kinx")), False),
         ("g5_field_kind_missing", G.replace(f"theorem {P}_f2_kind ", f"theorem {P}_f2_kinx "), False),
@@ -1618,25 +1618,25 @@ def g5_selftest():
     return n, bad
 
 
-# ---------------------------------------------------------------- rule 13: GEN6 (`scalgen.py p2enc --gen6`)
-# A GEN6 file (header `GEN6-JSON:`, or any of the four encoder kinds) is checked by rule 13 ONLY (it has a `def` of its
+# ---------------------------------------------------------------- rule 13: fast-path (`scalgen.py encoder --fast-path`)
+# A fast-path file (header `FAST-PATH-JSON:`, or any of the four encoder kinds) is checked by rule 13 ONLY (it has a `def` of its
 # layout, which rule 2 forbids for the older files):
-#  13a. (Removed: a git-blob pin of the kind and lemma modules of the encoder lemma unit's hand-over.)
+#  13a. (Removed: a git-blob pin of the kind and lemma modules of the encoder lemmas.)
 #  13b. Structure: top-level lines as rule 2 plus exactly one `def <P>_layout : EncLayout where` (none when a hand
 #       layout of GEN6_HAND is named); no banned token (rule 3, comments and strings removed); the theorems are exactly
 #       P_head, P_f0 … P_f(n-1), P_epi, P_fast, each followed by its `_kind` (encHeadKindN / encFieldKindN /
-#       encEpiKindN / encFastKindN), and optionally P_stmt; every theorem's `hk` binder names the same code constant C;
+#       encEpiKindN / encFastKindN), and optionally P_statement; every theorem's `hk` binder names the same code constant C;
 #       `set_option` only `maxHeartbeats 4000000` / `maxRecDepth 100000`; every kind proof is `  intro h; rfl`.
 #  13c. RECOMPUTATION (an own interpreter, it does not import the generator): from the `.S` and the IR named in
-#       GEN6-JSON (sha256 checked) this program recomputes the fields list, the layout (st, frame, gd, rt, nstk, lens,
+#       FAST-PATH-JSON (sha256 checked) this program recomputes the fields list, the layout (st, frame, gd, rt, nstk, lens,
 #       pre, exs, post) and every boundary state (pc, done, live registers, stack slots, existential sizes); every
 #       kind line must equal, as whole normalised text, the line rendered from the recomputation. A hand layout name
 #       (GEN6_HAND, in `Prysm/<Type>/EncodeFastPathKindInstances.lean`) is accepted only if its def equals the recomputation in its own
 #       chunk order. C is bound to the `.S`: an imported code module of the file must define
-#       `def C : Program := include_x64_rt "../<S of GEN6-JSON>"`.
+#       `def C : Program := include_x64_rt "../<S of FAST-PATH-JSON>"`.
 #  13d. P_fast's proof uses P_head, every P_fi and P_epi exactly once.
-#  13e. P_stmt, if present, is `theorem P_stmt : type_of% (@X ‹Host›) :=` + `  [V ]P_fast` with X not generated and V
-#       empty or in GEN6_VIA, or `theorem P_stmt : X :=` + `  P_fast` (hand Prop).
+#  13e. P_statement, if present, is `theorem P_statement : type_of% (@X ‹Host›) :=` + `  [V ]P_fast` with X not generated and V
+#       empty or in GEN6_VIA, or `theorem P_statement : X :=` + `  P_fast` (hand Prop).
 # Limits: the kind fixes the statement only up to what the kind reads (`hcap63` is a fixed premise; an extra
 # chunk in L.pre would be a stronger premise, and the recomputation would reject it); that the code walk is the
 # function's whole fast path is the generator's claim, checked by the proofs, not here.
@@ -2069,16 +2069,16 @@ def check_gen6(text, gnames=frozenset(), kr=None):
     kr = kr or KR
     errs, info = [], "gen6"
     lines = text.split("\n")
-    gj = [l for l in lines if l.startswith("GEN6-JSON: ")]
+    gj = [l for l in lines if l.startswith("FAST-PATH-JSON: ")]
     try:
         if len(gj) != 1:
-            raise ValueError(f"{len(gj)} GEN6-JSON lines")
-        J = _g6json.loads(gj[0][len("GEN6-JSON: "):])
+            raise ValueError(f"{len(gj)} FAST-PATH-JSON lines")
+        J = _g6json.loads(gj[0][len("FAST-PATH-JSON: "):])
         P, C, S, IR, TY, LAY = (J["prefix"], J["const"], J["S"], J["ir"], J["ir_type"], J["layout"])
         if not (re.fullmatch(r"(?:[A-Z][A-Za-z0-9]*\.)?[a-z][a-z0-9_]*", P) and re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", C)):
             raise ValueError("prefix / const")
     except Exception as e:
-        return errs + [f"rule 13: no single valid GEN6-JSON line ({e})"], info
+        return errs + [f"rule 13: no single valid FAST-PATH-JSON line ({e})"], info
     info = f"{P}_fast"
     # 13b structure
     body = strip_strings(strip_comments(text))
@@ -2116,7 +2116,7 @@ def check_gen6(text, gnames=frozenset(), kr=None):
     try:
         tsha = lambda p: _g6hash.sha256((kr / p).read_bytes()).hexdigest()
         if tsha(S) != J["S_sha256"] or tsha(IR) != J["ir_sha256"]:
-            raise G6Mismatch("sha256 of the .S or the IR differs from GEN6-JSON")
+            raise G6Mismatch("sha256 of the .S or the IR differs from FAST-PATH-JSON")
         fs, goffs, size = g6_ir((kr / IR).read_text(), TY)
         n = len(fs)
         hand_pre, handdef = None, None
@@ -2134,8 +2134,8 @@ def check_gen6(text, gnames=frozenset(), kr=None):
         return errs + [f"rule 13c: recomputation refused: {type(e).__name__}: {e}"], info
     want = [f"{P}_head", f"{P}_head_kind"] + [x for i in range(n) for x in (f"{P}_f{i}", f"{P}_f{i}_kind")] + \
         [f"{P}_epi", f"{P}_epi_kind", f"{P}_fast", f"{P}_fast_kind"]
-    if thms not in (want, want + [f"{P}_stmt"]):
-        return errs + [f"rule 13b: theorems {thms}, expected {want} [+ {P}_stmt]"], info
+    if thms not in (want, want + [f"{P}_statement"]):
+        return errs + [f"rule 13b: theorems {thms}, expected {want} [+ {P}_statement]"], info
     # 13c: layout
     fileL = handdef if hand else g6_layout_def(body, f"{P}_layout")
     if fileL is None:
@@ -2191,28 +2191,28 @@ def check_gen6(text, gnames=frozenset(), kr=None):
         if fp.count(t) != 1:
             errs.append(f"rule 13d: the fast-path proof does not use `{t.strip('( ')}` exactly once")
     # 13e: identity
-    if f"{P}_stmt" in chunk:
-        c = chunk[f"{P}_stmt"].rstrip()
+    if f"{P}_statement" in chunk:
+        c = chunk[f"{P}_statement"].rstrip()
         if c.endswith(f"\nend Prysm.{J['type']}"):
             c = c[: -len(f"\nend Prysm.{J['type']}")].rstrip()
-        m = re.fullmatch(rf"theorem {P}_stmt : type_of% \(@(\S+) ‹Host›\) :=\n  (?:(\S+) )?{P}_fast", c) or \
-            re.fullmatch(rf"theorem {P}_stmt : (\S+) :=\n  {P}_fast()", c)
+        m = re.fullmatch(rf"theorem {P}_statement : type_of% \(@(\S+) ‹Host›\) :=\n  (?:(\S+) )?{P}_fast", c) or \
+            re.fullmatch(rf"theorem {P}_statement : (\S+) :=\n  {P}_fast()", c)
         if not m:
-            errs.append(f"rule 13e: {P}_stmt: not the identity form")
+            errs.append(f"rule 13e: {P}_statement: not the identity form")
         else:
             x, via = m.group(1), m.group(2)
             if GENNS.match(x) or x.split(".")[-1] in gnames:
                 errs.append(f"rule 13e: {x} is a generated name")
             if via and via not in GEN6_VIA:
                 errs.append(f"rule 13e: implication lemma {via} not in GEN6_VIA")
-        info += f", identity {P}_stmt"
+        info += f", identity {P}_statement"
     return errs, info
 
 
-# ---- rule 13 selftest controls: mutants of the committed raw GEN6 outputs (a missing file is a FAIL)
+# ---- rule 13 selftest controls: mutants of the committed raw fast-path outputs (a missing file is a FAIL)
 G6_SELFTEST = {"vb": "lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "cp": "lean/Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
                "hs": "lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "bh": "lean/Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean"}
-# the lemma unit's own layouts (`Enc2Ex*.lean`, scratch emitter of the encoder lemma unit): the recomputation must give them too
+# the lemmas's own layouts (`Prysm/*/EncodeFastPathExample.lean`, scratch emitter of the encoder lemmas): the recomputation must give them too
 G6_L_LAYOUTS = {"ValidatorBalance": ("lean/Prysm/ValidatorBalance/EncodeFastPathExample.lean", "Prysm.ValidatorBalance.Encode.example_layout"),
                 "DepositMessage": ("lean/Prysm/DepositMessage/EncodeFastPathExample.lean", "Prysm.DepositMessage.Encode.example_layout"),
                 "HistoricalSummary": ("lean/Prysm/HistoricalSummary/EncodeFastPathExample.lean", "Prysm.HistoricalSummary.Encode.example_layout")}
@@ -2257,7 +2257,7 @@ def g6_cases(T):
         ("g6_extra_theorem", r(V, "\nend Prysm.ValidatorBalance", "\ntheorem extra : True := trivial\n\nend Prysm.ValidatorBalance"),
          False),
         ("g6_json_sha", r(V, sha, ("0" if sha[0] != "0" else "1") + sha[1:]), False),
-        ("g6_json_missing", r(V, "GEN6-JSON: ", "GEN6-JSOX: "), False),
+        ("g6_json_missing", r(V, "FAST-PATH-JSON: ", "fast-path-JSOX: "), False),
         ("g6_layout_named_hand", V.replace("Prysm.ValidatorBalance.Encode.generated_layout", "Prysm.BeaconBlockHeader.encodeLayout"), False),
         ("g6_const_unbound", V.replace("marshalSSZTo", "otherMarshalSSZTo"), False),
         ("g6_stmt_generated", r(Cp, "type_of% (@Prysm.Checkpoint.Encode.fast_path ‹Host›)",
@@ -2272,7 +2272,7 @@ def g6_cases(T):
 
 
 def g6_selftest():
-    """Rule 13 controls + the recomputation against the hand layouts of `Prysm/<Type>/EncodeFastPathKindInstances.lean` and the example layouts of the encoder lemma unit.
+    """Rule 13 controls + the recomputation against the hand layouts of `Prysm/<Type>/EncodeFastPathKindInstances.lean` and the example layouts of the encoder lemmas.
     Returns (n, bad)."""
     bad, n = [], 0
     try:

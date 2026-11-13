@@ -9,7 +9,7 @@ import Prysm.Checkpoint.Code
 /-!
 # Example instances of the window and step mechanisms on the development sites: the `PendingPartialWithdrawal` part
 
-It holds the steps and the call block of `PendingPartialWithdrawal.WithdrawableEpoch` (`p2dec --gen3` `lea` set-up form, interleaved uint64 read). The declarations of the other types of this group are in `Prysm/SyncCommitteeMessage/DecodeStepExamples.lean`.
+It holds the steps and the call block of `PendingPartialWithdrawal.WithdrawableEpoch` (`decoder --call-segments` `lea` set-up form, interleaved uint64 read). The declarations of the other types of this group are in `Prysm/SyncCommitteeMessage/DecodeStepExamples.lean`.
 -/
 
 open Machine Runtime Prysm.Checkpoint.Code

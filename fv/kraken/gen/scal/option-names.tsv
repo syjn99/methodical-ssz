@@ -1,0 +1,20 @@
+# Generator modes and options of gen/scal/scalgen.py: earlier name (in run records, the frozen generator of
+# gen/scal/p2dec_test.py and old headers) and present name. Labels of the earlier generated headers follow.
+# earlier	present	meaning
+p1	uint64	mode: accept path of a uint64 primitive decoder
+p2dec	decoder	mode: container decoder (without an option: 32-byte field segments)
+p2enc	encoder	mode: container encoder
+--gen2	--field-segments	decoder option: byte vectors of 32, 48 and 96 bytes and inline uint64 fields
+--gen3	--call-segments	decoder option: also the fields that a callee decodes (implies --field-segments)
+--gen4	--steps	decoder option: the step chain over windows (a padding nop anywhere)
+--gen5	--whole-accept	decoder option: the step chain plus the whole accept and size-reject theorems
+--gen6	--fast-path	encoder option: the encoder fast path theorem
+GEN2 coverage	field segment coverage	header line that kindcheck.py reads
+GEN3 coverage	call segment coverage	header line that kindcheck.py reads
+GEN4 coverage	step coverage	header line that kindcheck.py reads
+GEN4 fields	Step chain fields	header of the FIELDS-JSON block
+GEN5 (`p2dec --gen5`, unit G5-G)	Whole accept (`decoder --whole-accept`)	header of the whole-accept block (kindcheck.py marker)
+GEN5-JSON	WHOLE-ACCEPT-JSON	machine-readable line of the whole-accept block
+GEN6 (`p2enc --gen6`, unit E2-G)	Fast path (`encoder --fast-path`)	module heading of a fast-path file
+GEN6-JSON	FAST-PATH-JSON	machine-readable line of a fast-path file
+G5-L kinds	whole-accept kinds	the kinds of Codec/Kind/DecodeAcceptAnyFrame.lean

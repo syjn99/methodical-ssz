@@ -180,7 +180,7 @@ theorem _root_.Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call_k
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `TargetIndex` (callee decoder field, Go offset 16, SSZ offset 8): the WHOLE call field 48–85, composed from the
-step theorems of its set-up and the call-block theorem (worked example of the `p2dec --gen4` emission recipe). The entry
+step theorems of its set-up and the call-block theorem (worked example of the `decoder --steps` emission recipe). The entry
 conditions of the call block (rax = `rcv + 16`, rbx = `bf + 8`, rcx = 8) are closed by `rfl` on the state
 that the steps computed. -/
 theorem _root_.Prysm.PendingConsolidation.Decode.example_step_TargetIndex_field (k : Nat) (hk : Prysm.PendingConsolidation.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingConsolidation.Code.unmarshalSSZ k) :

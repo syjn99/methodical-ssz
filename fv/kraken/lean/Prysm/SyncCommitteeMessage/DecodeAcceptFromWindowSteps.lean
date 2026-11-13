@@ -14,7 +14,7 @@ import Prysm.SyncCommitteeMessage.Statements
   `rY = rax`, then the tail as four steps) instead of the hand lemma `bytes32dec_seg_rax` and hand steps;
 * ValidatorIndex 82–117: `Decode.example_step_ValidatorIndex_field` (six step theorems and the call-block window)
   instead of the hand lemma `Decode.validator_index_arg` and a hand-applied `calldec_seg`;
-* Signature 120–145: `Decode.example_step_Signature_seg` (window; the padding `nop` before `callq runtime.makeslice` is inside it) instead of the `p2dec --gen3`
+* Signature 120–145: `Decode.example_step_Signature_seg` (window; the padding `nop` before `callq runtime.makeslice` is inside it) instead of the `decoder --call-segments`
   `pad` instance.
 Unchanged: `Decode.head0` and `Decode.spill2` (hand, `Prysm/SyncCommitteeMessage/DecodeSegments.lean`), the generated Slot theorems (`Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean`),
 the hand steps 146–160. `Prysm/SyncCommitteeMessage/DecodeSegments.lean` is imported for `Decode.head0` / `Decode.spill2` only; `Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` checks by

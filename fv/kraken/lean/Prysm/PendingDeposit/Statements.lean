@@ -18,7 +18,7 @@ Sources: the Go receiver layout (IR `go_fields` in `prysm/ir/ir-mainnet.json`), 
 (`prysm/go1.26.10/link-set/norm`), and the statement shape of the earlier hand accept theorems
 `Prysm.SyncCommitteeMessage.Decode.accept_statement` (fresh byte slices and a callee field) and `Prysm.Deposit_Data.Decode.accept_statement` (fresh byte
 slices in a `0x20` frame). These abbrevs are the targets of the hand proofs. They are not generator output.
-`--gen4 --compose` refuses, so no identity check runs against them.
+`--steps --compose` refuses, so no identity check runs against them.
 
 ## `Decode.accept_statement` — `(*v1alpha1.PendingDeposit).UnmarshalSSZ`
 

@@ -9,7 +9,7 @@ import Prysm.BeaconBlockHeader.Code
 import Prysm.PendingDeposit.Code
 
 /-!
-# Independent hand STATEMENTS of three `p2dec --gen5` accept theorems (statements only, no proof): the `ValidatorBalance` part
+# Independent hand STATEMENTS of three `decoder --whole-accept` accept theorems (statements only, no proof): the `ValidatorBalance` part
 
 The declarations of the other types of this group are in `Prysm/SyncAggregatorSelectionData/Statements.lean`.
 -/

@@ -10,7 +10,7 @@ import Prysm.Checkpoint.DecodeCallSegmentExamples
 import Prysm.Deposit_Data.DecodeCallSegmentExamples
 
 /-!
-# Hand-written example instances of the `p2dec --gen3` lemmas on the development sites
+# Hand-written example instances of the `decoder --call-segments` lemmas on the development sites
 
 One theorem and one `_kind` line per lemma per site, in the shape a generated theorem is to have (the idiom
 of `Prysm/DepositMessage/DecodeFieldSegmentExamples.lean`). Examples for the generator; not generator output (the text was produced by a

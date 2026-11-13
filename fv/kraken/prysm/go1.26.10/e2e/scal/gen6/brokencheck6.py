@@ -9,7 +9,7 @@ BROKEN = {
     "13a-pins-ignored": ('        if blobs.get(m) != b:\n            errs.append(f"rule 13a', '        if False:\n            errs.append(f"rule 13a'),
     "13b-banned-ignored": ('    if BANNED.search(body):\n        errs.append("rule 13b: banned token")',
                            '    if False:\n        errs.append("rule 13b: banned token")'),
-    "13b-theorem-list-ignored": ('    if thms not in (want, want + [f"{P}_stmt"]):', '    if False:'),
+    "13b-theorem-list-ignored": ('    if thms not in (want, want + [f"{P}_statement"]):', '    if False:'),
     "13b-set-option-ignored": ('            if l.startswith("set_option ") and l not in', '            if False and l not in'),
     "13c-kind-line-ignored": ('        if g6_norm(hdr) != g6_norm(line) or rl[0]', '        if False and g6_norm(hdr) != g6_norm(line) or rl[0]'),
     "13c-layout-ignored": ('            if fileL.get(k) != X["L"][k]:', '            if False:'),

@@ -3,7 +3,7 @@ import Codec.EncodeFrameTest
 import Prysm.Checkpoint.Code
 
 /-!
-# GEN6 (`p2enc --gen6`, unit E2-G): encoder fast path of `(*v1alpha1.Checkpoint).MarshalSSZTo`
+# Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.Checkpoint).MarshalSSZTo`
 
 Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a
 step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem
@@ -12,7 +12,7 @@ has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKind
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
 The statement implies the committed hand statement `Prysm.Checkpoint.Encode.fast_path` through `Prysm.Checkpoint.Encode.fast_path_of_kind`.
-GEN6-JSON: {"type": "Checkpoint", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 40, "frame": 104, "gd": 0, "rt": true, "fields": [["Epoch", "u", 8], ["Root", "b", 32]], "boundaries": [8, 36, 63], "layout": "Prysm.Checkpoint.encodeLayout", "S_sha256": "c4345527c651c0a3ff8319af3f35df1e375b8c58a6a45054762da0a0dcef1b1d", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.Checkpoint.Encode.fast_path via Prysm.Checkpoint.Encode.fast_path_of_kind", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Checkpoint", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
+FAST-PATH-JSON: {"type": "Checkpoint", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 40, "frame": 104, "gd": 0, "rt": true, "fields": [["Epoch", "u", 8], ["Root", "b", 32]], "boundaries": [8, 36, 63], "layout": "Prysm.Checkpoint.encodeLayout", "S_sha256": "c4345527c651c0a3ff8319af3f35df1e375b8c58a6a45054762da0a0dcef1b1d", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same Prysm.Checkpoint.Encode.fast_path via Prysm.Checkpoint.Encode.fast_path_of_kind", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Checkpoint", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
 -/
 
 open Machine Runtime Codec Prysm.Checkpoint.Code
@@ -507,7 +507,7 @@ theorem Encode.generated_epi_kind : ∀ (h : Host), type_of% (@Encode.generated_
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **Encoder fast path of `(*v1alpha1.Checkpoint).MarshalSSZTo` (Go 1.26.10), generated** (`p2enc --gen6`):
+/-- **Encoder fast path of `(*v1alpha1.Checkpoint).MarshalSSZTo` (Go 1.26.10), generated** (`encoder --fast-path`):
 head, one theorem per field, epilogue, chained by `eventually_trans`. Premises: `len + 40 ≤ cap`,
 every byte-vector field of its exact length. Statement = the kind instance (`_kind`). Fast path only. -/
 theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
@@ -585,7 +585,7 @@ theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated
   intro h; rfl
 
 /-- Statement check: the generated theorem proves the committed hand statement (implication tie). -/
-theorem Encode.generated_stmt : type_of% (@Prysm.Checkpoint.Encode.fast_path ‹Host›) :=
+theorem Encode.generated_statement : type_of% (@Prysm.Checkpoint.Encode.fast_path ‹Host›) :=
   Prysm.Checkpoint.Encode.fast_path_of_kind Encode.generated_fast
 
 end Prysm.Checkpoint

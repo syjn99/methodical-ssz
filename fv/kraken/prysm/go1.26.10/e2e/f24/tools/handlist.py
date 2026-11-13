@@ -1,14 +1,12 @@
-"""Append the names of the F24 types (`X` below) to gen/axioms-lists/flat-fixed-size-types.lean (imports after the last import;
+"""Append the names of the eight types (`TYPES` below) to gen/axioms-lists/flat-fixed-size-types.lean (imports after the last import;
 #print axioms lines at the end). Names: every declaration of the dump that matches a pattern of `pats` below."""
 import re, sys
 dump, axs, lean = sys.argv[1:4]
-X = ['Dpr', 'Bdr', 'Bbr', 'Bsr', 'Epr', 'Pdc', 'Vid', 'Bpf']
-x = [s.lower() for s in X]
-pats = [r'^E2eScal\.F24\.', r'^E2eScal\.F24Code\.', r'^E2eScal\.Wit(%s)G[AR]\.' % '|'.join(X),
-        r'^E2eScal\.WitE2c(%s)\.' % '|'.join(X), r'^E2eScal\.Gen\.(%s)_g[45]dec' % '|'.join(x),
-        r'^E2eScal\.Gen6Enc\.(%s)_g6e' % '|'.join(x), r'^E2eScal\.E2c\.(%s)_e2c' % '|'.join(x),
-        r'^E2e\.prysm(%s)Desc' % '|'.join(X), r'^E2e\.P(%s)\.' % '|'.join(X), r'^E2e\.P(%s)$' % '|'.join(X),
-        r'^E2e\.p(%s)(_|Enc)' % '|'.join(x), r'^E2e\.dprChecker']
+TYPES = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest',
+         'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity', 'BuilderPreferences']
+# the declarations that the evidence tools and the generator runs of these types write
+pats = [r'^Prysm\.(%s)\.(Decode\.(generated_|accept_spec$|reject_size_spec$|reject_complete$)|Encode\.generated_|'
+        r'Witness\.Generated|SszValue\b|desc\b|desc_|checker|Code\.)' % '|'.join(TYPES)]
 names = []
 for l in open(dump):
     if l.startswith('#'):

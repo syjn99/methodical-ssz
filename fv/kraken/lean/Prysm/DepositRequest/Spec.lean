@@ -4,9 +4,9 @@ import Prysm.DepositRequest.SpecDescription
 import Prysm.DepositRequest.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1.DepositRequest` (FLAT24 / H7)
+# Spec bridge for the real Prysm `v1.DepositRequest` (24 flat hold-out types)
 
-Written by the FLAT24 evaluator with its evidence script `f24spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`
+Written by the evidence script `f24spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`
 generalised to a field list). `desc` (`Prysm/DepositRequest/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).
 `checkerDesc` (`Prysm/DepositRequest/SpecChecker.lean`, rendered by `gen/e2e/descterm.py`) is the Desc checker's Desc of the type
 (the producer output recorded in `gen/desc/results/main.result.json`, same sha256; copy in `prysm/go1.26.10/e2e/f24/`).

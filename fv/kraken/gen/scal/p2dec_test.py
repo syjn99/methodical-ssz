@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generator tests for the extension of `scalgen.py p2dec` to a 32-byte field at SSZ offset 0 (offset-0 form). Tests that can fail.
+"""Generator tests for the extension of `scalgen.py decoder` to a 32-byte field at SSZ offset 0 (offset-0 form). Tests that can fail.
 
 usage: p2dec_test.py <work-dir> <result.json>      (run from anywhere; one gated job; Python 3 stdlib + git)
 exit 0 = every case has its expected exit code and output; 1 = a case differs; 2 = usage
@@ -16,49 +16,49 @@ Cases (all on the committed Eth1Data `.S` and IR; mutants are written to <work-d
  - partial: one mutant again with `--partial-out`: the file starts with `/-! PARTIAL OUTPUT` and names the
    missing field; stdout stays empty.
 
-GEN2 cases (`p2dec --gen2`; ids `g2-*`; mutated `.S` and IR copies in <work-dir> only):
- - g2-compat-*: the default mode (no `--gen2`) on BlobIdentifier / DepositMessage still prints the committed
-   files of hold-out set H3, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean` / `Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean` byte for byte.
- - g2-new-*: `--gen2` on Eth1Data, BlobIdentifier, DepositMessage: exit 0 twice, identical, = the committed
+field-segment cases (`decoder --field-segments`; ids `field-segments-*`; mutated `.S` and IR copies in <work-dir> only):
+ - field-segments-compat-*: the default mode (no `--field-segments`) on BlobIdentifier / DepositMessage still prints the committed
+   files of hold-out types BlobIdentifier and DepositMessage, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean` / `Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean` byte for byte.
+ - field-segments-new-*: `--field-segments` on Eth1Data, BlobIdentifier, DepositMessage: exit 0 twice, identical, = the committed
    raw files `Prysm/Eth1Data/GeneratedDecodeFieldSegments.lean`, `Prysm/BlobIdentifier/GeneratedDecodeFieldSegments.lean`, `Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean`, with every field covered.
  - adversarial `.S` / IR mutants: wrong size immediates, a size other than 32 / 48 / 96, mismatched registers
    in the uint64 triple, base register not rsp / rdx, a scratch register outside the lemma's list, wrong
    displacement against the IR, truncated `.S`, swapped field order (IR and code), a delegated overlay
    field (real BeaconBlockHeader). Expected: the field is "not covered" (no theorem with its name, exit 3) or
    exit 2; 0 bytes on stdout whenever the exit code is not 0; the `--summary` JSON agrees with the exit code.
- - g2-syn48-add: a synthetic `.S` / IR where DepositMessage.WithdrawalCredentials is a 48-byte add-form field
+ - field-segments-syn48-add: a synthetic `.S` / IR where DepositMessage.WithdrawalCredentials is a 48-byte add-form field
    (no development site has one): the theorem text has the add-form 48 shape and the parameters of the
    synthetic code. Text check only (no Lean code constant for a synthetic `.S`: not kernel-checked).
- - g2-partial: a mutant with `--partial-out`: the file is marked PARTIAL and `kindcheck.py` rejects it.
- - g2c-*: `--compose` = the committed `Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean` / `Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean` / `Prysm/Eth1Data/GeneratedDecodeAcceptComposition.lean` (two runs,
+ - field-segments-partial: a mutant with `--partial-out`: the file is marked PARTIAL and `kindcheck.py` rejects it.
+ - field-segments-compose-*: `--compose` = the committed `Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean` / `Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean` / `Prysm/Eth1Data/GeneratedDecodeAcceptComposition.lean` (two runs,
    identical; kindcheck PASS "identity-checked"); without `--same-as` the run warns on stderr and kindcheck
    rejects the file (no statement check); a field not covered, a tail store from another register and a
    shifted epilogue give exit 2 and 0 bytes.
 
-GEN2 fix cases (ids `g2f-*`):
- - g2-partial (changed): the `--gen2 --partial-out` file is a Lean module: imports first, then the PARTIAL header
+field-segment fix cases (ids `field-segments-fix-*`):
+ - field-segments-partial (changed): the `--field-segments --partial-out` file is a Lean module: imports first, then the PARTIAL header
    with an `UNCOVERED-JSON:` line; `kindcheck.py` exit 1 by default, exit 3 with `--partial`.
- - g2f-bh-partial: real BeaconBlockHeader (Slot, ProposerIndex are delegated overlay fields): exit 3, 0 bytes on
+ - field-segments-fix-bh-partial: real BeaconBlockHeader (Slot, ProposerIndex are delegated overlay fields): exit 3, 0 bytes on
    stdout, partial file = the committed `lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean`, two runs identical, kindcheck
    default exit 1, `--partial` exit 3 with `PARTIAL 3/5 fields`.
- - g2f-compose-*: `--compose` refusals, exit 2, 0 bytes, no partial file even with `--partial-out`: partial
+ - field-segments-fix-compose-*: `--compose` refusals, exit 2, 0 bytes, no partial file even with `--partial-out`: partial
    coverage (BeaconBlockHeader), frame 0x28, a non-contiguous field (a `nop` between two fields), uint64 first
    field (IR order of BlobIdentifier swapped: displacement 0, not covered).
- - g2f-no-same-as-marker: `--compose` without `--same-as` still exits 0; the theorem line carries
+ - field-segments-fix-no-same-as-marker: `--compose` without `--same-as` still exits 0; the theorem line carries
    `-- UNCHECKED STATEMENT` and the header says the statement is checked by nobody; kindcheck exit 1.
- - g2f-same-as-generated: `--same-as Prysm.BlobIdentifier.Decode.accept_generated_composition` (a generated theorem): exit 0, kindcheck
+ - field-segments-fix-same-as-generated: `--same-as Prysm.BlobIdentifier.Decode.accept_generated_composition` (a generated theorem): exit 0, kindcheck
    exit 1.
- - g2f-same-as-prop: `--same-as-prop Prysm.BlobIdentifier.Decode.hand_statement`: exit 0, the Prop identity line, kindcheck PASS; the
-   test fixture `g2f-bi-prop-fixture.lean` (the output with a scratch `abbrev` equal to the type of
+ - field-segments-fix-same-as-prop: `--same-as-prop Prysm.BlobIdentifier.Decode.hand_statement`: exit 0, the Prop identity line, kindcheck PASS; the
+   test fixture `field-segments-fix-bi-prop-fixture.lean` (the output with a scratch `abbrev` equal to the type of
    `Bi.bi_e2e_accept_main`) is written to <work-dir> for a separate gated `lake env lean`.
 
-GEN3 cases (`p2dec --gen3`; ids `g3-*`; mutated `.S` / IR copies in <work-dir> only):
- - g3-new-*: `--gen3` on PendingPartialWithdrawal, Deposit_Data, BeaconBlockHeader: exit 0 twice, identical,
+call-segment cases (`decoder --call-segments`; ids `call-segments-*`; mutated `.S` / IR copies in <work-dir> only):
+ - call-segments-new-*: `--call-segments` on PendingPartialWithdrawal, Deposit_Data, BeaconBlockHeader: exit 0 twice, identical,
    every field covered, = the committed raw files `Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean`, `Prysm/Deposit_Data/GeneratedDecodeCallSegments.lean`, `Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean` when they
    exist; AttestationData: exit 3, Slot / CommitteeIndex / BeaconBlockRoot covered, Source / Target not
    (nested containers), partial file = committed `Prysm/AttestationData/GeneratedDecodeCallSegmentsPartial.lean` when it exists; `kindcheck.py` PASS
    (`--partial`: exit 3).
- - adversarial `.S` / IR mutants per GEN3 shape: wrong callee symbol, callee without a proved spec (IR),
+ - adversarial `.S` / IR mutants per call-segment shape: wrong callee symbol, callee without a proved spec (IR),
    `test` / `je` missing, `je` to a missing or an earlier label, set-up with an extra or a missing move, `nop` in
    an unobserved position (between `add` and `mov $0x8,%ecx`, after the `callq`, before `memmove`, before
    `mov $n,%ecx`, in the offset-0 form), two `nop`s, the two-directive read with swapped registers, wrong
@@ -66,14 +66,14 @@ GEN3 cases (`p2dec --gen3`; ids `g3-*`; mutated `.S` / IR copies in <work-dir> o
    the IR, a reload set-up with another rdi constant or register, IR order swapped (SSZ offset of a first-form
    callee field not 0). Expected: the field is not covered (exit 3; no theorem whose name has the field) or
    exit 2; 0 bytes on stdout whenever the exit code is not 0; `--summary` agrees.
- - g3-compose-*: `--gen3 --compose` refuses callee / two-directive types (PendingPartialWithdrawal,
+ - call-segments-compose-*: `--call-segments --compose` refuses callee / two-directive types (PendingPartialWithdrawal,
    BeaconBlockHeader: exit 2, 0 bytes); Deposit_Data composes (exit 0) with the `decAcceptKind` `_kind` line
-   and the identity with `H4.dd_accept_stmt`; kindcheck PASS; = committed `Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean` when it exists.
+   and the identity with `Prysm.Deposit_Data.Decode.accept_statement`; kindcheck PASS; = committed `Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean` when it exists.
 
-GEN4 cases (`p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <work-dir> only):
- - g4-new-*: `--gen4` on the 10 development types: exit 0 twice (AttestationData: 3), identical, the expected
+step cases (`decoder --steps`; ids `steps-*`; mutated `.S` / IR copies in <work-dir> only):
+ - steps-new-*: `--steps` on the 10 development types: exit 0 twice (AttestationData: 3), identical, the expected
    covered fields, `kindcheck.py` PASS (`--partial`: exit 3), = the committed raw file `Gen4*.lean` when it exists.
- - g4-compose-refuse: `--gen4 --compose` exits 2 with the reason, 0 bytes, no file.
+ - steps-compose-refuse: `--steps --compose` exits 2 with the reason, 0 bytes, no file.
  - adversarial inputs for the dataflow (SyncCommitteeMessage, PendingConsolidation, PendingPartialWithdrawal,
    Eth1Data): a receiver / argument register clobbered between set-up and block, set-up moves in another VALID order
    (covered) and in an invalid order (refused), an extra harmless move and a fall-through label (covered), `nop` at
@@ -86,23 +86,23 @@ GEN4 cases (`p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <work-dir> o
    uncovered field: `kindcheck.py --partial` exit 3 on the partial file), 0 bytes on stdout unless exit 0; the
    summary's miss class is checked where stated. A covered mutant is a text result only (no Lean constant exists for
    mutated code): its theorems carry the mutated code's indices, never a parameter of the unmutated code.
- - g4f-*: the reviewer's inputs (`rv` edits). The seven the GEN4 walker had accepted without the
+ - steps-review-*: the reviewer's inputs (`rv` edits). The seven the step walker had accepted without the
    block entry being established (a05, a15, a29, a31, b05: an 8-byte stack store overlapping a tracked slot; b01, b02:
    head not the `decpro_seg` prologue) and b03 must be refused; a41 (extra head `nop`) is a head miss of class
    padding; a13 (wrong source offset) class other; stores to the return-address slot or below rsp, writes to r14 /
    rbp refused; the ten valid variants (a08, a14, a16, a19, a21, a27, a35, a38, b04, b06) stay covered. a34 (a
    store after the last field event) is refused by the epilogue rule (exit 2).
- - g4f2-*: the reviewer's inputs and the systematic pass. The head size immediate must equal the IR
+ - steps-review2-*: the reviewer's inputs and the systematic pass. The head size immediate must equal the IR
    SSZ fixed size (c34, d15, d16: exit 2, class other); a callee that is not the IR field's overlay type is refused
    (ValidatorIndex field calling Epoch.UnmarshalSSZ and the reverse); after the last field event only the plain return
    (`mov d(%rsp),%rax|%rbx`, `xor`, nops, labels, forward jmp, `add $F,%rsp; pop %rbp; retq`) is accepted: a store, a
    call or a wrong frame size there gives exit 2 with every field `reached` and not covered; a nop there stays covered.
-   Every `--gen4` case also checks the summary flag `reached` (true up to the first uncovered field, false after it,
+   Every `--steps` case also checks the summary flag `reached` (true up to the first uncovered field, false after it,
    false for every field on a head miss); on exit 2 the summary lists every field.
- - g4f3-*: the reviewer's inputs: a `jmp` after the last field event to a label that is not in
+ - steps-review3-*: the reviewer's inputs: a `jmp` after the last field event to a label that is not in
    the file (x01 `jmp runtime.abort`, x02 `jmp *%rdx`, x03 a tail `jmp` to Slot.UnmarshalSSZ): exit 2, every field not
    covered and `reached`.
- - fc-*: fail-closed. A harness (written to <work-dir>, run as one process per type on Eth1Data,
+ - steps-fail-closed-*: fail-closed. A harness (written to <work-dir>, run as one process per type on Eth1Data,
    SyncCommitteeMessage, PendingPartialWithdrawal) imports the working-tree `scalgen.py`, monkeypatches it and calls
    `main()`: an unexpected exception, a plain `G4Stop` and `SystemExit(0)` injected in the head (`g4_head`), at every
    `g4_parse` / `g4_label_index` call of the walk (each field, by the walk's current field), at every theorem-text
@@ -110,21 +110,21 @@ GEN4 cases (`p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <work-dir> o
    that returns every field with a stop or without an end index, and an inner run that returns a text without the
    flags. Expected for every injection: exit 2 or 3 (exit 2 for an unexpected exception and SystemExit), 0 bytes on
    stdout, the summary's exit equal, fewer fields covered than the IR has. Control: no injection, exit 0.
-GEN5 cases (`p2dec --gen5`; ids `g5-*`; mutated `.S` / IR copies in <work-dir> only):
- - g5-new-*: `--gen5` on PendingDeposit, SyncCommitteeMessage, VoluntaryExit, PowBlock, ValidatorBalance: exit 0 twice,
-   identical, every GEN5 theorem with its kind line, `kindcheck.py` PASS (rule 12: kind parameters recomputed from the
+whole-accept cases (`decoder --whole-accept`; ids `whole-accept-*`; mutated `.S` / IR copies in <work-dir> only):
+ - whole-accept-new-*: `--whole-accept` on PendingDeposit, SyncCommitteeMessage, VoluntaryExit, PowBlock, ValidatorBalance: exit 0 twice,
+   identical, every whole-accept theorem with its kind line, `kindcheck.py` PASS (rule 12: kind parameters recomputed from the
    IR and the `.S`); PendingPartialWithdrawal (interleaved fields) and AttestationData (nested fields): exit 2, 0 bytes.
  - adversarial inputs, each expected exit 2 with 0 bytes on stdout and `accept_generated: false` in the summary (no
-   accept theorem): every class of the GEN4 reviews (stack-store overlap / misaligned store, head variants, size
-   immediate, epilogue jump to a missing label, truncated file, callee of another overlay type) and the GEN5 rules
+   accept theorem): every class of the step reviews (stack-store overlap / misaligned store, head variants, size
+   immediate, epilogue jump to a missing label, truncated file, callee of another overlay type) and the whole-accept rules
    (spill to a non-home slot, a register spilled twice, an extra `rcx` spill, `dB != F + 24`, an `xor` epilogue in a
    frame other than 0x20, an epilogue load of a non-zero slot, a `nop` inside the accept epilogue, a malformed
    size-error block, a stack store of an input value, a load from a stack slot outside the layout, interleaved
    fields); statement-level IR mutants (a wrong Go offset, a wrong size, the field order swapped, a Go offset that
    the code matches but that is not the kind's running sum). Valid variants (an extra harmless move, another valid
    set-up order): exit 0 and kindcheck PASS.
- - g5fc-*: fail-closed. A harness imports the working-tree `scalgen.py`, takes its `gen5` module (`g5_module()`),
-   monkeypatches it and calls `main()`: an unexpected exception, SystemExit(0) and a G5Refuse injected in the GEN4
+ - whole-accept-fail-closed-*: fail-closed. A harness imports the working-tree `scalgen.py`, takes its `gen5` module (`g5_module()`),
+   monkeypatches it and calls `main()`: an unexpected exception, SystemExit(0) and a G5Refuse injected in the step
    front end, the recomputed walk / epilogue, the head / epilogue / reject specification, every step rendering, every
    theorem renderer, and results without the flags (a missing kind line, an inner run that sets no flag). Expected for
    every injection: exit 2, 0 bytes on stdout, summary exit 2 and `accept_generated: false`. Control: exit 0.
@@ -147,19 +147,19 @@ OLD_ARGS = ["--const", "unmarshalSSZ", "--ir", "prysm/ir/ir-mainnet.json", "--ty
 
 # (id, what, 1-based line, old text, new text or None = delete, expected exit, expected MATCH fields)
 MUTANTS = [
-    ("m-len", "wrong length: memmove count 0x10 in the offset-0 DepositRoot block", 31,
+    ("mutant-len", "wrong length: memmove count 0x10 in the offset-0 DepositRoot block", 31,
      "  mov $0x20,%ecx", "  mov $0x10,%ecx", 3, ["BlockHash"]),
-    ("m-nomemmove", "missing memmove: the DepositRoot memmove call removed", 32,
+    ("mutant-nomemmove", "missing memmove: the DepositRoot memmove call removed", 32,
      "  callq runtime.memmove", None, 3, ["BlockHash"]),
-    ("m-addreg", "an add with a different register: BlockHash `add $0x28,%rsi`", 68,
+    ("mutant-addreg", "an add with a different register: BlockHash `add $0x28,%rsi`", 68,
      "  add $0x28,%rbx", "  add $0x28,%rsi", 3, ["DepositRoot"]),
-    ("m-z-dest", "offset-0 form with a wrong destination: DepositRoot pointer stored at 0x10(%rdx)", 29,
+    ("mutant-z-dest", "offset-0 form with a wrong destination: DepositRoot pointer stored at 0x10(%rdx)", 29,
      "  mov %rax,0x8(%rdx)", "  mov %rax,0x10(%rdx)", 3, ["BlockHash"]),
-    ("m-z-nonzero", "offset-0 form at SSZ offset 40: the BlockHash add removed", 68,
+    ("mutant-z-nonzero", "offset-0 form at SSZ offset 40: the BlockHash add removed", 68,
      "  add $0x28,%rbx", None, 3, ["DepositRoot"]),
-    ("m-both", "both fields broken: DepositRoot length and the BlockHash add register", None,
+    ("mutant-both", "both fields broken: DepositRoot length and the BlockHash add register", None,
      None, None, 2, []),
-    ("m-z-srcreg", "offset-0 form with the buffer reloaded into rsi (not the memmove source register)", 30,
+    ("mutant-z-srcreg", "offset-0 form with the buffer reloaded into rsi (not the memmove source register)", 30,
      "  mov 0x38(%rsp),%rbx", "  mov 0x38(%rsp),%rsi", 3, ["BlockHash"]),
 ]
 
@@ -242,45 +242,45 @@ def edits(lines, eds):
 
 # (id, what, type key, .S edits or a function of the lines, IR edit or None, expected exit, expected covered)
 G2_MUT = [
-    ("g2-size-imm-head", "PublicKey makeslice size immediate 0x20 instead of 0x30 (IR 48)", "DM",
+    ("field-segments-size-imm-head", "PublicKey makeslice size immediate 0x20 instead of 0x30 (IR 48)", "DM",
      [(16, "  mov $0x30,%ecx", "  mov $0x20,%ecx")], None, 3, ["WithdrawalCredentials", "Amount"]),
-    ("g2-size-imm-memmove", "PublicKey memmove count 0x20 instead of 0x30 (offset-0 form)", "DM",
+    ("field-segments-size-imm-memmove", "PublicKey memmove count 0x20 instead of 0x30 (offset-0 form)", "DM",
      [(31, "  mov $0x30,%ecx", "  mov $0x20,%ecx")], None, 3, ["WithdrawalCredentials", "Amount"]),
-    ("g2-size-imm-len", "PublicKey len store 0x20 instead of 0x30 after memmove", "DM",
+    ("field-segments-size-imm-len", "PublicKey len store 0x20 instead of 0x30 after memmove", "DM",
      [(34, "  movq $0x30,0x8(%rdx)", "  movq $0x20,0x8(%rdx)")], None, 3, ["WithdrawalCredentials", "Amount"]),
-    ("g2-size-64", "PublicKey of 64 bytes in IR and code (size outside 32/48/96)", "DM",
+    ("field-segments-size-64", "PublicKey of 64 bytes in IR and code (size outside 32/48/96)", "DM",
      [(16, "  mov $0x30,%ecx", "  mov $0x40,%ecx"), (20, "  movq $0x30,0x10(%rdx)", "  movq $0x40,0x10(%rdx)"),
       (31, "  mov $0x30,%ecx", "  mov $0x40,%ecx"), (34, "  movq $0x30,0x8(%rdx)", "  movq $0x40,0x8(%rdx)"),
       (35, "  movq $0x30,0x10(%rdx)", "  movq $0x40,0x10(%rdx)")], ir_size("PublicKey", 64), 2, []),
-    ("g2-size-20-ir", "PublicKey declared 20 bytes in the IR, code unchanged", "DM", [], ir_size("PublicKey", 20), 2, []),
-    ("g2-u64-reg-mismatch-load", "Amount: `mov 0x50(%rcx),%rsi` (load into another register)", "DM",
+    ("field-segments-size-20-ir", "PublicKey declared 20 bytes in the IR, code unchanged", "DM", [], ir_size("PublicKey", 20), 2, []),
+    ("field-segments-u64-reg-mismatch-load", "Amount: `mov 0x50(%rcx),%rsi` (load into another register)", "DM",
      [(85, "  mov 0x50(%rcx),%rcx", "  mov 0x50(%rcx),%rsi")], None, 3, ["PublicKey", "WithdrawalCredentials"]),
-    ("g2-u64-reg-mismatch-store", "Amount: `mov %rsi,0x30(%rdx)` (store from another register)", "DM",
+    ("field-segments-u64-reg-mismatch-store", "Amount: `mov %rsi,0x30(%rdx)` (store from another register)", "DM",
      [(86, "  mov %rcx,0x30(%rdx)", "  mov %rsi,0x30(%rdx)")], None, 3, ["PublicKey", "WithdrawalCredentials"]),
-    ("g2-u64-reg-mismatch-reload", "Amount: buffer reloaded into rdi, read through rcx", "DM",
+    ("field-segments-u64-reg-mismatch-reload", "Amount: buffer reloaded into rdi, read through rcx", "DM",
      [(84, "  mov 0x38(%rsp),%rcx", "  mov 0x38(%rsp),%rdi")], None, 3, ["PublicKey", "WithdrawalCredentials"]),
-    ("g2-u64-base-not-rsp", "Amount: buffer reload from 0x38(%rbp)", "DM",
+    ("field-segments-u64-base-not-rsp", "Amount: buffer reload from 0x38(%rbp)", "DM",
      [(84, "  mov 0x38(%rsp),%rcx", "  mov 0x38(%rbp),%rcx")], None, 3, ["PublicKey", "WithdrawalCredentials"]),
-    ("g2-u64-base-not-rdx", "Amount: store to 0x30(%rax) (receiver not in rdx)", "DM",
+    ("field-segments-u64-base-not-rdx", "Amount: store to 0x30(%rax) (receiver not in rdx)", "DM",
      [(86, "  mov %rcx,0x30(%rdx)", "  mov %rcx,0x30(%rax)")], None, 3, ["PublicKey", "WithdrawalCredentials"]),
-    ("g2-u64-reg-rbp", "Amount: scratch register rbp (not in U64InlineReg)", "DM",
+    ("field-segments-u64-reg-rbp", "Amount: scratch register rbp (not in U64InlineReg)", "DM",
      [(84, "  mov 0x38(%rsp),%rcx", "  mov 0x38(%rsp),%rbp"), (85, "  mov 0x50(%rcx),%rcx", "  mov 0x50(%rbp),%rbp"),
       (86, "  mov %rcx,0x30(%rdx)", "  mov %rbp,0x30(%rdx)")], None, 3, ["PublicKey", "WithdrawalCredentials"]),
-    ("g2-u64-src-disp", "Amount: source displacement 0x48 against IR SSZ offset 80", "DM",
+    ("field-segments-u64-src-disp", "Amount: source displacement 0x48 against IR SSZ offset 80", "DM",
      [(85, "  mov 0x50(%rcx),%rcx", "  mov 0x48(%rcx),%rcx")], None, 3, ["PublicKey", "WithdrawalCredentials"]),
-    ("g2-u64-dst-disp", "Amount: receiver displacement 0x38 against IR Go offset 48", "DM",
+    ("field-segments-u64-dst-disp", "Amount: receiver displacement 0x38 against IR Go offset 48", "DM",
      [(86, "  mov %rcx,0x30(%rdx)", "  mov %rcx,0x38(%rdx)")], None, 3, ["PublicKey", "WithdrawalCredentials"]),
-    ("g2-u64-32bit", "Index: 32-bit register form `mov 0x20(%rcx),%ecx`", "BI",
+    ("field-segments-u64-32bit", "Index: 32-bit register form `mov 0x20(%rcx),%ecx`", "BI",
      [(49, "  mov 0x20(%rcx),%rcx", "  mov 0x20(%rcx),%ecx")], None, 3, ["BlockRoot"]),
-    ("g2-truncated-after-wc", "DepositMessage `.S` cut after directive 83 (Amount read missing)", "DM",
+    ("field-segments-truncated-after-wc", "DepositMessage `.S` cut after directive 83 (Amount read missing)", "DM",
      lambda L: L[:84], None, 3, ["PublicKey", "WithdrawalCredentials"]),
-    ("g2-truncated-in-pk", "DepositMessage `.S` cut inside the PublicKey segment (line 30)", "DM",
+    ("field-segments-truncated-in-pk", "DepositMessage `.S` cut inside the PublicKey segment (line 30)", "DM",
      lambda L: L[:30], None, 2, []),
-    ("g2-ir-order-swap", "IR field order PublicKey / WithdrawalCredentials swapped (SSZ offsets move)", "DM",
+    ("field-segments-ir-order-swap", "IR field order PublicKey / WithdrawalCredentials swapped (SSZ offsets move)", "DM",
      [], ir_swap("PublicKey", "WithdrawalCredentials"), 3, ["Amount"]),
-    ("g2-code-order-swap", "Eth1Data code: the DepositCount read moved after the BlockHash segment", "E1",
+    ("field-segments-code-order-swap", "Eth1Data code: the DepositCount read moved after the BlockHash segment", "E1",
      lambda L: L[:47] + L[50:86] + L[47:50] + L[86:], None, 2, []),
-    ("g2-overlay", "real BeaconBlockHeader: Slot / ProposerIndex are delegated overlay fields", "BH",
+    ("field-segments-overlay", "real BeaconBlockHeader: Slot / ProposerIndex are delegated overlay fields", "BH",
      [], None, 3, ["ParentRoot", "StateRoot", "BodyRoot"]),
 ]
 
@@ -288,22 +288,22 @@ G2_MUT = [
 def gen2_cases(work, new):
     res, bad = [], 0
     irt = (KR / IR).read_text()
-    # compatibility: default mode = committed files of hold-out set H3
+    # compatibility: default mode = committed files of hold-out types BlobIdentifier and DepositMessage
     for key in ("BI", "DM"):
         c = G2[key]
-        rc, so, se = run(["python3", "-I", str(new), "p2dec", "--S", c["S"], "--ir", IR, "--type", c["type"]]
+        rc, so, se = run(["python3", "-I", str(new), "decoder", "--S", c["S"], "--ir", IR, "--type", c["type"]]
                          + c["old_args"], KR)
         ok = rc == 0 and so == (KR / c["old"]).read_bytes()
-        res.append(dict(id=f"g2-compat-{key}", expect=f"default mode exit 0, stdout = {c['old']}", exit=rc,
+        res.append(dict(id=f"field-segments-compat-{key}", expect=f"default mode exit 0, stdout = {c['old']}", exit=rc,
                         stdout_bytes=len(so), ok=bool(ok)))
         bad |= not ok
-    # GEN2 runs, twice, = committed raw output
+    # field-segment runs, twice, = committed raw output
     for key in ("E1", "BI", "DM"):
         c = G2[key]
         outs = []
         for i in range(2):
-            sm = work / f"g2-new-{key}-{i}.json"
-            rc, so, se = run(["python3", "-I", str(new), "p2dec", "--gen2", "--summary", str(sm), "--S", c["S"],
+            sm = work / f"field-segments-new-{key}-{i}.json"
+            rc, so, se = run(["python3", "-I", str(new), "decoder", "--field-segments", "--summary", str(sm), "--S", c["S"],
                               "--ir", IR, "--type", c["type"]] + c["args"], KR)
             outs.append((rc, so, json.loads(sm.read_text())))
         com = (KR / c["committed"]).read_bytes() if (KR / c["committed"]).exists() else None
@@ -311,7 +311,7 @@ def gen2_cases(work, new):
         cov = [f["field"] for f in sm["fields"] if f["status"] == "covered"]
         ok = (all(r == 0 for r, _, _ in outs) and outs[0][1] == outs[1][1] and outs[0][1] == com
               and cov == c["fields"] and sm["exit"] == 0)
-        res.append(dict(id=f"g2-new-{key}", expect=f"exit 0 twice, identical, = {c['committed']}, covered {c['fields']}",
+        res.append(dict(id=f"field-segments-new-{key}", expect=f"exit 0 twice, identical, = {c['committed']}, covered {c['fields']}",
                         exit=[r for r, _, _ in outs], stdout_bytes=len(outs[0][1]), deterministic=outs[0][1] == outs[1][1],
                         equals_committed=outs[0][1] == com, covered=cov, ok=bool(ok)))
         bad |= not ok
@@ -330,7 +330,7 @@ def gen2_cases(work, new):
         sm = work / f"{mid}.summary.json"
         if sm.exists():
             sm.unlink()
-        rc, so, se = run(["python3", "-I", str(new), "p2dec", "--gen2", "--summary", str(sm), "--S", str(f),
+        rc, so, se = run(["python3", "-I", str(new), "decoder", "--field-segments", "--summary", str(sm), "--S", str(f),
                           "--ir", irp, "--type", c["type"]] + c["args"], KR)
         s = json.loads(sm.read_text()) if sm.exists() else {}
         cov = [x["field"] for x in s.get("fields", []) if x.get("status") == "covered"]
@@ -347,11 +347,11 @@ def gen2_cases(work, new):
                          (67, "  mov $0x20,%ecx", "  mov $0x30,%ecx"), (70, "  movq $0x20,0x20(%rdx)", "  movq $0x30,0x20(%rdx)"),
                          (71, "  movq $0x20,0x28(%rdx)", "  movq $0x30,0x28(%rdx)"),
                          (85, "  mov 0x50(%rcx),%rcx", "  mov 0x60(%rcx),%rcx")])
-    f = work / "g2-syn48-add.S"
+    f = work / "field-segments-syn48-add.S"
     f.write_text("\n".join(lines))
-    irf = work / "g2-syn48-add.ir.json"
+    irf = work / "field-segments-syn48-add.ir.json"
     irf.write_text(ir_edit(irt, c["type"], ir_size("WithdrawalCredentials", 48)))
-    rc, so, se = run(["python3", "-I", str(new), "p2dec", "--gen2", "--S", str(f), "--ir", str(irf), "--type", c["type"]]
+    rc, so, se = run(["python3", "-I", str(new), "decoder", "--field-segments", "--S", str(f), "--ir", str(irf), "--type", c["type"]]
                      + c["args"], KR)
     t = so.decode()
     want = ["@Codec.bytesDecSegKind h 48 unmarshalSSZ 47 61 48 56 24 24 32 40 48 := by",
@@ -361,16 +361,16 @@ def gen2_cases(work, new):
             "@Codec.u64DecInlineSegKind h unmarshalSSZ 83 56 96 48 := by"]
     miss = [w for w in want if w not in t]
     ok = rc == 0 and not miss and "length = 32" not in t.split("Decode.generated_field_WithdrawalCredentials_seg")[1].split("theorem")[0]
-    res.append(dict(id="g2-syn48-add", what="synthetic 48-byte add-form field (text check only, not kernel-checked)",
+    res.append(dict(id="field-segments-syn48-add", what="synthetic 48-byte add-form field (text check only, not kernel-checked)",
                     expect="exit 0; add-form 48 shape with the synthetic parameters", exit=rc, stdout_bytes=len(so),
                     missing=miss, ok=bool(ok)))
     bad |= not ok
     # partial output on request, then kindcheck must reject it
-    f = work / "g2-u64-src-disp.S"
-    po = work / "g2-partial.lean"
+    f = work / "field-segments-u64-src-disp.S"
+    po = work / "field-segments-partial.lean"
     if po.exists():
         po.unlink()
-    rc, so, se = run(["python3", "-I", str(new), "p2dec", "--gen2", "--S", str(f), "--partial-out", str(po), "--ir", IR,
+    rc, so, se = run(["python3", "-I", str(new), "decoder", "--field-segments", "--S", str(f), "--partial-out", str(po), "--ir", IR,
                       "--type", c["type"]] + c["args"], KR)
     pt = po.read_text() if po.exists() else ""
     kc = subprocess.run(["python3", "-I", "-B", str(HERE / "kindcheck.py"), str(po)], capture_output=True, text=True)
@@ -380,7 +380,7 @@ def gen2_cases(work, new):
     ok = (rc == 3 and so == b"" and pt.startswith("import ") and len(ph) == 1 and "NOT generated: Amount" in ph[0]
           and uj and [u["field"] for u in uj[0]] == ["Amount"] and "Decode.generated_field_Amount_seg" not in pt
           and kc.returncode == 1 and kp.returncode == 3 and "PARTIAL 2/3 fields" in kp.stdout)
-    res.append(dict(id="g2-partial", expect="exit 3, Lean-module PARTIAL file without Amount, kindcheck exit 1, --partial exit 3",
+    res.append(dict(id="field-segments-partial", expect="exit 3, Lean-module PARTIAL file without Amount, kindcheck exit 1, --partial exit 3",
                     exit=rc, stdout_bytes=len(so), partial_header=ph, kindcheck_exit=kc.returncode,
                     kindcheck_partial_exit=kp.returncode, ok=bool(ok)))
     bad |= not ok
@@ -397,34 +397,34 @@ def gen2_cases(work, new):
         nm, ha, _, imps = CP[key]
         a = list(c["args"])
         a[a.index("--imports") + 1] = imps
-        return (["p2dec", "--gen2", "--compose", "--name", nm] + (["--same-as", ha] if same else [])
+        return (["decoder", "--field-segments", "--compose", "--name", nm] + (["--same-as", ha] if same else [])
                 + ["--ir", IR, "--type", c["type"]] + a)
 
     for key in ("BI", "DM", "E1"):
         outs = [run(["python3", "-I", str(new)] + cargs(key) + ["--S", G2[key]["S"]], KR) for _ in range(2)]
         com = (KR / CP[key][2]).read_bytes() if (KR / CP[key][2]).exists() else None
-        tf = work / f"g2c-{key}.lean"
+        tf = work / f"field-segments-compose-{key}.lean"
         tf.write_bytes(outs[0][1])
         kc = subprocess.run(["python3", "-I", str(HERE / "kindcheck.py"), str(tf)], capture_output=True, text=True)
         ok = (outs[0][0] == 0 and outs[1][0] == 0 and outs[0][1] == outs[1][1] == com and kc.returncode == 0
               and f"identity against {CP[key][1]} — statement evidence only if" in kc.stdout)
-        res.append(dict(id=f"g2c-new-{key}", expect=f"exit 0 twice, identical, = {CP[key][2]}, kindcheck identity PASS",
+        res.append(dict(id=f"field-segments-compose-new-{key}", expect=f"exit 0 twice, identical, = {CP[key][2]}, kindcheck identity PASS",
                         exit=[o[0] for o in outs], stdout_bytes=len(outs[0][1]), equals_committed=outs[0][1] == com,
                         kindcheck_exit=kc.returncode, ok=bool(ok)))
         bad |= not ok
     rc, so, se = run(["python3", "-I", str(new)] + cargs("BI", same=False) + ["--S", G2["BI"]["S"]], KR)
-    tf = work / "g2c-nosame.lean"
+    tf = work / "field-segments-compose-nosame.lean"
     tf.write_bytes(so)
     kc = subprocess.run(["python3", "-I", str(HERE / "kindcheck.py"), str(tf)], capture_output=True, text=True)
     ok = rc == 0 and "NOT checked" in se and "NO statement check" in so.decode() and kc.returncode == 1
-    res.append(dict(id="g2c-no-same-as", expect="exit 0, stderr says NOT checked, kindcheck exit 1", exit=rc,
+    res.append(dict(id="field-segments-compose-no-same-as", expect="exit 0, stderr says NOT checked, kindcheck exit 1", exit=rc,
                     stdout_bytes=len(so), kindcheck_exit=kc.returncode, ok=bool(ok)))
     bad |= not ok
     base = (KR / G2["DM"]["S"]).read_text().split("\n")
     for (mid, what, eds) in [
-            ("g2c-not-covered", "Amount not covered (source displacement 0x48)", [(85, "  mov 0x50(%rcx),%rcx", "  mov 0x48(%rcx),%rcx")]),
-            ("g2c-tail-reg", "PublicKey tail store from rsi instead of rdi", [(47, "  mov %rdi,(%rdx)", "  mov %rsi,(%rdx)")]),
-            ("g2c-epilogue", "epilogue frame 0x28", [(89, "  add $0x20,%rsp", "  add $0x28,%rsp")])]:
+            ("field-segments-compose-not-covered", "Amount not covered (source displacement 0x48)", [(85, "  mov 0x50(%rcx),%rcx", "  mov 0x48(%rcx),%rcx")]),
+            ("field-segments-compose-tail-reg", "PublicKey tail store from rsi instead of rdi", [(47, "  mov %rdi,(%rdx)", "  mov %rsi,(%rdx)")]),
+            ("field-segments-compose-epilogue", "epilogue frame 0x28", [(89, "  add $0x20,%rsp", "  add $0x28,%rsp")])]:
         f = work / f"{mid}.S"
         f.write_text("\n".join(edits(base, eds)))
         rc, so, se = run(["python3", "-I", str(new)] + cargs("DM") + ["--S", str(f)], KR)
@@ -440,19 +440,19 @@ GEN2_BH_PARTIAL = "lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPart
 
 
 def g2f_cases(work, new, cargs, CP, irt):
-    """GEN2 fix cases: partial output as a Lean module, compose refusals, statement markers."""
+    """field-segment fix cases: partial output as a Lean module, compose refusals, statement markers."""
     res, bad = [], 0
     KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
     c = G2["BH"]
     outs = []
     for i in range(2):
-        po = work / f"g2f-bh-partial-{i}.lean"
+        po = work / f"field-segments-fix-bh-partial-{i}.lean"
         if po.exists():
             po.unlink()
-        rc, so, se = run(["python3", "-I", "-B", str(new), "p2dec", "--gen2", "--partial-out", str(po), "--S", c["S"],
+        rc, so, se = run(["python3", "-I", "-B", str(new), "decoder", "--field-segments", "--partial-out", str(po), "--S", c["S"],
                           "--ir", IR, "--type", c["type"]] + c["args"], KR)
         outs.append((rc, so, po.read_bytes() if po.exists() else b""))
-    po = work / "g2f-bh-partial-0.lean"
+    po = work / "field-segments-fix-bh-partial-0.lean"
     kc = subprocess.run(KC + [str(po)], capture_output=True, text=True)
     kp = subprocess.run(KC + ["--partial", str(po)], capture_output=True, text=True)
     com = (KR / GEN2_BH_PARTIAL).read_bytes() if (KR / GEN2_BH_PARTIAL).exists() else None
@@ -462,25 +462,25 @@ def g2f_cases(work, new, cargs, CP, irt):
           and uj and [u["field"] for u in uj[0]] == ["Slot", "ProposerIndex"]
           and all("delegated overlay" in u["reason"] for u in uj[0])
           and kc.returncode == 1 and kp.returncode == 3 and "PARTIAL 3/5 fields" in kp.stdout)
-    res.append(dict(id="g2f-bh-partial", expect=f"exit 3 twice, 0 bytes, file = {GEN2_BH_PARTIAL}, kindcheck 1, --partial 3",
+    res.append(dict(id="field-segments-fix-bh-partial", expect=f"exit 3 twice, 0 bytes, file = {GEN2_BH_PARTIAL}, kindcheck 1, --partial 3",
                     exit=[o[0] for o in outs], stdout_bytes=len(outs[0][1]), equals_committed=outs[0][2] == com,
                     uncovered=uj, kindcheck_exit=kc.returncode, kindcheck_partial_exit=kp.returncode, ok=bool(ok)))
     bad |= not ok
     # --compose refusals
     dm = (KR / G2["DM"]["S"]).read_text().split("\n")
-    bia = ["p2dec", "--gen2", "--compose", "--name", "Decode.accept_generated_composition", "--same-as", "Prysm.BlobIdentifier.Decode.accept"]
+    bia = ["decoder", "--field-segments", "--compose", "--name", "Decode.accept_generated_composition", "--same-as", "Prysm.BlobIdentifier.Decode.accept"]
     for (mid, what, base_args, S_text, ir_text) in [
-            ("g2f-compose-partial-bh", "partial coverage: real BeaconBlockHeader (3 of 5 fields)",
-             ["p2dec", "--gen2", "--compose", "--name", "bh_e2e_accept_main_gc", "--ir", IR, "--type", c["type"]] + c["args"],
+            ("field-segments-fix-compose-partial-bh", "partial coverage: real BeaconBlockHeader (3 of 5 fields)",
+             ["decoder", "--field-segments", "--compose", "--name", "bh_e2e_accept_main_gc", "--ir", IR, "--type", c["type"]] + c["args"],
              None, None),
-            ("g2f-compose-frame-0x28", "DepositMessage frame 0x28 (prologue and epilogue)", cargs("DM"),
+            ("field-segments-fix-compose-frame-0x28", "DepositMessage frame 0x28 (prologue and epilogue)", cargs("DM"),
              "\n".join(edits(dm, [(7, "  sub $0x20,%rsp", "  sub $0x28,%rsp"), (89, "  add $0x20,%rsp", "  add $0x28,%rsp")])), None),
-            ("g2f-compose-not-contiguous", "DepositMessage: a nop between the PublicKey tail and WithdrawalCredentials",
+            ("field-segments-fix-compose-not-contiguous", "DepositMessage: a nop between the PublicKey tail and WithdrawalCredentials",
              cargs("DM"), "\n".join(edits(dm, [(47, "  mov %rdi,(%rdx)", "  mov %rdi,(%rdx)\n  nop")])), None),
-            ("g2f-compose-u64-first", "BlobIdentifier IR order swapped: uint64 Index first (displacement 0)",
+            ("field-segments-fix-compose-u64-first", "BlobIdentifier IR order swapped: uint64 Index first (displacement 0)",
              cargs("BI"), None, ir_edit(irt, G2["BI"]["type"], ir_swap("BlockRoot", "Index")))]:
         a = list(base_args)
-        S = c["S"] if mid == "g2f-compose-partial-bh" else (G2["DM"]["S"] if mid != "g2f-compose-u64-first" else G2["BI"]["S"])
+        S = c["S"] if mid == "field-segments-fix-compose-partial-bh" else (G2["DM"]["S"] if mid != "field-segments-fix-compose-u64-first" else G2["BI"]["S"])
         if S_text is not None:
             f = work / f"{mid}.S"
             f.write_text(S_text)
@@ -499,13 +499,13 @@ def g2f_cases(work, new, cargs, CP, irt):
         bad |= not ok
     # --compose without --same-as: marker
     rc, so, se = run(["python3", "-I", "-B", str(new)] + cargs("BI", same=False) + ["--S", G2["BI"]["S"]], KR)
-    tf = work / "g2f-nosame.lean"
+    tf = work / "field-segments-fix-nosame.lean"
     tf.write_bytes(so)
     kc = subprocess.run(KC + [str(tf)], capture_output=True, text=True)
     th = [l for l in so.decode().split("\n") if l.startswith("theorem ")]
     ok = (rc == 0 and th and th[0].endswith("-- UNCHECKED STATEMENT: checked by nobody") and len(th) == 1
           and "checked by nobody" in so.decode().split("-/")[0] and kc.returncode == 1)
-    res.append(dict(id="g2f-no-same-as-marker", expect="exit 0, UNCHECKED STATEMENT on the theorem line, kindcheck 1",
+    res.append(dict(id="field-segments-fix-no-same-as-marker", expect="exit 0, UNCHECKED STATEMENT on the theorem line, kindcheck 1",
                     exit=rc, stdout_bytes=len(so), theorem_line_end=th[0][-45:] if th else None,
                     kindcheck_exit=kc.returncode, ok=bool(ok)))
     bad |= not ok
@@ -514,11 +514,11 @@ def g2f_cases(work, new, cargs, CP, irt):
     a[a.index("--same-as") + 1] = "Prysm.BlobIdentifier.Decode.accept_generated_composition"
     a[a.index("--name") + 1] = "bi_selfgen_gc"  # the reviewer's case: another name, right-hand side generated
     rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--S", G2["BI"]["S"]], KR)
-    tf = work / "g2f-same-as-generated.lean"
+    tf = work / "field-segments-fix-same-as-generated.lean"
     tf.write_bytes(so)
     kc = subprocess.run(KC + [str(tf)], capture_output=True, text=True)
     ok = rc == 0 and kc.returncode == 1 and "is a generated name" in kc.stdout
-    res.append(dict(id="g2f-same-as-generated", expect="exit 0, kindcheck exit 1 (generated right-hand side)", exit=rc,
+    res.append(dict(id="field-segments-fix-same-as-generated", expect="exit 0, kindcheck exit 1 (generated right-hand side)", exit=rc,
                     stdout_bytes=len(so), kindcheck_exit=kc.returncode, ok=bool(ok)))
     bad |= not ok
     # --same-as-prop
@@ -526,7 +526,7 @@ def g2f_cases(work, new, cargs, CP, irt):
     a[a.index("--same-as"):a.index("--same-as") + 2] = ["--same-as-prop", "Prysm.BlobIdentifier.Decode.hand_statement"]
     rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--S", G2["BI"]["S"]], KR)
     t = so.decode()
-    tf = work / "g2f-same-as-prop.lean"
+    tf = work / "field-segments-fix-same-as-prop.lean"
     tf.write_bytes(so)
     kc = subprocess.run(KC + [str(tf)], capture_output=True, text=True)
     line = "    type_of% (@Decode.accept_generated_composition h) = @Prysm.BlobIdentifier.Decode.hand_statement h := by"
@@ -535,11 +535,11 @@ def g2f_cases(work, new, cargs, CP, irt):
           and t.split("\n/-- Statement check")[0].replace("Prysm.BlobIdentifier.Decode.hand_statement", "Prysm.BlobIdentifier.Decode.accept")
           == com.split("\n/-- Statement check")[0])
     imps, rest = t.split("\n\n", 1)
-    (work / "g2f-bi-prop-fixture.lean").write_text(
+    (work / "field-segments-fix-bi-prop-fixture.lean").write_text(
         imps + "\n\n-- TEST FIXTURE (scratch, not in the library): a Prop-valued abbrev equal to the type of the hand\n"
         "-- theorem `Prysm.BlobIdentifier.Decode.accept`.\n"
         "abbrev Prysm.BlobIdentifier.Decode.hand_statement [h : Host] : Prop := type_of% (@Prysm.BlobIdentifier.Decode.accept h)\n\n" + rest)
-    res.append(dict(id="g2f-same-as-prop", expect="exit 0, Prop identity line, kindcheck PASS; fixture written",
+    res.append(dict(id="field-segments-fix-same-as-prop", expect="exit 0, Prop identity line, kindcheck PASS; fixture written",
                     exit=rc, stdout_bytes=len(so), kindcheck_exit=kc.returncode, ok=bool(ok)))
     bad |= not ok
     return res, bad
@@ -582,83 +582,83 @@ def ir_overlay_name(field, name):
 
 # (id, what, type key, .S edits (1-based line, old, new or None) or a function of the lines, IR edit, exit, covered)
 G3_MUT = [
-    ("g3-wrong-callee", "Index: call to Epoch.UnmarshalSSZ (IR ValidatorIndex)", "PW",
+    ("call-segments-wrong-callee", "Index: call to Epoch.UnmarshalSSZ (IR ValidatorIndex)", "PW",
      [(18, f"  callq {PRIM}ValidatorIndex.UnmarshalSSZ", f"  callq {PRIM}Epoch.UnmarshalSSZ")], None, 3,
      ["Amount", "WithdrawableEpoch"]),
-    ("g3-callee-no-spec", "Index: callee Gwei.UnmarshalSSZ in code and IR (no proved callee spec)", "PW",
+    ("call-segments-callee-no-spec", "Index: callee Gwei.UnmarshalSSZ in code and IR (no proved callee spec)", "PW",
      [(18, f"  callq {PRIM}ValidatorIndex.UnmarshalSSZ", f"  callq {PRIM}Gwei.UnmarshalSSZ")], ir_overlay_name("Index", "Gwei"), 3,
      ["Amount", "WithdrawableEpoch"]),
-    ("g3-test-missing", "Index: `test %rax,%rax` after the call removed", "PW", [(19, "  test %rax,%rax", None)], None, 3,
+    ("call-segments-test-missing", "Index: `test %rax,%rax` after the call removed", "PW", [(19, "  test %rax,%rax", None)], None, 3,
      ["Amount", "WithdrawableEpoch"]),
-    ("g3-je-missing", "Index: `je` after the test replaced by `jne`", "PW",
+    ("call-segments-je-missing", "Index: `je` after the test replaced by `jne`", "PW",
      [(20, f"  je {PWL}b9", f"  jne {PWL}b9")], None, 3, ["Amount", "WithdrawableEpoch"]),
-    ("g3-je-no-label", "Index: `je` to a label that does not exist", "PW",
+    ("call-segments-je-no-label", "Index: `je` to a label that does not exist", "PW",
      [(20, f"  je {PWL}b9", f"  je {PWL}zz")], None, 3, ["Amount", "WithdrawableEpoch"]),
-    ("g3-je-earlier-label", "Index: `je` to the entry label (before the call)", "PW",
+    ("call-segments-je-earlier-label", "Index: `je` to the entry label (before the call)", "PW",
      [(20, f"  je {PWL}b9", f"  je {PWL}0")], None, 3, ["Amount", "WithdrawableEpoch"]),
-    ("g3-setup-extra-move", "Index: `mov %rax,%rdx` between `add` and `mov $0x8,%ecx`", "PW",
+    ("call-segments-setup-extra-move", "Index: `mov %rax,%rdx` between `add` and `mov $0x8,%ecx`", "PW",
      [(17, "  mov $0x8,%ecx", "  mov %rax,%rdx\n  mov $0x8,%ecx")], None, 3, ["Amount", "WithdrawableEpoch"]),
-    ("g3-setup-missing-move", "Index: `mov $0x8,%ecx` removed", "PW", [(17, "  mov $0x8,%ecx", None)], None, 3,
+    ("call-segments-setup-missing-move", "Index: `mov $0x8,%ecx` removed", "PW", [(17, "  mov $0x8,%ecx", None)], None, 3,
      ["Amount", "WithdrawableEpoch"]),
-    ("g3-setup-nop-between", "Index: `nop` between `add $0x8,%rax` and `mov $0x8,%ecx` (unobserved position)", "PW",
+    ("call-segments-setup-nop-between", "Index: `nop` between `add $0x8,%rax` and `mov $0x8,%ecx` (unobserved position)", "PW",
      [(17, "  mov $0x8,%ecx", "  nop\n  mov $0x8,%ecx")], None, 3, ["Amount", "WithdrawableEpoch"]),
-    ("g3-nop-after-call", "Index: `nop` between the `callq` and `test`", "PW",
+    ("call-segments-nop-after-call", "Index: `nop` between the `callq` and `test`", "PW",
      [(19, "  test %rax,%rax", "  nop\n  test %rax,%rax")], None, 3, ["Amount", "WithdrawableEpoch"]),
-    ("g3-first-add-other-reg", "Index: `add $0x8,%rbx` instead of rax", "PW", [(16, "  add $0x8,%rax", "  add $0x8,%rbx")], None, 3,
+    ("call-segments-first-add-other-reg", "Index: `add $0x8,%rbx` instead of rax", "PW", [(16, "  add $0x8,%rax", "  add $0x8,%rbx")], None, 3,
      ["Amount", "WithdrawableEpoch"]),
-    ("g3-rr-swapped", "Amount: `mov 0x8(%rax),%r8; mov %r8,0x10(%rbx)` (bases swapped)", "PW",
+    ("call-segments-rr-swapped", "Amount: `mov 0x8(%rax),%r8; mov %r8,0x10(%rbx)` (bases swapped)", "PW",
      [(55, "  mov 0x8(%rbx),%r8", "  mov 0x8(%rax),%r8"), (56, "  mov %r8,0x10(%rax)", "  mov %r8,0x10(%rbx)")], None, 3, ["Index"]),
-    ("g3-rr-two-regs", "Amount: `mov 0x8(%rbx),%r8; mov %r9,0x10(%rax)`", "PW",
+    ("call-segments-rr-two-regs", "Amount: `mov 0x8(%rbx),%r8; mov %r9,0x10(%rax)`", "PW",
      [(56, "  mov %r8,0x10(%rax)", "  mov %r9,0x10(%rax)")], None, 3, ["Index"]),
-    ("g3-rr-src-disp", "Amount: source displacement 0x10 against IR SSZ offset 8", "PW",
+    ("call-segments-rr-src-disp", "Amount: source displacement 0x10 against IR SSZ offset 8", "PW",
      [(55, "  mov 0x8(%rbx),%r8", "  mov 0x10(%rbx),%r8")], None, 3, ["Index"]),
-    ("g3-rr-dst-disp", "Amount: receiver displacement 0x18 against IR Go offset 16", "PW",
+    ("call-segments-rr-dst-disp", "Amount: receiver displacement 0x18 against IR Go offset 16", "PW",
      [(56, "  mov %r8,0x10(%rax)", "  mov %r8,0x18(%rax)")], None, 3, ["Index"]),
-    ("g3-rr-reg-rdx", "Amount read through rdx (clobbers the `lea` set-up register)", "PW",
+    ("call-segments-rr-reg-rdx", "Amount read through rdx (clobbers the `lea` set-up register)", "PW",
      [(55, "  mov 0x8(%rbx),%r8", "  mov 0x8(%rbx),%rdx"), (56, "  mov %r8,0x10(%rax)", "  mov %rdx,0x10(%rax)")], None, 3,
      ["Index", "Amount"]),
-    ("g3-rr-reg-rbp", "Amount read through rbp (not in U64RRReg)", "PW",
+    ("call-segments-rr-reg-rbp", "Amount read through rbp (not in U64RRReg)", "PW",
      [(55, "  mov 0x8(%rbx),%r8", "  mov 0x8(%rbx),%rbp"), (56, "  mov %r8,0x10(%rax)", "  mov %rbp,0x10(%rax)")], None, 3,
      ["Index"]),
-    ("g3-lea-src-disp", "WithdrawableEpoch: `lea 0x18(%rbx),%rdx` against IR SSZ offset 16", "PW",
+    ("call-segments-lea-src-disp", "WithdrawableEpoch: `lea 0x18(%rbx),%rdx` against IR SSZ offset 16", "PW",
      [(50, "  lea 0x10(%rbx),%rdx", "  lea 0x18(%rbx),%rdx")], None, 3, ["Index", "Amount"]),
-    ("g3-lea-f-disp", "WithdrawableEpoch: `lea 0x20(%rax),%rsi` against IR Go offset 24", "PW",
+    ("call-segments-lea-f-disp", "WithdrawableEpoch: `lea 0x20(%rax),%rsi` against IR Go offset 24", "PW",
      [(54, "  lea 0x18(%rax),%rsi", "  lea 0x20(%rax),%rsi")], None, 3, ["Index", "Amount"]),
-    ("g3-lea-extra-move", "WithdrawableEpoch: an extra `mov %rdx,%rcx` before `mov %rsi,%rax`", "PW",
+    ("call-segments-lea-extra-move", "WithdrawableEpoch: an extra `mov %rdx,%rcx` before `mov %rsi,%rax`", "PW",
      [(57, "  mov %rsi,%rax", "  mov %rdx,%rcx\n  mov %rsi,%rax")], None, 3, ["Index", "Amount"]),
-    ("g3-ir-swap-index-amount", "IR order Index / Amount swapped (Index at SSZ offset 8, Amount at 0)", "PW",
+    ("call-segments-ir-swap-index-amount", "IR order Index / Amount swapped (Index at SSZ offset 8, Amount at 0)", "PW",
      [], ir_swap("Index", "Amount"), 2, []),
-    ("g3-reload-c", "ProposerIndex: `add $-0x10,%rdi` (observed: minus the SSZ offset 8)", "BH",
+    ("call-segments-reload-c", "ProposerIndex: `add $-0x10,%rdi` (observed: minus the SSZ offset 8)", "BH",
      [(51, "  add $-0x8,%rdi", "  add $-0x10,%rdi")], None, 3, ["Slot", "ParentRoot", "StateRoot", "BodyRoot"]),
-    ("g3-reload-reg", "ProposerIndex: buffer reloaded into rcx", "BH",
+    ("call-segments-reload-reg", "ProposerIndex: buffer reloaded into rcx", "BH",
      [(48, "  mov 0x78(%rsp),%rbx", "  mov 0x78(%rsp),%rcx")], None, 3, ["Slot", "ParentRoot", "StateRoot", "BodyRoot"]),
-    ("g3-two-nops-setup", "ProposerIndex: two `nop`s before the call", "BH",
+    ("call-segments-two-nops-setup", "ProposerIndex: two `nop`s before the call", "BH",
      [(55, "  nop", "  nop\n  nop")], None, 3, ["Slot", "ParentRoot", "StateRoot", "BodyRoot"]),
-    ("g3-reload-src-disp", "ProposerIndex: `add $0x10,%rbx` against IR SSZ offset 8", "BH",
+    ("call-segments-reload-src-disp", "ProposerIndex: `add $0x10,%rbx` against IR SSZ offset 8", "BH",
      [(49, "  add $0x8,%rbx", "  add $0x10,%rbx")], None, 3, ["Slot", "ParentRoot", "StateRoot", "BodyRoot"]),
-    ("g3-pad-two-nops", "WithdrawalCredentials: two `nop`s before makeslice", "DD",
+    ("call-segments-pad-two-nops", "WithdrawalCredentials: two `nop`s before makeslice", "DD",
      [(51, "  nop", "  nop\n  nop")], None, 3, ["PublicKey", "Amount", "Signature"]),
-    ("g3-pad-before-memmove", "WithdrawalCredentials: `nop` before `callq runtime.memmove`", "DD",
+    ("call-segments-pad-before-memmove", "WithdrawalCredentials: `nop` before `callq runtime.memmove`", "DD",
      [(68, "  callq runtime.memmove", "  nop\n  callq runtime.memmove")], None, 3, ["PublicKey", "Amount", "Signature"]),
-    ("g3-pad-before-size", "WithdrawalCredentials: `nop` before `mov $0x20,%ecx` (moved)", "DD",
+    ("call-segments-pad-before-size", "WithdrawalCredentials: `nop` before `mov $0x20,%ecx` (moved)", "DD",
      [(50, "  mov $0x20,%ecx", "  nop"), (51, "  nop", "  mov $0x20,%ecx")], None, 3, ["PublicKey", "Amount", "Signature"]),
-    ("g3-pad-offset0", "PublicKey (offset-0 form): `nop` before makeslice", "DD",
+    ("call-segments-pad-offset0", "PublicKey (offset-0 form): `nop` before makeslice", "DD",
      [(17, "  callq runtime.makeslice", "  nop\n  callq runtime.makeslice")], None, 3,
      ["WithdrawalCredentials", "Amount", "Signature"]),
 ]
 
 
 def g3_cases(work, new):
-    """The GEN3 shapes, their adversarial inputs and the compose refusals / Deposit_Data (`DD`) composition."""
+    """The call-segment shapes, their adversarial inputs and the compose refusals / Deposit_Data (`DD`) composition."""
     res, bad = [], 0
     irt = (KR / IR).read_text()
     KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
-    G = ["python3", "-I", "-B", str(new), "p2dec", "--gen3"]
+    G = ["python3", "-I", "-B", str(new), "decoder", "--call-segments"]
     for key in ("PW", "DD", "BH", "AD"):
         c = G3[key]
         outs = []
         for i in range(2):
-            po, su = work / f"g3-new-{key}-{i}.partial.lean", work / f"g3-new-{key}-{i}.json"
+            po, su = work / f"call-segments-new-{key}-{i}.partial.lean", work / f"call-segments-new-{key}-{i}.json"
             for q in (po, su):
                 if q.exists():
                     q.unlink()
@@ -668,7 +668,7 @@ def g3_cases(work, new):
         rc, so, pt, sm = outs[0]
         cov = [f["field"] for f in sm["fields"] if f["status"] == "covered"]
         text = so if key != "AD" else pt
-        f = work / f"g3-new-{key}.lean"
+        f = work / f"call-segments-new-{key}.lean"
         f.write_bytes(text)
         kc = subprocess.run(KC + (["--partial"] if key == "AD" else []) + [str(f)], capture_output=True, text=True)
         com = (KR / c["committed"]).read_bytes() if (KR / c["committed"]).exists() else None
@@ -676,7 +676,7 @@ def g3_cases(work, new):
         ok = (rc == (3 if key == "AD" else 0) and outs[0][:3] == outs[1][:3] and cov == want_cov
               and kc.returncode == (3 if key == "AD" else 0) and (com is None or com == text)
               and (key != "AD" or so == b""))
-        res.append(dict(id=f"g3-new-{key}", expect=f"exit {3 if key == 'AD' else 0} twice, identical, covered {want_cov}, "
+        res.append(dict(id=f"call-segments-new-{key}", expect=f"exit {3 if key == 'AD' else 0} twice, identical, covered {want_cov}, "
                         f"kindcheck PASS, = committed if present", exit=rc, stdout_bytes=len(so), covered=cov,
                         kindcheck_exit=kc.returncode, committed_present=com is not None,
                         equals_committed=(com == text) if com is not None else None, ok=bool(ok)))
@@ -713,13 +713,13 @@ def g3_cases(work, new):
     # compose: refusals for callee / two-directive types, Deposit_Data composed with decAcceptKind
     for key in ("PW", "BH"):
         c = G3[key]
-        po = work / f"g3-compose-{key}.partial.lean"
+        po = work / f"call-segments-compose-{key}.partial.lean"
         if po.exists():
             po.unlink()
         rc, so, se = run(G + ["--compose", "--name", "x_g3", "--S", c["S"], "--ir", IR, "--type", c["type"],
                               "--partial-out", str(po)] + c["args"], KR)
         ok = rc == 2 and so == b"" and not po.exists() and "no composition" in se
-        res.append(dict(id=f"g3-compose-refuse-{key}", expect="exit 2, 0 bytes, no file", exit=rc, stdout_bytes=len(so),
+        res.append(dict(id=f"call-segments-compose-refuse-{key}", expect="exit 2, 0 bytes, no file", exit=rc, stdout_bytes=len(so),
                         stderr=se.strip()[:300], ok=bool(ok)))
         bad |= not ok
     c = G3["DD"]
@@ -728,7 +728,7 @@ def g3_cases(work, new):
                      "--imports", "Codec.DecoderHeadEpilogue,Prysm.Deposit_Data.GeneratedDecodeCallSegments,Prysm.Deposit_Data.Statements", "--open", "Prysm.Deposit_Data.Code"], KR)
             for _ in range(2)]
     rc, so, se = outs[0]
-    f = work / "g3-compose-DD.lean"
+    f = work / "call-segments-compose-DD.lean"
     f.write_bytes(so)
     kc = subprocess.run(KC + [str(f)], capture_output=True, text=True)
     com = KR / "lean/Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean"
@@ -738,17 +738,17 @@ def g3_cases(work, new):
           and "@Codec.decAcceptKind h unmarshalSSZ true [.bytes 48, .bytes 32, .u64, .bytes 96] 106 := by" in t
           and "set_option maxHeartbeats 200000 in\ntheorem Decode.accept_generated_composition_kind" in t
           and "UNCHECKED" not in t and (com is None or com == so))
-    res.append(dict(id="g3-compose-DD", expect="exit 0 twice, identical, decAcceptKind line + Prop identity, kindcheck PASS",
+    res.append(dict(id="call-segments-compose-DD", expect="exit 0 twice, identical, decAcceptKind line + Prop identity, kindcheck PASS",
                     exit=rc, stdout_bytes=len(so), kindcheck_exit=kc.returncode, committed_present=com is not None,
                     ok=bool(ok)))
     bad |= not ok
-    # --gen3 without a GEN3 shape (Eth1Data) covers what --gen2 covers, with the same theorem text
+    # --call-segments without a call-segment shape (Eth1Data) covers what --field-segments covers, with the same theorem text
     c2 = G2["E1"]
     rc, so, se = run(G + ["--S", c2["S"], "--ir", IR, "--type", c2["type"]] + c2["args"], KR)
     com = (KR / c2["committed"]).read_text()
     body = lambda s: s.split("namespace Prysm.Eth1Data\n", 1)[1]
     ok = rc == 0 and body(so.decode()) == body(com)
-    res.append(dict(id="g3-e1-same-theorems-as-gen2", expect="exit 0, theorem text = committed Gen2E1Dec.lean body",
+    res.append(dict(id="call-segments-e1-same-theorems-as-gen2", expect="exit 0, theorem text = committed Gen2E1Dec.lean body",
                     exit=rc, stdout_bytes=len(so), ok=bool(ok)))
     bad |= not ok
     return res, bad
@@ -804,76 +804,76 @@ VI = ["  mov 0x78(%rsp),%rbx", "  add $0x28,%rbx", "  mov 0x88(%rsp),%rdi", "  a
       "  mov $0x8,%ecx"]
 # (id, what, type key, .S edits or function, IR edit, exit, covered, miss class of the first uncovered field or None)
 G4_MUT = [
-    ("g4-clobber-rax", "ValidatorIndex: `mov %rdx,%rax` after `add $0x28,%rax` (receiver clobbered before the call)", "SM",
+    ("steps-clobber-rax", "ValidatorIndex: `mov %rdx,%rax` after `add $0x28,%rax` (receiver clobbered before the call)", "SM",
      sm_vi(VI[:5] + ["  mov %rdx,%rax"] + VI[5:]), None, 3, SMF[:2], "register"),
-    ("g4-clobber-rbx-callee-arg", "ValidatorIndex: `mov 0x88(%rsp),%rbx` after the rbx set-up (source register clobbered)", "SM",
+    ("steps-clobber-rbx-callee-arg", "ValidatorIndex: `mov 0x88(%rsp),%rbx` after the rbx set-up (source register clobbered)", "SM",
      sm_vi(VI[:2] + ["  mov 0x88(%rsp),%rbx"] + VI[2:]), None, 3, SMF[:2], None),
-    ("g4-order-valid", "ValidatorIndex: `add $0x28,%rax` first, then the rbx / rdi set-up (another valid order)", "SM",
+    ("steps-order-valid", "ValidatorIndex: `add $0x28,%rax` first, then the rbx / rdi set-up (another valid order)", "SM",
      sm_vi([VI[4]] + VI[:4] + [VI[5]]), None, 0, SMF, None),
-    ("g4-order-valid-ecx-first", "ValidatorIndex: `mov $0x8,%ecx` first (another valid order)", "SM",
+    ("steps-order-valid-ecx-first", "ValidatorIndex: `mov $0x8,%ecx` first (another valid order)", "SM",
      sm_vi([VI[5]] + VI[:5]), None, 0, SMF, None),
-    ("g4-order-invalid", "ValidatorIndex: `add $0x28,%rbx` before `mov 0x78(%rsp),%rbx` (the load overwrites the add)", "SM",
+    ("steps-order-invalid", "ValidatorIndex: `add $0x28,%rbx` before `mov 0x78(%rsp),%rbx` (the load overwrites the add)", "SM",
      sm_vi([VI[1], VI[0]] + VI[2:]), None, 3, SMF[:2], "set-up order"),
-    ("g4-extra-harmless", "ValidatorIndex: an extra `mov %rdi,%rsi` in the set-up", "SM",
+    ("steps-extra-harmless", "ValidatorIndex: an extra `mov %rdi,%rsi` in the set-up", "SM",
      sm_vi(VI[:4] + ["  mov %rdi,%rsi"] + VI[4:]), None, 0, SMF, None),
-    ("g4-label-fallthrough", "ValidatorIndex: a fall-through label between two set-up moves (label step)", "SM",
+    ("steps-label-fallthrough", "ValidatorIndex: a fall-through label between two set-up moves (label step)", "SM",
      sm_vi(VI[:2] + [f"{SML}zz:"] + VI[2:]), None, 0, SMF, None),
-    ("g4-nop-start", "ValidatorIndex: `nop` before the first set-up move", "SM", sm_vi(["  nop"] + VI), None, 0, SMF, None),
-    ("g4-nop-middle", "ValidatorIndex: `nop` between `add $0x28,%rbx` and `mov 0x88(%rsp),%rdi`", "SM",
+    ("steps-nop-start", "ValidatorIndex: `nop` before the first set-up move", "SM", sm_vi(["  nop"] + VI), None, 0, SMF, None),
+    ("steps-nop-middle", "ValidatorIndex: `nop` between `add $0x28,%rbx` and `mov 0x88(%rsp),%rdi`", "SM",
      sm_vi(VI[:2] + ["  nop"] + VI[2:]), None, 0, SMF, None),
-    ("g4-nop-end", "ValidatorIndex: `nop` between `mov $0x8,%ecx` and the `callq`", "SM", sm_vi(VI + ["  nop"]), None, 0, SMF, None),
-    ("g4-nop-doubled-after-call", "ValidatorIndex: two `nop`s between the `callq` and `test`", "SM",
+    ("steps-nop-end", "ValidatorIndex: `nop` between `mov $0x8,%ecx` and the `callq`", "SM", sm_vi(VI + ["  nop"]), None, 0, SMF, None),
+    ("steps-nop-doubled-after-call", "ValidatorIndex: two `nop`s between the `callq` and `test`", "SM",
      [(90, "  test %rax,%rax", "  nop\n  nop\n  test %rax,%rax")], None, 0, SMF, None),
-    ("g4-nop-in-segment", "Signature: `nop` before `callq runtime.memmove` and two before makeslice", "SM",
+    ("steps-nop-in-segment", "Signature: `nop` before `callq runtime.memmove` and two before makeslice", "SM",
      [(141, "  callq runtime.memmove", "  nop\n  callq runtime.memmove"), (124, "  nop", "  nop\n  nop")], None, 0, SMF, None),
-    ("g4-cld-for-nop-seg", "Signature: the `nop` before makeslice replaced by `cld` (one byte, no step lemma)", "SM",
+    ("steps-cld-for-nop-seg", "Signature: the `nop` before makeslice replaced by `cld` (one byte, no step lemma)", "SM",
      [(124, "  nop", "  cld")], None, 3, SMF[:3], "new directive form"),
-    ("g4-cld-for-nop-call", "TargetIndex: the `nop` after the `callq` replaced by `cld`", "PC",
+    ("steps-cld-for-nop-call", "TargetIndex: the `nop` after the `callq` replaced by `cld`", "PC",
      [(57, "  nop", "  cld")], None, 3, PCF[:1], "new directive form"),
-    ("g4-cld-in-setup", "TargetIndex: `cld` in the set-up (no step lemma)", "PC",
+    ("steps-cld-in-setup", "TargetIndex: `cld` in the set-up (no step lemma)", "PC",
      [(53, "  mov 0x58(%rsp),%rax", "  cld\n  mov 0x58(%rsp),%rax")], None, 3, PCF[:1], "new directive form"),
-    ("g4-disp-f-off8", "ValidatorIndex: `add $0x30,%rax` (Go offset 0x28 in the IR)", "SM",
+    ("steps-disp-f-off8", "ValidatorIndex: `add $0x30,%rax` (Go offset 0x28 in the IR)", "SM",
      sm_vi(VI[:4] + ["  add $0x30,%rax"] + VI[5:]), None, 3, SMF[:2], "other"),
-    ("g4-disp-src-off8", "ValidatorIndex: `add $0x30,%rbx` (SSZ offset 0x28 in the IR)", "SM",
+    ("steps-disp-src-off8", "ValidatorIndex: `add $0x30,%rbx` (SSZ offset 0x28 in the IR)", "SM",
      sm_vi([VI[0], "  add $0x30,%rbx"] + VI[2:]), None, 3, SMF[:2], None),
-    ("g4-swapped-call-regs", "WithdrawableEpoch: `mov %rsi,%rbx; mov %rdx,%rax` (source / destination swapped)", "PW",
+    ("steps-swapped-call-regs", "WithdrawableEpoch: `mov %rsi,%rbx; mov %rdx,%rax` (source / destination swapped)", "PW",
      [(57, "  mov %rsi,%rax", "  mov %rsi,%rbx"), (58, "  mov %rdx,%rbx", "  mov %rdx,%rax")], None, 3, PWF[:2], "register"),
-    ("g4-unknown-callee-code", "TargetIndex: `callq …Gwei.UnmarshalSSZ` in the code (IR ValidatorIndex)", "PC",
+    ("steps-unknown-callee-code", "TargetIndex: `callq …Gwei.UnmarshalSSZ` in the code (IR ValidatorIndex)", "PC",
      [(56, f"  callq {PRIM}ValidatorIndex.UnmarshalSSZ", f"  callq {PRIM}Gwei.UnmarshalSSZ")], None, 3, PCF[:1], None),
-    ("g4-unknown-callee-ir", "TargetIndex: callee Gwei.UnmarshalSSZ in code and IR (no proved spec)", "PC",
+    ("steps-unknown-callee-ir", "TargetIndex: callee Gwei.UnmarshalSSZ in code and IR (no proved spec)", "PC",
      [(56, f"  callq {PRIM}ValidatorIndex.UnmarshalSSZ", f"  callq {PRIM}Gwei.UnmarshalSSZ")],
      ir_overlay_name("TargetIndex", "Gwei"), 3, PCF[:1], "new field kind"),
-    ("g4-label-in-call-window", "TargetIndex: the `nop` after the `callq` replaced by a label (inside the call window)", "PC",
+    ("steps-label-in-call-window", "TargetIndex: the `nop` after the `callq` replaced by a label (inside the call window)", "PC",
      [(57, "  nop", "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_zz:")],
      None, 3, PCF[:1], "other"),
-    ("g4-label-in-seg-window", "Signature: a label between `xor %ebx,%ebx` and `mov $0x60,%ecx` (inside the segment window)", "SM",
+    ("steps-label-in-seg-window", "Signature: a label between `xor %ebx,%ebx` and `mov $0x60,%ecx` (inside the segment window)", "SM",
      [(123, "  mov $0x60,%ecx", f"{SML}zz:\n  mov $0x60,%ecx")], None, 3, SMF[:3], "other"),
-    ("g4-ir-order-swap", "IR order Amount / WithdrawableEpoch swapped (wrong field order)", "PW",
+    ("steps-ir-order-swap", "IR order Amount / WithdrawableEpoch swapped (wrong field order)", "PW",
      [], ir_swap("Amount", "WithdrawableEpoch"), 3, PWF[:1], "set-up order"),
-    ("g4-code-order-swap", "Eth1Data code: the DepositCount read moved after the BlockHash segment", "E1",
+    ("steps-code-order-swap", "Eth1Data code: the DepositCount read moved after the BlockHash segment", "E1",
      lambda L: L[:47] + L[50:86] + L[47:50] + L[86:], None, 3, ["DepositRoot"], "set-up order"),
-    ("g4-ry-rbx", "BlockRoot: receiver reloaded into rbx after memmove (not in the lemma's set)", "SM",
+    ("steps-ry-rbx", "BlockRoot: receiver reloaded into rbx after memmove (not in the lemma's set)", "SM",
      [(68, "  mov 0x70(%rsp),%rax", "  mov 0x70(%rsp),%rbx"), (69, "  movq $0x20,0x18(%rax)", "  movq $0x20,0x18(%rbx)"),
       (70, "  movq $0x20,0x20(%rax)", "  movq $0x20,0x20(%rbx)")], None, 3, SMF[:1], "register"),
-    ("g4-reload-other-slot", "BlockRoot: second receiver reload from 0x68(%rsp)", "SM",
+    ("steps-reload-other-slot", "BlockRoot: second receiver reload from 0x68(%rsp)", "SM",
      [(68, "  mov 0x70(%rsp),%rax", "  mov 0x68(%rsp),%rax")], None, 3, SMF[:1], "other"),
-    ("g4-buffer-slot-overwritten", "Signature: `mov %rax,0x78(%rsp)` before the segment (buffer slot overwritten)", "SM",
+    ("steps-buffer-slot-overwritten", "Signature: `mov %rax,0x78(%rsp)` before the segment (buffer slot overwritten)", "SM",
      [(119, "  mov %rbx,0x30(%rsp)", "  mov %rbx,0x30(%rsp)\n  mov %rax,0x78(%rsp)")], None, 3, SMF[:3], "register"),
-    ("g4-store-unknown-base", "ValidatorIndex: `mov %rax,0x8(%rcx)` in the set-up (store through an unknown base)", "SM",
+    ("steps-store-unknown-base", "ValidatorIndex: `mov %rax,0x8(%rcx)` in the set-up (store through an unknown base)", "SM",
      sm_vi(VI[:2] + ["  mov %rax,0x8(%rcx)"] + VI[2:]), None, 3, SMF[:2], "register"),
-    ("g4-indexed-operand", "Amount: `mov 0x8(%rbx,%rcx,1),%r8` (index operand)", "PW",
+    ("steps-indexed-operand", "Amount: `mov 0x8(%rbx,%rcx,1),%r8` (index operand)", "PW",
      [(55, "  mov 0x8(%rbx),%r8", "  mov 0x8(%rbx,%rcx,1),%r8")], None, 3, PWF[:1], "new directive form"),
-    ("g4-imm-store", "TargetIndex: `movq $0x0,0x40(%rsp)` in the set-up (immediate store)", "PC",
+    ("steps-imm-store", "TargetIndex: `movq $0x0,0x40(%rsp)` in the set-up (immediate store)", "PC",
      [(53, "  mov 0x58(%rsp),%rax", "  movq $0x0,0x40(%rsp)\n  mov 0x58(%rsp),%rax")], None, 3, PCF[:1], "new directive form"),
-    ("g4-rip-load", "TargetIndex: `mov ssz.ErrSize(%rip),%rdi` in the set-up", "PC",
+    ("steps-rip-load", "TargetIndex: `mov ssz.ErrSize(%rip),%rdi` in the set-up", "PC",
      [(53, "  mov 0x58(%rsp),%rax", "  mov ssz.ErrSize(%rip),%rdi\n  mov 0x58(%rsp),%rax")], None, 3, PCF[:1], "new directive form"),
-    ("g4-rsp-change", "TargetIndex: `add $0x8,%rsp` in the set-up", "PC",
+    ("steps-rsp-change", "TargetIndex: `add $0x8,%rsp` in the set-up", "PC",
      [(53, "  mov 0x58(%rsp),%rax", "  add $0x8,%rsp\n  mov 0x58(%rsp),%rax")], None, 3, PCF[:1], None),
-    ("g4-movi-len-16", "TargetIndex: `mov $0x10,%ecx` (rcx = 16 at the call)", "PC",
+    ("steps-movi-len-16", "TargetIndex: `mov $0x10,%ecx` (rcx = 16 at the call)", "PC",
      [(55, "  mov $0x8,%ecx", "  mov $0x10,%ecx")], None, 3, PCF[:1], None),
-    ("g4-u64-src-disp", "Amount: `mov 0x10(%rbx),%r8` (SSZ offset 8 in the IR)", "PW",
+    ("steps-u64-src-disp", "Amount: `mov 0x10(%rbx),%r8` (SSZ offset 8 in the IR)", "PW",
      [(55, "  mov 0x8(%rbx),%r8", "  mov 0x10(%rbx),%r8")], None, 3, PWF[:1], "other"),
-    ("g4-u64-dst-disp", "Amount: store to 0x18(%rax), the Go offset of WithdrawableEpoch", "PW",
+    ("steps-u64-dst-disp", "Amount: store to 0x18(%rax), the Go offset of WithdrawableEpoch", "PW",
      [(56, "  mov %r8,0x10(%rax)", "  mov %r8,0x18(%rax)")], None, 3, PWF[:1], "set-up order"),
 ]
 
@@ -901,97 +901,97 @@ def rv(eds):
 
 E1F = G4["E1"]["fields"]
 SMJ = SML[:-1]
-# The reviewer's inputs (ids `g4f-<reviewer id>`). The seven inputs the GEN4 walker accepted although
+# The reviewer's inputs (ids `steps-review-<reviewer id>`). The seven inputs the step walker accepted although
 # the code does not establish the block entry must be refused; the eleven valid variants stay covered; plus
 # head-miss classes and the frame / goroutine register rule.
 G4F_MUT = [
-    ("g4f-a05", "8-byte stack store at 0x7c overlaps the buffer slot 0x78 (M1a)", "SM",
+    ("steps-review-a05", "8-byte stack store at 0x7c overlaps the buffer slot 0x78 (M1a)", "SM",
      rv([(83, "mov 0x78(%rsp),%rbx", ("before", ["mov %rdi,0x7c(%rsp)"]))]), None, 3, SMF[:2], "other"),
-    ("g4f-a15", "a05 with nops around the store (M1a)", "SM",
+    ("steps-review-a15", "a05 with nops around the store (M1a)", "SM",
      rv([(83, "mov 0x78(%rsp),%rbx", ("before", ["nop", "mov %rdi,0x7c(%rsp)", "nop"])),
          (88, "mov $0x8,%ecx", ("before", ["nop"]))]), None, 3, SMF[:2], "other"),
-    ("g4f-a29", "8-byte stack store at 0x3c overlaps the buffer slot 0x38 (M1a)", "E1",
+    ("steps-review-a29", "8-byte stack store at 0x3c overlaps the buffer slot 0x38 (M1a)", "E1",
      rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x3c(%rsp)"]))]), None, 3, E1F[:1], "other"),
-    ("g4f-a31", "8-byte stack store at 0x34 overlaps the receiver slot 0x30 before the segment (M1a)", "E1",
+    ("steps-review-a31", "8-byte stack store at 0x34 overlaps the receiver slot 0x30 before the segment (M1a)", "E1",
      rv([(51, "lea type__+387072(%rip),%rax", ("before", ["mov %rsi,0x34(%rsp)"]))]), None, 3, E1F[:2], "other"),
-    ("g4f-b05", "8-byte stack store at 0x34 overlaps the buffer slot 0x38 from below (M1a)", "E1",
+    ("steps-review-b05", "8-byte stack store at 0x34 overlaps the buffer slot 0x38 from below (M1a)", "E1",
      rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x34(%rsp)"]))]), None, 3, E1F[:1], "other"),
-    ("g4f-b01", "head: receiver spilled before `push %rbp` (M1b)", "SM",
+    ("steps-review-b01", "head: receiver spilled before `push %rbp` (M1b)", "SM",
      rv([(5, "push %rbp", ("before", ["mov %rax,0x70(%rsp)"])), (9, "nop", None), (12, "mov %rax,0x70(%rsp)", None)]),
      None, 2, [], "other"),
-    ("g4f-b02", "head: `sub $0x60,%rsp` replaced by `nop` (frame never allocated) (M1b)", "SM",
+    ("steps-review-b02", "head: `sub $0x60,%rsp` replaced by `nop` (frame never allocated) (M1b)", "SM",
      rv([(7, "sub $0x60,%rsp", "nop")]), None, 2, [], "other"),
-    ("g4f-b03", "head: a spill at 0x74 and `mov %rcx,0x70(%rsp)` at directive 8 (M1b)", "SM",
+    ("steps-review-b03", "head: a spill at 0x74 and `mov %rcx,0x70(%rsp)` at directive 8 (M1b)", "SM",
      rv([(9, "nop", "mov %rcx,0x70(%rsp)"), (12, "mov %rax,0x70(%rsp)", "mov %rax,0x74(%rsp)")]), None, 2, [], "other"),
-    ("g4f-a41", "head: an extra `nop` moves `cmp $size,%rcx` to directive 10 (S1: class padding)", "SM",
+    ("steps-review-a41", "head: an extra `nop` moves `cmp $size,%rcx` to directive 10 (S1: class padding)", "SM",
      rv([(9, "nop", ["nop", "nop"])]), None, 2, [], "padding"),
-    ("g4f-a13", "ValidatorIndex source `add $0x0,%rbx` (S1: wrong offset is class other)", "SM",
+    ("steps-review-a13", "ValidatorIndex source `add $0x0,%rbx` (S1: wrong offset is class other)", "SM",
      rv([(84, "add $0x28,%rbx", "add $0x0,%rbx")]), None, 3, SMF[:2], "other"),
-    ("g4f-a43", "ValidatorIndex: receiver reloaded after its add (class set-up order)", "SM",
+    ("steps-review-a43", "ValidatorIndex: receiver reloaded after its add (class set-up order)", "SM",
      rv([(87, "add $0x28,%rax", ["add $0x28,%rax", "mov 0x70(%rsp),%rax"])]), None, 3, SMF[:2], "set-up order"),
-    ("g4f-store-retaddr", "ValidatorIndex: `mov %rdi,0x68(%rsp)` (the return-address slot, frame 0x60)", "SM",
+    ("steps-review-store-retaddr", "ValidatorIndex: `mov %rdi,0x68(%rsp)` (the return-address slot, frame 0x60)", "SM",
      sm_vi(VI[:2] + ["  mov %rdi,0x68(%rsp)"] + VI[2:]), None, 3, SMF[:2], "other"),
-    ("g4f-store-below-sp", "ValidatorIndex: `mov %rdi,-0x8(%rsp)` (below rsp)", "SM",
+    ("steps-review-store-below-sp", "ValidatorIndex: `mov %rdi,-0x8(%rsp)` (below rsp)", "SM",
      sm_vi(VI[:2] + ["  mov %rdi,-0x8(%rsp)"] + VI[2:]), None, 3, SMF[:2], "other"),
-    ("g4f-write-r14", "ValidatorIndex: `mov %rdx,%r14` in the set-up (goroutine register)", "SM",
+    ("steps-review-write-r14", "ValidatorIndex: `mov %rdx,%r14` in the set-up (goroutine register)", "SM",
      sm_vi(VI[:2] + ["  mov %rdx,%r14"] + VI[2:]), None, 3, SMF[:2], "other"),
-    ("g4f-write-rbp", "ValidatorIndex: `lea 0x8(%rax),%rbp` in the set-up (frame pointer)", "SM",
+    ("steps-review-write-rbp", "ValidatorIndex: `lea 0x8(%rax),%rbp` in the set-up (frame pointer)", "SM",
      sm_vi(VI[:2] + ["  lea 0x8(%rax),%rbp"] + VI[2:]), None, 3, SMF[:2], "other"),
     # the eleven valid variants of the reviewer (covered)
-    ("g4f-a08", "fall-through label in the ValidatorIndex set-up", "SM",
+    ("steps-review-a08", "fall-through label in the ValidatorIndex set-up", "SM",
      rv([(87, "add $0x28,%rax", ("before", [SMJ + "_zz:"]))]), None, 0, SMF, None),
-    ("g4f-a14", "nops at 25 positions", "SM",
+    ("steps-review-a14", "nops at 25 positions", "SM",
      rv([(x, "", ("before", ["nop"])) for x in (16, 17, 18, 19, 20, 48, 51, 53, 62, 65, 67, 70, 73, 82, 84, 86, 88, 89, 90,
                                                  91, 119, 126, 141, 147, 156)]), None, 0, SMF, None),
-    ("g4f-a16", "spill + reload of the receiver through 0x48(%rsp)", "SM",
+    ("steps-review-a16", "spill + reload of the receiver through 0x48(%rsp)", "SM",
      rv([(87, "add $0x28,%rax", ("before", ["mov %rax,0x48(%rsp)", "mov 0x48(%rsp),%rax"]))]), None, 0, SMF, None),
-    ("g4f-a19", "forward jmp over a junk directive", "SM",
+    ("steps-review-a19", "forward jmp over a junk directive", "SM",
      rv([(87, "add $0x28,%rax", ("before", ["jmp " + SMJ + "_yy", "xor %eax,%eax", SMJ + "_yy:"]))]), None, 0, SMF, None),
-    ("g4f-a21", "rcx = 16 - 8", "SM", rv([(88, "mov $0x8,%ecx", ["mov $0x10,%ecx", "add $-0x8,%rcx"])]), None, 0, SMF, None),
-    ("g4f-a27", "DepositCount value moved through rcx", "E1",
+    ("steps-review-a21", "rcx = 16 - 8", "SM", rv([(88, "mov $0x8,%ecx", ["mov $0x10,%ecx", "add $-0x8,%rcx"])]), None, 0, SMF, None),
+    ("steps-review-a27", "DepositCount value moved through rcx", "E1",
      rv([(50, "mov %rsi,0x20(%rdx)", ["mov %rsi,%rcx", "nop", "mov %rcx,0x20(%rdx)"])]), None, 0, E1F, None),
-    ("g4f-a34", "store after the last field event (G4-F2: epilogue rule, refused)", "E1",
+    ("steps-review-a34", "store after the last field event (second review: epilogue rule, refused)", "E1",
      rv([(87, "xor %eax,%eax", ("before", ["mov %rsi,0x20(%rdx)"]))]), None, 2, [], "other"),
-    ("g4f-a35", "buffer reloaded from sp + 8 after the call", "PC",
+    ("steps-review-a35", "buffer reloaded from sp + 8 after the call", "PC",
      rv([(49, "mov 0x60(%rsp),%rbx", "mov 0x8(%rsp),%rbx")]), None, 0, PCF, None),
-    ("g4f-a38", "receiver in another frame slot across the call", "PC",
+    ("steps-review-a38", "receiver in another frame slot across the call", "PC",
      rv([(16, "add $0x8,%rax", ("before", ["mov %rax,0x30(%rsp)"])), (53, "mov 0x58(%rsp),%rax", "mov 0x30(%rsp),%rax")]),
      None, 0, PCF, None),
-    ("g4f-b04", "no nil check in the head", "SM", rv([(15, "test %al,(%rax)", None)]), None, 0, SMF, None),
-    ("g4f-b06", "aligned store to the neighbour slot 0x40", "E1",
+    ("steps-review-b04", "no nil check in the head", "SM", rv([(15, "test %al,(%rax)", None)]), None, 0, SMF, None),
+    ("steps-review-b06", "aligned store to the neighbour slot 0x40", "E1",
      rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x40(%rsp)"]))]), None, 0, E1F, None),
 ]
 
 # Head size immediate vs the IR, and the systematic pass (callee vs the IR overlay
 # type, the directives after the last field event)
 G4F2_MUT = [
-    ("g4f2-c34", "head: `cmp $0x10,%rcx` (IR SSZ size 0x90) (M3)", "SM",
+    ("steps-review2-c34", "head: `cmp $0x10,%rcx` (IR SSZ size 0x90) (M3)", "SM",
      rv([(10, "cmp $0x90,%rcx", "cmp $0x10,%rcx")]), None, 2, [], "other"),
-    ("g4f2-d15", "head: `cmp $0x20,%rcx` (IR SSZ size 0x48) (M3)", "E1",
+    ("steps-review2-d15", "head: `cmp $0x20,%rcx` (IR SSZ size 0x48) (M3)", "E1",
      rv([(10, "cmp $0x48,%rcx", "cmp $0x20,%rcx")]), None, 2, [], "other"),
-    ("g4f2-d16", "head: `cmp $0x100,%rcx` (IR SSZ size 0x48) (M3)", "E1",
+    ("steps-review2-d16", "head: `cmp $0x100,%rcx` (IR SSZ size 0x48) (M3)", "E1",
      rv([(10, "cmp $0x48,%rcx", "cmp $0x100,%rcx")]), None, 2, [], "other"),
-    ("g4f2-callee-vi-epoch", "Index (IR ValidatorIndex): `callq …Epoch.UnmarshalSSZ` (callee not the overlay type)", "PW",
+    ("steps-review2-callee-vi-epoch", "Index (IR ValidatorIndex): `callq …Epoch.UnmarshalSSZ` (callee not the overlay type)", "PW",
      rv([(18, f"callq {PRIM}ValidatorIndex.UnmarshalSSZ", f"callq {PRIM}Epoch.UnmarshalSSZ")]), None, 2, [], "set-up order"),
-    ("g4f2-callee-epoch-vi", "WithdrawableEpoch (IR Epoch): `callq …ValidatorIndex.UnmarshalSSZ`", "PW",
+    ("steps-review2-callee-epoch-vi", "WithdrawableEpoch (IR Epoch): `callq …ValidatorIndex.UnmarshalSSZ`", "PW",
      rv([(60, f"callq {PRIM}Epoch.UnmarshalSSZ", f"callq {PRIM}ValidatorIndex.UnmarshalSSZ")]), None, 3, PWF[:2], "other"),
-    ("g4f2-epi-call", "a `callq …Epoch.UnmarshalSSZ` after the last field event", "E1",
+    ("steps-review2-epi-call", "a `callq …Epoch.UnmarshalSSZ` after the last field event", "E1",
      rv([(87, "xor %eax,%eax", ("before", [f"callq {PRIM}Epoch.UnmarshalSSZ"]))]), None, 2, [], "other"),
-    ("g4f2-epi-store-rsp", "a stack store `mov %rsi,0x8(%rsp)` after the last field event", "E1",
+    ("steps-review2-epi-store-rsp", "a stack store `mov %rsi,0x8(%rsp)` after the last field event", "E1",
      rv([(87, "xor %eax,%eax", ("before", ["mov %rsi,0x8(%rsp)"]))]), None, 2, [], "other"),
-    ("g4f2-epi-frame", "`add $0x28,%rsp` (head frame 0x20) after the last field event", "E1",
+    ("steps-review2-epi-frame", "`add $0x28,%rsp` (head frame 0x20) after the last field event", "E1",
      rv([(89, "add $0x20,%rsp", "add $0x28,%rsp")]), None, 2, [], "other"),
-    ("g4f2-epi-nop-valid", "a `nop` in the epilogue (plain return: covered)", "E1",
+    ("steps-review2-epi-nop-valid", "a `nop` in the epilogue (plain return: covered)", "E1",
      rv([(89, "add $0x20,%rsp", ("before", ["nop"]))]), None, 0, E1F, None),
 ]
 
 # An epilogue `jmp` to a label that is not in the file
 G4F3_MUT = [
-    ("g4f3-x01", "Eth1Data: `jmp runtime.abort` in place of `xor %eax,%eax` after the last field event (M4)", "E1",
+    ("steps-review3-x01", "Eth1Data: `jmp runtime.abort` in place of `xor %eax,%eax` after the last field event (M4)", "E1",
      rv([(87, "xor %eax,%eax", "jmp runtime.abort")]), None, 2, [], "other"),
-    ("g4f3-x02", "Eth1Data: `jmp *%rdx` in place of `xor %eax,%eax` after the last field event (M4)", "E1",
+    ("steps-review3-x02", "Eth1Data: `jmp *%rdx` in place of `xor %eax,%eax` after the last field event (M4)", "E1",
      rv([(87, "xor %eax,%eax", "jmp *%rdx")]), None, 2, [], "other"),
-    ("g4f3-x03", "SyncCommitteeMessage: a tail `jmp …Slot.UnmarshalSSZ` after the last field event (M4)", "SM",
+    ("steps-review3-x03", "SyncCommitteeMessage: a tail `jmp …Slot.UnmarshalSSZ` after the last field event (M4)", "SM",
      rv([(157, "mov 0x28(%rsp),%rax", ("before", ["jmp " + PRIM + "Slot.UnmarshalSSZ"]))]), None, 2, [], "other"),
 ]
 
@@ -1124,9 +1124,9 @@ def fc_cases(work, new):
     h.write_text(FC_HARNESS)
     for key in ("E1", "SM", "PW"):
         c = G4[key]
-        cfg, out = work / f"fc-{key}.cfg.json", work / f"fc-{key}.result.json"
-        cfg.write_text(json.dumps(dict(argv=["p2dec", "--gen4", "--S", c["S"], "--ir", IR, "--type", c["type"]] + c["args"],
-                                       summary=str(work / f"fc-{key}.summary.json"))))
+        cfg, out = work / f"steps-fail-closed-{key}.cfg.json", work / f"steps-fail-closed-{key}.result.json"
+        cfg.write_text(json.dumps(dict(argv=["decoder", "--steps", "--S", c["S"], "--ir", IR, "--type", c["type"]] + c["args"],
+                                       summary=str(work / f"steps-fail-closed-{key}.summary.json"))))
         out.unlink(missing_ok=True)
         rc, so, se = run(["python3", "-I", "-B", str(h), str(new), str(cfg), str(out)], KR)
         R = json.loads(out.read_text()) if rc == 0 and out.exists() else []
@@ -1141,7 +1141,7 @@ def fc_cases(work, new):
             else:
                 ok = all(r["rc"] in ((2,) if kind in ("unexpected", "sysexit0") else (2, 3)) and r["stdout"] == 0
                          and r["sm_exit"] == r["rc"] and r["total"] == n and r["covered"] < n for r in rs)
-            res.append(dict(id=f"fc-{key}-{ph.replace(' ', '')}-{kind.replace(' ', '_')}", expect="control: exit 0, all "
+            res.append(dict(id=f"steps-fail-closed-{key}-{ph.replace(' ', '')}-{kind.replace(' ', '_')}", expect="control: exit 0, all "
                             "covered" if ph == "control" else "exit 2 / 3 (2 for unexpected / SystemExit), 0 bytes, "
                             "summary exit equal, covered < total", exit=sorted({str(r["rc"]) for r in rs}),
                             stdout_bytes=sum(r["stdout"] for r in rs), injections=len(rs),
@@ -1150,7 +1150,7 @@ def fc_cases(work, new):
         # every IR field had injections in the walk, and every phase was injected
         fl = {r["phase"] for r in R}
         ok = rc == 0 and all(f"field {x}" in fl for x in range(n)) and {"head", "text", "epilogue", "flags", "control"} <= fl
-        res.append(dict(id=f"fc-{key}-phases", expect=f"harness exit 0; injections in the head, fields 0..{n - 1}, "
+        res.append(dict(id=f"steps-fail-closed-{key}-phases", expect=f"harness exit 0; injections in the head, fields 0..{n - 1}, "
                         "texts, epilogue, flags", exit=rc, stdout_bytes=0, injections=len(R),
                         phases=sorted(fl), stderr=se.strip()[-300:], ok=bool(ok)))
         bad |= not ok
@@ -1158,15 +1158,15 @@ def fc_cases(work, new):
 
 
 def g4_cases(work, new):
-    """`--gen4` on the development types, compose refusal, dataflow adversarial inputs."""
+    """`--steps` on the development types, compose refusal, dataflow adversarial inputs."""
     res, bad = [], 0
     irt = (KR / IR).read_text()
     KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
-    G = ["python3", "-I", "-B", str(new), "p2dec", "--gen4"]
+    G = ["python3", "-I", "-B", str(new), "decoder", "--steps"]
     for key, c in G4.items():
         outs = []
         for i in range(2):
-            po, su = work / f"g4-new-{key}-{i}.partial.lean", work / f"g4-new-{key}-{i}.json"
+            po, su = work / f"steps-new-{key}-{i}.partial.lean", work / f"steps-new-{key}-{i}.json"
             for q in (po, su):
                 if q.exists():
                     q.unlink()
@@ -1177,25 +1177,25 @@ def g4_cases(work, new):
         part = c["cov"] != c["fields"]
         cov = [f["field"] for f in sm["fields"] if f["status"] == "covered"]
         text = pt if part else so
-        f = work / f"g4-new-{key}.lean"
+        f = work / f"steps-new-{key}.lean"
         f.write_bytes(text)
         kc = subprocess.run(KC + (["--partial"] if part else []) + [str(f)], capture_output=True, text=True)
         com = (KR / c["committed"]).read_bytes() if (KR / c["committed"]).exists() else None
         ok = (rc == (3 if part else 0) and outs[0][:3] == outs[1][:3] and cov == c["cov"]
               and kc.returncode == (3 if part else 0) and (com is None or com == text) and (not part or so == b""))
-        res.append(dict(id=f"g4-new-{key}", expect=f"exit {3 if part else 0} twice, identical, covered {c['cov']}, "
+        res.append(dict(id=f"steps-new-{key}", expect=f"exit {3 if part else 0} twice, identical, covered {c['cov']}, "
                         f"kindcheck PASS, = committed if present", exit=rc, stdout_bytes=len(so), covered=cov,
                         kindcheck_exit=kc.returncode, committed_present=com is not None,
                         equals_committed=(com == text) if com is not None else None, ok=bool(ok)))
         bad |= not ok
     c = G4["SM"]
-    po = work / "g4-compose.partial.lean"
+    po = work / "steps-compose.partial.lean"
     if po.exists():
         po.unlink()
     rc, so, se = run(G + ["--compose", "--name", "x_g4", "--S", c["S"], "--ir", IR, "--type", c["type"],
                           "--partial-out", str(po)] + c["args"], KR)
-    ok = rc == 2 and so == b"" and not po.exists() and "--gen4 --compose: refused" in se
-    res.append(dict(id="g4-compose-refuse", expect="exit 2, 0 bytes, no file, reason", exit=rc, stdout_bytes=len(so),
+    ok = rc == 2 and so == b"" and not po.exists() and "--steps --compose: refused" in se
+    res.append(dict(id="steps-compose-refuse", expect="exit 2, 0 bytes, no file, reason", exit=rc, stdout_bytes=len(so),
                     stderr=se.strip()[:300], ok=bool(ok)))
     bad |= not ok
     for (mid, what, key, eds, irf, want, covw, mcls) in G4_MUT + G4F_MUT + G4F2_MUT + G4F3_MUT:
@@ -1242,7 +1242,7 @@ def g4_cases(work, new):
     return res, bad
 
 
-# ---------------------------------------------------------------------------------------------- GEN5
+# ---------------------------------------------------------------------------------------------- whole-accept
 
 def g5c(sdir, tname, const, mod, pre, extra=()):
     return dict(S=f"prysm/go1.26.10/link-set/{sdir}/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
@@ -1273,60 +1273,60 @@ def ir_goff(field, off):
 PDL = "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_"
 # (id, what, type key, .S edit function or None, IR edit or None, expected exit)
 G5_MUT = [
-    # classes of the GEN4 reviews (the GEN4 front end refuses; GEN5 emits nothing)
-    ("g5-store-misaligned", "PendingDeposit Amount: `mov %rsi,0x2c(%rsp)` before the receiver store (misaligned stack store)",
+    # classes of the step reviews (the step front end refuses; whole-accept emits nothing)
+    ("whole-accept-store-misaligned", "PendingDeposit Amount: `mov %rsi,0x2c(%rsp)` before the receiver store (misaligned stack store)",
      "PD", rv([(88, "mov %rsi,0x38(%rdx)", ("before", ["mov %rsi,0x2c(%rsp)"]))]), None, 2),
-    ("g5-store-overlap-bf", "PendingDeposit Amount: `mov %rdx,0x58(%rsp)` overwrites the buffer slot before its reload",
+    ("whole-accept-store-overlap-bf", "PendingDeposit Amount: `mov %rdx,0x58(%rsp)` overwrites the buffer slot before its reload",
      "PD", rv([(86, "mov 0x58(%rsp),%rsi", ("before", ["mov %rdx,0x58(%rsp)"]))]), None, 2),
-    ("g5-head-spill-before-push", "VoluntaryExit: a spill `mov %rax,0x58(%rsp)` before `push %rbp`", "VE",
+    ("whole-accept-head-spill-before-push", "VoluntaryExit: a spill `mov %rax,0x58(%rsp)` before `push %rbp`", "VE",
      rv([(5, "push %rbp", ("before", ["mov %rax,0x58(%rsp)"]))]), None, 2),
-    ("g5-head-no-frame", "VoluntaryExit: `sub $0x48,%rsp` removed (frame never allocated)", "VE",
+    ("whole-accept-head-no-frame", "VoluntaryExit: `sub $0x48,%rsp` removed (frame never allocated)", "VE",
      rv([(7, "sub $0x48,%rsp", "nop")]), None, 2),
-    ("g5-head-nop-moved", "VoluntaryExit: the head `nop` moved before `cmp 0x10(%r14),%rsp`", "VE",
+    ("whole-accept-head-nop-moved", "VoluntaryExit: the head `nop` moved before `cmp 0x10(%r14),%rsp`", "VE",
      rv([(9, "nop", None), (3, "cmp 0x10(%r14),%rsp", ("before", ["nop"]))]), None, 2),
-    ("g5-size-imm", "VoluntaryExit: `cmp $0x18,%rcx` (IR SSZ size 16)", "VE", rv([(10, "cmp $0x10,%rcx", "cmp $0x18,%rcx")]), None, 2),
-    ("g5-epi-jmp-missing", "PowBlock: `jmp runtime.abort` in place of `xor %eax,%eax` after the last field event", "PB",
+    ("whole-accept-size-imm", "VoluntaryExit: `cmp $0x18,%rcx` (IR SSZ size 16)", "VE", rv([(10, "cmp $0x10,%rcx", "cmp $0x18,%rcx")]), None, 2),
+    ("whole-accept-epi-jmp-missing", "PowBlock: `jmp runtime.abort` in place of `xor %eax,%eax` after the last field event", "PB",
      rv([(120, "xor %eax,%eax", "jmp runtime.abort")]), None, 2),
-    ("g5-truncated", "SyncCommitteeMessage `.S` cut inside the Signature segment", "SM", lambda L: L[:140], None, 2),
-    ("g5-truncated-epi", "VoluntaryExit `.S` cut after `add $0x48,%rsp` of the accept epilogue", "VE", lambda L: L[:87], None, 2),
-    ("g5-callee-other-type", "VoluntaryExit: the ValidatorIndex field calls Epoch.UnmarshalSSZ", "VE",
+    ("whole-accept-truncated", "SyncCommitteeMessage `.S` cut inside the Signature segment", "SM", lambda L: L[:140], None, 2),
+    ("whole-accept-truncated-epi", "VoluntaryExit `.S` cut after `add $0x48,%rsp` of the accept epilogue", "VE", lambda L: L[:87], None, 2),
+    ("whole-accept-callee-other-type", "VoluntaryExit: the ValidatorIndex field calls Epoch.UnmarshalSSZ", "VE",
      lambda L: [l.replace("ValidatorIndex.UnmarshalSSZ", "Epoch.UnmarshalSSZ") for l in L], None, 2),
-    # GEN5 rules (the GEN4 front end covers these inputs; GEN5 refuses)
-    ("g5-head-rdi-not-home", "PendingDeposit: `mov %rdi,0x70(%rsp)` (rdi home slot 0x68)", "PD",
+    # whole-accept rules (the step front end covers these inputs; whole-accept refuses)
+    ("whole-accept-head-rdi-not-home", "PendingDeposit: `mov %rdi,0x70(%rsp)` (rdi home slot 0x68)", "PD",
      rv([(13, "mov %rdi,0x68(%rsp)", "mov %rdi,0x70(%rsp)")]), None, 2),
-    ("g5-head-spill-twice", "PendingDeposit: `mov %rax,0x50(%rsp)` twice", "PD",
+    ("whole-accept-head-spill-twice", "PendingDeposit: `mov %rax,0x50(%rsp)` twice", "PD",
      rv([(12, "mov %rax,0x50(%rsp)", ["mov %rax,0x50(%rsp)", "mov %rax,0x50(%rsp)"])]), None, 2),
-    ("g5-head-rcx-spill", "VoluntaryExit: an extra spill `mov %rcx,0x68(%rsp)` (no rcx slot in the kind)", "VE",
+    ("whole-accept-head-rcx-spill", "VoluntaryExit: an extra spill `mov %rcx,0x68(%rsp)` (no rcx slot in the kind)", "VE",
      rv([(15, "test %al,(%rax)", ("before", ["mov %rcx,0x68(%rsp)"]))]), None, 2),
-    ("g5-head-db", "ValidatorBalance: decPro spills rbx to 0x48 (dB != F + 24)", "VB",
+    ("whole-accept-head-db", "ValidatorBalance: decPro spills rbx to 0x48 (dB != F + 24)", "VB",
      rv([(8, "mov %rbx,0x50(%rsp)", "mov %rbx,0x48(%rsp)")]), None, 2),
-    ("g5-epi-xor-frame48", "VoluntaryExit: `xor %eax,%eax; xor %ebx,%ebx` before `add $0x48,%rsp` (no xor lemma in frame 0x48)",
+    ("whole-accept-epi-xor-frame48", "VoluntaryExit: `xor %eax,%eax; xor %ebx,%ebx` before `add $0x48,%rsp` (no xor lemma in frame 0x48)",
      "VE", rv([(87, "add $0x48,%rsp", ("before", ["xor %eax,%eax", "xor %ebx,%ebx"]))]), None, 2),
-    ("g5-epi-load-ptr-slot", "SyncCommitteeMessage: epilogue `mov 0x38(%rsp),%rax` (the pointer slot, not a zero slot)", "SM",
+    ("whole-accept-epi-load-ptr-slot", "SyncCommitteeMessage: epilogue `mov 0x38(%rsp),%rax` (the pointer slot, not a zero slot)", "SM",
      rv([(157, "mov 0x28(%rsp),%rax", "mov 0x38(%rsp),%rax")]), None, 2),
-    ("g5-epi-nop", "PendingDeposit: a `nop` between `add $0x40,%rsp` and `pop %rbp` of the accept epilogue", "PD",
+    ("whole-accept-epi-nop", "PendingDeposit: a `nop` between `add $0x40,%rsp` and `pop %rbp` of the accept epilogue", "PD",
      rv([(163, "pop %rbp", ("before", ["nop"]))]), None, 2),
-    ("g5-reject-errsize", "SyncCommitteeMessage: size-error block loads ssz.ErrOffset", "SM",
+    ("whole-accept-reject-errsize", "SyncCommitteeMessage: size-error block loads ssz.ErrOffset", "SM",
      rv([(163, "mov ssz.ErrSize(%rip),%rax", "mov ssz.ErrOffset(%rip),%rax")]), None, 2),
-    ("g5-reject-frame", "VoluntaryExit: size-error block `add $0x40,%rsp` (frame 0x48)", "VE",
+    ("whole-accept-reject-frame", "VoluntaryExit: size-error block `add $0x40,%rsp` (frame 0x48)", "VE",
      rv([(93, "add $0x48,%rsp", "add $0x40,%rsp")]), None, 2),
-    ("g5-store-input", "PendingDeposit Amount: `mov %rsi,0x30(%rsp)` stores the input word into a frame slot", "PD",
+    ("whole-accept-store-input", "PendingDeposit Amount: `mov %rsi,0x30(%rsp)` stores the input word into a frame slot", "PD",
      rv([(88, "mov %rsi,0x38(%rdx)", ("before", ["mov %rsi,0x30(%rsp)"]))]), None, 2),
-    ("g5-load-outside-layout", "ValidatorBalance Balance: `mov 0x30(%rsp),%rsi` (no stack chunk at 0x30)", "VB",
+    ("whole-accept-load-outside-layout", "ValidatorBalance Balance: `mov 0x30(%rsp),%rsi` (no stack chunk at 0x30)", "VB",
      rv([(52, "mov %rcx,0x10(%rdx)", ("before", ["mov 0x30(%rsp),%rsi"]))]), None, 2),
-    ("g5-interleaved", "real PendingPartialWithdrawal: the Epoch set-up runs inside the Amount field", "PW", None, None, 2),
-    ("g5-nested", "real AttestationData: Source / Target are nested containers (GEN4 exit 3)", "AD", None, None, 2),
+    ("whole-accept-interleaved", "real PendingPartialWithdrawal: the Epoch set-up runs inside the Amount field", "PW", None, None, 2),
+    ("whole-accept-nested", "real AttestationData: Source / Target are nested containers (step exit 3)", "AD", None, None, 2),
     # statement-level IR mutants
-    ("g5-ir-goff", "IR: PowBlock ParentHash Go offset 32 (code 24)", "PB", None, ir_goff("ParentHash", 32), 2),
-    ("g5-ir-size", "IR: PowBlock TotalDifficulty of 48 bytes (code 32)", "PB", None, ir_size("TotalDifficulty", 48), 2),
-    ("g5-ir-order", "IR: VoluntaryExit Epoch / ValidatorIndex order swapped", "VE", None, ir_swap("Epoch", "ValidatorIndex"), 2),
-    ("g5-ir-goff-code", "IR and code: ValidatorBalance Balance at Go offset 24 (code store 0x18; not the running sum 16)", "VB",
+    ("whole-accept-ir-goff", "IR: PowBlock ParentHash Go offset 32 (code 24)", "PB", None, ir_goff("ParentHash", 32), 2),
+    ("whole-accept-ir-size", "IR: PowBlock TotalDifficulty of 48 bytes (code 32)", "PB", None, ir_size("TotalDifficulty", 48), 2),
+    ("whole-accept-ir-order", "IR: VoluntaryExit Epoch / ValidatorIndex order swapped", "VE", None, ir_swap("Epoch", "ValidatorIndex"), 2),
+    ("whole-accept-ir-goff-code", "IR and code: ValidatorBalance Balance at Go offset 24 (code store 0x18; not the running sum 16)", "VB",
      rv([(52, "mov %rcx,0x10(%rdx)", "mov %rcx,0x18(%rdx)")]), ir_goff("Balance", 24), 2),
-    ("g5-ir-goff-first", "IR: VoluntaryExit Epoch Go offset 0 (code 8, state word)", "VE", None, ir_goff("Epoch", 0), 2),
+    ("whole-accept-ir-goff-first", "IR: VoluntaryExit Epoch Go offset 0 (code 8, state word)", "VE", None, ir_goff("Epoch", 0), 2),
     # valid variants: generated, kindcheck PASS
-    ("g5-valid-extra-move", "SyncCommitteeMessage: an extra `mov %rdi,%rsi` in the ValidatorIndex set-up", "SM",
+    ("whole-accept-valid-extra-move", "SyncCommitteeMessage: an extra `mov %rdi,%rsi` in the ValidatorIndex set-up", "SM",
      sm_vi(VI[:4] + ["  mov %rdi,%rsi"] + VI[4:]), None, 0),
-    ("g5-valid-order", "SyncCommitteeMessage: ValidatorIndex set-up with `mov $0x8,%ecx` first", "SM",
+    ("whole-accept-valid-order", "SyncCommitteeMessage: ValidatorIndex set-up with `mov $0x8,%ecx` first", "SM",
      sm_vi([VI[5]] + VI[:5]), None, 0),
 ]
 
@@ -1334,24 +1334,24 @@ G5_MUT = [
 def g5_run(work, new, mid, c, S=None, ir=None, extra=()):
     su = work / f"{mid}.g5.json"
     su.unlink(missing_ok=True)
-    rc, so, se = run(["python3", "-I", "-B", str(new), "p2dec", "--gen5", "--S", S or c["S"], "--ir", ir or IR,
+    rc, so, se = run(["python3", "-I", "-B", str(new), "decoder", "--whole-accept", "--S", S or c["S"], "--ir", ir or IR,
                       "--type", c["type"], "--summary", str(su)] + c["args"] + list(extra), KR)
     sm = json.loads(su.read_text()) if su.exists() else {}
     return rc, so, se, sm
 
 
 def g5_cases(work, new):
-    """`--gen5` on real types, adversarial inputs, valid variants."""
+    """`--whole-accept` on real types, adversarial inputs, valid variants."""
     res, bad = [], 0
     KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
     irt = (KR / IR).read_text()
     for key in ("PD", "SM", "VE", "PB", "VB", "PW", "AD"):
         c = G5[key]
-        r1, r2 = g5_run(work, new, f"g5-new-{key}-1", c), g5_run(work, new, f"g5-new-{key}-2", c)
+        r1, r2 = g5_run(work, new, f"whole-accept-new-{key}-1", c), g5_run(work, new, f"whole-accept-new-{key}-2", c)
         want = 2 if key in ("PW", "AD") else 0
         kc = None
         if r1[0] == 0:
-            f = work / f"g5-new-{key}.lean"
+            f = work / f"whole-accept-new-{key}.lean"
             f.write_bytes(r1[1])
             kc = subprocess.run(KC + [str(f)], capture_output=True, text=True).returncode
         t = r1[1].decode()
@@ -1360,7 +1360,7 @@ def g5_cases(work, new):
                   for x in ("head", "f1", "epi", "accept", "reject")) if want == 0 else True
         ok = (r1[0] == want and r1[:2] == r2[:2] and (r1[1] == b"") == (want != 0) and thm and kc == (0 if want == 0 else None)
               and r1[3].get("exit") == want and r1[3].get("accept_generated") == (want == 0))
-        res.append(dict(id=f"g5-new-{key}", expect=f"exit {want} twice, identical" + (", every GEN5 theorem kinded, kindcheck "
+        res.append(dict(id=f"whole-accept-new-{key}", expect=f"exit {want} twice, identical" + (", every whole-accept theorem kinded, kindcheck "
                         "PASS" if want == 0 else ", 0 bytes, accept_generated false"), exit=r1[0], stdout_bytes=len(r1[1]),
                         kindcheck_exit=kc, reason=r1[3].get("reason", "")[:300], ok=bool(ok)))
         bad |= not ok
@@ -1393,7 +1393,7 @@ def g5_cases(work, new):
     return res, bad
 
 
-# the GEN5 fail-closed harness (written to <work-dir>; argv: scalgen.py config.json result.json; cwd = fv/kraken)
+# the whole-accept fail-closed harness (written to <work-dir>; argv: scalgen.py config.json result.json; cwd = fv/kraken)
 G5FC_HARNESS = r"""
 import contextlib, importlib.util, io, json, pathlib, sys
 spec = importlib.util.spec_from_file_location("scalgen_g5fc", sys.argv[1])
@@ -1521,9 +1521,9 @@ def g5_fc_cases(work, new, keys=None):
     h.write_text(G5FC_HARNESS)
     for key in (keys or G5FC_KEYS):
         c = G5[key]
-        cfg, out = work / f"g5fc-{key}.cfg.json", work / f"g5fc-{key}.result.json"
-        cfg.write_text(json.dumps(dict(argv=["p2dec", "--gen5", "--S", c["S"], "--ir", IR, "--type", c["type"]] + c["args"],
-                                       summary=str(work / f"g5fc-{key}.summary.json"))))
+        cfg, out = work / f"whole-accept-fail-closed-{key}.cfg.json", work / f"whole-accept-fail-closed-{key}.result.json"
+        cfg.write_text(json.dumps(dict(argv=["decoder", "--whole-accept", "--S", c["S"], "--ir", IR, "--type", c["type"]] + c["args"],
+                                       summary=str(work / f"whole-accept-fail-closed-{key}.summary.json"))))
         out.unlink(missing_ok=True)
         rc, so, se = run(["python3", "-I", "-B", str(h), str(new), str(cfg), str(out)], KR)
         R = json.loads(out.read_text()) if rc == 0 and out.exists() else []
@@ -1535,14 +1535,14 @@ def g5_fc_cases(work, new, keys=None):
                 ok = all(r["rc"] == 0 and r["stdout"] > 0 and r["acc"] is True for r in rs)
             else:
                 ok = all(r["rc"] == 2 and r["stdout"] == 0 and r["sm_exit"] == 2 and r["acc"] is False for r in rs)
-            res.append(dict(id=f"g5fc-{key}-{ph}-{kind.replace(' ', '_')}", expect="control: exit 0" if ph == "control"
+            res.append(dict(id=f"whole-accept-fail-closed-{key}-{ph}-{kind.replace(' ', '_')}", expect="control: exit 0" if ph == "control"
                             else "exit 2, 0 bytes, summary exit 2, accept_generated false", exit=sorted({str(r["rc"]) for r in rs}),
                             stdout_bytes=sum(r["stdout"] for r in rs), injections=len(rs),
                             bad=[r for r in rs if not ok][:3], ok=bool(ok)))
             bad |= not ok
         fl = {r["phase"] for r in R}
         ok = rc == 0 and {"control", "gen4", "derive", "render", "flags"} <= fl and len(R) > 50
-        res.append(dict(id=f"g5fc-{key}-phases", expect="harness exit 0; injections in gen4, derive, render, flags",
+        res.append(dict(id=f"whole-accept-fail-closed-{key}-phases", expect="harness exit 0; injections in gen4, derive, render, flags",
                         exit=rc, stdout_bytes=0, injections=len(R), phases=sorted(fl), stderr=se.strip()[-300:], ok=bool(ok)))
         bad |= not ok
     return res, bad
@@ -1556,8 +1556,8 @@ def main(work, out):
     new = KR / "gen" / "scal" / "scalgen.py"
 
     # old generator, historical record
-    rc, so, se = run(["python3", "-I", str(old), "p2dec", "--S", S] + OLD_ARGS, KR)
-    rec = [l for l in (KR / RECORD).read_text().split("\n") if l.startswith("scalgen p2dec:")]
+    rc, so, se = run(["python3", "-I", str(old), "p2dec", "--S", S] + OLD_ARGS, KR)  # the frozen generator: its mode name
+    rec = [l for l in (KR / RECORD).read_text().split("\n") if l.startswith("scalgen p2dec:")]  # the record line
     ok = rc == 2 and so == b"" and rec and se.strip() == rec[0]
     res.append(dict(id="old-gen", expect="exit 2, 0 bytes, stderr = record", exit=rc, stdout_bytes=len(so),
                     stderr=se.strip(), ok=bool(ok)))
@@ -1566,7 +1566,7 @@ def main(work, out):
     # new generator, two runs, committed output
     outs = []
     for _ in range(2):
-        rc, so, se = run(["python3", "-I", str(new), "p2dec", "--S", S] + ARGS, KR)
+        rc, so, se = run(["python3", "-I", str(new), "decoder", "--S", S] + ARGS, KR)
         outs.append((rc, so, se))
     com = (KR / COMMITTED).read_bytes() if (KR / COMMITTED).exists() else None
     ok = all(r == 0 for r, _, _ in outs) and outs[0][1] == outs[1][1] and outs[0][1] == com
@@ -1578,13 +1578,13 @@ def main(work, out):
 
     base = (KR / S).read_text().split("\n")
     for (mid, what, line, o, n, want, match) in MUTANTS:
-        if mid == "m-both":
+        if mid == "mutant-both":
             lines = mutate(mutate(base, 31, "  mov $0x20,%ecx", "  mov $0x10,%ecx"), 68, "  add $0x28,%rbx", "  add $0x28,%rsi")
         else:
             lines = mutate(base, line, o, n)
         f = work / f"{mid}.S"
         f.write_text("\n".join(lines))
-        rc, so, se = run(["python3", "-I", str(new), "p2dec", "--S", str(f)] + ARGS, KR)
+        rc, so, se = run(["python3", "-I", str(new), "decoder", "--S", str(f)] + ARGS, KR)
         got = sorted(l.split()[3].rstrip(":") for l in se.split("\n") if ": MATCH form" in l)
         ok = rc == want and so == b"" and (want == 2 or got == sorted(match))
         res.append(dict(id=mid, what=what, expect=f"exit {want}, 0 bytes" + (f", MATCH {match}" if want == 3 else ""),
@@ -1592,11 +1592,11 @@ def main(work, out):
         bad |= not ok
 
     # partial output on request
-    f = work / "m-addreg.S"
+    f = work / "mutant-addreg.S"
     po = work / "partial.lean"
     if po.exists():
         po.unlink()
-    rc, so, se = run(["python3", "-I", str(new), "p2dec", "--S", str(f), "--partial-out", str(po)] + ARGS, KR)
+    rc, so, se = run(["python3", "-I", str(new), "decoder", "--S", str(f), "--partial-out", str(po)] + ARGS, KR)
     pt = po.read_text() if po.exists() else ""
     ok = (rc == 3 and so == b"" and pt.startswith("/-! PARTIAL OUTPUT") and "NOT generated: BlockHash" in pt.split("\n")[0]
           and "theorem Decode.generated_root_DepositRoot_seg " in pt and "Decode.generated_root_BlockHash_seg" not in pt)

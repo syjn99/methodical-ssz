@@ -4,7 +4,7 @@ import Prysm.Eth1Data.Code
 import Prysm.BlobIdentifier.Code
 
 /-!
-# Hand-written example instances of the `p2dec --gen2` lemmas on the development sites: the `Eth1Data` part
+# Hand-written example instances of the `decoder --field-segments` lemmas on the development sites: the `Eth1Data` part
 
 It holds the segment theorems of `Eth1Data.DepositRoot`, `Eth1Data.BlockHash` and `Eth1Data.DepositCount`. The declarations of the other types of this group are in `Prysm/DepositMessage/DecodeFieldSegmentExamples.lean`.
 -/

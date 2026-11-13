@@ -6,7 +6,7 @@ import Prysm.BlobIdentifier.DecodeFieldSegmentExamples
 import Prysm.Eth1Data.DecodeFieldSegmentExamples
 
 /-!
-# Hand-written example instances of the `p2dec --gen2` lemmas on the development sites
+# Hand-written example instances of the `decoder --field-segments` lemmas on the development sites
 
 One theorem and one `_kind` line per site, in the shape a generated theorem is to have (the text of
 `Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean` with the new lemma, template and kind names). Hand-written examples for the generator;

@@ -5,11 +5,11 @@ Reads a committed normalized `.S` file (`link/norm/*.S`, one directive per non-e
 for the 32-byte field segments, the IR (`prysm/ir/ir-mainnet.json`: SSZ fixed sizes of the fields and the gc amd64 Go
 field offsets). Emits Lean text that applies the parameterized lemmas of `lean/Codec`:
 
-  p1     the accept path of a uint64 primitive `UnmarshalSSZ` (`Codec.u64dec_accept`);
+  uint64 the accept path of a uint64 primitive `UnmarshalSSZ` (`Codec.u64dec_accept`);
          emits the whole function theorem (uint64 decoder statement kind) for the code constant.
-  p2dec  for every 32-byte `[]byte` field of a container decoder, the decode segment
+  decoder  for every 32-byte `[]byte` field of a container decoder, the decode segment
          (`Codec.rootdec_seg`, or `Codec.rootdec_seg_z` for the offset-0 form, a field at SSZ offset 0: extension after both
-         hold-outs were opened) as a theorem about the function's code constant. Field rule in `p2dec`:
+         hold-outs were opened) as a theorem about the function's code constant. Field rule in `decoder`:
          output complete (exit 0) or absent (exit 3 some fields failed, exit 2 none matched or wrong).
 
 Statement check: every emitted theorem `t` is followed by
@@ -30,14 +30,14 @@ of a template textually and stops (exit 2, message on stderr) when one does not 
 compiler variation that the template does not cover is reported, not patched.
 
 Python 3 standard library only. Usage:
-  scalgen.py p1 --S FILE --const LEAN_CONST --name THM [--same-as HAND_THM] --imports M1,M2 [--open NS]
-  scalgen.py p2dec --S FILE --const LEAN_CONST --ir IR.json --type PKGSUFFIX.TYPE --prefix NAME
-                   --imports M1,M2 [--open NS] [--partial-out FILE] [--gen2 [--summary FILE.json]]
+  scalgen.py uint64 --S FILE --const LEAN_CONST --name THM [--same-as HAND_THM] --imports M1,M2 [--open NS]
+  scalgen.py decoder --S FILE --const LEAN_CONST --ir IR.json --type PKGSUFFIX.TYPE --prefix NAME
+                   --imports M1,M2 [--open NS] [--partial-out FILE] [--field-segments [--summary FILE.json]]
 
-GEN2 (`--gen2`, off by default): see the block comment before `ir_fields`. Without `--gen2` the output is the
-text of the first `p2dec` generator and its offset-0 extension, byte for byte (compatibility switch; `regen_check.sh` of every committed file).
-GEN4 (`p2dec --gen4 [--summary FILE.json] [--partial-out FILE]`, off by default): see the block comment
-before `G4_R64`; its own code path, the default / `--gen2` / `--gen3` text is unchanged.
+field-segment (`--field-segments`, off by default): see the block comment before `ir_fields`. Without `--field-segments` the output is the
+text of the first `decoder` generator and its offset-0 extension, byte for byte (compatibility switch; `regen_check.sh` of every committed file).
+step (`decoder --steps [--summary FILE.json] [--partial-out FILE]`, off by default): see the block comment
+before `G4_R64`; its own code path, the default / `--field-segments` / `--call-segments` text is unchanged.
 """
 import argparse, hashlib, json, pathlib, re, sys
 
@@ -80,7 +80,7 @@ def lean_str(s):
     return f'"{s}"'
 
 
-# The namespace of every output: Prysm.<Go type name>, from --type (`<package>.<Type>`), or for p1 (no --type) from
+# The namespace of every output: Prysm.<Go type name>, from --type (`<package>.<Type>`), or for uint64 (no --type) from
 # the name of the `.S` file (`<package>.<Type>.<Method>.S`). A `.S` file of another name (a test mutant) gives
 # Prysm.Unknown; the generator still checks the text as before.
 GEN_NS = None
@@ -126,7 +126,7 @@ def kind_thm(name, kind):
             f"  intro h; with_reducible rfl\n")
 
 
-# ---------------------------------------------------------------- p1: uint64 decoder
+# ---------------------------------------------------------------- uint64 decoder
 
 P1_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k)
     (hf : LabelsFresh {const} k)
@@ -168,7 +168,7 @@ def p1_read(dirs):
     tail = [r"mov \(%rbx\),%rcx", r"nop", r"mov %rcx,\(%rax\)", r"xor %eax,%eax", r"xor %ebx,%ebx",
             rf"add \${fs:#x},%rsp", r"pop %rbp", r"retq"]
     for n, rx in enumerate(tail):
-        expect(dirs, jb + 1 + n, rx, f"P1 tail directive {n + 1}")
+        expect(dirs, jb + 1 + n, rx, f"uint64 decoder tail directive {n + 1}")
     return dict(fn=fn, l0=l0, lcc=lcc, lbb=lbb, fs=fs, dsp=dsp, jb=jb)
 
 
@@ -194,7 +194,7 @@ def p1(args):
     return out
 
 
-# ---------------------------------------------------------------- p2dec: 32-byte field decode
+# ---------------------------------------------------------------- decoder: 32-byte field decode
 
 # Only the code hypotheses (k, hk, hf) are binders before the colon; the rest of the statement is one
 # `∀ …, …` after it, and the proof is `exact Codec.rootdec_seg … hA hB hl` with NO further argument. This
@@ -313,13 +313,13 @@ P2DECZ_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (
 def p2dec_find(dirs, fo, src, n=32, gen2=False, pad_ok=False):
     """The decode segment of the field at Go offset `fo`, SSZ offset `src`: (j1, j2, params), params["form"]
     "add" (`rootDecMid`, 12 directives) or "zero" (`rootDecMidZ`, 11 directives, SSZ offset 0).
-    GEN2: `n` is the vector size (IR); every size immediate of the segment must be `n` (default 32: the
-    directive texts and regular expressions are exactly those of the first `p2dec` generator and its offset-0 extension, `{32:#x}` = `0x20`). Only with
-    `gen2` (the `--gen2` mode) is a pointer store without displacement, `mov %rax,(%rdx)`, read as Go offset 0
+    field-segment: `n` is the vector size (IR); every size immediate of the segment must be `n` (default 32: the
+    directive texts and regular expressions are exactly those of the first `decoder` generator and its offset-0 extension, `{32:#x}` = `0x20`). Only with
+    `gen2` (the `--field-segments` mode) is a pointer store without displacement, `mov %rax,(%rdx)`, read as Go offset 0
     (DepositMessage.PublicKey); the default mode keeps the reading of the first generator and its offset-0 extension (such a field does not match).
-    GEN3 (`pad_ok`, only from `--gen3`): one padding `nop` between `mov $n,%ecx` and `callq runtime.makeslice`
+    call-segment (`pad_ok`, only from `--call-segments`): one padding `nop` between `mov $n,%ecx` and `callq runtime.makeslice`
     is read (head `bytesDecHeadP true`, 10 directives; params["pad"]); add form only. Without `pad_ok` the text
-    and the regular expressions are exactly the GEN2 ones."""
+    and the regular expressions are exactly the field-segment ones."""
     N = f"{n:#x}"
     hits = []
     for i in range(len(dirs)):
@@ -329,7 +329,7 @@ def p2dec_find(dirs, fo, src, n=32, gen2=False, pad_ok=False):
             expect(dirs, i + 1, r"xor %ebx,%ebx", "xor %ebx,%ebx")
             expect(dirs, i + 2, rf"mov \${N},%ecx", f"mov ${N},%ecx")
             pd = 1 if (pad_ok and i + 3 < len(dirs) and dirs[i + 3] == "nop") else 0
-            i += pd  # GEN3: the head directives after the padding `nop` are read one index later
+            i += pd  # call-segment: the head directives after the padding `nop` are read one index later
             expect(dirs, i + 3, r"callq runtime\.makeslice", "callq runtime.makeslice")
             dR = int(expect(dirs, i + 4, rf"mov ({HEX})\(%rsp\),%rdx", "the receiver reload").group(1), 16)
             fL = int(expect(dirs, i + 5, rf"movq \$0x0,({HEX})\(%rdx\)", "len = 0").group(1), 16)
@@ -416,7 +416,7 @@ def p2dec_seg(c, fname, src, fo, j1, j2, p):
     return out
 
 
-def p2dec(args):
+def decoder(args):
     """Field rule (offset-0 extension). Every 32-byte field of the IR type is matched on its own; a field that
     does not match does not stop the matching of the later fields. The output is complete or absent:
     - every field matches                → exit 0, the whole file on stdout;
@@ -454,16 +454,16 @@ def p2dec(args):
         return header(sha, args.S, args, extra, kinds) + body
     missing = [f for f, _, _ in roots if f not in {x[0] for x in found}]
     text = (f"/-! PARTIAL OUTPUT (scalgen exit 3): {len(found)} of {len(roots)} 32-byte fields of `{args.type}`; "
-            f"NOT generated: {', '.join(missing)}. Not a complete p2dec output. -/\n"
+            f"NOT generated: {', '.join(missing)}. Not a complete decoder output. -/\n"
             + header(sha, args.S, args, extra, kinds) + body)
     raise Partial(report, text)
 
 
-# ---------------------------------------------------------------- GEN2 (`p2dec --gen2`)
+# ---------------------------------------------------------------- field-segment (`decoder --field-segments`)
 #
-# Compatibility switch: the extended coverage is ONLY behind `--gen2`. Without the flag, `p2dec` is the first
+# Compatibility switch: the extended coverage is ONLY behind `--field-segments`. Without the flag, `decoder` is the first
 # generator with its offset-0 extension, text for text (32-byte fields only, same stdout, same exit codes), so every committed output
-# of `gen.sh` and the commands of hold-out set H3 regenerates byte for byte. With `--gen2` every own field of the IR type is
+# of `gen.sh` and the commands of hold-out types BlobIdentifier and DepositMessage regenerates byte for byte. With `--field-segments` every own field of the IR type is
 # classified and reported:
 #   fixed byte vector, `[]byte`, size 32  -> the theorem text of the first generator and its offset-0 extension (`rootdec_seg` / `rootdec_seg_z`);
 #   fixed byte vector, `[]byte`, size 48 / 96 -> `Codec.bytesdec_seg` / `bytesdec_seg_z` (lemmas of
@@ -471,7 +471,7 @@ def p2dec(args):
 #   `uint64` (IR k = uint, 64 bits)        -> `Codec.u64dec_inline_seg` (`{`Codec/InlineUint64.lean`,`Codec/Kind/InlineUint64.lean`}.lean`);
 #   anything else (byte vector of another size, delegated overlay fields such as Slot / Epoch, nested
 #   containers, lists, bitfields, bool)    -> "not covered: <reason>", never a guessed theorem.
-# Exit codes as for `p2dec`: 0 every field covered (whole file on stdout); 3 some fields covered (nothing on
+# Exit codes as for `decoder`: 0 every field covered (whole file on stdout); 3 some fields covered (nothing on
 # stdout; `--partial-out` writes the covered ones under a PARTIAL OUTPUT header); 2 no field covered, two
 # fields claim overlapping directives, the covered segments are not in IR field order, or the IR read fails.
 # `--summary FILE` writes a machine-readable per-field report (JSON) in every case (also on exit 2 / 3).
@@ -513,7 +513,7 @@ def ir_fields(ir_path, tname, gen3=False):
         elif k == "overlay" or v.get("deleg"):
             cls, info = "none", f"delegated overlay field ({v.get('go_type')}): compiled as a call, no template"
         else:
-            cls, info = "none", f"field kind {k} ({v.get('go_type')}): no GEN2 template (nested containers, lists, bitfields, bool, other uints)"
+            cls, info = "none", f"field kind {k} ({v.get('go_type')}): no field-segment template (nested containers, lists, bitfields, bool, other uints)"
         out.append((f["key"], off, fo, cls, info))
         off += v["fixed_size"]
     return out, hashlib.sha256(raw).hexdigest()
@@ -535,7 +535,7 @@ def ir_ssz_size(ir_path, tname):
 
 
 def u64_find(dirs, fo, src):
-    """The inline uint64 read of the field at Go offset `fo`, SSZ offset `src` (interface (c) of the GEN2 inline uint64 lemma):
+    """The inline uint64 read of the field at Go offset `fo`, SSZ offset `src` (interface (c) of the field-segment inline uint64 lemma):
     `mov dB(%rsp),%rX; mov src(%rX),%rX; mov %rX,fo(%rdx)`, the same 64-bit scratch register rX in all four
     places, rX in U64_REGS. Exactly one site must match. Displacement 0 (src = 0 or fo = 0) is not covered
     (not exercised for the lemma; the `.S` writes such a displacement without a number)."""
@@ -571,7 +571,7 @@ def _sub_once(text, old, new):
     return text.replace(old, new)
 
 
-def _size_stmt(stmt):
+def _size_statement(stmt):
     """The statement of the first generator and its offset-0 extension, with the size 32 in its five places replaced by `{n}` (interface (a)/(b))."""
     for old, new in [("(hroot : root.length = 32)", "(hroot : root.length = {n})"),
                      ("(hav : 32 ≤ avail)", "(hav : {n} ≤ avail)"),
@@ -582,8 +582,8 @@ def _size_stmt(stmt):
     return stmt
 
 
-BYTES_STMT = _size_stmt(P2DEC_STMT)
-BYTESZ_STMT = _size_stmt(P2DECZ_STMT)
+BYTES_STMT = _size_statement(P2DEC_STMT)
+BYTESZ_STMT = _size_statement(P2DECZ_STMT)
 
 U64_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
     ∀ (sp rcv bf aB aSrc aF : BitVec 64)
@@ -603,7 +603,7 @@ U64_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf 
 
 
 def bytes_seg(c, fname, src, fo, j1, j2, p):
-    """GEN2 text of a 48- / 96-byte field (interface (a) add form, (b) offset-0 form)."""
+    """field-segment text of a 48- / 96-byte field (interface (a) add form, (b) offset-0 form)."""
     n = p["n"]
     name = f"{c['prefix']}_{fname}_seg"
     k = c["const"]
@@ -634,7 +634,7 @@ def bytes_seg(c, fname, src, fo, j1, j2, p):
 
 
 def u64_seg(c, fname, src, fo, j, p):
-    """GEN2 text of an inline uint64 field (interface (c))."""
+    """field-segment text of an inline uint64 field (interface (c))."""
     name = f"{c['prefix']}_{fname}_seg"
     k = c["const"]
     tmpl = f"Codec.u64DecInline Reg64.{p['rX']} {p['dB']} {p['src']} {p['f']}"
@@ -650,10 +650,10 @@ def u64_seg(c, fname, src, fo, j, p):
 
 
 def p2dec_gen2(args):
-    """`p2dec --gen2`: per-field coverage (see the block comment above). Returns the text or raises
+    """`decoder --field-segments`: per-field coverage (see the block comment above). Returns the text or raises
     NoMatch (exit 2) / Partial (exit 3); `args.summary_data` collects the per-field report."""
     dirs, sha = read_S(args.S)
-    g3 = getattr(args, "gen3", False)
+    g3 = getattr(args, "call_segments", False)
     fields, irsha = ir_fields(args.ir, args.type, gen3=g3) if g3 else ir_fields(args.ir, args.type)
     summ = args.summary_data = dict(type=args.type, S=args.S, S_sha256=sha, ir_sha256=irsha, fields=[])
     if not fields:
@@ -738,7 +738,7 @@ def p2dec_gen2(args):
         kinds.append("Codec.Kind.CalleeDecode")
     if any(cl == "bytes" and a[5].get("pad") for *_, cl, a in found) and "Codec.Kind.FixedBytesDecode" not in kinds:
         kinds.append("Codec.Kind.FixedBytesDecode")
-    cov = "GEN3 coverage (`p2dec --gen3`)" if g3 else "GEN2 coverage (`p2dec --gen2`)"
+    cov = "call segment coverage (`decoder --call-segments`)" if g3 else "field segment coverage (`decoder --field-segments`)"
     extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); {cov}: "
              f"{len(found)} of {len(fields)} fields")
     body = ""
@@ -767,7 +767,7 @@ def p2dec_gen2(args):
     if len(found) == len(fields):
         return header(sha, args.S, args, extra, kinds) + body
     missing = [f for f in order if f not in {x[2] for x in found}]
-    # the `--partial-out` file of `--gen2` is a valid Lean module.
+    # the `--partial-out` file of `--field-segments` is a valid Lean module.
     # The imports come first; the PARTIAL header is a module doc right after them, with one machine-readable
     # line `UNCOVERED-JSON: [{"field": …, "reason": …}, …]`. `kindcheck.py` rejects the file by default and
     # checks the kinds of the present theorems with `--partial` (exit 3, never 0). Stdout stays empty (exit 3).
@@ -776,16 +776,16 @@ def p2dec_gen2(args):
     full = header(sha, args.S, args, extra, kinds)
     imps, rest = full.split("\n\n", 1)
     text = (imps + f"\n\n/-! PARTIAL OUTPUT (scalgen exit 3): {len(found)} of {len(fields)} fields of `{args.type}` "
-            f"({'--gen3' if g3 else '--gen2'}); NOT generated: {', '.join(missing)}. Not a complete p2dec output.\n"
+            f"({'--call-segments' if g3 else '--field-segments'}); NOT generated: {', '.join(missing)}. Not a complete decoder output.\n"
             f"UNCOVERED-JSON: {json.dumps(unc)}\n-/\n\n" + rest + body)
     raise Partial(report, text)
 
 
-# ---------------------------------------------------------------- GEN3 (`p2dec --gen3`, implies `--gen2`)
+# ---------------------------------------------------------------- call-segment (`decoder --call-segments`, implies `--field-segments`)
 #
-# Compatibility switch: the GEN3 shapes are ONLY behind `--gen3`. Without it, `--gen2` and the default mode are
-# the earlier text byte for byte (`regen_check.sh` of every committed file). `--gen3` adds exactly the shapes
-# of the GEN3 lemma unit (`lean/Codec/CalleeDecode.lean`, `lean/Codec/Kind/CalleeDecode.lean`, `lean/Codec/InlineUint64RegisterBase.lean`, `lean/Codec/FixedBytesDecodePadding.lean`, `lean/Codec/Kind/DecodeAcceptComposition.lean`):
+# Compatibility switch: the call-segment shapes are ONLY behind `--call-segments`. Without it, `--field-segments` and the default mode are
+# the earlier text byte for byte (`regen_check.sh` of every committed file). `--call-segments` adds exactly the shapes
+# of the call-segment lemmas (`lean/Codec/CalleeDecode.lean`, `lean/Codec/Kind/CalleeDecode.lean`, `lean/Codec/InlineUint64RegisterBase.lean`, `lean/Codec/FixedBytesDecodePadding.lean`, `lean/Codec/Kind/DecodeAcceptComposition.lean`):
 #   uint64-overlay field decoded by a CALL to a callee decoder with a proved accept spec (Slot, CommitteeIndex,
 #     ValidatorIndex, Epoch of `consensus-types/primitives`): the call block `calldec_seg` (`callq fn;
 #     test %rax,%rax; je lok`, label `lok:` after it) and the argument set-up before the `callq`, one of the
@@ -794,13 +794,13 @@ def p2dec_gen2(args):
 #     `callarg_mov_seg`. Kinds `callDecSegKind`, `callArgFirstKind`, `callArgReloadKind`, `callArgLeaKind`,
 #     `callArgMovKind`. The callee spec stays the hypothesis `hC : U64CalleeAcc "<fn>"` of the call theorem.
 #   `uint64` field read in the two-directive form `mov src(%rbx),%rX; mov %rX,f(%rax)`: `u64dec_rr_seg`
-#     (kind `u64DecRRSegKind`, register in the kind), when the GEN2 inline form does not match.
+#     (kind `u64DecRRSegKind`, register in the kind), when the field-segment inline form does not match.
 #   byte vector with one padding `nop` between `mov $n,%ecx` and `callq runtime.makeslice` (add form):
 #     `bytesdec_seg_p true n` (kind: the existing `bytesDecSegKind`).
 # Anything else (another set-up, a callee without a proved spec, pointer / nested-container callees, a `nop`
 # elsewhere, two `nop`s, the offset-0 form with a `nop`) is "not covered: <reason>", never a guessed theorem.
-# `--compose` with `--gen3`: callee or two-directive uint64 fields are refused (no composition template, no
-# composed-statement kind); otherwise the GEN2 composition plus the `_kind` line against `decAcceptKind`.
+# `--compose` with `--call-segments`: callee or two-directive uint64 fields are refused (no composition template, no
+# composed-statement kind); otherwise the field-segment composition plus the `_kind` line against `decAcceptKind`.
 
 # callee decoders with a proved accept spec (`Prysm/Slot/CalleeDecodeFunctionSpecs.lean`: `U64CalleeAcc <label>` = `Prysm.Slot.Decode.accept_function_spec` / `Prysm.CommitteeIndex.Decode.accept_function_spec` /
 # `Prysm.ValidatorIndex.Decode.accept_function_spec` / `Prysm.Epoch.Decode.accept_function_spec` by rfl; proved by `Prysm.Slot.Decode.accept_function_spec_holds` / `Prysm.CommitteeIndex.Decode.accept_function_spec_holds` / `Prysm.ValidatorIndex.Decode.accept_function_spec_holds` / `Prysm.Epoch.Decode.accept_function_spec_holds`)
@@ -812,11 +812,11 @@ RR_REGS = ("rcx", "rdx", "rsi", "rdi", "r8", "r9", "r10", "r11", "r12", "r13", "
 
 
 def gen3_callee(v):
-    """IR class of a delegated field under `--gen3`: ("call", callee label) or ("none", reason)."""
+    """IR class of a delegated field under `--call-segments`: ("call", callee label) or ("none", reason)."""
     dt, u = v.get("delegated_to") or {}, v.get("underlying") or {}
     if v.get("k") != "overlay":
         return "none", (f"field kind {v.get('k')} ({v.get('go_type')}, delegated to {dt.get('k')} {dt.get('name')}): "
-                        f"nested container / pointer callee, no GEN3 template")
+                        f"nested container / pointer callee, no call-segment template")
     if not (v.get("deleg") or {}).get("unmarshaler") or dt.get("k") != "overlay" or v.get("fixed_size") != 8 \
             or u.get("k") != "uint" or u.get("bits") != 64:
         return "none", f"overlay field ({v.get('go_type')}) that is not a delegated uint64 overlay"
@@ -861,7 +861,7 @@ def rr_find(dirs, fo, src):
 
 
 def u64_find_gen3(dirs, fo, src):
-    """GEN2 inline form, else the GEN3 two-directive form; exactly one site of the two forms together."""
+    """field-segment inline form, else the call-segment two-directive form; exactly one site of the two forms together."""
     if src == 0 or fo == 0:
         raise NoMatch(f"inline uint64 with displacement 0 (SSZ offset {src}, Go offset {fo}): not exercised for "
                       f"u64dec_inline_seg / u64dec_rr_seg")
@@ -871,7 +871,7 @@ def u64_find_gen3(dirs, fo, src):
     except NoMatch as e:
         cand = [j for j in range(len(dirs)) if re.fullmatch(rf"mov %\w+,{fo:#x}\(%rdx\)", dirs[j])]
         if cand:
-            raise NoMatch(f"{e} (GEN2 inline form at a store to {fo:#x}(%rdx))")
+            raise NoMatch(f"{e} (field-segment inline form at a store to {fo:#x}(%rdx))")
         if len(rr) != 1:
             raise NoMatch(f"field at Go offset {fo:#x}: no inline uint64 read; {len(rr)} two-directive reads "
                           f"`mov {src:#x}(%rbx),%rX; mov %rX,{fo:#x}(%rax)` match (expected 1)")
@@ -1085,7 +1085,7 @@ G3_OPTS = "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in
 
 
 def call_seg(c, fname, src, fo, p):
-    """GEN3 text of a callee-decoder field: set-up theorem(s) and the call-block theorem, each with its kind."""
+    """call-segment text of a callee-decoder field: set-up theorem(s) and the call-block theorem, each with its kind."""
     k, pre = c["const"], f"{c['prefix']}_{fname}"
     padb = "true" if p["pad"] else "false"
     padnote = " (padding `nop`)" if p["pad"] else ""
@@ -1137,7 +1137,7 @@ def call_seg(c, fname, src, fo, p):
 
 
 def u64rr_seg(c, fname, src, fo, j, p):
-    """GEN3 text of a two-directive uint64 read (`u64dec_rr_seg`)."""
+    """call-segment text of a two-directive uint64 read (`u64dec_rr_seg`)."""
     name = f"{c['prefix']}_{fname}_seg"
     k = c["const"]
     out = G3_OPTS + (f"/-- `{fname}` (inline uint64, two-directive form, SSZ offset {src}, Go offset {fo}): decode "
@@ -1151,7 +1151,7 @@ def u64rr_seg(c, fname, src, fo, j, p):
 
 
 def bytes_seg_pad(c, fname, src, fo, j1, j2, p):
-    """GEN3 text of a byte vector with the padding `nop` before `callq runtime.makeslice` (`bytesdec_seg_p true`)."""
+    """call-segment text of a byte vector with the padding `nop` before `callq runtime.makeslice` (`bytesdec_seg_p true`)."""
     n = p["n"]
     name = f"{c['prefix']}_{fname}_seg"
     k = c["const"]
@@ -1172,11 +1172,11 @@ def bytes_seg_pad(c, fname, src, fo, j1, j2, p):
     return out
 
 
-# ---------------------------------------------------------------- GEN2 composition (`p2dec --gen2 --compose`)
+# ---------------------------------------------------------------- field-segment composition (`decoder --field-segments --compose`)
 #
 # Emits the whole accept theorem of a container decoder whose fields are ALL covered, as a chain of
 # `eventually_trans` over `Codec.dechead_seg`, the generated segment theorems (imported from the module
-# that `p2dec --gen2` wrote with the same `--prefix`), `Codec.bytesdec_tail_seg` after each byte vector and
+# that `decoder --field-segments` wrote with the same `--prefix`), `Codec.bytesdec_tail_seg` after each byte vector and
 # `Codec.decepi_seg` (`lean/Codec/DecoderHeadEpilogue.lean`). Shape accepted (else exit 2, nothing written):
 # frame 0x20 with the spills 0x30 / 0x38 (decHead), the first field a byte vector starting at directive 13,
 # every byte vector followed by `mov 0x18(%rsp),%rY; jmp L` and `L: mov %rY,fo(%rdx)`, the fields contiguous in
@@ -1275,13 +1275,13 @@ def compose(args, dirs, sha, irsha, fields, found):
     head, steps, jE = compose_read(dirs, found, ssz)
     slots = compose_layout(args.ir, args.type, found)
     C, name = args.const, args.name
-    g3 = getattr(args, "gen3", False)
+    g3 = getattr(args, "call_segments", False)
     if g3:
-        # GEN3: the composed statement is checked against `decAcceptKind C st fields jret`; the kind
+        # call-segment: the composed statement is checked against `decAcceptKind C st fields jret`; the kind
         # has one optional opaque word (the protoc `state`) at Go offset 0 and contiguous fields after it
         opq = [o for cl, _, o in slots if cl == "opaque"]
         if opq not in ([], [0]):
-            raise NoMatch(f"--compose --gen3: opaque receiver words at Go offsets {opq}; decAcceptKind allows one at 0 only")
+            raise NoMatch(f"--compose --call-segments: opaque receiver words at Go offsets {opq}; decAcceptKind allows one at 0 only")
         kst = "true" if opq == [0] else "false"
         kfields = ", ".join(f".bytes {a[5]['n']}" if cl == "bytes" else ".u64" for *_, cl, a in found)
     nf = len(found)
@@ -1473,11 +1473,11 @@ def compose(args, dirs, sha, irsha, fields, found):
            "; composed accept theorem; NO statement check (no hand theorem given: the statement is unchecked text, "
            "checked by nobody; `kindcheck.py` rejects this file)")
     if g3:
-        chk = ("; composed accept theorem (`p2dec --gen3 --compose`); statement check: the kind `decAcceptKind` "
+        chk = ("; composed accept theorem (`decoder --call-segments --compose`); statement check: the kind `decAcceptKind` "
                "(`_kind`, rfl at default transparency)" + (f" and the identity with `{hand}`" if hand else ""))
         if not hand:
             # without an independent hand statement the composed statement is
-            # marked UNCHECKED like the GEN2 case; `kindcheck.py` rejects the file (the kind fixes the shape only)
+            # marked UNCHECKED like the field-segment case; `kindcheck.py` rejects the file (the kind fixes the shape only)
             chk += ("; NO independent hand statement (`--same-as` / `--same-as-prop`): UNCHECKED STATEMENT, "
                     "`kindcheck.py` rejects this file")
     out = header(sha, args.S, args, f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`){chk}",
@@ -1506,15 +1506,15 @@ def compose(args, dirs, sha, irsha, fields, found):
                 f"theorem {name}_type : ∀ (h : Host),\n    type_of% (@{name} h) = type_of% (@{args.same_as} h) := by\n"
                 f"  intro h; with_reducible rfl\n")
     else:
-        print(f"scalgen p2dec: --compose without --same-as: the statement of {name} is NOT checked", file=sys.stderr)
+        print(f"scalgen decoder: --compose without --same-as: the statement of {name} is NOT checked", file=sys.stderr)
     return out + f"\nend {GEN_NS}\n"
 
 
-# ---------------------------------------------------------------- GEN4 (`p2dec --gen4`)
+# ---------------------------------------------------------------- step (`decoder --steps`)
 #
-# Compatibility switch: GEN4 is ONLY behind `--gen4` (its own path; it does not change the default, `--gen2` or
-# `--gen3` text, `regen_check.sh` of every committed file). Lemmas: `lean/Codec/NopWindow.lean`, `lean/Codec/WindowSteps.lean`,
-# `lean/Codec/Kind/WindowSteps.lean`, `lean/Codec/CalleeDecodeWindow.lean`, `lean/Codec/FixedBytesDecodeWindow.lean`, `lean/Codec/FixedBytesDecodeWindowOffsetZero.lean`, `lean/Codec/Kind/FixedBytesDecodeWindow.lean`; the interface is the GEN4 lemma unit's hand-over.
+# Compatibility switch: step is ONLY behind `--steps` (its own path; it does not change the default, `--field-segments` or
+# `--call-segments` text, `regen_check.sh` of every committed file). Lemmas: `lean/Codec/NopWindow.lean`, `lean/Codec/WindowSteps.lean`,
+# `lean/Codec/Kind/WindowSteps.lean`, `lean/Codec/CalleeDecodeWindow.lean`, `lean/Codec/FixedBytesDecodeWindow.lean`, `lean/Codec/FixedBytesDecodeWindowOffsetZero.lean`, `lean/Codec/Kind/FixedBytesDecodeWindow.lean`; the interface is the step lemmas.
 # Matching is NOT by multi-directive set-up templates. The generator walks the accept path of the decoder from the
 # end of the head (prologue, spills, nil check) and keeps a small DATAFLOW state: which register / stack slot holds
 # the receiver (`rcv + o`), the buffer (`bf + o`), an immediate, the bytes of the buffer at an offset, the new slice
@@ -1533,9 +1533,9 @@ def compose(args, dirs, sha, irsha, fields, found):
 # A field is complete at its own event: the call block (callee field), the store of the bytes `bf + src` into
 # `rcv + f` (uint64 field), the store of the new slice pointer into `rcv + fP` after the byte segment (byte field).
 # Its theorems are the steps / blocks since the previous field. Events out of IR order stop the walk.
-# Not emitted (no kind in the hand-over): the head (`decpro_seg`, spills, `kstep_nilchk`), the epilogue
-# (`decret_seg`), field compositions. `--gen4 --compose` refuses (exit 2): there is no kind for a composed
-# statement with GEN4 blocks and none for the head / epilogue lemmas.
+# Not emitted (no kind in the hand-written lemmas): the head (`decpro_seg`, spills, `kstep_nilchk`), the epilogue
+# (`decret_seg`), field compositions. `--steps --compose` refuses (exit 2): there is no kind for a composed
+# statement with step blocks and none for the head / epilogue lemmas.
 # The dataflow is the generator's acceptance rule only; it is not trusted. Lean checks every emitted theorem
 # (`he` by `rfl` on the code constant) and its `_kind` line; a field composition that uses the steps re-checks the
 # entry state of each block (`rfl` / `ecancel`).
@@ -1966,7 +1966,7 @@ def _g4_walk(dirs, fields, head_end, slots0, F, done):
                 raise G4Stop(i, f"byte segment at {i}: label {lff} not after the head window", "other")
             rest = [rf"mov %rax,({SHX})\(%rsp\)", rf"mov %rax,({SHX})?\(%(\w+)\)", rf"mov ({SHX})\(%rsp\),%rbx"]
             i3 = jl + 1
-            # the form is chosen by the directive after the buffer reload (as in GEN2): `add $X,%rbx` or not
+            # the form is chosen by the directive after the buffer reload (as in field-segment): `add $X,%rbx` or not
             _, _, ib = g4_window(dirs, i3, rest, jl, f"byte segment middle at {jl}")
             k4 = ib[-1] + 1
             while k4 < len(dirs) and dirs[k4] == "nop":
@@ -2277,7 +2277,7 @@ def g4_fail_closed(args, why):
 
 
 def p2dec_gen4(args):
-    """`p2dec --gen4`: the dataflow walk; returns the text or raises NoMatch (exit 2) / Partial (exit 3).
+    """`decoder --steps`: the dataflow walk; returns the text or raises NoMatch (exit 2) / Partial (exit 3).
     FAIL-CLOSED: the `else` branch below is the ONLY place that returns a text (exit 0). It is reached only
     when `_p2dec_gen4` completed normally AND set all three flags of G4_FLAGS: `head_ok` (g4_head returned),
     `fields_complete` (the walk returned without a stop, every IR field completed in IR order) and `epilogue_ok`
@@ -2303,15 +2303,15 @@ def p2dec_gen4(args):
 def _p2dec_gen4(args, flags):
     dirs, sha = read_S(args.S)
     fields, irsha = ir_fields(args.ir, args.type, gen3=True)
-    summ = args.summary_data = dict(type=args.type, S=args.S, S_sha256=sha, ir_sha256=irsha, mode="gen4", fields=[])
+    summ = args.summary_data = dict(type=args.type, S=args.S, S_sha256=sha, ir_sha256=irsha, mode="steps", fields=[])
     args.g4_fields = fields
     if not fields:
         raise NoMatch(f"{args.type}: no field")
     if len({f[0] for f in fields}) != len(fields):
         raise NoMatch(f"{args.type}: a field name repeats")
     if args.compose:
-        raise NoMatch("--gen4 --compose: refused. The G4-L hand-over has no kind for a field composition, none for a "
-                      "composed accept statement with GEN4 blocks (call fields, register-parametric byte segments, step "
+        raise NoMatch("--steps --compose: refused. The step lemmas have no kind for a field composition, none for a "
+                      "composed accept statement with step blocks (call fields, register-parametric byte segments, step "
                       "chains) and none for the head / epilogue lemmas (decpro_seg, kstep_nilchk, decret_seg); a composed "
                       "theorem would have no statement check. Accept theorems over the generated chains stay hand "
                       "compositions")
@@ -2397,13 +2397,13 @@ def _p2dec_gen4(args, flags):
     if not ncov:
         raise NoMatch("; ".join(report))
     kinds = ["Codec.Kind.WindowSteps", "Codec.Kind.FixedBytesDecodeWindow", "Codec.CalleeDecodeWindow"] + (["Codec.FixedBytesDecodeWindowOffsetZero"] if "segz" in used else [])
-    extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); GEN4 coverage (`p2dec --gen4`): "
+    extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); step coverage (`decoder --steps`): "
              f"{ncov} of {len(fields)} fields; step chain from directive {head_end} (end of the head)")
     body += f"end {GEN_NS}\n"
     # the theorems of each covered field, machine-readable (`kindcheck.py` rule 10 counts the fields from it: a
     # uint64 field has only step theorems, so its field is not visible in the theorem names)
     fj = [dict(field=r["field"], theorems=r["theorems"]) for r in summ["fields"] if r["status"] == "covered"]
-    fblock = (f"/-! GEN4 fields (machine-readable, read by `kindcheck.py`):\nFIELDS-JSON: {json.dumps(fj)}\n-/\n\n")
+    fblock = (f"/-! Step chain fields (machine-readable, read by `kindcheck.py`):\nFIELDS-JSON: {json.dumps(fj)}\n-/\n\n")
 
     def gheader():
         h = header(sha, args.S, args, extra, kinds)
@@ -2417,21 +2417,21 @@ def _p2dec_gen4(args, flags):
     full = gheader()
     imps, rest = full.split("\n\n", 1)
     text = (imps + f"\n\n/-! PARTIAL OUTPUT (scalgen exit 3): {ncov} of {len(fields)} fields of `{args.type}` "
-            f"(--gen4); NOT generated: {', '.join(missing)}. Not a complete p2dec output.\n"
+            f"(--steps); NOT generated: {', '.join(missing)}. Not a complete decoder output.\n"
             f"UNCOVERED-JSON: {json.dumps(unc)}\n-/\n\n" + rest + body)
     raise Partial(report, text)
 
 
-# ---------------------------------------------------------------- GEN5: generated whole accept theorem
+# ---------------------------------------------------------------- whole-accept: generated whole accept theorem
 
 G5_FLAGS = ("gen4_ok", "derived", "rendered", "kinds_complete", "statement_check")
 
 
 def p2dec_gen5(args):
-    """`p2dec --gen5`: the GEN4 walk as front end, then the whole accept theorem (head, one theorem per field,
-    epilogue, accept, size reject), every statement with its `_kind` line (the GEN5 lemma unit's hand-over).
+    """`decoder --whole-accept`: the step walk as front end, then the whole accept theorem (head, one theorem per field,
+    epilogue, accept, size reject), every statement with its `_kind` line (the whole-accept lemmas).
     FAIL-CLOSED: the `else` branch below is the ONLY place that returns a text (exit 0). It is reached only when
-    `_p2dec_gen5` completed normally AND set every flag of G5_FLAGS. ANY exception of any phase (also a GEN4 exit 3
+    `_p2dec_gen5` completed normally AND set every flag of G5_FLAGS. ANY exception of any phase (also a step exit 3
     `Partial`, a `G5Refuse`, an unexpected error, SystemExit; not KeyboardInterrupt) is exit 2: nothing on stdout,
     no accept theorem, no partial file."""
     flags = dict.fromkeys(G5_FLAGS, False)
@@ -2442,7 +2442,7 @@ def p2dec_gen5(args):
     except BaseException as e:
         why = e.why if hasattr(e, "why") and isinstance(getattr(e, "why"), str) else str(e)
         if isinstance(e, Partial):
-            why = "the GEN4 front end covers only some fields (exit 3): " + "; ".join(e.report)
+            why = "the step front end covers only some fields (exit 3): " + "; ".join(e.report)
         args.g5_summary.update(accept_generated=False, reason=f"{type(e).__name__}: {why}")
         raise NoMatch(f"gen5: no accept theorem ({type(e).__name__}: {why})")
     else:
@@ -2474,18 +2474,18 @@ def g5_module():
 def _p2dec_gen5(args, flags):
     G5 = g5_module()
     args.imports = ",".join(args.imports.split(",") + [m for m in G5.G5_IMPORTS if m not in args.imports.split(",")])
-    # phase 1: the GEN4 front end, unchanged; exit 0 of GEN4 (every field, head, epilogue) or no accept theorem
+    # phase 1: the step front end, unchanged; exit 0 of step (every field, head, epilogue) or no accept theorem
     g4 = p2dec_gen4(args)
     if not isinstance(g4, str) or not g4.endswith(f"end {GEN_NS}\n"):
-        raise G5.G5Refuse("GEN4 front end returned no complete module")
+        raise G5.G5Refuse("step front end returned no complete module")
     dirs, sha = read_S(args.S)
     fields, irsha = ir_fields(args.ir, args.type, gen3=True)
     head_end, slots, F = g4_head(dirs, ir_ssz_size(args.ir, args.type))
     done, stop, end = g4_walk(dirs, fields, head_end, slots, F)
     if stop is not None or end is None or [y for (y, _) in done] != list(range(len(fields))):
-        raise G5.G5Refuse("GEN4 walk did not complete every field")
+        raise G5.G5Refuse("step walk did not complete every field")
     if g4_epilogue(dirs, end, F) is not G4_EPI_OK:
-        raise G5.G5Refuse("GEN4 epilogue check failed")
+        raise G5.G5Refuse("step epilogue check failed")
     flags["gen4_ok"] = True
     # phase 2: the description (frame facts, boundary states) from the walk; G5Refuse on anything not modelled
     t = G5.g5_derive(dirs, fields, head_end, F, done, end, args, label_index)
@@ -2504,8 +2504,8 @@ def _p2dec_gen5(args, flags):
                 or body.count(f"\ntheorem {name} : ") != 1:
             raise G5.G5Refuse(f"theorem {name} or its `_kind` line is missing")
     flags["kinds_complete"] = True
-    if args.same_as_prop and body.count(f"\ntheorem {args.prefix}_accept_stmt : {args.same_as_prop} := ") != 1:
-        raise G5.G5Refuse("statement identity `_stmt` missing")
+    if args.same_as_prop and body.count(f"\ntheorem {args.prefix}_accept_statement : {args.same_as_prop} := ") != 1:
+        raise G5.G5Refuse("statement identity `_statement` missing")
     if args.same_as and body.count(f"\ntheorem {args.prefix}_accept_same : ") != 1:
         raise G5.G5Refuse("statement identity `_same` missing")
     flags["statement_check"] = True
@@ -2513,22 +2513,22 @@ def _p2dec_gen5(args, flags):
               fields=t.fieldslean(), frame=t.frame, statement_check=(f"stmt {args.same_as_prop}" if args.same_as_prop
                                                                     else f"same {args.same_as}" if args.same_as
                                                                     else "kind instance only"))
-    blk = (f"/-! GEN5 (`p2dec --gen5`, unit G5-G): the whole accept theorem `{args.prefix}_accept` of `{args.type}` from\n"
-           f"the GEN4 chain above: head, one theorem per field, epilogue (boundary states in entry terms), accept, size\n"
-           f"reject. Every statement has a `_kind` line against the G5-L kinds. In-sample (development data).\n"
-           f"GEN5-JSON: {json.dumps(gj)}\n-/\n\n"
+    blk = (f"/-! Whole accept (`decoder --whole-accept`): the whole accept theorem `{args.prefix}_accept` of `{args.type}` from\n"
+           f"the step chain above: head, one theorem per field, epilogue (boundary states in entry terms), accept, size\n"
+           f"reject. Every statement has a `_kind` line against the whole-accept kinds. In-sample (development data).\n"
+           f"WHOLE-ACCEPT-JSON: {json.dumps(gj)}\n-/\n\n"
            f"open {G5.G5_OPENS}\n\nnamespace {GEN_NS}\n\n")
     return g4 + "\n" + blk + body + f"end {GEN_NS}\n"
 
 
-# ---------------------------------------------------------------- GEN6: generated encoder fast-path theorem
+# ---------------------------------------------------------------- fast-path: generated encoder fast-path theorem
 
 G6_FLAGS = ("walked", "rendered", "kinds_complete", "statement_check", "verified")
 
 
 def p2enc_gen6(args):
-    """`p2enc --gen6`: the encoder fast-path theorem of a flat `MarshalSSZTo` (interface of the encoder lemma unit): head, one theorem per
-    IR field, epilogue, fast-path theorem, each with its `_kind` line, and the identity `_stmt` on request.
+    """`encoder --fast-path`: the encoder fast-path theorem of a flat `MarshalSSZTo` (interface of the encoder lemmas): head, one theorem per
+    IR field, epilogue, fast-path theorem, each with its `_kind` line, and the identity `_statement` on request.
     FAIL-CLOSED: the `else` branch below is the ONLY place that returns a text (exit 0). It is reached only when
     `_p2enc_gen6` completed normally AND set every flag of G6_FLAGS AND returned a string. ANY exception of any phase
     (a `G6Refuse`, an unexpected error, SystemExit; not KeyboardInterrupt) is exit 2: nothing on stdout, no
@@ -2595,13 +2595,13 @@ def _p2enc_gen6(args, flags):
                if args.same_as_via else f"\nThe statement is the declared type of the committed hand theorem `{args.same_as}`.")
         tail = (f"/-- Statement check: the generated theorem proves the committed hand statement"
                 f"{' (implication tie)' if via else ''}. -/\n"
-                f"theorem {px}_stmt : type_of% (@{args.same_as} ‹Host›) :=\n  {via}{px}_fast\n\n")
+                f"theorem {px}_statement : type_of% (@{args.same_as} ‹Host›) :=\n  {via}{px}_fast\n\n")
     elif args.same_as_prop:
         tie = f"\nThe statement is the hand-written Prop `{args.same_as_prop}`."
         tail = (f"/-- Statement check: the generated theorem proves the hand-written Prop. -/\n"
-                f"theorem {px}_stmt : {args.same_as_prop} :=\n  {px}_fast\n\n")
-    if (args.same_as or args.same_as_prop) and tail.count(f"\ntheorem {px}_stmt : ") != 1:
-        raise G6.G6Refuse("statement identity `_stmt` missing")
+                f"theorem {px}_statement : {args.same_as_prop} :=\n  {px}_fast\n\n")
+    if (args.same_as or args.same_as_prop) and tail.count(f"\ntheorem {px}_statement : ") != 1:
+        raise G6.G6Refuse("statement identity `_statement` missing")
     flags["statement_check"] = True
     meta = dict(g.meta(), statement_check=(f"same {args.same_as}" + (f" via {args.same_as_via}" if args.same_as_via else "")
                                            if args.same_as else f"prop {args.same_as_prop}" if args.same_as_prop
@@ -2610,14 +2610,14 @@ def _p2enc_gen6(args, flags):
     imports = [m for m in G6.G6_IMPORTS] + [m for m in args.imports.split(",") if m and m not in G6.G6_IMPORTS]
     opens = " ".join(["Machine", "Runtime", "Codec"] + [o for o in args.open.split(",") if o])
     head = ("".join(f"import {m}\n" for m in imports) + "\n"
-            f"/-!\n# GEN6 (`p2enc --gen6`, unit E2-G): encoder fast path of `(*v1alpha1.{g.t}).MarshalSSZTo`\n\n"
+            f"/-!\n# Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.{g.t}).MarshalSSZTo`\n\n"
             "Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a\n"
             "step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem\n"
             "has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKindN`).\n"
             f"**Fast path only**: `len(dst) + {g.size} ≤ cap(dst)` and every byte-vector field of its exact length. No\n"
             "`runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the\n"
             f"growslice branches, the length rejects, the morestack path. Not a complete encoder result.{tie}\n"
-            f"GEN6-JSON: {json.dumps(meta)}\n-/\n\n"
+            f"FAST-PATH-JSON: {json.dumps(meta)}\n-/\n\n"
             f"open {opens}\nvariable [Host]\n\nnamespace {GEN_NS}\n\n")
     text = head + body + "\n" + tail + f"end {GEN_NS}\n"
     for bad in ("sorry", "admit", "native_decide", "bv_decide", "axiom ", "maxHeartbeats 4000001"):
@@ -2631,64 +2631,64 @@ def _p2enc_gen6(args, flags):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["p1", "p2dec", "p2enc"])
+    ap.add_argument("mode", choices=["uint64", "decoder", "encoder"])
     ap.add_argument("--S", required=True)
     ap.add_argument("--const", required=True)
     ap.add_argument("--name")
     ap.add_argument("--same-as", help="NAME must be an independently written hand statement (a theorem written by "
-                    "hand, not generated); p1: emits NAME_same; p2dec --compose: emits the identity `T_type : "
+                    "hand, not generated); uint64: emits NAME_same; decoder --compose: emits the identity `T_type : "
                     "type_of% (@T h) = type_of% (@NAME h)`. A generated NAME is no statement check (kindcheck rejects it)")
-    ap.add_argument("--same-as-prop", help="p2dec --compose: NAME is a hand-written Prop-valued `abbrev NAME [Host] : "
-                    "Prop` (no proof); emits `T_type : ∀ (h : Host), type_of% (@T h) = @NAME h` (unit G2-F)")
+    ap.add_argument("--same-as-prop", help="decoder --compose: NAME is a hand-written Prop-valued `abbrev NAME [Host] : "
+                    "Prop` (no proof); emits `T_type : ∀ (h : Host), type_of% (@T h) = @NAME h`")
     ap.add_argument("--ir")
     ap.add_argument("--type")
     ap.add_argument("--prefix")
     ap.add_argument("--imports", required=True)
     ap.add_argument("--open", default="")
-    ap.add_argument("--partial-out", help="p2dec: on exit 3, write the matched fields here (marked PARTIAL)")
-    ap.add_argument("--gen2", action="store_true",
-                    help="p2dec: GEN2 coverage (byte vectors of 32 / 48 / 96 bytes, inline uint64); off = S2 / SG-1 text")
-    ap.add_argument("--gen3", action="store_true",
-                    help="p2dec: GEN3 coverage (implies --gen2): uint64-overlay fields decoded by a call to a callee "
+    ap.add_argument("--partial-out", help="decoder: on exit 3, write the matched fields here (marked PARTIAL)")
+    ap.add_argument("--field-segments", action="store_true",
+                    help="decoder: field segment coverage (byte vectors of 32 / 48 / 96 bytes, inline uint64); off = the earlier text")
+    ap.add_argument("--call-segments", action="store_true",
+                    help="decoder: call segment coverage (implies --field-segments): uint64-overlay fields decoded by a call to a callee "
                          "decoder with a proved spec, the two-directive uint64 read, the padding nop before makeslice")
-    ap.add_argument("--gen4", action="store_true",
-                    help="p2dec: GEN4 coverage (unit G4-G): a dataflow walk over the accept path with kinded per-instruction "
+    ap.add_argument("--steps", action="store_true",
+                    help="decoder: step coverage: a dataflow walk over the accept path with kinded per-instruction "
                          "step theorems, nop windows, register-parametric byte segments and call blocks; own path, does not "
-                         "change the default / --gen2 / --gen3 text")
-    ap.add_argument("--gen5", action="store_true",
-                    help="p2dec: GEN5 (unit G5-G): the GEN4 output plus the whole accept theorem and the size-reject "
+                         "change the default / --field-segments / --call-segments text")
+    ap.add_argument("--whole-accept", action="store_true",
+                    help="decoder: whole-accept: the step output plus the whole accept theorem and the size-reject "
                          "theorem with their kinds; refuses (exit 2, nothing on stdout) unless every theorem is emitted")
-    ap.add_argument("--summary", help="p2dec --gen2 / --gen4: write the per-field coverage report (JSON) here")
-    ap.add_argument("--gen6", action="store_true",
-                    help="p2enc (unit E2-G): the encoder fast-path theorem with head / field / epilogue theorems and their "
+    ap.add_argument("--summary", help="decoder --field-segments / --steps: write the per-field coverage report (JSON) here")
+    ap.add_argument("--fast-path", action="store_true",
+                    help="encoder: the encoder fast-path theorem with head / field / epilogue theorems and their "
                          "kinds; refuses (exit 2, nothing on stdout) unless every theorem is emitted")
-    ap.add_argument("--hand-layout", help="p2enc --gen6: use this committed EncLayout (chunk order of a hand statement)")
-    ap.add_argument("--hand-layout-src", help="p2enc --gen6: the Lean file that defines --hand-layout")
-    ap.add_argument("--same-as-via", help="p2enc --gen6 --same-as: the implication lemma (kind instance -> hand statement)")
+    ap.add_argument("--hand-layout", help="encoder --fast-path: use this committed EncLayout (chunk order of a hand statement)")
+    ap.add_argument("--hand-layout-src", help="encoder --fast-path: the Lean file that defines --hand-layout")
+    ap.add_argument("--same-as-via", help="encoder --fast-path --same-as: the implication lemma (kind instance -> hand statement)")
     ap.add_argument("--compose", action="store_true",
-                    help="p2dec --gen2: emit the composed accept theorem --name (needs every field covered; the "
+                    help="decoder --field-segments: emit the composed accept theorem --name (needs every field covered; the "
                          "segment theorems come from the module of the same --prefix, listed in --imports)")
     args = ap.parse_args()
     global GEN_NS
     GEN_NS = gen_ns(args.S, args.type) if args.S else None
-    if args.mode == "p2enc" or args.gen6 or args.hand_layout or args.hand_layout_src or args.same_as_via:
-        if not (args.mode == "p2enc" and args.gen6):
-            ap.error("p2enc needs --gen6; --gen6 / --hand-layout / --same-as-via are p2enc options")
-        if args.gen2 or args.gen3 or args.gen4 or args.gen5 or args.compose or args.partial_out or args.name:
-            ap.error("p2enc --gen6 excludes --gen2 / --gen3 / --gen4 / --gen5 / --compose / --partial-out / --name")
+    if args.mode == "encoder" or args.fast_path or args.hand_layout or args.hand_layout_src or args.same_as_via:
+        if not (args.mode == "encoder" and args.fast_path):
+            ap.error("encoder needs --fast-path; --fast-path / --hand-layout / --same-as-via are encoder options")
+        if args.field_segments or args.call_segments or args.steps or args.whole_accept or args.compose or args.partial_out or args.name:
+            ap.error("encoder --fast-path excludes --field-segments / --call-segments / --steps / --whole-accept / --compose / --partial-out / --name")
         if not (args.ir and args.type and args.prefix):
-            ap.error("p2enc --gen6 needs --ir, --type, --prefix")
+            ap.error("encoder --fast-path needs --ir, --type, --prefix")
         if args.same_as_prop and args.same_as:
             ap.error("--same-as and --same-as-prop exclude each other")
         if bool(args.hand_layout) != bool(args.hand_layout_src):
             ap.error("--hand-layout and --hand-layout-src go together")
         if args.same_as_via and not args.same_as:
             ap.error("--same-as-via needs --same-as")
-        args.g6_summary = dict(type=args.type, mode="gen6", generated=False)
+        args.g6_summary = dict(type=args.type, mode="fast-path", generated=False)
         try:
             out = p2enc_gen6(args)
         except NoMatch as e:
-            print(f"scalgen p2enc: no fast-path theorem: {e}", file=sys.stderr)
+            print(f"scalgen encoder: no fast-path theorem: {e}", file=sys.stderr)
             if args.summary:
                 pathlib.Path(args.summary).write_text(json.dumps(dict(args.g6_summary, exit=2), indent=1) + "\n")
             sys.exit(2)
@@ -2696,19 +2696,19 @@ def main():
             pathlib.Path(args.summary).write_text(json.dumps(dict(args.g6_summary, exit=0), indent=1) + "\n")
         sys.stdout.write(out)
         return
-    if args.gen5:
-        if args.mode != "p2dec" or args.gen2 or args.gen3 or args.gen4 or args.compose or args.partial_out:
-            ap.error("--gen5 is a p2dec option; it excludes --gen2 / --gen3 / --gen4 / --compose / --partial-out")
+    if args.whole_accept:
+        if args.mode != "decoder" or args.field_segments or args.call_segments or args.steps or args.compose or args.partial_out:
+            ap.error("--whole-accept is a decoder option; it excludes --field-segments / --call-segments / --steps / --compose / --partial-out")
         if not (args.ir and args.type and args.prefix):
-            ap.error("--gen5 needs --ir, --type, --prefix")
+            ap.error("--whole-accept needs --ir, --type, --prefix")
         if args.same_as_prop and args.same_as:
             ap.error("--same-as and --same-as-prop exclude each other")
-        args.g5_summary = dict(type=args.type, mode="gen5", accept_generated=False)
+        args.g5_summary = dict(type=args.type, mode="whole-accept", accept_generated=False)
         args.summary_data = None
         try:
             out = p2dec_gen5(args)
         except NoMatch as e:
-            print(f"scalgen p2dec: no accept theorem: {e}", file=sys.stderr)
+            print(f"scalgen decoder: no accept theorem: {e}", file=sys.stderr)
             if args.summary:
                 pathlib.Path(args.summary).write_text(json.dumps(dict(args.g5_summary, exit=2), indent=1) + "\n")
             sys.exit(2)
@@ -2716,29 +2716,29 @@ def main():
             pathlib.Path(args.summary).write_text(json.dumps(dict(args.g5_summary, exit=0), indent=1) + "\n")
         sys.stdout.write(out)
         return
-    if args.gen4:
-        if args.mode != "p2dec":
-            ap.error("--gen4 is a p2dec option")
-        if args.gen2 or args.gen3:
-            ap.error("--gen4 excludes --gen2 / --gen3")
+    if args.steps:
+        if args.mode != "decoder":
+            ap.error("--steps is a decoder option")
+        if args.field_segments or args.call_segments:
+            ap.error("--steps excludes --field-segments / --call-segments")
         if args.same_as_prop and not args.compose:
-            ap.error("--same-as-prop is a p2dec --compose option")
-    if args.gen3:
-        if args.mode != "p2dec":
-            ap.error("--gen3 is a p2dec option")
-        args.gen2 = True  # GEN3 = the GEN2 shapes + the GEN3 shapes
+            ap.error("--same-as-prop is a decoder --compose option")
+    if args.call_segments:
+        if args.mode != "decoder":
+            ap.error("--call-segments is a decoder option")
+        args.field_segments = True  # call-segment = the field-segment shapes + the call-segment shapes
     if args.same_as_prop and not args.compose:
-        ap.error("--same-as-prop is a p2dec --compose option")
+        ap.error("--same-as-prop is a decoder --compose option")
     if args.same_as_prop and args.same_as:
         ap.error("--same-as and --same-as-prop exclude each other")
-    if args.compose and not ((args.gen2 or args.gen4) and args.name):
-        ap.error("--compose needs --gen2 and --name")
-    if args.partial_out and args.mode != "p2dec":
-        ap.error("--partial-out is a p2dec option")
-    if (args.gen2 or args.summary) and args.mode != "p2dec":
-        ap.error("--gen2 / --summary are p2dec options")
-    if args.summary and not (args.gen2 or args.gen4):
-        ap.error("--summary needs --gen2")
+    if args.compose and not ((args.field_segments or args.steps) and args.name):
+        ap.error("--compose needs --field-segments and --name")
+    if args.partial_out and args.mode != "decoder":
+        ap.error("--partial-out is a decoder option")
+    if (args.field_segments or args.summary) and args.mode != "decoder":
+        ap.error("--field-segments / --summary are decoder options")
+    if args.summary and not (args.field_segments or args.steps):
+        ap.error("--summary needs --field-segments")
     args.summary_data = None
 
     def summary(exit_code):
@@ -2749,8 +2749,8 @@ def main():
             pathlib.Path(args.summary).write_text(json.dumps(d, indent=1) + "\n")
 
     try:
-        out = (p1(args) if args.mode == "p1" else p2dec_gen4(args) if args.gen4 else
-               (p2dec_gen2(args) if args.gen2 else p2dec(args)))
+        out = (p1(args) if args.mode == "uint64" else p2dec_gen4(args) if args.steps else
+               (p2dec_gen2(args) if args.field_segments else decoder(args)))
     except NoMatch as e:
         print(f"scalgen {args.mode}: no template match: {e}", file=sys.stderr)
         if args.summary_data:
@@ -2769,7 +2769,7 @@ def main():
         print(f"scalgen {args.mode}: incomplete: nothing on stdout (exit 3)", file=sys.stderr)
         summary(3)
         sys.exit(3)
-    if args.gen2 or args.gen4:
+    if args.field_segments or args.steps:
         for f in args.summary_data["fields"]:
             print(f"scalgen {args.mode}: field {f['field']}: {f['status'].upper()} "
                   + (f"{f['shape']}, directives {f['directives'][0]}–{f['directives'][1]}" if f["status"] == "covered"

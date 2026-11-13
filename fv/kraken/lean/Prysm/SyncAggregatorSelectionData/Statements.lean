@@ -11,7 +11,7 @@ import Prysm.ValidatorBalance.Statements
 import Prysm.VoluntaryExit.Statements
 
 /-!
-# Independent hand STATEMENTS of three `p2dec --gen5` accept theorems (statements only, no proof)
+# Independent hand STATEMENTS of three `decoder --whole-accept` accept theorems (statements only, no proof)
 
 Hand-written BEFORE the author opened the generated modules `Prysm/SyncAggregatorSelectionData/GeneratedDecodeAccept.lean`,
 `Prysm/ValidatorBalance/GeneratedDecodeAccept.lean`, `Prysm/VoluntaryExit/GeneratedDecodeAccept.lean` or their kind lines. These generated files were already committed.

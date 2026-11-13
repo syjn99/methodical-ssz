@@ -3,10 +3,10 @@ import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of the generated `Decode.generated_reject` (FLAT24 / H7)
+# Witness of the generated `Decode.generated_reject` (24 flat hold-out types)
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.ExecutionPayloadEnvelopesByRangeRequest).UnmarshalSSZ` (index 1).
-Written by the FLAT24 evaluator with its evidence script `f24wit.py`: the text of the G5-C reject witnesses
+Written by the evidence script `f24wit.py`: the text of the generated size-reject witnesses
 (`Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeRejectSize.lean`) with the v1alpha1.ExecutionPayloadEnvelopesByRangeRequest decoder and the generated size-reject theorem of `Prysm/ExecutionPayloadEnvelopesByRangeRequest/GeneratedDecodeAccept.lean`. Memory at
 `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a data word `0x2a`,
 stand-ins: the real values are set by the runtime's init and are not read from the ELF), the guard word, saved-rbp

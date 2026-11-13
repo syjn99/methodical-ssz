@@ -4,7 +4,7 @@ import Prysm.ValidatorBalance.Spec
 /-!
 # Spec alignment of the real ValidatorBalance decoder
 
-Built on the GENERATED theorems of `Prysm/ValidatorBalance/GeneratedDecodeAccept.lean` (`p2dec --gen5`; raw output, not edited):
+Built on the GENERATED theorems of `Prysm/ValidatorBalance/GeneratedDecodeAccept.lean` (`decoder --whole-accept`; raw output, not edited):
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
   The statement is the generated accept statement (kind instance) with the input chunks replaced by the

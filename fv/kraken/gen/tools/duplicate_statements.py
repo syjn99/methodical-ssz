@@ -471,7 +471,7 @@ FIXTURE = {
                              'theorem add_zero_hand (n : Nat) : n + 0 = n := rfl\nend Base\n',
     'lean/Base/Other.lean': 'namespace Other\ntheorem add_zero_other (n : Nat) : n + 0 = n := rfl\nend Other\n',
     'lean/Base/Uses.lean': 'import Base.Lemmas\nexample : Base.add_zero_hand 1 = Base.add_zero_hand 1 := rfl\n',
-    'lean/T/GeneratedDecodeAccept.lean': '/- written by scalgen.py p2dec -/\nnamespace T\ntheorem generated_a : True := trivial\n'
+    'lean/T/GeneratedDecodeAccept.lean': '/- written by scalgen.py decoder -/\nnamespace T\ntheorem generated_a : True := trivial\n'
                                          'theorem generated_step_a : True := trivial\n'
                                          'theorem generated_b : 1 = 1 := rfl\n'
                                          'theorem generated_b_kind : 2 = 2 := rfl\nend T\n',
@@ -481,7 +481,7 @@ FIXTURE = {
     'lean/T/Plain.lean': 'namespace T\ntheorem lemma_one : 4 = 4 := rfl\nend T\n',
     'lean/T/PlainTwin.lean': 'import T.Plain\nnamespace T\ntheorem lemma_two : 4 = 4 := rfl\nend T\n'
                              'theorem use_two : 4 = 4 := T.lemma_two\n',
-    'gen/scal/gen.sh': 'python3 scalgen.py p1 --same-as T.accept\n',
+    'gen/scal/gen.sh': 'python3 scalgen.py uint64 --same-as T.accept\n',
     'gen/axioms-lists/hand.lean': '#print axioms T.seg\n',
 }
 DUMP = [('Base.f.eq_1', 'h1'), ('Base.f_eq', 'h1'),              # lean-derived

@@ -38,13 +38,21 @@ The design principles are in `../../README.md`.
 The tools for the 24 other flat types are in `prysm/go1.26.10/e2e/f24/tools/` and `prysm/go1.26.10/e2e/f24/gen/part1.sh`.
 The encoder specification and witness emitter of the flat types is `prysm/go1.26.10/e2e/scal/e2c/e2cemit.py`.
 
+`scal/scalgen.py` has three modes. `uint64`: the accept path of a uint64 primitive decoder. `decoder`: a container
+decoder. Without an option it writes the 32-byte field segments. `--field-segments` adds byte vectors of 32, 48 and
+96 bytes and inline uint64 fields, `--call-segments` also the fields that a callee decodes, `--steps` the step chain
+over windows (a padding `nop` anywhere), and `--whole-accept` the step chain with the whole accept and size-reject
+theorems. `encoder --fast-path`: the encoder fast path theorem. `scal/option-names.tsv` gives the earlier names of
+the modes and options and of the labels in the generated headers (run records and old headers use them).
+`prysm/go1.26.10/e2e/f24/gen/record-names.tsv` maps the earlier run record names of `part1.sh`.
+
 ## 3. Check that a generated file is the generator output
 
 Use `regen_check.sh` of the project skill. It runs the generator two times into scratch files and compares them with the tracked file.
 Exit 0 means the same bytes. Run it from `fv/kraken`:
 
 ```sh
-sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/scal/scalgen.py p1 --S prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.CommitteeIndex.Code > "$REGEN_OUT"'
+sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/scal/scalgen.py uint64 --S prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.CommitteeIndex.Code > "$REGEN_OUT"'
 ```
 
 For the other files, take the command from `scal/gen.sh` or from the file header. Replace the output redirect with `> "$REGEN_OUT"`.
@@ -155,7 +163,6 @@ Other limits:
 
 - The specification and witness files of five flat types (HistoricalSummary, SyncAggregatorSelectionData, SigningData, ValidatorBalance, VoluntaryExit) have no tracked generator script.
 - The commands of 12 generated files are not in `scal/gen.sh`. Their headers give the commands.
-- `prysm/go1.26.10/e2e/f24/gen/part1.sh` uses the GNU `sed` form `\U`. BSD `sed` on macOS writes wrong file names. `scal/gen.sh` uses `tr` and `cut` instead.
 - `prysm/go1.26.10/e2e/f24/gen/part1.sh` calls a job wrapper that is not tracked. Run its `scalgen.py` commands directly.
 - 15 of the 24 `*SpecChecker.lean` headers name a path where the `Desc` file is not. The file is in a subdirectory of
   `prysm/go1.26.10/e2e/` (`e1/`, `f24/`, `g5c/`, `h3/` to `h6/`). Nine of these headers have a hand-added line that

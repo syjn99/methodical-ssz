@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Generator tests for `scalgen.py p2enc --gen6`. Tests that can fail.
+"""Generator tests for `scalgen.py encoder --fast-path`. Tests that can fail.
 
 usage: p2enc_test.py <work-dir> <result.json>     (cwd = fv/kraken; one gated job; Python 3 stdlib only)
 exit 0 = every case has its expected outcome; 1 = a case differs; 2 = usage
 
 Cases (mutated `.S` / IR copies are written to <work-dir>, nothing in the repository changes):
- - e6-real-*: the 16 flat development types as committed in `gen/gen.sh` (GEN6 rows): exit 0, two runs
+ - fast-path-real-*: the 16 flat development types as committed in `gen/gen.sh` (fast-path rows): exit 0, two runs
    byte-identical, every theorem with its kind line; equal to the committed `lean/Prysm/<T>/GeneratedEncodeFastPath.lean` when it
    exists.
- - e6-adv-*: adversarial `.S` / IR mutants (capacity test altered so that the growslice site is on the walked path,
+ - fast-path-adv-*: adversarial `.S` / IR mutants (capacity test altered so that the growslice site is on the walked path,
    length test with a wrong immediate / wrong word, a store to the wrong offset vs the IR, fields out of order, a
    clobbered dst / len register, memmove with swapped source / destination, epilogue frame-test variants, a
    truncated file, an extra store beyond len + size, unknown directives and callees, stack stores outside the frame,
    head variants, IR mutants, ...). Expected: exit 2, 0 bytes on stdout, the `--summary` says generated = false.
- - e6-ok-*: valid variants that must stay COVERED (exit 0, every kind line): nops at many places, an extra harmless
+ - fast-path-ok-*: valid variants that must stay COVERED (exit 0, every kind line): nops at many places, an extra harmless
    move, a consistent register rename.
  - e6fc-*: fail-closed fault injection. A harness imports the working-tree `scalgen.py`, takes its `gen6enc` module
    (`g6_module()`), monkeypatches one phase and calls `main()`: an unexpected exception, SystemExit(0) and a G6Refuse
@@ -50,7 +50,7 @@ def spath(t):
 
 def argv(t, S=None, ir=IR, extra=None, summary=None):
     _, d, c, mod, p, x, _ = ROW[t]
-    a = ["python3", "-I", "-B", "gen/scal/scalgen.py", "p2enc", "--gen6", "--S", S or spath(t), "--const", c,
+    a = ["python3", "-I", "-B", "gen/scal/scalgen.py", "encoder", "--fast-path", "--S", S or spath(t), "--const", c,
          "--ir", ir, "--type", f"v1alpha1.{t}", "--prefix", "Encode.generated", "--imports", mod, "--open", f"Prysm.{t}.Code"]
     a += x if extra is None else extra
     if summary:
@@ -111,7 +111,7 @@ def adversarial(work):
         "BlobIdentifier"
 
     def adv(i, t, edits, what, expect="refuse", extra=None):
-        C.append((f"e6-adv-{i}" if expect == "refuse" else f"e6-ok-{i}", argv(t, S=mut(t, edits, work, i), extra=extra),
+        C.append((f"fast-path-adv-{i}" if expect == "refuse" else f"fast-path-ok-{i}", argv(t, S=mut(t, edits, work, i), extra=extra),
                   expect, what))
     # capacity test altered: the growslice site is on the walked path / the test is not provably passed
     adv("cap-jae-deleted", vb, [(f"jae {lbl(vb, '7b')}", None, 0)], "capacity test branch removed: growslice on the path")
@@ -143,21 +143,21 @@ def adversarial(work):
         g = ty["go_fields"]
         g[1], g[2] = g[2], g[1]
         ty["ir"]["fields"].reverse()
-    C.append(("e6-adv-fields-out-of-order", argv(vb, ir=ir_mut(vb, swap, work, "vb-swap")), "refuse",
+    C.append(("fast-path-adv-fields-out-of-order", argv(vb, ir=ir_mut(vb, swap, work, "vb-swap")), "refuse",
               "IR field order swapped, Go offsets as in the code"))
     adv("code-fields-swapped", vb, [("mov 0x10(%rax),%r8", ["mov 0x8(%rax),%r8"], 0),
                                     ("mov 0x8(%rax),%r8", ["mov 0x10(%rax),%r8"], 0)],
         "code writes Balance first and Index second")
-    C.append(("e6-adv-ir-goff", argv(vb, ir=ir_mut(vb, lambda ty: ty["go_fields"][2].__setitem__("offset_gc_amd64", 24),
+    C.append(("fast-path-adv-ir-goff", argv(vb, ir=ir_mut(vb, lambda ty: ty["go_fields"][2].__setitem__("offset_gc_amd64", 24),
                                                    work, "vb-goff")), "refuse", "IR Go offset off by 8"))
-    C.append(("e6-adv-ir-size", argv(dm, ir=ir_mut(dm, lambda ty: (
+    C.append(("fast-path-adv-ir-size", argv(dm, ir=ir_mut(dm, lambda ty: (
         ty["go_fields"][0].__setitem__("tag", ty["go_fields"][0]["tag"].replace('ssz-size:"48"', 'ssz-size:"32"')),
         ty["ir"]["fields"][0]["v"].update(size=32, fixed_size=32), ty["ir"].update(fixed_size=ty["ir"]["fixed_size"] - 16)),
         work, "dm-size")), "refuse", "IR size 48 -> 32 (code tests 48)"))
-    C.append(("e6-adv-ir-size-only-tag", argv(dm, ir=ir_mut(dm, lambda ty: ty["go_fields"][0].__setitem__(
+    C.append(("fast-path-adv-ir-size-only-tag", argv(dm, ir=ir_mut(dm, lambda ty: ty["go_fields"][0].__setitem__(
         "tag", ty["go_fields"][0]["tag"].replace('ssz-size:"48"', 'ssz-size:"32"')), work, "dm-tag")), "refuse",
         "IR views disagree (tag 32, SSZ IR 48)"))
-    C.append(("e6-adv-ir-missing-type", argv(vb) [:0] + [x.replace("v1alpha1.ValidatorBalance", "v1alpha1.NoSuchType")
+    C.append(("fast-path-adv-ir-missing-type", argv(vb) [:0] + [x.replace("v1alpha1.ValidatorBalance", "v1alpha1.NoSuchType")
                                                          for x in argv(vb)], "refuse", "type not in the IR"))
     # clobbered registers
     adv("clobber-len", vb, [("mov %r8,(%rbx,%rcx,1)", ["mov $0x0,%ecx", "mov %r8,(%rbx,%rcx,1)"], 0)],
@@ -184,7 +184,7 @@ def adversarial(work):
     tr = lines_of(vb)[:40]
     p = work / "truncated.S"
     p.write_text("\n".join(tr))
-    C.append(("e6-adv-truncated", argv(vb, S=str(p)), "refuse", "file cut after 40 lines"))
+    C.append(("fast-path-adv-truncated", argv(vb, S=str(p)), "refuse", "file cut after 40 lines"))
     adv("blank-line", vb, [("mov %rbx,0x80(%rsp)", ["mov %rbx,0x80(%rsp)", ""], 0)], "blank line inside")
     adv("dup-label", vb, [("mov %r8,-0x8(%rdx,%rbx,1)", [f"{lbl(vb, '7b')}:", "mov %r8,-0x8(%rdx,%rbx,1)"], 0)],
         "label defined twice")
@@ -202,10 +202,10 @@ def adversarial(work):
     adv("head-guard", vb, [("cmp 0x10(%r14),%rsp", ["cmp 0x18(%r14),%rsp"], 0)], "stack guard on another word")
     adv("head-frame", vb, [("sub $0x68,%rsp", ["sub %rax,%rsp"], 0)], "frame allocation form")
     # hand layout of another type
-    C.append(("e6-adv-hand-layout-other", argv(bh, extra=["--hand-layout=Prysm.Eth1Data.encodeLayout",
+    C.append(("fast-path-adv-hand-layout-other", argv(bh, extra=["--hand-layout=Prysm.Eth1Data.encodeLayout",
                                                            "--hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean"]),
               "refuse", "hand layout of Eth1Data for BeaconBlockHeader"))
-    C.append(("e6-adv-hand-layout-missing", argv(bh, extra=["--hand-layout=Prysm.BeaconBlockHeader.encodeLayoutMissing",
+    C.append(("fast-path-adv-hand-layout-missing", argv(bh, extra=["--hand-layout=Prysm.BeaconBlockHeader.encodeLayoutMissing",
                                                              "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean"]),
               "refuse", "hand layout not in the file"))
     # valid variants: must stay covered
@@ -365,7 +365,7 @@ def main():
         com = pathlib.Path(f"lean/Prysm/{t}/GeneratedEncodeFastPath.lean")
         same = (r1[1] == com.read_bytes()) if com.exists() else None
         ok = r1[0] == 0 and r1[1] == r2[1] and kinds_ok(r1[1], p, nf) and same is not False
-        res.append(dict(id=f"e6-real-{p}", expect="exit 0, deterministic, all kinds" + (", = committed" if same else ""),
+        res.append(dict(id=f"fast-path-real-{p}", expect="exit 0, deterministic, all kinds" + (", = committed" if same else ""),
                         exit=r1[0], stdout=len(r1[1]), committed_equal=same, ok=ok, stderr=r1[2][-200:]))
     # adversarial + valid variants
     for cid, a, exp, what in adversarial(work):
@@ -407,8 +407,8 @@ def main():
     res.append(dict(id="e6fc-every-phase-reached", expect="every injected phase reached in some type",
                     exit=0, stdout=0, ok=phases <= reached, missing=sorted(phases - reached)))
     n_ok = sum(r["ok"] for r in res)
-    summary = dict(total=len(res), ok=n_ok, adversarial=sum(r["id"].startswith("e6-adv-") for r in res),
-                   valid_variants=sum(r["id"].startswith("e6-ok-") for r in res),
+    summary = dict(total=len(res), ok=n_ok, adversarial=sum(r["id"].startswith("fast-path-adv-") for r in res),
+                   valid_variants=sum(r["id"].startswith("fast-path-ok-") for r in res),
                    fc=sum(r["id"].startswith("e6fc-") for r in res), cases=res)
     out.write_text(json.dumps(summary, indent=1) + "\n")
     for r in res:

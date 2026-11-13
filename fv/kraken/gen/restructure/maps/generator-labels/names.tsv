@@ -1,0 +1,13 @@
+# kind	old name	new name	scope	fifth column (see ../../README.md section 2)
+# namespace: old namespace, new namespace, module prefix of the modules where the row applies, whole|part
+# type: the namespace of one type; outside it a reference is written with the full name
+# declaration: old full name, new full name, library, module that declares the name after the forward run
+declaration	Prysm.BeaconBlockHeader.Encode.generated_stmt	Prysm.BeaconBlockHeader.Encode.generated_statement	Prysm	Prysm.BeaconBlockHeader.GeneratedEncodeFastPath
+declaration	Prysm.Checkpoint.Encode.generated_stmt	Prysm.Checkpoint.Encode.generated_statement	Prysm	Prysm.Checkpoint.GeneratedEncodeFastPath
+declaration	Prysm.Deposit_Data.Decode.generated_accept_stmt	Prysm.Deposit_Data.Decode.generated_accept_statement	Prysm	Prysm.Deposit_Data.GeneratedDecodeAccept
+declaration	Prysm.Eth1Data.Encode.generated_stmt	Prysm.Eth1Data.Encode.generated_statement	Prysm	Prysm.Eth1Data.GeneratedEncodeFastPath
+declaration	Prysm.Eth1Data.rootdec_seg_z_stmt_eq_hand	Prysm.Eth1Data.rootdec_seg_z_statement_eq_hand	Prysm	Prysm.Eth1Data.GeneratedDecodeOffsetZeroSameAsHand
+declaration	Prysm.PendingConsolidation.Decode.generated_accept_stmt	Prysm.PendingConsolidation.Decode.generated_accept_statement	Prysm	Prysm.PendingConsolidation.GeneratedDecodeAccept
+declaration	Prysm.PendingDeposit.Decode.generated_accept_stmt	Prysm.PendingDeposit.Decode.generated_accept_statement	Prysm	Prysm.PendingDeposit.GeneratedDecodeAccept
+declaration	Prysm.PowBlock.Decode.generated_accept_stmt	Prysm.PowBlock.Decode.generated_accept_statement	Prysm	Prysm.PowBlock.GeneratedDecodeAccept
+declaration	Prysm.SyncCommitteeMessage.Decode.generated_accept_stmt	Prysm.SyncCommitteeMessage.Decode.generated_accept_statement	Prysm	Prysm.SyncCommitteeMessage.GeneratedDecodeAccept

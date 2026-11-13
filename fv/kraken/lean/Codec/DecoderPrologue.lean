@@ -5,7 +5,7 @@ import Codec.DecoderHeadEpilogue
 # Frame-parametric prologue, return and nil-check step
 
 The prologue of every development decoder (directives 0–10) is the same up to the frame size `F`, the
-displacement `dB` of the first rbx spill, the SSZ size `sz` and the labels. The `--gen2` and `--gen3` methods had one head lemma for
+displacement `dB` of the first rbx spill, the SSZ size `sz` and the labels. The `--field-segments` and `--call-segments` methods had one head lemma for
 the frame `0x20` (`Codec.dechead_seg`) and one hand lemma per call-field type (`pw_head`, `bh_head0`,
 `sm_head0`, `pc_head`; epilogues `pw_epi`, `pc_epi`). Here:
 

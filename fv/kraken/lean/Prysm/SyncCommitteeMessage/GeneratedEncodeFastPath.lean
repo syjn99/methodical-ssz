@@ -3,7 +3,7 @@ import Codec.EncodeFrameTest
 import Prysm.SyncCommitteeMessage.EncoderCode
 
 /-!
-# GEN6 (`p2enc --gen6`, unit E2-G): encoder fast path of `(*v1alpha1.SyncCommitteeMessage).MarshalSSZTo`
+# Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.SyncCommitteeMessage).MarshalSSZTo`
 
 Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a
 step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem
@@ -11,7 +11,7 @@ has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKind
 **Fast path only**: `len(dst) + 144 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
-GEN6-JSON: {"type": "SyncCommitteeMessage", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 144, "frame": 168, "gd": 48, "rt": true, "fields": [["Slot", "u", 8], ["BlockRoot", "b", 32], ["ValidatorIndex", "u", 8], ["Signature", "b", 96]], "boundaries": [10, 36, 64, 93, 115], "layout": "Prysm.SyncCommitteeMessage.Encode.generated_layout", "S_sha256": "7f8d9761a2459f5065669cac92bf6a420d6b28539c7e07449f8158882dcf7ea5", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.SyncCommitteeMessage", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f3", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
+FAST-PATH-JSON: {"type": "SyncCommitteeMessage", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 144, "frame": 168, "gd": 48, "rt": true, "fields": [["Slot", "u", 8], ["BlockRoot", "b", 32], ["ValidatorIndex", "u", 8], ["Signature", "b", 96]], "boundaries": [10, 36, 64, 93, 115], "layout": "Prysm.SyncCommitteeMessage.Encode.generated_layout", "S_sha256": "7f8d9761a2459f5065669cac92bf6a420d6b28539c7e07449f8158882dcf7ea5", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.SyncCommitteeMessage", "kinds": [{"theorem": "Encode.generated_head", "kind": "encHeadKindN"}, {"theorem": "Encode.generated_f0", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f1", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f2", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_f3", "kind": "encFieldKindN"}, {"theorem": "Encode.generated_epi", "kind": "encEpiKindN"}, {"theorem": "Encode.generated_fast", "kind": "encFastKindN"}]}
 -/
 
 open Machine Runtime Codec Prysm.SyncCommitteeMessage.Code
@@ -966,7 +966,7 @@ theorem Encode.generated_epi_kind : ∀ (h : Host), type_of% (@Encode.generated_
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **Encoder fast path of `(*v1alpha1.SyncCommitteeMessage).MarshalSSZTo` (Go 1.26.10), generated** (`p2enc --gen6`):
+/-- **Encoder fast path of `(*v1alpha1.SyncCommitteeMessage).MarshalSSZTo` (Go 1.26.10), generated** (`encoder --fast-path`):
 head, one theorem per field, epilogue, chained by `eventually_trans`. Premises: `len + 144 ≤ cap`,
 every byte-vector field of its exact length. Statement = the kind instance (`_kind`). Fast path only. -/
 theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)

@@ -1,11 +1,11 @@
-"""GEN6: `scalgen.py p2enc --gen6`, generated fast-path theorems for flat encoders (`MarshalSSZTo`).
+"""fast-path: `scalgen.py encoder --fast-path`, generated fast-path theorems for flat encoders (`MarshalSSZTo`).
 
-Interface: the encoder lemma unit's hand-over; the reference texts are `lean/Prysm/*/EncodeFastPathExample.lean`. A symbolic
+Interface: the encoder lemmas; the reference texts are `lean/Prysm/*/EncodeFastPathExample.lean`. A symbolic
 dataflow walk over the fast path of the `.S` file (head; per IR field its length test not taken, its capacity test
 passed with the growslice site SKIPPED, never stepped; the store / `memmove` commit; the epilogue with the frame
 test where present) produces ONE module: the head theorem, one theorem per IR field, the epilogue theorem, the
 fast-path theorem, each with its `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKindN`),
-and, on request, the identity with a hand statement (`_stmt`).
+and, on request, the identity with a hand statement (`_statement`).
 
 **Fast path only**: the premises are `len(dst) + SizeSSZ ≤ cap(dst)` and every byte-vector field of its exact
 length. No growslice branch, length reject or morestack path is proved.
@@ -210,7 +210,7 @@ def s_pf(v):
     raise G6Refuse(f"register value not in the language: {v}")
 
 
-def s_stmt(v):
+def s_statement(v):
     k = v[0]
     if k == "rcv":
         return "s.regs.rax.toBitVec"
@@ -1131,7 +1131,7 @@ class Gen6:
              f"{st}.data.regs.rsp = {{ toBitVec := s.regs.rsp.toBitVec - {self.F + 8} }}",
              f"{st}.data.regs.rbp = {{ toBitVec := s.regs.rsp.toBitVec - 8 }}",
              f"{st}.data.regs.r14 = s.regs.r14"]
-        r += [f"{st}.data.regs.get64 Reg64.{x} = {s_stmt(v)}" for x, v in b["regs"]]
+        r += [f"{st}.data.regs.get64 Reg64.{x} = {s_statement(v)}" for x, v in b["regs"]]
         t = ("\n" + ind + "∧ ").join(r) + " ∧\n" + ind
         t += self.exq(b["exs"])
         return t + "(" + self.mem(b["slots"], b["outv"], ind + "  ") + f") {st}.data.dmem"
@@ -1247,7 +1247,7 @@ class Gen6:
         o += self.entry(b)
         o += self.thms[nf + 1]
         o.append(kline(f"{px}_epi", "encEpiKindN", f"\n    {self.stk_(b)}"))
-        o.append(f"{OPT}/-- **Encoder fast path of `(*v1alpha1.{self.t}).MarshalSSZTo` (Go 1.26.10), generated** (`p2enc --gen6`):\n"
+        o.append(f"{OPT}/-- **Encoder fast path of `(*v1alpha1.{self.t}).MarshalSSZTo` (Go 1.26.10), generated** (`encoder --fast-path`):\n"
                  f"head, one theorem per field, epilogue, chained by `eventually_trans`. Premises: `len + {self.size} ≤ cap`,\n"
                  "every byte-vector field of its exact length. Statement = the kind instance (`_kind`). Fast path only. -/")
         o.append(f"theorem {px}_fast : ∀ {B}\n    {hmem}\n    {hg} {hrest}{hmm},\n    Eventually (step1 Host.exe)\n      (fun st => "
@@ -1281,7 +1281,7 @@ class Gen6:
         return o
 
     def meta(self):
-        """facts for the GEN6-JSON header (kindcheck recomputes them independently; they are not trusted)"""
+        """facts for the FAST-PATH-JSON header (kindcheck recomputes them independently; they are not trusted)"""
         return dict(type=self.t, const=self.C, prefix=self.px, size=self.size, frame=self.F, gd=self.gd, rt=self.rt,
                     fields=[[f[0], f[1], f[2]] for f in self.fields], boundaries=[b["pc"] for b in self.bstate],
                     layout=self.layout(), S_sha256=self.Ssha, ir_sha256=self.irsha)

@@ -181,7 +181,7 @@ theorem Decode.example_step_ValidatorIndex_call_kind : ∀ (h : Host), type_of% 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `ValidatorIndex` (callee decoder field, Go offset 40, SSZ offset 40): the WHOLE call field 82–117, composed from the
-step theorems of its set-up and the call-block theorem (worked example of the `p2dec --gen4` emission recipe). The entry
+step theorems of its set-up and the call-block theorem (worked example of the `decoder --steps` emission recipe). The entry
 conditions of the call block (rax = `rcv + 40`, rbx = `bf + 40`, rcx = 8) are closed by `rfl` on the state
 that the steps computed. -/
 theorem Decode.example_step_ValidatorIndex_field (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k) :
@@ -363,7 +363,7 @@ theorem Decode.example_step_s81_kind : ∀ (h : Host), type_of% (@Decode.example
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `BlockRoot`: the WHOLE byte field 47–81 (segment, then the tail `mov 0x38(%rsp),%rsi; jmp; label; mov %rsi,0x10(%rax)`
-as four steps): worked example of the `p2dec --gen4` emission recipe for a byte field. Statement = the segment statement
+as four steps): worked example of the `decoder --steps` emission recipe for a byte field. Statement = the segment statement
 with the end at directive 82. -/
 theorem Decode.example_step_BlockRoot_field (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k) :
     ∀

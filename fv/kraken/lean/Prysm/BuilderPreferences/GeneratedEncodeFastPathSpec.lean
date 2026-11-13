@@ -3,7 +3,7 @@ import Prysm.BuilderPreferences.Spec
 import Runtime.CopyModel
 
 /-!
-# BuilderPreferences encoder fast path (generated theorem) against the independent Desc (FLAT24 / H7, text of the unit E2-C emitter)
+# BuilderPreferences encoder fast path (generated theorem) against the independent Desc (24 flat hold-out types, text of the encoder specification emitter)
 
 `Encode.generated_fast_spec`: for a receiver holding the Go layout of `g : SszValue` (uint64 fields = `uintBytes 8`, byte
 fields = `(p, n, cap)` with the n bytes at `p`), the generated fast-path theorem `Encode.generated_fast` writes at
@@ -70,7 +70,7 @@ theorem Encode.generated_fast_spec (k : Nat)
     (fun st ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, _, _, _, _, _, _, _, hm⟩ =>
       ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, ?_⟩)
   rw [SszValue.encode_toList_generated, Encode.generated_fast_split _ _ hF0]
-  try simp only [← Std.ExtHashMap.sep_assoc]  -- one output chunk: nothing to reassociate (FLAT24 attempt 2)
+  try simp only [← Std.ExtHashMap.sep_assoc]  -- one output chunk: nothing to reassociate (second attempt)
   generalize (uintBytes 8 g.maxExecutionPayment.toNat).toList = F0 at hm ⊢
   exact sep_true (by ecancel)
 

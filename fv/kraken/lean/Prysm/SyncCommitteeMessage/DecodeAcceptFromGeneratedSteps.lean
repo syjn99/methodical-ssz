@@ -4,11 +4,11 @@ import Prysm.SyncCommitteeMessage.GeneratedDecodeSteps
 import Prysm.SyncCommitteeMessage.Statements
 
 /-!
-# `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path from the GENERATED `p2dec --gen4` chains
+# `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path from the GENERATED `decoder --steps` chains
 
 `Decode.accept_from_generated_steps : Decode.accept_statement` (the pre-committed hand statement, `Prysm/SyncCommitteeMessage/Statements.lean`, unchanged). Every field
 is a HAND field composition (`sm_gg_*_field`; no kind exists for a field composition, so its statement is checked
-only through this accept theorem) over the GENERATED theorems of `Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean` (`p2dec --gen4`, raw output):
+only through this accept theorem) over the GENERATED theorems of `Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean` (`decoder --steps`, raw output):
 * Slot 15–46: generated steps 15, 16 + generated call block (`Decode.generated_step_Slot_call`);
 * BlockRoot 47–81: generated segment (`Decode.generated_step_BlockRoot_seg`, rY = rax) + generated tail steps 72, 73, 80, 81;
 * ValidatorIndex 82–117: generated steps 82–87 + generated call block;
@@ -69,7 +69,7 @@ theorem Decode.from_generated_steps_Slot_field (k : Nat) (hk : Code.unmarshalSSZ
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `BlockRoot`: the WHOLE byte field 47–81 (segment, then the tail `mov 0x38(%rsp),%rsi; jmp; label; mov %rsi,0x10(%rax)`
-as four steps): worked example of the `p2dec --gen4` emission recipe for a byte field. Statement = the segment statement
+as four steps): worked example of the `decoder --steps` emission recipe for a byte field. Statement = the segment statement
 with the end at directive 82. -/
 theorem Decode.from_generated_steps_BlockRoot_field (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k) :
     ∀
@@ -132,7 +132,7 @@ theorem Decode.from_generated_steps_BlockRoot_field (k : Nat) (hk : Code.unmarsh
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `ValidatorIndex` (callee decoder field, Go offset 40, SSZ offset 40): the WHOLE call field 82–117, composed from the
-step theorems of its set-up and the call-block theorem (worked example of the `p2dec --gen4` emission recipe). The entry
+step theorems of its set-up and the call-block theorem (worked example of the `decoder --steps` emission recipe). The entry
 conditions of the call block (rax = `rcv + 40`, rbx = `bf + 40`, rcx = 8) are closed by `rfl` on the state
 that the steps computed. -/
 theorem Decode.from_generated_steps_ValidatorIndex_field (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k) :
@@ -249,7 +249,7 @@ theorem Decode.from_generated_steps_Signature_field (k : Nat) (hk : Code.unmarsh
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- **Accept path of the real `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ` (Go 1.26.10) from the generated `p2dec --gen4`
+/-- **Accept path of the real `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ` (Go 1.26.10) from the generated `decoder --steps`
 chains**; statement = the hand statement `Decode.accept_statement` (unchanged). -/
 theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   intro k hk hf kS hkS hfS kV hkV hfV in0 rt in1 sig hin0 hrt hin1 hsig s ra guard

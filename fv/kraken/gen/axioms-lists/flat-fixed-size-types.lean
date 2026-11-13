@@ -424,7 +424,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.Eth1Data.Decode.generated_root_BlockHash_seg
 #print axioms Prysm.Eth1Data.Decode.generated_root_BlockHash_seg_kind
 #print axioms Prysm.Eth1Data.rootDecMidZ_eq_hand
-#print axioms Prysm.Eth1Data.rootdec_seg_z_stmt_eq_hand
+#print axioms Prysm.Eth1Data.rootdec_seg_z_statement_eq_hand
 #print axioms Prysm.Eth1Data.Decode.dec_DepositRoot_seg_hand
 
 -- Hold-out (BlobIdentifier, DepositMessage UnmarshalSSZ): every new theorem.
@@ -1591,7 +1591,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.Deposit_Data.Decode.generated_WithdrawalCredentials_seg_kind
 #print axioms Prysm.Deposit_Data.Decode.generated_accept
 #print axioms Prysm.Deposit_Data.Decode.generated_accept_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_accept_stmt
+#print axioms Prysm.Deposit_Data.Decode.generated_accept_statement
 #print axioms Prysm.Deposit_Data.Decode.generated_epi
 #print axioms Prysm.Deposit_Data.Decode.generated_epi_kind
 #print axioms Prysm.Deposit_Data.Decode.generated_f1
@@ -1758,7 +1758,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.PowBlock.Decode.generated_TotalDifficulty_seg_kind
 #print axioms Prysm.PowBlock.Decode.generated_accept
 #print axioms Prysm.PowBlock.Decode.generated_accept_kind
-#print axioms Prysm.PowBlock.Decode.generated_accept_stmt
+#print axioms Prysm.PowBlock.Decode.generated_accept_statement
 #print axioms Prysm.PowBlock.Decode.generated_epi
 #print axioms Prysm.PowBlock.Decode.generated_epi_kind
 #print axioms Prysm.PowBlock.Decode.generated_f1
@@ -1801,7 +1801,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.PendingConsolidation.Decode.generated_TargetIndex_call_kind
 #print axioms Prysm.PendingConsolidation.Decode.generated_accept
 #print axioms Prysm.PendingConsolidation.Decode.generated_accept_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_accept_stmt
+#print axioms Prysm.PendingConsolidation.Decode.generated_accept_statement
 #print axioms Prysm.PendingConsolidation.Decode.generated_epi
 #print axioms Prysm.PendingConsolidation.Decode.generated_epi_kind
 #print axioms Prysm.PendingConsolidation.Decode.generated_f1
@@ -1840,7 +1840,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.PendingDeposit.Decode.generated_WithdrawalCredentials_seg_kind
 #print axioms Prysm.PendingDeposit.Decode.generated_accept
 #print axioms Prysm.PendingDeposit.Decode.generated_accept_kind
-#print axioms Prysm.PendingDeposit.Decode.generated_accept_stmt
+#print axioms Prysm.PendingDeposit.Decode.generated_accept_statement
 #print axioms Prysm.PendingDeposit.Decode.generated_epi
 #print axioms Prysm.PendingDeposit.Decode.generated_epi_kind
 #print axioms Prysm.PendingDeposit.Decode.generated_f1
@@ -1967,7 +1967,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.SyncCommitteeMessage.Decode.generated_ValidatorIndex_call_kind
 #print axioms Prysm.SyncCommitteeMessage.Decode.generated_accept
 #print axioms Prysm.SyncCommitteeMessage.Decode.generated_accept_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_accept_stmt
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_accept_statement
 #print axioms Prysm.SyncCommitteeMessage.Decode.generated_epi
 #print axioms Prysm.SyncCommitteeMessage.Decode.generated_epi_kind
 #print axioms Prysm.SyncCommitteeMessage.Decode.generated_f1
@@ -2600,7 +2600,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.BeaconBlockHeader.Encode.generated_fast_kind
 #print axioms Prysm.BeaconBlockHeader.Encode.generated_head
 #print axioms Prysm.BeaconBlockHeader.Encode.generated_head_kind
-#print axioms Prysm.BeaconBlockHeader.Encode.generated_stmt
+#print axioms Prysm.BeaconBlockHeader.Encode.generated_statement
 #print axioms Prysm.BlobIdentifier.Encode.generated_epi
 #print axioms Prysm.BlobIdentifier.Encode.generated_epi_kind
 #print axioms Prysm.BlobIdentifier.Encode.generated_f0
@@ -2622,7 +2622,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.Checkpoint.Encode.generated_fast_kind
 #print axioms Prysm.Checkpoint.Encode.generated_head
 #print axioms Prysm.Checkpoint.Encode.generated_head_kind
-#print axioms Prysm.Checkpoint.Encode.generated_stmt
+#print axioms Prysm.Checkpoint.Encode.generated_statement
 #print axioms Prysm.Deposit_Data.Encode.generated_epi
 #print axioms Prysm.Deposit_Data.Encode.generated_epi_kind
 #print axioms Prysm.Deposit_Data.Encode.generated_f0
@@ -2663,7 +2663,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.Eth1Data.Encode.generated_fast_kind
 #print axioms Prysm.Eth1Data.Encode.generated_head
 #print axioms Prysm.Eth1Data.Encode.generated_head_kind
-#print axioms Prysm.Eth1Data.Encode.generated_stmt
+#print axioms Prysm.Eth1Data.Encode.generated_statement
 #print axioms Prysm.HistoricalSummary.Encode.generated_epi
 #print axioms Prysm.HistoricalSummary.Encode.generated_epi_kind
 #print axioms Prysm.HistoricalSummary.Encode.generated_f0
