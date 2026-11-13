@@ -94,12 +94,12 @@ theorem SszValue.serialize_eq (g : SszValue) : serialize desc g.toValue = .ok (S
 
 /-- **Spec roundtrip.** -/
 theorem SszValue.roundtrip (g : SszValue) : deserialize desc (SszValue.encode g) = .ok g.toValue :=
-  deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
+  deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
     SszValue.toValue_fits g
 
 theorem SszValue.accepted_is_encoding {bs : Array UInt8} {v : Value} (h : deserialize desc bs = .ok v) :
     ∃ g : SszValue, v = g.toValue ∧ bs = SszValue.encode g :=
-  accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
+  accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
     SszValue.toValue_surjective' h
 
 /-- **EthLib accepts exactly the 16-byte inputs.** -/
@@ -146,10 +146,10 @@ theorem desc_deserialize_checker (bs : Array UInt8) (v : Value) :
   · intro h
     obtain ⟨g, rfl, hb⟩ := SszValue.accepted_is_encoding h
     rw [hb]
-    exact deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
+    exact deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
       SszValue.serialize_eq_checker SszValue.toValue_fits_checker g
   · intro h
-    obtain ⟨g, rfl, hb⟩ := accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
+    obtain ⟨g, rfl, hb⟩ := accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
       SszValue.serialize_eq_checker (SszValue.toValue_surjective _ (.inr rfl)) h
     rw [hb]; exact SszValue.roundtrip g
 

@@ -12,7 +12,7 @@ The library `Prysm` holds the proofs of the Prysm types (one directory for each 
 A module that a later step added or split is not in a `files.tsv`.
 
 **`Spec`.** EthLib specifications that several types share, and the ones that the `Desc` checker imports (`../gen/desccheck/`).
-They are the specifications of the small test types (`Spec/Test*.lean`) and of two reduced Prysm types (`Spec/ReducedPrysm.lean`).
+They are the specifications of the small test types (`Spec/Test*.lean`) and of two reduced Prysm types (`Spec/TestCheckpointAndAttestationData.lean`).
 They import only EthLib and each other. `Spec/DeserializeOfSerialize.lean` holds a general lemma: if `serialize` of every Go value gives `enc g`, then every input that EthLib accepts is `enc g` of one value.
 So a machine proof only has to say what the code does on `enc g`, and that the code rejects every other input.
 
@@ -237,7 +237,9 @@ generator writes it, or because it is a record. The table after the list gives t
 - Directory labels under `../prysm/go1.26.10/e2e/` (`ad`, `bh`, `e1`, `f24`, `g5c`, `h3` to `h6`, `lv`, `scal`), the
   link and differential scripts `../gen/e2e/*link.py`, `../gen/e2e/*diff.py`, and the negative case files
   `*negcases*.json`: records of the work steps; generated headers and tests name these paths.
-- The test type names of `Spec/Test*.lean` and `Spec/ReducedPrysm.lean` (test types of `../target/`).
+- The Go type and field names of `../target/` (for example `ListC`, a list of containers, and `BitL`, a bit list):
+  external Go names. `Spec/Test*.lean` writes the type names in full words (`ListOfContainersValue`,
+  `bitListDesc`) and keeps the Go field names in lower case as structure fields.
 - Negative case ids (for example `epr-control`): records that the negative check results name.
 - The records of earlier names (`../gen/restructure/maps/`).
 

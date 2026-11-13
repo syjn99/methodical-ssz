@@ -24,11 +24,11 @@ variable {G : Type} {d : Desc} (hw : d.wellFormed = .ok ()) {toV : G → Value} 
   (hsurj : ∀ v, Value.fits d v = true → ∃ g, toV g = v)
 
 include hw hser hfit in
-theorem deserialize_enc (g : G) : deserialize d (enc g) = .ok (toV g) :=
+theorem deserialize_encoding (g : G) : deserialize d (enc g) = .ok (toV g) :=
   roundTrip_of_wellFormed hw ((Value.fits_eq_true hw).mp (hfit g)) (hser g)
 
 include hw hser hsurj in
-theorem accepted_is_enc {bs : Bytes} {v : Value} (h : deserialize d bs = .ok v) :
+theorem accepted_input_is_encoding {bs : Bytes} {v : Value} (h : deserialize d bs = .ok v) :
     ∃ g, v = toV g ∧ bs = enc g := by
   have hf := (Value.fits_eq_true hw).mpr (fits_of_deserialize d bs v h)
   obtain ⟨g, rfl⟩ := hsurj v hf
@@ -37,7 +37,7 @@ theorem accepted_is_enc {bs : Bytes} {v : Value} (h : deserialize d bs = .ok v) 
   exact ⟨g, rfl, (Except.ok.inj this).symm⟩
 
 include hw hser hfit in
-theorem rejected_not_enc {bs : Bytes} {e : Err} (h : deserialize d bs = .error e) (g : G) : bs ≠ enc g := by
-  rintro rfl; rw [deserialize_enc hw hser hfit] at h; cases h
+theorem rejected_input_is_not_encoding {bs : Bytes} {e : Err} (h : deserialize d bs = .error e) (g : G) : bs ≠ enc g := by
+  rintro rfl; rw [deserialize_encoding hw hser hfit] at h; cases h
 
 end Spec

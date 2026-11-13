@@ -25,14 +25,14 @@ the same accepted inputs with the same values (EthLib error values are not compa
 
 `SszValue` is the SSZ content of a Go `v1alpha1.AttestationData` with `len(BeaconBlockRoot) = 32`
 and non-nil `Source`/`Target` whose `Root`s have length 32. The proofs of the spec lemmas follow
-`Spec/ReducedPrysm.lean` (its text, with the names of this namespace); they
+`Spec/TestCheckpointAndAttestationData.lean` (its text, with the names of this namespace); they
 read EthLib and `Prysm.Checkpoint.Spec` only.
 After the split of this module, the equality with the checker Desc is in `Prysm/AttestationData/SpecEquivalence.lean`.
 -/
 
 namespace Prysm.AttestationData
 open EthLib.Serialization.Ssz
-open Spec hiding encode readUint_lt
+open Spec hiding readUint_lt
 
 /-- consensus-specs phase0 `AttestationData`. -/
 def desc : Desc := .container ["slot", "index", "beacon_block_root", "source", "target"]
@@ -112,12 +112,12 @@ theorem SszValue.serialize_eq (g : SszValue) : serialize desc g.toValue = .ok (S
 
 /-- **Spec roundtrip.** -/
 theorem SszValue.roundtrip (g : SszValue) : deserialize desc (SszValue.encode g) = .ok g.toValue :=
-  deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
+  deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
     SszValue.toValue_fits g
 
 theorem SszValue.accepted_is_encoding {bs : Array UInt8} {v : Value} (h : deserialize desc bs = .ok v) :
     ∃ g : SszValue, v = g.toValue ∧ bs = SszValue.encode g :=
-  accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
+  accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
     SszValue.toValue_surjective h
 
 theorem checkpoint_of_bytes (bs : Array UInt8) (o : Nat) (h : o + 40 ≤ bs.size) :

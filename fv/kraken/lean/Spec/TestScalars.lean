@@ -19,10 +19,10 @@ EthLib `Desc.uint` takes a byte width, so uint64 is `.uint 8`.
 namespace Spec
 open EthLib.Serialization.Ssz
 
-def scDesc : Desc := .container ["a", "b", "c", "d", "e"] [.uint 1, .uint 2, .uint 4, .uint 8, .bool]
+def scalarsDesc : Desc := .container ["a", "b", "c", "d", "e"] [.uint 1, .uint 2, .uint 4, .uint 8, .bool]
 
-theorem scDesc_wellFormed : scDesc.wellFormed = .ok () := by rfl
-theorem scDesc_fixedSize : scDesc.fixedSize = some 16 := by rfl
+theorem scalarsDesc_wellFormed : scalarsDesc.wellFormed = .ok () := by rfl
+theorem scalarsDesc_fixedSize : scalarsDesc.fixedSize = some 16 := by rfl
 
 /-- A Go value of type `target.Scalars`. -/
 structure Scalars where
@@ -35,11 +35,11 @@ structure Scalars where
 def Scalars.toValue (v : Scalars) : Value :=
   .seq [.uint v.a.toNat, .uint v.b.toNat, .uint v.c.toNat, .uint v.d.toNat, .bool v.e]
 
-theorem sc_toValue_fits (v : Scalars) : Value.fits scDesc v.toValue = true := by
+theorem scalars_toValue_fits (v : Scalars) : Value.fits scalarsDesc v.toValue = true := by
   have := v.a.toNat_lt; have := v.b.toNat_lt; have := v.c.toNat_lt; have := v.d.toNat_lt
-  simp [Scalars.toValue, scDesc, Value.fits, Value.fieldsFit]; omega
+  simp [Scalars.toValue, scalarsDesc, Value.fits, Value.fieldsFit]; omega
 
-theorem sc_toValue_injective (v w : Scalars) (h : v.toValue = w.toValue) : v = w := by
+theorem scalars_toValue_injective (v w : Scalars) (h : v.toValue = w.toValue) : v = w := by
   obtain ⟨a, b, c, d, e⟩ := v; obtain ⟨a', b', c', d', e'⟩ := w
   simp only [Scalars.toValue, Value.seq.injEq, List.cons.injEq, Value.uint.injEq, Value.bool.injEq,
     and_true] at h
@@ -68,7 +68,7 @@ theorem fits_container {names : List String} {fs : List Desc} {v : Value}
     (h : Value.fits (.container names fs) v = true) : ∃ vs, v = .seq vs ∧ Value.fieldsFit fs vs = true := by
   cases v <;> simp [Value.fits] at h ⊢; exact h
 
-theorem sc_toValue_surjective (v : Value) (h : Value.fits scDesc v = true) :
+theorem scalars_toValue_surjective (v : Value) (h : Value.fits scalarsDesc v = true) :
     ∃ g : Scalars, g.toValue = v := by
   obtain ⟨vs, rfl, hf⟩ := fits_container h
   have hl := fieldsFit_length hf
@@ -87,17 +87,17 @@ theorem sc_toValue_surjective (v : Value) (h : Value.fits scDesc v = true) :
 /-! ## Encoding -/
 
 /-- The 16 bytes of an encoding, as a function of the Go value. -/
-def scEncode (g : Scalars) : Array UInt8 :=
+def scalarsEncode (g : Scalars) : Array UInt8 :=
   uintBytes 1 g.a.toNat ++ uintBytes 2 g.b.toNat ++ uintBytes 4 g.c.toNat ++ uintBytes 8 g.d.toNat ++
     #[if g.e then 1 else 0]
 
-theorem sc_serialize (g : Scalars) : serialize scDesc g.toValue = .ok (scEncode g) := by
+theorem scalars_serialize (g : Scalars) : serialize scalarsDesc g.toValue = .ok (scalarsEncode g) := by
   have := g.a.toNat_lt; have := g.b.toNat_lt; have := g.c.toNat_lt; have := g.d.toNat_lt
-  simp only [scDesc, Scalars.toValue, serialize, serializeStruct, serializeFields]
+  simp only [scalarsDesc, Scalars.toValue, serialize, serializeStruct, serializeFields]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, scEncode]
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, scalarsEncode]
 
-theorem sc_encode_size (g : Scalars) : (scEncode g).size = 16 := by
-  simp [scEncode, Spec.uintBytes_size]
+theorem scalars_encode_size (g : Scalars) : (scalarsEncode g).size = 16 := by
+  simp [scalarsEncode, Spec.uintBytes_size]
 
 end Spec

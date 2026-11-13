@@ -54,12 +54,12 @@ theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszVa
 
 /-- **Spec roundtrip.** -/
 theorem encode_roundtrip (g : SszValue) : deserialize desc (SszValue.encode g) = .ok g.toValue :=
-  deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize
+  deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize
     toValue_fits g
 
 theorem accepted_is_encode {bs : Array UInt8} {v : Value} (h : deserialize desc bs = .ok v) :
     ∃ g : SszValue, v = g.toValue ∧ bs = SszValue.encode g :=
-  accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize
+  accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize
     toValue_surjective h
 
 /-- **EthLib accepts exactly the 1240-byte inputs.** -/

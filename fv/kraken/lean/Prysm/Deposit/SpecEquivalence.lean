@@ -61,10 +61,10 @@ theorem desc_deserialize_checker (bs : Array UInt8) (v : Value) :
   · intro h
     obtain ⟨g, rfl, hb⟩ := accepted_is_encode h
     rw [hb]
-    exact deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
+    exact deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
       serialize_checker toValue_fits_checker g
   · intro h
-    obtain ⟨g, rfl, hb⟩ := accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
+    obtain ⟨g, rfl, hb⟩ := accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
       serialize_checker toValue_surjective_checker h
     rw [hb]; exact encode_roundtrip g
 

@@ -13,7 +13,7 @@ import Prysm.AttestationData.Spec
 
 namespace Codec
 open EthLib.Serialization.Ssz
-open Spec hiding encode readUint_lt
+open Spec hiding readUint_lt
 
 /-- Two field lists whose fields encode every value the same way. -/
 inductive SameEnc : List Desc → List Desc → Prop

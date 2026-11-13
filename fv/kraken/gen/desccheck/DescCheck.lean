@@ -6,8 +6,8 @@ import Spec.TestListU64
 import Spec.TestFixedVec
 import Spec.TestBitVec
 import Spec.TestNested
-import Spec.TestListC
-import Spec.ReducedPrysm
+import Spec.TestListOfContainers
+import Spec.TestCheckpointAndAttestationData
 import Spec.TestBitList
 
 /-!
@@ -112,30 +112,30 @@ def rn (ns : List String) : Desc → Desc
 /-! Checker-owned Go field names of the 9 hand types (21 names). The Go-named terms
 are the `Spec` terms with the Go field names at every container level; a self-check
 in `main` requires them to equal the `Spec` terms up to names. -/
-def scGo : Desc := rn ["A", "B", "C", "D", "E"] Spec.scDesc
-def luGo : Desc := rn ["L"] Spec.luDesc
-def fvGo : Desc := rn ["R", "W"] Spec.fvDesc
-def bvGo : Desc := rn ["J"] Spec.bvDesc
-def blGo : Desc := rn ["B"] Spec.blDesc
-def cpGo : Desc := rn ["Epoch", "Root"] Spec.checkpointDesc
-def neGo : Desc := match Spec.neDesc with
-  | .container _ [a, _, _] => .container ["A", "S", "L"] [a, scGo, luGo]
+def scalarsGoDesc : Desc := rn ["A", "B", "C", "D", "E"] Spec.scalarsDesc
+def listU64GoDesc : Desc := rn ["L"] Spec.listU64Desc
+def fixedVecGoDesc : Desc := rn ["R", "W"] Spec.fixedVecDesc
+def bitVecGoDesc : Desc := rn ["J"] Spec.bitVecDesc
+def bitListGoDesc : Desc := rn ["B"] Spec.bitListDesc
+def checkpointGoDesc : Desc := rn ["Epoch", "Root"] Spec.checkpointDesc
+def nestedGoDesc : Desc := match Spec.nestedDesc with
+  | .container _ [a, _, _] => .container ["A", "S", "L"] [a, scalarsGoDesc, listU64GoDesc]
   | d => d
-def lcGo : Desc := match Spec.lcDesc with
-  | .container _ [.list _ n] => .container ["Items"] [.list luGo n]
+def listOfContainersGoDesc : Desc := match Spec.listOfContainersDesc with
+  | .container _ [.list _ n] => .container ["Items"] [.list listU64GoDesc n]
   | d => d
-def adGo : Desc := match Spec.attestationDataDesc with
+def attestationDataGoDesc : Desc := match Spec.attestationDataDesc with
   | .container _ [a, b, c, _, _] =>
-    .container ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"] [a, b, c, cpGo, cpGo]
+    .container ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"] [a, b, c, checkpointGoDesc, checkpointGoDesc]
   | d => d
 
 /-- Checker-owned spec table: (package, type) -> (reference name, `Spec` Desc, Go-named Desc). -/
 def refs : List ((String × String) × (String × Desc × Desc)) :=
-  [((tgt, "Scalars"), ("Spec.scDesc", Spec.scDesc, scGo)), ((tgt, "FixedVec"), ("Spec.fvDesc", Spec.fvDesc, fvGo)),
-   ((tgt, "ListU64"), ("Spec.luDesc", Spec.luDesc, luGo)), ((tgt, "BitVec"), ("Spec.bvDesc", Spec.bvDesc, bvGo)),
-   ((tgt, "Nested"), ("Spec.neDesc", Spec.neDesc, neGo)), ((tgt, "ListC"), ("Spec.lcDesc", Spec.lcDesc, lcGo)),
-   ((tgt, "BitL"), ("Spec.blDesc", Spec.blDesc, blGo)), ((tgtPrysm, "Checkpoint"), ("Spec.cpDesc", Spec.checkpointDesc, cpGo)),
-   ((tgtPrysm, "AttestationData"), ("Spec.adDesc", Spec.attestationDataDesc, adGo))]
+  [((tgt, "Scalars"), ("Spec.scalarsDesc", Spec.scalarsDesc, scalarsGoDesc)), ((tgt, "FixedVec"), ("Spec.fixedVecDesc", Spec.fixedVecDesc, fixedVecGoDesc)),
+   ((tgt, "ListU64"), ("Spec.listU64Desc", Spec.listU64Desc, listU64GoDesc)), ((tgt, "BitVec"), ("Spec.bitVecDesc", Spec.bitVecDesc, bitVecGoDesc)),
+   ((tgt, "Nested"), ("Spec.nestedDesc", Spec.nestedDesc, nestedGoDesc)), ((tgt, "ListC"), ("Spec.listOfContainersDesc", Spec.listOfContainersDesc, listOfContainersGoDesc)),
+   ((tgt, "BitL"), ("Spec.bitListDesc", Spec.bitListDesc, bitListGoDesc)), ((tgtPrysm, "Checkpoint"), ("Spec.checkpointDesc", Spec.checkpointDesc, checkpointGoDesc)),
+   ((tgtPrysm, "AttestationData"), ("Spec.attestationDataDesc", Spec.attestationDataDesc, attestationDataGoDesc))]
 
 def handPackages : List String := [tgt, tgtPrysm]
 def handTypeNames : List String := refs.map (·.1.2)

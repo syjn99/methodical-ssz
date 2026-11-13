@@ -1,4 +1,4 @@
-import Spec.ReducedPrysm
+import Spec.TestCheckpointAndAttestationData
 import Spec.DeserializeOfSerialize
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import Prysm.Checkpoint.SpecChecker
@@ -23,7 +23,7 @@ this namespace use `desc`.
 `SszValue` is the SSZ content of a Go `v1alpha1.Checkpoint` in the EthLib domain
 (`len(Root) = 32`): the other Go fields (`state`, `unknownFields`, `sizeCache`)
 carry no SSZ value. The proofs of the spec lemmas below follow
-`Spec/ReducedPrysm.lean` and an earlier Checkpoint spec module that is no longer in the tree (their text, with the names of this
+`Spec/TestCheckpointAndAttestationData.lean` and an earlier Checkpoint spec module that is no longer in the tree (their text, with the names of this
 namespace); they read EthLib only.
 -/
 
@@ -86,13 +86,13 @@ theorem SszValue.serialize_eq (g : SszValue) : serialize desc g.toValue = .ok (S
 
 /-- **Spec roundtrip**: EthLib decodes the encoding of `g` to `g`. -/
 theorem SszValue.roundtrip (g : SszValue) : deserialize desc (SszValue.encode g) = .ok g.toValue :=
-  deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
+  deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
     SszValue.toValue_fits g
 
 /-- Every input that EthLib accepts is the encoding of the value it returns. -/
 theorem SszValue.accepted_is_encoding {bs : Array UInt8} {v : Value} (h : deserialize desc bs = .ok v) :
     ∃ g : SszValue, v = g.toValue ∧ bs = SszValue.encode g :=
-  accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
+  accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
     SszValue.toValue_surjective h
 
 /-- **EthLib accepts exactly the 40-byte inputs.** -/

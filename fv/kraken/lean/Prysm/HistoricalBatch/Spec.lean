@@ -6,8 +6,8 @@ import Codec.ByteVector32Values
 # Spec bridge for the real Prysm `v1alpha1.HistoricalBatch`
 
 The order of `Prysm.SyncCommittee.Spec`. Imported as is: `Codec.assemble_inline_ok` (any list of inline parts),
-`Codec.headWidth_inline`, `Codec.bodyWidth_inline` (`Codec/SerializeInline.lean`), and EthLib's `concatParts_size`, `concat_fixed_slices`, `deserialize_enc`,
-`accepted_is_enc` (through `Spec`). New here: the SyncCommittee lemmas whose statements fix 48-byte elements (`toV48`,
+`Codec.headWidth_inline`, `Codec.bodyWidth_inline` (`Codec/SerializeInline.lean`), and EthLib's `concatParts_size`, `concat_fixed_slices`, `deserialize_encoding`,
+`accepted_input_is_encoding` (through `Spec`). New here: the SyncCommittee lemmas whose statements fix 48-byte elements (`toV48`,
 `allFit_bv48`, `allFit_map_bv48`, `serializeEach_bv48`, `concatParts_v48`) with 32, a vector lemma stated once and
 used for both fields (`v32_serialize`, `v32_of_bytes`), and the container lemmas for two vector fields.
 The 32-byte helpers are `Codec.toByteVector32`, `Codec.allFit_byteVector32` and `Codec.allFit_map_byteVector32`
@@ -113,12 +113,12 @@ theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszVa
 
 /-- **Spec roundtrip.** -/
 theorem encode_roundtrip (g : SszValue) : deserialize desc (SszValue.encode g) = .ok g.toValue :=
-  deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize
+  deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize
     toValue_fits g
 
 theorem accepted_is_encode {bs : Array UInt8} {v : Value} (h : deserialize desc bs = .ok v) :
     ∃ g : SszValue, v = g.toValue ∧ bs = SszValue.encode g :=
-  accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize
+  accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize
     toValue_surjective h
 
 /-- **EthLib accepts exactly the 524288-byte inputs.** -/

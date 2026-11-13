@@ -85,6 +85,9 @@ A kind identity is not a witness. It does not show that the premises can hold.
 `desccheck/DescCheck.lean` is a Lean program that runs EthLib functions. It shares no code with `desc/producer.py`.
 So a defect in the producer or in the IR does not also hide in the checker.
 `desc/run_desccheck.sh` runs it (needs Lean). The result is `desc/results/main.result.json`.
+That result and the review sources `desc/review/*` are records of earlier runs, and they keep the earlier names of the
+`Spec` declarations (for example `Spec.scDesc`, `Fv1.luDesc`). `desc/spec-names-old-new.tsv` gives the present name of
+each earlier name. A new checker run writes the present names.
 
 - The set of expected types is closed. It is the table of hand cases in the checker plus the keys of `prysm/inventory.json`.
 - Before it parses a file, the checker limits the file size and the nesting depth.

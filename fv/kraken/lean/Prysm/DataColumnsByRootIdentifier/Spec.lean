@@ -29,7 +29,7 @@ theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszVa
   simp only [desc, SszValue.toValue, receiverValue, serialize, serializeStruct, serializeFields, serializeSequence,
     List.length_map, hl, ite_true, serializeEach_u64, Vector.toArray_mk, hz]
   simp only [bind, Except.bind, pure, Except.pure, assemble, Desc.isFixed, Desc.fixedSize, Option.isSome_some]
-  simp only [inl_headWidth, inl_bodyWidth, inl_headOf, inl_bodiesOf]
+  simp only [inlineParts_headWidth, inlineParts_bodyWidth, inlineParts_headOf, inlineParts_bodiesOf]
   have h4 : ¬ (4294967296 ≤ 36 + 8 * l.length) := by simp [bytesPerOffset] at h32; omega
   have h8 : ¬ (4294967296 ≤ 8 * l.length) := by omega
   have f1 : ((Desc.uint 8).list 128).isFixed = false := rfl

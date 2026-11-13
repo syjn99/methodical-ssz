@@ -46,13 +46,13 @@ structure Fixed where
 def Fixed.toValue (f : Fixed) : Value := .seq [.uint f.a.toNat, .bytes f.b.toArray]
 
 /-- Every Go value maps to a value that fits the declaration. -/
-theorem toValue_fits (f : Fixed) : Value.fits fixedDesc f.toValue = true := by
+theorem fixed_toValue_fits (f : Fixed) : Value.fits fixedDesc f.toValue = true := by
   have := f.a.toNat_lt
   simp [Fixed.toValue, fixedDesc, Value.fits, Value.fieldsFit]; omega
 
 /-- The abstraction covers every intended value: each EthLib value that fits
 the declaration is the image of exactly one Go value. -/
-theorem toValue_surjective (v : Value) (h : Value.fits fixedDesc v = true) :
+theorem fixed_toValue_surjective (v : Value) (h : Value.fits fixedDesc v = true) :
     ∃ f : Fixed, f.toValue = v := by
   match v, h with
   | .seq [.uint n, .bytes d], h =>
@@ -66,7 +66,7 @@ theorem toValue_surjective (v : Value) (h : Value.fits fixedDesc v = true) :
   | .seq (.uint _ :: .seq _ :: []), h | .seq (.uint _ :: .union _ _ :: []), h => simp [fixedDesc, Value.fits, Value.fieldsFit] at h
   | .bool _, h | .uint _, h | .bytes _, h | .bits _, h | .union _ _, h => simp [fixedDesc, Value.fits] at h
 
-theorem toValue_injective (f g : Fixed) (h : f.toValue = g.toValue) : f = g := by
+theorem fixed_toValue_injective (f g : Fixed) (h : f.toValue = g.toValue) : f = g := by
   obtain ⟨a, b⟩ := f; obtain ⟨a', b'⟩ := g
   simp only [Fixed.toValue, Value.seq.injEq, List.cons.injEq, Value.uint.injEq, Value.bytes.injEq, and_true] at h
   obtain ⟨h1, h2⟩ := h
@@ -77,18 +77,18 @@ theorem toValue_injective (f g : Fixed) (h : f.toValue = g.toValue) : f = g := b
 /-! ## Encoding -/
 
 /-- The 40 bytes of an encoding, as a function of the Go value. -/
-def encode (f : Fixed) : Array UInt8 := uintBytes 8 f.a.toNat ++ f.b.toArray
+def fixedEncode (f : Fixed) : Array UInt8 := uintBytes 8 f.a.toNat ++ f.b.toArray
 
 theorem uintBytes_size (w n : Nat) : (uintBytes w n).size = w := by
   induction w generalizing n with
   | zero => rfl
   | succ w ih => simp [uintBytes, ih]; omega
 
-theorem encode_size (f : Fixed) : (encode f).size = 40 := by
-  simp [encode, uintBytes_size]
+theorem fixed_encode_size (f : Fixed) : (fixedEncode f).size = 40 := by
+  simp [fixedEncode, uintBytes_size]
 
-theorem serialize_fixed (f : Fixed) : serialize fixedDesc f.toValue = .ok (encode f) := by
-  unfold encode
+theorem serialize_fixed (f : Fixed) : serialize fixedDesc f.toValue = .ok (fixedEncode f) := by
+  unfold fixedEncode
   have ha := f.a.toNat_lt
   simp only [fixedDesc, Fixed.toValue, serialize, serializeStruct, serializeFields, ha, ite_true,
     bind, Except.bind, pure, Except.pure]
@@ -105,7 +105,7 @@ theorem serialize_fixed (f : Fixed) : serialize fixedDesc f.toValue = .ok (encod
 /-! ## Decoding -/
 
 /-- The Go value an accepted 40-byte input decodes to. -/
-def decode (bs : Array UInt8) : Fixed where
+def fixedDecode (bs : Array UInt8) : Fixed where
   a := UInt64.ofNat (readUint bs 0 8)
   b := Vector.ofFn fun i => bs[8 + i.val]!
 
@@ -123,7 +123,7 @@ theorem readUint_congr (d d' : Array UInt8) (k w : Nat)
     simp only [readUint]
     rw [h k (by omega) (by omega), ih (k + 1) (fun i h1 h2 => h i (by omega) (by omega))]
 theorem deserialize_fixed_ok (bs : Array UInt8) (h : bs.size = 40) :
-    deserialize fixedDesc bs = .ok (decode bs).toValue := by
+    deserialize fixedDesc bs = .ok (fixedDecode bs).toValue := by
   rw [deserialize.eq_def]
   simp only [fixedDesc, deserializeStruct, structSlots, structBudget, structBodies, bodyStarts, readSlots,
     Desc.fieldsFixedSize, Desc.fixedSize, h]
@@ -131,7 +131,7 @@ theorem deserialize_fixed_ok (bs : Array UInt8) (h : bs.size = 40) :
     bodyStarts, Slot.held, deserializeFields, pure, Except.pure]
   rw [deserialize.eq_def, deserialize.eq_def]
   simp [h, bind, Except.bind, throw, throwThe, MonadExceptOf.throw, bytesPerOffset, pure, Except.pure,
-    decode, Fixed.toValue]
+    fixedDecode, Fixed.toValue]
   constructor
   · rw [Nat.mod_eq_of_lt (by simpa using readUint_lt bs 0 8)]
     apply readUint_congr; intro i _ hi; simp [Array.getElem?_extract, h]; omega
@@ -150,7 +150,7 @@ theorem deserialize_fixed_err (bs : Array UInt8) (h : bs.size ≠ 40) :
 
 /-! ## Error correspondence
 
-Phase 0 target: success and rejection agree. The kind table below is the
+The goal: success and rejection agree. The kind table below is the
 intended mapping; only the `errSize` row occurs in the three functions. -/
 
 inductive GoErr where

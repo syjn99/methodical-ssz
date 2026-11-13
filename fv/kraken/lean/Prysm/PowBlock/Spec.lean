@@ -131,21 +131,21 @@ theorem SszValue.serialize_eq_checker (g : SszValue) : serialize checkerDesc g.t
 
 /-- **Spec roundtrip.** -/
 theorem SszValue.roundtrip (g : SszValue) : deserialize desc (SszValue.encode g) = .ok g.toValue :=
-  deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
+  deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
     SszValue.toValue_fits g
 
 theorem SszValue.roundtrip_checker (g : SszValue) : deserialize checkerDesc (SszValue.encode g) = .ok g.toValueC :=
-  deserialize_enc (G := SszValue) (toV := SszValue.toValueC) (enc := SszValue.encode) checker_wellFormed SszValue.serialize_eq_checker
+  deserialize_encoding (G := SszValue) (toV := SszValue.toValueC) (enc := SszValue.encode) checker_wellFormed SszValue.serialize_eq_checker
     SszValue.toValueC_fits g
 
 theorem SszValue.accepted_is_encoding {bs : Array UInt8} {v : Value} (h : deserialize desc bs = .ok v) :
     ∃ g : SszValue, v = g.toValue ∧ bs = SszValue.encode g :=
-  accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
+  accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
     SszValue.toValue_surjective' h
 
 theorem SszValue.accepted_is_encoding_checker {bs : Array UInt8} {v : Value} (h : deserialize checkerDesc bs = .ok v) :
     ∃ g : SszValue, v = g.toValueC ∧ bs = SszValue.encode g :=
-  accepted_is_enc (G := SszValue) (toV := SszValue.toValueC) (enc := SszValue.encode) checker_wellFormed SszValue.serialize_eq_checker
+  accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValueC) (enc := SszValue.encode) checker_wellFormed SszValue.serialize_eq_checker
     SszValue.toValueC_surjective' h
 
 /-- **EthLib accepts exactly the 96-byte inputs** (hand Desc). -/

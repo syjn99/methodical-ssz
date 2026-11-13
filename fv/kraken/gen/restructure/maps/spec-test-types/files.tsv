@@ -1,0 +1,3 @@
+# old path	new path	meaning (paths are relative to the repository root)
+fv/kraken/lean/Spec/TestListC.lean	fv/kraken/lean/Spec/TestListOfContainers.lean	Spec of the Go test type ListC, a list of containers (`Items []*ListU64`)
+fv/kraken/lean/Spec/ReducedPrysm.lean	fv/kraken/lean/Spec/TestCheckpointAndAttestationData.lean	Spec of the test-target copies of the Prysm types Checkpoint and AttestationData

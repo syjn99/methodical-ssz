@@ -55,7 +55,7 @@ theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszVa
     List.length_map, hl, decide_true, if_true, serializeEach_u64, Vector.toArray_mk, hz]
   rw [hd]
   simp only [bind, Except.bind, pure, Except.pure, assemble, Desc.isFixed, Desc.fixedSize, Option.isSome_some]
-  simp only [inl_headWidth, inl_bodyWidth, inl_headOf, inl_bodiesOf]
+  simp only [inlineParts_headWidth, inlineParts_bodyWidth, inlineParts_headOf, inlineParts_bodiesOf]
   have h4 : ¬ (4294967296 ≤ 228 + 8 * l.length) := by simp [bytesPerOffset] at h32; omega
   have h8 : ¬ (4294967296 ≤ 8 * l.length) := by omega
   have f1 : ((Desc.uint 8).list 2048).isFixed = false := rfl
@@ -69,12 +69,12 @@ theorem toValue_serialize (g : SszValue) : serialize desc g.toValue = .ok (SszVa
 
 /-- **Spec roundtrip.** -/
 theorem encode_roundtrip (g : SszValue) : deserialize desc (SszValue.encode g) = .ok g.toValue :=
-  deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize
+  deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize
     toValue_fits g
 
 theorem accepted_is_encode {bs : Array UInt8} {v : Value} (h : deserialize desc bs = .ok v) :
     ∃ g : SszValue, v = g.toValue ∧ bs = SszValue.encode g :=
-  accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize
+  accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed toValue_serialize
     toValue_surjective h
 
 /-- The four checks of the Go decoder, in its order. -/

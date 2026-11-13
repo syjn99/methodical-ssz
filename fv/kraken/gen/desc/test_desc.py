@@ -111,7 +111,7 @@ MUTANTS = [
      _both(_limit17, _set(["reference"], None))),
     ("r2-ref-key-removed", "BitL", "bitList -> byteList in term and claim, reference key deleted", "ref-claim",
      _both(_set(["ssz", "fields", 0, "k"], "byteList"), _set(["fields", 0, "kind"], "byteList"), _del(["reference"]))),
-    ("r12-type", "Scalars", "type name Scalars -> Checkpoint (reference stays Spec.scDesc)", "hand-name", _set(["type"], "Checkpoint")),
+    ("r12-type", "Scalars", "type name Scalars -> Checkpoint (reference stays Spec.scalarsDesc)", "hand-name", _set(["type"], "Checkpoint")),
     ("r7-claim-name", "Scalars", "claim name of field 0 changed (term names unchanged)", "name[0]", _set(["fields", 0, "name"], "Zzz")),
     ("r11-index", "Checkpoint", "index claim of field 1 -> 7", "index[1]", _set(["fields", 1, "index"], 7)),
     ("r8-term-names-swapped", "Scalars", "term field names reversed, claims follow (shapes unchanged)", "go-names",
@@ -200,7 +200,7 @@ TEXT_MUTANTS = [   # raw-text mutants: (id, base, what, designated, text transfo
      lambda t: t.replace('"type": "ListU64",', '"type": "ListU64",\n "x": ' + "[" * 100 + "]" * 100 + ",", 1)),
     ("z2-size-1100000", "ListU64", "1100000 bytes of trailing white space (valid JSON)", "bounds", lambda t: t + " " * 1100000),
     ("y10-escaped-key", "Scalars", "key 'refer\\u0065nce' written with an escape next to 'reference'", "strict-json",
-     lambda t: t.replace('"reference": "Spec.scDesc"', '"reference": "Spec.scDesc",\n "refer\\u0065nce": null', 1)),
+     lambda t: t.replace('"reference": "Spec.scalarsDesc"', '"reference": "Spec.scalarsDesc",\n "refer\\u0065nce": null', 1)),
 ]
 
 # Prysm types only: no independent spec Desc offline (consensus-specs is not available); these

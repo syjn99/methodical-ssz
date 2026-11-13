@@ -299,6 +299,19 @@ How to handle a new finding is in `../README.md` section 7.
 - Effect: the hand `Desc` copies consensus-specs, but its independence from the checker is by content only.
 - State: recorded. A new type must have its hand `Desc` written before the checker `Desc` is printed.
 
+### Replayed review mutants carry earlier reference names
+
+- What: `gen/desc/test_desc.py prepare` replays the review sources `gen/desc/review/r1_mutants.py`, `r2_mutants.py` and
+  `r3_mutants.py` unchanged. Their mutants set `reference` to earlier names (`Fv1.scDesc`, `Fv1.luDesc`, ...); the checker
+  table names the present `Spec` names.
+- Effect: such a mutant fails at the reference check because of the name alone. `test_desc.py evaluate` asks only for a
+  FAIL, so the case still counts as expected, but three mutants no longer test their own defect: `n10-ref-trailing-space`
+  and `q27-ref-trailing-space` (a trailing space after a right name), and `q46-escaped-key`, whose replacement of the
+  reference `Fv1.luDesc` by null matches nothing.
+- Where: `gen/desc/spec-names-old-new.tsv` gives the present name of each earlier name.
+- State: open. The review sources are records (`gen/desc/review/SOURCES.sha256`). A fix translates the names in
+  `test_desc.py` and needs a checker run with Lean.
+
 ### A code directory is not a Lake input
 
 - What: `lean/Prysm/Checkpoint/CapacityReservedCode.lean` includes `.S` files from a directory that `lean/lakefile.toml` does not declare as an input.

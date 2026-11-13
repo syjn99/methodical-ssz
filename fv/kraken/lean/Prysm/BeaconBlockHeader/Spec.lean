@@ -26,7 +26,7 @@ The proofs are the text of `Prysm/AttestationData/Spec.lean` (AttestationData) w
 
 namespace Prysm.BeaconBlockHeader
 open EthLib.Serialization.Ssz
-open Spec hiding encode readUint_lt
+open Spec hiding readUint_lt
 
 /-- consensus-specs phase0 `BeaconBlockHeader`. -/
 def desc : Desc := .container ["slot", "proposer_index", "parent_root", "state_root", "body_root"]
@@ -120,12 +120,12 @@ theorem SszValue.serialize_eq (g : SszValue) : serialize desc g.toValue = .ok (S
 
 /-- **Spec roundtrip.** -/
 theorem SszValue.roundtrip (g : SszValue) : deserialize desc (SszValue.encode g) = .ok g.toValue :=
-  deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
+  deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
     SszValue.toValue_fits g
 
 theorem SszValue.accepted_is_encoding {bs : Array UInt8} {v : Value} (h : deserialize desc bs = .ok v) :
     ∃ g : SszValue, v = g.toValue ∧ bs = SszValue.encode g :=
-  accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
+  accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) desc_wellFormed SszValue.serialize_eq
     SszValue.toValue_surjective' h
 
 /-- **EthLib accepts exactly the 112-byte inputs.** -/
@@ -172,10 +172,10 @@ theorem desc_deserialize_checker (bs : Array UInt8) (v : Value) :
   constructor
   · intro h
     obtain ⟨g, rfl, rfl⟩ := SszValue.accepted_is_encoding h
-    exact deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
+    exact deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
       SszValue.serialize_eq_checker SszValue.toValue_fits_checker g
   · intro h
-    obtain ⟨g, rfl, rfl⟩ := accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
+    obtain ⟨g, rfl, rfl⟩ := accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
       SszValue.serialize_eq_checker (SszValue.toValue_surjective _ (.inr rfl)) h
     exact SszValue.roundtrip g
 

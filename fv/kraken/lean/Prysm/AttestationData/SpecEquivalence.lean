@@ -15,7 +15,7 @@ for every value, and `desc_deserialize_checker` the same accepted inputs with th
 
 namespace Prysm.AttestationData
 open EthLib.Serialization.Ssz
-open Spec hiding encode readUint_lt
+open Spec hiding readUint_lt
 
 /-- The checker's Desc has the same kinds in the same order; only the names differ. -/
 theorem desc_checker :
@@ -96,10 +96,10 @@ theorem desc_deserialize_checker (bs : Array UInt8) (v : Value) :
   constructor
   · intro h
     obtain ⟨g, rfl, rfl⟩ := SszValue.accepted_is_encoding h
-    exact deserialize_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
+    exact deserialize_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
       SszValue.serialize_eq_checker SszValue.toValue_fits_checker g
   · intro h
-    obtain ⟨g, rfl, rfl⟩ := accepted_is_enc (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
+    obtain ⟨g, rfl, rfl⟩ := accepted_input_is_encoding (G := SszValue) (toV := SszValue.toValue) (enc := SszValue.encode) checker_wellFormed
       SszValue.serialize_eq_checker SszValue.toValue_surjective_checker h
     exact SszValue.roundtrip g
 
