@@ -27,7 +27,7 @@ The design principles are in `../../README.md`.
 | `type_inventory.py` | The raw IR of the generator | `prysm/ir/*.json` (`reduce`) and `prysm/inventory.json` (`build`) |
 | `type_list_document.py`, `type_scope.py` | `prysm/inventory.json` | `prysm/TYPES.md`, `prysm/type-scope.json`, `prysm/type-scope.md` |
 | `keepalive.py` | `prysm/inventory.json` | The `main.go` of the Prysm target |
-| `tools/proof_inventory.py` | The symbol listing of the ELF and a declaration list from Lean | `prysm/go1.26.10/ssz-methods.json`, `prysm/proof-inventory.md`, `prysm/proof-inventory.json` |
+| `tools/proof_inventory.py` | The symbol listing of the ELF (`methods`); a declaration list from `tools/inventory_decls.lean` and the JSON of an axioms gate run, both on the built tree (`run`) | `prysm/go1.26.10/ssz-methods.json`, `prysm/proof-inventory.md`, `prysm/proof-inventory.json` |
 | `e2e/*link.py` | The Prysm ELF, its disassembly and symbol listing | One link set: the filtered disassembly and the data files |
 | `e2e/callgraph.py` and the `callgraph` mode of `e2e/*link.py` | A filtered disassembly | `callgraph*.json` files. The tree holds none of them. `e2e/e2elink.py` imports the function list of `e2e/callgraph.py` |
 | `e2e/*diff.py` | Nothing, or a Go output file | Go differential cases, and their comparison with the Go output |
@@ -105,11 +105,31 @@ python3 -I -B fv/kraken/gen/e2e/axioms_gate.py --selftest
 - The `check` mode reads a dump that `run` wrote. It needs only Python.
 - `e2e/axioms.py` reads the output of `lake env lean <hand list>` for one hand list.
 
+### Theorems with the same statement
+
+`tools/duplicate_statements.py` reads the dump of the gate (`run` mode) and the tree. It finds each group of theorems
+with the same statement hash and gives the group one class with a reason. The class rules are in its usage text.
+
+```sh
+python3 -I -B fv/kraken/gen/restructure/tools/regen.py <scratch>/regen-work > <scratch>/regen.txt
+python3 -I -B fv/kraken/gen/tools/duplicate_statements.py <scratch>/dump.tsv --root fv/kraken \
+  --regen <scratch>/regen.txt --out <scratch>/groups.tsv
+python3 -I -B fv/kraken/gen/tools/duplicate_statements.py --selftest
+```
+
+- Give `regen.py` the `--files` options that its usage text names. The tool takes the generated files from its result.
+- The table has one row per theorem of a group: group id, name, module, class, reason. The counts per class go to
+  standard error.
+- Exit 1 means a group in the class `delete-candidate` (a hand theorem that can be removed: its twin is visible at
+  every use and no check names it) or `unclassified`. Remove the theorem, or record a new rule in the tool.
+- The tool reads text. It does not see a name that a macro declares, or a use through a notation.
+
 ## 7. Python-only checks
 
 These run without Lean, Go or the Prysm ELF:
 
 - `scal/kindcheck.py`, and the `--selftest` mode of `e2e/axioms_gate.py`.
+- `tools/duplicate_statements.py`, on a dump of the axioms gate (the dump itself needs Lean).
 - `python3 -B fv/kraken/link/data.py --check fv/kraken/link/out`.
 - `regen_check.sh` with `scal/scalgen.py`, `e2e/descterm.py`, `e2e/lvdescterm.py`, `e2e/layout.py` and `e2e/adlayout.py`.
 - `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`, `kparse/summ.py`.
@@ -121,7 +141,8 @@ These need more than Python:
 - `e2e/negative.py` and the `run` mode of the axioms gate need Lean.
 - The link checks need the ELF and the LLVM tools.
 - The differential checks need Go and a Prysm tree.
-- `tools/proof_inventory.py` needs the symbol listing of the Prysm ELF and Lean.
+- `tools/proof_inventory.py methods` needs the symbol listing of the Prysm ELF. Its `run` mode needs Lean: the output of
+  `tools/inventory_decls.lean` and the JSON of an axioms gate run on the built tree.
 
 ## 8. Known limits
 

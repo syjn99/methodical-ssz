@@ -8,8 +8,11 @@
   "elf_sha256": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e"
  },
  "axioms_gate": {
+  "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=Spec,Machine,Runtime,Codec,Prysm",
   "verdict": "PASS",
-  "declarations": 14415
+  "declarations": 19305,
+  "theorems": 15930,
+  "modules": 769
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec_k, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / spec_k / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -17,22 +20,22 @@
   "`runtime.writeBarrier` != 0 (every accept theorem assumes the flag word is 0)",
   "runtime callee bodies (makeslice / memmove / growslice / newobject / fmt.errorf: contract hypotheses, MakesliceC / MemmoveC / ...)",
   "callee error returns (the `fmt.Errorf` wrap paths of delegated fields; `reject_complete` covers the size path condition only)",
-  "growslice / T-7 (encoder capacity growth beyond the listed theorems)",
+  "growslice (encoder capacity growth beyond the listed theorems; FINDINGS.md: \"Growslice contract gives no lower bound on the remaining heap\")",
   "x86-64 hardware execution (semantics = Kraken's model of the amd64 instructions; no hardware run)"
  ],
  "cannot_detect": [
-  "a row whose `codec` or `reject_complete` names ANOTHER type's theorem: these two parts are checked for existence, kind and axioms only (their types hold no code constant, their proofs use no mapped theorem; review g5c-r1 m03, m04). Keying them to the row's Desc constant needs a new column in `inventory_decls.lean`; not done",
-  "that a theorem's statement says what its part name means (accept, reject, spec): the mapping table is hand-written; the statements are checked by review and by the kinds, not by this script",
+  "a row whose `codec` or `reject_complete` names ANOTHER type's theorem: these two parts are checked for existence, kind and axioms only (their types hold no code constant, their proofs use no mapped theorem; found by an earlier review). Keying them to the row's Desc constant needs a new column in `inventory_decls.lean`; not done",
+  "that a theorem's statement says what its part name means (accept, reject, spec): the mapping chooses names by their form (SPEC.md); the statements are checked by review and by the kinds, not by this script",
   "a theorem with two target code constants of which neither calls the other (it fails: no single subject)",
   "that <decls.tsv> was made on the built tree of the same commit (its header has the Lean version, no commit id)",
-  "that an encoder row's premise text and NOT-proved text say what the mapped reject / growslice theorems assume (hand-written per row, unit E2-C2; checked by review against the theorem statements, not by this script)",
+  "that an encoder row's premise text and NOT-proved text say what the mapped reject / growslice theorems assume (hand-written per row; checked by review against the theorem statements, not by this script)",
   "methods outside `github.com/OffchainLabs/prysm/v7/` (e.g. `github.com/holiman/uint256`) and SSZ methods with names outside the listed kinds"
  ],
  "totals": {
   "denominators": {
    "target_ssz_methods": "prysm/go1.26.10/ssz-methods.json (from the nm listing of the pinned ELF, sha256 88ee8b9afe7d5265982e869fc33a2fe7b69acc38d52f4efd173326d1db4140ac)",
    "dumped_functions": "prysm/go1.26.10/functions.json (functions with a `.S` text)",
-   "development_population": "FLAT16 of gen/tools/proof_inventory.py (the 16 flat types opened by the GEN5 line)"
+   "development_population": "DEVELOPMENT_TYPES of gen/tools/proof_inventory.py (the 16 flat types with which the generated-decoder work started)"
   },
   "target_ssz_methods": 1292,
   "target_types": 211,
@@ -45,17 +48,17 @@
    "UnmarshalSSZ": {
     "target": 211,
     "functions_json": 211,
-    "mapped": 28,
-    "complete": 18,
-    "partial": 10
+    "mapped": 34,
+    "complete": 20,
+    "partial": 14
    },
    "MarshalSSZTo": {
     "target": 211,
     "functions_json": 211,
-    "mapped": 24,
+    "mapped": 25,
     "complete": 0,
-    "partial": 24,
-    "fast_path_complete": 24,
+    "partial": 25,
+    "fast_path_complete": 25,
     "fast_path_partial": 0
    },
    "MarshalSSZ": {
@@ -108,7 +111,7 @@
     "partial": 0
    }
   },
-  "types_not_started": 182,
+  "types_not_started": 176,
   "development_population": [
    "Checkpoint",
    "BeaconBlockHeader",
@@ -169,15 +172,15 @@
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 20",
-    "encoder_refused_h7": "byte vector 20"
+    "decoder_refused_by_generator": "byte vector 20",
+    "encoder_refused_by_generator": "byte vector 20"
    },
    "v1.ConsolidationRequest": {
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 20",
-    "encoder_refused_h7": "byte vector 20"
+    "decoder_refused_by_generator": "byte vector 20",
+    "encoder_refused_by_generator": "byte vector 20"
    },
    "v1.DepositRequest": {
     "decoder": "complete",
@@ -188,22 +191,22 @@
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 20",
-    "encoder_refused_h7": "byte vector 20"
+    "decoder_refused_by_generator": "byte vector 20",
+    "encoder_refused_by_generator": "byte vector 20"
    },
    "v1.WithdrawalRequest": {
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 20",
-    "encoder_refused_h7": "byte vector 20"
+    "decoder_refused_by_generator": "byte vector 20",
+    "encoder_refused_by_generator": "byte vector 20"
    },
    "v1alpha1.BLSToExecutionChange": {
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 20",
-    "encoder_refused_h7": "byte vector 20"
+    "decoder_refused_by_generator": "byte vector 20",
+    "encoder_refused_by_generator": "byte vector 20"
    },
    "v1alpha1.BeaconBlocksByRangeRequest": {
     "decoder": "partial",
@@ -223,28 +226,28 @@
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 1",
-    "encoder_refused_h7": "byte vector 1"
+    "decoder_refused_by_generator": "byte vector 1",
+    "encoder_refused_by_generator": "byte vector 1"
    },
    "v1alpha1.BuilderPendingWithdrawal": {
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 20",
-    "encoder_refused_h7": "byte vector 20"
+    "decoder_refused_by_generator": "byte vector 20",
+    "encoder_refused_by_generator": "byte vector 20"
    },
    "v1alpha1.BuilderPreferences": {
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "fast path complete",
-    "decoder_refused_h7": "callee primitives.Gwei.UnmarshalSSZ"
+    "decoder_refused_by_generator": "callee primitives.Gwei.UnmarshalSSZ"
    },
    "v1alpha1.ENRForkID": {
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 4",
-    "encoder_refused_h7": "byte vector 4"
+    "decoder_refused_by_generator": "byte vector 4",
+    "encoder_refused_by_generator": "byte vector 4"
    },
    "v1alpha1.ExecutionPayloadEnvelopesByRangeRequest": {
     "decoder": "partial",
@@ -257,15 +260,15 @@
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 4",
-    "encoder_refused_h7": "byte vector 4"
+    "decoder_refused_by_generator": "byte vector 4",
+    "encoder_refused_by_generator": "byte vector 4"
    },
    "v1alpha1.ForkData": {
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 4",
-    "encoder_refused_h7": "byte vector 4"
+    "decoder_refused_by_generator": "byte vector 4",
+    "encoder_refused_by_generator": "byte vector 4"
    },
    "v1alpha1.PartialDataColumnGroupID": {
     "decoder": "partial",
@@ -278,36 +281,36 @@
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "bool",
-    "encoder_refused_h7": "bool"
+    "decoder_refused_by_generator": "bool",
+    "encoder_refused_by_generator": "bool"
    },
    "v1alpha1.ProposerPreferences": {
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 20",
-    "encoder_refused_h7": "byte vector 20"
+    "decoder_refused_by_generator": "byte vector 20",
+    "encoder_refused_by_generator": "byte vector 20"
    },
    "v1alpha1.Status": {
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 4",
-    "encoder_refused_h7": "byte vector 4"
+    "decoder_refused_by_generator": "byte vector 4",
+    "encoder_refused_by_generator": "byte vector 4"
    },
    "v1alpha1.StatusV2": {
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 4",
-    "encoder_refused_h7": "byte vector 4"
+    "decoder_refused_by_generator": "byte vector 4",
+    "encoder_refused_by_generator": "byte vector 4"
    },
    "v1alpha1.Validator": {
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "bool",
-    "encoder_refused_h7": "bool"
+    "decoder_refused_by_generator": "bool",
+    "encoder_refused_by_generator": "bool"
    },
    "v1alpha1.ValidatorIdentity": {
     "decoder": "partial",
@@ -320,8 +323,8 @@
     "decoder": "not started",
     "decoder_missing": [],
     "encoder": "not started",
-    "decoder_refused_h7": "byte vector 20",
-    "encoder_refused_h7": "byte vector 20"
+    "decoder_refused_by_generator": "byte vector 20",
+    "encoder_refused_by_generator": "byte vector 20"
    }
   },
   "target_types_without_ir": [
@@ -515,8 +518,8 @@
     "witness_reject"
    ],
    "theorems": {
-    "accept": "E2eAd.ci_unmarshal_accept_main",
-    "witness_accept": "E2eAd.WitCi.ci_accept_runs"
+    "accept": "Prysm.CommitteeIndex.Decode.accept",
+    "witness_accept": "Prysm.CommitteeIndex.Witness.DecodeAccept.runs"
    },
    "note": ""
   },
@@ -609,10 +612,10 @@
     "codec"
    ],
    "theorems": {
-    "accept": "E2e.ep_unmarshal_accept_main",
-    "reject": "E2e.ep_unmarshal_reject_len_main",
-    "witness_accept": "E2e.WitEp.ep_accept_runs",
-    "witness_reject": "E2e.WitEpR.epr_runs"
+    "accept": "Prysm.Epoch.Decode.accept",
+    "reject": "Prysm.Epoch.Decode.reject_size",
+    "witness_accept": "Prysm.Epoch.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.Epoch.Witness.DecodeRejectSize.runs"
    },
    "note": ""
   },
@@ -793,8 +796,8 @@
     "witness_reject"
    ],
    "theorems": {
-    "accept": "E2eAd.sl_unmarshal_accept_main",
-    "witness_accept": "E2eAd.WitSl.sl_accept_runs"
+    "accept": "Prysm.Slot.Decode.accept",
+    "witness_accept": "Prysm.Slot.Witness.DecodeAccept.runs"
    },
    "note": ""
   },
@@ -887,12 +890,12 @@
     "codec"
    ],
    "theorems": {
-    "accept": "E2eScal.Gen.vi_unmarshal_accept_main_g",
-    "reject": "E2eScal.vi_unmarshal_reject_len_main",
-    "witness_accept": "E2eScal.WitVi.vi_accept_runs",
-    "witness_reject": "E2eScal.WitViR.vir_runs"
+    "accept": "Prysm.ValidatorIndex.Decode.generated_accept",
+    "reject": "Prysm.ValidatorIndex.Decode.reject_size",
+    "witness_accept": "Prysm.ValidatorIndex.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.ValidatorIndex.Witness.DecodeRejectSize.runs"
    },
-   "note": ""
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -1117,14 +1120,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.bdr_g6e_fast"
+     "Prysm.BuilderDepositRequest.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.bdr_e2c_spec_k"
+     "Prysm.BuilderDepositRequest.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cBdr.bdr_e2c_wit_empty",
-     "E2eScal.WitE2cBdr.bdr_e2c_wit_prefix"
+     "Prysm.BuilderDepositRequest.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.BuilderDepositRequest.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -1163,15 +1166,15 @@
     "codec"
    ],
    "theorems": {
-    "accept": "E2eScal.Gen.bdr_g5dec_accept",
-    "reject": "E2eScal.Gen.bdr_g5dec_reject",
-    "spec_k": "E2eScal.F24.bdr_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.F24.bdr_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.F24.bdr_e2e_reject_complete",
-    "witness_accept": "E2eScal.WitBdrGA.bdr_accept_runs",
-    "witness_reject": "E2eScal.WitBdrGR.bdr_reject_runs"
+    "accept": "Prysm.BuilderDepositRequest.Decode.generated_accept",
+    "reject": "Prysm.BuilderDepositRequest.Decode.generated_reject",
+    "spec_k": "Prysm.BuilderDepositRequest.Decode.accept_spec",
+    "reject_size_spec": "Prysm.BuilderDepositRequest.Decode.reject_size_spec",
+    "reject_complete": "Prysm.BuilderDepositRequest.Decode.reject_complete",
+    "witness_accept": "Prysm.BuilderDepositRequest.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.BuilderDepositRequest.Witness.GeneratedDecodeRejectSize.runs"
    },
-   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto; codec: no Desc-checker record for this type"
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -1396,14 +1399,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.dpr_g6e_fast"
+     "Prysm.DepositRequest.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.dpr_e2c_spec_k"
+     "Prysm.DepositRequest.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cDpr.dpr_e2c_wit_empty",
-     "E2eScal.WitE2cDpr.dpr_e2c_wit_prefix"
+     "Prysm.DepositRequest.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.DepositRequest.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -1440,18 +1443,18 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.Gen.dpr_g5dec_accept",
-    "reject": "E2eScal.Gen.dpr_g5dec_reject",
-    "spec_k": "E2eScal.F24.dpr_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.F24.dpr_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.F24.dpr_e2e_reject_complete",
+    "accept": "Prysm.DepositRequest.Decode.generated_accept",
+    "reject": "Prysm.DepositRequest.Decode.generated_reject",
+    "spec_k": "Prysm.DepositRequest.Decode.accept_spec",
+    "reject_size_spec": "Prysm.DepositRequest.Decode.reject_size_spec",
+    "reject_complete": "Prysm.DepositRequest.Decode.reject_complete",
     "codec": [
-     "E2e.prysmDprDesc_deserialize_checker"
+     "Prysm.DepositRequest.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitDprGA.dpr_accept_runs",
-    "witness_reject": "E2eScal.WitDprGR.dpr_reject_runs"
+    "witness_accept": "Prysm.DepositRequest.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.DepositRequest.Witness.GeneratedDecodeRejectSize.runs"
    },
-   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto"
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -3103,16 +3106,16 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eAd.ad_e2e_accept_main",
-    "reject": "E2eAd.ad_e2e_reject_size_main",
-    "spec_k": "E2eAd.ad_e2e_accept_spec_k",
-    "reject_size_spec": "E2eAd.ad_e2e_reject_size_spec",
-    "reject_complete": "E2eAd.ad_e2e_reject_complete",
+    "accept": "Prysm.AttestationData.Decode.accept",
+    "reject": "Prysm.AttestationData.Decode.reject_size",
+    "spec_k": "Prysm.AttestationData.Decode.accept_spec",
+    "reject_size_spec": "Prysm.AttestationData.Decode.reject_size_spec",
+    "reject_complete": "Prysm.AttestationData.Decode.reject_complete",
     "codec": [
-     "E2e.prysmAdDesc_deserialize_checker"
+     "Prysm.AttestationData.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eAd.WitAdA.ad_accept_runs",
-    "witness_reject": "E2eAd.WitAdR.ad_reject_runs"
+    "witness_accept": "Prysm.AttestationData.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.AttestationData.Witness.DecodeRejectSize.runs"
    },
    "note": ""
   },
@@ -5439,33 +5442,33 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.bh_g6e_fast"
+     "Prysm.BeaconBlockHeader.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.bh_e2c_spec_k"
+     "Prysm.BeaconBlockHeader.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cBh.bh_e2c_wit_empty",
-     "E2eScal.WitE2cBh.bh_e2c_wit_prefix"
+     "Prysm.BeaconBlockHeader.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.BeaconBlockHeader.Witness.GeneratedEncodeFastPath.runs_prefix"
     ],
     "hand": [
-     "E2eScal.Bh.bh_e2e_marshal_main",
-     "E2eScal.Bh.bh_e2e_marshal_spec_k"
+     "Prysm.BeaconBlockHeader.Encode.fast_path",
+     "Prysm.BeaconBlockHeader.Encode.fast_path_spec"
     ],
     "rejects": [
-     "E2eScal.Bh.bh_e2e_marshal_reject1_main",
-     "E2eScal.Bh.bh_e2e_marshal_reject2_main",
-     "E2eScal.Bh.bh_e2e_marshal_reject3_main"
+     "Prysm.BeaconBlockHeader.Encode.reject_length_parent_root",
+     "Prysm.BeaconBlockHeader.Encode.reject_length_state_root",
+     "Prysm.BeaconBlockHeader.Encode.reject_length_body_root"
     ],
     "other_witness": [
-     "E2eScal.WitBhM.bhm_runs_empty"
+     "Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
    "witness": true,
    "not_proved": [
     "growslice branches (5 capacity tests)",
-    "length rejects with cap < len + 112 (with len + 16 \u2264 cap < len + 112 a ParentRoot reject is reached without a growslice call) [3 byte fields; proved only: bh_e2e_marshal_reject1_main (len + 112 \u2264 cap), bh_e2e_marshal_reject2_main (len + 112 \u2264 cap, MemmoveC), bh_e2e_marshal_reject3_main (len + 112 \u2264 cap, MemmoveC)]",
+    "length rejects with cap < len + 112 (with len + 16 \u2264 cap < len + 112 a ParentRoot reject is reached without a growslice call) [3 byte fields; proved only: reject_length_parent_root (len + 112 \u2264 cap), reject_length_state_root (len + 112 \u2264 cap, MemmoveC), reject_length_body_root (len + 112 \u2264 cap, MemmoveC)]",
     "morestack"
    ]
   },
@@ -5495,16 +5498,16 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.Bh.bh_e2e_accept_main",
-    "reject": "E2eScal.Bh.bh_e2e_reject_size_main",
-    "spec_k": "E2eScal.Bh.bh_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.Bh.bh_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.Bh.bh_e2e_reject_complete",
+    "accept": "Prysm.BeaconBlockHeader.Decode.accept",
+    "reject": "Prysm.BeaconBlockHeader.Decode.reject_size",
+    "spec_k": "Prysm.BeaconBlockHeader.Decode.accept_spec",
+    "reject_size_spec": "Prysm.BeaconBlockHeader.Decode.reject_size_spec",
+    "reject_complete": "Prysm.BeaconBlockHeader.Decode.reject_complete",
     "codec": [
-     "E2e.prysmBhDesc_deserialize_checker"
+     "Prysm.BeaconBlockHeader.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitBhA.bh_accept_runs",
-    "witness_reject": "E2eScal.WitBhR.bh_reject_runs"
+    "witness_accept": "Prysm.BeaconBlockHeader.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.BeaconBlockHeader.Witness.DecodeRejectSize.runs"
    },
    "note": ""
   },
@@ -5647,14 +5650,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.bbr_g6e_fast"
+     "Prysm.BeaconBlocksByRangeRequest.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.bbr_e2c_spec_k"
+     "Prysm.BeaconBlocksByRangeRequest.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cBbr.bbr_e2c_wit_empty",
-     "E2eScal.WitE2cBbr.bbr_e2c_wit_prefix"
+     "Prysm.BeaconBlocksByRangeRequest.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.BeaconBlocksByRangeRequest.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -5706,15 +5709,15 @@
     "codec"
    ],
    "theorems": {
-    "accept": "E2eScal.Gen.bbr_g5dec_accept",
-    "reject": "E2eScal.Gen.bbr_g5dec_reject",
-    "spec_k": "E2eScal.F24.bbr_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.F24.bbr_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.F24.bbr_e2e_reject_complete",
-    "witness_accept": "E2eScal.WitBbrGA.bbr_accept_runs",
-    "witness_reject": "E2eScal.WitBbrGR.bbr_reject_runs"
+    "accept": "Prysm.BeaconBlocksByRangeRequest.Decode.generated_accept",
+    "reject": "Prysm.BeaconBlocksByRangeRequest.Decode.generated_reject",
+    "spec_k": "Prysm.BeaconBlocksByRangeRequest.Decode.accept_spec",
+    "reject_size_spec": "Prysm.BeaconBlocksByRangeRequest.Decode.reject_size_spec",
+    "reject_complete": "Prysm.BeaconBlocksByRangeRequest.Decode.reject_complete",
+    "witness_accept": "Prysm.BeaconBlocksByRangeRequest.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.BeaconBlocksByRangeRequest.Witness.GeneratedDecodeRejectSize.runs"
    },
-   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto; codec: no Desc-checker record for this type"
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -7199,14 +7202,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.bi_g6e_fast"
+     "Prysm.BlobIdentifier.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.bi_e2c_spec_k"
+     "Prysm.BlobIdentifier.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cBi.bi_e2c_wit_empty",
-     "E2eScal.WitE2cBi.bi_e2c_wit_prefix"
+     "Prysm.BlobIdentifier.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.BlobIdentifier.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -7243,16 +7246,16 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.Bi.bi_e2e_accept_main",
-    "reject": "E2eScal.Bi.bi_e2e_reject_size_main",
-    "spec_k": "E2eScal.Bi.bi_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.Bi.bi_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.Bi.bi_e2e_reject_complete",
+    "accept": "Prysm.BlobIdentifier.Decode.accept",
+    "reject": "Prysm.BlobIdentifier.Decode.reject_size",
+    "spec_k": "Prysm.BlobIdentifier.Decode.accept_spec",
+    "reject_size_spec": "Prysm.BlobIdentifier.Decode.reject_size_spec",
+    "reject_complete": "Prysm.BlobIdentifier.Decode.reject_complete",
     "codec": [
-     "E2e.prysmBiDesc_deserialize_checker"
+     "Prysm.BlobIdentifier.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitBiA.bi_accept_runs",
-    "witness_reject": "E2eScal.WitBiR.bi_reject_runs"
+    "witness_accept": "Prysm.BlobIdentifier.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.BlobIdentifier.Witness.DecodeRejectSize.runs"
    },
    "note": ""
   },
@@ -7479,14 +7482,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.bsr_g6e_fast"
+     "Prysm.BlobSidecarsByRangeRequest.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.bsr_e2c_spec_k"
+     "Prysm.BlobSidecarsByRangeRequest.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cBsr.bsr_e2c_wit_empty",
-     "E2eScal.WitE2cBsr.bsr_e2c_wit_prefix"
+     "Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -7538,15 +7541,15 @@
     "codec"
    ],
    "theorems": {
-    "accept": "E2eScal.Gen.bsr_g5dec_accept",
-    "reject": "E2eScal.Gen.bsr_g5dec_reject",
-    "spec_k": "E2eScal.F24.bsr_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.F24.bsr_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.F24.bsr_e2e_reject_complete",
-    "witness_accept": "E2eScal.WitBsrGA.bsr_accept_runs",
-    "witness_reject": "E2eScal.WitBsrGR.bsr_reject_runs"
+    "accept": "Prysm.BlobSidecarsByRangeRequest.Decode.generated_accept",
+    "reject": "Prysm.BlobSidecarsByRangeRequest.Decode.generated_reject",
+    "spec_k": "Prysm.BlobSidecarsByRangeRequest.Decode.accept_spec",
+    "reject_size_spec": "Prysm.BlobSidecarsByRangeRequest.Decode.reject_size_spec",
+    "reject_complete": "Prysm.BlobSidecarsByRangeRequest.Decode.reject_complete",
+    "witness_accept": "Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.runs"
    },
-   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto; codec: no Desc-checker record for this type"
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -8359,14 +8362,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.bpf_g6e_fast"
+     "Prysm.BuilderPreferences.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.bpf_e2c_spec_k"
+     "Prysm.BuilderPreferences.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cBpf.bpf_e2c_wit_empty",
-     "E2eScal.WitE2cBpf.bpf_e2c_wit_prefix"
+     "Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -8711,39 +8714,39 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.cp_g6e_fast"
+     "Prysm.Checkpoint.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.cp_e2c_spec_k"
+     "Prysm.Checkpoint.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cCp.cp_e2c_wit_empty",
-     "E2eScal.WitE2cCp.cp_e2c_wit_prefix"
+     "Prysm.Checkpoint.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.Checkpoint.Witness.GeneratedEncodeFastPath.runs_prefix"
     ],
     "hand": [
-     "E2e.cp_e2e_marshal_main",
-     "E2e.cp_e2e_marshal_spec_k"
+     "Prysm.Checkpoint.Encode.fast_path",
+     "Prysm.Checkpoint.Encode.fast_path_spec"
     ],
     "rejects": [
-     "E2e.cp_e2e_marshal_reject_main",
-     "E2e.cp_e2e_marshal_reject_cover"
+     "Prysm.Checkpoint.Encode.reject_length",
+     "Prysm.Checkpoint.Encode.reject_length_cover"
     ],
     "grow": [
-     "E2e.cp_e2e_marshal_grow_main",
-     "E2e.cp_e2e_marshal_grow2_main",
-     "E2e.cp_e2e_marshal_grow_any_main"
+     "Prysm.Checkpoint.Encode.grow_first_site",
+     "Prysm.Checkpoint.Encode.grow_second_site",
+     "Prysm.Checkpoint.Encode.grow_any_site"
     ],
     "other_witness": [
-     "E2e.WitCpM.cpm_runs_empty",
-     "E2e.WitCpMR.cpmr_runs",
-     "E2e.WitCpG.cpg_runs"
+     "Prysm.Checkpoint.Witness.EncodeFastPath.runs_empty",
+     "Prysm.Checkpoint.Witness.EncodeRejectLength.runs",
+     "Prysm.Checkpoint.Witness.EncodeGrowFirstSite.runs"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
    "witness": true,
    "not_proved": [
-    "growslice branches outside the GrowsliceC / MemmoveC contracts and the heap budget, and the run after the second growslice call when the heap left by the first call is below the second call's budget (T-7 residual, FINDINGS T-7, differential only) [2 capacity tests; proved only: cp_e2e_marshal_grow_main (cap < len + 8, len + 40 \u2264 nextSliceCap(len + 8, cap), GrowsliceC + MemmoveC contracts + heap budget), cp_e2e_marshal_grow2_main (len + 8 \u2264 cap < len + 40, GrowsliceC + MemmoveC contracts + heap budget), cp_e2e_marshal_grow_any_main (cap < len + 8, GrowsliceC + MemmoveC contracts + heap budget: returns or reaches the second growslice call)]",
-    "length rejects with cap < len + 8 outside the GrowsliceC contract or the heap budget [1 byte fields; proved only: cp_e2e_marshal_reject_main (len + 8 \u2264 cap), cp_e2e_marshal_reject_cover (every cap, GrowsliceC contract + heap budget 4\u00b7len + 8736 \u2264 avail \u2264 maxAlloc)]",
+    "growslice branches outside the GrowsliceC / MemmoveC contracts and the heap budget, and the run after the second growslice call when the heap left by the first call is below the second call's budget (FINDINGS.md: \"Growslice contract gives no lower bound on the remaining heap\"; checked by the differential test only) [2 capacity tests; proved only: grow_first_site (cap < len + 8, len + 40 \u2264 nextSliceCap(len + 8, cap), GrowsliceC + MemmoveC contracts + heap budget), grow_second_site (len + 8 \u2264 cap < len + 40, GrowsliceC + MemmoveC contracts + heap budget), grow_any_site (cap < len + 8, GrowsliceC + MemmoveC contracts + heap budget: returns or reaches the second growslice call)]",
+    "length rejects with cap < len + 8 outside the GrowsliceC contract or the heap budget [1 byte fields; proved only: reject_length (len + 8 \u2264 cap), reject_length_cover (every cap, GrowsliceC contract + heap budget 4\u00b7len + 8736 \u2264 avail \u2264 maxAlloc)]",
     "morestack"
    ]
   },
@@ -8760,10 +8763,10 @@
    "missing": [],
    "theorems": {
     "main": [
-     "E2e.cp_e2e_size_main"
+     "Prysm.Checkpoint.Size.result"
     ],
     "witness": [
-     "E2e.WitCpS.cps_runs"
+     "Prysm.Checkpoint.Witness.Size.runs"
     ]
    },
    "note": ""
@@ -8780,16 +8783,16 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2e.cp_e2e_accept_main",
-    "reject": "E2e.cp_e2e_reject_size_main",
-    "spec_k": "E2e.cp_e2e_accept_spec_k",
-    "reject_size_spec": "E2e.cp_e2e_reject_size_spec",
-    "reject_complete": "E2e.cp_e2e_reject_complete",
+    "accept": "Prysm.Checkpoint.Decode.accept",
+    "reject": "Prysm.Checkpoint.Decode.reject_size",
+    "spec_k": "Prysm.Checkpoint.Decode.accept_spec",
+    "reject_size_spec": "Prysm.Checkpoint.Decode.reject_size_spec",
+    "reject_complete": "Prysm.Checkpoint.Decode.reject_complete",
     "codec": [
-     "E2e.prysmCpDesc_deserialize_checker"
+     "Prysm.Checkpoint.desc_deserialize_checker"
     ],
-    "witness_accept": "E2e.WitCpA.cp_accept_runs",
-    "witness_reject": "E2e.WitCpR.cp_reject_runs"
+    "witness_accept": "Prysm.Checkpoint.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.Checkpoint.Witness.DecodeRejectSize.runs"
    },
    "note": ""
   },
@@ -9152,7 +9155,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9166,7 +9169,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9180,7 +9183,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9194,10 +9197,29 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "Prysm.DataColumnsByRootIdentifier.Encode.fast_path"
+    ],
+    "spec": [
+     "Prysm.DataColumnsByRootIdentifier.Encode.fast_path_spec"
+    ],
+    "witness": [
+     "Prysm.DataColumnsByRootIdentifier.Witness.EncodeFastPath.runs_empty",
+     "Prysm.DataColumnsByRootIdentifier.Witness.EncodeFastPath.runs_one_element",
+     "Prysm.DataColumnsByRootIdentifier.Witness.EncodeFastPath.runs_maximum"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths; growth and reject theorems of this type exist and are not classified by this tool (no premise text): Encode.grow_first_site, Encode.grow_one_site, Encode.reject_length, Encode.reject_too_big",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "length rejects (1 byte fields)",
+    "morestack",
+    "note: theorems for some of these paths exist but this tool does not classify them (no premise text): Encode.grow_first_site, Encode.grow_one_site, Encode.reject_length, Encode.reject_too_big"
+   ]
   },
   {
    "symbols": [
@@ -9208,7 +9230,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9222,9 +9244,21 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
-   "missing": [],
-   "theorems": {},
+   "state": "partial",
+   "missing": [
+    "reject_size_spec",
+    "reject_complete"
+   ],
+   "theorems": {
+    "accept": "Prysm.DataColumnsByRootIdentifier.Decode.accept",
+    "reject": "Prysm.DataColumnsByRootIdentifier.Decode.reject_size",
+    "spec_k": "Prysm.DataColumnsByRootIdentifier.Decode.accept_spec",
+    "codec": [
+     "Prysm.DataColumnsByRootIdentifier.desc_deserialize_checker"
+    ],
+    "witness_accept": "Prysm.DataColumnsByRootIdentifier.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.DataColumnsByRootIdentifier.Witness.DecodeRejectSize.RejectSize.runs"
+   },
    "note": ""
   },
   {
@@ -9236,7 +9270,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9250,7 +9284,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9264,7 +9298,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9278,7 +9312,7 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9292,7 +9326,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9306,9 +9340,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "complete",
    "missing": [],
-   "theorems": {},
+   "theorems": {
+    "accept": "Prysm.Deposit.Decode.accept",
+    "reject": "Prysm.Deposit.Decode.reject_size",
+    "spec_k": "Prysm.Deposit.Decode.accept_spec",
+    "reject_size_spec": "Prysm.Deposit.Decode.reject_size_spec",
+    "reject_complete": "Prysm.Deposit.Decode.reject_complete",
+    "codec": [
+     "Prysm.Deposit.desc_deserialize_checker"
+    ],
+    "witness_accept": "Prysm.Deposit.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.Deposit.Witness.DecodeRejectSize.runs"
+   },
    "note": ""
   },
   {
@@ -9366,14 +9411,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.dm_g6e_fast"
+     "Prysm.DepositMessage.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.dm_e2c_spec_k"
+     "Prysm.DepositMessage.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cDm.dm_e2c_wit_empty",
-     "E2eScal.WitE2cDm.dm_e2c_wit_prefix"
+     "Prysm.DepositMessage.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.DepositMessage.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -9410,16 +9455,16 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.Dm.dm_e2e_accept_main",
-    "reject": "E2eScal.Dm.dm_e2e_reject_size_main",
-    "spec_k": "E2eScal.Dm.dm_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.Dm.dm_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.Dm.dm_e2e_reject_complete",
+    "accept": "Prysm.DepositMessage.Decode.accept",
+    "reject": "Prysm.DepositMessage.Decode.reject_size",
+    "spec_k": "Prysm.DepositMessage.Decode.accept_spec",
+    "reject_size_spec": "Prysm.DepositMessage.Decode.reject_size_spec",
+    "reject_complete": "Prysm.DepositMessage.Decode.reject_complete",
     "codec": [
-     "E2e.prysmDmDesc_deserialize_checker"
+     "Prysm.DepositMessage.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitDmA.dm_accept_runs",
-    "witness_reject": "E2eScal.WitDmR.dm_reject_runs"
+    "witness_accept": "Prysm.DepositMessage.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.DepositMessage.Witness.DecodeRejectSize.runs"
    },
    "note": ""
   },
@@ -9562,14 +9607,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.dd_g6e_fast"
+     "Prysm.Deposit_Data.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.dd_e2c_spec_k"
+     "Prysm.Deposit_Data.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cDd.dd_e2c_wit_empty",
-     "E2eScal.WitE2cDd.dd_e2c_wit_prefix"
+     "Prysm.Deposit_Data.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.Deposit_Data.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -9606,16 +9651,16 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.H4.dd_e2e_accept_main",
-    "reject": "E2eScal.H4.dd_e2e_reject_size_main",
-    "spec_k": "E2eScal.H4.dd_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.H4.dd_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.H4.dd_e2e_reject_complete",
+    "accept": "Prysm.Deposit_Data.Decode.accept",
+    "reject": "Prysm.Deposit_Data.Decode.reject_size",
+    "spec_k": "Prysm.Deposit_Data.Decode.accept_spec",
+    "reject_size_spec": "Prysm.Deposit_Data.Decode.reject_size_spec",
+    "reject_complete": "Prysm.Deposit_Data.Decode.reject_complete",
     "codec": [
-     "E2e.prysmDdDesc_deserialize_checker"
+     "Prysm.Deposit_Data.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitDdA.dd_accept_runs",
-    "witness_reject": "E2eScal.WitDdR.dd_reject_runs"
+    "witness_accept": "Prysm.Deposit_Data.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.Deposit_Data.Witness.DecodeRejectSize.runs"
    },
    "note": ""
   },
@@ -9758,21 +9803,21 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.e1_g6e_fast"
+     "Prysm.Eth1Data.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.e1_e2c_spec_k"
+     "Prysm.Eth1Data.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cE1.e1_e2c_wit_empty",
-     "E2eScal.WitE2cE1.e1_e2c_wit_prefix"
+     "Prysm.Eth1Data.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.Eth1Data.Witness.GeneratedEncodeFastPath.runs_prefix"
     ],
     "hand": [
-     "E2eScal.E1.e1_e2e_marshal_main",
-     "E2eScal.E1.e1_e2e_marshal_spec_k"
+     "Prysm.Eth1Data.Encode.fast_path",
+     "Prysm.Eth1Data.Encode.fast_path_spec"
     ],
     "other_witness": [
-     "E2eScal.WitE1M.e1m_runs_empty"
+     "Prysm.Eth1Data.Witness.EncodeFastPath.runs_empty"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -9809,16 +9854,16 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.E1.e1_e2e_accept_main",
-    "reject": "E2eScal.E1.e1_e2e_reject_size_main",
-    "spec_k": "E2eScal.E1.e1_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.E1.e1_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.E1.e1_e2e_reject_complete",
+    "accept": "Prysm.Eth1Data.Decode.accept",
+    "reject": "Prysm.Eth1Data.Decode.reject_size",
+    "spec_k": "Prysm.Eth1Data.Decode.accept_spec",
+    "reject_size_spec": "Prysm.Eth1Data.Decode.reject_size_spec",
+    "reject_complete": "Prysm.Eth1Data.Decode.reject_complete",
     "codec": [
-     "E2e.prysmE1Desc_deserialize_checker"
+     "Prysm.Eth1Data.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitE1A.e1_accept_runs",
-    "witness_reject": "E2eScal.WitE1R.e1_reject_runs"
+    "witness_accept": "Prysm.Eth1Data.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.Eth1Data.Witness.DecodeRejectSize.runs"
    },
    "note": ""
   },
@@ -10213,14 +10258,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.epr_g6e_fast"
+     "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.epr_e2c_spec_k"
+     "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cEpr.epr_e2c_wit_empty",
-     "E2eScal.WitE2cEpr.epr_e2c_wit_prefix"
+     "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -10272,15 +10317,15 @@
     "codec"
    ],
    "theorems": {
-    "accept": "E2eScal.Gen.epr_g5dec_accept",
-    "reject": "E2eScal.Gen.epr_g5dec_reject",
-    "spec_k": "E2eScal.F24.epr_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.F24.epr_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.F24.epr_e2e_reject_complete",
-    "witness_accept": "E2eScal.WitEprGA.epr_accept_runs",
-    "witness_reject": "E2eScal.WitEprGR.epr_reject_runs"
+    "accept": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.generated_accept",
+    "reject": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.generated_reject",
+    "spec_k": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.accept_spec",
+    "reject_size_spec": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.reject_size_spec",
+    "reject_complete": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.reject_complete",
+    "witness_accept": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Witness.GeneratedDecodeRejectSize.runs"
    },
-   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto; codec: no Desc-checker record for this type"
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -10459,7 +10504,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10473,7 +10518,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10487,7 +10532,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10501,7 +10546,7 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10515,7 +10560,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10529,9 +10574,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "complete",
    "missing": [],
-   "theorems": {},
+   "theorems": {
+    "accept": "Prysm.HistoricalBatch.Decode.accept",
+    "reject": "Prysm.HistoricalBatch.Decode.reject_size",
+    "spec_k": "Prysm.HistoricalBatch.Decode.accept_spec",
+    "reject_size_spec": "Prysm.HistoricalBatch.Decode.reject_size_spec",
+    "reject_complete": "Prysm.HistoricalBatch.Decode.reject_complete",
+    "codec": [
+     "Prysm.HistoricalBatch.desc_deserialize_checker"
+    ],
+    "witness_accept": "Prysm.HistoricalBatch.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.HistoricalBatch.Witness.DecodeRejectSize.runs"
+   },
    "note": ""
   },
   {
@@ -10589,14 +10645,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.hs_g6e_fast"
+     "Prysm.HistoricalSummary.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.hs_e2c_spec_k"
+     "Prysm.HistoricalSummary.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cHs.hs_e2c_wit_empty",
-     "E2eScal.WitE2cHs.hs_e2c_wit_prefix"
+     "Prysm.HistoricalSummary.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.HistoricalSummary.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -10634,18 +10690,18 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.Gen.hs_g5dec_accept",
-    "reject": "E2eScal.Gen.hs_g5dec_reject",
-    "spec_k": "E2eScal.G5C.hs_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.G5C.hs_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.G5C.hs_e2e_reject_complete",
+    "accept": "Prysm.HistoricalSummary.Decode.generated_accept",
+    "reject": "Prysm.HistoricalSummary.Decode.generated_reject",
+    "spec_k": "Prysm.HistoricalSummary.Decode.accept_spec",
+    "reject_size_spec": "Prysm.HistoricalSummary.Decode.reject_size_spec",
+    "reject_complete": "Prysm.HistoricalSummary.Decode.reject_complete",
     "codec": [
-     "E2e.prysmHsDesc_deserialize_checker"
+     "Prysm.HistoricalSummary.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitHsGA.hs_accept_runs",
-    "witness_reject": "E2eScal.WitHsGR.hs_reject_runs"
+    "witness_accept": "Prysm.HistoricalSummary.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.HistoricalSummary.Witness.GeneratedDecodeRejectSize.runs"
    },
-   "note": "generated accept / size-reject theorems (p2dec --gen5; statement = kind instance)"
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -10740,7 +10796,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10754,7 +10810,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10768,7 +10824,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10782,7 +10838,7 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10796,7 +10852,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10810,9 +10866,21 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
-   "missing": [],
-   "theorems": {},
+   "state": "partial",
+   "missing": [
+    "reject_complete"
+   ],
+   "theorems": {
+    "accept": "Prysm.IndexedAttestation.Decode.accept",
+    "reject": "Prysm.IndexedAttestation.Decode.reject_size",
+    "spec_k": "Prysm.IndexedAttestation.Decode.accept_spec",
+    "reject_size_spec": "Prysm.IndexedAttestation.Decode.reject_size_spec",
+    "codec": [
+     "Prysm.IndexedAttestation.desc_deserialize_checker"
+    ],
+    "witness_accept": "Prysm.IndexedAttestation.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.IndexedAttestation.Witness.DecodeRejectSize.runs_size"
+   },
    "note": ""
   },
   {
@@ -13334,14 +13402,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.pdc_g6e_fast"
+     "Prysm.PartialDataColumnGroupID.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.pdc_e2c_spec_k"
+     "Prysm.PartialDataColumnGroupID.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cPdc.pdc_e2c_wit_empty",
-     "E2eScal.WitE2cPdc.pdc_e2c_wit_prefix"
+     "Prysm.PartialDataColumnGroupID.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.PartialDataColumnGroupID.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -13380,15 +13448,15 @@
     "codec"
    ],
    "theorems": {
-    "accept": "E2eScal.Gen.pdc_g5dec_accept",
-    "reject": "E2eScal.Gen.pdc_g5dec_reject",
-    "spec_k": "E2eScal.F24.pdc_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.F24.pdc_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.F24.pdc_e2e_reject_complete",
-    "witness_accept": "E2eScal.WitPdcGA.pdc_accept_runs",
-    "witness_reject": "E2eScal.WitPdcGR.pdc_reject_runs"
+    "accept": "Prysm.PartialDataColumnGroupID.Decode.generated_accept",
+    "reject": "Prysm.PartialDataColumnGroupID.Decode.generated_reject",
+    "spec_k": "Prysm.PartialDataColumnGroupID.Decode.accept_spec",
+    "reject_size_spec": "Prysm.PartialDataColumnGroupID.Decode.reject_size_spec",
+    "reject_complete": "Prysm.PartialDataColumnGroupID.Decode.reject_complete",
+    "witness_accept": "Prysm.PartialDataColumnGroupID.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.PartialDataColumnGroupID.Witness.GeneratedDecodeRejectSize.runs"
    },
-   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto; codec: no Desc-checker record for this type"
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -14145,14 +14213,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.pc_g6e_fast"
+     "Prysm.PendingConsolidation.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.pc_e2c_spec_k"
+     "Prysm.PendingConsolidation.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cPc.pc_e2c_wit_empty",
-     "E2eScal.WitE2cPc.pc_e2c_wit_prefix"
+     "Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -14188,16 +14256,16 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.H5.pc_e2e_accept_main",
-    "reject": "E2eScal.H5.pc_e2e_reject_size_main",
-    "spec_k": "E2eScal.H5.pc_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.H5.pc_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.H5.pc_e2e_reject_complete",
+    "accept": "Prysm.PendingConsolidation.Decode.accept",
+    "reject": "Prysm.PendingConsolidation.Decode.reject_size",
+    "spec_k": "Prysm.PendingConsolidation.Decode.accept_spec",
+    "reject_size_spec": "Prysm.PendingConsolidation.Decode.reject_size_spec",
+    "reject_complete": "Prysm.PendingConsolidation.Decode.reject_complete",
     "codec": [
-     "E2e.prysmPcDesc_deserialize_checker"
+     "Prysm.PendingConsolidation.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitPcA.pc_accept_runs",
-    "witness_reject": "E2eScal.WitPcR.pc_reject_runs"
+    "witness_accept": "Prysm.PendingConsolidation.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.PendingConsolidation.Witness.DecodeRejectSize.runs"
    },
    "note": ""
   },
@@ -14256,14 +14324,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.pd_g6e_fast"
+     "Prysm.PendingDeposit.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.pd_e2c_spec_k"
+     "Prysm.PendingDeposit.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cPd.pd_e2c_wit_empty",
-     "E2eScal.WitE2cPd.pd_e2c_wit_prefix"
+     "Prysm.PendingDeposit.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.PendingDeposit.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -14300,18 +14368,18 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.H6.pd_e2e_accept_g4gen",
-    "reject": "E2eScal.H6.pd_e2e_reject_size_main",
-    "spec_k": "E2eScal.H6.pd_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.H6.pd_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.H6.pd_e2e_reject_complete",
+    "accept": "Prysm.PendingDeposit.Decode.accept_from_generated_steps",
+    "reject": "Prysm.PendingDeposit.Decode.reject_size",
+    "spec_k": "Prysm.PendingDeposit.Decode.accept_spec",
+    "reject_size_spec": "Prysm.PendingDeposit.Decode.reject_size_spec",
+    "reject_complete": "Prysm.PendingDeposit.Decode.reject_complete",
     "codec": [
-     "E2e.prysmPdDesc_deserialize_checker"
+     "Prysm.PendingDeposit.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitPdA.pd_accept_runs",
-    "witness_reject": "E2eScal.WitPdR.pd_reject_runs"
+    "witness_accept": "Prysm.PendingDeposit.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.PendingDeposit.Witness.DecodeRejectSize.runs"
    },
-   "note": ""
+   "note": "accept composed from generated steps"
   },
   {
    "symbols": [
@@ -14368,14 +14436,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.pw_g6e_fast"
+     "Prysm.PendingPartialWithdrawal.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.pw_e2c_spec_k"
+     "Prysm.PendingPartialWithdrawal.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cPw.pw_e2c_wit_empty",
-     "E2eScal.WitE2cPw.pw_e2c_wit_prefix"
+     "Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -14411,18 +14479,18 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.H4.pw_e2e_accept_main",
-    "reject": "E2eScal.H4.pw_e2e_reject_size_main",
-    "spec_k": "E2eScal.H4.pw_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.H4.pw_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.H4.pw_e2e_reject_complete",
+    "accept": "Prysm.PendingPartialWithdrawal.Decode.accept",
+    "reject": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
+    "spec_k": "Prysm.PendingPartialWithdrawal.Decode.accept_spec",
+    "reject_size_spec": "Prysm.PendingPartialWithdrawal.Decode.reject_size_spec",
+    "reject_complete": "Prysm.PendingPartialWithdrawal.Decode.reject_complete",
     "codec": [
-     "E2e.prysmPwDesc_deserialize_checker"
+     "Prysm.PendingPartialWithdrawal.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitPwA.pw_accept_runs",
-    "witness_reject": "E2eScal.WitPwR.pw_reject_runs"
+    "witness_accept": "Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.PendingPartialWithdrawal.Witness.DecodeRejectSize.runs"
    },
-   "note": "accept_spec_k added in unit G5-C (PwSpecKA.lean)"
+   "note": ""
   },
   {
    "symbols": [
@@ -14479,14 +14547,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.pb_g6e_fast"
+     "Prysm.PowBlock.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.pb_e2c_spec_k"
+     "Prysm.PowBlock.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cPb.pb_e2c_wit_empty",
-     "E2eScal.WitE2cPb.pb_e2c_wit_prefix"
+     "Prysm.PowBlock.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.PowBlock.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -14524,19 +14592,19 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.H6.pb_e2e_accept_g4gen",
-    "reject": "E2eScal.H6.pb_e2e_reject_size_main",
-    "spec_k": "E2eScal.H6.pb_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.H6.pb_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.H6.pb_e2e_reject_complete",
+    "accept": "Prysm.PowBlock.Decode.accept_from_generated_steps",
+    "reject": "Prysm.PowBlock.Decode.reject_size",
+    "spec_k": "Prysm.PowBlock.Decode.accept_spec",
+    "reject_size_spec": "Prysm.PowBlock.Decode.reject_size_spec",
+    "reject_complete": "Prysm.PowBlock.Decode.reject_complete",
     "codec": [
-     "E2e.pb_accepts_same",
-     "E2e.pb_codec_checker"
+     "Prysm.PowBlock.Decode.accepts_same",
+     "Prysm.PowBlock.Decode.codec_checker"
     ],
-    "witness_accept": "E2eScal.WitPbA.pb_accept_runs",
-    "witness_reject": "E2eScal.WitPbR.pb_reject_runs"
+    "witness_accept": "Prysm.PowBlock.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.PowBlock.Witness.DecodeRejectSize.runs"
    },
-   "note": "codec: same accepted inputs + number / LE-bytes correspondence (spec uint256)"
+   "note": "accept composed from generated steps; codec: same accepted inputs + number / LE-bytes correspondence (spec uint256)"
   },
   {
    "symbols": [
@@ -17869,14 +17937,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.sd_g6e_fast"
+     "Prysm.SigningData.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.sd_e2c_spec_k"
+     "Prysm.SigningData.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cSd.sd_e2c_wit_empty",
-     "E2eScal.WitE2cSd.sd_e2c_wit_prefix"
+     "Prysm.SigningData.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.SigningData.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -17914,18 +17982,18 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.Gen.sd_g5dec_accept",
-    "reject": "E2eScal.Gen.sd_g5dec_reject",
-    "spec_k": "E2eScal.G5C.sd_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.G5C.sd_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.G5C.sd_e2e_reject_complete",
+    "accept": "Prysm.SigningData.Decode.generated_accept",
+    "reject": "Prysm.SigningData.Decode.generated_reject",
+    "spec_k": "Prysm.SigningData.Decode.accept_spec",
+    "reject_size_spec": "Prysm.SigningData.Decode.reject_size_spec",
+    "reject_complete": "Prysm.SigningData.Decode.reject_complete",
     "codec": [
-     "E2e.prysmSdDesc_deserialize_checker"
+     "Prysm.SigningData.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitSdGA.sd_accept_runs",
-    "witness_reject": "E2eScal.WitSdGR.sd_reject_runs"
+    "witness_accept": "Prysm.SigningData.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.SigningData.Witness.GeneratedDecodeRejectSize.runs"
    },
-   "note": "generated accept / size-reject theorems (p2dec --gen5; statement = kind instance)"
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -18216,7 +18284,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18230,7 +18298,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18244,7 +18312,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18258,7 +18326,7 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18272,7 +18340,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18286,9 +18354,21 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
-   "missing": [],
-   "theorems": {},
+   "state": "partial",
+   "missing": [
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.SyncAggregate.Decode.accept",
+    "reject": "Prysm.SyncAggregate.Decode.reject_size",
+    "spec_k": "Prysm.SyncAggregate.Decode.accept_spec",
+    "reject_size_spec": "Prysm.SyncAggregate.Decode.reject_size_spec",
+    "reject_complete": "Prysm.SyncAggregate.Decode.reject_complete",
+    "codec": [
+     "Prysm.SyncAggregate.desc_deserialize_checker"
+    ],
+    "witness_accept": "Prysm.SyncAggregate.Witness.DecodeAccept.runs"
+   },
    "note": ""
   },
   {
@@ -18346,14 +18426,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.sa_g6e_fast"
+     "Prysm.SyncAggregatorSelectionData.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.sa_e2c_spec_k"
+     "Prysm.SyncAggregatorSelectionData.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cSa.sa_e2c_wit_empty",
-     "E2eScal.WitE2cSa.sa_e2c_wit_prefix"
+     "Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -18389,18 +18469,18 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.Gen.sa_g5dec_accept",
-    "reject": "E2eScal.Gen.sa_g5dec_reject",
-    "spec_k": "E2eScal.G5C.sa_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.G5C.sa_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.G5C.sa_e2e_reject_complete",
+    "accept": "Prysm.SyncAggregatorSelectionData.Decode.generated_accept",
+    "reject": "Prysm.SyncAggregatorSelectionData.Decode.generated_reject",
+    "spec_k": "Prysm.SyncAggregatorSelectionData.Decode.accept_spec",
+    "reject_size_spec": "Prysm.SyncAggregatorSelectionData.Decode.reject_size_spec",
+    "reject_complete": "Prysm.SyncAggregatorSelectionData.Decode.reject_complete",
     "codec": [
-     "E2e.prysmSaDesc_deserialize_checker"
+     "Prysm.SyncAggregatorSelectionData.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitSaGA.sa_accept_runs",
-    "witness_reject": "E2eScal.WitSaGR.sa_reject_runs"
+    "witness_accept": "Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeRejectSize.runs"
    },
-   "note": "generated accept / size-reject theorems (p2dec --gen5; statement = kind instance)"
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -18411,7 +18491,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18425,7 +18505,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18439,7 +18519,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18453,7 +18533,7 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18467,7 +18547,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18481,9 +18561,21 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
-   "missing": [],
-   "theorems": {},
+   "state": "partial",
+   "missing": [
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.SyncCommittee.Decode.accept",
+    "reject": "Prysm.SyncCommittee.Decode.reject_size",
+    "spec_k": "Prysm.SyncCommittee.Decode.accept_spec",
+    "reject_size_spec": "Prysm.SyncCommittee.Decode.reject_size_spec",
+    "reject_complete": "Prysm.SyncCommittee.Decode.reject_complete",
+    "codec": [
+     "Prysm.SyncCommittee.desc_deserialize_checker"
+    ],
+    "witness_accept": "Prysm.SyncCommittee.Witness.DecodeAccept.runs"
+   },
    "note": ""
   },
   {
@@ -18625,14 +18717,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.sc_g6e_fast"
+     "Prysm.SyncCommitteeMessage.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.sc_e2c_spec_k"
+     "Prysm.SyncCommitteeMessage.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cSc.sc_e2c_wit_empty",
-     "E2eScal.WitE2cSc.sc_e2c_wit_prefix"
+     "Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -18669,16 +18761,16 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.H5.sm_e2e_accept_main",
-    "reject": "E2eScal.H5.sm_e2e_reject_size_main",
-    "spec_k": "E2eScal.H5.sm_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.H5.sm_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.H5.sm_e2e_reject_complete",
+    "accept": "Prysm.SyncCommitteeMessage.Decode.accept",
+    "reject": "Prysm.SyncCommitteeMessage.Decode.reject_size",
+    "spec_k": "Prysm.SyncCommitteeMessage.Decode.accept_spec",
+    "reject_size_spec": "Prysm.SyncCommitteeMessage.Decode.reject_size_spec",
+    "reject_complete": "Prysm.SyncCommitteeMessage.Decode.reject_complete",
     "codec": [
-     "E2e.prysmSmDesc_deserialize_checker"
+     "Prysm.SyncCommitteeMessage.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitSmA.sm_accept_runs",
-    "witness_reject": "E2eScal.WitSmR.sm_reject_runs"
+    "witness_accept": "Prysm.SyncCommitteeMessage.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.runs"
    },
    "note": ""
   },
@@ -18821,14 +18913,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.vb_g6e_fast"
+     "Prysm.ValidatorBalance.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.vb_e2c_spec_k"
+     "Prysm.ValidatorBalance.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cVb.vb_e2c_wit_empty",
-     "E2eScal.WitE2cVb.vb_e2c_wit_prefix"
+     "Prysm.ValidatorBalance.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.ValidatorBalance.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -18864,18 +18956,18 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.Gen.vb_g5dec_accept",
-    "reject": "E2eScal.Gen.vb_g5dec_reject",
-    "spec_k": "E2eScal.G5C.vb_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.G5C.vb_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.G5C.vb_e2e_reject_complete",
+    "accept": "Prysm.ValidatorBalance.Decode.generated_accept",
+    "reject": "Prysm.ValidatorBalance.Decode.generated_reject",
+    "spec_k": "Prysm.ValidatorBalance.Decode.accept_spec",
+    "reject_size_spec": "Prysm.ValidatorBalance.Decode.reject_size_spec",
+    "reject_complete": "Prysm.ValidatorBalance.Decode.reject_complete",
     "codec": [
-     "E2e.prysmVbDesc_deserialize_checker"
+     "Prysm.ValidatorBalance.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitVbGA.vb_accept_runs",
-    "witness_reject": "E2eScal.WitVbGR.vb_reject_runs"
+    "witness_accept": "Prysm.ValidatorBalance.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.ValidatorBalance.Witness.GeneratedDecodeRejectSize.runs"
    },
-   "note": "generated accept / size-reject theorems (p2dec --gen5; statement = kind instance); spec Desc from the Prysm proto: consensus-specs has no such container"
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -18932,14 +19024,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.vid_g6e_fast"
+     "Prysm.ValidatorIdentity.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.vid_e2c_spec_k"
+     "Prysm.ValidatorIdentity.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cVid.vid_e2c_wit_empty",
-     "E2eScal.WitE2cVid.vid_e2c_wit_prefix"
+     "Prysm.ValidatorIdentity.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.ValidatorIdentity.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -18978,15 +19070,15 @@
     "codec"
    ],
    "theorems": {
-    "accept": "E2eScal.Gen.vid_g5dec_accept",
-    "reject": "E2eScal.Gen.vid_g5dec_reject",
-    "spec_k": "E2eScal.F24.vid_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.F24.vid_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.F24.vid_e2e_reject_complete",
-    "witness_accept": "E2eScal.WitVidGA.vid_accept_runs",
-    "witness_reject": "E2eScal.WitVidGR.vid_reject_runs"
+    "accept": "Prysm.ValidatorIdentity.Decode.generated_accept",
+    "reject": "Prysm.ValidatorIdentity.Decode.generated_reject",
+    "spec_k": "Prysm.ValidatorIdentity.Decode.accept_spec",
+    "reject_size_spec": "Prysm.ValidatorIdentity.Decode.reject_size_spec",
+    "reject_complete": "Prysm.ValidatorIdentity.Decode.reject_complete",
+    "witness_accept": "Prysm.ValidatorIdentity.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.ValidatorIdentity.Witness.GeneratedDecodeRejectSize.runs"
    },
-   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto; codec: no Desc-checker record for this type"
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -19127,14 +19219,14 @@
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Gen6Enc.ve_g6e_fast"
+     "Prysm.VoluntaryExit.Encode.generated_fast"
     ],
     "spec": [
-     "E2eScal.E2c.ve_e2c_spec_k"
+     "Prysm.VoluntaryExit.Encode.generated_fast_spec"
     ],
     "witness": [
-     "E2eScal.WitE2cVe.ve_e2c_wit_empty",
-     "E2eScal.WitE2cVe.ve_e2c_wit_prefix"
+     "Prysm.VoluntaryExit.Witness.GeneratedEncodeFastPath.runs_empty",
+     "Prysm.VoluntaryExit.Witness.GeneratedEncodeFastPath.runs_prefix"
     ]
    },
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
@@ -19170,18 +19262,18 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "E2eScal.Gen.ve_g5dec_accept",
-    "reject": "E2eScal.Gen.ve_g5dec_reject",
-    "spec_k": "E2eScal.G5C.ve_e2e_accept_spec_k",
-    "reject_size_spec": "E2eScal.G5C.ve_e2e_reject_size_spec",
-    "reject_complete": "E2eScal.G5C.ve_e2e_reject_complete",
+    "accept": "Prysm.VoluntaryExit.Decode.generated_accept",
+    "reject": "Prysm.VoluntaryExit.Decode.generated_reject",
+    "spec_k": "Prysm.VoluntaryExit.Decode.accept_spec",
+    "reject_size_spec": "Prysm.VoluntaryExit.Decode.reject_size_spec",
+    "reject_complete": "Prysm.VoluntaryExit.Decode.reject_complete",
     "codec": [
-     "E2e.prysmVeDesc_deserialize_checker"
+     "Prysm.VoluntaryExit.desc_deserialize_checker"
     ],
-    "witness_accept": "E2eScal.WitVeGA.ve_accept_runs",
-    "witness_reject": "E2eScal.WitVeGR.ve_reject_runs"
+    "witness_accept": "Prysm.VoluntaryExit.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.VoluntaryExit.Witness.GeneratedDecodeRejectSize.runs"
    },
-   "note": "generated accept / size-reject theorems (p2dec --gen5; statement = kind instance)"
+   "note": "generated accept theorem (statement = kind instance)"
   }
  ]
 }

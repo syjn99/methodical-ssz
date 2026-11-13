@@ -12,7 +12,7 @@ How to build the target ELF again is in `../README.md` section 3.
 | `ir/ir-mainnet.json`, `ir/ir-minimal.json` | The reduced generator IR (intermediate representation) of each type, with the Go field layout `go_fields` | `gen/type_inventory.py reduce` |
 | `inventory.json` | The type inventory: every generated type, its fields and its delegations | `gen/type_inventory.py build` |
 | `TYPES.md`, `type-scope.json`, `type-scope.md` | Type lists and a scope classification of the inventory | `gen/type_list_document.py`, `gen/type_scope.py` |
-| `proof-inventory.md`, `proof-inventory.json` | The per-method table of theorems, witnesses and paths not proved | `gen/tools/proof_inventory.py run` |
+| `proof-inventory.md`, `proof-inventory.json` | The per-method table of theorems, witnesses and paths not proved | `gen/tools/proof_inventory.py run` (with the outputs of `inventory_decls.lean` and of an axioms gate run on the built tree) |
 | `_generated/` | The Go files that the pinned generator wrote for Prysm, with `SHA256SUMS` | `gen/prysm-gen.sh` |
 | `diff/` | A classification of the differences between these files and the Prysm files | `gen/gendiff.py` |
 | `go1.26.10/` | The target namespace of the Go 1.26.10 ELF (section 2) | |

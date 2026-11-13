@@ -115,6 +115,15 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
   Run one case per job. The cases of `prysm/go1.26.10/e2e/lv/negcases-lv*.json` use `gen/e2e/lvnegative.py` with the same arguments.
 - The drift check compares a dump with the dump of a reviewed tree.
 
+The proof inventory `prysm/proof-inventory.md` needs a built tree and the JSON of an axioms gate run on it (cwd `fv/kraken`):
+
+```sh
+python3 -I -B gen/tools/proof_inventory.py names <scratch>/inventory-names.txt
+cd lean && lake env lean --run ../gen/tools/inventory_decls.lean <scratch>/inventory-names.txt \
+  $(cd .. && find lean/Prysm -name '*.lean' | sed 's|^lean/||;s|\.lean$||;s|/|.|g' | sort) > <scratch>/decls.tsv && cd ..
+python3 -I -B gen/tools/proof_inventory.py run <scratch>/decls.tsv <scratch>/gate.json prysm/proof-inventory.md prysm/proof-inventory.json
+```
+
 **Python only.** These use only tracked files.
 
 ```sh

@@ -2,32 +2,41 @@
 """Inventory of the pinned target's SSZ methods. Python 3 standard library only.
 
   proof_inventory.py names <names.txt>
-      write the theorem names of the FIXED mapping table below (input of `inventory_decls.lean`)
+      write every name that the mapping rule below can choose (input of `inventory_decls.lean`)
   proof_inventory.py methods <p1cbin-amd64.nm> [<out.json>]
       read the `go tool nm` listing of the pinned ELF (not committed, 2 MB), check its sha256
       against the `nm sha256` line of `prysm/go1.26.10/build-ids.txt`, and write the list of SSZ methods of the target
       (default `prysm/go1.26.10/ssz-methods.json`). This list is the denominator of the inventory.
-  proof_inventory.py run <decls.tsv> <proof-inventory.md> <proof-inventory.json>
+  proof_inventory.py run <decls.tsv> <axioms-gate.json> <proof-inventory.md> <proof-inventory.json>
       read `prysm/go1.26.10/ssz-methods.json` (every SSZ method of the pinned target), `prysm/go1.26.10/functions.json`
       (the DUMPED subset: the functions with a `.S` text), `prysm/ir/ir-mainnet.json` (field shapes, for the flat
-      population), the committed axioms gate record `prysm/go1.26.10/e2e/axioms-gate.json`, the code constants of
-      `lean/{E2e,E2eAd,E2eScal}/**` (`def X : Program := include_x64_rt "…S"`) and <decls.tsv> (output of
+      population), <axioms-gate.json> (the JSON of `gen/e2e/axioms_gate.py run` on the built tree of the same commit;
+      its verdict must be PASS; the table records its header, declaration, theorem and module counts), the code
+      constants of `lean/Prysm/**` (`def X : Program := include_x64_rt "…S"`, keyed by full declared name, whatever
+      module declares them), the link tables `prysm/go1.26.10/e2e/**/RESULT`, and <decls.tsv> (output of
       `gen/tools/inventory_decls.lean` for the names above, run on the built tree of the same commit), and write the
-      table.
+      table. The committed record `prysm/go1.26.10/e2e/axioms-gate.json` (a past run, old names) is not read.
   (cwd = fv/kraken)
 
 Three denominators are kept apart: (1) the SSZ methods of the target (`ssz-methods.json`, per method kind);
-(2) the dumped functions (`functions.json`); (3) the 16-type flat DEVELOPMENT population of the GEN5 line (`FLAT16`).
-The flat fixed-size types of the target are computed from the IR by `FLAT_RULE`; those outside `FLAT16` are listed.
+(2) the dumped functions (`functions.json`); (3) the development population: the 16 flat types with which the generated-decoder work
+started (`DEVELOPMENT_TYPES`).
+The flat fixed-size types of the target are computed from the IR by `FLAT_RULE`; those outside `DEVELOPMENT_TYPES` are listed.
 
-Rule. A function's state comes ONLY from the mapping table and the declarations in <decls.tsv>:
-  * every theorem named in the table must exist (kind `theorem`) and have only the standard axioms
+Mapping. The rows are derived by a rule, not written by hand: for every directory `lean/Prysm/<GoTypeName>/` and
+every part, the first candidate name of `DEC_CANDIDATES` / `ENC_FORMS` / `SIZE_FORM` (the name forms of
+gen/restructure/SPEC.md and the names the generators write) that exists in <decls.tsv> is the part's theorem.
+The encoder theorems outside the fast path need hand-written premise texts (`ENC_EXTRA`, keyed by full names).
+
+Rule. A function's state comes ONLY from the mapping and the declarations in <decls.tsv>:
+  * every chosen theorem must exist (kind `theorem`) and have only the standard axioms
     (`propext`, `Classical.choice`, `Quot.sound`); otherwise the script FAILS (exit 1);
   * the accept / reject / spec_k / reject_size_spec theorems of a decoder row, and the theorems of an encoder or
     SizeSSZ row, must have, in their TYPE, the code constant whose included `.S` is that function of the target, and
     that function must be the SUBJECT: the only one of the theorem's target code constants that no other of them calls
-    (call graph = `call_targets` of `functions.json`); a constant counts only if its `.S` is in a link table of the
-    pinned ELF (`../prysm/go1.26.10/e2e/[<unit>/]link/norm/<function>.S`); else FAIL;
+    (call graph = `call_targets` of `functions.json`); a constant counts only if its `.S` is
+    `../prysm/go1.26.10/e2e/<dir>/norm/<function>.S` and `<dir>/RESULT` names the pinned ELF sha256, ends in
+    `PASS all` and has `PASS (a) <function>:`; else FAIL;
   * a witness must use (in its proof) the row's accept / reject theorem, and `accept_spec_k` the accept theorem,
     `reject_size_spec` the reject theorem; else FAIL;
   * a decoder is "complete" (in this sense only) when accept, size reject, spec alignment (spec_k, reject_size_spec,
@@ -52,8 +61,8 @@ Limits (what the checks do NOT detect; also written into proof-inventory.md):
     `inventory_decls.lean`; not done.
   * The subject rule uses the call graph of `functions.json`; a theorem whose type holds two target code constants
     where neither calls the other fails (no subject), it is not resolved.
-  * The mapping table itself is hand-written: the script checks the named theorems, not that the theorem's statement
-    says what its part name means (that is the review of the statement).
+  * The mapping rule chooses names by their form: the script checks the chosen theorems, not that the theorem's
+    statement says what its part name means (that is the review of the statement and of the name).
   * <decls.tsv> carries the Lean version but no commit id; that it was made on the built tree of the same commit is
     a procedure step, not a check.
 """
@@ -68,16 +77,17 @@ V1A = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
 PRIM = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
 V1E = "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
 
-# The flat fixed-size population of the GEN5 plan (decoders; AttestationData has nested fields and is listed apart).
-FLAT16 = ["Checkpoint", "BeaconBlockHeader", "Eth1Data", "BlobIdentifier", "DepositMessage", "Deposit_Data",
+# The development population: the 16 flat fixed-size types with which the generated-decoder work (`scalgen.py p2dec
+# --gen5`) started (decoders; AttestationData has nested fields and is listed apart).
+DEVELOPMENT_TYPES = ["Checkpoint", "BeaconBlockHeader", "Eth1Data", "BlobIdentifier", "DepositMessage", "Deposit_Data",
           "PendingPartialWithdrawal", "SyncCommitteeMessage", "PendingConsolidation", "PendingDeposit", "PowBlock",
           "HistoricalSummary", "SigningData", "SyncAggregatorSelectionData", "ValidatorBalance", "VoluntaryExit"]
 NESTED = ["AttestationData"]
-# Refusal class of the flat-type hold-out (H7) per flat type outside FLAT16 and generator (wording only, no state rule).
-# Source: the one-shot runs of the flat-type hold-out (`p2dec --gen5`, `p2enc --gen6`), classes read at the stop directive of the `.S`;
-# the per-type run record is in git history only. A type or method missing
-# here was generated (exit 0) by that run. The class is a field kind or a callee the generators do not support.
-F24_REFUSED = {
+# Why the generators refused a flat type outside DEVELOPMENT_TYPES (wording only, no state rule). Source: the single
+# generator runs on the flat types outside the development population (`p2dec --gen5`, `p2enc --gen6`), the class read
+# at the directive of the `.S` where the run stopped; the per-type run record is in git history only. A type or method
+# missing here was generated (exit 0) by that run. The class is a field kind or a callee the generators do not support.
+GENERATOR_REFUSED = {
     "v1.BuilderExitRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
     "v1.ConsolidationRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
     "v1.Withdrawal": dict(decoder="byte vector 20", encoder="byte vector 20"),
@@ -98,100 +108,51 @@ F24_REFUSED = {
 }
 
 
-def dec(accept, reject, spec_k, reject_spec, reject_complete, codec, wit_a, wit_r, note=""):
-    return dict(accept=accept, reject=reject, spec_k=spec_k, reject_size_spec=reject_spec,
-                reject_complete=reject_complete, codec=codec, witness_accept=wit_a, witness_reject=wit_r, note=note)
-
-
-def std(ns, p, P, wns, codec=None, accept=None, note=""):
-    """The usual names: <ns>.<p>_e2e_*, E2e.prysm<P>Desc_deserialize_checker, <wns>.Wit<P>{A,R}."""
-    return dec(accept or f"{ns}.{p}_e2e_accept_main", f"{ns}.{p}_e2e_reject_size_main", f"{ns}.{p}_e2e_accept_spec_k",
-               f"{ns}.{p}_e2e_reject_size_spec", f"{ns}.{p}_e2e_reject_complete",
-               codec or [f"E2e.prysm{P}Desc_deserialize_checker"],
-               f"{wns}.Wit{P}A.{p}_accept_runs", f"{wns}.Wit{P}R.{p}_reject_runs", note)
-
-
-def g5c(p, P, extra=""):
-    return dec(f"E2eScal.Gen.{p}_g5dec_accept", f"E2eScal.Gen.{p}_g5dec_reject", f"E2eScal.G5C.{p}_e2e_accept_spec_k",
-               f"E2eScal.G5C.{p}_e2e_reject_size_spec", f"E2eScal.G5C.{p}_e2e_reject_complete",
-               [f"E2e.prysm{P}Desc_deserialize_checker"], f"E2eScal.Wit{P}GA.{p}_accept_runs",
-               f"E2eScal.Wit{P}GR.{p}_reject_runs",
-               "generated accept / size-reject theorems (p2dec --gen5; statement = kind instance)" + extra)
-
-
-
-def f24dec(p, P, codec):
-    """Row of the flat-type hold-out (H7): generated accept / size-reject (`Gen5F24<P>Dec`), spec alignment `F24<P>`Prysm/Deposit/DecodeSpec.lean``, witnesses
-    `Wit<P>GA` / `Wit<P>GR`; codec None = no Desc-checker record for the type (the row stays partial)."""
-    return dec(f"E2eScal.Gen.{p}_g5dec_accept", f"E2eScal.Gen.{p}_g5dec_reject", f"E2eScal.F24.{p}_e2e_accept_spec_k",
-               f"E2eScal.F24.{p}_e2e_reject_size_spec", f"E2eScal.F24.{p}_e2e_reject_complete", codec,
-               f"E2eScal.Wit{P}GA.{p}_accept_runs", f"E2eScal.Wit{P}GR.{p}_reject_runs",
-               "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the "
-               "Prysm proto" + ("" if codec else "; codec: no Desc-checker record for this type"))
-
-# ---------------------------------------------------------------- FIXED mapping table: (package, type) -> methods
-DECODERS = {
-    (V1A, "Checkpoint"): std("E2e", "cp", "Cp", "E2e"),
-    (V1A, "AttestationData"): std("E2eAd", "ad", "Ad", "E2eAd"),
-    (V1A, "BeaconBlockHeader"): std("E2eScal.Bh", "bh", "Bh", "E2eScal"),
-    (V1A, "Eth1Data"): std("E2eScal.E1", "e1", "E1", "E2eScal"),
-    (V1A, "BlobIdentifier"): std("E2eScal.Bi", "bi", "Bi", "E2eScal"),
-    (V1A, "DepositMessage"): std("E2eScal.Dm", "dm", "Dm", "E2eScal"),
-    (V1A, "Deposit_Data"): std("E2eScal.H4", "dd", "Dd", "E2eScal"),
-    (V1A, "PendingPartialWithdrawal"): dec("Prysm.PendingPartialWithdrawal.Decode.accept", "Prysm.PendingPartialWithdrawal.Decode.reject_size",
-                                           "Prysm.PendingPartialWithdrawal.Decode.accept_spec", "Prysm.PendingPartialWithdrawal.Decode.reject_size_spec",
-                                           "Prysm.PendingPartialWithdrawal.Decode.reject_complete",
-                                           ["Prysm.PendingPartialWithdrawal.desc_deserialize_checker"], "Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs",
-                                           "Prysm.PendingPartialWithdrawal.Witness.DecodeRejectSize.runs",
-                                           "accept_spec_k added in unit G5-C (PwSpecKA.lean)"),
-    (V1A, "SyncCommitteeMessage"): std("E2eScal.H5", "sm", "Sm", "E2eScal"),
-    (V1A, "PendingConsolidation"): std("E2eScal.H5", "pc", "Pc", "E2eScal"),
-    (V1A, "PendingDeposit"): std("E2eScal.H6", "pd", "Pd", "E2eScal", accept="Prysm.PendingDeposit.Decode.accept_from_generated_steps"),
-    (V1A, "PowBlock"): std("E2eScal.H6", "pb", "Pb", "E2eScal", accept="Prysm.PowBlock.Decode.accept_from_generated_steps",
-                           codec=["Prysm.PowBlock.Decode.accepts_same", "Prysm.PowBlock.Decode.codec_checker"],
-                           note="codec: same accepted inputs + number / LE-bytes correspondence (spec uint256)"),
-    (V1A, "HistoricalSummary"): g5c("hs", "Hs"),
-    (V1A, "SigningData"): g5c("sd", "Sd"),
-    (V1A, "SyncAggregatorSelectionData"): g5c("sa", "Sa"),
-    (V1A, "ValidatorBalance"): g5c("vb", "Vb", "; spec Desc from the Prysm proto: consensus-specs has no such container"),
-    (V1A, "VoluntaryExit"): g5c("ve", "Ve"),
-    # Flat-type hold-out (H7): the seven flat types outside FLAT16 whose decoder `p2dec --gen5` generated (one-shot runs);
-    # spec Desc from the Prysm proto; codec equality only where a Desc-checker record exists (DepositRequest).
-    (V1E, "DepositRequest"): f24dec("dpr", "Dpr", ["Prysm.DepositRequest.desc_deserialize_checker"]),
-    (V1E, "BuilderDepositRequest"): f24dec("bdr", "Bdr", None),
-    (V1A, "BeaconBlocksByRangeRequest"): f24dec("bbr", "Bbr", None),
-    (V1A, "BlobSidecarsByRangeRequest"): f24dec("bsr", "Bsr", None),
-    (V1A, "ExecutionPayloadEnvelopesByRangeRequest"): f24dec("epr", "Epr", None),
-    (V1A, "PartialDataColumnGroupID"): f24dec("pdc", "Pdc", None),
-    (V1A, "ValidatorIdentity"): f24dec("vid", "Vid", None),
-    # primitives (hand-written methods; overlay uint64; no Desc / spec module): accept, length reject, witnesses
-    (PRIM, "Epoch"): dec("Prysm.Epoch.Decode.accept", "Prysm.Epoch.Decode.reject_size", None, None, None, None,
-                         "Prysm.Epoch.Witness.DecodeAccept.runs", "Prysm.Epoch.Witness.DecodeRejectSize.runs"),
-    (PRIM, "Slot"): dec("Prysm.Slot.Decode.accept", None, None, None, None, None, "Prysm.Slot.Witness.DecodeAccept.runs",
-                        None),
-    (PRIM, "CommitteeIndex"): dec("Prysm.CommitteeIndex.Decode.accept", None, None, None, None, None,
-                                  "Prysm.CommitteeIndex.Witness.DecodeAccept.runs", None),
-    (PRIM, "ValidatorIndex"): dec("Prysm.ValidatorIndex.Decode.generated_accept", "Prysm.ValidatorIndex.Decode.reject_size",
-                                  None, None, None, None, "Prysm.ValidatorIndex.Witness.DecodeAccept.runs", "Prysm.ValidatorIndex.Witness.DecodeRejectSize.runs"),
+# ---------------------------------------------------------------- mapping, derived by rule from the name forms
+# A row is derived for every type directory `lean/Prysm/<GoTypeName>/` from the name forms of SPEC.md (gen/restructure):
+# `Prysm.<GoTypeName>.Decode.accept`, `.Decode.reject_size`, `.Encode.fast_path`, `.Witness.<Role>.runs`, ... and the
+# names that the generators write (`Decode.generated_accept`, `Encode.generated_fast`, ...). For each part the FIRST
+# candidate that exists (a declaration of <decls.tsv>, kind not MISSING) is the row's theorem; a part with no existing
+# candidate is missing. The order of the candidates is part of the rule (the hand main theorem before the generated one).
+# The checks of the Rule above apply to every chosen theorem exactly as to a hand-written row.
+V1A_PREFIX = "Prysm."
+DEC_CANDIDATES = {
+    "accept": ["Decode.accept", "Decode.accept_from_generated_steps", "Decode.generated_accept"],
+    "reject": ["Decode.reject_size", "Decode.generated_reject"],
+    "spec_k": ["Decode.accept_spec"],
+    "reject_size_spec": ["Decode.reject_size_spec"],
+    "reject_complete": ["Decode.reject_complete"],
+    # codec equality of the hand Desc and the Desc checker's Desc; the alternative pair is the correspondence form
+    # (same accepted inputs + number / little-endian bytes correspondence, spec uint256)
+    "codec": [["desc_deserialize_checker"], ["Decode.accepts_same", "Decode.codec_checker"]],
 }
-def enc(x, p, hand=(), rejects=(), grow=(), other_witness=(), left=None):
-    """Encoder row: the generated fast-path theorem `<p>_g6e_fast`, its spec corollary against the independent
-    Desc and its witness (two instances); hand theorems of the three hand-proved types kept as recorded.
-    `rejects` and `grow` are pairs (theorem, premise text: the premise under which
-    that theorem holds, beyond the fast path's frame premises); `left` maps the path class ("length rejects",
-    "growslice branches") to the text of what stays NOT proved in that class although theorems are mapped."""
-    return dict(fast=[f"E2eScal.Gen6Enc.{p}_g6e_fast"], spec=[f"E2eScal.E2c.{p}_e2c_spec_k"],
-                witness=[f"E2eScal.WitE2c{x}.{p}_e2c_wit_empty", f"E2eScal.WitE2c{x}.{p}_e2c_wit_prefix"],
-                hand=list(hand), rejects=[n for n, _ in rejects], grow=[n for n, _ in grow],
-                other_witness=list(other_witness),
-                premise={n: t for n, t in list(rejects) + list(grow)}, left=dict(left or {}))
+# The witness of a part follows the form of the chosen theorem: for a generated theorem the generated witness comes
+# first. The Rule's refs check then requires that the chosen witness uses the chosen theorem.
+WIT_ACCEPT = {"Decode.generated_accept": ["Witness.GeneratedDecodeAccept.runs", "Witness.DecodeAccept.runs"]}
+WIT_ACCEPT_DEFAULT = ["Witness.DecodeAccept.runs"]
+WIT_REJECT = {"Decode.generated_reject": ["Witness.GeneratedDecodeRejectSize.runs", "Witness.DecodeRejectSize.runs"]}
+WIT_REJECT_DEFAULT = ["Witness.DecodeRejectSize.runs", "Witness.DecodeRejectSize.runs_size",
+                      "Witness.DecodeRejectSize.RejectSize.runs"]
+# Encoder fast path: the generated theorem, its spec corollary and its two witness instances; else the hand theorem,
+# its spec corollary and its witness instances (`runs_empty` and the qualified `runs_*` that exist).
+ENC_FORMS = [
+    dict(fast="Encode.generated_fast", spec="Encode.generated_fast_spec",
+         witness=["Witness.GeneratedEncodeFastPath.runs_empty", "Witness.GeneratedEncodeFastPath.runs_prefix"]),
+    dict(fast="Encode.fast_path", spec="Encode.fast_path_spec",
+         witness=["Witness.EncodeFastPath.runs_empty", "Witness.EncodeFastPath.runs_one_element",
+                  "Witness.EncodeFastPath.runs_maximum"]),
+]
+# When a type has both forms, the hand theorems and the hand witness are listed too (`hand`, `other_witness`).
+ENC_HAND = ["Encode.fast_path", "Encode.fast_path_spec"]
+ENC_HAND_WITNESS = ["Witness.EncodeFastPath.runs_empty"]
+SIZE_FORM = dict(main=["Size.result"], witness=["Witness.Size.runs"])
 
-
-ENC_PARTS = ["fast", "spec", "witness", "hand", "rejects", "grow", "other_witness"]
+# Encoder theorems outside the fast path need a premise text (what the theorem assumes beyond the fast-path frame
+# premises) and a text of what stays NOT proved in their path class: these texts are hand-written (review of the
+# statements), keyed by the present full names. A type without an entry has its path classes listed as NOT proved.
 CP_GROW = "GrowsliceC + MemmoveC contracts + heap budget"
-ENCODERS = {  # MarshalSSZTo: fast path (theorem + spec corollary + witness), hand theorems, rejects, growslice paths
-    (V1A, "Checkpoint"): enc(
-        "Cp", "cp", hand=["Prysm.Checkpoint.Encode.fast_path", "Prysm.Checkpoint.Encode.fast_path_spec"],
+ENC_EXTRA = {
+    "Checkpoint": dict(
         rejects=[("Prysm.Checkpoint.Encode.reject_length", "len + 8 ≤ cap"),
                  ("Prysm.Checkpoint.Encode.reject_length_cover",
                   "every cap, GrowsliceC contract + heap budget 4·len + 8736 ≤ avail ≤ maxAlloc")],
@@ -199,50 +160,119 @@ ENCODERS = {  # MarshalSSZTo: fast path (theorem + spec corollary + witness), ha
               ("Prysm.Checkpoint.Encode.grow_second_site", f"len + 8 ≤ cap < len + 40, {CP_GROW}"),
               ("Prysm.Checkpoint.Encode.grow_any_site",
                f"cap < len + 8, {CP_GROW}: returns or reaches the second growslice call")],
-        other_witness=["Prysm.Checkpoint.Witness.EncodeFastPath.runs_empty", "Prysm.Checkpoint.Witness.EncodeRejectLength.runs", "Prysm.Checkpoint.Witness.EncodeGrowFirstSite.runs"],
+        other_witness=["Prysm.Checkpoint.Witness.EncodeRejectLength.runs", "Prysm.Checkpoint.Witness.EncodeGrowFirstSite.runs"],
         left={"length rejects": "with cap < len + 8 outside the GrowsliceC contract or the heap budget",
               "growslice branches": "outside the GrowsliceC / MemmoveC contracts and the heap budget, and the run after "
                                     "the second growslice call when the heap left by the first call is below the "
-                                    "second call's budget (T-7 residual, FINDINGS T-7, differential "
-                                    "only)"}),
-    (V1A, "BeaconBlockHeader"): enc(
-        "Bh", "bh", hand=["Prysm.BeaconBlockHeader.Encode.fast_path", "Prysm.BeaconBlockHeader.Encode.fast_path_spec"],
+                                    "second call's budget (FINDINGS.md: \"Growslice contract gives no lower bound "
+                                    "on the remaining heap\"; checked by the differential test only)"}),
+    "BeaconBlockHeader": dict(
         rejects=[("Prysm.BeaconBlockHeader.Encode.reject_length_parent_root", "len + 112 ≤ cap"),
                  ("Prysm.BeaconBlockHeader.Encode.reject_length_state_root", "len + 112 ≤ cap, MemmoveC"),
                  ("Prysm.BeaconBlockHeader.Encode.reject_length_body_root", "len + 112 ≤ cap, MemmoveC")],
-        other_witness=["Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty"],
         left={"length rejects": "with cap < len + 112 (with len + 16 ≤ cap < len + 112 a ParentRoot reject is "
                                 "reached without a growslice call)"}),
-    (V1A, "Eth1Data"): enc("E1", "e1", hand=["Prysm.Eth1Data.Encode.fast_path", "Prysm.Eth1Data.Encode.fast_path_spec"],
-                           other_witness=["Prysm.Eth1Data.Witness.EncodeFastPath.runs_empty"]),
-    (V1A, "BlobIdentifier"): enc("Bi", "bi"),
-    (V1A, "DepositMessage"): enc("Dm", "dm"),
-    (V1A, "Deposit_Data"): enc("Dd", "dd"),
-    (V1A, "PendingPartialWithdrawal"): enc("Pw", "pw"),
-    (V1A, "SyncCommitteeMessage"): enc("Sc", "sc"),
-    (V1A, "PendingConsolidation"): enc("Pc", "pc"),
-    (V1A, "PendingDeposit"): enc("Pd", "pd"),
-    (V1A, "PowBlock"): enc("Pb", "pb"),
-    (V1A, "HistoricalSummary"): enc("Hs", "hs"),
-    (V1A, "SigningData"): enc("Sd", "sd"),
-    (V1A, "SyncAggregatorSelectionData"): enc("Sa", "sa"),
-    (V1A, "ValidatorBalance"): enc("Vb", "vb"),
-    (V1A, "VoluntaryExit"): enc("Ve", "ve"),
-    # Flat-type hold-out (H7): the eight flat types outside FLAT16 whose encoder `p2enc --gen6` generated (one-shot runs)
-    (V1E, "DepositRequest"): enc("Dpr", "dpr"),
-    (V1E, "BuilderDepositRequest"): enc("Bdr", "bdr"),
-    (V1A, "BeaconBlocksByRangeRequest"): enc("Bbr", "bbr"),
-    (V1A, "BlobSidecarsByRangeRequest"): enc("Bsr", "bsr"),
-    (V1A, "ExecutionPayloadEnvelopesByRangeRequest"): enc("Epr", "epr"),
-    (V1A, "PartialDataColumnGroupID"): enc("Pdc", "pdc"),
-    (V1A, "ValidatorIdentity"): enc("Vid", "vid"),
-    (V1A, "BuilderPreferences"): enc("Bpf", "bpf"),
 }
+# Encoder theorems outside the fast path that the tool does not classify (no premise text in ENC_EXTRA): the row says
+# that they exist, so that its NOT-proved column does not understate silently.
+ENC_UNCLASSIFIED = ["Encode.grow_first_site", "Encode.grow_second_site", "Encode.grow_one_site", "Encode.grow_any_site",
+                    "Encode.reject_length", "Encode.reject_too_big"]
+ENC_PARTS = ["fast", "spec", "witness", "hand", "rejects", "grow", "other_witness"]
 ENC_PREMISE = "premise: len + SizeSSZ <= cap, exact field lengths"
-SIZERS = {(V1A, "Checkpoint"): dict(main=["Prysm.Checkpoint.Size.result"], witness=["Prysm.Checkpoint.Witness.Size.runs"])}
-
 DEC_PARTS = ["accept", "reject", "spec_k", "reject_size_spec", "reject_complete", "codec", "witness_accept",
              "witness_reject"]
+SKIP_DIRS = {"ElfData", "RuntimeModel"}
+
+
+def type_dirs():
+    """The Go type names of the directories `lean/Prysm/<GoTypeName>/` (the ELF data and runtime models excluded)."""
+    return sorted(p.name for p in (KR / "lean/Prysm").iterdir() if p.is_dir() and p.name not in SKIP_DIRS)
+
+
+def candidates(t):
+    """Every name that the rule can choose for type t (input of `inventory_decls.lean`)."""
+    out = []
+    for v in DEC_CANDIDATES.values():
+        for c in v:
+            out += c if isinstance(c, list) else [c]
+    for v in list(WIT_ACCEPT.values()) + [WIT_ACCEPT_DEFAULT] + list(WIT_REJECT.values()) + [WIT_REJECT_DEFAULT]:
+        out += v
+    for f in ENC_FORMS:
+        out += [f["fast"], f["spec"]] + f["witness"]
+    out += ENC_UNCLASSIFIED
+    out += ENC_HAND + ENC_HAND_WITNESS + SIZE_FORM["main"] + SIZE_FORM["witness"]
+    out = [f"{V1A_PREFIX}{t}.{n}" for n in out]
+    x = ENC_EXTRA.get(t, {})
+    out += [n for n, _ in x.get("rejects", [])] + [n for n, _ in x.get("grow", [])] + x.get("other_witness", [])
+    return list(dict.fromkeys(out))
+
+
+def names():
+    out = []
+    for t in type_dirs():
+        out += candidates(t)
+    return list(dict.fromkeys(out))
+
+
+def derive(D, target_key):
+    """The rows of the mapping, chosen from the declarations D that exist. target_key: Go type name -> (package, type)."""
+    have = lambda n: n in D and D[n]["kind"] != "MISSING"   # noqa: E731
+    decoders, encoders, sizers, unknown = {}, {}, {}, []
+    for t in type_dirs():
+        if t not in target_key:
+            unknown.append(t)
+            continue
+        key, P = target_key[t], f"{V1A_PREFIX}{t}."
+        r = {}
+        for part in ("accept", "reject", "spec_k", "reject_size_spec", "reject_complete"):
+            r[part] = next((P + c for c in DEC_CANDIDATES[part] if have(P + c)), None)
+        r["codec"] = next(([P + c for c in grp] for grp in DEC_CANDIDATES["codec"] if all(have(P + c) for c in grp)), None)
+        acc_form = r["accept"][len(P):] if r["accept"] else None
+        rej_form = r["reject"][len(P):] if r["reject"] else None
+        wa = WIT_ACCEPT.get(acc_form, WIT_ACCEPT_DEFAULT) if acc_form else []
+        wr = WIT_REJECT.get(rej_form, WIT_REJECT_DEFAULT) if rej_form else []
+        r["witness_accept"] = next((P + c for c in wa if have(P + c)), None)
+        r["witness_reject"] = next((P + c for c in wr if have(P + c)), None)
+        notes = []
+        if acc_form == "Decode.generated_accept":
+            notes.append("generated accept theorem (statement = kind instance)")
+        if acc_form == "Decode.accept_from_generated_steps":
+            notes.append("accept composed from generated steps")
+        if r["codec"] and len(r["codec"]) == 2:
+            notes.append("codec: same accepted inputs + number / LE-bytes correspondence (spec uint256)")
+        r["note"] = "; ".join(notes)
+        if any(r[p] for p in DEC_PARTS):
+            decoders[key] = r
+        form = next((f for f in ENC_FORMS if have(P + f["fast"])), None)
+        x = ENC_EXTRA.get(t, {})
+        if form:
+            e = dict(fast=[P + form["fast"]], spec=[P + form["spec"]] if have(P + form["spec"]) else [],
+                     witness=[P + w for w in form["witness"] if have(P + w)], hand=[], rejects=[], grow=[],
+                     other_witness=[], premise={}, left=dict(x.get("left", {})))
+            if form is ENC_FORMS[0]:
+                e["hand"] = [P + h for h in ENC_HAND if have(P + h)]
+                if e["hand"]:
+                    e["other_witness"] = [P + w for w in ENC_HAND_WITNESS if have(P + w)]
+            for cls in ("rejects", "grow"):
+                for n, prem in x.get(cls, []):
+                    if not have(n):
+                        unknown.append(f"{n} (ENC_EXTRA of {t}: not in <decls.tsv>)")
+                        continue
+                    e[cls].append(n)
+                    e["premise"][n] = prem
+            for n in x.get("other_witness", []):
+                if have(n):
+                    e["other_witness"].append(n)
+                else:
+                    unknown.append(f"{n} (ENC_EXTRA of {t}: not in <decls.tsv>)")
+            mapped = set(e["rejects"] + e["grow"])
+            e["unclassified"] = [P + n for n in ENC_UNCLASSIFIED if have(P + n) and P + n not in mapped]
+            encoders[key] = e
+        if have(P + SIZE_FORM["main"][0]):
+            sizers[key] = dict(main=[P + n for n in SIZE_FORM["main"]],
+                               witness=[P + n for n in SIZE_FORM["witness"] if have(P + n)])
+    return decoders, encoders, sizers, unknown
+
 WHAT_COMPLETE_EXCLUDES = [
     "morestack paths (the `jbe` to `runtime.morestack_noctxt` at entry)",
     "`runtime.writeBarrier` != 0 (every accept theorem assumes the flag word is 0)",
@@ -250,59 +280,74 @@ WHAT_COMPLETE_EXCLUDES = [
     "MakesliceC / MemmoveC / ...)",
     "callee error returns (the `fmt.Errorf` wrap paths of delegated fields; `reject_complete` covers the size path "
     "condition only)",
-    "growslice / T-7 (encoder capacity growth beyond the listed theorems)",
+    "growslice (encoder capacity growth beyond the listed theorems; FINDINGS.md: \"Growslice contract gives no lower "
+    "bound on the remaining heap\")",
     "x86-64 hardware execution (semantics = Kraken's model of the amd64 instructions; no hardware run)",
 ]
 CANNOT_DETECT = [
     "a row whose `codec` or `reject_complete` names ANOTHER type's theorem: these two parts are checked for existence, "
-    "kind and axioms only (their types hold no code constant, their proofs use no mapped theorem; review g5c-r1 m03, "
-    "m04). Keying them to the row's Desc constant needs a new column in `inventory_decls.lean`; not done",
-    "that a theorem's statement says what its part name means (accept, reject, spec): the mapping table is "
-    "hand-written; the statements are checked by review and by the kinds, not by this script",
+    "kind and axioms only (their types hold no code constant, their proofs use no mapped theorem; found by "
+    "an earlier review). Keying them to the row's Desc constant needs a new column in `inventory_decls.lean`; not done",
+    "that a theorem's statement says what its part name means (accept, reject, spec): the mapping chooses names by "
+    "their form (SPEC.md); the statements are checked by review and by the kinds, not by this script",
     "a theorem with two target code constants of which neither calls the other (it fails: no single subject)",
     "that <decls.tsv> was made on the built tree of the same commit (its header has the Lean version, no commit id)",
     "that an encoder row's premise text and NOT-proved text say what the mapped reject / growslice theorems assume "
-    "(hand-written per row, unit E2-C2; checked by review against the theorem statements, not by this script)",
+    "(hand-written per row; checked by review against the theorem statements, not by this script)",
     "methods outside `github.com/OffchainLabs/prysm/v7/` (e.g. `github.com/holiman/uint256`) and SSZ methods with "
     "names outside the listed kinds",
 ]
 
 
-def names():
-    out = []
-    for row in DECODERS.values():
-        for k in DEC_PARTS:
-            v = row[k]
-            out += v if isinstance(v, list) else ([v] if v else [])
-    for row in ENCODERS.values():
-        for k in ENC_PARTS:
-            out += row[k]
-    for row in SIZERS.values():
-        for v in row.values():
-            out += v
-    return list(dict.fromkeys(out))
+PIN_S = re.compile(r"^\.\./prysm/go1\.26\.10/e2e/((?:[\w-]+/)*[\w-]+)/norm/([^/]+)\.S$")
+CODE_DEF = re.compile(r'^\s*(?:@\[[^\]]*\]\s*)?(?:private\s+|protected\s+|noncomputable\s+)*def\s+(\S+)\s*:\s*Program\s*:=\s*'
+                      r'include_x64_rt\s+"([^"]+)"', re.M)
 
 
-PIN_S = re.compile(r"^\.\./prysm/go1\.26\.10/e2e/(?:\w+/)?link/norm/([^/]+)\.S$")
+def link_tables():
+    """Link table directory (under prysm/go1.26.10/e2e/) -> set of the functions whose text check (a) PASSed, for every
+    directory whose `RESULT` names the pinned ELF (`elf sha256` of build-ids.txt) and ends in `PASS all`."""
+    elf = build_ids().get("elf sha256")
+    out = {}
+    root = KR / "prysm/go1.26.10/e2e"
+    for res in sorted(root.rglob("RESULT")):
+        t = res.read_text()
+        if f"elf sha256 {elf}" not in t or not re.search(r"(?m)^PASS all$", t):
+            continue
+        out[str(res.parent.relative_to(root))] = set(re.findall(r"(?m)^PASS \(a\) (\S+?):", t))
+    return out
 
 
 def code_constants():
-    """Lean code constant (full name) -> normalized function key `pkg_with_underscores.Type.Method`, for constants
-    whose `.S` is in a link table of the pinned ELF; other constants -> None (not a target
-    function: local stand-ins, other builds such as `opt-r1`). Scans the three trees recursively; a constant name
-    defined twice is a failure (returned in the second value)."""
+    """Lean code constant (full declared name) -> normalized function key `pkg_with_underscores.Type.Method`, for the
+    constants whose `.S` is `../prysm/go1.26.10/e2e/<dir>/norm/<function>.S` with `<dir>` a link table of the pinned
+    ELF (`link_tables`: RESULT with the pinned ELF sha256, `PASS all`, and `PASS (a) <function>:`); other constants ->
+    None (not a target function: runtime models, other builds such as the capacity-reserved test ELF).
+    Every `lean/Prysm/**.lean` file is read, whatever module declares the constant: the full name comes from the
+    namespace blocks (`namespace` / `end`) and the declaring name (`_root_.` prefix, dotted names). A full name declared
+    twice is a failure (second value)."""
     m, dup = {}, []
-    pat = re.compile(r'^def (\w+) : Program := include_x64_rt "([^"]+)"', re.M)
-    for d in ("E2e", "E2eAd", "E2eScal"):
-        for f in sorted((KR / "lean" / d).rglob("*.lean")):
-            t = f.read_text()
-            ns = re.search(r"^namespace ([\w.]+)", t, re.M)
-            for name, path in pat.findall(t):
-                full = (ns.group(1) + "." if ns else "") + name
-                if full in m:
-                    dup.append(full)
-                hit = PIN_S.match(path)
-                m[full] = hit.group(1) if hit else None
+    tables = link_tables()
+    for f in sorted((KR / "lean/Prysm").rglob("*.lean")):
+        stack = []
+        for line in f.read_text().split("\n"):
+            ns = re.match(r"^namespace\s+(\S+)\s*$", line)
+            if ns:
+                stack.append(ns.group(1))
+                continue
+            en = re.match(r"^end\s+(\S+)\s*$", line)
+            if en and stack and stack[-1] == en.group(1):
+                stack.pop()
+                continue
+            d = CODE_DEF.match(line)
+            if not d:
+                continue
+            name, path = d.group(1), d.group(2)
+            full = name[len("_root_."):] if name.startswith("_root_.") else ".".join(stack + [name])
+            if full in m:
+                dup.append(full)
+            hit = PIN_S.match(path)
+            m[full] = hit.group(2) if hit and hit.group(2) in tables.get(hit.group(1), set()) else None
     return m, dup
 
 
@@ -388,10 +433,14 @@ def ir_types():
     return out, bad
 
 
-def run(decls_p, md_p, json_p):
+def run(decls_p, gate_p, md_p, json_p):
     fails = []
     funcs = json.load(open(KR / "prysm/go1.26.10/functions.json"))["functions"]
-    gate = json.load(open(KR / "prysm/go1.26.10/e2e/axioms-gate.json"))
+    gate = json.load(open(gate_p))
+    for k in ("header", "verdict", "declarations", "theorems", "modules"):
+        if k not in gate:
+            print(f"FAIL {gate_p}: no `{k}` (not an output of gen/e2e/axioms_gate.py run)")
+            return 1
     raw = open(decls_p).read().split("\n")
     if not any(l.startswith("# inventory_decls v1") for l in raw):
         print(f"FAIL {decls_p}: no inventory_decls header")
@@ -404,19 +453,37 @@ def run(decls_p, md_p, json_p):
         return 1
     header = lines[0][0] if lines and lines[0][0].startswith("#") else None
     D = {r[0]: dict(kind=r[1], axioms=r[2], programs=r[3], refs=r[4]) for r in lines if not r[0].startswith("#")}
-    want = names()
-    for n in want:
+    for n in names():
         if n not in D:
             fails.append(f"{n}: not in {decls_p} (run inventory_decls.lean on the names of `proof_inventory.py names`)")
-        elif D[n]["kind"] != "theorem":
-            fails.append(f"{n}: {D[n]['kind']} (a theorem named in the mapping is absent from the tree)")
+    sm0 = json.load(open(KR / METHODS_JSON))
+    target_key = {r["type"]: (r["package"], r["type"]) for r in sm0["methods"]}
+    if len(target_key) != len({(r["package"], r["type"]) for r in sm0["methods"]}):
+        fails.append(f"{METHODS_JSON}: a Go type name occurs in two packages (the directory name does not decide)")
+    DECODERS, ENCODERS, SIZERS, unknown = derive(D, target_key)
+    for u in unknown:
+        fails.append(f"lean/Prysm/{u}: not a type of {METHODS_JSON}" if "/" not in u and " " not in u else u)
+    chosen = []
+    for r in DECODERS.values():
+        for k in DEC_PARTS:
+            v = r[k]
+            chosen += v if isinstance(v, list) else ([v] if v else [])
+    for r in ENCODERS.values():
+        for k in ENC_PARTS:
+            chosen += r[k]
+    for r in SIZERS.values():
+        for v in r.values():
+            chosen += v
+    for n in dict.fromkeys(chosen):
+        if D[n]["kind"] != "theorem":
+            fails.append(f"{n}: {D[n]['kind']} (a name of the mapping is not a theorem)")
         else:
             ax = set() if D[n]["axioms"] == "-" else set(D[n]["axioms"].split(","))
             if not ax <= STD:
                 fails.append(f"{n}: non-standard axioms {sorted(ax - STD)}")
     cc, dup = code_constants()
     for n in dup:
-        fails.append(f"code constant {n} is defined twice under lean/")
+        fails.append(f"code constant {n} is defined twice under lean/Prysm/")
     fn_by_key = {re.sub(r"\(\*?(\w+)\)", r"\1", f["symbol"]).replace("/", "_").replace("-", "_"): f for f in funcs}
     sym_key = {f["symbol"]: k for k, f in fn_by_key.items()}
     callees = {k: {sym_key[c] for c in f.get("call_targets", {}) if c in sym_key} for k, f in fn_by_key.items()}
@@ -509,9 +576,18 @@ def run(decls_p, md_p, json_p):
                               "proved)")
         if "runtime.morestack_noctxt.abi0" in ct:
             not_proved.append("morestack")
+        if r["unclassified"]:
+            not_proved.append("note: theorems for some of these paths exist but this tool does not classify them "
+                              "(no premise text): " + ", ".join(n.rsplit(".", 2)[-2] + "." + n.rsplit(".", 1)[-1]
+                                                                for n in r["unclassified"]))
         rows[(pkg, typ, "MarshalSSZTo")] = dict(state=state, missing=missing,
                                                 theorems={k: v for k, v in r.items()
-                                                          if v and k in ENC_PARTS}, note=ENC_PREMISE,
+                                                          if v and k in ENC_PARTS},
+                                                note=ENC_PREMISE + ("; growth and reject theorems of this type exist "
+                                                     "and are not classified by this tool (no premise text): "
+                                                     + ", ".join(n.rsplit(".", 2)[-2] + "." + n.rsplit(".", 1)[-1]
+                                                                 for n in r["unclassified"])
+                                                     if r["unclassified"] else ""),
                                                 witness=bool(r["witness"]), not_proved=not_proved)
     for (pkg, typ), r in SIZERS.items():
         for n in r["main"]:
@@ -544,14 +620,14 @@ def run(decls_p, md_p, json_p):
             no_ir.append(key)
         elif rec.get("variable") is False and rec.get("fields") and all(field_flat(f["v"]) for f in rec["fields"]):
             flat_target.append(key)
-    for t in FLAT16:
+    for t in DEVELOPMENT_TYPES:
         if (V1A, t) not in flat_target:
-            fails.append(f"FLAT16 type {t}: not a flat fixed-size type of the target by FLAT_RULE")
+            fails.append(f"DEVELOPMENT_TYPES type {t}: not a flat fixed-size type of the target by FLAT_RULE")
     for t in NESTED:
         if (V1A, t) in flat_target:
             fails.append(f"NESTED type {t}: flat by FLAT_RULE")
     if gate.get("verdict") != "PASS":
-        fails.append(f"committed axioms gate verdict {gate.get('verdict')}")
+        fails.append(f"axioms gate {gate_p}: verdict {gate.get('verdict')}")
     if fails:
         for f in fails:
             print("FAIL", f)
@@ -585,21 +661,22 @@ def run(decls_p, md_p, json_p):
             by_kind[k]["fast_path_complete"] = sum(t["state"] == "fast path complete" for t in tk)
             by_kind[k]["fast_path_partial"] = sum(t["state"] == "fast path partial" for t in tk)
     runtime = [f["symbol"] for f in funcs if f["type"] is None]
-    dev = {t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in FLAT16}
-    flat_ns = [k for k in flat_target if k not in {(V1A, t) for t in FLAT16}]
+    dev = {t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in DEVELOPMENT_TYPES}
+    flat_ns = [k for k in flat_target if k not in {(V1A, t) for t in DEVELOPMENT_TYPES}]
     flat_ns_state = {f"{p.rsplit('/', 1)[-1]}.{t}": ("not started" if (p, t) not in started_types else "started")
                      for p, t in flat_ns}
     tot = dict(
         denominators={
             "target_ssz_methods": f"{METHODS_JSON} (from the nm listing of the pinned ELF, sha256 {sm['nm_sha256']})",
             "dumped_functions": "prysm/go1.26.10/functions.json (functions with a `.S` text)",
-            "development_population": "FLAT16 of gen/tools/proof_inventory.py (the 16 flat types opened by the GEN5 line)"},
+            "development_population": "DEVELOPMENT_TYPES of gen/tools/proof_inventory.py (the 16 flat types with which "
+                                      "the generated-decoder work started)"},
         target_ssz_methods=len(target), target_types=len(target_types),
         functions_json_total=len(funcs), functions_json_runtime_helpers=runtime,
         by_kind=by_kind,
         types_not_started=sum(1 for p, t in target_types if (p, t) not in started_types),
-        development_population=FLAT16,
-        development_population_decoders_complete=f"{sum(v == 'complete' for v in dev.values())}/{len(FLAT16)}",
+        development_population=DEVELOPMENT_TYPES,
+        development_population_decoders_complete=f"{sum(v == 'complete' for v in dev.values())}/{len(DEVELOPMENT_TYPES)}",
         development_population_not_complete={t: rows[(V1A, t, "UnmarshalSSZ")]["missing"]
                                              for t, v in dev.items() if v != "complete"},
         flat_rule=FLAT_RULE,
@@ -610,14 +687,15 @@ def run(decls_p, md_p, json_p):
                 decoder=rows.get((p, t, "UnmarshalSSZ"), {}).get("state", "not started"),
                 decoder_missing=rows.get((p, t, "UnmarshalSSZ"), {}).get("missing", []),
                 encoder=rows.get((p, t, "MarshalSSZTo"), {}).get("state", "not started"),
-                **{f"{m}_refused_h7": c for m, c in F24_REFUSED.get(f"{p.rsplit('/', 1)[-1]}.{t}", {}).items()})
+                **{f"{m}_refused_by_generator": c for m, c in GENERATOR_REFUSED.get(f"{p.rsplit('/', 1)[-1]}.{t}", {}).items()})
             for p, t in flat_ns},
         target_types_without_ir=[f"{p.rsplit('/', 1)[-1]}.{t}" for p, t in no_ir],
         nested={t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in NESTED},
     )
     out = dict(schema="fvkraken.inventory/2", source="gen/tools/proof_inventory.py", decls_header=header,
                methods_source=dict(file=METHODS_JSON, nm_sha256=sm["nm_sha256"], elf_sha256=sm["elf_sha256"]),
-               axioms_gate=dict(verdict=gate["verdict"], declarations=gate["declarations"]),
+               axioms_gate=dict(header=gate["header"], verdict=gate["verdict"],
+                                declarations=gate["declarations"], theorems=gate["theorems"], modules=gate["modules"]),
                definition_complete="decoder: accept + size reject + spec alignment (accept_spec_k, reject_size_spec, "
                "reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all "
                "kernel-checked theorems with standard axioms; accept / reject / spec_k / reject_size_spec theorems "
@@ -636,16 +714,19 @@ def run(decls_p, md_p, json_p):
           "not counted here.", "",
           f"Inputs: `{METHODS_JSON}` (made by `proof_inventory.py methods` from the `go tool nm` listing of the ELF, "
           f"sha256 `{sm['nm_sha256']}`; the listing is not committed), `prysm/go1.26.10/functions.json`, "
-          "`prysm/ir/ir-mainnet.json`, the committed axioms gate record, the code constants of `lean/`, and the output "
+          "`prysm/ir/ir-mainnet.json`, the output of `gen/e2e/axioms_gate.py run` on the built tree, the code constants "
+          "of `lean/Prysm/` with the link tables of the pinned ELF (`prysm/go1.26.10/e2e/**/RESULT`), and the output "
           "of `gen/tools/inventory_decls.lean` on the built tree.", "",
-          f"Declarations header: `{header}`. Axioms gate: {gate['verdict']}, {gate['declarations']} declarations.", "",
+          f"Declarations header: `{header}`. Axioms gate run: {gate['verdict']}, {gate['declarations']} declarations "
+          f"({gate['theorems']} theorems, {gate['modules']} modules), header `{gate['header']}`.", "",
           "## Denominators", "",
           f"1. SSZ methods of the target: {len(target)} methods of {len(target_types)} types (`{METHODS_JSON}`). "
           "This is the total in every line below.",
           f"2. Dumped functions (`functions.json`, a `.S` text exists): {len(funcs)}, of which "
           f"{len(funcs) - len(runtime)} are SSZ methods and {len(runtime)} are runtime helpers "
           f"({', '.join(r.rsplit('.', 1)[-1] for r in runtime)}). A theorem needs a dumped function.",
-          f"3. Development population of the GEN5 line: the {len(FLAT16)} flat types of `FLAT16`. "
+          f"3. Development population: the {len(DEVELOPMENT_TYPES)} flat types with which the generated-decoder work "
+          "started (`DEVELOPMENT_TYPES` of the script). "
           "It is not the set of flat fixed-size types of the target (see the flat types below).", "",
           "## Totals by method kind", "",
           "| method kind | in the target | in `functions.json` | with a mapping row | complete | partial |",
@@ -675,7 +756,7 @@ def run(decls_p, md_p, json_p):
         md.append("- Other: " + "; ".join(f"`{k}` {bk[k]['target']} in the target, none proved" for k in other) + ".")
     md += [f"- Types with no mapping row (\"not started\", every method): {tot['types_not_started']} of "
            f"{len(target_types)}.",
-           f"- Decoders of the {len(FLAT16)}-type development population: "
+           f"- Decoders of the {len(DEVELOPMENT_TYPES)}-type development population: "
            f"{tot['development_population_decoders_complete']} complete (defined sense)."]
     for t, miss in tot["development_population_not_complete"].items():
         md.append(f"  - {t}: missing {', '.join(miss)}.")
@@ -685,23 +766,23 @@ def run(decls_p, md_p, json_p):
            f"- Nested: {', '.join(f'{t} {s}' for t, s in tot['nested'].items())} (not flat)."]
     fs_ = tot["flat_outside_development_population_states"]
     started_ = {k: v for k, v in fs_.items() if flat_ns_state.get(k) == "started"}
-    if started_:   # flat-type hold-out (H7): per flat type outside FLAT16 with a mapping row
+    if started_:   # flat types outside DEVELOPMENT_TYPES with a mapping row
         md.append(f"- Flat types outside the development population with a mapping row: {len(started_)}; decoders "
                   f"complete {sum(v['decoder'] == 'complete' for v in started_.values())}, encoders fast-path complete "
                   f"{sum(v['encoder'] == 'fast path complete' for v in started_.values())}.")
         for k, v in started_.items():
             md.append(f"  - {k}: decoder {v['decoder']}"
                       + (f" (missing {', '.join(v['decoder_missing'])})" if v["decoder_missing"] else "")
-                      + (f"; H7 run refused: {v['decoder_refused_h7']}" if "decoder_refused_h7" in v else "")
+                      + (f"; generator run refused: {v['decoder_refused_by_generator']}" if "decoder_refused_by_generator" in v else "")
                       + f"; encoder {v['encoder']}.")
     refused_ = {k: v for k, v in fs_.items() if flat_ns_state.get(k) == "not started"}
-    if refused_:   # refusal class of the flat-type hold-out (H7) one-shot run per not-started flat type (wording only)
+    if refused_:   # why the single generator run refused each not-started flat type (wording only)
         md.append(f"- Flat types outside the development population without a mapping row: {len(refused_)}; "
-                  "refusal class of the H7 one-shot run (`p2dec --gen5` / `p2enc --gen6`), a field kind or callee "
+                  "why the single generator run (`p2dec --gen5` / `p2enc --gen6`) refused it, a field kind or callee "
                   "the generators do not support:")
         for k, v in refused_.items():
-            md.append(f"  - {k}: decoder refused ({v.get('decoder_refused_h7', 'no H7 record')}); encoder refused "
-                      f"({v.get('encoder_refused_h7', 'no H7 record')}).")
+            md.append(f"  - {k}: decoder refused ({v.get('decoder_refused_by_generator', 'no record of the run')}); encoder "
+                      f"refused ({v.get('encoder_refused_by_generator', 'no record of the run')}).")
     if no_ir:
         md.append(f"- Target types without an IR record (not classified): {', '.join(tot['target_types_without_ir'])}.")
     md += ["", f"Flat rule: {FLAT_RULE}.", "",
@@ -742,7 +823,7 @@ if __name__ == "__main__":
         sys.exit(0)
     if len(sys.argv) in (3, 4) and sys.argv[1] == "methods":
         sys.exit(methods(sys.argv[2], sys.argv[3] if len(sys.argv) == 4 else KR / METHODS_JSON))
-    if len(sys.argv) == 5 and sys.argv[1] == "run":
-        sys.exit(run(*sys.argv[2:5]))
+    if len(sys.argv) == 6 and sys.argv[1] == "run":
+        sys.exit(run(*sys.argv[2:6]))
     print(__doc__)
     sys.exit(2)
