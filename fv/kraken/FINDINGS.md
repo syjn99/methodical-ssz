@@ -296,8 +296,8 @@ How to handle a new finding is in `../README.md` section 7.
 ### Recursion depth limits without a located cause
 
 - What: four witness examples raise `maxRecDepth` and the cause is not known. The rule asks for a profiled cause for each raised limit.
-- Where: `lean/E2eEnc/WitF.lean` (one place, limit 4000) and `lean/E2eEnc/WitG.lean` (three places, limit 8000).
-- How it shows: the examples fail at 512 and at 2000. `WitG.lean` also fails at 4000. The comment at each place says that the cause is not located.
+- Where: `lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeFastPath.lean` (one place, limit 4000) and `lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeGrowFirstSite.lean` (three places, limit 8000).
+- How it shows: the examples fail at 512 and at 2000. `WitnessEncodeGrowFirstSite.lean` also fails at 4000. The comment at each place says that the cause is not located.
 - State: open.
 
 ## 4. Target and environment

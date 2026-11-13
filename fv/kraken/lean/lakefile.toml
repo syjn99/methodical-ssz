@@ -104,9 +104,9 @@ filter = {extension = ["S"]}
 [[lean_lib]]
 name = "Prysm"
 globs = ["Prysm.+"]
-needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S",
-  "lv_data", "lv_t3_norm_S", "lv_t3_data", "runtime_model_S", "lv_hb_norm_S", "lv_dep_norm_S", "lv_dep_data",
-  "deposit_lean_S"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data",
+  "lv_t3_norm_S", "lv_t3_data", "runtime_model_S", "lv_hb_norm_S", "lv_dep_norm_S", "lv_dep_data", "deposit_lean_S",
+  "enc_norm_S", "dcd_norm_S", "dcd_data"]
 
 # Generated and hand proofs of the flat fixed-size types: their segment instances, accept and reject theorems,
 # witnesses and specifications. The parameterized lemmas that they use are in Codec. Build one module at a time.
@@ -172,22 +172,14 @@ path = "Prysm/Deposit"
 text = true
 filter = {extension = ["S"]}
 
-# First variable-length encoder hand proof: real v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo on
-# the same Go 1.26.10 ELF. Own library: the Prysm / E2eScal modules do not change. Build one module
-# at a time, e.g. `lake build E2eEnc.StmtEnc`. The .S files of prysm/go1.26.10/e2e/lv/link-enc are inputs.
+# Link sets of v1alpha1.DataColumnsByRootIdentifier on the same Go 1.26.10 ELF: lv/link-enc (MarshalSSZTo) and
+# lv/link-dec (UnmarshalSSZ and its data). Inputs of the Prysm modules that read them
+# (Prysm/DataColumnsByRootIdentifier/, Prysm/ElfData/).
 [[input_dir]]
 name = "enc_norm_S"
 path = "../prysm/go1.26.10/e2e/lv/link-enc/norm"
 text = true
 
-[[lean_lib]]
-name = "E2eEnc"
-globs = ["E2eEnc.+"]
-needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data",
-  "lv_t3_norm_S", "lv_t3_data", "enc_norm_S"]
-
-# Round trip: the real v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ (link set lv/link-dec), the witness-only
-# runtime models of this library (E2eDec/*.S) and the decoder→encoder composition. Own library: no other module changes.
 [[input_dir]]
 name = "dcd_norm_S"
 path = "../prysm/go1.26.10/e2e/lv/link-dec/norm"
@@ -197,15 +189,3 @@ text = true
 name = "dcd_data"
 path = "../prysm/go1.26.10/e2e/lv/link-dec/data"
 text = true
-
-[[input_dir]]
-name = "dcd_lean_S"
-path = "E2eDec"
-text = true
-filter = {extension = ["S"]}
-
-[[lean_lib]]
-name = "E2eDec"
-globs = ["E2eDec.+"]
-needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data",
-  "lv_t3_norm_S", "lv_t3_data", "enc_norm_S", "dcd_norm_S", "dcd_data", "dcd_lean_S"]

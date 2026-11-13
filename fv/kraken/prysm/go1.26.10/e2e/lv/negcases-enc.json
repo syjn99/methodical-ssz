@@ -1,105 +1,105 @@
 [
  {
-  "code_def": "DcMarshal",
-  "code_ns": "E2eEnc.Code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-control-rb",
   "kind": "control",
-  "module": "E2eEnc/Reject.lean",
-  "theorem": "dc_e2e_reject_bytes_main",
-  "stmt_module": "E2eEnc/StmtEnc.lean"
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_length",
+  "stmt_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
  },
  {
-  "code_def": "DcMarshal",
-  "code_ns": "E2eEnc.Code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-control-iter",
   "kind": "control",
-  "module": "E2eEnc/Loop.lean",
-  "theorem": "dc_iter"
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeLoop.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.iter"
  },
  {
-  "code_def": "DcMarshal",
-  "code_ns": "E2eEnc.Code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-rb-len33",
   "kind": "code",
   "old": "  cmpq $0x20,0x10(%rax)",
   "new": "  cmpq $0x21,0x10(%rax)",
-  "module": "E2eEnc/Reject.lean",
-  "theorem": "dc_e2e_reject_bytes_main",
-  "stmt_module": "E2eEnc/StmtEnc.lean"
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_length",
+  "stmt_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
  },
  {
-  "code_def": "DcMarshal",
-  "code_ns": "E2eEnc.Code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-rt-max129",
   "kind": "code",
   "old": "  cmp $0x80,%r8",
   "new": "  cmp $0x81,%r8",
-  "module": "E2eEnc/Reject.lean",
-  "theorem": "dc_e2e_reject_toobig_main",
-  "stmt_module": "E2eEnc/StmtEnc.lean"
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_too_big",
+  "stmt_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
  },
  {
-  "code_def": "DcMarshal",
-  "code_ns": "E2eEnc.Code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-rt-offset37",
   "kind": "code",
   "old": "  movl $0x24,-0x4(%rbx,%rax,1)",
   "new": "  movl $0x25,-0x4(%rbx,%rax,1)",
-  "module": "E2eEnc/Reject.lean",
-  "theorem": "dc_e2e_reject_toobig_main",
-  "stmt_module": "E2eEnc/StmtEnc.lean"
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_too_big",
+  "stmt_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
  },
  {
-  "code_def": "DcMarshal",
-  "code_ns": "E2eEnc.Code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-iter-step16",
   "kind": "code",
   "old": "  add $0x8,%rbx",
   "new": "  add $0x10,%rbx",
-  "module": "E2eEnc/Loop.lean",
-  "theorem": "dc_iter"
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeLoop.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.iter"
  },
  {
-  "code_def": "DcMarshal",
-  "code_ns": "E2eEnc.Code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-iter-store",
   "kind": "code",
   "old": "  mov %r9,-0x8(%rbx,%rax,1)",
   "new": "  mov %r9,-0x10(%rbx,%rax,1)",
-  "module": "E2eEnc/Loop.lean",
-  "theorem": "dc_iter"
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeLoop.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.iter"
  },
  {
-  "code_def": "DcMarshal",
-  "code_ns": "E2eEnc.Code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-stmt-rt127",
   "kind": "stmt",
-  "stmt_def": "dc_reject_toobig_stmt",
+  "stmt_def": "Prysm.DataColumnsByRootIdentifier.Encode.reject_too_big_statement",
   "old": "(hn1 : 128 < nb.toNat)",
   "new": "(hn1 : 127 < nb.toNat)",
-  "module": "E2eEnc/Reject.lean",
-  "theorem": "dc_e2e_reject_toobig_main",
-  "stmt_module": "E2eEnc/StmtEnc.lean"
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_too_big",
+  "stmt_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
  },
  {
-  "code_def": "DcMarshal",
-  "code_ns": "E2eEnc.Code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
   "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-stmt-rb33",
   "kind": "stmt",
-  "stmt_def": "dc_reject_bytes_stmt",
+  "stmt_def": "Prysm.DataColumnsByRootIdentifier.Encode.reject_length_statement",
   "old": "(hbl : bl ≠ 32)",
   "new": "(hbl : bl ≠ 33)",
-  "module": "E2eEnc/Reject.lean",
-  "theorem": "dc_e2e_reject_bytes_main",
-  "stmt_module": "E2eEnc/StmtEnc.lean"
+  "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_length",
+  "stmt_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
  }
 ]

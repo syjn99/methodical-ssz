@@ -53,6 +53,9 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
 - `Prysm/HistoricalBatch/`: the `v1alpha1.HistoricalBatch` decoder.
 - `Prysm/Deposit/`: the `v1alpha1.Deposit` decoder, proved with the lemmas of `Codec/Segment/`, and its witnesses.
   `../gen/restructure/maps/historical-batch-and-deposit/files.tsv` gives the earlier path of each module of the two types.
+- `Prysm/DataColumnsByRootIdentifier/`: the `v1alpha1.DataColumnsByRootIdentifier` encoder (fast path, growth at the
+  first site and at any one site, two rejects), the decoder, and their composition at the machine level.
+  `../gen/restructure/maps/data-columns-by-root-identifier/files.tsv` gives the earlier path of each module.
 - `Prysm/RuntimeModel/`: witness-only models of runtime functions that read ELF data of a link set
   (bump allocators that dispatch on a type word). The library `Runtime` does not import `Prysm`.
 - `Prysm/ElfData/`: the ELF data of a link set and the command that reads it, namespace `ElfData.<SetName>`.
@@ -62,8 +65,6 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
 The generated files are `Gen*.lean`. They use the patterns and kinds of `Codec`.
 The statement kinds of the composed accept theorems, of the callee calls and of the encoder fast path are still here (`KindAccept*.lean`, `KindCall.lean`, `KindEncN.lean`): their modules import modules of single types (see `../gen/README.md`).
 
-**`E2eEnc` and `E2eDec`.** The `v1alpha1.DataColumnsByRootIdentifier` encoder and decoder, and their composition at the machine level.
-
 ### Dependencies
 
 The import graph has this order:
@@ -71,7 +72,6 @@ The import graph has this order:
 ```text
 EthLib -> Spec -> Machine -> Runtime -> TestTarget -> Codec (except Codec/Segment/)
        -> Prysm -> E2eScal -> Prysm (list types, HistoricalBatch) -> Codec/Segment/ -> Prysm (Deposit)
-                                     Prysm (list types) -> E2eEnc -> E2eDec
 ```
 
 The arrows give the order of the libraries in the import graph. A library imports only libraries to its left.

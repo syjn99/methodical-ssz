@@ -143,6 +143,8 @@ The maps apply in this order:
 - `maps/sync-and-indexed-attestation/`: the library `E2eList` becomes `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/` and `Prysm/IndexedAttestation/`.
   Some of its modules go to `Prysm/RuntimeModel/` and `Prysm/ElfData/`.
 - `maps/historical-batch-and-deposit/`: the libraries `E2eHb`, `E2eDep` and `E2eDepW` become `Prysm/HistoricalBatch/` and `Prysm/Deposit/`.
+- `maps/data-columns-by-root-identifier/`: the libraries `E2eEnc` and `E2eDec` become `Prysm/DataColumnsByRootIdentifier/`.
+  Some of their modules go to `Prysm/RuntimeModel/` and `Prysm/ElfData/`.
 
 Issue 10 of `syjn99/methodical-ssz` holds the list of the steps that remain.
 

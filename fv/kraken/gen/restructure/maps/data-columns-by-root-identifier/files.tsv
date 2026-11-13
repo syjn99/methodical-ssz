@@ -1,0 +1,42 @@
+# old path	new path	meaning (paths are relative to the repository root)
+# Step data-columns-by-root-identifier: the libraries E2eEnc and E2eDec (DataColumnsByRootIdentifier encoder, decoder and round trip).
+fv/kraken/lean/E2eEnc/Code.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/CodeMarshalSSZTo.lean	program constant of DataColumnsByRootIdentifier.MarshalSSZTo from link set lv/link-enc (Code role; the qualifier names the method, because the type has two code modules)
+fv/kraken/lean/E2eEnc/DcSpecChecker.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/SpecChecker.lean	generated Desc-checker Desc of DataColumnsByRootIdentifier (gen/e2e/lvdescterm.py)
+fv/kraken/lean/E2eEnc/Defs.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/SpecDefinitions.lean	hand Desc, SSZ content structure, receiver value, offset bytes and encoding of DataColumnsByRootIdentifier
+fv/kraken/lean/E2eEnc/DescEq.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/SpecEquivalence.lean	hand Desc and Desc-checker Desc of DataColumnsByRootIdentifier give the same serialize and deserialize
+fv/kraken/lean/E2eEnc/Spec.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/Spec.lean	DataColumnsByRootIdentifier bridge lemmas to EthLib (encoding size, serialize), and the EthLib side of the two encoder rejects (mixed module, main role Spec)
+fv/kraken/lean/E2eEnc/SpecD.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/SpecDecodeBridge.lean	decoder-side bridge lemmas to EthLib: fits, surjective, round trip of the encoding, accepted inputs are encodings, the decoder checks (role not in the table)
+fv/kraken/lean/E2eEnc/StmtEnc.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean	frozen statements of the encoder: fast path, first-site growth, length reject, too-big reject and their EthLib forms
+fv/kraken/lean/E2eEnc/StmtEncG.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/StatementsEncodeGrowAnySite.lean	frozen statements of the encoder for growth at any site (they stay unproved)
+fv/kraken/lean/E2eEnc/StmtEncG1.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/StatementsEncodeGrowOneSite.lean	corrected encoder statements: growth at any one site (one growth only)
+fv/kraken/lean/E2eEnc/Fast.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/EncodeFastPath.lean	encoder fast path (capacity sufficient)
+fv/kraken/lean/E2eEnc/Grow.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/EncodeGrowFirstSite.lean	encoder: growth at the first append site only
+fv/kraken/lean/E2eEnc/Once.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/EncodeGrowOneSite.lean	encoder: growth at any one append site
+fv/kraken/lean/E2eEnc/Reject.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean	encoder: BlockRoot length reject and Columns too-big reject (mixed roles: named by the first)
+fv/kraken/lean/E2eEnc/Loop.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/EncodeLoop.lean	encoder: the Columns loop when the capacity is sufficient, and the tactic daddr
+fv/kraken/lean/E2eEnc/LoopG.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/EncodeLoopGrowAnySite.lean	encoder: the Columns loop when any iteration can grow the block
+fv/kraken/lean/E2eEnc/Tail.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/EncodeTail.lean	encoder: from the first site to the return when sites 2 and 3 do not grow
+fv/kraken/lean/E2eEnc/TailG.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/EncodeTailGrow.lean	encoder: from the first site to the return when site 2 or the loop can grow
+fv/kraken/lean/E2eEnc/SpecM.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/EncodeSpec.lean	encoder fast path against EthLib
+fv/kraken/lean/E2eEnc/SpecG.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/EncodeSpecGrowFirstSite.lean	encoder first-site growth against EthLib
+fv/kraken/lean/E2eEnc/SpecOnce.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/EncodeSpecGrowOneSite.lean	encoder growth at any one site against EthLib
+fv/kraken/lean/E2eEnc/SpecRT.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/DecodeThenEncodeSpec.lean	round trip of EthLib serialize and deserialize for the DataColumnsByRootIdentifier Desc
+fv/kraken/lean/E2eEnc/WitF.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeFastPath.lean	witnesses of the encoder fast path: empty, one element, maximum
+fv/kraken/lean/E2eEnc/WitG.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeGrowFirstSite.lean	witnesses of the encoder first-site growth: empty, one element, maximum
+fv/kraken/lean/E2eEnc/WitG1.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeGrowOneSite.lean	witnesses of the encoder growth at any one site: first site, second site, the loop with 16 elements and with the maximum
+fv/kraken/lean/E2eEnc/WitR.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeRejectLength.lean	witnesses of the encoder length reject and too-big reject (mixed roles: named by the first)
+fv/kraken/lean/E2eDec/Code.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/CodeUnmarshalSSZ.lean	program constant of DataColumnsByRootIdentifier.UnmarshalSSZ from link set lv/link-dec (Code role; the qualifier names the method, because the type has two code modules)
+fv/kraken/lean/E2eDec/Data.lean	fv/kraken/lean/Prysm/ElfData/DataColumnsByRootIdentifierDecoder.lean	ELF data definitions of link set lv/link-dec that the decoder statements read (the two fmt.Errorf formats)
+fv/kraken/lean/E2eDec/Include.lean	fv/kraken/lean/Prysm/ElfData/DataColumnsByRootIdentifierDecoderReader.lean	the command dcd_data_include that reads the data files of link set lv/link-dec (trusted reader, text of the IndexedAttestation reader)
+fv/kraken/lean/E2eDec/BumpDc.lean	fv/kraken/lean/Prysm/RuntimeModel/BumpAllocatorUint64DispatchForDataColumnsByRootIdentifier.lean	witness-only runtime.makeslice model that bumps by 8 per element for the uint64 type word and by 1 otherwise, for the DataColumnsByRootIdentifier decoder witness host (a copy of the model of BumpAllocatorUint64AndStructDispatch.lean with another label)
+fv/kraken/lean/E2eDec/BumpAllocDc.S	fv/kraken/lean/Prysm/RuntimeModel/BumpAllocDc.S	assembly of the 8-or-1 bump makeslice model of the DataColumnsByRootIdentifier decoder witness host (file name kept: .S files are not renamed)
+fv/kraken/lean/E2eDec/StmtDec.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean	frozen statements of the decoder: size reject, offset reject, accept and its EthLib form
+fv/kraken/lean/E2eDec/StmtComp.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/StatementsDecodeThenEncode.lean	frozen statement of the decoder-then-encoder round trip (it stays unproved)
+fv/kraken/lean/E2eDec/StmtCompS.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/StatementsDecodeThenEncodeScratchBounded.lean	corrected round-trip statement with the added premise that bounds the scratch size
+fv/kraken/lean/E2eDec/Reject.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/DecodeRejectSize.lean	decoder: size reject and offset reject, and the tactic dcaddr (mixed roles: named by the first)
+fv/kraken/lean/E2eDec/Loop.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/DecodeLoop.lean	decoder: the Columns element loop
+fv/kraken/lean/E2eDec/Accept.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/DecodeAccept.lean	decoder accept path
+fv/kraken/lean/E2eDec/SpecA.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/DecodeSpecAccept.lean	decoder accept path against EthLib
+fv/kraken/lean/E2eDec/Compose.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/DecodeThenEncode.lean	round trip on the machine: decoder accept path, then encoder fast path on the same receiver
+fv/kraken/lean/E2eDec/WitA.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/WitnessDecodeAccept.lean	witness of the decoder accept path for every n <= 128
+fv/kraken/lean/E2eDec/WitR.lean	fv/kraken/lean/Prysm/DataColumnsByRootIdentifier/WitnessDecodeRejectSize.lean	witnesses of the decoder size reject and offset reject (mixed roles: named by the first)
