@@ -23,7 +23,7 @@ For every input of 33 blocks of 32 bytes and a Deposit_Data, and every old point
 decoder returns nil.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Deposit.Code E2eScal.H4Code
+open Machine Runtime TestTarget Machine.Witness Prysm.Deposit.Code
 
 namespace Prysm.Deposit.Witness.DecodeAccept
 
@@ -31,7 +31,7 @@ def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := dataLabels ++ unmarshalSSZ ++ DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120 ++ RtCopy
+def P : Program := dataLabels ++ unmarshalSSZ ++ Prysm.Deposit_Data.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120 ++ RtCopy
 
 -- `maxRecDepth` (builds of `Prysm.Deposit.WitnessDecodeAccept`, one run each; scoped per declaration): the default (512)
 -- stops these list computations over the 356-directive host; 1000, 2000, 5000 and 20000 pass (measured with the
@@ -44,26 +44,26 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : unmarshalSSZ.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels (DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120 ++ RtCopy)
+  infixAt_of dataLabels (Prysm.Deposit_Data.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hk165 : DdUnmarshal.IsInfixAt Host.prog 165 :=
+theorem hk165 : Prysm.Deposit_Data.Code.unmarshalSSZ.IsInfixAt Host.prog 165 :=
   infixAt_of (dataLabels ++ unmarshalSSZ) (Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2000 in
 theorem hk308 : Prysm.RuntimeModel.BumpAllocByteSliceDispatch.IsInfixAt Host.prog 308 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ DdUnmarshal) (BumpNew120 ++ RtCopy)
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.Deposit_Data.Code.unmarshalSSZ) (BumpNew120 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2000 in
 theorem hk324 : BumpNew120.IsInfixAt Host.prog 324 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch) RtCopy
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.Deposit_Data.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch) RtCopy
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2000 in
 theorem hk330 : RtCopy.IsInfixAt Host.prog 330 :=
-  infixAt_of (dataLabels ++ unmarshalSSZ ++ DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120) []
+  infixAt_of (dataLabels ++ unmarshalSSZ ++ Prysm.Deposit_Data.Code.unmarshalSSZ ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf9 : LabelsFresh unmarshalSSZ 9 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf165 : LabelsFresh DdUnmarshal 165 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf165 : LabelsFresh Prysm.Deposit_Data.Code.unmarshalSSZ 165 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf308 : LabelsFresh Prysm.RuntimeModel.BumpAllocByteSliceDispatch 308 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf330 : LabelsFresh RtCopy 330 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hn308 : ∀ i < 308, Host.prog[i]? ≠ some (.label "runtime.makeslice") :=

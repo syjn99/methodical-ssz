@@ -6,7 +6,7 @@ import Machine.Labels
 import Prysm.ElfData.CheckpointAndEpoch
 import Prysm.ElfData.SyncAggregateAndSyncCommittee
 import Prysm.SyncCommittee.SpecDefinitions
-import E2eScal.H4Code
+import Prysm.Deposit_Data.Code
 import Prysm.Deposit.Code
 
 /-!
@@ -15,7 +15,7 @@ import Prysm.Deposit.Code
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
 Selection: the same family as HistoricalBatch (a `Vector[Bytes32, N]` field as `[][]byte`), not forbidden, no
 existing proof. The only such types without a pointer field are HistoricalBatch and SyncCommittee; Deposit has the
-one pointer field whose decoder already has a proof (`E2eScal.H4.dd_e2e_accept_main`, Deposit_Data).
+one pointer field whose decoder already has a proof (`Prysm.Deposit_Data.Decode.accept`, Deposit_Data).
 
     func (c *Deposit) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 1240 { return ssz.ErrSize }
@@ -70,13 +70,13 @@ def Decode.reject_size_statement : Prop :=
 /-- **Deposit accept (machine).** On a 1240-byte input `proofs.flatten ‖ pk ‖ wc ‖ amt ‖ sig` (33 blocks of 32 bytes,
 then the 184 bytes of a Deposit_Data) the decoder returns nil; the receiver holds a fresh `[][]byte` Proof
 (len = cap = 33, headers `(ps[i], 32, 32)`, element i = `proofs[i]`) and a fresh Deposit_Data object `po` decoded
-by the real Deposit_Data decoder (the postcondition of `E2eScal.H4.dd_e2e_accept_main`: PublicKey = pk,
+by the real Deposit_Data decoder (the postcondition of `Prysm.Deposit_Data.Decode.accept`: PublicKey = pk,
 WithdrawalCredentials = wc, Amount = amt, Signature = sig); input, `state`, the spills, the caller's frame `R`
 and the stack guard are unchanged; 2144 heap bytes are used. -/
 def Decode.accept_statement : Prop :=
   ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
-    (kd : Nat) (hkd : E2eScal.H4Code.DdUnmarshal.IsInfixAt Host.prog kd)
-    (hfd : LabelsFresh E2eScal.H4Code.DdUnmarshal kd)
+    (kd : Nat) (hkd : Prysm.Deposit_Data.Code.unmarshalSSZ.IsInfixAt Host.prog kd)
+    (hfd : LabelsFresh Prysm.Deposit_Data.Code.unmarshalSSZ kd)
     (proofs : List (List UInt8)) (hps : proofs.length = 33) (hp : ∀ e ∈ proofs, e.length = 32)
     (pk wc amt sig : List UInt8) (hpk : pk.length = 48) (hwc : wc.length = 32) (hamt : amt.length = 8)
     (hsig : sig.length = 96)

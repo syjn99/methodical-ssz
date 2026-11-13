@@ -2,8 +2,8 @@
  {
   "id": "scal-sl-control",
   "kind": "control",
-  "module": "E2eScal/P1Slot.lean",
-  "theorem": "sl_unmarshal_accept_main_s",
+  "module": "Prysm/Slot/DecodeAcceptFromUint64Pattern.lean",
+  "theorem": "Prysm.Slot.Decode.accept_from_uint64_pattern",
   "code_def": "slotUnmarshalSSZ",
   "code_ns": "Prysm.AttestationData.Code",
   "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
@@ -12,8 +12,8 @@
  {
   "id": "scal-sl-fs",
   "kind": "code",
-  "module": "E2eScal/P1Slot.lean",
-  "theorem": "sl_unmarshal_accept_main_s",
+  "module": "Prysm/Slot/DecodeAcceptFromUint64Pattern.lean",
+  "theorem": "Prysm.Slot.Decode.accept_from_uint64_pattern",
   "code_def": "slotUnmarshalSSZ",
   "code_ns": "Prysm.AttestationData.Code",
   "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
@@ -24,8 +24,8 @@
  {
   "id": "scal-sl-load",
   "kind": "code",
-  "module": "E2eScal/P1Slot.lean",
-  "theorem": "sl_unmarshal_accept_main_s",
+  "module": "Prysm/Slot/DecodeAcceptFromUint64Pattern.lean",
+  "theorem": "Prysm.Slot.Decode.accept_from_uint64_pattern",
   "code_def": "slotUnmarshalSSZ",
   "code_ns": "Prysm.AttestationData.Code",
   "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
@@ -36,16 +36,16 @@
  {
   "id": "scal-sl-stmt",
   "kind": "stmt",
-  "module": "E2eScal/P1Slot.lean",
-  "theorem": "sl_unmarshal_accept_main_s",
+  "module": "Prysm/Slot/DecodeAcceptFromUint64Pattern.lean",
+  "theorem": "Prysm.Slot.Decode.accept_from_uint64_pattern",
   "old": "Eq (s2.At (s.regs.rsp.toBitVec + 16))",
   "new": "Eq (s2.At (s.regs.rsp.toBitVec + 24))"
  },
  {
   "id": "scal-gci-control",
   "kind": "control",
-  "module": "E2eScal/GenCi.lean",
-  "theorem": "ci_unmarshal_accept_main_g",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
   "code_def": "committeeIndexUnmarshalSSZ",
   "code_ns": "Prysm.AttestationData.Code",
   "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
@@ -54,8 +54,8 @@
  {
   "id": "scal-gci-cmp",
   "kind": "code",
-  "module": "E2eScal/GenCi.lean",
-  "theorem": "ci_unmarshal_accept_main_g",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
   "code_def": "committeeIndexUnmarshalSSZ",
   "code_ns": "Prysm.AttestationData.Code",
   "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
@@ -66,16 +66,16 @@
  {
   "id": "scal-gci-stmt",
   "kind": "stmt",
-  "module": "E2eScal/GenCi.lean",
-  "theorem": "ci_unmarshal_accept_main_g",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
   "old": "st.data.regs.rax = 0 ∧",
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
   "id": "scal-adr-control",
   "kind": "control",
-  "module": "E2eScal/P2DecAd.lean",
-  "theorem": "ad_e2e_root_s",
+  "module": "Prysm/AttestationData/DecodeBlockRootFromBytes32Pattern.lean",
+  "theorem": "Prysm.AttestationData.Decode.block_root_from_bytes32_pattern",
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.AttestationData.Code",
   "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
@@ -84,8 +84,8 @@
  {
   "id": "scal-adr-src",
   "kind": "code",
-  "module": "E2eScal/P2DecAd.lean",
-  "theorem": "ad_e2e_root_s",
+  "module": "Prysm/AttestationData/DecodeBlockRootFromBytes32Pattern.lean",
+  "theorem": "Prysm.AttestationData.Decode.block_root_from_bytes32_pattern",
   "line": 105,
   "old": "  add $0x10,%rbx",
   "new": "  add $0x18,%rbx",
@@ -97,16 +97,16 @@
  {
   "id": "scal-adr-stmt",
   "kind": "stmt",
-  "module": "E2eScal/P2DecAd.lean",
-  "theorem": "ad_e2e_root_s",
+  "module": "Prysm/AttestationData/DecodeBlockRootFromBytes32Pattern.lean",
+  "theorem": "Prysm.AttestationData.Decode.block_root_from_bytes32_pattern",
   "old": "Eq ((Int.toBytes 8 32).At (rcv + 40)) ⋆ Eq (root.At p)",
   "new": "Eq ((Int.toBytes 8 0).At (rcv + 40)) ⋆ Eq (root.At p)"
  },
  {
   "id": "scal-gad-control",
   "kind": "control",
-  "module": "E2eScal/GenAdDec.lean",
-  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.AttestationData.Code",
   "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
@@ -115,8 +115,8 @@
  {
   "id": "scal-gad-cap",
   "kind": "code",
-  "module": "E2eScal/GenAdDec.lean",
-  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
   "line": 110,
   "old": "  movq $0x20,0x28(%rdx)",
   "new": "  movq $0x21,0x28(%rdx)",
@@ -128,8 +128,8 @@
  {
   "id": "scal-gad-stmt-extra",
   "kind": "stmt",
-  "module": "E2eScal/GenAdDec.lean",
-  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
   "old": "(hmm : MemmoveC St),",
   "new": "(hmm : MemmoveC St) (hextra : (1 : Nat) = 2),",
   "why": "audit AU-08: an extra false hypothesis in the generated statement must fail (the statement is kernel-checked against the rootdec_seg instance); with the old fixed-text statement this mutant compiled (rc 0)"
@@ -137,16 +137,16 @@
  {
   "id": "scal-gcp-control",
   "kind": "control",
-  "module": "E2eScal/GenCpDec.lean",
-  "theorem": "cp_dec_Root_seg",
+  "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_seg",
   "code_def": "unmarshalSSZ",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
  },
  {
   "id": "scal-gcp-src",
   "kind": "code",
-  "module": "E2eScal/GenCpDec.lean",
-  "theorem": "cp_dec_Root_seg",
+  "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_seg",
   "old": "  add $0x8,%rbx",
   "new": "  add $0x10,%rbx",
   "code_def": "unmarshalSSZ",
@@ -155,8 +155,8 @@
  {
   "id": "scal-gcp-stmt-extra",
   "kind": "stmt",
-  "module": "E2eScal/GenCpDec.lean",
-  "theorem": "cp_dec_Root_seg",
+  "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_seg",
   "old": "(hmm : MemmoveC St),",
   "new": "(hmm : MemmoveC St) (hextra : (1 : Nat) = 2),",
   "why": "audit AU-08: an extra false hypothesis in the generated statement must fail (the statement is kernel-checked against the rootdec_seg instance); with the old fixed-text statement this mutant compiled (rc 0)"
@@ -164,16 +164,16 @@
  {
   "id": "scal-cpa-control",
   "kind": "control",
-  "module": "E2eScal/P2EncCpAt.lean",
-  "theorem": "cp_enc_tmpl_at",
+  "module": "Prysm/Checkpoint/EncodeBytes32TemplatePlacement.lean",
+  "theorem": "Prysm.Checkpoint.Encode.bytes32_template_at",
   "code_def": "marshalSSZTo",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
  },
  {
   "id": "scal-cpa-len",
   "kind": "code",
-  "module": "E2eScal/P2EncCpAt.lean",
-  "theorem": "cp_enc_tmpl_at",
+  "module": "Prysm/Checkpoint/EncodeBytes32TemplatePlacement.lean",
+  "theorem": "Prysm.Checkpoint.Encode.bytes32_template_at",
   "code_def": "marshalSSZTo",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  cmpq $0x20,0x18(%rax)",
@@ -182,8 +182,8 @@
  {
   "id": "scal-cpa-spill",
   "kind": "code",
-  "module": "E2eScal/P2EncCpAt.lean",
-  "theorem": "cp_enc_tmpl_at",
+  "module": "Prysm/Checkpoint/EncodeBytes32TemplatePlacement.lean",
+  "theorem": "Prysm.Checkpoint.Encode.bytes32_template_at",
   "code_def": "marshalSSZTo",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  mov %rdi,0x58(%rsp)",
@@ -192,73 +192,73 @@
  {
   "id": "scal-cpa-stmt",
   "kind": "stmt",
-  "module": "E2eScal/P2EncCpAt.lean",
-  "theorem": "cp_enc_tmpl_at",
+  "module": "Prysm/Checkpoint/EncodeBytes32TemplatePlacement.lean",
+  "theorem": "Prysm.Checkpoint.Encode.bytes32_template_at",
   "old": "88 80 96",
   "new": "88 80 104"
  },
  {
   "id": "scal-gad-stmt-extra-before",
   "kind": "stmt",
-  "module": "E2eScal/GenAdDec.lean",
-  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
   "old": "(hf : LabelsFresh unmarshalSSZ k) :",
   "new": "(hf : LabelsFresh unmarshalSSZ k) (hextra : (1 : Nat) = 2) :"
  },
  {
   "id": "scal-gad-stmt-extra-first",
   "kind": "stmt",
-  "module": "E2eScal/GenAdDec.lean",
-  "theorem": "ad_dec_BeaconBlockRoot_seg",
-  "old": "theorem ad_dec_BeaconBlockRoot_seg (k : Nat)",
-  "new": "theorem ad_dec_BeaconBlockRoot_seg (hextra : (1 : Nat) = 2) (k : Nat)"
+  "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
+  "old": "theorem Decode.generated_root_BeaconBlockRoot_seg (k : Nat)",
+  "new": "theorem Decode.generated_root_BeaconBlockRoot_seg (hextra : (1 : Nat) = 2) (k : Nat)"
  },
  {
   "id": "scal-gad-stmt-drop",
   "kind": "stmt",
-  "module": "E2eScal/GenAdDec.lean",
-  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
   "old": "(avail : Nat) (hav : 32 ≤ avail)",
   "new": "(avail : Nat)"
  },
  {
   "id": "scal-gad-stmt-literal",
   "kind": "stmt",
-  "module": "E2eScal/GenAdDec.lean",
-  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
   "old": "Eq ((Int.toBytes 8 32).At aL)",
   "new": "Eq ((Int.toBytes 8 33).At aL)"
  },
  {
   "id": "scal-gad-kind-arg",
   "kind": "stmt",
-  "module": "E2eScal/GenAdDec.lean",
-  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "module": "Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
   "old": "unmarshalSSZ 86 100 128 136 104 24 32 40 16",
   "new": "unmarshalSSZ 86 100 128 136 104 24 32 40 8"
  },
  {
   "id": "scal-gcp-stmt-extra-before",
   "kind": "stmt",
-  "module": "E2eScal/GenCpDec.lean",
-  "theorem": "cp_dec_Root_seg",
+  "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
+  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_seg",
   "old": "(hf : LabelsFresh unmarshalSSZ k) :",
   "new": "(hf : LabelsFresh unmarshalSSZ k) (hextra : (1 : Nat) = 2) :"
  },
  {
   "id": "scal-gci-stmt-extra-before",
   "kind": "stmt",
-  "module": "E2eScal/GenCi.lean",
-  "theorem": "ci_unmarshal_accept_main_g",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
   "old": "(hlen : s.regs.rcx = 8) :",
   "new": "(hlen : s.regs.rcx = 8) (hextra : (1 : Nat) = 2) :"
  },
  {
   "id": "scal-gci-stmt-extra-first",
   "kind": "stmt",
-  "module": "E2eScal/GenCi.lean",
-  "theorem": "ci_unmarshal_accept_main_g",
-  "old": "theorem ci_unmarshal_accept_main_g (k : Nat)",
-  "new": "theorem ci_unmarshal_accept_main_g (hextra : (1 : Nat) = 2) (k : Nat)"
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
+  "old": "theorem Decode.generated_accept (k : Nat)",
+  "new": "theorem Decode.generated_accept (hextra : (1 : Nat) = 2) (k : Nat)"
  }
 ]

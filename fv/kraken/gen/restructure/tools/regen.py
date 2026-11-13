@@ -6,8 +6,11 @@ usage (from the repository root):
 
   <work dir>   scratch directory. It must not exist. Delete it later with `trash`.
   --files      a files.tsv of a map. The module names of its rows let the script recognize the imports that the
-               generator adds by itself in the hold-out files. Give the files.tsv of the shared-layer map:
-               fv/kraken/gen/restructure/maps/shared-layer/files.tsv
+               generator adds by itself in the hold-out files, and the earlier output names of the evidence tools.
+               Give the files.tsv of the shared-layer map and of the flat-types map (the two maps that moved
+               those modules):
+               --files fv/kraken/gen/restructure/maps/shared-layer/files.tsv
+               --files fv/kraken/gen/restructure/maps/flat-types/files.tsv
 
 The tree is not changed: every generator runs in a copy of fv/ under <work dir>/copy.
 Each output line is `<EQ|DIF|MIS|NOT>` TAB generator TAB tracked file TAB detail.
@@ -18,9 +21,11 @@ Run it before and after a step and compare the two results with `diff`.
 Expected: the same lines, except that the generator outputs of the moved types can change from DIF to EQ.
 The generators that write files of a moved type must reproduce the moved file, or the difference needs a reason.
 
-The script knows the generators and the output names of the tree at the base of the flat-types step
-(gen/scal/gen.sh, the hold-out headers of lean/E2eScal/, f24 and e2c tools, descterm, lvdescterm, layout, adlayout).
-The flat-types step moves those outputs. Update the paths of sections 1 to 4 in that step.
+The script knows the generators and the output names of the tree after the flat-types step
+(gen/scal/gen.sh, the hold-out headers, f24 and e2c tools, descterm, lvdescterm, layout, adlayout).
+Section 1 compares every Lean file that gen/scal/gen.sh writes. Sections 2 to 4 name the outputs by their paths in
+lean/Prysm/<GoTypeName>/. A tool of section 4 that still writes a file under an earlier name is compared with the
+tracked file of that name in the files.tsv of the maps given with --files.
 """
 import difflib
 import os
@@ -54,6 +59,15 @@ for ftsv in file_maps:
         if old.startswith('fv/kraken/lean/') and old.endswith('.lean') and new.startswith('fv/kraken/lean/'):
             modules[old[15:-5].replace('/', '.')] = new[15:-5].replace('/', '.')
 old_module_of = {v: k for k, v in modules.items()}
+# earlier file name (base name) of a moved Lean file -> its path relative to fv/kraken
+moved_path_of = {}
+for ftsv in file_maps:
+    for line in open(os.path.join(root, ftsv) if not os.path.isabs(ftsv) else ftsv):
+        if line.startswith('#') or not line.strip():
+            continue
+        old, new = line.split('\t')[:2]
+        if old.startswith('fv/kraken/lean/') and old.endswith('.lean'):
+            moved_path_of[os.path.basename(old)] = new[len('fv/kraken/'):]
 os.makedirs(work)
 COPY = os.path.join(work, 'copy')
 shutil.copytree(os.path.join(root, 'fv'), os.path.join(COPY, 'fv'), symlinks=True,
@@ -80,26 +94,27 @@ def run(cmd, cwd, **kw):
     return subprocess.run(cmd, cwd=cwd, capture_output=True, **kw)
 
 
-# 1. gen/scal/gen.sh, in place in the copy.
+# 1. gen/scal/gen.sh, in place in the copy. Every Lean file that the run writes (a new size or modification time) is
+#    compared with the tracked file of the same path.
 gen_sh = os.path.join(COPY_KRAKEN, 'gen/scal/gen.sh')
-text = open(gen_sh).read()
+
+
+def lean_stats(d):
+    out = {}
+    for dp, dn, fs in os.walk(d):
+        for f in fs:
+            if f.endswith('.lean'):
+                st = os.stat(os.path.join(dp, f))
+                out[os.path.join(dp, f)] = (st.st_mtime_ns, st.st_size)
+    return out
+
+
+stats_before = lean_stats(os.path.join(COPY_KRAKEN, 'lean'))
 r = run(['sh', gen_sh], COPY_KRAKEN)
-outs = set()
-for m in re.finditer(r'(?:> |--partial-out )lean/E2eScal/(\S+?)\.lean', text):
-    outs.add(m.group(1))
-# loop targets of gen.sh: the decoder names in the quoted rows and the Gen6...Enc files
-for m in re.finditer(r'"[^"]*\b(Gen[45]\w+Dec)( -| --[^"]*)?"', text):
-    outs.add(m.group(1))
-scal_dir = os.path.join(COPY_KRAKEN, 'lean/E2eScal')
-for f in (os.listdir(scal_dir) if os.path.isdir(scal_dir) else []):
-    if f.startswith('Gen6') and f.endswith('Enc.lean') and 'F24' not in f:
-        outs.add(f[:-5])
-for o in sorted(outs):
-    if '$' in o:
-        continue
-    produced = os.path.join(COPY_KRAKEN, 'lean/E2eScal', o + '.lean')
-    cmp('gen.sh rc=%d' % r.returncode, os.path.join(KRAKEN, 'lean/E2eScal', o + '.lean'),
-        open(produced, 'rb').read() if os.path.exists(produced) else None)
+stats_after = lean_stats(os.path.join(COPY_KRAKEN, 'lean'))
+for produced in sorted(p for p in stats_after if stats_before.get(p) != stats_after[p]):
+    rel = os.path.relpath(produced, COPY_KRAKEN)
+    cmp('gen.sh rc=%d' % r.returncode, os.path.join(KRAKEN, rel), open(produced, 'rb').read())
 if r.returncode:
     results.append(('gen.sh', 'stderr', r.stderr.decode()[-400:]))
 
@@ -107,10 +122,17 @@ if r.returncode:
 #    They are recognized by their names before the shared-layer step (hence --files).
 GENERATOR_ADDED = re.compile(r"^E2eScal\.(Kind\w*|CallReg|SegRegZ|SegReg|StepK|CallDec|FieldComp|NopView|AcceptTies|"
                              r"RejectTies|U64RR)$")
-HOLD_OUT = ("GenBiDec GenDmDec Gen2DdDecPartial Gen3PcDecPartial Gen3SmDecPartial Gen4H6HsDec Gen4H6PbDec Gen4H6PdDec "
-            "Gen4H6SaDec Gen4H6SdDec Gen4H6VbDec Gen4H6VeDec").split()
-for f in HOLD_OUT:
-    p = os.path.join(KRAKEN, 'lean/E2eScal', f + '.lean')
+# hold-out file (path under lean/Prysm/) -> the prefix of its generated names (the --prefix of its command)
+HOLD_OUT = {'BlobIdentifier/GeneratedDecodeRootFieldSegments': 'Decode.generated_root',
+            'DepositMessage/GeneratedDecodeRootFieldSegments': 'Decode.generated_root',
+            'Deposit_Data/GeneratedDecodeFieldSegmentsPartial': 'Decode.generated_field',
+            'PendingConsolidation/GeneratedDecodeCallSegmentsPartial': 'Decode.generated_call',
+            'SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial': 'Decode.generated_call'}
+for t in ('HistoricalSummary', 'PowBlock', 'PendingDeposit', 'SyncAggregatorSelectionData', 'SigningData', 'ValidatorBalance',
+          'VoluntaryExit'):
+    HOLD_OUT[t + '/GeneratedDecodeSteps'] = 'Decode.generated_step'
+for f, prefix in HOLD_OUT.items():
+    p = os.path.join(KRAKEN, 'lean/Prysm', f + '.lean')
     if not os.path.exists(p):
         results.append(('holdout', os.path.relpath(p, KRAKEN), 'NOT RUN: the file is not in the tree'))
         continue
@@ -120,12 +142,11 @@ for f in HOLD_OUT:
     go_type = re.search(r"type `(v1alpha1\.\w+)`", tx)[1]
     m = re.search(r"--gen(\d)", tx[:3000])
     mode = f"--gen{m[1]}" if m else ""
-    prefix = re.search(r"\b([a-z0-9]+_(?:g\d)?dec)_", tx)[1]
-    const = re.search(r"\b([A-Z][a-z0-9]+Unmarshal)\b", tx)[1]
+    const = 'unmarshalSSZ'
     opened = re.search(r"^open (?:Fk|Machine Runtime TestTarget) (\S+)", tx, re.M)[1]
     user = [i for i in imps if not GENERATOR_ADDED.match(old_module_of.get(i, i))]
     cmd = ["python3", "-I", "-B", "gen/scal/scalgen.py", "p2dec"] + ([mode] if mode else [])
-    out = os.path.join(work, f'holdout.{f}.lean')
+    out = os.path.join(work, f'holdout.{f.replace("/", ".")}.lean')
     partial = "PARTIAL OUTPUT" in tx[:600]
     if partial:
         cmd += ["--partial-out", out]
@@ -144,13 +165,14 @@ for kind, go_type, px in rows:
     PK = ('github.com_OffchainLabs_prysm_v7_proto_engine_v1' if kind == 'v1'
           else 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1')
     for g, meth, suf, tag in (('p2dec', 'UnmarshalSSZ', 'Dec', '--gen5'), ('p2enc', 'MarshalSSZTo', 'Enc', '--gen6')):
-        tr = os.path.join(KRAKEN, 'lean/E2eScal', f'Gen{tag[-1]}F24{X}{suf}.lean')
+        tr = os.path.join(KRAKEN, 'lean/Prysm', go_type,
+                          'GeneratedDecodeAccept.lean' if g == 'p2dec' else 'GeneratedEncodeFastPath.lean')
         if not os.path.exists(tr):
             continue
         cmd = ['python3', '-I', '-B', 'gen/scal/scalgen.py', g, tag, '--S', f'{NORM}/{PK}.{go_type}.{meth}.S', '--const',
-               f'{X}{"Unmarshal" if g == "p2dec" else "Marshal"}', '--ir', 'prysm/ir/ir-mainnet.json', '--type',
-               f'{kind}.{go_type}', '--prefix', f'{px}_{"g5dec" if g == "p2dec" else "g6e"}', '--imports',
-               'E2eScal.F24Code', '--open', 'E2eScal.F24Code',
+               'unmarshalSSZ' if g == 'p2dec' else 'marshalSSZTo', '--ir', 'prysm/ir/ir-mainnet.json', '--type',
+               f'{kind}.{go_type}', '--prefix', 'Decode.generated' if g == 'p2dec' else 'Encode.generated', '--imports',
+               'Prysm.BuilderDepositRequest.Code', '--open', f'Prysm.{go_type}.Code',
                '--summary', os.path.join(work, f'{X}.{tag}.summary.json')]
         r = run(cmd, COPY_KRAKEN)
         cmp('f24 part1 rc=%d' % r.returncode, tr, r.stdout)
@@ -158,29 +180,38 @@ for kind, go_type, px in rows:
 # 4. Evidence tools of f24 and e2c.
 TOOLS = 'prysm/go1.26.10/e2e/f24/tools'
 for name, cmdf, glob in (
-        ('f24spec', lambda o: ['python3', '-I', '-B', f'{TOOLS}/f24spec.py', o], r'F24\w+Spec\.lean$'),
+        ('f24spec', lambda o: ['python3', '-I', '-B', f'{TOOLS}/f24spec.py', o], r'Spec\.lean$'),
         ('f24emitenc', lambda o: ['python3', '-I', '-B', f'{TOOLS}/f24emitenc.py', 'lean', o], r'.*\.lean$'),
         ('e2cemit', lambda o: ['python3', '-I', '-B', 'prysm/go1.26.10/e2e/scal/e2c/e2cemit.py', 'lean', o],
          r'.*\.lean$')):
     o = os.path.join(work, name)
     os.makedirs(o)
     r = run(cmdf(o), COPY_KRAKEN)
-    for f in sorted(os.listdir(o)):
-        if re.match(glob, f):
-            cmp(f'{name} rc={r.returncode}', os.path.join(KRAKEN, 'lean/E2eScal', f), open(os.path.join(o, f), 'rb').read())
+    for dp, dn, fs in sorted(os.walk(o)):
+        for f in sorted(fs):
+            if re.match(glob, f):
+                rel = os.path.relpath(os.path.join(dp, f), o)
+                cmp(f'{name} rc={r.returncode}', os.path.join(KRAKEN, moved_path_of.get(rel, 'lean/' + rel)),
+                    open(os.path.join(dp, f), 'rb').read())
 o = os.path.join(work, 'f24speck')
 os.makedirs(o)
-for f in (os.listdir(os.path.join(KRAKEN, 'lean/E2eScal')) if os.path.isdir(os.path.join(KRAKEN, 'lean/E2eScal')) else []):
-    if re.match(r'Gen5F24\w+Dec\.lean$', f):
-        shutil.copy(os.path.join(KRAKEN, 'lean/E2eScal', f), o)
+for t in sorted(os.listdir(os.path.join(KRAKEN, 'lean/Prysm'))):
+    src = os.path.join(KRAKEN, 'lean/Prysm', t, 'GeneratedDecodeAccept.lean')
+    if os.path.exists(src):
+        os.makedirs(os.path.join(o, 'Prysm', t))
+        shutil.copy(src, os.path.join(o, 'Prysm', t))
+stats_before = lean_stats(o)
 r = run(['python3', '-I', '-B', f'{TOOLS}/f24speck.py', o], COPY_KRAKEN)
-for f in sorted(os.listdir(o)):
-    if re.match(r'F24\w+SpecK\.lean$', f):
-        cmp(f'f24speck rc={r.returncode}', os.path.join(KRAKEN, 'lean/E2eScal', f), open(os.path.join(o, f), 'rb').read())
+for produced in sorted(p for p, st in lean_stats(o).items() if stats_before.get(p) != st):
+    rel = os.path.relpath(produced, o)
+    cmp(f'f24speck rc={r.returncode}', os.path.join(KRAKEN, 'lean', rel), open(produced, 'rb').read())
+stats_before = lean_stats(os.path.join(COPY_KRAKEN, 'lean'))
 r = run(['python3', '-I', '-B', f'{TOOLS}/f24wit.py', '.'], COPY_KRAKEN)
-for f in sorted(os.listdir(scal_dir) if os.path.isdir(scal_dir) else []):
-    if re.match(r'Wit(Dpr|Bdr|Bbr|Bsr|Epr|Pdc|Vid)G[AR]\.lean$', f):
-        cmp(f'f24wit rc={r.returncode}', os.path.join(KRAKEN, 'lean/E2eScal', f), open(os.path.join(scal_dir, f), 'rb').read())
+stats_after = lean_stats(os.path.join(COPY_KRAKEN, 'lean'))
+for produced in sorted(p for p in stats_after if stats_before.get(p) != stats_after[p]):
+    rel = os.path.relpath(produced, COPY_KRAKEN)
+    cmp(f'f24wit rc={r.returncode}', os.path.join(KRAKEN, moved_path_of.get(os.path.basename(rel), rel)),
+        open(produced, 'rb').read())
 neg_out = os.path.join(work, 'negcases-f24.json')
 r = run(['python3', '-I', '-B', f'{TOOLS}/f24neg.py', 'lean', neg_out], COPY_KRAKEN)
 cmp(f'f24neg rc={r.returncode}', os.path.join(KRAKEN, 'prysm/go1.26.10/e2e/f24/negcases-f24.json'),

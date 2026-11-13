@@ -1,149 +1,149 @@
 [
  {
   "id": "g3g-pwdec-index-call-control",
-  "module": "E2eScal/Gen3PwDec.lean",
-  "theorem": "pw_g3dec_Index_call",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_Index_call",
   "kind": "control"
  },
  {
   "id": "g3g-pwg3-control",
-  "module": "E2eScal/PwAcceptG3.lean",
-  "theorem": "pw_e2e_accept_main_g3",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeAcceptFromGeneratedCallSegments.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.accept_from_generated_call_segments",
   "kind": "control"
  },
  {
   "id": "g3g-ddc-control",
-  "module": "E2eScal/Gen3DdAccept2.lean",
-  "theorem": "dd_e2e_accept_main_g3",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.accept_generated_composition",
   "kind": "control"
  },
  {
   "id": "g3g-bhg3-control",
-  "module": "E2eScal/BhAcceptG3.lean",
-  "theorem": "bh_e2e_accept_main_g3",
+  "module": "Prysm/BeaconBlockHeader/DecodeAcceptFromGeneratedCallSegments.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.accept_from_generated_call_segments",
   "kind": "control"
  },
  {
   "id": "g3g-pwdec-index-call-stmt-rbx",
-  "module": "E2eScal/Gen3PwDec.lean",
-  "theorem": "pw_g3dec_Index_call",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_Index_call",
   "kind": "stmt",
   "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
   "new": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 8"
  },
  {
   "id": "g3g-pwdec-amount-stmt-val",
-  "module": "E2eScal/Gen3PwDec.lean",
-  "theorem": "pw_g3dec_Amount_seg",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_Amount_seg",
   "kind": "stmt",
   "old": "⋆ Eq (v.At aF) ⋆ R) st.data.dmem",
   "new": "⋆ Eq (vF.At aF) ⋆ R) st.data.dmem"
  },
  {
   "id": "g3g-pwdec-we-arg1-stmt-rsi",
-  "module": "E2eScal/Gen3PwDec.lean",
-  "theorem": "pw_g3dec_WithdrawableEpoch_arg1",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_WithdrawableEpoch_arg1",
   "kind": "stmt",
   "old": "st.data.regs.rsi.toBitVec = aF",
   "new": "st.data.regs.rsi.toBitVec = aSrc"
  },
  {
   "id": "g3g-bhdec-pi-arg-stmt-pad",
-  "module": "E2eScal/Gen3BhDec.lean",
-  "theorem": "bh_g3dec_ProposerIndex_arg",
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_call_ProposerIndex_arg",
   "kind": "stmt",
   "old": "(k + 47 + 7 + padLen true)",
   "new": "(k + 47 + 7 + padLen false)"
  },
  {
   "id": "g3g-bhdec-slot-call-stmt-callee",
-  "module": "E2eScal/Gen3BhDec.lean",
-  "theorem": "bh_g3dec_Slot_call",
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_call_Slot_call",
   "kind": "stmt",
   "old": "primitives.Slot.UnmarshalSSZ\")",
   "new": "primitives.Epoch.UnmarshalSSZ\")"
  },
  {
   "id": "g3g-dddec-wc-stmt-size",
-  "module": "E2eScal/Gen3DdDec.lean",
-  "theorem": "dd_g3dec_WithdrawalCredentials_seg",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeCallSegments.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_call_WithdrawalCredentials_seg",
   "kind": "stmt",
   "old": "(hroot : root.length = 32)",
   "new": "(hroot : root.length = 48)"
  },
  {
   "id": "g3g-ddc-kind-stmt-field",
-  "module": "E2eScal/Gen3DdAccept2.lean",
-  "theorem": "dd_e2e_accept_main_g3_kind",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.accept_generated_composition_kind",
   "kind": "stmt",
   "old": "[.bytes 48, .bytes 32, .u64, .bytes 96]",
   "new": "[.bytes 48, .bytes 48, .u64, .bytes 96]"
  },
  {
   "id": "g3g-pwg3-stmt-other",
-  "module": "E2eScal/PwAcceptG3.lean",
-  "theorem": "pw_e2e_accept_main_g3",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeAcceptFromGeneratedCallSegments.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.accept_from_generated_call_segments",
   "kind": "stmt",
-  "old": "theorem pw_e2e_accept_main_g3 : pw_accept_stmt",
-  "new": "theorem pw_e2e_accept_main_g3 : dd_accept_stmt"
+  "old": "theorem Decode.accept_from_generated_call_segments : Decode.accept_statement",
+  "new": "theorem Decode.accept_from_generated_call_segments : Prysm.Deposit_Data.Decode.accept_statement"
  },
  {
   "id": "g3g-bhg3-head-stmt-len",
-  "module": "E2eScal/BhAcceptG3.lean",
-  "theorem": "bh_e2e_head_g3g",
+  "module": "Prysm/BeaconBlockHeader/DecodeAcceptFromGeneratedCallSegments.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.head_from_generated_call_segments",
   "kind": "stmt",
   "old": "(hlen : s.regs.rcx = 112)",
   "new": "(hlen : s.regs.rcx = 104)"
  },
  {
   "id": "g3g-pwdec-amount-code-dst",
-  "module": "E2eScal/Gen3PwDec.lean",
-  "theorem": "pw_g3dec_Amount_seg",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_Amount_seg",
   "kind": "code",
   "line": 56,
   "old": "  mov %r8,0x10(%rax)",
   "new": "  mov %r8,0x18(%rax)",
-  "code_def": "PwUnmarshal",
-  "code_ns": "E2eScal.H4Code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.PendingPartialWithdrawal.Code",
   "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {
   "id": "g3g-pwdec-index-arg-code-add",
-  "module": "E2eScal/Gen3PwDec.lean",
-  "theorem": "pw_g3dec_Index_arg",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_call_Index_arg",
   "kind": "code",
   "line": 16,
   "old": "  add $0x8,%rax",
   "new": "  add $0x10,%rax",
-  "code_def": "PwUnmarshal",
-  "code_ns": "E2eScal.H4Code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.PendingPartialWithdrawal.Code",
   "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {
   "id": "g3g-bhdec-pi-arg-code-rdi",
-  "module": "E2eScal/Gen3BhDec.lean",
-  "theorem": "bh_g3dec_ProposerIndex_arg",
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_call_ProposerIndex_arg",
   "kind": "code",
   "line": 51,
   "old": "  add $-0x8,%rdi",
   "new": "  add $-0x10,%rdi",
-  "code_def": "BhUnmarshal",
-  "code_ns": "E2eScal.BhCode",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
   "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S"
  },
  {
   "id": "g3g-dddec-wc-code-nop",
-  "module": "E2eScal/Gen3DdDec.lean",
-  "theorem": "dd_g3dec_WithdrawalCredentials_seg",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeCallSegments.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_call_WithdrawalCredentials_seg",
   "kind": "code",
   "line": 51,
   "old": "  nop",
   "new": "  mov $0x20,%ecx",
-  "code_def": "DdUnmarshal",
-  "code_ns": "E2eScal.H4Code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.Deposit_Data.Code",
   "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  }

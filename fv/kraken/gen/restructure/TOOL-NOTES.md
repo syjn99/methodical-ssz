@@ -29,7 +29,8 @@ A map with at least one `type` row runs in reference mode (below).
 The shared-layer map has no `type` row and keeps the old behaviour.
 
 Maps compose in order: `shared-layer`, `checkpoint-and-epoch`, `attestation-data`, `sync-and-indexed-attestation`,
-`historical-batch-and-deposit`, `data-columns-by-root-identifier`, then the next step.
+`historical-batch-and-deposit`, `data-columns-by-root-identifier`,
+`flat-types`, then the next step.
 To undo, run the inverse of the last map first.
 The forward run of a step needs nothing from the earlier maps.
 The inverse of the map of a step alone must give the tree from which the step started.
@@ -136,7 +137,7 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   Exception: a file outside every type can get an `open` from an `open` row with scope `-` (or `*`).
   A reference in that file can be shortened through that `open` too.
   Reason: `scalgen.py` needs a bare `--const` name and refuses a qualified one (`Prysm.Checkpoint.Code.marshalSSZTo`).
-  So the generated E2eScal files keep `open Prysm.Checkpoint.Code` and the bare `unmarshalSSZ`.
+  So the generated files keep `open Prysm.<GoTypeName>.Code` and the bare `unmarshalSSZ`.
 - Comments: the tool does not rewrite a short token whose last name component does not change.
   Such a token is often an English word: `word`, `block`, `host`.
   A comment above the `open` lines is resolved in the scope of the first namespace block.
@@ -191,10 +192,9 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   After a move, the namespace `E2e` can be gone from the imports of one generated file.
   The tool removes it from that file, and then the generator does not reproduce that file.
   `gen5.py` (`G5_OPENS`) and `f24wit.py` were changed, because every output lost `E2e`.
-  `e2cemit.py` still writes `open ... E2e ...`.
-  Only its Checkpoint output (`E2cSpecCp.lean`) lost `E2e`.
-  That file is not reproduced until the flat-types step moves E2eScal.
-  Fix `e2cemit.py` in that step.
+  `e2cemit.py` was changed in the flat-types step.
+- A generator writes its `--prefix` into a comment (the `GEN6-JSON` line), and an evidence tool writes old names into
+  comments. The tool does not rewrite such text: give `manual-edits.tsv` rows, made by rule from a trial tree.
 - List generated names (`.mk`, fields, `.eq_1`) as declaration rows.
   Else a body inside `theorem SszValue.x` sees `SszValue.g` as declared for every local `g`.
 - Do not make declaration rows from a regular-expression list of the source files.
@@ -226,7 +226,7 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   Example: `accept_function_spec Heap S` in a case, but `Decode.accept_function_spec Heap S` in the module.
   Run `negative.py --check-cases` (cwd `fv/kraken`) after the run, and fix the cases with `manual-edits.tsv` rows.
 - Old abbreviations can be equal across libraries.
-  Example: E2eScal (SyncAggregatorSelectionData) declares `PSa`, `psaEnc`, `prysmSaDesc` and `sa_*` lemmas.
+  Example: the old library E2eScal (SyncAggregatorSelectionData) declared `PSa`, `psaEnc`, `prysmSaDesc` and `sa_*` lemmas.
   These are also old names of SyncAggregate.
   The tool leaves such short names in JSON fields unchanged.
   Count such names before and after the run in the files of the other library.
@@ -237,11 +237,10 @@ Then write the rows from the trial tree, and run the trial again with the rows.
   Without `code_ns`, a case in a module under `Prysm/<Type>/` uses `Prysm.<Type>.Code` (`negative.code_ns_of`).
   A full name in `code_def` uses `_root_`.
 - Modules that use the Lean module system (`module`, `public import`) keep it after a move.
-- `fv/kraken/lean/E2eScal/G4DepCheck.lean` tests the namespace prefixes `E2eScal`, `E2e`, `E2eAd` and `Fk`.
-  It has no `Prysm` prefix.
-  Fix it in the flat-types step.
+- `fv/kraken/lean/Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` walks the project namespaces
+  `Prysm`, `Codec`, `ElfData`, `Machine`, `Runtime` and `TestTarget`. A step that adds a root namespace adds it there.
 - `fv/kraken/gen/tools/proof_inventory.py` reads the code constants of `lean/{E2e,E2eAd,E2eScal}/**`.
-  `lean/E2e` and `lean/E2eAd` are gone, and the flat-types step removes `lean/E2eScal`.
+  `lean/E2e`, `lean/E2eAd` and `lean/E2eScal` are gone.
   The script needs a rework before its next use.
 - `descterm.py` emits the namespace from the Go type name as written.
   For the Go type `Deposit_Data` the namespace is `Prysm.Deposit_Data`.

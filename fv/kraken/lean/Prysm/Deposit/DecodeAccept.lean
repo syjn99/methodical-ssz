@@ -1,6 +1,6 @@
 import Codec.Segment.Bytes32LoopHistoricalBatch
 import Codec.Segment.SizeRejectInstances
-import E2eScal.DdAccept
+import Prysm.Deposit_Data.DecodeAccept
 import Prysm.Deposit.Statements
 
 /-!
@@ -10,7 +10,7 @@ import Prysm.Deposit.Statements
 * Proof loop 40–76, 37–39: `Codec.Segment.v32_loop` (n = 33), block and gap facts read from the program;
 * 84–105 (hand steps): exit label, `new(Deposit_Data)` (`NewobjectC`), the Data pointer, the arguments
   buf[1056:1240], the call;
-* the Deposit_Data decoder: `E2eScal.H4.dd_e2e_accept_main` (machine code in the host, our scratch as its frame);
+* the Deposit_Data decoder: `Prysm.Deposit_Data.Decode.accept` (machine code in the host, our scratch as its frame);
 * 106–107 `test; je` taken (err = nil), epilogue 135–138.
 Statement: the frozen `Prysm.Deposit.Decode.accept_statement`.
 -/
@@ -323,7 +323,7 @@ theorem Decode.accept : Decode.accept_statement := by
   obtain ⟨fd, fe, hfd8, hfe, rfl⟩ := split_at r3 8 (by omega)
   have hfe' : fe.length = 8 := by simp only [List.length_append] at hr3'; omega
   rw [Decode.scratch_as_data_frame (rsp.toBitVec - 104) Sd hSd fa fb fc fd fe hfa hfb hfc hfd8 hfe', Decode.data_object_words rax5.toBitVec] at H11
-  refine eventually_trans _ _ _ _ (E2eScal.H4.dd_e2e_accept_main kd hkd hfd pk wc amt sig hpk hwc hamt hsig _
+  refine eventually_trans _ _ _ _ (Prysm.Deposit_Data.Decode.accept kd hkd hfd pk wc amt sig hpk hwc hamt hsig _
     (UInt64.ofBitVec (Host.addrOf (k + 105 + 1)).toBitVec) guard
     fe spm5 sb1 fc fd fb fa
     (List.replicate 8 0) (List.replicate 8 0) (List.replicate 8 0) (List.replicate 8 0) (List.replicate 8 0)

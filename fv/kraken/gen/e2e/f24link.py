@@ -48,7 +48,7 @@ FUNCS = DEC + ENC
 SCOPE = {f: "in (FLAT24 decoder)" for f in DEC} | {f: "in (FLAT24 encoder)" for f in ENC}
 CLASS = dict(adlink.CLASS)
 CLASS.update({
-    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec E2eScal.ViUAccC, proved from machine code (H1)"),
+    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (H1)"),
     f"{PRIM}.(*Slot).UnmarshalSSZ": ("a", "function spec Prysm.Slot.Decode.accept_function_spec, proved from machine code (E2eAd)"),
     f"{PRIM}.(*Epoch).UnmarshalSSZ": ("a", "function spec Prysm.Epoch.Decode.accept_function_spec, proved from machine code (E2e)"),
     "fmt.errorf": ("b", "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"),

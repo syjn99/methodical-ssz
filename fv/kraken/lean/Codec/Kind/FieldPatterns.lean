@@ -14,7 +14,7 @@ The kinds are hand text, written once, and do not depend on a hand theorem of th
 body is kernel-checked against the lemma conclusion. They are `abbrev`s: `with_reducible rfl` unfolds
 them, but not `Int.toBytes` or other semireducible definitions. A wrong literal fails fast and does not run
 into a long unfolding (review fix-r1 S2).
-The anchors in `E2eScal/KindAnchor.lean` show that the P1 kind is the statement of the reviewed hand
+The anchors in `Prysm/Slot/Uint64DecoderKindAnchors.lean` show that the P1 kind is the statement of the reviewed hand
 theorems `Prysm.Slot.Decode.accept` and `Prysm.CommitteeIndex.Decode.accept`.
 -/
 

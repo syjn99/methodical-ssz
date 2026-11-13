@@ -15,10 +15,12 @@
 #
 # Environment:
 #   KINDCHECK_FILES  the generated Lean files for kindcheck.py, as paths relative to fv/kraken.
-#                    Default: the non-partial lean/E2eScal/Gen*.lean files.
+#                    Default: the generated and example modules that were the non-partial lean/E2eScal/Gen*.lean
+#                    files: lean/Prysm/*/Generated*.lean and lean/Prysm/*/Decode*Example*.lean, without the
+#                    identity and specification modules whose names also start with Generated.
 #                    After a step that moves them, give the moved paths of the same files (see files.tsv).
 #   PARTIAL_FILES    the partial generator outputs for `kindcheck.py --partial`, relative to fv/kraken.
-#                    Default: lean/E2eScal/Gen*Partial.lean.
+#                    Default: lean/Prysm/*/Generated*Partial.lean.
 set -u
 if [ $# -ne 1 ]; then
   sed -n '2,21p' "$0" >&2
@@ -55,7 +57,7 @@ run depcheck_data_selftest gen/e2e/depcheck_data.py python3 -I -B gen/e2e/depche
 run kindcheck_selftest gen/scal/kindcheck.py python3 -I -B gen/scal/kindcheck.py --selftest
 
 if [ -z "${KINDCHECK_FILES:-}" ]; then
-  KINDCHECK_FILES=$(ls lean/E2eScal/Gen*.lean 2>/dev/null | grep -v Partial)
+  KINDCHECK_FILES=$(ls lean/Prysm/*/Generated*.lean lean/Prysm/*/Decode*Example*.lean 2>/dev/null | grep -v -e 'Partial\.lean$' -e SameAsHand -e GeneratedEncodeFastPathSpec -e CompositionKind)
 fi
 if [ -n "$KINDCHECK_FILES" ]; then
   # shellcheck disable=SC2086
@@ -64,10 +66,10 @@ else
   echo "kindcheck_generated not run (no files)" | tee -a "$OUT/summary.txt"
 fi
 if [ -z "${PARTIAL_FILES:-}" ]; then
-  PARTIAL_FILES=$(ls lean/E2eScal/Gen*Partial.lean 2>/dev/null)
+  PARTIAL_FILES=$(ls lean/Prysm/*/Generated*Partial.lean 2>/dev/null)
 fi
 for f in $PARTIAL_FILES; do
-  run "kindcheck_partial_$(basename "$f" .lean)" gen/scal/kindcheck.py python3 -I -B gen/scal/kindcheck.py --partial "$f"
+  run "kindcheck_partial_$(basename "$(dirname "$f")")_$(basename "$f" .lean)" gen/scal/kindcheck.py python3 -I -B gen/scal/kindcheck.py --partial "$f"
 done
 
 run negative_selftest gen/e2e/negative.py python3 -I -B gen/e2e/negative.py --selftest

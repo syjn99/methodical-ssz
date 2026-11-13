@@ -11,7 +11,7 @@ names, so the two `Desc`s accept the same inputs with the same values.
 -/
 
 namespace Prysm.Deposit
-open EthLib.Serialization.Ssz Spec TestTarget E2e Codec.Segment
+open EthLib.Serialization.Ssz Spec TestTarget Codec.Segment
 
 theorem desc_checker :
     desc = .container ["proof", "data"] [.vector (.byteVector 32) 33, .container
@@ -26,9 +26,9 @@ theorem serialize_checker (g : SszValue) : serialize checkerDesc g.toValue = .ok
   obtain ⟨pr, d⟩ := g
   have hl1 := vN_flatten_length 33 pr
   have hs1 := vN_serialize 33 (by decide) pr
-  have hs2 := pdd_serialize_checker d
-  have hl2 := pdd_enc_size d
-  simp only [ddCheckerDesc] at hs2
+  have hs2 := Prysm.Deposit_Data.SszValue.serialize_eq_checker d
+  have hl2 := Prysm.Deposit_Data.SszValue.enc_size d
+  simp only [Prysm.Deposit_Data.checkerDesc] at hs2
   simp only [checkerDesc, SszValue.toValue, serialize, serializeStruct, serializeFields] at hs1 ⊢
   simp only [List.length_map, Vector.length_toList, beq_self_eq_true, ↓reduceIte] at hs1 ⊢
   rw [hs1, hs2]
@@ -37,8 +37,8 @@ theorem serialize_checker (g : SszValue) : serialize checkerDesc g.toValue = .ok
     Array.append_assoc, hl1, hl2]
 
 theorem toValue_fits_checker (g : SszValue) : Value.fits checkerDesc g.toValue = true := by
-  have h := pdd_toValue_fits_checker g.data
-  simp only [ddCheckerDesc] at h
+  have h := Prysm.Deposit_Data.SszValue.toValue_fits_checker g.data
+  simp only [Prysm.Deposit_Data.checkerDesc] at h
   simp [checkerDesc, SszValue.toValue, Value.fits, Value.fieldsFit, Prysm.HistoricalBatch.allFit_map_bv32, h]
 
 theorem toValue_surjective_checker (v : Value) (h : Value.fits checkerDesc v = true) :
@@ -49,7 +49,7 @@ theorem toValue_surjective_checker (v : Value) (h : Value.fits checkerDesc v = t
       .byteVector 96]) w := by
     intro w; cases w <;> simp [Value.fits]
   have h' : Value.fits desc v = true := by
-    cases v <;> simp_all [desc, checkerDesc, prysmDdDesc, Value.fits]
+    cases v <;> simp_all [desc, checkerDesc, Prysm.Deposit_Data.desc, Value.fits]
     rename_i es
     rcases es with _ | ⟨e0, _ | ⟨e1, _ | _⟩⟩ <;> simp_all [Value.fieldsFit]
   exact toValue_surjective v h'

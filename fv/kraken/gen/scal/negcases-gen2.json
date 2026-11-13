@@ -69,33 +69,33 @@
  },
  {
   "id": "g2-ex-pk-control",
-  "module": "E2eScal/Gen2Examples.lean",
-  "theorem": "dm_dec_PublicKey_seg",
+  "module": "Prysm/DepositMessage/DecodeFieldSegmentExamples.lean",
+  "theorem": "Prysm.DepositMessage.Decode.example_field_PublicKey_seg",
   "kind": "control"
  },
  {
   "id": "g2-ex-pk-stmt-size",
-  "module": "E2eScal/Gen2Examples.lean",
-  "theorem": "dm_dec_PublicKey_seg",
+  "module": "Prysm/DepositMessage/DecodeFieldSegmentExamples.lean",
+  "theorem": "Prysm.DepositMessage.Decode.example_field_PublicKey_seg",
   "kind": "stmt",
   "old": "(hroot : root.length = 48)",
   "new": "(hroot : root.length = 32)"
  },
  {
   "id": "g2-ex-idx-stmt-off",
-  "module": "E2eScal/Gen2Examples.lean",
-  "theorem": "bi_dec_Index_seg",
+  "module": "Prysm/DepositMessage/DecodeFieldSegmentExamples.lean",
+  "theorem": "Prysm.BlobIdentifier.Decode.example_field_Index_seg",
   "kind": "stmt",
   "old": "(hSrc : bf + (32 : Int64).toBitVec = aSrc)",
   "new": "(hSrc : bf + (24 : Int64).toBitVec = aSrc)"
  },
  {
   "id": "g2-ex-idx-code-off",
-  "module": "E2eScal/Gen2Examples.lean",
-  "theorem": "bi_dec_Index_seg",
+  "module": "Prysm/DepositMessage/DecodeFieldSegmentExamples.lean",
+  "theorem": "Prysm.BlobIdentifier.Decode.example_field_Index_seg",
   "kind": "code",
-  "code_def": "BiUnmarshal",
-  "code_ns": "E2eScal.H3Code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.BlobIdentifier.Code",
   "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
   "old": "  mov 0x20(%rcx),%rcx",
@@ -127,8 +127,8 @@
  },
  {
   "id": "g2-compose-control",
-  "module": "E2eScal/Gen2ComposeEx.lean",
-  "theorem": "bi_e2e_accept_main_composed",
+  "module": "Prysm/BlobIdentifier/DecodeAcceptComposedExample.lean",
+  "theorem": "Prysm.BlobIdentifier.Decode.accept_composed_example",
   "kind": "control"
  }
 ]

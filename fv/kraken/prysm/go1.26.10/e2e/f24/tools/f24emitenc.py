@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
 """Copy of the emitter `scal/e2c/e2cemit.py` (evidence tool, not part of gen/scal; only the type
-table and the module names Gen6F24<X>Enc changed). Emitter: per generated encoder fast-path theorem
-`<p>_g6e_fast`, emit a witness module (WitE2c<X>.lean) and a spec-corollary module (E2cSpec<X>.lean).
+table and the output paths changed). Emitter: per generated encoder fast-path theorem
+`Encode.generated_fast`, emit a witness module and a spec-corollary module:
+<out dir>/Prysm/<T>/WitnessGeneratedEncodeFastPath.lean and <out dir>/Prysm/<T>/GeneratedEncodeFastPathSpec.lean.
 
-Reads the committed Gen6<X>Enc.lean (statement text, GEN6-JSON header) and the IR (Go struct size).
-usage: e2cemit.py <lean dir> <out dir> [X ...]
+Reads the committed Prysm/<T>/GeneratedEncodeFastPath.lean (statement text, GEN6-JSON header) and the IR (Go struct size).
+usage: e2cemit.py <lean dir> <out dir> [<T> ...]      (<T>: a Go type name of TYPES)
 """
 import json, re, sys, os
 
 TYPES = {
-    # X: (spec module, P structure, enc, serialize lemma, Desc, [(field accessor kind, expr)])
-    'Bbr': ('E2eScal.F24BbrSpec', 'PBbr', 'pbbrEnc', 'pbbr_serialize', 'prysmBbrDesc', ['u:startSlot', 'u:count', 'u:step']),
-    'Bdr': ('E2eScal.F24BdrSpec', 'PBdr', 'pbdrEnc', 'pbdr_serialize', 'prysmBdrDesc',
+    # Go type name: (spec module, SSZ value structure, encoding, serialize lemma, Desc, [(field accessor kind, expr)])
+    'BeaconBlocksByRangeRequest': ('Prysm.BeaconBlocksByRangeRequest.Spec', 'Prysm.BeaconBlocksByRangeRequest.SszValue', 'Prysm.BeaconBlocksByRangeRequest.SszValue.encode', 'Prysm.BeaconBlocksByRangeRequest.SszValue.serialize_eq', 'Prysm.BeaconBlocksByRangeRequest.desc', ['u:startSlot', 'u:count', 'u:step']),
+    'BuilderDepositRequest': ('Prysm.BuilderDepositRequest.Spec', 'Prysm.BuilderDepositRequest.SszValue', 'Prysm.BuilderDepositRequest.SszValue.encode', 'Prysm.BuilderDepositRequest.SszValue.serialize_eq', 'Prysm.BuilderDepositRequest.desc',
             ['b:pubkey', 'b:withdrawalCredentials', 'u:amount', 'b:signature']),
-    'Bpf': ('E2eScal.F24BpfSpec', 'PBpf', 'pbpfEnc', 'pbpf_serialize', 'prysmBpfDesc', ['u:maxExecutionPayment']),
-    'Bsr': ('E2eScal.F24BsrSpec', 'PBsr', 'pbsrEnc', 'pbsr_serialize', 'prysmBsrDesc', ['u:startSlot', 'u:count']),
-    'Dpr': ('E2eScal.F24DprSpec', 'PDpr', 'pdprEnc', 'pdpr_serialize', 'prysmDprDesc',
+    'BuilderPreferences': ('Prysm.BuilderPreferences.Spec', 'Prysm.BuilderPreferences.SszValue', 'Prysm.BuilderPreferences.SszValue.encode', 'Prysm.BuilderPreferences.SszValue.serialize_eq', 'Prysm.BuilderPreferences.desc', ['u:maxExecutionPayment']),
+    'BlobSidecarsByRangeRequest': ('Prysm.BlobSidecarsByRangeRequest.Spec', 'Prysm.BlobSidecarsByRangeRequest.SszValue', 'Prysm.BlobSidecarsByRangeRequest.SszValue.encode', 'Prysm.BlobSidecarsByRangeRequest.SszValue.serialize_eq', 'Prysm.BlobSidecarsByRangeRequest.desc', ['u:startSlot', 'u:count']),
+    'DepositRequest': ('Prysm.DepositRequest.Spec', 'Prysm.DepositRequest.SszValue', 'Prysm.DepositRequest.SszValue.encode', 'Prysm.DepositRequest.SszValue.serialize_eq', 'Prysm.DepositRequest.desc',
             ['b:pubkey', 'b:withdrawalCredentials', 'u:amount', 'b:signature', 'u:index']),
-    'Epr': ('E2eScal.F24EprSpec', 'PEpr', 'peprEnc', 'pepr_serialize', 'prysmEprDesc', ['u:startSlot', 'u:count']),
-    'Pdc': ('E2eScal.F24PdcSpec', 'PPdc', 'ppdcEnc', 'ppdc_serialize', 'prysmPdcDesc', ['b:beaconBlockRoot', 'u:slot']),
-    'Vid': ('E2eScal.F24VidSpec', 'PVid', 'pvidEnc', 'pvid_serialize', 'prysmVidDesc',
+    'ExecutionPayloadEnvelopesByRangeRequest': ('Prysm.ExecutionPayloadEnvelopesByRangeRequest.Spec', 'Prysm.ExecutionPayloadEnvelopesByRangeRequest.SszValue', 'Prysm.ExecutionPayloadEnvelopesByRangeRequest.SszValue.encode', 'Prysm.ExecutionPayloadEnvelopesByRangeRequest.SszValue.serialize_eq', 'Prysm.ExecutionPayloadEnvelopesByRangeRequest.desc', ['u:startSlot', 'u:count']),
+    'PartialDataColumnGroupID': ('Prysm.PartialDataColumnGroupID.Spec', 'Prysm.PartialDataColumnGroupID.SszValue', 'Prysm.PartialDataColumnGroupID.SszValue.encode', 'Prysm.PartialDataColumnGroupID.SszValue.serialize_eq', 'Prysm.PartialDataColumnGroupID.desc', ['b:beaconBlockRoot', 'u:slot']),
+    'ValidatorIdentity': ('Prysm.ValidatorIdentity.Spec', 'Prysm.ValidatorIdentity.SszValue', 'Prysm.ValidatorIdentity.SszValue.encode', 'Prysm.ValidatorIdentity.SszValue.serialize_eq', 'Prysm.ValidatorIdentity.desc',
             ['u:index', 'b:pubkey', 'u:activationEpoch']),
 }
 RTCOPY_LEN = 26
@@ -75,7 +76,7 @@ def split_top(s, sep):
 
 
 def parse(lean_dir, X):
-    path = os.path.join(lean_dir, 'E2eScal', 'Gen6F24%sEnc.lean' % X)
+    path = os.path.join(lean_dir, 'Prysm', X, 'GeneratedEncodeFastPath.lean')
     src = open(path).read()
     hdr = json.loads(re.search(r'GEN6-JSON: (\{.*\})', src).group(1))
     opn = re.search(r'^open (.*)$', src, re.M).group(1)
@@ -339,9 +340,9 @@ def emit_wit(X, info, cl, gsize):
     w('field value of the stated lengths every premise of `%s_fast` holds (non-vacuity of the fast path).' % p)
     w('-/')
     w('')
-    w('open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.Gen6Enc %s' % ' '.join(info['open'].split()[5:]))
+    w('open Machine Runtime TestTarget Machine.Witness Codec %s' % ' '.join(info['open'].split()[4:]))
     w('')
-    w('namespace E2eScal.WitE2c%s' % X)
+    w('namespace Prysm.%s.Witness.GeneratedEncodeFastPath' % X)
     w('')
     w('set_option maxRecDepth 100000')
     w('')
@@ -467,8 +468,8 @@ def emit_wit(X, info, cl, gsize):
         w(line)
         w('    (fun _ h => ⟨h.1, h.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)')
         w('')
-    inst('%s_e2c_wit_empty' % sp, 'Empty prefix, `cap = %d`.' % size, [], 0)
-    inst('%s_e2c_wit_prefix' % sp, 'Prefix `[0xaa, 0xbb, 0xcc]`, 5 spare bytes (`cap = len + %d`).' % (size + 5),
+    inst('runs_empty', 'Empty prefix, `cap = %d`.' % size, [], 0)
+    inst('runs_prefix', 'Prefix `[0xaa, 0xbb, 0xcc]`, 5 spare bytes (`cap = len + %d`).' % (size + 5),
          [0xaa, 0xbb, 0xcc], 5)
 
     def vals(kind):
@@ -488,9 +489,9 @@ def emit_wit(X, info, cl, gsize):
     for nm, kind in (('empty', 'zero'), ('prefix', 'mid'), ('prefix', 'max')):
         v, pr = vals(kind)
         w('example (z\' : RegZmms) (f : StatusFlags) :=')
-        w('  %s_e2c_wit_%s %s %s z\' f' % (sp, nm, v, pr))
+        w('  runs_%s %s %s z\' f' % (nm, v, pr))
     w('')
-    w('end E2eScal.WitE2c%s' % X)
+    w('end Prysm.%s.Witness.GeneratedEncodeFastPath' % X)
     return '\n'.join(L) + '\n', dict(rsp=rsp, dst=dst, R=R, gsize=gsize)
 
 
@@ -500,6 +501,7 @@ def emit_spec(X, info, cl):
     p = hdr['prefix']
     sp = p.split('_')[0]
     smod, PS, enc, ser, desc, facc = TYPES[X]
+    PS, enc, ser, desc = (n[len('Prysm.%s.' % X):] for n in (PS, enc, ser, desc))  # short names in Prysm.<T>
     role = cl['role']
     fexpr = []
     for k, fa in enumerate(facc):
@@ -569,26 +571,26 @@ def emit_spec(X, info, cl):
     w('/-!')
     w('# %s encoder fast path (generated theorem) against the independent Desc (FLAT24 / H7, text of the unit E2-C emitter)' % hdr['type'])
     w('')
-    w('`%s_e2c_spec_k`: for a receiver holding the Go layout of `g : %s` (uint64 fields = `uintBytes 8`, byte' % (sp, PS))
+    w('`Encode.generated_fast_spec`: for a receiver holding the Go layout of `g : %s` (uint64 fields = `uintBytes 8`, byte' % PS)
     w('fields = `(p, n, cap)` with the n bytes at `p`), the generated fast-path theorem `%s_fast` writes at' % p)
     w('`dst[len:len+%d]` exactly the bytes of `serialize %s g.toValue` (the Desc of the decoder\'s spec alignment).' % (hdr['size'], desc))
-    w('Shape of `E2eScal.Bh.bh_e2e_marshal_spec_k`. Encoder fast path only (`len + %d ≤ cap`, exact field' % hdr['size'])
+    w('Shape of `Prysm.BeaconBlockHeader.Encode.fast_path_spec`. Encoder fast path only (`len + %d ≤ cap`, exact field' % hdr['size'])
     w('lengths). Emitted by the unit\'s evidence tool `e2cemit.py`, then built and kernel-checked.')
     w('-/')
     w('')
-    w('open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.Gen6Enc %s EthLib.Serialization.Ssz' % ' '.join(info['open'].split()[5:]))
+    w('open Machine Runtime TestTarget Codec %s EthLib.Serialization.Ssz' % ' '.join(info['open'].split()[4:]))
     w('variable [Host]')
     w('')
-    w('namespace E2eScal.E2c')
+    w('namespace Prysm.%s' % X)
     w('')
     toList = ' ++ '.join(fe[0] for fe in fexpr)
-    w('theorem %s_e2c_enc_toList (g : %s) : (%s g).toList = %s := by' % (sp, PS, enc, toList))
+    w('theorem SszValue.encode_toList_generated (g : %s) : (%s g).toList = %s := by' % (PS, enc, toList))
     w('  simp only [%s, Array.toList_append] <;> rfl' % enc)
     w('')
     names = ['A%d' % k for k in range(nfl)]
     hyps = ' '.join('(h%d : A%d.length = %d)' % (k, k, fexpr[k][1]) for k in range(nfl))
     rhs = 'Eq (A0.At a)' + ''.join(' ⋆ Eq (A%d.At (a + %d))' % (k, offs[k]) for k in range(1, nfl))
-    w('theorem %s_e2c_split (a : BitVec 64) (%s : List UInt8) %s :' % (sp, ' '.join(names), hyps))
+    w('theorem Encode.generated_fast_split (a : BitVec 64) (%s : List UInt8) %s :' % (' '.join(names), hyps))
     w('    Eq ((%s).At a) = %s := by' % (' ++ '.join(names), rhs))
     if nfl > 2:
         w('  simp only [List.append_assoc]')
@@ -603,7 +605,7 @@ def emit_spec(X, info, cl):
         w('  simp only [Std.ExtHashMap.sep_assoc]')
     w('')
     w('set_option maxHeartbeats 4000000 in')
-    w('theorem %s_e2c_spec_k %s :' % (sp, '\n    '.join(out_b)))
+    w('theorem Encode.generated_fast_spec %s :' % '\n    '.join(out_b))
     w('    ∃ bs, serialize %s g.toValue = .ok bs ∧' % desc)
     w('    Eventually (step1 Host.exe)')
     w('      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx')
@@ -619,14 +621,14 @@ def emit_spec(X, info, cl):
     w('  refine eventually_mono (%s_fast %s)' % (p, ' '.join(args)))
     w('    (fun st ⟨%s⟩ =>' % pat)
     w('      ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, ?_⟩)')
-    w('  rw [%s_e2c_enc_toList, %s_e2c_split %s %s]' % (sp, sp, ' '.join(['_'] * (nfl + 1)), ' '.join('hF%d' % k for k in range(nfl))))
+    w('  rw [SszValue.encode_toList_generated, Encode.generated_fast_split %s %s]' % (' '.join(['_'] * (nfl + 1)), ' '.join('hF%d' % k for k in range(nfl))))
     w(('  try simp only [← Std.ExtHashMap.sep_assoc]  -- one output chunk: nothing to reassociate (FLAT24 attempt 2)'
        if len(hdr['fields']) == 1 else '  simp only [← Std.ExtHashMap.sep_assoc]'))
     for k, fe in enumerate(fexpr):
         w('  generalize %s = F%d at hm ⊢' % (fe[0], k))
     w('  exact sep_true (by ecancel)')
     w('')
-    w('end E2eScal.E2c')
+    w('end Prysm.%s' % X)
     return '\n'.join(L) + '\n'
 
 
@@ -637,16 +639,17 @@ def main():
     summary = {}
     for X in which:
         info = parse(lean_dir, X)
-        info['module'] = 'E2eScal.Gen6F24%sEnc' % X
+        info['module'] = 'Prysm.%s.GeneratedEncodeFastPath' % X
         info['Spath'] = os.path.join(lean_dir, '..', info['hdr']['S'])
-        if X in ('Cp',):
+        if X in ('Checkpoint',):
             info['Spath'] = os.path.join(lean_dir, '..', 'prysm/go1.26.10/e2e/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S') if not os.path.exists(info['Spath']) else info['Spath']
         cl = classify(info)
         gsize, _ = ir_size(ir, info['hdr']['ir_type'])
         wt, meta = emit_wit(X, info, cl, gsize)
         sp = emit_spec(X, info, cl)
-        open(os.path.join(out_dir, 'WitE2c%s.lean' % X), 'w').write(wt)
-        open(os.path.join(out_dir, 'E2cSpec%s.lean' % X), 'w').write(sp)
+        os.makedirs(os.path.join(out_dir, 'Prysm', X), exist_ok=True)
+        open(os.path.join(out_dir, 'Prysm', X, 'WitnessGeneratedEncodeFastPath.lean'), 'w').write(wt)
+        open(os.path.join(out_dir, 'Prysm', X, 'GeneratedEncodeFastPathSpec.lean'), 'w').write(sp)
         summary[X] = dict(meta, rt=any(b[0] == ['hmm'] for b in info['binders']), nex=len(info['exnames']))
     print(json.dumps(summary, indent=1, sort_keys=True))
 

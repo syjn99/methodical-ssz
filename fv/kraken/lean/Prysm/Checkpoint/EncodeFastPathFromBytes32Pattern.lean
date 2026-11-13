@@ -1,0 +1,221 @@
+import Codec.Bytes32Encode
+import Prysm.Checkpoint.EncodeFastPath
+
+/-!
+# In-sample check of the 32-byte field pattern (encode): the Checkpoint encoder fast path through `rootenc_seg`
+
+`Encode.fast_path_from_bytes32_pattern` has the statement of `Prysm.Checkpoint.Encode.fast_path` (`Prysm/Checkpoint/EncodeFastPath.lean`)
+word for word. Its proof is the hand proof with directives 36–62 (the `Root` length test,
+the capacity test, the spills and `memmove`) replaced by one application of
+`Codec.rootenc_seg` (head block at k + 36, `lrej` = `L_108`, tail block at k + 55 = `L_cf`;
+field displacements 16 / 24; spills 0x58 / 0x50 / 0x60). Directives 0–35 (guard, prologue,
+the inlined Epoch encoder) and 63–70 (return) are the hand text unchanged (verbatim share;
+they are not part of the 32-byte field pattern). `Encode.fast_path_from_bytes32_pattern_same_statement` checks that the statements are the
+same proposition.
+-/
+
+open Machine Runtime TestTarget Prysm.Checkpoint.Code
+variable [Host]
+
+open Codec
+namespace Prysm.Checkpoint
+
+set_option maxHeartbeats 64000000 in
+set_option maxRecDepth 100000 in
+theorem Encode.fast_path_from_bytes32_pattern (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
+    (cst e8 cC ctl root pre d0 d1 : List UInt8) (hcst : cst.length = 8) (he8 : e8.length = 8) (hcC : cC.length = 8)
+    (hctl : ctl.length = 32) (hroot : root.length = 32) (hd0 : d0.length = 8) (hd1 : d1.length = 32)
+    (p : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
+    (fp s2 l16 l24 l32 t40 t30 rslot : List UInt8)
+    (hfp : fp.length = 8) (h2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8)
+    (hl32 : l32.length = 8) (ht40 : t40.length = 16) (ht30 : t30.length = 16) (hrs : rslot.length = 8)
+    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
+      ⋆ Eq (l16.At (s.regs.rsp.toBitVec - 16)) ⋆ Eq (l24.At (s.regs.rsp.toBitVec - 24))
+      ⋆ Eq (l32.At (s.regs.rsp.toBitVec - 32)) ⋆ Eq (t30.At (s.regs.rsp.toBitVec - 48))
+      ⋆ Eq (t40.At (s.regs.rsp.toBitVec - 64))
+      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 120)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 120 - BitVec.ofNat 64 S))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Eq (cst.At s.regs.rax.toBitVec) ⋆ Eq (e8.At (s.regs.rax.toBitVec + 8))
+      ⋆ Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 32))
+      ⋆ Eq (ctl.At (s.regs.rax.toBitVec + 40)) ⋆ Eq (root.At p)
+      ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
+      ⋆ Eq (d1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8)) ⋆ R)
+    (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
+    (hcap : s.regs.rcx.toNat + 40 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
+    (hmm : MemmoveC S) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
+        ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 ∧ st.data.regs.rcx = s.regs.rdi
+        ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
+        ∃ (t u scr : List UInt8), t.length = 8 ∧ u.length = 16 ∧ scr.length = S ∧
+        (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec - 16))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rdi.toBitVec.toInt).At (s.regs.rsp.toBitVec - 24))
+          ⋆ Eq ((Int.toBytes 8 (s.regs.rcx.toBitVec + 40).toInt).At (s.regs.rsp.toBitVec - 32))
+          ⋆ Eq (u.At (s.regs.rsp.toBitVec - 48)) ⋆ Eq (e8.At (s.regs.rsp.toBitVec - 64))
+          ⋆ Eq (t.At (s.regs.rsp.toBitVec - 56))
+          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 63)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 120))
+          ⋆ Eq (scr.At (s.regs.rsp.toBitVec - 120 - BitVec.ofNat 64 S))
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+          ⋆ Eq (cst.At s.regs.rax.toBitVec) ⋆ Eq (e8.At (s.regs.rax.toBitVec + 8))
+          ⋆ Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 32))
+          ⋆ Eq (ctl.At (s.regs.rax.toBitVec + 40)) ⋆ Eq (root.At p)
+          ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
+          ⋆ Eq (root.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8)) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf k⟩ := by
+  have hA := Codec.infix_sub (q := Codec.rootEncHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf" 16 24) 36 hk
+    (by simp only [marshalSSZTo, Codec.rootEncHead, List.drop_succ_cons, List.drop_zero, List.length_cons,
+      List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.rootEncTail "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf" 88 80 96) 55 hk
+    (by simp only [marshalSSZTo, Codec.rootEncTail, List.drop_succ_cons, List.drop_zero, List.length_cons,
+      List.length_nil, List.take_succ_cons, List.take_zero])
+  have hl := Machine.label_at' hk hf (j := 55)
+    (by simp only [marshalSSZTo, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+    (by simp only [marshalSSZTo, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hguard hsp hcap hcap63 hpre ⊢
+  have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size
+  simp only [UInt64.size] at *
+  kat hk marshalSSZTo 0
+  kat hk marshalSSZTo 1
+  kat hk marshalSSZTo 2
+  apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk marshalSSZTo 3
+  split
+  · rename_i h; exfalso
+    simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+    rcases h with h | h
+    · apply h; omega
+    · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
+  simp only [Effects.All]
+  kat hk marshalSSZTo 4
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
+  intro m1 H1
+  simp only [Width.bytes, Width.bits] at H1
+  kunfold
+  kat hk marshalSSZTo 5
+  kat hk marshalSSZTo 6
+  kat hk marshalSSZTo 7
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
+  intro m2 H2
+  simp only [Width.bytes, Width.bits] at H2
+  kunfold
+  kat hk marshalSSZTo 8
+  kat hk marshalSSZTo 9
+  apply load_step _ _ _ _ e8 _ _ (by ecancel) (by exact he8)
+  kunfold
+  kat hk marshalSSZTo 10
+  kat hk marshalSSZTo 11
+  kat hk marshalSSZTo 12
+  kat hk marshalSSZTo 13
+  kat hk marshalSSZTo 14
+  simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
+  kunfold
+  rw [show rsp.toBitVec - 8#64 - 104 + 48 = rsp.toBitVec - 64 by bv_omega]
+  apply store_avx_step _ _ _ _ t40 _ _ (by ecancel) (by exact ht40) (by decide)
+  intro m3 H3
+  kunfold
+  kat hk marshalSSZTo 15
+  simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
+  kunfold
+  rw [show rsp.toBitVec - 64 + 16 = rsp.toBitVec - 48 by bv_omega]
+  apply store_avx_step _ _ _ _ t30 _ _ (by ecancel) (by exact ht30) (by decide)
+  intro m4 H4
+  kunfold
+  rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 64),
+    show rsp.toBitVec - 64 + 8 = rsp.toBitVec - 56 by bv_omega] at H4
+  kat hk marshalSSZTo 16
+  apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
+    _ _ (by eaddr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
+  intro m5 H5
+  simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H5
+  kunfold
+  kat hk marshalSSZTo 17
+  kat hk marshalSSZTo 18
+  split
+  case isFalse h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega
+  simp only [Effects.All]
+  klabel hk hf marshalSSZTo 33
+  kat hk marshalSSZTo 33
+  kat hk marshalSSZTo 34
+  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ e8 _ _ (by eaddr) (by ecancel) (by exact he8)
+  kunfold
+  kat hk marshalSSZTo 35
+  rw [Prysm.Checkpoint.Encode.fast_path_mul]
+  apply store_step _ _ _ _ _ d0 _ _ (by ecancel) (by exact hd0)
+  intro m6 H6
+  simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6
+  kunfold
+  refine eventually_trans _ _ _ _ (Codec.rootenc_seg _ _ 16 24 88 80 96 (k + 36) (k + 55) hA hB hl
+    (rsp.toBitVec - 8#64 - 104) rax.toBitVec (rcx.toBitVec + 8) rbx.toBitVec rdi.toBitVec p
+    (rax.toBitVec + 16) (rax.toBitVec + 24) (rsp.toBitVec - 24) (rsp.toBitVec - 32) (rsp.toBitVec - 16)
+    (rsp.toBitVec - 120) (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rbx.toBitVec + rcx.toBitVec + 8) S
+    (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
+    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
+    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega)
+    (by rw [show rsp.toBitVec - 8#64 - 104 - 8 = rsp.toBitVec - 120 by bv_omega]) (by bv_omega)
+    (by have h8 : (8 : BitVec 64).toNat = 8 := rfl
+        simp only [BitVec.toNat_add, UInt64.toNat_toBitVec, h8]; omega)
+    root d1 l24 l32 l16 rslot scratch hroot hd1 hl24 hl32 hl16 hrs hsc _ _ _ _ rfl rfl rfl rfl rfl rfl rfl
+    (by ecancel) hmm) ?_
+  rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, stk1, hstk1, Hm1⟩
+  dsimp only at hpc1 hrsp1 hr141 hrbp1 Hm1
+  subst hpc1
+  obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
+    zmms1, flags1, mem1⟩ := e1
+  simp only at hrsp1 hr141 hrbp1 Hm1
+  subst rsp1 r141 rbp1
+  kat hk marshalSSZTo 63
+  apply load_step_at _ _ (rsp.toBitVec - 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+    (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk marshalSSZTo 64
+  apply load_step_at _ _ (rsp.toBitVec - 32) _ _ (Int.toBytes 8 (rcx.toBitVec + 8 + 32).toInt) _ _ (by eaddr)
+    (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk marshalSSZTo 65
+  apply load_step_at _ _ (rsp.toBitVec - 24) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+    (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk marshalSSZTo 66
+  intro _
+  kat hk marshalSSZTo 67
+  intro _
+  kat hk marshalSSZTo 68
+  kat hk marshalSSZTo 69
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+    (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk marshalSSZTo 70
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by eaddr) (by ecancel)
+    (by exact Int.toBytes_length 8 _)
+  kunfold
+  apply Eventually.done
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?tt, ?uu, stk1, ?htt, ?huu, hstk1, ?hmem⟩
+  case hmem =>
+    rw [show k + 55 + 7 + 1 = k + 63 from rfl] at Hm1
+    rw [show rcx.toBitVec + 40 = rcx.toBitVec + 8 + 32 by bv_omega]
+    ecancel
+  case htt => simp [Int.toBytes_length]
+  case huu => simp [Int.toBytes_length]
+  all_goals first
+    | exact trivial
+    | with_reducible rfl
+    | (exact Prysm.Checkpoint.Encode.fast_path_len40 rcx (by omega))
+    | (apply UInt64.toBitVec_inj.mp; simp; done)
+    | (apply UInt64.toBitVec_inj.mp; eaddr)
+
+/-- The in-sample statement is the hand statement (same proposition). -/
+theorem Encode.fast_path_from_bytes32_pattern_same_statement : @Prysm.Checkpoint.Encode.fast_path = @Encode.fast_path_from_bytes32_pattern := rfl
+
+end Prysm.Checkpoint

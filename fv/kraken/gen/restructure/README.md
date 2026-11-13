@@ -146,6 +146,10 @@ The maps apply in this order:
 - `maps/data-columns-by-root-identifier/`: the libraries `E2eEnc` and `E2eDec` become `Prysm/DataColumnsByRootIdentifier/`.
   Some of their modules go to `Prysm/RuntimeModel/` and `Prysm/ElfData/`.
 
+- `maps/flat-types/`: the library `E2eScal` becomes `Prysm/<GoTypeName>/` for 24 flat types; some modules go to the
+  directories of earlier types, and the type-independent modules go to `Codec/` and `Codec/Kind/`.
+  The step changed the emit strings of the generators and the evidence tools, `kindcheck.py`, `regen.py` and `python_checks.sh`.
+
 Issue 10 of `syjn99/methodical-ssz` holds the list of the steps that remain.
 
 ## 5. Helper scripts in `tools/`
@@ -196,7 +200,8 @@ Before the forward run:
 6. Run the regeneration comparison on the base:
    ```sh
    python3 -I -B fv/kraken/gen/restructure/tools/regen.py <scratch>/regen-before-work \
-     --files fv/kraken/gen/restructure/maps/shared-layer/files.tsv > <scratch>/regen-before.txt
+     --files fv/kraken/gen/restructure/maps/shared-layer/files.tsv \
+     --files fv/kraken/gen/restructure/maps/flat-types/files.tsv > <scratch>/regen-before.txt
    ```
 
 Make the map:

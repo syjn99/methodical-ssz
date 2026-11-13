@@ -10,7 +10,7 @@ epilogue. This file has the three pieces that are not a field segment. Each one 
 form of `Seg.lean` (template + `IsInfixAt` hypothesis); none uses a runtime contract.
 
 * `dechead_seg` — `decHead fn l0 lmore lerr sz` (13 directives: two labels, stack guard, prologue,
-  `cmp $sz,%rcx; jne lerr`, the two spills). Statement = the statement of `E2eScal.Bi.bi_e2e_head` with the
+  `cmp $sz,%rcx; jne lerr`, the two spills). Statement = the statement of `Prysm.BlobIdentifier.Decode.head` with the
   size `sz` (`hlen : rcx = sz`). The frame size and the spill displacements are literals (the three
   development decoders agree); another frame is not covered.
 * `bytesdec_tail_seg` — the code after the `jne lwb` of a byte-vector segment when the write barrier is
@@ -92,7 +92,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- **Head segment**: from the entry through the stack guard, the prologue, the size check
 (`rcx = sz`) and the two spills to directive `j + 13`. The statement is that of
-`E2eScal.Bi.bi_e2e_head` with the template and the size as parameters. -/
+`Prysm.BlobIdentifier.Decode.head` with the template and the size as parameters. -/
 theorem dechead_seg (fn l0 lmore lerr : String) (sz : Int64) (j : Nat)
     (hA : (decHead fn l0 lmore lerr sz).IsInfixAt Host.prog j)
     (s : MachineData) (ra guard : UInt64) (fp s1 s2 : List UInt8)

@@ -8,7 +8,7 @@
 The Go program is `prysm/go1.26.10/e2e/f24/f24check-main.go.txt`, run natively with Go 1.26.10 through the gate
 with `go run -overlay` in the parked Prysm tree (read only). This is a Go-semantics check on the host
 (linux/arm64), not an execution of the amd64 ELF. Every expected value is computed here, independently of the code
-under test, from the field list of the hand Desc (`lean/E2eScal/F24Desc.lean`, Prysm proto): the encoding is the
+under test, from the field list of the hand Desc (`lean/Prysm/DepositRequest/SpecDescription.lean`, Prysm proto): the encoding is the
 concatenation of the fields in order (uint64 little-endian, byte vectors as is); decoding accepts exactly that size
 and yields those field values (byte fields with len = cap = size); any other size gives an error that is
 ssz.ErrSize. Encoder fast path: output = prefix ++ encoding, same backing array, cap unchanged, receiver unchanged

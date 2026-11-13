@@ -9,7 +9,7 @@ This is a Go-semantics check, not an execution of the amd64 ELF. Every expected 
 independently of the code under test, from consensus-specs: serialize(BeaconBlockHeader) = uint64 LE slot ++
 uint64 LE proposer_index ++ parent_root ++ state_root ++ body_root (three Bytes32); MarshalSSZTo(dst) returns
 dst ++ serialize. Case groups:
-  fast-*   len(dst) + 112 <= cap(dst): the path of `bh_e2e_marshal_main`. Also expected: nil error, the result
+  fast-*   len(dst) + 112 <= cap(dst): the path of `Prysm.BeaconBlockHeader.Encode.fast_path`. Also expected: nil error, the result
            shares the backing array of dst (no growslice), cap unchanged, receiver unchanged.
   grow-*   nil or short dst (runtime.growslice): NOT the proved path; checked for the bytes only.
   rej-*    one root of length 31 or 33 (ssz.ErrBytesLength, nil slice): NOT the proved path.

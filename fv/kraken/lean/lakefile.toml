@@ -108,13 +108,6 @@ needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_
   "lv_t3_norm_S", "lv_t3_data", "runtime_model_S", "lv_hb_norm_S", "lv_dep_norm_S", "lv_dep_data", "deposit_lean_S",
   "enc_norm_S", "dcd_norm_S", "dcd_data"]
 
-# Generated and hand proofs of the flat fixed-size types: their segment instances, accept and reject theorems,
-# witnesses and specifications. The parameterized lemmas that they use are in Codec. Build one module at a time.
-[[lean_lib]]
-name = "E2eScal"
-globs = ["E2eScal.+"]
-needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S"]
-
 # Link sets of the list and vector types on the same Go 1.26.10 ELF: lv/link (SyncAggregate and SyncCommittee
 # decoders) and lv/link-t3 (IndexedAttestation decoder). Inputs of the Prysm modules that read them
 # (Prysm/SyncAggregate/, Prysm/SyncCommittee/, Prysm/IndexedAttestation/, Prysm/ElfData/) and of the libraries below.

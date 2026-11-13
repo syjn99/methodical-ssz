@@ -19,7 +19,7 @@ The design principles are in `../../README.md`.
 
 | Program | Reads | Writes |
 | --- | --- | --- |
-| `scal/scalgen.py`, with `scal/gen5.py` and `scal/gen6enc.py` | A converted `.S` file and the IR entry of one type | `lean/E2eScal/Gen*.lean`: segment, accept, size reject and encoder fast path theorems |
+| `scal/scalgen.py`, with `scal/gen5.py` and `scal/gen6enc.py` | A converted `.S` file and the IR entry of one type | `lean/Prysm/<GoTypeName>/Generated*.lean`: segment, accept, size reject and encoder fast path theorems |
 | `scal/gen.sh` | | Runs `scalgen.py` once for each committed generated file |
 | `e2e/descterm.py`, `e2e/lvdescterm.py` | A `Desc` JSON file that the checker accepted | `*SpecChecker.lean`: the checker `Desc` as Lean |
 | `e2e/layout.py`, `e2e/adlayout.py` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/Checkpoint/Layout.lean`, `lean/Prysm/AttestationData/Layout.lean` |
@@ -44,7 +44,7 @@ Use `regen_check.sh` of the project skill. It runs the generator two times into 
 Exit 0 means the same bytes. Run it from `fv/kraken`:
 
 ```sh
-sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/E2eScal/GenCi.lean -- sh -c 'python3 -I gen/scal/scalgen.py p1 --S prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const committeeIndexUnmarshalSSZ --name ci_unmarshal_accept_main_g --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.AttestationData.Code > "$REGEN_OUT"'
+sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/scal/scalgen.py p1 --S prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const committeeIndexUnmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.AttestationData.Code > "$REGEN_OUT"'
 ```
 
 For the other files, take the command from `scal/gen.sh` or from the file header. Replace the output redirect with `> "$REGEN_OUT"`.
@@ -54,7 +54,7 @@ The check compares bytes only. It does not show that the output is correct.
 
 A generated theorem `t` is followed by a line `t_kind`.
 It states that the full type of `t`, with all hypotheses, is equal to a frozen kind with parameters.
-The kinds are hand text in `lean/Codec/Kind/*.lean` and `lean/E2eScal/Kind*.lean`. Each kind has a proof from its lemma.
+The kinds are hand text in `lean/Codec/Kind/*.lean`. Each kind has a proof from its lemma.
 Lean checks the identity. So a hypothesis that the generator adds, removes or changes makes `t_kind` fail.
 
 Lean does not check which kind the line names. A line that compares `t` with itself also compiles.
@@ -63,8 +63,8 @@ It does not check the kind files and the lemma files themselves. Their git-blob 
 
 ```sh
 python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest
-python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/GenCi.lean
-python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/E2eScal/Gen2BhDecPartial.lean
+python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean
+python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean
 ```
 
 Run Lean and `kindcheck.py` together on every generated file. Each one alone lets a defect through.

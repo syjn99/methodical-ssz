@@ -17,7 +17,7 @@ open Machine Runtime TestTarget
 namespace Codec
 
 /-- Second block of the P2 decode segment, offset-0 form (from `lff:` to `jne lwb`): `rootDecMid` without
-`add $src,%rbx` (the memmove source is the buffer pointer itself). Body = `E2eScal.E1.rootDecMid0`. -/
+`add $src,%rbx` (the memmove source is the buffer pointer itself). Body = `Prysm.Eth1Data.rootDecMid0`. -/
 def rootDecMidZ (lff lwb : String) (dR dB dS fP fL fC : Int64) : Program :=
   [Kraken.Directive.label lff,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64

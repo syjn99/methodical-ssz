@@ -61,9 +61,12 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
 - `Prysm/ElfData/`: the ELF data of a link set and the command that reads it, namespace `ElfData.<SetName>`.
   The root `ElfData` keeps the order of the constant names that some `simp` proofs depend on (see `../gen/restructure/README.md`).
 
-**`E2eScal`.** Generated and hand proofs for the flat fixed-size types. A flat type has only fixed-size fields and no nested container.
-The generated files are `Gen*.lean`. They use the patterns and kinds of `Codec`.
-The statement kinds of the composed accept theorems, of the callee calls and of the encoder fast path are still here (`KindAccept*.lean`, `KindCall.lean`, `KindEncN.lean`): their modules import modules of single types (see `../gen/README.md`).
+The flat fixed-size types (a flat type has only fixed-size fields and no nested container) have their directories in
+`Prysm/` too, for example `Prysm/BeaconBlockHeader/` and `Prysm/DepositRequest/`. The generated files are
+`Prysm/<GoTypeName>/Generated*.lean`. They use the patterns and kinds of `Codec`.
+`../gen/restructure/maps/flat-types/files.tsv` gives the earlier path of each module.
+The statement kinds of the composed and whole accept theorems, of the callee calls and of the encoder fast path are in
+`Codec/Kind/` (`DecodeAccept*.lean`, `CalleeDecode.lean`, `EncodeFastPathAnyFrame.lean`); some of these modules import modules of single types.
 
 ### Dependencies
 
@@ -71,13 +74,14 @@ The import graph has this order:
 
 ```text
 EthLib -> Spec -> Machine -> Runtime -> TestTarget -> Codec (except Codec/Segment/)
-       -> Prysm -> E2eScal -> Prysm (list types, HistoricalBatch) -> Codec/Segment/ -> Prysm (Deposit)
+       -> Prysm -> Prysm (list types, HistoricalBatch) -> Codec/Segment/ -> Prysm (Deposit)
 ```
 
 The arrows give the order of the libraries in the import graph. A library imports only libraries to its left.
 Exceptions: `Machine/Step.lean` imports `TestTarget/Code.lean`, `Runtime/Contracts.lean` imports `TestTarget/Data.lean`,
 `Runtime/BumpAllocatorVariants.lean` imports `TestTarget/FunctionSpecs.lean`, and `Codec/Bytes32Decode.lean` imports `Prysm/ElfData/CheckpointAndEpoch.lean`.
-`Prysm/Checkpoint/CapacityReserved*.lean` and `Prysm/Deposit/` import `E2eScal`, and `Prysm/HistoricalBatch/` does not import `E2eScal`.
+`Prysm/Checkpoint/CapacityReserved*.lean` and `Prysm/Deposit/` import modules of the flat types, and `Prysm/HistoricalBatch/` does not import them.
+Some modules of `Codec/` and `Codec/Kind/` import modules of the flat types (the kinds and lemmas that the shared layer left in a type library).
 A new type gets its own library or modules. Do not change a reviewed module to add a new type.
 
 ## 2. How machine code enters Lean
@@ -90,7 +94,7 @@ A new type gets its own library or modules. Do not change a reviewed module to a
 
 The `.S` and data files are not Lean imports. So `lakefile.toml` declares their directories as `input_dir` entries in the `needs` of each library.
 Lake then puts the file contents into the input hash, and a changed file makes Lake build the proofs again.
-Some directories that `E2eScal` and `Prysm/Checkpoint/CapacityReservedCode.lean` include are not declared. A change there does not cause a rebuild (see `../FINDINGS.md`).
+Some directories that the code modules of the flat types and `Prysm/Checkpoint/CapacityReservedCode.lean` include are not declared. A change there does not cause a rebuild (see `../FINDINGS.md`).
 When you add a code directory, add it as an `input_dir` of the library. A `lakefile.toml` change needs user approval.
 
 ## 3. Shape of a main theorem
@@ -101,7 +105,7 @@ Its proof is `Prysm.SyncAggregate.Decode.reject_size` in `Prysm/SyncAggregate/De
 
 ```lean
 def Prysm.SyncAggregate.Decode.reject_size_statement : Prop :=
-  ∀ (k : Nat) (hk : SaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh SaUnmarshal k)
+  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
     (R : DataMem → Prop)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -238,8 +242,8 @@ Some abbreviations have two or three meanings. The namespace decides the meaning
 | `Pdc`, `Vid`, `Bpf` | `v1alpha1.PartialDataColumnGroupID`, `ValidatorIdentity`, `BuilderPreferences` |
 | `Ep`, `Sl`, `Ci`, `Vi` | `primitives.Epoch`, `Slot`, `CommitteeIndex`, `ValidatorIndex` (hand-written methods) |
 | `Lu`, `Lc`, `Bl`, `Bv` | test types `ListU64`, `ListC`, `BitL`, `BitVec` in `../target/` |
-| `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` in `E2eScal` encoder names such as `Gen6ScEnc`, `v1alpha1.SyncCommittee` in the old library `E2eList`, and the test type `Scalars` in `TestTarget` |
-| `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` in `E2eScal`, and `v1alpha1.SyncAggregate` in the old library `E2eList` |
+| `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` in names of the old library `E2eScal` such as `Gen6ScEnc`, `v1alpha1.SyncCommittee` in the old library `E2eList`, and the test type `Scalars` in `TestTarget` |
+| `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` in the old library `E2eScal`, and `v1alpha1.SyncAggregate` in the old library `E2eList` |
 | `Fv` | the test type `FixedVec` in `TestTarget` declaration names |
 | `epr` | two meanings: `ExecutionPayloadEnvelopesByRangeRequest`, and the Epoch reject witness `Prysm.Epoch.Witness.DecodeRejectSize.runs` |
 | `Pad` | `v1alpha1.PayloadAttestationData` in the generator scripts |

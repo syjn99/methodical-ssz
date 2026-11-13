@@ -1,39 +1,39 @@
 [
  {
   "id": "e2-tie-bh-control",
-  "module": "E2eScal/EncTies.lean",
-  "theorem": "bh_marshal_is_kindN",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path_is_kind_any_frame",
   "kind": "control"
  },
  {
   "id": "e2-tie-bh-kind-field",
-  "module": "E2eScal/EncTies.lean",
-  "theorem": "bh_marshal_is_kindN",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path_is_kind_any_frame",
   "kind": "stmt",
   "old": "[.u64, .u64, .bytes 32, .bytes 32, .bytes 32]",
   "new": "[.u64, .u64, .bytes 32, .bytes 32, .bytes 48]"
  },
  {
   "id": "e2-tie-e1-kind-layout",
-  "module": "E2eScal/EncTies.lean",
-  "theorem": "e1_marshal_is_kindN",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
+  "theorem": "Prysm.Eth1Data.Encode.fast_path_is_kind_any_frame",
   "kind": "stmt",
-  "old": "E2eScal.E1Code.E1Marshal layEncE1",
-  "new": "E2eScal.E1Code.E1Marshal layEncBh"
+  "old": "Prysm.Eth1Data.Code.marshalSSZTo Prysm.Eth1Data.encodeLayout",
+  "new": "Prysm.Eth1Data.Code.marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout"
  },
  {
   "id": "e2-tie-cp-control",
-  "module": "E2eScal/EncTies.lean",
-  "theorem": "cp_marshal_of_kind",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path_of_kind",
   "kind": "control"
  },
  {
   "id": "e2-tie-cp-stmt-field",
-  "module": "E2eScal/EncTies.lean",
-  "theorem": "cp_marshal_of_kind",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path_of_kind",
   "kind": "stmt",
-  "old": "layEncCp [.u64, .bytes 32]",
-  "new": "layEncCp [.u64, .bytes 48]"
+  "old": "encodeLayout [.u64, .bytes 32]",
+  "new": "encodeLayout [.u64, .bytes 48]"
  },
  {
   "id": "e2-st-jae-control",
@@ -103,83 +103,83 @@
  },
  {
   "id": "e2-vb-f0-control",
-  "module": "E2eScal/Enc2ExVb.lean",
-  "theorem": "vb_g6_f0",
+  "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.example_f0",
   "kind": "control"
  },
  {
   "id": "e2-vb-f0-stmt-out",
-  "module": "E2eScal/Enc2ExVb.lean",
-  "theorem": "vb_g6_f0",
+  "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.example_f0",
   "kind": "stmt",
   "old": "Eq (v0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
   "new": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))"
  },
  {
   "id": "e2-vb-fast-stmt-cap",
-  "module": "E2eScal/Enc2ExVb.lean",
-  "theorem": "vb_e2e_marshal_g6",
+  "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.example_fast",
   "kind": "stmt",
   "old": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)",
   "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
  },
  {
   "id": "e2-vb-fast-kind-fields",
-  "module": "E2eScal/Enc2ExVb.lean",
-  "theorem": "vb_e2e_marshal_g6_kind",
+  "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.example_fast_kind",
   "kind": "stmt",
-  "old": "E2eScal.Gen6.layEncVb [.u64, .u64]",
-  "new": "E2eScal.Gen6.layEncVb [.u64, .bytes 8]"
+  "old": "Prysm.ValidatorBalance.Encode.example_layout [.u64, .u64]",
+  "new": "Prysm.ValidatorBalance.Encode.example_layout [.u64, .bytes 8]"
  },
  {
   "id": "e2-vb-head-code-frame",
-  "module": "E2eScal/Enc2ExVb.lean",
-  "theorem": "vb_g6_head",
+  "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.example_head",
   "kind": "code",
   "old": "  sub $0x68,%rsp",
   "new": "  sub $0x70,%rsp",
   "line": 7,
-  "code_def": "VbMarshal",
-  "code_ns": "E2eScal.Enc2Code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.ValidatorBalance.Code",
   "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S"
  },
  {
   "id": "e2-hs-epi-control",
-  "module": "E2eScal/Enc2ExHs.lean",
-  "theorem": "hs_g6_epi",
+  "module": "Prysm/HistoricalSummary/EncodeFastPathExample.lean",
+  "theorem": "Prysm.HistoricalSummary.Encode.example_epi",
   "kind": "control"
  },
  {
   "id": "e2-hs-epi-code-ft",
-  "module": "E2eScal/Enc2ExHs.lean",
-  "theorem": "hs_g6_epi",
+  "module": "Prysm/HistoricalSummary/EncodeFastPathExample.lean",
+  "theorem": "Prysm.HistoricalSummary.Encode.example_epi",
   "kind": "code",
   "old": "  lea 0x60(%rsp),%rsi",
   "new": "  lea 0x40(%rsp),%rsi",
   "line": 69,
-  "code_def": "HsMarshal",
-  "code_ns": "E2eScal.Enc2Code",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.HistoricalSummary.Code",
   "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S"
  },
  {
   "id": "e2-bh-f2-code-cap",
-  "module": "E2eScal/Enc2ExBh.lean",
-  "theorem": "bh_g6_f2",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPathExample.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.example_f2",
   "kind": "code",
   "old": "  cmp %r9,%rdi",
   "new": "  cmp %r8,%rdi",
   "line": 68,
-  "code_def": "BhMarshal",
-  "code_ns": "E2eScal.BhCode",
+  "code_def": "marshalSSZTo",
+  "code_ns": "Prysm.BeaconBlockHeader.Code",
   "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
   "id": "e2-bh-stmt-control",
-  "module": "E2eScal/Enc2ExBh.lean",
-  "theorem": "bh_e2e_marshal_g6_stmt",
+  "module": "Prysm/BeaconBlockHeader/EncodeFastPathExample.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.example_fast_same_statement",
   "kind": "control"
  }
 ]

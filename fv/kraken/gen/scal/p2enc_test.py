@@ -6,7 +6,7 @@ exit 0 = every case has its expected outcome; 1 = a case differs; 2 = usage
 
 Cases (mutated `.S` / IR copies are written to <work-dir>, nothing in the repository changes):
  - e6-real-*: the 16 flat development types as committed in `gen/gen.sh` (GEN6 rows): exit 0, two runs
-   byte-identical, every theorem with its kind line; equal to the committed `lean/E2eScal/Gen6*Enc.lean` when it
+   byte-identical, every theorem with its kind line; equal to the committed `lean/Prysm/<T>/GeneratedEncodeFastPath.lean` when it
    exists.
  - e6-adv-*: adversarial `.S` / IR mutants (capacity test altered so that the growslice site is on the walked path,
    length test with a wrong immediate / wrong word, a store to the wrong offset vs the IR, fields out of order, a
@@ -27,20 +27,20 @@ P = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
 E = "prysm/go1.26.10/e2e"
 IR = "prysm/ir/ir-mainnet.json"
 ROWS = [  # type, link dir, const, code module, prefix, extra args, output file
-    ("Checkpoint", "link", "marshalSSZTo", "Prysm.Checkpoint.Code", "cp", ["--hand-layout=E2eScal.layEncCp",
-     "--hand-layout-src=lean/E2eScal/EncTies.lean", "--same-as=Prysm.Checkpoint.Encode.fast_path",
-     "--same-as-via=E2eScal.cp_marshal_of_kind"], "Gen6CpEnc"),
-    ("BeaconBlockHeader", "bh/link", "BhMarshal", "E2eScal.BhCode", "bh", ["--hand-layout=E2eScal.layEncBh",
-     "--hand-layout-src=lean/E2eScal/EncTies.lean", "--same-as=E2eScal.Bh.bh_e2e_marshal_main"], "Gen6BhEnc"),
-    ("Eth1Data", "e1/link", "E1Marshal", "E2eScal.E1Code", "e1", ["--hand-layout=E2eScal.layEncE1",
-     "--hand-layout-src=lean/E2eScal/EncTies.lean", "--same-as=E2eScal.E1.e1_e2e_marshal_main"], "Gen6E1Enc"),
-] + [(t, "enc2/link", c, "E2eScal.Enc2Code", p, [], f"Gen6{p.capitalize()}Enc") for t, c, p in [
-    ("BlobIdentifier", "BiMarshal", "bi"), ("DepositMessage", "DmMarshal", "dm"), ("Deposit_Data", "DdMarshal", "dd"),
-    ("PendingPartialWithdrawal", "PwMarshal", "pw"), ("SyncCommitteeMessage", "ScMarshal", "sc"),
-    ("PendingConsolidation", "PcMarshal", "pc"), ("PendingDeposit", "PdMarshal", "pd"), ("PowBlock", "PbMarshal", "pb"),
-    ("HistoricalSummary", "HsMarshal", "hs"), ("SigningData", "SdMarshal", "sd"),
-    ("SyncAggregatorSelectionData", "SaMarshal", "sa"), ("ValidatorBalance", "VbMarshal", "vb"),
-    ("VoluntaryExit", "VeMarshal", "ve")]]
+    ("Checkpoint", "link", "marshalSSZTo", "Prysm.Checkpoint.Code", "cp", ["--hand-layout=Prysm.Checkpoint.encodeLayout",
+     "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Checkpoint.Encode.fast_path",
+     "--same-as-via=Prysm.Checkpoint.Encode.fast_path_of_kind"], "Gen6CpEnc"),
+    ("BeaconBlockHeader", "bh/link", "marshalSSZTo", "Prysm.BeaconBlockHeader.Code", "bh", ["--hand-layout=Prysm.BeaconBlockHeader.encodeLayout",
+     "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean", "--same-as=Prysm.BeaconBlockHeader.Encode.fast_path"], "Gen6BhEnc"),
+    ("Eth1Data", "e1/link", "marshalSSZTo", "Prysm.Eth1Data.Code", "e1", ["--hand-layout=Prysm.Eth1Data.encodeLayout",
+     "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Eth1Data.Encode.fast_path"], "Gen6E1Enc"),
+] + [(t, "enc2/link", c, "Prysm.BlobIdentifier.EncoderCode", p, [], f"Gen6{p.capitalize()}Enc") for t, c, p in [
+    ("BlobIdentifier", "marshalSSZTo", "bi"), ("DepositMessage", "marshalSSZTo", "dm"), ("Deposit_Data", "marshalSSZTo", "dd"),
+    ("PendingPartialWithdrawal", "marshalSSZTo", "pw"), ("SyncCommitteeMessage", "marshalSSZTo", "sc"),
+    ("PendingConsolidation", "marshalSSZTo", "pc"), ("PendingDeposit", "marshalSSZTo", "pd"), ("PowBlock", "marshalSSZTo", "pb"),
+    ("HistoricalSummary", "marshalSSZTo", "hs"), ("SigningData", "marshalSSZTo", "sd"),
+    ("SyncAggregatorSelectionData", "marshalSSZTo", "sa"), ("ValidatorBalance", "marshalSSZTo", "vb"),
+    ("VoluntaryExit", "marshalSSZTo", "ve")]]
 ROW = {r[0]: r for r in ROWS}
 
 
@@ -51,7 +51,7 @@ def spath(t):
 def argv(t, S=None, ir=IR, extra=None, summary=None):
     _, d, c, mod, p, x, _ = ROW[t]
     a = ["python3", "-I", "-B", "gen/scal/scalgen.py", "p2enc", "--gen6", "--S", S or spath(t), "--const", c,
-         "--ir", ir, "--type", f"v1alpha1.{t}", "--prefix", f"{p}_g6e", "--imports", mod, "--open", mod]
+         "--ir", ir, "--type", f"v1alpha1.{t}", "--prefix", "Encode.generated", "--imports", mod, "--open", f"Prysm.{t}.Code"]
     a += x if extra is None else extra
     if summary:
         a += ["--summary", summary]
@@ -202,11 +202,11 @@ def adversarial(work):
     adv("head-guard", vb, [("cmp 0x10(%r14),%rsp", ["cmp 0x18(%r14),%rsp"], 0)], "stack guard on another word")
     adv("head-frame", vb, [("sub $0x68,%rsp", ["sub %rax,%rsp"], 0)], "frame allocation form")
     # hand layout of another type
-    C.append(("e6-adv-hand-layout-other", argv(bh, extra=["--hand-layout=E2eScal.layEncE1",
-                                                           "--hand-layout-src=lean/E2eScal/EncTies.lean"]),
+    C.append(("e6-adv-hand-layout-other", argv(bh, extra=["--hand-layout=Prysm.Eth1Data.encodeLayout",
+                                                           "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean"]),
               "refuse", "hand layout of Eth1Data for BeaconBlockHeader"))
-    C.append(("e6-adv-hand-layout-missing", argv(bh, extra=["--hand-layout=E2eScal.layEncZz",
-                                                             "--hand-layout-src=lean/E2eScal/EncTies.lean"]),
+    C.append(("e6-adv-hand-layout-missing", argv(bh, extra=["--hand-layout=Prysm.BeaconBlockHeader.encodeLayoutMissing",
+                                                             "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean"]),
               "refuse", "hand layout not in the file"))
     # valid variants: must stay covered
     adv("nops", vb, [("lea 0x8(%rcx),%rdx", ["nop", "lea 0x8(%rcx),%rdx", "nop"], 0), ("cmp %rdx,%rdi", ["cmp %rdx,%rdi", "nop"], 0),
@@ -227,7 +227,7 @@ KINDS = ("encHeadKindN", "encFieldKindN", "encEpiKindN", "encFastKindN")
 
 def kinds_ok(out, p, nf):
     t = out.decode()
-    want = [f"{p}_g6e_head"] + [f"{p}_g6e_f{i}" for i in range(nf)] + [f"{p}_g6e_epi", f"{p}_g6e_fast"]
+    want = ["Encode.generated_head"] + [f"Encode.generated_f{i}" for i in range(nf)] + ["Encode.generated_epi", "Encode.generated_fast"]
     return all(t.count(f"\ntheorem {w}_kind : ∀ (h : Host), type_of% (@{w} h)\n") == 1 for w in want)
 
 
@@ -362,7 +362,7 @@ def main():
     for t, d, c, mod, p, x, f in ROWS:
         r1, r2 = run(argv(t)), run(argv(t))
         nf = nfields(t)
-        com = pathlib.Path(f"lean/E2eScal/{f}.lean")
+        com = pathlib.Path(f"lean/Prysm/{t}/GeneratedEncodeFastPath.lean")
         same = (r1[1] == com.read_bytes()) if com.exists() else None
         ok = r1[0] == 0 and r1[1] == r2[1] and kinds_ok(r1[1], p, nf) and same is not False
         res.append(dict(id=f"e6-real-{p}", expect="exit 0, deterministic, all kinds" + (", = committed" if same else ""),

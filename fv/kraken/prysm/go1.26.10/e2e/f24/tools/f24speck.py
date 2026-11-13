@@ -1,10 +1,10 @@
-"""Evidence tool (not part of gen/scal): write lean/E2eScal/F24<X>SpecK.lean from the generated accept statement
-text of Gen5F24<X>Dec.lean (statement copied, input chunks replaced by the encoding of the EthLib-decoded value): the
+"""Evidence tool (not part of gen/scal): write <dir>/Prysm/<GoTypeName>/DecodeSpec.lean from the generated accept
+statement text of <dir>/Prysm/<GoTypeName>/GeneratedDecodeAccept.lean (statement copied, input chunks replaced by the encoding of the EthLib-decoded value): the
 text of the script `mkspeck.py` generalised to n fields of uint64 / byte vectors.
-usage: python3 -I -B f24speck.py <fv/kraken/lean/E2eScal> [X ...]"""
+usage: python3 -I -B f24speck.py <fv/kraken/lean> [X ...]"""
 import os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from f24spec import T  # noqa: E402
+from f24spec import T, GO_TYPE, new_names  # noqa: E402
 
 DEC = ['Dpr', 'Bdr', 'Bbr', 'Bsr', 'Epr', 'Pdc', 'Vid']
 
@@ -15,10 +15,10 @@ def emit(d, X):
     P, pe = f'P{X}', f'p{x}Enc'
     N = sum(f[2] for f in fs)
     n = len(fs)
-    src = open(os.path.join(d, f'Gen5F24{X}Dec.lean')).read()
-    i = src.index(f'theorem {x}_g5dec_accept : ∀ ')
+    src = open(os.path.join(d, 'Prysm', GO_TYPE[X], 'GeneratedDecodeAccept.lean')).read()
+    i = src.index('theorem Decode.generated_accept : ∀ ')
     j = src.index(' := by\n', i)
-    stmt = src[i + len(f'theorem {x}_g5dec_accept : '):j]
+    stmt = src[i + len('theorem Decode.generated_accept : '):j]
     intro = re.search(r'\n  intro (k hk hf [^\n]*)\n', src[j:]).group(1).split()
     ex = [f'(uintBytes 8 g.{f[0]}.toNat).toList' if f[1] == 'u' else f'g.{f[0]}.toArray.toList' for f in fs]
     lp = ['(by simp [Spec.uintBytes_size])' if f[1] == 'u' else '(by simp)' for f in fs]
@@ -75,7 +75,7 @@ edited):
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = {N}`.
 -/
 
-open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.F24Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget Codec Prysm.{GO_TYPE[X]}.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.F24
@@ -128,5 +128,5 @@ end E2eScal.F24
 if __name__ == '__main__':
     d = sys.argv[1]
     for X in (sys.argv[2:] or DEC):
-        open(os.path.join(d, f'F24{X}SpecK.lean'), 'w').write(emit(d, X))
+        open(os.path.join(d, 'Prysm', GO_TYPE[X], 'DecodeSpec.lean'), 'w').write(new_names(emit(d, X), X))
         print(X)

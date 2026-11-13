@@ -9,7 +9,7 @@ import Prysm.SyncAggregate.Statements
 
 Directives 2–7 (guard, prologue, rbx spill), 9–10 `cmp $0xa0,%rcx; jne L_177` taken, `L_177` (88),
 the two loads of `ssz.ErrSize` (89–90), epilogue 91–93 (`add $0x20`).
-Proof text: `E2eScal.H4.dd_e2e_reject_size_main` (`DdReject.lean`) with this decoder's directive indices
+Proof text: `Prysm.Deposit_Data.Decode.reject_size` (`DdReject.lean`) with this decoder's directive indices
 and frame size. The statement is the frozen `Decode.reject_size_statement`.
 -/
 

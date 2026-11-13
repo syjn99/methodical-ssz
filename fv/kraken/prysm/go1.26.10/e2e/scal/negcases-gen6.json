@@ -1,172 +1,172 @@
 [
  {
   "id": "g6-vb-fast-control",
-  "module": "E2eScal/Gen6VbEnc.lean",
-  "theorem": "vb_g6e_fast",
+  "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.generated_fast",
   "kind": "control"
  },
  {
   "id": "g6-cp-stmt-control",
-  "module": "E2eScal/Gen6CpEnc.lean",
-  "theorem": "cp_g6e_stmt",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_stmt",
   "kind": "control"
  },
  {
   "id": "g6-hs-epi-control",
-  "module": "E2eScal/Gen6HsEnc.lean",
-  "theorem": "hs_g6e_epi",
+  "module": "Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.HistoricalSummary.Encode.generated_epi",
   "kind": "control",
-  "code_def": "HsMarshal",
+  "code_def": "marshalSSZTo",
   "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S",
-  "code_ns": "E2eScal.Enc2Code"
+  "code_ns": "Prysm.HistoricalSummary.Code"
  },
  {
   "id": "g6-dm-f0-control",
-  "module": "E2eScal/Gen6DmEnc.lean",
-  "theorem": "dm_g6e_f0",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_f0",
   "kind": "control",
-  "code_def": "DmMarshal",
+  "code_def": "marshalSSZTo",
   "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo.S",
-  "code_ns": "E2eScal.Enc2Code"
+  "code_ns": "Prysm.DepositMessage.Code"
  },
  {
   "id": "g6-vb-fast-stmt-hcap",
-  "module": "E2eScal/Gen6VbEnc.lean",
-  "theorem": "vb_g6e_fast",
+  "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.generated_fast",
   "kind": "stmt",
   "old": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)",
   "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
  },
  {
   "id": "g6-dm-f0-stmt-len",
-  "module": "E2eScal/Gen6DmEnc.lean",
-  "theorem": "dm_g6e_f0",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_f0",
   "kind": "stmt",
   "old": "(hb0 : b0.length = 48)",
   "new": "(hb0 : b0.length = 32)"
  },
  {
   "id": "g6-hs-epi-stmt-size",
-  "module": "E2eScal/Gen6HsEnc.lean",
-  "theorem": "hs_g6e_epi",
+  "module": "Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.HistoricalSummary.Encode.generated_epi",
   "kind": "stmt",
   "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 64",
   "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 72"
  },
  {
   "id": "g6-pd-fast-stmt-rsp",
-  "module": "E2eScal/Gen6PdEnc.lean",
-  "theorem": "pd_g6e_fast",
+  "module": "Prysm/PendingDeposit/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingDeposit.Encode.generated_fast",
   "kind": "stmt",
   "old": "st.data.regs.rsp = s.regs.rsp + 8",
   "new": "st.data.regs.rsp = s.regs.rsp + 16"
  },
  {
   "id": "g6-e1-stmt-other-hand",
-  "module": "E2eScal/Gen6E1Enc.lean",
-  "theorem": "e1_g6e_stmt",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_stmt",
   "kind": "stmt",
-  "old": "type_of% (@E2eScal.E1.e1_e2e_marshal_main ‹Host›)",
-  "new": "type_of% (@E2eScal.Bh.bh_e2e_marshal_main ‹Host›)"
+  "old": "type_of% (@Prysm.Eth1Data.Encode.fast_path ‹Host›)",
+  "new": "type_of% (@Prysm.BeaconBlockHeader.Encode.fast_path ‹Host›)"
  },
  {
   "id": "g6-ir-vb-goff",
-  "module": "E2eScal/Gen6VbEnc.lean",
-  "theorem": "vb_g6e_fast",
+  "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.generated_fast",
   "kind": "stmt",
   "old": "\n      ⋆ Eq (v1.At (s.regs.rax.toBitVec + 16))",
   "new": "\n      ⋆ Eq (v1.At (s.regs.rax.toBitVec + 24))"
  },
  {
   "id": "g6-ir-dm-ssz-off",
-  "module": "E2eScal/Gen6DmEnc.lean",
-  "theorem": "dm_g6e_fast",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_fast",
   "kind": "stmt",
   "old": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))",
   "new": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))"
  },
  {
   "id": "g6-ir-pw-order",
-  "module": "E2eScal/Gen6PwEnc.lean",
-  "theorem": "pw_g6e_fast",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Encode.generated_fast",
   "kind": "stmt",
   "old": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))",
   "new": "Eq (v2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
  },
  {
   "id": "g6-vb-kind-fields",
-  "module": "E2eScal/Gen6VbEnc.lean",
-  "theorem": "vb_g6e_fast_kind",
+  "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.generated_fast_kind",
   "kind": "stmt",
   "old": "[.u64, .u64]",
   "new": "[.u64, .bytes 32]"
  },
  {
   "id": "g6-vb-kind-pc",
-  "module": "E2eScal/Gen6VbEnc.lean",
-  "theorem": "vb_g6e_f0_kind",
+  "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.generated_f0_kind",
   "kind": "stmt",
   "old": "⟨8, 0,",
   "new": "⟨9, 0,"
  },
  {
   "id": "g6-cp-kind-layout",
-  "module": "E2eScal/Gen6CpEnc.lean",
-  "theorem": "cp_g6e_fast_kind",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_kind",
   "kind": "stmt",
-  "old": "E2eScal.layEncCp",
-  "new": "E2eScal.layEncE1"
+  "old": "Prysm.Checkpoint.encodeLayout",
+  "new": "Prysm.Eth1Data.encodeLayout"
  },
  {
   "id": "g6-bh-kind-fields",
-  "module": "E2eScal/Gen6BhEnc.lean",
-  "theorem": "bh_g6e_epi_kind",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_epi_kind",
   "kind": "stmt",
   "old": "[.u64, .u64, .bytes 32, .bytes 32, .bytes 32]",
   "new": "[.u64, .u64, .bytes 32, .bytes 32, .bytes 48]"
  },
  {
   "id": "g6-vb-f1-code-store",
-  "module": "E2eScal/Gen6VbEnc.lean",
-  "theorem": "vb_g6e_f1",
+  "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorBalance.Encode.generated_f1",
   "kind": "code",
-  "code_def": "VbMarshal",
+  "code_def": "marshalSSZTo",
   "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S",
   "old": "  mov %r8,-0x8(%rdx,%rbx,1)",
   "new": "  mov %r8,-0x10(%rdx,%rbx,1)",
-  "code_ns": "E2eScal.Enc2Code"
+  "code_ns": "Prysm.ValidatorBalance.Code"
  },
  {
   "id": "g6-dm-f0-code-len",
-  "module": "E2eScal/Gen6DmEnc.lean",
-  "theorem": "dm_g6e_f0",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_f0",
   "kind": "code",
-  "code_def": "DmMarshal",
+  "code_def": "marshalSSZTo",
   "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo.S",
   "old": "  cmpq $0x30,0x8(%rax)",
   "new": "  cmpq $0x20,0x8(%rax)",
-  "code_ns": "E2eScal.Enc2Code"
+  "code_ns": "Prysm.DepositMessage.Code"
  },
  {
   "id": "g6-hs-epi-code-ft",
-  "module": "E2eScal/Gen6HsEnc.lean",
-  "theorem": "hs_g6e_epi",
+  "module": "Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.HistoricalSummary.Encode.generated_epi",
   "kind": "code",
-  "code_def": "HsMarshal",
+  "code_def": "marshalSSZTo",
   "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S",
   "old": "  lea 0x60(%rsp),%rsi",
   "new": "  lea 0x58(%rsp),%rsi",
-  "code_ns": "E2eScal.Enc2Code"
+  "code_ns": "Prysm.HistoricalSummary.Code"
  },
  {
   "id": "g6-dd-f3-code-size",
-  "module": "E2eScal/Gen6DdEnc.lean",
-  "theorem": "dd_g6e_f3",
+  "module": "Prysm/Deposit_Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Deposit_Data.Encode.generated_f3",
   "kind": "code",
-  "code_def": "DdMarshal",
+  "code_def": "marshalSSZTo",
   "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.MarshalSSZTo.S",
   "old": "  mov $0x60,%ecx",
   "new": "  mov $0x30,%ecx",
-  "code_ns": "E2eScal.Enc2Code"
+  "code_ns": "Prysm.Deposit_Data.Code"
  }
 ]

@@ -9,7 +9,7 @@ import Codec.FixedBytesDecode
 are unchanged. `bytesDecSegKind_of` / `bytesDecSegZKind_of` prove a kind from the lemma (`bytesdec_seg`,
 `bytesdec_seg_z`) and the code facts of an instance, so the kind body is kernel-checked against the lemma
 conclusion. The kind has no size hypothesis: for a size outside 32 / 48 / 96 it is a proposition without a
-proof here. `E2eScal/SegNRel.lean` shows `rootDecSegKind = bytesDecSegKind 32` and
+proof here. `Codec/FixedBytesDecodeSizeInstances.lean` shows `rootDecSegKind = bytesDecSegKind 32` and
 `rootDecSegZKind = bytesDecSegZKind 32` (`rfl`).
 -/
 

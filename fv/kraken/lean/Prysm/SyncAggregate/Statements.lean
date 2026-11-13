@@ -10,7 +10,7 @@ import Prysm.SyncCommittee.SpecDefinitions
 # Hand STATEMENTS of the target `(*v1alpha1.SyncAggregate).UnmarshalSSZ` (statements only, no proof)
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
-Statement shape: `E2eScal.H4.dd_accept_stmt` (Deposit_Data, the same makeslice + memmove field idiom),
+Statement shape: `Prysm.Deposit_Data.Decode.accept_statement` (Deposit_Data, the same makeslice + memmove field idiom),
 `dd_e2e_reject_size_main`, `dd_e2e_accept_spec_k`, `dd_e2e_reject_size_spec`, `dd_e2e_reject_complete`.
 
     func (c *SyncAggregate) UnmarshalSSZ(buf []byte) error {

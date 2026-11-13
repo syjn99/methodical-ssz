@@ -1,142 +1,142 @@
 [
  {
   "id": "g4g-smdec-vi-call-control",
-  "module": "E2eScal/Gen4SmDec.lean",
-  "theorem": "sm_g4dec_ValidatorIndex_call",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_ValidatorIndex_call",
   "kind": "control"
  },
  {
   "id": "g4g-pcdec-ti-call-control",
-  "module": "E2eScal/Gen4PcDec.lean",
-  "theorem": "pc_g4dec_TargetIndex_call",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call",
   "kind": "control"
  },
  {
   "id": "g4g-dddec-pk-segz-control",
-  "module": "E2eScal/Gen4DdDec.lean",
-  "theorem": "dd_g4dec_PublicKey_seg",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_step_PublicKey_seg",
   "kind": "control"
  },
  {
   "id": "g4g-smacc-control",
-  "module": "E2eScal/SmAcceptG4gen.lean",
-  "theorem": "sm_e2e_accept_g4gen",
+  "module": "Prysm/SyncCommitteeMessage/DecodeAcceptFromGeneratedSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_from_generated_steps",
   "kind": "control"
  },
  {
   "id": "g4g-pwacc-control",
-  "module": "E2eScal/PwAcceptG4gen.lean",
-  "theorem": "pw_e2e_accept_main_g4gen",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeAcceptFromGeneratedSteps.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.accept_from_generated_steps",
   "kind": "control"
  },
  {
   "id": "g4g-smdec-s87-stmt-imm",
-  "module": "E2eScal/Gen4SmDec.lean",
-  "theorem": "sm_g4dec_s87",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_s87",
   "kind": "stmt",
   "old": "(BitVec.truncate 32 (8 : Int64).toBitVec)",
   "new": "(BitVec.truncate 32 (16 : Int64).toBitVec)"
  },
  {
   "id": "g4g-smdec-s82-stmt-disp",
-  "module": "E2eScal/Gen4SmDec.lean",
-  "theorem": "sm_g4dec_s82",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_s82",
   "kind": "stmt",
   "old": "(ha : base + (120 : Int64).toBitVec = a)",
   "new": "(ha : base + (112 : Int64).toBitVec = a)"
  },
  {
   "id": "g4g-smdec-br-seg-stmt-ry",
-  "module": "E2eScal/Gen4SmDec.lean",
-  "theorem": "sm_g4dec_BlockRoot_seg",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_BlockRoot_seg",
   "kind": "stmt",
   "old": "st.data.regs.get64 Reg64.rax = rcv",
   "new": "st.data.regs.get64 Reg64.rdx = rcv"
  },
  {
   "id": "g4g-pcdec-ti-call-stmt-ret",
-  "module": "E2eScal/Gen4PcDec.lean",
-  "theorem": "pc_g4dec_TargetIndex_call",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call",
   "kind": "stmt",
   "old": "(Host.addrOf (k + 55 + 1))",
   "new": "(Host.addrOf (k + 56 + 1))"
  },
  {
   "id": "g4g-dddec-pk-segz-stmt-size",
-  "module": "E2eScal/Gen4DdDec.lean",
-  "theorem": "dd_g4dec_PublicKey_seg",
+  "module": "Prysm/Deposit_Data/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.Deposit_Data.Decode.generated_step_PublicKey_seg",
   "kind": "stmt",
   "old": "(hroot : root.length = 48)",
   "new": "(hroot : root.length = 32)"
  },
  {
   "id": "g4g-pwdec-s54-stmt-reg",
-  "module": "E2eScal/Gen4PwDec.lean",
-  "theorem": "pw_g4dec_s54",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_step_s54",
   "kind": "stmt",
   "old": "Codec.setR s Reg64.r8 (BitVec.ofInt",
   "new": "Codec.setR s Reg64.r9 (BitVec.ofInt"
  },
  {
   "id": "g4g-smgg-slot-stmt-pc",
-  "module": "E2eScal/SmAcceptG4gen.lean",
-  "theorem": "sm_gg_Slot_field",
+  "module": "Prysm/SyncCommitteeMessage/DecodeAcceptFromGeneratedSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.from_generated_steps_Slot_field",
   "kind": "stmt",
   "old": "st.pc = Host.addrOf (k + 46 + 1)",
   "new": "st.pc = Host.addrOf (k + 47 + 1)"
  },
  {
   "id": "g4g-pwgg-aw-stmt-val",
-  "module": "E2eScal/PwAcceptG4gen.lean",
-  "theorem": "pw_gg_Amount_WithdrawableEpoch_fields",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeAcceptFromGeneratedSteps.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.from_generated_steps_Amount_WithdrawableEpoch_fields",
   "kind": "stmt",
   "old": "⋆ Eq (v.At (rcv + 16))\n",
   "new": "⋆ Eq (vF.At (rcv + 16))\n"
  },
  {
   "id": "g4g-pcgg-ti-stmt-src",
-  "module": "E2eScal/PcAcceptG4gen.lean",
-  "theorem": "pc_gg_TargetIndex_field",
+  "module": "Prysm/PendingConsolidation/DecodeAcceptFromGeneratedSteps.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.from_generated_steps_TargetIndex_field",
   "kind": "stmt",
   "old": "⋆ Eq (e8.At (bf + 8)) ⋆ Eq (e8.At (rcv + 16)) ⋆ F) st.data.dmem",
   "new": "⋆ Eq (e8.At (bf + 8)) ⋆ Eq (c0.At (rcv + 16)) ⋆ F) st.data.dmem"
  },
  {
   "id": "g4g-smdec-s86-code-imm",
-  "module": "E2eScal/Gen4SmDec.lean",
-  "theorem": "sm_g4dec_s86",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_s86",
   "kind": "code",
   "line": 87,
   "old": "  add $0x28,%rax",
   "new": "  add $0x30,%rax",
-  "code_def": "SmUnmarshal",
-  "code_ns": "E2eScal.H5Code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.SyncCommitteeMessage.Code",
   "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
   "id": "g4g-smdec-br-seg-code-ry",
-  "module": "E2eScal/Gen4SmDec.lean",
-  "theorem": "sm_g4dec_BlockRoot_seg",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_BlockRoot_seg",
   "kind": "code",
   "line": 68,
   "old": "  mov 0x70(%rsp),%rax",
   "new": "  mov 0x70(%rsp),%rcx",
-  "code_def": "SmUnmarshal",
-  "code_ns": "E2eScal.H5Code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.SyncCommitteeMessage.Code",
   "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
   "id": "g4g-pcdec-ti-call-code-nop",
-  "module": "E2eScal/Gen4PcDec.lean",
-  "theorem": "pc_g4dec_TargetIndex_call",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeSteps.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call",
   "kind": "code",
   "line": 57,
   "old": "  nop",
   "new": "  mov %rax,%rax",
-  "code_def": "PcUnmarshal",
-  "code_ns": "E2eScal.H5Code",
+  "code_def": "unmarshalSSZ",
+  "code_ns": "Prysm.PendingConsolidation.Code",
   "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  }

@@ -228,7 +228,7 @@ How to handle a new finding is in `../README.md` section 7.
 ### Slow proof steps
 
 - What: two proofs spent most of their time in one `omega` side goal each.
-- Where: the `bv_omega` of the argument `hLo` of `Codec.rootenc_seg` in `lean/E2eScal/P2EncCp.lean`. The `wit_split` side goals of the Checkpoint cover witnesses.
+- Where: the `bv_omega` of the argument `hLo` of `Codec.rootenc_seg` in `lean/Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean`. The `wit_split` side goals of the Checkpoint cover witnesses.
 - State: fixed. `lean/Machine/WitnessSplit.lean` has `wit_split_n` (commit `301300f`). The `P2EncCp` step is a constant-only rewrite (commit `ab43cbb`).
 
 ### Limit options without a profiled cause
@@ -241,18 +241,18 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: five Checkpoint theorems do not state the rest of memory: `Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver`, `Prysm.Checkpoint.Encode.fast_path_spec`, `Prysm.Checkpoint.DecodeThenEncode.round_trip`, `Prysm.Checkpoint.Encode.cover` and `Prysm.Checkpoint.Encode.reject_length_cover`.
 - State: disclosed. The component theorems and the `*_framed` cover theorems state the exact frame. The composition has no framed version.
-- Related: `bh_e2e_accept_main` hides three argument-area slots in one 24-byte existential. They are dead stack only. The statement is not changed.
+- Related: `Prysm.BeaconBlockHeader.Decode.accept` hides three argument-area slots in one 24-byte existential. They are dead stack only. The statement is not changed.
 
 ### Docstrings that say more than their theorem
 
 - What: the docstrings of the `*_reject_complete` theorems of `PendingDeposit`, `PowBlock`, `SyncCommitteeMessage` and `PendingConsolidation` say that the code reaches the `ssz.ErrSize` site. The theorem proves only `size ≠ N`.
-  A comment in `lean/E2eScal/VbDesc.lean` names the wrong Prysm tree.
+  A comment in `lean/Prysm/ValidatorBalance/SpecDescription.lean` names the wrong Prysm tree.
 - State: open. The fix is a `.lean` edit.
 
 ### Unreachable error wraps hold only with the callee specifications
 
 - What: the theorems of an unreachable error wrap state a conditional skip: if the callee returns `rax = 0`, the code skips the wrap.
-  Unreachability for every input holds only together with the callee specifications, such as `Prysm.Slot.Decode.accept_function_spec` and `E2eScal.ViUAccC`.
+  Unreachability for every input holds only together with the callee specifications, such as `Prysm.Slot.Decode.accept_function_spec` and `Prysm.ValidatorIndex.Decode.accept_function_spec`.
 - State: recorded. The theorems are not changed.
 
 ### Hand `Desc` is independent in content, not always in time
@@ -263,7 +263,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Several code directories are not Lake inputs
 
-- What: `E2eScal` and `lean/Prysm/Checkpoint/CapacityReservedCode.lean` include `.S` files from directories that `lean/lakefile.toml` does not declare as inputs.
+- What: the code modules of the flat types in `lean/Prysm/` and `lean/Prysm/Checkpoint/CapacityReservedCode.lean` include `.S` files from directories that `lean/lakefile.toml` does not declare as inputs.
   A change in such a file does not make Lake build the proofs again.
 - Where: the `norm` directories of the link sets `bh`, `e1`, `enc2`, `f24`, `h3`, `h4`, `h5` and `h6` under `prysm/go1.26.10/e2e/`, and `prysm/go1.26.10/opt-r1/link/norm`.
   The declared input `lv_dep_data` is not read by any Lean file. `Prysm.Deposit.Code.depDataType_addr` is a hand definition. `gen/e2e/depcheck_data.py` compares it with its data file.

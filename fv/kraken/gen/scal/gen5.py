@@ -19,11 +19,11 @@ PRIM = 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.'
 # callee symbol -> (code constant, binder suffix, proved spec theorem); the four proved callees (interface of the GEN5 lemma unit)
 G5_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('Prysm.AttestationData.Code.slotUnmarshalSSZ', 'S', 'Prysm.Slot.Decode.accept_function_spec_holds'),
               PRIM + 'CommitteeIndex.UnmarshalSSZ': ('Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ', 'C', 'Prysm.CommitteeIndex.Decode.accept_function_spec_holds'),
-              PRIM + 'ValidatorIndex.UnmarshalSSZ': ('E2eScal.BhCode.ViUnmarshal', 'V', 'vi_uacc_holds'),
+              PRIM + 'ValidatorIndex.UnmarshalSSZ': ('Prysm.ValidatorIndex.Code.unmarshalSSZ', 'V', 'Prysm.ValidatorIndex.Decode.accept_function_spec_holds'),
               PRIM + 'Epoch.UnmarshalSSZ': ('Prysm.Epoch.Code.unmarshalSSZ', 'E', 'Prysm.Epoch.Decode.accept_function_spec_holds')}
-G5_IMPORTS = ['E2eScal.AcceptTies', 'Codec.FieldFrame', 'E2eScal.ViSpec', 'Prysm.Epoch.DecodeAccept', 'Prysm.Slot.DecodeAccept',
-              'Codec.DecoderHeadEpilogue', 'E2eScal.RejectTies']
-G5_OPENS = 'E2eScal Codec'
+G5_IMPORTS = ['Codec.Kind.DecodeAcceptAnyFrameInstances', 'Codec.FieldFrame', 'Prysm.ValidatorIndex.DecodeAcceptFunctionSpec', 'Prysm.Epoch.DecodeAccept', 'Prysm.Slot.DecodeAccept',
+              'Codec.DecoderHeadEpilogue', 'Prysm.BlobIdentifier.DecodeRejectSizeKindInstances']
+G5_OPENS = 'Codec'
 # the statement kinds of the GEN5 lemma unit's hand-over (kindcheck.py pins their modules)
 G5_KINDS = ('decHeadKindN', 'decFieldKindN', 'decEpiKindN', 'decAcceptKindN', 'decRejectKindN')
 
@@ -129,7 +129,7 @@ class T:
         rt = 'none' if not self.rt else (f"some ⟨{'true' if self.rt['hS'] else 'false'}, {self.rt['x']}, "
                                           f"{self.cs.index(self.lo_name)}, {self.rt['loB']}⟩")
         # explicit constructor (field order of `DecLayout`: callees nstk lens pre rt gd st exs post frame)
-        return ("(E2eScal.DecLayout.mk [" + ', '.join(c[0] for c in self.callees) + "] " + str(len(self.stack))
+        return ("(Codec.DecLayout.mk [" + ', '.join(c[0] for c in self.callees) + "] " + str(len(self.stack))
                 + "\n      [" + ', '.join(f'({i}, {l})' for i, l in lens) + "]\n      ["
                 + ', '.join(self.sllean(s) for s in self.pre) + "]\n      (" + rt + ") " + str(self.gd)
                 + " " + ('true' if self.st else 'false') + " " + self.exlean(self.exs)
@@ -247,7 +247,7 @@ class T:
 
     def kind(self, name, kind, extra):
         self.kinds_emitted.append((name, kind))
-        return (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @E2eScal.{kind} h {self.Cq} {self.L} {self.fieldslean()}"
+        return (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @Codec.{kind} h {self.Cq} {self.L} {self.fieldslean()}"
                 f"{extra} := by\n  intro h; rfl\n\n")
 
     # ---- common proof prefix of field / epilogue theorems
@@ -370,7 +370,7 @@ class T:
         av = 'avail' if h0 == 0 else f'(avail - {h0})'
         rc, bf = 's.regs.rax.toBitVec', 's.regs.rbx.toBitVec'
         state = "_ (by rfl) (by rfl) (by rfl)" if pre else "d hrsp hrbp hr14"
-        call = (f"  refine eventually_trans _ _ _ _ (Gen.{f['seg']} k hk hf (s.regs.rsp.toBitVec - {fr}) {rc} {bf}\n"
+        call = (f"  refine eventually_trans _ _ _ _ ({f['seg']} k hk hf (s.regs.rsp.toBitVec - {fr}) {rc} {bf}\n"
                 f"    {soff(f['dR'] - fr)} {soff(f['dB'] - fr)} {soff(f['dS'] - fr)} {soff(aret)}\n"
                 f"    {self.lo_addr()} {off(rc, g)} {off(rc, g + 8)} {off(rc, g + 16)}{'' if z else ' ' + off(bf, so)} {St}\n"
                 f"    {ADDR} {ADDR} {ADDR} (by bv_omega) {hLo}\n"
@@ -385,9 +385,9 @@ class T:
         s += (f"  rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hr14', {pn}, spl', lo', hspl', hlo', hrY, Hm'⟩\n"
               "  dsimp only at hpc' hrsp' hrbp' hr14' hrY Hm'\n  subst hpc'\n" + destr("d'", '2') +
               "  simp only at hrsp' hrbp' hr14' hrY Hm'\n  subst rsp2 rbp2 r142\n")
-        s += P(f"  apply Gen.{self.ns}_s{t[0]} k hk hf (s.regs.rsp.toBitVec - {fr}) {soff(f['dS'] - fr)} {pn} {ADDR} _ _ _ (by rfl) (by ecancel)\n  kn\n"
-               f"  apply Gen.{self.ns}_s{t[1]} k hk hf\n  apply Gen.{self.ns}_s{t[2]} k hk hf\n"
-               f"  apply Gen.{self.ns}_s{t[3]} k hk hf {rc} {off(rc, g)} {ADDR0 if g == 0 else ADDR} (Int.toBytes 8 {pn}.toInt) {LEN} _ _ _\n"
+        s += P(f"  apply {self.ns}_s{t[0]} k hk hf (s.regs.rsp.toBitVec - {fr}) {soff(f['dS'] - fr)} {pn} {ADDR} _ _ _ (by rfl) (by ecancel)\n  kn\n"
+               f"  apply {self.ns}_s{t[1]} k hk hf\n  apply {self.ns}_s{t[2]} k hk hf\n"
+               f"  apply {self.ns}_s{t[3]} k hk hf {rc} {off(rc, g)} {ADDR0 if g == 0 else ADDR} (Int.toBytes 8 {pn}.toInt) {LEN} _ _ _\n"
                "    (by exact hrY) (by ecancel)\n  intro m' H\n  kn\n  simp only [Reg64s.get64] at H\n")
         if d2['exs'] != [24, 'lo']:
             refuse(f'gen5 field {i + 1}: post state existentials {d2["exs"]} (byte recipe: [24, lo])')
@@ -452,7 +452,7 @@ class T:
             fp, hfp = self.vterm(self.slot_at(d, afp), xs)
             post_x = [(f"(Int.toBytes 8 {src}.toInt)", LEN), ("(Int.toBytes 8 (rsp.toBitVec - 8#64).toInt)", LEN)]
         s += ''.join(P(l) + '\n' for l in f['steps'])
-        s += P(f"  refine eventually_trans _ _ _ _ (Gen.{f['call']} k hk hf hC (s.regs.rsp.toBitVec - {fr}) {dst} {src}\n"
+        s += P(f"  refine eventually_trans _ _ _ _ ({f['call']} k hk hf hC (s.regs.rsp.toBitVec - {fr}) {dst} {src}\n"
                f"    {soff(aret)} {soff(afp)} {soff(as2)} (by bv_omega) (by bv_omega) (by bv_omega)\n"
                f"    {{ toBitVec := s.regs.rsp.toBitVec - 8#64 }} s.regs.r14 guard {v} {rs} {fp} {s2} aN{i}\n"
                f"    h{v} {hrs} {hfp} {hs2} haN{i} hg _ _\n"
@@ -562,7 +562,7 @@ class T:
              f"    _ (k + {r['jl'] + 4}) (win hk {r['jl'] + 3} 1) (by rfl) (by rfl) _ (win hk {r['jl'] + 4} {r['nret']}) (by rfl)\n"
              "    s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard (fun h => hlen (h.trans (by rfl)))\n")
         self.kinds_emitted.append((name, 'decRejectKindN'))
-        s += (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @E2eScal.decRejectKindN h {C} {self.ssz()} := by\n"
+        s += (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @Codec.decRejectKindN h {C} {self.ssz()} := by\n"
               "  intro h; with_reducible rfl\n\n")
         return s
 
@@ -974,7 +974,7 @@ def g5_epi_spec(dirs, i, F, has_rt, has_call):
 def g5_step(u, regs, stk, frame, pfx, fl, cur, fields):
     """Render one GEN4 step theorem as an application in entry terms and update the register model."""
     k = u['kind']
-    nm = f"Gen.{pfx}_s{u['jd']}"
+    nm = f"{pfx}_s{u['jd']}"
     rterm = {('RCV',): lambda o: off('s.regs.rax.toBitVec', o), ('BF',): lambda o: off('s.regs.rbx.toBitVec', o)}
 
     def base_term(r):

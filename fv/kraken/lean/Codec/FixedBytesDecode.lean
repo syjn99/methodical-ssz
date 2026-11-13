@@ -20,7 +20,7 @@ The lemmas `bytesdec_seg` (add form) and `bytesdec_seg_z` (offset-0 form) take t
 runs the proof text of the model lemma (`rootdec_seg`, `rootdec_seg_z`) with the literal size. The
 hypothesis `hn` is a limit of the proof method (the machine steps are computed with a literal immediate),
 not of the code shape; another size needs one more case. Contracts: `MakesliceC` and `MemmoveC` exactly as
-in `rootdec_seg`. `E2eScal/SegNRel.lean` shows that the 32-byte lemmas and `H3.bytes48dec_seg_z` are the
+in `rootdec_seg`. `Codec/FixedBytesDecodeSizeInstances.lean` shows that the 32-byte lemmas and `H3.bytes48dec_seg_z` are the
 `n = 32` / `n = 48` instances (`rfl`).
 -/
 

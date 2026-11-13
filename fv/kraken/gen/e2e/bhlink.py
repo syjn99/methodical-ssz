@@ -34,7 +34,7 @@ SCOPE = {FUNCS[0]: "in (H1 encoder fast path)", FUNCS[1]: "in (H1 decoder)", FUN
          FUNCS[3]: "record only (inlined into BeaconBlockHeader.MarshalSSZTo or unused)"}
 CLASS = dict(adlink.CLASS)
 CLASS.update({
-    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec ViUAccC, proved from machine code (P1)"),
+    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (P1)"),
     "fmt.errorf": ("b", "FmtErrorfWC (field wraps 'Slot: %w', 'ProposerIndex: %w'); decoder: unreachable under "
                         "the callee specs; ValidatorIndex length reject (not in H1)"),
     "runtime.newobject": ("b", "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"),

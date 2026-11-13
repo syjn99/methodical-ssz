@@ -1,4 +1,5 @@
-"""Evidence tool (not part of gen/scal): write the decoder witness modules Wit<X>GA / Wit<X>GR of the seven
+"""Evidence tool (not part of gen/scal): write the decoder witness modules WitnessGeneratedDecodeAccept and
+WitnessGeneratedDecodeRejectSize (lean/Prysm/<GoTypeName>/) of the seven
 generated decoders (non-vacuity of the generated accept / size-reject theorems). Texts follow the script
 `mkwit.py` (reject; callee frame 0x38) and the hand witnesses `WitDdA.lean` (frame 0x20 bytes) and `WitPdA.lean`
 (frame with slices and callees); the memory block of each type is laid out here from the frame facts of its `.S`
@@ -6,14 +7,14 @@ generated decoders (non-vacuity of the generated accept / size-reject theorems).
 usage: python3 -I -B f24wit.py <fv/kraken> [X ...]"""
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from f24spec import T  # noqa: E402
+from f24spec import T, GO_TYPE, new_names  # noqa: E402
 
 NORM = 'prysm/go1.26.10/e2e/f24/link/norm'
 SFILE = {'Dpr': 'engine_v1.DepositRequest', 'Bdr': 'engine_v1.BuilderDepositRequest',
          'Bbr': 'prysm_v1alpha1.BeaconBlocksByRangeRequest', 'Bsr': 'prysm_v1alpha1.BlobSidecarsByRangeRequest',
          'Epr': 'prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest',
          'Pdc': 'prysm_v1alpha1.PartialDataColumnGroupID', 'Vid': 'prysm_v1alpha1.ValidatorIdentity'}
-CALLEE = {'Sl': ('Prysm.AttestationData.Code.slotUnmarshalSSZ', 'primitives.Slot'), 'Vi': ('E2eScal.BhCode.ViUnmarshal', 'primitives.ValidatorIndex'),
+CALLEE = {'Sl': ('Prysm.AttestationData.Code.slotUnmarshalSSZ', 'primitives.Slot'), 'Vi': ('Prysm.ValidatorIndex.Code.unmarshalSSZ', 'primitives.ValidatorIndex'),
           'Ep': ('Prysm.Epoch.Code.unmarshalSSZ', 'primitives.Epoch')}
 CLEN, BUMPLEN, RTLEN = 63, 6, 26
 
@@ -57,7 +58,7 @@ slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill s
 (instances {N - 1}, {N + 1}, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2eScal.F24Code
+open Machine Runtime TestTarget Machine.Witness Prysm.BuilderDepositRequest.Code
 
 open Codec
 namespace E2eScal.Wit{X}GR
@@ -169,7 +170,7 @@ at rax = 0x10020 (protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout: `st
 returns nil. The receiver is a Go value of `{ty}` (all zero).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.F24Code
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec Prysm.BuilderDepositRequest.Code
 
 namespace E2eScal.Wit{X}GA
 
@@ -347,7 +348,7 @@ def accbytes(X, n, frame):
                    + [('(by decide)' if f[1] == 'u' else 'rfl') for f in fs] + ['(by decide)'] * nb)
     ex2 = ' '.join([f'(List.replicate {f[2]} 0xff)' for f in fs] + ['(List.replicate 8 0xff)'] * nb
                    + ['rfl'] * (len(fs) + nb))
-    opens = 'Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.F24Code'
+    opens = 'Machine Runtime TestTarget Machine.Witness E2eScal Codec Prysm.BuilderDepositRequest.Code'
     cdoc = ', '.join(f'`{CALLEE[c][1]}` UnmarshalSSZ' for c in callees)
     return f'''import E2eScal.Gen5F24{X}Dec
 import Runtime.CopyModel
@@ -471,16 +472,16 @@ end E2eScal.Wit{X}GA
 
 if __name__ == '__main__':
     kr = sys.argv[1]
-    d = os.path.join(kr, 'lean', 'E2eScal')
     which = sys.argv[2:] or ['Dpr', 'Bdr', 'Bbr', 'Bsr', 'Epr', 'Pdc', 'Vid']
     for X in which:
         n = slen(kr, X)
-        open(os.path.join(d, f'Wit{X}GR.lean'), 'w').write(reject(X, n))
+        d = os.path.join(kr, 'lean', 'Prysm', GO_TYPE[X])
+        open(os.path.join(d, 'WitnessGeneratedDecodeRejectSize.lean'), 'w').write(new_names(reject(X, n), X))
         if X in ('Bbr', 'Bsr', 'Epr'):
             a = acc38(X, n)
         elif X in ('Dpr', 'Bdr'):
             a = accbytes(X, n, '20')
         else:
             a = accbytes(X, n, 'pd')
-        open(os.path.join(d, f'Wit{X}GA.lean'), 'w').write(a)
+        open(os.path.join(d, 'WitnessGeneratedDecodeAccept.lean'), 'w').write(new_names(a, X))
         print(X, n)

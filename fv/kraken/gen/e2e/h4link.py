@@ -30,7 +30,7 @@ FUNCS = [f"{V1A1}.(*Deposit_Data).UnmarshalSSZ", f"{V1A1}.(*PendingPartialWithdr
 SCOPE = {FUNCS[0]: "in (H4 decoder)", FUNCS[1]: "in (H4 decoder)"}
 CLASS = dict(adlink.CLASS)
 CLASS.update({
-    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec E2eScal.ViUAccC, proved from machine code (H1)"),
+    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (H1)"),
     f"{PRIM}.(*Epoch).UnmarshalSSZ": ("a", "function spec Prysm.Epoch.Decode.accept_function_spec, proved from machine code (prysm-e2e)"),
     "fmt.errorf": ("b", "FmtErrorfWC (field wraps 'Index: %w', 'WithdrawableEpoch: %w'); decoder: unreachable "
                         "under the callee specs"),

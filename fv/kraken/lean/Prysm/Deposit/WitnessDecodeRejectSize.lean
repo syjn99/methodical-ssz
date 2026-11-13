@@ -6,7 +6,7 @@ import Machine.WitnessHost
 # Witness of `Decode.reject_size` (Deposit size reject)
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.Deposit).UnmarshalSSZ`
-(index 1). The text of `E2eScal/WitDdR.lean` with the Deposit decoder.
+(index 1). The text of `Prysm/Deposit_Data/WitnessDecodeRejectSize.lean` with the Deposit decoder.
 Memory at `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a
 data word `0x2a`, stand-ins: the real values are set by the runtime's init and are not read from the ELF),
 the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill

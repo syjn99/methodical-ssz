@@ -1,13 +1,13 @@
-"""Evidence tool (not part of gen/scal): write lean/E2eScal/F24<X>Spec.lean, the spec bridge of each type
+"""Evidence tool (not part of gen/scal): write <out>/Prysm/<GoTypeName>/Spec.lean, the spec bridge of each type
 (the text of SmSpec.lean / SaSpec.lean generalised to a field list: P structure, encoding, serialize, roundtrip,
 accepts-iff-size, spec reject; codec equality with the checker Desc where a Desc-checker record exists).
-usage: python3 -I -B f24spec.py <fv/kraken/lean/E2eScal>"""
+usage: python3 -I -B f24spec.py <out dir>"""
 import sys, os
 
 T = {  # X: (Go type, fields [(name, 'u'|'b', n)], checker (lean name, names) or None)
  'Dpr': ('v1.DepositRequest', [('pubkey', 'b', 48), ('withdrawalCredentials', 'b', 32), ('amount', 'u', 8),
                                ('signature', 'b', 96), ('index', 'u', 8)],
-         ('dprCheckerDesc', None)),
+         ('Prysm.DepositRequest.checkerDesc', None)),
  'Bdr': ('v1.BuilderDepositRequest', [('pubkey', 'b', 48), ('withdrawalCredentials', 'b', 32), ('amount', 'u', 8),
                                       ('signature', 'b', 96)], None),
  'Bbr': ('v1alpha1.BeaconBlocksByRangeRequest', [('startSlot', 'u', 8), ('count', 'u', 8), ('step', 'u', 8)], None),
@@ -37,7 +37,7 @@ def emit(X, ty, fs, chk):
     w = L.append
     w('import Prysm.Checkpoint.Spec')
     w('import Prysm.Checkpoint.SpecEquivalence')
-    w('import E2eScal.F24Desc')
+    w('import Prysm.DepositRequest.SpecDescription')
     if chk:
         w(f'import E2eScal.F24{X}SpecChecker')
     w('')
@@ -217,6 +217,56 @@ def emit(X, ty, fs, chk):
     return '\n'.join(L) + '\n'
 
 
+# Names of the restructured tree: the old template names of type X inside the namespace Prysm.<GoTypeName>.
+GO_TYPE = {'Dpr': 'DepositRequest', 'Bdr': 'BuilderDepositRequest', 'Bbr': 'BeaconBlocksByRangeRequest', 'Bsr': 'BlobSidecarsByRangeRequest', 'Epr': 'ExecutionPayloadEnvelopesByRangeRequest', 'Pdc': 'PartialDataColumnGroupID', 'Vid': 'ValidatorIdentity', 'Bpf': 'BuilderPreferences'}
+
+
+def new_names(text, X):
+    import re as _re
+    x, T = X.lower(), GO_TYPE[X]
+    rules = [
+        (r'\bimport E2eScal\.Gen5F24%sDec\b' % X, 'import Prysm.%s.GeneratedDecodeAccept' % T),
+        (r'\bimport E2eScal\.Gen6F24%sEnc\b' % X, 'import Prysm.%s.GeneratedEncodeFastPath' % T),
+        (r'\bimport E2eScal\.F24%sSpecChecker\b' % X, 'import Prysm.%s.SpecChecker' % T),
+        (r'\bimport E2eScal\.F24%sSpec\b' % X, 'import Prysm.%s.Spec' % T),
+        (r'\bE2eScal\.Gen\.%s_g5dec_' % x, 'Prysm.%s.Decode.generated_' % T),
+        (r'\bE2eScal\.Gen6Enc\.%s_g6e_' % x, 'Prysm.%s.Encode.generated_' % T),
+        (r'\b%s_g5dec_' % x, 'Decode.generated_'),
+        (r'\b%s_g6e_' % x, 'Encode.generated_'),
+        (r'\b%s_e2e_accept_spec_k\b' % x, 'Decode.accept_spec'),
+        (r'\b%s_e2e_reject_size_spec\b' % x, 'Decode.reject_size_spec'),
+        (r'\b%s_e2e_reject_complete\b' % x, 'Decode.reject_complete'),
+        (r'\b%s_e2c_spec_k\b' % x, 'Encode.generated_fast_spec'),
+        (r'\b%s_e2c_split\b' % x, 'Encode.generated_fast_split'),
+        (r'\b%s_e2c_enc_toList\b' % x, 'SszValue.encode_toList_generated'),
+        (r'\b%s_e2c_wit_(empty|prefix)\b' % x, r'runs_\1'),
+        (r'\b%s_(accept|reject)_runs\b' % x, 'runs'),
+        (r'\bp%sEnc\b' % x, 'SszValue.encode'),
+        (r'\bp%s_serialize_checker\b' % x, 'SszValue.serialize_eq_checker'),
+        (r'\bp%s_serialize\b' % x, 'SszValue.serialize_eq'),
+        (r'\bp%s_accepted_is_enc\b' % x, 'SszValue.accepted_is_encoding'),
+        (r'\bp%s_(\w+)' % x, r'SszValue.\1'),
+        (r'\bP%s\b' % X, 'SszValue'),
+        (r'\bprysm%sDesc' % X, 'desc'),
+        (r'\bPrysm\.%s\.checkerDesc\b' % T, 'checkerDesc'),
+        (r'\b%sChecker' % x, 'checker'),
+        (r'\b%sUnmarshal\b' % X, 'unmarshalSSZ'),
+        (r'\b%sMarshal\b' % X, 'marshalSSZTo'),
+        (r'\bnamespace E2eScal\.Wit%sGA\b' % X, 'namespace Prysm.%s.Witness.GeneratedDecodeAccept' % T),
+        (r'\bend E2eScal\.Wit%sGA\b' % X, 'end Prysm.%s.Witness.GeneratedDecodeAccept' % T),
+        (r'\bnamespace E2eScal\.Wit%sGR\b' % X, 'namespace Prysm.%s.Witness.GeneratedDecodeRejectSize' % T),
+        (r'\bend E2eScal\.Wit%sGR\b' % X, 'end Prysm.%s.Witness.GeneratedDecodeRejectSize' % T),
+        (r'\bnamespace E2eScal\.WitE2c%s\b' % X, 'namespace Prysm.%s.Witness.GeneratedEncodeFastPath' % T),
+        (r'\bend E2eScal\.WitE2c%s\b' % X, 'end Prysm.%s.Witness.GeneratedEncodeFastPath' % T),
+        (r'^(namespace|end) (E2e|E2eScal\.F24|E2eScal\.E2c)$', r'\1 Prysm.%s' % T),
+        (r'^(open .*?)\bE2eScal ', r'\1'),
+        (r'^(open .*)\bPrysm\.BuilderDepositRequest\.Code\b', r'\1Prysm.%s.Code' % T),
+    ]
+    for rx, rep in rules:
+        text = _re.sub(rx, rep, text, flags=_re.M)
+    return text
+
+
 descnames = {
  'Dpr': ['pubkey', 'withdrawal_credentials', 'amount', 'signature', 'index'],
  'Bdr': ['pubkey', 'withdrawal_credentials', 'amount', 'signature'],
@@ -228,5 +278,6 @@ descnames = {
 if __name__ == '__main__':
     out = sys.argv[1]
     for X, (ty, fs, chk) in T.items():
-        open(os.path.join(out, f'F24{X}Spec.lean'), 'w').write(emit(X, ty, fs, chk))
+        os.makedirs(os.path.join(out, 'Prysm', GO_TYPE[X]), exist_ok=True)
+        open(os.path.join(out, 'Prysm', GO_TYPE[X], 'Spec.lean'), 'w').write(new_names(emit(X, ty, fs, chk), X))
         print(X)

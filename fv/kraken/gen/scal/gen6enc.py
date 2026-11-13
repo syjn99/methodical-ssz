@@ -1,6 +1,6 @@
 """GEN6: `scalgen.py p2enc --gen6`, generated fast-path theorems for flat encoders (`MarshalSSZTo`).
 
-Interface: the encoder lemma unit's hand-over; the reference texts are `lean/E2eScal/Enc2Ex*.lean`. A symbolic
+Interface: the encoder lemma unit's hand-over; the reference texts are `lean/Prysm/*/EncodeFastPathExample.lean`. A symbolic
 dataflow walk over the fast path of the `.S` file (head; per IR field its length test not taken, its capacity test
 passed with the growslice site SKIPPED, never stepped; the store / `memmove` commit; the epilogue with the frame
 test where present) produces ONE module: the head theorem, one theorem per IR field, the epilogue theorem, the
@@ -15,8 +15,7 @@ one guarded success point (see there). This module never writes to stdout.
 """
 import hashlib, json, pathlib, re
 
-G6_IMPORTS = ["E2eScal.EncTies", "Codec.EncodeFrameTest"]
-G6_NS = "E2eScal.Gen6Enc"
+G6_IMPORTS = ["Prysm.BeaconBlockHeader.EncodeFastPathKindInstances", "Codec.EncodeFrameTest"]
 R64 = "rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15".split()
 R32 = {"eax": "rax", "ebx": "rbx", "ecx": "rcx", "edx": "rdx", "esi": "rsi", "edi": "rdi"}
 BYTE_SIZES = (32, 48, 96)
@@ -96,7 +95,8 @@ def parse_layout(src, name):
     (offsets from the entry rsp) and their binder indices, plus the whole literal text of the def (normalised)."""
     short = name.rsplit(".", 1)[-1]
     txt = pathlib.Path(src).read_text()
-    m = re.search(rf"\ndef {re.escape(short)} : EncLayout where\n((?:  .*\n|    .*\n)+)", txt)
+    m = (re.search(rf"\ndef _root_\.{re.escape(name)} : EncLayout where\n((?:  .*\n|    .*\n)+)", txt)
+         or re.search(rf"\ndef {re.escape(short)} : EncLayout where\n((?:  .*\n|    .*\n)+)", txt))
     if not m:
         raise G6Refuse(f"hand layout {name} not found in {src}")
     body = m[1]
@@ -263,8 +263,8 @@ class Gen6:
     def __init__(self, S, const, ir, tname, prefix, hand_layout=None, hand_layout_src=None):
         if not re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", const):
             raise G6Refuse(f"code constant name {const!r} is not a bare identifier")
-        if not re.fullmatch(r"[a-z][a-z0-9_]*", prefix):
-            raise G6Refuse(f"prefix {prefix!r} is not a lower-case identifier")
+        if not re.fullmatch(r"(?:[A-Z][A-Za-z0-9]*\.)?[a-z][a-z0-9_]*", prefix):
+            raise G6Refuse(f"prefix {prefix!r} is not a lower-case identifier (optionally behind one capitalized word)")
         self.t, self.C, self.px = tname.rsplit(".", 1)[1], const, prefix
         self.fields, self.size, self.irsha = read_ir(ir, tname)
         self.L, self.Ssha = read_S(S, tname)
@@ -1169,7 +1169,7 @@ class Gen6:
         return "[" + ", ".join(".lo" if e == "S" else f".n {e}" for e in exs) + "]"
 
     def layout(self):
-        return self.layname or f"{G6_NS}.{self.px}_layout"
+        return self.layname or f"Prysm.{self.t}.{self.px}_layout"
 
     def layout_fields(self):
         pre = self.pre + ([("lo", "S", ("scr",))] if self.rt else [])
@@ -1212,7 +1212,7 @@ class Gen6:
 
         def kline(name, kind, extra):
             kinds.append((name, kind))
-            return (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @E2eScal.{kind} h {C} {lay} {fk}"
+            return (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @Codec.{kind} h {C} {lay} {fk}"
                     + extra + " := by\n  intro h; rfl\n")
         o.append(f"{OPT}/-- Head: directives 0–{b0['pc'] - 1} (stack guard, frame, spills); entry → boundary state 0. -/")
         o.append(f"theorem {px}_head : ∀ {B}\n    {hmem}\n    {hg} {hrest}{hmm},\n    Eventually (step1 Host.exe)\n      (fun st => "

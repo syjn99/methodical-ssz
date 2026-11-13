@@ -1,12 +1,12 @@
 import Codec.DecoderHeadEpilogue
-import E2eScal.E1Accept
+import Prysm.Eth1Data.DecodeAccept
 import Prysm.SyncAggregate.DecodeFieldSegments
 import Prysm.SyncAggregate.Statements
 
 /-!
 # `(*v1alpha1.SyncAggregate).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
-Hand composition with the text of `E2eScal.H4.dd_e2e_accept_main` (`DdAccept.lean`):
+Hand composition with the text of `Prysm.Deposit_Data.Decode.accept` (`DdAccept.lean`):
 
 * head 0–12: `Codec.dechead_seg` (size 160);
 * SyncCommitteeBits 13–36: `Prysm.SyncAggregate.bytesdec_seg_z64` (64 bytes, offset 0); pointer tail 37–38, 45–46 (rdi);
@@ -120,7 +120,7 @@ theorem Decode.accept : Decode.accept_statement := by
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 8) (rax.toBitVec + 16) (rax.toBitVec + 24) S
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
-    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega) (E2eScal.E1.e1_lo _ _)
+    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega) (Prysm.Eth1Data.Decode.stack_low_eq _ _)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     (by simp only [Int64.toBitVec_ofNat])
     (rsp - 8) r14 bits hbits spl rslot lo l18 aP1 aL1 aC1 hspl hrs hlo hl18 haP1 haL1 haC1
@@ -146,7 +146,7 @@ theorem Decode.accept : Decode.accept_statement := by
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 32) (rax.toBitVec + 40) (rax.toBitVec + 48) (rbx.toBitVec + 64) S
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
-    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega) (E2eScal.E1.e1_lo _ _)
+    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega) (Prysm.Eth1Data.Decode.stack_low_eq _ _)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     (rsp - 8) r14 sig hsig spl1 (Int.toBytes 8 (Host.addrOf (k + 26 + 5 + 1)).toBitVec.toInt) lo1 (Int.toBytes 8 p1.toInt) aP2 aL2 aC2 hspl1 (Int.toBytes_length 8 _) hlo1 (Int.toBytes_length 8 _) haP2 haL2 haC2

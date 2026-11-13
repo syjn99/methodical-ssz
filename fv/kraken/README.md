@@ -90,7 +90,7 @@ Each item says what the command needs.
 **Lean only.** Lake fetches Kraken and EthLib at the pinned commits on the first run.
 
 ```sh
-cd fv/kraken/lean && lake build Machine Runtime Codec Spec TestTarget Prysm E2eScal
+cd fv/kraken/lean && lake build Machine Runtime Codec Spec TestTarget Prysm
 cd fv/kraken/lean && lake build Prysm.SyncAggregate.DecodeRejectSize    # one module
 ```
 
@@ -120,7 +120,7 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
 ```sh
 python3 -B fv/kraken/link/data.py --check fv/kraken/link/out
 python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest
-python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/GenCi.lean
+python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean
 python3 -I -B fv/kraken/gen/e2e/axioms_gate.py --selftest
 ```
 

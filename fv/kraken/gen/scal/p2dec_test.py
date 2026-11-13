@@ -8,7 +8,7 @@ Cases (all on the committed Eth1Data `.S` and IR; mutants are written to <work-d
  - old-gen: the frozen generator (git blob OLD_BLOB, method freeze 56dfc27) on Eth1Data: exit 2, 0 bytes on
    stdout, stderr = the committed record line of `prysm/go1.26.10/e2e/e1/gen-e1dec.raw.txt` (historical record).
  - new-gen: the working-tree generator on Eth1Data: exit 0, both fields (DepositRoot offset-0 form,
-   BlockHash add form), stdout = the committed `lean/E2eScal/GenE1Dec.lean`, two runs byte-identical.
+   BlockHash add form), stdout = the committed `lean/Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean`, two runs byte-identical.
  - mutants of the `.S` (one line changed or removed, found by exact text at a 1-based line):
    wrong length, missing memmove, an add on another register, offset-0 form with a wrong destination,
    offset-0 form at a non-zero SSZ offset, broken head of the first field, unrecognised directive in place
@@ -39,16 +39,16 @@ GEN2 fix cases (ids `g2f-*`):
  - g2-partial (changed): the `--gen2 --partial-out` file is a Lean module: imports first, then the PARTIAL header
    with an `UNCOVERED-JSON:` line; `kindcheck.py` exit 1 by default, exit 3 with `--partial`.
  - g2f-bh-partial: real BeaconBlockHeader (Slot, ProposerIndex are delegated overlay fields): exit 3, 0 bytes on
-   stdout, partial file = the committed `lean/E2eScal/Gen2BhDecPartial.lean`, two runs identical, kindcheck
+   stdout, partial file = the committed `lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean`, two runs identical, kindcheck
    default exit 1, `--partial` exit 3 with `PARTIAL 3/5 fields`.
  - g2f-compose-*: `--compose` refusals, exit 2, 0 bytes, no partial file even with `--partial-out`: partial
    coverage (BeaconBlockHeader), frame 0x28, a non-contiguous field (a `nop` between two fields), uint64 first
    field (IR order of BlobIdentifier swapped: displacement 0, not covered).
  - g2f-no-same-as-marker: `--compose` without `--same-as` still exits 0; the theorem line carries
    `-- UNCHECKED STATEMENT` and the header says the statement is checked by nobody; kindcheck exit 1.
- - g2f-same-as-generated: `--same-as E2eScal.Gen.bi_e2e_accept_main_gc` (a generated theorem): exit 0, kindcheck
+ - g2f-same-as-generated: `--same-as Prysm.BlobIdentifier.Decode.accept_generated_composition` (a generated theorem): exit 0, kindcheck
    exit 1.
- - g2f-same-as-prop: `--same-as-prop E2eScal.Fx.biStmt`: exit 0, the Prop identity line, kindcheck PASS; the
+ - g2f-same-as-prop: `--same-as-prop Prysm.BlobIdentifier.Decode.hand_statement`: exit 0, the Prop identity line, kindcheck PASS; the
    test fixture `g2f-bi-prop-fixture.lean` (the output with a scratch `abbrev` equal to the type of
    `Bi.bi_e2e_accept_main`) is written to <work-dir> for a separate gated `lake env lean`.
 
@@ -139,11 +139,11 @@ KR = HERE.parent.parent
 OLD_BLOB = "78e3339bc0ff3f20b6daa9a28582c97d7df9f712"
 S = "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S"
 RECORD = "prysm/go1.26.10/e2e/e1/gen-e1dec.raw.txt"
-COMMITTED = "lean/E2eScal/GenE1Dec.lean"
-ARGS = ["--const", "E1Unmarshal", "--ir", "prysm/ir/ir-mainnet.json", "--type", "v1alpha1.Eth1Data",
-        "--prefix", "e1_dec", "--imports", "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,E2eScal.E1Code", "--open", "E2eScal.E1Code"]
-OLD_ARGS = ["--const", "E1Unmarshal", "--ir", "prysm/ir/ir-mainnet.json", "--type", "v1alpha1.Eth1Data",
-            "--prefix", "e1_dec", "--imports", "Codec.Bytes32Decode,E2eScal.E1Code", "--open", "E2eScal.E1Code"]
+COMMITTED = "lean/Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean"
+ARGS = ["--const", "unmarshalSSZ", "--ir", "prysm/ir/ir-mainnet.json", "--type", "v1alpha1.Eth1Data",
+        "--prefix", "Decode.generated_root", "--imports", "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Prysm.Eth1Data.Code", "--open", "Prysm.Eth1Data.Code"]
+OLD_ARGS = ["--const", "unmarshalSSZ", "--ir", "prysm/ir/ir-mainnet.json", "--type", "v1alpha1.Eth1Data",
+            "--prefix", "Decode.generated_root", "--imports", "Codec.Bytes32Decode,Prysm.Eth1Data.Code", "--open", "Prysm.Eth1Data.Code"]
 
 # (id, what, 1-based line, old text, new text or None = delete, expected exit, expected MATCH fields)
 MUTANTS = [
@@ -179,28 +179,28 @@ H3N = "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_p
 E1S = S
 IR = "prysm/ir/ir-mainnet.json"
 G2 = {
-    "E1": dict(S=E1S, type="v1alpha1.Eth1Data", committed="lean/E2eScal/Gen2E1Dec.lean",
-               args=["--const", "E1Unmarshal", "--prefix", "e1_g2dec", "--imports",
-                     "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.InlineUint64,E2eScal.E1Code", "--open", "E2eScal.E1Code"],
+    "E1": dict(S=E1S, type="v1alpha1.Eth1Data", committed="lean/Prysm/Eth1Data/GeneratedDecodeFieldSegments.lean",
+               args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_field", "--imports",
+                     "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.InlineUint64,Prysm.Eth1Data.Code", "--open", "Prysm.Eth1Data.Code"],
                fields=["DepositRoot", "DepositCount", "BlockHash"]),
     "BI": dict(S=H3N + "BlobIdentifier.UnmarshalSSZ.S", type="v1alpha1.BlobIdentifier",
-               committed="lean/E2eScal/Gen2BiDec.lean", old="lean/E2eScal/GenBiDec.lean",
-               args=["--const", "BiUnmarshal", "--prefix", "bi_g2dec", "--imports",
-                     "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.InlineUint64,E2eScal.H3Code", "--open", "E2eScal.H3Code"],
-               old_args=["--const", "BiUnmarshal", "--prefix", "bi_dec", "--imports",
-                         "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,E2eScal.H3Code", "--open", "E2eScal.H3Code"],
+               committed="lean/Prysm/BlobIdentifier/GeneratedDecodeFieldSegments.lean", old="lean/Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean",
+               args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_field", "--imports",
+                     "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.InlineUint64,Prysm.BlobIdentifier.Code", "--open", "Prysm.BlobIdentifier.Code"],
+               old_args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_root", "--imports",
+                         "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Prysm.BlobIdentifier.Code", "--open", "Prysm.BlobIdentifier.Code"],
                fields=["BlockRoot", "Index"]),
     "DM": dict(S=H3N + "DepositMessage.UnmarshalSSZ.S", type="v1alpha1.DepositMessage",
-               committed="lean/E2eScal/Gen2DmDec.lean", old="lean/E2eScal/GenDmDec.lean",
-               args=["--const", "DmUnmarshal", "--prefix", "dm_g2dec", "--imports",
-                     "Codec.Bytes32Decode,Codec.FixedBytesDecode,Codec.InlineUint64,E2eScal.H3Code", "--open", "E2eScal.H3Code"],
-               old_args=["--const", "DmUnmarshal", "--prefix", "dm_dec", "--imports",
-                         "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,E2eScal.H3Code", "--open", "E2eScal.H3Code"],
+               committed="lean/Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean", old="lean/Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean",
+               args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_field", "--imports",
+                     "Codec.Bytes32Decode,Codec.FixedBytesDecode,Codec.InlineUint64,Prysm.BlobIdentifier.Code", "--open", "Prysm.DepositMessage.Code"],
+               old_args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_root", "--imports",
+                         "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Prysm.BlobIdentifier.Code", "--open", "Prysm.DepositMessage.Code"],
                fields=["PublicKey", "WithdrawalCredentials", "Amount"]),
     "BH": dict(S="prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
                  "BeaconBlockHeader.UnmarshalSSZ.S", type="v1alpha1.BeaconBlockHeader",
-               args=["--const", "BhUnmarshal", "--prefix", "bh_g2dec", "--imports",
-                     "Codec.Bytes32Decode,E2eScal.BhCode", "--open", "E2eScal.BhCode"],
+               args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_field", "--imports",
+                     "Codec.Bytes32Decode,Prysm.BeaconBlockHeader.Code", "--open", "Prysm.BeaconBlockHeader.Code"],
                fields=["Slot", "ProposerIndex", "ParentRoot", "StateRoot", "BodyRoot"]),
 }
 
@@ -354,13 +354,13 @@ def gen2_cases(work, new):
     rc, so, se = run(["python3", "-I", str(new), "p2dec", "--gen2", "--S", str(f), "--ir", str(irf), "--type", c["type"]]
                      + c["args"], KR)
     t = so.decode()
-    want = ["@Codec.bytesDecSegKind h 48 DmUnmarshal 47 61 48 56 24 24 32 40 48 := by",
+    want = ["@Codec.bytesDecSegKind h 48 unmarshalSSZ 47 61 48 56 24 24 32 40 48 := by",
             "with_reducible exact Codec.bytesdec_seg 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl",
             "(hroot : root.length = 48)", "(hav : 48 ≤ avail)", "⋆ Heap (avail - 48)", "Eq ((Int.toBytes 8 48).At aL)",
             "Eq ((Int.toBytes 8 48).At aC)", "(hSrc : bf + (48 : Int64).toBitVec = aSrc)",
-            "@Codec.u64DecInlineSegKind h DmUnmarshal 83 56 96 48 := by"]
+            "@Codec.u64DecInlineSegKind h unmarshalSSZ 83 56 96 48 := by"]
     miss = [w for w in want if w not in t]
-    ok = rc == 0 and not miss and "length = 32" not in t.split("dm_g2dec_WithdrawalCredentials_seg")[1].split("theorem")[0]
+    ok = rc == 0 and not miss and "length = 32" not in t.split("Decode.generated_field_WithdrawalCredentials_seg")[1].split("theorem")[0]
     res.append(dict(id="g2-syn48-add", what="synthetic 48-byte add-form field (text check only, not kernel-checked)",
                     expect="exit 0; add-form 48 shape with the synthetic parameters", exit=rc, stdout_bytes=len(so),
                     missing=miss, ok=bool(ok)))
@@ -378,19 +378,19 @@ def gen2_cases(work, new):
     ph = [l for l in pt.split("\n") if "PARTIAL OUTPUT" in l]
     uj = [json.loads(l.split(": ", 1)[1]) for l in pt.split("\n") if l.startswith("UNCOVERED-JSON: ")]
     ok = (rc == 3 and so == b"" and pt.startswith("import ") and len(ph) == 1 and "NOT generated: Amount" in ph[0]
-          and uj and [u["field"] for u in uj[0]] == ["Amount"] and "dm_g2dec_Amount_seg" not in pt
+          and uj and [u["field"] for u in uj[0]] == ["Amount"] and "Decode.generated_field_Amount_seg" not in pt
           and kc.returncode == 1 and kp.returncode == 3 and "PARTIAL 2/3 fields" in kp.stdout)
     res.append(dict(id="g2-partial", expect="exit 3, Lean-module PARTIAL file without Amount, kindcheck exit 1, --partial exit 3",
                     exit=rc, stdout_bytes=len(so), partial_header=ph, kindcheck_exit=kc.returncode,
                     kindcheck_partial_exit=kp.returncode, ok=bool(ok)))
     bad |= not ok
     # composition (`--compose`)
-    CP = {"BI": ("bi_e2e_accept_main_gc", "E2eScal.Bi.bi_e2e_accept_main", "lean/E2eScal/Gen2BiAccept.lean",
-                 "Codec.DecoderHeadEpilogue,E2eScal.Gen2BiDec,E2eScal.BiAccept"),
-          "DM": ("dm_e2e_accept_main_gc", "E2eScal.Dm.dm_e2e_accept_main", "lean/E2eScal/Gen2DmAccept.lean",
-                 "Codec.DecoderHeadEpilogue,E2eScal.Gen2DmDec,E2eScal.DmAccept"),
-          "E1": ("e1_e2e_accept_main_gc", "E2eScal.E1.e1_e2e_accept_main", "lean/E2eScal/Gen2E1Accept.lean",
-                 "Codec.DecoderHeadEpilogue,E2eScal.Gen2E1Dec,E2eScal.E1Accept")}
+    CP = {"BI": ("Decode.accept_generated_composition", "Prysm.BlobIdentifier.Decode.accept", "lean/Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
+                 "Codec.DecoderHeadEpilogue,Prysm.BlobIdentifier.GeneratedDecodeFieldSegments,Prysm.BlobIdentifier.DecodeAccept"),
+          "DM": ("Decode.accept_generated_composition", "Prysm.DepositMessage.Decode.accept", "lean/Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean",
+                 "Codec.DecoderHeadEpilogue,Prysm.DepositMessage.GeneratedDecodeFieldSegments,Prysm.DepositMessage.DecodeAccept"),
+          "E1": ("Decode.accept_generated_composition", "Prysm.Eth1Data.Decode.accept", "lean/Prysm/Eth1Data/GeneratedDecodeAcceptComposition.lean",
+                 "Codec.DecoderHeadEpilogue,Prysm.Eth1Data.GeneratedDecodeFieldSegments,Prysm.Eth1Data.DecodeAccept")}
 
     def cargs(key, same=True):
         c = G2[key]
@@ -436,7 +436,7 @@ def gen2_cases(work, new):
     return res + r2, bad | b2
 
 
-GEN2_BH_PARTIAL = "lean/E2eScal/Gen2BhDecPartial.lean"
+GEN2_BH_PARTIAL = "lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean"
 
 
 def g2f_cases(work, new, cargs, CP, irt):
@@ -468,7 +468,7 @@ def g2f_cases(work, new, cargs, CP, irt):
     bad |= not ok
     # --compose refusals
     dm = (KR / G2["DM"]["S"]).read_text().split("\n")
-    bia = ["p2dec", "--gen2", "--compose", "--name", "bi_e2e_accept_main_gc", "--same-as", "E2eScal.Bi.bi_e2e_accept_main"]
+    bia = ["p2dec", "--gen2", "--compose", "--name", "Decode.accept_generated_composition", "--same-as", "Prysm.BlobIdentifier.Decode.accept"]
     for (mid, what, base_args, S_text, ir_text) in [
             ("g2f-compose-partial-bh", "partial coverage: real BeaconBlockHeader (3 of 5 fields)",
              ["p2dec", "--gen2", "--compose", "--name", "bh_e2e_accept_main_gc", "--ir", IR, "--type", c["type"]] + c["args"],
@@ -511,7 +511,7 @@ def g2f_cases(work, new, cargs, CP, irt):
     bad |= not ok
     # --same-as a generated theorem
     a = cargs("BI")
-    a[a.index("--same-as") + 1] = "E2eScal.Gen.bi_e2e_accept_main_gc"
+    a[a.index("--same-as") + 1] = "Prysm.BlobIdentifier.Decode.accept_generated_composition"
     a[a.index("--name") + 1] = "bi_selfgen_gc"  # the reviewer's case: another name, right-hand side generated
     rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--S", G2["BI"]["S"]], KR)
     tf = work / "g2f-same-as-generated.lean"
@@ -523,22 +523,22 @@ def g2f_cases(work, new, cargs, CP, irt):
     bad |= not ok
     # --same-as-prop
     a = cargs("BI")
-    a[a.index("--same-as"):a.index("--same-as") + 2] = ["--same-as-prop", "E2eScal.Fx.biStmt"]
+    a[a.index("--same-as"):a.index("--same-as") + 2] = ["--same-as-prop", "Prysm.BlobIdentifier.Decode.hand_statement"]
     rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--S", G2["BI"]["S"]], KR)
     t = so.decode()
     tf = work / "g2f-same-as-prop.lean"
     tf.write_bytes(so)
     kc = subprocess.run(KC + [str(tf)], capture_output=True, text=True)
-    line = "    type_of% (@bi_e2e_accept_main_gc h) = @E2eScal.Fx.biStmt h := by"
+    line = "    type_of% (@Decode.accept_generated_composition h) = @Prysm.BlobIdentifier.Decode.hand_statement h := by"
     com = (KR / CP["BI"][2]).read_text()
-    ok = (rc == 0 and line in t and kc.returncode == 0 and "identity against E2eScal.Fx.biStmt" in kc.stdout
-          and t.split("\n/-- Statement check")[0].replace("E2eScal.Fx.biStmt", "E2eScal.Bi.bi_e2e_accept_main")
+    ok = (rc == 0 and line in t and kc.returncode == 0 and "identity against Prysm.BlobIdentifier.Decode.hand_statement" in kc.stdout
+          and t.split("\n/-- Statement check")[0].replace("Prysm.BlobIdentifier.Decode.hand_statement", "Prysm.BlobIdentifier.Decode.accept")
           == com.split("\n/-- Statement check")[0])
     imps, rest = t.split("\n\n", 1)
     (work / "g2f-bi-prop-fixture.lean").write_text(
         imps + "\n\n-- TEST FIXTURE (scratch, not in the library): a Prop-valued abbrev equal to the type of the hand\n"
-        "-- theorem `E2eScal.Bi.bi_e2e_accept_main`.\n"
-        "abbrev E2eScal.Fx.biStmt [h : Host] : Prop := type_of% (@E2eScal.Bi.bi_e2e_accept_main h)\n\n" + rest)
+        "-- theorem `Prysm.BlobIdentifier.Decode.accept`.\n"
+        "abbrev Prysm.BlobIdentifier.Decode.hand_statement [h : Host] : Prop := type_of% (@Prysm.BlobIdentifier.Decode.accept h)\n\n" + rest)
     res.append(dict(id="g2f-same-as-prop", expect="exit 0, Prop identity line, kindcheck PASS; fixture written",
                     exit=rc, stdout_bytes=len(so), kindcheck_exit=kc.returncode, ok=bool(ok)))
     bad |= not ok
@@ -548,22 +548,22 @@ def g2f_cases(work, new, cargs, CP, irt):
 H4N = "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
 G3 = {
     "PW": dict(S=H4N + "PendingPartialWithdrawal.UnmarshalSSZ.S", type="v1alpha1.PendingPartialWithdrawal",
-               committed="lean/E2eScal/Gen3PwDec.lean",
-               args=["--const", "PwUnmarshal", "--prefix", "pw_g3dec", "--imports", "E2eScal.H4Code", "--open", "E2eScal.H4Code"],
+               committed="lean/Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
+               args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_call", "--imports", "Prysm.Deposit_Data.Code", "--open", "Prysm.PendingPartialWithdrawal.Code"],
                fields=["Index", "Amount", "WithdrawableEpoch"]),
-    "DD": dict(S=H4N + "Deposit_Data.UnmarshalSSZ.S", type="v1alpha1.Deposit_Data", committed="lean/E2eScal/Gen3DdDec.lean",
-               args=["--const", "DdUnmarshal", "--prefix", "dd_g3dec", "--imports",
-                     "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.FixedBytesDecode,E2eScal.SegNPad,Codec.InlineUint64,E2eScal.H4Code",
-                     "--open", "E2eScal.H4Code"],
+    "DD": dict(S=H4N + "Deposit_Data.UnmarshalSSZ.S", type="v1alpha1.Deposit_Data", committed="lean/Prysm/Deposit_Data/GeneratedDecodeCallSegments.lean",
+               args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_call", "--imports",
+                     "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.FixedBytesDecode,Codec.FixedBytesDecodePadding,Codec.InlineUint64,Prysm.Deposit_Data.Code",
+                     "--open", "Prysm.Deposit_Data.Code"],
                fields=["PublicKey", "WithdrawalCredentials", "Amount", "Signature"]),
-    "BH": dict(S=G2["BH"]["S"], type="v1alpha1.BeaconBlockHeader", committed="lean/E2eScal/Gen3BhDec.lean",
-               args=["--const", "BhUnmarshal", "--prefix", "bh_g3dec", "--imports", "Codec.Bytes32Decode,E2eScal.BhCode",
-                     "--open", "E2eScal.BhCode"],
+    "BH": dict(S=G2["BH"]["S"], type="v1alpha1.BeaconBlockHeader", committed="lean/Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean",
+               args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_call", "--imports", "Codec.Bytes32Decode,Prysm.BeaconBlockHeader.Code",
+                     "--open", "Prysm.BeaconBlockHeader.Code"],
                fields=["Slot", "ProposerIndex", "ParentRoot", "StateRoot", "BodyRoot"]),
     "AD": dict(S="prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
                  "AttestationData.UnmarshalSSZ.S", type="v1alpha1.AttestationData",
-               committed="lean/E2eScal/Gen3AdDecPartial.lean",
-               args=["--const", "unmarshalSSZ", "--prefix", "ad_g3dec", "--imports", "Codec.Bytes32Decode,Prysm.AttestationData.Code",
+               committed="lean/Prysm/AttestationData/GeneratedDecodeCallSegmentsPartial.lean",
+               args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_call", "--imports", "Codec.Bytes32Decode,Prysm.AttestationData.Code",
                      "--open", "Prysm.AttestationData.Code"],
                fields=["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"]),
 }
@@ -723,20 +723,20 @@ def g3_cases(work, new):
                         stderr=se.strip()[:300], ok=bool(ok)))
         bad |= not ok
     c = G3["DD"]
-    outs = [run(G + ["--compose", "--name", "dd_e2e_accept_main_g3", "--same-as-prop", "E2eScal.H4.dd_accept_stmt",
-                     "--S", c["S"], "--ir", IR, "--type", c["type"], "--const", "DdUnmarshal", "--prefix", "dd_g3dec",
-                     "--imports", "Codec.DecoderHeadEpilogue,E2eScal.Gen3DdDec,E2eScal.H4Stmt", "--open", "E2eScal.H4Code"], KR)
+    outs = [run(G + ["--compose", "--name", "Decode.accept_generated_composition", "--same-as-prop", "Prysm.Deposit_Data.Decode.accept_statement",
+                     "--S", c["S"], "--ir", IR, "--type", c["type"], "--const", "unmarshalSSZ", "--prefix", "Decode.generated_call",
+                     "--imports", "Codec.DecoderHeadEpilogue,Prysm.Deposit_Data.GeneratedDecodeCallSegments,Prysm.Deposit_Data.Statements", "--open", "Prysm.Deposit_Data.Code"], KR)
             for _ in range(2)]
     rc, so, se = outs[0]
     f = work / "g3-compose-DD.lean"
     f.write_bytes(so)
     kc = subprocess.run(KC + [str(f)], capture_output=True, text=True)
-    com = KR / "lean/E2eScal/Gen3DdAccept2.lean"
+    com = KR / "lean/Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean"
     com = com.read_bytes() if com.exists() else None
     t = so.decode()
     ok = (rc == 0 and outs[0] == outs[1] and kc.returncode == 0 and "decAcceptKind" in kc.stdout
-          and "@E2eScal.decAcceptKind h DdUnmarshal true [.bytes 48, .bytes 32, .u64, .bytes 96] 106 := by" in t
-          and "set_option maxHeartbeats 200000 in\ntheorem dd_e2e_accept_main_g3_kind" in t
+          and "@Codec.decAcceptKind h unmarshalSSZ true [.bytes 48, .bytes 32, .u64, .bytes 96] 106 := by" in t
+          and "set_option maxHeartbeats 200000 in\ntheorem Decode.accept_generated_composition_kind" in t
           and "UNCHECKED" not in t and (com is None or com == so))
     res.append(dict(id="g3-compose-DD", expect="exit 0 twice, identical, decAcceptKind line + Prop identity, kindcheck PASS",
                     exit=rc, stdout_bytes=len(so), kindcheck_exit=kc.returncode, committed_present=com is not None,
@@ -746,7 +746,7 @@ def g3_cases(work, new):
     c2 = G2["E1"]
     rc, so, se = run(G + ["--S", c2["S"], "--ir", IR, "--type", c2["type"]] + c2["args"], KR)
     com = (KR / c2["committed"]).read_text()
-    body = lambda s: s.split("namespace E2eScal.Gen\n", 1)[1]
+    body = lambda s: s.split("namespace Prysm.Eth1Data\n", 1)[1]
     ok = rc == 0 and body(so.decode()) == body(com)
     res.append(dict(id="g3-e1-same-theorems-as-gen2", expect="exit 0, theorem text = committed Gen2E1Dec.lean body",
                     exit=rc, stdout_bytes=len(so), ok=bool(ok)))
@@ -760,8 +760,8 @@ PN = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
 
 def g4c(sdir, tname, const, mod, pre, out, fields, cov=None):
     return dict(S=f"prysm/go1.26.10/e2e/{sdir}/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
-                committed=f"lean/E2eScal/{out}.lean", args=["--const", const, "--prefix", f"{pre}_g4dec", "--imports", mod,
-                                                             "--open", mod],
+                committed=f"lean/Prysm/{tname}/GeneratedDecodeSteps" + ("Partial" if out.endswith("Partial") else "") + ".lean", args=["--const", const, "--prefix", "Decode.generated_step", "--imports", mod,
+                                                             "--open", f"Prysm.{tname}.Code"],
                 fields=fields, cov=fields if cov is None else cov)
 
 
@@ -769,20 +769,20 @@ G4 = {
     "CP": g4c("link/norm", "Checkpoint", "unmarshalSSZ", "Prysm.Checkpoint.Code", "cp", "Gen4CpDec", ["Epoch", "Root"]),
     "AD": g4c("ad/link/norm", "AttestationData", "unmarshalSSZ", "Prysm.AttestationData.Code", "ad", "Gen4AdDecPartial",
               ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"], ["Slot", "CommitteeIndex", "BeaconBlockRoot"]),
-    "BH": g4c("bh/link/norm", "BeaconBlockHeader", "BhUnmarshal", "E2eScal.BhCode", "bh", "Gen4BhDec",
+    "BH": g4c("bh/link/norm", "BeaconBlockHeader", "unmarshalSSZ", "Prysm.BeaconBlockHeader.Code", "bh", "Gen4BhDec",
               ["Slot", "ProposerIndex", "ParentRoot", "StateRoot", "BodyRoot"]),
-    "E1": g4c("e1/link/norm", "Eth1Data", "E1Unmarshal", "E2eScal.E1Code", "e1", "Gen4E1Dec",
+    "E1": g4c("e1/link/norm", "Eth1Data", "unmarshalSSZ", "Prysm.Eth1Data.Code", "e1", "Gen4E1Dec",
               ["DepositRoot", "DepositCount", "BlockHash"]),
-    "BI": g4c("h3/link/norm", "BlobIdentifier", "BiUnmarshal", "E2eScal.H3Code", "bi", "Gen4BiDec", ["BlockRoot", "Index"]),
-    "DM": g4c("h3/link/norm", "DepositMessage", "DmUnmarshal", "E2eScal.H3Code", "dm", "Gen4DmDec",
+    "BI": g4c("h3/link/norm", "BlobIdentifier", "unmarshalSSZ", "Prysm.BlobIdentifier.Code", "bi", "Gen4BiDec", ["BlockRoot", "Index"]),
+    "DM": g4c("h3/link/norm", "DepositMessage", "unmarshalSSZ", "Prysm.BlobIdentifier.Code", "dm", "Gen4DmDec",
               ["PublicKey", "WithdrawalCredentials", "Amount"]),
-    "DD": g4c("h4/link/norm", "Deposit_Data", "DdUnmarshal", "E2eScal.H4Code", "dd", "Gen4DdDec",
+    "DD": g4c("h4/link/norm", "Deposit_Data", "unmarshalSSZ", "Prysm.Deposit_Data.Code", "dd", "Gen4DdDec",
               ["PublicKey", "WithdrawalCredentials", "Amount", "Signature"]),
-    "PW": g4c("h4/link/norm", "PendingPartialWithdrawal", "PwUnmarshal", "E2eScal.H4Code", "pw", "Gen4PwDec",
+    "PW": g4c("h4/link/norm", "PendingPartialWithdrawal", "unmarshalSSZ", "Prysm.Deposit_Data.Code", "pw", "Gen4PwDec",
               ["Index", "Amount", "WithdrawableEpoch"]),
-    "SM": g4c("h5/link/norm", "SyncCommitteeMessage", "SmUnmarshal", "E2eScal.H5Code", "sm", "Gen4SmDec",
+    "SM": g4c("h5/link/norm", "SyncCommitteeMessage", "unmarshalSSZ", "Prysm.SyncCommitteeMessage.Code", "sm", "Gen4SmDec",
               ["Slot", "BlockRoot", "ValidatorIndex", "Signature"]),
-    "PC": g4c("h5/link/norm", "PendingConsolidation", "PcUnmarshal", "E2eScal.H5Code", "pc", "Gen4PcDec",
+    "PC": g4c("h5/link/norm", "PendingConsolidation", "unmarshalSSZ", "Prysm.SyncCommitteeMessage.Code", "pc", "Gen4PcDec",
               ["SourceIndex", "TargetIndex"]),
 }
 SMF, PCF, PWF = G4["SM"]["fields"], G4["PC"]["fields"], G4["PW"]["fields"]
@@ -1246,18 +1246,18 @@ def g4_cases(work, new):
 
 def g5c(sdir, tname, const, mod, pre, extra=()):
     return dict(S=f"prysm/go1.26.10/e2e/{sdir}/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
-                args=["--const", const, "--prefix", f"{pre}_g5dec", "--imports", mod, "--open", mod, *extra])
+                args=["--const", const, "--prefix", "Decode.generated", "--imports", mod, "--open", f"Prysm.{tname}.Code", *extra])
 
 
 G5 = {
-    "PD": g5c("h6/link/norm", "PendingDeposit", "PdUnmarshal", "E2eScal.H6Code", "pd",
-              ["--same-as-prop", "E2eScal.H6.pd_accept_stmt"]),
-    "SM": g5c("h5/link/norm", "SyncCommitteeMessage", "SmUnmarshal", "E2eScal.H5Code", "sm",
-              ["--same-as-prop", "E2eScal.H5.sm_accept_stmt"]),
-    "VE": g5c("h6/link/norm", "VoluntaryExit", "VeUnmarshal", "E2eScal.H6Code", "ve"),
-    "PB": g5c("h6/link/norm", "PowBlock", "PbUnmarshal", "E2eScal.H6Code", "pb", ["--same-as-prop", "E2eScal.H6.pb_accept_stmt"]),
-    "VB": g5c("h6/link/norm", "ValidatorBalance", "VbUnmarshal", "E2eScal.H6Code", "vb"),
-    "PW": g5c("h4/link/norm", "PendingPartialWithdrawal", "PwUnmarshal", "E2eScal.H4Code", "pw"),
+    "PD": g5c("h6/link/norm", "PendingDeposit", "unmarshalSSZ", "Prysm.PendingDeposit.Code", "pd",
+              ["--same-as-prop", "Prysm.PendingDeposit.Decode.accept_statement"]),
+    "SM": g5c("h5/link/norm", "SyncCommitteeMessage", "unmarshalSSZ", "Prysm.SyncCommitteeMessage.Code", "sm",
+              ["--same-as-prop", "Prysm.SyncCommitteeMessage.Decode.accept_statement"]),
+    "VE": g5c("h6/link/norm", "VoluntaryExit", "unmarshalSSZ", "Prysm.PendingDeposit.Code", "ve"),
+    "PB": g5c("h6/link/norm", "PowBlock", "unmarshalSSZ", "Prysm.PendingDeposit.Code", "pb", ["--same-as-prop", "Prysm.PowBlock.Decode.accept_statement"]),
+    "VB": g5c("h6/link/norm", "ValidatorBalance", "unmarshalSSZ", "Prysm.PendingDeposit.Code", "vb"),
+    "PW": g5c("h4/link/norm", "PendingPartialWithdrawal", "unmarshalSSZ", "Prysm.Deposit_Data.Code", "pw"),
     "AD": g5c("ad/link/norm", "AttestationData", "unmarshalSSZ", "Prysm.AttestationData.Code", "ad"),
 }
 
@@ -1599,7 +1599,7 @@ def main(work, out):
     rc, so, se = run(["python3", "-I", str(new), "p2dec", "--S", str(f), "--partial-out", str(po)] + ARGS, KR)
     pt = po.read_text() if po.exists() else ""
     ok = (rc == 3 and so == b"" and pt.startswith("/-! PARTIAL OUTPUT") and "NOT generated: BlockHash" in pt.split("\n")[0]
-          and "theorem e1_dec_DepositRoot_seg " in pt and "e1_dec_BlockHash_seg" not in pt)
+          and "theorem Decode.generated_root_DepositRoot_seg " in pt and "Decode.generated_root_BlockHash_seg" not in pt)
     res.append(dict(id="partial", expect="exit 3, 0 bytes on stdout, --partial-out file marked PARTIAL, DepositRoot only",
                     exit=rc, stdout_bytes=len(so), partial_first_line=pt.split("\n")[0], ok=bool(ok)))
     bad |= not ok

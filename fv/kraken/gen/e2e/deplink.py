@@ -36,7 +36,7 @@ def callgraph(objdump, out):
     lvlink.FUNCS[:] = FUNCS
     lvlink.SCOPE.clear()
     lvlink.SCOPE[FUNCS[0]] = "in (Deposit decoder)"
-    lvlink.CLASS[f"{V1A1}.(*Deposit_Data).UnmarshalSSZ"] = ("a", "machine code in the host (E2eScal.H4.dd_e2e_accept_main)")
+    lvlink.CLASS[f"{V1A1}.(*Deposit_Data).UnmarshalSSZ"] = ("a", "machine code in the host (Prysm.Deposit_Data.Decode.accept)")
     return lvlink.callgraph(objdump, out)
 
 

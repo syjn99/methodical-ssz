@@ -1,5 +1,5 @@
 import Prysm.Deposit.Statements
-import E2eScal.DdSpec
+import Prysm.Deposit_Data.Spec
 
 /-!
 # Hand STATEMENTS of the Deposit spec companions (statements only, no proof)
@@ -12,23 +12,23 @@ Frozen at their commit. The hand `Desc` below is written from consensus-specs ph
         proof: Vector[Bytes32, DEPOSIT_CONTRACT_TREE_DEPTH + 1]   # 33
         data: DepositData
 
-`DepositData` is the hand `Desc` `E2e.prysmDdDesc` (imported). `SszValue` is the SSZ content of a Go
+`DepositData` is the hand `Desc` `Prysm.Deposit_Data.desc` (imported). `SszValue` is the SSZ content of a Go
 `v1alpha1.Deposit` whose byte fields have the spec lengths; `SszValue.encode` is its 1240-byte SSZ encoding.
 Shapes: `Prysm.HistoricalBatch.Decode.accept_spec_statement`, `Prysm.HistoricalBatch.Decode.reject_size_spec_statement`, `Prysm.HistoricalBatch.Decode.reject_complete_statement`.
 -/
 
-open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz Prysm.Deposit.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.Deposit.Code
 variable [Host]
 
 namespace Prysm.Deposit
 
 /-- consensus-specs phase0 `Deposit`. -/
-def desc : Desc := .container ["proof", "data"] [.vector (.byteVector 32) 33, prysmDdDesc]
+def desc : Desc := .container ["proof", "data"] [.vector (.byteVector 32) 33, Prysm.Deposit_Data.desc]
 
 /-- SSZ content of a Go `v1alpha1.Deposit` (33 proof roots of 32 bytes, Deposit_Data). -/
 structure SszValue where
   proof : Vector (Vector UInt8 32) 33
-  data : PDd
+  data : Prysm.Deposit_Data.SszValue
 
 /-- The 33 proof roots as byte lists, in order. -/
 def SszValue.proofs (g : SszValue) : List (List UInt8) := g.proof.toList.map (·.toList)
@@ -37,15 +37,15 @@ def SszValue.toValue (g : SszValue) : Value :=
   .seq [.seq (g.proof.toList.map fun p => .bytes p.toArray), g.data.toValue]
 
 /-- `proof[0] ‖ … ‖ proof[32] ‖ pubkey ‖ withdrawalCredentials ‖ amount ‖ signature`. -/
-def SszValue.encode (g : SszValue) : Array UInt8 := g.proofs.flatten.toArray ++ pddEnc g.data
+def SszValue.encode (g : SszValue) : Array UInt8 := g.proofs.flatten.toArray ++ Prysm.Deposit_Data.SszValue.encode g.data
 
 /-- **Deposit accept (spec).** If EthLib accepts `bsA` against `desc` as `v`, there is `g : SszValue` with
 `g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the
 receiver holds `g` (postcondition of `Decode.accept_statement`). -/
 def Decode.accept_spec_statement : Prop :=
   ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
-    (kd : Nat) (hkd : E2eScal.H4Code.DdUnmarshal.IsInfixAt Host.prog kd)
-    (hfd : LabelsFresh E2eScal.H4Code.DdUnmarshal kd)
+    (kd : Nat) (hkd : Prysm.Deposit_Data.Code.unmarshalSSZ.IsInfixAt Host.prog kd)
+    (hfd : LabelsFresh Prysm.Deposit_Data.Code.unmarshalSSZ kd)
     (bsA : Array UInt8) (v : Value) (hd : deserialize desc bsA = .ok v)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 lI1 lD lI lP spl rslot lo ast aP aL aC aD : List UInt8)

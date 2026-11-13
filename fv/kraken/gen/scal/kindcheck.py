@@ -41,7 +41,7 @@ Checks, per file (text only):
         theorem t_type : ∀ (h : Host),
             type_of% (@t h) = type_of% (@X h) := by
           intro h; with_reducible rfl
-    with X a dotted name under `E2eScal.` that is not `t` and not declared in the file (a hand theorem), or
+    with X a dotted name under `Prysm.` that is not `t` and not declared in the file (a hand theorem), or
     (`--same-as-prop`) the Prop form
         theorem t_type : ∀ (h : Host),
             type_of% (@t h) = @X h := by
@@ -51,8 +51,8 @@ Checks, per file (text only):
      6a. `_type` is accepted ONLY for a composed theorem: its proof (the lines up to the next theorem) uses
          both `Codec.dechead_seg` and `Codec.decepi_seg`. A segment theorem needs its `_kind`; a `_type`
          in place of a `_kind` fails.
-     6b. X must not be a generated name: not under a namespace `E2eScal.Gen…` (`Gen`, `Gen2Ex`, …) and not a
-         name declared in a module `lean/E2eScal/Gen*.lean` (compared by the last name component). A
+     6b. X must not be a generated name: not `Prysm.<T>.Decode.generated…` / `.example…` (or Encode) and not a
+         name declared in a module `lean/Prysm/<T>/Generated*.lean` or `Decode*Example*.lean` (last name component). A
          generated theorem never vouches for a generated theorem.
      6c. A theorem line with the marker `UNCHECKED STATEMENT` (`--compose` without `--same-as`) fails.
     The PASS line names X: "identity against X — statement evidence only if X is an independent hand
@@ -63,18 +63,18 @@ Checks, per file (text only):
     is m - n; the theorems present are checked by rules 1-6 as usual (no composed theorem allowed). The
     default mode rejects every partial file (rule 0, unchanged).
  8. GEN3 (`scalgen.py p2dec --gen3`): further `_kind` right-hand sides:
-        @E2eScal.callDecSegKind h C "fn" "lok" j j2      fn one of the four callee labels with a proved accept
+        @Codec.callDecSegKind h C "fn" "lok" j j2      fn one of the four callee labels with a proved accept
                                                          spec (CALLEES: Slot, CommitteeIndex, ValidatorIndex,
                                                          Epoch of consensus-types/primitives)
-        @E2eScal.callArgFirstKind h C pad f j            pad = true | false
-        @E2eScal.callArgReloadKind h C pad dB src dD c dR f j     (Int64 literals: n or (-n))
-        @E2eScal.callArgLeaKind h C dB src dD c dR f j
-        @E2eScal.callArgMovKind h C j
-        @E2eScal.u64DecRRSegKind h C Reg64.rX src f j    rX one of the registers of `U64RRReg`
-    (kinds of `lean/E2eScal/KindCall.lean`). A composed accept theorem
-    (rule 6a) may instead carry the composed-statement kind of `lean/E2eScal/KindAccept.lean`:
+        @Codec.callArgFirstKind h C pad f j            pad = true | false
+        @Codec.callArgReloadKind h C pad dB src dD c dR f j     (Int64 literals: n or (-n))
+        @Codec.callArgLeaKind h C dB src dD c dR f j
+        @Codec.callArgMovKind h C j
+        @Codec.u64DecRRSegKind h C Reg64.rX src f j    rX one of the registers of `U64RRReg`
+    (kinds of `lean/Codec/Kind/CalleeDecode.lean`). A composed accept theorem
+    (rule 6a) may instead carry the composed-statement kind of `lean/Codec/Kind/DecodeAcceptComposition.lean`:
         set_option maxHeartbeats 200000 in
-        theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.decAcceptKind h C st [f, …] jret := by
+        theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.decAcceptKind h C st [f, …] jret := by
           intro h; rfl
     with st = true | false, f = `.bytes 32|48|96` or `.u64`; `rfl` at default transparency (the recursive kind
     must unfold) under the default heartbeat limit written out (a timeout is a FAIL). An identity `t_type`
@@ -90,7 +90,7 @@ Checks, per file (text only):
         @Codec.stepLdvKind / stepLdbKind / stepStKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
         @Codec.stepMovIKind h C Reg64.rD imm j e                @Codec.stepJmpKind h C "l" j jl
         @Codec.stepLabelKind h C "l" j e                        @Codec.stepNopsKind h C j e
-        @E2eScal.callDecSegKindG4 h C "fn" "lok" j jc j2         (fn in CALLEES)
+        @Codec.callDecSegKindG4 h C "fn" "lok" j jc j2         (fn in CALLEES)
         @Codec.bytesDecSegKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC src
         @Codec.bytesDecSegZKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC
     (n = 32 | 48 | 96; rY one of rax, rcx, rdx, rsi, rdi; registers `Reg64.<one of the 16>`).
@@ -105,7 +105,7 @@ Checks, per file (text only):
 11. A file in which a non-composed theorem has a GEN2 / GEN3 / GEN4 kind must
     carry the coverage header (`GEN2|GEN3|GEN4 coverage (…): n of m fields`); rule 6a also ignores string literals.
     Exemption: the hand example modules listed in HAND_EXAMPLES (exact paths
-    `lean/E2eScal/Gen2Examples.lean`, `Gen3Examples.lean`) are not generator output and skip rule 11 only; every
+    `lean/Prysm/DepositMessage/DecodeFieldSegmentExamples.lean`, `Gen3Examples.lean`) are not generator output and skip rule 11 only; every
     other rule applies to them. `Gen4Examples.lean` is not listed: its hand field compositions fail rules 4 and 10c,
     and no recorded command runs `kindcheck.py` on it.
     6d. A composed accept theorem with only the kind `decAcceptKind` (no
@@ -134,8 +134,8 @@ phantom kind parameters (they do not occur in the kind body; `stepLabelKind C l 
 `stepNopsKind C j e` by `rfl`), so a label name in a kind line is NOT checked by this program or by the `_kind`
 line; the label is checked only by the proof's code fact (`he`, `hl`). Also not checked: that the kind parameters (C, indices, displacements, offsets) are the right
 ones for the Go type (a wrong one fails the proof's code facts, not this check); name resolution (the
-check reads `@Codec.<kind>` and `@E2eScal.<kind>` as text; an `open` of a namespace that declares another
-`Codec.<kind>` or `E2eScal.<kind>` would not be seen); that the kind and lemma modules are unchanged (the pins
+check reads `@Codec.<kind>` as text; an `open` of a namespace that declares another
+`Codec.<kind>` would not be seen); that the kind and lemma modules are unchanged (the pins
 were removed); that the file builds. A pass is not a non-vacuity witness.
 """
 import re
@@ -145,21 +145,21 @@ import tempfile
 
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
-E2ESCAL = KR / "lean" / "E2eScal"   # rule 6b: the directory of the Gen*.lean modules
+PRYSM = KR / "lean" / "Prysm"   # rule 6b: the type directories with the generated and example modules
 # Rule 11 exemption: hand-written example modules of the lemma units. They have GEN2+
 # kinds but are not generator output, so they have no coverage header. Only these exact paths (relative to
 # fv/kraken) skip rule 11; every other rule applies to them unchanged.
 # `Gen4Examples.lean` is not listed: it also fails rules 4 and 10c (hand field compositions `*_field` without a kind,
 # no FIELDS-JSON line), so an exemption from rule 11 alone would not make it pass; kindcheck is not a check of it.
-HAND_EXAMPLES = ("lean/E2eScal/Gen2Examples.lean", "lean/E2eScal/Gen3Examples.lean")
-GENNS = re.compile(r"^E2eScal\.Gen\w*\.")  # rule 6b: generated namespaces (E2eScal.Gen, E2eScal.Gen2Ex, ...)
+HAND_EXAMPLES = ("lean/Prysm/DepositMessage/DecodeFieldSegmentExamples.lean", "lean/Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean")
+GENNS = re.compile(r"^Prysm\.\w+\.(?:Decode|Encode)\.(?:generated|example|accept_generated_composition|accept_composed_example)")  # rule 6b: generated and example names
 DECL = re.compile(r"^(?:private |protected |noncomputable )*(?:theorem|lemma|def|abbrev) (\S+)")
 COMPOSED = ("(Codec.dechead_seg ", "(Codec.decepi_seg ")  # rule 6a
 UNCHECKED = "UNCHECKED STATEMENT"  # rule 6c
 
 # GEN2 kinds (`lean/Codec/Kind/FixedBytesDecode.lean`, `lean/Codec/Kind/InlineUint64.lean`)
 GEN2_KINDS = ("bytesDecSegKind", "bytesDecSegZKind", "u64DecInlineSegKind")
-# GEN3 kinds (`lean/E2eScal/KindCall.lean`, `lean/E2eScal/KindAccept.lean`)
+# GEN3 kinds (`lean/Codec/Kind/CalleeDecode.lean`, `lean/Codec/Kind/DecodeAcceptComposition.lean`)
 GEN3_KINDS = ("callDecSegKind", "callArgFirstKind", "callArgReloadKind", "callArgLeaKind", "callArgMovKind",
               "u64DecRRSegKind", "decAcceptKind")
 CALLEES = tuple(f'"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"'
@@ -170,8 +170,8 @@ G4RY = r"Reg64\.(?:rax|rcx|rdx|rsi|rdi)"
 # kind -> (parameter regex after `h `, with {C} for the code constant; namespace of the kind and of its lemma; lemma
 # of the proof). The step kinds and the fixed-bytes window kinds are in Codec (`lean/Codec/Kind/WindowSteps.lean`,
 # `lean/Codec/Kind/FixedBytesDecodeWindow.lean`, lemma modules `lean/Codec/WindowSteps.lean`,
-# `lean/Codec/FixedBytesDecodeWindow*.lean`); the call-block kind is in E2eScal (`lean/E2eScal/KindCall.lean`,
-# `lean/E2eScal/CallReg.lean`).
+# `lean/Codec/FixedBytesDecodeWindow*.lean`); the call-block kind is in Codec (`lean/Codec/Kind/CalleeDecode.lean`,
+# `lean/Codec/CalleeDecodeWindow.lean`).
 GEN4_KINDS = {
     "stepMovRRKind": ("{C} G4REG G4REG NAT NAT", "Codec", "kstep_mov_rr"),
     "stepLdvKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "kstep_ldv"),
@@ -183,7 +183,7 @@ GEN4_KINDS = {
     "stepJmpKind": ("{C} LBL NAT NAT", "Codec", "kstep_jmp"),
     "stepLabelKind": ("{C} LBL NAT NAT", "Codec", "kstep_label"),
     "stepNopsKind": ("{C} NAT NAT", "Codec", "kstep_nops"),
-    "callDecSegKindG4": ("{C} LBL LBL NAT NAT NAT", "E2eScal", "calldec_seg_w"),
+    "callDecSegKindG4": ("{C} LBL LBL NAT NAT NAT", "Codec", "calldec_seg_w"),
     "bytesDecSegKindWindow": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT INT", "Codec", "bytesdec_seg_window"),
     "bytesDecSegZKindWindow": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT", "Codec", "bytesdec_seg_z_window"),
 }
@@ -205,10 +205,11 @@ HK = re.compile(r"\(hk : (\S+)\.IsInfixAt Host\.prog k\)")
 NAT = r"(?:0|[1-9][0-9]*)"
 
 
-def gen_names(lean_dir=E2ESCAL):
-    """Rule 6b: last name components of every declaration in a module `Gen*.lean` (generated or example)."""
+def gen_names(lean_dir=PRYSM):
+    """Rule 6b: last name components of every declaration in a generated module `<Type>/Generated*.lean` or an example
+    module `<Type>/Decode*Example*.lean`."""
     out = set()
-    for f in sorted(lean_dir.glob("Gen*.lean")):
+    for f in sorted(list(lean_dir.glob("*/Generated*.lean")) + list(lean_dir.glob("*/Decode*Example*.lean"))):
         for l in f.read_text().split("\n"):
             if (m := DECL.match(l)):
                 out.add(m.group(1).rsplit(".", 1)[-1])
@@ -326,18 +327,18 @@ def check_text(text, gnames=None, partial=False, rule11=True):
     def type_line(t):
         j = pos[t + "_type"]
         nx = lines[j + 1] if j + 1 < len(lines) else ""
-        m = (re.fullmatch(rf"    type_of% \(@{re.escape(t)} h\) = type_of% \(@(E2eScal(?:\.\w+)+) h\) := by", nx)
-             or re.fullmatch(rf"    type_of% \(@{re.escape(t)} h\) = @(E2eScal(?:\.\w+)+) h := by", nx))
+        m = (re.fullmatch(rf"    type_of% \(@{re.escape(t)} h\) = type_of% \(@(Prysm(?:\.\w+)+) h\) := by", nx)
+             or re.fullmatch(rf"    type_of% \(@{re.escape(t)} h\) = @(Prysm(?:\.\w+)+) h := by", nx))
         if lines[j] != f"theorem {t}_type : ∀ (h : Host),":
             errs.append(f"{t}_type: header is not `theorem {t}_type : ∀ (h : Host),`")
         elif not m:
-            errs.append(f"{t}_type: not an identity `type_of% (@{t} h) = type_of% (@E2eScal.… h)` "
-                        f"or `= @E2eScal.… h`: {nx[:160]}")
+            errs.append(f"{t}_type: not an identity `type_of% (@{t} h) = type_of% (@Prysm.… h)` "
+                        f"or `= @Prysm.… h`: {nx[:160]}")
         elif m.group(1).rsplit(".", 1)[-1] in names or m.group(1) == t:
             errs.append(f"{t}_type: right-hand side {m.group(1)} is declared in this file (degenerate identity)")
         elif GENNS.match(m.group(1)) or m.group(1).rsplit(".", 1)[-1] in gnames:
-            errs.append(f"{t}_type: right-hand side {m.group(1)} is a generated name (namespace E2eScal.Gen… or "
-                        f"declared in a Gen*.lean module): a generated theorem cannot vouch for a generated theorem")
+            errs.append(f"{t}_type: right-hand side {m.group(1)} is a generated name (`Decode.generated…` or "
+                        f"`Decode.example…`, or declared in a generated or example module): a generated theorem cannot vouch for a generated theorem")
         if j + 2 >= len(lines) or lines[j + 2] != "  intro h; with_reducible rfl":
             errs.append(f"{t}_type: proof line is not `  intro h; with_reducible rfl`")
         ident.append((t, m.group(1) if m else "?"))
@@ -367,7 +368,7 @@ def check_text(text, gnames=None, partial=False, rule11=True):
             continue
         j = pos[t + "_kind"]
         acc = rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = " \
-              rf"@E2eScal\.decAcceptKind h {C} {BOOL} \[{DECF}(?:, {DECF})*\] {NAT} := by"
+              rf"@Codec\.decAcceptKind h {C} {BOOL} \[{DECF}(?:, {DECF})*\] {NAT} := by"
         if re.fullmatch(acc, lines[j]):
             # GEN3 composed-statement kind (rule 8): composed theorems only, default heartbeats written out
             composed.add(t)
@@ -388,7 +389,7 @@ def check_text(text, gnames=None, partial=False, rule11=True):
                             f"statement (`--same-as` / `--same-as-prop`): UNCHECKED STATEMENT")
             continue
         g4m = re.fullmatch(rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
-                           rf"@(Codec|E2eScal)\.(\w+) h (.*) := by", lines[j])
+                           rf"@(Codec)\.(\w+) h (.*) := by", lines[j])
         if g4m and g4m.group(2) in GEN4_KINDS:
             kn = g4m.group(2)
             spec, kns, lem = GEN4_KINDS[kn]
@@ -412,17 +413,17 @@ def check_text(text, gnames=None, partial=False, rule11=True):
                 rf"|rootDecSegZKind h {C}(?: {NAT}){{8}}"
                 rf"|bytesDecSegKind h {SIZE} {C}(?: {NAT}){{9}}|bytesDecSegZKind h {SIZE} {C}(?: {NAT}){{8}}"
                 rf"|u64DecInlineSegKind h {C}(?: {NAT}){{4}})"
-                rf"|@E2eScal\.(?:callDecSegKind h {C} {LBL} {LBL} {NAT} {NAT}"
+                rf"|@Codec\.(?:callDecSegKind h {C} {LBL} {LBL} {NAT} {NAT}"
                 rf"|callArgFirstKind h {C} {BOOL} {INT} {NAT}"
                 rf"|callArgReloadKind h {C} {BOOL}(?: {INT}){{6}} {NAT}"
                 rf"|callArgLeaKind h {C}(?: {INT}){{6}} {NAT}"
                 rf"|callArgMovKind h {C} {NAT}"
                 rf"|u64DecRRSegKind h {C} {RRREG}(?: {INT}){{2}} {NAT})) := by")
-        if any(f"@Codec.{kn} " in lines[j] for kn in GEN2_KINDS) or any(f"@E2eScal.{kn} " in lines[j] for kn in GEN3_KINDS):
+        if any(f"@Codec.{kn} " in lines[j] for kn in GEN2_KINDS) or any(f"@Codec.{kn} " in lines[j] for kn in GEN3_KINDS):
             newkind.add(t)
         if not re.fullmatch(want, lines[j]):
             errs.append(f"{t}_kind: header is not a frozen kind: {lines[j][:160]}")
-        elif "@E2eScal.callDecSegKind " in lines[j] and lines[j].split(f" h {hk.group(1)} ", 1)[1].split(" ")[0] not in CALLEES:
+        elif "@Codec.callDecSegKind " in lines[j] and lines[j].split(f" h {hk.group(1)} ", 1)[1].split(" ")[0] not in CALLEES:
             errs.append(f"{t}_kind: callee {lines[j].split(f' h {hk.group(1)} ', 1)[1].split(' ')[0]} has no proved "
                         f"accept spec (allowed: Slot, CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives)")
         if j + 1 >= len(lines) or lines[j + 1] != "  intro h; with_reducible rfl":
@@ -523,11 +524,11 @@ def main(files, partial=False):
     gn = gen_names()
     bad = 0
     for f in files:
-        text = pathlib.Path(f).read_text()
+        text = pathlib.Path(f).read_text().replace("\ntheorem _root_.", "\ntheorem ")
         hand = pathlib.Path(f).resolve() in {(KR / x).resolve() for x in HAND_EXAMPLES}
-        g5 = G5_MARK in text or "GEN5-JSON" in text or any(f"@E2eScal.{k} " in text for k in (
+        g5 = G5_MARK in text or "GEN5-JSON" in text or any(f"@Codec.{k} " in text for k in (
             "decHeadKindN", "decFieldKindN", "decEpiKindN", "decAcceptKindN", "decRejectKindN"))
-        g6 = "GEN6-JSON" in text or any(f"@E2eScal.{k} " in text for k in GEN6_KINDS)
+        g6 = "GEN6-JSON" in text or any(f"@Codec.{k} " in text for k in GEN6_KINDS)
         if g6 and not partial:
             # rule 13: a GEN6 file is checked by rule 13 only; a GEN5 / older kind in it fails 13c
             errs, info6 = check_gen6(text, gn)
@@ -571,7 +572,7 @@ open Machine Runtime TestTarget Prysm.AttestationData.Code
 variable [Host]
 
 open Codec
-namespace E2eScal.Gen
+namespace Prysm.Fixture
 
 set_option maxRecDepth 100000 in
 theorem t (k : Nat) (hk : VxUnmarshal.IsInfixAt Host.prog k)
@@ -581,21 +582,21 @@ theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.u64DecAcceptKind h VxU
   intro h; with_reducible rfl
 
 /-- doc -/
-theorem s (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhUnmarshal k) :
+theorem s (k : Nat) (hk : Prysm.BeaconBlockHeader.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.BeaconBlockHeader.Code.unmarshalSSZ k) :
     Q := by
   exact bar
-theorem s_kind : ∀ (h : Host), type_of% (@s h) = @Codec.rootDecSegKind h BhUnmarshal 86 100 128 136 104 24 32 40 16 := by
+theorem s_kind : ∀ (h : Host), type_of% (@s h) = @Codec.rootDecSegKind h Prysm.BeaconBlockHeader.Code.unmarshalSSZ 86 100 128 136 104 24 32 40 16 := by
   intro h; with_reducible rfl
 
-theorem z (k : Nat) (hk : E1Unmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh E1Unmarshal k) :
+theorem z (k : Nat) (hk : Prysm.Eth1Data.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.Eth1Data.Code.unmarshalSSZ k) :
     Z := by
   with_reducible exact baz
-theorem z_kind : ∀ (h : Host), type_of% (@z h) = @Codec.rootDecSegZKind h E1Unmarshal 13 26 48 56 24 8 16 24 := by
+theorem z_kind : ∀ (h : Host), type_of% (@z h) = @Codec.rootDecSegZKind h Prysm.Eth1Data.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by
   intro h; with_reducible rfl
 
 theorem t_same : @E2eAd.x = @t := rfl
 
-end E2eScal.Gen
+end Prysm.Fixture
 """
 
 
@@ -610,21 +611,21 @@ def selftest():
         ("missing_kind", GOOD.replace("theorem t_kind", "theorem t_kinx"), False),
         ("kind_not_next", GOOD.replace("theorem t_kind :", "theorem zz (hk : VxUnmarshal.IsInfixAt Host.prog k) : True := trivial\ntheorem t_kind :"), False),
         ("proof_not_rfl", GOOD.replace("intro h; with_reducible rfl\n\n/--", "intro h; simp\n\n/--"), False),
-        ("local_abbrev", GOOD.replace("namespace E2eScal.Gen\n", "namespace E2eScal.Gen\nabbrev Codec.u64DecAcceptKind := True\n"), False),
+        ("local_abbrev", GOOD.replace("namespace Prysm.Fixture\n", "namespace Prysm.Fixture\nabbrev Codec.u64DecAcceptKind := True\n"), False),
         ("sorry", GOOD.replace("with_reducible exact foo", "sorry"), False),
-        ("kind_other_namespace", GOOD.replace("@Codec.u64DecAcceptKind", "@E2eScal.u64DecAcceptKind"), False),
+        ("kind_other_namespace", GOOD.replace("@Codec.u64DecAcceptKind", "@Prysm.Fixture.u64DecAcceptKind"), False),
         ("same_not_identity", GOOD.replace("@E2eAd.x = @t := rfl", "True := trivial"), False),
         ("orphan_kind", GOOD + "theorem q_kind : True := trivial\n", False),
     ]
     # offset-0 kind of the generator extension (rootDecSegZKind, 8 parameters)
-    zk = "= @Codec.rootDecSegZKind h E1Unmarshal 13 26 48 56 24 8 16 24 := by"
+    zk = "= @Codec.rootDecSegZKind h Prysm.Eth1Data.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by"
     assert zk in GOOD
     cases = cases + [
         ("z_degenerate_rhs_self", GOOD.replace(zk, "= type_of% (@z h) := by"), False),
         ("z_degenerate_rhs_true", GOOD.replace(zk, "= True := by"), False),
         ("z_nine_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 24 0 :=")), False),
         ("z_seven_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 :=")), False),
-        ("z_other_const", GOOD.replace(zk, zk.replace("E1Unmarshal", "BhUnmarshal")), False),
+        ("z_other_const", GOOD.replace(zk, zk.replace("Prysm.Eth1Data.Code.unmarshalSSZ", "Prysm.BeaconBlockHeader.Code.unmarshalSSZ")), False),
         ("z_as_add_kind", GOOD.replace(zk, zk.replace("rootDecSegZKind", "rootDecSegKind")), False),
         # a --partial-out file (header text as scalgen.py writes it) must fail, even if
         # every theorem it has is well kinded
@@ -669,19 +670,19 @@ import Codec.Kind.InlineUint64
 
 /-! Generated by `gen/scal/scalgen.py p2dec`; GEN2 coverage (`p2dec --gen2`): 3 of 3 fields. -/
 
-open Machine Runtime TestTarget E2eScal.H3Code
+open Machine Runtime TestTarget Prysm.BlobIdentifier.Code
 variable [Host]
 
 open Codec
-namespace E2eScal.Gen
+namespace Prysm.Fixture
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `PublicKey` (48 bytes, SSZ offset 0, Go offset 0): decode segment, directives 13–36. -/
-theorem a (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DmUnmarshal k) :
+theorem a (k : Nat) (hk : Prysm.DepositMessage.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) :
     A := by
   with_reducible exact Codec.bytesdec_seg_z 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
-theorem a_kind : ∀ (h : Host), type_of% (@a h) = @Codec.bytesDecSegZKind h 48 DmUnmarshal 13 26 48 56 24 0 8 16 := by
+theorem a_kind : ∀ (h : Host), type_of% (@a h) = @Codec.bytesDecSegZKind h 48 Prysm.DepositMessage.Code.unmarshalSSZ 13 26 48 56 24 0 8 16 := by
   intro h; with_reducible rfl
 
 theorem b (k : Nat) (hk : XyUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh XyUnmarshal k) :
@@ -692,14 +693,14 @@ theorem b_kind : ∀ (h : Host), type_of% (@b h) = @Codec.bytesDecSegKind h 96 X
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-theorem c (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DmUnmarshal k) :
+theorem c (k : Nat) (hk : Prysm.DepositMessage.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) :
     C := by
   have hX : Codec.U64InlineReg Reg64.rcx := by decide
   with_reducible exact Codec.u64dec_inline_seg Reg64.rcx hX _ _ _ (k + 83) hA
-theorem c_kind : ∀ (h : Host), type_of% (@c h) = @Codec.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by
+theorem c_kind : ∀ (h : Host), type_of% (@c h) = @Codec.u64DecInlineSegKind h Prysm.DepositMessage.Code.unmarshalSSZ 83 56 80 48 := by
   intro h; with_reducible rfl
 
-end E2eScal.Gen
+end Prysm.Fixture
 """
 
 
@@ -708,34 +709,34 @@ import Codec.Kind.FieldPatterns
 
 /-! Generated by `gen/scal/scalgen.py p2dec`; composed accept theorem; statement check: identity. -/
 
-open Machine Runtime TestTarget E2eScal.H3Code
+open Machine Runtime TestTarget Prysm.BlobIdentifier.Code
 variable [Host]
 
 open Codec
-namespace E2eScal.Gen
+namespace Prysm.Fixture
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-theorem d (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DmUnmarshal k)
+theorem d (k : Nat) (hk : Prysm.DepositMessage.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k)
     (x1 : List UInt8) :
     D := by
   refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ 88 (k + 0) hH) ?_
-  refine eventually_trans _ _ _ _ (E2eScal.Gen.dm_g2dec_Amount_seg k hk hf) ?_
+  refine eventually_trans _ _ _ _ (Prysm.DepositMessage.Decode.generated_field_Amount_seg k hk hf) ?_
   refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + 86) hE) ?_
 
 /-- Statement check: the declared type is that of the hand theorem (definitional identity). -/
 theorem d_type : ∀ (h : Host),
-    type_of% (@d h) = type_of% (@E2eScal.Dm.dm_e2e_accept_main h) := by
+    type_of% (@d h) = type_of% (@Prysm.DepositMessage.Decode.accept h) := by
   intro h; with_reducible rfl
 
-end E2eScal.Gen
+end Prysm.Fixture
 """
 
 
 def gen2_cases():
-    za = "= @Codec.bytesDecSegZKind h 48 DmUnmarshal 13 26 48 56 24 0 8 16 := by"
+    za = "= @Codec.bytesDecSegZKind h 48 Prysm.DepositMessage.Code.unmarshalSSZ 13 26 48 56 24 0 8 16 := by"
     ab = "= @Codec.bytesDecSegKind h 96 XyUnmarshal 47 61 48 56 24 24 32 40 48 := by"
-    uc = "= @Codec.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by"
+    uc = "= @Codec.u64DecInlineSegKind h Prysm.DepositMessage.Code.unmarshalSSZ 83 56 80 48 := by"
     for x in (za, ab, uc):
         assert GOOD2.count(x) == 1
     return [
@@ -751,39 +752,39 @@ def gen2_cases():
         ("g2_add_nine_params", GOOD2.replace(ab, ab.replace(" 40 48 :=", " 40 :=")), False, False),
         ("g2_z_nine_params", GOOD2.replace(za, za.replace(" 8 16 :=", " 8 16 0 :=")), False, False),
         ("g2_u64_three_params", GOOD2.replace(uc, uc.replace(" 80 48 :=", " 80 :=")), False, False),
-        ("g2_u64_register_param", GOOD2.replace(uc, uc.replace(" h DmUnmarshal", " h Reg64.rcx DmUnmarshal")), False, False),
-        ("g2_u64_other_const", GOOD2.replace(uc, uc.replace("DmUnmarshal", "BiUnmarshal")), False, False),
+        ("g2_u64_register_param", GOOD2.replace(uc, uc.replace(" h Prysm.DepositMessage.Code.unmarshalSSZ", " h Reg64.rcx Prysm.DepositMessage.Code.unmarshalSSZ")), False, False),
+        ("g2_u64_other_const", GOOD2.replace(uc, uc.replace("Prysm.DepositMessage.Code.unmarshalSSZ", "Prysm.BlobIdentifier.Code.unmarshalSSZ")), False, False),
         ("g2_add_as_z_kind", GOOD2.replace(ab, ab.replace("bytesDecSegKind", "bytesDecSegZKind")), False, False),
         ("g2_partial_output", GOOD2.replace("/-! Generated", "/-! PARTIAL OUTPUT (scalgen exit 3): 2 of 3 fields "
                                             "of `v1alpha1.DepositMessage` (--gen2); NOT generated: Amount. -/\n/-! Generated"), False, False),
         ("g2_proof_not_rfl", GOOD2.replace(uc + "\n  intro h; with_reducible rfl", uc + "\n  intro h; rfl"), False, False),
         ("g2c_good_identity", COMP, True, False),
-        ("g2c_no_identity", COMP.split("\n/-- Statement check")[0] + "\nend E2eScal.Gen\n", False, False),
-        ("g2c_degenerate_self", COMP.replace("type_of% (@E2eScal.Dm.dm_e2e_accept_main h)", "type_of% (@d h)"), False, False),
-        ("g2c_rhs_declared_here", COMP.replace("@E2eScal.Dm.dm_e2e_accept_main h", "@E2eScal.Gen.d h"), False, False),
-        ("g2c_rhs_true", COMP.replace("type_of% (@E2eScal.Dm.dm_e2e_accept_main h) := by", "True := by"), False, False),
+        ("g2c_no_identity", COMP.split("\n/-- Statement check")[0] + "\nend Prysm.Fixture\n", False, False),
+        ("g2c_degenerate_self", COMP.replace("type_of% (@Prysm.DepositMessage.Decode.accept h)", "type_of% (@d h)"), False, False),
+        ("g2c_rhs_declared_here", COMP.replace("@Prysm.DepositMessage.Decode.accept h", "@Prysm.Fixture.d h"), False, False),
+        ("g2c_rhs_true", COMP.replace("type_of% (@Prysm.DepositMessage.Decode.accept h) := by", "True := by"), False, False),
         ("g2c_proof_not_rfl", COMP.replace("  intro h; with_reducible rfl", "  intro h; rfl"), False, False),
-        ("g2c_orphan_type", GOOD2 + "theorem q_type : ∀ (h : Host),\n    type_of% (@q h) = type_of% (@E2eScal.X h) := by\n"
+        ("g2c_orphan_type", GOOD2 + "theorem q_type : ∀ (h : Host),\n    type_of% (@q h) = type_of% (@Prysm.X h) := by\n"
                                      "  intro h; with_reducible rfl\n", False, False),
     ]
 
 
 # rule 6b in the selftest: a fixed set of "generated" names instead of the tree's Gen*.lean (the controls do
 # not depend on the tree); `gen_seg_x` stands for a theorem of another generated module
-GNAMES = {"gen_seg_x", "bi_e2e_accept_main_gc", "bi_e2e_accept_main_composed"}
+GNAMES = {"gen_seg_x", "accept_generated_composition", "accept_composed_example"}
 
 
 def g2f_cases():
     """Controls of rules 6a-6c and 7."""
-    ty = ("theorem {t}_type : ∀ (h : Host),\n    type_of% (@{t} h) = type_of% (@E2eScal.Dm.dm_e2e_accept_main h) := by\n"
+    ty = ("theorem {t}_type : ∀ (h : Host),\n    type_of% (@{t} h) = type_of% (@Prysm.DepositMessage.Decode.accept h) := by\n"
           "  intro h; with_reducible rfl\n")
-    uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @Codec.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
+    uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @Codec.u64DecInlineSegKind h Prysm.DepositMessage.Code.unmarshalSSZ 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
     assert GOOD2.count(uc) == 1
     seg_type = GOOD2.replace(uc, ty.format(t="c"))           # reviewer case (i): `_type` in place of a segment kind
-    rhs = "type_of% (@E2eScal.Dm.dm_e2e_accept_main h)"
+    rhs = "type_of% (@Prysm.DepositMessage.Decode.accept h)"
     assert COMP.count(rhs) == 1
-    gen_rhs = COMP.replace(rhs, "type_of% (@E2eScal.Gen.bi_e2e_accept_main_gc h)")  # reviewer case (ii)
-    prop = COMP.replace(rhs, "@E2eScal.Fx.dmStmt h")
+    gen_rhs = COMP.replace(rhs, "type_of% (@Prysm.BlobIdentifier.Decode.accept_generated_composition h)")  # reviewer case (ii)
+    prop = COMP.replace(rhs, "@Prysm.DepositMessage.Decode.hand_statement h")
     unc = json_line([("Slot", "delegated overlay field"), ("ProposerIndex", "delegated overlay field")])
     PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--gen2); NOT "
           "generated: Slot, ProposerIndex. Not a complete p2dec output.\n" + unc + "\n-/\n")
@@ -792,18 +793,18 @@ def g2f_cases():
     return [
         ("g2f_segment_type_instead_of_kind", seg_type, False, False),
         ("g2f_rhs_generated_namespace", gen_rhs, False, False),
-        ("g2f_rhs_gen2ex_namespace", COMP.replace(rhs, "type_of% (@E2eScal.Gen2Ex.bi_e2e_accept_main_composed h)"), False, False),
-        ("g2f_rhs_generated_namespace_fresh_name", COMP.replace(rhs, "type_of% (@E2eScal.Gen.zz_fresh h)"), False, False),
+        ("g2f_rhs_gen2ex_namespace", COMP.replace(rhs, "type_of% (@Prysm.BlobIdentifier.Decode.accept_composed_example h)"), False, False),
+        ("g2f_rhs_generated_namespace_fresh_name", COMP.replace(rhs, "type_of% (@Prysm.DepositMessage.Decode.generated_zz_fresh h)"), False, False),
         ("g2f_unchecked_marker_with_identity", COMP.replace(
-            "(hf : LabelsFresh DmUnmarshal k)\n", "(hf : LabelsFresh DmUnmarshal k) -- UNCHECKED STATEMENT\n"), False, False),
-        ("g2f_rhs_declared_in_gen_module", COMP.replace(rhs, "type_of% (@E2eScal.Other.gen_seg_x h)"), False, False),
-        ("g2f_composed_without_decepi", COMP.replace("Codec.decepi_seg", "E2eScal.decepi_sex"), False, False),
+            "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k)\n", "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) -- UNCHECKED STATEMENT\n"), False, False),
+        ("g2f_rhs_declared_in_gen_module", COMP.replace(rhs, "type_of% (@Prysm.Other.gen_seg_x h)"), False, False),
+        ("g2f_composed_without_decepi", COMP.replace("Codec.decepi_seg", "Codec.decepi_sex"), False, False),
         ("g2f_prop_identity_good", prop, True, False),
-        ("g2f_prop_identity_generated_rhs", COMP.replace(rhs, "@E2eScal.Gen.bi_e2e_accept_main_gc h"), False, False),
-        ("g2f_prop_identity_on_segment", GOOD2.replace(uc, ty.format(t="c").replace(rhs, "@E2eScal.Fx.dmStmt h")), False, False),
+        ("g2f_prop_identity_generated_rhs", COMP.replace(rhs, "@Prysm.BlobIdentifier.Decode.accept_generated_composition h"), False, False),
+        ("g2f_prop_identity_on_segment", GOOD2.replace(uc, ty.format(t="c").replace(rhs, "@Prysm.DepositMessage.Decode.hand_statement h")), False, False),
         ("g2f_unchecked_marker", COMP.split("\n/-- Statement check")[0].replace(
-            "(hf : LabelsFresh DmUnmarshal k)\n", "(hf : LabelsFresh DmUnmarshal k) -- UNCHECKED STATEMENT\n")
-         + "\nend E2eScal.Gen\n", False, False),
+            "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k)\n", "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) -- UNCHECKED STATEMENT\n")
+         + "\nend Prysm.Fixture\n", False, False),
         ("g2f_partial_default_rejects", part, False, False),
         ("g2f_partial_mode_good", part, True, True),
         ("g2f_partial_mode_complete_file", GOOD2, False, True),
@@ -818,36 +819,36 @@ def g2f_cases():
 FN_VI = '"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ"'
 FN_EP = '"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ"'
 G3K = {
-    "pw_Index_arg": "@E2eScal.callArgFirstKind h PwUnmarshal false 8 15",
-    "pw_Index_call": f'@E2eScal.callDecSegKind h PwUnmarshal {FN_VI} "L_pw_b9" 17 47',
-    "pw_Amount_seg": "@E2eScal.u64DecRRSegKind h PwUnmarshal Reg64.r8 8 16 54",
-    "pw_WithdrawableEpoch_arg1": "@E2eScal.callArgLeaKind h PwUnmarshal 96 16 112 (-16) 88 24 48",
-    "pw_WithdrawableEpoch_arg2": "@E2eScal.callArgMovKind h PwUnmarshal 56",
-    "pw_WithdrawableEpoch_call": f'@E2eScal.callDecSegKind h PwUnmarshal {FN_EP} "L_pw_159" 59 88',
-    "bh_ProposerIndex_arg": "@E2eScal.callArgReloadKind h PwUnmarshal true 120 8 136 (-8) 112 16 47",
-    "bh_ProposerIndex_call": f'@E2eScal.callDecSegKind h PwUnmarshal {FN_VI} "L_bh_154" 55 85',
-    "dd_WithdrawalCredentials_seg": "@Codec.bytesDecSegKind h 32 PwUnmarshal 47 61 48 56 24 32 40 48 48",
+    "pw_Index_arg": "@Codec.callArgFirstKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ false 8 15",
+    "pw_Index_call": f'@Codec.callDecSegKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {FN_VI} "L_pw_b9" 17 47',
+    "pw_Amount_seg": "@Codec.u64DecRRSegKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 8 16 54",
+    "pw_WithdrawableEpoch_arg1": "@Codec.callArgLeaKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 96 16 112 (-16) 88 24 48",
+    "pw_WithdrawableEpoch_arg2": "@Codec.callArgMovKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 56",
+    "pw_WithdrawableEpoch_call": f'@Codec.callDecSegKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {FN_EP} "L_pw_159" 59 88',
+    "bh_ProposerIndex_arg": "@Codec.callArgReloadKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ true 120 8 136 (-8) 112 16 47",
+    "bh_ProposerIndex_call": f'@Codec.callDecSegKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {FN_VI} "L_bh_154" 55 85',
+    "dd_WithdrawalCredentials_seg": "@Codec.bytesDecSegKind h 32 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 47 61 48 56 24 32 40 48 48",
 }
 G3PROOF = {"pw_Amount_seg": "  have hX : Codec.U64RRReg Reg64.r8 := by decide\n  with_reducible exact Codec.u64dec_rr_seg Reg64.r8 hX _ _ (k + 54) hA\n",
-           "dd_WithdrawalCredentials_seg": "  with_reducible exact E2eScal.bytesdec_seg_p true 32 (Or.inl rfl) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl\n"}
+           "dd_WithdrawalCredentials_seg": "  with_reducible exact Codec.bytesdec_seg_p true 32 (Or.inl rfl) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl\n"}
 
 
 def g3_block(t, kind):
     return ("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
-            f"theorem {t} (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PwUnmarshal k) :\n"
+            f"theorem {t} (k : Nat) (hk : Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ k) :\n"
             f"    T := by\n" + G3PROOF.get(t, "  with_reducible exact foo\n")
             + f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h) = {kind} := by\n  intro h; with_reducible rfl\n\n")
 
 
-GOOD3 = ("import E2eScal.KindCall\nimport E2eScal.SegNPad\nimport Codec.Kind.FieldPatterns\nimport Codec.Kind.FixedBytesDecode\n\n"
+GOOD3 = ("import Codec.Kind.CalleeDecode\nimport Codec.FixedBytesDecodePadding\nimport Codec.Kind.FieldPatterns\nimport Codec.Kind.FixedBytesDecode\n\n"
          "/-! Generated by `gen/scal/scalgen.py p2dec`; GEN3 coverage (`p2dec --gen3`): 5 of 5 fields. -/\n\n"
-         "open Machine Runtime TestTarget E2eScal.H4Code\nvariable [Host]\n\nopen Codec\nnamespace E2eScal.Gen\n\n"
-         + "".join(g3_block(t, k) for t, k in G3K.items()) + "end E2eScal.Gen\n")
+         "open Machine Runtime TestTarget Prysm.Deposit_Data.Code\nvariable [Host]\n\nopen Codec\nnamespace Prysm.Fixture\n\n"
+         + "".join(g3_block(t, k) for t, k in G3K.items()) + "end Prysm.Fixture\n")
 
 COMP3 = COMP.replace("composed accept theorem; statement check: identity", "composed accept theorem (`p2dec --gen3 --compose`)").replace(
     "\n/-- Statement check: the declared type is that of the hand theorem",
     "\n-- Statement check: kind.\nset_option maxHeartbeats 200000 in\n"
-    "theorem d_kind : ∀ (h : Host), type_of% (@d h) = @E2eScal.decAcceptKind h DmUnmarshal false [.bytes 48, .bytes 32, .u64] 68 := by\n"
+    "theorem d_kind : ∀ (h : Host), type_of% (@d h) = @Codec.decAcceptKind h Prysm.DepositMessage.Code.unmarshalSSZ false [.bytes 48, .bytes 32, .u64] 68 := by\n"
     "  intro h; rfl\n\n/-- Statement check: the declared type is that of the hand theorem")
 
 
@@ -863,12 +864,12 @@ def g3_cases():
         b = g3_block(t, G3K[t])
         assert text.count(b) == 1
         return text.replace(b, "")
-    comp_kind = "@E2eScal.decAcceptKind h DmUnmarshal false [.bytes 48, .bytes 32, .u64] 68 := by"
+    comp_kind = "@Codec.decAcceptKind h Prysm.DepositMessage.Code.unmarshalSSZ false [.bytes 48, .bytes 32, .u64] 68 := by"
     assert COMP3.count(comp_kind) == 1
-    comp_only = COMP3.split("\n/-- Statement check: the declared type")[0] + "\nend E2eScal.Gen\n"
+    comp_only = COMP3.split("\n/-- Statement check: the declared type")[0] + "\nend Prysm.Fixture\n"
     # k04: `_type` in place of a segment `_kind`, the two composed lemma names only in a comment
-    uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @Codec.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
-    ty = ("theorem c_type : ∀ (h : Host),\n    type_of% (@c h) = type_of% (@E2eScal.Dm.dm_e2e_accept_main h) := by\n"
+    uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @Codec.u64DecInlineSegKind h Prysm.DepositMessage.Code.unmarshalSSZ 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
+    ty = ("theorem c_type : ∀ (h : Host),\n    type_of% (@c h) = type_of% (@Prysm.DepositMessage.Decode.accept h) := by\n"
           "  intro h; with_reducible rfl\n")
     k04 = GOOD2.replace(uc, ty).replace("  with_reducible exact Codec.u64dec_inline_seg Reg64.rcx hX _ _ _ (k + 83) hA\n",
                                         "  -- (Codec.dechead_seg x) (Codec.decepi_seg y)\n"
@@ -879,7 +880,7 @@ def g3_cases():
     PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--gen2); NOT "
           "generated: Slot, ProposerIndex. Not a complete p2dec output.\n" + unc + "\n-/\n")
     part = GOOD2.replace("\n/-! Generated", "\n" + PH + "/-! Generated").replace(" 3 of 3 fields", " 3 of 5 fields")
-    k22 = part.split("set_option maxHeartbeats 4000000")[0] + "end E2eScal.Gen\n"
+    k22 = part.split("set_option maxHeartbeats 4000000")[0] + "end Prysm.Fixture\n"
     k24 = GOOD2.replace(" 3 of 3 fields", " 3 of 5 fields")
     unc1 = json_line([("ProposerIndex", "x")])
     nm = part.replace("3 of 5 fields of", "3 of 3 fields of").replace(unc, "UNCOVERED-JSON: []")
@@ -899,11 +900,11 @@ def g3_cases():
         ("g3_mov_extra_param", kchg("pw_WithdrawableEpoch_arg2", G3K["pw_WithdrawableEpoch_arg2"] + " 0"), False, False),
         ("g3_rr_register_rax", kchg("pw_Amount_seg", G3K["pw_Amount_seg"].replace("Reg64.r8", "Reg64.rax")), False, False),
         ("g3_rr_register_missing", kchg("pw_Amount_seg", G3K["pw_Amount_seg"].replace("Reg64.r8 ", "")), False, False),
-        ("g3_rr_as_inline_kind", kchg("pw_Amount_seg", "@Codec.u64DecInlineSegKind h PwUnmarshal 54 8 8 16"), True, False),
+        ("g3_rr_as_inline_kind", kchg("pw_Amount_seg", "@Codec.u64DecInlineSegKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 54 8 8 16"), True, False),
         ("g3_call_without_arg", drop(GOOD3, "pw_Index_arg"), False, False),
         ("g3_lea_without_arg2", drop(GOOD3, "pw_WithdrawableEpoch_arg2"), False, False),
         ("g3_arg_without_call", drop(GOOD3, "pw_Index_call"), False, False),
-        ("g3_decaccept_on_segment", kchg("pw_Amount_seg", "@E2eScal.decAcceptKind h PwUnmarshal true [.u64] 54"), False, False),
+        ("g3_decaccept_on_segment", kchg("pw_Amount_seg", "@Codec.decAcceptKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ true [.u64] 54"), False, False),
         ("g3c_good_kind_and_identity", COMP3, True, False),
         # rule 6d: the kind alone is no independent statement check
         ("g3c_kind_only_rejected", comp_only, False, False),
@@ -913,7 +914,7 @@ def g3_cases():
         ("g3c_field_size_64", COMP3.replace(comp_kind, comp_kind.replace(".bytes 48", ".bytes 64")), False, False),
         ("g3c_empty_fields", COMP3.replace(comp_kind, comp_kind.replace("[.bytes 48, .bytes 32, .u64]", "[]")), False, False),
         ("g3c_st_not_bool", COMP3.replace(comp_kind, comp_kind.replace(" false [", " 0 [")), False, False),
-        ("g3c_other_const", COMP3.replace(comp_kind, comp_kind.replace("DmUnmarshal", "BiUnmarshal")), False, False),
+        ("g3c_other_const", COMP3.replace(comp_kind, comp_kind.replace("Prysm.DepositMessage.Code.unmarshalSSZ", "Prysm.BlobIdentifier.Code.unmarshalSSZ")), False, False),
         ("g3c_not_composed_comment_only", comp_only.replace("(Codec.decepi_seg (k + 86) hE)", "foo -- (Codec.decepi_seg "), False, False),
         ("s1_k04_line_comment", k04, False, False),
         ("s1_k04_block_comment", k04b, False, False),
@@ -922,8 +923,8 @@ def g3_cases():
                                                '  have s := "(Codec.dechead_seg x) (Codec.decepi_seg y)"\n')
          .replace(" 3 of 3 fields", " 2 of 2 fields"), False, False),
         # rule 6d with the generator's new marker (`--gen3 --compose` without `--same-as*`)
-        ("g3c_kind_only_marked", comp_only.replace("(hf : LabelsFresh DmUnmarshal k)\n",
-                                                   "(hf : LabelsFresh DmUnmarshal k) -- UNCHECKED STATEMENT\n"), False, False),
+        ("g3c_kind_only_marked", comp_only.replace("(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k)\n",
+                                                   "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) -- UNCHECKED STATEMENT\n"), False, False),
         ("s2_k22_theorem_removed_partial", k22, False, True),
         ("s2_k23_uncovered_entry_dropped", part.replace("3 of 5 fields of", "4 of 5 fields of").replace(unc, unc1), False, True),
         ("s2_uncovered_field_has_theorem", unc_has_thm, False, True),
@@ -937,30 +938,30 @@ def g3_cases():
 
 # GEN4 controls: kind lines and proof lemma as `scalgen.py p2dec --gen4` writes them
 G4K = {
-    "pw_g4dec_s50": ("@Codec.stepLdbKind h PwUnmarshal Reg64.r8 Reg64.rbx 8 50 51", "kstep_ldb Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
-    "pw_g4dec_s51": ("@Codec.stepStKind h PwUnmarshal Reg64.r8 Reg64.rax 16 51 52", "kstep_st Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
-    "pw_g4dec_s52": ("@Codec.stepAddKind h PwUnmarshal Reg64.rdi (-16) 52 53", "kstep_add Reg64.rdi (-16) _ (k + 52) (k + 53) hq he hend"),
-    "pw_g4dec_s53": ("@Codec.stepMovIKind h PwUnmarshal Reg64.rcx 8 53 55", "kstep_movi Reg64.rcx 8 _ (k + 53) (k + 55) hq he hend"),
-    "pw_g4dec_Index_call": (f'@E2eScal.callDecSegKindG4 h PwUnmarshal {FN_VI} "L_pw_b9" 55 56 88',
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s50": ("@Codec.stepLdbKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rbx 8 50 51", "kstep_ldb Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51": ("@Codec.stepStKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rax 16 51 52", "kstep_st Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s52": ("@Codec.stepAddKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdi (-16) 52 53", "kstep_add Reg64.rdi (-16) _ (k + 52) (k + 53) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53": ("@Codec.stepMovIKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rcx 8 53 55", "kstep_movi Reg64.rcx 8 _ (k + 53) (k + 55) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call": (f'@Codec.callDecSegKindG4 h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {FN_VI} "L_pw_b9" 55 56 88',
                             "calldec_seg_w _ _ _ (k + 55) (k + 56) (k + 88) hq he hjc hB hl"),
-    "pw_g4dec_Root_seg": ("@Codec.bytesDecSegKindWindow h 32 PwUnmarshal Reg64.rax 89 108 114 112 120 56 24 32 40 16",
+    "pw_g4dec_Root_seg": ("@Codec.bytesDecSegKindWindow h 32 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rax 89 108 114 112 120 56 24 32 40 16",
                           "bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 89) (k + 102) (k + 102) (k + 108) (k + 114) hqA heA hqB heB hjl hl hjm hend"),
-    "pw_g4dec_s115": ("@Codec.stepJmpKind h PwUnmarshal \"L_pw_200\" 115 130", 'kstep_jmp "L_pw_200" _ (k + 115) (k + 130) hq he hl'),
-    "pw_g4dec_s130": ("@Codec.stepLabelKind h PwUnmarshal \"L_pw_200\" 130 131", 'kstep_label "L_pw_200" _ (k + 130) (k + 131) hq he hend'),
-    "pw_g4dec_s131": ("@Codec.stepStKind h PwUnmarshal Reg64.rsi Reg64.rax 24 131 132", "kstep_st Reg64.rsi Reg64.rax 24 _ (k + 131) (k + 132) hq he hend"),
-    "pw_g4dec_Sig_seg": ("@Codec.bytesDecSegZKindWindow h 96 PwUnmarshal Reg64.rdx 132 150 156 112 120 56 48 56 64",
+    "pw_g4dec_s115": ("@Codec.stepJmpKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pw_200\" 115 130", 'kstep_jmp "L_pw_200" _ (k + 115) (k + 130) hq he hl'),
+    "pw_g4dec_s130": ("@Codec.stepLabelKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pw_200\" 130 131", 'kstep_label "L_pw_200" _ (k + 130) (k + 131) hq he hend'),
+    "pw_g4dec_s131": ("@Codec.stepStKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rax 24 131 132", "kstep_st Reg64.rsi Reg64.rax 24 _ (k + 131) (k + 132) hq he hend"),
+    "pw_g4dec_Sig_seg": ("@Codec.bytesDecSegZKindWindow h 96 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdx 132 150 156 112 120 56 48 56 64",
                          "bytesdec_seg_z_window 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 132) (k + 145) (k + 145) (k + 150) (k + 156) hqA heA hqB heB hjl hl hjm hend"),
-    "pw_g4dec_s156": ("@Codec.stepLdvKind h PwUnmarshal Reg64.rsi Reg64.rsp 56 156 157", "kstep_ldv Reg64.rsi Reg64.rsp 56 _ (k + 156) (k + 157) hq he hend"),
-    "pw_g4dec_s157": ("@Codec.stepStKind h PwUnmarshal Reg64.rsi Reg64.rdx 48 157 158", "kstep_st Reg64.rsi Reg64.rdx 48 _ (k + 157) (k + 158) hq he hend"),
+    "pw_g4dec_s156": ("@Codec.stepLdvKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rsp 56 156 157", "kstep_ldv Reg64.rsi Reg64.rsp 56 _ (k + 156) (k + 157) hq he hend"),
+    "pw_g4dec_s157": ("@Codec.stepStKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rdx 48 157 158", "kstep_st Reg64.rsi Reg64.rdx 48 _ (k + 157) (k + 158) hq he hend"),
 }
-G4F = [("Amount", ["pw_g4dec_s50", "pw_g4dec_s51"]), ("Index", ["pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]),
+G4F = [("Amount", ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51"]), ("Index", ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]),
        ("Root", ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]),
        ("Sig", ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"])]
 
 
 def g4_block(t, kind, proof):
     return ("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
-            f"/-- Directive `x`. -/\ntheorem {t} (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PwUnmarshal k) :\n"
+            f"/-- Directive `x`. -/\ntheorem {t} (k : Nat) (hk : Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ k) :\n"
             f"    T := by\n  have hq := Codec.win hk 1 1\n  with_reducible exact {G4_LEMMAS[proof.split()[0]]}.{proof}\n"
             f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h) = {kind} := by\n  intro h; with_reducible rfl\n\n")
 
@@ -970,11 +971,11 @@ def g4_text(fields=G4F, kinds=G4K, n=None, m=None, fj=None):
     n = len(fields) if n is None else n
     m = n if m is None else m
     fj = json.dumps([dict(field=f, theorems=ts) for f, ts in fields]) if fj is None else fj
-    return ("import Codec.Kind.WindowSteps\nimport Codec.Kind.FixedBytesDecodeWindow\nimport E2eScal.CallReg\nimport Codec.FixedBytesDecodeWindowOffsetZero\n\n"
+    return ("import Codec.Kind.WindowSteps\nimport Codec.Kind.FixedBytesDecodeWindow\nimport Codec.CalleeDecodeWindow\nimport Codec.FixedBytesDecodeWindowOffsetZero\n\n"
             f"/-! Generated by `gen/scal/scalgen.py p2dec`; GEN4 coverage (`p2dec --gen4`): {n} of {m} fields. -/\n\n"
             f"/-! GEN4 fields (machine-readable, read by `kindcheck.py`):\nFIELDS-JSON: {fj}\n-/\n\n"
-            "open Machine Runtime TestTarget E2eScal.H4Code\nvariable [Host]\n\nopen Codec\nnamespace E2eScal.Gen\n\n"
-            + "".join(g4_block(t, *kinds[t]) for _, ts in fields for t in ts) + "end E2eScal.Gen\n")
+            "open Machine Runtime TestTarget Prysm.Deposit_Data.Code\nvariable [Host]\n\nopen Codec\nnamespace Prysm.Fixture\n\n"
+            + "".join(g4_block(t, *kinds[t]) for _, ts in fields for t in ts) + "end Prysm.Fixture\n")
 
 
 GOOD4 = g4_text()
@@ -998,36 +999,36 @@ def g4_cases():
           "Not a complete p2dec output.\n" + unc + "\n-/\n")
     part = g4_text(m=5).replace("\n\n/-! Generated", "\n\n" + PH + "/-! Generated", 1)
     assert part.count(PARTIAL) == 1
-    st = G4K["pw_g4dec_s51"][0]
+    st = G4K["Prysm.PendingPartialWithdrawal.Decode.generated_step_s51"][0]
     k2 = dict(G4K, pw_g4dec_Index_seg=G4K["pw_g4dec_Root_seg"])
     two_blocks = [G4F[0], ("Index", G4F[1][1] + ["pw_g4dec_Index_seg"]), G4F[2], G4F[3]]
     return [
         ("g4_good", GOOD4, True, False),
-        ("g4_step_degenerate_self", kchg("pw_g4dec_s51", "type_of% (@pw_g4dec_s51 h)"), False, False),
-        ("g4_step_kind_other_namespace", kchg("pw_g4dec_s51", st.replace("@Codec.", "@E2eScal.")), False, False),
-        ("g4_step_degenerate_true", kchg("pw_g4dec_s51", "True"), False, False),
-        ("g4_step_kind_missing", GOOD4.replace("theorem pw_g4dec_s51_kind", "theorem pw_g4dec_s51_kinx"), False, False),
-        ("g4_st_without_disp", kchg("pw_g4dec_s51", st.replace(" 16 51 52", " 51 52")), False, False),
-        ("g4_st_register_not_reg64", kchg("pw_g4dec_s51", st.replace("Reg64.r8", "Reg64.xmm0")), False, False),
-        ("g4_st_register_symbolic", kchg("pw_g4dec_s51", st.replace("Reg64.r8", "r")), False, False),
-        ("g4_st_other_const", kchg("pw_g4dec_s51", st.replace("PwUnmarshal", "PcUnmarshal")), False, False),
-        ("g4_add_extra_param", kchg("pw_g4dec_s52", G4K["pw_g4dec_s52"][0] + " 0"), False, False),
-        ("g4_call_two_indices", kchg("pw_g4dec_Index_call", G4K["pw_g4dec_Index_call"][0].replace(" 56 88", " 88")), False, False),
-        ("g4_call_callee_without_spec", kchg("pw_g4dec_Index_call", G4K["pw_g4dec_Index_call"][0].replace(
+        ("g4_step_degenerate_self", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", "type_of% (@Prysm.PendingPartialWithdrawal.Decode.generated_step_s51 h)"), False, False),
+        ("g4_step_kind_other_namespace", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", st.replace("@Codec.", "@Prysm.Fixture.")), False, False),
+        ("g4_step_degenerate_true", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", "True"), False, False),
+        ("g4_step_kind_missing", GOOD4.replace("theorem Prysm.PendingPartialWithdrawal.Decode.generated_step_s51_kind", "theorem pw_g4dec_s51_kinx"), False, False),
+        ("g4_st_without_disp", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", st.replace(" 16 51 52", " 51 52")), False, False),
+        ("g4_st_register_not_reg64", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", st.replace("Reg64.r8", "Reg64.xmm0")), False, False),
+        ("g4_st_register_symbolic", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", st.replace("Reg64.r8", "r")), False, False),
+        ("g4_st_other_const", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", st.replace("Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ", "Prysm.PendingConsolidation.Code.unmarshalSSZ")), False, False),
+        ("g4_add_extra_param", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s52", G4K["Prysm.PendingPartialWithdrawal.Decode.generated_step_s52"][0] + " 0"), False, False),
+        ("g4_call_two_indices", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call", G4K["Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"][0].replace(" 56 88", " 88")), False, False),
+        ("g4_call_callee_without_spec", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call", G4K["Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"][0].replace(
             "consensus_types_primitives.ValidatorIndex", "proto_prysm_v1alpha1.Checkpoint")), False, False),
         ("g4_seg_ry_rbx", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace("Reg64.rax", "Reg64.rbx")), False, False),
         ("g4_seg_size_64", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace(" h 32 ", " h 64 ")), False, False),
         ("g4_seg_missing_src", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace(" 40 16", " 40")), False, False),
         ("g4_segz_with_src", kchg("pw_g4dec_Sig_seg", G4K["pw_g4dec_Sig_seg"][0] + " 0"), False, False),
-        ("g4_lemma_kind_mismatch", pchg("pw_g4dec_s50", "  with_reducible exact Codec.kstep_ldv Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"), False, False),
-        ("g4_lemma_only_in_string", pchg("pw_g4dec_s50", '  have x := "Codec.kstep_ldb "\n  with_reducible exact foo\n'), False, False),
-        ("g4_lemma_only_in_comment", pchg("pw_g4dec_s50", "  -- Codec.kstep_ldb\n  with_reducible exact foo\n"), False, False),
-        ("g4_two_lemmas", pchg("pw_g4dec_s50", "  with_reducible exact Codec.kstep_ldb (Codec.kstep_st x)\n"), False, False),
+        ("g4_lemma_kind_mismatch", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "  with_reducible exact Codec.kstep_ldv Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"), False, False),
+        ("g4_lemma_only_in_string", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", '  have x := "Codec.kstep_ldb "\n  with_reducible exact foo\n'), False, False),
+        ("g4_lemma_only_in_comment", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "  -- Codec.kstep_ldb\n  with_reducible exact foo\n"), False, False),
+        ("g4_two_lemmas", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "  with_reducible exact Codec.kstep_ldb (Codec.kstep_st x)\n"), False, False),
         ("g4_fields_json_missing", GOOD4.replace("FIELDS-JSON: ", "FIELDS: "), False, False),
         ("g4_fields_json_two_lines", GOOD4.replace("FIELDS-JSON: ", "FIELDS-JSON: []\nFIELDS-JSON: "), False, False),
-        ("g4_theorem_not_listed", g4_text(fj='[{"field": "Amount", "theorems": ["pw_g4dec_s50"]}, {"field": "Index", "theorems": ["pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'), False, False),
-        ("g4_listed_theorem_absent", g4_text(fj='[{"field": "Amount", "theorems": ["pw_g4dec_s50", "pw_g4dec_s51", "pw_g4dec_s49"]}, {"field": "Index", "theorems": ["pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'), False, False),
-        ("g4_theorem_in_two_fields", g4_text(fj='[{"field": "Amount", "theorems": ["pw_g4dec_s50", "pw_g4dec_s51"]}, {"field": "Index", "theorems": ["pw_g4dec_s51", "pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'), False, False),
+        ("g4_theorem_not_listed", g4_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s50"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'), False, False),
+        ("g4_listed_theorem_absent", g4_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s49"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'), False, False),
+        ("g4_theorem_in_two_fields", g4_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s51"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_s51", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_s53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'), False, False),
         ("g4_two_blocks_one_field", g4_text(fields=two_blocks, kinds=k2), False, False),
         ("g4_block_name_other_field", g4_text(fields=[("Amount", G4F[0][1]), ("Idx", G4F[1][1]), G4F[2], G4F[3]]), False, False),
         ("g4_count_edited_dropped_field", g4_text(fields=G4F[:3], n=4), False, False),
@@ -1069,7 +1070,7 @@ def s4_exit_cases():
 #  12a. (removed: a git-blob pin of the kind and lemma modules);
 #  12b. the GEN5 theorems are exactly, in this order: P_head, P_f1 … P_fn, P_epi, P_accept, [P_accept_stmt |
 #       P_accept_same], P_reject (P = the GEN5-JSON prefix, n = the IR field count), each but the identity followed by
-#       its `_kind` theorem `theorem T_kind : ∀ (h : Host), type_of% (@T h)` / `    = @E2eScal.K h C …` with
+#       its `_kind` theorem `theorem T_kind : ∀ (h : Host), type_of% (@T h)` / `    = @Codec.K h C …` with
 #       K = decHeadKindN / decFieldKindN / decEpiKindN / decAcceptKindN / decRejectKindN and the proof line
 #       `  intro h; rfl` (`  intro h; with_reducible rfl` for the reject kind); every `hk` binder names C;
 #  12c. the kind parameters are RECOMPUTED here, independently of the generator, from the `.S` file and the IR JSON
@@ -1087,7 +1088,7 @@ def s4_exit_cases():
 G5_MARK = "/-! GEN5 (`p2dec --gen5`"
 G5_PRIM = "github.com_OffchainLabs_prysm_v7_consensus_types_primitives."
 G5_CONST = {"Slot": "Prysm.AttestationData.Code.slotUnmarshalSSZ", "CommitteeIndex": "Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ",
-            "ValidatorIndex": "E2eScal.BhCode.ViUnmarshal", "Epoch": "Prysm.Epoch.Code.unmarshalSSZ"}
+            "ValidatorIndex": "Prysm.ValidatorIndex.Code.unmarshalSSZ", "Epoch": "Prysm.Epoch.Code.unmarshalSSZ"}
 G5_HDR = re.compile(r"Generated by `gen/scal/scalgen\.py p2dec` from `([^`]+)`\n\(sha256 `([0-9a-f]{64})`\) and `([^`]+)` "
                     r"\(sha256 `([0-9a-f]{64})`, type `([^`]+)`\)")
 
@@ -1269,7 +1270,7 @@ def g5_expect(dirs, fields, sz):
         post.append(sl(("at", -frame + o), ".zero" if v == ("zero",) else f"(.ptr {v[1]})"))
     post += [sl(("at", -(frame + 8)), f"(.ret {last_call + 1})"), sl(stack[-1], "(.ex 1)")]
     exs = "[.n 24, .lo]" if has_rt else "[.n 8, .n 8]"
-    L = (f"(E2eScal.DecLayout.mk [{', '.join(callees)}] {len(stack)} [{', '.join(lens)}] [{', '.join(pre)}] ({rt}) "
+    L = (f"(Codec.DecLayout.mk [{', '.join(callees)}] {len(stack)} [{', '.join(lens)}] [{', '.join(pre)}] ({rt}) "
          f"{frame + 8 if has_call else 0} {'true' if st else 'false'} {exs} [{', '.join(post)}] {frame})")
     return dict(L=L, fields="[" + ", ".join(f[1] for f in fields) + "]", pcs=pcs, sz=sz)
 
@@ -1288,9 +1289,9 @@ def g5_split_kind(lines, j):
         return f"{m.group(1)}_kind: no `:= by`"
     body.append(lines[k][:-len(" := by")])
     txt = " ".join(x.strip() for x in body)
-    mk = re.fullmatch(r"= @E2eScal\.(\w+) h (\S+) ?(.*)", txt)
+    mk = re.fullmatch(r"= @Codec\.(\w+) h (\S+) ?(.*)", txt)
     if not mk:
-        return f"{m.group(1)}_kind: right-hand side is not `= @E2eScal.K h C …`"
+        return f"{m.group(1)}_kind: right-hand side is not `= @Codec.K h C …`"
     return m.group(1), mk.group(1), mk.group(2), mk.group(3), (lines[k + 1] if k + 1 < len(lines) else ""), k + 1
 
 
@@ -1417,10 +1418,10 @@ def check_gen5(text, gnames=frozenset(), kr=None, expect=None):
     if ident:
         l = lines[pos[ident[0]]]
         if ident[0].endswith("_stmt"):
-            m = re.fullmatch(rf"theorem {P}_accept_stmt : (E2eScal(?:\.\w+)+) := {P}_accept", l)
+            m = re.fullmatch(rf"theorem {P}_accept_stmt : (Prysm(?:\.\w+)+) := {P}_accept", l)
         else:
             m = re.fullmatch(rf"theorem {P}_accept_same : ∀ \(h : Host\), type_of% \(@{P}_accept h\) = "
-                             rf"type_of% \(@(E2eScal(?:\.\w+)+) h\) := by", l)
+                             rf"type_of% \(@(Prysm(?:\.\w+)+) h\) := by", l)
             if m and lines[pos[ident[0]] + 1] != "  intro h; rfl":
                 m = None
         if not m:
@@ -1440,23 +1441,23 @@ G5_VE = ("prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_prot
 # the layouts of the GEN5 lemma unit's hand-over (`AcceptTies.lean`: layCal, layMix40, layRt, layMix60), transcribed by hand as
 # constructor text; the recomputation from the real `.S` / IR must give exactly these
 G5_HAND = {
-    "VoluntaryExit": ("h6", "(E2eScal.DecLayout.mk [Prysm.Epoch.Code.unmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 7 [(0, 8), (1, 8), (2, 8), "
+    "VoluntaryExit": ("h6", "(Codec.DecLayout.mk [Prysm.Epoch.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 7 [(0, 8), (1, 8), (2, 8), "
                       "(3, 8), (4, 8), (5, 8), (6, 8)] [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), "
                       ".at (.up 32) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 88) (.orig 5), .at (.dn 96) (.orig 6)] (none) 88 "
                       "true [.n 8, .n 8] [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) "
                       "(.reg .rdi), .at (.dn 72) (.ex 0), .at (.dn 88) (.ret 56), .at (.dn 96) (.ex 1)] 80)"),
-    "PendingDeposit": ("h6", "(E2eScal.DecLayout.mk [Prysm.AttestationData.Code.slotUnmarshalSSZ] 10 [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), "
+    "PendingDeposit": ("h6", "(Codec.DecLayout.mk [Prysm.AttestationData.Code.slotUnmarshalSSZ] 10 [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), "
                        "(6, 8), (7, 8), (8, 8)] [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) "
                        "(.orig 3), .at (.dn 72) (.orig 4), .at (.dn 64) (.orig 5), .at (.dn 56) (.orig 6), .at (.dn 32) (.orig 7), "
                        ".at (.dn 80) (.orig 8), .lo (.orig 9)] (some ⟨true, 8, 9, 88⟩) 80 true [.n 24, .lo] [.at (.dn 8) (.reg "
                        ".rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 72) (.ex 0), "
                        ".at (.dn 32) (.ptr 2), .at (.dn 80) (.ret 131), .lo (.ex 1)] 72)"),
-    "PowBlock": ("h6", "(E2eScal.DecLayout.mk [] 7 [(0, 8), (1, 8), (2, 8), (3, 24), (4, 8), (5, 8)] [.at (.dn 8) (.orig 0), "
+    "PowBlock": ("h6", "(Codec.DecLayout.mk [] 7 [(0, 8), (1, 8), (2, 8), (3, 24), (4, 8), (5, 8)] [.at (.dn 8) (.orig 0), "
                  ".at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.dn 40) (.orig 3), .at (.dn 16) (.orig 4), .at (.dn 48) "
                  "(.orig 5), .lo (.orig 6)] (some ⟨false, 0, 6, 48⟩) 0 false [.n 24, .lo] [.at (.dn 8) (.reg .rbp), .at (.up 8) "
                  "(.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.ex 0), .at (.dn 16) (.ptr 2), .at (.dn 48) (.ret 104), "
                  ".lo (.ex 1)] 40)"),
-    "SyncCommitteeMessage": ("h5", "(E2eScal.DecLayout.mk [Prysm.AttestationData.Code.slotUnmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 12 [(0, 8), (1, 8), "
+    "SyncCommitteeMessage": ("h5", "(Codec.DecLayout.mk [Prysm.AttestationData.Code.slotUnmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 12 [(0, 8), (1, 8), "
                              "(2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8), (9, 8), (10, 8)] [.at (.dn 8) (.orig 0), .at "
                              "(.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 104) (.orig 4), .at (.dn "
                              "96) (.orig 5), .at (.dn 88) (.orig 6), .at (.dn 64) (.orig 7), .at (.dn 56) (.orig 8), .at (.dn 48) "
@@ -1480,21 +1481,21 @@ def g5_good_text():
     sp, sraw, iraw = g5_inputs("VoluntaryExit", "h6")
     fields, sz = g5_ir(iraw.decode(), "v1alpha1.VoluntaryExit")
     E = g5_expect([l.strip() for l in sraw.decode("ascii").split("\n") if l.strip()], fields, sz)
-    C, P, L, F = "VeUnmarshal", "ve_g5dec", E["L"], E["fields"]
+    C, P, L, F = "Prysm.VoluntaryExit.Code.unmarshalSSZ", "Decode.generated", E["L"], E["fields"]
 
     def thm(t, body):
         return (f"set_option maxRecDepth 100000 in\ntheorem {t} : ∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k) "
                 f"(hf : LabelsFresh {C} k),\n    T := by\n{body}\n")
 
     def kd(t, k, ds, proof="  intro h; rfl"):
-        return (f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h)\n    = @E2eScal.{k} h {C} {L} {F}"
+        return (f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h)\n    = @Codec.{k} h {C} {L} {F}"
                 + "".join(f"\n    ⟨{E['pcs'][d]}, {d}, [], [], []⟩" for d in ds) + f" := by\n{proof}\n\n")
     n = len(E["pcs"]) - 1
-    out = (f"import E2eScal.H6Code\n\n/-! Generated by `gen/scal/scalgen.py p2dec` from `{sp}`\n(sha256 "
+    out = (f"import Prysm.PendingDeposit.Code\n\n/-! Generated by `gen/scal/scalgen.py p2dec` from `{sp}`\n(sha256 "
            f"`{hashlib.sha256(sraw).hexdigest()}`) and `prysm/ir/ir-mainnet.json` (sha256 `{hashlib.sha256(iraw).hexdigest()}`"
-           f", type `v1alpha1.VoluntaryExit`); GEN4 coverage. -/\n\nnamespace E2eScal.Gen\nend E2eScal.Gen\n\n"
-           f"{G5_MARK}, unit G5-G): text.\nGEN5-JSON: {{\"accept\": \"{P}_accept\"}}\n-/\n\nopen E2e E2eAd E2eScal Codec\n\n"
-           f"namespace E2eScal.Gen\n\n")
+           f", type `v1alpha1.VoluntaryExit`); GEN4 coverage. -/\n\nnamespace Prysm.Fixture\nend Prysm.Fixture\n\n"
+           f"{G5_MARK}, unit G5-G): text.\nGEN5-JSON: {{\"accept\": \"{P}_accept\"}}\n-/\n\nopen Codec\n\n"
+           f"namespace Prysm.Fixture\n\n")
     out += thm(f"{P}_head", "  exact x") + kd(f"{P}_head", "decHeadKindN", [0])
     for i in range(n):
         out += thm(f"{P}_f{i + 1}", "  exact x") + kd(f"{P}_f{i + 1}", "decFieldKindN", [i, i + 1])
@@ -1504,20 +1505,20 @@ def g5_good_text():
     out += thm(f"{P}_accept", chain) + kd(f"{P}_accept", "decAcceptKindN", [])
     out += (f"set_option maxRecDepth 100000 in\ntheorem {P}_reject : ∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : "
             f"LabelsFresh {C} k),\n    T := by\n  exact y\ntheorem {P}_reject_kind : ∀ (h : Host), type_of% (@{P}_reject h)\n"
-            f"    = @E2eScal.decRejectKindN h {C} {E['sz']} := by\n  intro h; with_reducible rfl\n\n")
-    return out + "end E2eScal.Gen\n"
+            f"    = @Codec.decRejectKindN h {C} {E['sz']} := by\n  intro h; with_reducible rfl\n\n")
+    return out + "end Prysm.Fixture\n"
 
 
 def g5_cases():
     """Rule 12 controls: (id, text, expect PASS)."""
     G = g5_good_text()
-    P = "ve_g5dec"
+    P = "Decode.generated"
     stmt = G.replace(f"intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem {P}_reject ",
-                     f"intro h; rfl\n\ntheorem {P}_accept_stmt : E2eScal.H6.ve_hand_stmt := {P}_accept\n\n"
+                     f"intro h; rfl\n\ntheorem {P}_accept_stmt : Prysm.VoluntaryExit.Decode.hand_statement := {P}_accept\n\n"
                      f"set_option maxRecDepth 100000 in\ntheorem {P}_reject ", 1)
     same = G.replace(f"intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem {P}_reject ",
                      f"intro h; rfl\n\ntheorem {P}_accept_same : ∀ (h : Host), type_of% (@{P}_accept h) = type_of% "
-                     f"(@E2eScal.Ve.ve_e2e_accept_main h) := by\n  intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem "
+                     f"(@Prysm.VoluntaryExit.Decode.hand_accept h) := by\n  intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem "
                      f"{P}_reject ", 1)
     assert stmt != G and same != G
     acc_k = f"theorem {P}_accept_kind : ∀ (h : Host), type_of% (@{P}_accept h)"
@@ -1527,16 +1528,16 @@ def g5_cases():
         ("g5_good_same", same, True),
         ("g5_accept_kind_missing", G.replace(acc_k, acc_k.replace("_accept_kind", "_accept_kinx")), False),
         ("g5_field_kind_missing", G.replace(f"theorem {P}_f2_kind ", f"theorem {P}_f2_kinx "), False),
-        ("g5_reject_missing", G.split("set_option maxRecDepth 100000 in\ntheorem ve_g5dec_reject ")[0] + "end E2eScal.Gen\n",
+        ("g5_reject_missing", G.split("set_option maxRecDepth 100000 in\ntheorem Decode.generated_reject ")[0] + "end Prysm.Fixture\n",
          False),
-        ("g5_extra_theorem", G.replace("end E2eScal.Gen\n", "theorem extra : True := trivial\n\nend E2eScal.Gen\n")[::-1].replace(
-            "end E2eScal.Gen\n"[::-1], "", 0)[::-1], False),
-        ("g5_kind_name_swapped", G.replace("= @E2eScal.decEpiKindN h", "= @E2eScal.decFieldKindN h", 1), False),
-        ("g5_kind_proof_not_rfl", G.replace("intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem ve_g5dec_f1 ",
-                                            "intro h; simp\n\nset_option maxRecDepth 100000 in\ntheorem ve_g5dec_f1 ", 1), False),
+        ("g5_extra_theorem", G.replace("end Prysm.Fixture\n", "theorem extra : True := trivial\n\nend Prysm.Fixture\n")[::-1].replace(
+            "end Prysm.Fixture\n"[::-1], "", 0)[::-1], False),
+        ("g5_kind_name_swapped", G.replace("= @Codec.decEpiKindN h", "= @Codec.decFieldKindN h", 1), False),
+        ("g5_kind_proof_not_rfl", G.replace("intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem Decode.generated_f1 ",
+                                            "intro h; simp\n\nset_option maxRecDepth 100000 in\ntheorem Decode.generated_f1 ", 1), False),
         ("g5_L_frame_wrong", G.replace("(.ex 1)] 80)", "(.ex 1)] 88)"), False),
         ("g5_L_gd_wrong", G.replace("(none) 88 true", "(none) 80 true"), False),
-        ("g5_L_callee_order", G.replace("[Prysm.Epoch.Code.unmarshalSSZ, E2eScal.BhCode.ViUnmarshal]", "[E2eScal.BhCode.ViUnmarshal, "
+        ("g5_L_callee_order", G.replace("[Prysm.Epoch.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ]", "[Prysm.ValidatorIndex.Code.unmarshalSSZ, "
                                         "Prysm.Epoch.Code.unmarshalSSZ]"), False),
         ("g5_L_post_ret", G.replace("(.ret 56)", "(.ret 55)"), False),
         ("g5_L_slot_dropped", G.replace(".at (.up 32) (.orig 3), ", ""), False),
@@ -1544,20 +1545,20 @@ def g5_cases():
         ("g5_fields_extra", G.replace("[.u64, .u64]", "[.u64, .u64, .u64]"), False),
         ("g5_pc_wrong", G.replace("⟨48, 1, ", "⟨47, 1, "), False),
         ("g5_done_wrong", G.replace("⟨48, 1, ", "⟨48, 2, "), False),
-        ("g5_reject_size", G.replace("decRejectKindN h VeUnmarshal 16 ", "decRejectKindN h VeUnmarshal 24 "), False),
+        ("g5_reject_size", G.replace("decRejectKindN h Prysm.VoluntaryExit.Code.unmarshalSSZ 16 ", "decRejectKindN h Prysm.VoluntaryExit.Code.unmarshalSSZ 24 "), False),
         ("g5_reject_proof", G.replace("intro h; with_reducible rfl", "intro h; rfl"), False),
-        ("g5_const_other", G.replace("decAcceptKindN h VeUnmarshal", "decAcceptKindN h PcUnmarshal"), False),
-        ("g5_hk_other", G.replace(f"theorem {P}_epi : ∀ (k : Nat) (hk : VeUnmarshal", f"theorem {P}_epi : ∀ (k : Nat) (hk : PcUnmarshal"),
+        ("g5_const_other", G.replace("decAcceptKindN h Prysm.VoluntaryExit.Code.unmarshalSSZ", "decAcceptKindN h Prysm.PendingConsolidation.Code.unmarshalSSZ"), False),
+        ("g5_hk_other", G.replace(f"theorem {P}_epi : ∀ (k : Nat) (hk : Prysm.VoluntaryExit.Code.unmarshalSSZ", f"theorem {P}_epi : ∀ (k : Nat) (hk : Prysm.PendingConsolidation.Code.unmarshalSSZ"),
          False),
         ("g5_chain_skips_field", G.replace(f"  refine eventually_trans _ _ _ _ ({P}_f1 a) ?_\n", ""), False),
-        ("g5_stmt_generated", stmt.replace("E2eScal.H6.ve_hand_stmt", "E2eScal.Gen.ve_g4dec_s15"), False),
-        ("g5_same_self", same.replace("(@E2eScal.Ve.ve_e2e_accept_main h)", "(@E2eScal.Gen5.ve_e2e_accept_g5 h)"), False),
+        ("g5_stmt_generated", stmt.replace("Prysm.VoluntaryExit.Decode.hand_statement", "Prysm.VoluntaryExit.Decode.generated_step_s15"), False),
+        ("g5_same_self", same.replace("(@Prysm.VoluntaryExit.Decode.hand_accept h)", "(@Prysm.VoluntaryExit.Decode.example_accept h)"), False),
         ("g5_sorry", G.replace("  exact y\n", "  sorry\n"), False),
-        ("g5_local_def", G.replace("namespace E2eScal.Gen\n\nset_option", "namespace E2eScal.Gen\n\ndef q := 1\n\nset_option"),
+        ("g5_local_def", G.replace("namespace Prysm.Fixture\n\nset_option", "namespace Prysm.Fixture\n\ndef q := 1\n\nset_option"),
          False),
         ("g5_sha_wrong", G.replace("(sha256 `" + G.split("(sha256 `")[1][:64], "(sha256 `" + (
             "0" if G.split("(sha256 `")[1][0] != "0" else "1") + G.split("(sha256 `")[1][1:64], 1), False),
-        ("g5_two_blocks", G.replace("end E2eScal.Gen\n\n" + G5_MARK, "end E2eScal.Gen\n\n" + G5_MARK + " x -/\n" + G5_MARK, 1),
+        ("g5_two_blocks", G.replace("end Prysm.Fixture\n\n" + G5_MARK, "end Prysm.Fixture\n\n" + G5_MARK + " x -/\n" + G5_MARK, 1),
          False),
     ]
 
@@ -1568,7 +1569,7 @@ def g5_selftest():
     bad = []
     cs = g5_cases()
     for name, text, ok in cs:
-        errs, _ = check_gen5(text, GNAMES | {"ve_e2e_accept_g5"})
+        errs, _ = check_gen5(text, GNAMES | {"Prysm.VoluntaryExit.Decode.example_accept"})
         if (not errs) != ok:
             bad.append((name, errs[:3]))
     n = len(cs)
@@ -1635,8 +1636,8 @@ import hashlib as _g6hash
 import json as _g6json
 
 GEN6_KINDS = ("encHeadKindN", "encFieldKindN", "encEpiKindN", "encFastKindN")
-GEN6_HAND = ("E2eScal.layEncBh", "E2eScal.layEncE1", "E2eScal.layEncCp")
-GEN6_VIA = ("E2eScal.cp_marshal_of_kind",)
+GEN6_HAND = ("Prysm.BeaconBlockHeader.encodeLayout", "Prysm.Eth1Data.encodeLayout", "Prysm.Checkpoint.encodeLayout")
+GEN6_VIA = ("Prysm.Checkpoint.Encode.fast_path_of_kind",)
 G6_R64 = "rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15".split()
 G6_R32 = dict(eax="rax", ebx="rbx", ecx="rcx", edx="rdx", esi="rsi", edi="rdi")
 G6_LAYF = ("st", "frame", "gd", "rt", "nstk", "lens", "pre", "exs", "post")
@@ -2031,9 +2032,13 @@ def g6_expect(dirs, fs, goffs, size, hand_pre=None):
     return dict(L=L, fields=fields, states=sts, pcs=[x[0] for x in states], size=size)
 
 
-def g6_layout_def(text, short):
-    """{field: normalised value} of `def <short> : EncLayout where` in a Lean text, or None."""
-    m = re.search(rf"(?m)^def {re.escape(short)} : EncLayout where\n((?:  .*\n?)+)", text)
+def g6_layout_def(text, short, full=None):
+    """{field: normalised value} of `def <short> : EncLayout where` in a Lean text, or None. With `full`, a declaring line
+    `def _root_.<full>` (a layout of another type than the namespace block of the module) comes first, then the
+    name relative to the type namespace `Prysm.<T>`."""
+    m = None
+    for d in ([f"_root_.{full}", full.split(".", 2)[2]] if full and full.count(".") >= 2 else []) + [short]:
+        m = m or re.search(rf"(?m)^def {re.escape(d)} : EncLayout where\n((?:  .*\n?)+)", text)
     if not m:
         return None
     flds, cur = {}, None
@@ -2062,7 +2067,7 @@ def check_gen6(text, gnames=frozenset(), kr=None):
             raise ValueError(f"{len(gj)} GEN6-JSON lines")
         J = _g6json.loads(gj[0][len("GEN6-JSON: "):])
         P, C, S, IR, TY, LAY = (J["prefix"], J["const"], J["S"], J["ir"], J["ir_type"], J["layout"])
-        if not (re.fullmatch(r"[a-z][a-z0-9_]*", P) and re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", C)):
+        if not (re.fullmatch(r"(?:[A-Z][A-Za-z0-9]*\.)?[a-z][a-z0-9_]*", P) and re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", C)):
             raise ValueError("prefix / const")
     except Exception as e:
         return errs + [f"rule 13: no single valid GEN6-JSON line ({e})"], info
@@ -2072,7 +2077,7 @@ def check_gen6(text, gnames=frozenset(), kr=None):
     if BANNED.search(body):
         errs.append("rule 13b: banned token")
     hand = LAY in GEN6_HAND
-    if not hand and LAY != f"E2eScal.Gen6Enc.{P}_layout":
+    if not hand and LAY != f"Prysm.{J['type']}.{P}_layout":
         errs.append(f"rule 13b: layout name {LAY} is neither a pinned hand layout nor {P}_layout of this file")
     ndef = 0
     in_def = False
@@ -2094,7 +2099,7 @@ def check_gen6(text, gnames=frozenset(), kr=None):
             if l.startswith("set_option ") and l not in ("set_option maxHeartbeats 4000000 in",
                                                        "set_option maxRecDepth 100000 in"):
                 errs.append(f"rule 13b: `{l}`")
-            if l.startswith("namespace ") and l != "namespace E2eScal.Gen6Enc":
+            if l.startswith("namespace ") and l != f"namespace Prysm.{J['type']}":
                 errs.append(f"rule 13b: `{l}`")
     if ndef != (0 if hand else 1):
         errs.append(f"rule 13b: {ndef} layout defs (expected {0 if hand else 1})")
@@ -2108,8 +2113,8 @@ def check_gen6(text, gnames=frozenset(), kr=None):
         n = len(fs)
         hand_pre, handdef = None, None
         if hand:
-            ht = (kr / "lean/E2eScal/EncTies.lean").read_text()
-            handdef = g6_layout_def(ht, LAY.split(".")[-1])
+            ht = (kr / "lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean").read_text()
+            handdef = g6_layout_def(ht, LAY.split(".")[-1], LAY)
             if handdef is None:
                 raise G6Mismatch(f"hand layout {LAY} not in EncTies.lean")
             hand_pre = [(int(k) * (1 if d == "up" else -1), int(i)) for d, k, i in
@@ -2150,9 +2155,9 @@ def check_gen6(text, gnames=frozenset(), kr=None):
     for t, (kind, sts) in exp.items():
         k = chunk[f"{t}_kind"]
         hdr, sep, rest = k.partition(":= by\n")
-        line = (f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h) = @E2eScal.{kind} h {C} {LAY} {X['fields']}{sts}")
+        line = (f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h) = @Codec.{kind} h {C} {LAY} {X['fields']}{sts}")
         rl = rest.split("\n")
-        tail_ok = all(x.strip() in ("", "end E2eScal.Gen6Enc") or x.startswith("set_option ") for x in rl[1:])
+        tail_ok = all(x.strip() in ("", f"end Prysm.{J['type']}") or x.startswith("set_option ") for x in rl[1:])
         if g6_norm(hdr) != g6_norm(line) or rl[0] != "  intro h; rfl" or not tail_ok or not sep:
             errs.append(f"rule 13c: {t}_kind differs from the recomputation\n      file:       {g6_norm(hdr)}\n"
                         f"      recomputed: {g6_norm(line)}")
@@ -2165,7 +2170,9 @@ def check_gen6(text, gnames=frozenset(), kr=None):
     bound = False
     for imp in re.findall(r"(?m)^import (\S+)$", text):
         f = kr / "lean" / (imp.replace(".", "/") + ".lean")
-        if f.exists() and f'def {C} : Program := include_x64_rt "../{S}"' in f.read_text():
+        # the code module of several types declares the constants of the other types root-qualified
+        if f.exists() and any(f'def {d} : Program := include_x64_rt "../{S}"' in f.read_text()
+                              for d in (C, f"Code.{C}", f"_root_.Prysm.{J['type']}.Code.{C}")):
             bound = True
     if not bound:
         errs.append(f"rule 13c: no imported code module defines `{C}` from `{S}`")
@@ -2177,15 +2184,15 @@ def check_gen6(text, gnames=frozenset(), kr=None):
     # 13e: identity
     if f"{P}_stmt" in chunk:
         c = chunk[f"{P}_stmt"].rstrip()
-        if c.endswith("\nend E2eScal.Gen6Enc"):
-            c = c[: -len("\nend E2eScal.Gen6Enc")].rstrip()
+        if c.endswith(f"\nend Prysm.{J['type']}"):
+            c = c[: -len(f"\nend Prysm.{J['type']}")].rstrip()
         m = re.fullmatch(rf"theorem {P}_stmt : type_of% \(@(\S+) ‹Host›\) :=\n  (?:(\S+) )?{P}_fast", c) or \
             re.fullmatch(rf"theorem {P}_stmt : (\S+) :=\n  {P}_fast()", c)
         if not m:
             errs.append(f"rule 13e: {P}_stmt: not the identity form")
         else:
             x, via = m.group(1), m.group(2)
-            if GENNS.match(x) or x.split(".")[-1] in gnames or x.startswith("E2eScal.Gen6"):
+            if GENNS.match(x) or x.split(".")[-1] in gnames:
                 errs.append(f"rule 13e: {x} is a generated name")
             if via and via not in GEN6_VIA:
                 errs.append(f"rule 13e: implication lemma {via} not in GEN6_VIA")
@@ -2194,12 +2201,12 @@ def check_gen6(text, gnames=frozenset(), kr=None):
 
 
 # ---- rule 13 selftest controls: mutants of the committed raw GEN6 outputs (a missing file is a FAIL)
-G6_SELFTEST = {"vb": "lean/E2eScal/Gen6VbEnc.lean", "cp": "lean/E2eScal/Gen6CpEnc.lean",
-               "hs": "lean/E2eScal/Gen6HsEnc.lean", "bh": "lean/E2eScal/Gen6BhEnc.lean"}
+G6_SELFTEST = {"vb": "lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "cp": "lean/Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
+               "hs": "lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "bh": "lean/Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean"}
 # the lemma unit's own layouts (`Enc2Ex*.lean`, scratch emitter of the encoder lemma unit): the recomputation must give them too
-G6_L_LAYOUTS = {"ValidatorBalance": ("lean/E2eScal/Enc2ExVb.lean", "layEncVb"),
-                "DepositMessage": ("lean/E2eScal/Enc2ExDm.lean", "layEncDm"),
-                "HistoricalSummary": ("lean/E2eScal/Enc2ExHs.lean", "layEncHs")}
+G6_L_LAYOUTS = {"ValidatorBalance": ("lean/Prysm/ValidatorBalance/EncodeFastPathExample.lean", "Prysm.ValidatorBalance.Encode.example_layout"),
+                "DepositMessage": ("lean/Prysm/DepositMessage/EncodeFastPathExample.lean", "Prysm.DepositMessage.Encode.example_layout"),
+                "HistoricalSummary": ("lean/Prysm/HistoricalSummary/EncodeFastPathExample.lean", "Prysm.HistoricalSummary.Encode.example_layout")}
 
 
 def g6_cases(T):
@@ -2222,32 +2229,32 @@ def g6_cases(T):
         ("g6_layout_post_fld", r(V, "(.fld 0), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1)]\n\n",
                                  "(.fld 1), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1)]\n\n"), False),
         ("g6_layout_lens", r(V, "(2, 16), (3, 16)]", "(2, 8), (3, 16)]"), False),
-        ("g6_fields_param", r(V, "vb_g6e_f0 h)\n    = @E2eScal.encFieldKindN h VbMarshal E2eScal.Gen6Enc.vb_g6e_layout [.u64, .u64]",
-                              "vb_g6e_f0 h)\n    = @E2eScal.encFieldKindN h VbMarshal E2eScal.Gen6Enc.vb_g6e_layout [.u64, .bytes 32]"),
+        ("g6_fields_param", r(V, "Encode.generated_f0 h)\n    = @Codec.encFieldKindN h marshalSSZTo Prysm.ValidatorBalance.Encode.generated_layout [.u64, .u64]",
+                              "Encode.generated_f0 h)\n    = @Codec.encFieldKindN h marshalSSZTo Prysm.ValidatorBalance.Encode.generated_layout [.u64, .bytes 32]"),
          False),
         ("g6_boundary_pc", r(V, "[.u64, .u64]\n    ⟨8, 0,", "[.u64, .u64]\n    ⟨9, 0,"), False),
         ("g6_boundary_done", r(V, "[.u64, .u64]\n    ⟨8, 0,", "[.u64, .u64]\n    ⟨8, 1,"), False),
         ("g6_boundary_reg_dropped", r(V, "[.u64, .u64]\n    ⟨8, 0, [(.rax, .rcv), ", "[.u64, .u64]\n    ⟨8, 0, ["), False),
-        ("g6_kind_name_swapped", r(V, "= @E2eScal.encEpiKindN h", "= @E2eScal.encHeadKindN h"), False),
-        ("g6_kind_line_missing", r(V, "theorem vb_g6e_f1_kind :", "theorem vb_g6e_f1_kinx :"), False),
-        ("g6_kind_const", r(V, "= @E2eScal.encFastKindN h VbMarshal", "= @E2eScal.encFastKindN h SaMarshal"), False),
+        ("g6_kind_name_swapped", r(V, "= @Codec.encEpiKindN h", "= @Codec.encHeadKindN h"), False),
+        ("g6_kind_line_missing", r(V, "theorem Encode.generated_f1_kind :", "theorem Encode.generated_f1_kinx :"), False),
+        ("g6_kind_const", r(V, "= @Codec.encFastKindN h marshalSSZTo", "= @Codec.encFastKindN h Prysm.SyncAggregatorSelectionData.Code.marshalSSZTo"), False),
         ("g6_kind_proof", r(V, "  intro h; rfl\n", "  intro h; exact rfl\n"), False),
-        ("g6_hk_const", r(V, "theorem vb_g6e_f1 : ∀ (k : Nat) (hk : VbMarshal.IsInfixAt",
-                          "theorem vb_g6e_f1 : ∀ (k : Nat) (hk : SaMarshal.IsInfixAt"), False),
-        ("g6_extra_def", r(V, "namespace E2eScal.Gen6Enc\n", "namespace E2eScal.Gen6Enc\n\ndef foo : Nat := 1\n"), False),
+        ("g6_hk_const", r(V, "theorem Encode.generated_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt",
+                          "theorem Encode.generated_f1 : ∀ (k : Nat) (hk : Prysm.SyncAggregatorSelectionData.Code.marshalSSZTo.IsInfixAt"), False),
+        ("g6_extra_def", r(V, "namespace Prysm.ValidatorBalance\n", "namespace Prysm.ValidatorBalance\n\ndef foo : Nat := 1\n"), False),
         ("g6_sorry", r(V, "  apply Eventually.done\n", "  sorry\n"), False),
         ("g6_heartbeats", r(V, "set_option maxHeartbeats 4000000 in", "set_option maxHeartbeats 8000000 in"), False),
-        ("g6_fast_skips_f0", r(V, "(vb_g6e_f0 k hk", "(vb_g6e_f1 k hk"), False),
-        ("g6_extra_theorem", r(V, "\nend E2eScal.Gen6Enc", "\ntheorem vb_extra : True := trivial\n\nend E2eScal.Gen6Enc"),
+        ("g6_fast_skips_f0", r(V, "(Encode.generated_f0 k hk", "(Encode.generated_f1 k hk"), False),
+        ("g6_extra_theorem", r(V, "\nend Prysm.ValidatorBalance", "\ntheorem extra : True := trivial\n\nend Prysm.ValidatorBalance"),
          False),
         ("g6_json_sha", r(V, sha, ("0" if sha[0] != "0" else "1") + sha[1:]), False),
         ("g6_json_missing", r(V, "GEN6-JSON: ", "GEN6-JSOX: "), False),
-        ("g6_layout_named_hand", V.replace("E2eScal.Gen6Enc.vb_g6e_layout", "E2eScal.layEncBh"), False),
-        ("g6_const_unbound", V.replace("VbMarshal", "SaMarshal"), False),
+        ("g6_layout_named_hand", V.replace("Prysm.ValidatorBalance.Encode.generated_layout", "Prysm.BeaconBlockHeader.encodeLayout"), False),
+        ("g6_const_unbound", V.replace("marshalSSZTo", "otherMarshalSSZTo"), False),
         ("g6_stmt_generated", r(Cp, "type_of% (@Prysm.Checkpoint.Encode.fast_path ‹Host›)",
-                                "type_of% (@E2eScal.Gen6Enc.cp_g6e_fast ‹Host›)"), False),
-        ("g6_stmt_via_unknown", r(Cp, "  E2eScal.cp_marshal_of_kind cp_g6e_fast", "  E2eScal.foo cp_g6e_fast"), False),
-        ("g6_hand_with_def", r(B, "namespace E2eScal.Gen6Enc\n", "namespace E2eScal.Gen6Enc\n\ndef bh_g6e_layout : EncLayout where\n  st := true\n"),
+                                "type_of% (@Prysm.Checkpoint.Encode.generated_fast ‹Host›)"), False),
+        ("g6_stmt_via_unknown", r(Cp, "  Prysm.Checkpoint.Encode.fast_path_of_kind Encode.generated_fast", "  Prysm.Checkpoint.foo Encode.generated_fast"), False),
+        ("g6_hand_with_def", r(B, "namespace Prysm.BeaconBlockHeader\n", "namespace Prysm.BeaconBlockHeader\n\ndef Encode.generated_layout : EncLayout where\n  st := true\n"),
          False),
         ("g6_hs_frame_state", r(H, "  frame := 80\n", "  frame := 88\n"), False),
         ("g6_bh_state_slot", r(B, "(.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 3)",
@@ -2276,7 +2283,7 @@ def g6_selftest():
             sp = f"prysm/go1.26.10/e2e/{d}/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.{tname}.MarshalSSZTo.S"
             fs, goffs, size = g6_ir((KR / "prysm/ir/ir-mainnet.json").read_text(), "v1alpha1." + tname)
             X = g6_expect([l.strip() for l in (KR / sp).read_text().split("\n") if l.strip()], fs, goffs, size)
-            Lx = g6_layout_def((KR / src).read_text(), short)
+            Lx = g6_layout_def((KR / src).read_text(), short.rsplit(".", 1)[-1], short)
             if Lx != X["L"]:
                 bad.append((f"g6_recompute_{tname}", Lx, X["L"]))
         except Exception as e:

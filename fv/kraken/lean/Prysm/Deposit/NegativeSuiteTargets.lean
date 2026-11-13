@@ -10,7 +10,7 @@ the completeness property then no longer hold for that size, so the proof must f
 (`lv/negcases-spec.json`). The `example`s lie after the theorems; the negative runner cuts the module at the target.
 -/
 
-open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz Prysm.Deposit.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz Prysm.Deposit.Code
 variable [Host]
 
 namespace Prysm.Deposit.NegativeSuiteTargets
