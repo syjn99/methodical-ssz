@@ -5,8 +5,8 @@ import Prysm.DepositRequest.SpecDescription
 /-!
 # Spec bridge for the real Prysm `v1alpha1.ValidatorIdentity` (FLAT24 / H7)
 
-Written by the FLAT24 evaluator with its evidence script `f24spec.py` (the text of `SmSpec.lean` / `SaSpec.lean`
-generalised to a field list). `desc` (`F24Desc.lean`) is the independent hand `Desc` (Prysm proto).
+Written by the FLAT24 evaluator with its evidence script `f24spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`
+generalised to a field list). `desc` (`Prysm/ValidatorIdentity/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).
 No Desc-checker record exists for this type (`gen/desc/results/main.result.json`): no codec equality here.
 `SszValue` is the SSZ content of a Go `v1alpha1.ValidatorIdentity`.
 -/

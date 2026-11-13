@@ -176,7 +176,7 @@ def p1(args):
     dirs, sha = read_S(args.S)
     p = p1_read(dirs)
     c = args.const
-    out = header(sha, args.S, args, f"; P1 parameters: frame {p['fs']:#x}, spill {p['dsp']:#x}, "
+    out = header(sha, args.S, args, f"; uint64 decoder parameters: frame {p['fs']:#x}, spill {p['dsp']:#x}, "
                  f"accept label at directive {p['jb']}")
     out += "set_option maxRecDepth 100000 in\n"
     out += P1_STMT.format(name=args.name, const=c)

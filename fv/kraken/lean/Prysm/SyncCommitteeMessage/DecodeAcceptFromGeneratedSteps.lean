@@ -363,20 +363,20 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
   subst hrsp8 hrbp8 hr148
   -- epilogue 156–160 (hand steps)
   kat hk Code.unmarshalSSZ 156
-  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 157
-  apply load_step_at _ _ (rsp.toBitVec - 56) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 56) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 158
   kat hk Code.unmarshalSSZ 159
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 160
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -392,6 +392,6 @@ theorem Decode.accept_from_generated_steps : Decode.accept_statement := by
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; bhaddr)
+    | (apply UInt64.toBitVec_inj.mp; beacon_block_header_addr)
 
 end Prysm.SyncCommitteeMessage

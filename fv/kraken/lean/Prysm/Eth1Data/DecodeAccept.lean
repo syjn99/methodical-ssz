@@ -38,7 +38,7 @@ variable [Host]
 
 namespace Prysm.Eth1Data
 
-/-- Address equation by `toNat` and `omega` (as `bhaddr`). -/
+/-- Address equation by `toNat` and `omega` (as `beacon_block_header_addr`). -/
 macro "e1addr" : tactic => `(tactic| (
   apply BitVec.eq_of_toNat_eq
   simp only [BitVec.toNat_add, BitVec.toNat_sub, BitVec.toNat_neg, BitVec.toNat_ofNat, BitVec.ofNat_eq_ofNat,

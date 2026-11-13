@@ -21,7 +21,7 @@ statement is the independent hand statement `Prysm.SyncCommitteeMessage.Decode.a
 * hand steps 146–147, label 154, 155 and the epilogue 156–160 (the text of the BeaconBlockHeader tail).
 
 Stack (rsp = entry rsp): frame `sub $0x60` as BeaconBlockHeader; the helper lemmas `Prysm.BeaconBlockHeader.Decode.stack_low_eq`, `Prysm.BeaconBlockHeader.Decode.lo8`,
-`Prysm.BeaconBlockHeader.Decode.j3`, `Prysm.BeaconBlockHeader.Decode.accept_guard` and the tactic `bhaddr` are reused. No contract, no new hypothesis form.
+`Prysm.BeaconBlockHeader.Decode.j3`, `Prysm.BeaconBlockHeader.Decode.accept_guard` and the tactic `beacon_block_header_addr` are reused. No contract, no new hypothesis form.
 -/
 
 open Machine Runtime Prysm.AttestationData.Code Prysm.SyncCommitteeMessage.Code Codec
@@ -115,14 +115,14 @@ theorem Decode.accept : Decode.accept_statement := by
   subst hrsp4 hrbp4 hr144
   -- instance directives 72–73, L_153 (80), 81
   kat hk Code.unmarshalSSZ 72
-  apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p1.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p1.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 73
   klabel hk hf Code.unmarshalSSZ 80
   kat hk Code.unmarshalSSZ 80
   kat hk Code.unmarshalSSZ 81
-  apply store_step_at _ _ (rax.toBitVec + 16) _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrax4]; try bhaddr)
+  apply store_step_at _ _ (rax.toBitVec + 16) _ _ _ (Int.toBytes 8 p1.toInt) _ _ (by rw [hrax4]; try beacon_block_header_addr)
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
@@ -191,33 +191,33 @@ theorem Decode.accept : Decode.accept_statement := by
   subst hrsp8 hrbp8 hr148
   -- instance directives 146–147, L_289 (154), 155, epilogue 156–160
   kat hk Code.unmarshalSSZ 146
-  apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p2.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 48) _ _ (Int.toBytes 8 p2.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 147
   klabel hk hf Code.unmarshalSSZ 154
   kat hk Code.unmarshalSSZ 154
   kat hk Code.unmarshalSSZ 155
-  apply store_step_at _ _ (rax.toBitVec + 48) _ _ _ (Int.toBytes 8 p2.toInt) _ _ (by rw [hrdx8]; try bhaddr) (by ecancel)
+  apply store_step_at _ _ (rax.toBitVec + 48) _ _ _ (Int.toBytes 8 p2.toInt) _ _ (by rw [hrdx8]; try beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
   kunfold
   kat hk Code.unmarshalSSZ 156
-  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 157
-  apply load_step_at _ _ (rsp.toBitVec - 56) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 56) _ _ (Int.toBytes 8 (UInt64.toBitVec 0).toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 158
   kat hk Code.unmarshalSSZ 159
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 160
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -233,6 +233,6 @@ theorem Decode.accept : Decode.accept_statement := by
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; bhaddr)
+    | (apply UInt64.toBitVec_inj.mp; beacon_block_header_addr)
 
 end Prysm.SyncCommitteeMessage

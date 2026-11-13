@@ -45,7 +45,7 @@ theorem Decode.accept_ret (x : BitVec 64) : ({ toBitVec := x - 112 } + 8 : UInt6
 theorem Decode.accept_guard (x : BitVec 64) (g : Nat) (h : g + 112 < x.toNat) : g < (x - 112).toNat := by bv_omega
 
 /-- Address equation by `toNat` and `omega` (as `kaddr`, with `Width.bits` reduced). -/
-macro "bhaddr" : tactic => `(tactic| (
+macro "beacon_block_header_addr" : tactic => `(tactic| (
   apply BitVec.eq_of_toNat_eq
   simp only [BitVec.toNat_add, BitVec.toNat_sub, BitVec.toNat_neg, BitVec.toNat_ofNat, BitVec.ofNat_eq_ofNat,
     UInt64.toNat_toBitVec, UInt64.toBitVec_add, UInt64.toBitVec_ofNat, Width.bits, Nat.reducePow]
@@ -185,17 +185,17 @@ theorem Decode.head (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf
   klabel hk hf Code.unmarshalSSZ 46
   kat hk Code.unmarshalSSZ 46
   kat hk Code.unmarshalSSZ 47
-  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 48
   kat hk Code.unmarshalSSZ 49
-  apply load_step_at _ _ (rsp.toBitVec + 32) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 32) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 50
   kat hk Code.unmarshalSSZ 51
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by bhaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by beacon_block_header_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk Code.unmarshalSSZ 52
