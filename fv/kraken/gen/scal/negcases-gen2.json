@@ -83,7 +83,7 @@
  },
  {
   "id": "g2-ex-idx-stmt-off",
-  "module": "Prysm/DepositMessage/DecodeFieldSegmentExamples.lean",
+  "module": "Prysm/BlobIdentifier/DecodeFieldSegmentExamples.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.example_field_Index_seg",
   "kind": "stmt",
   "old": "(hSrc : bf + (32 : Int64).toBitVec = aSrc)",
@@ -91,11 +91,10 @@
  },
  {
   "id": "g2-ex-idx-code-off",
-  "module": "Prysm/DepositMessage/DecodeFieldSegmentExamples.lean",
+  "module": "Prysm/BlobIdentifier/DecodeFieldSegmentExamples.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.example_field_Index_seg",
   "kind": "code",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.BlobIdentifier.Code",
+  "code_def": "Prysm.BlobIdentifier.Code.unmarshalSSZ",
   "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
   "old": "  mov 0x20(%rcx),%rcx",

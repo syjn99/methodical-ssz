@@ -261,17 +261,16 @@
  },
  {
   "id": "g5-rej-ve-control",
-  "module": "Prysm/PendingDeposit/DecodeRejectSizeExample.lean",
+  "module": "Prysm/VoluntaryExit/DecodeRejectSizeExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_reject",
   "kind": "control",
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.VoluntaryExit.Code",
+  "code_def": "Prysm.VoluntaryExit.Code.unmarshalSSZ",
   "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
   "id": "g5-rej-ve-stmt-size",
-  "module": "Prysm/PendingDeposit/DecodeRejectSizeExample.lean",
+  "module": "Prysm/VoluntaryExit/DecodeRejectSizeExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_reject",
   "kind": "stmt",
   "old": "(hlen : s.regs.rcx ≠ 16)",
@@ -279,27 +278,25 @@
  },
  {
   "id": "g5-rej-ve-code-size",
-  "module": "Prysm/PendingDeposit/DecodeRejectSizeExample.lean",
+  "module": "Prysm/VoluntaryExit/DecodeRejectSizeExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_reject",
   "kind": "code",
   "old": "  cmp $0x10,%rcx",
   "new": "  cmp $0x18,%rcx",
   "line": 10,
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.VoluntaryExit.Code",
+  "code_def": "Prysm.VoluntaryExit.Code.unmarshalSSZ",
   "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
   "id": "g5-rej-ve-code-frame",
-  "module": "Prysm/PendingDeposit/DecodeRejectSizeExample.lean",
+  "module": "Prysm/VoluntaryExit/DecodeRejectSizeExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_reject",
   "kind": "code",
   "old": "  add $0x48,%rsp",
   "new": "  add $0x40,%rsp",
   "line": 93,
-  "code_def": "unmarshalSSZ",
-  "code_ns": "Prysm.VoluntaryExit.Code",
+  "code_def": "Prysm.VoluntaryExit.Code.unmarshalSSZ",
   "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  }

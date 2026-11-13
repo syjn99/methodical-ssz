@@ -22,8 +22,8 @@ The texts were produced from one description per type by a scratch emitter of th
 repository; it is not the generator). They are development data (in-sample). The independent checks of
 the statements are the `rfl` ties of `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 
-`Prysm/PendingDeposit/DecodeRejectSizeExample.lean`: size-reject theorems of PendingDeposit and VoluntaryExit from `decrej_seg`
-(`decRejectKindN`).
+`Prysm/PendingDeposit/DecodeRejectSizeExample.lean` and `Prysm/VoluntaryExit/DecodeRejectSizeExample.lean`: size-reject
+theorems of PendingDeposit and VoluntaryExit from `decrej_seg` (`decRejectKindN`).
 
 `Decode.example_accept_all` collects the four accept theorems under their kinds.
 -/

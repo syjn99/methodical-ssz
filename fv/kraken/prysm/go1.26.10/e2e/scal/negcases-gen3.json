@@ -215,7 +215,7 @@
  },
  {
   "id": "g3-ex-wc-stmt-nopad",
-  "module": "Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean",
+  "module": "Prysm/Deposit_Data/DecodeCallSegmentExamples.lean",
   "theorem": "Prysm.Deposit_Data.Decode.example_call_WithdrawalCredentials_seg",
   "kind": "stmt",
   "old": "(q := Codec.bytesDecHeadP true 32",

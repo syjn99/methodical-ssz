@@ -186,17 +186,16 @@
  },
  {
   "id": "g4-ex-pccall-control",
-  "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
+  "module": "Prysm/PendingConsolidation/DecodeStepExamples.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call",
   "kind": "control",
-  "code_def": "Code.unmarshalSSZ",
-  "code_ns": "Prysm.PendingConsolidation.Code",
+  "code_def": "Prysm.PendingConsolidation.Code.unmarshalSSZ",
   "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
   "id": "g4-ex-pccall-stmt-ret",
-  "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
+  "module": "Prysm/PendingConsolidation/DecodeStepExamples.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call",
   "kind": "stmt",
   "old": "(Host.addrOf (k + 55 + 1)).toBitVec.toInt).At aRet",
@@ -204,14 +203,13 @@
  },
  {
   "id": "g4-ex-pccall-code-nonop",
-  "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
+  "module": "Prysm/PendingConsolidation/DecodeStepExamples.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call",
   "kind": "code",
   "line": 57,
   "old": "  nop",
   "new": "  mov %rdx,%rdx",
-  "code_def": "Code.unmarshalSSZ",
-  "code_ns": "Prysm.PendingConsolidation.Code",
+  "code_def": "Prysm.PendingConsolidation.Code.unmarshalSSZ",
   "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
@@ -282,7 +280,7 @@
  },
  {
   "id": "g4-ex-pcfield-stmt-src",
-  "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
+  "module": "Prysm/PendingConsolidation/DecodeStepExamples.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.example_step_TargetIndex_field",
   "kind": "stmt",
   "old": "⋆ Eq (e8.At (bf + 8)) ⋆ Eq (c0.At (rcv + 16)) ⋆ F),",

@@ -105,9 +105,13 @@ Checks, per file (text only):
 11. A file in which a non-composed theorem has a GEN2 / GEN3 / GEN4 kind must
     carry the coverage header (`GEN2|GEN3|GEN4 coverage (…): n of m fields`); rule 6a also ignores string literals.
     Exemption: the hand example modules listed in HAND_EXAMPLES (exact paths
-    `lean/Prysm/DepositMessage/DecodeFieldSegmentExamples.lean`, `Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean`) are not generator output and skip rule 11 only; every
-    other rule applies to them. `Prysm/SyncCommitteeMessage/DecodeStepExamples.lean` is not listed: its hand field compositions fail rules 4 and 10c,
-    and no recorded command runs `kindcheck.py` on it.
+    `lean/Prysm/<T>/DecodeFieldSegmentExamples.lean` for T = DepositMessage, BlobIdentifier, Eth1Data and
+    `lean/Prysm/<T>/DecodeCallSegmentExamples.lean` for T = PendingPartialWithdrawal, BeaconBlockHeader, AttestationData,
+    Checkpoint, Deposit_Data) are not generator output and skip rule 11 only; every
+    other rule applies to them. `Prysm/<T>/DecodeStepExamples.lean` (T = SyncCommitteeMessage, PendingConsolidation, Checkpoint,
+    BeaconBlockHeader, PendingPartialWithdrawal, Deposit_Data) are not listed: they have no FIELDS-JSON line (rule 10c), and the
+    hand field compositions of SyncCommitteeMessage and PendingConsolidation fail rule 4;
+    no recorded command runs `kindcheck.py` on them.
     6d. A composed accept theorem with only the kind `decAcceptKind` (no
     identity `_type` with an independent hand statement) FAILS; `scalgen.py --gen3 --compose` without `--same-as*`
     now also marks it `UNCHECKED STATEMENT` (rule 6c).
@@ -149,9 +153,13 @@ PRYSM = KR / "lean" / "Prysm"   # rule 6b: the type directories with the generat
 # Rule 11 exemption: hand-written example modules of the lemma units. They have GEN2+
 # kinds but are not generator output, so they have no coverage header. Only these exact paths (relative to
 # fv/kraken) skip rule 11; every other rule applies to them unchanged.
-# `Prysm/SyncCommitteeMessage/DecodeStepExamples.lean` is not listed: it also fails rules 4 and 10c (hand field compositions `*_field` without a kind,
-# no FIELDS-JSON line), so an exemption from rule 11 alone would not make it pass; kindcheck is not a check of it.
-HAND_EXAMPLES = ("lean/Prysm/DepositMessage/DecodeFieldSegmentExamples.lean", "lean/Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean")
+# The modules `Prysm/<T>/DecodeStepExamples.lean` are not listed: they also fail rule 10c (no FIELDS-JSON line), and two of
+# them rule 4 (hand field compositions `*_field` without a kind), so an exemption from rule 11 alone would not make them
+# pass; kindcheck is not a check of them.
+HAND_EXAMPLES = ("lean/Prysm/DepositMessage/DecodeFieldSegmentExamples.lean", "lean/Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean",
+                 "lean/Prysm/BlobIdentifier/DecodeFieldSegmentExamples.lean", "lean/Prysm/Eth1Data/DecodeFieldSegmentExamples.lean",
+                 "lean/Prysm/BeaconBlockHeader/DecodeCallSegmentExamples.lean", "lean/Prysm/AttestationData/DecodeCallSegmentExamples.lean",
+                 "lean/Prysm/Checkpoint/DecodeCallSegmentExamples.lean", "lean/Prysm/Deposit_Data/DecodeCallSegmentExamples.lean")
 GENNS = re.compile(r"^Prysm\.\w+\.(?:Decode|Encode)\.(?:generated|example|accept_generated_composition|accept_composed_example)")  # rule 6b: generated and example names
 DECL = re.compile(r"^(?:private |protected |noncomputable )*(?:theorem|lemma|def|abbrev) (\S+)")
 COMPOSED = ("(Codec.dechead_seg ", "(Codec.decepi_seg ")  # rule 6a
