@@ -10,9 +10,9 @@
  "axioms_gate": {
   "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=Spec,Machine,Runtime,Codec,Prysm",
   "verdict": "PASS",
-  "declarations": 20439,
-  "theorems": 16899,
-  "modules": 815
+  "declarations": 20716,
+  "theorems": 17165,
+  "modules": 825
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -55,10 +55,10 @@
    "MarshalSSZTo": {
     "target": 211,
     "functions_json": 211,
-    "mapped": 29,
+    "mapped": 30,
     "complete": 0,
-    "partial": 29,
-    "fast_path_complete": 29,
+    "partial": 30,
+    "fast_path_complete": 30,
     "fast_path_partial": 0
    },
    "MarshalSSZ": {
@@ -3190,10 +3190,26 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "Prysm.AttestationData.Encode.fast_path"
+    ],
+    "spec": [
+     "Prysm.AttestationData.Encode.fast_path_spec"
+    ],
+    "witness": [
+     "Prysm.AttestationData.Witness.EncodeFastPath.runs_empty"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "length rejects (1 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [

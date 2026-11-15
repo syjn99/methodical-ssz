@@ -73,7 +73,9 @@ How to handle a new finding is in `../README.md` section 7.
 - What: if `Source` or `Target` is nil, the encoder stores a new zero `Checkpoint` in the receiver before it encodes it. The zero `Checkpoint` then fails with `ErrBytesLength`.
 - Where: `(*v1alpha1.AttestationData).MarshalSSZTo`.
 - Effect: an encoder theorem must state this change of the receiver.
-- State: known behavior, not a specification violation. No encoder theorem exists for this type yet.
+- State: known behavior, not a specification violation.
+  `Prysm.AttestationData.Encode.fast_path` covers only a receiver with `Source` and `Target` not nil, so it has no such write.
+  No theorem exists for the nil branches.
 
 ### AttestationData decoder always allocates Source and Target
 
@@ -391,6 +393,19 @@ How to handle a new finding is in `../README.md` section 7.
   A development type without a mapping row ends in a `KeyError`, not in a FAIL line.
   19 mapped names are not in the `#print axioms` hand list `gen/axioms-lists/flat-fixed-size-types.lean`. `gen/tools/inventory_decls.lean` checks their axioms on every run.
 - State: open.
+
+### The inventory row of the AttestationData encoder does not show every premise
+
+- What: the tool's row text for an encoder fast path is "len + SizeSSZ ≤ cap, exact field lengths".
+  `Prysm.AttestationData.Encode.fast_path` needs more premises than that text.
+  It needs `Source` and `Target` not nil, the stack bound `guard + 312 < rsp` and `cap < 2^63`.
+  It also needs disjoint memory blocks for the receiver, `dst`, the root, both Checkpoints and their roots.
+  So `Source = Target` and two roots in one backing array are not covered. Go allows both.
+- Where: `gen/tools/proof_inventory.py` (the fast-path row text and the NOT-proved column).
+- Effect: the NOT-proved column does not list the `newobject` branches for a nil `Source` or `Target`.
+  It also does not list the error wraps of the two Checkpoint calls.
+  The doc comment of `lean/Prysm/AttestationData/EncodeFastPath.lean` states these limits.
+- State: open. The tool is not changed.
 
 ### Open checker items of the flat encoder generator
 

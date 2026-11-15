@@ -35,6 +35,8 @@ import Prysm.Slot.Marshal
 import Prysm.Slot.WitnessMarshal
 import Prysm.CommitteeIndex.Marshal
 import Prysm.CommitteeIndex.WitnessMarshal
+import Prysm.AttestationData.EncodeSpec
+import Prysm.AttestationData.WitnessEncodeFastPath
 
 -- AttestationData set: the AttestationData, Slot and CommitteeIndex theorems and the Checkpoint function specifications.
 #print axioms Prysm.AttestationData.desc_checker
@@ -112,3 +114,16 @@ import Prysm.CommitteeIndex.WitnessMarshal
 #print axioms Prysm.CommitteeIndex.Marshal.result
 #print axioms Prysm.CommitteeIndex.Marshal.result_spec
 #print axioms Prysm.CommitteeIndex.Witness.Marshal.runs
+#print axioms Prysm.AttestationData.Encode.head_slot
+#print axioms Prysm.AttestationData.Encode.head_index
+#print axioms Prysm.AttestationData.Encode.head_root
+#print axioms Prysm.AttestationData.Encode.source_call
+#print axioms Prysm.AttestationData.Encode.target_call
+#print axioms Prysm.AttestationData.Encode.head
+#print axioms Prysm.AttestationData.Encode.calls
+#print axioms Prysm.AttestationData.Encode.fast_path
+#print axioms Prysm.AttestationData.Encode.fast_path_spec
+#print axioms Prysm.AttestationData.Witness.EncodeFastPath.mem_premise
+#print axioms Prysm.AttestationData.Witness.EncodeFastPath.runs_empty
+#print axioms Prysm.AttestationData.Witness.EncodeFastPath.Prefix.mem_premise
+#print axioms Prysm.AttestationData.Witness.EncodeFastPath.runs_prefix
