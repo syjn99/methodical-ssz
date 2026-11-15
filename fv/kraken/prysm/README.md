@@ -30,7 +30,6 @@ All files here belong to one ELF. Do not mix them with the files of another ELF.
 | `link/` | A link table of 136 functions of this ELF. No current theorem includes it. It is a record: its data files keep their ids (`x5…`), and `link/data-ids-old-new.tsv` gives the present id of each item |
 | `link-set/` | The one link set of the proved functions: `target.objdump`, `norm/*.S`, `norm/all.S`, `data/*.data` and `RESULT`. `gen/checks/link_set.py` writes it. Its `RESULT` replaces the `RESULT` files of the 16 earlier link sets. `data-ids-old-new.tsv` maps the data ids of the earlier link sets and records to the present ids |
 | `evidence/` | The check records, negative case lists and generator records of the proved types (section 3) |
-| `capacity-reserved/` | A separate ELF of a generator option that reserves the encoder output once. The option is not adopted. `lean/Prysm/Checkpoint/CapacityReserved*.lean` prove theorems about it. Its `link/` directory is a record of that ELF: the data files keep their ids, and `link/data-ids-old-new.tsv` gives the present id of each item. The ELF can be rebuilt (`../gen/README.md` section 7; generator `ca191bb`, an overlay of `phase0.ssz.go`, the flags of `gen/prysm-elf.sh`), with the sha256 of `capacity-reserved/build-ids.txt`. A check of the committed `link/` set on it gives exit 0 and 44 PASS lines, equal to the record except the two `file sha256` lines of files that no longer exist and the bundle hash |
 
 ## 3. Records under `go1.26.10/evidence/`
 

@@ -98,9 +98,10 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: a generator option `--reserve-marshal` makes `Checkpoint.MarshalSSZTo` reserve `len + 40` bytes once.
   With an invalid `Root` and 8 to 39 spare bytes, the new code allocates one block and does not write the spare bytes of the caller.
-- Where: generator commit `ca191bb` on a branch that is not merged. The evidence is in `prysm/go1.26.10/capacity-reserved/` and `lean/Prysm/Checkpoint/CapacityReserved*.lean`.
+- Where: a generator branch that is not merged.
 - How it shows: the benchmark results are mixed. The fast path is slower and the error path allocates one more block.
-- State: not adopted. The option is off by default. The old proofs apply only to the old ELF.
+- State: closed. The option is not adopted and is off by default.
+  Its test ELF records, its negative cases and its Lean proofs are deleted from the tree. Git history keeps them.
 
 ### In-place hash call depends on an aliasing premise
 
@@ -175,14 +176,11 @@ How to handle a new finding is in `../README.md` section 7.
 ### Link check result changes on a new run
 
 - What: `link/check.py` hashes the ELF, the `norm/*.S` files, the `data/*.data` files and `AXIOMS.txt` if it exists. It hashes no Lean file.
-  Two tracked `RESULT` files have sha256 lines for `lean/Fk/Code.lean` and `AXIOMS.txt`. Neither file is in the tree now.
-- Where: `prysm/go1.26.10/link/RESULT` and `prysm/go1.26.10/capacity-reserved/link/RESULT` (records of earlier runs).
-- Effect: a new run writes these files without the two lines, with a different bundle hash.
-- State: open for these two records. A new run on `link/out` dropped the two lines from `link/out/RESULT`, and
+  One tracked `RESULT` file has sha256 lines for `lean/Fk/Code.lean` and `AXIOMS.txt`. Neither file is in the tree now.
+- Where: `prysm/go1.26.10/link/RESULT` (a record of an earlier run).
+- Effect: a new run writes this file without the two lines, with a different bundle hash.
+- State: open for this record. A new run on `link/out` dropped the two lines from `link/out/RESULT`, and
   `prysm/go1.26.10/link-set/RESULT` never had them.
-  The capacity-reserved ELF can be rebuilt (`gen/README.md` section 7): its sha256 equals `capacity-reserved/build-ids.txt`.
-  A check of the committed `capacity-reserved/link` set on it gives exit 0 and 44 PASS lines.
-  That result equals the record except the two `file sha256` lines and the bundle hash. The record stays as it is.
 
 ### Link set `prysm/go1.26.10/link` has no tracked disassembly
 
@@ -255,7 +253,7 @@ How to handle a new finding is in `../README.md` section 7.
     `Prysm.BeaconBlockHeader.EncodeFastPathKindInstances` until commit `7adfc767` removed that import. The case now has
     `mutant_imports: ["Prysm.Eth1Data.EncodeFastPathKindInstances"]`. Before the restructuring it passed (`f6ee2b6c`,
     `prysm/go1.26.10/e2e/scal/gen6/neg-result.json`, `g6-cp-kind-layout`, class `inside`). No other case names a declaration of the two Eth1Data modules.
-- The 20 cases that do not pass (present id, class, earlier record with the same outcome, cause):
+- The 18 remaining cases that do not pass (present id, class, earlier record with the same outcome, cause):
   - An earlier theorem of the module owns the mutated directive (Lean keeps a failed theorem with `sorry` and continues,
     so the designated theorem has no error; class `outside`):
     - `sync-aggregate-decode-accept-code-movq-0x40-to-0x3f`: `3a7e90b3`, `prysm/go1.26.10/e2e/lv/negative-lv.json`,
@@ -291,15 +289,14 @@ How to handle a new finding is in `../README.md` section 7.
       `pending-consolidation-decode-accept-spec-statement-host-56-to-55`: `18432398`,
       `prysm/go1.26.10/e2e/h5/negative-h5.json`, `sm-ask-stmt-swap`, `sm-ask-stmt-ret`, `pc-ask-stmt-swap`, `pc-ask-stmt-ret`.
   - Wall time limit of the tool, 300 s (class `timeout_wall`):
-    - `checkpoint-capacity-reserved-encode-tail-fit-code-mov-rbx-rcx-1-to-0x1-rbx-rcx-1` and
-      `checkpoint-capacity-reserved-encode-tail-fit-code-mov-r9-to-r8`: `dada4c6d`, `prysm/go1.26.10/opt-r1/negative.json`,
-      `o-tail-fit-store`, `o-tail-fit-val`.
     - `pow-block-decode-generated-accept-statement-rax-32-to-48`: `d3dddd1a`, `prysm/go1.26.10/e2e/scal/negative-gen5g.json`, `g5g-pb-acc-stmt-size`.
   - Memory cap kill, 6 GiB (class `killed`): `deposit-data-decode-accept-spec-statement-heap-176-to-175`: `f704f6f0`,
     `prysm/go1.26.10/e2e/scal/negative-h4.json`, `dd-ask-stmt-heap`.
+- Two more of the 20 cases had the class `timeout_wall`. They were cases of a separate test ELF.
+  That ELF, its Lean proofs and its case file are deleted from the tree, so 18 cases remain.
 - Effect: a timeout, a kill, no error or an error outside the designated theorem is not a pass (`../README.md` section 6).
-  So these 20 mutants do not show that their theorem depends on the mutated text. The controls of the same groups pass.
-- State: open; a decision on the 20 is needed and not taken. Options:
+  So these 18 mutants do not show that their theorem depends on the mutated text. The controls of the same groups pass.
+- State: open; a decision on the 18 is needed and not taken. Options:
   - cases whose directive an earlier theorem owns: designate the case to that theorem (it then repeats the passing
     sibling case), let a case name the supporting theorems whose errors also count, or mutate a directive that the
     designated theorem proves itself; for the PendingDeposit reject case, keep the identity theorem out of the mutant or
@@ -307,7 +304,7 @@ How to handle a new finding is in `../README.md` section 7.
   - the stuck `rfl` cases: a stated heartbeat limit for these mutants (if a run without limit ends in a definite `rfl`
     failure), mutations that Lean refutes definitely (for example the same literal in the hand statement, which the accept
     proof checks), or keeping them as recorded limits;
-  - the other timeouts, the wall-time cases and the memory kill: a per-case limit, a different mutation of the same fault,
+  - the other timeouts, the wall-time case and the memory kill: a per-case limit, a different mutation of the same fault,
     or keeping them as recorded limits;
   - the frame case: it depends on the open item "Kind checks do not bind every parameter".
 
@@ -385,11 +382,11 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### A code directory is not a Lake input
 
-- What: `lean/Prysm/Checkpoint/CapacityReservedCode.lean` includes `.S` files from a directory that `lean/lakefile.toml` does not declare as an input.
-  A change in such a file does not make Lake build the proofs again.
-- Where: `prysm/go1.26.10/capacity-reserved/link/norm` (the capacity-reserved test ELF). The link set `prysm/go1.26.10/link-set` is an input.
+- What: a Lean module of a separate test ELF included `.S` files from a directory that `lean/lakefile.toml` did not declare as an input.
+  A change in such a file did not make Lake build the proofs again.
+- Where: the link set `prysm/go1.26.10/link-set` is an input.
   `ElfData.PrysmTarget.typeDeposit_Data_addr` comes from the data include of its data file. `gen/checks/deposit_data_include_check.py` checks this.
-- State: open for the capacity-reserved test ELF. A `lakefile.toml` change needs user approval.
+- State: closed. The module and the directory of that test ELF are deleted from the tree. Git history keeps them.
 
 ### Inventory script trusts its method list
 

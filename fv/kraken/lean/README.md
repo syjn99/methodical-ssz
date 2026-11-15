@@ -30,8 +30,6 @@ The full name of a main theorem is the name of the work, for example `Prysm.Chec
 The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `../gen/restructure/maps/attestation-data/` give the earlier path and a one-line meaning of each module that these maps moved.
 - `Prysm/Checkpoint/`: the `v1alpha1.Checkpoint` decoder, encoder and `SizeSSZ`, the hand specification (`Spec.lean`),
   the Go value predicate (`GoValue.lean`) and the decoder-then-encoder composition (`DecodeThenEncode.lean`).
-  The files `CapacityReserved*.lean` hold proofs about a separate test ELF of a generator option that is not adopted
-  (the encoder reserves 40 bytes of capacity first; namespace `Prysm.Checkpoint.CapacityReserved`).
 - `Prysm/Epoch/`: the decoder of the hand-written `primitives.Epoch` method and its function specification.
   Its program constant is `Prysm.Epoch.Code.unmarshalSSZ` (`Prysm/Epoch/Code.lean`).
 - `Prysm/AttestationData/`: the `v1alpha1.AttestationData` decoder (accept path in four parts, size reject, EthLib
@@ -80,15 +78,13 @@ Codec <-> Prysm (at module level, both directions)
   has `public meta import Lean` for its elaborators). `Runtime` imports only Kraken, `Machine` and `Runtime`. So these
   three libraries import only libraries to their left (and Lean itself).
 - `Codec` and `Prysm` import each other at module level. 25 of the 60 `Codec` modules import a `Prysm` module:
-  13 of 36 in `Codec/`, 2 of 11 in `Codec/Kind/`, 10 of 13 in `Codec/Segment/`. 211 of the 673 `Prysm` modules
+  13 of 36 in `Codec/`, 2 of 11 in `Codec/Kind/`, 10 of 13 in `Codec/Segment/`. 210 of the 662 `Prysm` modules
   import a `Codec` module. Lean forbids a cycle of modules, so the module graph has no cycle; only the
   libraries have no order.
 - The `Codec` modules that import `Prysm` hold lemmas and kinds that the shared layer took from a type
   (for example `Codec/Bytes32Decode.lean` reads the ELF data of `Prysm/ElfData/PrysmTarget.lean`), and instances
   that tie a general lemma to the lemmas of a type (`Codec/Segment/*Instances.lean`).
-- `Prysm/Deposit/` imports modules of a flat type (`Prysm/Deposit_Data/`). `Prysm/Checkpoint/CapacityReserved*.lean`
-  import only `Prysm/Checkpoint/` modules and the shared libraries (`Codec.StackGuard`, `Runtime.CopyModel`, `Machine`,
-  Kraken), no flat type. `Prysm/HistoricalBatch/` does not import the flat types.
+- `Prysm/Deposit/` imports modules of a flat type (`Prysm/Deposit_Data/`). `Prysm/HistoricalBatch/` does not import the flat types.
 A new type gets its own directory `Prysm/<GoTypeName>/`. Do not change a reviewed module to add a new type.
 
 ## 2. How machine code enters Lean
@@ -101,7 +97,6 @@ A new type gets its own directory `Prysm/<GoTypeName>/`. Do not change a reviewe
 
 The `.S` and data files are not Lean imports. So `lakefile.toml` declares their directories as `input_dir` entries in the `needs` of each library.
 Lake then puts the file contents into the input hash, and a changed file makes Lake build the proofs again.
-The directory that `Prysm/Checkpoint/CapacityReservedCode.lean` includes is not declared. A change there does not cause a rebuild (see `../FINDINGS.md`).
 When you add a code directory, add it as an `input_dir` of the library. A `lakefile.toml` change needs user approval.
 
 ## 3. Shape of a main theorem

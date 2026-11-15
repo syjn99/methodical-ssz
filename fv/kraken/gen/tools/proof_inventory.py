@@ -322,7 +322,7 @@ def code_constants():
     """Lean code constant (full declared name) -> normalized function key `pkg_with_underscores.Type.Method`, for the
     constants whose `.S` is `../prysm/go1.26.10/<dir>/norm/<function>.S` with `<dir>` a link table of the pinned
     ELF (`link_tables`: RESULT with the pinned ELF sha256, `PASS all`, and `PASS (a) <function>:`); other constants ->
-    None (not a target function: runtime models, other builds such as the capacity-reserved test ELF).
+    None (not a target function, for example a runtime model).
     Every `lean/Prysm/**.lean` file is read, whatever module declares the constant: the full name comes from the
     namespace blocks (`namespace` / `end`) and the declaring name (`_root_.` prefix, dotted names). A full name declared
     twice is a failure (second value)."""

@@ -111,8 +111,8 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
 - The gate also checks that each name of the hand lists in `gen/axioms-lists/` is in the dump. Each `*.lean` file of that directory is a hand list.
 - A new library or a new hand list needs no change to the gate.
 - The gate overwrites its JSON argument. Give a scratch path, unless you intend to update a committed record.
-- The negative test files are the `negative-cases-*.json` files in `gen/checks/`, `gen/generator/`,
-  `prysm/go1.26.10/capacity-reserved/` and the subdirectories of `prysm/go1.26.10/evidence/`. The file `<name>.ids.tsv`
+- The negative test files are the `negative-cases-*.json` files in `gen/checks/`, `gen/generator/`
+  and the subdirectories of `prysm/go1.26.10/evidence/`. The file `<name>.ids.tsv`
   next to each one gives the earlier id of each case. A case id says what the case does: the Go type, the theorem without
   the namespace of its type, the kind (control, statement or code), and for a mutant the changed words or operands
   (for example `epoch-decode-accept-code-cmp-0x8-to-0x9`). A case may name `mutant_imports` (module names): `negative.py`
@@ -163,6 +163,5 @@ These runs check Go semantics on the host. They do not run the amd64 machine cod
 - The stack growth path and the write barrier path are excluded by premises. They are not proved.
 - After a slice growth, the contract gives only an upper bound on the remaining heap. One encoder state after a second growth is not proved.
 - There are no theorems for the hash tree root methods.
-- The converted `.S` directory of the capacity-reserved test ELF is not a Lake input. A change in it does not make Lake build the proofs again.
 - The Prysm ELF and its symbol listing are not in the repository. The Prysm link checks need them.
 - The details and the state of each limit are in `FINDINGS.md`.

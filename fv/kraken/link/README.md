@@ -59,8 +59,8 @@ The inputs are the ELF, the `.S` files of `norm/` and the data files of `data/`.
 The last line is a bundle hash: the sha256 of `RESULT` up to the last PASS line.
 One bundle hash thus binds the ELF to the exact text that Lean includes.
 
-Two tracked `RESULT` files have sha256 lines for two files that are no longer in the tree: `lean/Fk/Code.lean` and `AXIOMS.txt`.
-They are `prysm/go1.26.10/link/RESULT` and `prysm/go1.26.10/capacity-reserved/link/RESULT`, records of earlier runs.
+The tracked `RESULT` file `prysm/go1.26.10/link/RESULT` is a record of an earlier run.
+It has sha256 lines for two files that are no longer in the tree: `lean/Fk/Code.lean` and `AXIOMS.txt`.
 A new run writes its `RESULT` without the two lines, so the bundle hash changes.
 `link/out/RESULT` and `prysm/go1.26.10/link-set/RESULT` have no such line.
 `prysm/go1.26.10/link/` has no `target.objdump`; `../FINDINGS.md` gives the way to rebuild it for a check.
