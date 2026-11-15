@@ -14,6 +14,8 @@ import Prysm.BeaconBlockHeader.WitnessDecodeRejectSize
 import Prysm.BeaconBlockHeader.WitnessDecodeErrorUnreachable
 import Prysm.ValidatorIndex.WitnessDecodeRejectSize
 import Prysm.ValidatorIndex.DecodeSpec
+import Prysm.ValidatorIndex.EncodeSpec
+import Prysm.ValidatorIndex.WitnessEncodeFastPath
 import Prysm.Eth1Data.DecodeSpec
 import Prysm.Eth1Data.WitnessDecodeAccept
 import Prysm.Eth1Data.WitnessDecodeRejectSize
@@ -5334,3 +5336,8 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.ValidatorIdentity.Witness.GeneratedDecodeRejectSize.runs._proof_1_6
 #print axioms Prysm.ValidatorIdentity.Witness.GeneratedDecodeRejectSize.word_bytes
 #print axioms Prysm.ValidatorIdentity.Witness.GeneratedDecodeRejectSize.zeros
+-- ValidatorIndex encoder, fast path only (hand proof)
+#print axioms Prysm.ValidatorIndex.Encode.fast_path
+#print axioms Prysm.ValidatorIndex.Encode.fast_path_spec
+#print axioms Prysm.ValidatorIndex.Witness.EncodeFastPath.runs_empty
+#print axioms Prysm.ValidatorIndex.Witness.EncodeFastPath.runs_prefix

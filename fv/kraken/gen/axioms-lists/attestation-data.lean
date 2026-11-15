@@ -12,6 +12,17 @@ import Prysm.AttestationData.WitnessDecodeAccept
 import Prysm.AttestationData.WitnessDecodeRejectSize
 import Prysm.AttestationData.DecodeErrorWrapsUnreachable
 import Prysm.AttestationData.SpecEquivalence
+import Prysm.Slot.Size
+import Prysm.Slot.WitnessSize
+import Prysm.CommitteeIndex.Spec
+import Prysm.CommitteeIndex.Size
+import Prysm.CommitteeIndex.WitnessSize
+import Prysm.AttestationData.Size
+import Prysm.AttestationData.WitnessSize
+import Prysm.Slot.EncodeSpec
+import Prysm.Slot.WitnessEncodeFastPath
+import Prysm.CommitteeIndex.EncodeSpec
+import Prysm.CommitteeIndex.WitnessEncodeFastPath
 
 -- AttestationData set: the AttestationData, Slot and CommitteeIndex theorems and the Checkpoint function specifications.
 #print axioms Prysm.AttestationData.desc_checker
@@ -56,3 +67,20 @@ import Prysm.AttestationData.SpecEquivalence
 #print axioms Prysm.AttestationData.bump_newobject72
 #print axioms Prysm.AttestationData.Witness.DecodeAccept.runs
 #print axioms Prysm.AttestationData.Witness.DecodeRejectSize.runs
+#print axioms Prysm.Slot.Size.result
+#print axioms Prysm.Slot.Size.result_spec
+#print axioms Prysm.Slot.Witness.Size.runs
+#print axioms Prysm.CommitteeIndex.Size.result
+#print axioms Prysm.CommitteeIndex.Size.result_spec
+#print axioms Prysm.CommitteeIndex.Witness.Size.runs
+#print axioms Prysm.AttestationData.Size.result
+#print axioms Prysm.AttestationData.Size.result_spec
+#print axioms Prysm.AttestationData.Witness.Size.runs
+#print axioms Prysm.Slot.Encode.fast_path
+#print axioms Prysm.Slot.Encode.fast_path_spec
+#print axioms Prysm.Slot.Witness.EncodeFastPath.runs_empty
+#print axioms Prysm.Slot.Witness.EncodeFastPath.runs_prefix
+#print axioms Prysm.CommitteeIndex.Encode.fast_path
+#print axioms Prysm.CommitteeIndex.Encode.fast_path_spec
+#print axioms Prysm.CommitteeIndex.Witness.EncodeFastPath.runs_empty
+#print axioms Prysm.CommitteeIndex.Witness.EncodeFastPath.runs_prefix

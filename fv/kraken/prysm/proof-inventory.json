@@ -10,9 +10,9 @@
  "axioms_gate": {
   "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=Spec,Machine,Runtime,Codec,Prysm",
   "verdict": "PASS",
-  "declarations": 19082,
-  "theorems": 15753,
-  "modules": 762
+  "declarations": 19623,
+  "theorems": 16196,
+  "modules": 790
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -55,10 +55,10 @@
    "MarshalSSZTo": {
     "target": 211,
     "functions_json": 211,
-    "mapped": 25,
+    "mapped": 29,
     "complete": 0,
-    "partial": 25,
-    "fast_path_complete": 25,
+    "partial": 29,
+    "fast_path_complete": 29,
     "fast_path_partial": 0
    },
    "MarshalSSZ": {
@@ -71,9 +71,9 @@
    "SizeSSZ": {
     "target": 211,
     "functions_json": 211,
-    "mapped": 1,
+    "mapped": 5,
     "complete": 0,
-    "partial": 1
+    "partial": 5
    },
    "HashTreeRoot": {
     "target": 211,
@@ -480,10 +480,25 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "hand-written",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "Prysm.CommitteeIndex.Encode.fast_path"
+    ],
+    "spec": [
+     "Prysm.CommitteeIndex.Encode.fast_path_spec"
+    ],
+    "witness": [
+     "Prysm.CommitteeIndex.Witness.EncodeFastPath.runs_empty"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (1 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -494,9 +509,16 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "hand-written",
-   "state": "none",
+   "state": "proved",
    "missing": [],
-   "theorems": {},
+   "theorems": {
+    "main": [
+     "Prysm.CommitteeIndex.Size.result"
+    ],
+    "witness": [
+     "Prysm.CommitteeIndex.Witness.Size.runs"
+    ]
+   },
    "note": ""
   },
   {
@@ -576,10 +598,25 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "hand-written",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "Prysm.Epoch.Encode.fast_path"
+    ],
+    "spec": [
+     "Prysm.Epoch.Encode.fast_path_spec"
+    ],
+    "witness": [
+     "Prysm.Epoch.Witness.EncodeFastPath.runs_empty"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (1 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -590,9 +627,16 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "hand-written",
-   "state": "none",
+   "state": "proved",
    "missing": [],
-   "theorems": {},
+   "theorems": {
+    "main": [
+     "Prysm.Epoch.Size.result"
+    ],
+    "witness": [
+     "Prysm.Epoch.Witness.Size.runs"
+    ]
+   },
    "note": ""
   },
   {
@@ -758,10 +802,25 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "hand-written",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "Prysm.Slot.Encode.fast_path"
+    ],
+    "spec": [
+     "Prysm.Slot.Encode.fast_path_spec"
+    ],
+    "witness": [
+     "Prysm.Slot.Witness.EncodeFastPath.runs_empty"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (1 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -772,9 +831,16 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "hand-written",
-   "state": "none",
+   "state": "proved",
    "missing": [],
-   "theorems": {},
+   "theorems": {
+    "main": [
+     "Prysm.Slot.Size.result"
+    ],
+    "witness": [
+     "Prysm.Slot.Witness.Size.runs"
+    ]
+   },
    "note": ""
   },
   {
@@ -854,10 +920,25 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "hand-written",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "Prysm.ValidatorIndex.Encode.fast_path"
+    ],
+    "spec": [
+     "Prysm.ValidatorIndex.Encode.fast_path_spec"
+    ],
+    "witness": [
+     "Prysm.ValidatorIndex.Witness.EncodeFastPath.runs_empty"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (1 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -3089,9 +3170,16 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "proved",
    "missing": [],
-   "theorems": {},
+   "theorems": {
+    "main": [
+     "Prysm.AttestationData.Size.result"
+    ],
+    "witness": [
+     "Prysm.AttestationData.Witness.Size.runs"
+    ]
+   },
    "note": ""
   },
   {

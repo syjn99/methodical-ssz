@@ -34,6 +34,10 @@ import Prysm.Checkpoint.EncodeCoverFramed
 import Prysm.Checkpoint.WitnessEncodeCoverFramed
 import Prysm.Checkpoint.WitnessEncodeRejectLengthCoverFramed
 import Prysm.Checkpoint.GoValueWitness
+import Prysm.Epoch.Size
+import Prysm.Epoch.WitnessSize
+import Prysm.Epoch.EncodeSpec
+import Prysm.Epoch.WitnessEncodeFastPath
 #print axioms Prysm.Epoch.Decode.accept
 #print axioms Prysm.Epoch.Decode.accept_function_spec_holds
 #print axioms Prysm.Epoch.Witness.DecodeAccept.runs
@@ -120,3 +124,11 @@ import Prysm.Checkpoint.GoValueWitness
 #print axioms Prysm.Checkpoint.witness_encode_cover_receiver
 #print axioms Prysm.Checkpoint.witness_encode_reject_length_cover_receiver
 #print axioms Prysm.Checkpoint.witness_encode_reject_length_cover_receiver_bad
+#print axioms Prysm.Epoch.Size.result
+#print axioms Prysm.Epoch.Size.result_spec
+#print axioms Prysm.Epoch.uint64_serialize_eq
+#print axioms Prysm.Epoch.Witness.Size.runs
+#print axioms Prysm.Epoch.Encode.fast_path
+#print axioms Prysm.Epoch.Encode.fast_path_spec
+#print axioms Prysm.Epoch.Witness.EncodeFastPath.runs_empty
+#print axioms Prysm.Epoch.Witness.EncodeFastPath.runs_prefix
