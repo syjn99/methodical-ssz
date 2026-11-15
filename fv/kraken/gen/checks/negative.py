@@ -20,8 +20,8 @@ For each case the mutant Lean file is the module's text up to the end of the des
 directly follows it is kept and belongs to the case range). The case range starts at the first line of the
 theorem's command: the `set_option … in` lines and the doc comment directly above the `theorem` line belong to it
 (Lean reports an error of the whole declaration, for example its heartbeat timeout, at that line). For code cases, a
-new constant `Prysm.Checkpoint.Code.<code_def>Mut` that includes the mutated .S copy (absolute path in <work-dir>)
-and every whole-word use of <code_def> after the imports renamed to it. `lake env lean <file>` runs
+new constant `Prysm.Checkpoint.Code.<code_definition>Mut` that includes the mutated .S copy (absolute path in <work-dir>)
+and every whole-word use of <code_definition> after the imports renamed to it. `lake env lean <file>` runs
 under the memory cap from fv/kraken/lean. A mutant passes the suite when Lean reports an error,
 every error line lies inside the case range, and the FIRST error is neither a resource error nor a wrong_target
 form (a later heartbeat or recursion error after a real first error is kept in "later_resource_error" and does
@@ -33,7 +33,7 @@ constant, or another parse / name-resolution form listed at WRONG_TARGET: the mu
 target); the resource classes are decided by the FIRST error line (a later resource
 error is kept in "later_resource_error"). These three resource classes and wrong_target are never a pass.
 negative.py --reclassify <result.json> [<work-dir>] recomputes the classes of a result file; --selftest checks them.
-negative.py --check-cases <cases.json>... resolves every case to one theorem line and checks the code_def use (no Lean).
+negative.py --check-cases <cases.json>... resolves every case to one theorem line and checks the code_definition use (no Lean).
 "theorem" is the full Lean name or the name as written on the declaration line; the full name selects the namespace
 block when one module holds the same written name twice. Without "code_namespace", a full name in "code_definition" is declared
 with `_root_`, and a module under Prysm/<Type>/ uses Prysm.<Type>.Code.
@@ -133,7 +133,7 @@ def find_decl(lines, name, kinds=("theorem",)):
 
 
 def code_namespace_of(c):
-    """Namespace of the code constant of a case: `code_ns`, else `_root_` for a full name in `code_def`, else
+    """Namespace of the code constant of a case: `code_namespace`, else `_root_` for a full name in `code_definition`, else
     `Prysm.<Type>.Code` for a module under Prysm/<Type>/, else Prysm.Checkpoint.Code (the old default set)."""
     if "code_namespace" in c:
         return c["code_namespace"]
@@ -145,16 +145,53 @@ def code_namespace_of(c):
     return "Prysm.Checkpoint.Code"
 
 
+ATTRIBUTE_LINE = re.compile(r"^@\[[^\]]*\]\s*$")
+
+
+def block_comments(lines):
+    """Top-level block comments of a Lean text: (start line, start column, end line, end column, doc), 0-based,
+    end column after `-/`. Block comments nest; line comments (`--`) and string literals are skipped."""
+    out, depth, start, doc = [], 0, None, False
+    for ln, line in enumerate(lines):
+        k, instr = 0, False
+        while k < len(line):
+            two = line[k:k + 2]
+            if depth == 0 and instr:
+                if line[k] == "\\":
+                    k += 2; continue
+                if line[k] == '"':
+                    instr = False
+                k += 1; continue
+            if depth == 0 and two == "--":
+                break
+            if depth == 0 and line[k] == '"':
+                instr = True; k += 1; continue
+            if two == "/-":
+                if depth == 0:
+                    start, doc = (ln, k), line[k:k + 3] == "/--"
+                depth += 1; k += 2; continue
+            if two == "-/" and depth > 0:
+                depth -= 1; k += 2
+                if depth == 0:
+                    out.append((start[0], start[1], ln, k, doc))
+                continue
+            k += 1
+    return out
+
+
 def command_start(lines, start):
-    """0-based first line of the Lean command whose `theorem` line is `lines[start]`: the doc comment `/-- … -/`
-    directly above it and the `set_option … in` lines above that belong to the same command."""
+    """0-based first line of the Lean command whose `theorem` line is `lines[start]`. Above the `theorem` line the
+    command holds, from the bottom: attribute lines `@[…]`, one doc comment `/-- … -/` that ends at the end of the line
+    directly above them and starts a line, and `set_option … in` lines. A line comment, a plain `/- … -/` or a module
+    comment `/-! … -/` above the theorem is not part of the command; anything else stops the walk."""
     i = start
+    while i > 0 and ATTRIBUTE_LINE.match(lines[i - 1]):
+        i -= 1
     if i > 0 and lines[i - 1].rstrip().endswith("-/"):
-        j = i - 1
-        while j > 0 and not lines[j].lstrip().startswith("/--"):
-            j -= 1
-        if lines[j].lstrip().startswith("/--"):
-            i = j
+        for sl, sc, el, ec, doc in block_comments(lines[:i]):
+            if el == i - 1 and doc and not lines[el][ec:].strip() and not lines[sl][:sc].strip():
+                i = sl
+                break
     while i > 0 and lines[i - 1].startswith("set_option") and lines[i - 1].rstrip().endswith(" in"):
         i -= 1
     return i
@@ -521,6 +558,30 @@ def selftest():
     src3 = ["import X", "theorem T.d : True := trivial", "theorem T.e : True := trivial"]
     if command_start(src3, 2) != 2:
         bad.append(("range_no_prefix", command_start(src3, 2), 2))
+    # comments that are not the theorem's doc comment stop the walk (review D1): plain, module, line comment
+    for name, cmt in (("range_plain_comment", ["/- plain comment", "-/"]), ("range_module_comment", ["/-! section", "-/"]),
+                      ("range_line_comment", ["-- note -/"]), ("range_plain_one_line", ["/- plain -/"])):
+        s4 = ["import X", "/-- doc of a -/", "theorem T.a : True := trivial", ""] + cmt + ["theorem T.b : True := trivial"]
+        got = command_start(s4, len(s4) - 1)
+        if got != len(s4) - 1:
+            bad.append((name, got, len(s4) - 1))
+    # the reviewer's example: expected 6 (the `theorem` line itself), not 1
+    s5 = ["import X", "/-- doc of a -/", "theorem T.a : True := trivial", "", "/- plain comment", "-/",
+          "theorem T.b : True := trivial"]
+    if command_start(s5, 6) != 6:
+        bad.append(("range_review_example", command_start(s5, 6), 6))
+    # a doc comment above a set_option … in line of another command is not taken (the walk ends at TOP)
+    s6 = ["import X", "/-- doc", "of a -/", "theorem T.a : True := by", "  trivial", "  -/", "theorem T.b : True := trivial"]
+    if command_start(s6, 6) != 6:
+        bad.append(("range_body_comment_end", command_start(s6, 6), 6))
+    # attribute lines belong to the command: set_option, doc comment, @[simp], theorem
+    s7 = ["import X", "set_option maxRecDepth 10 in", "/-- doc -/", "@[simp]", "theorem T.f : True := trivial"]
+    if command_start(s7, 4) != 1:
+        bad.append(("range_attribute", command_start(s7, 4), 1))
+    # a multi-line doc comment with a blank line inside counts
+    s8 = ["import X", "/-- first", "", "second -/", "theorem T.g : True := trivial"]
+    if command_start(s8, 4) != 1:
+        bad.append(("range_doc_blank_inside", command_start(s8, 4), 1))
     # an error of the whole declaration at its first line is inside (the case of a later heartbeat timeout)
     r = classify({**base, "id": "cmd", "range": [34, 84], "error_lines": [60, 36],
                   "first_error": "x:60:61: error: Application type mismatch: The argument",
@@ -554,7 +615,7 @@ def selftest_timeout():
 
 def check_cases(*paths):
     """Dry run (no Lean): every case of every given cases file resolves to exactly one theorem line of its module
-    (`find_decl`), and a case with `code_def` has a whole-word use of `code_def` after the imports (else the mutant
+    (`find_decl`), and a case with `code_definition` has a whole-word use of it after the imports (else the mutant
     would not use the mutated program). A case with "statement_def" (list_negative.py) also resolves its def line in
     "statement_module" or the inlined modules. Each module of "mutant_imports" exists under lean/, is not the case
     module and not one of its imports, and occurs once. Prints one line per failure and a summary."""
@@ -592,7 +653,7 @@ def check_cases(*paths):
                 for m in c.get("inline", [c["statement_module"]] if c.get("statement_module") else []):
                     body += "\n" + (LEAN / m).read_text()
                 if not re.search(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", body):
-                    bad.append(f"{p}: {c['id']}: code_def {name} is not used in {c['module']}")
+                    bad.append(f"{p}: {c['id']}: code_definition {name} is not used in {c['module']}")
     for b in bad:
         print("CHECK FAIL", b)
     print(f"check-cases: {n} cases, {len(bad)} failures")

@@ -216,7 +216,7 @@ How to handle a new finding is in `../README.md` section 7.
 - What: the accept kind `decodeAcceptKindAnyFrame` does not read the frame of its layout. An accept kind line with a wrong frame still elaborates.
   `gen/generator/kindcheck.py` does not bind the code constant to the `.S` file of the header. It does not check the `.S` label against the IR type.
 - How it shows: a negative test with a wrong frame in the kind line gives no error. The head, field and epilogue kinds fix the frame.
-- State: open. A kind change needs a new lemma unit.
+- State: open. A change of the kind needs new lemmas and a new check of every kind instance.
 
 ## 3. Proof process and checks
 
@@ -226,50 +226,90 @@ How to handle a new finding is in `../README.md` section 7.
 - Where: `gen/checks/negative.py`.
 - State: fixed in part (commit `23eceac` and later). Such first errors get the class `wrong_target`. The list of patterns is not complete. Read the first error of every row.
 
-### Five negative cases do not pass
+### Negative cases that do not pass
 
-- What: five Lean mutants failed, but not inside their designated theorem, or they timed out.
-  The runs on commit `0174730a` and on the tree of the renames gave the same result.
-  None of the five ever passed: the commits that added them already recorded them as not counted
-  (`52caade5` for the encoder lemmas, `f5c5f528` and `4d330a0a` for the kind lines of the call segments and the whole
-  accept; the case file of the SyncAggregate case notes it).
-- Where and cause:
-  - `checkpoint-encode-fast-path-of-kind-statement-encode-layout-32-to-48` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-encoder-lemmas.json`, `Prysm.Checkpoint.Encode.fast_path_of_kind`): class `outside`.
-    The first error is the designed one, inside the theorem: an application type mismatch (`root.length = 32` where the
-    mutated kind needs 48). The second error is a heartbeat timeout of the whole declaration, which Lean reports at the
-    first line of the command (the doc comment under the `set_option … in` lines). The case range of the tool started
-    at the `theorem` line. Fixed in the tool: the case range now starts at the theorem's command (`negative.py`
-    `command_start`, used by `list_negative.py` too; self-test fixtures). Under this rule the recorded errors of the
-    case lie inside its range, its first error is not a resource error, and its class is `inside`; the later timeout
-    stays in `later_resource_error`. A run with Lean confirms it: class `inside`, range 34–84, error lines 60 and 36; the control passes.
-    Reclassifying the 129 results of the last full run under the new range changes no other case.
-  - `sync-aggregate-decode-accept-code-movq-0x40-to-0x3f` (`prysm/go1.26.10/evidence/lists-and-vectors/negative-cases-sync-aggregate-and-sync-committee.json`, `Prysm.SyncAggregate.Decode.accept`): class `outside`.
-    The code mutation changes `movq $0x40,0x10(%rdx)` (line 34 of the `.S`) to `movq $0x3f,0x10(%rdx)`.
-    That directive lies in the window (directives 13–36) of the segment lemma `Prysm.SyncAggregate.Decode.bits_segment`,
-    which precedes the main theorem in the module. The only error (unsolved goals) is in the proof of that lemma.
-    Lean keeps a failed lemma (with `sorry`) and continues, so `Decode.accept`, which uses the lemma, has no error of
-    its own: no theorem after the segment lemma can reject a fault of a directive that the lemma owns. The case
-    `sync-aggregate-decode-bits-segment-code-movq-0x40-to-0x3f` (same mutation, designated to the segment lemma) passes.
-  - `blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-call-segments.json`, `Prysm.BlobIdentifier.Decode.accept_is_kind`),
-    `pending-deposit-decode-accept-is-kind-any-frame-statement-layout-mixed-frame40-131-to-130` and
-    `beacon-block-header-decode-accept-is-kind-any-frame-statement-prysm-2-to-1` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-whole-accept.json`,
-    `Prysm.PendingDeposit.Decode.accept_is_kind_any_frame` and `Prysm.BeaconBlockHeader.Decode.accept_is_kind_any_frame`): class `timeout_heartbeat`.
-    The first two change the return directive `jret` (the last argument of `decodeAcceptKind`, the `131` of
-    `layoutMixedFrame40`), which the kind writes as `Host.addrOf (k + jret)`; the third changes the pointer index `ip`
-    (the `2` of `layoutMixedFrame60`), which the kind writes as `ps.getD ip 0`. Both sides of the equality are then
-    stuck terms over the abstract `Host` and the abstract list `ps`. `rfl` at default transparency finds no constructor
-    clash and unfolds `Host.addrOf`, `List.take` and `Int.toBytes` until the default limit of 200000 heartbeats.
-    The other mutants of the same groups change a constructor or a list (`.bytes 96` to `.bytes 48`, the callee order,
-    `false` to `true`, one more field) and fail at once with `rfl` failed, inside.
-- Effect: a timeout or an error outside the designated theorem is not a pass (`../README.md` section 6).
-  So the four open mutants do not show that their theorem depends on the mutated text. The controls of the same
-  groups pass.
-- State: the first case is fixed in the tool (above). The other four cases and their mutations are not changed;
-  a decision on them is open. Options for the SyncAggregate case: designate it to the segment lemma (it then repeats
-  the passing case above), let a case name the supporting lemmas whose errors also count, or mutate a directive that
-  the main theorem proves itself. Options for the three timeouts: a stated heartbeat limit for these mutants (if a
-  run without limit ends in a definite `rfl` failure), mutations that Lean refutes definitely (for example the same
-  literal in the hand statement, which the accept proof checks), or keeping them as recorded limits.
+- What: the first full run of the Lean mutant suite on the renamed tree (commit `7adfc767`, all 1062 cases) passed 1036 cases.
+  Six of the 26 others were broken by the restructuring; their case texts are corrected (below), and a Lean run of
+  these six after the correction passes all six. The count is then 1042 passing and 20 not passing (the 1036 other
+  results are from the full run; the six from the later run).
+  Each of the 20 has the same outcome in a committed result record from before the restructuring (old case id from the
+  `.ids.tsv` next to the case file; the records are on the archive branches of the earlier history, see the commit message of
+  `eca2b556`). Their mutation texts are the same as in the base case files, and their ranges differ only by the moved
+  lines of their modules and by the range rule below.
+- Range rule of the tool: the case range starts at the first line of the theorem's command (`set_option … in` lines and an
+  attached doc comment `/-- … -/`; `negative.py` `command_start`, used by `list_negative.py`). Lean reports an error of the
+  whole declaration, for example its heartbeat timeout, at that line. With this rule
+  `checkpoint-encode-fast-path-of-kind-statement-encode-layout-32-to-48` (designed error inside the theorem, then a
+  heartbeat timeout of the declaration at its first line) passes. A plain comment, a module comment or a line comment above
+  the theorem does not widen the range (self-test fixtures).
+- Fixed by the six case-text corrections (a Lean run after the correction: the control passes and the five mutants fail inside their theorems):
+  - `sync-committee-message-decode-example-step-directive-82-control` and the four code mutants
+    `…-directive-82-code-mov-0x78-rsp-to-0x70-rsp`, `…-directive-86-code-add-rax-to-rdx`, `…-directive-87-code-mov-ecx-to-eax`,
+    `…-block-root-segment-code-mov-rax-to-rdx` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-steps.json`): the
+    module names its code constant relatively (`Code.unmarshalSSZ` inside `namespace Prysm.SyncCommitteeMessage`), and
+    the case namespace `Prysm.SyncCommitteeMessage.Code` made the tool declare `Prysm.SyncCommitteeMessage.Code.Code.unmarshalSSZMut`,
+    so the renamed uses did not resolve (`Unknown identifier`). The case namespace is now `Prysm.SyncCommitteeMessage`.
+    Before the restructuring they passed (`4499e775`, `prysm/go1.26.10/e2e/scal/negative-gen4.json`, `g4-ex-s82-*`, `g4-ex-s86-code-reg`, `g4-ex-s87-code-clobber`, `g4-ex-br-code-reg`).
+  - `checkpoint-encode-generated-fast-kind-statement-prysm-checkpoint-to-eth1-data` (`…/negative-cases-fast-path.json`):
+    the mutant names `Prysm.Eth1Data.encodeLayout`, which the case module reached through
+    `Prysm.BeaconBlockHeader.EncodeFastPathKindInstances` until commit `7adfc767` removed that import. The case now has
+    `mutant_imports: ["Prysm.Eth1Data.EncodeFastPathKindInstances"]`. Before the restructuring it passed (`f6ee2b6c`,
+    `prysm/go1.26.10/e2e/scal/gen6/neg-result.json`, `g6-cp-kind-layout`, class `inside`). No other case names a declaration of the two Eth1Data modules.
+- The 20 cases that do not pass (present id, class, earlier record with the same outcome, cause):
+  - An earlier theorem of the module owns the mutated directive (Lean keeps a failed theorem with `sorry` and continues,
+    so the designated theorem has no error; class `outside`):
+    - `sync-aggregate-decode-accept-code-movq-0x40-to-0x3f`: `3a7e90b3`, `prysm/go1.26.10/e2e/lv/negative-lv.json`,
+      `lv-sa-bitslen63`. The segment lemma `Prysm.SyncAggregate.Decode.bits_segment` owns the directive; the case
+      `sync-aggregate-decode-bits-segment-code-movq-0x40-to-0x3f` (same mutation) passes.
+    - `eth1-data-encode-encode-deposit-root-code-callq-runtime-memmove-to-runtime-growslice`: `792c8125`,
+      `prysm/go1.26.10/e2e/scal/negative-enc.json`, `enc-e1-a-call` (recorded there as "mis-targeted"). The lemma
+      `Prysm.Eth1Data.Encode.call_at` owns the `callq`; the case `eth1-data-encode-call-at-code-callq-runtime-memmove-to-runtime-growslice` passes.
+    - `pending-deposit-decode-generated-reject-code-add-0x40-to-0x48`: `d3dddd1a`, `prysm/go1.26.10/e2e/scal/negative-gen5g.json`,
+      `g5g-pd-rej-code-frame`. One error is inside `Decode.generated_reject`; the other is in the identity theorem
+      `Decode.generated_accept_statement` before it, which compares the generated accept theorem (renamed to the mutated
+      code constant) with the hand statement of `Prysm/PendingDeposit/Statements.lean` (the original constant), so it fails
+      for every code mutation of this module.
+  - The kind does not read the frame (entry "Kind checks do not bind every parameter"; class `no_error`):
+    `voluntary-exit-decode-generated-accept-statement-uint64-80-to-88`: `d3dddd1a`, `g5g-ve-acc-kind-frame`.
+  - Stuck `rfl` comparison (class `timeout_heartbeat` at 200000 heartbeats): the mutated literal is a return directive
+    (`Host.addrOf (k + jret)`) or a pointer index (`ps.getD ip 0`) over the abstract `Host` and list `ps`; `rfl` finds
+    no constructor clash and unfolds until the limit. The structural mutants of the same groups fail at once.
+    - `blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33`: `f5c5f528`, `prysm/go1.26.10/e2e/scal/negative-gen3.json`, `g3-kindacc-stmt-jret`.
+    - `pending-deposit-decode-accept-is-kind-any-frame-statement-layout-mixed-frame40-131-to-130` and
+      `beacon-block-header-decode-accept-is-kind-any-frame-statement-prysm-2-to-1`: `4d330a0a`, `prysm/go1.26.10/e2e/scal/negative-gen5.json`,
+      `g5-tie-pd-kind-jret`, `g5-tie-bh-kind-ptr`.
+  - Other heartbeat timeouts (class `timeout_heartbeat`; the cause is not analysed):
+    - `codec-window-steps-step-store-statement-get64-r-s-to-r-b`: `4499e775`, `prysm/go1.26.10/e2e/scal/negative-gen4.json`, `g4-sk-st-stmt-src`.
+    - `deposit-data-decode-accept-spec-statement-rax-96-to-48` (4000000 heartbeats): `f704f6f0`, `prysm/go1.26.10/e2e/scal/negative-h4.json`, `dd-ask-stmt-siglen`.
+    - `sync-aggregator-selection-data-decode-accept-spec-statement-uint-bytes-slot-to-subcommittee-index`,
+      `validator-balance-decode-accept-spec-statement-uint-bytes-index-to-balance`,
+      `voluntary-exit-decode-accept-spec-statement-uint-bytes-epoch-to-validator-index`: `499db402`,
+      `prysm/go1.26.10/e2e/g5c/negative-g5c.json`, `g5c-sa-`, `g5c-vb-`, `g5c-ve-speck-stmt-field-swap`.
+    - `sync-committee-message-decode-accept-spec-statement-uint-bytes-validator-index-to-slot`,
+      `sync-committee-message-decode-accept-spec-statement-host-141-to-140`,
+      `pending-consolidation-decode-accept-spec-statement-uint-bytes-target-index-to-source-index`,
+      `pending-consolidation-decode-accept-spec-statement-host-56-to-55`: `18432398`,
+      `prysm/go1.26.10/e2e/h5/negative-h5.json`, `sm-ask-stmt-swap`, `sm-ask-stmt-ret`, `pc-ask-stmt-swap`, `pc-ask-stmt-ret`.
+  - Wall time limit of the tool, 300 s (class `timeout_wall`):
+    - `checkpoint-capacity-reserved-encode-tail-fit-code-mov-rbx-rcx-1-to-0x1-rbx-rcx-1` and
+      `checkpoint-capacity-reserved-encode-tail-fit-code-mov-r9-to-r8`: `dada4c6d`, `prysm/go1.26.10/opt-r1/negative.json`,
+      `o-tail-fit-store`, `o-tail-fit-val`.
+    - `pow-block-decode-generated-accept-statement-rax-32-to-48`: `d3dddd1a`, `prysm/go1.26.10/e2e/scal/negative-gen5g.json`, `g5g-pb-acc-stmt-size`.
+  - Memory cap kill, 6 GiB (class `killed`): `deposit-data-decode-accept-spec-statement-heap-176-to-175`: `f704f6f0`,
+    `prysm/go1.26.10/e2e/scal/negative-h4.json`, `dd-ask-stmt-heap`.
+- Effect: a timeout, a kill, no error or an error outside the designated theorem is not a pass (`../README.md` section 6).
+  So these 20 mutants do not show that their theorem depends on the mutated text. The controls of the same groups pass.
+- State: open; a decision on the 20 is needed and not taken. Options:
+  - cases whose directive an earlier theorem owns: designate the case to that theorem (it then repeats the passing
+    sibling case), let a case name the supporting theorems whose errors also count, or mutate a directive that the
+    designated theorem proves itself; for the PendingDeposit reject case, keep the identity theorem out of the mutant or
+    give the mutant the hand statement with the mutated constant;
+  - the stuck `rfl` cases: a stated heartbeat limit for these mutants (if a run without limit ends in a definite `rfl`
+    failure), mutations that Lean refutes definitely (for example the same literal in the hand statement, which the accept
+    proof checks), or keeping them as recorded limits;
+  - the other timeouts, the wall-time cases and the memory kill: a per-case limit, a different mutation of the same fault,
+    or keeping them as recorded limits;
+  - the frame case: it depends on the open item "Kind checks do not bind every parameter".
 
 ### A theorem can look closed when it is not
 

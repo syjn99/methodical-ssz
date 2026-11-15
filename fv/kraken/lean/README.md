@@ -76,8 +76,9 @@ EthLib -> Spec -> Machine -> Runtime
 Codec <-> Prysm (at module level, both directions)
 ```
 
-- `Spec` imports only EthLib and `Spec`. `Machine` imports only Kraken, Std and `Machine`. `Runtime` imports only
-  Kraken, `Machine` and `Runtime`. So these three libraries import only libraries to their left.
+- `Spec` imports only EthLib and `Spec`. `Machine` imports only Kraken, Std, Lean and `Machine` (`Machine/Include.lean`
+  has `public meta import Lean` for its elaborators). `Runtime` imports only Kraken, `Machine` and `Runtime`. So these
+  three libraries import only libraries to their left (and Lean itself).
 - `Codec` and `Prysm` import each other at module level. 25 of the 60 `Codec` modules import a `Prysm` module:
   13 of 36 in `Codec/`, 2 of 11 in `Codec/Kind/`, 10 of 13 in `Codec/Segment/`. 211 of the 673 `Prysm` modules
   import a `Codec` module. Lean forbids a cycle of modules, so the module graph has no cycle; only the
@@ -85,7 +86,9 @@ Codec <-> Prysm (at module level, both directions)
 - The `Codec` modules that import `Prysm` hold lemmas and kinds that the shared layer took from a type
   (for example `Codec/Bytes32Decode.lean` reads the ELF data of `Prysm/ElfData/PrysmTarget.lean`), and instances
   that tie a general lemma to the lemmas of a type (`Codec/Segment/*Instances.lean`).
-- `Prysm/Checkpoint/CapacityReserved*.lean` and `Prysm/Deposit/` import modules of the flat types, and `Prysm/HistoricalBatch/` does not import them.
+- `Prysm/Deposit/` imports modules of a flat type (`Prysm/Deposit_Data/`). `Prysm/Checkpoint/CapacityReserved*.lean`
+  import only `Prysm/Checkpoint/` modules and the shared libraries (`Codec.StackGuard`, `Runtime.CopyModel`, `Machine`,
+  Kraken), no flat type. `Prysm/HistoricalBatch/` does not import the flat types.
 A new type gets its own directory `Prysm/<GoTypeName>/`. Do not change a reviewed module to add a new type.
 
 ## 2. How machine code enters Lean
@@ -224,7 +227,12 @@ Earlier short names and labels remain only in the places below, each for the rea
     code constants and labels that `include_x64_code` takes from them;
   - Go names: the type, field, function and package names of Prysm and of the test target `../target/` (for example
     `ListC`, a list of containers, and `BitL`, a bit list; `Spec/Test*.lean` writes the type names in full words and
-    keeps the Go field names in lower case as structure fields);
+    keeps the Go field names in lower case as structure fields). The test-target type `ListU64` (`../target/types.go`)
+    keeps its Go name in `Spec`, and so do the names made from it: the module `Spec/TestListU64.lean`, the structure
+    `Spec.ListU64` and the lemmas `Spec.listU64Desc`, `Spec.listU64Encode`, `Spec.listU64_*`, `Spec.allFit_listU64_inv`,
+    `Spec.serializeEach_listU64`. The description checker's input `../gen/desc/hand-types-ir.json` and its record
+    `../gen/desc/results/main.result.json` name the type `ListU64`; `../gen/desc/hand-types-references.json` names
+    `Spec.listU64Desc`;
   - the build path `fvphase1c/p1cbin` of the `main` package of the pinned Prysm ELF (`../README.md`): the ELF records it;
   - the names of Kraken, Lean, Mathlib and EthLib.
 - Records of earlier runs keep the names and paths of their run. These tables give the present name of each earlier one:

@@ -125,7 +125,7 @@
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_directive_82",
   "kind": "control",
   "code_definition": "Code.unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
+  "code_namespace": "Prysm.SyncCommitteeMessage",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
@@ -146,7 +146,7 @@
   "old": "  mov 0x78(%rsp),%rbx",
   "new": "  mov 0x70(%rsp),%rbx",
   "code_definition": "Code.unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
+  "code_namespace": "Prysm.SyncCommitteeMessage",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
@@ -159,7 +159,7 @@
   "old": "  add $0x28,%rax",
   "new": "  add $0x28,%rdx",
   "code_definition": "Code.unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
+  "code_namespace": "Prysm.SyncCommitteeMessage",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
@@ -172,7 +172,7 @@
   "old": "  mov $0x8,%ecx",
   "new": "  mov $0x8,%eax",
   "code_definition": "Code.unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
+  "code_namespace": "Prysm.SyncCommitteeMessage",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
@@ -236,7 +236,7 @@
   "old": "  mov 0x70(%rsp),%rax",
   "new": "  mov 0x70(%rsp),%rdx",
   "code_definition": "Code.unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
+  "code_namespace": "Prysm.SyncCommitteeMessage",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },

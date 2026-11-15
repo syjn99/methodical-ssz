@@ -4,8 +4,8 @@ This directory holds the tool, the maps and the helper scripts that move Lean mo
 They also rename namespaces and declarations.
 Each step that renames with `rename.py` has one map directory under `maps/`.
 Some steps were applied by scripts only (section 4).
-The directory is temporary.
-Delete it (with `trash`) when the restructuring is done.
+The directory stays after the restructuring: its maps are the record of the earlier module and declaration names
+(`../../lean/README.md` section 8), and its tools rerun and check the steps.
 
 Read these files first:
 
@@ -159,7 +159,8 @@ The maps apply in this order:
 - `maps/link-set/`: the data namespaces become `ElfData.PrysmTarget`, and eight address lemmas get names there.
   A hand-edit script merges the 16 link sets of the Prysm ELF into `prysm/go1.26.10/link-set` and the five data readers into one.
 - `maps/review-names/`: plain names from the independent review.
-  The callee window segment kind `Codec.callDecSegKindG4` (and `_of`, `_eq_G4`) becomes `Codec.callDecSegKindWindow` (`_of`, `_eq_window`).
+  The callee window segment kind `Codec.callDecSegKindG4` (and `_of`, `_eq_G4`) becomes `Codec.callDecSegKindWindow` (`_of`, `_eq_window`;
+  now `Codec.callDecodeSegmentKindWindow`, see `maps/plain-name-parts/`).
   The frame `Machine.luFrame` (`_sep`, `_slices`) becomes `Machine.stackFrame144`.
   The modules `EncodeFastPathExamples` and `DecodeAcceptExamples` become `EncodeFastPathExampleIndex` and `DecodeAcceptExampleIndex`.
   The module `Uint64DecoderKindAnchors` becomes `Uint64DecoderKindSameAsHand`.

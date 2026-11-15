@@ -115,7 +115,10 @@
   "theorem": "Prysm.Checkpoint.Encode.generated_fast_kind",
   "kind": "statement",
   "old": "Prysm.Checkpoint.encodeLayout",
-  "new": "Prysm.Eth1Data.encodeLayout"
+  "new": "Prysm.Eth1Data.encodeLayout",
+  "mutant_imports": [
+   "Prysm.Eth1Data.EncodeFastPathKindInstances"
+  ]
  },
  {
   "id": "beacon-block-header-encode-generated-epilogue-kind-statement-uint64-32-to-48",
