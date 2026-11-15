@@ -1,10 +1,13 @@
 import Codec.Kind.EncodeFastPathAnyFrame
+import Prysm.Eth1Data.EncodeFastPath
 
 /-!
-# Hand layout of the Eth1Data encoder fast-path statement
+# Hand layout of the Eth1Data encoder fast-path statement, and its tie to `encodeFastPathKindAnyFrame`
 
 `encodeLayout` is the layout of the hand statement `Encode.fast_path`, as `encodeFastPathKindAnyFrame` reads it.
-The tie theorem of Eth1Data stays in `Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean`, because its negative case compares the two layouts.
+`Encode.fast_path_is_kind_any_frame`: the declared type of the committed theorem is the kind instance, `rfl` at
+default transparency. Its negative case puts the BeaconBlockHeader layout into the statement; the mutated copy
+imports `Prysm.BeaconBlockHeader.EncodeFastPathKindInstances` (case key `mutant_imports` of `gen/checks/negative.py`).
 -/
 
 open Machine Runtime
@@ -28,5 +31,12 @@ def encodeLayout : EncoderFrameLayout where
   post := [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx),
     .at (.below 24) (.reg .rbx), .at (.below 32) (.len 72), .at (.below 40) (.reg .rdi), .at (.below 48) (.reg .rdi),
     .at (.below 56) (.len 32), .at (.below 144) (.ret 81), .low (.existential 0)]
+
+variable [Host]
+
+/-- Eth1Data: the declared type of the hand theorem is the kind instance. -/
+theorem Encode.fast_path_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.Eth1Data.Encode.fast_path h)
+    = @encodeFastPathKindAnyFrame h Prysm.Eth1Data.Code.marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .uint64, .bytes 32] := by
+  intro h; rfl
 
 end Prysm.Eth1Data

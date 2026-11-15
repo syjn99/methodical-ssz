@@ -14,12 +14,21 @@
   "new": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 48]"
  },
  {
-  "id": "beacon-block-header-encode-fast-path-is-kind-any-frame-statement-prysm-eth1-data-to-beacon-block-header",
-  "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
+  "id": "eth1-data-encode-fast-path-is-kind-any-frame-statement-prysm-eth1-data-to-beacon-block-header",
+  "module": "Prysm/Eth1Data/EncodeFastPathKindInstances.lean",
   "theorem": "Prysm.Eth1Data.Encode.fast_path_is_kind_any_frame",
   "kind": "statement",
   "old": "Prysm.Eth1Data.Code.marshalSSZTo Prysm.Eth1Data.encodeLayout",
-  "new": "Prysm.Eth1Data.Code.marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout"
+  "new": "Prysm.Eth1Data.Code.marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout",
+  "mutant_imports": [
+   "Prysm.BeaconBlockHeader.EncodeFastPathKindInstances"
+  ]
+ },
+ {
+  "id": "eth1-data-encode-fast-path-is-kind-any-frame-control",
+  "module": "Prysm/Eth1Data/EncodeFastPathKindInstances.lean",
+  "theorem": "Prysm.Eth1Data.Encode.fast_path_is_kind_any_frame",
+  "kind": "control"
  },
  {
   "id": "checkpoint-encode-fast-path-of-kind-control",

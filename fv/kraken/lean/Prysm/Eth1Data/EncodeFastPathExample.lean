@@ -1,6 +1,7 @@
 import Prysm.BeaconBlockHeader.EncodeFastPathKindInstances
 import Codec.EncodeFrameTest
 import Prysm.Eth1Data.Code
+import Prysm.Eth1Data.EncodeFastPathKindInstances
 
 /-!
 # Worked example: `(*v1alpha1.Eth1Data).MarshalSSZTo`, fast-path theorem in generated style

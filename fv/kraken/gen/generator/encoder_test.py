@@ -26,13 +26,13 @@ import json, os, pathlib, re, subprocess, sys
 P = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
 E = "prysm/go1.26.10"
 IR = "prysm/ir/ir-mainnet.json"
-ROWS = [  # type, link dir, const, code module, prefix, extra args, output file
+ROWS = [  # type, link dir, const, modules to import (code module first), prefix, extra args, output file
     ("Checkpoint", "link-set", "marshalSSZTo", "Prysm.Checkpoint.Code", "checkpoint", ["--hand-layout=Prysm.Checkpoint.encodeLayout",
      "--hand-layout-src=lean/Prysm/Checkpoint/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Checkpoint.Encode.fast_path",
      "--same-as-via=Prysm.Checkpoint.Encode.fast_path_of_kind"], "GeneratedEncodeFastPath"),
     ("BeaconBlockHeader", "link-set", "marshalSSZTo", "Prysm.BeaconBlockHeader.Code", "beacon-block-header", ["--hand-layout=Prysm.BeaconBlockHeader.encodeLayout",
      "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean", "--same-as=Prysm.BeaconBlockHeader.Encode.fast_path"], "GeneratedEncodeFastPath"),
-    ("Eth1Data", "link-set", "marshalSSZTo", "Prysm.Eth1Data.Code", "eth1-data", ["--hand-layout=Prysm.Eth1Data.encodeLayout",
+    ("Eth1Data", "link-set", "marshalSSZTo", "Prysm.Eth1Data.Code,Prysm.Eth1Data.EncodeFastPathKindInstances", "eth1-data", ["--hand-layout=Prysm.Eth1Data.encodeLayout",
      "--hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Eth1Data.Encode.fast_path"], "GeneratedEncodeFastPath"),
 ] + [(t, "link-set", c, f"Prysm.{t}.EncoderCode", p, [], "GeneratedEncodeFastPath") for t, c, p in [
     ("BlobIdentifier", "marshalSSZTo", "blob-identifier"), ("DepositMessage", "marshalSSZTo", "deposit-message"), ("Deposit_Data", "marshalSSZTo", "deposit-data"),

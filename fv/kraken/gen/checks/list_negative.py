@@ -55,7 +55,7 @@ def theorem_range(lines, thm):
     end = next((i for i in range(start + 1, len(lines)) if n.TOP.match(lines[i])), len(lines))
     while end > start and lines[end - 1].strip() == "":
         end -= 1
-    return start + 1, end
+    return n.command_start(lines, start) + 1, end  # the case range starts at the theorem's command (negative.py)
 
 
 def run_case(c, work):

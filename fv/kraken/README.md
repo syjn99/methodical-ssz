@@ -115,7 +115,8 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
   `prysm/go1.26.10/capacity-reserved/` and the subdirectories of `prysm/go1.26.10/evidence/`. The file `<name>.ids.tsv`
   next to each one gives the earlier id of each case. A case id says what the case does: the Go type, the theorem without
   the namespace of its type, the kind (control, statement or code), and for a mutant the changed words or operands
-  (for example `epoch-decode-accept-code-cmp-0x8-to-0x9`).
+  (for example `epoch-decode-accept-code-cmp-0x8-to-0x9`). A case may name `mutant_imports` (module names): `negative.py`
+  imports them into the mutated copy only, so that a mutant can use a declaration of another module.
   Run one case per job. The cases of `prysm/go1.26.10/evidence/lists-and-vectors/negative-cases-sync-aggregate-and-sync-committee.json`
   and `negative-cases-indexed-attestation.json` use `gen/checks/list_negative.py` with the same arguments.
 - The drift check compares a dump with the dump of a reviewed tree.

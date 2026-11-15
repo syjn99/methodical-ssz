@@ -11,15 +11,21 @@ cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoc
   statement:  "old", "new" (exact text, unique inside the theorem statement)
   control: optional "code_definition"/"assembly" (then an unmutated copy of the .S is included the same way)
   optional for code/control: "code_namespace" (namespace of the code constant, default Prysm.Checkpoint.Code) and "norm"
-  (path of the .S under fv/kraken instead of prysm/go1.26.10/link-set/norm/<S>; AttestationData set)}
+  (path of the .S under fv/kraken instead of prysm/go1.26.10/link-set/norm/<S>; AttestationData set);
+  optional for every kind: "mutant_imports" (list of module names, e.g. "Prysm.BeaconBlockHeader.EncodeFastPathKindInstances"):
+  the mutated copy imports them in addition (the case module is unchanged), so that a mutant can name a declaration
+  of another module, for example the layout of another type}
 For each case the mutant Lean file is the module's text up to the end of the designated theorem
 (the next top-level `theorem`/`def`/`end`/`example`/`/--` after it is cut; a `theorem <thm>_kind` that
-directly follows it is kept and belongs to the case range), with, for code cases, a
+directly follows it is kept and belongs to the case range). The case range starts at the first line of the
+theorem's command: the `set_option … in` lines and the doc comment directly above the `theorem` line belong to it
+(Lean reports an error of the whole declaration, for example its heartbeat timeout, at that line). For code cases, a
 new constant `Prysm.Checkpoint.Code.<code_def>Mut` that includes the mutated .S copy (absolute path in <work-dir>)
 and every whole-word use of <code_def> after the imports renamed to it. `lake env lean <file>` runs
-under the memory cap from fv/kraken/lean. A mutant passes the suite when Lean reports an error and
-every error line lies inside the theorem's line range and no error is a Lean heartbeat timeout;
-a control when Lean reports no error. Each result has a "class": control_pass, inside, outside,
+under the memory cap from fv/kraken/lean. A mutant passes the suite when Lean reports an error,
+every error line lies inside the case range, and the FIRST error is neither a resource error nor a wrong_target
+form (a later heartbeat or recursion error after a real first error is kept in "later_resource_error" and does
+not change the class); a control passes when Lean reports no error. Each result has a "class": control_pass, inside, outside,
 no_error, killed, timeout_wall (CASE_TIMEOUT expired) or timeout_heartbeat (an error line is Lean's
 "(deterministic) timeout") or recursion_limit (an error line is "maximum recursion
 depth has been reached") or wrong_target (the FIRST error is a parse error or an unknown identifier /
@@ -139,6 +145,21 @@ def code_namespace_of(c):
     return "Prysm.Checkpoint.Code"
 
 
+def command_start(lines, start):
+    """0-based first line of the Lean command whose `theorem` line is `lines[start]`: the doc comment `/-- … -/`
+    directly above it and the `set_option … in` lines above that belong to the same command."""
+    i = start
+    if i > 0 and lines[i - 1].rstrip().endswith("-/"):
+        j = i - 1
+        while j > 0 and not lines[j].lstrip().startswith("/--"):
+            j -= 1
+        if lines[j].lstrip().startswith("/--"):
+            i = j
+    while i > 0 and lines[i - 1].startswith("set_option") and lines[i - 1].rstrip().endswith(" in"):
+        i -= 1
+    return i
+
+
 def cut(text, thm):
     lines = text.split("\n")
     start, written = find_decl(lines, thm)
@@ -251,6 +272,15 @@ def run_case(c, work):
     d.mkdir(parents=True, exist_ok=True)
     src = (LEAN / c["module"]).read_text()
     lines, lo, hi = cut(src, c["theorem"])
+    # lines of the theorem's command above its `theorem` line (set_option … in, doc comment); the inserted import
+    # and code lines below go above the command, so this count stays and the case range is [lo - head, hi]
+    head = (lo - 1) - command_start(lines, lo - 1)
+    extra = [f"import {m}" for m in c.get("mutant_imports", [])]
+    if extra:  # after the last import line of the copy; the theorem range moves with them
+        k = max(i for i, l in enumerate(lines) if l.startswith("import ")) + 1
+        lines = lines[:k] + extra + lines[k:]
+        lo += len(extra)
+        hi += len(extra)
     text = "\n".join(lines)
     diff = ""
     if c.get("code_definition"):
@@ -299,7 +329,7 @@ def run_case(c, work):
     # no absolute work-dir path in the committed result file
     first, later = [x.replace(str(work), "<work>") if x else x for x in (first, later)]
     r = {"id": c["id"], "kind": c["kind"], "module": c["module"], "theorem": c["theorem"],
-         "range": [lo, hi], "error_lines": errs, "first_error": first, "rc": rc,
+         "range": [lo - head, hi], "error_lines": errs, "first_error": first, "rc": rc,
          "killed": killed, "timeout": timed_out, "timeout_reaped_pids": reaped, "later_resource_error": later,
          "seconds": round(time.time() - t0, 1), "diff": diff}
     return classify(r)
@@ -365,10 +395,10 @@ def imports_of(modules):
     return sorted(mods)
 
 
-def precheck(modules):
+def precheck(modules, extra=()):
     """`lake env lean` does no trace check, so a stale .olean could be used. Before any case,
-    `lake build --no-build <imports>` must exit 0 (every imported module is up to date)."""
-    imps = imports_of(modules)
+    `lake build --no-build <imports>` must exit 0 (every imported module is up to date; also the `mutant_imports`)."""
+    imps = sorted(set(imports_of(modules)) | set(extra))
     argv = ["lake", "build", "--no-build"] + imps
     r = subprocess.run(argv, cwd=LEAN, capture_output=True, text=True)
     tail = [l for l in (r.stdout + r.stderr).splitlines() if l.startswith("- ") or "error" in l][-20:]
@@ -386,7 +416,7 @@ def main(cases, work, out, *ids):
             return 2
     work = pathlib.Path(work).resolve()
     work.mkdir(parents=True, exist_ok=True)
-    pc = precheck(sorted({c["module"] for c in cs}))
+    pc = precheck(sorted({c["module"] for c in cs}), sorted({m for c in cs for m in c.get("mutant_imports", [])}))
     if pc["rc"] != 0:
         print("PRECHECK FAILED: stale or missing imported modules; no case run", pc["failures"], flush=True)
         return 2
@@ -477,6 +507,26 @@ def selftest():
         r = classify({**base, "id": name, **f})
         if r["class"] != want or r["pass"] != (want in ("inside", "control_pass")):
             bad.append((name, r["class"], want))
+    # the case range starts at the theorem's command: its set_option … in lines and its doc comment
+    src = ["import X", "", "set_option maxHeartbeats 400 in", "set_option maxRecDepth 10 in", "/-- doc", "-/",
+           "theorem T.a : True := by", "  trivial", "", "/-- next -/", "theorem T.b : True := trivial"]
+    lines, lo, hi = cut("\n".join(src), "T.a")
+    for name, got, want in (("range_theorem_line", lo, 7), ("range_command", command_start(lines, lo - 1) + 1, 3),
+                            ("range_end", hi, 8)):
+        if got != want:
+            bad.append((name, got, want))
+    src2 = ["import X", "/-- one line -/", "theorem T.c : True := trivial"]
+    if command_start(src2, 2) != 1:
+        bad.append(("range_doc_one_line", command_start(src2, 2), 1))
+    src3 = ["import X", "theorem T.d : True := trivial", "theorem T.e : True := trivial"]
+    if command_start(src3, 2) != 2:
+        bad.append(("range_no_prefix", command_start(src3, 2), 2))
+    # an error of the whole declaration at its first line is inside (the case of a later heartbeat timeout)
+    r = classify({**base, "id": "cmd", "range": [34, 84], "error_lines": [60, 36],
+                  "first_error": "x:60:61: error: Application type mismatch: The argument",
+                  "later_resource_error": "x:36:0: error: (deterministic) timeout at `whnf`"})
+    if r["class"] != "inside":
+        bad.append(("command_start_error", r["class"], "inside"))
     print("selftest", "PASS" if not bad else f"FAIL {bad}")
     return 1 if bad else 0
 
@@ -506,7 +556,8 @@ def check_cases(*paths):
     """Dry run (no Lean): every case of every given cases file resolves to exactly one theorem line of its module
     (`find_decl`), and a case with `code_def` has a whole-word use of `code_def` after the imports (else the mutant
     would not use the mutated program). A case with "statement_def" (list_negative.py) also resolves its def line in
-    "statement_module" or the inlined modules. Prints one line per failure and a summary."""
+    "statement_module" or the inlined modules. Each module of "mutant_imports" exists under lean/, is not the case
+    module and not one of its imports, and occurs once. Prints one line per failure and a summary."""
     bad, n = [], 0
     for p in paths:
         for c in json.load(open(p)):
@@ -523,6 +574,16 @@ def check_cases(*paths):
             except (OSError, ValueError, StopIteration, KeyError) as e:
                 bad.append(f"{p}: {c['id']}: {type(e).__name__} {e}")
                 continue
+            mi = c.get("mutant_imports", [])
+            own = c["module"][:-len(".lean")].replace("/", ".")
+            if not isinstance(mi, list) or len(set(mi)) != len(mi):
+                bad.append(f"{p}: {c['id']}: mutant_imports is not a list of distinct module names")
+                mi = []
+            for m in mi:
+                if not (LEAN / (m.replace(".", "/") + ".lean")).exists():
+                    bad.append(f"{p}: {c['id']}: mutant_imports: no module {m}")
+                elif m == own or f"import {m}" in src.split("\n"):
+                    bad.append(f"{p}: {c['id']}: mutant_imports: {m} is the case module or one of its imports")
             if c.get("code_definition"):
                 tl = "\n".join(lines).split("\n")
                 k = max(i for i, l in enumerate(tl) if l.startswith("import ")) + 1

@@ -46,7 +46,7 @@ Steps:
 5. Give the reviewer the drift output, the allowlist and both SHAs.
 
 An axiom-set change is drift even when every axiom is on the allowed policy list (`propext`, `Classical.choice`, `Quot.sound`).
-The axioms gate (`fv/kraken/gen/e2e/axioms_gate.py`) checks the policy. It does not detect a theorem that now uses `Classical.choice` and did not before.
+The axioms gate (`fv/kraken/gen/checks/axioms_gate.py`) checks the policy. It does not detect a theorem that now uses `Classical.choice` and did not before.
 
 ### Negative controls
 

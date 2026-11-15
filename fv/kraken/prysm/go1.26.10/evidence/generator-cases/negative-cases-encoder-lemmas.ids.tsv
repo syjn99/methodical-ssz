@@ -1,7 +1,8 @@
 # negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
 e2-tie-bh-control	beacon-block-header-encode-fast-path-is-kind-any-frame-control
 e2-tie-bh-kind-field	beacon-block-header-encode-fast-path-is-kind-any-frame-statement-uint64-32-to-48
-e2-tie-e1-kind-layout	beacon-block-header-encode-fast-path-is-kind-any-frame-statement-prysm-eth1-data-to-beacon-block-header
+e2-tie-e1-kind-layout	eth1-data-encode-fast-path-is-kind-any-frame-statement-prysm-eth1-data-to-beacon-block-header
+eth1-data-encode-fast-path-is-kind-any-frame-control	eth1-data-encode-fast-path-is-kind-any-frame-control
 e2-tie-cp-control	checkpoint-encode-fast-path-of-kind-control
 e2-tie-cp-stmt-field	checkpoint-encode-fast-path-of-kind-statement-encode-layout-32-to-48
 e2-st-jae-control	codec-encode-steps-step-cmp-jae-taken-control

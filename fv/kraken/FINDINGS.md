@@ -180,16 +180,24 @@ How to handle a new finding is in `../README.md` section 7.
 - Effect: a new run writes these files without the two lines, with a different bundle hash.
 - State: open for these two records. A new run on `link/out` dropped the two lines from `link/out/RESULT`, and
   `prysm/go1.26.10/link-set/RESULT` never had them.
+  The capacity-reserved ELF can be rebuilt (`gen/README.md` section 7): its sha256 equals `capacity-reserved/build-ids.txt`.
+  A check of the committed `capacity-reserved/link` set on it gives exit 0 and 44 PASS lines.
+  That result equals the record except the two `file sha256` lines and the bundle hash. The record stays as it is.
 
-### Link set `prysm/go1.26.10/link` cannot be checked from the tracked files
+### Link set `prysm/go1.26.10/link` has no tracked disassembly
 
-- What: the `norm` directory of this link set (136 functions, read by no theorem) does not have all the files that its
-  `all.S` and `link/check.py` need.
-- Evidence: a fresh conversion of the whole disassembly of the pinned ELF (642 files) gives 1269 PASS lines and one FAIL.
-  The FAIL is the reassembly check of `v1alpha1.BeaconStateBellatrix.MarshalSSZTo` at `0x93fd87`.
-  The instruction is a `jge`: the ELF bytes are `0f8d7a000000`, and clang gives a 2-byte form.
-  The link set `prysm/go1.26.10/link-set` (the 16 earlier link sets, merged) passes on the same ELF.
-- State: open. The function has no proof.
+- What: the directory of this link table (136 functions, read by no theorem) has no `target.objdump`. `link/check.py` needs it.
+  Its `norm/` directory is complete: 136 `.S` files and `all.S`, the functions of the 136 `PASS (a)` lines of its `RESULT`.
+- How to check it: filter the full disassembly of the pinned ELF (`gen/prysm-elf.sh` writes it) on the functions of `norm/`.
+  A function is kept when the clean name of `link/convert_objdump.py` of its `TEXT` line names a `.S` file of `norm/`.
+  Then run `link/check.py` on a copy of the directory with that `target.objdump`, the ELF and its symbol listing.
+  The result is exit 0 and 224 PASS lines. Every PASS and DIFF line equals the committed `RESULT`.
+- Earlier attempt: a check with the whole disassembly (641 functions) needed `.S` files that `norm/` does not hold.
+  A fresh conversion of all 641 functions gives 1269 PASS lines and one FAIL: the reassembly of
+  `v1alpha1.BeaconStateBellatrix.MarshalSSZTo` at `0x93fd87`. The ELF bytes of that `jge` are `0f8d7a000000`, and clang gives a 2-byte form.
+  That function is not in the table and has no proof.
+- State: the table checks with a rebuilt disassembly. The committed `RESULT` is a record of an earlier run and stays.
+  The link set `prysm/go1.26.10/link-set` passes on the same ELF.
 
 ### The proof generator covers only some code forms
 
@@ -220,27 +228,48 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Five negative cases do not pass
 
-- What: five Lean mutants fail, but not inside their designated theorem, or they time out.
-  The runs on commit `0174730a` and on the current tree give the same result.
-- Where:
+- What: five Lean mutants failed, but not inside their designated theorem, or they timed out.
+  The runs on commit `0174730a` and on the tree of the renames gave the same result.
+  None of the five ever passed: the commits that added them already recorded them as not counted
+  (`52caade5` for the encoder lemmas, `f5c5f528` and `4d330a0a` for the kind lines of the call segments and the whole
+  accept; the case file of the SyncAggregate case notes it).
+- Where and cause:
   - `checkpoint-encode-fast-path-of-kind-statement-encode-layout-32-to-48` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-encoder-lemmas.json`, `Prysm.Checkpoint.Encode.fast_path_of_kind`): class `outside`.
-    The mutation is in the statement. The second error is a heartbeat timeout of the whole declaration.
-    Lean reports it at the start of the command, the `set_option … in` line above the `theorem` line.
-    The theorem range of the tool starts at the `theorem` line.
+    The first error is the designed one, inside the theorem: an application type mismatch (`root.length = 32` where the
+    mutated kind needs 48). The second error is a heartbeat timeout of the whole declaration, which Lean reports at the
+    first line of the command (the doc comment under the `set_option … in` lines). The case range of the tool started
+    at the `theorem` line. Fixed in the tool: the case range now starts at the theorem's command (`negative.py`
+    `command_start`, used by `list_negative.py` too; self-test fixtures). Under this rule the recorded errors of the
+    case lie inside its range, its first error is not a resource error, and its class is `inside`; the later timeout
+    stays in `later_resource_error`. A run with Lean confirms it: class `inside`, range 34–84, error lines 60 and 36; the control passes.
+    Reclassifying the 129 results of the last full run under the new range changes no other case.
   - `sync-aggregate-decode-accept-code-movq-0x40-to-0x3f` (`prysm/go1.26.10/evidence/lists-and-vectors/negative-cases-sync-aggregate-and-sync-committee.json`, `Prysm.SyncAggregate.Decode.accept`): class `outside`.
-    The code mutation changes `movq $0x40,0x10(%rdx)` to `movq $0x3f,0x10(%rdx)`.
-    The only error (unsolved goals) is 7 lines before the theorem line.
-    That line is in the proof of the segment lemma `Prysm.SyncAggregate.Decode.bits_segment`, which reads the same code directives.
-  - `blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-call-segments.json`, `Prysm.BlobIdentifier.Decode.accept_is_kind`): class `timeout_heartbeat`.
-  - `pending-deposit-decode-accept-is-kind-any-frame-statement-layout-mixed-frame40-131-to-130` and
+    The code mutation changes `movq $0x40,0x10(%rdx)` (line 34 of the `.S`) to `movq $0x3f,0x10(%rdx)`.
+    That directive lies in the window (directives 13–36) of the segment lemma `Prysm.SyncAggregate.Decode.bits_segment`,
+    which precedes the main theorem in the module. The only error (unsolved goals) is in the proof of that lemma.
+    Lean keeps a failed lemma (with `sorry`) and continues, so `Decode.accept`, which uses the lemma, has no error of
+    its own: no theorem after the segment lemma can reject a fault of a directive that the lemma owns. The case
+    `sync-aggregate-decode-bits-segment-code-movq-0x40-to-0x3f` (same mutation, designated to the segment lemma) passes.
+  - `blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-call-segments.json`, `Prysm.BlobIdentifier.Decode.accept_is_kind`),
+    `pending-deposit-decode-accept-is-kind-any-frame-statement-layout-mixed-frame40-131-to-130` and
     `beacon-block-header-decode-accept-is-kind-any-frame-statement-prysm-2-to-1` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-whole-accept.json`,
     `Prysm.PendingDeposit.Decode.accept_is_kind_any_frame` and `Prysm.BeaconBlockHeader.Decode.accept_is_kind_any_frame`): class `timeout_heartbeat`.
-  - The three timeouts occur at the default limit of 200000 heartbeats.
-    Each mutant changes one literal of the kind instance, and `rfl` does not refute the equality within the limit.
+    The first two change the return directive `jret` (the last argument of `decodeAcceptKind`, the `131` of
+    `layoutMixedFrame40`), which the kind writes as `Host.addrOf (k + jret)`; the third changes the pointer index `ip`
+    (the `2` of `layoutMixedFrame60`), which the kind writes as `ps.getD ip 0`. Both sides of the equality are then
+    stuck terms over the abstract `Host` and the abstract list `ps`. `rfl` at default transparency finds no constructor
+    clash and unfolds `Host.addrOf`, `List.take` and `Int.toBytes` until the default limit of 200000 heartbeats.
+    The other mutants of the same groups change a constructor or a list (`.bytes 96` to `.bytes 48`, the callee order,
+    `false` to `true`, one more field) and fail at once with `rfl` failed, inside.
 - Effect: a timeout or an error outside the designated theorem is not a pass (`../README.md` section 6).
-  So these five mutants do not show that their theorem depends on the mutated text.
-  The controls of the same groups pass.
-- State: open. The cases and the tools are not changed.
+  So the four open mutants do not show that their theorem depends on the mutated text. The controls of the same
+  groups pass.
+- State: the first case is fixed in the tool (above). The other four cases and their mutations are not changed;
+  a decision on them is open. Options for the SyncAggregate case: designate it to the segment lemma (it then repeats
+  the passing case above), let a case name the supporting lemmas whose errors also count, or mutate a directive that
+  the main theorem proves itself. Options for the three timeouts: a stated heartbeat limit for these mutants (if a
+  run without limit ends in a definite `rfl` failure), mutations that Lean refutes definitely (for example the same
+  literal in the hand statement, which the accept proof checks), or keeping them as recorded limits.
 
 ### A theorem can look closed when it is not
 

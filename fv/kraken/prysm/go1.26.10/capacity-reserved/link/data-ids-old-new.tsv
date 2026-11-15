@@ -1,5 +1,5 @@
 # Record: the data files of this directory keep their old ids, and its RESULT names them. The ELF of this
-# directory (sha256 3ef7ac89...) is not available, so no new check can rename them. Each row gives the id
+# directory (sha256 3ef7ac89...) can be rebuilt (gen/README.md section 7); the record is kept. Each row gives the id
 # of the item at the same label and offset in prysm/go1.26.10/link-set/data (the pinned ELF).
 old id	present id of the same item in prysm/go1.26.10/link-set/data
 e2eCpFmtW	formatEpoch

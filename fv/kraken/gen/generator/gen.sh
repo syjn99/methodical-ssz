@@ -85,12 +85,13 @@ done
 # types (all in-sample). One run per type; raw output committed unedited. Encoder FAST PATH only (premises
 # len + SizeSSZ <= cap, byte-vector fields of exact length). Statement check: the kind (kindcheck.py rule 13 recomputes
 # its parameters) and, for the three hand types, the identity `_statement` (Checkpoint through Prysm.Checkpoint.Encode.fast_path_of_kind).
-# Row: Go type name, link set directory, module of the code constants, the hand layout and identity options.
+# Row: Go type name, link set directory, the modules to import (code constants; for Eth1Data also its hand layout,
+# which no other import brings), the hand layout and identity options.
 PP=github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1
 LT="--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean"
 for row in "Checkpoint norm Prysm.Checkpoint.Code --hand-layout=Prysm.Checkpoint.encodeLayout --hand-layout-src=lean/Prysm/Checkpoint/EncodeFastPathKindInstances.lean --same-as=Prysm.Checkpoint.Encode.fast_path --same-as-via=Prysm.Checkpoint.Encode.fast_path_of_kind" \
   "BeaconBlockHeader norm Prysm.BeaconBlockHeader.Code --hand-layout=Prysm.BeaconBlockHeader.encodeLayout $LT --same-as=Prysm.BeaconBlockHeader.Encode.fast_path" \
-  "Eth1Data norm Prysm.Eth1Data.Code --hand-layout=Prysm.Eth1Data.encodeLayout --hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean --same-as=Prysm.Eth1Data.Encode.fast_path" \
+  "Eth1Data norm Prysm.Eth1Data.Code,Prysm.Eth1Data.EncodeFastPathKindInstances --hand-layout=Prysm.Eth1Data.encodeLayout --hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean --same-as=Prysm.Eth1Data.Encode.fast_path" \
   "BlobIdentifier norm Prysm.BlobIdentifier.EncoderCode" "DepositMessage norm Prysm.DepositMessage.EncoderCode" \
   "Deposit_Data norm Prysm.Deposit_Data.EncoderCode" "PendingPartialWithdrawal norm Prysm.PendingPartialWithdrawal.EncoderCode" \
   "SyncCommitteeMessage norm Prysm.SyncCommitteeMessage.EncoderCode" "PendingConsolidation norm Prysm.PendingConsolidation.EncoderCode" \

@@ -154,6 +154,25 @@ These need more than Python:
 - `checks/negative.py` and the `run` mode of the axioms gate need Lean.
 - The link checks need the ELF and the LLVM tools.
 - The differential checks need Go and a Prysm tree.
+  A Prysm tree at the pinned commit with the generated files of `prysm/_generated/` is enough; nothing is written into it.
+  Copy the `differential-main.go.txt` file of the script to `<scratch>/main.go`.
+  Then build it with an overlay that adds it as a package of the Prysm module:
+  `go build -overlay <ov.json> -o <scratch>/diff ./fvdiffscratch/<name>` in the Prysm tree, with Go 1.26.10.
+  `<ov.json>` is `{"Replace": {"<prysm-tree>/fvdiffscratch/<name>/main.go": "<scratch>/main.go"}}`.
+  The program reads the cases on stdin, or from the path in its first argument where the Go text reads `os.Args[1]`.
+  The capacity-reserved script needs a second build: its overlay also replaces `proto/prysm/v1alpha1/phase0.ssz.go`
+  with the output of the generator commit of `prysm/go1.26.10/capacity-reserved/build-ids.txt`.
+- The capacity-reserved ELF builds the same way, with Go 1.26.10 and no write into the Prysm tree:
+  1. `git archive ca191bb -- . ':!fv' | tar -x -C <gen>`, then `go build -trimpath -o <scratch>/ssz ./cmd/ssz` in `<gen>`.
+  2. In the Prysm tree: `CAPACITY_RESERVED_GEN=<scratch>/ssz sh <repo>/fv/kraken/prysm/go1.26.10/capacity-reserved/generator_wrapper.sh
+     gen --config=proto/prysm/v1alpha1/phase0.yaml --output=<scratch>/phase0.ssz.go --override-package-name=eth '--go-build-constraint=!minimal'`.
+  3. In the Prysm tree: `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -p 2 -tags purego -trimpath -overlay <ov.json>
+     -o <scratch>/p1cbin-amd64 ./fvphase1c/p1cbin`; `<ov.json>` replaces `<prysm-tree>/proto/prysm/v1alpha1/phase0.ssz.go`
+     with `<scratch>/phase0.ssz.go`.
+  4. The `objdump` and `nm` commands of `prysm-elf.sh`, then `checks/checkpoint_and_epoch_link.py filter` and `data`,
+     `link/convert_objdump.py --norm` and `link/check.py` on a scratch directory.
+  The sha256 of the generator binary, of `phase0.ssz.go`, of the ELF, of the disassembly and of the symbol listing must
+  equal `capacity-reserved/build-ids.txt`.
 - `tools/proof_inventory.py methods` needs the symbol listing of the Prysm ELF. Its `run` mode needs Lean: the output of
   `tools/inventory_decls.lean` and the JSON of an axioms gate run on the built tree.
 

@@ -1,16 +1,14 @@
 import Codec.Kind.EncodeFastPathAnyFrame
 import Prysm.BeaconBlockHeader.EncodeFastPath
-import Prysm.Eth1Data.EncodeFastPath
 import Prysm.Checkpoint.EncodeFastPath
 import Prysm.Checkpoint.EncodeFastPathKindInstances
-import Prysm.Eth1Data.EncodeFastPathKindInstances
 
 /-!
-# Ties of `encodeFastPathKindAnyFrame` to the three hand-written encoder fast-path statements
+# Ties of `encodeFastPathKindAnyFrame` to the hand-written encoder fast-path statements
 
-- BeaconBlockHeader (`Encode.fast_path`) and Eth1Data (`Prysm.Eth1Data.Encode.fast_path`): the declared type of
-  the committed theorem is the kind instance, `rfl` at default transparency (the recursive definitions of
-  the kind unfold on the literal layout and field list).
+- BeaconBlockHeader (`Encode.fast_path`): the declared type of the committed theorem is the kind instance, `rfl`
+  at default transparency (the recursive definitions of the kind unfold on the literal layout and field list).
+  Eth1Data has the same tie in `Prysm/Eth1Data/EncodeFastPathKindInstances.lean`.
 - Checkpoint (`Prysm.Checkpoint.Encode.fast_path`): not `rfl`. The hand statement names a 32-byte chunk `ctl` at
   `rax + 40` (after the capacity word of `Root`; not part of the Go layout of the receiver). In the kind that
   memory is part of `R`. `Prysm.Checkpoint.Encode.fast_path_of_kind`: the kind instance implies the hand statement. The converse
@@ -18,9 +16,8 @@ import Prysm.Eth1Data.EncodeFastPathKindInstances
   its length hypothesis and its chunk removed, the two statements have the same text.
 
 The hand statements and theorems are used as committed.
-After the split of this module, the Checkpoint declarations are in `Prysm/Checkpoint/EncodeFastPathKindInstances.lean`.
-The Eth1Data layout is in `Prysm/Eth1Data/EncodeFastPathKindInstances.lean`.
-The Eth1Data tie theorem stays here: its negative case puts the BeaconBlockHeader layout into its statement.
+The Checkpoint declarations are in `Prysm/Checkpoint/EncodeFastPathKindInstances.lean`, the Eth1Data layout and
+tie in `Prysm/Eth1Data/EncodeFastPathKindInstances.lean`.
 -/
 
 open Machine Runtime
@@ -51,11 +48,6 @@ variable [Host]
 /-- BeaconBlockHeader: the declared type of the hand theorem is the kind instance. -/
 theorem Encode.fast_path_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.BeaconBlockHeader.Encode.fast_path h)
     = @encodeFastPathKindAnyFrame h Prysm.BeaconBlockHeader.Code.marshalSSZTo encodeLayout [.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32] := by
-  intro h; rfl
-
-/-- Eth1Data: the declared type of the hand theorem is the kind instance. -/
-theorem _root_.Prysm.Eth1Data.Encode.fast_path_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.Eth1Data.Encode.fast_path h)
-    = @encodeFastPathKindAnyFrame h Prysm.Eth1Data.Code.marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .uint64, .bytes 32] := by
   intro h; rfl
 
 end Prysm.BeaconBlockHeader
