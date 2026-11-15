@@ -19,12 +19,11 @@ $G decoder --assembly prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prys
 B=prysm/go1.26.10/link-set/norm
 $G uint64 --assembly $B/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --imports Codec.Uint64Decoder,Prysm.BeaconBlockHeader.Code --open Prysm.ValidatorIndex.Code > lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean
 $G decoder --assembly $B/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.BeaconBlockHeader --prefix Decode.generated_root --imports Codec.Bytes32Decode,Prysm.BeaconBlockHeader.Code --open Prysm.BeaconBlockHeader.Code > lean/Prysm/BeaconBlockHeader/GeneratedDecodeRootFieldSegments.lean
-# Hold-out of Eth1Data: the one run exits 2 and writes nothing (no template for a 32-byte field at SSZ offset 0; record
-# prysm/go1.26.10/evidence/eth1-data/gen-e1dec.raw.txt). The empty file of that run was not kept; the GeneratedDecodeRootFieldSegments.lean of Eth1Data
-# now is the offset-0 extension output of the last command below. The Eth1Data hold-out command stays as a comment so that `set -e` does not stop this script:
+# Hold-out of Eth1Data: the frozen generator exits 2 on this command and writes nothing (no template for a 32-byte field
+# at SSZ offset 0). The GeneratedDecodeRootFieldSegments.lean of Eth1Data is the output of the offset-0 extension command below. The Eth1Data hold-out command stays as a comment so that `set -e` does not stop this script:
 # $G decoder --assembly prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.Eth1Data --prefix Decode.generated_root --imports Codec.Bytes32Decode,Prysm.Eth1Data.Code --open Prysm.Eth1Data.Code > lean/Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean
 # Generator extension for a 32-byte field at SSZ offset 0 (a later extension; Eth1Data is development data for it).
-# The Eth1Data command of the frozen generator above stays the recorded negative result. Raw output committed unedited.
+# The commented Eth1Data command above is the case that the frozen generator rejects. Raw output committed unedited.
 $G decoder --assembly prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.Eth1Data --prefix Decode.generated_root --imports Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Prysm.Eth1Data.Code --open Prysm.Eth1Data.Code > lean/Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean
 # Generator change (BlobIdentifier and DepositMessage are hold-out types; development work): `decoder --field-segments` on the development
 # set (Eth1Data, BlobIdentifier, DepositMessage are in-sample). New files; the files above stay as they are.

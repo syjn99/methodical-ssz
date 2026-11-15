@@ -2,9 +2,10 @@
 """Summarize a log of ParserRun.lean (the Kraken parser run) into JSON.
 
 Usage: summarize_parser_log.py <parser log> <functions.json> <out.json>
+The usual <out.json> is fv/kraken/prysm/go1.26.10/parser-result.json.
 Maps each parsed file (convert_objdump.py-cleaned name) back to the ELF symbol of
 functions.json and counts OK / ERR per function kind. A function of
-functions.json with no KPARSE line is "not run".
+functions.json with no `parser OK` or `parser ERR` line is "not run".
 Python 3 standard library only. Run with python3 -I.
 """
 import json
@@ -26,10 +27,10 @@ def main():
     res = {}
     done = None
     for line in open(log):
-        m = re.match(r"KPARSE (OK|ERR) (\S+) (.*)$", line.rstrip("\n"))
+        m = re.match(r"parser (OK|ERR) (\S+) (.*)$", line.rstrip("\n"))
         if m:
             res[os.path.basename(m.group(2)).removesuffix(".S")] = (m.group(1), m.group(3))
-        m = re.match(r"KPARSE DONE (\d+) (\d+)", line)
+        m = re.match(r"parser DONE (\d+) (\d+)", line)
         if m:
             done = (int(m.group(1)), int(m.group(2)))
     funcs = json.load(open(fpath))["functions"]
@@ -46,7 +47,7 @@ def main():
         rows.append(OrderedDict(symbol=f["symbol"], group=group, status=status,
                                 directives=int(detail) if status == "OK" else None,
                                 error=detail if status == "ERR" else None))
-    out = OrderedDict(schema="fvphase1c.kparse/1", log_done_line=done,
+    out = OrderedDict(schema="fvphase1c.parser-result/1", log_done_line=done,
                       counts={f"{g}: {s}": n for (g, s), n in sorted(cnt.items())},
                       errors=[r for r in rows if r["status"] == "ERR"], functions=rows)
     with open(out_path, "w") as fh:

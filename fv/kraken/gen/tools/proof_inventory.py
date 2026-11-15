@@ -25,7 +25,7 @@ The flat fixed-size types of the target are computed from the IR by `FLAT_RULE`;
 
 Mapping. The rows are derived by a rule, not written by hand: for every directory `lean/Prysm/<GoTypeName>/` and
 every part, the first candidate name of `DEC_CANDIDATES` / `ENC_FORMS` / `SIZE_FORM` (the name forms of
-gen/restructure/SPEC.md and the names the generators write) that exists in <decls.tsv> is the part's theorem.
+lean/README.md section 8 and the names the generators write) that exists in <decls.tsv> is the part's theorem.
 The encoder theorems outside the fast path need hand-written premise texts (`ENC_EXTRA`, keyed by full names).
 
 Rule. A function's state comes ONLY from the mapping and the declarations in <decls.tsv>:
@@ -109,7 +109,7 @@ GENERATOR_REFUSED = {
 
 
 # ---------------------------------------------------------------- mapping, derived by rule from the name forms
-# A row is derived for every type directory `lean/Prysm/<GoTypeName>/` from the name forms of SPEC.md (gen/restructure):
+# A row is derived for every type directory `lean/Prysm/<GoTypeName>/` from the name forms of lean/README.md section 8:
 # `Prysm.<GoTypeName>.Decode.accept`, `.Decode.reject_size`, `.Encode.fast_path`, `.Witness.<Role>.runs`, ... and the
 # names that the generators write (`Decode.generated_accept`, `Encode.generated_fast`, ...). For each part the FIRST
 # candidate that exists (a declaration of <decls.tsv>, kind not MISSING) is the row's theorem; a part with no existing
@@ -289,7 +289,7 @@ CANNOT_DETECT = [
     "kind and axioms only (their types hold no code constant, their proofs use no mapped theorem; found by "
     "an earlier review). Keying them to the row's Desc constant needs a new column in `inventory_decls.lean`; not done",
     "that a theorem's statement says what its part name means (accept, reject, spec): the mapping chooses names by "
-    "their form (SPEC.md); the statements are checked by review and by the kinds, not by this script",
+    "their form (lean/README.md section 8); the statements are checked by review and by the kinds, not by this script",
     "a theorem with two target code constants of which neither calls the other (it fails: no single subject)",
     "that <decls.tsv> was made on the built tree of the same commit (its header has the Lean version, no commit id)",
     "that an encoder row's premise text and NOT-proved text say what the mapped reject / growslice theorems assume "

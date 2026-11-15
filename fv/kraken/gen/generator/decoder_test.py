@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """Generator tests for the extension of `generator.py decoder` to a 32-byte field at SSZ offset 0 (offset-0 form). Tests that can fail.
 
-usage: decoder_test.py <work-dir> <result.json>      (run from anywhere; one gated job; Python 3 stdlib + git)
+usage: decoder_test.py <work-dir> <result.json>      (run from anywhere; one gated job; Python 3 stdlib)
 exit 0 = every case has its expected exit code and output; 1 = a case differs; 2 = usage
 
-Cases (all on the committed Eth1Data `.S` and IR; mutants are written to <work-dir>, nothing in the repo):
- - old-gen: the frozen generator (git blob OLD_BLOB, method freeze 56dfc27) on Eth1Data: exit 2, 0 bytes on
-   stdout, stderr = the committed record line of `prysm/go1.26.10/evidence/eth1-data/gen-e1dec.raw.txt` (historical record).
+Cases (all on the committed Eth1Data `.S` and IR; mutants are written to <work-dir>, nothing in the repo).
+Every case runs `gen/generator/generator.py` of the working tree. No case runs an earlier generator.
  - new-gen: the working-tree generator on Eth1Data: exit 0, both fields (DepositRoot offset-0 form,
    BlockHash add form), stdout = the committed `lean/Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean`, two runs byte-identical.
  - mutants of the `.S` (one line changed or removed, found by exact text at a 1-based line):
@@ -136,14 +135,10 @@ import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
-OLD_BLOB = "78e3339bc0ff3f20b6daa9a28582c97d7df9f712"
 S = "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S"
-RECORD = "prysm/go1.26.10/evidence/eth1-data/gen-e1dec.raw.txt"
 COMMITTED = "lean/Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean"
 ARGS = ["--const", "unmarshalSSZ", "--ir", "prysm/ir/ir-mainnet.json", "--type", "v1alpha1.Eth1Data",
         "--prefix", "Decode.generated_root", "--imports", "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Prysm.Eth1Data.Code", "--open", "Prysm.Eth1Data.Code"]
-OLD_ARGS = ["--const", "unmarshalSSZ", "--ir", "prysm/ir/ir-mainnet.json", "--type", "v1alpha1.Eth1Data",
-            "--prefix", "Decode.generated_root", "--imports", "Codec.Bytes32Decode,Prysm.Eth1Data.Code", "--open", "Prysm.Eth1Data.Code"]
 
 # (id, what, 1-based line, old text, new text or None = delete, expected exit, expected MATCH fields)
 MUTANTS = [
@@ -1551,17 +1546,7 @@ def whole_accept_fc_cases(work, new, keys=None):
 def main(work, out):
     work.mkdir(parents=True, exist_ok=True)
     res, bad = [], 0
-    old = work / "generator_frozen.py"
-    old.write_bytes(subprocess.run(["git", "cat-file", "-p", OLD_BLOB], cwd=KR, capture_output=True, check=True).stdout)
     new = KR / "gen" / "generator" / "generator.py"
-
-    # old generator, historical record
-    rc, so, se = run(["python3", "-I", str(old), "p2dec", "--S", S] + OLD_ARGS, KR)  # the frozen generator: its mode name
-    rec = [l for l in (KR / RECORD).read_text().split("\n") if l.startswith("scalgen p2dec:")]  # the record line
-    ok = rc == 2 and so == b"" and rec and se.strip() == rec[0]
-    res.append(dict(id="old-gen", expect="exit 2, 0 bytes, stderr = record", exit=rc, stdout_bytes=len(so),
-                    stderr=se.strip(), ok=bool(ok)))
-    bad |= not ok
 
     # new generator, two runs, committed output
     outs = []

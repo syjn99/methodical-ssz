@@ -9,7 +9,7 @@ PROVISIONAL. Nothing here is proved or attempted. For every type of the inventor
 - contracts: runtime calls of the three functions (go1.26.10/functions.json) checked against
   the contract registry of the hand case; fmt format shapes (verbs of the Go literal) against
   the three hand fmt contracts
-- tool: Kraken runtime parser result of the three functions (go1.26.10/kparse.json)
+- tool: Kraken runtime parser result of the three functions (go1.26.10/parser-result.json)
 - size band of the largest function against the largest hand function
 - expected failure classes (all that apply) and the first one, in the order
   tool gap > missing contract > new pattern (automation) > none known.
@@ -61,7 +61,7 @@ def main():
     k = sys.argv[1]
     inv = json.load(open(f"{k}/prysm/inventory.json"))
     fn = json.load(open(f"{k}/prysm/go1.26.10/functions.json"))
-    kp = {r["symbol"]: r for r in json.load(open(f"{k}/prysm/go1.26.10/kparse.json"))["functions"]}
+    kp = {r["symbol"]: r for r in json.load(open(f"{k}/prysm/go1.26.10/parser-result.json"))["functions"]}
     hand_max = max(sum(1 for l in open(os.path.join(f"{k}/link/out/norm", f)) if l.startswith("  "))
                    for f in os.listdir(f"{k}/link/out/norm") if f.startswith("target"))
     funcs = {(f["package"], f["type"], f["method"]): f for f in fn["functions"]}
@@ -166,7 +166,7 @@ def main():
     json.dump(res, open(f"{k}/prysm/type-scope.json", "w"), indent=1)
     L = ["# Type scope: provisional classification of the Prysm types", "",
          "**It is provisional.** We did not try proofs. This table does not say whether a proof is possible. `gen/type_scope.py` makes it from JSON.", "",
-         "Failure reason classes (in the order in which they apply first): tool gap (`%riz`) > missing contract > new pattern (automation) > none known.",
+         "Failure reason classes (in the order in which they apply first): tool gap (the Kraken parser rejects one of the three functions) > missing contract > new pattern (automation) > none known.",
          "\"Including callees\" is the first class that applies in the type and the closure of its generated callees. If the type alone is \"none known\" but a callee blocks it, the type is blocked.",
          "123 of the 135 Prysm types are protobuf structs. Their Go layout is different from the reduced types of the hand case (`ir/*.json` `go_fields`).",
          "Generator defect is one of the classes, but no output code defect is known, so no type has that class.",

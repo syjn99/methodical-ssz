@@ -10,9 +10,9 @@
  "axioms_gate": {
   "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=Spec,Machine,Runtime,Codec,Prysm",
   "verdict": "PASS",
-  "declarations": 19246,
-  "theorems": 15930,
-  "modules": 761
+  "declarations": 18869,
+  "theorems": 15584,
+  "modules": 750
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -25,7 +25,7 @@
  ],
  "cannot_detect": [
   "a row whose `codec` or `reject_complete` names ANOTHER type's theorem: these two parts are checked for existence, kind and axioms only (their types hold no code constant, their proofs use no mapped theorem; found by an earlier review). Keying them to the row's Desc constant needs a new column in `inventory_decls.lean`; not done",
-  "that a theorem's statement says what its part name means (accept, reject, spec): the mapping chooses names by their form (SPEC.md); the statements are checked by review and by the kinds, not by this script",
+  "that a theorem's statement says what its part name means (accept, reject, spec): the mapping chooses names by their form (lean/README.md section 8); the statements are checked by review and by the kinds, not by this script",
   "a theorem with two target code constants of which neither calls the other (it fails: no single subject)",
   "that <decls.tsv> was made on the built tree of the same commit (its header has the Lean version, no commit id)",
   "that an encoder row's premise text and NOT-proved text say what the mapped reject / growslice theorems assume (hand-written per row; checked by review against the theorem statements, not by this script)",

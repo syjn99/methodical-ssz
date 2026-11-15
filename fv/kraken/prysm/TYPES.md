@@ -14,8 +14,7 @@ The program counts all numbers. The scope classification is a first pass (provis
 - Hand-written delegate targets (`consensus-types/primitives`): 5. Types that call them: 52.
 - Generated functions: 405 (types × 3), instructions: 116889, maximum for each function: 2890.
 - Mnemonic level: 405/405 generated functions use only names that the Kraken runtime parser accepts.
-- Real parser run: 392 generated functions OK, 13 ERR. All ERR are `%riz` operands (section 4).
-- We ran all files that failed because of `%riz` (18, including functions outside I) again as diagnostic copies with only `%riz` removed. 18 are OK. This is only a diagnosis, not a conversion result.
+- Real parser run: 405 generated functions of I OK, 0 ERR. Errors of all parsed functions by message: `unsupported instruction: bsr` 1 (section 4).
 - Differences from the committed Prysm files: 232 changed blocks, 232 classified, 0 not classified.
 - Types with a different IR in the minimal preset: 41. Types with a changed scope classification: 0.
 
@@ -41,7 +40,7 @@ Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `
 4. `gen/type_inventory.py build` writes the sets, kinds, depths and scopes to `inventory.json`.
 5. `gen/prysm-elf.sh` builds the ELF two times and extracts objdump and nm. `gen/keepalive.py` makes `main`.
 6. `gen/mnemonics.py` counts the instructions, mnemonics and call kinds for each function (`go1.26.10/functions.json`).
-7. `link/convert_objdump.py --norm` (read only) makes the `.S` files, and `gen/kraken-parser/ParserRun.lean` runs the Kraken runtime parser (`go1.26.10/kparse.json`).
+7. `link/convert_objdump.py --norm` (read only) makes the `.S` files, and `gen/kraken-parser/ParserRun.lean` runs the Kraken runtime parser (`go1.26.10/parser-result.json`).
 
 - `fork_configs`: ['proto/prysm/v1alpha1/phase0.yaml', 'proto/prysm/v1alpha1/altair.yaml', 'proto/prysm/v1alpha1/bellatrix.yaml', 'proto/prysm/v1alpha1/capella.yaml', 'proto/prysm/v1alpha1/deneb.yaml', 'proto/prysm/v1alpha1/electra.yaml', 'proto/prysm/v1alpha1/fulu.yaml']
 - `set_A`: every type configured in a fork config (phase0..fulu)
@@ -56,7 +55,7 @@ Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `
 How we decide "does Kraken accept it":
 
 - Mnemonic level: the 186 branch strings of `parseInstr` in `Kraken/X64/Parser/Basic.lean` of the fixed Kraken, and `j`/`set`/`cmov` + 30 `parseCondCode?` condition codes. The 10 `convert_objdump.py` NORM forms count as `nop`.
-- Real parser level: we ran `Kraken.X64.Parser.parse`, which `include_x64_code` uses, on each file (log copy `go1.26.10/kparse-log.txt`). This is the verdict criterion.
+- Real parser level: we ran `Kraken.X64.Parser.parse`, which `include_x64_code` uses, on each file. This is the verdict criterion.
 - We did not examine the semantics level (`kstep` and theorems). This table is a classification, not a proof.
 
 ## 4. Numbers
@@ -98,33 +97,11 @@ How we decide "does Kraken accept it":
 | `hand_written_instructions` | 792 |
 | `all_dumped_unsupported` | {"bsr": 1} |
 | `functions_per_call_kind` | {"ValidateBitlist": 10, "ValidateBitvector": 14, "convT64": 36, "fmt": 217, "generated method": 224, "growslice": 150, "hand-written primitives method": 52, "makeslice": 124, "memmove": 246, "morestack_noctxt": 339, "moveSlice* (stack-backed result to heap)": 8, "newobject": 286, "panic*": 54, "write barrier": 292} |
-| `kparse` | {"generated (not inventory): ERR": 5, "generated (not inventory): OK": 205, "hand-written: OK": 24, "inventory: ERR": 13, "inventory: OK": 392, "runtime/ssz: ERR": 1, "runtime/ssz: OK": 1} |
-| `kparse_riz_diag` | OK 18, ERR 0 |
+| `parser` | {"generated (not inventory): OK": 210, "hand-written: OK": 24, "inventory: OK": 405, "runtime/ssz: ERR": 1, "runtime/ssz: OK": 1} |
 
 Parser ERR list:
 
 - `github.com/OffchainLabs/methodical-ssz/ssz.ValidateBitlist` (runtime/ssz): line 22: unsupported instruction: bsr
-- `proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundle).MarshalSSZTo` (generated (not inventory)): line 61: unknown register: riz
-- `proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundleV2).MarshalSSZTo` (generated (not inventory)): line 61: unknown register: riz
-- `proto/prysm/v1alpha1.(*BeaconBlockBodyAltair).MarshalSSZTo` (inventory): line 314: unknown register: riz
-- `proto/prysm/v1alpha1.(*BeaconBlockBodyBellatrix).MarshalSSZTo` (inventory): line 313: unknown register: riz
-- `proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyBellatrix).MarshalSSZTo` (inventory): line 313: unknown register: riz
-- `proto/prysm/v1alpha1.(*BeaconBlockBodyCapella).MarshalSSZTo` (inventory): line 313: unknown register: riz
-- `proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyCapella).MarshalSSZTo` (inventory): line 313: unknown register: riz
-- `proto/prysm/v1alpha1.(*BeaconBlockBodyDeneb).MarshalSSZTo` (inventory): line 313: unknown register: riz
-- `proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyDeneb).MarshalSSZTo` (inventory): line 313: unknown register: riz
-- `proto/prysm/v1alpha1.(*BeaconBlockBodyElectra).MarshalSSZTo` (inventory): line 313: unknown register: riz
-- `proto/prysm/v1alpha1.(*BeaconStateElectra).MarshalSSZTo` (inventory): line 1525: unknown register: riz
-- `proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyElectra).MarshalSSZTo` (inventory): line 313: unknown register: riz
-- `proto/prysm/v1alpha1.(*BeaconStateFulu).MarshalSSZTo` (inventory): line 1523: unknown register: riz
-- `proto/prysm/v1alpha1.(*BeaconBlockBodyGloas).MarshalSSZTo` (generated (not inventory)): line 313: unknown register: riz
-- `proto/prysm/v1alpha1.(*BuilderConfig).UnmarshalSSZ` (generated (not inventory)): line 68: unknown register: riz
-- `proto/prysm/v1alpha1.(*BeaconBlockBodyHeze).MarshalSSZTo` (generated (not inventory)): line 313: unknown register: riz
-- `proto/prysm/v1alpha1.(*BeaconBlockBody).MarshalSSZTo` (inventory): line 321: unknown register: riz
-- `proto/prysm/v1alpha1.(*BeaconState).MarshalSSZTo` (inventory): line 1417: unknown register: riz
-
-`%riz` is the spelling that GNU objdump uses for a SIB byte without an index (when `%r12` is the base register). The address is the same as `(%r12)`.
-It is not a generator defect. It is a gap in the converter or in the Kraken parser (`../FINDINGS.md`, entry "Kraken cannot parse some operand and instruction forms").
 
 Mnemonic frequency of the generated functions (I only):
 
@@ -178,7 +155,7 @@ Call abbreviations: VBl=ValidateBitlist, VBv=ValidateBitvector, cT64=convT64, fm
 | `Withdrawal` | engine | B | fixed container | 4 | 0 | in | 0/1 | 117/2/105 | 25 | - | OK/OK/OK | fmt grow hand mks mm new stk wb |
 | `WithdrawalRequest` | engine | B | fixed container | 3 | 0 | in | 0/0 | 107/2/98 | 22 | - | OK/OK/OK | grow mks mm stk wb |
 | `BeaconBlockAltair` | altair |  | variable container | 5 | 0 | in | 1/2 | 215/32/228 | 30 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
-| `BeaconBlockBodyAltair` | altair |  | variable container | 9 | 1 | in | 7/0 | 979/99/1554 | 40 | - | ERR(riz)/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
+| `BeaconBlockBodyAltair` | altair |  | variable container | 9 | 1 | in | 7/0 | 979/99/1554 | 40 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `BeaconStateAltair` | altair |  | variable container | 24 | 1 | in | 6/1 | 1720/18/1746 | 40 | - | OK/OK/OK | VBv cT64 fmt gen grow hand mks mm new pan stk wb |
 | `ContributionAndProof` | altair |  | fixed container | 3 | 0 | in | 1/1 | 142/2/141 | 24 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
 | `LightClientBootstrapAltair` | altair |  | fixed container | 3 | 1 | in | 2/0 | 287/2/187 | 29 | - | OK/OK/OK | fmt gen grow mks mm new pan stk wb |
@@ -194,17 +171,17 @@ Call abbreviations: VBl=ValidateBitlist, VBv=ValidateBitvector, cT64=convT64, fm
 | `SyncCommitteeContribution` | altair |  | fixed container | 5 | 0 | in | 0/1 | 162/2/161 | 26 | - | OK/OK/OK | fmt grow hand mks mm new stk wb |
 | `SyncCommitteeMessage` | altair |  | fixed container | 4 | 0 | in | 0/2 | 142/2/163 | 25 | - | OK/OK/OK | fmt grow hand mks mm new stk wb |
 | `BeaconBlockBellatrix` | bellatrix |  | variable container | 5 | 0 | in | 1/2 | 215/32/228 | 30 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
-| `BeaconBlockBodyBellatrix` | bellatrix |  | variable container | 10 | 1 | in | 8/0 | 1055/134/1629 | 40 | - | ERR(riz)/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
+| `BeaconBlockBodyBellatrix` | bellatrix |  | variable container | 10 | 1 | in | 8/0 | 1055/134/1629 | 40 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `BeaconStateBellatrix` | bellatrix |  | variable container | 25 | 1 | in | 7/1 | 1818/51/1772 | 39 | - | OK/OK/OK | VBv cT64 fmt gen grow hand mks mm new pan stk wb |
 | `BlindedBeaconBlockBellatrix` | bellatrix |  | variable container | 5 | 0 | in | 1/2 | 215/32/228 | 30 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
-| `BlindedBeaconBlockBodyBellatrix` | bellatrix |  | variable container | 10 | 1 | in | 8/0 | 1049/119/1629 | 40 | - | ERR(riz)/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
+| `BlindedBeaconBlockBodyBellatrix` | bellatrix |  | variable container | 10 | 1 | in | 8/0 | 1049/119/1629 | 40 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `SignedBeaconBlockBellatrix` | bellatrix |  | variable container | 2 | 0 | in | 1/0 | 153/48/128 | 30 | - | OK/OK/OK | fmt gen grow mks mm new stk wb |
 | `SignedBlindedBeaconBlockBellatrix` | bellatrix |  | variable container | 2 | 0 | in | 1/0 | 153/48/128 | 30 | - | OK/OK/OK | fmt gen grow mks mm new stk wb |
 | `BLSToExecutionChange` | capella | B | fixed container | 3 | 0 | in | 0/1 | 120/2/130 | 26 | - | OK/OK/OK | fmt grow hand mks mm new stk wb |
-| `BeaconBlockBodyCapella` | capella |  | variable container | 11 | 1 | in | 9/0 | 1139/140/1832 | 40 | - | ERR(riz)/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
+| `BeaconBlockBodyCapella` | capella |  | variable container | 11 | 1 | in | 9/0 | 1139/140/1832 | 40 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `BeaconBlockCapella` | capella |  | variable container | 5 | 0 | in | 1/2 | 215/32/228 | 30 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
 | `BeaconStateCapella` | capella |  | variable container | 28 | 1 | in | 8/2 | 2018/53/2066 | 39 | - | OK/OK/OK | VBv cT64 fmt gen grow hand mks mm new pan stk wb |
-| `BlindedBeaconBlockBodyCapella` | capella |  | variable container | 11 | 1 | in | 9/0 | 1129/123/1832 | 40 | - | ERR(riz)/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
+| `BlindedBeaconBlockBodyCapella` | capella |  | variable container | 11 | 1 | in | 9/0 | 1129/123/1832 | 40 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `BlindedBeaconBlockCapella` | capella |  | variable container | 5 | 0 | in | 1/2 | 215/32/228 | 30 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
 | `BuilderBidCapella` | capella |  | variable container | 3 | 0 | in | 1/0 | 168/32/161 | 30 | - | OK/OK/OK | fmt gen grow mks mm new stk wb |
 | `HistoricalSummary` | capella | B | fixed container | 2 | 0 | in | 0/0 | 105/2/94 | 22 | - | OK/OK/OK | grow mks mm mvS stk wb |
@@ -217,11 +194,11 @@ Call abbreviations: VBl=ValidateBitlist, VBv=ValidateBitvector, cT64=convT64, fm
 | `SignedBeaconBlockCapella` | capella |  | variable container | 2 | 0 | in | 1/0 | 153/48/128 | 30 | - | OK/OK/OK | fmt gen grow mks mm new stk wb |
 | `SignedBlindedBeaconBlockCapella` | capella |  | variable container | 2 | 0 | in | 1/0 | 153/48/128 | 30 | - | OK/OK/OK | fmt gen grow mks mm new stk wb |
 | `SignedBuilderBidCapella` | capella |  | variable container | 2 | 0 | in | 1/0 | 158/48/128 | 30 | - | OK/OK/OK | fmt gen grow mks mm new stk wb |
-| `BeaconBlockBodyDeneb` | deneb |  | variable container | 12 | 1 | in | 9/0 | 1227/144/2014 | 40 | - | ERR(riz)/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
+| `BeaconBlockBodyDeneb` | deneb |  | variable container | 12 | 1 | in | 9/0 | 1227/144/2014 | 40 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `BeaconBlockContentsDeneb` | deneb |  | variable container | 3 | 1 | in | 1/0 | 279/57/444 | 37 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `BeaconBlockDeneb` | deneb |  | variable container | 5 | 0 | in | 1/2 | 215/32/228 | 30 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
 | `BeaconStateDeneb` | deneb |  | variable container | 28 | 1 | in | 8/2 | 2018/53/2066 | 39 | - | OK/OK/OK | VBv cT64 fmt gen grow hand mks mm new pan stk wb |
-| `BlindedBeaconBlockBodyDeneb` | deneb |  | variable container | 12 | 1 | in | 9/0 | 1218/126/2014 | 40 | - | ERR(riz)/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
+| `BlindedBeaconBlockBodyDeneb` | deneb |  | variable container | 12 | 1 | in | 9/0 | 1218/126/2014 | 40 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `BlindedBeaconBlockDeneb` | deneb |  | variable container | 5 | 0 | in | 1/2 | 215/32/228 | 30 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
 | `BlobIdentifier` | deneb |  | fixed container | 2 | 0 | in | 0/0 | 72/2/65 | 21 | - | OK/OK/OK | grow mks mm stk wb |
 | `BlobSidecar` | deneb |  | fixed container | 6 | 1 | in | 1/0 | 255/2/243 | 29 | - | OK/OK/OK | fmt gen grow mks mm new pan stk wb |
@@ -239,11 +216,11 @@ Call abbreviations: VBl=ValidateBitlist, VBv=ValidateBitvector, cT64=convT64, fm
 | `AggregateAttestationAndProofElectra` | electra |  | variable container | 3 | 0 | in | 1/1 | 159/32/164 | 29 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
 | `AttestationElectra` | electra | B | variable container | 4 | 1 | in | 1/0 | 234/3/224 | 30 | - | OK/OK/OK | VBl fmt gen grow mks mm new stk wb |
 | `AttesterSlashingElectra` | electra | B | variable container | 2 | 0 | in | 1/0 | 177/52/160 | 31 | - | OK/OK/OK | fmt gen grow new stk wb |
-| `BeaconBlockBodyElectra` | electra | B | variable container | 13 | 1 | in | 10/0 | 1313/172/2023 | 40 | - | ERR(riz)/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
+| `BeaconBlockBodyElectra` | electra | B | variable container | 13 | 1 | in | 10/0 | 1313/172/2023 | 40 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `BeaconBlockContentsElectra` | electra |  | variable container | 3 | 1 | in | 1/0 | 279/57/444 | 37 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `BeaconBlockElectra` | electra | B | variable container | 5 | 0 | in | 1/2 | 215/32/228 | 30 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
-| `BeaconStateElectra` | electra |  | variable container | 37 | 1 | in | 11/4 | 2463/63/2806 | 40 | - | ERR(riz)/OK/OK | VBv cT64 fmt gen grow hand mks mm new pan stk wb |
-| `BlindedBeaconBlockBodyElectra` | electra | B | variable container | 13 | 1 | in | 10/0 | 1304/154/2023 | 40 | - | ERR(riz)/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
+| `BeaconStateElectra` | electra |  | variable container | 37 | 1 | in | 11/4 | 2463/63/2806 | 40 | - | OK/OK/OK | VBv cT64 fmt gen grow hand mks mm new pan stk wb |
+| `BlindedBeaconBlockBodyElectra` | electra | B | variable container | 13 | 1 | in | 10/0 | 1304/154/2023 | 40 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `BlindedBeaconBlockElectra` | electra |  | variable container | 5 | 0 | in | 1/2 | 215/32/228 | 30 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
 | `BuilderBidElectra` | electra |  | variable container | 5 | 1 | in | 2/0 | 329/64/406 | 37 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `IndexedAttestationElectra` | electra | B | variable container | 3 | 1 | in | 1/0 | 173/4/253 | 36 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
@@ -260,7 +237,7 @@ Call abbreviations: VBl=ValidateBitlist, VBv=ValidateBitvector, cT64=convT64, fm
 | `SignedBuilderBidElectra` | electra |  | variable container | 2 | 0 | in | 1/0 | 138/32/128 | 29 | - | OK/OK/OK | fmt gen grow mks mm new stk wb |
 | `SingleAttestation` | electra |  | fixed container | 4 | 0 | in | 1/2 | 168/2/180 | 25 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
 | `BeaconBlockContentsFulu` | fulu | B | variable container | 3 | 1 | in | 1/0 | 279/57/444 | 37 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
-| `BeaconStateFulu` | fulu | B | variable container | 38 | 1 | in | 11/4 | 2540/63/2890 | 41 | - | ERR(riz)/OK/OK | VBv cT64 fmt gen grow hand mks mm new pan stk wb |
+| `BeaconStateFulu` | fulu | B | variable container | 38 | 1 | in | 11/4 | 2540/63/2890 | 41 | - | OK/OK/OK | VBv cT64 fmt gen grow hand mks mm new pan stk wb |
 | `BlindedBeaconBlockFulu` | fulu | B | variable container | 5 | 0 | in | 1/2 | 215/32/228 | 30 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
 | `DataColumnSidecar` | fulu | B | variable container | 6 | 1 | in | 1/0 | 400/12/667 | 37 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `DataColumnsByRootIdentifier` | fulu | B | variable container | 2 | 1 | in | 0/0 | 107/4/208 | 35 | - | OK/OK/OK | cT64 fmt grow mks mm new pan stk wb |
@@ -276,9 +253,9 @@ Call abbreviations: VBl=ValidateBitlist, VBv=ValidateBitvector, cT64=convT64, fm
 | `AttestationData` | phase0 | B | fixed container | 5 | 0 | in | 1/2 | 218/2/220 | 25 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
 | `AttesterSlashing` | phase0 |  | variable container | 2 | 0 | in | 1/0 | 177/52/160 | 31 | - | OK/OK/OK | fmt gen grow new stk wb |
 | `BeaconBlock` | phase0 |  | variable container | 5 | 0 | in | 1/2 | 215/32/228 | 30 | - | OK/OK/OK | fmt gen grow hand mks mm new stk wb |
-| `BeaconBlockBody` | phase0 |  | variable container | 8 | 1 | in | 6/0 | 834/99/1505 | 40 | - | ERR(riz)/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
+| `BeaconBlockBody` | phase0 |  | variable container | 8 | 1 | in | 6/0 | 834/99/1505 | 40 | - | OK/OK/OK | cT64 fmt gen grow mks mm new pan stk wb |
 | `BeaconBlockHeader` | phase0 | B | fixed container | 5 | 0 | in | 0/2 | 182/2/198 | 26 | - | OK/OK/OK | fmt grow hand mks mm new stk wb |
-| `BeaconState` | phase0 |  | variable container | 21 | 1 | in | 6/1 | 1491/36/2099 | 41 | - | ERR(riz)/OK/OK | VBv cT64 fmt gen grow hand mks mm new pan stk wb |
+| `BeaconState` | phase0 |  | variable container | 21 | 1 | in | 6/1 | 1491/36/2099 | 41 | - | OK/OK/OK | VBv cT64 fmt gen grow hand mks mm new pan stk wb |
 | `Checkpoint` | phase0 | B | fixed container | 2 | 0 | in | 0/1 | 85/2/98 | 24 | - | OK/OK/OK | fmt grow hand mks mm new stk wb |
 | `Deposit` | phase0 | B | fixed container | 2 | 1 | in | 1/0 | 257/2/140 | 29 | - | OK/OK/OK | fmt gen grow mks mm new pan stk wb |
 | `DepositMessage` | phase0 |  | fixed container | 3 | 0 | in | 0/0 | 107/2/99 | 23 | - | OK/OK/OK | grow mks mm stk wb |

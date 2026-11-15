@@ -2,11 +2,12 @@
 """Write fv/kraken/prysm/TYPES.md from the saved JSON. No number is typed by hand.
 
 Usage: type_list_document.py <prysm-dir>
-Inputs: inventory.json, go1.26.10/functions.json, go1.26.10/kparse.json,
-go1.26.10/kparse-riz-diag.json, diff/generated-go-diff.json, go1.26.10/build-ids.txt.
+Inputs: inventory.json, go1.26.10/functions.json, go1.26.10/parser-result.json,
+diff/generated-go-diff.json, go1.26.10/build-ids.txt.
 Python 3 standard library only. Run with python3 -I.
 """
 import json
+import re
 import sys
 from collections import Counter
 
@@ -26,13 +27,11 @@ def main():
     d = sys.argv[1]
     inv = json.load(open(f"{d}/inventory.json"))
     fn = json.load(open(f"{d}/go1.26.10/functions.json"))
-    kp = json.load(open(f"{d}/go1.26.10/kparse.json"))
-    rz = json.load(open(f"{d}/go1.26.10/kparse-riz-diag.json"))
+    kp = json.load(open(f"{d}/go1.26.10/parser-result.json"))
     gd = json.load(open(f"{d}/diff/generated-go-diff.json"))
     bid = dict(l.split(": ", 1) for l in open(f"{d}/go1.26.10/build-ids.txt").read().splitlines() if ": " in l)
     c, fc = inv["counts"], fn["counts"]
     kps = {r["symbol"]: r for r in kp["functions"]}
-    rzs = {r["symbol"]: r for r in rz["functions"]}
     funcs = {(f["package"], f["type"], f["method"]): f for f in fn["functions"]}
     L = []
     w = L.append
@@ -55,10 +54,12 @@ def main():
     w(f"- Hand-written delegate targets (`consensus-types/primitives`): {c['I_hand_written']}. Types that call them: {c['types_calling_hand_written']}.")
     w(f"- Generated functions: {fc['generated_functions_inventory']} (types × 3), instructions: {fc['generated_instructions']}, maximum for each function: {fc['max_instructions']}.")
     w(f"- Mnemonic level: {fc['generated_functions_all_supported']}/{fc['generated_functions_inventory']} generated functions use only names that the Kraken runtime parser accepts.")
+    # an error message without its line number, for example `unsupported instruction: bsr`
+    err_kinds = Counter(re.sub(r"^line \d+: ", "", r["error"]) for r in kp["errors"])
     ok_inv = kp["counts"].get("inventory: OK", 0)
     err_inv = kp["counts"].get("inventory: ERR", 0)
-    w(f"- Real parser run: {ok_inv} generated functions OK, {err_inv} ERR. All ERR are `%riz` operands (section 4).")
-    w(f"- We ran all files that failed because of `%riz` ({rz['ok'] + rz['err']}, including functions outside I) again as diagnostic copies with only `%riz` removed. {rz['ok']} are OK. This is only a diagnosis, not a conversion result.")
+    w(f"- Real parser run: {ok_inv} generated functions of I OK, {err_inv} ERR. Errors of all parsed functions by message: "
+      + (", ".join(f"`{m}` {n}" for m, n in sorted(err_kinds.items())) or "none") + " (section 4).")
     w(f"- Differences from the committed Prysm files: {gd['totals']['blocks']} changed blocks, {gd['totals']['classified']} classified, {gd['totals']['unclassified']} not classified.")
     w(f"- Types with a different IR in the minimal preset: {c['minimal_differs']}. Types with a changed scope classification: {c['minimal_scope_changes']}.")
     w("")
@@ -84,7 +85,7 @@ def main():
     w("4. `gen/type_inventory.py build` writes the sets, kinds, depths and scopes to `inventory.json`.")
     w("5. `gen/prysm-elf.sh` builds the ELF two times and extracts objdump and nm. `gen/keepalive.py` makes `main`.")
     w("6. `gen/mnemonics.py` counts the instructions, mnemonics and call kinds for each function (`go1.26.10/functions.json`).")
-    w("7. `link/convert_objdump.py --norm` (read only) makes the `.S` files, and `gen/kraken-parser/ParserRun.lean` runs the Kraken runtime parser (`go1.26.10/kparse.json`).")
+    w("7. `link/convert_objdump.py --norm` (read only) makes the `.S` files, and `gen/kraken-parser/ParserRun.lean` runs the Kraken runtime parser (`go1.26.10/parser-result.json`).")
     w("")
     for k, v in inv["definitions"].items():
         w(f"- `{k}`: {v}")
@@ -92,7 +93,7 @@ def main():
     w("How we decide \"does Kraken accept it\":")
     w("")
     w(f"- Mnemonic level: the {len(fn['kraken_accepted_names'])} branch strings of `parseInstr` in `Kraken/X64/Parser/Basic.lean` of the fixed Kraken, and `j`/`set`/`cmov` + {len(fn['kraken_condition_codes'])} `parseCondCode?` condition codes. The {len(fn['conv_norm_forms'])} `convert_objdump.py` NORM forms count as `nop`.")
-    w("- Real parser level: we ran `Kraken.X64.Parser.parse`, which `include_x64_code` uses, on each file (log copy `go1.26.10/kparse-log.txt`). This is the verdict criterion.")
+    w("- Real parser level: we ran `Kraken.X64.Parser.parse`, which `include_x64_code` uses, on each file. This is the verdict criterion.")
     w("- We did not examine the semantics level (`kstep` and theorems). This table is a classification, not a proof.")
     w("")
     w("## 4. Numbers")
@@ -106,16 +107,14 @@ def main():
               "generated_functions_all_supported", "hand_written_instructions", "all_dumped_unsupported",
               "functions_per_call_kind"):
         w(f"| `{k}` | {json.dumps(fc[k], ensure_ascii=False)} |")
-    w(f"| `kparse` | {json.dumps(kp['counts'], ensure_ascii=False)} |")
-    w(f"| `kparse_riz_diag` | OK {rz['ok']}, ERR {rz['err']} |")
+    w(f"| `parser` | {json.dumps(kp['counts'], ensure_ascii=False)} |")
     w("")
     w("Parser ERR list:")
     w("")
     for r in kp["errors"]:
         w(f"- `{short(r['symbol'])}` ({r['group']}): {r['error']}")
-    w("")
-    w("`%riz` is the spelling that GNU objdump uses for a SIB byte without an index (when `%r12` is the base register). The address is the same as `(%r12)`.")
-    w("It is not a generator defect. It is a gap in the converter or in the Kraken parser (`../FINDINGS.md`, entry \"Kraken cannot parse some operand and instruction forms\").")
+    if not kp["errors"]:
+        w("- none")
     w("")
     w("Mnemonic frequency of the generated functions (I only):")
     w("")
@@ -166,8 +165,6 @@ def main():
             uns |= set(f["unsupported"])
             calls |= set(f["calls"])
             r = kps.get(f["symbol"], {}).get("status", "not run")
-            if r == "ERR" and rzs.get(f["symbol"], {}).get("status") == "OK":
-                r = "ERR(riz)"
             kpst.append(r)
         ng = sum(1 for cc in t["callees"] if tuple(cc.rsplit("/", 1)) not in hand)
         nh = sum(1 for cc in t["callees"] if tuple(cc.rsplit("/", 1)) in hand)

@@ -1,15 +1,13 @@
 {
- "schema": "fvphase1c.kparse/1",
+ "schema": "fvphase1c.parser-result/1",
  "log_done_line": [
-  622,
-  19
+  640,
+  1
  ],
  "counts": {
-  "generated (not inventory): ERR": 5,
-  "generated (not inventory): OK": 205,
+  "generated (not inventory): OK": 210,
   "hand-written: OK": 24,
-  "inventory: ERR": 13,
-  "inventory: OK": 392,
+  "inventory: OK": 405,
   "runtime/ssz: ERR": 1,
   "runtime/ssz: OK": 1
  },
@@ -20,132 +18,6 @@
    "status": "ERR",
    "directives": null,
    "error": "line 22: unsupported instruction: bsr"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundle).MarshalSSZTo",
-   "group": "generated (not inventory)",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 61: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundleV2).MarshalSSZTo",
-   "group": "generated (not inventory)",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 61: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyAltair).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 314: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyBellatrix).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyBellatrix).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyCapella).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyCapella).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyDeneb).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyDeneb).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyElectra).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateElectra).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 1525: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyElectra).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateFulu).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 1523: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyGloas).MarshalSSZTo",
-   "group": "generated (not inventory)",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderConfig).UnmarshalSSZ",
-   "group": "generated (not inventory)",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 68: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyHeze).MarshalSSZTo",
-   "group": "generated (not inventory)",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBody).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 321: unknown register: riz"
-  },
-  {
-   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconState).MarshalSSZTo",
-   "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 1417: unknown register: riz"
   }
  ],
  "functions": [
@@ -551,9 +423,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundle).MarshalSSZTo",
    "group": "generated (not inventory)",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 61: unknown register: riz"
+   "status": "OK",
+   "directives": 212,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundle).UnmarshalSSZ",
@@ -572,9 +444,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundleV2).MarshalSSZTo",
    "group": "generated (not inventory)",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 61: unknown register: riz"
+   "status": "OK",
+   "directives": 212,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundleV2).UnmarshalSSZ",
@@ -782,9 +654,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyAltair).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 314: unknown register: riz"
+   "status": "OK",
+   "directives": 1070,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyAltair).UnmarshalSSZ",
@@ -1118,9 +990,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyBellatrix).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
+   "status": "OK",
+   "directives": 1155,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyBellatrix).UnmarshalSSZ",
@@ -1181,9 +1053,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyBellatrix).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
+   "status": "OK",
+   "directives": 1147,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyBellatrix).UnmarshalSSZ",
@@ -1244,9 +1116,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyCapella).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
+   "status": "OK",
+   "directives": 1246,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyCapella).UnmarshalSSZ",
@@ -1307,9 +1179,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyCapella).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
+   "status": "OK",
+   "directives": 1234,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyCapella).UnmarshalSSZ",
@@ -1601,9 +1473,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyDeneb).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
+   "status": "OK",
+   "directives": 1340,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyDeneb).UnmarshalSSZ",
@@ -1685,9 +1557,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyDeneb).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
+   "status": "OK",
+   "directives": 1329,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyDeneb).UnmarshalSSZ",
@@ -2063,9 +1935,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyElectra).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
+   "status": "OK",
+   "directives": 1433,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyElectra).UnmarshalSSZ",
@@ -2126,9 +1998,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateElectra).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 1525: unknown register: riz"
+   "status": "OK",
+   "directives": 2661,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateElectra).UnmarshalSSZ",
@@ -2147,9 +2019,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyElectra).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
+   "status": "OK",
+   "directives": 1422,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyElectra).UnmarshalSSZ",
@@ -2504,9 +2376,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateFulu).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 1523: unknown register: riz"
+   "status": "OK",
+   "directives": 2744,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateFulu).UnmarshalSSZ",
@@ -2924,9 +2796,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyGloas).MarshalSSZTo",
    "group": "generated (not inventory)",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
+   "status": "OK",
+   "directives": 1370,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyGloas).UnmarshalSSZ",
@@ -3078,9 +2950,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderConfig).UnmarshalSSZ",
    "group": "generated (not inventory)",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 68: unknown register: riz"
+   "status": "OK",
+   "directives": 471,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderEntry).SizeSSZ",
@@ -3575,9 +3447,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyHeze).MarshalSSZTo",
    "group": "generated (not inventory)",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 313: unknown register: riz"
+   "status": "OK",
+   "directives": 1370,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyHeze).UnmarshalSSZ",
@@ -4121,9 +3993,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBody).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 321: unknown register: riz"
+   "status": "OK",
+   "directives": 913,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBody).UnmarshalSSZ",
@@ -4163,9 +4035,9 @@
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconState).MarshalSSZTo",
    "group": "inventory",
-   "status": "ERR",
-   "directives": null,
-   "error": "line 1417: unknown register: riz"
+   "status": "OK",
+   "directives": 1624,
+   "error": null
   },
   {
    "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconState).UnmarshalSSZ",

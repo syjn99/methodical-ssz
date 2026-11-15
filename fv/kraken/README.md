@@ -55,20 +55,22 @@ Run heavy jobs one at a time, under a memory limit.
 
 The IR (intermediate representation) is the type description that the generator reads.
 The generator binary is built from the pinned generator commit with Go 1.26.10 and `-trimpath`.
-After step 2, these commands make the IR, the inventory, the function list, the parser record and the type documents again:
+After step 2, these commands make the IR, the inventory, the function list, the parser result and the type documents again:
 
 ```sh
 python3 -I fv/kraken/gen/type_inventory.py reduce <out>/ir-mainnet.json fv/kraken/prysm/ir/ir-mainnet.json   # the same for minimal
 python3 -I fv/kraken/gen/type_inventory.py build fv/kraken/prysm
 python3 -I fv/kraken/gen/mnemonics.py <elf-out>/p1cbin-amd64.objdump fv/kraken/lean/.lake/packages/Kraken/Kraken/X64/Parser/Basic.lean fv/kraken/link/convert_objdump.py fv/kraken/prysm/inventory.json fv/kraken/prysm/go1.26.10/functions.json
 python3 -I fv/kraken/link/convert_objdump.py <elf-out>/p1cbin-amd64.objdump <elf-out>/p1cbin-amd64.nm <norm-out> --norm
-cd fv/kraken/lean && PARSER_RUN_LIST=<.S list> lake env lean ../gen/kraken-parser/ParserRun.lean
-python3 -I fv/kraken/gen/kraken-parser/summarize_parser_log.py <parser log> fv/kraken/prysm/go1.26.10/functions.json fv/kraken/prysm/go1.26.10/kparse.json
+ls <norm-out>/*.S | grep -v '/all\.S$' > <scratch>/parser-list.txt
+cd fv/kraken/lean && PARSER_RUN_LIST=<scratch>/parser-list.txt lake env lean ../gen/kraken-parser/ParserRun.lean > <scratch>/parser-log.txt
+python3 -I fv/kraken/gen/kraken-parser/summarize_parser_log.py <scratch>/parser-log.txt fv/kraken/prysm/go1.26.10/functions.json fv/kraken/prysm/go1.26.10/parser-result.json
 python3 -I fv/kraken/gen/type_list_document.py fv/kraken/prysm
 python3 -I fv/kraken/gen/type_scope.py fv/kraken
 ```
 
-The tracked file `prysm/go1.26.10/kparse-log.txt` is the parser log of the pinned ELF. `kraken-parser/summarize_parser_log.py` makes `kparse.json` from it.
+The `.S` list has one file for each function of `prysm/go1.26.10/functions.json`, without `all.S`.
+The parser log is not tracked. `kraken-parser/summarize_parser_log.py` makes `prysm/go1.26.10/parser-result.json` from it.
 
 ## 4. Directory layout
 
@@ -112,8 +114,8 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
 - A new library or a new hand list needs no change to the gate.
 - The gate overwrites its JSON argument. Give a scratch path, unless you intend to update a committed record.
 - The negative test files are the `negative-cases-*.json` files in `gen/checks/`, `gen/generator/`
-  and the subdirectories of `prysm/go1.26.10/evidence/`. The file `<name>.ids.tsv`
-  next to each one gives the earlier id of each case. A case id says what the case does: the Go type, the theorem without
+  and the subdirectories of `prysm/go1.26.10/evidence/`.
+  A case id says what the case does: the Go type, the theorem without
   the namespace of its type, the kind (control, statement or code), and for a mutant the changed words or operands
   (for example `epoch-decode-accept-code-cmp-0x8-to-0x9`). A case may name `mutant_imports` (module names): `negative.py`
   imports them into the mutated copy only, so that a mutant can use a declaration of another module.
@@ -137,6 +139,7 @@ python3 -B fv/kraken/link/data.py --check fv/kraken/link/out
 python3 -I -B fv/kraken/gen/generator/kindcheck.py --selftest
 python3 -I -B fv/kraken/gen/generator/kindcheck.py fv/kraken/lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean
 python3 -I -B fv/kraken/gen/checks/axioms_gate.py --selftest
+sh fv/kraken/gen/checks/python_checks.sh <scratch>/python-checks
 ```
 
 `gen/README.md` tells how to regenerate a generated Lean file and compare it with the tracked file.

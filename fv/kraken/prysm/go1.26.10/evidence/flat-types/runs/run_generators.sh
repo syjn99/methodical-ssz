@@ -1,7 +1,6 @@
 #!/bin/bash
 # One gated `decoder --whole-accept` run and one gated `encoder --fast-path` run per type (48 jobs, NN 10..57). No rerun.
 # Run records: <GoTypeName>.<mode>.{rc,stdout,stderr,summary.json} in <evidence dir>/raw (mode: whole-accept, fast-path).
-# The records of the first run have earlier names; record-names.tsv next to this script maps them to these names.
 E=$1; K=$2  # evidence dir (holds g.sh: the gate wrapper), fv/kraken
 N=prysm/go1.26.10/link-set/norm; R=$E/raw
 NN=10

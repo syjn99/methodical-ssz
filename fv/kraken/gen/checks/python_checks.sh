@@ -1,29 +1,28 @@
 #!/bin/sh
-# Python-only checks before and after a step. No Lean, no build.
+# Python-only checks of the tree. No Lean, no build.
 #
 # usage (from the repository root):
-#   sh fv/kraken/gen/restructure/tools/python_checks.sh <out dir>
+#   sh fv/kraken/gen/checks/python_checks.sh <out dir>
 #
 #   <out dir>  directory for the outputs. It must not exist. Delete it later with `trash`.
 #
-# Run it once on the tree before the forward run and once after the hand edits, with two out dirs.
-# Then compare: `diff -r <before> <after>`. Each check writes <name>.txt and one line `<name> rc=<n>` to summary.txt.
+# Each check writes <name>.txt and one line `<name> rc=<n>` to summary.txt.
+# To check a change, run it before and after the change, with two out dirs, and compare: `diff -r <before> <after>`.
 # Expected: the same rc for every check. A text difference needs a stated reason (for example a library count).
 # A check whose script is not in the tree gets the line `<name> not run (no <script>)`.
 # The default kindcheck list also has example files that no generator writes (for example the hand-written `Prysm/*/DecodeAcceptComposedExample.lean`).
-# So kindcheck_generated can exit 1 on the base too. `kindcheck.py --partial` never exits 0 (see its usage text).
+# So kindcheck_generated can exit 1 on an unchanged tree too. `kindcheck.py --partial` never exits 0 (see its usage text).
 #
 # Environment:
 #   KINDCHECK_FILES  the generated Lean files for kindcheck.py, as paths relative to fv/kraken.
 #                    Default: the non-partial generated and example modules lean/Prysm/*/Generated*.lean and
 #                    lean/Prysm/*/Decode*Example*.lean, without the identity and specification modules whose
 #                    names also start with Generated.
-#                    After a step that moves them, give the moved paths of the same files (see files.tsv).
 #   PARTIAL_FILES    the partial generator outputs for `kindcheck.py --partial`, relative to fv/kraken.
 #                    Default: lean/Prysm/*/Generated*Partial.lean.
 set -u
 if [ $# -ne 1 ]; then
-  sed -n '2,21p' "$0" >&2
+  sed -n '2,22p' "$0" >&2
   exit 2
 fi
 OUT=$1
@@ -77,12 +76,11 @@ echo "$CASES" > "$OUT/negative_case_files.txt"
 # shellcheck disable=SC2086
 run negative_check_cases gen/checks/negative.py python3 -I -B gen/checks/negative.py --check-cases $CASES
 # shellcheck disable=SC2086
-run negative_case_ranges gen/restructure/tools/negative_case_ranges.py \
-  python3 -I -B gen/restructure/tools/negative_case_ranges.py $CASES
-run rename_selftest gen/restructure/rename.py python3 -I -B gen/restructure/rename.py --selftest
+run negative_case_ranges gen/checks/negative_case_ranges.py \
+  python3 -I -B gen/checks/negative_case_ranges.py $CASES
 
 # Every tracked Python file under fv/ parses (the py_compile check without .pyc files).
-run python_syntax gen/restructure/tools/python_checks.sh python3 -I -B -c '
+run python_syntax gen/checks/python_checks.sh python3 -I -B -c '
 import ast, subprocess, sys
 root = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True).stdout.strip()
 files = subprocess.run(["git", "-C", root, "ls-files", "fv/*.py"], capture_output=True, text=True).stdout.split()

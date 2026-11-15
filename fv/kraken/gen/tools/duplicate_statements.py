@@ -9,7 +9,7 @@ usage (from the repository root, or give --root):
   <gate dump.tsv>  the dump of the axioms gate: `python3 -I -B fv/kraken/gen/checks/axioms_gate.py run <json> <dump.tsv>`.
                    Columns: name, kind, statement (type) hash, value hash, axioms.
   --root           the directory fv/kraken of the tree that gave the dump (default: fv/kraken).
-  --regen          the result of `gen/restructure/tools/regen.py` for the same tree (required). Its third column
+  --regen          the result of `gen/checks/regenerate_and_compare.py` for the same tree (required). Its third column
                    names the generated files (rows EQ, DIF and NOT). A header comment is not used: hand files also
                    name generators in their comments.
   --out            write the table here (default: standard output). The summary goes to standard error.
@@ -321,7 +321,7 @@ def checked_names(root):
             elif rel.startswith('gen' + os.sep + 'axioms-lists' + os.sep) and f.endswith('.lean'):
                 for m in re.finditer(r'#print\s+axioms\s+(\S+)', open(p, encoding='utf-8').read()):
                     names.setdefault(('list', m.group(1), ''), rel)
-            elif f.endswith(('.sh', '.lean')) and not rel.startswith('gen' + os.sep + 'restructure'):
+            elif f.endswith(('.sh', '.lean')):
                 text = open(p, encoding='utf-8', errors='replace').read()
                 if '--same-as' in text:
                     for m in re.finditer(r'--same-as(?:-prop)?[ =]+([A-Za-z_][\w.\']*)', text):

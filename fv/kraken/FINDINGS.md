@@ -120,7 +120,7 @@ How to handle a new finding is in `../README.md` section 7.
 ### Kraken cannot parse some operand and instruction forms
 
 - What: the Kraken parser rejects the SIB index `%riz` and multi-byte padding `nop` forms. The `include_x64` elaborator rejects some condition codes.
-- Where: 13 generated functions had `%riz`.
+- Where: 13 generated functions had `%riz` in the Kraken parser run of the record `prysm/go1.26.10/kparse.json` (commit `f55333d1`), made before the converter dropped `%riz`.
 - State: worked around. `link/convert_objdump.py --norm` drops `%riz` and writes padding as `nop`. `include_x64_code` (`lean/Machine/Include.lean`) uses the runtime parser.
 
 ### Converter wrote a negative 32-bit displacement as a large positive number
@@ -230,9 +230,9 @@ How to handle a new finding is in `../README.md` section 7.
   Six of the 26 others were broken by the restructuring; their case texts are corrected (below), and a Lean run of
   these six after the correction passes all six. The count is then 1042 passing and 20 not passing (the 1036 other
   results are from the full run; the six from the later run).
-  Each of the 20 has the same outcome in a committed result record from before the restructuring (old case id from the
-  `.ids.tsv` next to the case file; the records are on the archive branches of the earlier history, see the commit message of
-  `eca2b556`). Their mutation texts are the same as in the base case files, and their ranges differ only by the moved
+  Each of the 20 has the same outcome in a committed result record from before the restructuring. The list below gives
+  the commit, the record path and the earlier case id of each; the records are on the archive branches of the earlier
+  history, see the commit message of `eca2b556`. Their mutation texts are the same as in the base case files, and their ranges differ only by the moved
   lines of their modules and by the range rule below.
 - Range rule of the tool: the case range starts at the first line of the theorem's command (`set_option … in` lines and an
   attached doc comment `/-- … -/`; `negative.py` `command_start`, used by `list_negative.py`). Lean reports an error of the
@@ -282,7 +282,7 @@ How to handle a new finding is in `../README.md` section 7.
     - `sync-aggregator-selection-data-decode-accept-spec-statement-uint-bytes-slot-to-subcommittee-index`,
       `validator-balance-decode-accept-spec-statement-uint-bytes-index-to-balance`,
       `voluntary-exit-decode-accept-spec-statement-uint-bytes-epoch-to-validator-index`: `499db402`,
-      `prysm/go1.26.10/e2e/g5c/negative-g5c.json`, `g5c-sa-`, `g5c-vb-`, `g5c-ve-speck-stmt-field-swap`.
+      `prysm/go1.26.10/e2e/g5c/negative-g5c.json`, `g5c-sa-speck-stmt-field-swap`, `g5c-vb-speck-stmt-field-swap`, `g5c-ve-speck-stmt-field-swap`.
     - `sync-committee-message-decode-accept-spec-statement-uint-bytes-validator-index-to-slot`,
       `sync-committee-message-decode-accept-spec-statement-host-141-to-140`,
       `pending-consolidation-decode-accept-spec-statement-uint-bytes-target-index-to-source-index`,
@@ -376,7 +376,8 @@ How to handle a new finding is in `../README.md` section 7.
   FAIL, so the case still counts as expected, but three mutants no longer test their own defect: `n10-ref-trailing-space`
   and `q27-ref-trailing-space` (a trailing space after a right name), and `q46-escaped-key`, whose replacement of the
   reference `Fv1.luDesc` by null matches nothing.
-- Where: `gen/desc/spec-names-old-new.tsv` gives the present name of each earlier name.
+- Where: `gen/desc/review/r2_mutants.py` (`n10-ref-trailing-space`, reference `Fv1.luDesc`, now `Spec.listU64Desc`) and
+  `r3_mutants.py` (`q27-ref-trailing-space`, reference `Fv1.scDesc`, now `Spec.scalarsDesc`; `q46-escaped-key`, reference `Fv1.luDesc`).
 - State: open. The review sources are records, copied unchanged from the review. A fix translates the names in
   `test_desc.py` and needs a checker run with Lean.
 

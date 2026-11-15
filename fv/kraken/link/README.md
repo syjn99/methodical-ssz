@@ -17,7 +17,7 @@ The build info of the test target ELF names its main package `github.com/Offchai
 Its line table names the source files `cmd/p1bin/main.go`, `target/types.ssz.go` and `target/types1b.ssz.go`.
 These names are identities of that ELF, so they stay. The generator writes `types1b.ssz.go` from `types1b.go`.
 The file name `p1bin-amd64` of an ELF is the name of that main package; `check.py` and the data files read it.
-The data ids of `link/out/data/` follow the rule of `data.py` `item_id`; `link/out/data-ids-old-new.tsv` gives the earlier ids.
+The data ids of `link/out/data/` follow the rule of `data.py` `item_id`.
 `staticuint64s` keeps its id: it is the symbol `runtime.staticuint64s`, and `Runtime/StaticUint64s.lean` includes it.
 
 `convert_objdump.py` changes only what Kraken cannot read directly:

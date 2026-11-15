@@ -2,29 +2,22 @@
 with the tracked file. No Lean, no Go, no build.
 
 usage (from the repository root):
-  python3 -I -B fv/kraken/gen/restructure/tools/regen.py <work dir> [--files <files.tsv>]... > <result.txt>
+  python3 -I -B fv/kraken/gen/checks/regenerate_and_compare.py <work dir> > <result.txt>
 
   <work dir>   scratch directory. It must not exist. Delete it later with `trash`.
-  --files      a files.tsv of a map. Its rows give the earlier output names of the evidence tools.
-               Give the files.tsv of the shared-layer map and of the flat-types map (the two maps that moved
-               those files):
-               --files fv/kraken/gen/restructure/maps/shared-layer/files.tsv
-               --files fv/kraken/gen/restructure/maps/flat-types/files.tsv
 
 The tree is not changed: every generator runs in a copy of fv/ under <work dir>/copy.
 Each output line is `<EQ|DIF|MIS|NOT>` TAB generator TAB tracked file TAB detail.
 EQ: the output equals the tracked file. DIF: it differs (the detail shows the first changed lines).
 MIS: the tracked file does not exist. NOT: the tracked input of a hold-out command is not in the tree.
 
-Run it before and after a step and compare the two results with `diff`.
-Expected: the same lines, except that the generator outputs of the moved types can change from DIF to EQ.
-The generators that write files of a moved type must reproduce the moved file, or the difference needs a reason.
+To check a change, run it before and after the change and compare the two results with `diff`.
+A difference needs a reason.
 
-The script knows the generators and the output names of the tree after the flat-types step
-(gen/generator/gen.sh, the hold-out headers, the flat-type and encoder specification tools, desc_to_lean, list_desc_to_lean, layout, attestation_data_layout).
+The script knows these generators and their output names: gen/generator/gen.sh, the hold-out headers, the flat-type
+and encoder specification tools, desc_to_lean, list_desc_to_lean, layout and attestation_data_layout.
 Section 1 compares every Lean file that gen/generator/gen.sh writes. Sections 2 to 4 name the outputs by their paths in
-lean/Prysm/<GoTypeName>/. A tool of section 4 that still writes a file under an earlier name is compared with the
-tracked file of that name in the files.tsv of the maps given with --files.
+lean/Prysm/<GoTypeName>/.
 """
 import difflib
 import os
@@ -36,28 +29,13 @@ import sys
 args = sys.argv[1:]
 if not args or args[0].startswith('-'):
     sys.exit(__doc__)
+if len(args) != 1:
+    sys.exit(__doc__)
 work = os.path.abspath(args[0])
-file_maps = []
-rest = args[1:]
-while rest:
-    if rest[0] == '--files' and len(rest) > 1:
-        file_maps.append(rest[1])
-        rest = rest[2:]
-    else:
-        sys.exit(__doc__)
 if os.path.exists(work):
     sys.exit(f'error: {work} exists. Delete it with trash, or give another directory.')
 root = subprocess.run(['git', 'rev-parse', '--show-toplevel'], capture_output=True, text=True, check=True).stdout.strip()
 KRAKEN = os.path.join(root, 'fv/kraken')
-# earlier file name (base name) of a moved Lean file -> its path relative to fv/kraken
-moved_path_of = {}
-for ftsv in file_maps:
-    for line in open(os.path.join(root, ftsv) if not os.path.isabs(ftsv) else ftsv):
-        if line.startswith('#') or not line.strip():
-            continue
-        old, new = line.split('\t')[:2]
-        if old.startswith('fv/kraken/lean/') and old.endswith('.lean'):
-            moved_path_of[os.path.basename(old)] = new[len('fv/kraken/'):]
 os.makedirs(work)
 COPY = os.path.join(work, 'copy')
 shutil.copytree(os.path.join(root, 'fv'), os.path.join(COPY, 'fv'), symlinks=True,
@@ -188,7 +166,7 @@ for name, cmdf, glob in (
         for f in sorted(fs):
             if re.match(glob, f):
                 rel = os.path.relpath(os.path.join(dp, f), o)
-                cmp(f'{name} rc={r.returncode}', os.path.join(KRAKEN, moved_path_of.get(rel, 'lean/' + rel)),
+                cmp(f'{name} rc={r.returncode}', os.path.join(KRAKEN, 'lean', rel),
                     open(os.path.join(dp, f), 'rb').read())
 o = os.path.join(work, 'flat_types_decode_spec')
 os.makedirs(o)
@@ -207,7 +185,7 @@ r = run(['python3', '-I', '-B', f'{TOOLS}/flat_types_witness.py', '.'], COPY_KRA
 stats_after = lean_stats(os.path.join(COPY_KRAKEN, 'lean'))
 for produced in sorted(p for p in stats_after if stats_before.get(p) != stats_after[p]):
     rel = os.path.relpath(produced, COPY_KRAKEN)
-    cmp(f'flat_types_witness rc={r.returncode}', os.path.join(KRAKEN, moved_path_of.get(os.path.basename(rel), rel)),
+    cmp(f'flat_types_witness rc={r.returncode}', os.path.join(KRAKEN, rel),
         open(produced, 'rb').read())
 neg_out = os.path.join(work, 'negative-cases-flat-types.json')
 r = run(['python3', '-I', '-B', f'{TOOLS}/flat_types_negative_cases.py', 'lean', neg_out], COPY_KRAKEN)

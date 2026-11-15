@@ -49,12 +49,13 @@ Per file (any failure = FAIL):
 Result file: schema `fvphase1c.desccheck-result/1`, inventory path and sha256, table keys,
 exceptions, list-level findings, one record per file (path, sha256 of the bytes (EthLib
 SHA-256, FIPS 180-4), role, package, type, status, PASS/FAIL, failed checks with details) and
-`verdict` OK/FAIL. `first-generator/emit.py` reads only this file. The human log escapes every character
+`verdict` OK/FAIL. The human log escapes every character
 outside printable ASCII. A run with verdict FAIL ends with a non-zero exit.
 
 Threat model. Defends against: producer or IR bugs in the 9 hand types (spec comparison),
 mislabelled, stray, missing or duplicated Desc files, look-alike names, JSON parser differences,
-and stale or mixed result files at the emit boundary (sha256 binding, verdict, inventory hash).
+and stale or mixed result files (each record binds its file by sha256; the result binds the inventory by
+sha256 and has one verdict).
 Does not defend against: wrong shapes of the 135 Prysm types that agree with the inventory
 (no independent spec offline: consistency only), a forged result file written by hand (the
 result is not signed), or a wrong inventory committed on purpose.
@@ -188,8 +189,8 @@ partial def termUnknown (path : String) (j : Json) : List String :=
 def hexOf (b : ByteArray) : String :=
   b.foldl (fun acc x => acc ++ (if x < 16 then "0" else "") ++ String.ofList (Nat.toDigits 16 x.toNat)) ""
 
-/-- SHA-256 (EthLib, FIPS 180-4) of the file bytes, lower-case hex. emit.py binds a record to a
-file by this value (hashlib.sha256). -/
+/-- SHA-256 (EthLib, FIPS 180-4) of the file bytes, lower-case hex. A `SpecChecker.lean` header gives the
+sha256 of its `Desc` file (hashlib.sha256), which is this value. -/
 def sha256Hex (b : ByteArray) : String := hexOf (EthLib.Cryptography.Hash.sha256 b)
 
 /-- Escape a string for the human log: every character outside printable ASCII becomes \x<hex>;. -/

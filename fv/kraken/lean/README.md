@@ -8,8 +8,6 @@ The design principles are in `../../README.md`. The build commands are in `../RE
 
 The libraries `Spec`, `Machine`, `Runtime` and `Codec` are the shared layer.
 The library `Prysm` holds the proofs of the Prysm types (one directory for each type).
-`../gen/restructure/maps/shared-layer/files.tsv` gives the earlier path and a one-line meaning of each module that this map moved.
-A module that a later step added or split is not in a `files.tsv`.
 
 **`Spec`.** EthLib specifications that several types share, and the ones that the `Desc` checker imports (`../gen/desc-checker/`).
 They are the specifications of the small test types (`Spec/Test*.lean`) and of two reduced Prysm types (`Spec/TestCheckpointAndAttestationData.lean`).
@@ -27,7 +25,6 @@ A model is a small assembly program (`Runtime/*.S`) with theorems that it satisf
 
 **`Prysm`.** One directory for each Prysm type, `Prysm/<GoTypeName>/<Role>.lean`, namespace `Prysm.<GoTypeName>`.
 The full name of a main theorem is the name of the work, for example `Prysm.Checkpoint.Decode.reject_size`.
-The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `../gen/restructure/maps/attestation-data/` give the earlier path and a one-line meaning of each module that these maps moved.
 - `Prysm/Checkpoint/`: the `v1alpha1.Checkpoint` decoder, encoder and `SizeSSZ`, the hand specification (`Spec.lean`),
   the Go value predicate (`GoValue.lean`) and the decoder-then-encoder composition (`DecodeThenEncode.lean`).
 - `Prysm/Epoch/`: the decoder of the hand-written `primitives.Epoch` method and its function specification.
@@ -41,27 +38,27 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
   caller that holds Checkpoint as a nested field (AttestationData), and their checks on the Checkpoint witness hosts.
 - `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/`, `Prysm/IndexedAttestation/`: the decoders of these types.
   They have byte vectors, a vector of byte vectors and a variable-size list.
-  `../gen/restructure/maps/sync-and-indexed-attestation/files.tsv` gives the earlier path of each module that this map moved.
 - `Prysm/HistoricalBatch/`: the `v1alpha1.HistoricalBatch` decoder.
 - `Prysm/Deposit/`: the `v1alpha1.Deposit` decoder, proved with the lemmas of `Codec/Segment/`, and its witnesses.
-  `../gen/restructure/maps/historical-batch-and-deposit/files.tsv` gives the earlier path of each module of the two types that this map moved.
 - `Prysm/DataColumnsByRootIdentifier/`: the `v1alpha1.DataColumnsByRootIdentifier` encoder (fast path, growth at the
   first site and at any one site, two rejects), the decoder, and their composition at the machine level.
-  `../gen/restructure/maps/data-columns-by-root-identifier/files.tsv` gives the earlier path of each module that this map moved.
 - `Prysm/RuntimeModel/`: witness-only models of runtime functions that read ELF data of a link set
   (bump allocators that dispatch on a type word). The library `Runtime` does not import `Prysm`.
 - `Prysm/ElfData/`: the ELF data of the link set `../prysm/go1.26.10/link-set` (`PrysmTarget.lean`, namespace
   `ElfData.PrysmTarget`) and the command `prysm_data_include` that reads it (`PrysmTargetReader.lean`).
-  The root `ElfData` keeps the order of the constant names that some `simp` proofs depend on (see `../gen/restructure/README.md`).
+  The data namespace has the root `ElfData`, not `Prysm`, because of the order of names in `simp`.
+  `simp` with the commutativity lemmas `Std.ExtHashMap.sep_comm` and `sep_comm_l` orders the parts of a separating
+  conjunction by the names of their constants (Lean `Name.cmp`, root component first).
+  The root `ElfData` sorts before `HAdd`, `HSub`, `Host`, `Int`, `List` and `Eq`; the root `Prysm` sorts after them.
+  Some `simp` proofs depend on that order, so a data name with another root can make them fail. Only a build shows such a failure.
   A data name is the id of its data file, and the id names the ELF item: `sszErrSize` is the address of the global
   `ssz.ErrSize`, `typeUint8` the type descriptor of `uint8`, `formatSlot` the format string `Slot: %w`.
   `../link/data.py` (`item_id`) gives the rule; a type descriptor gets its id in the item table of its link script.
-  The lemmas `<id>_addr_eq` restate an address. `../prysm/go1.26.10/link-set/data-ids-old-new.tsv` gives the earlier ids.
+  The lemmas `<id>_addr_eq` restate an address.
 
 The flat fixed-size types (a flat type has only fixed-size fields and no nested container) have their directories in
 `Prysm/` too, for example `Prysm/BeaconBlockHeader/` and `Prysm/DepositRequest/`. The generated files are
 `Prysm/<GoTypeName>/Generated*.lean`. They use the patterns and kinds of `Codec`.
-`../gen/restructure/maps/flat-types/files.tsv` gives the earlier path of each module that this map moved.
 The statement kinds of the composed and whole accept theorems, of the callee calls and of the encoder fast path are in
 `Codec/Kind/` (`DecodeAccept*.lean`, `CalleeDecode.lean`, `EncodeFastPathAnyFrame.lean`); some of these modules import modules of single types.
 
@@ -213,7 +210,7 @@ Use one witness host for each file. Two `Host` instances in one file make instan
 
 ## 8. Names
 
-Module, namespace and main theorem names use the full Go type name (`../gen/restructure/SPEC.md`).
+Module, namespace and main theorem names use the full Go type name (the name forms at the end of this section).
 The structure `Prysm.<GoTypeName>.SszValue` holds the SSZ content of a type.
 Earlier short names and labels remain only in the places below, each for the reason given.
 
@@ -230,38 +227,68 @@ Earlier short names and labels remain only in the places below, each for the rea
     `Spec.listU64Desc`;
   - the build path `fvphase1c/p1cbin` of the `main` package of the pinned Prysm ELF (`../README.md`): the ELF records it;
   - the names of Kraken, Lean, Mathlib and EthLib.
-- Records of earlier runs keep the names and paths of their run. These tables give the present name of each earlier one:
-  - `../gen/path-names.tsv`: earlier paths of tools, tests, directories and case files;
-  - `<case file>.ids.tsv`, next to each negative case file `negative-cases-*.json`: earlier ids of the negative cases;
-  - `../gen/generator/decoder-test-case-ids.tsv` and `../gen/generator/encoder-test-case-ids.tsv`: earlier ids of the
-    cases of the generator tests;
-  - `../gen/generator/option-names.tsv`: earlier generator modes, options and header labels;
-  - `../prysm/go1.26.10/evidence/flat-types/runs/record-names.tsv`: earlier record file names of the generator runs on
-    the 24 flat types, and the names that a new run writes;
-  - `../prysm/go1.26.10/link-set/data-ids-old-new.tsv`: earlier data ids of the Prysm link set;
-  - `../gen/desc/spec-names-old-new.tsv`: earlier names of the `Spec` test-type declarations, which the records of the
-    `Desc` checker name;
-  - `differential-cases.ids.tsv`, next to each Go differential case file `differential-cases.json`: earlier ids of the
-    differential cases;
-  - the maps of `../gen/restructure/maps/` (`names.tsv`, `files.tsv`): the module and declaration names before and
-    after each rename step (`../gen/restructure/README.md` section 4).
-  Some of these records also keep earlier names inside their files:
-  - the first generator `../gen/first-generator/` (an earlier run): the namespaces it writes (`Gen1c.*`, `TestTarget.*`,
-    `Fk.*`) name libraries that were removed, and the include API snapshot `include-api-v3.json` keeps its fields
-    (`fix3_commit`, `status`);
-  - the parser-run records `../prysm/go1.26.10/kparse.json`, `kparse-log.txt`, `kparse-riz-diag.json`,
-    `kparse-riz-diag-log.txt` and the log lines `KPARSE OK` / `KPARSE ERR` / `KPARSE DONE` that
-    `../gen/kraken-parser/ParserRun.lean` prints and `summarize_parser_log.py` reads;
-  - the raw output of the frozen generator `../prysm/go1.26.10/evidence/eth1-data/gen-e1dec.raw.txt` (earlier tool
-    names and labels inside) and the mode name `p2dec` and option `--S` of the frozen generator in the case `old-gen`
-    of `../gen/generator/decoder_test.py`;
+- Records of earlier runs keep the names and paths of their run:
   - the set labels `set_A`, `set_B`, `set_I`, `in_A`, `in_B`, `A_minus_B`, `B_generated_minus_A`, `I_hand_written` of
     `../prysm/inventory.json` (the inventory format that `../gen/type_inventory.py`, `type_list_document.py`,
     `type_scope.py` and `../prysm/TYPES.md` use);
-  - the axioms records `../prysm/go1.26.10/evidence/AXIOMS.txt` and `axioms.json`, which name two theorems of an
-    earlier tree (`Prysm.Epoch.Decode.reject_static_addr`, `Prysm.Checkpoint.Encode.tail_rej`).
-- Schema ids: `fvphase1c.*` (for example `fvphase1c.inventory/1`, `fvphase1c.desc/1`) and `fvpar.include-api/1`. They are
+  - the `Desc` checker result `../gen/desc/results/main.result.json` and the review sources `../gen/desc/review/*`
+    (`../gen/README.md` section 5);
+  - the data ids of the record link table `../prysm/go1.26.10/link/`;
+  - the records `../prysm/go1.26.10/evidence/generator-cases/AXIOMS.txt`, `evidence/negative/result.json`,
+    `evidence/e2e.json` and `evidence/axioms-gate.json`, and the frozen lists `../gen/frozen/*.json`.
+- Schema ids: `fvphase1c.*` (for example `fvphase1c.inventory/1`, `fvphase1c.desc/1`). They are
   format identifiers that the tools write and that records and checks compare, so they are kept.
 - Standard short words: lemma names of the form instruction + constant + fact (`Machine.and7_zero`, `Machine.zx8`,
   `Machine.jg16_false`); the instruction, register and memory words of Kraken and x86 inside `Codec` names (`Lea`,
   `Mov`, `Nop`, `Ret`, `Reg`, `Mem`, `rax`, …).
+
+### Name forms
+
+A module of a Prysm type is `Prysm/<GoTypeName>/<Role>.lean` in the library `Prysm`, with the namespace `Prysm.<GoTypeName>`.
+`<GoTypeName>` is the Go type name as the Go source writes it. It is never an abbreviation.
+A declaration of the type uses a dotted name for the function part, for example `theorem Decode.reject_size` inside `namespace Prysm.Checkpoint`.
+
+| Content of the module | Role name |
+| --- | --- |
+| Program constants read from the converted `.S` files | `Code` |
+| Go struct layout (offsets, sizes) | `Layout` |
+| Validity of the Go value of the receiver | `GoValue` (and `GoValueWitness` for its witness) |
+| The EthLib description of the type and the bridge lemmas | `Spec` |
+| The description generated for the description checker | `SpecChecker` |
+| Equality of the hand description and the checker description | `SpecEquivalence` |
+| Decoder, accept path | `DecodeAccept` |
+| Decoder, one reject path | `DecodeRejectSize`, `DecodeRejectOffset`, `DecodeRejectAlignment`, `DecodeRejectOverflow`, `DecodeRejectDelegate` |
+| Decoder, a loop or a call that the accept path uses | `DecodeLoop`, `DecodeCall`, with a plain qualifier when there are several |
+| Decoder, connection to EthLib | `DecodeSpec` |
+| Encoder, path with no slice growth | `EncodeFastPath` |
+| Encoder, growth at the first append site only | `EncodeGrowFirstSite` |
+| Encoder, growth at any one site / at any site | `EncodeGrowOneSite` / `EncodeGrowAnySite` |
+| Encoder, a reject | `EncodeRejectLength`, `EncodeRejectTooBig`, and so on (name the cause) |
+| Encoder, connection to EthLib | `EncodeSpec` |
+| Encoder, a part of a long proof (head, tail, cover, a field) | `Encode` + plain word for the part (`EncodeHead`, `EncodeTail`, `EncodeCover`) |
+| `SizeSSZ` | `Size` |
+| Decode then encode, round trip, composition | `DecodeThenEncode` |
+| A witness of theorem X (a concrete state that satisfies the premises) | `Witness` + the role of X (`WitnessDecodeAccept`, `WitnessEncodeFastPath`) |
+| Statements only (definitions `..._statement : Prop`) | `Statements`, or `Statements` + plain qualifier |
+| ELF data definitions of a link set, and the command that reads them | under `Prysm/ElfData/`: `<PlainSetName>` and `<PlainSetName>Reader` |
+
+If no role fits, the module name uses plain words that say what the module holds (for example `DecodeFieldSegments`, `SpecDescription`).
+A module that holds several roles has the name of its main role.
+
+The main theorems inside `Prysm.<GoTypeName>` have these names:
+
+- decoder: `Decode.accept`, `Decode.reject_size`, `Decode.reject_offset`, `Decode.reject_alignment`, `Decode.reject_overflow`,
+  `Decode.accept_spec`, `Decode.reject_<cause>_spec`, `Decode.reject_complete`;
+- encoder: `Encode.fast_path`, `Encode.grow_first_site`, `Encode.grow_one_site`, `Encode.grow_any_site`, `Encode.reject_length`,
+  `Encode.reject_too_big`, `Encode.fast_path_spec` (and `Encode.<path>_spec` for the other paths);
+- `SizeSSZ`: `Size.result`, `Size.result_spec`; decode then encode: `DecodeThenEncode.round_trip`;
+- a suffix in words states an added premise, for example `Decode.reject_alignment_error_word_nonzero`;
+- the statement of a theorem is the `def` or `abbrev` with the name of the theorem + `_statement`;
+- program constants: `Code.unmarshalSSZ`, `Code.marshalSSZTo`, `Code.sizeSSZ`, `Code.marshalSSZ`; descriptions: `desc`,
+  `checkerDesc`; Go layout: `goFields`, `goSize`;
+- a function specification of a method: `Decode.accept_function_spec` or `Encode.fast_path_function_spec`; the lemma
+  that it holds has the suffix `_holds`;
+- a witness file has the namespace `Prysm.<GoTypeName>.Witness.<Role>` (for example `Witness.DecodeAccept`), and its
+  main theorem is `runs`, with a plain qualifier for the case (`runs_empty`, `runs_one_element`, `runs_maximum`).
+
+The generators write the names `Decode.generated_*` and `Encode.generated_*` (`../gen/README.md`).

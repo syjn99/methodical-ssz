@@ -15,7 +15,6 @@
       Reads only the checker result files (main.result.json, scen/*.result.json). Writes
       <out.json> and <out.md> (table: case -> expected -> actual -> failing check).
       Exit status 1 on any mismatch.
-The emit side of every scenario is tested by first-generator/test_boundary.py.
 Python 3 standard library only. Run with python3 -I.
 """
 import copy
@@ -306,7 +305,7 @@ def prepare(work):
             lst.append(v)
         write(f"{scen}/{sid}.txt", "\n".join(lst) + "\n")
         exp["scenarios"][sid] = {"source": "phase1c", "what": what, "list": f"{scen}/{sid}.txt", "expect": "FAIL", "finding": finding}
-    # emit-boundary scenarios: every wrong hand-type Desc (controls and replay mutants with a hand
+    # add-and-replace scenarios (key "boundary"): every wrong hand-type Desc (controls and replay mutants with a hand
     # base that a sound checker must reject), added next to the originals and in place of its base
     wrong = [(m["id"], m["base"], p) for p, m in exp["controls"].items() if hand_base(m["base"])]
     wrong += [(m["id"], m["base"], p) for p, m in exp["replay"].items() if hand_base(m["base"]) and m["reviewer_expects"] == "FAIL"]
@@ -423,7 +422,7 @@ def evaluate(work, out):
     for r in full["replay"]:
         md.append(f"| {r['review']} | {r['id']} | {r['base']} | {r['reviewer_expects']} | {r['result']} | {r['status']} | "
                   f"{', '.join(r['failed_checks'])} | {r['note']} |")
-    md += ["", "## List scenarios (t01-t13 of review/r3_mutants.py, the scenarios of this file, emit-boundary add/replace)", "",
+    md += ["", "## List scenarios (t01-t13 of review/r3_mutants.py, the scenarios of this file, add-and-replace scenarios)", "",
            "| id | source | verdict | findings | as expected |", "| --- | --- | --- | --- | --- |"]
     for r in full["scenarios"]:
         f = "; ".join(f"{k}: {len(v) if isinstance(v, list) else v}" for k, v in r["findings"].items())

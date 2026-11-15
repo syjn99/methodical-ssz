@@ -5,31 +5,27 @@
  "types": 135,
  "counts": {
   "first_class": {
-   "missing contract": 61,
+   "missing contract": 74,
    "new pattern (automation)": 23,
-   "none known": 38,
-   "tool gap": 13
+   "none known": 38
   },
   "first_class_transitive": {
-   "missing contract": 77,
+   "missing contract": 119,
    "new pattern (automation)": 8,
-   "none known": 8,
-   "tool gap": 42
+   "none known": 8
   },
   "first_class_transitive_fulu_reachable": {
-   "missing contract": 28,
+   "missing contract": 37,
    "new pattern (automation)": 2,
-   "none known": 6,
-   "tool gap": 9
+   "none known": 6
   },
   "first_class_scope_in_only": {
-   "missing contract": 58,
+   "missing contract": 71,
    "new pattern (automation)": 23,
-   "none known": 38,
-   "tool gap": 13
+   "none known": 38
   },
   "has_class": {
-   "tool gap": 13,
+   "tool gap": 0,
    "missing contract": 74,
    "new pattern (automation)": 91,
    "none known": 38
@@ -67,14 +63,13 @@
    "list_container_fixed_elements_new": 19,
    "vector_of_container_forms": 1,
    "vector_of_byte_slices": 27,
-   "three_functions_parse": 119,
-   "some_function_does_not_parse": 13
+   "three_functions_parse": 132,
+   "some_function_does_not_parse": 0
   },
   "fulu_reachable_first_class": {
-   "missing contract": 20,
+   "missing contract": 23,
    "new pattern (automation)": 7,
-   "none known": 15,
-   "tool gap": 3
+   "none known": 15
   }
  },
  "rows": [
@@ -1026,7 +1021,7 @@
    ],
    "first_class": "missing contract",
    "callee_closure": 14,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockAltair",
@@ -1079,7 +1074,7 @@
    ],
    "first_class": "missing contract",
    "callee_closure": 15,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockBellatrix",
@@ -1132,7 +1127,7 @@
    ],
    "first_class": "missing contract",
    "callee_closure": 16,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockBody",
@@ -1178,20 +1173,19 @@
     "panic*": 13
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 1505,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 13,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockBodyAltair",
@@ -1237,20 +1231,19 @@
     "panic*": 13
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 1554,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 14,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockBodyBellatrix",
@@ -1298,20 +1291,19 @@
     "panic*": 13
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 1629,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 15,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockBodyCapella",
@@ -1359,20 +1351,19 @@
     "panic*": 15
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 1832,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 18,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockBodyDeneb",
@@ -1422,20 +1413,19 @@
     "panic*": 17
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 2014,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 18,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockBodyElectra",
@@ -1485,20 +1475,19 @@
     "panic*": 16
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 2023,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 22,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockCapella",
@@ -1551,7 +1540,7 @@
    ],
    "first_class": "missing contract",
    "callee_closure": 19,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockContentsDeneb",
@@ -1599,7 +1588,7 @@
    ],
    "first_class": "new pattern (automation)",
    "callee_closure": 20,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockContentsElectra",
@@ -1647,7 +1636,7 @@
    ],
    "first_class": "new pattern (automation)",
    "callee_closure": 24,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockContentsFulu",
@@ -1695,7 +1684,7 @@
    ],
    "first_class": "new pattern (automation)",
    "callee_closure": 24,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockDeneb",
@@ -1748,7 +1737,7 @@
    ],
    "first_class": "missing contract",
    "callee_closure": 19,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockElectra",
@@ -1801,7 +1790,7 @@
    ],
    "first_class": "missing contract",
    "callee_closure": 23,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconBlockHeader",
@@ -1914,20 +1903,19 @@
     "panic*": 29
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 2099,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 7,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconStateAltair",
@@ -2288,20 +2276,19 @@
     "panic*": 36
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 2806,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 11,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BeaconStateFulu",
@@ -2370,20 +2357,19 @@
     "panic*": 38
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 2890,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 11,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BlindedBeaconBlockBellatrix",
@@ -2436,7 +2422,7 @@
    ],
    "first_class": "missing contract",
    "callee_closure": 16,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BlindedBeaconBlockBodyBellatrix",
@@ -2484,20 +2470,19 @@
     "panic*": 13
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 1629,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 15,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BlindedBeaconBlockBodyCapella",
@@ -2545,20 +2530,19 @@
     "panic*": 15
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 1832,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 17,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BlindedBeaconBlockBodyDeneb",
@@ -2608,20 +2592,19 @@
     "panic*": 17
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 2014,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 17,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BlindedBeaconBlockBodyElectra",
@@ -2671,20 +2654,19 @@
     "panic*": 16
    },
    "kraken_parse_marshal_size_unmarshal": [
-    "ERR",
+    "OK",
     "OK",
     "OK"
    ],
    "max_instructions": 2023,
    "size_band": "over 3x hand max",
    "expected_failure_classes": [
-    "tool gap",
     "missing contract",
     "new pattern (automation)"
    ],
-   "first_class": "tool gap",
+   "first_class": "missing contract",
    "callee_closure": 21,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BlindedBeaconBlockCapella",
@@ -2737,7 +2719,7 @@
    ],
    "first_class": "missing contract",
    "callee_closure": 18,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BlindedBeaconBlockDeneb",
@@ -2790,7 +2772,7 @@
    ],
    "first_class": "missing contract",
    "callee_closure": 18,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BlindedBeaconBlockElectra",
@@ -2843,7 +2825,7 @@
    ],
    "first_class": "missing contract",
    "callee_closure": 22,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BlindedBeaconBlockFulu",
@@ -2896,7 +2878,7 @@
    ],
    "first_class": "missing contract",
    "callee_closure": 22,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "BlobIdentifier",
@@ -5346,7 +5328,7 @@
    ],
    "first_class": "none known",
    "callee_closure": 15,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBeaconBlockAltair",
@@ -5390,7 +5372,7 @@
    ],
    "first_class": "none known",
    "callee_closure": 16,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBeaconBlockBellatrix",
@@ -5434,7 +5416,7 @@
    ],
    "first_class": "none known",
    "callee_closure": 17,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBeaconBlockCapella",
@@ -5478,7 +5460,7 @@
    ],
    "first_class": "none known",
    "callee_closure": 20,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBeaconBlockContentsDeneb",
@@ -5526,7 +5508,7 @@
    ],
    "first_class": "new pattern (automation)",
    "callee_closure": 21,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBeaconBlockContentsElectra",
@@ -5574,7 +5556,7 @@
    ],
    "first_class": "new pattern (automation)",
    "callee_closure": 25,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBeaconBlockContentsFulu",
@@ -5622,7 +5604,7 @@
    ],
    "first_class": "new pattern (automation)",
    "callee_closure": 25,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBeaconBlockDeneb",
@@ -5666,7 +5648,7 @@
    ],
    "first_class": "none known",
    "callee_closure": 20,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBeaconBlockElectra",
@@ -5710,7 +5692,7 @@
    ],
    "first_class": "none known",
    "callee_closure": 24,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBeaconBlockFulu",
@@ -5754,7 +5736,7 @@
    ],
    "first_class": "none known",
    "callee_closure": 24,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBeaconBlockHeader",
@@ -5842,7 +5824,7 @@
    ],
    "first_class": "none known",
    "callee_closure": 17,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBlindedBeaconBlockCapella",
@@ -5886,7 +5868,7 @@
    ],
    "first_class": "none known",
    "callee_closure": 19,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBlindedBeaconBlockDeneb",
@@ -5930,7 +5912,7 @@
    ],
    "first_class": "none known",
    "callee_closure": 19,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBlindedBeaconBlockElectra",
@@ -5974,7 +5956,7 @@
    ],
    "first_class": "none known",
    "callee_closure": 23,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBlindedBeaconBlockFulu",
@@ -6018,7 +6000,7 @@
    ],
    "first_class": "none known",
    "callee_closure": 23,
-   "first_class_transitive": "tool gap"
+   "first_class_transitive": "missing contract"
   },
   {
    "type": "SignedBuilderBidCapella",

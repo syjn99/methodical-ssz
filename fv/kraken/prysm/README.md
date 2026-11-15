@@ -26,9 +26,9 @@ All files here belong to one ELF. Do not mix them with the files of another ELF.
 | `build-ids.txt` | The Go version, the build flags and the sha256 of the ELF, its disassembly and its symbol listing |
 | `p1cbin-main.go.txt`, `prysm-go.mod.diff` | The `main` package of the binary and the `go.mod` change in the Prysm tree |
 | `ssz-methods.json` | Every SSZ method of the ELF. It is the denominator of the inventory |
-| `functions.json`, `kparse.json`, `kparse-log.txt` | The functions with a converted `.S` file, which of them the Kraken parser reads, and the parser log that `gen/kraken-parser/summarize_parser_log.py` reads |
-| `link/` | A link table of 136 functions of this ELF. No current theorem includes it. It is a record: its data files keep their ids (`x5…`), and `link/data-ids-old-new.tsv` gives the present id of each item |
-| `link-set/` | The one link set of the proved functions: `target.objdump`, `norm/*.S`, `norm/all.S`, `data/*.data` and `RESULT`. `gen/checks/link_set.py` writes it. Its `RESULT` replaces the `RESULT` files of the 16 earlier link sets. `data-ids-old-new.tsv` maps the data ids of the earlier link sets and records to the present ids |
+| `functions.json`, `parser-result.json` | The functions with a converted `.S` file, and which of them the Kraken parser reads. `gen/kraken-parser/summarize_parser_log.py` writes `parser-result.json` from a parser log that is not tracked (`../README.md` section 3) |
+| `link/` | A link table of 136 functions of this ELF. No current theorem includes it. It is a record: its data files keep the ids of its run (`x5…`) |
+| `link-set/` | The one link set of the proved functions: `target.objdump`, `norm/*.S`, `norm/all.S`, `data/*.data` and `RESULT`. `gen/checks/link_set.py` writes it. Its `RESULT` replaces the `RESULT` files of the 16 earlier link sets |
 | `evidence/` | The check records, negative case lists and generator records of the proved types (section 3) |
 
 ## 3. Records under `go1.26.10/evidence/`
@@ -54,7 +54,7 @@ This table says what each subdirectory holds.
 Other files in `evidence/`: `axioms-gate.json` and `e2e.json` are records of runs before the restructuring.
 They name files and libraries that are no longer in the tree.
 `axioms-gate.json` is the record of an axioms gate run. `e2e.json` binds the include files and the link inputs of that time by sha256.
-`gen/checks/axioms.py` writes `axioms.json` from `AXIOMS.txt`. `gen/checks/differential.py check` writes `differential.json`. `gen/checks/negative.py` writes `negative/result.json`.
+`gen/checks/differential.py check` writes `differential.json`. `gen/checks/negative.py` writes `negative/result.json`.
 
 ## 4. Files that are inputs of checks
 
@@ -63,11 +63,10 @@ Do not edit these files by hand. Make them again with their generator.
 - The `.S` and `.data` files of the link set. Lean includes them, and the link check compares them with the ELF.
 - `ir/*.json` and `inventory.json`. The generators, the `Desc` checker and the frozen lists read them. `gen/frozen/THEOREMS.json` pins the sha256 of `inventory.json`.
 - The `*.desc.json` files. The `Desc` checker accepted them, and the header of each `*SpecChecker.lean` gives their sha256.
-- The negative case lists `negative-cases-*.json`, each with the id table `<name>.ids.tsv` next to it. The negative test scripts read them.
+- The negative case lists `negative-cases-*.json`. The negative test scripts read them.
 - `go1.26.10/build-ids.txt` and `go1.26.10/ssz-methods.json`. `gen/tools/proof_inventory.py` reads them. It checks the symbol listing against the sha256 in `build-ids.txt`.
 
 Some records are also inputs of checks. Do not edit them by hand either:
-`go1.26.10/kparse.json` and `go1.26.10/kparse-riz-diag.json` (`gen/type_scope.py` and `gen/type_list_document.py` read them),
-`go1.26.10/build-ids.txt`, and `go1.26.10/evidence/eth1-data/gen-e1dec.raw.txt` (the decoder generator test reads it).
+`go1.26.10/parser-result.json` (`gen/type_scope.py` and `gen/type_list_document.py` read it) and `go1.26.10/build-ids.txt`.
 
 The other JSON files and the `RESULT` files are records of check runs. A new run writes them again. Do not edit them to change a result.

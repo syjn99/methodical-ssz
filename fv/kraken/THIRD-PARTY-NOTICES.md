@@ -67,8 +67,8 @@ Scope: the path lists come from program scans of the tracked files for Go source
 
 ## H. Files that only name upstream symbols
 
-- Other files under `fv/kraken/` (1101 tracked files outside sections A to G) may name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of families A and E.
-  Examples: `prysm/go1.26.10/functions.json`, `prysm/go1.26.10/kparse*` (4) and the negative-test case files `**/negative-cases*.json` (32).
+- Other files under `fv/kraken/` (940 tracked files outside sections A to G) may name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of families A and E.
+  Examples: `prysm/go1.26.10/functions.json`, `prysm/go1.26.10/parser-result.json` (1) and the negative-test case files `**/negative-cases*.json` (32).
 - A program scan of these files for Go source fragments (`func `, `return `, `{ return`, `inline call to`, `can inline`) found these quotes:
   - doc comments in `lean/Prysm/` quote short excerpts of family B methods and of Prysm `consensus-types/primitives` (`lean/Prysm/Epoch/DecodeAccept.lean` lines 9-11, `lean/Codec/Uint64Decoder.lean` lines 7-8);
 - The other hits are this project's own tool code or prose. The `.py`, `.go` and `.sh` hits were not each read. The files were not each read in full.

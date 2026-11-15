@@ -32,7 +32,7 @@ The design principles are in `../../README.md`.
 | `checks/callgraph.py` and the `callgraph` mode of `checks/*_link.py` | A filtered disassembly | `callgraph*.json` files. The tree holds none of them. `checks/checkpoint_and_epoch_link.py` imports the function list of `checks/callgraph.py` |
 | `checks/*_differential.py` | Nothing, or a Go output file | Go differential cases, and their comparison with the Go output |
 | `frozen/build_lists.py` | The inventory and the generated Go | `frozen/THEOREMS.json`, `frozen/ASSUMPTIONS.json` |
-| `kraken-parser/summarize_parser_log.py` | A log of `kraken-parser/ParserRun.lean` | `prysm/go1.26.10/kparse.json`: which functions the Kraken parser reads |
+| `kraken-parser/summarize_parser_log.py` | A log of `kraken-parser/ParserRun.lean` | `prysm/go1.26.10/parser-result.json`: which functions the Kraken parser reads |
 | `prysm-gen.sh`, `prysm-elf.sh` | A Prysm tree and the generator binary | Generated Go, the IR and the Prysm ELF (needs Go) |
 
 The tools for the 24 other flat types are in `prysm/go1.26.10/evidence/flat-types/tools/` and `prysm/go1.26.10/evidence/flat-types/runs/run_generators.sh`.
@@ -42,9 +42,7 @@ The encoder specification and witness emitter of the flat types is `prysm/go1.26
 decoder. Without an option it writes the 32-byte field segments. `--field-segments` adds byte vectors of 32, 48 and
 96 bytes and inline uint64 fields, `--call-segments` also the fields that a callee decodes, `--steps` the step chain
 over windows (a padding `nop` anywhere), and `--whole-accept` the step chain with the whole accept and size-reject
-theorems. `encoder --fast-path`: the encoder fast path theorem. `generator/option-names.tsv` gives the earlier names of
-the modes and options and of the labels in the generated headers (run records and old headers use them).
-`prysm/go1.26.10/evidence/flat-types/runs/record-names.tsv` maps the earlier run record names of `run_generators.sh`.
+theorems. `encoder --fast-path`: the encoder fast path theorem.
 
 ## 3. Check that a generated file is the generator output
 
@@ -86,8 +84,13 @@ A kind identity is not a witness. It does not show that the premises can hold.
 So a defect in the producer or in the IR does not also hide in the checker.
 `desc/run_desc_checker.sh` runs it (needs Lean). The result is `desc/results/main.result.json`.
 That result and the review sources `desc/review/*` are records of earlier runs, and they keep the earlier names of the
-`Spec` declarations (for example `Spec.scDesc`, `Fv1.luDesc`). `desc/spec-names-old-new.tsv` gives the present name of
-each earlier name. A new checker run writes the present names.
+`Spec` descriptions: the result names `Spec.<xy>Desc`, and the review sources name `Fv1.<xy>Desc`.
+The two letters `<xy>` give the test type: `sc` Scalars, `fv` FixedVec, `lu` ListU64, `bv` BitVec, `ne` Nested,
+`lc` ListOfContainers, `bl` BitList, `cp` Checkpoint, `ad` AttestationData.
+The present name is `Spec.` + the type name in lower camel case + `Desc`, for example `Spec.scalarsDesc` and `Spec.listU64Desc`.
+A new checker run writes the present names.
+No program checks the binding of the result where a `Desc` is used.
+The header of each `*SpecChecker.lean` states the sha256 of its `Desc` file as text only.
 
 - The set of expected types is closed. It is the table of hand cases in the checker plus the keys of `prysm/inventory.json`.
 - Before it parses a file, the checker limits the file size and the nesting depth.
@@ -122,13 +125,14 @@ python3 -I -B fv/kraken/gen/checks/axioms_gate.py --selftest
 with the same statement hash and gives the group one class with a reason. The class rules are in its usage text.
 
 ```sh
-python3 -I -B fv/kraken/gen/restructure/tools/regen.py <scratch>/regen-work > <scratch>/regen.txt
+python3 -I -B fv/kraken/gen/checks/regenerate_and_compare.py <scratch>/regen-work > <scratch>/regen.txt
 python3 -I -B fv/kraken/gen/tools/duplicate_statements.py <scratch>/dump.tsv --root fv/kraken \
   --regen <scratch>/regen.txt --out <scratch>/groups.tsv
 python3 -I -B fv/kraken/gen/tools/duplicate_statements.py --selftest
 ```
 
-- Give `regen.py` the `--files` options that its usage text names. The tool takes the generated files from its result.
+- `checks/regenerate_and_compare.py` runs the Python generators of the Lean files on a copy of the tree and compares each output
+  with the tracked file. `duplicate_statements.py` takes the generated files from its result.
 - The table has one row per theorem of a group: group id, name, module, class, reason. The counts per class go to
   standard error.
 - Exit 1 means a group in the class `delete-candidate` (a hand theorem that can be removed: its twin is visible at
@@ -143,13 +147,20 @@ These run without Lean, Go or the Prysm ELF:
 - `tools/duplicate_statements.py`, on a dump of the axioms gate (the dump itself needs Lean).
 - `python3 -B fv/kraken/link/data.py --check fv/kraken/link/out`.
 - `regen_check.sh` with `generator/generator.py`, `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py`, `checks/layout.py` and `checks/attestation_data_layout.py`.
-- `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`, `kraken-parser/summarize_parser_log.py`.
+- `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`.
+- `checks/regenerate_and_compare.py <scratch>/<work dir>`, the regeneration comparison of all Python generators of Lean files.
+- `checks/python_checks.sh <scratch>/<out dir>`. It runs `link/data.py --check`, `checks/check_include.py`,
+  `checks/deposit_data_include_check.py`, the self-tests of `checks/axioms_gate.py`, `checks/deposit_data_include_check.py`,
+  `generator/kindcheck.py` and `checks/negative.py`, `kindcheck.py` on the generated files, `negative.py --check-cases`
+  and `checks/negative_case_ranges.py` on every case file, and a syntax check of every Python file under `fv/`.
 - `frozen/test_frozen.py <repo-root> <scratch>`, which runs `frozen/build_lists.py` and compares the two frozen lists.
 - `desc/test_desc.py prepare` writes the `Desc` files. The checker run after it needs Lean.
 
 These need more than Python:
 
 - `checks/negative.py` and the `run` mode of the axioms gate need Lean.
+- `kraken-parser/summarize_parser_log.py` needs a log of `kraken-parser/ParserRun.lean` (Lean) on the `.S` files of the
+  Prysm ELF (`../README.md` section 3). The log is not tracked.
 - The link checks need the ELF and the LLVM tools.
 - The differential checks need Go and a Prysm tree.
   A Prysm tree at the pinned commit with the generated files of `prysm/_generated/` is enough; nothing is written into it.
