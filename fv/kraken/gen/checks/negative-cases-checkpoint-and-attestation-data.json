@@ -472,6 +472,91 @@
   "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))"
  },
  {
+  "id": "epoch-encode-grow-first-site-control",
+  "kind": "control",
+  "module": "Prysm/Epoch/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Epoch.Encode.grow_first_site",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZTo.S"
+ },
+ {
+  "id": "epoch-encode-grow-first-site-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/Epoch/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Epoch.Encode.grow_first_site",
+  "old": "  mov $0x8,%edi",
+  "new": "  mov $0x9,%edi",
+  "why": "growslice num 9: old = len - 1 bytes, not len",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZTo.S"
+ },
+ {
+  "id": "epoch-encode-grow-first-site-code-mov-0x68-rsp-to-0x70-rsp",
+  "kind": "code",
+  "module": "Prysm/Epoch/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Epoch.Encode.grow_first_site",
+  "old": "  mov %rcx,0x68(%rsp)",
+  "new": "  mov %rcx,0x70(%rsp)",
+  "why": "len spilled to the wrong slot before the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZTo.S"
+ },
+ {
+  "id": "epoch-encode-grow-first-site-code-mov-0x68-rsp-to-0x60-rsp",
+  "kind": "code",
+  "module": "Prysm/Epoch/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Epoch.Encode.grow_first_site",
+  "old": "  mov 0x68(%rsp),%rcx",
+  "new": "  mov 0x60(%rsp),%rcx",
+  "why": "len reloaded from the rbx spill slot after the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZTo.S"
+ },
+ {
+  "id": "epoch-encode-grow-first-site-code-jae-to-jb",
+  "kind": "code",
+  "module": "Prysm/Epoch/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Epoch.Encode.grow_first_site",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZTo_61",
+  "new": "  jb L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZTo_61",
+  "why": "with cap < len + 8 the inverted test skips the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZTo.S"
+ },
+ {
+  "id": "epoch-encode-grow-first-site-statement-rbx-8-to-9",
+  "kind": "statement",
+  "module": "Prysm/Epoch/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Epoch.Encode.grow_first_site",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 8",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 9",
+  "why": "the returned length is len + 8"
+ },
+ {
+  "id": "epoch-encode-grow-first-site-statement-hgrow-lt-to-le",
+  "kind": "statement",
+  "module": "Prysm/Epoch/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Epoch.Encode.grow_first_site",
+  "old": "(hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)",
+  "new": "(hgrow : s.regs.rdi.toNat ≤ s.regs.rcx.toNat + 8)",
+  "why": "with cap = len + 8 the code takes the fast path, not the growslice call"
+ },
+ {
+  "id": "epoch-encode-cover-framed-control",
+  "kind": "control",
+  "module": "Prysm/Epoch/EncodeCoverFramed.lean",
+  "theorem": "Prysm.Epoch.Encode.cover_framed"
+ },
+ {
+  "id": "epoch-encode-cover-framed-statement-rcx-rdi-to-rcx",
+  "kind": "statement",
+  "module": "Prysm/Epoch/EncodeCoverFramed.lean",
+  "theorem": "Prysm.Epoch.Encode.cover_framed",
+  "old": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rcx = s.regs.rdi ∧",
+  "new": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rcx = s.regs.rcx ∧",
+  "why": "(1): the fast path returns cap = the caller's cap"
+ },
+ {
   "id": "slot-encode-fast-path-control",
   "kind": "control",
   "module": "Prysm/Slot/EncodeFastPath.lean",
@@ -542,6 +627,91 @@
   "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))"
  },
  {
+  "id": "slot-encode-grow-first-site-control",
+  "kind": "control",
+  "module": "Prysm/Slot/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Slot.Encode.grow_first_site",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo.S"
+ },
+ {
+  "id": "slot-encode-grow-first-site-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/Slot/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Slot.Encode.grow_first_site",
+  "old": "  mov $0x8,%edi",
+  "new": "  mov $0x9,%edi",
+  "why": "growslice num 9: old = len - 1 bytes, not len",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo.S"
+ },
+ {
+  "id": "slot-encode-grow-first-site-code-mov-0x68-rsp-to-0x70-rsp",
+  "kind": "code",
+  "module": "Prysm/Slot/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Slot.Encode.grow_first_site",
+  "old": "  mov %rcx,0x68(%rsp)",
+  "new": "  mov %rcx,0x70(%rsp)",
+  "why": "len spilled to the wrong slot before the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo.S"
+ },
+ {
+  "id": "slot-encode-grow-first-site-code-mov-0x68-rsp-to-0x60-rsp",
+  "kind": "code",
+  "module": "Prysm/Slot/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Slot.Encode.grow_first_site",
+  "old": "  mov 0x68(%rsp),%rcx",
+  "new": "  mov 0x60(%rsp),%rcx",
+  "why": "len reloaded from the rbx spill slot after the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo.S"
+ },
+ {
+  "id": "slot-encode-grow-first-site-code-jae-to-jb",
+  "kind": "code",
+  "module": "Prysm/Slot/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Slot.Encode.grow_first_site",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo_61",
+  "new": "  jb L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo_61",
+  "why": "with cap < len + 8 the inverted test skips the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo.S"
+ },
+ {
+  "id": "slot-encode-grow-first-site-statement-rbx-8-to-9",
+  "kind": "statement",
+  "module": "Prysm/Slot/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Slot.Encode.grow_first_site",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 8",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 9",
+  "why": "the returned length is len + 8"
+ },
+ {
+  "id": "slot-encode-grow-first-site-statement-hgrow-lt-to-le",
+  "kind": "statement",
+  "module": "Prysm/Slot/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Slot.Encode.grow_first_site",
+  "old": "(hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)",
+  "new": "(hgrow : s.regs.rdi.toNat ≤ s.regs.rcx.toNat + 8)",
+  "why": "with cap = len + 8 the code takes the fast path, not the growslice call"
+ },
+ {
+  "id": "slot-encode-cover-framed-control",
+  "kind": "control",
+  "module": "Prysm/Slot/EncodeCoverFramed.lean",
+  "theorem": "Prysm.Slot.Encode.cover_framed"
+ },
+ {
+  "id": "slot-encode-cover-framed-statement-rcx-rdi-to-rcx",
+  "kind": "statement",
+  "module": "Prysm/Slot/EncodeCoverFramed.lean",
+  "theorem": "Prysm.Slot.Encode.cover_framed",
+  "old": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rcx = s.regs.rdi ∧",
+  "new": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rcx = s.regs.rcx ∧",
+  "why": "(1): the fast path returns cap = the caller's cap"
+ },
+ {
   "id": "committee-index-encode-fast-path-control",
   "kind": "control",
   "module": "Prysm/CommitteeIndex/EncodeFastPath.lean",
@@ -610,6 +780,91 @@
   "theorem": "Prysm.CommitteeIndex.Encode.fast_path_spec",
   "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
   "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-control",
+  "kind": "control",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "old": "  mov $0x8,%edi",
+  "new": "  mov $0x9,%edi",
+  "why": "growslice num 9: old = len - 1 bytes, not len",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-code-mov-0x68-rsp-to-0x70-rsp",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "old": "  mov %rcx,0x68(%rsp)",
+  "new": "  mov %rcx,0x70(%rsp)",
+  "why": "len spilled to the wrong slot before the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-code-mov-0x68-rsp-to-0x60-rsp",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "old": "  mov 0x68(%rsp),%rcx",
+  "new": "  mov 0x60(%rsp),%rcx",
+  "why": "len reloaded from the rbx spill slot after the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-code-jae-to-jb",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo_61",
+  "new": "  jb L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo_61",
+  "why": "with cap < len + 8 the inverted test skips the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-statement-rbx-8-to-9",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 8",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 9",
+  "why": "the returned length is len + 8"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-statement-hgrow-lt-to-le",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "old": "(hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)",
+  "new": "(hgrow : s.regs.rdi.toNat ≤ s.regs.rcx.toNat + 8)",
+  "why": "with cap = len + 8 the code takes the fast path, not the growslice call"
+ },
+ {
+  "id": "committee-index-encode-cover-framed-control",
+  "kind": "control",
+  "module": "Prysm/CommitteeIndex/EncodeCoverFramed.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.cover_framed"
+ },
+ {
+  "id": "committee-index-encode-cover-framed-statement-rcx-rdi-to-rcx",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/EncodeCoverFramed.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.cover_framed",
+  "old": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rcx = s.regs.rdi ∧",
+  "new": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rcx = s.regs.rcx ∧",
+  "why": "(1): the fast path returns cap = the caller's cap"
  },
  {
   "id": "checkpoint-encode-fast-path-spec-control",

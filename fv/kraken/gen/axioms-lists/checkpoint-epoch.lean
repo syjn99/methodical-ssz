@@ -38,6 +38,10 @@ import Prysm.Epoch.Size
 import Prysm.Epoch.WitnessSize
 import Prysm.Epoch.EncodeSpec
 import Prysm.Epoch.WitnessEncodeFastPath
+import Prysm.Epoch.EncodeGrowFirstSite
+import Prysm.Epoch.WitnessEncodeGrowFirstSite
+import Prysm.Epoch.EncodeCoverFramed
+import Prysm.Epoch.WitnessEncodeCoverFramed
 #print axioms Prysm.Epoch.Decode.accept
 #print axioms Prysm.Epoch.Decode.accept_function_spec_holds
 #print axioms Prysm.Epoch.Witness.DecodeAccept.runs
@@ -132,3 +136,8 @@ import Prysm.Epoch.WitnessEncodeFastPath
 #print axioms Prysm.Epoch.Encode.fast_path_spec
 #print axioms Prysm.Epoch.Witness.EncodeFastPath.runs_empty
 #print axioms Prysm.Epoch.Witness.EncodeFastPath.runs_prefix
+#print axioms Prysm.Epoch.Encode.grow_first_site
+#print axioms Prysm.Epoch.Witness.EncodeGrowFirstSite.runs
+#print axioms Prysm.Epoch.Witness.EncodeGrowFirstSite.runs_empty
+#print axioms Prysm.Epoch.Encode.cover_framed
+#print axioms Prysm.Epoch.Witness.EncodeCoverFramed.runs

@@ -16,6 +16,10 @@ import Prysm.ValidatorIndex.WitnessDecodeRejectSize
 import Prysm.ValidatorIndex.DecodeSpec
 import Prysm.ValidatorIndex.EncodeSpec
 import Prysm.ValidatorIndex.WitnessEncodeFastPath
+import Prysm.ValidatorIndex.EncodeGrowFirstSite
+import Prysm.ValidatorIndex.WitnessEncodeGrowFirstSite
+import Prysm.ValidatorIndex.EncodeCoverFramed
+import Prysm.ValidatorIndex.WitnessEncodeCoverFramed
 import Prysm.Eth1Data.DecodeSpec
 import Prysm.Eth1Data.WitnessDecodeAccept
 import Prysm.Eth1Data.WitnessDecodeRejectSize
@@ -5341,3 +5345,9 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.ValidatorIndex.Encode.fast_path_spec
 #print axioms Prysm.ValidatorIndex.Witness.EncodeFastPath.runs_empty
 #print axioms Prysm.ValidatorIndex.Witness.EncodeFastPath.runs_prefix
+-- ValidatorIndex encoder, growslice path and framed capacity cover (hand proof)
+#print axioms Prysm.ValidatorIndex.Encode.grow_first_site
+#print axioms Prysm.ValidatorIndex.Witness.EncodeGrowFirstSite.runs
+#print axioms Prysm.ValidatorIndex.Witness.EncodeGrowFirstSite.runs_empty
+#print axioms Prysm.ValidatorIndex.Encode.cover_framed
+#print axioms Prysm.ValidatorIndex.Witness.EncodeCoverFramed.runs

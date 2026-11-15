@@ -31,13 +31,16 @@ The full name of a main theorem is the name of the work, for example `Prysm.Chec
   Its program constant is `Prysm.Epoch.Code.unmarshalSSZ` (`Prysm/Epoch/Code.lean`).
   The directory also has the encoder fast path (`EncodeFastPath.lean`, `EncodeSpec.lean`) and `SizeSSZ` (`Size.lean`).
   Their program constants are in `EncodeCode.lean` and `SizeCode.lean`, so that the importers of `Code.lean` do not build again.
+  `EncodeGrowFirstSite.lean` has the encoder growslice path.
+  `EncodeCoverFramed.lean` joins the two encoder paths for every capacity, with the exact frame.
 - `Prysm/AttestationData/`: the `v1alpha1.AttestationData` decoder (accept path in four parts, size reject, EthLib
   alignment), `SizeSSZ` (`Size.lean`), its hand specification and witnesses. The Slot and CommitteeIndex
   decoders of its link set are in `Prysm/Slot/Code.lean` and `Prysm/CommitteeIndex/Code.lean`.
 - `Prysm/Slot/` and `Prysm/CommitteeIndex/`: the decoders of the hand-written `primitives.Slot` and
   `primitives.CommitteeIndex` methods and their function specifications.
   Both directories have the encoder fast path and `SizeSSZ` in files with the names of `Prysm/Epoch/`.
-  `Prysm/ValidatorIndex/` has the encoder fast path in files with the same names.
+  They also have the encoder growslice path and the framed cover in files with these names.
+  `Prysm/ValidatorIndex/` has the encoder fast path, the growslice path and the framed cover in such files.
   `Prysm/CommitteeIndex/Spec.lean` holds its description `.uint 8`.
   `Prysm/Slot/DecodeSpec.lean` and `Prysm/ValidatorIndex/DecodeSpec.lean` align the Slot and ValidatorIndex decoders with EthLib.
 - `Prysm/Checkpoint/*AsNestedField.lean`: the function specifications of the Checkpoint decoder and encoder for a
@@ -81,7 +84,7 @@ Codec <-> Prysm (at module level, both directions)
   has `public meta import Lean` for its elaborators). `Runtime` imports only Kraken, `Machine` and `Runtime`. So these
   three libraries import only libraries to their left (and Lean itself).
 - `Codec` and `Prysm` import each other at module level. 25 of the 60 `Codec` modules import a `Prysm` module:
-  13 of 36 in `Codec/`, 2 of 11 in `Codec/Kind/`, 10 of 13 in `Codec/Segment/`. 214 of the 702 `Prysm` modules
+  13 of 36 in `Codec/`, 2 of 11 in `Codec/Kind/`, 10 of 13 in `Codec/Segment/`. 214 of the 718 `Prysm` modules
   import a `Codec` module. Lean forbids a cycle of modules, so the module graph has no cycle; only the
   libraries have no order.
 - The `Codec` modules that import `Prysm` hold lemmas and kinds that the shared layer took from a type
@@ -329,7 +332,7 @@ So each one is a candidate for deletion.
 - `../prysm/go1.26.10/evidence/negative/result.json`.
   `../gen/checks/negative.py` writes such a file.
   It has 154 case ids, for example `ep-control` and `cpa-cmp41`.
-  None of them is one of the 191 ids of `../gen/checks/negative-cases-checkpoint-and-attestation-data.json`.
+  None of them is one of the 218 ids of `../gen/checks/negative-cases-checkpoint-and-attestation-data.json`.
   Its mutant diffs name `ElfData.CheckpointAndEpoch.e2e*` and `MakesliceC`.
   It has absolute container paths.
   `../../../AGENTS.md` does not allow absolute container paths in committed files.

@@ -10,9 +10,9 @@
  "axioms_gate": {
   "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=Spec,Machine,Runtime,Codec,Prysm",
   "verdict": "PASS",
-  "declarations": 19623,
-  "theorems": 16196,
-  "modules": 790
+  "declarations": 20247,
+  "theorems": 16740,
+  "modules": 806
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -493,11 +493,12 @@
      "Prysm.CommitteeIndex.Witness.EncodeFastPath.runs_empty"
     ]
    },
-   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths; growth and reject theorems of this type exist and are not classified by this tool (no premise text): Encode.grow_first_site",
    "witness": true,
    "not_proved": [
     "growslice branches (1 capacity tests)",
-    "morestack"
+    "morestack",
+    "note: theorems for some of these paths exist but this tool does not classify them (no premise text): Encode.grow_first_site"
    ]
   },
   {
@@ -611,11 +612,12 @@
      "Prysm.Epoch.Witness.EncodeFastPath.runs_empty"
     ]
    },
-   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths; growth and reject theorems of this type exist and are not classified by this tool (no premise text): Encode.grow_first_site",
    "witness": true,
    "not_proved": [
     "growslice branches (1 capacity tests)",
-    "morestack"
+    "morestack",
+    "note: theorems for some of these paths exist but this tool does not classify them (no premise text): Encode.grow_first_site"
    ]
   },
   {
@@ -815,11 +817,12 @@
      "Prysm.Slot.Witness.EncodeFastPath.runs_empty"
     ]
    },
-   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths; growth and reject theorems of this type exist and are not classified by this tool (no premise text): Encode.grow_first_site",
    "witness": true,
    "not_proved": [
     "growslice branches (1 capacity tests)",
-    "morestack"
+    "morestack",
+    "note: theorems for some of these paths exist but this tool does not classify them (no premise text): Encode.grow_first_site"
    ]
   },
   {
@@ -933,11 +936,12 @@
      "Prysm.ValidatorIndex.Witness.EncodeFastPath.runs_empty"
     ]
    },
-   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths; growth and reject theorems of this type exist and are not classified by this tool (no premise text): Encode.grow_first_site",
    "witness": true,
    "not_proved": [
     "growslice branches (1 capacity tests)",
-    "morestack"
+    "morestack",
+    "note: theorems for some of these paths exist but this tool does not classify them (no premise text): Encode.grow_first_site"
    ]
   },
   {

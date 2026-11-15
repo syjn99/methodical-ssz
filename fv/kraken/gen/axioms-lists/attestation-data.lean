@@ -23,6 +23,14 @@ import Prysm.Slot.EncodeSpec
 import Prysm.Slot.WitnessEncodeFastPath
 import Prysm.CommitteeIndex.EncodeSpec
 import Prysm.CommitteeIndex.WitnessEncodeFastPath
+import Prysm.Slot.EncodeGrowFirstSite
+import Prysm.Slot.WitnessEncodeGrowFirstSite
+import Prysm.Slot.EncodeCoverFramed
+import Prysm.Slot.WitnessEncodeCoverFramed
+import Prysm.CommitteeIndex.EncodeGrowFirstSite
+import Prysm.CommitteeIndex.WitnessEncodeGrowFirstSite
+import Prysm.CommitteeIndex.EncodeCoverFramed
+import Prysm.CommitteeIndex.WitnessEncodeCoverFramed
 
 -- AttestationData set: the AttestationData, Slot and CommitteeIndex theorems and the Checkpoint function specifications.
 #print axioms Prysm.AttestationData.desc_checker
@@ -80,7 +88,17 @@ import Prysm.CommitteeIndex.WitnessEncodeFastPath
 #print axioms Prysm.Slot.Encode.fast_path_spec
 #print axioms Prysm.Slot.Witness.EncodeFastPath.runs_empty
 #print axioms Prysm.Slot.Witness.EncodeFastPath.runs_prefix
+#print axioms Prysm.Slot.Encode.grow_first_site
+#print axioms Prysm.Slot.Witness.EncodeGrowFirstSite.runs
+#print axioms Prysm.Slot.Witness.EncodeGrowFirstSite.runs_empty
+#print axioms Prysm.Slot.Encode.cover_framed
+#print axioms Prysm.Slot.Witness.EncodeCoverFramed.runs
 #print axioms Prysm.CommitteeIndex.Encode.fast_path
 #print axioms Prysm.CommitteeIndex.Encode.fast_path_spec
 #print axioms Prysm.CommitteeIndex.Witness.EncodeFastPath.runs_empty
 #print axioms Prysm.CommitteeIndex.Witness.EncodeFastPath.runs_prefix
+#print axioms Prysm.CommitteeIndex.Encode.grow_first_site
+#print axioms Prysm.CommitteeIndex.Witness.EncodeGrowFirstSite.runs
+#print axioms Prysm.CommitteeIndex.Witness.EncodeGrowFirstSite.runs_empty
+#print axioms Prysm.CommitteeIndex.Encode.cover_framed
+#print axioms Prysm.CommitteeIndex.Witness.EncodeCoverFramed.runs
