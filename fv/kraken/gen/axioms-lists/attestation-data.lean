@@ -3,6 +3,7 @@ import Prysm.Slot.DecodeAccept
 import Prysm.Slot.WitnessDecodeAccept
 import Prysm.Slot.DecodeRejectSize
 import Prysm.Slot.WitnessDecodeRejectSize
+import Prysm.Slot.DecodeSpec
 import Prysm.CommitteeIndex.WitnessDecodeAccept
 import Prysm.Checkpoint.WitnessDecodeFunctionSpecAsNestedField
 import Prysm.Checkpoint.WitnessEncodeFunctionSpecAsNestedField
@@ -26,6 +27,9 @@ import Prysm.AttestationData.SpecEquivalence
 #print axioms Prysm.Slot.Witness.DecodeRejectSize.runs
 #print axioms Prysm.Slot.Witness.DecodeRejectSize.InputLength9.runs
 #print axioms Prysm.Slot.Witness.DecodeRejectSize.InputLength300.runs
+#print axioms Prysm.Slot.Decode.accept_spec
+#print axioms Prysm.Slot.Decode.reject_size_spec
+#print axioms Prysm.Slot.Decode.reject_complete
 #print axioms Prysm.CommitteeIndex.Decode.accept
 #print axioms Prysm.CommitteeIndex.Decode.accept_function_spec_holds
 #print axioms Prysm.Slot.Witness.DecodeAccept.runs

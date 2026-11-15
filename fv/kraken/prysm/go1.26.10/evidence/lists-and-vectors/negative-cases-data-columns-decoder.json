@@ -111,5 +111,36 @@
    "Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean",
    "Prysm/DataColumnsByRootIdentifier/DecodeRejectSize.lean"
   ]
+ },
+ {
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "id": "data-columns-by-root-identifier-decode-reject-offset-spec-control",
+  "kind": "control",
+  "inline": [
+   "Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean",
+   "Prysm/DataColumnsByRootIdentifier/DecodeRejectSize.lean",
+   "Prysm/DataColumnsByRootIdentifier/StatementsDecodeSpecReject.lean"
+  ],
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeSpecReject.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_offset_spec"
+ },
+ {
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "id": "data-columns-by-root-identifier-decode-reject-offset-spec-statement-hoff-offset-bytes-to-0xe5-0-0",
+  "kind": "statement",
+  "statement_def": "Prysm.DataColumnsByRootIdentifier.Decode.reject_offset_spec_statement",
+  "old": "(hoff : (bs.toList.drop 32).take 4 ≠ offsetBytes)",
+  "new": "(hoff : (bs.toList.drop 32).take 4 ≠ [0xe5, 0, 0, 0])",
+  "inline": [
+   "Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean",
+   "Prysm/DataColumnsByRootIdentifier/DecodeRejectSize.lean",
+   "Prysm/DataColumnsByRootIdentifier/StatementsDecodeSpecReject.lean"
+  ],
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeSpecReject.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_offset_spec"
  }
 ]

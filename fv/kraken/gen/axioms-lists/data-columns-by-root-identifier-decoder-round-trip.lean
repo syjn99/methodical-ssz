@@ -5,6 +5,7 @@ import Prysm.DataColumnsByRootIdentifier.EncodeSpecGrowOneSite
 import Prysm.DataColumnsByRootIdentifier.DecodeRejectSize
 import Prysm.DataColumnsByRootIdentifier.DecodeAccept
 import Prysm.DataColumnsByRootIdentifier.DecodeSpecAccept
+import Prysm.DataColumnsByRootIdentifier.DecodeSpecReject
 import Prysm.DataColumnsByRootIdentifier.DecodeThenEncode
 import Prysm.DataColumnsByRootIdentifier.WitnessDecodeAccept
 import Prysm.DataColumnsByRootIdentifier.WitnessDecodeRejectSize
@@ -24,6 +25,8 @@ import Prysm.DataColumnsByRootIdentifier.WitnessDecodeRejectSize
 #print axioms Prysm.DataColumnsByRootIdentifier.Encode.grow_one_site_spec
 #print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_size
 #print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_offset
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_size_spec
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_offset_spec
 #print axioms Prysm.DataColumnsByRootIdentifier.Decode.iter
 #print axioms Prysm.DataColumnsByRootIdentifier.Decode.loop
 #print axioms Prysm.DataColumnsByRootIdentifier.Decode.accept

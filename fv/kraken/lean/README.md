@@ -27,13 +27,14 @@ A model is a small assembly program (`Runtime/*.S`) with theorems that it satisf
 The full name of a main theorem is the name of the work, for example `Prysm.Checkpoint.Decode.reject_size`.
 - `Prysm/Checkpoint/`: the `v1alpha1.Checkpoint` decoder, encoder and `SizeSSZ`, the hand specification (`Spec.lean`),
   the Go value predicate (`GoValue.lean`) and the decoder-then-encoder composition (`DecodeThenEncode.lean`).
-- `Prysm/Epoch/`: the decoder of the hand-written `primitives.Epoch` method and its function specification.
+- `Prysm/Epoch/`: the decoder of the hand-written `primitives.Epoch` method, its function specification and its EthLib alignment (`DecodeSpec.lean`).
   Its program constant is `Prysm.Epoch.Code.unmarshalSSZ` (`Prysm/Epoch/Code.lean`).
 - `Prysm/AttestationData/`: the `v1alpha1.AttestationData` decoder (accept path in four parts, size reject, EthLib
   alignment), its hand specification and witnesses. The Slot and CommitteeIndex
   decoders of its link set are in `Prysm/Slot/Code.lean` and `Prysm/CommitteeIndex/Code.lean`.
 - `Prysm/Slot/` and `Prysm/CommitteeIndex/`: the decoders of the hand-written `primitives.Slot` and
   `primitives.CommitteeIndex` methods and their function specifications.
+  `Prysm/Slot/DecodeSpec.lean` and `Prysm/ValidatorIndex/DecodeSpec.lean` align the Slot and ValidatorIndex decoders with EthLib.
 - `Prysm/Checkpoint/*AsNestedField.lean`: the function specifications of the Checkpoint decoder and encoder for a
   caller that holds Checkpoint as a nested field (AttestationData), and their checks on the Checkpoint witness hosts.
 - `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/`, `Prysm/IndexedAttestation/`: the decoders of these types.
@@ -75,7 +76,7 @@ Codec <-> Prysm (at module level, both directions)
   has `public meta import Lean` for its elaborators). `Runtime` imports only Kraken, `Machine` and `Runtime`. So these
   three libraries import only libraries to their left (and Lean itself).
 - `Codec` and `Prysm` import each other at module level. 25 of the 60 `Codec` modules import a `Prysm` module:
-  13 of 36 in `Codec/`, 2 of 11 in `Codec/Kind/`, 10 of 13 in `Codec/Segment/`. 210 of the 666 `Prysm` modules
+  13 of 36 in `Codec/`, 2 of 11 in `Codec/Kind/`, 10 of 13 in `Codec/Segment/`. 210 of the 674 `Prysm` modules
   import a `Codec` module. Lean forbids a cycle of modules, so the module graph has no cycle; only the
   libraries have no order.
 - The `Codec` modules that import `Prysm` hold lemmas and kinds that the shared layer took from a type

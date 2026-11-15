@@ -13,6 +13,7 @@ import Prysm.BeaconBlockHeader.WitnessDecodeAccept
 import Prysm.BeaconBlockHeader.WitnessDecodeRejectSize
 import Prysm.BeaconBlockHeader.WitnessDecodeErrorUnreachable
 import Prysm.ValidatorIndex.WitnessDecodeRejectSize
+import Prysm.ValidatorIndex.DecodeSpec
 import Prysm.Eth1Data.DecodeSpec
 import Prysm.Eth1Data.WitnessDecodeAccept
 import Prysm.Eth1Data.WitnessDecodeRejectSize
@@ -388,6 +389,9 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.runs
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength9.runs9
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength300.runs300
+#print axioms Prysm.ValidatorIndex.Decode.accept_spec
+#print axioms Prysm.ValidatorIndex.Decode.reject_size_spec
+#print axioms Prysm.ValidatorIndex.Decode.reject_complete
 -- Hold-out type Eth1Data, decoder; no generated theorem (the generator run emitted nothing)
 #print axioms Prysm.Eth1Data.root_decode_segment_source_offset_zero
 #print axioms Prysm.Eth1Data.Decode.head

@@ -16,6 +16,8 @@ import Prysm.Checkpoint.EncodeSpec
 import Prysm.Checkpoint.WitnessSize
 import Prysm.Epoch.DecodeRejectSize
 import Prysm.Epoch.WitnessDecodeRejectSize
+import Prysm.Epoch.Spec
+import Prysm.Epoch.DecodeSpec
 import Prysm.Checkpoint.GoValue
 import Prysm.Checkpoint.DecodeThenEncode
 import Prysm.Checkpoint.WitnessDecodeThenEncode
@@ -68,6 +70,13 @@ import Prysm.Checkpoint.GoValueWitness
 #print axioms Prysm.Epoch.Witness.DecodeRejectSize.runs
 #print axioms Prysm.Epoch.Witness.DecodeRejectSize.InputLength9.runs
 #print axioms Prysm.Epoch.Witness.DecodeRejectSize.InputLength300.runs
+#print axioms Prysm.Epoch.uint64_deserialize_ok
+#print axioms Prysm.Epoch.uint64_spec_accepts_iff
+#print axioms Prysm.Epoch.uint64_spec_rejects
+#print axioms Prysm.Epoch.uint64_accepted_is_encoding
+#print axioms Prysm.Epoch.Decode.accept_spec
+#print axioms Prysm.Epoch.Decode.reject_size_spec
+#print axioms Prysm.Epoch.Decode.reject_complete
 #print axioms Prysm.Checkpoint.layout
 #print axioms Prysm.Checkpoint.witness_decode_accept_receiver_pre
 #print axioms Prysm.Checkpoint.witness_decode_accept_receiver_post
