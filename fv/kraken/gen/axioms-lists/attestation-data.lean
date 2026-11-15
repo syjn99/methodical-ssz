@@ -31,6 +31,10 @@ import Prysm.CommitteeIndex.EncodeGrowFirstSite
 import Prysm.CommitteeIndex.WitnessEncodeGrowFirstSite
 import Prysm.CommitteeIndex.EncodeCoverFramed
 import Prysm.CommitteeIndex.WitnessEncodeCoverFramed
+import Prysm.Slot.Marshal
+import Prysm.Slot.WitnessMarshal
+import Prysm.CommitteeIndex.Marshal
+import Prysm.CommitteeIndex.WitnessMarshal
 
 -- AttestationData set: the AttestationData, Slot and CommitteeIndex theorems and the Checkpoint function specifications.
 #print axioms Prysm.AttestationData.desc_checker
@@ -102,3 +106,9 @@ import Prysm.CommitteeIndex.WitnessEncodeCoverFramed
 #print axioms Prysm.CommitteeIndex.Witness.EncodeGrowFirstSite.runs_empty
 #print axioms Prysm.CommitteeIndex.Encode.cover_framed
 #print axioms Prysm.CommitteeIndex.Witness.EncodeCoverFramed.runs
+#print axioms Prysm.Slot.Marshal.result
+#print axioms Prysm.Slot.Marshal.result_spec
+#print axioms Prysm.Slot.Witness.Marshal.runs
+#print axioms Prysm.CommitteeIndex.Marshal.result
+#print axioms Prysm.CommitteeIndex.Marshal.result_spec
+#print axioms Prysm.CommitteeIndex.Witness.Marshal.runs

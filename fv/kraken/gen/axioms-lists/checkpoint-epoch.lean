@@ -42,6 +42,8 @@ import Prysm.Epoch.EncodeGrowFirstSite
 import Prysm.Epoch.WitnessEncodeGrowFirstSite
 import Prysm.Epoch.EncodeCoverFramed
 import Prysm.Epoch.WitnessEncodeCoverFramed
+import Prysm.Epoch.Marshal
+import Prysm.Epoch.WitnessMarshal
 #print axioms Prysm.Epoch.Decode.accept
 #print axioms Prysm.Epoch.Decode.accept_function_spec_holds
 #print axioms Prysm.Epoch.Witness.DecodeAccept.runs
@@ -141,3 +143,6 @@ import Prysm.Epoch.WitnessEncodeCoverFramed
 #print axioms Prysm.Epoch.Witness.EncodeGrowFirstSite.runs_empty
 #print axioms Prysm.Epoch.Encode.cover_framed
 #print axioms Prysm.Epoch.Witness.EncodeCoverFramed.runs
+#print axioms Prysm.Epoch.Marshal.result
+#print axioms Prysm.Epoch.Marshal.result_spec
+#print axioms Prysm.Epoch.Witness.Marshal.runs

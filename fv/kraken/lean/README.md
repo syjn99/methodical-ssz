@@ -33,6 +33,8 @@ The full name of a main theorem is the name of the work, for example `Prysm.Chec
   Their program constants are in `EncodeCode.lean` and `SizeCode.lean`, so that the importers of `Code.lean` do not build again.
   `EncodeGrowFirstSite.lean` has the encoder growslice path.
   `EncodeCoverFramed.lean` joins the two encoder paths for every capacity, with the exact frame.
+  `Marshal.lean` has `MarshalSSZ` with the growslice contract and its EthLib link; its witness is `WitnessMarshal.lean`.
+  Its program constant is in `MarshalCode.lean`.
 - `Prysm/AttestationData/`: the `v1alpha1.AttestationData` decoder (accept path in four parts, size reject, EthLib
   alignment), `SizeSSZ` (`Size.lean`), its hand specification and witnesses. The Slot and CommitteeIndex
   decoders of its link set are in `Prysm/Slot/Code.lean` and `Prysm/CommitteeIndex/Code.lean`.
@@ -40,6 +42,7 @@ The full name of a main theorem is the name of the work, for example `Prysm.Chec
   `primitives.CommitteeIndex` methods and their function specifications.
   Both directories have the encoder fast path and `SizeSSZ` in files with the names of `Prysm/Epoch/`.
   They also have the encoder growslice path and the framed cover in files with these names.
+  They also have `MarshalSSZ` in `Marshal.lean`, `MarshalCode.lean` and `WitnessMarshal.lean`.
   `Prysm/ValidatorIndex/` has the encoder fast path, the growslice path and the framed cover in such files.
   `Prysm/CommitteeIndex/Spec.lean` holds its description `.uint 8`.
   `Prysm/Slot/DecodeSpec.lean` and `Prysm/ValidatorIndex/DecodeSpec.lean` align the Slot and ValidatorIndex decoders with EthLib.
@@ -84,7 +87,7 @@ Codec <-> Prysm (at module level, both directions)
   has `public meta import Lean` for its elaborators). `Runtime` imports only Kraken, `Machine` and `Runtime`. So these
   three libraries import only libraries to their left (and Lean itself).
 - `Codec` and `Prysm` import each other at module level. 25 of the 60 `Codec` modules import a `Prysm` module:
-  13 of 36 in `Codec/`, 2 of 11 in `Codec/Kind/`, 10 of 13 in `Codec/Segment/`. 214 of the 718 `Prysm` modules
+  13 of 36 in `Codec/`, 2 of 11 in `Codec/Kind/`, 10 of 13 in `Codec/Segment/`. 214 of the 727 `Prysm` modules
   import a `Codec` module. Lean forbids a cycle of modules, so the module graph has no cycle; only the
   libraries have no order.
 - The `Codec` modules that import `Prysm` hold lemmas and kinds that the shared layer took from a type
@@ -332,7 +335,7 @@ So each one is a candidate for deletion.
 - `../prysm/go1.26.10/evidence/negative/result.json`.
   `../gen/checks/negative.py` writes such a file.
   It has 154 case ids, for example `ep-control` and `cpa-cmp41`.
-  None of them is one of the 218 ids of `../gen/checks/negative-cases-checkpoint-and-attestation-data.json`.
+  None of them is one of the 239 ids of `../gen/checks/negative-cases-checkpoint-and-attestation-data.json`.
   Its mutant diffs name `ElfData.CheckpointAndEpoch.e2e*` and `MakesliceC`.
   It has absolute container paths.
   `../../../AGENTS.md` does not allow absolute container paths in committed files.
@@ -409,6 +412,7 @@ An example is `theorem Decode.reject_size` inside `namespace Prysm.Checkpoint`.
 | Encoder, connection to EthLib | `EncodeSpec` |
 | Encoder, a part of a long proof (head, tail, cover, a field) | `Encode` + plain word for the part (`EncodeHead`, `EncodeTail`, `EncodeCover`) |
 | `SizeSSZ` | `Size` |
+| `MarshalSSZ` | `Marshal` |
 | Decode then encode, round trip, composition | `DecodeThenEncode` |
 | A witness of theorem X (a concrete state that satisfies the premises) | `Witness` + the role of X (`WitnessDecodeAccept`, `WitnessEncodeFastPath`) |
 | Statements only (definitions `..._statement : Prop`) | `Statements`, or `Statements` + plain qualifier |
@@ -424,7 +428,8 @@ The main theorems inside `Prysm.<GoTypeName>` have these names:
   `Decode.accept_spec`, `Decode.reject_<cause>_spec`, `Decode.reject_complete`;
 - encoder: `Encode.fast_path`, `Encode.grow_first_site`, `Encode.grow_one_site`, `Encode.grow_any_site`, `Encode.reject_length`,
   `Encode.reject_too_big`, `Encode.fast_path_spec` (and `Encode.<path>_spec` for the other paths);
-- `SizeSSZ`: `Size.result`, `Size.result_spec`; decode then encode: `DecodeThenEncode.round_trip`;
+- `SizeSSZ`: `Size.result`, `Size.result_spec`; `MarshalSSZ`: `Marshal.result`, `Marshal.result_spec`;
+- decode then encode: `DecodeThenEncode.round_trip`;
 - a suffix in words states an added premise, for example `Decode.reject_alignment_error_word_nonzero`;
 - the statement of a theorem is the `def` or `abbrev` with the name of the theorem + `_statement`;
 - program constants: `Code.unmarshalSSZ`, `Code.marshalSSZTo`, `Code.sizeSSZ`, `Code.marshalSSZ`; descriptions: `desc`,

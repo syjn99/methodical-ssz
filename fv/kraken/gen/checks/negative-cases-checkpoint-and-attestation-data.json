@@ -852,6 +852,219 @@
   "why": "with cap = len + 8 the code takes the fast path, not the growslice call"
  },
  {
+  "id": "epoch-marshal-result-control",
+  "kind": "control",
+  "module": "Prysm/Epoch/Marshal.lean",
+  "theorem": "Prysm.Epoch.Marshal.result",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZ.S"
+ },
+ {
+  "id": "epoch-marshal-result-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/Epoch/Marshal.lean",
+  "theorem": "Prysm.Epoch.Marshal.result",
+  "line": 18,
+  "old": "  mov $0x8,%ebx",
+  "new": "  mov $0x9,%ebx",
+  "why": "returned length 9, not 8",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZ.S"
+ },
+ {
+  "id": "epoch-marshal-result-code-mov-0x40-rsp-to-0x38-rsp",
+  "kind": "code",
+  "module": "Prysm/Epoch/Marshal.lean",
+  "theorem": "Prysm.Epoch.Marshal.result",
+  "old": "  mov 0x40(%rsp),%rdx",
+  "new": "  mov 0x38(%rsp),%rdx",
+  "why": "value reloaded from a frame byte range that the code did not write",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZ.S"
+ },
+ {
+  "id": "epoch-marshal-result-code-mov-rax-to-0x8-rax",
+  "kind": "code",
+  "module": "Prysm/Epoch/Marshal.lean",
+  "theorem": "Prysm.Epoch.Marshal.result",
+  "old": "  mov %rdx,(%rax)",
+  "new": "  mov %rdx,0x8(%rax)",
+  "why": "value stored at new[8..16], not at new[0..8]",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZ.S"
+ },
+ {
+  "id": "epoch-marshal-result-code-mov-rbx-rdi-to-rbx-rcx",
+  "kind": "code",
+  "module": "Prysm/Epoch/Marshal.lean",
+  "theorem": "Prysm.Epoch.Marshal.result",
+  "old": "  mov %rbx,%rdi",
+  "new": "  mov %rbx,%rcx",
+  "why": "growslice oldCap 8 = newLen and num unset: outside the contract premises",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZ.S"
+ },
+ {
+  "id": "epoch-marshal-result-statement-rbx-8-to-9",
+  "kind": "statement",
+  "module": "Prysm/Epoch/Marshal.lean",
+  "theorem": "Prysm.Epoch.Marshal.result",
+  "old": "∧ st.data.regs.rbx = 8",
+  "new": "∧ st.data.regs.rbx = 9",
+  "why": "the returned length is 8"
+ },
+ {
+  "id": "epoch-marshal-result-statement-hbud-8192-to-8191",
+  "kind": "statement",
+  "module": "Prysm/Epoch/Marshal.lean",
+  "theorem": "Prysm.Epoch.Marshal.result",
+  "old": "(hbud : 2 * nextSliceCap 8 0 + 8192 ≤ avail)",
+  "new": "(hbud : 2 * nextSliceCap 8 0 + 8191 ≤ avail)",
+  "why": "the growslice contract needs the budget 2 * nextSliceCap 8 0 + 8192"
+ },
+ {
+  "id": "slot-marshal-result-control",
+  "kind": "control",
+  "module": "Prysm/Slot/Marshal.lean",
+  "theorem": "Prysm.Slot.Marshal.result",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZ.S"
+ },
+ {
+  "id": "slot-marshal-result-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/Slot/Marshal.lean",
+  "theorem": "Prysm.Slot.Marshal.result",
+  "line": 18,
+  "old": "  mov $0x8,%ebx",
+  "new": "  mov $0x9,%ebx",
+  "why": "returned length 9, not 8",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZ.S"
+ },
+ {
+  "id": "slot-marshal-result-code-mov-0x40-rsp-to-0x38-rsp",
+  "kind": "code",
+  "module": "Prysm/Slot/Marshal.lean",
+  "theorem": "Prysm.Slot.Marshal.result",
+  "old": "  mov 0x40(%rsp),%rdx",
+  "new": "  mov 0x38(%rsp),%rdx",
+  "why": "value reloaded from a frame byte range that the code did not write",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZ.S"
+ },
+ {
+  "id": "slot-marshal-result-code-mov-rax-to-0x8-rax",
+  "kind": "code",
+  "module": "Prysm/Slot/Marshal.lean",
+  "theorem": "Prysm.Slot.Marshal.result",
+  "old": "  mov %rdx,(%rax)",
+  "new": "  mov %rdx,0x8(%rax)",
+  "why": "value stored at new[8..16], not at new[0..8]",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZ.S"
+ },
+ {
+  "id": "slot-marshal-result-code-mov-rbx-rdi-to-rbx-rcx",
+  "kind": "code",
+  "module": "Prysm/Slot/Marshal.lean",
+  "theorem": "Prysm.Slot.Marshal.result",
+  "old": "  mov %rbx,%rdi",
+  "new": "  mov %rbx,%rcx",
+  "why": "growslice oldCap 8 = newLen and num unset: outside the contract premises",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZ.S"
+ },
+ {
+  "id": "slot-marshal-result-statement-rbx-8-to-9",
+  "kind": "statement",
+  "module": "Prysm/Slot/Marshal.lean",
+  "theorem": "Prysm.Slot.Marshal.result",
+  "old": "∧ st.data.regs.rbx = 8",
+  "new": "∧ st.data.regs.rbx = 9",
+  "why": "the returned length is 8"
+ },
+ {
+  "id": "slot-marshal-result-statement-hbud-8192-to-8191",
+  "kind": "statement",
+  "module": "Prysm/Slot/Marshal.lean",
+  "theorem": "Prysm.Slot.Marshal.result",
+  "old": "(hbud : 2 * nextSliceCap 8 0 + 8192 ≤ avail)",
+  "new": "(hbud : 2 * nextSliceCap 8 0 + 8191 ≤ avail)",
+  "why": "the growslice contract needs the budget 2 * nextSliceCap 8 0 + 8192"
+ },
+ {
+  "id": "committee-index-marshal-result-control",
+  "kind": "control",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-marshal-result-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "line": 18,
+  "old": "  mov $0x8,%ebx",
+  "new": "  mov $0x9,%ebx",
+  "why": "returned length 9, not 8",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-marshal-result-code-mov-0x40-rsp-to-0x38-rsp",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "old": "  mov 0x40(%rsp),%rdx",
+  "new": "  mov 0x38(%rsp),%rdx",
+  "why": "value reloaded from a frame byte range that the code did not write",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-marshal-result-code-mov-rax-to-0x8-rax",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "old": "  mov %rdx,(%rax)",
+  "new": "  mov %rdx,0x8(%rax)",
+  "why": "value stored at new[8..16], not at new[0..8]",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-marshal-result-code-mov-rbx-rdi-to-rbx-rcx",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "old": "  mov %rbx,%rdi",
+  "new": "  mov %rbx,%rcx",
+  "why": "growslice oldCap 8 = newLen and num unset: outside the contract premises",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-marshal-result-statement-rbx-8-to-9",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "old": "∧ st.data.regs.rbx = 8",
+  "new": "∧ st.data.regs.rbx = 9",
+  "why": "the returned length is 8"
+ },
+ {
+  "id": "committee-index-marshal-result-statement-hbud-8192-to-8191",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "old": "(hbud : 2 * nextSliceCap 8 0 + 8192 ≤ avail)",
+  "new": "(hbud : 2 * nextSliceCap 8 0 + 8191 ≤ avail)",
+  "why": "the growslice contract needs the budget 2 * nextSliceCap 8 0 + 8192"
+ },
+ {
   "id": "committee-index-encode-cover-framed-control",
   "kind": "control",
   "module": "Prysm/CommitteeIndex/EncodeCoverFramed.lean",
