@@ -739,6 +739,60 @@
   "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
  },
  {
+  "id": "slot-decode-reject-size-control",
+  "kind": "control",
+  "module": "Prysm/Slot/DecodeRejectSize.lean",
+  "theorem": "Prysm.Slot.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "code_namespace": "Prysm.Slot.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+ },
+ {
+  "id": "slot-decode-reject-size-code-cmp-0x8-to-0x7",
+  "kind": "code",
+  "module": "Prysm/Slot/DecodeRejectSize.lean",
+  "theorem": "Prysm.Slot.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "code_namespace": "Prysm.Slot.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x7,%rcx"
+ },
+ {
+  "id": "slot-decode-reject-size-code-mov-0x28-to-0x27",
+  "kind": "code",
+  "module": "Prysm/Slot/DecodeRejectSize.lean",
+  "theorem": "Prysm.Slot.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "code_namespace": "Prysm.Slot.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "old": "  mov $0x28,%ebx",
+  "new": "  mov $0x27,%ebx"
+ },
+ {
+  "id": "slot-decode-reject-size-code-mov-0x2-to-0x1",
+  "kind": "code",
+  "module": "Prysm/Slot/DecodeRejectSize.lean",
+  "theorem": "Prysm.Slot.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "code_namespace": "Prysm.Slot.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "old": "  mov $0x2,%edi",
+  "new": "  mov $0x1,%edi"
+ },
+ {
+  "id": "slot-decode-reject-size-statement-rax-none-to-none",
+  "kind": "statement",
+  "module": "Prysm/Slot/DecodeRejectSize.lean",
+  "theorem": "Prysm.Slot.Decode.reject_size",
+  "old": "st.data.regs.rax ≠ 0",
+  "new": "st.data.regs.rax = 0"
+ },
+ {
   "id": "attestation-data-ssz-value-spec-accepts-iff-control",
   "kind": "control",
   "module": "Prysm/AttestationData/Spec.lean",
