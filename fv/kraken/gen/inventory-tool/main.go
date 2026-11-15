@@ -189,7 +189,7 @@ func main() {
 		buildTags = strings.Split(*tags, ",")
 	}
 	sz := types.SizesFor("gc", "amd64")
-	res := out{Schema: "fvphase1c.ir/1", Tags: *tags}
+	res := out{Schema: "fv.kraken.ir/1", Tags: *tags}
 	for _, cfgPath := range flag.Args() {
 		b, err := os.ReadFile(cfgPath)
 		if err != nil {

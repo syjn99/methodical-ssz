@@ -1,4 +1,4 @@
-# runtimeStaticuint64s: link/data.py, p1bin-amd64 bytes [0xd45780, 0xd45f80)
+# runtimeStaticuint64s: link/data.py, target-amd64 bytes [0xd45780, 0xd45f80)
 at runtime.staticuint64s 0
 bytes 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00
 bytes 02 00 00 00 00 00 00 00 03 00 00 00 00 00 00 00

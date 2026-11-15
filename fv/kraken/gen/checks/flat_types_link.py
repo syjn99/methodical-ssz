@@ -9,7 +9,7 @@ Usage (Python 3 standard library only; python3 -I -B; every step runs gated):
   flat_types_link.py filter <outdir> <objdump> <elf> <nm>    <outdir>/target.objdump of FUNCS (+ ELF/nm links)
   flat_types_link.py data <outdir> <checkpoint-link-dir> <attestation-data-link-dir> <eth1-data-link-dir>
                                                      after `convert_objdump.py <outdir>/target.objdump
-                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
+                                                     <outdir>/target-amd64.nm <outdir>/norm --norm`:
                                                      write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 SizeSSZ, MarshalSSZ and HashTreeRoot are not in the set.

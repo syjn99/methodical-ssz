@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render the `ssz` term of a Desc-checker input file (schema fvphase1c.desc/1) as Lean.
+"""Render the `ssz` term of a Desc-checker input file (schema fv.kraken.desc/1) as Lean.
 
 A new file with the method of `desc_to_lean.py` (not changed); it also renders `bitVector`, `vector` and `list`.
 Usage: list_desc_to_lean.py <desc.json> <lean-name> > lean/Prysm/<GoTypeName>/SpecChecker.lean
@@ -14,7 +14,7 @@ import sys
 path, name = sys.argv[1:3]
 raw = open(path, "rb").read()
 d = json.loads(raw)
-assert d["schema"] == "fvphase1c.desc/1"
+assert d["schema"] == "fv.kraken.desc/1"
 
 
 def term(t):

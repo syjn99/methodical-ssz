@@ -130,9 +130,7 @@ How to handle a new finding is in `../README.md` section 7.
 - How it shows: `clang` rejected the line in the reassembly step of the link check.
 - State: fixed in commit `93b3f2a`. `link/convert_objdump.py --norm` writes the signed form. The SIB form without a base and the segment form are not handled. The Prysm ELF has none of them.
   A displacement range check in `link/check.py` is not added.
-  One converted file that Lean includes keeps the old form: `prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.MarshalSSZTo.S`
-  (`lea 0xffffff58(%rsp),%r12`). No theorem uses its program constant `Prysm.Validator.Code.marshalSSZTo`.
-  `clang` encodes both forms to the same bytes, so the link check passes on this file.
+  Every converted file of `prysm/go1.26.10/link-set/norm/` is the output of a fresh `--norm` run and has the signed form.
 
 ### Stack guard branch exhausts kernel memory
 
@@ -176,11 +174,9 @@ How to handle a new finding is in `../README.md` section 7.
 ### Link check result changes on a new run
 
 - What: `link/check.py` hashes the ELF, the `norm/*.S` files, the `data/*.data` files and `AXIOMS.txt` if it exists. It hashes no Lean file.
-  One tracked `RESULT` file has sha256 lines for `lean/Fk/Code.lean` and `AXIOMS.txt`. Neither file is in the tree now.
-- Where: `prysm/go1.26.10/link/RESULT` (a record of an earlier run).
-- Effect: a new run writes this file without the two lines, with a different bundle hash.
-- State: open for this record. A new run on `link/out` dropped the two lines from `link/out/RESULT`, and
-  `prysm/go1.26.10/link-set/RESULT` never had them.
+  A `RESULT` file that has a sha256 line for a file that is not in the tree gets a different bundle hash on a new run.
+- Where: the three `RESULT` files `link/out/RESULT`, `prysm/go1.26.10/link-set/RESULT` and `prysm/go1.26.10/link/RESULT`.
+- State: fixed. Each of the three files is the output of a new run on its pinned ELF. None has a sha256 line for a Lean file or `AXIOMS.txt`.
 
 ### Link set `prysm/go1.26.10/link` has no tracked disassembly
 
@@ -188,13 +184,13 @@ How to handle a new finding is in `../README.md` section 7.
   Its `norm/` directory is complete: 136 `.S` files and `all.S`, the functions of the 136 `PASS (a)` lines of its `RESULT`.
 - How to check it: filter the full disassembly of the pinned ELF (`gen/prysm-elf.sh` writes it) on the functions of `norm/`.
   A function is kept when the clean name of `link/convert_objdump.py` of its `TEXT` line names a `.S` file of `norm/`.
-  Then run `link/check.py` on a copy of the directory with that `target.objdump`, the ELF and its symbol listing.
+  Then run `link/check.py` on a copy of the directory with that `target.objdump`, the ELF as `target-amd64` and its symbol listing as `target-amd64.nm`.
   The result is exit 0 and 224 PASS lines. Every PASS and DIFF line equals the committed `RESULT`.
 - Earlier attempt: a check with the whole disassembly (641 functions) needed `.S` files that `norm/` does not hold.
   A fresh conversion of all 641 functions gives 1269 PASS lines and one FAIL: the reassembly of
   `v1alpha1.BeaconStateBellatrix.MarshalSSZTo` at `0x93fd87`. The ELF bytes of that `jge` are `0f8d7a000000`, and clang gives a 2-byte form.
   That function is not in the table and has no proof.
-- State: the table checks with a rebuilt disassembly. The committed `RESULT` is a record of an earlier run and stays.
+- State: the table checks with a rebuilt disassembly. The committed `RESULT` is the output of this check on the pinned ELF.
   The link set `prysm/go1.26.10/link-set` passes on the same ELF.
 
 ### The proof generator covers only some code forms

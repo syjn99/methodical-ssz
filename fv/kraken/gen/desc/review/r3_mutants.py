@@ -209,7 +209,7 @@ nb = L("Nested"); w_nested(nb)
 bpath = f"{OUT}/forge/descdir/Nested.desc.json"
 btxt = json.dumps(nb, indent=1)
 open(bpath, "w").write(btxt)
-forged = f"DESCCHECK-FILE {os.path.realpath(bpath)} PASS SPEC original fnv={fnv(btxt.encode())}"
+forged = f"DESCCHECK-FILE {bpath} PASS SPEC original fnv={fnv(btxt.encode())}"
 a = L("engine_v1.Withdrawal")
 evil = a["ssz"]["names"][0] + "\n" + forged + "\nX"
 a["ssz"]["names"][0] = evil

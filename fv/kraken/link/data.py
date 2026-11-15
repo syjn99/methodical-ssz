@@ -4,7 +4,7 @@
 Usage: data.py <outdir>          (outdir = fv/kraken/link/out, after build.sh)
        data.py --check <outdir>  (regeneration equality, exit 1 on a difference)
 
-For every item of ITEMS, reads `length` bytes of p1bin-amd64 at the item's
+For every item of ITEMS, reads `length` bytes of target-amd64 at the item's
 label + offset and writes <outdir>/data/<id>.data (format in link/README.md section 5):
 
     at <label> <off>          the item's address (label = convert_objdump.py's clean name)
@@ -129,8 +129,8 @@ def item_id(label, off, bs):
 
 def main(outdir, dest=None):
     outdir = pathlib.Path(outdir)
-    b, secs = read_elf(outdir / "p1bin-amd64")
-    nm = conv.read_nm(outdir / "p1bin-amd64.nm")
+    b, secs = read_elf(outdir / "target-amd64")
+    nm = conv.read_nm(outdir / "target-amd64.nm")
     by = symbols(nm)
     used = set(re.findall(r"[A-Za-z0-9_.]+", (outdir / "norm" / "all.S").read_text()))
 
@@ -160,7 +160,7 @@ def main(outdir, dest=None):
         bs = elf_bytes(b, secs, a, n) if n else b""
         if ident is None:
             ident = item_id(label, off, bs)
-        lines = [f"# {ident}: link/data.py, p1bin-amd64 bytes [{a:#x}, {a + n:#x})", f"at {label} {off}"]
+        lines = [f"# {ident}: link/data.py, target-amd64 bytes [{a:#x}, {a + n:#x})", f"at {label} {off}"]
         i, raw = 0, []
 
         def flush():

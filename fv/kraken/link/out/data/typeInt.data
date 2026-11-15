@@ -1,4 +1,4 @@
-# typeInt: link/data.py, p1bin-amd64 bytes [0x4d0020, 0x4d0050)
+# typeInt: link/data.py, target-amd64 bytes [0x4d0020, 0x4d0050)
 at type__ 49184
 bytes 08 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 bytes 92 a8 8c 34 0f 08 08 02

@@ -6,7 +6,8 @@
       - controls (wrong Descs; each must FAIL at its designated check) and known passes (Prysm
         only: changes the inventory binding cannot see), list mutants.txt;
       - the replay of every review mutant: review/r1_mutants.py (20), r2_mutants.py (32),
-        r3_mutants.py (40), copied unchanged from the review directories;
+        r3_mutants.py (40), copied from the review directories unchanged except that r3_mutants.py writes
+        the forged line with the work directory path as given;
       - list scenarios: t01-t13 of review/r3_mutants.py, the scenarios of this file, and for every wrong hand-type Desc an
         "add" (next to the originals) and a "replace" (in place of its base) scenario;
       expect.json and batch.txt.
@@ -148,7 +149,7 @@ MUTANTS = [
      _set(["package"], lambda p: p.replace("OffchainLabs", "offchainlabs"))),
     ("e6-ad-inner-cp-names", "AttestationData", "Checkpoint names crossed inside Source (claims cover only the top)", "go-names",
      _set(["ssz", "fields", 3, "names"], ["Root", "Epoch"])),
-    ("e7-schema", "ListU64", "schema fvphase1c.desc/2", "schema", _set(["schema"], "fvphase1c.desc/2")),
+    ("e7-schema", "ListU64", "schema fv.kraken.desc/2", "schema", _set(["schema"], "fv.kraken.desc/2")),
     ("e8-term-extra-key", "BitL", "unknown key inside a term (limit2 next to limit)", "keys", _set(["ssz", "fields", 0, "limit2"], 1)),
 ]
 
@@ -304,7 +305,7 @@ def prepare(work):
                 v = f"{mut}/{v}.desc.json"
             lst.append(v)
         write(f"{scen}/{sid}.txt", "\n".join(lst) + "\n")
-        exp["scenarios"][sid] = {"source": "phase1c", "what": what, "list": f"{scen}/{sid}.txt", "expect": "FAIL", "finding": finding}
+        exp["scenarios"][sid] = {"source": "test_desc", "what": what, "list": f"{scen}/{sid}.txt", "expect": "FAIL", "finding": finding}
     # add-and-replace scenarios (key "boundary"): every wrong hand-type Desc (controls and replay mutants with a hand
     # base that a sound checker must reject), added next to the originals and in place of its base
     wrong = [(m["id"], m["base"], p) for p, m in exp["controls"].items() if hand_base(m["base"])]
@@ -405,7 +406,7 @@ def evaluate(work, out):
         "unexpected": bad, "producer_skipped": exp["producer_skipped"],
     }
     strip = lambda s: s.replace(work + "/", "")
-    full = json.loads(strip(json.dumps({"schema": "fvphase1c.desc-test/3", "summary": summary, "rows": rows,
+    full = json.loads(strip(json.dumps({"schema": "fv.kraken.desc-test/3", "summary": summary, "rows": rows,
                                         "scenarios": scen_rows, "replay": rep_rows})))
     json.dump(full, open(out, "w"), indent=1)
     md = ["# Desc checker: controls, replay and list scenarios", "",

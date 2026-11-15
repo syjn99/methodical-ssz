@@ -1,2 +1,2 @@
-# sszErrListTooBig: link/data.py, p1bin-amd64 bytes [0x5cce10, 0x5cce10)
+# sszErrListTooBig: link/data.py, target-amd64 bytes [0x5cce10, 0x5cce10)
 at ssz.ErrListTooBig 0

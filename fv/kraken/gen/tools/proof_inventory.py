@@ -3,7 +3,7 @@
 
   proof_inventory.py names <names.txt>
       write every name that the mapping rule below can choose (input of `inventory_decls.lean`)
-  proof_inventory.py methods <p1cbin-amd64.nm> [<out.json>]
+  proof_inventory.py methods <prysm-target-amd64.nm> [<out.json>]
       read the `go tool nm` listing of the pinned ELF (not committed, 2 MB), check its sha256
       against the `nm sha256` line of `prysm/go1.26.10/build-ids.txt`, and write the list of SSZ methods of the target
       (default `prysm/go1.26.10/ssz-methods.json`). This list is the denominator of the inventory.

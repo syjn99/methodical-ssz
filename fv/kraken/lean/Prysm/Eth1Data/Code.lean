@@ -2,7 +2,7 @@ import Kraken.X64.Parser
 import Machine.Include
 
 /-!
-# Code of the `Eth1Data` functions (Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the `Eth1Data` functions (Go 1.26.10 ELF `9a37219e…10e9`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
 (`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code` and `Prysm.BeaconBlockHeader.Code`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`).

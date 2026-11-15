@@ -75,7 +75,7 @@ def main():
     w(f"| Reproducibility | Second build with an empty GOCACHE: sha256 `{bid['elf b2 sha256']}` |")
     w("| Kraken / EthLib / Lean | `6064eec` / `8621856` / `nightly-2026-09-21` |")
     w("")
-    w("Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `9c850c97…c501` do not transfer to this machine code.")
+    w("Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `1aede9d9…0761` do not transfer to this machine code.")
     w("")
     w("## 3. Method")
     w("")

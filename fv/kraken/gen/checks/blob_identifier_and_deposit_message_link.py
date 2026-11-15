@@ -7,7 +7,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
   blob_identifier_and_deposit_message_link.py callgraph <objdump> <out.json>          call targets with contract class
   blob_identifier_and_deposit_message_link.py filter <outdir> <objdump> <elf> <nm>    <outdir>/target.objdump of FUNCS (+ ELF/nm links)
   blob_identifier_and_deposit_message_link.py data <outdir> <checkpoint-link-dir> <attestation-data-link-dir> after `convert_objdump.py <outdir>/target.objdump
-                                                    <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
+                                                    <outdir>/target-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 Encoders, SizeSSZ and HashTreeRoot are not in the set (out of the hold-out scope).

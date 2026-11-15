@@ -24,7 +24,7 @@ All files here belong to one ELF. Do not mix them with the files of another ELF.
 | Path | Content |
 | --- | --- |
 | `build-ids.txt` | The Go version, the build flags and the sha256 of the ELF, its disassembly and its symbol listing |
-| `p1cbin-main.go.txt`, `prysm-go.mod.diff` | The `main` package of the binary and the `go.mod` change in the Prysm tree |
+| `prysm-target-main.go.txt`, `prysm-go.mod.diff` | The `main` package of the binary and the `go.mod` change in the Prysm tree |
 | `ssz-methods.json` | Every SSZ method of the ELF. It is the denominator of the inventory |
 | `functions.json`, `parser-result.json` | The functions with a converted `.S` file, and which of them the Kraken parser reads. `gen/kraken-parser/summarize_parser_log.py` writes `parser-result.json` from a parser log that is not tracked (`../README.md` section 3) |
 | `link/` | A link table of 136 functions of this ELF. No current theorem includes it. It is a record: its data files keep the ids of its run (`x5…`) |

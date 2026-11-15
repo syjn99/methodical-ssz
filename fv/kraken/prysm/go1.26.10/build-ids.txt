@@ -1,11 +1,11 @@
 go: go version go1.26.10 linux/arm64
 target: GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -p 2 -tags purego -trimpath
 host: Linux aarch64
-elf sha256: c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e
-elf size: 23486009
-elf b2 sha256: c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e
-go build id: vvezRAx2XfNAzHGIedKc/LVz05eLSmRibjKM02M9g/vTUc8QDCGkwQyqjmLKtu/siAyhYgBvYBhMpoLOoxx
-go build id b2: vvezRAx2XfNAzHGIedKc/LVz05eLSmRibjKM02M9g/vTUc8QDCGkwQyqjmLKtu/siAyhYgBvYBhMpoLOoxx
+elf sha256: 9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9
+elf size: 23485993
+elf b2 sha256: 9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9
+go build id: PFxt_vomy-NMkP6VtHg-/XabTaS2ivvMgyApg0K1J/Y0V0G--WccPBCwqlifwB/cLvguJ6HQuzmZyQIxJmU
+go build id b2: PFxt_vomy-NMkP6VtHg-/XabTaS2ivvMgyApg0K1J/Y0V0G--WccPBCwqlifwB/cLvguJ6HQuzmZyQIxJmU
 objdump sha256: 580b0da9b133b7510c5e16a7eafbe73416761293cb0e3467a9f01417e7814a47
-nm sha256: 88ee8b9afe7d5265982e869fc33a2fe7b69acc38d52f4efd173326d1db4140ac
-main.go sha256: 794caf8f195f3d2e050baa310d17969caf8b8a0414c3b9f522028ab7d06ed16a
+nm sha256: 5d47a14dc050ea4b58e9d89baa3e3df41df0af4538b0b7200398e6d8f9745673
+main.go sha256: e2e5ee4b87da69de117977c1809daf8d59a99d2ffcc84713033fd100664d94c5

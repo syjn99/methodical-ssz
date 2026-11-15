@@ -1,5 +1,5 @@
 {
- "schema": "fvphase1c.assumptions/1",
+ "schema": "fv.kraken.assumptions/1",
  "status": "frozen at the commit that adds this file (P2). Change only by a separate commit with the reason in the run OUTBOX. The generator never writes this file.",
  "rule": "A generated theorem may use only these premise classes. A premise outside this list is a new trust assumption: stop and report.",
  "revision": "3: prysm-e2e E1.4 (run fve2e-20261110T010000Z-2dd40dab, OUTBOX 001): FmtErrorfDDC listed (existing form of Fk/Contracts.lean since fix3 X5); Go 1.26.10 re-read recorded for the prysm/go1.26.10/e2e instances; primitives.Epoch.UnmarshalSSZ present as a function spec. Revision 2 = review phase1c-r1 S2, revision 1 = 0532cbd",

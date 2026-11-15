@@ -1,4 +1,4 @@
-# formatLMisaligned: link/data.py, p1bin-amd64 bytes [0x4fa746, 0x4fa78a)
+# formatLMisaligned: link/data.py, target-amd64 bytes [0x4fa746, 0x4fa78a)
 at go_string._ 42646
 bytes 6d 69 73 61 6c 69 67 6e 65 64 20 62 79 74 65 73
 bytes 3a 20 63 2e 4c 20 6c 65 6e 67 74 68 20 69 73 20

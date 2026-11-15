@@ -1,4 +1,4 @@
-# typeUint64: link/data.py, p1bin-amd64 bytes [0x4cffe0, 0x4d0010)
+# typeUint64: link/data.py, target-amd64 bytes [0x4cffe0, 0x4d0010)
 at type__ 49120
 bytes 08 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 bytes db d2 3a 70 0f 08 08 0b

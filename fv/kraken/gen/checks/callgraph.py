@@ -2,7 +2,7 @@
 """Call graph of the Checkpoint / Epoch SSZ functions in the Go 1.26.10 ELF.
 
 Usage: callgraph.py <objdump> <out.json> [<gcflags-m2.log>]
-  <objdump>   `go tool objdump -gnu` of the Go 1.26.10 ELF (c6403c02...911e)
+  <objdump>   `go tool objdump -gnu` of the Go 1.26.10 ELF (9a37219e...10e9)
   <gcflags-m2.log>  optional: output of the gated `go build -gcflags=<pkg>=-m=2` (inlining evidence)
 Reads only these files. Python 3 standard library only. Writes <out.json>; prints a summary.
 """
@@ -80,7 +80,7 @@ def main(objdump, out, mlog=None):
             any("Epoch" in t for t in called[FUNCS[1]]),
         "Checkpoint.UnmarshalSSZ calls Epoch.UnmarshalSSZ": FUNCS[3] in called[FUNCS[2]],
     }
-    doc = {"elf_sha256": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e",
+    doc = {"elf_sha256": "9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9",
            "functions": [{"name": f, "scope": SCOPE[f], **res[f]} for f in FUNCS],
            "missing": missing, "asm_call_evidence": asm_inlined, "gcflags_m2": inl,
            "unclassified_calls": sum(c["class"] == "UNCLASSIFIED" for f in FUNCS for c in res[f]["calls"])}

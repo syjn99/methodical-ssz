@@ -70,7 +70,7 @@ def main():
     want = KNOWN_SUBTESTS | {"minimal:blocks:build", "minimal:detect:TestByState"}
     for k in sorted(want - seen_known):
         unexpected.append(f"known failure not seen: {k}")
-    res = {"schema": "fvphase1c.prysm-tests/4", "runs": runs, "known_seen": sorted(seen_known), "unexpected": unexpected,
+    res = {"schema": "fv.kraken.prysm-tests/4", "runs": runs, "known_seen": sorted(seen_known), "unexpected": unexpected,
            "verdict": "only known failures" if not unexpected else "UNEXPECTED"}
     json.dump(res, open(res_path, "w"), indent=1)
     print(json.dumps({"verdict": res["verdict"], "unexpected": unexpected, "known_seen": sorted(seen_known)}, indent=1))

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Call graph and link tables of the real v1alpha1.SyncAggregate, v1alpha1.SyncCommittee and
-v1alpha1.IndexedAttestation UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set, sha256 c6403c02...911e).
+v1alpha1.IndexedAttestation UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set, sha256 9a37219e...10e9).
 A new file with the text of `deposit_data_and_pending_partial_withdrawal_link.py`: the function set and the data items changed. Existing scripts
 (`checkpoint_and_epoch_link.py`, `attestation_data_link.py`, `deposit_data_and_pending_partial_withdrawal_link.py`, `link/convert_objdump.py`, `link/data.py`, `link/check.py`) are not changed.
 
@@ -11,7 +11,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
                                                     (+ ELF/nm links)
   lists_and_vectors_link.py data <outdir> <checkpoint-link-dir> <attestation-data-link-dir> [--with-indexed-attestation]
                                                     after `convert_objdump.py <outdir>/target.objdump
-                                                    <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
+                                                    <outdir>/target-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set (SyncAggregate, SyncCommittee only).
 IndexedAttestation is linked only with --with-indexed-attestation: its .S has `lea 0xffffff1c(%rdi),%rdx` (GNU objdump spelling of the

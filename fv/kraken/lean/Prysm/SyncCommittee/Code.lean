@@ -2,7 +2,7 @@ import Kraken.X64.Parser
 import Machine.Include
 
 /-!
-# Code of the SyncAggregate and SyncCommittee function set (Go 1.26.10 ELF `c6403c02…911e`): the `SyncCommittee` part
+# Code of the SyncAggregate and SyncCommittee function set (Go 1.26.10 ELF `9a37219e…10e9`): the `SyncCommittee` part
 
 The declarations of the other types of this group are in `Prysm/SyncAggregate/Code.lean`.
 -/

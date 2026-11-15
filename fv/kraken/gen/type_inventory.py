@@ -61,7 +61,7 @@ def cut(n):
 
 def reduce_ir(raw_path, out_path):
     raw = json.load(open(raw_path))
-    out = {"schema": "fvphase1c.ir-reduced/1", "tags": raw["tags"], "source_schema": raw["schema"], "configs": []}
+    out = {"schema": "fv.kraken.ir-reduced/1", "tags": raw["tags"], "source_schema": raw["schema"], "configs": []}
     for c in raw["configs"]:
         co = {k: c[k] for k in ("file", "sha256", "package")}
         if c.get("error"):
@@ -199,7 +199,7 @@ def walk_refs(n, acc):
 
 def build(pdir):
     irs = {p: json.load(open(f"{pdir}/ir/ir-{p}.json")) for p in ("mainnet", "minimal")}
-    out = OrderedDict(schema="fvphase1c.inventory/1", inputs={}, definitions={}, configs=[], sets={}, types=[],
+    out = OrderedDict(schema="fv.kraken.inventory/1", inputs={}, definitions={}, configs=[], sets={}, types=[],
                       hand_written_delegates=[], minimal_differences=[], counts={})
     out["inputs"] = {p: {"file": f"ir/ir-{p}.json", "tags": irs[p]["tags"]} for p in irs}
     out["definitions"] = {

@@ -3,7 +3,7 @@
 
 Usage: producer.py <out-dir> <reduced-ir.json>... [--types T1,pkg.T2] [--refs refs.json]
 
-Desc format (schema fvphase1c.desc/1):
+Desc format (schema fv.kraken.desc/1):
   type, package       Go type
   ssz                 the EthLib `Desc` term the type stands for, as JSON:
                       {"k":"bool"} {"k":"uint","w":<bytes>} {"k":"byteVector","n":N}
@@ -132,7 +132,7 @@ def produce(t, idx, ref=None):
         if info["variable"]:
             order.append(i)
         off += info["width"]
-    return {"schema": "fvphase1c.desc/1", "type": t["name"], "package": t["package"],
+    return {"schema": "fv.kraken.desc/1", "type": t["name"], "package": t["package"],
             "ssz": container_term(ir, idx, 0),
             "fixed_size": None if ir["variable"] else ir["fixed_size"],
             "fixed_part_size": off, "fields": fields, "variable_order": order, "reference": ref}

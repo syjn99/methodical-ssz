@@ -1,6 +1,6 @@
 {
- "schema": "fvphase1c.mnemonics/1",
- "method": "Kraken runtime parser (parseInstr match arms + j/set/cmov with parseCondCode?) at the pinned package; conv.py NORM forms count as norm; operand forms not checked",
+ "schema": "fv.kraken.mnemonics/1",
+ "method": "Kraken runtime parser (parseInstr match arms + j/set/cmov with parseCondCode?) at the pinned package; convert_objdump.py NORM forms count as norm; operand forms not checked",
  "kraken_accepted_names": [
   "adc",
   "adcb",

@@ -29,7 +29,7 @@ unkeyed or duplicate key, a duplicate path, or any failing original makes the ve
 Per file (any failure = FAIL):
 * `strict-json` the raw text: no duplicate key (after decoding escapes), integers only
                 (`-?(0|[1-9][0-9]*)`), no byte-order mark, nothing after the top value
-* `schema`      exactly `fvphase1c.desc/1`
+* `schema`      exactly `fv.kraken.desc/1`
 * `type`        an ASCII Go identifier; `package` an ASCII path in the checker's package list
 * `expected-key` (package, type) is in the expected set
 * `hand-name`   a hand type name outside its table package, unless the key is in the
@@ -46,7 +46,7 @@ Per file (any failure = FAIL):
   widths, variable flags, field kinds and fixed size equal the committed inventory. This binds a
   Prysm Desc to the inventory (same sszgen IR, another program). It is not a spec comparison.
 
-Result file: schema `fvphase1c.desccheck-result/1`, inventory path and sha256, table keys,
+Result file: schema `fv.kraken.desccheck-result/1`, inventory path and sha256, table keys,
 exceptions, list-level findings, one record per file (path, sha256 of the bytes (EthLib
 SHA-256, FIPS 180-4), role, package, type, status, PASS/FAIL, failed checks with details) and
 `verdict` OK/FAIL. The human log escapes every character
@@ -542,7 +542,7 @@ def checkFile (ctx : Ctx) (path : String) : IO FileRes := do
   let pk := pkE.toOption.getD ""
   let tyOk := tyE.toOption.isSome && goIdent ty
   let pkOk := pkE.toOption.isSome && pkgPath pk && knownPackages.contains pk
-  idl := idl ++ [("schema", schema == "fvphase1c.desc/1", s!"schema '{schema}'"),
+  idl := idl ++ [("schema", schema == "fv.kraken.desc/1", s!"schema '{schema}'"),
     ("type", tyOk, s!"type '{ty}' (ASCII Go identifier)"),
     ("package", pkOk, s!"package '{pk}' (ASCII path in the checker's package list)")]
   let key : Option (String × String) := if tyOk && pkOk then some (pk, ty) else none
@@ -663,7 +663,7 @@ def runSet (ctx : Ctx) (invInfo : Json) (selfOk : Bool) (cache : IO.Ref (Std.Has
   let failedOrig := ores.toList.filter (fun r => !r.failed.isEmpty) |>.map (·.path)
   let ok := selfOk && missing.isEmpty && extra.isEmpty && unkeyed.isEmpty && dupKeys.isEmpty && dupPaths.isEmpty && failedOrig.isEmpty
   let ks (l : List (String × String)) := Json.arr (l.map (fun k => Json.mkObj [("package", k.1), ("type", k.2)])).toArray
-  let res := Json.mkObj [("schema", "fvphase1c.desccheck-result/1"), ("checker", "fv/kraken/gen/desc-checker/DescChecker.lean"),
+  let res := Json.mkObj [("schema", "fv.kraken.desccheck-result/1"), ("checker", "fv/kraken/gen/desc-checker/DescChecker.lean"),
     ("inventory", invInfo), ("table_keys", Json.arr (refs.map (fun (k, (rn, _, _)) => Json.mkObj [("package", k.1), ("type", k.2), ("reference", rn)])).toArray),
     ("hand_name_exceptions", ks handNameExceptions), ("expected_key_count", ctx.expected.length),
     ("originals", origs.length), ("mutants", muts.length),

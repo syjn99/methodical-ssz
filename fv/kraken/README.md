@@ -16,13 +16,13 @@ The project has two target binaries. Their proofs are separate, because a proof 
 - The source is a pinned Prysm commit, with the generated files of the pinned generator.
 - The binary is a small Go `main` package that keeps the SSZ methods of all inventory types in the ELF.
 - The compiler is Go 1.26.10. It cross-compiles to `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0`, with `-tags purego -trimpath`.
-- The ELF identity is its sha256 `c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e`.
+- The ELF identity is its sha256 `9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9`.
   The file `prysm/go1.26.10/build-ids.txt` records it, with the Go build ID and the sha256 of the symbol listing and the disassembly.
 - The ELF is about 23 MB. It is not in the repository. Section 3 tells how to build it again.
 
 **The test target.** This is an older binary of small test types, compiled with Go 1.26.3.
 
-- The Go types are in `target/`. The `main` package is `cmd/p1bin/`.
+- The Go types are in `target/`. The `main` package is `cmd/test-target/`.
 - The ELF, its symbol listing and its disassembly are in `link/out/`. Their sha256 values are in `link/out/build-ids.txt`.
 - `Runtime/StaticUint64s.lean` reads one data file of this binary (`link/out/data/staticuint64s.data`).
 - `link/build.sh` builds this ELF again from the repository root.
@@ -49,7 +49,7 @@ Run heavy jobs one at a time, under a memory limit.
 1. Add the `replace` line of `prysm/go1.26.10/prysm-go.mod.diff` to the Prysm `go.mod`. Change its path to your generator tree.
 2. Generate the SSZ files and the generator IR with `sh fv/kraken/gen/prysm-gen.sh <prysm-tree> <generator-binary> <out>`.
 3. Copy the generated files from `<out>/gen/` into the Prysm tree.
-4. Write the `main` package with `python3 -I fv/kraken/gen/keepalive.py fv/kraken/prysm/inventory.json <prysm-tree>/fvphase1c/p1cbin/main.go`.
+4. Write the `main` package with `python3 -I fv/kraken/gen/keepalive.py fv/kraken/prysm/inventory.json <prysm-tree>/fv/prysm-target/main.go`.
 5. Build and dump the ELF with `sh fv/kraken/gen/prysm-elf.sh <prysm-tree> <elf-out> <empty-gocache-dir>`.
 6. Compare the sha256 of the ELF with `prysm/go1.26.10/build-ids.txt`. If they differ, stop. The proofs do not apply.
 
@@ -60,8 +60,8 @@ After step 2, these commands make the IR, the inventory, the function list, the 
 ```sh
 python3 -I fv/kraken/gen/type_inventory.py reduce <out>/ir-mainnet.json fv/kraken/prysm/ir/ir-mainnet.json   # the same for minimal
 python3 -I fv/kraken/gen/type_inventory.py build fv/kraken/prysm
-python3 -I fv/kraken/gen/mnemonics.py <elf-out>/p1cbin-amd64.objdump fv/kraken/lean/.lake/packages/Kraken/Kraken/X64/Parser/Basic.lean fv/kraken/link/convert_objdump.py fv/kraken/prysm/inventory.json fv/kraken/prysm/go1.26.10/functions.json
-python3 -I fv/kraken/link/convert_objdump.py <elf-out>/p1cbin-amd64.objdump <elf-out>/p1cbin-amd64.nm <norm-out> --norm
+python3 -I fv/kraken/gen/mnemonics.py <elf-out>/prysm-target-amd64.objdump fv/kraken/lean/.lake/packages/Kraken/Kraken/X64/Parser/Basic.lean fv/kraken/link/convert_objdump.py fv/kraken/prysm/inventory.json fv/kraken/prysm/go1.26.10/functions.json
+python3 -I fv/kraken/link/convert_objdump.py <elf-out>/prysm-target-amd64.objdump <elf-out>/prysm-target-amd64.nm <norm-out> --norm
 ls <norm-out>/*.S | grep -v '/all\.S$' > <scratch>/parser-list.txt
 cd fv/kraken/lean && PARSER_RUN_LIST=<scratch>/parser-list.txt lake env lean ../gen/kraken-parser/ParserRun.lean > <scratch>/parser-log.txt
 python3 -I fv/kraken/gen/kraken-parser/summarize_parser_log.py <scratch>/parser-log.txt fv/kraken/prysm/go1.26.10/functions.json fv/kraken/prysm/go1.26.10/parser-result.json
@@ -76,7 +76,7 @@ The parser log is not tracked. `kraken-parser/summarize_parser_log.py` makes `pr
 
 | Directory | Content |
 | --- | --- |
-| `cmd/p1bin/` | The `main` package of the test target |
+| `cmd/test-target/` | The `main` package of the test target |
 | `target/` | The Go test types, two reduced Prysm types and their generated code (test target) |
 | `link/` | The converter, the data extractor and the link check (see `link/README.md`) |
 | `link/out/` | The test target ELF, its listings, the converted `.S` files, the data files and the link result |

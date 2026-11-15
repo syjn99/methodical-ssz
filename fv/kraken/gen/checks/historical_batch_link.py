@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Call graph and link set of the real v1alpha1.HistoricalBatch UnmarshalSSZ on the Go 1.26.10 ELF
-(the same ELF as prysm/go1.26.10/link-set, sha256 c6403c02...911e). A new file. It reuses `lists_and_vectors_link.py`, `checkpoint_and_epoch_link.py`
+(the same ELF as prysm/go1.26.10/link-set, sha256 9a37219e...10e9). A new file. It reuses `lists_and_vectors_link.py`, `checkpoint_and_epoch_link.py`
 and `attestation_data_link.py` by import; none of them is changed.
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   historical_batch_link.py callgraph <objdump> <out.json>          call targets with contract class
   historical_batch_link.py filter <outdir> <objdump> <elf> <nm>    <outdir>/target.objdump of HistoricalBatch (+ ELF/nm links)
   historical_batch_link.py data <outdir> <checkpoint-link-dir> <lists-and-vectors-link-dir> after `convert_objdump.py <outdir>/target.objdump
-                                                    <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
+                                                    <outdir>/target-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 

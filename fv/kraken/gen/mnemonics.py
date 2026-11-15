@@ -190,7 +190,7 @@ def main():
                 write_barrier_flag_reads=fs[m]["write_barrier_flag_reads"]))
             for m in ("MarshalSSZTo", "SizeSSZ", "UnmarshalSSZ"))
     out = OrderedDict(
-        schema="fvphase1c.mnemonics/1",
+        schema="fv.kraken.mnemonics/1",
         method="Kraken runtime parser (parseInstr match arms + j/set/cmov with parseCondCode?) at the pinned package; "
                "convert_objdump.py NORM forms count as norm; operand forms not checked",
         kraken_accepted_names=sorted(names), kraken_condition_codes=sorted(ccs), kraken_prefix_forms=prefixes,

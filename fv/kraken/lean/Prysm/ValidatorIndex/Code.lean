@@ -2,7 +2,7 @@ import Kraken.X64.Parser
 import Machine.Include
 
 /-!
-# Code of the `ValidatorIndex` functions (Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the `ValidatorIndex` functions (Go 1.26.10 ELF `9a37219e…10e9`)
 
 The declarations of the other types of this group are in `Prysm/BeaconBlockHeader/Code.lean`.
 -/

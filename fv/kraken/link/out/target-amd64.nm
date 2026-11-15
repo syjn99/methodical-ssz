@@ -2604,7 +2604,7 @@
   501440        352 R go:itab.*reflect.rtype,reflect.Type
   5015a0        480 R internal/sync..dict.entry[interface {},interface {}]
   501d80        544 R internal/runtime/gc/scan.gcExpandersAVX512
-  501fa0        775 R runtime.modinfo.str
+  501fa0        781 R runtime.modinfo.str
   5022c0       1152 R internal/sync..dict.HashTrieMap[interface {},interface {}]
   502740       2048 R runtime.staticuint64s
   502f40          1 r go:rodatafipsstart
@@ -2612,11 +2612,11 @@
   502f81          0 r runtime.etypes
   502f81          0 r runtime.erodata
   502f88          0 r runtime.pclntab
-  59cd20     147928 r go:func.*
-  5c0ef8       3899 r runtime.findfunctab
-  5c1e33          0 r runtime.epclntab
-  5c1e40       2424 r runtime.typelink
-  5c27c0        360 r runtime.itablink
+  59cd38     147928 r go:func.*
+  5c0f10       3899 r runtime.findfunctab
+  5c1e4b          0 r runtime.epclntab
+  5c1e60       2424 r runtime.typelink
+  5c27e0        360 r runtime.itablink
   5c3000        832 D go:buildinfo
   5c3340        120 D go:fipsinfo
   5c33c0        592 D runtime.firstmoduledata

@@ -5,7 +5,7 @@ Usage (Python 3 standard library only; run with python3 -I -B; the steps after `
   checkpoint_and_epoch_link.py filter <outdir> <objdump> <elf> <nm>   write <outdir>/target.objdump (the 7 functions of
                                                     callgraph.py) and link the ELF and nm into <outdir>
   checkpoint_and_epoch_link.py data <outdir>                          after `convert_objdump.py <outdir>/target.objdump
-                                                    <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
+                                                    <outdir>/target-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data with link/data.py's code
 Then `link/check.py <outdir>` (a)-(f). The committed copy is fv/kraken/prysm/go1.26.10/link-set
 (norm/, data/, target.objdump, RESULT). link/convert_objdump.py, link/data.py and link/check.py are not changed.
@@ -42,7 +42,7 @@ def filt(outdir, objdump, elf, nm):
         if cur:
             keep.append(line)
     (out / "target.objdump").write_text("".join(keep))
-    for src, dst in ((elf, "p1bin-amd64"), (nm, "p1bin-amd64.nm")):
+    for src, dst in ((elf, "target-amd64"), (nm, "target-amd64.nm")):
         p = out / dst
         if not p.is_symlink() and not p.exists():
             os.symlink(src, p)

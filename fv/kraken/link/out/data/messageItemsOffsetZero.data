@@ -1,4 +1,4 @@
-# messageItemsOffsetZero: link/data.py, p1bin-amd64 bytes [0x4f9a7a, 0x4f9aaf)
+# messageItemsOffsetZero: link/data.py, target-amd64 bytes [0x4f9a7a, 0x4f9aaf)
 at go_string._ 39370
 bytes 65 6e 63 6f 75 6e 74 65 72 65 64 20 69 6e 76 61
 bytes 6c 69 64 20 6f 66 66 73 65 74 20 6f 66 20 30 20

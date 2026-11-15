@@ -1,5 +1,5 @@
 {
- "schema": "fvphase1c.gendiff/1",
+ "schema": "fv.kraken.gendiff/1",
  "rules": [
   {
    "commit": "b51620a",

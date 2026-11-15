@@ -297,7 +297,7 @@
        "type": "github.com/OffchainLabs/go-bitfield.Bitvector4"
       }
      ],
-     "go_file": "types1b.go",
+     "go_file": "types_bits_and_nesting.go",
      "go_file_kind": "native",
      "go_size_gc_amd64": 24,
      "ir": {
@@ -388,7 +388,7 @@
        "type": "*github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64"
       }
      ],
-     "go_file": "types1b.go",
+     "go_file": "types_bits_and_nesting.go",
      "go_file_kind": "native",
      "go_size_gc_amd64": 24,
      "ir": {
@@ -487,7 +487,7 @@
        "type": "[]*github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64"
       }
      ],
-     "go_file": "types1b.go",
+     "go_file": "types_bits_and_nesting.go",
      "go_file_kind": "native",
      "go_size_gc_amd64": 24,
      "ir": {
@@ -560,7 +560,7 @@
        "type": "github.com/OffchainLabs/go-bitfield.Bitlist"
       }
      ],
-     "go_file": "types1b.go",
+     "go_file": "types_bits_and_nesting.go",
      "go_file_kind": "native",
      "go_size_gc_amd64": 24,
      "ir": {
@@ -910,7 +910,7 @@
    ]
   }
  ],
- "schema": "fvphase1c.ir-reduced/1",
- "source_schema": "fvphase1c.ir/1",
+ "schema": "fv.kraken.ir-reduced/1",
+ "source_schema": "fv.kraken.ir/1",
  "tags": ""
 }

@@ -1,5 +1,5 @@
 {
- "schema": "fvphase1c.desc/1",
+ "schema": "fv.kraken.desc/1",
  "type": "SyncAggregatorSelectionData",
  "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
  "ssz": {

@@ -232,7 +232,7 @@ def main():
     out_dir = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else None
     k = f"{root}/fv/kraken"
     hand_types = ["Scalars", "FixedVec", "ListU64", "BitVec", "Nested", "ListC", "BitL", "Checkpoint", "AttestationData"]
-    hs = obligations.sites([f"{k}/target/types.ssz.go", f"{k}/target/types1b.ssz.go", f"{k}/target/prysm/types.ssz.go"])
+    hs = obligations.sites([f"{k}/target/types.ssz.go", f"{k}/target/types_bits_and_nesting.ssz.go", f"{k}/target/prysm/types.ssz.go"])
     hand_rows = instantiate(hs, hand_types, HAND)
     hand_main = [r for r in hand_rows if r["obligation"] != "unreachable_mc"]
     hand_unr = [r for r in hand_rows if r["obligation"] == "unreachable_mc"]
@@ -245,11 +245,11 @@ def main():
     out_types = sorted(t["name"] for t in inv["types"] if t["scope"] == "out")
     pr_rows = instantiate(ps, in_types)
     src_hash = {os.path.relpath(p, root): hashlib.sha256(open(p, "rb").read()).hexdigest() for p in
-                [f"{k}/target/types.ssz.go", f"{k}/target/types1b.ssz.go", f"{k}/target/prysm/types.ssz.go",
+                [f"{k}/target/types.ssz.go", f"{k}/target/types_bits_and_nesting.ssz.go", f"{k}/target/prysm/types.ssz.go",
                  f"{k}/prysm/inventory.json"] + sorted(f"{gen_dir}/{f}" for f in os.listdir(gen_dir))}
     from collections import Counter
     th = {
-        "schema": "fvphase1c.theorems/1",
+        "schema": "fv.kraken.theorems/1",
         "status": "frozen at the commit that adds this file (P2). Change only by a separate commit with the reason in the run OUTBOX. "
                   "The generator never writes this file.",
         "provisional_scope": "the Prysm part covers the types classed 'in' by the first-pass (provisional) inventory; a class change is a list change",
@@ -282,7 +282,7 @@ def main():
         },
     }
     asm = {
-        "schema": "fvphase1c.assumptions/1",
+        "schema": "fv.kraken.assumptions/1",
         "status": th["status"],
         "rule": "A generated theorem may use only these premise classes. A premise outside this list is a new trust assumption: stop and report.",
         "revision": "2: review phase1c-r1 S2 (Go 1.26.10 re-check condition, model per instance, API version). Revision 1 = 0532cbd",

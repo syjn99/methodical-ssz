@@ -1,5 +1,5 @@
 {
- "schema": "fvphase1c.inventory/1",
+ "schema": "fv.kraken.inventory/1",
  "inputs": {
   "mainnet": {
    "file": "ir/ir-mainnet.json",

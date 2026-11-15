@@ -1,6 +1,6 @@
 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.MarshalSSZTo:
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.MarshalSSZTo_0:
-  lea 0xffffff58(%rsp),%r12
+  lea -0xa8(%rsp),%r12
   cmp 0x10(%r14),%r12
   jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.MarshalSSZTo_39f
   push %rbp

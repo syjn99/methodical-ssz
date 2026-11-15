@@ -5,7 +5,7 @@ Usage (Python 3 standard library only; run with python3 -I -B; every step runs g
   link_set.py functions                               print the functions of the link set (one per line)
   link_set.py filter <outdir> <objdump> <elf> <nm>    write <outdir>/target.objdump (the functions above, in
                                                       address order) and link the ELF and nm into <outdir>
-  link_set.py data <outdir>                           after `convert_objdump.py <outdir>/target.objdump <outdir>/p1bin-amd64.nm
+  link_set.py data <outdir>                           after `convert_objdump.py <outdir>/target.objdump <outdir>/target-amd64.nm
                                                       <outdir>/norm --norm`: write <outdir>/data/*.data
 Then `link/check.py <outdir>` (a)-(f). The committed copy is fv/kraken/prysm/go1.26.10/link-set.
 
@@ -13,8 +13,7 @@ The function list is the union of the lists of the `gen/checks/*link.py` scripts
 operands of the converted code. `data` runs the `data` command of each script with <outdir> as its output directory
 and as every link directory argument, so the items of all scripts come from the one set.
 A data file id that two scripts write must get the same bytes; the command stops otherwise.
-Exception to a fresh `convert_objdump.py --norm` run: the committed `…v1alpha1.Validator.MarshalSSZTo.S` keeps the unsigned form
-`lea 0xffffff58(%rsp),%r12` of an older converter (see FINDINGS.md); no theorem uses its program constant.
+The committed files are the output of a fresh run of these steps.
 """
 import pathlib
 import subprocess
@@ -59,7 +58,7 @@ def data(outdir):
     for script, ndirs, extra in DATA_RUNS:
         with tempfile.TemporaryDirectory() as d:
             t = pathlib.Path(d)
-            for name in ("norm", "target.objdump", "p1bin-amd64", "p1bin-amd64.nm"):
+            for name in ("norm", "target.objdump", "target-amd64", "target-amd64.nm"):
                 (t / name).symlink_to((out / name).resolve())
             (t / "data").mkdir()
             r = subprocess.run([sys.executable, "-I", "-B", str(HERE / script), "data", str(t)]

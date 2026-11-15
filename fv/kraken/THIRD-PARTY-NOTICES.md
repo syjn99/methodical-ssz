@@ -13,7 +13,7 @@ Scope: the path lists come from program scans of the tracked files for Go source
   So the `proto/*` method bodies come from this repository's generator. `consensus-types/primitives` is Prysm source.
 - The data extracts and tables also name or hold Go runtime and standard-library symbols (for example `runtime.memmove`, type descriptors).
 - Produced by: `link/convert_objdump.py --norm` and `link/check.py` on an ELF cross-compiled by Go 1.26.10 (`GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 -tags purego -trimpath`).
-- ELF sha256 `c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e` (`prysm/go1.26.10/build-ids.txt`).
+- ELF sha256 `9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9` (`prysm/go1.26.10/build-ids.txt`).
 - The ELF is not committed.
 - Upstream: Prysm, <https://github.com/OffchainLabs/prysm>, commit `ab15ff70c72a568c870b2de662474685a95de294` (`README.md` section 2). Licence: GNU General Public License version 3 (root `LICENSE.md`).
 - Upstream: Go, <https://go.dev/>, <https://github.com/golang/go>. Licence: BSD-3-Clause (Go 1.26.10 `LICENSE`).
@@ -38,14 +38,14 @@ Scope: the path lists come from program scans of the tracked files for Go source
 
 ## E. Go 1.26.3 ELF of this repository's own target
 
-- Paths: `link/out/p1bin-amd64`, `link/out/p1bin-amd64.nm`, `link/out/target.objdump`, `link/out/RESULT`, `link/out/build-ids.txt`, `link/out/norm/*` (30), `link/out/data/*` (23). Total 58.
-- What: the ELF built from `cmd/p1bin`, `target/` and `ssz/` by Go 1.26.3 (`link/build.sh`), its symbol table, filtered disassembly, link tables, `.S` and data extracts.
-- ELF sha256 `9c850c97066b9d33d6e4c5ef0a385dcbe2c984ae774a527cdedd18d2b72ac501` (`link/out/build-ids.txt`).
-- Besides this repository's code, `p1bin-amd64.nm` shows linked code of the Go runtime and standard library,
+- Paths: `link/out/target-amd64`, `link/out/target-amd64.nm`, `link/out/target.objdump`, `link/out/RESULT`, `link/out/build-ids.txt`, `link/out/norm/*` (30), `link/out/data/*` (23). Total 58.
+- What: the ELF built from `cmd/test-target`, `target/` and `ssz/` by Go 1.26.3 (`link/build.sh`), its symbol table, filtered disassembly, link tables, `.S` and data extracts.
+- ELF sha256 `1aede9d9ccf58f7102e1765d56a4a95688a705f2632593a4e8f213f51f080761` (`link/out/build-ids.txt`).
+- Besides this repository's code, `target-amd64.nm` shows linked code of the Go runtime and standard library,
   `github.com/prysmaticlabs/gohashtree`, `github.com/minio/sha256-simd` and `github.com/klauspost/cpuid/v2` (versions in the root `go.mod`).
 - The `.S` files in `link/out/norm/` hold only `ssz.*`, `target.*` and `target_prysm.*` functions.
 - Upstream: Go, as in family A (the BSD-3-Clause name was read from the Go 1.26.10 tree, not from a Go 1.26.3 tree).
-- The ELF build info also lists `github.com/OffchainLabs/go-bitfield`. `p1bin-amd64.nm` has no symbol of it. The licences of gohashtree, sha256-simd, cpuid and go-bitfield were not read for this file.
+- The ELF build info also lists `github.com/OffchainLabs/go-bitfield`. `target-amd64.nm` has no symbol of it. The licences of gohashtree, sha256-simd, cpuid and go-bitfield were not read for this file.
 
 ## F. Prysm field definitions in the target package
 

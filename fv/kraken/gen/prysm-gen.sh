@@ -11,7 +11,7 @@
 # the default sources and stamps //go:build !minimal; minimal loads
 # -tags minimal sources and stamps //go:build minimal; progressive is on
 # (no --disable-progressive). Output goes outside the Prysm tree. The only
-# write into the Prysm tree is the inventory-tool scratch package fvphase1c/inventorytool.
+# write into the Prysm tree is the inventory-tool scratch package fv/inventory-tool.
 set -eu
 P=$1
 GEN=$2
@@ -51,9 +51,9 @@ cat "$O/gen/GEN_RC"
 fi
 [ "$MODE" = gen ] && exit $fail
 
-mkdir -p fvphase1c/inventorytool
-cp "$HERE/inventory-tool/main.go" fvphase1c/inventorytool/main.go
-go build -p 2 -o "$O/bin/inventory-tool" ./fvphase1c/inventorytool
+mkdir -p fv/inventory-tool
+cp "$HERE/inventory-tool/main.go" fv/inventory-tool/main.go
+go build -p 2 -o "$O/bin/inventory-tool" ./fv/inventory-tool
 CFGS="$V/phase0.yaml $V/altair.yaml $V/bellatrix.yaml $V/capella.yaml $V/deneb.yaml $V/electra.yaml $V/fulu.yaml
 $V/gloas.yaml $V/heze.yaml $V/non-core.yaml proto/engine/v1/engine.yaml proto/eth/v1/gateway.yaml
 proto/ssz_query/response.yaml proto/ssz_query/testing/test_containers.yaml"

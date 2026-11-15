@@ -13,10 +13,11 @@ Paths in this file are relative to `fv/kraken/`. A command that starts with `fv/
 | `link/check.py` | The link check. It writes the result file `RESULT` |
 | `link/build.sh` | Builds the test target ELF and runs the steps above for it |
 
-The build info of the test target ELF names its main package `github.com/OffchainLabs/methodical-ssz/fv/kraken/cmd/p1bin`.
-Its line table names the source files `cmd/p1bin/main.go`, `target/types.ssz.go` and `target/types1b.ssz.go`.
-These names are identities of that ELF, so they stay. The generator writes `types1b.ssz.go` from `types1b.go`.
-The file name `p1bin-amd64` of an ELF is the name of that main package; `check.py` and the data files read it.
+The build info of the test target ELF names its main package `github.com/OffchainLabs/methodical-ssz/fv/kraken/cmd/test-target`.
+Its line table names the source files `cmd/test-target/main.go`, `target/types.ssz.go` and `target/types_bits_and_nesting.ssz.go`.
+The generator writes `types_bits_and_nesting.ssz.go` from `types_bits_and_nesting.go`.
+In each link directory, the ELF file is `target-amd64` and its symbol listing is `target-amd64.nm`.
+`check.py`, `data.py`, `gen/checks/link_set.py` and the `gen/checks/*link.py` scripts use these names. The header line of each data file names the ELF file.
 The data ids of `link/out/data/` follow the rule of `data.py` `item_id`.
 `staticuint64s` keeps its id: it is the symbol `runtime.staticuint64s`, and `Runtime/StaticUint64s.lean` includes it.
 
@@ -59,10 +60,6 @@ The inputs are the ELF, the `.S` files of `norm/` and the data files of `data/`.
 The last line is a bundle hash: the sha256 of `RESULT` up to the last PASS line.
 One bundle hash thus binds the ELF to the exact text that Lean includes.
 
-The tracked `RESULT` file `prysm/go1.26.10/link/RESULT` is a record of an earlier run.
-It has sha256 lines for two files that are no longer in the tree: `lean/Fk/Code.lean` and `AXIOMS.txt`.
-A new run writes its `RESULT` without the two lines, so the bundle hash changes.
-`link/out/RESULT` and `prysm/go1.26.10/link-set/RESULT` have no such line.
 `prysm/go1.26.10/link/` has no `target.objdump`; `../FINDINGS.md` gives the way to rebuild it for a check.
 
 ## 4. Requirements

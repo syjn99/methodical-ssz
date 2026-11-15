@@ -3,7 +3,7 @@ import Machine.Include
 import Prysm.SyncCommittee.Code
 
 /-!
-# Code of the SyncAggregate and SyncCommittee function set (Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the SyncAggregate and SyncCommittee function set (Go 1.26.10 ELF `9a37219e…10e9`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
 (`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code` and `Prysm.Deposit_Data.Code`;

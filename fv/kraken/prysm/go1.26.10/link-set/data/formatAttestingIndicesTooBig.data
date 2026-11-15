@@ -1,4 +1,4 @@
-# formatAttestingIndicesTooBig: link/data.py, p1bin-amd64 bytes [0xc618e7, 0xc61930)
+# formatAttestingIndicesTooBig: link/data.py, target-amd64 bytes [0xc618e7, 0xc61930)
 at go_string._ 163839
 bytes 73 73 7a 2d 6d 61 78 20 65 78 63 65 65 64 65 64
 bytes 3a 20 63 2e 41 74 74 65 73 74 69 6e 67 49 6e 64

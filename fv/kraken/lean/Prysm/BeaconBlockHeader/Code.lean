@@ -3,7 +3,7 @@ import Machine.Include
 import Prysm.ValidatorIndex.Code
 
 /-!
-# Code of the `BeaconBlockHeader` functions (Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the `BeaconBlockHeader` functions (Go 1.26.10 ELF `9a37219e…10e9`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
 (`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code` and `Prysm.AttestationData.Code`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). The Slot callee is `Prysm.Slot.Code.unmarshalSSZ`.

@@ -83,12 +83,12 @@ A kind identity is not a witness. It does not show that the premises can hold.
 `desc-checker/DescChecker.lean` is a Lean program that runs EthLib functions. It shares no code with `desc/producer.py`.
 So a defect in the producer or in the IR does not also hide in the checker.
 `desc/run_desc_checker.sh` runs it (needs Lean). The result is `desc/results/main.result.json`.
-That result and the review sources `desc/review/*` are records of earlier runs, and they keep the earlier names of the
-`Spec` descriptions: the result names `Spec.<xy>Desc`, and the review sources name `Fv1.<xy>Desc`.
-The two letters `<xy>` give the test type: `sc` Scalars, `fv` FixedVec, `lu` ListU64, `bv` BitVec, `ne` Nested,
-`lc` ListOfContainers, `bl` BitList, `cp` Checkpoint, `ad` AttestationData.
-The present name is `Spec.` + the type name in lower camel case + `Desc`, for example `Spec.scalarsDesc` and `Spec.listU64Desc`.
-A new checker run writes the present names.
+`desc/test_desc.py prepare` makes its inputs, `desc/run_desc_checker.sh` writes it, and `desc/test_desc.py evaluate` checks it.
+They use a relative work directory under `lean/`, so the result holds no machine path.
+The result names the present `Spec` descriptions, for example `Spec.scalarsDesc` and `Spec.listU64Desc`.
+The review sources `desc/review/*` name earlier descriptions `Fv1.<xy>Desc`, for example `Fv1.scDesc` for Scalars.
+These earlier names occur in the result only inside the texts of the replayed review mutants.
+`../FINDINGS.md` ("Replayed review mutants carry earlier reference names") gives their effect on three mutants.
 No program checks the binding of the result where a `Desc` is used.
 The header of each `*SpecChecker.lean` states the sha256 of its `Desc` file as text only.
 

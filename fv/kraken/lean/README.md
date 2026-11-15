@@ -225,7 +225,6 @@ Earlier short names and labels remain only in the places below, each for the rea
     `Spec.serializeEach_listU64`. The description checker's input `../gen/desc/hand-types-ir.json` and its record
     `../gen/desc/results/main.result.json` name the type `ListU64`; `../gen/desc/hand-types-references.json` names
     `Spec.listU64Desc`;
-  - the build path `fvphase1c/p1cbin` of the `main` package of the pinned Prysm ELF (`../README.md`): the ELF records it;
   - the names of Kraken, Lean, Mathlib and EthLib.
 - Records of earlier runs keep the names and paths of their run:
   - the set labels `set_A`, `set_B`, `set_I`, `in_A`, `in_B`, `A_minus_B`, `B_generated_minus_A`, `I_hand_written` of
@@ -236,8 +235,6 @@ Earlier short names and labels remain only in the places below, each for the rea
   - the data ids of the record link table `../prysm/go1.26.10/link/`;
   - the records `../prysm/go1.26.10/evidence/generator-cases/AXIOMS.txt`, `evidence/negative/result.json`,
     `evidence/e2e.json` and `evidence/axioms-gate.json`, and the frozen lists `../gen/frozen/*.json`.
-- Schema ids: `fvphase1c.*` (for example `fvphase1c.inventory/1`, `fvphase1c.desc/1`). They are
-  format identifiers that the tools write and that records and checks compare, so they are kept.
 - Standard short words: lemma names of the form instruction + constant + fact (`Machine.and7_zero`, `Machine.zx8`,
   `Machine.jg16_false`); the instruction, register and memory words of Kraken and x86 inside `Codec` names (`Lea`,
   `Mov`, `Nop`, `Ret`, `Reg`, `Mem`, `rax`, …).

@@ -1,4 +1,4 @@
-# itabErrorStringError: link/data.py, p1bin-amd64 bytes [0xd28520, 0xd28540)
+# itabErrorStringError: link/data.py, target-amd64 bytes [0xd28520, 0xd28540)
 at go_itab._errors.errorString_error 0
 word type__ 733696
 word type__ 635584

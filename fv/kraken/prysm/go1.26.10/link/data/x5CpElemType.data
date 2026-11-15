@@ -1,4 +1,4 @@
-# x5CpElemType: link/data.py, p1bin-amd64 bytes [0xae9800, 0xae9830)
+# x5CpElemType: link/data.py, target-amd64 bytes [0xae9800, 0xae9830)
 at type__ 387072
 bytes 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 bytes 79 76 8c 6a 0f 01 01 08

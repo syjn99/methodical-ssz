@@ -47,7 +47,7 @@ def main():
         rows.append(OrderedDict(symbol=f["symbol"], group=group, status=status,
                                 directives=int(detail) if status == "OK" else None,
                                 error=detail if status == "ERR" else None))
-    out = OrderedDict(schema="fvphase1c.parser-result/1", log_done_line=done,
+    out = OrderedDict(schema="fv.kraken.parser-result/1", log_done_line=done,
                       counts={f"{g}: {s}": n for (g, s), n in sorted(cnt.items())},
                       errors=[r for r in rows if r["status"] == "ERR"], functions=rows)
     with open(out_path, "w") as fh:

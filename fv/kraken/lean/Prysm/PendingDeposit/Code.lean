@@ -8,7 +8,7 @@ import Prysm.ValidatorBalance.Code
 import Prysm.VoluntaryExit.Code
 
 /-!
-# Code of the `PendingDeposit` functions (Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the `PendingDeposit` functions (Go 1.26.10 ELF `9a37219e…10e9`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
 (`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code`, `Prysm.BeaconBlockHeader.Code`, `Prysm.Eth1Data.Code`,

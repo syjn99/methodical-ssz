@@ -4,7 +4,7 @@
 Usage: check.py <outdir>      (outdir = fv/kraken/link/out, after build.sh)
        check.py --selftest <outdir>
 
-Inputs in <outdir>: p1bin-amd64 (ELF), target.objdump, p1bin-amd64.nm, norm/*.S,
+Inputs in <outdir>: target-amd64 (ELF), target.objdump, target-amd64.nm, norm/*.S,
 data/*.data (link/data.py).
 Writes <outdir>/RESULT. Exit status 1 on any failure.
 
@@ -158,11 +158,11 @@ def parse_S(path):
 
 def run(outdir, log):
     outdir = pathlib.Path(outdir)
-    elf = outdir / "p1bin-amd64"
+    elf = outdir / "target-amd64"
     b, secs, esyms = read_elf(elf)
     conv.CLEANED.clear()
     fns = conv.read_objdump(outdir / "target.objdump")
-    nm = conv.read_nm(outdir / "p1bin-amd64.nm")
+    nm = conv.read_nm(outdir / "target-amd64.nm")
     # Go's nm adds size-0 group symbols (`type:*`, `go:string.*`) that are not in
     # the ELF .symtab; they are taken from nm with the section of their address.
     nmonly = set()
@@ -398,7 +398,7 @@ def main(outdir):
         log(f"FAIL {e}")
         (outdir / "RESULT").write_text("\n".join(lines) + "\n")
         return 1
-    log(f"elf sha256 {sha(outdir / 'p1bin-amd64')}")
+    log(f"elf sha256 {sha(outdir / 'target-amd64')}")
     for p in sorted((outdir / "norm").glob("*.S")):
         log(f"S sha256 {sha(p)} {p.name}")
     for p in sorted((outdir / "data").glob("*.data")):
@@ -462,7 +462,7 @@ def selftest(outdir):
         cases.append(("data file byte changed", t, False))
         # 9. the ELF range of a data file: the errorString itab's type word points to
         #    another *uint64 descriptor (0x4cbf00)
-        t = copy(); p = t / "p1bin-amd64"
+        t = copy(); p = t / "target-amd64"
         e = bytearray(p.read_bytes()); _, es, sy = read_elf(p)
         ia = sy["go:itab.*errors.errorString,error"][0] + 8
         o = next(s["off"] + ia - s["addr"] for s in es if s["typ"] == 1 and s["addr"] <= ia < s["addr"] + s["size"])

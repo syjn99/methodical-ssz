@@ -1,4 +1,4 @@
-# formatAttestingIndicesMisaligned: link/data.py, p1bin-amd64 bytes [0xc6361f, 0xc63672)
+# formatAttestingIndicesMisaligned: link/data.py, target-amd64 bytes [0xc6361f, 0xc63672)
 at go_string._ 171319
 bytes 6d 69 73 61 6c 69 67 6e 65 64 20 62 79 74 65 73
 bytes 3a 20 63 2e 41 74 74 65 73 74 69 6e 67 49 6e 64

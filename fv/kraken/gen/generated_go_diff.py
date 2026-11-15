@@ -57,7 +57,7 @@ def blocks(old, new):
 
 def main():
     tree, gen, outdir = sys.argv[1:4]
-    res = {"schema": "fvphase1c.gendiff/1", "rules": [{"commit": c, "title": t} for c, t, _ in RULES], "files": []}
+    res = {"schema": "fv.kraken.gendiff/1", "rules": [{"commit": c, "title": t} for c, t, _ in RULES], "files": []}
     for preset in ("mainnet", "minimal"):
         os.makedirs(f"{outdir}/{preset}", exist_ok=True)
         for name in sorted(os.listdir(f"{gen}/{preset}")):

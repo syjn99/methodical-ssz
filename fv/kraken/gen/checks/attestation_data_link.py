@@ -6,7 +6,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
   attestation_data_link.py callgraph <objdump> <out.json> <m2.log>  call targets with contract class + inlining lines
   attestation_data_link.py filter <outdir> <objdump> <elf> <nm>     <outdir>/target.objdump of FUNCS (+ ELF/nm links)
   attestation_data_link.py data <outdir> <checkpoint-link-dir>               after `convert_objdump.py <outdir>/target.objdump
-                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
+                                                     <outdir>/target-amd64.nm <outdir>/norm --norm`:
                                                      write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set. The Checkpoint
 link tables (prysm/go1.26.10/link-set) are not changed; the items that both sets use (uint8 type word,
