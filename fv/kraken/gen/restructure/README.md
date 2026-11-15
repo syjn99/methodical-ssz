@@ -215,9 +215,7 @@ The commit message of each such step lists its edits:
   directories and negative case files, the ids of the negative cases and of the generator test cases, and identifiers
   inside the Python tools. `gen/path-names.tsv` maps each earlier path to its present path. The file `<name>.ids.tsv`
   next to each case file maps the case ids, and `gen/generator/decoder-test-case-ids.tsv` and
-  `gen/generator/encoder-test-case-ids.tsv` map the ids of the generator test cases;
-- the CI forwarder: `gen/e2e/axioms_gate.py` only forwards to `gen/checks/axioms_gate.py`, because
-  `.github/workflows/fv-lean.yaml` names the earlier path. `gen/path-names.tsv` records this one kept path.
+  `gen/generator/encoder-test-case-ids.tsv` map the ids of the generator test cases.
 
 Issue 10 of `syjn99/methodical-ssz` holds the list of the steps that remain.
 

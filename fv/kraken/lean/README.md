@@ -267,7 +267,6 @@ Earlier short names and labels remain only in the places below, each for the rea
     earlier tree (`Prysm.Epoch.Decode.reject_static_addr`, `Prysm.Checkpoint.Encode.tail_rej`).
 - Schema ids: `fvphase1c.*` (for example `fvphase1c.inventory/1`, `fvphase1c.desc/1`) and `fvpar.include-api/1`. They are
   format identifiers that the tools write and that records and checks compare, so they are kept.
-- The forwarder `../gen/e2e/axioms_gate.py`: the CI workflow names this earlier path (`../gen/README.md` section 6).
 - Standard short words: lemma names of the form instruction + constant + fact (`Machine.and7_zero`, `Machine.zx8`,
   `Machine.jg16_false`); the instruction, register and memory words of Kraken and x86 inside `Codec` names (`Lea`,
   `Mov`, `Nop`, `Ret`, `Reg`, `Mem`, `rax`, …).

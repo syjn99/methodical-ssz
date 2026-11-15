@@ -161,4 +161,3 @@ file	prysm/go1.26.10/e2e/f24/f24check-main.go.txt	prysm/go1.26.10/evidence/flat-
 file	prysm/go1.26.10/e2e/scal/e2c/e2ccheck-main.go.txt	prysm/go1.26.10/evidence/generator-cases/encode-spec/differential-main.go.txt
 file	prysm/go1.26.10/opt-r1/diff/odiff-main.go.txt	prysm/go1.26.10/capacity-reserved/diff/differential-main.go.txt
 file	prysm/go1.26.10/opt-r1/diff/odiff-cases.json	prysm/go1.26.10/capacity-reserved/diff/differential-cases.json
-kept	gen/e2e/axioms_gate.py	gen/checks/axioms_gate.py	a forwarder: .github/workflows/fv-lean.yaml names the earlier path (lines 47 and 53: `sys.path.insert(0, '../gen/e2e')`, `fv/kraken/gen/e2e/axioms_gate.py run`), and the push token has no `workflow` scope, so that file is not changed here; change the two lines to gen/checks, then delete gen/e2e/
