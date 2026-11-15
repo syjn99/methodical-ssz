@@ -210,40 +210,176 @@ Use one witness host for each file. Two `Host` instances in one file make instan
 
 ## 8. Names
 
-Module, namespace and main theorem names use the full Go type name (the name forms at the end of this section).
+Module, namespace and main theorem names use the full Go type name.
+The rules are in "Name forms" at the end of this section.
 The structure `Prysm.<GoTypeName>.SszValue` holds the SSZ content of a type.
-Earlier short names and labels remain only in the places below, each for the reason given.
+Some short names, labels and earlier names remain in the tree.
+The lists below give each one with its reason.
+A name with no reason except "record of an earlier run" is marked as a candidate.
+The user decides on it.
 
-- External identities, written as their source writes them:
-  - ELF symbols, the labels of the `.S` files that come from the ELF (`../prysm/go1.26.10/link-set/norm/`), and the
-    code constants and labels that `include_x64_code` takes from them;
-  - Go names: the type, field, function and package names of Prysm and of the test target `../target/` (for example
-    `ListC`, a list of containers, and `BitL`, a bit list; `Spec/Test*.lean` writes the type names in full words and
-    keeps the Go field names in lower case as structure fields). The test-target type `ListU64` (`../target/types.go`)
-    keeps its Go name in `Spec`, and so do the names made from it: the module `Spec/TestListU64.lean`, the structure
-    `Spec.ListU64` and the lemmas `Spec.listU64Desc`, `Spec.listU64Encode`, `Spec.listU64_*`, `Spec.allFit_listU64_inv`,
-    `Spec.serializeEach_listU64`. The description checker's input `../gen/desc/hand-types-ir.json` and its record
-    `../gen/desc/results/main.result.json` name the type `ListU64`; `../gen/desc/hand-types-references.json` names
-    `Spec.listU64Desc`;
-  - the names of Kraken, Lean, Mathlib and EthLib.
-- Records of earlier runs keep the names and paths of their run:
-  - the set labels `set_A`, `set_B`, `set_I`, `in_A`, `in_B`, `A_minus_B`, `B_generated_minus_A`, `I_hand_written` of
-    `../prysm/inventory.json` (the inventory format that `../gen/type_inventory.py`, `type_list_document.py`,
-    `type_scope.py` and `../prysm/TYPES.md` use);
-  - the `Desc` checker result `../gen/desc/results/main.result.json` and the review sources `../gen/desc/review/*`
-    (`../gen/README.md` section 5);
-  - the data ids of the record link table `../prysm/go1.26.10/link/`;
-  - the records `../prysm/go1.26.10/evidence/generator-cases/AXIOMS.txt`, `evidence/negative/result.json`,
-    `evidence/e2e.json` and `evidence/axioms-gate.json`, and the frozen lists `../gen/frozen/*.json`.
-- Standard short words: lemma names of the form instruction + constant + fact (`Machine.and7_zero`, `Machine.zx8`,
-  `Machine.jg16_false`); the instruction, register and memory words of Kraken and x86 inside `Codec` names (`Lea`,
-  `Mov`, `Nop`, `Ret`, `Reg`, `Mem`, `rax`, …).
+### Names that an external source gives
+
+These names are written as their source writes them.
+
+- ELF symbols and the labels of the converted `.S` files.
+  `../link/convert_objdump.py` takes the file name and the first label from the ELF symbol.
+  It drops the module path.
+  It writes `_` for a character outside `[A-Za-z0-9_.]`, for example `target_prysm.Checkpoint`.
+  A jump target inside a function gets the label `L_<function>_<hex offset>`.
+  The `Code` constants of `include_x64_code` and the runtime labels (`runtime.makeslice`, `fmt.errorf`) use these names.
+- Go names of Prysm and of the test target `../target/`: type, field, method and package names.
+  Examples are `Deposit_Data` (a protobuf name), `ENRForkID`, `ListC` (a list of containers) and `BitL` (a bit list).
+  `Spec/Test*.lean` writes the type names in full words, for example `Spec.ListOfContainersValue` for `ListC`.
+  It keeps the Go field names in lower case as structure fields.
+  The test type `ListU64` (`../target/types.go`) keeps its Go name in `Spec`.
+  The names made from it keep it too.
+  These are the module `Spec/TestListU64.lean`, the structure `Spec.ListU64` and the lemmas `Spec.listU64Desc*`.
+  The lemmas `Spec.listU64Encode`, `Spec.listU64_*`, `Spec.allFit_listU64_inv` and `Spec.serializeEach_listU64` also keep it.
+  The checker input `../gen/desc/hand-types-ir.json` and the checker table use the Go names `ListU64`, `ListC` and `BitL`.
+  So do `../gen/desc/hand-types-references.json` and the checker result `../gen/desc/results/main.result.json`.
+- Data ids that `../link/data.py` (`item_id`) makes from a Go name, for example `formatJ` for the format string `J: %w`.
+  `J`, `B` and `L` are Go field names of the test target (`../link/out/data/`).
+- The Go compiler flag in the file name `../prysm/go1.26.10/evidence/gcflags-m2.txt` (output of `-gcflags=-m=2`).
+- The names of Kraken, Lean, Mathlib and EthLib, and of their declarations.
+
+### Names that a pinned file or a tool needs
+
+- The word `"p1cbin"`.
+  `../gen/keepalive.py` writes it into the `main` function of the Prysm target.
+  The copy of that file is `../prysm/go1.26.10/prysm-target-main.go.txt`.
+  The program prints the word, so the word is a string of the pinned ELF.
+  `../prysm/go1.26.10/build-ids.txt` records the sha256 of this `main.go`.
+  Each byte of `main.go` goes into the ELF.
+  Another word moves the string data, and with it the string addresses that the proofs name.
+  The message of commit `6c759123` records a scratch build with another word of the same length.
+  In that build, 232 lines in 36 `.S` files of the link set changed.
+  A new ELF hash needs user approval (`../../../AGENTS.md`).
+- The keys `elf b2 sha256` and `go build id b2` of `../prysm/go1.26.10/build-ids.txt`.
+  `b2` is the second build.
+  `../gen/prysm-elf.sh` writes these lines after it builds the ELF two times.
+  A new line needs a new build.
+- The set labels of the inventory `../prysm/inventory.json`.
+  The sets are `A`, `B`, `I` and their parts (`A_minus_B`, `B_generated_minus_A`, `I_minus_A`, `I_hand_written`).
+  The counts are `set_A`, `set_B`, `set_I` and similar keys.
+  Each type has the flags `in_A` and `in_B`.
+  These are keys of the inventory format.
+  `../gen/type_inventory.py` writes them.
+  `../gen/type_list_document.py`, `../gen/type_scope.py` (only `in_B`) and `../prysm/TYPES.md` read or show them.
+- Case ids that a test tool makes from the case parameters.
+  `../gen/checks/differential.py` writes ids such as `dec-…` and `enc-empty-cap40-…`.
+  `../prysm/go1.26.10/evidence/differential.json` records them.
+  `../gen/desc/test_desc.py` names its mutants `m-…`, `e1-…` to `e8-…`, `y1-…` to `y10-…` and `z1-…` to `z4-…`.
+  It names its scenarios `s-…`.
+  The checker result `../gen/desc/results/main.result.json` records these ids in its paths.
+  A new id needs a new differential run with Go, or a new checker run with Lean.
+- The negative case ids, for example `epoch-decode-accept-code-cmp-0x8-to-0x9`.
+  An id is the theorem name, the kind, and the old and the new text of the mutation.
+  So it holds register names such as `rax` and hypothesis names such as `hlen` and `hgrow`.
+- The review sources `../gen/desc/review/r1_mutants.py`, `r2_mutants.py` and `r3_mutants.py`.
+  `r1`, `r2` and `r3` are review labels.
+  The docstrings have more review labels and commit ids.
+  `../gen/desc/test_desc.py prepare` runs the three files on a copy of the original descriptions.
+  It replays their mutants (`r1-…`, `n01-…`, `q01-…`) and the list scenarios `t01` to `t13` of `r3_mutants.py`.
+  `r3_mutants.py` writes its forged checker line with the work directory path as given.
+  The replay writes the work directories `replay/rmut`, `replay/n` and `replay/r3`.
+  The checker result records these paths.
+  Some mutants set `reference` to earlier names `Fv1.<xy>Desc`, for example `Fv1.scDesc` for Scalars.
+  These names occur in the checker result only inside the texts of these mutants.
+  `../FINDINGS.md` ("Replayed review mutants carry earlier reference names") gives the effect on three mutants.
+  The docstring labels have no reason of their own.
+  They are candidates for plain words.
+- The record link table `../prysm/go1.26.10/link/` keeps the data ids of its run, `x5CpElemType` and `x5ErrSize`.
+  Its `RESULT` names these data files.
+  No theorem includes the table.
+  `../FINDINGS.md` ("Link set `prysm/go1.26.10/link` has no tracked disassembly") gives the way to check it again.
+  The table is a candidate for deletion.
+- The schema ids `fvkraken.ssz-methods/1` and `fvkraken.inventory/2` of `../gen/tools/proof_inventory.py`.
+  The schema id `type-scope/1` of `../gen/type_scope.py`.
+  The other schema ids have the form `fv.kraken.<name>/<n>`.
+  No tool reads these three ids.
+  They are candidates for that form.
+  A change needs a change of the tool and a new run of it.
+- The Lake package name `fvkraken` in `lakefile.toml`.
+  `lake-manifest.json` gives the root package the name `k0b`.
+  Lake writes the manifest.
+  The name `k0b` is a candidate for a fix.
+  A Lake change needs user approval (section 2).
+
+### Records that hold earlier names
+
+Each of these files is a record of a run, and it keeps the names of that run.
+No tool of the tree reads them, except where the item says so.
+`../../AGENTS.md` does not accept "historical material" as a reason.
+So each one is a candidate for deletion.
+
+- `../prysm/go1.26.10/evidence/e2e.json` (schema `prysm-e2e.status/1`).
+  It names the ELF files `p1bin-amd64` and `p1bin-amd64.nm` and the libraries `E2e` and `E2eAd`.
+  It also names paths under `prysm/go1.26.10/e2e/`.
+  No tool writes it or reads it.
+- `../prysm/go1.26.10/evidence/axioms-gate.json`.
+  Its header names the libraries `E2e`, `E2eAd` and `E2eScal`.
+  `../gen/tools/proof_inventory.py` states that it does not read this record.
+- `../prysm/go1.26.10/evidence/negative/result.json`.
+  `../gen/checks/negative.py` writes such a file.
+  It has 154 case ids, for example `ep-control` and `cpa-cmp41`.
+  None of them is one of the 154 ids of `../gen/checks/negative-cases-checkpoint-and-attestation-data.json`.
+  Its mutant diffs name `ElfData.CheckpointAndEpoch.e2e*` and `MakesliceC`.
+  It has absolute container paths.
+  `../../../AGENTS.md` does not allow absolute container paths in committed files.
+  A new run on the present case list drops every old id.
+- `../prysm/go1.26.10/evidence/generator-cases/AXIOMS.txt`.
+  Nine of its 22 names are not declarations of the tree, for example `Codec.u64dec_accept` and `Codec.rootdec_seg`.
+- The frozen lists `../gen/frozen/THEOREMS.json` and `ASSUMPTIONS.json`, and the text in `../gen/frozen/build_lists.py`.
+  `build_lists.py` writes the lists.
+  `../gen/frozen/test_frozen.py` compares them with the tracked files.
+  No other tool reads them.
+  They name test-target theorems that are not in the tree.
+  Examples are `sc_accept_main`, `lu_accept_main` and `vbv_accept_main`.
+  They also hold work labels such as `P2`, `fix3`, `OUTBOX` and `phase1c-r1 S1`.
+  They also hold the obligation id `compose_hupd`.
+  `ASSUMPTIONS.json` has a hand edit (`../gen/README.md` section 8).
+  The edit adds a run-directory name, `Fk/Contracts.lean`, `MakesliceC`, `E2e.EpUAccC` and `gen/gen1c/include_adapter.py`.
+  `../../../AGENTS.md` does not allow run-directory names in committed files.
+- The input paths in `../gen/desc/hand-types-ir.json` (key `file`).
+  They are absolute container paths of an earlier run, and the files are not tracked.
+  `../gen/desc/producer.py` does not read the key `file`.
+  The paths are candidates for deletion.
+
+### Other earlier names
+
+- `../FINDINGS.md` cites earlier records by commit and path.
+  An example is `prysm/go1.26.10/e2e/scal/negative-gen4.json` at `4499e775`.
+  It also gives the earlier case ids in these records, for example `g4-ex-s82-*`.
+  Git keeps each cited file at the cited commit.
+  So these names stay as references, not as records.
+- `../THIRD-PARTY-NOTICES.md` gives its sections the letters `A` to `I`.
+  It refers to "family A" and "family B".
+  Only that file uses the letters.
+  They are candidates for plain words.
+- `Spec/TestFixed.lean` (the structure `Spec.Fixed` and the lemmas `Spec.fixed*`) names the Go type `Fixed`.
+  `../target/` has no type `Fixed`.
+  `Spec/TestScalars.lean` imports the module for its byte lemmas, for example `Spec.uintBytes_size`.
+  The type part of the module is a candidate for deletion.
+
+### Standard short words
+
+- Lemma names of the form instruction + constant + fact.
+  Examples are `Machine.and7_zero`, `Machine.jg16_false`, `Machine.add8_neg8` and `Machine.shr3_toNat`.
+  `Machine.zx8`, `zx16` and `zx32` are zero extensions of 8, 16 and 32 bits.
+  `Machine.stackFrame144` is a frame of 144 bytes.
+- The instruction, register, flag and memory words of Kraken and x86 inside `Codec` names.
+  Examples are `lea`, `mov`, `nop`, `xor32`, `xmm15`, `r8`, `cmp_nc_true` and `Codec.lea_cmp_be_false`.
+- Hypothesis and variable names in statements, for example `hk`, `hf`, `hlen`, `e0`, `e1`, `ra` and `fp` (section 3).
 
 ### Name forms
 
-A module of a Prysm type is `Prysm/<GoTypeName>/<Role>.lean` in the library `Prysm`, with the namespace `Prysm.<GoTypeName>`.
-`<GoTypeName>` is the Go type name as the Go source writes it. It is never an abbreviation.
-A declaration of the type uses a dotted name for the function part, for example `theorem Decode.reject_size` inside `namespace Prysm.Checkpoint`.
+A module of a Prysm type is `Prysm/<GoTypeName>/<Role>.lean` in the library `Prysm`.
+Its namespace is `Prysm.<GoTypeName>`.
+`<GoTypeName>` is the Go type name as the Go source writes it.
+It is never an abbreviation.
+A declaration of the type uses a dotted name for the function part.
+An example is `theorem Decode.reject_size` inside `namespace Prysm.Checkpoint`.
 
 | Content of the module | Role name |
 | --- | --- |
@@ -269,7 +405,8 @@ A declaration of the type uses a dotted name for the function part, for example 
 | Statements only (definitions `..._statement : Prop`) | `Statements`, or `Statements` + plain qualifier |
 | ELF data definitions of a link set, and the command that reads them | under `Prysm/ElfData/`: `<PlainSetName>` and `<PlainSetName>Reader` |
 
-If no role fits, the module name uses plain words that say what the module holds (for example `DecodeFieldSegments`, `SpecDescription`).
+If no role fits, the module name uses plain words that say what the module holds.
+Examples are `DecodeFieldSegments` and `SpecDescription`.
 A module that holds several roles has the name of its main role.
 
 The main theorems inside `Prysm.<GoTypeName>` have these names:
