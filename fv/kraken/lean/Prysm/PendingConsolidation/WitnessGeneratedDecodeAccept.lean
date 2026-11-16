@@ -23,7 +23,7 @@ returns nil. The receiver is a Go value of `v1alpha1.PendingConsolidation` (all 
 
 open Machine Runtime Machine.Witness Codec Prysm.PendingConsolidation.Code
 
-namespace Prysm.PendingConsolidation.Witness.DecodeAccept
+namespace Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept
 
 set_option maxRecDepth 100000
 
@@ -92,4 +92,4 @@ example (z' : RegZmms) (f : StatusFlags) :=
 example (z' : RegZmms) (f : StatusFlags) :=
   runs (List.replicate 8 0xff) (List.replicate 8 0xff) rfl rfl z' f
 
-end Prysm.PendingConsolidation.Witness.DecodeAccept
+end Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept

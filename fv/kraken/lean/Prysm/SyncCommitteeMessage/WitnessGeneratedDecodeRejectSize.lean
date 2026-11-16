@@ -1,28 +1,28 @@
-import Prysm.PowBlock.GeneratedDecodeAccept
+import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
-import Prysm.PowBlock.Code
+import Prysm.SyncCommitteeMessage.Code
 
 /-!
 # Witness of `Decode.generated_reject`
 
-Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.PowBlock).UnmarshalSSZ`
-(index 1). Hand-written: the text of `Prysm/Deposit_Data/WitnessDecodeRejectSize.lean` with the PowBlock decoder.
+Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`
+(index 1). Hand-written: the text of `Prysm/SyncCommitteeMessage/WitnessGeneratedDecodeRejectSize.lean` with the SyncCommitteeMessage decoder.
 Memory at `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a
 data word `0x2a`, stand-ins: the real values are set by the runtime's init and are not read from the ELF),
 the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill
-slot. For every length `≠ 96` (instances 95, 97, 0) the decoder returns the two words.
+slot. For every length `≠ 144` (instances 143, 145, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime Machine.Witness Prysm.PowBlock.Code
+open Machine Runtime Machine.Witness Prysm.SyncCommitteeMessage.Code
 
-namespace Prysm.PowBlock.Witness.DecodeRejectSize
+namespace Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize
 
 set_option maxRecDepth 100000
 
 def program : Program := [.label "ssz.ErrSize"] ++ unmarshalSSZ
 
-theorem program_length : program.length = 142 := by rfl
+theorem program_length : program.length = 180 := by rfl
 
 instance host : Host := mkHost program (by rw [program_length]; decide)
 
@@ -48,7 +48,7 @@ def frame_rest : DataMem → Prop := Eq ((zeros 8).At (0x10028 : BitVec 64))
 
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `Decode.generated_reject`.** -/
-theorem runs (len : UInt64) (hlen : len ≠ 96) (zmms : RegZmms) (flags : StatusFlags) :
+theorem runs (len : UInt64) (hlen : len ≠ 144) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10e8
         ∧ st.data.regs.rbx = 0x2a)
@@ -65,8 +65,8 @@ theorem runs (len : UInt64) (hlen : len ≠ 96) (zmms : RegZmms) (flags : Status
     (by simp [initial_state]) hlen)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
-example (z' : RegZmms) (f : StatusFlags) := runs 95 (by decide) z' f
-example (z' : RegZmms) (f : StatusFlags) := runs 97 (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := runs 143 (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := runs 145 (by decide) z' f
 example (z' : RegZmms) (f : StatusFlags) := runs 0 (by decide) z' f
 
-end Prysm.PowBlock.Witness.DecodeRejectSize
+end Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize

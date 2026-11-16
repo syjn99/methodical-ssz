@@ -30,17 +30,17 @@
   "new": "bs.size ≠ 191 :="
  },
  {
-  "id": "pending-deposit-witness-decode-accept-runs-statement-rax-0-to-1",
-  "module": "Prysm/PendingDeposit/WitnessDecodeAccept.lean",
-  "theorem": "Prysm.PendingDeposit.Witness.DecodeAccept.runs",
+  "id": "pending-deposit-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/PendingDeposit/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Witness.GeneratedDecodeAccept.runs",
   "kind": "statement",
   "old": "st.data.regs.rax = 0 ∧",
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "pending-deposit-witness-decode-reject-size-runs-statement-hlen-192-to-193",
-  "module": "Prysm/PendingDeposit/WitnessDecodeRejectSize.lean",
-  "theorem": "Prysm.PendingDeposit.Witness.DecodeRejectSize.runs",
+  "id": "pending-deposit-witness-generated-decode-reject-size-runs-statement-hlen-192-to-193",
+  "module": "Prysm/PendingDeposit/WitnessGeneratedDecodeRejectSize.lean",
+  "theorem": "Prysm.PendingDeposit.Witness.GeneratedDecodeRejectSize.runs",
   "kind": "statement",
   "old": "(hlen : len ≠ 192)",
   "new": "(hlen : len ≠ 193)"
@@ -171,17 +171,17 @@
   "new": "bs.size ≠ 95 :="
  },
  {
-  "id": "pow-block-witness-decode-accept-runs-statement-rax-0-to-1",
-  "module": "Prysm/PowBlock/WitnessDecodeAccept.lean",
-  "theorem": "Prysm.PowBlock.Witness.DecodeAccept.runs",
+  "id": "pow-block-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/PowBlock/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Witness.GeneratedDecodeAccept.runs",
   "kind": "statement",
   "old": "st.data.regs.rax = 0 ∧",
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "pow-block-witness-decode-reject-size-runs-statement-hlen-96-to-97",
-  "module": "Prysm/PowBlock/WitnessDecodeRejectSize.lean",
-  "theorem": "Prysm.PowBlock.Witness.DecodeRejectSize.runs",
+  "id": "pow-block-witness-generated-decode-reject-size-runs-statement-hlen-96-to-97",
+  "module": "Prysm/PowBlock/WitnessGeneratedDecodeRejectSize.lean",
+  "theorem": "Prysm.PowBlock.Witness.GeneratedDecodeRejectSize.runs",
   "kind": "statement",
   "old": "(hlen : len ≠ 96)",
   "new": "(hlen : len ≠ 97)"

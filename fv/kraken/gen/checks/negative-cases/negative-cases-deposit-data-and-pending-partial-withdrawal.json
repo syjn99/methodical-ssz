@@ -185,17 +185,17 @@
   "new": "bs.size ≠ 183 :="
  },
  {
-  "id": "deposit-data-witness-decode-accept-runs-statement-rax-0-to-1",
-  "module": "Prysm/Deposit_Data/WitnessDecodeAccept.lean",
-  "theorem": "Prysm.Deposit_Data.Witness.DecodeAccept.runs",
+  "id": "deposit-data-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/Deposit_Data/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.Deposit_Data.Witness.GeneratedDecodeAccept.runs",
   "kind": "statement",
   "old": "st.data.regs.rax = 0 ∧",
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "deposit-data-witness-decode-reject-size-runs-statement-hlen-184-to-185",
-  "module": "Prysm/Deposit_Data/WitnessDecodeRejectSize.lean",
-  "theorem": "Prysm.Deposit_Data.Witness.DecodeRejectSize.runs",
+  "id": "deposit-data-witness-generated-decode-reject-size-runs-statement-hlen-184-to-185",
+  "module": "Prysm/Deposit_Data/WitnessGeneratedDecodeRejectSize.lean",
+  "theorem": "Prysm.Deposit_Data.Witness.GeneratedDecodeRejectSize.runs",
   "kind": "statement",
   "old": "(hlen : len ≠ 184)",
   "new": "(hlen : len ≠ 185)"

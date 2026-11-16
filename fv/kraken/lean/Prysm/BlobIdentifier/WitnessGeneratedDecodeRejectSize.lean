@@ -7,7 +7,7 @@ import Prysm.BlobIdentifier.Code
 # Witness of `Decode.generated_reject` (BlobIdentifier decoder size reject)
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`
-(index 1). Hand-written: the text of `Prysm/Eth1Data/WitnessDecodeRejectSize.lean` with the BlobIdentifier decoder.
+(index 1). Hand-written: the text of `Prysm/Eth1Data/WitnessGeneratedDecodeRejectSize.lean` with the BlobIdentifier decoder.
 Memory at `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a
 data word `0x2a`, stand-ins: the real values are set by the runtime's init and are not read from the ELF),
 the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill
@@ -16,7 +16,7 @@ slot. For every length `≠ 40` (instances 39, 41, 0) the decoder returns the tw
 
 open Machine Runtime Machine.Witness Prysm.BlobIdentifier.Code
 
-namespace Prysm.BlobIdentifier.Witness.DecodeRejectSize
+namespace Prysm.BlobIdentifier.Witness.GeneratedDecodeRejectSize
 
 set_option maxRecDepth 100000
 
@@ -69,4 +69,4 @@ example (z' : RegZmms) (f : StatusFlags) := runs 39 (by decide) z' f
 example (z' : RegZmms) (f : StatusFlags) := runs 41 (by decide) z' f
 example (z' : RegZmms) (f : StatusFlags) := runs 0 (by decide) z' f
 
-end Prysm.BlobIdentifier.Witness.DecodeRejectSize
+end Prysm.BlobIdentifier.Witness.GeneratedDecodeRejectSize

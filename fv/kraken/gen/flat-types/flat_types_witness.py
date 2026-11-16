@@ -1,7 +1,7 @@
 """Write the decoder witness modules WitnessGeneratedDecodeAccept and
 WitnessGeneratedDecodeRejectSize (lean/Prysm/<GoTypeName>/) of the seven
 generated decoders (non-vacuity of the generated accept / size-reject theorems). Texts follow the hand
-witnesses `Prysm/Deposit_Data/WitnessDecodeAccept.lean` (frame 0x20 bytes) and `Prysm/PendingDeposit/WitnessDecodeAccept.lean`
+witnesses `Prysm/Deposit_Data/WitnessGeneratedDecodeAccept.lean` (frame 0x20 bytes) and `Prysm/PendingDeposit/WitnessGeneratedDecodeAccept.lean`
 (frame with slices and callees); the memory block of each type is laid out here from the frame facts of its `.S`,
 with the addresses computed below.
 usage: python3 -I -B flat_types_witness.py <fv/kraken> [GoTypeName ...]"""
@@ -355,7 +355,7 @@ import Machine.WitnessHost
 /-!
 # Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path; 24 flat types)
 
-Written by `gen/flat-types/flat_types_witness.py`: the text of `{'Prysm/Deposit_Data/WitnessDecodeAccept.lean' if frame == '20' else 'Prysm/PendingDeposit/WitnessDecodeAccept.lean'}` with the
+Written by `gen/flat-types/flat_types_witness.py`: the text of `{'Prysm/Deposit_Data/WitnessGeneratedDecodeAccept.lean' if frame == '20' else 'Prysm/PendingDeposit/WitnessGeneratedDecodeAccept.lean'}` with the
 {ty} host and layout. It shows that the premises of the generated accept theorem (statement = kind instance)
 are satisfiable. Host: data labels, the real Go 1.26.10 `(*{ty}).UnmarshalSSZ` (index 9){', ' + cdoc if cdoc else ''},
 the 1-byte bump `runtime.makeslice` ({bi}, `bump_makeslice1`) and `MemmoveGrowsliceModel` ({ri}, `model_memmove`).

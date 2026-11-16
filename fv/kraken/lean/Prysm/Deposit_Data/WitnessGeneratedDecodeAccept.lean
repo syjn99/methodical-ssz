@@ -7,7 +7,7 @@ import Prysm.Deposit_Data.Code
 /-!
 # Witness of `Decode.generated_accept` (Deposit_Data decoder accept path)
 
-Hand-written (the text of `Prysm/DepositMessage/WitnessDecodeAccept.lean` with the Deposit_Data host and layout).
+Hand-written (the text of `Prysm/DepositMessage/WitnessGeneratedDecodeAccept.lean` with the Deposit_Data host and layout).
 It shows that the premises of the generated accept theorem `Prysm.Deposit_Data.Decode.generated_accept` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.Deposit_Data).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (152, `bump_makeslice1`) and `MemmoveGrowsliceModel` (158, `model_memmove`).
@@ -23,7 +23,7 @@ The receiver is a Go value of `v1alpha1.Deposit_Data` (zero `state`, zero-length
 
 open Machine Runtime Machine.Witness Codec Prysm.Deposit_Data.Code
 
-namespace Prysm.Deposit_Data.Witness.DecodeAccept
+namespace Prysm.Deposit_Data.Witness.GeneratedDecodeAccept
 
 set_option maxRecDepth 100000
 
@@ -124,4 +124,4 @@ example (z' : RegZmms) (f : StatusFlags) :=
   runs (List.replicate 48 0xff) (List.replicate 32 0xff) (List.replicate 8 0xff) (List.replicate 96 0xff)
     (List.replicate 8 0xff) (List.replicate 8 0xff) (List.replicate 8 0xff) rfl rfl rfl rfl rfl rfl rfl z' f
 
-end Prysm.Deposit_Data.Witness.DecodeAccept
+end Prysm.Deposit_Data.Witness.GeneratedDecodeAccept

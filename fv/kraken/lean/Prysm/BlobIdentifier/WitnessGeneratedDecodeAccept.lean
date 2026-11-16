@@ -7,7 +7,7 @@ import Prysm.BlobIdentifier.Code
 /-!
 # Witness of `Decode.generated_accept` (BlobIdentifier decoder accept path)
 
-Hand-written (the text of `Prysm/Eth1Data/WitnessDecodeAccept.lean` with the BlobIdentifier host and layout).
+Hand-written (the text of `Prysm/Eth1Data/WitnessGeneratedDecodeAccept.lean` with the BlobIdentifier host and layout).
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.BlobIdentifier).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (81, `bump_makeslice1`) and `MemmoveGrowsliceModel` (87, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 32-byte heap, guard word, the 40 input
@@ -22,7 +22,7 @@ The receiver is a Go value of `v1alpha1.BlobIdentifier` (zero `state`, zero-leng
 
 open Machine Runtime Machine.Witness Codec Prysm.BlobIdentifier.Code
 
-namespace Prysm.BlobIdentifier.Witness.DecodeAccept
+namespace Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept
 
 set_option maxRecDepth 100000
 
@@ -117,4 +117,4 @@ example (z' : RegZmms) (f : StatusFlags) :=
 example (z' : RegZmms) (f : StatusFlags) :=
   runs (List.replicate 32 0xff) (List.replicate 8 0xff) (List.replicate 8 0xff) rfl rfl rfl z' f
 
-end Prysm.BlobIdentifier.Witness.DecodeAccept
+end Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept

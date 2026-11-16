@@ -191,7 +191,9 @@ The connection to EthLib has three theorem forms:
 
 ## 6. Witnesses
 
-A witness file (`Prysm/<GoTypeName>/Witness*.lean`, namespace `Prysm.<GoTypeName>.Witness.<Role>`) builds one concrete `Host` with `Machine.Witness.mkHost` (`Machine/WitnessHost.lean`).
+A witness file (`Prysm/<GoTypeName>/Witness*.lean`) builds one concrete `Host` with `Machine.Witness.mkHost` (`Machine/WitnessHost.lean`).
+A witness module is `Witness` + the name of the module of the theorem that it applies.
+Its namespace is `Prysm.<GoTypeName>.Witness.<that module name>`; the witness of `Decode.generated_reject` is `WitnessGeneratedDecodeRejectSize`.
 The program is the data labels, the real converted function and the runtime models.
 A theorem `runs` (or `runs_<case>`) applies the main theorem to a concrete memory block and discharges every premise.
 The runtime models discharge the contract hypotheses. Example: `Prysm.SyncAggregate.Witness.DecodeAccept.runs`.
@@ -301,7 +303,7 @@ An example is `theorem Decode.reject_size` inside `namespace Prysm.Checkpoint`.
 | Encoder, a part of a long proof (head, tail, cover, a field) | `Encode` + plain word for the part (`EncodeHead`, `EncodeTail`, `EncodeCover`) |
 | `SizeSSZ` | `Size` |
 | Decode then encode, round trip, composition | `DecodeThenEncode` |
-| A witness of theorem X (a concrete state that satisfies the premises) | `Witness` + the role of X (`WitnessDecodeAccept`, `WitnessEncodeFastPath`) |
+| A witness of theorem X (a concrete state that satisfies the premises) | `Witness` + the name of the module that holds X (`WitnessDecodeAccept`, `WitnessGeneratedDecodeAccept`) |
 | Statements only (definitions `..._statement : Prop`) | `Statements`, or `Statements` + plain qualifier |
 | ELF data definitions of a link set, and the command that reads them | under `Prysm/ElfData/`: `<PlainSetName>` and `<PlainSetName>Reader` |
 
@@ -322,7 +324,7 @@ The main theorems inside `Prysm.<GoTypeName>` have these names:
   `checkerDesc`; Go layout: `goFields`, `goSize`;
 - a function specification of a method: `Decode.accept_function_spec` or `Encode.fast_path_function_spec`; the lemma
   that it holds has the suffix `_holds`;
-- a witness file has the namespace `Prysm.<GoTypeName>.Witness.<Role>` (for example `Witness.DecodeAccept`), and its
+- a witness file has the namespace `Prysm.<GoTypeName>.Witness.<Module>` (for example `Witness.GeneratedDecodeAccept`), and its
   main theorem is `runs`, with a plain qualifier for the case (`runs_empty`, `runs_one_element`, `runs_maximum`).
 
 The generators write the names `Decode.generated_*` and `Encode.generated_*` (`../gen/README.md`).

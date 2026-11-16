@@ -2,15 +2,15 @@ import Prysm.Checkpoint.EncodeFastPathFromBytes32Pattern
 import Prysm.Checkpoint.EncodeBytes32TemplatePlacement
 import Codec.Kind.FieldPatterns
 import Prysm.Slot.Uint64DecoderKindSameAsHand
-import Prysm.ValidatorIndex.WitnessDecodeAccept
+import Prysm.ValidatorIndex.WitnessGeneratedDecodeAccept
 import Prysm.BeaconBlockHeader.DecodeSpec
-import Prysm.BeaconBlockHeader.WitnessDecodeAccept
-import Prysm.BeaconBlockHeader.WitnessDecodeRejectSize
+import Prysm.BeaconBlockHeader.WitnessGeneratedDecodeAccept
+import Prysm.BeaconBlockHeader.WitnessGeneratedDecodeRejectSize
 import Prysm.BeaconBlockHeader.WitnessDecodeErrorUnreachable
 import Prysm.ValidatorIndex.WitnessDecodeRejectSize
 import Prysm.Eth1Data.DecodeSpec
-import Prysm.Eth1Data.WitnessDecodeAccept
-import Prysm.Eth1Data.WitnessDecodeRejectSize
+import Prysm.Eth1Data.WitnessGeneratedDecodeAccept
+import Prysm.Eth1Data.WitnessGeneratedDecodeRejectSize
 import Prysm.BeaconBlockHeader.EncodeSpec
 import Prysm.BeaconBlockHeader.WitnessEncodeFastPath
 import Prysm.BeaconBlockHeader.EncodeRootFieldsThroughCallBlock
@@ -18,18 +18,18 @@ import Prysm.Eth1Data.EncodeSpec
 import Prysm.Eth1Data.WitnessEncodeFastPath
 import Prysm.BeaconBlockHeader.WitnessEncodeRejectLength
 import Prysm.BlobIdentifier.DecodeSpec
-import Prysm.BlobIdentifier.WitnessDecodeAccept
-import Prysm.BlobIdentifier.WitnessDecodeRejectSize
+import Prysm.BlobIdentifier.WitnessGeneratedDecodeAccept
+import Prysm.BlobIdentifier.WitnessGeneratedDecodeRejectSize
 import Prysm.DepositMessage.DecodeSpec
-import Prysm.DepositMessage.WitnessDecodeAccept
-import Prysm.DepositMessage.WitnessDecodeRejectSize
+import Prysm.DepositMessage.WitnessGeneratedDecodeAccept
+import Prysm.DepositMessage.WitnessGeneratedDecodeRejectSize
 import Codec.FixedBytesDecode
 import Codec.InlineUint64
 import Codec.DecoderHeadEpilogue
 import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 import Prysm.Deposit_Data.DecodeSpec
-import Prysm.Deposit_Data.WitnessDecodeAccept
-import Prysm.Deposit_Data.WitnessDecodeRejectSize
+import Prysm.Deposit_Data.WitnessGeneratedDecodeAccept
+import Prysm.Deposit_Data.WitnessGeneratedDecodeRejectSize
 import Prysm.PendingPartialWithdrawal.DecodeSpec
 import Prysm.PendingPartialWithdrawal.WitnessDecodeRejectSize
 import Codec.CalleeDecode
@@ -49,10 +49,10 @@ import Prysm.SyncCommitteeMessage.SpecDescription
 import Prysm.SyncCommitteeMessage.Spec
 import Prysm.SyncCommitteeMessage.SpecChecker
 import Prysm.SyncCommitteeMessage.DecodeSpec
-import Prysm.PendingConsolidation.WitnessDecodeAccept
-import Prysm.PendingConsolidation.WitnessDecodeRejectSize
-import Prysm.SyncCommitteeMessage.WitnessDecodeAccept
-import Prysm.SyncCommitteeMessage.WitnessDecodeRejectSize
+import Prysm.PendingConsolidation.WitnessGeneratedDecodeAccept
+import Prysm.PendingConsolidation.WitnessGeneratedDecodeRejectSize
+import Prysm.SyncCommitteeMessage.WitnessGeneratedDecodeAccept
+import Prysm.SyncCommitteeMessage.WitnessGeneratedDecodeRejectSize
 import Codec.NopWindow
 import Codec.WindowSteps
 import Codec.Kind.WindowSteps
@@ -279,9 +279,9 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.ValidatorIndex.Decode.generated_accept
 #print axioms Prysm.ValidatorIndex.Decode.generated_accept_kind
 #print axioms Prysm.ValidatorIndex.Decode.accept_function_spec_holds
-#print axioms Prysm.ValidatorIndex.Witness.DecodeAccept.witness_mem
-#print axioms Prysm.ValidatorIndex.Witness.DecodeAccept.runs
-#print axioms Prysm.ValidatorIndex.Witness.DecodeAccept.runs_function_spec
+#print axioms Prysm.ValidatorIndex.Witness.GeneratedDecodeAccept.witness_mem
+#print axioms Prysm.ValidatorIndex.Witness.GeneratedDecodeAccept.runs
+#print axioms Prysm.ValidatorIndex.Witness.GeneratedDecodeAccept.runs_function_spec
 #print axioms Prysm.BeaconBlockHeader.Decode.slot_err_unreachable
 #print axioms Prysm.BeaconBlockHeader.Decode.validator_index_err_unreachable
 #print axioms Prysm.BeaconBlockHeader.Witness.DecodeErrorUnreachable.runs
@@ -294,8 +294,8 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.BeaconBlockHeader.Decode.accept_spec
 #print axioms Prysm.BeaconBlockHeader.Decode.reject_size_spec
 #print axioms Prysm.BeaconBlockHeader.Decode.reject_complete
-#print axioms Prysm.BeaconBlockHeader.Witness.DecodeAccept.runs
-#print axioms Prysm.BeaconBlockHeader.Witness.DecodeRejectSize.runs
+#print axioms Prysm.BeaconBlockHeader.Witness.GeneratedDecodeAccept.runs
+#print axioms Prysm.BeaconBlockHeader.Witness.GeneratedDecodeRejectSize.runs
 #print axioms Prysm.ValidatorIndex.Decode.reject_size
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.runs
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength9.runs9
@@ -311,8 +311,8 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.Eth1Data.Decode.accept_spec
 #print axioms Prysm.Eth1Data.Decode.reject_size_spec
 #print axioms Prysm.Eth1Data.Decode.reject_complete
-#print axioms Prysm.Eth1Data.Witness.DecodeAccept.runs
-#print axioms Prysm.Eth1Data.Witness.DecodeRejectSize.runs
+#print axioms Prysm.Eth1Data.Witness.GeneratedDecodeAccept.runs
+#print axioms Prysm.Eth1Data.Witness.GeneratedDecodeRejectSize.runs
 -- BeaconBlockHeader encoder, fast path only (hand proof)
 #print axioms Codec.lea_cmp_be_false
 #print axioms Prysm.BeaconBlockHeader.Encode.encode_slot
@@ -348,23 +348,23 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.BlobIdentifier.Decode.accept_spec
 #print axioms Prysm.BlobIdentifier.Decode.reject_size_spec
 #print axioms Prysm.BlobIdentifier.Decode.reject_complete
-#print axioms Prysm.BlobIdentifier.Witness.DecodeAccept.program_length
-#print axioms Prysm.BlobIdentifier.Witness.DecodeAccept.host_program_eq
-#print axioms Prysm.BlobIdentifier.Witness.DecodeAccept.placed_at_9
-#print axioms Prysm.BlobIdentifier.Witness.DecodeAccept.placed_at_81
-#print axioms Prysm.BlobIdentifier.Witness.DecodeAccept.placed_at_87
-#print axioms Prysm.BlobIdentifier.Witness.DecodeAccept.labels_fresh_at_9
-#print axioms Prysm.BlobIdentifier.Witness.DecodeAccept.labels_fresh_at_87
-#print axioms Prysm.BlobIdentifier.Witness.DecodeAccept.labels_fresh_at_81
-#print axioms Prysm.BlobIdentifier.Witness.DecodeAccept.label_bump_pointer
-#print axioms Prysm.BlobIdentifier.Witness.DecodeAccept.label_write_barrier
-#print axioms Prysm.BlobIdentifier.Witness.DecodeAccept.lift_heap
-#print axioms Prysm.BlobIdentifier.Witness.DecodeAccept.runs
-#print axioms Prysm.BlobIdentifier.Witness.DecodeRejectSize.program_length
-#print axioms Prysm.BlobIdentifier.Witness.DecodeRejectSize.placed_at_1
-#print axioms Prysm.BlobIdentifier.Witness.DecodeRejectSize.labels_fresh_at_1
-#print axioms Prysm.BlobIdentifier.Witness.DecodeRejectSize.label_err_size
-#print axioms Prysm.BlobIdentifier.Witness.DecodeRejectSize.runs
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept.program_length
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept.host_program_eq
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept.placed_at_9
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept.placed_at_81
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept.placed_at_87
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept.labels_fresh_at_9
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept.labels_fresh_at_87
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept.labels_fresh_at_81
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept.label_bump_pointer
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept.label_write_barrier
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept.lift_heap
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeAccept.runs
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeRejectSize.program_length
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeRejectSize.placed_at_1
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeRejectSize.labels_fresh_at_1
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeRejectSize.label_err_size
+#print axioms Prysm.BlobIdentifier.Witness.GeneratedDecodeRejectSize.runs
 #print axioms Prysm.DepositMessage.desc_checker
 #print axioms Prysm.DepositMessage.desc_wellFormed
 #print axioms Prysm.DepositMessage.desc_fixedSize
@@ -386,23 +386,23 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.DepositMessage.Decode.accept_spec
 #print axioms Prysm.DepositMessage.Decode.reject_size_spec
 #print axioms Prysm.DepositMessage.Decode.reject_complete
-#print axioms Prysm.DepositMessage.Witness.DecodeAccept.program_length
-#print axioms Prysm.DepositMessage.Witness.DecodeAccept.host_program_eq
-#print axioms Prysm.DepositMessage.Witness.DecodeAccept.placed_at_9
-#print axioms Prysm.DepositMessage.Witness.DecodeAccept.placed_at_118
-#print axioms Prysm.DepositMessage.Witness.DecodeAccept.placed_at_124
-#print axioms Prysm.DepositMessage.Witness.DecodeAccept.labels_fresh_at_9
-#print axioms Prysm.DepositMessage.Witness.DecodeAccept.labels_fresh_at_124
-#print axioms Prysm.DepositMessage.Witness.DecodeAccept.labels_fresh_at_118
-#print axioms Prysm.DepositMessage.Witness.DecodeAccept.label_bump_pointer
-#print axioms Prysm.DepositMessage.Witness.DecodeAccept.label_write_barrier
-#print axioms Prysm.DepositMessage.Witness.DecodeAccept.lift_heap
-#print axioms Prysm.DepositMessage.Witness.DecodeAccept.runs
-#print axioms Prysm.DepositMessage.Witness.DecodeRejectSize.program_length
-#print axioms Prysm.DepositMessage.Witness.DecodeRejectSize.placed_at_1
-#print axioms Prysm.DepositMessage.Witness.DecodeRejectSize.labels_fresh_at_1
-#print axioms Prysm.DepositMessage.Witness.DecodeRejectSize.label_err_size
-#print axioms Prysm.DepositMessage.Witness.DecodeRejectSize.runs
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeAccept.program_length
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeAccept.host_program_eq
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeAccept.placed_at_9
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeAccept.placed_at_118
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeAccept.placed_at_124
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_9
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_124
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_118
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeAccept.label_bump_pointer
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeAccept.label_write_barrier
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeAccept.lift_heap
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeAccept.runs
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeRejectSize.program_length
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeRejectSize.placed_at_1
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeRejectSize.labels_fresh_at_1
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeRejectSize.label_err_size
+#print axioms Prysm.DepositMessage.Witness.GeneratedDecodeRejectSize.runs
 
 -- Encoder blocks: fast paths only
 #print axioms Codec.encode32_memmove_call
@@ -484,8 +484,8 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.Deposit_Data.Decode.reject_complete
 #print axioms Prysm.PendingPartialWithdrawal.Decode.reject_size_spec
 #print axioms Prysm.PendingPartialWithdrawal.Decode.reject_complete
-#print axioms Prysm.Deposit_Data.Witness.DecodeAccept.runs
-#print axioms Prysm.Deposit_Data.Witness.DecodeRejectSize.runs
+#print axioms Prysm.Deposit_Data.Witness.GeneratedDecodeAccept.runs
+#print axioms Prysm.Deposit_Data.Witness.GeneratedDecodeRejectSize.runs
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeRejectSize.runs
 -- Callee decode blocks and the hand accept proofs of PendingPartialWithdrawal and BeaconBlockHeader
 #print axioms Prysm.BeaconBlockHeader.Decode.accept_guard
@@ -519,39 +519,39 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.SyncCommitteeMessage.Decode.accept_spec
 #print axioms Prysm.SyncCommitteeMessage.Decode.reject_complete
 #print axioms Prysm.SyncCommitteeMessage.Decode.reject_size_spec
-#print axioms Prysm.PendingConsolidation.Witness.DecodeAccept.program_length
-#print axioms Prysm.PendingConsolidation.Witness.DecodeAccept.labels_fresh_at_1
-#print axioms Prysm.PendingConsolidation.Witness.DecodeAccept.labels_fresh_at_108
-#print axioms Prysm.PendingConsolidation.Witness.DecodeAccept.placed_at_1
-#print axioms Prysm.PendingConsolidation.Witness.DecodeAccept.placed_at_108
-#print axioms Prysm.PendingConsolidation.Witness.DecodeAccept.runs
-#print axioms Prysm.PendingConsolidation.Witness.DecodeAccept.host_program_eq
-#print axioms Prysm.PendingConsolidation.Witness.DecodeRejectSize.program_length
-#print axioms Prysm.PendingConsolidation.Witness.DecodeRejectSize.labels_fresh_at_1
-#print axioms Prysm.PendingConsolidation.Witness.DecodeRejectSize.placed_at_1
-#print axioms Prysm.PendingConsolidation.Witness.DecodeRejectSize.label_err_size
-#print axioms Prysm.PendingConsolidation.Witness.DecodeRejectSize.runs
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.program_length
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.labels_fresh_at_188
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.labels_fresh_at_251
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.labels_fresh_at_314
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.labels_fresh_at_320
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.labels_fresh_at_9
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.placed_at_188
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.placed_at_251
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.placed_at_314
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.placed_at_320
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.placed_at_9
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.label_bump_pointer
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.label_write_barrier
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.lift_heap
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.host_program_eq
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeAccept.runs
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.program_length
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.labels_fresh_at_1
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.placed_at_1
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.label_err_size
-#print axioms Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.runs
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.program_length
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.labels_fresh_at_1
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.labels_fresh_at_108
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.placed_at_1
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.placed_at_108
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.runs
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.host_program_eq
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize.program_length
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize.labels_fresh_at_1
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize.placed_at_1
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize.label_err_size
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize.runs
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.program_length
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_188
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_251
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_314
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_320
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_9
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.placed_at_188
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.placed_at_251
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.placed_at_314
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.placed_at_320
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.placed_at_9
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.label_bump_pointer
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.label_write_barrier
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.lift_heap
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.host_program_eq
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.runs
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize.program_length
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize.labels_fresh_at_1
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize.placed_at_1
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize.label_err_size
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize.runs
 
 -- The step chain of `decoder --whole-accept`: the step lemmas, their kinds and the accept modules
 #print axioms Codec.bytesDecodeSegmentKindWindow_of

@@ -7,7 +7,7 @@ import Prysm.PowBlock.Code
 /-!
 # Witness of `Decode.generated_accept` (PowBlock decoder accept path)
 
-Hand-written (the text of `Prysm/Deposit_Data/WitnessDecodeAccept.lean` with the PowBlock host and layout).
+Hand-written (the text of `Prysm/Deposit_Data/WitnessGeneratedDecodeAccept.lean` with the PowBlock host and layout).
 It shows that the premises of the generated accept theorem `Prysm.PowBlock.Decode.generated_accept` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.PowBlock).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (150, `bump_makeslice1`) and `MemmoveGrowsliceModel` (156, `model_memmove`).
@@ -22,7 +22,7 @@ The receiver is a Go value of `v1alpha1.PowBlock` (zero-length slices).
 
 open Machine Runtime Machine.Witness Codec Prysm.PowBlock.Code
 
-namespace Prysm.PowBlock.Witness.DecodeAccept
+namespace Prysm.PowBlock.Witness.GeneratedDecodeAccept
 
 set_option maxRecDepth 100000
 
@@ -121,4 +121,4 @@ example (z' : RegZmms) (f : StatusFlags) :=
   runs (List.replicate 32 0xff) (List.replicate 32 0xff) (List.replicate 32 0xff)
     (List.replicate 8 0xff) (List.replicate 8 0xff) (List.replicate 8 0xff) rfl rfl rfl rfl rfl rfl z' f
 
-end Prysm.PowBlock.Witness.DecodeAccept
+end Prysm.PowBlock.Witness.GeneratedDecodeAccept

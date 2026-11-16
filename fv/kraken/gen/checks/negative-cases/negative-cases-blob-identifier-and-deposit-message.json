@@ -118,9 +118,9 @@
   "new": "bs.size ≠ 39 :="
  },
  {
-  "id": "blob-identifier-witness-decode-reject-size-runs-statement-hlen-40-to-41",
-  "module": "Prysm/BlobIdentifier/WitnessDecodeRejectSize.lean",
-  "theorem": "Prysm.BlobIdentifier.Witness.DecodeRejectSize.runs",
+  "id": "blob-identifier-witness-generated-decode-reject-size-runs-statement-hlen-40-to-41",
+  "module": "Prysm/BlobIdentifier/WitnessGeneratedDecodeRejectSize.lean",
+  "theorem": "Prysm.BlobIdentifier.Witness.GeneratedDecodeRejectSize.runs",
   "kind": "statement",
   "old": "(hlen : len ≠ 40)",
   "new": "(hlen : len ≠ 41)"
@@ -327,9 +327,9 @@
   "new": "bs.size ≠ 87 :="
  },
  {
-  "id": "deposit-message-witness-decode-reject-size-runs-statement-hlen-88-to-89",
-  "module": "Prysm/DepositMessage/WitnessDecodeRejectSize.lean",
-  "theorem": "Prysm.DepositMessage.Witness.DecodeRejectSize.runs",
+  "id": "deposit-message-witness-generated-decode-reject-size-runs-statement-hlen-88-to-89",
+  "module": "Prysm/DepositMessage/WitnessGeneratedDecodeRejectSize.lean",
+  "theorem": "Prysm.DepositMessage.Witness.GeneratedDecodeRejectSize.runs",
   "kind": "statement",
   "old": "(hlen : len ≠ 88)",
   "new": "(hlen : len ≠ 89)"

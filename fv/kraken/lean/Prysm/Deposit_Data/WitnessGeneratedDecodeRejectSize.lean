@@ -1,28 +1,28 @@
-import Prysm.PendingDeposit.GeneratedDecodeAccept
+import Prysm.Deposit_Data.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
-import Prysm.PendingDeposit.Code
+import Prysm.Deposit_Data.Code
 
 /-!
 # Witness of `Decode.generated_reject`
 
-Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.PendingDeposit).UnmarshalSSZ`
-(index 1). Hand-written: the text of `Prysm/Deposit_Data/WitnessDecodeRejectSize.lean` with the PendingDeposit decoder.
+Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.Deposit_Data).UnmarshalSSZ`
+(index 1). Hand-written: the text of `Prysm/DepositMessage/WitnessGeneratedDecodeRejectSize.lean` with the Deposit_Data decoder.
 Memory at `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a
 data word `0x2a`, stand-ins: the real values are set by the runtime's init and are not read from the ELF),
 the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill
-slot. For every length `≠ 192` (instances 191, 193, 0) the decoder returns the two words.
+slot. For every length `≠ 184` (instances 183, 185, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime Machine.Witness Prysm.PendingDeposit.Code
+open Machine Runtime Machine.Witness Prysm.Deposit_Data.Code
 
-namespace Prysm.PendingDeposit.Witness.DecodeRejectSize
+namespace Prysm.Deposit_Data.Witness.GeneratedDecodeRejectSize
 
 set_option maxRecDepth 100000
 
 def program : Program := [.label "ssz.ErrSize"] ++ unmarshalSSZ
 
-theorem program_length : program.length = 183 := by rfl
+theorem program_length : program.length = 144 := by rfl
 
 instance host : Host := mkHost program (by rw [program_length]; decide)
 
@@ -48,7 +48,7 @@ def frame_rest : DataMem → Prop := Eq ((zeros 8).At (0x10028 : BitVec 64))
 
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `Decode.generated_reject`.** -/
-theorem runs (len : UInt64) (hlen : len ≠ 192) (zmms : RegZmms) (flags : StatusFlags) :
+theorem runs (len : UInt64) (hlen : len ≠ 184) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10e8
         ∧ st.data.regs.rbx = 0x2a)
@@ -65,8 +65,8 @@ theorem runs (len : UInt64) (hlen : len ≠ 192) (zmms : RegZmms) (flags : Statu
     (by simp [initial_state]) hlen)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
-example (z' : RegZmms) (f : StatusFlags) := runs 191 (by decide) z' f
-example (z' : RegZmms) (f : StatusFlags) := runs 193 (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := runs 183 (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := runs 185 (by decide) z' f
 example (z' : RegZmms) (f : StatusFlags) := runs 0 (by decide) z' f
 
-end Prysm.PendingDeposit.Witness.DecodeRejectSize
+end Prysm.Deposit_Data.Witness.GeneratedDecodeRejectSize

@@ -173,17 +173,17 @@
   "new": "bs.size ≠ 143 :="
  },
  {
-  "id": "sync-committee-message-witness-decode-accept-runs-statement-rax-0-to-1",
-  "module": "Prysm/SyncCommitteeMessage/WitnessDecodeAccept.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Witness.DecodeAccept.runs",
+  "id": "sync-committee-message-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/SyncCommitteeMessage/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.runs",
   "kind": "statement",
   "old": "st.data.regs.rax = 0 ∧",
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "sync-committee-message-witness-decode-reject-size-runs-statement-hlen-144-to-145",
-  "module": "Prysm/SyncCommitteeMessage/WitnessDecodeRejectSize.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.runs",
+  "id": "sync-committee-message-witness-generated-decode-reject-size-runs-statement-hlen-144-to-145",
+  "module": "Prysm/SyncCommitteeMessage/WitnessGeneratedDecodeRejectSize.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize.runs",
   "kind": "statement",
   "old": "(hlen : len ≠ 144)",
   "new": "(hlen : len ≠ 145)"
@@ -337,17 +337,17 @@
   "new": "bs.size ≠ 15 :="
  },
  {
-  "id": "pending-consolidation-witness-decode-accept-runs-statement-rax-0-to-1",
-  "module": "Prysm/PendingConsolidation/WitnessDecodeAccept.lean",
-  "theorem": "Prysm.PendingConsolidation.Witness.DecodeAccept.runs",
+  "id": "pending-consolidation-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/PendingConsolidation/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.runs",
   "kind": "statement",
   "old": "st.data.regs.rax = 0 ∧",
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "pending-consolidation-witness-decode-reject-size-runs-statement-hlen-16-to-17",
-  "module": "Prysm/PendingConsolidation/WitnessDecodeRejectSize.lean",
-  "theorem": "Prysm.PendingConsolidation.Witness.DecodeRejectSize.runs",
+  "id": "pending-consolidation-witness-generated-decode-reject-size-runs-statement-hlen-16-to-17",
+  "module": "Prysm/PendingConsolidation/WitnessGeneratedDecodeRejectSize.lean",
+  "theorem": "Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize.runs",
   "kind": "statement",
   "old": "(hlen : len ≠ 16)",
   "new": "(hlen : len ≠ 17)"

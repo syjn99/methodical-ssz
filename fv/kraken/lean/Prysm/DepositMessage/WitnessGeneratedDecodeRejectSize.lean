@@ -1,28 +1,28 @@
-import Prysm.PendingConsolidation.GeneratedDecodeAccept
+import Prysm.DepositMessage.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
-import Prysm.PendingConsolidation.Code
+import Prysm.DepositMessage.Code
 
 /-!
-# Witness of `Decode.generated_reject`
+# Witness of `Decode.generated_reject` (DepositMessage decoder size reject)
 
-Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`
-(index 1). Hand-written: the text of `Prysm/PendingConsolidation/WitnessDecodeRejectSize.lean` with the PendingConsolidation decoder.
+Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.DepositMessage).UnmarshalSSZ`
+(index 1). Hand-written: the text of `Prysm/Eth1Data/WitnessGeneratedDecodeRejectSize.lean` with the DepositMessage decoder.
 Memory at `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a
 data word `0x2a`, stand-ins: the real values are set by the runtime's init and are not read from the ELF),
 the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill
-slot. For every length `≠ 16` (instances 15, 17, 0) the decoder returns the two words.
+slot. For every length `≠ 88` (instances 87, 89, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime Machine.Witness Prysm.PendingConsolidation.Code
+open Machine Runtime Machine.Witness Prysm.DepositMessage.Code
 
-namespace Prysm.PendingConsolidation.Witness.DecodeRejectSize
+namespace Prysm.DepositMessage.Witness.GeneratedDecodeRejectSize
 
 set_option maxRecDepth 100000
 
 def program : Program := [.label "ssz.ErrSize"] ++ unmarshalSSZ
 
-theorem program_length : program.length = 108 := by rfl
+theorem program_length : program.length = 110 := by rfl
 
 instance host : Host := mkHost program (by rw [program_length]; decide)
 
@@ -48,7 +48,7 @@ def frame_rest : DataMem → Prop := Eq ((zeros 8).At (0x10028 : BitVec 64))
 
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `Decode.generated_reject`.** -/
-theorem runs (len : UInt64) (hlen : len ≠ 16) (zmms : RegZmms) (flags : StatusFlags) :
+theorem runs (len : UInt64) (hlen : len ≠ 88) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10e8
         ∧ st.data.regs.rbx = 0x2a)
@@ -65,8 +65,8 @@ theorem runs (len : UInt64) (hlen : len ≠ 16) (zmms : RegZmms) (flags : Status
     (by simp [initial_state]) hlen)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
-example (z' : RegZmms) (f : StatusFlags) := runs 15 (by decide) z' f
-example (z' : RegZmms) (f : StatusFlags) := runs 17 (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := runs 87 (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := runs 89 (by decide) z' f
 example (z' : RegZmms) (f : StatusFlags) := runs 0 (by decide) z' f
 
-end Prysm.PendingConsolidation.Witness.DecodeRejectSize
+end Prysm.DepositMessage.Witness.GeneratedDecodeRejectSize

@@ -216,11 +216,11 @@
   "id": "eth1-data-decode-reject-complete-statement-size-72-to-71"
  },
  {
-  "module": "Prysm/Eth1Data/WitnessDecodeRejectSize.lean",
-  "theorem": "Prysm.Eth1Data.Witness.DecodeRejectSize.runs",
+  "module": "Prysm/Eth1Data/WitnessGeneratedDecodeRejectSize.lean",
+  "theorem": "Prysm.Eth1Data.Witness.GeneratedDecodeRejectSize.runs",
   "kind": "statement",
   "old": "(hlen : len ≠ 72)",
   "new": "(hlen : len ≠ 73)",
-  "id": "eth1-data-witness-decode-reject-size-runs-statement-hlen-72-to-73"
+  "id": "eth1-data-witness-generated-decode-reject-size-runs-statement-hlen-72-to-73"
  }
 ]

@@ -21,7 +21,7 @@ names replaced (`sed`); the machine theorem used is the generated `Decode.genera
 
 open Machine Runtime Machine.Witness Codec Prysm.ValidatorIndex.Code
 
-namespace Prysm.ValidatorIndex.Witness.DecodeAccept
+namespace Prysm.ValidatorIndex.Witness.GeneratedDecodeAccept
 
 set_option maxRecDepth 100000
 
@@ -91,4 +91,4 @@ example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 0) (zeros 8) (by
 example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 0x0123456789abcdef) (zeros 8) (by decide) rfl z' f
 example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 (2 ^ 64 - 1)) (zeros 8) (by decide) rfl z' f
 
-end Prysm.ValidatorIndex.Witness.DecodeAccept
+end Prysm.ValidatorIndex.Witness.GeneratedDecodeAccept

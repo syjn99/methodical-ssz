@@ -7,7 +7,7 @@ import Prysm.Eth1Data.Code
 /-!
 # Witness of `Decode.generated_accept` (Eth1Data decoder accept path)
 
-Hand-written (the text of `Prysm/BeaconBlockHeader/WitnessDecodeAccept.lean` with the Eth1Data host and layout).
+Hand-written (the text of `Prysm/BeaconBlockHeader/WitnessGeneratedDecodeAccept.lean` with the Eth1Data host and layout).
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.Eth1Data).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (117, `bump_makeslice1`) and `MemmoveGrowsliceModel` (123, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 64-byte heap, guard word, the 72 input
@@ -23,7 +23,7 @@ slices, zero DepositCount).
 
 open Machine Runtime Machine.Witness Codec Prysm.Eth1Data.Code
 
-namespace Prysm.Eth1Data.Witness.DecodeAccept
+namespace Prysm.Eth1Data.Witness.GeneratedDecodeAccept
 
 set_option maxRecDepth 100000
 
@@ -121,4 +121,4 @@ example (z' : RegZmms) (f : StatusFlags) :=
   runs (List.replicate 32 0xff) (List.replicate 8 0xff) (List.replicate 32 0xff) (List.replicate 8 0xff)
     (List.replicate 8 0xff) rfl rfl rfl rfl rfl z' f
 
-end Prysm.Eth1Data.Witness.DecodeAccept
+end Prysm.Eth1Data.Witness.GeneratedDecodeAccept

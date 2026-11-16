@@ -126,11 +126,11 @@ DEC_CANDIDATES = {
     # (same accepted inputs + number / little-endian bytes correspondence, spec uint256)
     "codec": [["desc_deserialize_checker"], ["Decode.accepts_same", "Decode.codec_checker"]],
 }
-# The witness of a part follows the form of the chosen theorem: for a generated theorem the generated witness comes
-# first. The Rule's refs check then requires that the chosen witness uses the chosen theorem.
-WIT_ACCEPT = {"Decode.generated_accept": ["Witness.GeneratedDecodeAccept.runs", "Witness.DecodeAccept.runs"]}
+# The witness of a part follows the form of the chosen theorem: the witness of a generated theorem is the generated
+# witness. The Rule's refs check then requires that the chosen witness uses the chosen theorem.
+WIT_ACCEPT = {"Decode.generated_accept": ["Witness.GeneratedDecodeAccept.runs"]}
 WIT_ACCEPT_DEFAULT = ["Witness.DecodeAccept.runs"]
-WIT_REJECT = {"Decode.generated_reject": ["Witness.GeneratedDecodeRejectSize.runs", "Witness.DecodeRejectSize.runs"]}
+WIT_REJECT = {"Decode.generated_reject": ["Witness.GeneratedDecodeRejectSize.runs"]}
 WIT_REJECT_DEFAULT = ["Witness.DecodeRejectSize.runs", "Witness.DecodeRejectSize.runs_size",
                       "Witness.DecodeRejectSize.RejectSize.runs"]
 # Encoder fast path: the generated theorem, its spec corollary and its two witness instances; else the hand theorem,

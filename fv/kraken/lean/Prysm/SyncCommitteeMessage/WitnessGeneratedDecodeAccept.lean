@@ -9,7 +9,7 @@ import Prysm.ValidatorIndex.Code
 /-!
 # Witness of `Decode.generated_accept` (SyncCommitteeMessage decoder accept path)
 
-Hand-written (the text of `Prysm/BeaconBlockHeader/WitnessDecodeAccept.lean` with the SyncCommitteeMessage host and
+Hand-written (the text of `Prysm/BeaconBlockHeader/WitnessGeneratedDecodeAccept.lean` with the SyncCommitteeMessage host and
 layout). It shows that the premises of the generated accept theorem `Prysm.SyncCommitteeMessage.Decode.generated_accept` are
 satisfiable. Host: data labels, the real Go 1.26.10 `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ` (index 9),
 `(*primitives.Slot).UnmarshalSSZ` (188), `(*primitives.ValidatorIndex).UnmarshalSSZ` (251), the 1-byte bump
@@ -26,7 +26,7 @@ decoder returns nil. The receiver is a Go value of `v1alpha1.SyncCommitteeMessag
 
 open Machine Runtime Machine.Witness Codec Prysm.SyncCommitteeMessage.Code
 
-namespace Prysm.SyncCommitteeMessage.Witness.DecodeAccept
+namespace Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept
 
 set_option maxRecDepth 100000
 
@@ -139,4 +139,4 @@ example (z' : RegZmms) (f : StatusFlags) :=
   runs (List.replicate 8 0xff) (List.replicate 32 0xff) (List.replicate 8 0xff) (List.replicate 96 0xff)
     (List.replicate 8 0xff) (List.replicate 8 0xff) rfl rfl rfl rfl rfl rfl z' f
 
-end Prysm.SyncCommitteeMessage.Witness.DecodeAccept
+end Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept

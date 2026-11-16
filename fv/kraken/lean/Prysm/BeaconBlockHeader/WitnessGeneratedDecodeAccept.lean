@@ -25,7 +25,7 @@ The receiver is a Go value of `v1alpha1.BeaconBlockHeader` (zero `state`, zero-l
 
 open Machine Runtime Machine.Witness Codec Prysm.BeaconBlockHeader.Code
 
-namespace Prysm.BeaconBlockHeader.Witness.DecodeAccept
+namespace Prysm.BeaconBlockHeader.Witness.GeneratedDecodeAccept
 
 set_option maxRecDepth 100000
 
@@ -139,4 +139,4 @@ example (z' : RegZmms) (f : StatusFlags) :=
     (List.replicate 32 0xff) (List.replicate 8 0xff) (List.replicate 8 0xff) (List.replicate 8 0xff)
     rfl rfl rfl rfl rfl rfl rfl rfl z' f
 
-end Prysm.BeaconBlockHeader.Witness.DecodeAccept
+end Prysm.BeaconBlockHeader.Witness.GeneratedDecodeAccept
