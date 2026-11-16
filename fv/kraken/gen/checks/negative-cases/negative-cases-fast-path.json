@@ -67,7 +67,10 @@
   "theorem": "Prysm.Eth1Data.Encode.generated_statement",
   "kind": "statement",
   "old": "type_of% (@Prysm.Eth1Data.Encode.fast_path ‹Host›)",
-  "new": "type_of% (@Prysm.BeaconBlockHeader.Encode.fast_path ‹Host›)"
+  "new": "type_of% (@Prysm.BeaconBlockHeader.Encode.fast_path ‹Host›)",
+  "mutant_imports": [
+   "Prysm.BeaconBlockHeader.EncodeFastPath"
+  ]
  },
  {
   "id": "validator-balance-encode-generated-fast-statement-v1-16-to-24",

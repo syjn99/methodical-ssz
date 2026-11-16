@@ -1,4 +1,4 @@
-import Prysm.BeaconBlockHeader.EncodeFastPathKindInstances
+import Codec.Kind.EncodeFastPathAnyFrame
 import Codec.EncodeFrameTest
 import Prysm.ValidatorIdentity.Code
 

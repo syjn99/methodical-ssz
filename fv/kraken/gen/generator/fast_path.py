@@ -15,7 +15,7 @@ one guarded success point (see there). This module never writes to stdout.
 """
 import hashlib, json, pathlib, re
 
-FAST_PATH_IMPORTS = ["Prysm.BeaconBlockHeader.EncodeFastPathKindInstances", "Codec.EncodeFrameTest"]
+FAST_PATH_IMPORTS = ["Codec.Kind.EncodeFastPathAnyFrame", "Codec.EncodeFrameTest"]
 R64 = "rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15".split()
 R32 = {"eax": "rax", "ebx": "rbx", "ecx": "rcx", "edx": "rdx", "esi": "rsi", "edi": "rdi"}
 BYTE_SIZES = (32, 48, 96)
