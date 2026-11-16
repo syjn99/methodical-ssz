@@ -13,14 +13,14 @@ The design principles are in `../../README.md`.
   The header comment of a generated file names its generator. Some headers also give the sha256 of the inputs.
 - A generator does not write to the shared libraries (`lean/Spec`, `lean/Machine`, `lean/Runtime`, `lean/Codec`) or `link/`.
 - The Python programs use only the standard library. Run them with `python3 -I`.
-- A generator refuses an input that it does not match. It writes nothing, or it marks a partial output as partial.
+- A generator refuses an input that it does not match. It writes nothing to standard output and exits with a code that is not 0.
 
 ## 2. Generators
 
 | Program | Reads | Writes |
 | --- | --- | --- |
-| `generator/generator.py`, with `generator/whole_accept.py` and `generator/fast_path.py` | A converted `.S` file and the IR entry of one type | `lean/Prysm/<GoTypeName>/Generated*.lean`: segment, accept, size reject and encoder fast path theorems |
-| `generator/gen.sh` | | Runs `generator.py` once for each committed generated file |
+| `generator/generator.py`, with `generator/whole_accept.py` and `generator/fast_path.py` | A converted `.S` file and the IR entry of one type | `lean/Prysm/<GoTypeName>/Generated*.lean`: segment, step, accept, size reject and encoder fast path theorems |
+| `generator/gen.sh` | | Runs `generator.py` once for each generated file of the types that are not in `flat-types/run_generators.sh` |
 | `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py` | A `Desc` JSON file that the checker accepted | `*SpecChecker.lean`: the checker `Desc` as Lean |
 | `checks/layout.py`, `checks/attestation_data_layout.py` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/Checkpoint/Layout.lean`, `lean/Prysm/AttestationData/Layout.lean` |
 | `desc/producer.py` | The reduced IR | One `Desc` JSON file for each type |
@@ -38,11 +38,15 @@ The design principles are in `../../README.md`.
 | `kraken-parser/summarize_parser_log.py` | A log of `kraken-parser/ParserRun.lean` | `prysm/go1.26.10/parser-result.json`: which functions the Kraken parser reads |
 | `prysm-gen.sh`, `prysm-elf.sh` | A Prysm tree and the generator binary | Generated Go, the IR and the Prysm ELF (needs Go) |
 
-`generator/generator.py` has three modes. `uint64`: the accept path of a uint64 primitive decoder. `decoder`: a container
-decoder. Without an option it writes the 32-byte field segments. `--field-segments` adds byte vectors of 32, 48 and
-96 bytes and inline uint64 fields, `--call-segments` also the fields that a callee decodes, `--steps` the step chain
-over windows (a padding `nop` anywhere), and `--whole-accept` the step chain with the whole accept and size-reject
-theorems. `encoder --fast-path`: the encoder fast path theorem.
+`generator/generator.py` has these modes:
+
+- `uint64`: the accept path of a uint64 primitive decoder.
+- `decoder`: the 32-byte field segments of a container decoder.
+- `decoder --steps`: the step chain of the accept path over windows (a padding `nop` anywhere).
+- `decoder --whole-accept`: the step chain with the head, field, epilogue, accept and size-reject theorems.
+- `encoder --fast-path`: the encoder fast path theorem. `--same-as`, `--same-as-prop` and `--same-as-via` add an identity with a hand statement.
+
+`generator/decoder_test.py` and `generator/encoder_test.py` test the modes. They run the generator on real and mutated inputs.
 
 ## 3. Check that a generated file is the generator output
 
@@ -53,7 +57,8 @@ Exit 0 means the same bytes. Run it from `fv/kraken`:
 sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/generator/generator.py uint64 --assembly prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --imports Codec.Uint64Decoder,Prysm.BeaconBlockHeader.Code --open Prysm.ValidatorIndex.Code > "$REGEN_OUT"'
 ```
 
-For the other files, take the command from `generator/gen.sh` or from the file header. Replace the output redirect with `> "$REGEN_OUT"`.
+For the other files, take the command from `generator/gen.sh` or `flat-types/run_generators.sh`. Replace the output redirect with `> "$REGEN_OUT"`.
+`checks/regenerate_and_compare.py` (section 6) compares all generated files in one run.
 The check compares bytes only. It does not show that the output is correct.
 
 ## 4. The kind check
@@ -180,13 +185,9 @@ These need more than Python:
 
 ## 8. Known limits
 
-- 11 of the 18 files that `checks/desc_to_lean.py` writes have hand-added or edited header lines.
-  So these files do not reproduce from the tracked tree.
 - The specification and witness files of five flat types (HistoricalSummary, SyncAggregatorSelectionData, SigningData, ValidatorBalance, VoluntaryExit) have no tracked generator script.
-- The commands of 12 generated files are not in `generator/gen.sh`. Their headers give the commands.
-- The `Desc` files are in `prysm/go1.26.10/evidence/`. `desc_to_lean.py` names this directory in its headers.
-  `list_desc_to_lean.py` names a subdirectory `lists-and-vectors/desc/` that does not exist, and two hand-edited headers
-  (AttestationData, BeaconBlockHeader) name another subdirectory. Nine headers have a hand-added line that names an
-  earlier subdirectory. A change of these headers changes tracked Lean files. `checks/regenerate_and_compare.py` finds a
-  `Desc` file by its base name.
+- Three hand modules have names that start with `Generated`: `lean/Prysm/<GoTypeName>/GeneratedEncodeFastPathSameAsHand.lean`.
+  They hold identities with hand statements. `checks/python_checks.sh` does not give them to `kindcheck.py`.
+- The `Desc` files are in `prysm/go1.26.10/evidence/`. The header of each `*SpecChecker.lean` names its `Desc` file by the path
+  relative to `fv/kraken` and by its sha256. `checks/regenerate_and_compare.py` runs the generator on the file that the header names.
 - `kindcheck.py` does not bind the code constant of a theorem to the `.S` file of the header. It does not check the `.S` label against the IR type.

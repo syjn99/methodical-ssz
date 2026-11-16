@@ -4,8 +4,8 @@ import Codec.DecoderHeadEpilogue
 /-!
 # Frame-parametric prologue, return and nil-check step
 
-The prologue of every development decoder (directives 0–10) is the same up to the frame size `F`, the
-displacement `dB` of the first rbx spill, the SSZ size `sz` and the labels. The `--field-segments` and `--call-segments` methods had one head lemma for
+The prologue of every flat decoder (directives 0–10) is the same up to the frame size `F`, the
+displacement `dB` of the first rbx spill, the SSZ size `sz` and the labels. Other head lemmas: one for
 the frame `0x20` (`Codec.decode_head_segment`) and one hand lemma per call-field type (`Prysm.PendingPartialWithdrawal.Decode.head`, `Prysm.BeaconBlockHeader.Decode.head_to_arguments`,
 `Prysm.SyncCommitteeMessage.Decode.head_to_arguments`, `Prysm.PendingConsolidation.Decode.head`; epilogues
 `Prysm.PendingPartialWithdrawal.Decode.epilogue`, `Prysm.PendingConsolidation.Decode.epilogue`). Here:

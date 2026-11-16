@@ -9,8 +9,6 @@ import Prysm.Eth1Data.Code
 
 Hand-written. No theorem about Eth1Data machine code is here.
 Hand accept proofs of other decoders with the same frame use these two declarations.
-`gen/generator/generator.py decoder --field-segments --compose` writes the name `Prysm.Eth1Data.Decode.stack_low_eq`
-into its output, so the name stays.
 - `eth1_data_addr`: closes an address equation by `toNat` and `omega`.
 - `Decode.stack_low_eq`: the two forms of the address of the runtime callees' stack bytes.
 -/

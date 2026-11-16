@@ -198,7 +198,7 @@ How to handle a new finding is in `../README.md` section 7.
   - A padding `nop` after a call, and compositions with call fields.
 - Encoder side: the six compiled sites that append a 32-byte field have six different instruction texts. Only the call step is shared. The steps before the call stay per site.
 - State: open proposals. A generator change needs user approval.
-- Open generator items: an internal refusal inside one phase can report full coverage in the summary (not reachable today). A stale `--partial-out` file can remain on exit 0 or 2. No summary is written on an interrupt.
+- Open generator items: an internal refusal inside one phase can report full coverage in the summary (not reachable today). No summary is written on an interrupt.
 
 ### Kind checks do not bind every parameter
 
