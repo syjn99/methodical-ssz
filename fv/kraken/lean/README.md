@@ -294,10 +294,6 @@ These names are written as their source writes them.
   It also gives the earlier case ids in these records, for example `g4-ex-s82-*`.
   Git keeps each cited file at the cited commit.
   So these names stay as references, not as records.
-- The docstring of `Prysm/Checkpoint/DecodeThenEncodeReceiver.lean` names the file `gen/frozen/THEOREMS.json` and its obligation `compose_hupd`.
-  The file is not in the tree.
-  Git keeps it at commit `320929dd`.
-  The docstring is a candidate for plain words.
 - `Spec/TestFixed.lean` (the structure `Spec.Fixed` and the lemmas `Spec.fixed*`) names the Go type `Fixed`.
   `../target/` has no type `Fixed`.
   `Spec/TestScalars.lean` imports the module for its byte lemmas, for example `Spec.uintBytes_size`.
