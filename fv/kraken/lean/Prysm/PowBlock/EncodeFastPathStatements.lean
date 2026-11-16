@@ -4,12 +4,11 @@ import Prysm.Deposit_Data.EncodeFastPathStatements
 import Prysm.SyncCommitteeMessage.EncodeFastPathStatements
 
 /-!
-# Independent hand statements of four encoder fast paths
+# Independent hand statement of the `PowBlock` encoder fast path
 
-Written by hand, independently of the generated fast-path theorems and their kind lines
-(`GeneratedEncodeFastPath.lean` of PowBlock, SyncCommitteeMessage, PendingPartialWithdrawal and Deposit_Data).
+Written by hand, independently of the generated fast-path theorem and its kind lines (`Prysm/PowBlock/GeneratedEncodeFastPath.lean`).
 Sources: the Go layout in `prysm/ir/ir-mainnet.json` (`go_fields`, gc amd64 offsets), the SSZ layout
-of the four containers, the `.S` files of `prysm/go1.26.10/link-set/norm/` (frame, guard, stack slots
+of the container, the `.S` file of `prysm/go1.26.10/link-set/norm/` (frame, guard, stack slots
 touched on the fast path and their contents at the return) and the binder order and memory order of the
 interface rules of the encoder statements (saved rbp, home slots ascending, other slots by first touch,
 the return slot; existentials in creation order).
@@ -20,11 +19,9 @@ No growslice branch, no length reject, no morestack path. Not a complete encoder
 | type | class | frame | guard | memmove |
 | --- | --- | --- | --- | --- |
 | PowBlock | frame test (`moveSliceNoCapNoScan` test not taken), no `state` word, 3 × bytes 32 | `0x50` | small | yes |
-| SyncCommitteeMessage | overlay uint64 (Slot, ValidatorIndex) via stack temps, bytes 32 + 96 | `0xa8` | `0x30` | yes |
-| PendingPartialWithdrawal | three uint64 (two overlay) via stack temps, no call | `0x90` | `0x18` | no |
-| Deposit_Data | bytes 48 + 32 + uint64 + bytes 96 | `0x88` | `0x10` | yes |
 
-Each statement is an `abbrev … : Prop`; `Prysm/PowBlock/GeneratedEncodeFastPathSameAsHand.lean` proves `type_of% generated = this` by `rfl`.
+The statement is an `abbrev … : Prop`.
+`Prysm/PowBlock/GeneratedEncodeFastPathSameAsHand.lean` proves `type_of% generated = this` by `rfl`.
 -/
 
 open Machine Runtime Codec Prysm.PowBlock.Code

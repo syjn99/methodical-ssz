@@ -3,11 +3,10 @@ import Prysm.BlobIdentifier.Spec
 import Prysm.BlobIdentifier.Code
 
 /-!
-# Spec alignment of the real BlobIdentifier decoder
+# Spec alignment of the BlobIdentifier decoder
 
-Hand-written. Built on the GENERATED theorems of `Prysm/BlobIdentifier/GeneratedDecodeAccept.lean` (`decoder --whole-accept`;
-raw output, not edited): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
-The text is that of `Prysm/Eth1Data/DecodeSpec.lean` with the BlobIdentifier statement; the equation `bsA = SszValue.encode g` is kept as a hypothesis `hb` instead of `subst`, see `Prysm/BlobIdentifier/Spec.lean`).
+Hand-written. Built on the GENERATED theorems of `Prysm/BlobIdentifier/GeneratedDecodeAccept.lean` (`decoder --whole-accept`): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
+The equation `bsA = SszValue.encode g` is a hypothesis `hb` instead of a `subst` (see `Prysm/BlobIdentifier/Spec.lean`).
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`, the independent consensus-specs Desc)
   as `v`, there is `g : SszValue` with `g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g`
   the machine code returns nil and the receiver holds `g` (the root at a fresh `p1` with len = cap = 32,

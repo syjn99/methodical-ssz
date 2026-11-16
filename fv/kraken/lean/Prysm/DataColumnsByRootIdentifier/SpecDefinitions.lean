@@ -3,9 +3,9 @@ import Spec.TestListU64
 /-!
 # Definitions that the encoder statements use (DataColumnsByRootIdentifier)
 
-These definitions are part of the frozen encoder statements (`Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean`). A later change needs a new name and a reason.
+These definitions are part of the encoder statements (`Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean`). A later change needs a new name and a reason.
 
-- `desc`: hand `Desc` from consensus-specs fulu (p2p-interface; no local copy of the spec text):
+- `desc`: hand `Desc` from consensus-specs fulu (`ethereum/consensus-specs` release `v1.7.0-beta.4`, `specs/fulu/p2p-interface.md`):
 
       class DataColumnsByRootIdentifier(Container):
           block_root: Root                                    # Bytes32

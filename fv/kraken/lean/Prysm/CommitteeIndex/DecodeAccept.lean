@@ -4,9 +4,16 @@ import Machine.Bytes
 import Prysm.CommitteeIndex.Code
 
 /-!
-# `(*primitives.Slot).UnmarshalSSZ` and `(*primitives.CommitteeIndex).UnmarshalSSZ`, accept path: the `CommitteeIndex` part
+# `(*primitives.CommitteeIndex).UnmarshalSSZ`, accept path
 
-The declarations of the other types of this group are in `Prysm/Slot/DecodeAccept.lean`.
+A hand-written Prysm method (`consensus-types/primitives/committee_index.go:28`), not generated.
+Its Go 1.26.10 machine code is the code of `(*primitives.Epoch).UnmarshalSSZ` with another name.
+Only the reject format string differs (`go_string._+110091`); checked by `diff`.
+The theorems below have the form of the theorems of `Prysm/Epoch/DecodeAccept.lean`.
+They are proved on the included code `Prysm.CommitteeIndex.Code.unmarshalSSZ`: directive indices 0–1 labels, 2–3 stack guard, 4–7
+prologue, 9–10 `cmp $0x8,%rcx; je L_bb`, 43 `L_bb`, 44 load, 46 store, 47–48 `xor`, 49–51 epilogue.
+`Decode.accept_function_spec` is the function specification (the form of `Prysm.Epoch.Decode.accept_function_spec`).
+The AttestationData decoder uses the callee only through it.
 -/
 
 open Machine

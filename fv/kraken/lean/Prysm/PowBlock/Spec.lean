@@ -4,7 +4,7 @@ import Prysm.PowBlock.SpecDescription
 import Prysm.PowBlock.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.PowBlock`
+# Spec bridge for the Prysm `v1alpha1.PowBlock`
 
 Hand-written (the shape of `Prysm/Deposit_Data/Spec.lean`).
 `desc` (`Prysm/PowBlock/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs bellatrix.

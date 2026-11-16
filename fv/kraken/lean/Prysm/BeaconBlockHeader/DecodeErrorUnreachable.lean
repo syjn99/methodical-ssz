@@ -5,11 +5,11 @@ import Prysm.BeaconBlockHeader.Code
 import Prysm.ElfData.PrysmTarget
 
 /-!
-# Real Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`: the error wraps after the callees
+# Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`: the error wraps after the callees
 
 Hand-written. The `fmt.errorf` wraps after the Slot call (directives 20–45) and the ValidatorIndex call (58–84) are not
 reached on a 112-byte input: `Decode.generated_accept` passes from directive 19 to 46 and from 57 to 85 under
-`Prysm.Slot.Decode.accept_function_spec` / `Prysm.ValidatorIndex.Decode.accept_function_spec` (rax = 0). Not a reject row.
+`Prysm.Slot.Decode.accept_function_spec` / `Prysm.ValidatorIndex.Decode.accept_function_spec` (rax = 0).
 
 **Unreachable error paths**:
 `Decode.slot_err_unreachable` (directive 18 → 46, skips 20–45, "Slot: %w") and

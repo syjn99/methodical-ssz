@@ -3,7 +3,7 @@ import Prysm.SyncCommittee.SpecDefinitions
 /-!
 # Definitions that the HistoricalBatch statements use
 
-Part of the frozen statements (`Prysm/HistoricalBatch/Statements.lean`). A later change needs a new name and a reason.
+Part of the statements (`Prysm/HistoricalBatch/Statements.lean`). A later change needs a new name and a reason.
 The slice objects `Codec.sliceHeaders` and `Codec.elementBlocks` are imported from the SyncCommittee definitions, not copied.
 
 - `desc`: hand `Desc` of consensus-specs phase0 `HistoricalBatch` (mainnet), from the spec text:

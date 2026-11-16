@@ -6,7 +6,7 @@ import Prysm.DataColumnsByRootIdentifier.Code
 /-!
 # Witnesses of `Encode.fast_path` (encoder fast path): n = 0, 1, 128
 
-Host: the real Go 1.26.10 `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo` (index 0) and `MemmoveGrowsliceModel` (index 118,
+Host: the Go 1.26.10 `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo` (index 0) and `MemmoveGrowsliceModel` (index 118,
 `model_memmove`, S = 0). One memory block at `0x10000`: guard word (r14 = 0xfff0), the receiver window (48 bytes:
 `state` 0, BlockRoot = (0x10038, 32, cap 0), Columns = (pc, n, cap 0)), the 32 root bytes at 0x10038, the 168-byte
 stack window from rsp − 144 (rsp = 0x100e8) to rsp + 24, `dst` at 0x10100 with len 0 and cap 36 + 8n (old contents

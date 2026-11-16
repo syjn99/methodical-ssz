@@ -3,9 +3,13 @@ import Prysm.Checkpoint.Spec
 import Prysm.SyncAggregate.SpecDescription
 
 /-!
-# Definitions that the SyncAggregate and SyncCommittee statements use: the `SyncAggregate` part
+# Definitions that the SyncAggregate statements use
 
-The declarations of the other types of this group are in `Prysm/SyncCommittee/SpecDefinitions.lean`.
+These definitions are part of the statements of `Prysm/SyncAggregate/Statements.lean`.
+
+- `SszValue`: the SSZ content of a Go `v1alpha1.SyncAggregate` whose byte fields have the lengths of the spec (64, 96).
+- `SszValue.toValue` is the EthLib `Value`.
+- `SszValue.encode` gives the 160 bytes of the SSZ encoding (fixed-size container: the fields in order).
 -/
 
 open Machine Runtime EthLib.Serialization.Ssz

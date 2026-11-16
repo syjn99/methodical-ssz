@@ -4,11 +4,11 @@
 <out dir>/Prysm/<T>/WitnessGeneratedEncodeFastPath.lean and <out dir>/Prysm/<T>/GeneratedEncodeFastPathSpec.lean.
 
 Reads the committed Prysm/<T>/GeneratedEncodeFastPath.lean (statement text, FAST-PATH-JSON header) and the IR (Go struct size).
-usage: flat_types_encode_spec.py <lean dir> <out dir> [<T> ...]      (<T>: a Go type name of TYPES)
+usage: flat_types_encode_spec.py <lean dir> <out dir> [<T> ...]      (<T>: a Go type name of ENCODE_SPEC_TYPES)
 """
 import json, re, sys, os
 
-TYPES = {
+ENCODE_SPEC_TYPES = {
     # Go type name: (spec module, SSZ value structure, encoding, serialize lemma, Desc, [(field accessor kind, expr)])
     'Checkpoint': ('Prysm.Checkpoint.Spec', 'Prysm.Checkpoint.SszValue', 'Prysm.Checkpoint.SszValue.encode', 'Prysm.Checkpoint.SszValue.serialize_eq', 'Prysm.Checkpoint.desc', ['u:epoch', 'b:root']),
     'BeaconBlockHeader': ('Prysm.BeaconBlockHeader.Spec', 'Prysm.BeaconBlockHeader.SszValue', 'Prysm.BeaconBlockHeader.SszValue.encode', 'Prysm.BeaconBlockHeader.SszValue.serialize_eq', 'Prysm.BeaconBlockHeader.desc',
@@ -355,7 +355,7 @@ def emit_wit(X, info, cl, gsize):
     w('# Witness of `%s_fast` (%s encoder fast path, generated theorem)' % (p, hdr['type']))
     w('')
     w('Written by `gen/flat-types/flat_types_encode_spec.py` from the statement text of `%s_fast` and the IR.' % p)
-    w('Host: the real Go 1.26.10 `MarshalSSZTo` (index 0)%s.' %
+    w('Host: the Go 1.26.10 `MarshalSSZTo` (index 0)%s.' %
       (' and `MemmoveGrowsliceModel` (index %d, `model_memmove`, S = 0)' % Pl if rt else '; no call on the fast path'))
     w('One memory block at `0x10000`: guard word (r14 = 0xfff0); the receiver at 0x10008 (`prysm/ir/ir-mainnet.json`')
     w('gc amd64 layout, %d bytes; byte fields = (pointer, n, n) with the n bytes after the receiver; unexported tail' % gsize)
@@ -525,7 +525,7 @@ def emit_spec(X, info, cl):
     fields = hdr['fields']
     p = hdr['prefix']
     sp = p.split('_')[0]
-    smod, PS, enc, ser, desc, facc = TYPES[X]
+    smod, PS, enc, ser, desc, facc = ENCODE_SPEC_TYPES[X]
     PS, enc, ser, desc = (n[len('Prysm.%s.' % X):] for n in (PS, enc, ser, desc))  # short names in Prysm.<T>
     role = cl['role']
     fexpr = []
@@ -660,7 +660,7 @@ def emit_spec(X, info, cl):
 
 def main():
     lean_dir, out_dir = sys.argv[1], sys.argv[2]
-    which = sys.argv[3:] or list(TYPES)
+    which = sys.argv[3:] or list(ENCODE_SPEC_TYPES)
     ir = json.load(open(os.path.join(lean_dir, '..', 'prysm', 'ir', 'ir-mainnet.json')))
     summary = {}
     for X in which:

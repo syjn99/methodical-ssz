@@ -8,7 +8,7 @@ import Prysm.DepositMessage.Code
 # Witness of `Decode.generated_accept` (DepositMessage decoder accept path)
 
 Hand-written.
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.DepositMessage).UnmarshalSSZ` (index 9), the 1-byte bump
+Host: data labels, the Go 1.26.10 `(*v1alpha1.DepositMessage).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (118, `bump_makeslice1`) and `MemmoveGrowsliceModel` (124, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 80-byte heap, guard word, the 88 input
 bytes, the 56-byte receiver (native Go struct; `prysm/ir/ir-mainnet.json` gc amd64 layout, size 56:

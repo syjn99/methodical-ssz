@@ -6,7 +6,7 @@ import Prysm.CommitteeIndex.Code
 /-!
 # Witness of `Decode.accept` and `Decode.accept_function_spec_holds`
 
-Host: the real Go 1.26.10 `(*primitives.CommitteeIndex).UnmarshalSSZ` alone, at index 0
+Host: the Go 1.26.10 `(*primitives.CommitteeIndex).UnmarshalSSZ` alone, at index 0
 (directive `i` at `0x10000 + i`). Memory: one 56-byte block at `0x10000`:
 guard word (r14 + 16, r14 = 0xfff0), the 8 input bytes (rbx = 0x10008), the
 8-byte receiver `*CommitteeIndex` (rax = 0x10010), the saved-rbp slot (rsp − 8), the

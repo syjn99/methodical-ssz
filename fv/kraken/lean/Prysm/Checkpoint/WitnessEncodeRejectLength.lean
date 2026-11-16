@@ -6,10 +6,10 @@ import Prysm.Checkpoint.Code
 /-!
 # Witness of `Encode.reject_length`
 
-Host: the label `ssz.ErrBytesLength` (index 0) and the real Go 1.26.10
+Host: the label `ssz.ErrBytesLength` (index 0) and the Go 1.26.10
 `(*v1alpha1.Checkpoint).MarshalSSZTo` (index 1). Memory at `0x10000`: the two
-words of `ssz.ErrBytesLength` (stand-in values: the real ones are set by the
-runtime's init), the guard word, the 72-byte receiver with `len(Root) = rl`,
+words of `ssz.ErrBytesLength` (stand-in values: the Go runtime sets the values
+at start), the guard word, the 72-byte receiver with `len(Root) = rl`,
 the stack window from rsp − 64 to rsp + 24 (rsp = 0x100a0), and `dst` at
 0x100b8 with `len = 0`, `cap = 48`. Frame `R`: the untouched 24-byte frame gap,
 the rax spill slot and `dst[8:48]`. For every `rl ≠ 32` (instances 31, 33, 0)

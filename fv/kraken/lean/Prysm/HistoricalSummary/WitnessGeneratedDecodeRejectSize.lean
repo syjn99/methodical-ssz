@@ -6,9 +6,9 @@ import Prysm.HistoricalSummary.Code
 /-!
 # Witness of the generated `Decode.generated_reject`
 
-Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.HistoricalSummary).UnmarshalSSZ` (index 1).
+Host: the label `ssz.ErrSize` (index 0), then the Go 1.26.10 `(*v1alpha1.HistoricalSummary).UnmarshalSSZ` (index 1).
 It applies the generated size-reject theorem of `Prysm/HistoricalSummary/GeneratedDecodeAccept.lean`. Memory at `0x10000`: the two words of `ssz.ErrSize` after package init
-(a non-zero itab word `0x10e8` and a data word `0x2a`, stand-ins: the real values are set by the runtime's init
+(a non-zero itab word `0x10e8` and a data word `0x2a`, stand-ins: the Go runtime sets the values at start
 and are not read from the ELF), the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame
 `R`) and the rbx spill slot. For every length `≠ 64` (instances 63, 65, 0) the decoder returns the two words.
 -/

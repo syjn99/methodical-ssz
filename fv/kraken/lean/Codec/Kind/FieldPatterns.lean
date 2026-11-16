@@ -3,7 +3,7 @@ import Codec.SegmentTemplate
 import Runtime.Contracts
 
 /-!
-# Frozen statement kinds of the generated theorems
+# Statement kinds of the generated theorems
 
 A generated theorem `t` is followed by `t_kind : ∀ (h : Host), type_of% (@t h) = <kind> …` (`rfl`).
 `@t h` is the whole declared type, binders before the colon included. So an added, removed or changed

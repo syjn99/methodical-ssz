@@ -5,7 +5,7 @@ import Prysm.Epoch.Code
 import Prysm.ValidatorIndex.Code
 
 /-!
-# Spec alignment of the real PendingPartialWithdrawal decoder, accept side
+# Spec alignment of the PendingPartialWithdrawal decoder, accept side
 
 The accept side of the PendingPartialWithdrawal decoder; `Prysm/PendingPartialWithdrawal/DecodeSpec.lean` has the reject side.
 The accept theorem `Decode.accept : Decode.accept_statement` is in `Prysm/PendingPartialWithdrawal/DecodeAccept.lean`. This module has:

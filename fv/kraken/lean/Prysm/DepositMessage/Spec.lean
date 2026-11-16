@@ -4,7 +4,7 @@ import Prysm.DepositMessage.SpecDescription
 import Prysm.DepositMessage.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.DepositMessage`
+# Spec bridge for the Prysm `v1alpha1.DepositMessage`
 
 Hand-written (`obtain … rfl` on `bs = enc g` is `rw` here: `subst` of that equation times out in `whnf` on a minimal
 reproduction).

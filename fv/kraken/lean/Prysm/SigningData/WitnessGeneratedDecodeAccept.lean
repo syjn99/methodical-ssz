@@ -8,7 +8,7 @@ import Prysm.SigningData.Code
 # Witness of the generated `Decode.generated_accept` (SigningData decoder accept path)
 
 It shows that the premises of the generated accept theorem (statement = kind instance) are satisfiable.
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.SigningData).UnmarshalSSZ` (index 9), the 1-byte bump
+Host: data labels, the Go 1.26.10 `(*v1alpha1.SigningData).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (114, `bump_makeslice1`) and `MemmoveGrowsliceModel` (120, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 64-byte heap, guard word, the 64 input bytes,
 the 48-byte receiver (native struct, `prysm/ir/ir-mainnet.json` gc amd64 layout: ObjectRoot header 0 with

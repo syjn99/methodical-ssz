@@ -12,7 +12,7 @@ has a `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encode
 **Fast path only**: `len(dst) + 40 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
-The statement implies the committed hand statement `Prysm.Checkpoint.Encode.fast_path` through `Prysm.Checkpoint.Encode.fast_path_of_kind`.
+The statement implies the hand statement `Prysm.Checkpoint.Encode.fast_path` through `Prysm.Checkpoint.Encode.fast_path_of_kind`.
 FAST-PATH-JSON: {"type": "Checkpoint", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 40, "frame": 104, "guard_addend": 0, "runtime_calls": true, "fields": [["Epoch", "u", 8], ["Root", "b", 32]], "boundaries": [8, 36, 63], "layout": "Prysm.Checkpoint.encodeLayout", "assembly_sha256": "c4345527c651c0a3ff8319af3f35df1e375b8c58a6a45054762da0a0dcef1b1d", "ir_sha256": "59b783f53a4aef9ca94860df8776154d571310937304ba29b9329ce80c7a29b0", "statement_check": "same Prysm.Checkpoint.Encode.fast_path via Prysm.Checkpoint.Encode.fast_path_of_kind", "assembly": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Checkpoint", "kinds": [{"theorem": "Encode.generated_head", "kind": "encodeHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encodeEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encodeFastPathKindAnyFrame"}]}
 -/
 
@@ -585,7 +585,7 @@ theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated
     = @Codec.encodeFastPathKindAnyFrame h marshalSSZTo Prysm.Checkpoint.encodeLayout [.uint64, .bytes 32] := by
   intro h; rfl
 
-/-- Statement check: the generated theorem proves the committed hand statement (implication tie). -/
+/-- Statement check: the generated theorem proves the hand statement (implication tie). -/
 theorem Encode.generated_statement : type_of% (@Prysm.Checkpoint.Encode.fast_path ‹Host›) :=
   Prysm.Checkpoint.Encode.fast_path_of_kind Encode.generated_fast
 

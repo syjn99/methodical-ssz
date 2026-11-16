@@ -7,10 +7,10 @@ import Prysm.SyncCommittee.Code
 /-!
 # Witness of `Decode.accept` (SyncCommittee decoder accept path)
 
-It shows that the premises of the frozen statement
+It shows that the premises of the statement
 `Prysm.SyncCommittee.Decode.accept_statement` are satisfiable, the three contract hypotheses included: both `MakesliceContract` instances come from
 the one type-dispatching model `Prysm.RuntimeModel.BumpMakesliceByteSliceDispatch` (`Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1`, `Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24`), `MemmoveContract` from `MemmoveGrowsliceModel`.
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (index 9), `Prysm.RuntimeModel.BumpMakesliceByteSliceDispatch` (146) and
+Host: data labels, the Go 1.26.10 `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (index 9), `Prysm.RuntimeModel.BumpMakesliceByteSliceDispatch` (146) and
 `MemmoveGrowsliceModel` (162).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 36912-byte heap, guard word, the 24624 input bytes
 (`pks.flatten ++ agg`), the 88-byte receiver (protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout, size 88:
@@ -91,7 +91,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
 -- Thresholds measured in separate runs: 200000, 400000 and 1000000 fail at `whnf`, 2000000 passes.
 -- Value 4000000 (twice the lowest passing value): passes.
 set_option maxHeartbeats 4000000 in
-/-- **Non-vacuity of `Decode.accept` (the premises of the frozen statement `Decode.accept_statement` are satisfiable).** -/
+/-- **Non-vacuity of `Decode.accept` (the premises of the statement `Decode.accept_statement` are satisfiable).** -/
 theorem runs (pks : List (List UInt8)) (agg oP1 oP2 : List UInt8) (hpks : pks.length = 512)
     (hpk : ∀ e ∈ pks, e.length = 48) (hagg : agg.length = 48) (h1 : oP1.length = 8) (h2 : oP2.length = 8)
     (zmms : RegZmms) (flags : StatusFlags) :

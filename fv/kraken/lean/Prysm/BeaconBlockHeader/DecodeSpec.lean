@@ -5,7 +5,7 @@ import Prysm.Slot.Code
 import Prysm.ValidatorIndex.Code
 
 /-!
-# Spec alignment of the real BeaconBlockHeader decoder
+# Spec alignment of the BeaconBlockHeader decoder
 
 Hand-written.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`, the independent consensus-specs Desc)

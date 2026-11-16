@@ -9,11 +9,11 @@ import Prysm.Deposit_Data.Code
 /-!
 # Witness of `Decode.accept` (Deposit decoder accept path)
 
-It shows that the premises of the frozen statement
+It shows that the premises of the statement
 `Prysm.Deposit.Decode.accept_statement` are satisfiable, the six contract hypotheses included: both `MakesliceContract` instances of the
 Deposit decoder and the one of the Deposit_Data decoder from `Prysm.RuntimeModel.BumpMakesliceByteSliceDispatch`, `NewobjectContract … 120` from
 `BumpNewobject120`, both `MemmoveContract` from `MemmoveGrowsliceModel`.
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.Deposit).UnmarshalSSZ` (index 9) and
+Host: data labels, the Go 1.26.10 `(*v1alpha1.Deposit).UnmarshalSSZ` (index 9) and
 `(*v1alpha1.Deposit_Data).UnmarshalSSZ` (165), `Prysm.RuntimeModel.BumpMakesliceByteSliceDispatch` (308), `BumpNewobject120` (324), `MemmoveGrowsliceModel` (330).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 2144-byte heap, guard word, the 1240 input
 bytes, the 72-byte receiver (protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout, size 72: `state` 0, Proof
@@ -113,7 +113,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
 -- twice the lowest passing value. Cause (profiler): `simp` 20.1 s (15.1 s and 4.89 s), the AC-normalization
 -- of the separating conjunction (33 chunks), as in `Prysm/HistoricalBatch/WitnessDecodeAccept.lean` / `Prysm/SyncCommittee/WitnessDecodeAccept.lean`.
 set_option maxHeartbeats 4000000 in
-/-- **Non-vacuity of `Decode.accept` (the premises of the frozen statement `Decode.accept_statement` are
+/-- **Non-vacuity of `Decode.accept` (the premises of the statement `Decode.accept_statement` are
 satisfiable).** -/
 theorem runs (proofs : List (List UInt8)) (pk wc amt sig oP oD : List UInt8) (hps : proofs.length = 33)
     (hp : ∀ e ∈ proofs, e.length = 32) (hpk : pk.length = 48) (hwc : wc.length = 32) (hamt : amt.length = 8)

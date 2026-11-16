@@ -15,7 +15,7 @@ Hand composition of segment lemmas:
 * epilogue 83–87: `Codec.decode_epilogue_segment`.
 
 The write-barrier blocks (22–25, 39–44, 57–60, 75–80) are skipped under the premise `writeBarrier = 0`
-(inside the segment lemmas). Statement: the frozen `Prysm.SyncAggregate.Decode.accept_statement`.
+(inside the segment lemmas). Statement: `Prysm.SyncAggregate.Decode.accept_statement`.
 -/
 
 open Machine Runtime Prysm.SyncAggregate.Code
@@ -70,7 +70,7 @@ theorem Decode.bits_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) 
     (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Prysm.SyncAggregate.bytes_decode_segment_offset_zero_size64 64 rfl _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
-/-- **Accept path of the real `(*v1alpha1.SyncAggregate).UnmarshalSSZ` (Go 1.26.10)**; statement = the frozen
+/-- **Accept path of the `(*v1alpha1.SyncAggregate).UnmarshalSSZ` (Go 1.26.10)**; statement =
 `Decode.accept_statement`. -/
 theorem Decode.accept : Decode.accept_statement := by
   intro k hk hf bits sig hbits hsig s ra guard

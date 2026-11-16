@@ -23,7 +23,7 @@ block, the guard word, `Heap`, `R`).
 
 The second call entry is the entry of the second `runtime.growslice` call with the remaining heap below that call's
 budget premise: the `GrowsliceContract` form gives no lower bound on the remaining heap.
-Its return is differential only. In the other disjuncts the returned block is `pre ++ bs` with
+Only the Go differential check covers its return. In the other disjuncts the returned block is `pre ++ bs` with
 `serialize desc g.toValue = .ok bs` (EthLib).
 
 `Encode.reject_length_cover_framed` (`len(Root) ≠ 32`): `len + 8 ≤ cap`: the epoch bytes are in the

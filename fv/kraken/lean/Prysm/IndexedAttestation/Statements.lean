@@ -13,11 +13,12 @@ import Prysm.IndexedAttestation.Code
 import Prysm.IndexedAttestation.SpecDefinitions
 
 /-!
-# Hand STATEMENTS of the target `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (statements only, no proof)
+# Hand statements of `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`
 
+This module holds the statements of the size reject, the offset reject, the accept path and the reject cases.
 A change to a statement needs a new name and a reason.
-Statement shape: `Prysm/SyncAggregate/Statements.lean` / `Prysm/SyncCommittee/Statements.lean` (exact frame, contracts as hypotheses, input and receiver kept) and, for
-the two `fmt.errorf` rejects, the contract forms `ConvT64Contract` and `FmtErrorfDecimalWrapContract` (`Runtime/Contracts.lean`).
+Statement shape: `Prysm/SyncAggregate/Statements.lean` / `Prysm/SyncCommittee/Statements.lean` (exact frame, contracts as hypotheses, input and receiver kept).
+The statements of the two `fmt.errorf` rejects (alignment, overflow) are in `Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean`.
 
     func (c *IndexedAttestation) UnmarshalSSZ(buf []byte) error {        // phase0.ssz.go:2819
         if size < 228 { return ssz.ErrSize }                                                  // size reject
@@ -102,113 +103,7 @@ def Decode.reject_offset_statement : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **Alignment reject (machine).** `len(buf) ≥ 228`, offset 228, `(len − 228) mod 8 ≠ 0`: `convT64(len − 228)` and `fmt.errorf("misaligned bytes: … %d … %w", len − 228, ssz.ErrIncorrectListSize)`; the decoder returns that error (rax ≠ 0). The 32-byte argument array at rsp − 48 holds `type:int`, the box, the error's type word and data word. Exact frame; the heap shrinks by at most the box and the errorf allocation. -/
-def Decode.reject_alignment_statement : Prop :=
-  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
-    (s : MachineData) (ra guard e0 e1 : UInt64) (esp : BitVec 64) (msg ity : List UInt8)
-    (he0 : e0.toBitVec = (label "go_itab._errors.errorString_error").toBitVec) (hity : ity.length = 8)
-    (fp s2 aw spl rslot lo : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8) (haw : aw.length = 32)
-    (hspl : spl.length = 40) (hrs : rslot.length = 8) (S : Nat) (hlo : lo.length = S)
-    (Heap : Nat → DataMem → Prop) (avail : Nat) (R : DataMem → Prop)
-    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
-      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8))
-      ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
-      ⋆ Eq (aw.At (s.regs.rsp.toBitVec - 48))
-      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 176))
-      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 184))
-      ⋆ Eq (lo.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
-      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Heap avail
-      ⋆ Eq (ElfData.PrysmTarget.formatAttestingIndicesMisaligned.At ElfData.PrysmTarget.formatAttestingIndicesMisaligned_addr)
-      ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrIncorrectListSize_addr)
-      ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrIncorrectListSize" + 8).toBitVec)
-      ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-      ⋆ ErrStr e1.toBitVec esp msg
-      ⋆ StaticBox (s.regs.rcx.toBitVec - 228)
-      ⋆ R)
-    (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : 228 ≤ s.regs.rcx.toNat) (hmis : (s.regs.rcx.toNat - 228) % 8 ≠ 0)
-    (hav : ElfData.PrysmTarget.formatAttestingIndicesMisaligned.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64Contract Heap S) (hfe : FmtErrorfDecimalWrapContract Heap ElfData.PrysmTarget.formatAttestingIndicesMisaligned ElfData.PrysmTarget.typeInt_addr S),
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
-        ∃ (bx : BitVec 64) (hb spl' lo' : List UInt8) (avail' : Nat), spl'.length = 40 ∧ lo'.length = S
-          ∧ BoxIn bx (s.regs.rcx.toBitVec - 228) hb ∧ avail' + hb.length ≤ avail ∧
-        (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
-          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 ElfData.PrysmTarget.typeInt_addr.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e1.toBitVec.toInt).At (s.regs.rsp.toBitVec - 48))
-          ⋆ Eq (spl'.At (s.regs.rsp.toBitVec - 176))
-          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 117)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 184))
-          ⋆ Eq (lo'.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
-          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Heap avail'
-          ⋆ Eq (ElfData.PrysmTarget.formatAttestingIndicesMisaligned.At ElfData.PrysmTarget.formatAttestingIndicesMisaligned_addr)
-          ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrIncorrectListSize_addr)
-          ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrIncorrectListSize" + 8).toBitVec)
-          ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-          ⋆ ErrStr e1.toBitVec esp msg
-          ⋆ StaticBox (s.regs.rcx.toBitVec - 228)
-          ⋆ Eq (hb.At bx)
-          ⋆ R) st.data.dmem)
-      ⟨s, Host.addrOf k⟩
-
-/-- **Overflow reject (machine).** `len(buf) ≥ 228`, offset 228, `(len − 228) mod 8 = 0`, `numElem = (len − 228)/8 > 2048`: `convT64(numElem)` and `fmt.errorf("ssz-max exceeded: … %d … %w", numElem, ssz.ErrListTooBig)`; the decoder returns that error (rax ≠ 0). Argument array at rsp − 80. -/
-def Decode.reject_overflow_statement : Prop :=
-  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
-    (s : MachineData) (ra guard e0 e1 : UInt64) (esp : BitVec 64) (msg ity : List UInt8)
-    (he0 : e0.toBitVec = (label "go_itab._errors.errorString_error").toBitVec) (hity : ity.length = 8)
-    (fp s2 aw spl rslot lo : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8) (haw : aw.length = 32)
-    (hspl : spl.length = 40) (hrs : rslot.length = 8) (S : Nat) (hlo : lo.length = S)
-    (Heap : Nat → DataMem → Prop) (avail : Nat) (R : DataMem → Prop)
-    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
-      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8))
-      ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
-      ⋆ Eq (aw.At (s.regs.rsp.toBitVec - 80))
-      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 176))
-      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 184))
-      ⋆ Eq (lo.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
-      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Heap avail
-      ⋆ Eq (ElfData.PrysmTarget.formatAttestingIndicesTooBig.At ElfData.PrysmTarget.formatAttestingIndicesTooBig_addr)
-      ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrListTooBig_addr)
-      ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec)
-      ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-      ⋆ ErrStr e1.toBitVec esp msg
-      ⋆ StaticBox (BitVec.ofNat 64 ((s.regs.rcx.toNat - 228) / 8))
-      ⋆ R)
-    (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : 228 ≤ s.regs.rcx.toNat) (hal : (s.regs.rcx.toNat - 228) % 8 = 0) (hbig : 2048 < (s.regs.rcx.toNat - 228) / 8)
-    (hav : ElfData.PrysmTarget.formatAttestingIndicesTooBig.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64Contract Heap S) (hfe : FmtErrorfDecimalWrapContract Heap ElfData.PrysmTarget.formatAttestingIndicesTooBig ElfData.PrysmTarget.typeInt_addr S),
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
-        ∃ (bx : BitVec 64) (hb spl' lo' : List UInt8) (avail' : Nat), spl'.length = 40 ∧ lo'.length = S
-          ∧ BoxIn bx (BitVec.ofNat 64 ((s.regs.rcx.toNat - 228) / 8)) hb ∧ avail' + hb.length ≤ avail ∧
-        (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
-          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 ElfData.PrysmTarget.typeInt_addr.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e1.toBitVec.toInt).At (s.regs.rsp.toBitVec - 80))
-          ⋆ Eq (spl'.At (s.regs.rsp.toBitVec - 176))
-          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 80)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 184))
-          ⋆ Eq (lo'.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
-          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Heap avail'
-          ⋆ Eq (ElfData.PrysmTarget.formatAttestingIndicesTooBig.At ElfData.PrysmTarget.formatAttestingIndicesTooBig_addr)
-          ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrListTooBig_addr)
-          ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec)
-          ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-          ⋆ ErrStr e1.toBitVec esp msg
-          ⋆ StaticBox (BitVec.ofNat 64 ((s.regs.rcx.toNat - 228) / 8))
-          ⋆ Eq (hb.At bx)
-          ⋆ R) st.data.dmem)
-      ⟨s, Host.addrOf k⟩
-
-/-- **Accept (machine).** For every `n ≤ 2048`, on the input `off(228) ‖ data(128) ‖ sig(96) ‖ ib(8n)` the decoder returns nil; the receiver holds AttestingIndices = (A, n, n) with `ib` at A, Data = a fresh 96-byte AttestationData object `pd` decoded by the real `AttestationData.UnmarshalSSZ` (placed in the host, discharged by `Prysm.AttestationData.Decode.accept`; its Source / Target objects as in that theorem), Signature = (psig, 96, 96) = sig. The three panicBounds branches of the element loop are not on the path (to be proved, not assumed). Exact frame, input, `state` and `R` unchanged; heap `8n + 432` bytes. -/
+/-- **Accept (machine).** For every `n ≤ 2048`, on the input `off(228) ‖ data(128) ‖ sig(96) ‖ ib(8n)` the decoder returns nil; the receiver holds AttestingIndices = (A, n, n) with `ib` at A, Data = a fresh 96-byte AttestationData object `pd` decoded by the `AttestationData.UnmarshalSSZ` (placed in the host, discharged by `Prysm.AttestationData.Decode.accept`; its Source / Target objects as in that theorem), Signature = (psig, 96, 96) = sig. The three panicBounds branches of the element loop are not on the path (to be proved, not assumed). Exact frame, input, `state` and `R` unchanged; heap `8n + 432` bytes. -/
 def Decode.accept_statement : Prop :=
   ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (kA : Nat) (hkA : Prysm.AttestationData.Code.unmarshalSSZ.IsInfixAt Host.prog kA) (hfA : LabelsFresh Prysm.AttestationData.Code.unmarshalSSZ kA)
@@ -399,116 +294,6 @@ def Decode.reject_offset_spec_statement : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **Alignment reject (spec).** `bs.size ≥ 228`, `bs[0:4] = offsetBytes`, `(bs.size − 228) mod 8 ≠ 0`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `Decode.reject_alignment_statement`). -/
-def Decode.reject_alignment_spec_statement : Prop :=
-  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
-    (bs : Array UInt8) (hbs : 228 ≤ bs.size) (hoff : bs.toList.take 4 = offsetBytes) (hmis : (bs.size - 228) % 8 ≠ 0)
-    (s : MachineData) (ra guard e0 e1 : UInt64) (esp : BitVec 64) (msg ity : List UInt8)
-    (he0 : e0.toBitVec = (label "go_itab._errors.errorString_error").toBitVec) (hity : ity.length = 8)
-    (fp s2 aw spl rslot lo : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8) (haw : aw.length = 32)
-    (hspl : spl.length = 40) (hrs : rslot.length = 8) (S : Nat) (hlo : lo.length = S)
-    (Heap : Nat → DataMem → Prop) (avail : Nat) (R : DataMem → Prop)
-    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
-      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8))
-      ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
-      ⋆ Eq (aw.At (s.regs.rsp.toBitVec - 48))
-      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 176))
-      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 184))
-      ⋆ Eq (lo.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
-      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Heap avail
-      ⋆ Eq (ElfData.PrysmTarget.formatAttestingIndicesMisaligned.At ElfData.PrysmTarget.formatAttestingIndicesMisaligned_addr)
-      ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrIncorrectListSize_addr)
-      ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrIncorrectListSize" + 8).toBitVec)
-      ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-      ⋆ ErrStr e1.toBitVec esp msg
-      ⋆ StaticBox (s.regs.rcx.toBitVec - 228)
-      ⋆ R)
-    (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size)
-    (hav : ElfData.PrysmTarget.formatAttestingIndicesMisaligned.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64Contract Heap S) (hfe : FmtErrorfDecimalWrapContract Heap ElfData.PrysmTarget.formatAttestingIndicesMisaligned ElfData.PrysmTarget.typeInt_addr S),
-    (∃ e, deserialize desc bs = .error e) ∧
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
-        ∃ (bx : BitVec 64) (hb spl' lo' : List UInt8) (avail' : Nat), spl'.length = 40 ∧ lo'.length = S
-          ∧ BoxIn bx (s.regs.rcx.toBitVec - 228) hb ∧ avail' + hb.length ≤ avail ∧
-        (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
-          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 ElfData.PrysmTarget.typeInt_addr.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e1.toBitVec.toInt).At (s.regs.rsp.toBitVec - 48))
-          ⋆ Eq (spl'.At (s.regs.rsp.toBitVec - 176))
-          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 117)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 184))
-          ⋆ Eq (lo'.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
-          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Heap avail'
-          ⋆ Eq (ElfData.PrysmTarget.formatAttestingIndicesMisaligned.At ElfData.PrysmTarget.formatAttestingIndicesMisaligned_addr)
-          ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrIncorrectListSize_addr)
-          ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrIncorrectListSize" + 8).toBitVec)
-          ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-          ⋆ ErrStr e1.toBitVec esp msg
-          ⋆ StaticBox (s.regs.rcx.toBitVec - 228)
-          ⋆ Eq (hb.At bx)
-          ⋆ R) st.data.dmem)
-      ⟨s, Host.addrOf k⟩
-
-/-- **Overflow reject (spec).** `bs.size ≥ 228`, `bs[0:4] = offsetBytes`, `(bs.size − 228) mod 8 = 0`, `(bs.size − 228)/8 > 2048`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `Decode.reject_overflow_statement`). -/
-def Decode.reject_overflow_spec_statement : Prop :=
-  ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
-    (bs : Array UInt8) (hbs : 228 ≤ bs.size) (hoff : bs.toList.take 4 = offsetBytes) (hal : (bs.size - 228) % 8 = 0) (hbig : 2048 < (bs.size - 228) / 8)
-    (s : MachineData) (ra guard e0 e1 : UInt64) (esp : BitVec 64) (msg ity : List UInt8)
-    (he0 : e0.toBitVec = (label "go_itab._errors.errorString_error").toBitVec) (hity : ity.length = 8)
-    (fp s2 aw spl rslot lo : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8) (haw : aw.length = 32)
-    (hspl : spl.length = 40) (hrs : rslot.length = 8) (S : Nat) (hlo : lo.length = S)
-    (Heap : Nat → DataMem → Prop) (avail : Nat) (R : DataMem → Prop)
-    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
-      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8))
-      ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
-      ⋆ Eq (aw.At (s.regs.rsp.toBitVec - 80))
-      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 176))
-      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 184))
-      ⋆ Eq (lo.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
-      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Heap avail
-      ⋆ Eq (ElfData.PrysmTarget.formatAttestingIndicesTooBig.At ElfData.PrysmTarget.formatAttestingIndicesTooBig_addr)
-      ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrListTooBig_addr)
-      ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec)
-      ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-      ⋆ ErrStr e1.toBitVec esp msg
-      ⋆ StaticBox (BitVec.ofNat 64 ((s.regs.rcx.toNat - 228) / 8))
-      ⋆ R)
-    (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size)
-    (hav : ElfData.PrysmTarget.formatAttestingIndicesTooBig.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64Contract Heap S) (hfe : FmtErrorfDecimalWrapContract Heap ElfData.PrysmTarget.formatAttestingIndicesTooBig ElfData.PrysmTarget.typeInt_addr S),
-    (∃ e, deserialize desc bs = .error e) ∧
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
-        ∃ (bx : BitVec 64) (hb spl' lo' : List UInt8) (avail' : Nat), spl'.length = 40 ∧ lo'.length = S
-          ∧ BoxIn bx (BitVec.ofNat 64 ((s.regs.rcx.toNat - 228) / 8)) hb ∧ avail' + hb.length ≤ avail ∧
-        (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
-          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 ElfData.PrysmTarget.typeInt_addr.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e1.toBitVec.toInt).At (s.regs.rsp.toBitVec - 80))
-          ⋆ Eq (spl'.At (s.regs.rsp.toBitVec - 176))
-          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 80)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 184))
-          ⋆ Eq (lo'.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
-          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Heap avail'
-          ⋆ Eq (ElfData.PrysmTarget.formatAttestingIndicesTooBig.At ElfData.PrysmTarget.formatAttestingIndicesTooBig_addr)
-          ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrListTooBig_addr)
-          ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec)
-          ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-          ⋆ ErrStr e1.toBitVec esp msg
-          ⋆ StaticBox (BitVec.ofNat 64 ((s.regs.rcx.toNat - 228) / 8))
-          ⋆ Eq (hb.At bx)
-          ⋆ R) st.data.dmem)
-      ⟨s, Host.addrOf k⟩
-
 /-- **Accept (spec).** If EthLib accepts `bsA` against `desc` as `v`, there is `g : SszValue` with `g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g` (postcondition of `Decode.accept_statement` with `n = g.idx.length`). -/
 def Decode.accept_spec_statement : Prop :=
   ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
@@ -646,7 +431,7 @@ def Decode.accept_spec_statement : Prop :=
 /-- **Reject cases (spec, pure).** Every input that EthLib rejects meets one of the four reject conditions of the
 decoder: size < 228 (size reject), offset ≠ 228 (offset reject), misaligned (alignment reject), more than 2048 elements (overflow reject). This is a statement about
 EthLib only. It is a reject-completeness statement for the machine code only for those disjuncts whose machine path is
-proved (the alignment and overflow rejects only under `e0 ≠ 0`, `Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean`). The delegate's error is not a disjunct: EthLib accepts every 128-byte `data`. -/
+proved (the alignment and overflow rejects with the premise `e0 ≠ 0`, `Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean`). The delegate's error is not a disjunct: EthLib accepts every 128-byte `data`. -/
 def Decode.reject_cases_statement : Prop :=
   ∀ bs : Array UInt8, (¬ ∃ v, deserialize desc bs = .ok v) →
     bs.size < 228 ∨ (228 ≤ bs.size ∧ bs.toList.take 4 ≠ offsetBytes)

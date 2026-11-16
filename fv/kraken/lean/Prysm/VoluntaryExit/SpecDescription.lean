@@ -3,7 +3,7 @@ import Prysm.Checkpoint.Spec
 /-!
 # Independent hand `Desc` of `v1alpha1.VoluntaryExit`
 
-This description is written by hand from consensus-specs phase0 (`specs/phase0/beacon-chain.md`, local clone at commit `aa16bb4`).
+This description is written by hand from consensus-specs phase0 (`ethereum/consensus-specs` release `v1.7.0-beta.4`, `specs/phase0/beacon-chain.md`).
 It does not use the checker description `Prysm/VoluntaryExit/SpecChecker.lean`.
 
     class VoluntaryExit(Container):

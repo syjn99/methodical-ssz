@@ -2,7 +2,7 @@ import Codec.Segment.Bytes32VectorSpec
 import Prysm.Deposit.StatementsSpec
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.Deposit`
+# Spec bridge for the Prysm `v1alpha1.Deposit`
 
 The order of `Prysm.HistoricalBatch.Spec`. Imported, not copied: the `Vector[Bytes32, n]` lemmas for any n (`Codec.Segment.Bytes32VectorSpec`), the
 32-byte element lemmas (`Prysm.HistoricalBatch.Spec`), the Deposit_Data spec bridge (`Prysm.Deposit_Data.SszValue.*`, `Prysm/Deposit_Data/Spec.lean`). New here:

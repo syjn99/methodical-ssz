@@ -10,7 +10,7 @@ import Prysm.Slot.Code
 
 Hand-written.
 It shows that the premises of the generated accept theorem `Prysm.PendingDeposit.Decode.generated_accept` are satisfiable.
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.PendingDeposit).UnmarshalSSZ` (index 9),
+Host: data labels, the Go 1.26.10 `(*v1alpha1.PendingDeposit).UnmarshalSSZ` (index 9),
 `(*primitives.Slot).UnmarshalSSZ` (191), the 1-byte bump `runtime.makeslice` (254, `bump_makeslice1`) and
 `MemmoveGrowsliceModel` (260, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 176-byte heap, guard word, the 192 input

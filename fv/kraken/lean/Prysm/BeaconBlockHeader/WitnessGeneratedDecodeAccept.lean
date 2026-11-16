@@ -9,7 +9,7 @@ import Prysm.ValidatorIndex.Code
 /-!
 # Witness of `Decode.generated_accept` (BeaconBlockHeader decoder accept path)
 
-Hand-written. Host: data labels, the real Go 1.26.10 `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`
+Hand-written. Host: data labels, the Go 1.26.10 `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`
 (index 9), `(*primitives.Slot).UnmarshalSSZ` (226), `(*primitives.ValidatorIndex).UnmarshalSSZ` (289),
 the 1-byte bump `runtime.makeslice` (352, `bump_makeslice1`) and `MemmoveGrowsliceModel` (358, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 96-byte heap, guard word, the 112 input

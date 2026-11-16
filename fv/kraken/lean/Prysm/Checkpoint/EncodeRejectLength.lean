@@ -5,7 +5,7 @@ import Codec.EncodeBitVecLemmas
 import Prysm.Checkpoint.Code
 
 /-!
-# Real Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, reject `len(c.Root) != 32` (Go 1.26.10)
+# Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, reject `len(c.Root) != 32` (Go 1.26.10)
 
 Go source `phase0.ssz.go:1967`: `return nil, ssz.ErrBytesLength`. The inlined
 Epoch encoder runs first: with `cap ≥ len + 8` the code (directives 0–35, the

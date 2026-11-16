@@ -9,7 +9,7 @@ import Prysm.BuilderDepositRequest.Code
 
 Written by `gen/flat-types/flat_types_witness.py`.
 It shows that the premises of the generated accept theorem (statement = kind instance)
-are satisfiable. Host: data labels, the real Go 1.26.10 `(*v1.BuilderDepositRequest).UnmarshalSSZ` (index 9),
+are satisfiable. Host: data labels, the Go 1.26.10 `(*v1.BuilderDepositRequest).UnmarshalSSZ` (index 9),
 the 1-byte bump `runtime.makeslice` (152, `bump_makeslice1`) and `MemmoveGrowsliceModel` (158, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 176-byte heap, guard word, the 184 input bytes,
 the 120-byte receiver (`prysm/ir/ir-mainnet.json` gc amd64 layout: `state`, per byte field a slice header with an

@@ -7,7 +7,7 @@ import Prysm.BeaconBlockHeader.Code
 import Codec.StackGuard
 
 /-!
-# Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, head segments
+# Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, head segments
 
 The length rejects of `Prysm/BeaconBlockHeader/EncodeRejectLength.lean` start with these two segments.
 

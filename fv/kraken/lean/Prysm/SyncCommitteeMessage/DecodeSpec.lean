@@ -5,11 +5,10 @@ import Prysm.Slot.Code
 import Prysm.ValidatorIndex.Code
 
 /-!
-# Spec alignment of the real SyncCommitteeMessage decoder
+# Spec alignment of the SyncCommitteeMessage decoder
 
 Hand-written.
-Built on the GENERATED theorems of `Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean` (`decoder --whole-accept`;
-raw output, not edited): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
+Built on the GENERATED theorems of `Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean` (`decoder --whole-accept`): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
 - `Decode.reject_size_spec`: `bs.size ≠ 144` → EthLib rejects, and the machine code returns `ssz.ErrSize`.

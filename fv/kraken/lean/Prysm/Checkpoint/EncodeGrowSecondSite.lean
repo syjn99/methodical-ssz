@@ -22,7 +22,7 @@ Each theorem is a prefix of `Prysm.Checkpoint.EncodeHead` followed by a tail of 
   block is unchanged; the new block is not returned (its pointer is in the dead frame slot only).
 
 The error words `e0`, `e1` are the global's value as it is; that they are non-nil is not proved here
-(no premise gives it): differential only.
+(no premise gives it): only the Go differential check covers it.
 -/
 
 open Machine Runtime Prysm.Checkpoint.Code

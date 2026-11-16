@@ -6,7 +6,7 @@ import Prysm.SyncCommittee.SpecDefinitions
 import Codec.SerializeInline
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.SyncCommittee`
+# Spec bridge for the Prysm `v1alpha1.SyncCommittee`
 
 The order of `Prysm/Deposit_Data/Spec.lean`. The Vector[Bytes48, 512] field is not unfolded element by element: the
 lemmas below are stated for any list of 48-byte vectors (`serializeEach_byteVector48`, `concatParts_byteVector48`,

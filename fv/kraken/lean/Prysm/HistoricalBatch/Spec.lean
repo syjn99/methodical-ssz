@@ -3,7 +3,7 @@ import Prysm.HistoricalBatch.SpecDefinitions
 import Codec.ByteVector32Values
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.HistoricalBatch`
+# Spec bridge for the Prysm `v1alpha1.HistoricalBatch`
 
 The order of `Prysm.SyncCommittee.Spec`. Imported as is: `Codec.assemble_inline_ok` (any list of inline parts),
 `Codec.headWidth_inline`, `Codec.bodyWidth_inline` (`Codec/SerializeInline.lean`), and EthLib's `concatParts_size`, `concat_fixed_slices`, `deserialize_encoding`,

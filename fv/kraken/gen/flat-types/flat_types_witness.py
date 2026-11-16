@@ -1,27 +1,28 @@
 """Write the decoder witness modules WitnessGeneratedDecodeAccept and
-WitnessGeneratedDecodeRejectSize (lean/Prysm/<GoTypeName>/) of the seven
-generated decoders (non-vacuity of the generated accept / size-reject theorems). Texts follow the hand
+WitnessGeneratedDecodeRejectSize (lean/Prysm/<GoTypeName>/) of the generated decoders of `WITNESS_TYPES`
+(non-vacuity of the generated accept / size-reject theorems). The texts have the form of the hand
 witnesses `Prysm/Deposit_Data/WitnessGeneratedDecodeAccept.lean` (frame 0x20 bytes) and `Prysm/PendingDeposit/WitnessGeneratedDecodeAccept.lean`
 (frame with slices and callees); the memory block of each type is laid out here from the frame facts of its `.S`,
 with the addresses computed below.
 usage: python3 -I -B flat_types_witness.py <fv/kraken> [GoTypeName ...]"""
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from flat_types_spec import T, with_code_imports  # noqa: E402
+from flat_types_spec import SPEC_TYPES, with_code_imports  # noqa: E402
 
 NORM = 'prysm/go1.26.10/link-set/norm'
-SFILE = {'DepositRequest': 'engine_v1.DepositRequest', 'BuilderDepositRequest': 'engine_v1.BuilderDepositRequest',
+ASSEMBLY_NAMES = {'DepositRequest': 'engine_v1.DepositRequest', 'BuilderDepositRequest': 'engine_v1.BuilderDepositRequest',
          'BeaconBlocksByRangeRequest': 'prysm_v1alpha1.BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest': 'prysm_v1alpha1.BlobSidecarsByRangeRequest',
          'ExecutionPayloadEnvelopesByRangeRequest': 'prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest',
          'PartialDataColumnGroupID': 'prysm_v1alpha1.PartialDataColumnGroupID', 'ValidatorIdentity': 'prysm_v1alpha1.ValidatorIdentity'}
 CALLEE = {'Slot': ('Prysm.Slot.Code.unmarshalSSZ', 'primitives.Slot'), 'ValidatorIndex': ('Prysm.ValidatorIndex.Code.unmarshalSSZ', 'primitives.ValidatorIndex'),
           'Epoch': ('Prysm.Epoch.Code.unmarshalSSZ', 'primitives.Epoch')}
+WITNESS_TYPES = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest',
+                 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
 CLEN, BUMPLEN, RTLEN = 63, 6, 26
 
 
 def slen(kr, X):
-    f = os.path.join(kr, NORM, 'github.com_OffchainLabs_prysm_v7_proto_' + SFILE[X].replace('engine_v1', 'engine_v1')
-                     .replace('prysm_v1alpha1', 'prysm_v1alpha1') + '.UnmarshalSSZ.S')
+    f = os.path.join(kr, NORM, 'github.com_OffchainLabs_prysm_v7_proto_' + ASSEMBLY_NAMES[X] + '.UnmarshalSSZ.S')
     return sum(1 for l in open(f) if l.strip())
 
 
@@ -36,9 +37,9 @@ def hexs(a):
     return '0x%x' % a
 
 
-# ---------------------------------------------------------------- reject witnesses (all seven; frame-independent)
+# ---------------------------------------------------------------- reject witnesses (every type of WITNESS_TYPES; frame-independent)
 def reject(X, n):
-    ty, fs, _ = T[X]
+    ty, fs, _ = SPEC_TYPES[X]
     N = sum(f[2] for f in fs)
     L = 1 + n
     return f'''import Prysm.{X}.GeneratedDecodeAccept
@@ -48,11 +49,11 @@ import Machine.WitnessHost
 /-!
 # Witness of the generated `Decode.generated_reject`
 
-Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*{ty}).UnmarshalSSZ` (index 1).
+Host: the label `ssz.ErrSize` (index 0), then the Go 1.26.10 `(*{ty}).UnmarshalSSZ` (index 1).
 Written by `gen/flat-types/flat_types_witness.py`.
 It applies the generated size-reject theorem of `Prysm/{X}/GeneratedDecodeAccept.lean`. Memory at
 `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a data word `0x2a`,
-stand-ins: the real values are set by the runtime's init and are not read from the ELF), the guard word, saved-rbp
+stand-ins: the Go runtime sets the values at start, and the ELF does not hold them), the guard word, saved-rbp
 slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill slot. For every length `≠ {N}`
 (instances {N - 1}, {N + 1}, 0) the decoder returns the two words.
 -/
@@ -120,7 +121,7 @@ end Prysm.{X}.Witness.GeneratedDecodeRejectSize
 # ---------------------------------------------------------------- accept witness, callee frame 0x38 (u64 fields only)
 def accept_witness_frame_0x38(X, n):
     """SyncAggregatorSelectionData frame (sub $0x38; Slot call first, then in-line u64). nf input words."""
-    ty, fs, _ = T[X]
+    ty, fs, _ = SPEC_TYPES[X]
     nf = len(fs)
     N = 8 * nf
     plen = 1 + n + CLEN
@@ -158,7 +159,7 @@ import Machine.WitnessHost
 
 Written by `gen/flat-types/flat_types_witness.py`, for the frame `0x38` with one Slot callee and {nf} input words.
 It shows that the premises of
-the generated accept theorem (statement = kind instance) are satisfiable. Host: one label, the real Go 1.26.10
+the generated accept theorem (statement = kind instance) are satisfiable. Host: one label, the Go 1.26.10
 `(*{ty}).UnmarshalSSZ` (index 1) and `primitives.Slot` UnmarshalSSZ ({1 + n}).
 One memory block at `0x10000`: guard · input ({nf} × 8){' · 8 unused' if gap else ''} · receiver (state, {nf} fields,
 then the untouched tail) · callee frame-pointer slot (rsp − 80) · callee return slot (rsp − 72) · 8 untouched · callee
@@ -242,7 +243,7 @@ end Prysm.{X}.Witness.GeneratedDecodeAccept
 # ---------------------------------------------------------------- accept witness, byte fields (+ callees)
 def accbytes(X, n, frame):
     """frame '20': Deposit_Data frame (sub $0x20, no call; S = 16); 'pd': slices + callees (S = 8), frame F."""
-    ty, fs, _ = T[X]
+    ty, fs, _ = SPEC_TYPES[X]
     N = sum(f[2] for f in fs)
     heap = sum(f[2] for f in fs if f[1] == 'b')
     nb = sum(1 for f in fs if f[1] == 'b')
@@ -357,7 +358,7 @@ import Machine.WitnessHost
 
 Written by `gen/flat-types/flat_types_witness.py`.
 It shows that the premises of the generated accept theorem (statement = kind instance)
-are satisfiable. Host: data labels, the real Go 1.26.10 `(*{ty}).UnmarshalSSZ` (index 9){', ' + cdoc if cdoc else ''},
+are satisfiable. Host: data labels, the Go 1.26.10 `(*{ty}).UnmarshalSSZ` (index 9){', ' + cdoc if cdoc else ''},
 the 1-byte bump `runtime.makeslice` ({bi}, `bump_makeslice1`) and `MemmoveGrowsliceModel` ({ri}, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the {heap}-byte heap, guard word, the {N} input bytes,
 the {gsize}-byte receiver (`prysm/ir/ir-mainnet.json` gc amd64 layout: `state`, per byte field a slice header with an
@@ -469,7 +470,7 @@ end Prysm.{X}.Witness.GeneratedDecodeAccept
 
 if __name__ == '__main__':
     kr = sys.argv[1]
-    which = sys.argv[2:] or ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
+    which = sys.argv[2:] or WITNESS_TYPES
     for X in which:
         n = slen(kr, X)
         d = os.path.join(kr, 'lean', 'Prysm', X)

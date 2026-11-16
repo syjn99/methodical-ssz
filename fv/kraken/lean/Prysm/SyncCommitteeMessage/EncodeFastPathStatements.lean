@@ -2,9 +2,24 @@ import Codec.Kind.EncodeFastPathAnyFrame
 import Prysm.SyncCommitteeMessage.Code
 
 /-!
-# Independent hand statements of four encoder fast paths: the `SyncCommitteeMessage` part
+# Independent hand statement of the `SyncCommitteeMessage` encoder fast path
 
-The declarations of the other types of this group are in `Prysm/PowBlock/EncodeFastPathStatements.lean`.
+Written by hand, independently of the generated fast-path theorem and its kind lines (`Prysm/SyncCommitteeMessage/GeneratedEncodeFastPath.lean`).
+Sources: the Go layout in `prysm/ir/ir-mainnet.json` (`go_fields`, gc amd64 offsets), the SSZ layout
+of the container, the `.S` file of `prysm/go1.26.10/link-set/norm/` (frame, guard, stack slots
+touched on the fast path and their contents at the return) and the binder order and memory order of the
+interface rules of the encoder statements (saved rbp, home slots ascending, other slots by first touch,
+the return slot; existentials in creation order).
+
+**Encoder fast path only**: `len(dst) + SizeSSZ ≤ cap(dst)` and every byte-vector field of its exact length.
+No growslice branch, no length reject, no morestack path. Not a complete encoder result.
+
+| type | class | frame | guard | memmove |
+| --- | --- | --- | --- | --- |
+| SyncCommitteeMessage | overlay uint64 (Slot, ValidatorIndex) via stack temps, bytes 32 + 96 | `0xa8` | `0x30` | yes |
+
+The statement is an `abbrev … : Prop`.
+`Prysm/SyncCommitteeMessage/GeneratedEncodeFastPathSameAsHand.lean` proves `type_of% generated = this` by `rfl`.
 -/
 
 open Machine Runtime Codec

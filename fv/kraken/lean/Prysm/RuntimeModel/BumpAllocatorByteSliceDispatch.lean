@@ -9,7 +9,7 @@ if rax is `type__+337600` (the `[]uint8` type of the SyncCommittee backing array
 it bumps by 24·cnt (`lea (%rcx,%rcx,2)`, `lea (%rdx,%rsi,8)`), otherwise by cnt. A Host has one
 `runtime.makeslice`; the SyncCommittee decoder needs `MakesliceContract … typeUint8Slice_addr 24 S` and `MakesliceContract … typeUint8_addr 1 S`
 together, so a model of esz 24 alone (the shape of `Runtime.bump_makeslice`) cannot sit in the same witness Host as
-`bump_makeslice1`. The real Go `makeslice` reads `et.Size_` from the type descriptor; this model compares the type
+`bump_makeslice1`. The Go `makeslice` reads `et.Size_` from the type descriptor; this model compares the type
 word with one address. It is an abstract model for non-vacuity only, not a Go refinement.
 Proof text: `Runtime.bump_makeslice1` with the dispatch steps added. The `.S` file is in the Lake `input_dir` `runtime_model_S`
 of the `Prysm` library, so Lake rebuilds the library when it changes.

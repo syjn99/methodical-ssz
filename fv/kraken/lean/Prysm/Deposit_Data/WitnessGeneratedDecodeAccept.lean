@@ -9,7 +9,7 @@ import Prysm.Deposit_Data.Code
 
 Hand-written.
 It shows that the premises of the generated accept theorem `Prysm.Deposit_Data.Decode.generated_accept` are satisfiable.
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.Deposit_Data).UnmarshalSSZ` (index 9), the 1-byte bump
+Host: data labels, the Go 1.26.10 `(*v1alpha1.Deposit_Data).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (152, `bump_makeslice1`) and `MemmoveGrowsliceModel` (158, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 176-byte heap, guard word, the 184 input
 bytes, the 120-byte receiver (protoc struct; `prysm/ir/ir-mainnet.json` gc amd64 layout, size 120: `state` 0,

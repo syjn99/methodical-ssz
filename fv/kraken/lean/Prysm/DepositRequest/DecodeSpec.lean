@@ -3,7 +3,7 @@ import Prysm.DepositRequest.Spec
 import Prysm.DepositRequest.Code
 
 /-!
-# Spec alignment of the real `v1.DepositRequest` decoder
+# Spec alignment of the `v1.DepositRequest` decoder
 
 Built on the GENERATED theorems of `Prysm/DepositRequest/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`):
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`

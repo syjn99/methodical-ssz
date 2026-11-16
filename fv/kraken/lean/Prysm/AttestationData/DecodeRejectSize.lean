@@ -5,7 +5,7 @@ import Prysm.AttestationData.Code
 import Prysm.ElfData.PrysmTarget
 
 /-!
-# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`: size reject
+# Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`: size reject
 
 `Decode.reject_size` (`len(buf) ≠ 128`, Go source `return ssz.ErrSize`): directives
 2–7 (guard, prologue, rbx spill), 9–10 `cmp $0x80,%rcx; jne L_3ad` taken, 226 `L_3ad`,

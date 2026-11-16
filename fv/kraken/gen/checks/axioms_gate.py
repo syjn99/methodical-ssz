@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Axioms gate over EVERY declaration of EVERY Lean library of fv/kraken/lean.
 
-Usage (one gated job, Lean env; the cwd does not matter):
+Usage (one heavy job at a time, Lean env; the cwd does not matter):
   axioms_gate.py run <out.json> <dump.tsv> [--extra-lean-path DIR --extra-module M]...
   axioms_gate.py check <dump.tsv> <out.json>       (pure Python, no Lean)
   axioms_gate.py --selftest                       (crafted inputs, no Lean)

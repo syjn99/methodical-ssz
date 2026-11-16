@@ -4,7 +4,7 @@ import Prysm.SigningData.SpecDescription
 import Prysm.SigningData.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.SigningData`
+# Spec bridge for the Prysm `v1alpha1.SigningData`
 
 Hand-written (the shape of `Prysm/PowBlock/Spec.lean` without its uint256 field, and the codec equality of
 `Prysm/PendingConsolidation/Spec.lean`). `desc` (`Prysm/SigningData/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs.

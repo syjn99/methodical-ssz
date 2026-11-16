@@ -6,7 +6,7 @@ import Prysm.ElfData.PrysmTarget
 import Prysm.AttestationData.Code
 
 /-!
-# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, head segment
+# Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, head segment
 
     func (a *AttestationData) UnmarshalSSZ(buf []byte) error {        // phase0.ssz.go:273
         if uint64(len(buf)) != 128 { return ssz.ErrSize }

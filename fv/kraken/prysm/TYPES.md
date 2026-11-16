@@ -1,20 +1,20 @@
 # Prysm Fulu type list
 
 `fv/kraken/gen/type_list_document.py` makes this file from the saved JSON. Do not change it by hand.
-The program counts all numbers. The scope classification is a first pass (provisional). It is not a proof.
+The program counts all numbers. The scope classification is a rule-based classification. It is not a proof.
 
 ## 1. Summary
 
 - Inventory types: 135 generated types. Fork config types: 124. Fulu-reachable types: 50 (generated 45, hand-written 5).
-- In scope: 132, out of scope: 3 (provisional). Reasons for out of scope: deep nesting 3.
+- In scope: 132, out of scope: 3. Reasons for out of scope: deep nesting 3.
 - For the generated Fulu-reachable types only: in scope 44, out of scope 1.
-- "In scope" means that the first-pass rules did not remove the type. It does not mean that a proof is possible. It also does not mean that the type fits the hand proof patterns.
+- "In scope" means that the scope rules did not remove the type. It does not mean that a proof is possible. It also does not mean that the type fits the hand proof patterns.
   The in-scope rule accepts these field shapes. The inventory types together have 46 `vector[bytesN]` fields, 31 `list[bytesN]` fields and 7 `vector[uint64]` fields. The depth is the inline depth (it does not follow delegation).
   The classification by what the proofs need is in `type-scope.md`.
 - Hand-written delegate targets (`consensus-types/primitives`): 5. Types that call them: 52.
 - Generated functions: 405 (types × 3), instructions: 116889, maximum for each function: 2890.
 - Mnemonic level: 405/405 generated functions use only names that the Kraken runtime parser accepts.
-- Real parser run: 405 generated functions of the inventory types OK, 0 ERR. Errors of all parsed functions by message: `unsupported instruction: bsr` 1 (section 4).
+- Parser run: 405 generated functions of the inventory types OK, 0 ERR. Errors of all parsed functions by message: `unsupported instruction: bsr` 1 (section 4).
 - Differences from the committed Prysm files: 232 changed blocks, 232 classified, 0 not classified.
 - Types with a different IR in the minimal preset: 41. Types with a changed scope classification: 0.
 
@@ -22,13 +22,12 @@ The program counts all numbers. The scope classification is a first pass (provis
 
 | Item | Value |
 | --- | --- |
-| Prysm source | `ab15ff70c72a568c870b2de662474685a95de294` (slice + `ssz-size`) |
-| Generator and runtime | `698c2025a73a296b55b95744a8408f3b03b2546b` |
+| Prysm source, generator and runtime | The pins of `../README.md` section 2 |
 | Target compilation | Cross-compiled for linux/amd64 with `go version go1.26.10 linux/arm64` (host binary), `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -p 2 -tags purego -trimpath` |
 | Host | Linux aarch64 (generation is arm64 native. No x86-64 hardware) |
 | ELF | sha256 `a5fbd7fa86d1c2e9c92b6138ff37cf770b253782a174c2493bf75fc26068b5c1`, 23486113 bytes. Not committed (`../README.md` section 3 tells how to build it again) |
 | Reproducibility | Second build with an empty GOCACHE: sha256 `a5fbd7fa86d1c2e9c92b6138ff37cf770b253782a174c2493bf75fc26068b5c1` |
-| Kraken / EthLib / Lean | `6064eec` / `8621856` / `nightly-2026-09-21` |
+| Kraken / EthLib / Lean | `../lean/lake-manifest.json`, `../lean/lean-toolchain` |
 
 ## 3. Method
 
@@ -53,8 +52,8 @@ The program counts all numbers. The scope classification is a first pass (provis
 How we decide "does Kraken accept it":
 
 - Mnemonic level: the 186 branch strings of `parseInstr` in `Kraken/X64/Parser/Basic.lean` of the fixed Kraken, and `j`/`set`/`cmov` + 30 `parseCondCode?` condition codes. The 10 `convert_objdump.py` NORM forms count as `nop`.
-- Real parser level: we ran `Kraken.X64.Parser.parse`, which `include_x64_code` uses, on each file. This is the verdict criterion.
-- We did not examine the semantics level (`kstep` and theorems). This table is a classification, not a proof.
+- Parser level: `Kraken.X64.Parser.parse`, which `include_x64_code` uses, runs on each file. This is the verdict criterion.
+- The semantics level (`kstep` and theorems) is not examined. This table is a classification, not a proof.
 
 ## 4. Numbers
 

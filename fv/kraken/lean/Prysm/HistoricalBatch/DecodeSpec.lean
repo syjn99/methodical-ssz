@@ -3,9 +3,9 @@ import Prysm.HistoricalBatch.DecodeRejectSize
 import Prysm.HistoricalBatch.Spec
 
 /-!
-# Spec alignment of the real HistoricalBatch decoder
+# Spec alignment of the HistoricalBatch decoder
 
-The statements are the frozen
+The statements are
 `Decode.accept_spec_statement`, `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement` (`Prysm/HistoricalBatch/Statements.lean`).
 -/
 

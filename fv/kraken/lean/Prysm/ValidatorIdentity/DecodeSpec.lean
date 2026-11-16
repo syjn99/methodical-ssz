@@ -5,7 +5,7 @@ import Prysm.Epoch.Code
 import Prysm.ValidatorIndex.Code
 
 /-!
-# Spec alignment of the real `v1alpha1.ValidatorIdentity` decoder
+# Spec alignment of the `v1alpha1.ValidatorIdentity` decoder
 
 Built on the GENERATED theorems of `Prysm/ValidatorIdentity/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`):
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`

@@ -10,7 +10,7 @@ import Prysm.Slot.Code
 
 Written by `gen/flat-types/flat_types_witness.py`.
 It shows that the premises of the generated accept theorem (statement = kind instance)
-are satisfiable. Host: data labels, the real Go 1.26.10 `(*v1alpha1.PartialDataColumnGroupID).UnmarshalSSZ` (index 9), `primitives.Slot` UnmarshalSSZ,
+are satisfiable. Host: data labels, the Go 1.26.10 `(*v1alpha1.PartialDataColumnGroupID).UnmarshalSSZ` (index 9), `primitives.Slot` UnmarshalSSZ,
 the 1-byte bump `runtime.makeslice` (178, `bump_makeslice1`) and `MemmoveGrowsliceModel` (184, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 32-byte heap, guard word, the 40 input bytes,
 the 72-byte receiver (`prysm/ir/ir-mainnet.json` gc amd64 layout: `state`, per byte field a slice header with an

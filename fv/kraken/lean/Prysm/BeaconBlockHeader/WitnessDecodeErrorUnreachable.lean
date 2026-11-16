@@ -4,7 +4,7 @@ import Prysm.BeaconBlockHeader.DecodeErrorUnreachable
 /-!
 # Witness of the two unreachable-path theorems of the BeaconBlockHeader decoder
 
-Host and state of `Prysm.BeaconBlockHeader.WitnessGeneratedDecodeRejectSize` (label `ssz.ErrSize` at index 0, the real Go 1.26.10
+Host and state of `Prysm.BeaconBlockHeader.WitnessGeneratedDecodeRejectSize` (label `ssz.ErrSize` at index 0, the Go 1.26.10
 `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ` at index 1). The premises are code placement, label
 freshness and `rax = 0`. `initial_state 112 …` with `rax` replaced by 0 satisfies all of them.
 The run starts at directive 18 or 56 (after the callee's return), not at the function entry.

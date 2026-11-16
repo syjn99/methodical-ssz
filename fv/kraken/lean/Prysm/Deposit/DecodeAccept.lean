@@ -13,7 +13,7 @@ import Prysm.Deposit.Code
   buf[1056:1240], the call;
 * the Deposit_Data decoder: `Prysm.Deposit_Data.Decode.generated_accept` (machine code in the host, our scratch as its frame);
 * 106–107 `test; je` taken (err = nil), epilogue 135–138.
-Statement: the frozen `Prysm.Deposit.Decode.accept_statement`.
+Statement: `Prysm.Deposit.Decode.accept_statement`.
 -/
 
 open Machine Runtime Codec.Segment Prysm.Deposit.Code

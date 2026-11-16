@@ -8,7 +8,7 @@ import Prysm.BlobIdentifier.Code
 # Witness of `Decode.generated_accept` (BlobIdentifier decoder accept path)
 
 Hand-written.
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.BlobIdentifier).UnmarshalSSZ` (index 9), the 1-byte bump
+Host: data labels, the Go 1.26.10 `(*v1alpha1.BlobIdentifier).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (81, `bump_makeslice1`) and `MemmoveGrowsliceModel` (87, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 32-byte heap, guard word, the 40 input
 bytes, the 72-byte receiver (`prysm/ir/ir-mainnet.json` gc amd64 layout, size 72: `state` 0, BlockRoot

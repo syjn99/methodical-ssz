@@ -10,7 +10,7 @@ import Prysm.ValidatorIndex.Code
 # Witness of `Decode.generated_accept` (SyncCommitteeMessage decoder accept path)
 
 Hand-written. It shows that the premises of the generated accept theorem `Prysm.SyncCommitteeMessage.Decode.generated_accept` are
-satisfiable. Host: data labels, the real Go 1.26.10 `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ` (index 9),
+satisfiable. Host: data labels, the Go 1.26.10 `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ` (index 9),
 `(*primitives.Slot).UnmarshalSSZ` (188), `(*primitives.ValidatorIndex).UnmarshalSSZ` (251), the 1-byte bump
 `runtime.makeslice` (314, `bump_makeslice1`) and `MemmoveGrowsliceModel` (320, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 128-byte heap, guard word, the 144 input

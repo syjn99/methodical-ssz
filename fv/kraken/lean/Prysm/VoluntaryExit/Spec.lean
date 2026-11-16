@@ -4,7 +4,7 @@ import Prysm.VoluntaryExit.SpecDescription
 import Prysm.VoluntaryExit.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.VoluntaryExit`
+# Spec bridge for the Prysm `v1alpha1.VoluntaryExit`
 
 `desc` (`Prysm/VoluntaryExit/SpecDescription.lean`) is the independent hand `Desc` (consensus-specs).
 It does not use `checkerDesc`.

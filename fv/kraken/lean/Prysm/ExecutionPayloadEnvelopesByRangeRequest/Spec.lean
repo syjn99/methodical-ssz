@@ -3,7 +3,7 @@ import Prysm.Checkpoint.SpecEquivalence
 import Prysm.DepositRequest.SpecDescription
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.ExecutionPayloadEnvelopesByRangeRequest`
+# Spec bridge for the Prysm `v1alpha1.ExecutionPayloadEnvelopesByRangeRequest`
 
 Written by `gen/flat-types/flat_types_spec.py`.
 `desc` (`Prysm/ExecutionPayloadEnvelopesByRangeRequest/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).

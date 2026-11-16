@@ -3,7 +3,7 @@ import Prysm.Checkpoint.SpecEquivalence
 import Prysm.AttestationData.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.AttestationData`
+# Spec bridge for the Prysm `v1alpha1.AttestationData`
 
 Independent hand `Desc`, written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`):
 
@@ -15,7 +15,7 @@ Independent hand `Desc`, written from consensus-specs phase0 (`specs/phase0/beac
         target: Checkpoint
 
 with `Checkpoint` = `Prysm.Checkpoint.desc` (consensus-specs `Checkpoint(epoch: Epoch, root: Root)`).
-The Prysm Go fields (`attestation.pb.go`, Prysm `ab15ff70`) are `Slot` (offset 8), `CommitteeIndex` (16),
+The Prysm Go fields (`attestation.pb.go` of the pinned Prysm commit, `README.md` section 2) are `Slot` (offset 8), `CommitteeIndex` (16),
 `BeaconBlockRoot` (24, slice header), `Source` (48) and `Target` (56), both `*Checkpoint`; `state` (0), `unknownFields` (64)
 and `sizeCache` (88) have no SSZ value (size 96; offsets from `prysm/ir/ir-mainnet.json`).
 `checkerDesc` (generated) is the Desc checker's Desc of `(v1alpha1, AttestationData)`;
@@ -36,9 +36,6 @@ open Spec hiding readUint_lt
 /-- consensus-specs phase0 `AttestationData`. -/
 def desc : Desc := .container ["slot", "index", "beacon_block_root", "source", "target"]
   [.uint 8, .uint 8, .byteVector 32, Prysm.Checkpoint.desc, Prysm.Checkpoint.desc]
-
-/-- The reduced hand case `Spec.attestationDataDesc` is the same term (cited, not used). -/
-theorem desc_eq_hand : desc = Spec.attestationDataDesc := rfl
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem desc_fixedSize : desc.fixedSize = some 128 := by rfl

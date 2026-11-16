@@ -7,7 +7,7 @@ import Prysm.Checkpoint.Code
 import Prysm.Epoch.Code
 
 /-!
-# Real Prysm `(*v1alpha1.Checkpoint).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
+# Prysm `(*v1alpha1.Checkpoint).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
     func (c *Checkpoint) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 40 { return ssz.ErrSize }

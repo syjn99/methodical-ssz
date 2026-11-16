@@ -1,10 +1,10 @@
 """Write <out>/Prysm/<GoTypeName>/Spec.lean, the spec bridge of each type
-(for a field list: P structure, encoding, serialize, roundtrip,
+(for a field list: SszValue structure, encoding, serialize, roundtrip,
 accepts-iff-size, spec reject; codec equality with the checker Desc where a Desc-checker record exists).
 usage: python3 -I -B flat_types_spec.py <out dir>"""
 import sys, os
 
-T = {  # Go type name: (Go type with package, fields [(name, 'u'|'b', n)], checker (lean name, names) or None)
+SPEC_TYPES = {  # Go type name: (Go type with package, fields [(name, 'u'|'b', n)], checker (lean name, names) or None)
  'DepositRequest': ('v1.DepositRequest', [('pubkey', 'b', 48), ('withdrawalCredentials', 'b', 32), ('amount', 'u', 8),
                                ('signature', 'b', 96), ('index', 'u', 8)],
          ('checkerDesc', None)),
@@ -35,7 +35,7 @@ def kind(f):
 
 
 def emit(X, ty, fs, chk):
-    P, pe = 'SszValue', 'SszValue.encode'
+    value_type, encode_name = 'SszValue', 'SszValue.encode'
     D = 'desc'
     N = sum(f[2] for f in fs)
     us = [f for f in fs if f[1] == 'u']
@@ -52,7 +52,7 @@ def emit(X, ty, fs, chk):
         w(f'import Prysm.{X}.SpecChecker')
     w('')
     w('/-!')
-    w(f'# Spec bridge for the real Prysm `{ty}`')
+    w(f'# Spec bridge for the Prysm `{ty}`')
     w('')
     w('Written by `gen/flat-types/flat_types_spec.py`.')
     w(f'`{D}` (`Prysm/{X}/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).')
@@ -61,7 +61,7 @@ def emit(X, ty, fs, chk):
         w('(the producer output recorded in `gen/desc/results/main.result.json`, same sha256; copy in `prysm/go1.26.10/evidence/`).')
     else:
         w('No Desc-checker record exists for this type (`gen/desc/results/main.result.json`): no codec equality here.')
-    w(f'`{P}` is the SSZ content of a Go `{ty}`.')
+    w(f'`{value_type}` is the SSZ content of a Go `{ty}`.')
     w('-/')
     w('')
     w(f'namespace Prysm.{X}')
@@ -81,33 +81,33 @@ def emit(X, ty, fs, chk):
         w('  cases v <;> (try simp only [serialize, serializeStruct]) <;> rfl')
         w('')
     w(f'/-- The SSZ content of a Go `{ty}`. -/')
-    w(f'structure {P} where')
+    w(f'structure {value_type} where')
     for f in fs:
         w(f'  {f[0]} : {"UInt64" if f[1] == "u" else f"Vector UInt8 {f[2]}"}')
     w('')
     vals = ', '.join(f'.uint g.{f[0]}.toNat' if f[1] == 'u' else f'.bytes g.{f[0]}.toArray' for f in fs)
-    w(f'def {P}.toValue (g : {P}) : Value :=')
+    w(f'def {value_type}.toValue (g : {value_type}) : Value :=')
     w(f'  .seq [{vals}]')
     w('')
     enc = ' ++ '.join(f'uintBytes 8 g.{f[0]}.toNat' if f[1] == 'u' else f'g.{f[0]}.toArray' for f in fs)
-    w(f'def {pe} (g : {P}) : Array UInt8 :=')
+    w(f'def {encode_name} (g : {value_type}) : Array UInt8 :=')
     w(f'  {enc}')
     w('')
-    w(f'theorem SszValue.encode_size (g : {P}) : ({pe} g).size = {N} := by')
-    w(f'  simp [{pe}, Spec.uintBytes_size]')
+    w(f'theorem SszValue.encode_size (g : {value_type}) : ({encode_name} g).size = {N} := by')
+    w(f'  simp [{encode_name}, Spec.uintBytes_size]')
     w('')
     lt = '; '.join(f'have := g.{f[0]}.toNat_lt' for f in us)
-    w(f'theorem SszValue.toValue_fits (g : {P}) : Value.fits {D} g.toValue = true := by')
+    w(f'theorem SszValue.toValue_fits (g : {value_type}) : Value.fits {D} g.toValue = true := by')
     w(f'  {lt}')
-    w(f'  simp only [{D}, {P}.toValue, Value.fits, Value.fieldsFit] at *')
+    w(f'  simp only [{D}, {value_type}.toValue, Value.fits, Value.fieldsFit] at *')
     w('  simp; omega')
     w('')
     n = len(fs)
     a = [f'a{i}' for i in range(n)]
     b = [f'b{i}' for i in range(n)]
-    w(f'theorem SszValue.toValue_injective (g h : {P}) (e : g.toValue = h.toValue) : g = h := by')
+    w(f'theorem SszValue.toValue_injective (g h : {value_type}) (e : g.toValue = h.toValue) : g = h := by')
     w(f'  obtain ⟨{", ".join(a)}⟩ := g; obtain ⟨{", ".join(b)}⟩ := h')
-    w(f'  simp only [{P}.toValue, Value.seq.injEq, List.cons.injEq, Value.uint.injEq, Value.bytes.injEq,')
+    w(f'  simp only [{value_type}.toValue, Value.seq.injEq, List.cons.injEq, Value.uint.injEq, Value.bytes.injEq,')
     w('    and_true] at e')
     inj = lambda i: (f'UInt64.toNat_inj.mp e{i}' if fs[i][1] == 'u' else f'Vector.toArray_inj.mp e{i}')
     if n == 1:
@@ -116,7 +116,7 @@ def emit(X, ty, fs, chk):
         w(f'  obtain ⟨{", ".join(f"e{i}" for i in range(n))}⟩ := e')
         w(f'  rw [{", ".join(inj(i) for i in range(n))}]')
     w('')
-    w(f'theorem SszValue.toValue_surjective\' (v : Value) (h : Value.fits {D} v = true) : ∃ g : {P}, g.toValue = v := by')
+    w(f'theorem SszValue.toValue_surjective\' (v : Value) (h : Value.fits {D} v = true) : ∃ g : {value_type}, g.toValue = v := by')
     w('  obtain ⟨vs, rfl, hf⟩ := fits_container h')
     w('  have hl := fieldsFit_length hf')
     w('  match vs, hl with')
@@ -134,27 +134,27 @@ def emit(X, ty, fs, chk):
     mk = ', '.join(f'UInt64.ofNat a{i}' if f[1] == 'u' else f'⟨a{i}, ha{i}⟩' for i, f in enumerate(fs))
     mods = ', '.join(f'Nat.mod_eq_of_lt ha{i}' for i, f in enumerate(fs) if f[1] == 'u')
     w(f'    exact ⟨⟨{mk}⟩,')
-    w(f'      by simp [{P}.toValue, {mods}]⟩')
+    w(f'      by simp [{value_type}.toValue, {mods}]⟩')
     w('')
     pat = ', '.join(f'a{i}' if f[1] == 'u' else f'⟨r{i}, hr{i}⟩' for i, f in enumerate(fs))
     hrs = ''.join(f', hr{i}' for i, f in enumerate(fs) if f[1] == 'b')
     lt2 = '; '.join(f'have := a{i}.toNat_lt' for i, f in enumerate(fs) if f[1] == 'u')
-    w(f'theorem SszValue.serialize_eq (g : {P}) : serialize {D} g.toValue = .ok ({pe} g) := by')
+    w(f'theorem SszValue.serialize_eq (g : {value_type}) : serialize {D} g.toValue = .ok ({encode_name} g) := by')
     w(f'  obtain ⟨{pat}⟩ := g')
     w(f'  {lt2}')
-    w(f'  simp only [{D}, {P}.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk{hrs}]')
+    w(f'  simp only [{D}, {value_type}.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk{hrs}]')
     w('  simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,')
-    w(f'    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, {pe},')
+    w(f'    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, {encode_name},')
     w('    Desc.fieldsFixedSize, Array.append_assoc]')
     w('')
     w('/-- **Spec roundtrip.** -/')
-    w(f'theorem SszValue.roundtrip (g : {P}) : deserialize {D} ({pe} g) = .ok g.toValue :=')
-    w(f'  deserialize_encoding (G := {P}) (toV := {P}.toValue) (enc := {pe}) {D}_wellFormed SszValue.serialize_eq')
+    w(f'theorem SszValue.roundtrip (g : {value_type}) : deserialize {D} ({encode_name} g) = .ok g.toValue :=')
+    w(f'  deserialize_encoding (G := {value_type}) (toV := {value_type}.toValue) (enc := {encode_name}) {D}_wellFormed SszValue.serialize_eq')
     w(f'    SszValue.toValue_fits g')
     w('')
     w(f'theorem SszValue.accepted_is_encoding {{bs : Array UInt8}} {{v : Value}} (h : deserialize {D} bs = .ok v) :')
-    w(f'    ∃ g : {P}, v = g.toValue ∧ bs = {pe} g :=')
-    w(f'  accepted_input_is_encoding (G := {P}) (toV := {P}.toValue) (enc := {pe}) {D}_wellFormed SszValue.serialize_eq')
+    w(f'    ∃ g : {value_type}, v = g.toValue ∧ bs = {encode_name} g :=')
+    w(f'  accepted_input_is_encoding (G := {value_type}) (toV := {value_type}.toValue) (enc := {encode_name}) {D}_wellFormed SszValue.serialize_eq')
     w(f'    SszValue.toValue_surjective\' h')
     w('')
     w(f'/-- **EthLib accepts exactly the {N}-byte inputs.** -/')
@@ -172,11 +172,11 @@ def emit(X, ty, fs, chk):
     w(f'    simp only [Nat.reducePow, Nat.reduceMul] at {" ".join(rs)}')
     gs = ', '.join(f'UInt64.ofNat (readUint bs {offs[i]} 8)' if f[1] == 'u'
                    else f'⟨bs.extract {offs[i]} {offs[i] + f[2]}, by simp; omega⟩' for i, f in enumerate(fs))
-    w(f'    let g : {P} := ⟨{gs}⟩')
-    w(f'    have e : bs = {pe} g := by')
+    w(f'    let g : {value_type} := ⟨{gs}⟩')
+    w(f'    have e : bs = {encode_name} g := by')
     s1 = ', '.join([f'UInt64.toNat_ofNat_of_lt\' r{i}' for i, f in enumerate(fs) if f[1] == 'u']
                    + [f'uintBytes_readUint_slice bs {offs[i]} 8 (by omega)' for i, f in enumerate(fs) if f[1] == 'u'])
-    w(f'      simp only [g, {pe}, {s1}]')
+    w(f'      simp only [g, {encode_name}, {s1}]')
     t = 'try ' if n == 1 else ''   # one field: no append to merge (BuilderPreferences)
     w(f'      {t}simp only [Nat.zero_add, Nat.reduceAdd]')
     w(f'      {t}simp (config := {{decide := true}}) only [Array.extract_append_extract, Nat.min_def, Nat.max_def, ↓reduceIte]')
@@ -196,15 +196,15 @@ def emit(X, ty, fs, chk):
         w('')
         w(f'theorem checker_wellFormed : {c}.wellFormed = .ok () := by rfl')
         w('')
-        w(f'theorem SszValue.serialize_eq_checker (g : {P}) : serialize {c} g.toValue = .ok ({pe} g) := by')
+        w(f'theorem SszValue.serialize_eq_checker (g : {value_type}) : serialize {c} g.toValue = .ok ({encode_name} g) := by')
         w(f'  rw [← {D}_serialize_checker]; exact SszValue.serialize_eq g')
         w('')
-        w(f'theorem SszValue.toValue_fits_checker (g : {P}) : Value.fits {c} g.toValue = true := by')
+        w(f'theorem SszValue.toValue_fits_checker (g : {value_type}) : Value.fits {c} g.toValue = true := by')
         w(f'  {lt}')
-        w(f'  simp [{c}, {P}.toValue, Value.fits, Value.fieldsFit]; omega')
+        w(f'  simp [{c}, {value_type}.toValue, Value.fits, Value.fieldsFit]; omega')
         w('')
         w(f'theorem SszValue.toValue_surjective_checker (v : Value) (h : Value.fits {c} v = true) :')
-        w(f'    ∃ g : {P}, g.toValue = v := by')
+        w(f'    ∃ g : {value_type}, g.toValue = v := by')
         w(f'  have h\' : Value.fits {D} v = true := by')
         w(f'    cases v <;> simp_all [{D}, {c}, Value.fits]')
         w(f'  exact SszValue.toValue_surjective\' v h\'')
@@ -216,10 +216,10 @@ def emit(X, ty, fs, chk):
         w('  · intro h')
         w(f'    obtain ⟨g, rfl, hb⟩ := SszValue.accepted_is_encoding h')
         w('    rw [hb]')
-        w(f'    exact deserialize_encoding (G := {P}) (toV := {P}.toValue) (enc := {pe}) checker_wellFormed')
+        w(f'    exact deserialize_encoding (G := {value_type}) (toV := {value_type}.toValue) (enc := {encode_name}) checker_wellFormed')
         w(f'      SszValue.serialize_eq_checker SszValue.toValue_fits_checker g')
         w('  · intro h')
-        w(f'    obtain ⟨g, rfl, hb⟩ := accepted_input_is_encoding (G := {P}) (toV := {P}.toValue) (enc := {pe})')
+        w(f'    obtain ⟨g, rfl, hb⟩ := accepted_input_is_encoding (G := {value_type}) (toV := {value_type}.toValue) (enc := {encode_name})')
         w(f'      checker_wellFormed SszValue.serialize_eq_checker SszValue.toValue_surjective_checker h')
         w(f'    rw [hb]; exact SszValue.roundtrip g')
         w('')
@@ -237,7 +237,7 @@ descnames = {
 
 if __name__ == '__main__':
     out = sys.argv[1]
-    for X, (ty, fs, chk) in T.items():
+    for X, (ty, fs, chk) in SPEC_TYPES.items():
         os.makedirs(os.path.join(out, 'Prysm', X), exist_ok=True)
         open(os.path.join(out, 'Prysm', X, 'Spec.lean'), 'w').write(emit(X, ty, fs, chk))
         print(X)

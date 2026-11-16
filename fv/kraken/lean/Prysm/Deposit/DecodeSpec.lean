@@ -3,9 +3,9 @@ import Prysm.Deposit.DecodeRejectSize
 import Prysm.Deposit.Spec
 
 /-!
-# Spec alignment of the real Deposit decoder
+# Spec alignment of the Deposit decoder
 
-The statements are the frozen `Decode.accept_spec_statement`,
+The statements are `Decode.accept_spec_statement`,
 `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement` (`Prysm/Deposit/StatementsSpec.lean`).
 -/
 

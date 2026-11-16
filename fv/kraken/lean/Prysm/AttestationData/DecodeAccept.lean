@@ -6,7 +6,7 @@ import Prysm.Epoch.Code
 import Prysm.Slot.Code
 
 /-!
-# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
+# Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
     func (a *AttestationData) UnmarshalSSZ(buf []byte) error {        // phase0.ssz.go:273
         if uint64(len(buf)) != 128 { return ssz.ErrSize }
@@ -77,7 +77,7 @@ theorem Decode.accept_split_spill_words (x : BitVec 64) (w : List UInt8) (h : w.
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- **Accept path of the real `(*v1alpha1.AttestationData).UnmarshalSSZ` (Go 1.26.10)**:
+/-- **Accept path of the `(*v1alpha1.AttestationData).UnmarshalSSZ` (Go 1.26.10)**:
 on a 128-byte input it returns nil and the receiver holds Slot = buf[0:8], CommitteeIndex =
 buf[8:16], a fresh 32-byte BeaconBlockRoot = buf[16:48], and fresh Source / Target objects
 decoded from buf[48:88] / buf[88:128]; the input, `state`, `unknownFields`, `sizeCache`, the

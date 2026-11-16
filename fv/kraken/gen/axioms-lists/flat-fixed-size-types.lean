@@ -48,9 +48,9 @@ import Prysm.SyncCommitteeMessage.WitnessGeneratedDecodeRejectSize
 import Codec.NopWindow
 import Codec.WindowSteps
 import Codec.Kind.WindowSteps
-import Codec.CalleeDecodeWindow
+import Codec.Kind.CalleeDecodeWindow
 import Codec.FixedBytesDecodeWindow
-import Codec.FixedBytesDecodeWindowOffsetZero
+import Codec.Kind.FixedBytesDecodeWindowOffsetZero
 import Codec.Kind.FixedBytesDecodeWindow
 import Codec.DecoderPrologue
 import Codec.Kind.DecodeAcceptAnyFrame
@@ -258,7 +258,7 @@ import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 -- The segment lemmas, the statement-identity checks and the generated instances.
 #print axioms Codec.infix_sub
 #print axioms Codec.uint64_decode_accept
--- Frozen statement kinds, their lemma ties and anchors, and the generated `_kind` identities
+-- Statement kinds, their lemma ties and anchors, and the generated `_kind` identities
 #print axioms Codec.uint64DecodeAcceptKind_of
 #print axioms Prysm.Slot.Decode.accept_kind_anchor
 #print axioms Prysm.CommitteeIndex.Decode.accept_kind_anchor
@@ -285,8 +285,8 @@ import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 #print axioms Prysm.BeaconBlockHeader.Witness.GeneratedDecodeRejectSize.runs
 #print axioms Prysm.ValidatorIndex.Decode.reject_size
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.runs
-#print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength9.runs9
-#print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength300.runs300
+#print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength9.runs_length_9
+#print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength300.runs_length_300
 -- Eth1Data, decoder: the specification
 #print axioms Prysm.Eth1Data.desc_checker
 #print axioms Prysm.Eth1Data.desc_serialize_checker
@@ -581,9 +581,7 @@ import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 #print axioms Codec.bytes_decode_window_offset_zero_96_rsi_rsi
 #print axioms Codec.bytes_decode_segment_window
 #print axioms Codec.bytes_decode_segment_offset_zero_window
-#print axioms Codec.bytes_decode_segment_offset_zero_inst
 #print axioms Codec.callDecodeSegmentKindWindow_of
-#print axioms Codec.call_decode_segment_dense
 #print axioms Codec.call_decode_segment_window
 #print axioms Codec.decode_prologue_segment
 #print axioms Codec.decode_return_segment

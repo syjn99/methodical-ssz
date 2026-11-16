@@ -6,9 +6,9 @@ import Prysm.DataColumnsByRootIdentifier.Code
 /-!
 # Witnesses of the decoder size reject and offset reject
 
-Host: the error label (index 0) and the real Go 1.26.10
+Host: the error label (index 0) and the Go 1.26.10
 `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ` (index 1). Memory at `0x10000`: the two error words (stand-in
-values: the real ones are set by the runtime's init), the guard word (r14 = 0x10000), the stack window rsp − 8 …
+values: the Go runtime sets the values at start), the guard word (r14 = 0x10000), the stack window rsp − 8 …
 rsp + 24 (rsp = 0x10020); the offset reject adds the 4 offset bytes at buf + 32 (0x10038). Frame `R`: the rax spill slot.
 -/
 

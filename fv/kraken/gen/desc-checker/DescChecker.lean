@@ -33,7 +33,7 @@ Per file (any failure = FAIL):
 * `type`        an ASCII Go identifier; `package` an ASCII path in the checker's package list
 * `expected-key` (package, type) is in the expected set
 * `hand-name`   a hand type name outside its table package, unless the key is in the
-                checker-owned exception list (the real Prysm `v1alpha1.Checkpoint` and
+                checker-owned exception list (the Prysm `v1alpha1.Checkpoint` and
                 `v1alpha1.AttestationData`)
 * `keys`        no unknown key at the top level or in a term; `claim-keys[i]` only the claim
                 keys that apply to field i's kind
@@ -60,7 +60,7 @@ Does not defend against: wrong shapes of the 135 Prysm types that agree with the
 (no independent spec offline: consistency only), a forged result file written by hand (the
 result is not signed), or a wrong inventory committed on purpose.
 
-Run (gated): `cd fv/kraken/lean && DESC_LIST=<file> DESC_RESULT=<file> [DESC_MUTANTS=<file>] lake env lean ../gen/desc-checker/DescChecker.lean`
+Run (a heavy job): `cd fv/kraken/lean && DESC_LIST=<file> DESC_RESULT=<file> [DESC_MUTANTS=<file>] lake env lean ../gen/desc-checker/DescChecker.lean`
 -/
 
 open Lean EthLib.Serialization.Ssz
@@ -150,7 +150,7 @@ def pkgPath (s : String) : Bool :=
   !s.isEmpty && s.all (fun c => c.isAlphanum || c == '.' || c == '_' || c == '-' || c == '/') &&
     (s.splitOn "/").all (fun seg => !seg.isEmpty && seg != "." && seg != "..")
 
-/-- Checker-owned exceptions: real Prysm types whose names equal hand type names. -/
+/-- Checker-owned exceptions: Prysm types whose names equal hand type names. -/
 def handNameExceptions : List (String × String) := [(prysmV1, "Checkpoint"), (prysmV1, "AttestationData")]
 
 /-- Claim keys that apply to every field, and those that apply to one term kind only. -/

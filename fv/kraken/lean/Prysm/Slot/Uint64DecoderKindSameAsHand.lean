@@ -3,12 +3,10 @@ import Prysm.Slot.DecodeAccept
 import Prysm.Slot.Code
 
 /-!
-# Anchors of the uint64 decoder statement kind
+# Tie of the uint64 decoder kind to the hand accept theorem of `Slot`
 
-The uint64 decoder kind `Codec.uint64DecodeAcceptKind C` is, for `C = Code.unmarshalSSZ` and `C = Prysm.CommitteeIndex.Code.unmarshalSSZ`, the full declared
-type of the reviewed hand theorem (binders before the colon included). So the frozen kind is the hand
-statement kind, not new text.
-The anchor of `Prysm.CommitteeIndex` is in `Prysm/CommitteeIndex/Uint64DecoderKindSameAsHand.lean`.
+This theorem shows that the kind `Codec.uint64DecodeAcceptKind` is the statement of the hand theorem `Prysm.Slot.Decode.accept`.
+The identity covers the full declared type, with the binders before the colon.
 -/
 
 open Machine Runtime

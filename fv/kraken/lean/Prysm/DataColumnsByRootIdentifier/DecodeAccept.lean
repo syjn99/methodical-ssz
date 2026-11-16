@@ -14,7 +14,7 @@ BlockRoot `makeslice` 20–23 (`MakesliceContract Heap typeUint8_addr 1 S`, len 
 `buf[36:]` pointer 27–35 (the mask of `Prysm/IndexedAttestation/DecodeAccept.lean` 18–24 with 36), `writeBarrier = 0` (36–37 `je` taken), 43–47 the pointer store
 and `memmove(pb, buf, 32)`, 48–63 len/cap 32 and the barrier branch, 64–71 alignment and bound checks, 72–75 Columns
 `makeslice` (`MakesliceContract Heap typeUint64_addr 8 S`, len = cap = n), 76–93 the header and pointer stores, `jmp L_320`,
-the element loop `Decode.loop` (185 → 204), 204–209 nil and the epilogue. Statement: the frozen `Decode.accept_statement`.
+the element loop `Decode.loop` (185 → 204), 204–209 nil and the epilogue. Statement: `Decode.accept_statement`.
 -/
 
 open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code

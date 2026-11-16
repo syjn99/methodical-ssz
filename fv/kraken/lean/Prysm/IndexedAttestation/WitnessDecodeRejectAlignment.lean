@@ -10,7 +10,7 @@ import Prysm.IndexedAttestation.Code
 
 The premises of the statements (`Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean`) are satisfiable, `e0 ≠ 0` included, with a concrete
 non-zero itab word.
-Host: data labels (`go_string._` at 0x10001, the bump pointer label at 0x10004), the real Go 1.26.10
+Host: data labels (`go_string._` at 0x10001, the bump pointer label at 0x10004), the Go 1.26.10
 `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (index 5), `ErrorfConvT64Model` (284: `model_convT64`, `model_errorf_decimal_wrap`), then the
 labels `go_itab._errors.errorString_error` (0x1012b, the value of `e0`), `ssz.ErrIncorrectListSize` (0x1013b),
 `ssz.ErrListTooBig` (0x1014b) and `runtime.staticuint64s` (0x1015b), with pad labels between (a label's address is

@@ -4,7 +4,7 @@ import Prysm.Eth1Data.SpecDescription
 import Prysm.Eth1Data.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.Eth1Data`
+# Spec bridge for the Prysm `v1alpha1.Eth1Data`
 
 Hand-written.
 `desc` (`Prysm/Eth1Data/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs phase0.

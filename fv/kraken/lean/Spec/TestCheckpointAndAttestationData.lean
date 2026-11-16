@@ -1,7 +1,10 @@
 import Spec.TestListU64
 
 /-!
-# Spec: Prysm `Checkpoint` (v7.1.8, commit 51b5a75ebbadf05af22bd2601b5baf7a9e99b66d)
+# Spec: the hand test types `Checkpoint` and `AttestationData`
+
+These are reduced forms of the Prysm types, without the protobuf fields.
+They have no ELF. The `Desc` checker tests and some proofs import them.
 
     type Checkpoint struct {
         Epoch Epoch                 // uint64

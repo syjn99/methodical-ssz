@@ -6,12 +6,12 @@ import Prysm.Checkpoint.Code
 import Prysm.Epoch.Code
 
 /-!
-# Machine-level composition decoder → encoder (real Go 1.26.10 code)
+# Machine-level composition decoder → encoder (Go 1.26.10 code)
 
 `DecodeThenEncode.round_trip` (it runs the decoder; the theorem of `Prysm/Checkpoint/DecodeThenEncodeReceiver.lean` does not): start at the
 **entry of `(*Checkpoint).UnmarshalSSZ`** with the premises of
 `Decode.accept` (40 input bytes `e8 ++ root`, any receiver contents). The
-decoder runs (with the real `(*primitives.Epoch).UnmarshalSSZ` through
+decoder runs (with the `(*primitives.Epoch).UnmarshalSSZ` through
 `Prysm.Epoch.Decode.accept_function_spec_holds`, no Epoch hypothesis) and returns nil to `ra`. The caller then
 calls `(*Checkpoint).MarshalSSZTo` on the same receiver (`hupd`: the call
 writes a new return address `ra2` into the same return slot, the rest of the

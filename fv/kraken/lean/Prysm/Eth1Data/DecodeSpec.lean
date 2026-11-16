@@ -3,10 +3,9 @@ import Prysm.Eth1Data.Spec
 import Prysm.Eth1Data.Code
 
 /-!
-# Spec alignment of the real Eth1Data decoder
+# Spec alignment of the Eth1Data decoder
 
-Hand-written. Built on the GENERATED theorems of `Prysm/Eth1Data/GeneratedDecodeAccept.lean` (`decoder --whole-accept`;
-raw output, not edited): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
+Hand-written. Built on the GENERATED theorems of `Prysm/Eth1Data/GeneratedDecodeAccept.lean` (`decoder --whole-accept`): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`, the independent consensus-specs Desc)
   as `v`, there is `g : SszValue` with `g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g`
   the machine code returns nil and the receiver holds `g` (the two roots at fresh `p1 p2` with

@@ -5,7 +5,7 @@ import Prysm.PendingPartialWithdrawal.Code
 import Prysm.ElfData.PrysmTarget
 
 /-!
-# Real Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`: size reject
+# Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`: size reject
 
 Hand-written. The frame is `sub $0x48`. `Decode.reject_size` (`len(buf) ≠ 24`, `return ssz.ErrSize`): directives 2–7, 9–10
 `cmp $0x18,%rcx; jne L_15f` taken, `L_15f` (92), loads of `ssz.ErrSize` (93–94), epilogue 95–97.

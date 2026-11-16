@@ -10,7 +10,7 @@ import Prysm.SyncCommittee.Code
 
 Directives 2–7 (guard, prologue `sub $0x30`, rbx spill), 9–10 `cmp $0x6030,%rcx; jne L_7d` taken,
 `L_7d` (30), the two loads of `ssz.ErrSize` (31–32), epilogue 33–35 (`add $0x30`).
-The statement is the frozen `Decode.reject_size_statement`.
+The statement is `Decode.reject_size_statement`.
 -/
 
 open Machine Runtime Prysm.SyncCommittee.Code
@@ -18,7 +18,7 @@ variable [Host]
 
 namespace Prysm.SyncCommittee
 
-/-- **Size reject (machine)**; statement = the frozen `Decode.reject_size_statement`. -/
+/-- **Size reject (machine)**; statement = `Decode.reject_size_statement`. -/
 theorem Decode.reject_size : Decode.reject_size_statement := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s

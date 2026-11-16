@@ -14,7 +14,7 @@ import Prysm.SyncCommittee.Code
 * AggregatePubkey 81–105: `Decode.aggregate_pubkey_segment` (the literal-size statement of `Codec.bytes_decode_segment 48`, src 24576);
   pointer tail 106–107, 115–116 (rsi);
 * epilogue 117–121 (hand steps, `add $0x30`).
-Statement: the frozen `Prysm.SyncCommittee.Decode.accept_statement`.
+Statement: `Prysm.SyncCommittee.Decode.accept_statement`.
 -/
 
 open Machine Runtime Prysm.SyncCommittee.Code
@@ -70,7 +70,7 @@ theorem Decode.aggregate_pubkey_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt H
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.bytes_decode_segment 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ _ (k + 81) (k + 94) hA hB hl
 
-/-- **Accept path of the real `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (Go 1.26.10)**; statement = the frozen
+/-- **Accept path of the `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (Go 1.26.10)**; statement =
 `Decode.accept_statement`. -/
 theorem Decode.accept : Decode.accept_statement := by
   intro k hk hf pks agg hpks hpk hagg s ra guard

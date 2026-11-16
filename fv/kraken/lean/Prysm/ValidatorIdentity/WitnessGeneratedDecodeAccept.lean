@@ -11,7 +11,7 @@ import Prysm.ValidatorIndex.Code
 
 Written by `gen/flat-types/flat_types_witness.py`.
 It shows that the premises of the generated accept theorem (statement = kind instance)
-are satisfiable. Host: data labels, the real Go 1.26.10 `(*v1alpha1.ValidatorIdentity).UnmarshalSSZ` (index 9), `primitives.ValidatorIndex` UnmarshalSSZ, `primitives.Epoch` UnmarshalSSZ,
+are satisfiable. Host: data labels, the Go 1.26.10 `(*v1alpha1.ValidatorIdentity).UnmarshalSSZ` (index 9), `primitives.ValidatorIndex` UnmarshalSSZ, `primitives.Epoch` UnmarshalSSZ,
 the 1-byte bump `runtime.makeslice` (276, `bump_makeslice1`) and `MemmoveGrowsliceModel` (282, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 48-byte heap, guard word, the 64 input bytes,
 the 80-byte receiver (`prysm/ir/ir-mainnet.json` gc amd64 layout: `state`, per byte field a slice header with an

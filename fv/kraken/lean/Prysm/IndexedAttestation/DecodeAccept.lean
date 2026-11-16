@@ -17,7 +17,7 @@ import Prysm.IndexedAttestation.Code
   `AttestationData.UnmarshalSSZ` on buf[4:132] discharged by `Prysm.AttestationData.Decode.accept` (its entry rsp = x − 184,
   scratch `Sd`), `je L_39c` taken (rax = 0);
 * Signature 217–260: `makeslice` (esz 1, cap 96), the header stores, `memmove` of buf[132:228], the epilogue.
-Statement: the frozen `Prysm.IndexedAttestation.Decode.accept_statement`.
+Statement: `Prysm.IndexedAttestation.Decode.accept_statement`.
 -/
 
 open Machine Runtime Prysm.IndexedAttestation.Code
@@ -162,7 +162,7 @@ theorem Decode.fresh_object96 (p : BitVec 64) :
 --   `Prysm/IndexedAttestation/DecodeRejectSize.lean`; 1024 passes.
 set_option maxHeartbeats 1600000 in
 set_option maxRecDepth 1024 in
-/-- **Accept path of the real `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (Go 1.26.10)**; statement = the frozen
+/-- **Accept path of the `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (Go 1.26.10)**; statement =
 `Decode.accept_statement`. -/
 theorem Decode.accept : Decode.accept_statement := by
   intro k hk hf kA hkA hfA kS hkS hfS kI hkI hfI kC hkC hfC kE hkE hfE n hn in0 in1 root se sroot te troot sig ib

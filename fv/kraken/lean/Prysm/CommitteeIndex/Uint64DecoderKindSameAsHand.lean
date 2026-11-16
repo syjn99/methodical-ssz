@@ -3,9 +3,10 @@ import Prysm.Slot.DecodeAccept
 import Prysm.CommitteeIndex.Code
 
 /-!
-# Anchors of the uint64 decoder statement kind: the `CommitteeIndex` part
+# Tie of the uint64 decoder kind to the hand accept theorem of `CommitteeIndex`
 
-The declarations of the other types of this group are in `Prysm/Slot/Uint64DecoderKindSameAsHand.lean`.
+This theorem shows that the kind `Codec.uint64DecodeAcceptKind` is the statement of the hand theorem `Prysm.CommitteeIndex.Decode.accept`.
+The identity covers the full declared type, with the binders before the colon.
 -/
 
 open Machine Runtime

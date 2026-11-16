@@ -3,7 +3,7 @@ import Prysm.Checkpoint.SpecEquivalence
 import Prysm.DepositRequest.SpecDescription
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.BeaconBlocksByRangeRequest`
+# Spec bridge for the Prysm `v1alpha1.BeaconBlocksByRangeRequest`
 
 Written by `gen/flat-types/flat_types_spec.py`.
 `desc` (`Prysm/BeaconBlocksByRangeRequest/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).

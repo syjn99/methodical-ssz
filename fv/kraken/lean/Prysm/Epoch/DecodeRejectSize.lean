@@ -23,7 +23,7 @@ with the format `ElfData.PrysmTarget.formatBufferLength` (40 bytes) and the type
 `ElfData.PrysmTarget.typeInt_addr` (`type:int` of the Go 1.26.10 ELF); contract forms of `Runtime/Contracts.lean` only.
 `StaticBox` uses the table `Runtime.Data.staticuint64s` at `Runtime.Data.staticuint64s_addr`.
 `Runtime/StaticUint64s.lean` reads it from the data file `staticuint64s.data` of the Prysm link set.
-Standalone obligation: from `Checkpoint.UnmarshalSSZ` this path is unreachable.
+This theorem covers the method alone: from `Checkpoint.UnmarshalSSZ` this path is unreachable.
 -/
 
 open Machine Runtime Prysm.Epoch.Code

@@ -5,7 +5,7 @@ import Prysm.IndexedAttestation.DecodeRejectOffset
 /-!
 # Spec alignment of the IndexedAttestation decoder's size and offset rejects, and the reject cases
 
-The statements are the frozen `Decode.reject_size_spec_statement`, `Decode.reject_offset_spec_statement` and `Decode.reject_cases_statement`
+The statements are `Decode.reject_size_spec_statement`, `Decode.reject_offset_spec_statement` and `Decode.reject_cases_statement`
 (`Prysm/IndexedAttestation/Statements.lean`). `Decode.reject_cases` is about EthLib only. It gives reject completeness of the machine code only for the reject
 paths with a machine theorem (the alignment and overflow rejects only under `e0 ≠ 0`, `Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean`).
 -/

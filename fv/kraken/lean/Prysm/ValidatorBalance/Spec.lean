@@ -4,7 +4,7 @@ import Prysm.ValidatorBalance.SpecDescription
 import Prysm.ValidatorBalance.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.ValidatorBalance`
+# Spec bridge for the Prysm `v1alpha1.ValidatorBalance`
 
 `desc` (`Prysm/ValidatorBalance/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).
 It does not use `checkerDesc`.

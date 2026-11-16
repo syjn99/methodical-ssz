@@ -3,12 +3,11 @@ import Prysm.PowBlock.Spec
 import Prysm.PowBlock.Code
 
 /-!
-# Spec alignment of the real PowBlock decoder
+# Spec alignment of the PowBlock decoder
 
 Hand-written: the shape of `Prysm/Deposit_Data/DecodeSpec.lean` with the PowBlock decoder
 (the input chunks are those of the `g` that EthLib decodes).
-Built on the GENERATED theorems of `Prysm/PowBlock/GeneratedDecodeAccept.lean` (`decoder --whole-accept`;
-raw output, not edited): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
+Built on the GENERATED theorems of `Prysm/PowBlock/GeneratedDecodeAccept.lean` (`decoder --whole-accept`): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
 - `Decode.reject_size_spec`: `bs.size ≠ 96` → EthLib rejects, and the machine code returns `ssz.ErrSize`.

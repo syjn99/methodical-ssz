@@ -7,7 +7,7 @@ import Prysm.Checkpoint.Code
 /-!
 # Witness of `Encode.cover`: every capacity range on one host
 
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.Checkpoint).MarshalSSZTo` (index 8) and `MemmoveGrowsliceModel`
+Host: data labels, the Go 1.26.10 `(*v1alpha1.Checkpoint).MarshalSSZTo` (index 8) and `MemmoveGrowsliceModel`
 (index 99: `model_growslice` — new capacity `2·newLen + 192` from the bump heap — and `model_memmove`,
 both with `S = 0`). One memory block at `0x10000`: bump pointer, a 9000-byte heap (≥ `4·len + 8736`),
 guard word (r14 = 0x12320), the 72-byte receiver (`Epoch` = `uintBytes 8 g.epoch`, `Root` =
@@ -16,7 +16,7 @@ a 30-byte prefix and `n` spare bytes (cap = 30 + n). Frame `R` = `emp`. Instance
 3, 8 (cap = len + 8), 39 (len + 39), 40 (len + 40, fast path); `runs_nil`: nil `dst`
 (rbx = 0, len = cap = 0). With this growslice model the first growth gives `2·(len+8)+192 ≥ len + 40`,
 so the run with `cap < len + 8` takes the left disjunct; the right disjunct (a second growslice after the
-first) needs a runtime that returns a smaller capacity and is not exercised here (Go differential only).
+first) needs a runtime that returns a smaller capacity and is not exercised here (only the Go differential check covers it).
 -/
 
 open Machine Runtime Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz

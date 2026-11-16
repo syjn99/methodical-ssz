@@ -15,7 +15,7 @@ import Prysm.HistoricalBatch.Code
 * epilogue 155–159 (hand steps, `add $0x38`).
 Proof text: `Prysm.SyncCommittee.Decode.accept` (`Prysm/SyncCommittee/DecodeAccept.lean`): its head and epilogue steps with the frame size and the
 receiver offsets changed; the middle is a second copy of the head steps; there is no tail field segment.
-Statement: the frozen `Prysm.HistoricalBatch.Decode.accept_statement`.
+Statement: `Prysm.HistoricalBatch.Decode.accept_statement`.
 -/
 
 open Machine Runtime Prysm.HistoricalBatch.Code
@@ -23,7 +23,7 @@ variable [Host]
 
 namespace Prysm.HistoricalBatch
 
-/-- **Accept path of the real `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (Go 1.26.10)**; statement = the frozen
+/-- **Accept path of the `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (Go 1.26.10)**; statement =
 `Decode.accept_statement`. -/
 theorem Decode.accept : Decode.accept_statement := by
   intro k hk hf brs srs hbrs hbr hsrs hsr s ra guard

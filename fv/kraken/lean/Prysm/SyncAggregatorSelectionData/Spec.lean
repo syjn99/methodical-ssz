@@ -4,7 +4,7 @@ import Prysm.SyncAggregatorSelectionData.SpecDescription
 import Prysm.SyncAggregatorSelectionData.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.SyncAggregatorSelectionData`
+# Spec bridge for the Prysm `v1alpha1.SyncAggregatorSelectionData`
 
 `desc` (`Prysm/SyncAggregatorSelectionData/SpecDescription.lean`) is the independent hand `Desc` (consensus-specs).
 It does not use `checkerDesc`.

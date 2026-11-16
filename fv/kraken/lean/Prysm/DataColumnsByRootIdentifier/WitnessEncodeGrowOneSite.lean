@@ -8,7 +8,7 @@ import Prysm.DataColumnsByRootIdentifier.Code
 
 One instance per growth site (see each namespace): site 1, site 2 and the loop. In each case the first growth gives
 `nextSliceCap ≥ len + 36 + 8n` (`hone`: the doubling rule `next_slice_cap_double` below 256, one round of `growLoop` `next_slice_cap_one_step`
-above). Host: data labels, the real Go 1.26.10 `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo` (index 8),
+above). Host: data labels, the Go 1.26.10 `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo` (index 8),
 `MemmoveGrowsliceModel` (index 126: `model_growslice`, `model_memmove`). The layout of `Prysm/DataColumnsByRootIdentifier/WitnessEncodeGrowFirstSite.lean` plus the slots x − 48, x − 72 and the
 old block `pre ‖ spare`. Frame `R`: the receiver words the code does not read and the 24-byte gap at rsp − 96.
 -/

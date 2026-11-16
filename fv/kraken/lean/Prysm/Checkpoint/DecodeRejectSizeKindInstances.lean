@@ -4,6 +4,8 @@ import Prysm.Checkpoint.Code
 
 /-!
 # Tie of `decodeRejectKindAnyFrame` to the size-reject theorem of `Checkpoint`
+
+This theorem shows that the kind `Codec.decodeRejectKindAnyFrame` (size 40) is the statement of the hand theorem `Prysm.Checkpoint.Decode.reject_size`.
 -/
 
 open Machine Runtime

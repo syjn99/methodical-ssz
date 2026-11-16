@@ -1,15 +1,21 @@
-import Prysm.DataColumnsByRootIdentifier.StatementsDecodeThenEncode
+import Prysm.DataColumnsByRootIdentifier.StatementsDecode
 import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
-# Round-trip statement with a bound on the scratch size
+# Statement of the round trip with a bound on the scratch size: decoder entry → accept → encoder fast path
 
-`DecodeThenEncode.round_trip_scratch_bounded_statement` is the frozen text of `DecodeThenEncode.round_trip_statement` with one added premise
-`(hS : S < 2 ^ 60)`; nothing else differs. Reason: the encoder's scratch is the decoder's scratch and return slot
-(`S + 8` bytes, `Prysm/DataColumnsByRootIdentifier/DecodeThenEncode.lean`); splitting that block needs `S + 8 < 2^64`, and nothing in the original premises
-bounds `S` (a list longer than 2^64 would cover every address, but the separation facts that refute it are not
-proved here). The precondition is stronger than the frozen one. `DecodeThenEncode.round_trip_statement` has no proof.
-Precedent: `Prysm.Checkpoint.DecodeThenEncode.round_trip` has the same premise `hS : S < 2 ^ 60`.
+The shape of `Prysm.Checkpoint.DecodeThenEncode.round_trip` (`Prysm/Checkpoint/DecodeThenEncode.lean`). Start at the entry of
+`(*DataColumnsByRootIdentifier).UnmarshalSSZ` with the premises of `Decode.accept_statement`; the decoder returns nil to `ra`.
+The caller then calls `MarshalSSZTo` on the same receiver: `hupd` writes a new return address `ra2` into the same
+return slot and leaves the rest of the memory; registers rax = receiver, rbx/rcx/rdi = `dst` (dptr, dlen, cap), rsp
+= the same x. The encoder returns at `ra2` with `(dptr, dlen + 36 + 8n, cap, nil)` and `dst = pre ‖ input bytes`;
+the input bytes are unchanged. The encoder slots x − 24 … x − 64 are not in the decoder's footprint: the caller passes
+them (`g24 … g64`) with `dst`. The encoder's return slot x − 144 is the first word of the decoder's callee spill
+area; its scratch is the decoder's scratch and return slot (`S + 8` bytes).
+
+The premise `(hS : S < 2 ^ 60)` bounds the scratch size.
+Reason: splitting the `S + 8` bytes of the encoder scratch needs `S + 8 < 2^64`, and no other premise bounds `S`.
+`Prysm.Checkpoint.DecodeThenEncode.round_trip` has the same premise `hS : S < 2 ^ 60`.
 -/
 
 open Machine Runtime EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code

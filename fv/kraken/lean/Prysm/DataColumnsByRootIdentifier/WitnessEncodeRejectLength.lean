@@ -7,7 +7,7 @@ import Prysm.DataColumnsByRootIdentifier.Code
 # Witnesses of the two encoder rejects
 
 - `RB`: Host `[label ssz.ErrBytesLength] ++ marshalSSZTo`. Memory at `0x10000`: the two words of `ssz.ErrBytesLength`
-  (stand-in values: the real ones are set by the runtime's init), the guard word (r14 = 0x10000), the receiver window
+  (stand-in values: the Go runtime sets the values at start), the guard word (r14 = 0x10000), the receiver window
   (`state`, BlockRoot ptr, len `bl`), the stack window rsp − 8 … rsp + 24 (rsp = 0x10038). Frame `R`: `state` and the
   rax spill slot. For every `bl ≠ 32` (instances 0, 31, 33).
 - `RT`: Host `[label ssz.ErrListTooBig] ++ marshalSSZTo ++ MemmoveGrowsliceModel` (`model_memmove`, S = 0). Memory at `0x10000`: the two

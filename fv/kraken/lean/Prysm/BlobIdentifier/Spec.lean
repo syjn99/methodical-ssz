@@ -4,7 +4,7 @@ import Prysm.BlobIdentifier.SpecDescription
 import Prysm.BlobIdentifier.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.BlobIdentifier`
+# Spec bridge for the Prysm `v1alpha1.BlobIdentifier`
 
 Hand-written (`obtain … rfl` on `bs = enc g` is `rw` here: `subst` of that equation times out in `whnf` on a minimal
 reproduction).

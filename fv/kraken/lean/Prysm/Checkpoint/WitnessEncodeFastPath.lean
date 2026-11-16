@@ -6,7 +6,7 @@ import Prysm.Checkpoint.Code
 /-!
 # Witness of `Encode.fast_path` (encoder fast path)
 
-Host: the real Go 1.26.10 `(*v1alpha1.Checkpoint).MarshalSSZTo` (index 0) and
+Host: the Go 1.26.10 `(*v1alpha1.Checkpoint).MarshalSSZTo` (index 0) and
 `MemmoveGrowsliceModel` (index 91, `model_memmove`, S = 0). One memory block at `0x10000`: guard
 word (r14 = 0xfff0), the 72-byte receiver (`state` 0, `Epoch` = `e8`, `Root` =
 (0x10050, 32, 32), `unknownFields`/`sizeCache` 0), the 32 root bytes at 0x10050,

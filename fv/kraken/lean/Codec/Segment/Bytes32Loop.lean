@@ -17,7 +17,7 @@ two blocks is empty or one `nop`, `GlueSource` that it is empty (src = 0) or the
 The element size is fixed at 32: other sizes compile to other sequences (48: `lea (x,x,2)` then `shl $4`), and
 `shl $5` is stepped with `shift_left64 5` (a literal count).
 The templates are the Kraken terms of HistoricalBatch directives 36–77 (link set `prysm/go1.26.10/link-set`) (printed with `repr`) with the varying
-operands replaced by parameters; each use shows the equality with the real program by `infix_sub` and
+operands replaced by parameters; each use shows the equality with the program by `infix_sub` and
 `rfl`/`decide` (`Prysm/Deposit/DecodeAccept.lean`).
 -/
 

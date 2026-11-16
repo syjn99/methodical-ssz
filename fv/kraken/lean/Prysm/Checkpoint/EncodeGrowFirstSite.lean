@@ -3,7 +3,7 @@ import Prysm.Checkpoint.EncodeFastPath
 import Prysm.Checkpoint.Code
 
 /-!
-# Real Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, growslice path, Go 1.26.10 machine code
+# Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, growslice path, Go 1.26.10 machine code
 
 `Encode.grow_first_site`: `cap(dst) < len(dst) + 8` (the first capacity test,
 directives 17–18, fails), so the inlined `append(dst, epoch bytes...)` calls

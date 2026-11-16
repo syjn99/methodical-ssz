@@ -7,11 +7,11 @@ import Prysm.HistoricalBatch.Code
 /-!
 # Witness of `Decode.accept` (HistoricalBatch decoder accept path)
 
-It shows that the premises of the frozen
+It shows that the premises of the
 statement `Prysm.HistoricalBatch.Decode.accept_statement` are satisfiable, the three contract hypotheses included. The contract models are the
 SyncCommittee ones, imported as they are: `Prysm.RuntimeModel.BumpMakesliceByteSliceDispatch` (`Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1`, `Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24`; the type word of the
 HistoricalBatch backing arrays is the SyncCommittee one) and `MemmoveGrowsliceModel` (`model_memmove`).
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (index 9), `Prysm.RuntimeModel.BumpMakesliceByteSliceDispatch` (191) and
+Host: data labels, the Go 1.26.10 `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (index 9), `Prysm.RuntimeModel.BumpMakesliceByteSliceDispatch` (191) and
 `MemmoveGrowsliceModel` (207).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 917504-byte heap, guard word, the 524288 input
 bytes (`brs.flatten ++ srs.flatten`), the 48-byte receiver (native struct, `prysm/ir/ir-mainnet.json` gc amd64
@@ -92,7 +92,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
 -- Cause (profiler): `simp` 11.8 s of the declaration (two calls, 9.5 s and 2.23 s): the memory premise is
 -- closed by `simp` AC-normalization of the separating conjunction (24 chunks), as in `Prysm.SyncCommittee.Witness.DecodeAccept.runs`.
 set_option maxHeartbeats 2000000 in
-/-- **Non-vacuity of `Decode.accept` (the premises of the frozen statement `Decode.accept_statement` are satisfiable).** -/
+/-- **Non-vacuity of `Decode.accept` (the premises of the statement `Decode.accept_statement` are satisfiable).** -/
 theorem runs (brs srs : List (List UInt8)) (oP1 oP2 : List UInt8) (hbrs : brs.length = 8192)
     (hbr : ∀ e ∈ brs, e.length = 32) (hsrs : srs.length = 8192) (hsr : ∀ e ∈ srs, e.length = 32)
     (h1 : oP1.length = 8) (h2 : oP2.length = 8) (zmms : RegZmms) (flags : StatusFlags) :

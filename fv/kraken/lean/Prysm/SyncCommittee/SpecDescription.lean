@@ -1,9 +1,15 @@
 import Prysm.Checkpoint.Spec
 
 /-!
-# Independent hand `Desc` of `v1alpha1.SyncAggregate` and `v1alpha1.SyncCommittee`: the `SyncCommittee` part
+# Independent hand `Desc` of `v1alpha1.SyncCommittee`
 
-The declarations of the other types of this group are in `Prysm/SyncAggregate/SpecDescription.lean`.
+This description is written by hand from the consensus-specs altair container definitions (`specs/altair/beacon-chain.md`).
+It does not use the Desc file of the producer, `prysm/go1.26.10/evidence/prysm_v1alpha1.SyncCommittee.desc.json`.
+
+    SYNC_COMMITTEE_SIZE = 512                       # mainnet preset
+    class SyncCommittee(Container):
+        pubkeys: Vector[BLSPubkey, SYNC_COMMITTEE_SIZE]   # BLSPubkey = Bytes48
+        aggregate_pubkey: BLSPubkey
 -/
 
 namespace Prysm.SyncCommittee

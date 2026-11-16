@@ -4,7 +4,7 @@ import Prysm.PendingConsolidation.SpecDescription
 import Prysm.PendingConsolidation.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.PendingConsolidation`
+# Spec bridge for the Prysm `v1alpha1.PendingConsolidation`
 
 Hand-written.
 `desc` (`Prysm/PendingConsolidation/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs electra.

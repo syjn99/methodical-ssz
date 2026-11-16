@@ -5,7 +5,7 @@ import EthLib.Serialization.Proofs.Ssz.Codec.RoundTripScalar
 import Prysm.SyncCommittee.SpecDefinitions
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.SyncAggregate`
+# Spec bridge for the Prysm `v1alpha1.SyncAggregate`
 
 The Bitvector[512] field uses two EthLib
 theorems: `unpackBits_packBits` (bits → bytes → bits) and `packBits_unpackBits` (bytes → bits → bytes; the

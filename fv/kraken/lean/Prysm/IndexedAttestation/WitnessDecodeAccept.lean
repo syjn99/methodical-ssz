@@ -13,11 +13,11 @@ import Prysm.Slot.Code
 # Witness of `Decode.accept` (IndexedAttestation decoder accept path)
 
 It shows that the premises of the
-frozen statement `Prysm.IndexedAttestation.Decode.accept_statement` are satisfiable for every `n ≤ 2048`, the nine contract hypotheses
+statement `Prysm.IndexedAttestation.Decode.accept_statement` are satisfiable for every `n ≤ 2048`, the nine contract hypotheses
 included: the four `MakesliceContract` instances come from the type-dispatching model `Prysm.RuntimeModel.BumpMakesliceUint64Dispatch` (`Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size8`,
 `Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1`), the two `NewobjectContract` instances from `Prysm.RuntimeModel.BumpNewobjectStructDispatch` (`Prysm.RuntimeModel.bump_newobject_struct_dispatch_size96`,
 `Prysm.RuntimeModel.bump_newobject_struct_dispatch_size72`), the three `MemmoveContract` instances from `MemmoveGrowsliceModel`.
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (index 9),
+Host: data labels, the Go 1.26.10 `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (index 9),
 `(*v1alpha1.AttestationData).UnmarshalSSZ` (288), `(*primitives.Slot).UnmarshalSSZ` (531),
 `(*primitives.CommitteeIndex).UnmarshalSSZ` (594), `(*v1alpha1.Checkpoint).UnmarshalSSZ` (657),
 `(*primitives.Epoch).UnmarshalSSZ` (765), `Prysm.RuntimeModel.BumpMakesliceUint64Dispatch` (828), `MemmoveGrowsliceModel` (843), `Prysm.RuntimeModel.BumpNewobjectStructDispatch` (869).
@@ -158,7 +158,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
 -- PANIC messages of the tactic). Thresholds: 3000000 and 4000000 fail at `whnf`, 5000000
 -- passes, also 6000000, 8000000, 12000000, 16000000. Value: twice the passing value.
 set_option maxHeartbeats 10000000 in
-/-- **Non-vacuity of `Decode.accept` (the premises of the frozen statement `Decode.accept_statement` are satisfiable)**,
+/-- **Non-vacuity of `Decode.accept` (the premises of the statement `Decode.accept_statement` are satisfiable)**,
 for every `n ≤ 2048`, every input and every old pointer word. -/
 theorem runs (n : Nat) (hn : n ≤ 2048) (in0 in1 root se sroot te troot sig ib oP1 oD oP2 : List UInt8)
     (hin0 : in0.length = 8) (hin1 : in1.length = 8) (hroot : root.length = 32) (hse : se.length = 8)

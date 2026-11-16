@@ -6,10 +6,10 @@ import Prysm.SyncCommitteeMessage.Code
 /-!
 # Witness of `Decode.generated_reject`
 
-Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`
+Host: the label `ssz.ErrSize` (index 0), then the Go 1.26.10 `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`
 (index 1). Hand-written.
 Memory at `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a
-data word `0x2a`, stand-ins: the real values are set by the runtime's init and are not read from the ELF),
+data word `0x2a`, stand-ins: the Go runtime sets the values at start, and the ELF does not hold them),
 the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill
 slot. For every length `≠ 144` (instances 143, 145, 0) the decoder returns the two words.
 -/

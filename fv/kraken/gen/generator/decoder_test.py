@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generator tests for `generator.py decoder --whole-accept`. Tests that can fail.
 
-usage: decoder_test.py <work-dir> <result.json>      (run from anywhere; one gated job; Python 3 stdlib)
+usage: decoder_test.py <work-dir> <result.json>      (run from anywhere; one heavy job at a time; Python 3 stdlib)
 exit 0 = every case has its expected exit code and output; 1 = a case differs; 2 = usage
 
 Every case runs `gen/generator/generator.py` of the working tree. Mutants are written to <work-dir>, nothing in the repository.

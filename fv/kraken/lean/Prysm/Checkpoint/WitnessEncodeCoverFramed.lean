@@ -14,8 +14,8 @@ the second growth disjunct (return) or the second call entry disjunct (entry of 
 
 Which of the three disjuncts of growth at the first site the run takes is not decidable through the contract:
 `GrowsliceContract` hides the capacity and the remaining heap that the runtime returns (it gives only bounds).
-With the witness model `model_growslice` (capacity `2·newLen + 192`) the real run takes the root fits disjunct.
-This is a property of the model, not of the theorem. The second growth on real Go 1.26.10 is differential only.
+With the witness model `model_growslice` (capacity `2·newLen + 192`) the run takes the root fits disjunct.
+This is a property of the model, not of the theorem. Only the Go differential check covers the second growth on Go 1.26.10.
 -/
 
 open Machine Runtime Machine.Witness EthLib.Serialization.Ssz

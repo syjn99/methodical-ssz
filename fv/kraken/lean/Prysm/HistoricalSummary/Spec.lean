@@ -4,7 +4,7 @@ import Prysm.HistoricalSummary.SpecDescription
 import Prysm.HistoricalSummary.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.HistoricalSummary`
+# Spec bridge for the Prysm `v1alpha1.HistoricalSummary`
 
 Hand-written (the shape of `Prysm/PowBlock/Spec.lean` without its uint256 field, and the codec equality of
 `Prysm/PendingConsolidation/Spec.lean`). `desc` (`Prysm/HistoricalSummary/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs.

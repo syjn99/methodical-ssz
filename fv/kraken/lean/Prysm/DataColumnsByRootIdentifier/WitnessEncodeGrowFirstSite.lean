@@ -6,7 +6,7 @@ import Prysm.DataColumnsByRootIdentifier.Code
 /-!
 # Witnesses of `Encode.grow_first_site` (grow at site 1): n = 0, 1, 128
 
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo` (index 8) and `MemmoveGrowsliceModel`
+Host: data labels, the Go 1.26.10 `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo` (index 8) and `MemmoveGrowsliceModel`
 (index 126: `model_growslice`, new capacity 2·newLen + 192 from the bump heap, and `model_memmove`, both with S = 0).
 `dst` has len 3321 and cap 3352 (`len + 32 > cap`, so site 1 grows); `nextSliceCap 3353 3352 = 4382`, which holds
 `len + 36 + 8n` for n ≤ 128 (`hfit`). One memory block at `0x10000`: bump pointer, a 16956-byte bump heap

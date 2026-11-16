@@ -5,7 +5,7 @@ import Prysm.Checkpoint.Code
 import Prysm.Epoch.Code
 
 /-!
-# Spec alignment of the real Checkpoint decoder
+# Spec alignment of the Checkpoint decoder
 
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is
   `g : SszValue` with `g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of
@@ -13,7 +13,7 @@ import Prysm.Epoch.Code
   `uintBytes 8 g.epoch`, `Root` = `(p, 32, 32)` with `g.root` at `p`).
 - `Decode.reject_size_spec`: `bs.size ≠ 40` → EthLib rejects, and the machine code
   (with `rcx = bs.size`) returns the two words of `ssz.ErrSize`.
-- `Decode.reject_complete` (obligation `reject_complete`): every input that EthLib
+- `Decode.reject_complete`: every input that EthLib
   rejects has `size ≠ 40`, which is the path condition of the one reject site of
   `UnmarshalSSZ` (`return ssz.ErrSize`, `Decode.reject_size`). Join: the
   machine accepts only `size = 40` inputs (every other size takes the ErrSize

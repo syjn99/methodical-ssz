@@ -8,7 +8,7 @@ import Runtime.StaticBoxLemmas
 import Codec.EncodeBitVecLemmas
 
 /-!
-# Real Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, fast path, Go 1.26.10 machine code
+# Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, fast path, Go 1.26.10 machine code
 
     func (c *Checkpoint) MarshalSSZTo(dst []byte) ([]byte, error) {
         if dst, err = c.Epoch.MarshalSSZTo(dst); err != nil { ... }   // inlined, cannot fail

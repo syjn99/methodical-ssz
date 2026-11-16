@@ -7,9 +7,9 @@ import Prysm.SyncAggregate.Code
 /-!
 # Witness of `Decode.accept` (SyncAggregate decoder accept path)
 
-It shows that the premises of the frozen
+It shows that the premises of the
 statement `Prysm.SyncAggregate.Decode.accept_statement` are satisfiable.
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.SyncAggregate).UnmarshalSSZ` (index 9), the 1-byte bump
+Host: data labels, the Go 1.26.10 `(*v1alpha1.SyncAggregate).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (115, `bump_makeslice1`) and `MemmoveGrowsliceModel` (121, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 160-byte heap, guard word, the 160 input bytes,
 the 88-byte receiver (protoc struct; `prysm/ir/ir-mainnet.json` gc amd64 layout, size 88: `state` 0,
@@ -89,7 +89,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
 -- Thresholds measured in separate runs: 200000 and 400000 fail at `whnf`, 1000000 passes.
 -- Value 2000000 (twice the lowest passing value): passes.
 set_option maxHeartbeats 2000000 in
-/-- **Non-vacuity of `Decode.accept` (the premises of the frozen statement `Decode.accept_statement` are satisfiable).** -/
+/-- **Non-vacuity of `Decode.accept` (the premises of the statement `Decode.accept_statement` are satisfiable).** -/
 theorem runs (bits sig oP1 oP2 : List UInt8) (hbits : bits.length = 64) (hsig : sig.length = 96)
     (h1 : oP1.length = 8) (h2 : oP2.length = 8) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)

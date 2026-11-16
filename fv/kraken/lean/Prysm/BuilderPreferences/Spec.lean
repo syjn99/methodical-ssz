@@ -3,7 +3,7 @@ import Prysm.Checkpoint.SpecEquivalence
 import Prysm.DepositRequest.SpecDescription
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.BuilderPreferences`
+# Spec bridge for the Prysm `v1alpha1.BuilderPreferences`
 
 Written by `gen/flat-types/flat_types_spec.py`.
 `desc` (`Prysm/BuilderPreferences/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).

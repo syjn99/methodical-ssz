@@ -6,7 +6,7 @@ import Machine.Labels
 import Prysm.BeaconBlockHeader.Code
 
 /-!
-# Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, ParentRoot and StateRoot blocks
+# Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, ParentRoot and StateRoot blocks
 
 These segments continue `Prysm.BeaconBlockHeader.EncodeHead`.
 The length rejects of `Prysm/BeaconBlockHeader/EncodeRejectLength.lean` use them.

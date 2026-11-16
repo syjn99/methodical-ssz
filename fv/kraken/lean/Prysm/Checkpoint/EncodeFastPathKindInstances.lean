@@ -3,10 +3,11 @@ import Prysm.Checkpoint.EncodeFastPath
 import Prysm.Checkpoint.Code
 
 /-!
-# Tie of `encodeFastPathKindAnyFrame` to the hand-written encoder fast-path statement of Checkpoint
+# Tie of `encodeFastPathKindAnyFrame` to the hand encoder fast-path statement of `Checkpoint`
 
+This theorem shows that the kind `Codec.encodeFastPathKindAnyFrame` implies the statement of the hand theorem `Prysm.Checkpoint.Encode.fast_path`.
 `encodeLayout` is the layout of the hand statement `Encode.fast_path`, with the stack chunks in its order.
-`Encode.fast_path_of_kind`: the kind instance implies the hand statement; the converse does not hold as stated.
+The converse does not hold as stated.
 -/
 
 open Machine Runtime

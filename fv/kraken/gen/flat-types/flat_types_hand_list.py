@@ -1,12 +1,12 @@
-"""Append the names of the eight types (`TYPES` below) to gen/axioms-lists/flat-fixed-size-types.lean (imports after the last import;
+"""Append the names of the types of `HAND_LIST_TYPES` below to gen/axioms-lists/flat-fixed-size-types.lean (imports after the last import;
 #print axioms lines at the end). Names: every declaration of the dump that matches a pattern of `pats` below."""
 import re, sys
 dump, axs, lean = sys.argv[1:4]
-TYPES = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest',
+HAND_LIST_TYPES = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest',
          'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity', 'BuilderPreferences']
 # the declarations that the tools of gen/flat-types/ and the generator runs of these types write
 pats = [r'^Prysm\.(%s)\.(Decode\.(generated_|accept_spec$|reject_size_spec$|reject_complete$)|Encode\.generated_|'
-        r'Witness\.Generated|SszValue\b|desc\b|desc_|checker|Code\.)' % '|'.join(TYPES)]
+        r'Witness\.Generated|SszValue\b|desc\b|desc_|checker|Code\.)' % '|'.join(HAND_LIST_TYPES)]
 names = []
 for l in open(dump):
     if l.startswith('#'):

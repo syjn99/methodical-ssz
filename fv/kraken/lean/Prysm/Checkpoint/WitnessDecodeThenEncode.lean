@@ -9,16 +9,16 @@ import Prysm.Epoch.Code
 /-!
 # Witness of `DecodeThenEncode.round_trip` (machine-level composition, one Host for decoder and encoder)
 
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.Checkpoint).UnmarshalSSZ`
-(index 9), the real `(*primitives.Epoch).UnmarshalSSZ` (index 117), the 1-byte
+Host: data labels, the Go 1.26.10 `(*v1alpha1.Checkpoint).UnmarshalSSZ`
+(index 9), the `(*primitives.Epoch).UnmarshalSSZ` (index 117), the 1-byte
 bump `runtime.makeslice` (index 180, `bump_makeslice1`), `MemmoveGrowsliceModel` (index 186,
-`model_memmove`) and the real `(*v1alpha1.Checkpoint).MarshalSSZTo` (index 212).
+`model_memmove`) and the `(*v1alpha1.Checkpoint).MarshalSSZTo` (index 212).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 32-byte
 heap, guard word, the 40 input bytes, the 72-byte receiver (all zero: a fresh
 `&Checkpoint{}`), the 144-byte stack window (rsp = 0x1011c, decoder scratch
 `S = 24`, encoder scratch 0) and `dst` at 0x10134 = prefix `[0xaa, 0xbb, 0xcc]`,
 40 old bytes, 5 spare bytes (`cap = 48`). The frame `frame_rest` is the spare capacity.
-The middle state is a real memory: the decoder's final memory with the
+The middle state is a concrete memory: the decoder's final memory with the
 encoder's return address (`ra2 = 0`) stored into the return slot
 (`Mem.storeInt`).
 -/
@@ -98,7 +98,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
 
 set_option maxHeartbeats 16000000 in
 /-- **Non-vacuity of `DecodeThenEncode.round_trip`.** Every premise holds in
-this one host; the decoder returns nil; from the real middle memory (return
+this one host; the decoder returns nil; from the middle memory (return
 slot rewritten with `ra2 = 0`) the encoder returns `(0x10134, 3 + 40, 48, nil)`
 and `dst[3..43]` = the 40 input bytes `e8 ++ root`. -/
 theorem runs (e8 root : List UInt8) (he8 : e8.length = 8) (hroot : root.length = 32)

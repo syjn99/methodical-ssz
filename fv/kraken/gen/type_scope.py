@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Provisional scope classification of the Prysm types of the inventory.
+"""Scope classification of the Prysm types of the inventory.
 
 Usage: type_scope.py <kraken-dir>     writes prysm/type-scope.json and prysm/type-scope.md
 
-PROVISIONAL. Nothing here is proved or attempted. For every type of the inventory:
+This is a classification, not a proof. For every type of the inventory:
 - patterns: the field shapes mapped to the existing hand proof patterns; shapes with no hand
   pattern are "new pattern"
 - contracts: runtime calls of the three functions (go1.26.10/functions.json) checked against
@@ -154,7 +154,7 @@ def main():
         "three_functions_parse": sum(1 for r in rin if all(p == "OK" for p in r["kraken_parse_marshal_size_unmarshal"])),
         "some_function_does_not_parse": sum(1 for r in rin if any(p != "OK" for p in r["kraken_parse_marshal_size_unmarshal"])),
     }
-    res = {"schema": "fv.kraken.type-scope/1", "status": "PROVISIONAL (classification, no proof attempted)",
+    res = {"schema": "fv.kraken.type-scope/1", "status": "classification, not a proof",
            "hand_max_instructions": hand_max, "types": len(rows),
            "counts": {"first_class": cnt(lambda r: r["first_class"]),
                       "first_class_transitive": cnt(lambda r: r["first_class_transitive"]),
@@ -168,8 +168,8 @@ def main():
                       "fulu_reachable_first_class": dict(sorted(Counter(r["first_class"] for r in rows if r["fulu_reachable"]).items()))},
            "rows": rows}
     json.dump(res, open(f"{k}/prysm/type-scope.json", "w"), indent=1)
-    L = ["# Type scope: provisional classification of the Prysm types", "",
-         "**It is provisional.** We did not try proofs. This table does not say whether a proof is possible. `gen/type_scope.py` makes it from JSON.", "",
+    L = ["# Type scope: classification of the Prysm types", "",
+         "This table is a classification. It does not say whether a proof is possible. `gen/type_scope.py` makes it from JSON.", "",
          "Failure reason classes (in the order in which they apply first): tool gap (the Kraken parser rejects one of the three functions) > missing contract > new pattern (automation) > none known.",
          "\"Including callees\" is the first class that applies in the type and the closure of its generated callees. If the type alone is \"none known\" but a callee blocks it, the type is blocked.",
          "123 of the 135 Prysm types are protobuf structs. Their Go layout is different from the reduced types of the hand case (`ir/*.json` `go_fields`).",

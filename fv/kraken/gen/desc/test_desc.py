@@ -10,7 +10,7 @@
       - list scenarios: the scenarios of review_mutants.py, the scenarios of this file, and for every wrong
         hand-type Desc an "added" (next to the originals) and an "in-place" (in place of its base) scenario;
       expect.json and batch.txt.
-  run_desc_checker.sh <work-dir> <fv/kraken/lean>       (gated; writes the checker result files)
+  run_desc_checker.sh <work-dir> <fv/kraken/lean>       (a heavy job; writes the checker result files)
   test_desc.py evaluate <work-dir> <out.json>
       Reads only the checker result files (main.result.json, scen/*.result.json). Writes
       <out.json> and <out.md> (table: case -> expected -> actual -> failing check).

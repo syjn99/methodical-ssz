@@ -1,6 +1,6 @@
 {
  "schema": "fv.kraken.type-scope/1",
- "status": "PROVISIONAL (classification, no proof attempted)",
+ "status": "classification, not a proof",
  "hand_max_instructions": 395,
  "types": 135,
  "counts": {

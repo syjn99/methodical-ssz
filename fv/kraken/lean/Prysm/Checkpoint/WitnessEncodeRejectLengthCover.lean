@@ -7,10 +7,10 @@ import Prysm.Checkpoint.Code
 /-!
 # Witness of `Encode.reject_length_cover`: `len(Root) ≠ 32`, every capacity range
 
-Host: data labels (the bump pointer, `ssz.ErrBytesLength` at 0x10008), the real Go 1.26.10
+Host: data labels (the bump pointer, `ssz.ErrBytesLength` at 0x10008), the Go 1.26.10
 `(*v1alpha1.Checkpoint).MarshalSSZTo` (index 9) and `MemmoveGrowsliceModel` (index 100: `model_growslice` — new capacity `2·newLen + 192` from the bump heap — and `model_memmove`,
 both with `S = 0`). One memory block at `0x10000`: bump pointer, the two `ssz.ErrBytesLength` words
-(stand-ins 0x10e8, 0x2b: the real values are set by the runtime's init; non-nil-ness is not proved),
+(stand-ins 0x10e8, 0x2b: the Go runtime sets the values at start; non-nil-ness is not proved),
 a 9000-byte heap, guard word (r14 = 0x12330), the 72-byte receiver (`Root` = (0x5000, rl, 48),
 `rl ≠ 32`), the stack window (rsp = 0x12408) and `dst` at 0x12428 = a 30-byte prefix and `n` spare
 bytes. Frame `R` = `emp`. Instances: n = 0 (cap = len: first growslice, then the reject), 3, 8

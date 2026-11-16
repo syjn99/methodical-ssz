@@ -68,7 +68,7 @@ def Decode.reject_size_statement : Prop :=
 /-- **Deposit accept (machine).** On a 1240-byte input `proofs.flatten ‖ pk ‖ wc ‖ amt ‖ sig` (33 blocks of 32 bytes,
 then the 184 bytes of a Deposit_Data) the decoder returns nil; the receiver holds a fresh `[][]byte` Proof
 (len = cap = 33, headers `(ps[i], 32, 32)`, element i = `proofs[i]`) and a fresh Deposit_Data object `po` decoded
-by the real Deposit_Data decoder (the postcondition of `Prysm.Deposit_Data.Decode.generated_accept`: PublicKey = pk,
+by the Deposit_Data decoder (the postcondition of `Prysm.Deposit_Data.Decode.generated_accept`: PublicKey = pk,
 WithdrawalCredentials = wc, Amount = amt, Signature = sig); input, `state`, the spills, the caller's frame `R`
 and the stack guard are unchanged; 2144 heap bytes are used. -/
 def Decode.accept_statement : Prop :=

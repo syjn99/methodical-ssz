@@ -7,9 +7,9 @@ import Prysm.DataColumnsByRootIdentifier.Code
 /-!
 # Witness of `Decode.accept` (decoder accept path)
 
-The premises of the frozen `Decode.accept_statement` are satisfiable for every `n ≤ 128`, the three contract hypotheses
+The premises of `Decode.accept_statement` are satisfiable for every `n ≤ 128`, the three contract hypotheses
 included: both `MakesliceContract` instances from `Prysm.RuntimeModel.BumpMakesliceUint64DispatchForDataColumnsByRootIdentifier` (`Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_for_data_columns_by_root_identifier_size8`, `Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_for_data_columns_by_root_identifier_size1`), `MemmoveContract`
-from `MemmoveGrowsliceModel`. Host: data labels (bump pointer at 0, `runtime.writeBarrier` at 8), the real Go 1.26.10
+from `MemmoveGrowsliceModel`. Host: data labels (bump pointer at 0, `runtime.writeBarrier` at 8), the Go 1.26.10
 `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ` (index 9), `Prysm.RuntimeModel.BumpMakesliceUint64DispatchForDataColumnsByRootIdentifier`, `MemmoveGrowsliceModel`. One memory block at
 `0x10000`: bump pointer, writeBarrier word, the 1056-byte heap (`32 + 8 · 128`), guard word, the receiver window
 (`state`, the old BlockRoot and Columns words), the stack window rsp − 152 … rsp + 40 (rsp = 0x10504, S = 0), and last

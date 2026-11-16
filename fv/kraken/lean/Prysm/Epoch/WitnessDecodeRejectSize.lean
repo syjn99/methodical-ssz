@@ -7,7 +7,7 @@ import Prysm.Epoch.Code
 # Witnesses of `Decode.reject_size` (len 7, 9 and 300)
 
 Host: four data labels (`go_string._` at 0x10000, `runtime.gcbits._` 0x10001,
-`runtime.staticuint64s` 0x10002, `runtime.modelBumpPointer` 0x10003), the real Go 1.26.10
+`runtime.staticuint64s` 0x10002, `runtime.modelBumpPointer` 0x10003), the Go 1.26.10
 `(*primitives.Epoch).UnmarshalSSZ` (index 4) and `ErrorfConvT64Model` (index 67: the
 `model_convT64` model on the bump heap, `model_errorf_decimal_decimal`). One memory block from
 0x10003 to the format string at `go_string._ + 110051`: bump pointer, the

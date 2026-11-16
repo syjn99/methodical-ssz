@@ -4,7 +4,7 @@ import Prysm.PendingDeposit.SpecDescription
 import Prysm.PendingDeposit.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.PendingDeposit`
+# Spec bridge for the Prysm `v1alpha1.PendingDeposit`
 
 Hand-written.
 `desc` (`Prysm/PendingDeposit/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs electra.

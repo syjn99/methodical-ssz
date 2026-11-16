@@ -7,11 +7,11 @@ import Prysm.IndexedAttestation.Code
 /-!
 # Witnesses of `Decode.reject_size` (size reject) and `Decode.reject_offset` (offset reject)
 
-The premises of the frozen statements `Decode.reject_size_statement` and
+The premises of the statements `Decode.reject_size_statement` and
 `Decode.reject_offset_statement` (`Prysm/IndexedAttestation/Statements.lean`) are satisfiable. Host: the labels `ssz.ErrSize` (index 0, 0x10000) and
-`ssz.ErrInvalidVariableOffset` (index 16, 0x10010) with pad labels between, then the real Go 1.26.10
+`ssz.ErrInvalidVariableOffset` (index 16, 0x10010) with pad labels between, then the Go 1.26.10
 `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (index 17). (The host of the alignment and overflow rejects, `Prysm/IndexedAttestation/WitnessDecodeRejectAlignment.lean` has neither label.)
-Memory at 0x10000: the two words of `ssz.ErrSize` (stand-ins `0x10e8`, `0x2a`: the real values are set by the
+Memory at 0x10000: the two words of `ssz.ErrSize` (stand-ins `0x10e8`, `0x2a`: the values are set by the
 runtime's package init), the two words of `ssz.ErrInvalidVariableOffset` (stand-ins `0x10f0`, `0x2b`), the guard
 word (r14 = 0x10010), the saved-rbp slot, the return slot (rsp = 0x10030), the caller's word at rsp + 8, the rbx
 spill slot and the 4 offset bytes of the input (rbx = 0x10048). The frame `R` holds the chunks that a statement does

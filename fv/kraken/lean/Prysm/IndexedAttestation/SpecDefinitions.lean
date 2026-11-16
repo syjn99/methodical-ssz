@@ -5,9 +5,9 @@ import Spec.TestListU64
 /-!
 # Definitions that the IndexedAttestation statements use (IndexedAttestation)
 
-These definitions are part of the frozen IndexedAttestation statements (`Prysm/IndexedAttestation/Statements.lean`). A later change needs a new name and a reason.
+These definitions are part of the IndexedAttestation statements (`Prysm/IndexedAttestation/Statements.lean`). A later change needs a new name and a reason.
 
-- `desc`: hand `Desc` from consensus-specs phase0 (no local copy of the spec text):
+- `desc`: hand `Desc` from consensus-specs phase0 (`ethereum/consensus-specs` release `v1.7.0-beta.4`, `specs/phase0/beacon-chain.md`):
 
       class IndexedAttestation(Container):
           attesting_indices: List[ValidatorIndex, MAX_VALIDATORS_PER_COMMITTEE]   # uint64, 2048

@@ -4,7 +4,7 @@ import Prysm.IndexedAttestation.Spec
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: accept path against EthLib
 
-`Decode.accept_spec : Decode.accept_spec_statement` (frozen, `Prysm/IndexedAttestation/Statements.lean`): an input that EthLib accepts against
+`Decode.accept_spec : Decode.accept_spec_statement` (`Prysm/IndexedAttestation/Statements.lean`): an input that EthLib accepts against
 `desc` is `SszValue.encode g` for a `g : SszValue` with `g.toValue = v` (`accepted_is_encode`), and the machine code
 decodes it into `g` (`Decode.accept` with `n = g.idx.length`).
 -/

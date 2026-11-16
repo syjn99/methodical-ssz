@@ -8,7 +8,7 @@ import Prysm.Epoch.Code
 import Prysm.Slot.Code
 
 /-!
-# Spec alignment of the real AttestationData decoder
+# Spec alignment of the AttestationData decoder
 
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`, the independent
   consensus-specs Desc) as `v`, there is `g : SszValue` with `g.toValue = v` and
@@ -17,7 +17,7 @@ import Prysm.Slot.Code
   at the fresh `p`, Source / Target = fresh objects holding `g.source` / `g.target`).
 - `Decode.reject_size_spec`: `bs.size ≠ 128` → EthLib rejects, and the machine code
   (with `rcx = bs.size`) returns the two words of `ssz.ErrSize`.
-- `Decode.reject_complete` (obligation `reject_complete`): every input that EthLib rejects
+- `Decode.reject_complete`: every input that EthLib rejects
   has `size ≠ 128`, the path condition of the one reachable reject site (`return
   ssz.ErrSize`). The four `fmt.Errorf` wrap sites are unreachable
   (`Prysm/AttestationData/DecodeRejectSize.lean`); they are not needed for the join and are not reject coverage.

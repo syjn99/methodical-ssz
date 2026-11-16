@@ -5,13 +5,13 @@ import Prysm.Checkpoint.Code
 import Prysm.ElfData.PrysmTarget
 
 /-!
-# Real Prysm `(*v1alpha1.Checkpoint).UnmarshalSSZ`: size reject and the unreachable Epoch-error path
+# Prysm `(*v1alpha1.Checkpoint).UnmarshalSSZ`: size reject and the unreachable Epoch-error path
 
 `Decode.reject_size` (`len(buf) ≠ 40`, Go source `return ssz.ErrSize`):
 directives 2–7 (guard, prologue, rbx spill), 9–10 `cmp $0x28,%rcx; jne L_16b`
 taken, 91 `L_16b`, 92–93 load the two words of `ssz.ErrSize`, 94–96 epilogue.
 The address is the data item `ElfData.PrysmTarget.sszErrSize_addr` (its symbol checked
-against the ELF by `link/check.py` (f)); the two words `e0`, `e1` are the
+against the ELF by the data check of `link/check.py`); the two words `e0`, `e1` are the
 global's value after package init (premise; `e0 ≠ 0` there, so the error is
 non-nil).
 

@@ -20,7 +20,7 @@ at the end of an argument set-up). The dense lemmas have one
   Tactics `window_skip_leading_nops`, `window_step_directive`, `window_skip_nops`, `window_skip_to_end` are the window forms of `step_directive` (`Machine/Step.lean`).
 
 Why the dense lemmas are not transferred by a general theorem: a `callq` pushes the address of the NEXT
-directive. In the real program that is the address of the nop, in a nop-erased program the address of the
+directive. In the program that is the address of the nop, in a nop-erased program the address of the
 instruction after it; the two machine states differ. The window lemmas are therefore proved directly (the
 proof texts of the dense lemmas with `window_step_directive` for `step_directive`), and the dense lemmas are their `q := tmpl` instances.
 Nothing here is trusted beyond `Machine.Step`.

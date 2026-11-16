@@ -10,7 +10,7 @@ import Prysm.ValidatorIndex.Code
 
 Hand-written. It shows that
 the premises of the independent hand statement `Prysm.PendingPartialWithdrawal.Decode.accept_statement` are satisfiable.
-Host: one label, the real Go 1.26.10 `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` (index 1),
+Host: one label, the Go 1.26.10 `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` (index 1),
 `(*primitives.ValidatorIndex).UnmarshalSSZ` (110) and `(*primitives.Epoch).UnmarshalSSZ` (173).
 One memory block at `0x10000`: guard word (r14 = 0xfff0), the 24 input bytes (rbx = 0x10008), the 64-byte
 receiver (rax = 0x10020; protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout, size 64: `state` 0,

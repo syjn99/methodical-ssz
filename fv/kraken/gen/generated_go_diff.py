@@ -7,9 +7,9 @@ Usage: generated_go_diff.py <prysm-tree> <gen-dir> <out-dir>
   file already replaced in the work tree does not matter.
 Writes <out-dir>/<preset>/<file>.diff and <out-dir>/generated-go-diff.json.
 
-A change block is a run of +/- lines. Each rule in RULES matches the change of
-one generator commit; its first item is that commit. A block that matches no rule is
-"unclassified" and needs a reading by hand.
+A change block is a run of +/- lines. Each rule in RULES matches the change of one generator commit.
+The key of a rule (its first item) is the short id of that commit in this repository; the output counts blocks by it.
+A block that matches no rule is "unclassified" and needs a reading by hand.
 Python 3 standard library only. Run with python3 -I.
 """
 import difflib

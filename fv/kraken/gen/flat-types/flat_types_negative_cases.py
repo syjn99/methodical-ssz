@@ -3,10 +3,10 @@ Per decoder type: accept_spec control; mutants of the generated accept theorem (
 theorem (post rax), accept_spec (hlen + 1), the accept witness (post rax). Per encoder type: spec control; mutants of the
 generated fast-path theorem (post rax), the spec corollary (hcap weakened by 8), the witness (post rax)."""
 import json, os, re, sys
-L = sys.argv[1]   # fv/kraken/lean
-DEC = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest',
+LEAN_DIR = sys.argv[1]   # fv/kraken/lean
+DECODER_CASE_TYPES = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest',
        'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
-ENC = ['BeaconBlocksByRangeRequest', 'BuilderDepositRequest', 'BuilderPreferences', 'BlobSidecarsByRangeRequest',
+ENCODER_CASE_TYPES = ['BeaconBlocksByRangeRequest', 'BuilderDepositRequest', 'BuilderPreferences', 'BlobSidecarsByRangeRequest',
        'DepositRequest', 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
 # the negative case id: <Go type in kebab case>-<theorem without its type namespace>-<kind>[-<mutated text>]
 # (the rule of all negative case files)
@@ -35,7 +35,7 @@ def case_id(mod, thm, kind, old=None, new=None):
     return re.sub(r'-+', '-', out)[:120].strip('-')
 
 def statement_of(path, thm):
-    s = open(os.path.join(L, path)).read()
+    s = open(os.path.join(LEAN_DIR, path)).read()
     # the declaring line has the full name without the namespace of its block: the longest suffix that occurs
     parts = thm.split('.')
     decl = next(('.'.join(parts[k:]) for k in range(len(parts)) if 'theorem ' + '.'.join(parts[k:]) + ' ' in s), thm)
@@ -56,29 +56,29 @@ def case(mod, thm, old=None, new=None):
     return dict(id=case_id(mod, thm, 'statement', old, new), module=mod, theorem=thm, kind='statement', old=old, new=new)
 
 
-C = []
-for T in DEC:
-    N = int(re.search(r'\(hlen : s\.regs\.rcx = (\d+)\)', statement_of(f'Prysm/{T}/GeneratedDecodeAccept.lean', f'Prysm.{T}.Decode.generated_accept')).group(1))
-    C.append(case(f'Prysm/{T}/DecodeSpec.lean', f'Prysm.{T}.Decode.accept_spec'))
-    C.append(case(f'Prysm/{T}/GeneratedDecodeAccept.lean', f'Prysm.{T}.Decode.generated_accept',
+CASES = []
+for type_name in DECODER_CASE_TYPES:
+    N = int(re.search(r'\(hlen : s\.regs\.rcx = (\d+)\)', statement_of(f'Prysm/{type_name}/GeneratedDecodeAccept.lean', f'Prysm.{type_name}.Decode.generated_accept')).group(1))
+    CASES.append(case(f'Prysm/{type_name}/DecodeSpec.lean', f'Prysm.{type_name}.Decode.accept_spec'))
+    CASES.append(case(f'Prysm/{type_name}/GeneratedDecodeAccept.lean', f'Prysm.{type_name}.Decode.generated_accept',
                   'st.data.regs.rax = 0 ∧', 'st.data.regs.rax = 1 ∧'))
-    C.append(case(f'Prysm/{T}/GeneratedDecodeAccept.lean', f'Prysm.{T}.Decode.generated_reject',
+    CASES.append(case(f'Prysm/{type_name}/GeneratedDecodeAccept.lean', f'Prysm.{type_name}.Decode.generated_reject',
                   'st.data.regs.rax = e0', 'st.data.regs.rax = e1'))
-    C.append(case(f'Prysm/{T}/DecodeSpec.lean', f'Prysm.{T}.Decode.accept_spec',
+    CASES.append(case(f'Prysm/{type_name}/DecodeSpec.lean', f'Prysm.{type_name}.Decode.accept_spec',
                   '(hlen : s.regs.rcx.toNat = bsA.size)', '(hlen : s.regs.rcx.toNat = bsA.size + 1)'))
-    C.append(case(f'Prysm/{T}/WitnessGeneratedDecodeAccept.lean', f'Prysm.{T}.Witness.GeneratedDecodeAccept.runs',
+    CASES.append(case(f'Prysm/{type_name}/WitnessGeneratedDecodeAccept.lean', f'Prysm.{type_name}.Witness.GeneratedDecodeAccept.runs',
                   'st.data.regs.rax = 0 ∧', 'st.data.regs.rax = 1 ∧'))
-for T in ENC:
-    sp = statement_of(f'Prysm/{T}/GeneratedEncodeFastPathSpec.lean', f'Prysm.{T}.Encode.generated_fast_spec')
+for type_name in ENCODER_CASE_TYPES:
+    sp = statement_of(f'Prysm/{type_name}/GeneratedEncodeFastPathSpec.lean', f'Prysm.{type_name}.Encode.generated_fast_spec')
     n = int(re.search(r'\(hcap : s\.regs\.rcx\.toNat \+ (\d+) ≤ s\.regs\.rdi\.toNat\)', sp).group(1))
-    wt = statement_of(f'Prysm/{T}/WitnessGeneratedEncodeFastPath.lean', f'Prysm.{T}.Witness.GeneratedEncodeFastPath.runs_empty')
+    wt = statement_of(f'Prysm/{type_name}/WitnessGeneratedEncodeFastPath.lean', f'Prysm.{type_name}.Witness.GeneratedEncodeFastPath.runs_empty')
     rax = re.search(r'st\.data\.regs\.rax = (0x[0-9a-f]+)', wt).group(1)
-    C.append(case(f'Prysm/{T}/GeneratedEncodeFastPathSpec.lean', f'Prysm.{T}.Encode.generated_fast_spec'))
-    C.append(case(f'Prysm/{T}/GeneratedEncodeFastPath.lean', f'Prysm.{T}.Encode.generated_fast',
+    CASES.append(case(f'Prysm/{type_name}/GeneratedEncodeFastPathSpec.lean', f'Prysm.{type_name}.Encode.generated_fast_spec'))
+    CASES.append(case(f'Prysm/{type_name}/GeneratedEncodeFastPath.lean', f'Prysm.{type_name}.Encode.generated_fast',
                   'st.data.regs.rax = s.regs.rbx', 'st.data.regs.rax = s.regs.rcx'))
-    C.append(case(f'Prysm/{T}/GeneratedEncodeFastPathSpec.lean', f'Prysm.{T}.Encode.generated_fast_spec',
+    CASES.append(case(f'Prysm/{type_name}/GeneratedEncodeFastPathSpec.lean', f'Prysm.{type_name}.Encode.generated_fast_spec',
                   f'(hcap : s.regs.rcx.toNat + {n} ≤ s.regs.rdi.toNat)', f'(hcap : s.regs.rcx.toNat + {n - 8} ≤ s.regs.rdi.toNat)'))
-    C.append(case(f'Prysm/{T}/WitnessGeneratedEncodeFastPath.lean', f'Prysm.{T}.Witness.GeneratedEncodeFastPath.runs_empty',
+    CASES.append(case(f'Prysm/{type_name}/WitnessGeneratedEncodeFastPath.lean', f'Prysm.{type_name}.Witness.GeneratedEncodeFastPath.runs_empty',
                   f'st.data.regs.rax = {rax}', 'st.data.regs.rax = 0x8'))
-json.dump(C, open(sys.argv[2], 'w'), indent=1, ensure_ascii=False)
-print(len(C), sum(1 for c in C if c['kind'] == 'control'))
+json.dump(CASES, open(sys.argv[2], 'w'), indent=1, ensure_ascii=False)
+print(len(CASES), sum(1 for c in CASES if c['kind'] == 'control'))

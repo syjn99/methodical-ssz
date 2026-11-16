@@ -7,7 +7,7 @@ line. Prints `parser OK <file> <directives>` or `parser ERR <file> <message>`,
 then `parser DONE <ok> <err>`. `<file>` is the file name without its directory, so the output holds no machine path.
 Read-only; no declaration is added.
 
-Run (gated): `cd fv/kraken/lean && PARSER_RUN_LIST=<file> lake env lean ../gen/kraken-parser/ParserRun.lean`
+Run (a heavy job): `cd fv/kraken/lean && PARSER_RUN_LIST=<file> lake env lean ../gen/kraken-parser/ParserRun.lean`
 -/
 
 def parserRunMain : IO Unit := do

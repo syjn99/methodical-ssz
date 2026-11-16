@@ -7,7 +7,7 @@ import Machine.Include
 
 Every definition below is elaborated by `data_include` (`Machine/Include.lean`) from a file of `fv/kraken/prysm/go1.26.10/link-set/data/`.
 `gen/checks/link_set.py` writes the files from the item table `prysm/go1.26.10/link-set.tsv` and the operands of the
-converted code. `link/check.py` (f) compares them with the ELF
+converted code. The data check of `link/check.py` compares them with the ELF
 (`prysm/go1.26.10/link-set/RESULT`). No byte and no offset below is written by hand.
 The names keep the ids of the data files. An operand that two functions share has one data file.
 The address lemmas at the end give the label form of some addresses. `rfl` proves each of them.

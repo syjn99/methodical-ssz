@@ -1,6 +1,6 @@
-# Type scope: provisional classification of the Prysm types
+# Type scope: classification of the Prysm types
 
-**It is provisional.** We did not try proofs. This table does not say whether a proof is possible. `gen/type_scope.py` makes it from JSON.
+This table is a classification. It does not say whether a proof is possible. `gen/type_scope.py` makes it from JSON.
 
 Failure reason classes (in the order in which they apply first): tool gap (the Kraken parser rejects one of the three functions) > missing contract > new pattern (automation) > none known.
 "Including callees" is the first class that applies in the type and the closure of its generated callees. If the type alone is "none known" but a callee blocks it, the type is blocked.

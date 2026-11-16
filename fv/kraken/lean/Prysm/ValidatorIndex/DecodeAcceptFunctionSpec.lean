@@ -5,7 +5,7 @@ import Prysm.ValidatorIndex.Code
 # `Decode.accept_function_spec`: function specification of `(*primitives.ValidatorIndex).UnmarshalSSZ`, accept path
 
 Hand-written (not generator output). The form of `Prysm.CommitteeIndex.Decode.accept_function_spec` at the
-label `Prysm.ValidatorIndex.Code.unmarshalLabel`. `Decode.accept_function_spec_holds` proves it from the generated machine
+label `Prysm.ValidatorIndex.Code.unmarshalSSZLabel`. `Decode.accept_function_spec_holds` proves it from the generated machine
 theorem `Prysm.ValidatorIndex.Decode.generated_accept`. The
 BeaconBlockHeader decoder uses the callee only through this specification (no contract).
 -/
@@ -34,14 +34,14 @@ def Decode.accept_function_spec : Prop :=
           ⋆ Eq ((Int.toBytes 8 st.regs.rbx.toBitVec.toInt).At (st.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (st.regs.r14.toBitVec + 16))
           ⋆ Eq (e8.At st.regs.rbx.toBitVec) ⋆ Eq (e8.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
-      ⟨st, label unmarshalLabel⟩
+      ⟨st, label unmarshalSSZLabel⟩
 
 /-- The ValidatorIndex machine code satisfies its specification (no assumption beyond the code's place in
 the host and its label freshness). -/
 theorem Decode.accept_function_spec_holds (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh unmarshalSSZ k) : Decode.accept_function_spec := by
   intro st ret e8 fp s2 c0 guard F he8 hfp h2 hc0 hlen hguard hm
-  rw [show label unmarshalLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]
+  rw [show label unmarshalSSZLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]
   exact Prysm.ValidatorIndex.Decode.generated_accept k hk hf e8 he8 st (UInt64.ofBitVec ret.toBitVec) guard fp s2 c0
     hfp h2 hc0 F hm hguard hlen
 

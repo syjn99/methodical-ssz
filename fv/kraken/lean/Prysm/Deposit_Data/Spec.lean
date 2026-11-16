@@ -4,7 +4,7 @@ import Prysm.Deposit_Data.SpecDescription
 import Prysm.Deposit_Data.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.Deposit_Data`
+# Spec bridge for the Prysm `v1alpha1.Deposit_Data`
 
 Hand-written.
 `desc` (`Prysm/Deposit_Data/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs phase0.

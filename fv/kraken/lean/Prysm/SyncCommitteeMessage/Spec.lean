@@ -4,7 +4,7 @@ import Prysm.SyncCommitteeMessage.SpecDescription
 import Prysm.SyncCommitteeMessage.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.SyncCommitteeMessage`
+# Spec bridge for the Prysm `v1alpha1.SyncCommitteeMessage`
 
 Hand-written.
 `desc` (`Prysm/SyncCommitteeMessage/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs altair.

@@ -5,6 +5,8 @@ import Prysm.Epoch.Code
 
 /-!
 # Tie of `decodeAcceptKindAnyFrame` to the hand accept statement of `Checkpoint`
+
+This theorem shows that the kind `Codec.decodeAcceptKindAnyFrame` implies the statement of the hand theorem `Prysm.Checkpoint.Decode.accept`.
 -/
 
 open Machine Runtime

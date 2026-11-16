@@ -10,7 +10,7 @@ import Prysm.Epoch.Code
 import Prysm.ValidatorIndex.Code
 
 /-!
-# Real Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`, accept path, Go 1.26.10 (first instance of the call-site lemmas)
+# Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`, accept path, Go 1.26.10 (first instance of the call-site lemmas)
 
 Hand-written. The statement is
 the independent hand statement `Prysm.PendingPartialWithdrawal.Decode.accept_statement` (`Prysm/PendingPartialWithdrawal/Statements.lean`).
@@ -167,12 +167,12 @@ theorem Decode.epilogue (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- **Accept path of the real `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` (Go 1.26.10)**; statement =
+/-- **Accept path of the `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` (Go 1.26.10)**; statement =
 the hand statement `Decode.accept_statement` (unchanged). -/
 theorem Decode.accept : Decode.accept_statement := by
   intro k hk hf kV hkV hfV kE hkE hfE in0 in1 in2 hin0 hin1 hin2 s ra guard
     fp s1 s2 s4 sp1 rslot lo ast a8 a16 a24 hfp h1 h2 h4 hsp1 hrs hlo hast ha8 ha16 ha24 R h_mem hguard hlen
-  have hvi : Uint64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
+  have hvi : Uint64CalleeAccept Prysm.ValidatorIndex.Code.unmarshalSSZLabel := Prysm.ValidatorIndex.Decode.accept_function_spec_holds kV hkV hfV
   have hep : Uint64CalleeAccept Prysm.Epoch.Code.unmarshalSSZLabel := Prysm.Epoch.Decode.accept_function_spec_holds kE hkE hfE
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢

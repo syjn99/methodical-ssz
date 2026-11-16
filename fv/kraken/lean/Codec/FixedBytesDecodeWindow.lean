@@ -6,8 +6,8 @@ import Codec.NopWindow
 
 `f = append(make([]byte, 0, n), buf[src:src+n]...)` (add form, `n` = 32, 48 or 96). The templates
 `bytesDecodeHeadRegister rX …` / `bytesDecodeMiddleRegisters rX rY …` are `bytesDecodeHead` / `bytesDecodeMiddle` (`Codec/FixedBytesDecode.lean`) with the register
-of the receiver reload as a parameter: `rX` after `callq runtime.makeslice` (rdx at all 14 development
-sites), `rY` after `callq runtime.memmove` (rdx at 13 sites, rax at SyncCommitteeMessage.BlockRoot).
+of the receiver reload as a parameter: `rX` after `callq runtime.makeslice` (usually
+rdx), `rY` after `callq runtime.memmove` (usually rdx, rax at SyncCommitteeMessage.BlockRoot).
 Both blocks are WINDOWS (`Codec/NopWindow.lean`): a `nop` may stand anywhere, for example before
 `callq runtime.makeslice`. `jl` is the index of the label `lff`, `jm` the index of the
 `callq runtime.memmove` (its return address stays in the return slot), `e` the end of the second window.

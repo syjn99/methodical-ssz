@@ -20,7 +20,7 @@ import Prysm.Checkpoint.Code
 
 Only the second call entry is not a return. It is the one state that the contract form cannot continue: `GrowsliceContract`
 gives the remaining heap of the first call only as an upper bound (`av' + C1 ≤ avail`), so the budget
-premise of the second call is not derivable. The return after the second call entry is differential only.
+premise of the second call is not derivable. Only the Go differential check covers the return after the second call entry.
 
 -/
 

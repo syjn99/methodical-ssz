@@ -4,14 +4,14 @@ n fields of uint64 / byte vectors.
 usage: python3 -I -B flat_types_decode_spec.py <fv/kraken/lean> [GoTypeName ...]"""
 import os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from flat_types_spec import T, with_code_imports  # noqa: E402
+from flat_types_spec import SPEC_TYPES, with_code_imports  # noqa: E402
 
-DEC = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
+DECODE_SPEC_TYPES = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
 
 
 def emit(d, X):
-    ty, fs, chk = T[X]
-    P, pe = 'SszValue', 'SszValue.encode'
+    ty, fs, chk = SPEC_TYPES[X]
+    value_type, encode_name = 'SszValue', 'SszValue.encode'
     N = sum(f[2] for f in fs)
     n = len(fs)
     src = open(os.path.join(d, 'Prysm', X, 'GeneratedDecodeAccept.lean')).read()
@@ -27,12 +27,12 @@ def emit(d, X):
     assert line, X
     statement_text = statement_text.replace(line.group(0), f'\n    (bsA : Array UInt8) (v : Value) (hd : deserialize desc bsA = .ok v)\n', 1)
     assert statement_text.count('(h_mem : s.dmem =⋆') == 1
-    statement_text = statement_text.replace('(h_mem : s.dmem =⋆', f'(Pm : ∀ g : {P}, bsA = {pe} g →\n      s.dmem =⋆', 1)
+    statement_text = statement_text.replace('(h_mem : s.dmem =⋆', f'(Pm : ∀ g : {value_type}, bsA = {encode_name} g →\n      s.dmem =⋆', 1)
     assert statement_text.count(f'(hlen : s.regs.rcx = {N})') == 1, X
     statement_text = statement_text.replace(f'(hlen : s.regs.rcx = {N})', '(hlen : s.regs.rcx.toNat = bsA.size)', 1)
     assert statement_text.count(',\n    Eventually (step1 Host.exe)') == 1
     statement_text = statement_text.replace(',\n    Eventually (step1 Host.exe)',
-                        f',\n    ∃ g : {P}, g.toValue = v ∧ bsA = {pe} g ∧\n    Eventually (step1 Host.exe)', 1)
+                        f',\n    ∃ g : {value_type}, g.toValue = v ∧ bsA = {encode_name} g ∧\n    Eventually (step1 Host.exe)', 1)
     for k in range(n):
         statement_text = re.sub(rf'\bfv{k}\b', ex[k], statement_text)
     assert not re.search(r'\bfv\d\b', statement_text)
@@ -59,11 +59,11 @@ def emit(d, X):
 import Prysm.{X}.Spec
 
 /-!
-# Spec alignment of the real `{ty}` decoder
+# Spec alignment of the `{ty}` decoder
 
 Built on the GENERATED theorems of `Prysm/{X}/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`):
-- `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : {P}` with `g.toValue = v`
-  and `bsA = {pe} g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
+- `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : {value_type}` with `g.toValue = v`
+  and `bsA = {encode_name} g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
   The statement is the generated accept statement (kind instance) with the input chunks replaced by the
   encoding of `g` (text written by `gen/flat-types/flat_types_decode_spec.py` from the generated statement; then checked
   by Lean against `{gname}`).
@@ -125,6 +125,6 @@ end Prysm.{X}
 
 if __name__ == '__main__':
     d = sys.argv[1]
-    for X in (sys.argv[2:] or DEC):
+    for X in (sys.argv[2:] or DECODE_SPEC_TYPES):
         open(os.path.join(d, 'Prysm', X, 'DecodeSpec.lean'), 'w').write(with_code_imports(emit(d, X), X))
         print(X)

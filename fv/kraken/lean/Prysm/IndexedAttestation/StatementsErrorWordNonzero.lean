@@ -8,16 +8,17 @@ import Prysm.IndexedAttestation.Code
 import Prysm.IndexedAttestation.SpecDefinitions
 
 /-!
-# IndexedAttestation statements for the alignment reject and the overflow reject with a non-zero itab word
+# IndexedAttestation statements of the alignment reject and the overflow reject
 
-The four defs below are the frozen texts of `Prysm/IndexedAttestation/Statements.lean` with one added premise `(he0nz : e0 ≠ 0)` and the suffix
-`_error_word_nonzero` in the name; nothing else differs. Reason: directives 103–106 (alignment reject) and 66–69 (overflow reject) are
-`mov ssz.Err…(%rip),%rcx; test %rcx,%rcx; je …; mov 0x8(%rcx),%rcx`; when the error's itab word is 0 the code skips the
-type-word load and passes 0 where `FmtErrorfDecimalWrapContract` needs `ity`. The Kraken Host places labels anywhere, so the itab label
-may be 0 and the frozen statements cannot refute that branch. The precondition is stronger than the frozen one (not
-equivalent). The frozen texts in `Prysm/IndexedAttestation/Statements.lean` have no proof.
-In the real ELF `e0` is the
-itab address `0xd28520` (check (b) of `prysm/go1.26.10/link-set/RESULT` binds `go_itab._errors.errorString_error` to it).
+These four statements have the premise `(he0nz : e0 ≠ 0)`: the first word of the error value is not zero.
+The suffix `_error_word_nonzero` of each name gives this premise.
+Reason: directives 103–106 (alignment reject) and 66–69 (overflow reject) are
+`mov ssz.Err…(%rip),%rcx; test %rcx,%rcx; je …; mov 0x8(%rcx),%rcx`.
+When the itab word of the error is 0, the code skips the type-word load and passes 0 where `FmtErrorfDecimalWrapContract` needs `ity`.
+The Kraken Host places labels anywhere, so without the premise the itab label can be 0.
+In the pinned ELF `e0` is the itab address `0xd28520`.
+The global label check of `link/check.py` binds `go_itab._errors.errorString_error` to that address.
+The other statements of the decoder are in `Prysm/IndexedAttestation/Statements.lean`.
 -/
 
 open Machine Runtime EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
@@ -133,7 +134,7 @@ def Decode.reject_overflow_error_word_nonzero_statement : Prop :=
       ⟨s, Host.addrOf k⟩
 
 
-/-- **Alignment reject (spec).** `bs.size ≥ 228`, `bs[0:4] = offsetBytes`, `(bs.size − 228) mod 8 ≠ 0`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `Decode.reject_alignment_statement`). -/
+/-- **Alignment reject (spec).** `bs.size ≥ 228`, `bs[0:4] = offsetBytes`, `(bs.size − 228) mod 8 ≠ 0`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `Decode.reject_alignment_error_word_nonzero_statement`). -/
 def Decode.reject_alignment_spec_error_word_nonzero_statement : Prop :=
   ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (bs : Array UInt8) (hbs : 228 ≤ bs.size) (hoff : bs.toList.take 4 = offsetBytes) (hmis : (bs.size - 228) % 8 ≠ 0)
@@ -189,7 +190,7 @@ def Decode.reject_alignment_spec_error_word_nonzero_statement : Prop :=
       ⟨s, Host.addrOf k⟩
 
 
-/-- **Overflow reject (spec).** `bs.size ≥ 228`, `bs[0:4] = offsetBytes`, `(bs.size − 228) mod 8 = 0`, `(bs.size − 228)/8 > 2048`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `Decode.reject_overflow_statement`). -/
+/-- **Overflow reject (spec).** `bs.size ≥ 228`, `bs[0:4] = offsetBytes`, `(bs.size − 228) mod 8 = 0`, `(bs.size − 228)/8 > 2048`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `Decode.reject_overflow_error_word_nonzero_statement`). -/
 def Decode.reject_overflow_spec_error_word_nonzero_statement : Prop :=
   ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (bs : Array UInt8) (hbs : 228 ≤ bs.size) (hoff : bs.toList.take 4 = offsetBytes) (hal : (bs.size - 228) % 8 = 0) (hbig : 2048 < (bs.size - 228) / 8)

@@ -8,8 +8,8 @@ import Prysm.Epoch.Code
 /-!
 # Witness of `Decode.accept` (decoder accept path)
 
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.Checkpoint).UnmarshalSSZ`
-(index 5), the real `(*primitives.Epoch).UnmarshalSSZ` (index 113), the
+Host: data labels, the Go 1.26.10 `(*v1alpha1.Checkpoint).UnmarshalSSZ`
+(index 5), the `(*primitives.Epoch).UnmarshalSSZ` (index 113), the
 1-byte bump `runtime.makeslice` (index 176, `bump_makeslice1`) and `MemmoveGrowsliceModel`
 (index 182, `model_memmove`). One memory block at `0x10000`: bump pointer,
 writeBarrier word, the 32-byte heap, guard word, the 40 input bytes, the

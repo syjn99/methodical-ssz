@@ -11,7 +11,7 @@ import Prysm.HistoricalBatch.Code
 Directives 2–7 (guard, prologue `sub $0x38`, rbx spill), 9–10 `cmp $0x80000,%rcx; jne L_7b` taken,
 `L_7b` (30), the two loads of `ssz.ErrSize` (31–32), epilogue 33–35 (`add $0x38`).
 Proof text: `Prysm.SyncCommittee.Decode.reject_size` (`Prysm/SyncCommittee/DecodeRejectSize.lean`) with the program name and the frame size
-changed (the directive indices are the same). The statement is the frozen `Decode.reject_size_statement`.
+changed (the directive indices are the same). The statement is `Decode.reject_size_statement`.
 -/
 
 open Machine Runtime Prysm.HistoricalBatch.Code
@@ -19,7 +19,7 @@ variable [Host]
 
 namespace Prysm.HistoricalBatch
 
-/-- **Size reject (machine)**; statement = the frozen `Decode.reject_size_statement`. -/
+/-- **Size reject (machine)**; statement = `Decode.reject_size_statement`. -/
 theorem Decode.reject_size : Decode.reject_size_statement := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s

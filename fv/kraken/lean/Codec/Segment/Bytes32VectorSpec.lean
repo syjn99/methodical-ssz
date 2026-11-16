@@ -3,9 +3,10 @@ import Prysm.HistoricalBatch.Spec
 /-!
 # Spec lemmas of a `Vector[Bytes32, n]` field, for ANY count `n`
 
-`Prysm.HistoricalBatch.Spec` states `roots_vector_flatten_length`, `roots_vector_serialize`, `roots_vector_of_bytes` for n = 8192. Here n is a variable;
-the side condition is that the field fits an SSZ offset (`32 * n < 2^32`).
+The count `n` is a variable.
+The side condition is that the field fits an SSZ offset (`32 * n < 2^32`).
 The element lemmas (`Codec.toByteVector32`, `Codec.allFit_byteVector32`, `serializeEach_byteVector32`, `concatParts_byteVector32`) are imported.
+`serializeEach_byteVector32` and `concatParts_byteVector32` are in `Prysm/HistoricalBatch/Spec.lean`.
 -/
 
 namespace Codec.Segment
@@ -49,10 +50,5 @@ theorem bytes32_vector_of_bytes (n : Nat) (d : Array UInt8) (hd : d.size = 32 * 
   simp only [Vector.toList_mk, List.toList_toArray]
   rw [hm, this, show n * 32 = d.size by omega]
   simp
-
-/-- The 8192 instances of `Prysm/HistoricalBatch/Spec.lean` follow by `exact`. -/
-example : type_of% @Prysm.HistoricalBatch.roots_vector_serialize := bytes32_vector_serialize 8192 (by decide)
-example : type_of% @Prysm.HistoricalBatch.roots_vector_flatten_length := bytes32_vector_flatten_length 8192
-example : type_of% @Prysm.HistoricalBatch.roots_vector_of_bytes := bytes32_vector_of_bytes 8192
 
 end Codec.Segment

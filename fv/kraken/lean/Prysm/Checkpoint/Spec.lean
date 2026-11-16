@@ -4,7 +4,7 @@ import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import Prysm.Checkpoint.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.Checkpoint`
+# Spec bridge for the Prysm `v1alpha1.Checkpoint`
 
 Independent hand `Desc`, written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`):
 
@@ -13,7 +13,7 @@ Independent hand `Desc`, written from consensus-specs phase0 (`specs/phase0/beac
         root: Root        # Root = Bytes32
 
 Field order epoch, root; SSZ kinds `uint64` (8-byte little endian) and `Bytes32`
-(EthLib `byteVector 32`). The Prysm Go fields (`attestation.pb.go`, Prysm `ab15ff70`) are
+(EthLib `byteVector 32`). The Prysm Go fields (`attestation.pb.go` of the pinned Prysm commit, `README.md` section 2) are
 `Epoch` at offset 8 and `Root` (`[]byte`, `ssz-size:"32"`) at offset 16, in this order; `state`, `unknownFields`
 and `sizeCache` have no SSZ value (Go size 72; gc amd64 layout from `prysm/ir/ir-mainnet.json`). `checkerDesc` (generated) is the Desc
 checker's Desc of `(v1alpha1, Checkpoint)`; `desc_checker` shows that the
@@ -38,9 +38,6 @@ def desc : Desc := .container ["epoch", "root"] [.uint 8, .byteVector 32]
 theorem desc_checker :
     ∃ fs, desc = .container ["epoch", "root"] fs ∧ checkerDesc = .container ["Epoch", "Root"] fs :=
   ⟨_, rfl, rfl⟩
-
-/-- The reduced hand case `Spec.checkpointDesc` is structurally the same term (cited, not used). -/
-theorem desc_eq_hand : desc = Spec.checkpointDesc := rfl
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem desc_fixedSize : desc.fixedSize = some 40 := by rfl

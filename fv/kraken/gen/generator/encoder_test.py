@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generator tests for `generator.py encoder --fast-path`. Tests that can fail.
 
-usage: encoder_test.py <work-dir> <result.json>     (cwd = fv/kraken; one gated job; Python 3 stdlib only)
+usage: encoder_test.py <work-dir> <result.json>     (cwd = fv/kraken; one heavy job at a time; Python 3 stdlib only)
 exit 0 = every case has its expected outcome; 1 = a case differs; 2 = usage
 
 Cases (mutated `.S` / IR copies are written to <work-dir>, nothing in the repository changes):

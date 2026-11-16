@@ -7,7 +7,7 @@ import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import Prysm.IndexedAttestation.SpecDefinitions
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.IndexedAttestation`
+# Spec bridge for the Prysm `v1alpha1.IndexedAttestation`
 
 The order of `Prysm/Deposit_Data/Spec.lean` / `Prysm/SyncAggregate/Spec.lean` with one variable field. The list part reuses the Go 1.26.3 ListU64 lemmas
 (`Spec.serializeEach_uint64`, `Spec.inlineParts_*`, `Codec.readUint64List`, `Codec.uint64Bytes_readUint64List`, `Spec.allFit_uint64(_inv)`); the data part

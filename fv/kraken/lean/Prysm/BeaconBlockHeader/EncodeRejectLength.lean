@@ -226,7 +226,7 @@ theorem Encode.reject_sum80_as_fields (y : BitVec 64) : y + 80 = y + 8 + 8 + 32 
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **Length reject of ParentRoot** (`len(b.ParentRoot) ≠ 32`, capacity premise `len + 112 ≤ cap`): the real
+/-- **Length reject of ParentRoot** (`len(b.ParentRoot) ≠ 32`, capacity premise `len + 112 ≤ cap`): the
 `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` returns `(nil, ssz.ErrBytesLength)`. Before the test the code
 has written Slot and ProposerIndex to `dst[len:]`; the conclusion states these bytes. The receiver, the prefix,
 the frame `R` and the stack guard are unchanged. No growslice branch. -/
@@ -304,7 +304,7 @@ theorem Encode.reject_length_parent_root (k : Nat) (hk : marshalSSZTo.IsInfixAt 
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **Length reject of StateRoot** (`len(b.StateRoot) ≠ 32`, capacity premise `len + 112 ≤ cap`): the real
+/-- **Length reject of StateRoot** (`len(b.StateRoot) ≠ 32`, capacity premise `len + 112 ≤ cap`): the
 `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` returns `(nil, ssz.ErrBytesLength)`. Before the test the code
 has written Slot, ProposerIndex and ParentRoot to `dst[len:]`; the conclusion states these bytes. The receiver, the prefix,
 the frame `R` and the stack guard are unchanged. No growslice branch. -/
@@ -418,7 +418,7 @@ theorem Encode.reject_length_state_root (k : Nat) (hk : marshalSSZTo.IsInfixAt H
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **Length reject of BodyRoot** (`len(b.BodyRoot) ≠ 32`, capacity premise `len + 112 ≤ cap`): the real
+/-- **Length reject of BodyRoot** (`len(b.BodyRoot) ≠ 32`, capacity premise `len + 112 ≤ cap`): the
 `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` returns `(nil, ssz.ErrBytesLength)`. Before the test the code
 has written Slot, ProposerIndex, ParentRoot and StateRoot to `dst[len:]`; the conclusion states these bytes. The receiver, the prefix,
 the frame `R` and the stack guard are unchanged. No growslice branch. -/

@@ -3,7 +3,7 @@ import Prysm.Checkpoint.Spec
 /-!
 # Independent hand `Desc` of `v1alpha1.SyncAggregatorSelectionData`
 
-This description is written by hand from consensus-specs altair (`specs/altair/validator.md`, local clone at commit `aa16bb4`).
+This description is written by hand from consensus-specs altair (`ethereum/consensus-specs` release `v1.7.0-beta.4`, `specs/altair/validator.md`).
 It does not use the checker description `Prysm/SyncAggregatorSelectionData/SpecChecker.lean`.
 
     class SyncAggregatorSelectionData(Container):

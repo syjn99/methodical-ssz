@@ -7,7 +7,7 @@ import Prysm.Checkpoint.Code
 /-!
 # Witness of `Encode.grow_first_site` (encoder growslice path)
 
-Host: data labels, the real Go 1.26.10 `(*v1alpha1.Checkpoint).MarshalSSZTo`
+Host: data labels, the Go 1.26.10 `(*v1alpha1.Checkpoint).MarshalSSZTo`
 (index 8) and `MemmoveGrowsliceModel` (index 99: `model_growslice`, new capacity 2·newLen + 192
 from the bump heap, and `model_memmove`, both with S = 0). One memory block at
 `0x10000`: bump pointer, an 8336-byte bump heap (= 2·nextSliceCap 38 36 + 8192,

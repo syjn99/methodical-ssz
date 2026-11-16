@@ -12,7 +12,7 @@ import Prysm.Slot.Code
 /-!
 # Witness of `Decode.accept` (AttestationData decoder accept path)
 
-Host (one per file: two `Host` instances in one file make instance resolution unfold both programs): data labels, the real Go 1.26.10
+Host (one per file: two `Host` instances in one file make instance resolution unfold both programs): data labels, the Go 1.26.10
 `(*v1alpha1.AttestationData).UnmarshalSSZ` (index 9), `(*primitives.Slot).UnmarshalSSZ` (252),
 `(*primitives.CommitteeIndex).UnmarshalSSZ` (315), `(*v1alpha1.Checkpoint).UnmarshalSSZ` (378),
 `(*primitives.Epoch).UnmarshalSSZ` (486), the 1-byte bump `runtime.makeslice` (549,

@@ -3,7 +3,7 @@ import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import Prysm.DataColumnsByRootIdentifier.StatementsEncode
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.DataColumnsByRootIdentifier`
+# Spec bridge for the Prysm `v1alpha1.DataColumnsByRootIdentifier`
 
 The order of `Prysm/IndexedAttestation/Spec.lean` (`Prysm.IndexedAttestation.toValue_serialize`): the list part reuses the Go 1.26.3 ListU64 lemmas
 (`Spec.serializeEach_uint64`, `Spec.inlineParts_*`, `Spec.uint64Bytes_size`). `toValue_serialize`: EthLib's `serialize` of a `SszValue` is

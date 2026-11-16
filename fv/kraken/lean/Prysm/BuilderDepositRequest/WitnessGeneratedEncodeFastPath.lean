@@ -7,7 +7,7 @@ import Prysm.BuilderDepositRequest.Code
 # Witness of `Encode.generated_fast` (BuilderDepositRequest encoder fast path, generated theorem)
 
 Written by `gen/flat-types/flat_types_encode_spec.py` from the statement text of `Encode.generated_fast` and the IR.
-Host: the real Go 1.26.10 `MarshalSSZTo` (index 0) and `MemmoveGrowsliceModel` (index 156, `model_memmove`, S = 0).
+Host: the Go 1.26.10 `MarshalSSZTo` (index 0) and `MemmoveGrowsliceModel` (index 156, `model_memmove`, S = 0).
 One memory block at `0x10000`: guard word (r14 = 0xfff0); the receiver at 0x10008 (`prysm/ir/ir-mainnet.json`
 gc amd64 layout, 120 bytes; byte fields = (pointer, n, n) with the n bytes after the receiver; unexported tail
 zero); the stack window (rsp = 0x101c8: rsp − 152 … rsp + 23); `dst` at 0x101e0: the prefix, the old output

@@ -9,7 +9,7 @@ import Prysm.ValidatorIndex.Code
 The ValidatorIndex code has the directive count, the host layout and the indices of the Epoch code.
 
 Host: four data labels (`go_string._` at 0x10000, `runtime.gcbits._` 0x10001,
-`runtime.staticuint64s` 0x10002, `runtime.modelBumpPointer` 0x10003), the real Go 1.26.10
+`runtime.staticuint64s` 0x10002, `runtime.modelBumpPointer` 0x10003), the Go 1.26.10
 `(*primitives.ValidatorIndex).UnmarshalSSZ` (index 4) and `ErrorfConvT64Model` (index 67: the
 `model_convT64` model on the bump heap, `model_errorf_decimal_decimal`). One memory block from
 0x10003 to the format string at `go_string._ + 110051`: bump pointer, the
@@ -129,7 +129,7 @@ def frame_rest : DataMem → Prop :=
 
 set_option maxHeartbeats 16000000 in
 /-- **Non-vacuity of `Decode.reject_size`** (len 9, static box). -/
-theorem runs9 (zmms : RegZmms) (flags : StatusFlags) :
+theorem runs_length_9 (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax ≠ 0)
       ⟨initial_state zmms flags, Host.addrOf 4⟩ :=
@@ -176,7 +176,7 @@ def frame_rest : DataMem → Prop :=
 
 set_option maxHeartbeats 16000000 in
 /-- **Non-vacuity of `Decode.reject_size`** (len 300 ≥ 256: heap box). -/
-theorem runs300 (zmms : RegZmms) (flags : StatusFlags) :
+theorem runs_length_300 (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax ≠ 0)
       ⟨initial_state zmms flags, Host.addrOf 4⟩ :=

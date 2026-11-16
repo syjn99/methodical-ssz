@@ -5,9 +5,11 @@ import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPath
 import Prysm.Deposit_Data.GeneratedEncodeFastPath
 
 /-!
-# Identities of the generated encoder fast-path theorems with the independent hand statements: the `SyncCommitteeMessage` part
+# Identity of the generated encoder fast-path theorem of `SyncCommitteeMessage` with the hand statement
 
-The declarations of the other types of this group are in `Prysm/PowBlock/GeneratedEncodeFastPathSameAsHand.lean`.
+This theorem shows that the generated theorem `Prysm.SyncCommitteeMessage.Encode.generated_fast` has the hand statement `Prysm.SyncCommitteeMessage.Encode.fast_path_statement`.
+The hand statement of `Prysm/SyncCommitteeMessage/EncodeFastPathStatements.lean` does not refer to the generated theorem.
+The identity is `rfl` at default transparency.
 -/
 
 open Machine Runtime Codec
