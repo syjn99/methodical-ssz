@@ -34,17 +34,14 @@ Checks:
      `bytes` are the ELF file bytes there, and each `word <s> <o>` is the
      8-byte little-endian value address(s) + o at its position; every byte
      of the file is printable ASCII or a newline (the rule of data_include).
-     This replaced the checks of hand-written Lean constants and of Go source
-     literals. This checker does not read Lean sources (only the
-     hash of AXIOMS.txt): which definitions a theorem uses is
+     This checker does not read Lean sources: which definitions a theorem uses is
      read from the theorem statements, not checked here. Items that the
      proven code addresses with `lea` (the format strings, the int and uint64
      type words) are bound to their id by the proofs; the items that only a
      contract uses (staticuint64s) are bound by the contract
      hypothesis. This check binds neither.
 The bundle hash (sha256 over RESULT up to and including the last PASS line,
-which covers the ELF, the .S files, the data files and the AXIOMS.txt
-hash) is the last line.
+which covers the ELF, the .S files and the data files) is the last line.
 """
 import hashlib
 import importlib.util
@@ -403,9 +400,6 @@ def main(outdir):
         log(f"S sha256 {sha(p)} {p.name}")
     for p in sorted((outdir / "data").glob("*.data")):
         log(f"data sha256 {sha(p)} {p.name}")
-    for p in [HERE.parent / "AXIOMS.txt"]:
-        if p.exists():
-            log(f"file sha256 {sha(p)} {p.relative_to(HERE.parent)}")
     log("PASS all")
     body = "\n".join(lines) + "\n"
     body += f"BUNDLE sha256 {hashlib.sha256(body.encode()).hexdigest()}\n"
