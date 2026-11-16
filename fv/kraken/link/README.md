@@ -37,23 +37,24 @@ It also stops on a branch into an instruction, or on two symbols with the same s
 ## 2. What the link check proves
 
 `check.py <outdir>` reads the ELF, the disassembly, the symbol listing, the `.S` files and the data files of one link set.
+The `PASS` lines of `RESULT` name the check by the letter of this list, for example `PASS (a) <function>: …`.
 
-- **Code.** For each function, the symbol table gives its address and size.
+- **(a) Code.** For each function, the symbol table gives its address and size.
   The disassembly covers that range with no gap.
   The disassembly bytes are the ELF bytes.
   An independent decoder (`llvm-objdump`) finds the same instruction boundaries.
   Each label `L_<function>_<offset>` sits before the instruction at that offset.
-- **Global labels.** Each call target and each `symbol+offset(%rip)` names a symbol of the ELF.
+- **(b) Global labels.** Each call target and each `symbol+offset(%rip)` names a symbol of the ELF.
   The original displacement gives the same address.
-- **Label freshness.** In `all.S`, each label is defined once.
+- **(c) Label freshness.** In `all.S`, each label is defined once.
   External labels are not defined there.
-  This is the `LabelsFresh` premise of the theorems, checked on the real layout.
-- **Reassembly.** `clang --target=x86_64-linux-gnu` assembles the `.S` text again at the original addresses.
+  This is the `LabelsFresh` premise of the theorems, checked on the layout of the ELF.
+- **(d) Reassembly.** `clang --target=x86_64-linux-gnu` assembles the `.S` text again at the original addresses.
   The result must be the ELF bytes.
   A difference passes only when LLVM decodes both byte strings to the same text.
   A normalized padding `nop` also passes.
-- **Order.** `all.S` has the same directives as the per-function files, in the same order.
-- **Data.** Each data file names one ELF symbol.
+- **(e) Order.** `all.S` has the same directives as the per-function files, in the same order.
+- **(f) Data.** Each data file names one ELF symbol.
   Its bytes are the ELF bytes at that place.
   Each pointer word is the address of its symbol plus its offset.
 

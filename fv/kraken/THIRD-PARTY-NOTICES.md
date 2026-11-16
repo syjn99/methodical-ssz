@@ -20,14 +20,14 @@ Other files can quote short fragments of generated code or upstream identifiers.
 - Produced by: `link/convert_objdump.py --norm` and `link/check.py` on an ELF cross-compiled by Go 1.26.10 (`GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 -tags purego -trimpath`).
 - The file `prysm/go1.26.10/build-ids.txt` records the ELF sha256.
 - The ELF is not committed.
-- Upstream: Prysm, <https://github.com/OffchainLabs/prysm>, commit `ab15ff70c72a568c870b2de662474685a95de294` (`README.md` section 2).
+- Upstream: Prysm, <https://github.com/OffchainLabs/prysm>, at the Prysm source commit of `README.md` section 2.
   Licence: GNU General Public License version 3 (root `LICENSE.md`).
 - Upstream: Go, <https://go.dev/>, <https://github.com/golang/go>. Licence: BSD-3-Clause (Go 1.26.10 `LICENSE`).
 
 ## Generator output for Prysm type definitions
 
 - Paths: `prysm/_generated/**` (the generated `*.ssz.go` files and `SHA256SUMS`).
-- What: output of this repository's generator (`sszgen/`, `ssz/` at `698c2025a73a296b55b95744a8408f3b03b2546b`).
+- What: output of this repository's generator (`sszgen/`, `ssz/` at the generator commit of `README.md` section 2).
   The inputs are the Prysm type definitions at the Prysm commit of the Prysm machine code.
 - The input specs are the configs that `gen/prysm-gen.sh` names.
   Upstream and licence of the inputs: Prysm, as for the Prysm machine code.
@@ -83,7 +83,7 @@ Other files can quote short fragments of generated code or upstream identifiers.
 
 ## Per-directory licence files in the Prysm tree
 
-- At `ab15ff70`, the Prysm tree tracks `LICENSE.md` (GPL-3.0) and other subdirectory licence files.
+- At the pinned Prysm commit, the Prysm tree tracks `LICENSE.md` (GPL-3.0) and other subdirectory licence files.
   None of them is in a package of the Prysm machine code.
 - `proto/eth/LICENSE` is Apache-2.0.
   `proto/eth` is not a package of the Prysm machine code.

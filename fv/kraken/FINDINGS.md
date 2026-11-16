@@ -53,9 +53,9 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   No such theorem exists.
 - Where: `(*v1alpha1.AttestationData).MarshalSSZTo`.
 
-### The bitlist encoder error text differs from three Prysm tests
+### The bitlist encoder error text differs from some Prysm tests
 
-- What does not hold: three Prysm tests do not get their expected error text from the bitlist length reject.
+- What does not hold: some Prysm tests do not get their expected error text from the bitlist length reject.
   The rejected inputs are the same.
 - Effect: these Prysm tests fail with the generated code.
   This is a compatibility issue, not a generator defect.
@@ -140,9 +140,10 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 ### The proof generator covers only some code forms
 
 - What does not hold: `gen/generator/generator.py` does not cover every field form.
-  It covers 8-byte `uint64` fields, the four primitive callees and byte vectors of 32, 48 and 96 bytes.
+  It covers 8-byte `uint64` fields and byte vectors of 32, 48 and 96 bytes.
+  It covers the callees `Slot`, `CommitteeIndex`, `ValidatorIndex` and `Epoch`.
   It refuses byte vectors of other sizes, `bool` fields, the `Gwei` callee, interleaved fields and nested containers.
-  On the encoder side, the six compiled sites that append a 32-byte field have six instruction texts.
+  On the encoder side, the compiled sites that append a 32-byte field have different instruction texts.
   Only the call step is shared between them.
 - Effect: a refused type needs hand proofs.
   A refused type of `gen/flat-types/run_generators.sh` has only `Code.lean`.
@@ -169,14 +170,17 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - Where: `decodeAcceptKindAnyFrame` and `decodeFinalStatePredicate` in `lean/Codec/Kind/DecodeAcceptAnyFrame.lean`.
   `check_whole_accept` in `gen/generator/kindcheck.py`.
 
-### `kindcheck.py` does not bind the code constant to the `.S` file
+### `kindcheck.py` binds the code constant to the `.S` file only for the encoder fast path
 
-- What does not hold: `gen/generator/kindcheck.py` does not check that the code constant of a theorem includes the `.S` file of the header.
-  It does not check the `.S` label against the IR type.
-- Effect: the kind parameters come from the `.S` file of the header.
-  The theorems can name another code constant.
-  A reader checks the `Code.lean` include of each generated file.
-- Where: `gen/generator/kindcheck.py`.
+- What does not hold: rule 13c of `gen/generator/kindcheck.py` binds the code constant to the `.S` file of the header.
+  This rule applies only to the encoder fast-path files (`GeneratedEncodeFastPath.lean`).
+  No check binds the code constant of a decoder file (`GeneratedDecodeAccept.lean`) to its `.S` file.
+  This holds for the step chain, the whole-accept block and the `uint64` file.
+  `kindcheck.py` does not check the `.S` label against the IR type.
+- Effect: the kind parameters of a decoder file come from the `.S` file of the header.
+  Its theorems can name another code constant.
+  A reader checks the `Code.lean` include of each generated decoder file.
+- Where: `check_fast_path` and `check_whole_accept` in `gen/generator/kindcheck.py`.
 
 ### Open items of the encoder checker
 
@@ -223,6 +227,27 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   The generated accept theorems that these proofs use keep their own mutants.
 - Where: `lean/Prysm/<GoTypeName>/DecodeSpec.lean` of these types, `gen/checks/negative-cases/`.
 
+### Some theorems have no witness
+
+- What does not hold: `Prysm.SyncAggregate.Decode.reject_size` and `Prysm.SyncCommittee.Decode.reject_size` have no witness.
+- Effect: no concrete state shows that the premises of these two theorems can hold.
+  The rule of `../AGENTS.md` asks for a witness of each main theorem.
+- Where: `lean/Prysm/SyncAggregate/`, `lean/Prysm/SyncCommittee/`.
+
+### The Go value check exists only for Checkpoint
+
+- What does not hold: only Checkpoint has a Lean predicate for a valid Go value of the receiver.
+  For the witnesses of the other types, no theorem shows that the receiver is a Go value of the type.
+- Effect: for these witnesses, a reader checks the receiver block against the Go layout.
+- Where: `lean/Prysm/Checkpoint/GoValue.lean`, `lean/Prysm/Checkpoint/GoValueWitness.lean`.
+
+### Some code constants have no theorem
+
+- What does not hold: `Prysm.AttestationData.Code.marshalSSZTo` and `Prysm.AttestationData.Code.sizeSSZ` have no theorem.
+- Effect: the AttestationData encoder and `SizeSSZ` are not proved.
+  The link check covers their `.S` files.
+- Where: `lean/Prysm/AttestationData/Code.lean`.
+
 ### A Lean error does not stop the file
 
 - What does not hold: Lean does not stop at a failed proof.
@@ -245,15 +270,15 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 
 ### Recursion depth limits without a located cause
 
-- What does not hold: four witness examples raise `maxRecDepth`, and the cause is not located.
+- What does not hold: some witness examples raise `maxRecDepth`, and the cause is not located.
 - Effect: the rule asks for a profiled cause for each raised limit.
-- Where: `lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeFastPath.lean` (one place, limit 4000).
-  `lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeGrowFirstSite.lean` (three places, limit 8000).
+- Where: `lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeFastPath.lean` (limit 4000).
+  `lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeGrowFirstSite.lean` (limit 8000).
   The comment at each place gives the measured values.
 
 ### Theorems that end with `⋆ True`
 
-- What does not hold: five Checkpoint theorems do not state the rest of memory.
+- What does not hold: these Checkpoint theorems do not state the rest of memory.
   They are `Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver` and `Prysm.Checkpoint.Encode.fast_path_spec`.
   They are also `Prysm.Checkpoint.DecodeThenEncode.round_trip`, `Prysm.Checkpoint.Encode.cover` and `Prysm.Checkpoint.Encode.reject_length_cover`.
 - Effect: the component theorems and the `*_framed` cover theorems state the exact frame.
@@ -291,7 +316,8 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 
 - What does not hold: `gen/tools/proof_inventory.py run` does not bind `prysm/go1.26.10/ssz-methods.json` to the ELF.
   Only the `methods` mode and a comparison of its output bind that file to the ELF.
-  A type directory without a mapping row ends in a `KeyError`, not in a FAIL line.
+  The tool derives a row for each type directory whose name is a type of that file.
+  A type directory with another name gives a `FAIL` line.
 - Effect: the inventory table is correct only for a method list that matches the ELF.
 - Where: `gen/tools/proof_inventory.py`.
 
@@ -310,7 +336,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 
 ### No run on x86-64 hardware
 
-- What does not hold: no test compares Kraken with a real x86-64 CPU.
+- What does not hold: no test compares Kraken with an x86-64 CPU.
 - Effect: the Go differential checks run on the host.
   They check Go semantics, not the amd64 machine code.
 - Where: `gen/checks/differential.py`.

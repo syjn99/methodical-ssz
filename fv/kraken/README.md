@@ -35,6 +35,7 @@ The description checker tests use them (`gen/README.md` section 5).
 
 Read each pin from the file that holds it.
 Do not copy the values into other files.
+The one exception is `prysm/go1.26.10/prysm-go.mod.diff`: its module version holds the generator commit, because the ELF records it.
 
 | Pin | File that holds it |
 | --- | --- |
@@ -207,7 +208,7 @@ They do not run the amd64 machine code.
 These are the main ones:
 
 - No run on x86-64 hardware.
-  No test compares Kraken with a real CPU.
+  No test compares Kraken with an x86-64 CPU.
 - The runtime contracts are not proved on the compiled runtime.
   They are hypotheses.
 - Some paths have no theorem.
@@ -237,17 +238,17 @@ Change the tool and run it again.
 
 | Kind | Written by | Command that makes it again | What checks it |
 | --- | --- | --- | --- |
-| `Code.lean` | Hand | None | The build, the link check of its `.S` files, `gen/tools/proof_inventory.py` |
-| `Layout.lean` | `gen/checks/layout.py` (Checkpoint), `gen/checks/attestation_data_layout.py` (AttestationData) | `python3 -I gen/checks/layout.py > lean/Prysm/Checkpoint/Layout.lean` | `regenerate_and_compare.py`, the build |
-| `Spec.lean` | Hand. For the types of the table `T` of `gen/flat-types/flat_types_spec.py`: that tool | `python3 -I -B gen/flat-types/flat_types_spec.py lean` | The build, the axioms gate, `regenerate_and_compare.py` |
+| `Code.lean` | Hand: one `include_x64_code` constant for each function that a proof reads | None | The build, the link check of its `.S` files, `gen/tools/proof_inventory.py` |
+| `Layout.lean` (Checkpoint, AttestationData) | `gen/checks/layout.py` | `python3 -I gen/checks/layout.py <T> > lean/Prysm/<T>/Layout.lean` | `regenerate_and_compare.py`, the build |
+| `Spec.lean` | Hand. For the types of the table `SPEC_TYPES` of `gen/flat-types/flat_types_spec.py`: that tool | `python3 -I -B gen/flat-types/flat_types_spec.py lean` | The build, the axioms gate, `regenerate_and_compare.py` |
 | `SpecDescription.lean`, `SpecDefinitions.lean` | Hand, from consensus-specs | None | The build, a review against consensus-specs |
 | `SpecChecker.lean` | `gen/checks/desc_to_lean.py` or `gen/checks/list_desc_to_lean.py` (named in its header) | `python3 -I gen/checks/desc_to_lean.py prysm/go1.26.10/evidence/<package>.<T>.desc.json checkerDesc > lean/Prysm/<T>/SpecChecker.lean` | `regenerate_and_compare.py`, the build |
 | `SpecEquivalence.lean` | Hand | None | The build, the axioms gate |
 | `GeneratedDecodeAccept.lean` | `gen/generator/generator.py`: mode `uint64` for ValidatorIndex, `decoder --whole-accept` for the other types | `sh gen/generator/gen.sh` for its types. For the types of `gen/flat-types/run_generators.sh`: `sh gen/flat-types/run_generators.sh <out dir>`, then copy `<out dir>/<T>.whole-accept.lean` when `<T>.whole-accept.rc` is 0 | The build, `gen/generator/kindcheck.py`, `regenerate_and_compare.py`, the axioms gate, the negative cases |
 | `GeneratedEncodeFastPath.lean` | `gen/generator/generator.py encoder --fast-path` | As for `GeneratedDecodeAccept.lean`, with `<T>.fast-path.lean` | The build, `kindcheck.py`, `gen/checks/fast_path_layout.py`, `regenerate_and_compare.py`, the negative cases |
-| `DecodeSpec.lean` | Hand. For the types of the list `DEC` of `gen/flat-types/flat_types_decode_spec.py`: that tool | `python3 -I -B gen/flat-types/flat_types_decode_spec.py lean` | The build, the axioms gate, `regenerate_and_compare.py` |
-| `WitnessGeneratedDecodeAccept.lean`, `WitnessGeneratedDecodeRejectSize.lean` | Hand. For the default type list of `gen/flat-types/flat_types_witness.py`: that tool | `python3 -I -B gen/flat-types/flat_types_witness.py .` | The build, the axioms gate, `regenerate_and_compare.py`, `proof_inventory.py` |
-| `GeneratedEncodeFastPathSpec.lean`, `WitnessGeneratedEncodeFastPath.lean` | `gen/flat-types/flat_types_encode_spec.py`, for every type of its table `TYPES` | `python3 -I -B gen/flat-types/flat_types_encode_spec.py lean lean` | The build, the axioms gate, `regenerate_and_compare.py` |
+| `DecodeSpec.lean` | Hand. For the types of the list `DECODE_SPEC_TYPES` of `gen/flat-types/flat_types_decode_spec.py`: that tool | `python3 -I -B gen/flat-types/flat_types_decode_spec.py lean` | The build, the axioms gate, `regenerate_and_compare.py` |
+| `WitnessGeneratedDecodeAccept.lean`, `WitnessGeneratedDecodeRejectSize.lean` | Hand. For the types of `WITNESS_TYPES` of `gen/flat-types/flat_types_witness.py`: that tool | `python3 -I -B gen/flat-types/flat_types_witness.py .` | The build, the axioms gate, `regenerate_and_compare.py`, `proof_inventory.py` |
+| `GeneratedEncodeFastPathSpec.lean`, `WitnessGeneratedEncodeFastPath.lean` | `gen/flat-types/flat_types_encode_spec.py`, for every type of its table `ENCODE_SPEC_TYPES` | `python3 -I -B gen/flat-types/flat_types_encode_spec.py lean lean` | The build, the axioms gate, `regenerate_and_compare.py` |
 | `EncodeLayout.lean` (BeaconBlockHeader, Eth1Data), `encodeLayout` in `Checkpoint/EncodeFastPathKindInstances.lean` | Hand. `gen/generator/gen.sh` gives it to the generator with `--hand-layout` | None | The build, `kindcheck.py` rule 13, `fast_path_layout.py` |
 | `GeneratedEncodeFastPathSameAsHand.lean`, `Uint64DecoderKindSameAsHand.lean`, `EncodeFastPathStatements.lean` | Hand | None | The build (each identity is `rfl`) |
 | Hand proof modules: `DecodeAccept.lean`, `DecodeReject*.lean`, `Encode*.lean`, `Statements*.lean`, the other `Witness*.lean` | Hand | None | The build, the axioms gate and its hand lists, the negative cases |
@@ -259,7 +260,7 @@ Change the tool and run it again.
 | --- | --- | --- | --- |
 | `lean/Spec/`, `lean/Machine/`, `lean/Runtime/`, `lean/Codec/` (except `Codec/Kind/`) | Hand | None | The build, the axioms gate |
 | `lean/Codec/Kind/*.lean` | Hand | None | The build. `kindcheck.py` checks that a `_kind` line names one of these kinds |
-| `lean/Prysm/ElfData/PrysmTarget.lean` | Hand: one `data_include <id>` line for each data file | None | The build (`data_include` reads each file), `gen/checks/deposit_data_include_check.py` |
+| `lean/Prysm/ElfData/PrysmTarget.lean` | Hand: one `data_include <id>` line for each data item that a proof reads | None | The build (`data_include` reads each file), `gen/checks/deposit_data_include_check.py` |
 | `lean/Prysm/RuntimeModel/*` | Hand | None | The build |
 | `lean/lakefile.toml`, `lean/lean-toolchain` | Hand. A change needs user approval | None | The build |
 | `lean/lake-manifest.json` | Lake | None | The build |

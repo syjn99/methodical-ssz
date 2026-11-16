@@ -11,7 +11,7 @@ The design principles are in `../../README.md`.
 - A generator is untrusted.
   Lean checks every proof that a generator writes.
 - A separate check covers the statement of a generated theorem.
-  It is a frozen kind (section 4) or an identity with a hand statement.
+  It is a kind (section 4) or an identity with a hand statement.
 - A generated Lean file must be equal to the output of its generator.
   Do not edit a generated file by hand.
   The header comment of a generated file names its generator.
@@ -29,7 +29,7 @@ The design principles are in `../../README.md`.
 | `generator/generator.py`, with `generator/whole_accept.py` and `generator/fast_path.py` | A converted `.S` file and the IR entry of one type | `lean/Prysm/<GoTypeName>/Generated*.lean`: step, accept, size reject and encoder fast path theorems |
 | `generator/gen.sh` | | Runs `generator.py` once for each generated file of the types that are not in `flat-types/run_generators.sh` |
 | `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py` | A `Desc` JSON file that the checker accepted | `*SpecChecker.lean`: the checker `Desc` as Lean |
-| `checks/layout.py`, `checks/attestation_data_layout.py` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/Checkpoint/Layout.lean`, `lean/Prysm/AttestationData/Layout.lean` |
+| `checks/layout.py <GoTypeName>` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/<GoTypeName>/Layout.lean` of Checkpoint and AttestationData |
 | `desc/producer.py` | The reduced IR | One `Desc` JSON file for each type |
 | `type_inventory.py` | The raw IR of the generator | `prysm/ir/*.json` (`reduce`) and `prysm/inventory.json` (`build`) |
 | `type_list_document.py`, `type_scope.py` | `prysm/inventory.json` | `prysm/TYPES.md`, `prysm/type-scope.json`, `prysm/type-scope.md` |
@@ -37,12 +37,12 @@ The design principles are in `../../README.md`.
 | `tools/proof_inventory.py` | The symbol listing of the ELF (`methods`); a declaration list from `tools/inventory_decls.lean` and the JSON of an axioms gate run, both on the built tree (`run`) | `prysm/go1.26.10/ssz-methods.json`, `prysm/proof-inventory.md`, `prysm/proof-inventory.json` |
 | `checks/link_set.py` | The Prysm ELF, its disassembly and symbol listing, and the item table `prysm/go1.26.10/link-set.tsv` | The link set `prysm/go1.26.10/link-set`: the filtered disassembly, the `.S` files and the data files (`../link/README.md` section 7) |
 | `checks/differential.py` | Nothing (`cases`), or the output of `checks/differential-main.go.txt` (`check`) | The Go differential cases `prysm/differential-cases/<package>.<Type>.json`, and their comparison with the Go output |
-| `flat-types/flat_types_spec.py` | Its table `T` of types and fields | `lean/Prysm/<GoTypeName>/Spec.lean` of the types of `T` |
-| `flat-types/flat_types_decode_spec.py` | `GeneratedDecodeAccept.lean` of the types of its list `DEC` | `DecodeSpec.lean` of these types |
-| `flat-types/flat_types_witness.py` | The `.S` files and the IR of the types of its default list | `WitnessGeneratedDecodeAccept.lean` and `WitnessGeneratedDecodeRejectSize.lean` of these types |
-| `flat-types/flat_types_encode_spec.py` | `GeneratedEncodeFastPath.lean` and the IR of the types of its table `TYPES` | `GeneratedEncodeFastPathSpec.lean` and `WitnessGeneratedEncodeFastPath.lean` of these types |
-| `flat-types/flat_types_negative_cases.py` | The Lean files of the flat types | `checks/negative-cases/negative-cases-flat-types.json` |
-| `flat-types/flat_types_hand_list.py` | A declaration dump | New names in the hand list `axioms-lists/flat-fixed-size-types.lean` |
+| `flat-types/flat_types_spec.py` | Its table `SPEC_TYPES` of types and fields | `lean/Prysm/<GoTypeName>/Spec.lean` of the types of `SPEC_TYPES` |
+| `flat-types/flat_types_decode_spec.py` | `GeneratedDecodeAccept.lean` of the types of its list `DECODE_SPEC_TYPES` | `DecodeSpec.lean` of these types |
+| `flat-types/flat_types_witness.py` | The `.S` files and the IR of the types of its list `WITNESS_TYPES` | `WitnessGeneratedDecodeAccept.lean` and `WitnessGeneratedDecodeRejectSize.lean` of these types |
+| `flat-types/flat_types_encode_spec.py` | `GeneratedEncodeFastPath.lean` and the IR of the types of its table `ENCODE_SPEC_TYPES` | `GeneratedEncodeFastPathSpec.lean` and `WitnessGeneratedEncodeFastPath.lean` of these types |
+| `flat-types/flat_types_negative_cases.py` | The Lean files of the types of its lists `DECODER_CASE_TYPES` and `ENCODER_CASE_TYPES` | `checks/negative-cases/negative-cases-flat-types.json` |
+| `flat-types/flat_types_hand_list.py` | A declaration dump and its list `HAND_LIST_TYPES` | New names in the hand list `axioms-lists/flat-fixed-size-types.lean` |
 | `flat-types/run_generators.sh` | The `.S` files of the flat types | The generator outputs of the flat types, in a scratch directory |
 | `prysm-rebuild-and-check.sh` | A Prysm tree and the generator tree | The Prysm ELF, the link set and the differential results, in a scratch directory (needs Docker) |
 | `kraken-parser/summarize_parser_log.py` | A log of `kraken-parser/ParserRun.lean` | `prysm/go1.26.10/parser-result.json`: which functions the Kraken parser reads |
@@ -83,7 +83,7 @@ It does not show that the output is correct.
 ## 4. The kind check
 
 A generated theorem `t` is followed by a line `t_kind`.
-It states that the full type of `t`, with all hypotheses, is equal to a frozen kind with parameters.
+It states that the full type of `t`, with all hypotheses, is equal to a kind with parameters.
 The kinds are hand text in `lean/Codec/Kind/*.lean`.
 Each kind has a proof from its lemma.
 Lean checks the identity.
@@ -92,7 +92,7 @@ So a hypothesis that the generator adds, removes or changes makes `t_kind` fail.
 Lean does not check which kind the line names.
 A line that compares `t` with itself also compiles.
 `generator/kindcheck.py` closes this gap.
-It checks by text that every `t_kind` names a frozen kind and has the fixed proof line.
+It checks by text that every `t_kind` names a kind of `lean/Codec/Kind/` and has the fixed proof line.
 It does not check the kind files and the lemma files themselves.
 For the whole-accept and the encoder fast-path files it recomputes the kind parameters from the `.S` file and the IR.
 
@@ -104,7 +104,7 @@ The usage text of `kindcheck.py` gives the details.
 | --- | --- |
 | 2 | The top-level lines are only imports, `open`, `variable`, `namespace`, `end`, `set_option … in`, theorems, comments and blank lines. |
 | 3 | No `sorry`, `admit`, `native_decide`, `bv_decide` or `axiom` token occurs. |
-| 4 | Each theorem `t` has one theorem `t_kind` with a frozen kind of its code constant and the fixed proof line. |
+| 4 | Each theorem `t` has one theorem `t_kind` with a kind of its code constant and the fixed proof line. |
 | 5 | Each `_kind` theorem belongs to a theorem of the file. |
 | 10 | A step theorem names one of the step kinds, with the parameter forms of the usage text. |
 | 10b | The proof of a step theorem uses the lemma of its kind and no other step lemma. |
@@ -134,6 +134,22 @@ For the `uint64` file, `kindcheck.py` does not check the kind parameters.
 Only the proof checks them, through its code facts.
 A kind identity is not a witness.
 It does not show that the premises can hold.
+
+### Ties of a kind to a hand theorem
+
+A tie shows that a kind is the statement of a hand theorem.
+A reviewer reads the hand theorem against the specification, so the kind is not new text.
+The tree has these forms of tie:
+
+- An identity of a kind with the full type of a hand theorem, proved by `with_reducible rfl`.
+  `Decode.accept_kind_anchor` of Slot and CommitteeIndex ties `uint64DecodeAcceptKind` (`Uint64DecoderKindSameAsHand.lean`).
+  `Prysm.Checkpoint.Decode.reject_size_is_kind_any_frame` ties `decodeRejectKindAnyFrame` (`Checkpoint/DecodeRejectSizeKindInstances.lean`).
+- An implication from a kind instance to the statement of a hand theorem.
+  `Prysm.Checkpoint.Decode.accept_of_kind` does this for `decodeAcceptKindAnyFrame`, and `Prysm.Checkpoint.Encode.fast_path_of_kind` for `encodeFastPathKindAnyFrame`.
+  The generated Checkpoint fast-path file uses `Encode.fast_path_of_kind` through `--same-as-via`.
+- An identity of a generated theorem with an independent hand statement, proved by `rfl`.
+  `Encode.generated_fast_same_as_statement` in `GeneratedEncodeFastPathSameAsHand.lean` of Deposit_Data, PowBlock and SyncCommitteeMessage does this.
+  The hand statement is in `EncodeFastPathStatements.lean` of the same type.
 
 ## 5. The independent `Desc` checker
 
@@ -224,7 +240,7 @@ These run without Lean, Go or the Prysm ELF:
 
 - `generator/kindcheck.py`, and the `--selftest` mode of `checks/axioms_gate.py`.
 - `tools/duplicate_statements.py`, on a dump of the axioms gate (the dump itself needs Lean).
-- `regen_check.sh` with `generator/generator.py`, `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py`, `checks/layout.py` and `checks/attestation_data_layout.py`.
+- `regen_check.sh` with `generator/generator.py`, `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py` and `checks/layout.py`.
 - `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`.
 - `checks/regenerate_and_compare.py <scratch>/<work dir>`, the regeneration comparison of all Python generators of Lean files.
 - `checks/fast_path_layout.py`, an independent recomputation of the layouts of the generated encoder fast-path theorems (cwd `fv/kraken`).
@@ -233,6 +249,7 @@ These run without Lean, Go or the Prysm ELF:
 - `checks/python_checks.sh <scratch>/<out dir>`.
   It runs `checks/deposit_data_include_check.py` and the self-tests of
   `checks/axioms_gate.py`, `checks/deposit_data_include_check.py`, `generator/kindcheck.py` and `checks/negative.py`.
+  The self-test `negative.py --selftest-timeout` checks the kill of a process tree with a fake child, without Lean.
   It also runs `generator/kindcheck_broken_copies_test.py`, `checks/fast_path_layout.py` and `kindcheck.py` on the generated files.
   It runs `negative.py --check-cases` and `checks/negative_case_ranges.py` on every case file, and a syntax check of every Python file under `fv/`.
 - `generator/decoder_test.py <work-dir> <result.json>` and `generator/encoder_test.py <work-dir> <result.json>` (cwd `fv/kraken`).
@@ -269,7 +286,7 @@ These need more than Python:
   `../README.md` section 7 gives the rule for each kind of file.
 - `lean/Prysm/<GoTypeName>/GeneratedEncodeFastPathSameAsHand.lean` is a hand module, although its name starts with `Generated`.
   Deposit_Data, PowBlock and SyncCommitteeMessage have one.
-  It holds the identity `Encode.generated_fast_same_as_statement` of the generated theorem with the hand statement of `EncodeFastPathStatements.lean`.
+  It holds the identity `Encode.generated_fast_same_as_statement` of the generated theorem with the hand statement of `EncodeFastPathStatements.lean` (section 4).
   `checks/python_checks.sh` does not give it, or `GeneratedEncodeFastPathSpec.lean`, to `kindcheck.py`.
 - The `Desc` files are in `prysm/go1.26.10/evidence/`.
   The header of each `*SpecChecker.lean` names its `Desc` file by the path relative to `fv/kraken` and by its sha256.

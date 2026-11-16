@@ -17,11 +17,13 @@ The library `Prysm` holds the proofs of the Prysm types, one directory for each 
 **`Spec`.** The general lemma `Spec/DeserializeOfSerialize.lean` and the specifications of the hand test types (`Spec/Test*.lean`).
 The lemma: if `serialize` of every Go value `g` gives `enc g`, every accepted input is `enc g` of one value.
 So a machine proof says what the code does on `enc g`, and that the code rejects every other input.
-The hand test types have no ELF.
-The `Desc` checker `../gen/desc-checker/DescChecker.lean` imports them for its tests.
-`Spec/TestCheckpointAndAttestationData.lean` specifies reduced `Checkpoint` and `AttestationData` types without the protobuf fields.
+A hand test type is a small type with a hand `Desc`, its Go value and its encoding.
+It has no ELF.
+`Spec/TestCheckpointAndAttestationData.lean` holds reduced forms of the Prysm `Checkpoint` and `AttestationData`, without the protobuf fields.
+The `Desc` checker `../gen/desc-checker/DescChecker.lean` imports the test types for its tests.
+Some proofs import them for their lemmas: `Codec/ReadUint64List.lean`, `Prysm/Checkpoint/Spec.lean`, and `SpecDefinitions.lean` of DataColumnsByRootIdentifier and IndexedAttestation.
 `Spec` imports only EthLib and `Spec`.
-It holds no machine code and no Prysm type.
+It holds no machine code and no specification of a type of the Prysm target.
 
 **`Machine`.** Helpers on the Kraken machine model.
 They are the one-instruction step lemmas and tactics (`Machine/Step.lean`), and the stack frame, byte, label and flag lemmas.
@@ -41,9 +43,8 @@ Others are the encoder step lemmas (`Codec/Encode*.lean`) and the stack guard le
 `Codec/Kind/` holds the statement kinds of the generated proofs (`../gen/README.md` section 4).
 The whole accept kind is in `Codec/Kind/DecodeAcceptAnyFrame.lean` and the encoder fast-path kind in `Codec/Kind/EncodeFastPathAnyFrame.lean`.
 Their field list is in `Codec/Kind/ContainerField.lean`.
-The statement kind of a callee call is in `Codec/CalleeDecodeWindow.lean`.
+The lemmas of the kinds are in `Codec/`.
 `Codec/Segment/` holds segment and loop lemmas for any frame, size or element count.
-Only the `example` lines of `Codec/Segment/Bytes32VectorSpec.lean` apply them to a single type.
 Many `Codec` comments name the type whose code gave a template.
 Some `Codec` modules have one user type, for example `Codec/Segment/SizeReject.lean` (Deposit).
 A work unit keeps a new lemma in its type directory (`../../AGENTS.md`).
@@ -94,14 +95,16 @@ Codec <-> Prysm (at module level, both directions)
   Lean forbids a cycle of modules, so the module graph has no cycle.
   Only the libraries have no order.
 - A `Codec` module that imports `Prysm` uses code, data or specification lemmas of a type in a general lemma or kind.
-  These `Codec` modules import a module of a single type:
+  `grep -rlE '^import Prysm' lean/Codec` gives these modules, with the `Prysm` directories that they import:
   - `Codec/ByteSliceListDefinitions.lean` (Checkpoint, SyncAggregate);
   - `Codec/ByteSliceListLemmas.lean` (SyncCommittee);
   - `Codec/ByteVector32Values.lean` (SyncCommittee, HistoricalBatch);
   - `Codec/CalleeDecode.lean` (ValidatorIndex, Epoch, Slot): it uses their decoder specifications;
-  - `Codec/Segment/Bytes32VectorSpec.lean` (HistoricalBatch): its `example` lines apply the general lemmas to HistoricalBatch theorems;
+  - `Codec/Segment/Bytes32VectorSpec.lean` (HistoricalBatch): it uses the element lemmas of `Prysm/HistoricalBatch/Spec.lean`;
   - `Codec/SerializeFieldsCongruence.lean` (Checkpoint, AttestationData);
-  - `Codec/SerializeInline.lean` (Checkpoint, SyncCommittee).
+  - `Codec/SerializeInline.lean` (Checkpoint, SyncCommittee);
+  - `Codec/DecodeRejectSizeAnyFrame.lean`, `Codec/FixedBytesDecode.lean`, `Codec/Kind/DecodeAcceptAnyFrame.lean`, `Codec/Kind/DecodeRejectAnyFrame.lean`,
+    `Codec/Segment/Bytes32Loop.lean`, `Codec/Segment/SizeReject.lean` and `Codec/Uint64RejectSize.lean` (ElfData): they use data addresses of the link set.
 - `Prysm/Deposit/` imports modules of the flat type `Prysm/Deposit_Data/`.
 
 A new type gets its own directory `Prysm/<GoTypeName>/`.
@@ -221,7 +224,16 @@ It also has a checker `Desc` when the `Desc` checker accepted a producer file fo
 
 - The hand `Desc` `Prysm.<GoTypeName>.desc` is written by hand from the consensus-specs definition.
   It does not use the checker `Desc`.
-  It is in `Spec.lean`, `SpecDescription.lean` or `SpecDefinitions.lean` of the type.
+  This rule gives its module:
+  1. `SpecDescription.lean`, when the type directory has this module.
+     These are BeaconBlocksByRangeRequest, BlobIdentifier, BlobSidecarsByRangeRequest, BuilderDepositRequest, BuilderPreferences,
+     DepositMessage, DepositRequest, Deposit_Data, Eth1Data, ExecutionPayloadEnvelopesByRangeRequest, HistoricalSummary,
+     PartialDataColumnGroupID, PendingConsolidation, PendingDeposit, PendingPartialWithdrawal, PowBlock, SigningData,
+     SyncAggregate, SyncAggregatorSelectionData, SyncCommittee, SyncCommitteeMessage, ValidatorBalance, ValidatorIdentity and VoluntaryExit.
+  2. Else `SpecDefinitions.lean`, when the type directory has this module: DataColumnsByRootIdentifier, HistoricalBatch, IndexedAttestation.
+  3. Else `Spec.lean`: AttestationData, BeaconBlockHeader, Checkpoint.
+  4. Deposit is the exception: its hand `Desc` is in `Deposit/StatementsSpec.lean`.
+  `grep -lE '^def desc' lean/Prysm/*/*.lean` lists the modules.
   Example: `Prysm.Checkpoint.desc` in `Prysm/Checkpoint/Spec.lean`.
 - The checker `Desc` `Prysm.<GoTypeName>.checkerDesc` is in `SpecChecker.lean`.
   `../gen/checks/desc_to_lean.py` or `../gen/checks/list_desc_to_lean.py` writes it from a file of `../prysm/go1.26.10/evidence/`.
@@ -299,12 +311,12 @@ Examples are `Deposit_Data`, `ENRForkID` and the label `runtime.makeslice`.
 | Role | Content of the module |
 | --- | --- |
 | `Code` | Program constants read from the converted `.S` files (hand) |
-| `Layout` | Go struct layout from the IR: offsets and sizes (`../gen/checks/layout.py`, `attestation_data_layout.py`) |
+| `Layout` | Go struct layout from the IR: offsets and sizes (`../gen/checks/layout.py`) |
 | `EncodeLayout` | Hand encoder frame layout that `gen.sh` gives the generator with `--hand-layout` |
 | `GoValue`, `GoValueWitness` | Validity of the Go value of the receiver, and its witness |
-| `Spec` | The `SszValue` structure, its bridge lemmas to EthLib and, for some types, the hand `Desc` |
+| `Spec` | The `SszValue` structure, its bridge lemmas to EthLib and, for some types, the hand `Desc` (section 5) |
 | `SpecDescription` | The hand `Desc` alone |
-| `SpecDefinitions` | The hand `Desc` and the definitions that the frozen statements use |
+| `SpecDefinitions` | The definitions that the statements use, and for some types the hand `Desc` (section 5) |
 | `SpecChecker` | The checker `Desc` (`../gen/checks/desc_to_lean.py`, `list_desc_to_lean.py`) |
 | `SpecEquivalence` | Codec equality of the hand `Desc` and the checker `Desc` |
 | `SpecDecodeBridge` | Decoder-side lemmas of the specification bridge |
@@ -350,7 +362,8 @@ The main theorems inside `Prysm.<GoTypeName>` have these names:
   `Encode.grow_first_site_spec`, `Encode.grow_one_site_spec`;
 - `SizeSSZ`: `Size.result`, `Size.result_spec`; decode then encode: `DecodeThenEncode.round_trip`;
 - the statement of a theorem is the `def` or `abbrev` with the name of the theorem + `_statement`;
-- program constants: `Code.unmarshalSSZ`, `Code.marshalSSZTo`, `Code.sizeSSZ`, `Code.marshalSSZ`;
+- program constants: `Code.unmarshalSSZ`, `Code.marshalSSZTo`, `Code.sizeSSZ`, declared as `def Code.<method>` inside `namespace Prysm.<GoTypeName>`;
+  label abbreviations: `Code.unmarshalSSZLabel`, `Code.marshalSSZToLabel`;
   descriptions: `desc`, `checkerDesc`;
 - a function specification of a method: `Decode.accept_function_spec` or `Encode.fast_path_function_spec`.
   The lemma that it holds has the suffix `_holds`;

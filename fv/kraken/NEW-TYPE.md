@@ -56,13 +56,14 @@ python3 -B fv/kraken/link/check.py <scratch>/link-set
 
 Expected: `check.py` exits 0, and the last check line of `RESULT` is `PASS all`.
 Then copy the new set to `prysm/go1.26.10/link-set`.
-A new data file also needs a `data_include <id>` line in `lean/Prysm/ElfData/PrysmTarget.lean`.
+For each data item that a proof reads, add a `data_include <id>` line to `lean/Prysm/ElfData/PrysmTarget.lean`.
+A data file that no proof reads needs no line.
 
 ## 3. `Code.lean`
 
 What you make: `lean/Prysm/<T>/Code.lean` by hand.
-It has one `include_x64_code` constant for each method, for example `Code.unmarshalSSZ` and `Code.marshalSSZTo`.
-Take `lean/Prysm/HistoricalSummary/Code.lean` as the model.
+It has one `include_x64_code` constant for each method that a proof reads, for example `Code.unmarshalSSZ` and `Code.marshalSSZTo`.
+Take `lean/Prysm/HistoricalSummary/Code.lean` as the model: `namespace Prysm.<T>` and `def Code.<method>`.
 The path of each `.S` file is relative to `fv/kraken/lean`.
 
 ```sh
@@ -109,7 +110,7 @@ What you make, in this order:
    It also holds the codec equality of `desc` and `checkerDesc`, for example `desc_serialize_checker`.
    Example: `lean/Prysm/HistoricalSummary/Spec.lean`.
    For a flat type of uint64 and byte vector fields, `gen/flat-types/flat_types_spec.py` can write it.
-   Add the type to its table `T`, then run `python3 -I -B gen/flat-types/flat_types_spec.py lean` from `fv/kraken`.
+   Add the type to its table `SPEC_TYPES`, then run `python3 -I -B gen/flat-types/flat_types_spec.py lean` from `fv/kraken`.
 
 What checks it: the build of these modules, and the axioms gate (step 7).
 No tool checks the hand `Desc` against consensus-specs.
@@ -119,11 +120,11 @@ A reviewer reads it (`FINDINGS.md`).
 
 What you make: one row for the type in one of two driver scripts.
 
-- `gen/flat-types/run_generators.sh`: a row `<package> <T>` (`v1` or `v1alpha1`).
+- `gen/flat-types/run_generators.sh`: a row `<package> <T>` (`v1` or `v1alpha1`), for example `v1alpha1 ValidatorIdentity`.
   Choose it for a flat type when the tools of `gen/flat-types/` write its specification, decoder corollary and witnesses.
   The script writes into a scratch directory.
   Copy each output whose `.rc` file holds 0.
-- `gen/generator/gen.sh`: the type name in the `decoder --whole-accept` loop and in the `encoder --fast-path` loop.
+- `gen/generator/gen.sh`: the type name in the `decoder --whole-accept` loop and in the `encoder --fast-path` loop, for example `HistoricalSummary`.
   Choose it for a `v1alpha1` type when you write its specification, decoder corollary and decoder witnesses by hand.
   A row can give options: `--hand-layout` with `--hand-layout-src`, and `--same-as` with `--same-as-via`.
   The script writes into `lean/Prysm/<T>/` directly.
@@ -133,7 +134,9 @@ mkdir <scratch>/flat-out && sh fv/kraken/gen/flat-types/run_generators.sh <scrat
 sh fv/kraken/gen/generator/gen.sh
 ```
 
-Expected: `HistoricalSummary.whole-accept.rc` and `HistoricalSummary.fast-path.rc` hold 0, and `gen.sh` exits 0.
+Expected for a row of `run_generators.sh`: `ValidatorIdentity.whole-accept.rc` and `ValidatorIdentity.fast-path.rc` hold 0.
+Expected for a row of `gen.sh`: `gen.sh` exits 0.
+It writes `lean/Prysm/HistoricalSummary/GeneratedDecodeAccept.lean` and `lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean`.
 
 Exit 2 is a refusal.
 The generator writes nothing to standard output.
@@ -141,8 +144,14 @@ The last line of `<T>.whole-accept.stderr` or `<T>.fast-path.stderr` gives the r
 `FINDINGS.md`, entry "The proof generator covers only some code forms", lists the covered forms.
 Do not add a refused type to `gen.sh`: its output redirect writes an empty file, and the script stops.
 A refused method needs hand proofs with the roles `DecodeAccept`, `DecodeRejectSize`, `EncodeFastPath` and their witnesses.
-`lean/Prysm/Checkpoint/` shows these modules.
 Put the statements first in a `Statements` module.
+`lean/Prysm/SyncAggregate/` is the model of a hand decoder.
+Its `Statements.lean` holds the statements.
+`DecodeAccept.lean` and `DecodeRejectSize.lean` prove them from the `Codec` segment lemmas.
+`Codec/FixedBytesDecode.lean` covers byte vectors of 32, 48 and 96 bytes.
+For another size, prove the segment lemma in the type directory.
+`lean/Prysm/SyncAggregate/DecodeFieldSegments.lean` does this for 64 bytes: `bytes_decode_segment_offset_zero_size64`.
+It has the statement of `Codec.bytes_decode_segment_offset_zero` with `hn : n = 64`, and the proof method of `Codec/FixedBytesDecode.lean`.
 A generator change needs user approval.
 
 What checks it: `gen/generator/kindcheck.py` (step 7).
@@ -161,23 +170,33 @@ What you make:
 - `GeneratedEncodeFastPathSpec.lean` and `WitnessGeneratedEncodeFastPath.lean`: the encoder corollary and its witness.
 
 A person writes the first two for the types of `gen.sh`.
-Tools write them for a type of `run_generators.sh`:
+Tools write them for a type of `run_generators.sh`.
+Add a type of `run_generators.sh` to every table of this list.
+A type whose decoder the generator refuses goes only into the tables of the encoder, as BuilderPreferences does.
 
-| Files | Tool | Table to extend |
+| File | Table | What the table gives |
 | --- | --- | --- |
-| `DecodeSpec.lean` | `gen/flat-types/flat_types_decode_spec.py` | `DEC` |
-| `WitnessGeneratedDecodeAccept.lean`, `WitnessGeneratedDecodeRejectSize.lean` | `gen/flat-types/flat_types_witness.py` | the default list in `__main__` |
-| `GeneratedEncodeFastPathSpec.lean`, `WitnessGeneratedEncodeFastPath.lean` | `gen/flat-types/flat_types_encode_spec.py` | `TYPES` (every type with a generated fast path) |
+| `gen/flat-types/run_generators.sh` | the rows after `<<'TYPES'` | The generator runs. `gen/checks/regenerate_and_compare.py` reads these rows |
+| `gen/flat-types/flat_types_spec.py` | `SPEC_TYPES` | The Go type and the fields. The decoder and witness tools read this table too |
+| `gen/flat-types/flat_types_decode_spec.py` | `DECODE_SPEC_TYPES` | The types that get `DecodeSpec.lean` |
+| `gen/flat-types/flat_types_witness.py` | `WITNESS_TYPES` and `ASSEMBLY_NAMES` | The types that get the two decoder witnesses, and the name of the `.S` file |
+| `gen/flat-types/flat_types_witness.py` | the frame forms in `__main__` | The accept witness form: frame `0x38`, frame `0x20`, or the frame with slices and callees |
+| `gen/flat-types/flat_types_encode_spec.py` | `ENCODE_SPEC_TYPES` | Every type with a generated fast path, also the types of `gen.sh` |
+| `gen/flat-types/flat_types_negative_cases.py` | `DECODER_CASE_TYPES` and `ENCODER_CASE_TYPES` | The negative cases of the decoder and of the encoder |
+| `gen/flat-types/flat_types_hand_list.py` | `HAND_LIST_TYPES` | The names that go into `gen/axioms-lists/flat-fixed-size-types.lean` |
 
 From `fv/kraken`:
 
 ```sh
+python3 -I -B gen/flat-types/flat_types_spec.py lean
 python3 -I -B gen/flat-types/flat_types_decode_spec.py lean
 python3 -I -B gen/flat-types/flat_types_witness.py .
 python3 -I -B gen/flat-types/flat_types_encode_spec.py lean lean
+python3 -I -B gen/flat-types/flat_types_negative_cases.py lean gen/checks/negative-cases/negative-cases-flat-types.json
 ```
 
 Expected: exit 0 for each tool.
+`flat_types_hand_list.py` needs the declaration dump of the axioms gate (step 7).
 What checks it: the build and the axioms gate (step 7), and `regenerate_and_compare.py` for the tool-written files.
 
 ## 7. The checks
@@ -195,7 +214,12 @@ A check that did not run is "not run" in the pull request.
    Expected: exit 0 for both.
 2. The axioms gate, with a hand list entry.
    Add the imports and one `#print axioms <name>` line for each main theorem and witness to a file of `gen/axioms-lists/`.
-   HistoricalSummary is in `gen/axioms-lists/flat-fixed-size-types.lean`.
+   For a type of `HAND_LIST_TYPES`, `gen/flat-types/flat_types_hand_list.py` adds the lines to `flat-fixed-size-types.lean`:
+   `python3 -I gen/flat-types/flat_types_hand_list.py <dump.tsv> gen/axioms-lists/flat-fixed-size-types.lean <module list>`.
+   For any other new type, make a new file `gen/axioms-lists/<type>.lean`.
+   `<type>` is the Go type name in lower case, with `-` between the words.
+   An example is `gen/axioms-lists/historical-batch.lean`.
+   The gate reads every `*.lean` file of the directory.
 
    ```sh
    python3 -I -B fv/kraken/gen/checks/axioms_gate.py run <scratch>/gate.json <scratch>/dump.tsv
@@ -218,13 +242,17 @@ A check that did not run is "not run" in the pull request.
 
    Expected: every line starts with `EQ`.
 5. The negative cases.
-   Add one control and at least one mutant for each main theorem to a file of `gen/checks/negative-cases/`.
+   Add one control and at least one mutant for each main theorem.
+   For a type of `DECODER_CASE_TYPES` or `ENCODER_CASE_TYPES`, `flat_types_negative_cases.py` writes them into `negative-cases-flat-types.json`.
+   For any other new type, make a new file `gen/checks/negative-cases/negative-cases-<type>.json`, with the type name as in step 2.
+   An example is `negative-cases-historical-batch.json`.
+   `python_checks.sh` reads every tracked file with `negative-cases` in its name.
    A control has `id`, `module`, `theorem` and `kind: "control"`.
    A statement mutant also has `old` and `new`: a text that occurs once in the statement, and its change.
    A code mutant has `code_definition`, `assembly`, `old` and `new` (`gen/checks/negative.py` usage text).
+   `assembly` is the name of the `.S` file in `prysm/go1.26.10/link-set/norm`.
    The id is the Go type in lower case, the theorem without its type namespace, the kind and the change.
    An example is `historical-summary-decode-generated-accept-statement-hav-64-to-32`.
-   For a type of `gen/flat-types/flat_types_negative_cases.py` (lists `DEC` and `ENC`), that tool writes the cases.
    The Python checks of the case files run in `python_checks.sh` (item 6).
    The run with Lean needs Linux (`FINDINGS.md`).
    Run one case per job:
@@ -242,6 +270,15 @@ A check that did not run is "not run" in the pull request.
 
    Expected: every line of `<scratch>/python-checks/summary.txt` ends with `rc=0`.
 7. The proof inventory: run the commands of `README.md` section 5 (needs a built tree and the gate JSON).
+   `gen/tools/proof_inventory.py` derives the row of a type from its directory `lean/Prysm/<T>/` and the theorem names.
+   The directory name must be a Go type of `prysm/go1.26.10/ssz-methods.json`, else the tool prints a `FAIL` line.
+   The theorems must have the names of `lean/README.md` section 8, the candidates of `DEC_CANDIDATES`, `ENC_FORMS` and `SIZE_FORM`.
+   An encoder theorem outside the fast path needs an entry in `ENC_EXTRA`.
+   The entry gives a premise text for each theorem and a text of what is not proved.
+   Without that entry, a theorem with a name of `ENC_UNCLASSIFIED` shows in the row as not classified.
+   `GENERATOR_REFUSED` gives the reason why the generators refuse a flat type.
+   Change the entry of the type when the generator result of the type changes.
+   Do not add the type to `CORE_FLAT_TYPES`: it is a fixed list.
    Expected: `gen/tools/proof_inventory.py run` exits 0, and `prysm/proof-inventory.md` has a row for the type.
 8. The link check of step 2, when the link set changed (needs the ELF).
 
