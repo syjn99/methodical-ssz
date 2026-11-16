@@ -1,8 +1,8 @@
 #!/bin/sh
 # Build the Go 1.26.10 target ELF twice and dump its SSZ functions.
-# Run inside the heavy-job gate, with Go 1.26.10 (env-go12610.sh) on PATH,
-# from the temporary Prysm tree that already holds the 698c202 outputs and
-# fv/prysm-target/main.go (fv/kraken/gen/keepalive.py).
+# Run one heavy job at a time, with Go 1.26.10 on PATH (the version of prysm/go1.26.10/build-ids.txt),
+# from a Prysm tree that holds the outputs of the generator commit of fv/kraken/README.md section 2
+# and fv/prysm-target/main.go (fv/kraken/gen/keepalive.py).
 #
 # Usage: prysm-elf.sh <prysm-tree> <outdir> <fresh-gocache-dir>
 #   <outdir>/prysm-target-amd64                the first build (shared GOCACHE)
@@ -11,7 +11,7 @@
 set -eu
 P=$1
 O=$2
-C2=$3
+SECOND_GOCACHE=$3
 cd "$P"
 mkdir -p "$O"
 FLAGS="-p 2 -tags purego -trimpath"
@@ -19,9 +19,9 @@ echo "### first build"
 # shellcheck disable=SC2086
 GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build $FLAGS -o "$O/prysm-target-amd64" ./fv/prysm-target
 echo "### second build (empty GOCACHE)"
-mkdir -p "$C2"
+mkdir -p "$SECOND_GOCACHE"
 # shellcheck disable=SC2086
-GOCACHE=$C2 GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build $FLAGS -o "$O/prysm-target-amd64.second-build" ./fv/prysm-target
+GOCACHE=$SECOND_GOCACHE GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build $FLAGS -o "$O/prysm-target-amd64.second-build" ./fv/prysm-target
 RE='(proto/prysm/v1alpha1|proto/engine/v1)\.\(\*[A-Za-z0-9_]+\)\.(MarshalSSZTo|SizeSSZ|UnmarshalSSZ)$|consensus-types/primitives\.\(\*[A-Za-z0-9_]+\)\.(MarshalSSZTo|MarshalSSZ|SizeSSZ|UnmarshalSSZ)$|methodical-ssz/ssz\.Validate(Bitlist|Bitvector)$'
 echo "### objdump"
 go tool objdump -gnu -s "$RE" "$O/prysm-target-amd64" > "$O/prysm-target-amd64.objdump"

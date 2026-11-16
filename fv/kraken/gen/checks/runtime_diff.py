@@ -11,7 +11,7 @@ import hashlib
 import json
 import sys
 
-G3, G10, OUT = sys.argv[1:4]
+GOROOT_OLD, GOROOT_NEW, OUT = sys.argv[1:4]
 # contract -> [(file, function or None for the whole file)]
 ROWS = {
     "MakesliceContract (esz 1)": [("src/runtime/slice.go", "makeslice"), ("src/runtime/malloc.go", "mallocgc")],
@@ -43,11 +43,11 @@ def body(root, f, fn):
     return s[i:j + 3]
 
 
-out = {"go_1_26_3": G3, "go_1_26_10": G10, "rows": []}
+out = {"go_1_26_3": GOROOT_OLD, "go_1_26_10": GOROOT_NEW, "rows": []}
 for c, parts in ROWS.items():
     items = []
     for f, fn in parts:
-        a, b = body(G3, f, fn), body(G10, f, fn)
+        a, b = body(GOROOT_OLD, f, fn), body(GOROOT_NEW, f, fn)
         d = list(difflib.unified_diff(a.splitlines(), b.splitlines(), lineterm="", n=0))
         items.append({"file": f, "function": fn, "same": a == b,
                       "sha256_1_26_3": hashlib.sha256(a.encode()).hexdigest(),

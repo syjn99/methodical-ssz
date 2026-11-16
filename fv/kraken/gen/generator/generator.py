@@ -77,7 +77,7 @@ def lean_str(s):
 
 # The namespace of every output: Prysm.<Go type name>, from --type (`<package>.<Type>`), or for uint64 (no --type) from
 # the name of the `.S` file (`<package>.<Type>.<Method>.S`). A `.S` file of another name (a test mutant) gives
-# Prysm.Unknown; the generator still checks the text as before.
+# Prysm.Unknown; the generator checks the text in the same way.
 GEN_NS = None
 
 

@@ -242,7 +242,8 @@ end Prysm.{X}.Witness.GeneratedDecodeAccept
 
 # ---------------------------------------------------------------- accept witness, byte fields (+ callees)
 def accbytes(X, n, frame):
-    """frame '20': Deposit_Data frame (sub $0x20, no call; S = 16); 'pd': slices + callees (S = 8), frame F."""
+    """frame 'no_callee_frame_0x20': the Deposit_Data frame (sub $0x20, no call; S = 16);
+    frame 'slices_and_callees': slices and callees (S = 8), the frame F of the type."""
     ty, fs, _ = SPEC_TYPES[X]
     N = sum(f[2] for f in fs)
     heap = sum(f[2] for f in fs if f[1] == 'b')
@@ -271,7 +272,7 @@ def accbytes(X, n, frame):
     tail = gsize - rlen
     assert tail == 32, (X, tail)
     endr = rax + gsize
-    if frame == '20':
+    if frame == 'no_callee_frame_0x20':
         S = 16
         F_lo = endr                      # lo (S bytes) = rsp - 48 - S
         rsp = F_lo + 48 + S
@@ -477,8 +478,8 @@ if __name__ == '__main__':
         if X in ('BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest'):
             a = accept_witness_frame_0x38(X, n)
         elif X in ('DepositRequest', 'BuilderDepositRequest'):
-            a = accbytes(X, n, '20')
+            a = accbytes(X, n, 'no_callee_frame_0x20')
         else:
-            a = accbytes(X, n, 'pd')
+            a = accbytes(X, n, 'slices_and_callees')
         open(os.path.join(d, 'WitnessGeneratedDecodeAccept.lean'), 'w').write(with_code_imports(a, X))
         print(X, n)

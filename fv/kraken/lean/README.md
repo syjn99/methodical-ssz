@@ -23,7 +23,9 @@ It has no ELF.
 The `Desc` checker `../gen/desc-checker/DescChecker.lean` imports the test types for its tests.
 Some proofs import them for their lemmas: `Codec/ReadUint64List.lean`, `Prysm/Checkpoint/Spec.lean`, and `SpecDefinitions.lean` of DataColumnsByRootIdentifier and IndexedAttestation.
 `Spec` imports only EthLib and `Spec`.
-It holds no machine code and no specification of a type of the Prysm target.
+It holds no machine code.
+The reduced `Checkpoint` and `AttestationData` of `Spec/TestCheckpointAndAttestationData.lean` are its only forms of Prysm types.
+The hand `Desc` of each type of the Prysm target is in `Prysm/<GoTypeName>/` (section 5).
 
 **`Machine`.** Helpers on the Kraken machine model.
 They are the one-instruction step lemmas and tactics (`Machine/Step.lean`), and the stack frame, byte, label and flag lemmas.
@@ -111,7 +113,7 @@ Codec <-> Prysm (at module level, both directions)
     Examples are the generated decoders that call Slot, Epoch or ValidatorIndex, and AttestationData, which calls Checkpoint.
   - A nested type: the type holds another type as a field.
     The module imports the modules of the field type, for example Deposit and `Prysm/Deposit_Data/`.
-  - The shared `Spec` of a nested type: the `Spec` module of the outer type uses the `SszValue` lemmas of the field type.
+  - The shared `Spec` of a nested type: the outer `Spec` module uses the `SszValue` lemmas of the field type.
     An example is `Prysm/IndexedAttestation/Spec.lean`, which uses `Prysm.AttestationData.SszValue`.
   - The shared imports of `Prysm/Checkpoint/Spec.lean` and `Prysm/Checkpoint/SpecEquivalence.lean`.
     Many `Spec`, `SpecDescription` and `SpecDefinitions` modules import them for the EthLib and `Spec` modules that they import.
@@ -234,7 +236,9 @@ A Prysm type has a hand `Desc`.
 It also has a checker `Desc` when the `Desc` checker accepted a producer file for it.
 
 - The hand `Desc` `Prysm.<GoTypeName>.desc` is written by hand from the consensus-specs definition.
-  It does not use the checker `Desc`.
+  For some types it is written from the Prysm proto definition: `grep -l 'from the Prysm proto' Prysm/*/SpecDescription.lean` lists them.
+  Such a `Desc` has the same source as the `Desc` producer, so it is not an independent specification (`../FINDINGS.md`).
+  The hand `Desc` does not use the checker `Desc`.
   This rule gives its module:
   1. `SpecDescription.lean`, when the type directory has this module.
      These are BeaconBlocksByRangeRequest, BlobIdentifier, BlobSidecarsByRangeRequest, BuilderDepositRequest, BuilderPreferences,

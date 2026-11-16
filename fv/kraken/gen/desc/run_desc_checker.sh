@@ -1,5 +1,5 @@
 #!/bin/sh
-# Run the Desc checker for test_desc.py. Run inside the heavy-job gate with the Lean env.
+# Run the Desc checker for test_desc.py. Run one heavy job at a time, with the Lean toolchain of lean/lean-toolchain.
 # Usage: run_desc_checker.sh <work-dir> <fv/kraken/lean>
 #   main : DESC_LIST=list.txt (originals), DESC_MUTANTS=mutants.txt (controls, known passes,
 #          review mutants) -> <work>/main.result.json, <work>/logs/main.log

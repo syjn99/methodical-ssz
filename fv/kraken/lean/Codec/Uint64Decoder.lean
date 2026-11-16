@@ -29,7 +29,7 @@ open Machine
 
 namespace Codec
 
-/-- Head block of the uint64 decoder pattern (directives 0–10 of the dev instances). -/
+/-- Head block of the uint64 decoder pattern (directives 0–10 of the Epoch, Slot and CommitteeIndex decoders). -/
 def uint64DecodeHead (fn l0 lcc lbb : String) (fs dsp : Int64) : Program :=
   [Kraken.Directive.label fn,
    Kraken.Directive.label l0,

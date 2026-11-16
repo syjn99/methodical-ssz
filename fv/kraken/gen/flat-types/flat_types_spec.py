@@ -55,7 +55,8 @@ def emit(X, ty, fs, chk):
     w(f'# Spec bridge for the Prysm `{ty}`')
     w('')
     w('Written by `gen/flat-types/flat_types_spec.py`.')
-    w(f'`{D}` (`Prysm/{X}/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).')
+    w(f'`{D}` (`Prysm/{X}/SpecDescription.lean`) is the hand `Desc`, written from the Prysm proto definition.')
+    w('It has the same source as the Desc producer, so it is not an independent specification.')
     if chk:
         w(f'`{chk[0]}` (`Prysm/{X}/SpecChecker.lean`, rendered by `gen/checks/desc_to_lean.py`) is the Desc checker\'s Desc of the type')
         w('(the producer output recorded in `gen/desc/results/main.result.json`, same sha256; copy in `prysm/go1.26.10/evidence/`).')

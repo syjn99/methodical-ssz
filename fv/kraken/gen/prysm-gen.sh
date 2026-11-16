@@ -1,6 +1,7 @@
 #!/bin/sh
 # Generate the Fulu-relevant Prysm SSZ files with the pinned generator and dump
-# the generator IR. Run inside the heavy-job gate, with Go 1.26.10 on PATH.
+# the generator IR. Run one heavy job at a time, with Go 1.26.10 on PATH (the version of
+# prysm/go1.26.10/build-ids.txt).
 #
 # Usage: prysm-gen.sh <prysm-tree> <generator-binary> <outdir> [gen|ir|all]
 #   gen   : <outdir>/gen/{mainnet,minimal}/<config>[.minimal].ssz.go

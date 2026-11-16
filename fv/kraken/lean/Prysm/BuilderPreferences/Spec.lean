@@ -6,7 +6,8 @@ import Prysm.BuilderPreferences.SpecDescription
 # Spec bridge for the Prysm `v1alpha1.BuilderPreferences`
 
 Written by `gen/flat-types/flat_types_spec.py`.
-`desc` (`Prysm/BuilderPreferences/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).
+`desc` (`Prysm/BuilderPreferences/SpecDescription.lean`) is the hand `Desc`, written from the Prysm proto definition.
+It has the same source as the Desc producer, so it is not an independent specification.
 No Desc-checker record exists for this type (`gen/desc/results/main.result.json`): no codec equality here.
 `SszValue` is the SSZ content of a Go `v1alpha1.BuilderPreferences`.
 -/

@@ -3,7 +3,7 @@ import Lean
 /-!
 # inventory_decls: facts about named declarations for `proof_inventory.py` (core `Lean` only)
 
-Usage (`lean` is a heavy command: run it through the heavy-job gate, cwd `fv/kraken/lean`):
+Usage (`lean` is a heavy command: run one heavy job at a time, cwd `fv/kraken/lean`):
 
     lake env lean --run ../gen/tools/inventory_decls.lean <names.txt> Module...
 

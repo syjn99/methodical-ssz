@@ -7,7 +7,8 @@ import Prysm.DepositRequest.SpecChecker
 # Spec bridge for the Prysm `v1.DepositRequest`
 
 Written by `gen/flat-types/flat_types_spec.py`.
-`desc` (`Prysm/DepositRequest/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).
+`desc` (`Prysm/DepositRequest/SpecDescription.lean`) is the hand `Desc`, written from the Prysm proto definition.
+It has the same source as the Desc producer, so it is not an independent specification.
 `checkerDesc` (`Prysm/DepositRequest/SpecChecker.lean`, rendered by `gen/checks/desc_to_lean.py`) is the Desc checker's Desc of the type
 (the producer output recorded in `gen/desc/results/main.result.json`, same sha256; copy in `prysm/go1.26.10/evidence/`).
 `SszValue` is the SSZ content of a Go `v1.DepositRequest`.
