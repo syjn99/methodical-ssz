@@ -26,7 +26,6 @@ No growslice branch, no length reject, no morestack path. Not a complete encoder
 | Deposit_Data | bytes 48 + 32 + uint64 + bytes 96 | `0x88` | `0x10` | yes |
 
 Each statement is an `abbrev … : Prop`; `Prysm/PowBlock/GeneratedEncodeFastPathSameAsHand.lean` proves `type_of% generated = this` by `rfl`.
-After the split of this module, the declarations of the other types are in `Prysm/Deposit_Data/EncodeFastPathStatements.lean`, `Prysm/PendingPartialWithdrawal/EncodeFastPathStatements.lean`, `Prysm/SyncCommitteeMessage/EncodeFastPathStatements.lean`.
 -/
 
 open Machine Runtime Codec Prysm.PowBlock.Code

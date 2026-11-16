@@ -15,7 +15,7 @@ Reason (attempt 1 of `Prysm/DataColumnsByRootIdentifier/EncodeLoopGrowAnySite.le
 (`avail' + esz·newCap ≤ avail`). After one growth nothing bounds the remaining heap from below, so the budget premise of
 a second `growslice` call cannot be discharged: `Encode.grow_any_site_statement` does not follow from the contract forms of
 `Runtime/Contracts.lean` (a form with a lower bound, e.g. `avail' + esz·newCap = avail`, is missing; a new form needs user
-approval). The originals stay unchanged and unproved (N). The new premises are not implied by the old ones and the old
+approval). The two statements without these premises have no proof. The new premises are not implied by the old ones and the old
 ones are not implied by the new ones (the new statement allows a smaller heap and forbids a second growth).
 -/
 

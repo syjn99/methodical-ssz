@@ -7,8 +7,8 @@ import Prysm.Checkpoint.Code
 `Encode.tail_grow`: `len(Root) = 32` and `len + 8 ≤ C < len + 40` (the block holds the epoch bytes,
 the root does not fit). Directives 33–41 (`jae L_cf` not taken), 42–43 save `len + 8` at rsp0 − 72
 and `Root.ptr` at rsp0 − 16, 44–49 `runtime.growslice(old = b, newLen = len + 40, oldCap = C,
-num = 32, et = uint8)` with the contract `GrowsliceContract Heap typeUint8_addr 1 S` (existing form,
-instance esz 1; `old` = the first `len + 8` bytes of the block = `pre ++ epoch`), 50–54 restore,
+num = 32, et = uint8)` with the contract `GrowsliceContract Heap typeUint8_addr 1 S`
+(instance esz 1; `old` = the first `len + 8` bytes of the block = `pre ++ epoch`), 50–54 restore,
 55–62 spills and `memmove(nb + len + 8, Root.ptr, 32)`, 63–70 return `(nb, len + 40, C2, nil)`
 with `nextSliceCap (len + 40) C ≤ C2`. The old block is unchanged (it keeps `pre ++ epoch`); the
 new block is `pre ++ epoch ++ root ++ rest`.

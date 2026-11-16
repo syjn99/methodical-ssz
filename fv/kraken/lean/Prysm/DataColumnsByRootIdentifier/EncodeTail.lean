@@ -23,7 +23,7 @@ variable [Host]
 namespace Prysm.DataColumnsByRootIdentifier
 
 omit [Host] in
-/-- `cmp $0x80, a; jg` is not taken when `a ≤ 128` (the text of `Prysm.IndexedAttestation.Decode.jg2048_false`). -/
+/-- `cmp $0x80, a; jg` is not taken when `a ≤ 128`. -/
 theorem Encode.jg128_false (a : BitVec 64) (af : Bool) (h : a.toNat ≤ 128) :
     CondCode.g.interp (StatusFlags.from_result (a - 128)
       { cf := BitVec.unsigned (a - 128) != a.unsigned - BitVec.unsigned (128 : BitVec 64), af := af,

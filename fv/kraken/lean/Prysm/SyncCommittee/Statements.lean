@@ -10,7 +10,7 @@ import Prysm.SyncCommittee.SpecDefinitions
 # Hand STATEMENTS of the target `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (statements only, no proof)
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
-Statement shape: as `Prysm/SyncAggregate/Statements.lean` (`Prysm.Deposit_Data.Decode.accept_statement` and its spec companions), with a 512-element
+Statement shape: as `Prysm/SyncAggregate/Statements.lean`, with a 512-element
 `[][]byte` field.
 
     func (c *SyncCommittee) UnmarshalSSZ(buf []byte) error {

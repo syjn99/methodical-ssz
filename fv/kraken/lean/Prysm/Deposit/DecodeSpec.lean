@@ -5,11 +5,11 @@ import Prysm.Deposit.Spec
 /-!
 # Spec alignment of the real Deposit decoder
 
-The text of `Prysm.HistoricalBatch.DecodeSpec` with the Deposit statement. The statements are the frozen `Decode.accept_spec_statement`,
+The statements are the frozen `Decode.accept_spec_statement`,
 `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement` (`Prysm/Deposit/StatementsSpec.lean`).
 -/
 
-open Machine Runtime EthLib.Serialization.Ssz Prysm.Deposit.Code
+open Machine Runtime EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.Deposit

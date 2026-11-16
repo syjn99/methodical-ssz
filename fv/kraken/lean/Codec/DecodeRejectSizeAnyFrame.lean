@@ -9,8 +9,8 @@ import Prysm.ElfData.PrysmTarget
 The size-reject path is the same code in every flat decoder: the prologue with `jne lerr` taken, `lerr:`,
 the two words of `ssz.ErrSize` into rax / rbx, `add $F,%rsp; pop %rbp; retq`. Only the frame `F`, the first
 spill displacement `dB = F + 24`, the size `sz` and the labels differ.
-- `decodeRejectKindAnyFrame C sz`: the statement of the committed theorems `Prysm.<Type>.Decode.reject_size` with the code
-  constant and the size replaced (tie: `Prysm/Checkpoint/DecodeRejectSizeKindInstances.lean`).
+- `decodeRejectKindAnyFrame C sz`: the statement of the theorems `Prysm.<Type>.Decode.reject_size` with the code
+  constant and the size as parameters (tie: `Prysm/Checkpoint/DecodeRejectSizeKindInstances.lean`).
 - `decode_reject_segment`: the proof over windows (nops anywhere): `decoderPrologue` (`Codec/DecoderPrologue.lean`), `decodeErrorBlock`, then `decode_epilogue_any_frame`.
 Not covered: callee error returns (`fmt.errorf`), `morestack`.
 -/

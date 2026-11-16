@@ -7,7 +7,7 @@ import Prysm.Deposit_Data.Code
 /-!
 # Witness of `Decode.generated_accept` (Deposit_Data decoder accept path)
 
-Hand-written (the text of `Prysm/DepositMessage/WitnessGeneratedDecodeAccept.lean` with the Deposit_Data host and layout).
+Hand-written.
 It shows that the premises of the generated accept theorem `Prysm.Deposit_Data.Decode.generated_accept` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.Deposit_Data).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (152, `bump_makeslice1`) and `MemmoveGrowsliceModel` (158, `model_memmove`).

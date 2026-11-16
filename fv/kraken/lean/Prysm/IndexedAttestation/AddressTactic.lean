@@ -1,7 +1,7 @@
 import Machine.Step
 
-/-! The address tactic of the IndexedAttestation proofs (moved from `Prysm/IndexedAttestation/DecodeRejectSize.lean`, so that `Prysm/IndexedAttestation/DecodeAccept.lean` does not import the
-reject module; `gen/checks/list_negative.py` inlines `Prysm/IndexedAttestation/Statements.lean` into a mutant and needs it imported only once). -/
+/-! The address tactic of the IndexedAttestation proofs. It is a module of its own, so that `Prysm/IndexedAttestation/DecodeAccept.lean` does not
+import a reject module: `gen/checks/list_negative.py` inlines `Prysm/IndexedAttestation/Statements.lean` into a mutant and needs it imported only once. -/
 
 namespace Prysm.IndexedAttestation
 

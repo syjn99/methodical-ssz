@@ -7,8 +7,7 @@ import Prysm.ValidatorIndex.Code
 /-!
 # Spec alignment of the real BeaconBlockHeader decoder
 
-Hand-written (the text of `Prysm/AttestationData/DecodeSpec.lean` with the BeaconBlockHeader
-statement).
+Hand-written.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`, the independent consensus-specs Desc)
   as `v`, there is `g : SszValue` with `g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g`
   the machine code returns nil and the receiver holds `g` (Slot / ProposerIndex = `uintBytes 8`, the three
@@ -21,7 +20,7 @@ statement).
 The machine-code theorems used are the generated `Decode.generated_accept` and `Decode.generated_reject`.
 -/
 
-open Machine Runtime Prysm.BeaconBlockHeader.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.BeaconBlockHeader

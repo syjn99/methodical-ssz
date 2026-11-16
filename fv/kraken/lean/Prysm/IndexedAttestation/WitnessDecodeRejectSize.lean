@@ -7,7 +7,7 @@ import Prysm.IndexedAttestation.Code
 /-!
 # Witnesses of `Decode.reject_size` (size reject) and `Decode.reject_offset` (offset reject)
 
-The text of `Prysm/Checkpoint/WitnessDecodeRejectSize.lean`. The premises of the frozen statements `Decode.reject_size_statement` and
+The premises of the frozen statements `Decode.reject_size_statement` and
 `Decode.reject_offset_statement` (`Prysm/IndexedAttestation/Statements.lean`) are satisfiable. Host: the labels `ssz.ErrSize` (index 0, 0x10000) and
 `ssz.ErrInvalidVariableOffset` (index 16, 0x10010) with pad labels between, then the real Go 1.26.10
 `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (index 17). (The host of the alignment and overflow rejects, `Prysm/IndexedAttestation/WitnessDecodeRejectAlignment.lean` has neither label.)

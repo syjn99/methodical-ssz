@@ -6,11 +6,11 @@ import Prysm.HistoricalBatch.Code
 import Prysm.SyncCommittee.Code
 
 /-!
-# The SyncCommittee and HistoricalBatch size-reject statements re-derived from `Codec.Segment.reject_size_any_frame`
+# The SyncCommittee and HistoricalBatch size-reject statements as instances of `Codec.Segment.reject_size_any_frame`
 
 Each theorem has the frozen statement as its type (`Prysm.SyncCommittee.Decode.reject_size_statement`, `Decode.reject_size_statement`); the proof is one
-application of the general lemma with the block facts read from the real program. The hand proofs
-(`Prysm/SyncCommittee/DecodeRejectSize.lean`, `Prysm/HistoricalBatch/DecodeRejectSize.lean`) are unchanged.
+application of the general lemma with the block facts read from the real program. The hand proofs are in
+`Prysm/SyncCommittee/DecodeRejectSize.lean` and `Prysm/HistoricalBatch/DecodeRejectSize.lean`.
 -/
 
 open Machine Runtime Prysm.HistoricalBatch Prysm.HistoricalBatch.Code

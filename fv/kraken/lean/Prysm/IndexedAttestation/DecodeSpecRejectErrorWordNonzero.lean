@@ -7,10 +7,10 @@ import Prysm.IndexedAttestation.DecodeRejectOverflow
 
 Statements: the corrected `Decode.reject_alignment_spec_error_word_nonzero_statement` and `Decode.reject_overflow_spec_error_word_nonzero_statement` (`Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean`):
 EthLib rejects (`spec_rejects`: the Go check that fails is one of `decodeChecks`) and the machine code returns the
-`fmt.errorf` error (`Decode.reject_alignment_error_word_nonzero`, `Decode.reject_overflow_error_word_nonzero`). The text of `Prysm/IndexedAttestation/DecodeSpecReject.lean`.
+`fmt.errorf` error (`Decode.reject_alignment_error_word_nonzero`, `Decode.reject_overflow_error_word_nonzero`).
 -/
 
-open Machine Runtime EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
+open Machine Runtime EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.IndexedAttestation

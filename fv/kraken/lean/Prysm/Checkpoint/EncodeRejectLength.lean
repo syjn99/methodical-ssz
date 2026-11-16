@@ -17,7 +17,6 @@ find `len(Root) ≠ 32`. Directives 71–79: `rdi, rsi` = the two words of
 The conclusion states the side effect exactly (the epoch bytes are written before the root length test): `dst[len:len+8]`
 holds the epoch bytes, everything else of `dst` is unchanged, the returned
 slice is nil. The 32-byte stack temp is named as in the fast path.
-After the split of this module, the BitVec lemma that other types use is in `Codec/EncodeBitVecLemmas.lean`.
 -/
 
 open Machine Runtime Prysm.Checkpoint.Code

@@ -15,7 +15,7 @@ From here the code is the same for both prefixes. Three tails, by the code's bra
   `(b, len + 40, C, nil)`.
 - `Encode.tail_grow` (`len(Root) = 32`, `len + 8 ≤ C < len + 40`): directives 33–41 (`jae` not
   taken), 42–49 the second `runtime.growslice(old = b, newLen = len + 40, oldCap = C, num = 32,
-  et = uint8)` (contract `GrowsliceContract Heap typeUint8_addr 1 S`, the existing form, instance esz 1),
+  et = uint8)` (contract `GrowsliceContract Heap typeUint8_addr 1 S`, instance esz 1),
   50–54 restore, 55–70 memmove into the new block and return `(nb, len + 40, C2, nil)`. The old
   block keeps `pre ++ epoch` (it is the growslice source).
 - `Encode.tail_reject` (`len(Root) ≠ 32`): directives 33–38 (`jne L_108` taken), 71–79: the two words of

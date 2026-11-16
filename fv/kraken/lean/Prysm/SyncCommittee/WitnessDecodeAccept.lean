@@ -7,7 +7,7 @@ import Prysm.SyncCommittee.Code
 /-!
 # Witness of `Decode.accept` (SyncCommittee decoder accept path)
 
-The text of `Prysm/SyncAggregate/WitnessDecodeAccept.lean` with the SyncCommittee host and layout. It shows that the premises of the frozen statement
+It shows that the premises of the frozen statement
 `Prysm.SyncCommittee.Decode.accept_statement` are satisfiable, the three contract hypotheses included: both `MakesliceContract` instances come from
 the one type-dispatching model `Prysm.RuntimeModel.BumpMakesliceByteSliceDispatch` (`Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1`, `Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24`), `MemmoveContract` from `MemmoveGrowsliceModel`.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (index 9), `Prysm.RuntimeModel.BumpMakesliceByteSliceDispatch` (146) and
@@ -93,7 +93,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
 -- AC-normalization of the separating conjunction (here 25 chunks). Without this option the declaration stops at `whnf`
 -- with the default 200000 heartbeats after a 2.3 s `simp` (scratch copy).
 -- Thresholds measured in separate runs: 200000, 400000 and 1000000 fail at `whnf`, 2000000 passes.
--- Value 4000000 (twice the lowest passing value; was 16000000): passes.
+-- Value 4000000 (twice the lowest passing value): passes.
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `Decode.accept` (the premises of the frozen statement `Decode.accept_statement` are satisfiable).** -/
 theorem runs (pks : List (List UInt8)) (agg oP1 oP2 : List UInt8) (hpks : pks.length = 512)

@@ -10,7 +10,7 @@ A generated theorem `t` is followed by `t_kind : ∀ (h : Host), type_of% (@t h)
 hypothesis anywhere in the statement makes `t_kind` fail. A theorem that only has an `exact` against the
 lemma instance does not have this property: `theorem t (hx : 1 = 2) : P := p` compiles when `p` does not use `hx`.
 
-The kinds are hand text, written once, and do not depend on a hand theorem of the instance type.
+The kinds are hand text and do not depend on a hand theorem of the instance type.
 `uint64DecodeAcceptKind_of` proves the kind of this module from the code facts of its lemma, so the kind
 body is kernel-checked against the lemma conclusion. The kinds are `abbrev`s: `with_reducible rfl` unfolds
 them, but not `Int.toBytes` or other semireducible definitions. A wrong literal fails fast and does not run

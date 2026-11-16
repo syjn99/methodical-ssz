@@ -13,7 +13,6 @@ directive indices: the head 0–26 of `Prysm/IndexedAttestation/DecodeAccept.lea
 rsp − 48 (two `movups`), `convT64(len − 228)` (`ConvT64Contract`), the itab word (103–106, `e0 ≠ 0`), `fmt.errorf`
 (`FmtErrorfDecimalWrapContract`), `jne L_248` taken (rax ≠ 0), epilogue 128–130. Overflow reject: `jg L_105` taken (57), the array at rsp − 80,
 `convT64(numElem)`, 66–69, `fmt.errorf`, `jne L_199`, epilogue 91–93.
-After the split of this module, the other reject path is in `Prysm/IndexedAttestation/DecodeRejectOverflow.lean`.
 -/
 
 open Machine Runtime Prysm.IndexedAttestation.Code

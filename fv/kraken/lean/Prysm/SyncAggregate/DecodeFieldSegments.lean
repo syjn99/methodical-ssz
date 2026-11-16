@@ -5,10 +5,9 @@ import Codec.FixedBytesDecode
 
 - `bytes_decode_segment_offset_zero_size64`: the statement of `Codec.bytes_decode_segment_offset_zero` with `hn : n = 64` (SyncCommitteeBits, offset 0).
   `Codec/FixedBytesDecode.lean` covers n ∈ {32, 48, 96}; its `hn` is a limit of the proof method (literal immediates).
-  The proof is `Codec/FixedBytesDecode.lean`'s local macro `bytes_decode_offset_zero_case`, copied here as `bytes_decode_zero` with its text unchanged, at n = 64.
-- `bytesDecodeHeadNop96`, `bytes96_decode_segment_nop`: `Prysm.Deposit_Data.bytesDecodeHeadNop` / `bytes32_decode_segment_nop` with the size
-  literal 32 replaced by 96 (SyncCommitteeSignature has a `nop` between `mov $0x60,%ecx` and the makeslice call,
-  directive 50). Every other token of the text is unchanged.
+  The proof uses the local macro `bytes_decode_zero` (the macro `bytes_decode_offset_zero_case` of `Codec/FixedBytesDecode.lean`) at n = 64.
+- `bytesDecodeHeadNop96`, `bytes96_decode_segment_nop`: the forms of `Prysm.Deposit_Data.bytesDecodeHeadNop` / `bytes32_decode_segment_nop`
+  for the size 96 (SyncCommitteeSignature has a `nop` between `mov $0x60,%ecx` and the makeslice call, directive 50).
 Contracts: `MakesliceContract`, `MemmoveContract`, as in the model lemmas.
 -/
 

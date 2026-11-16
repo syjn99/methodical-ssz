@@ -12,8 +12,8 @@ import Prysm.ValidatorIndex.Code
 /-!
 # Real Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`, accept path, Go 1.26.10 (first instance of the call-site lemmas)
 
-Hand-written (the type is development data). The statement is
-the independent hand statement `Prysm.PendingPartialWithdrawal.Decode.accept_statement` (`Prysm/Deposit_Data/Statements.lean`), unchanged.
+Hand-written. The statement is
+the independent hand statement `Prysm.PendingPartialWithdrawal.Decode.accept_statement` (`Prysm/PendingPartialWithdrawal/Statements.lean`).
 Proof: a chain of `eventually_trans` over
 
 * `Decode.head` (hand steps, directives 0–14: stack guard, prologue `sub $0x48`, length check, three spills, nil check),
@@ -22,7 +22,7 @@ Proof: a chain of `eventually_trans` over
   (59–61, label 88) for `WithdrawableEpoch` — callee `Epoch`,
 * `Decode.epilogue` (hand steps, 89–91: `add $0x48,%rsp; pop %rbp; retq`).
 
-The callees are used only through `Uint64CalleeAccept` (= the existing `Prysm.ValidatorIndex.Decode.accept_function_spec` / `Prysm.Epoch.Decode.accept_function_spec`, proved by
+The callees are used only through `Uint64CalleeAccept` (= `Prysm.ValidatorIndex.Decode.accept_function_spec` / `Prysm.Epoch.Decode.accept_function_spec`, proved by
 `Prysm.ValidatorIndex.Decode.accept_function_spec_holds` / `Prysm.Epoch.Decode.accept_function_spec_holds` from their machine code). No contract, no new hypothesis form.
 Stack (rsp = entry rsp): callee return slot rsp − 88, callee saved rbp rsp − 96, callee rbx spill rsp − 72.
 -/

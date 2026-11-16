@@ -11,7 +11,7 @@ Hand-written. The `fmt.errorf` wraps after the Slot call (directives 20–45) an
 reached on a 112-byte input: `Decode.generated_accept` passes from directive 19 to 46 and from 57 to 85 under
 `Prysm.Slot.Decode.accept_function_spec` / `Prysm.ValidatorIndex.Decode.accept_function_spec` (rax = 0). Not a reject row.
 
-**`unreachable_mc` rows** (the form of `Prysm.AttestationData.Decode.slot_err_unreachable`):
+**Unreachable error paths**:
 `Decode.slot_err_unreachable` (directive 18 → 46, skips 20–45, "Slot: %w") and
 `Decode.validator_index_err_unreachable` (56 → 85, skips 58–84, "ValidatorIndex: %w"): with `rax = 0` after the callee
 the code jumps over the wrap with registers and memory unchanged.
@@ -24,7 +24,7 @@ namespace Prysm.BeaconBlockHeader
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **`unreachable_mc`: the `fmt.errorf("Slot: %w")` path** (directives 20–45). -/
+/-- **Unreachable: the `fmt.errorf("Slot: %w")` path** (directives 20–45). -/
 theorem Decode.slot_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh unmarshalSSZ k) (s : MachineData) (h0 : s.regs.rax = 0) :
     Eventually (step1 Host.exe)
@@ -44,7 +44,7 @@ theorem Decode.slot_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **`unreachable_mc`: the `fmt.errorf("ValidatorIndex: %w")` path** (directives 58–84). -/
+/-- **Unreachable: the `fmt.errorf("ValidatorIndex: %w")` path** (directives 58–84). -/
 theorem Decode.validator_index_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh unmarshalSSZ k) (s : MachineData) (h0 : s.regs.rax = 0) :
     Eventually (step1 Host.exe)

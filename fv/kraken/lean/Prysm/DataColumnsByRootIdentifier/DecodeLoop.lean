@@ -4,7 +4,7 @@ import Prysm.DataColumnsByRootIdentifier.Code
 import Codec.ByteSliceListLemmas
 
 /-!
-# Decoder: the element loop (the text of `Prysm/IndexedAttestation/DecodeLoop.lean`)
+# Decoder: the element loop
 
 Loop head `L_320` (directive 185). The same instruction order as `Prysm.IndexedAttestation.Decode.iter` (147–165, 143–146) with this
 function's registers and slots: rax = i, rdx = n, rcx = cap − 36, rdi = the input pointer `p0` (buf + 36), rsi = the

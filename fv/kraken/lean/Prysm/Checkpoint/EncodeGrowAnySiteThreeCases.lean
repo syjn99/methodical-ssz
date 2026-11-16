@@ -6,7 +6,7 @@ import Prysm.Checkpoint.Code
 
 `Encode.grow_any_site_three_cases` has exactly the premises of `Encode.grow_any_site` (`len(Root) = 32`,
 `cap < len + 8`, nil / cap 0 `dst` included; no new premise, no new contract form: `GrowsliceContract` esz 1 and
-`MemmoveContract`, both existing). Its conclusion is a three-way disjunction, each with the exact frame:
+`MemmoveContract`). Its conclusion is a three-way disjunction, each with the exact frame:
 
 - (A) the block `C1` from the first growth holds the root (`len + 40 ≤ C1`): return through `Encode.tail_fit`
   (same as the left disjunct of `Encode.grow_any_site`).
@@ -18,7 +18,7 @@ import Prysm.Checkpoint.Code
   call in the exact state of `Encode.tail_grow_call`, with `Heap av'` in memory and
   `av' < 2·nextSliceCap (len+40) C1 + 8192`.
 
-Only (C) is not a return. It is the one state that the existing form cannot continue: `GrowsliceContract`
+Only (C) is not a return. It is the one state that the contract form cannot continue: `GrowsliceContract`
 gives the remaining heap of the first call only as an upper bound (`av' + C1 ≤ avail`), so the budget
 premise of the second call is not derivable. The return in (C) is differential only.
 
@@ -201,7 +201,7 @@ theorem Encode.grow_any_site_three_cases (k : Nat) (hk : marshalSSZTo.IsInfixAt 
     have ht8 : (tail.take 8).length = 8 := by simp only [List.length_take]; omega
     rw [Encode.grow_any_site_split8 d1.regs.rbx.toBitVec rcx pre tail hpre htl (by omega)] at Hm1
     by_cases hb2 : 2 * nextSliceCap (rcx.toNat + 40) d1.regs.rdi.toNat + 8192 ≤ av1
-    · -- (B): the heap left covers the second call's budget (Encode.tail_grow, GrowsliceContract esz 1, existing form)
+    · -- (B): the heap left covers the second call's budget (Encode.tail_grow, GrowsliceContract esz 1)
       refine eventually_mono (Encode.tail_grow k hk hf rsp r14 rbp ra rcx d1.regs.rdi rax.toBitVec d1.regs.rbx.toBitVec p
         e8 root pre (tail.take 8) l16 l24 l32 l72 spl1 (Int.toBytes 8 (Host.addrOf (k + 28)).toBitVec.toInt) scr1
         he8 hroot hpre ht8 hl16 hl24 hl32 hl72 hspl1 (Int.toBytes_length 8 _) S hscr1 _ Heap av1 d1 hrsp1 hrbp1 hr141

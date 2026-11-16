@@ -14,7 +14,7 @@ These definitions are part of the frozen IndexedAttestation statements (`Prysm/I
           data: AttestationData
           signature: BLSSignature                                                # Bytes96
 
-  `data` reuses the existing hand `Prysm.AttestationData.desc`.
+  `data` uses the hand `Prysm.AttestationData.desc`.
 - `SszValue`: the SSZ content of a Go `v1alpha1.IndexedAttestation` whose Signature has 96 bytes and whose AttestingIndices
   has at most 2048 elements (the field `hidx` keeps the length condition explicit).
 - `SszValue.encode`: offset 228 (4 bytes) ‖ data (128) ‖ signature (96) ‖ the indices as 8-byte little-endian words.

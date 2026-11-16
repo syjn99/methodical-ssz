@@ -2,7 +2,7 @@ import Prysm.BeaconBlockHeader.WitnessGeneratedDecodeRejectSize
 import Prysm.BeaconBlockHeader.DecodeErrorUnreachable
 
 /-!
-# Witness of the two `unreachable_mc` theorems of the BeaconBlockHeader decoder
+# Witness of the two unreachable-path theorems of the BeaconBlockHeader decoder
 
 Host and state of `Prysm.BeaconBlockHeader.WitnessGeneratedDecodeRejectSize` (label `ssz.ErrSize` at index 0, the real Go 1.26.10
 `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ` at index 1). The premises are code placement, label

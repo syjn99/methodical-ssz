@@ -19,7 +19,7 @@ import Prysm.Slot.Code
   (with `rcx = bs.size`) returns the two words of `ssz.ErrSize`.
 - `Decode.reject_complete` (obligation `reject_complete`): every input that EthLib rejects
   has `size ≠ 128`, the path condition of the one reachable reject site (`return
-  ssz.ErrSize`). The four `fmt.Errorf` wrap sites are `unreachable_mc` rows
+  ssz.ErrSize`). The four `fmt.Errorf` wrap sites are unreachable
   (`Prysm/AttestationData/DecodeRejectSize.lean`); they are not needed for the join and are not reject coverage.
 -/
 

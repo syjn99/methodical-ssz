@@ -56,7 +56,7 @@ theorem flatten_split (pks : List (List UInt8)) (i : Nat) (hi : i < pks.length) 
   calc pks.flatten = (pks.take i ++ (pks[i] :: pks.drop (i + 1))).flatten := congrArg List.flatten e
     _ = _ := by rw [List.flatten_append, List.flatten_cons]
 
-/-- `cmp b, a; jge` is not taken when `a < b < 2^62` (the text of `Machine.jge_false`, bound 2^62 instead of 16). -/
+/-- `cmp b, a; jge` is not taken when `a < b < 2^62` (the form of `Machine.jge_false` with the bound 2^62 instead of 16). -/
 theorem jge_false_of_lt (a b : BitVec 64) (hb : b.toNat < 2 ^ 62) (hab : a.toNat < b.toNat)
     (h : (a - b).msb = ((a.toInt - b.toInt).bmod 18446744073709551616 != a.toInt - b.toInt)) : False := by
   have ta : a.toInt = a.toNat := BitVec.toInt_eq_toNat_of_lt (by omega)

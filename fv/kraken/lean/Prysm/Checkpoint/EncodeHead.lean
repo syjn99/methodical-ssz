@@ -6,12 +6,12 @@ import Prysm.Checkpoint.Code
 
 - `Encode.head_fit`: `len + 8 ≤ cap`: directives 0–18 (`jae L_7b` taken): guard, prologue, the
   inlined Epoch encoder's stack temp (rsp0 − 64 … rsp0 − 33; X15 is not assumed zero), the block
-  stays the caller's `dst`. The text of `Encode.fast_path`'s proof up to directive 33.
+  stays the caller's `dst`.
 - `Encode.head_grow`: `cap < len + 8`: directives 0–32: the first `runtime.growslice(old = dst.ptr,
   newLen = len + 8, oldCap = cap, num = 8, et = uint8)` (`GrowsliceContract Heap typeUint8_addr 1 S`,
-  existing form, instance esz 1); the block becomes the new one (`pre ++ tail`, `tail` of
+  instance esz 1); the block becomes the new one (`pre ++ tail`, `tail` of
   `newCap − len` bytes), the old block keeps `pre`. No premise on `nextSliceCap` beyond the
-  heap budget. The text of `Encode.grow_first_site`'s proof up to directive 33.
+  heap budget.
 
 Both end at `L_7b` in the register and stack state that the tails of `Prysm.Checkpoint.EncodeTail` /
 `Prysm.Checkpoint.EncodeTailGrow` take.

@@ -51,7 +51,7 @@ def codomain : Expr → Expr
   | e => e
 
 /-- Constants of a type, following definitions whose type ends in `Prop` (after its binders, e.g. `[Host] → Prop`) (statement abbrevs such as
-`Prysm.PendingDeposit.Decode.accept_statement`), so that the code constant inside a named statement is found. -/
+`Prysm.SyncAggregate.Decode.accept_statement`), so that the code constant inside a named statement is found. -/
 partial def typeConsts (env : Environment) (t : Expr) : NameSet := Id.run do
   let mut out : NameSet := {}
   let mut todo : List Expr := [t]

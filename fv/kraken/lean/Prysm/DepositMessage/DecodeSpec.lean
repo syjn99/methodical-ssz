@@ -5,8 +5,7 @@ import Prysm.DepositMessage.Code
 /-!
 # Spec alignment of the real DepositMessage decoder
 
-Hand-written (the text of `Prysm/Eth1Data/DecodeSpec.lean` with the DepositMessage statement;
-the equation `bsA = SszValue.encode g` is kept as a hypothesis `hb` instead of `subst`, see `Prysm/DepositMessage/Spec.lean`).
+Hand-written (the equation `bsA = SszValue.encode g` is a hypothesis `hb` instead of a `subst`, see `Prysm/DepositMessage/Spec.lean`).
 Built on the GENERATED theorems of `Prysm/DepositMessage/GeneratedDecodeAccept.lean` (`decoder --whole-accept`;
 raw output, not edited): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`, the independent consensus-specs Desc)

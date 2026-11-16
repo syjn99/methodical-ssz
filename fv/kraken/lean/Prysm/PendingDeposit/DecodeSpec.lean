@@ -17,7 +17,7 @@ raw output, not edited): the accept path is `Decode.generated_accept`, the size 
   size reject site. The Slot callee's error return (fmt.errorf wrap) is not modelled: the Slot decoder accepts every 8-byte input.
 -/
 
-open Machine Runtime Prysm.PendingDeposit.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.PendingDeposit

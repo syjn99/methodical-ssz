@@ -5,11 +5,11 @@ import Prysm.SyncCommittee.Spec
 /-!
 # Spec alignment of the real SyncCommittee decoder
 
-The text of `Prysm/SyncAggregate/DecodeSpec.lean` with the SyncCommittee statement. The statements are the frozen `Decode.accept_spec_statement`,
+The statements are the frozen `Decode.accept_spec_statement`,
 `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement` (`Prysm/SyncCommittee/Statements.lean`).
 -/
 
-open Machine Runtime EthLib.Serialization.Ssz Prysm.SyncCommittee.Code
+open Machine Runtime EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.SyncCommittee

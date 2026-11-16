@@ -19,7 +19,7 @@ import Prysm.Epoch.Code
   machine accepts only `size = 40` inputs (every other size takes the ErrSize
   return); EthLib accepts exactly those (`SszValue.spec_accepts_iff`). So the accepted
   sets agree. The second Go-source reject site (`fmt.Errorf("Epoch: %w")`) is not
-  reachable (`Decode.epoch_err_unreachable`, `unreachable_mc` column): it is not
+  reachable (`Decode.epoch_err_unreachable`): it is not
   needed for the join and is not counted as reject coverage.
 -/
 

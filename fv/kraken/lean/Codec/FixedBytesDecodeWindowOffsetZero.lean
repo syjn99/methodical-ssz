@@ -9,9 +9,8 @@ import Machine.Labels
 the receiver registers as parameters. Statement `BytesDecodeOffsetZeroWindow n rX rY` = the statement of `bytes_decode_segment_offset_zero` over
 two windows (`jl` = index of the label, `jm` = index of `callq runtime.memmove`, `e` = end), register fact
 `regs.get64 rY = rcv`. Proof: one theorem per case (the proof text of `bytes_decode_segment_offset_zero` with the window tactics).
-Same limits as `Codec/FixedBytesDecodeWindow.lean` (`rX` ∈ {rdx, rsi}, `rY` ∈ {rax, rcx, rdx, rsi, rdi}, `n` ∈ {32, 48, 96}). At the
-four development sites of this form the code is dense with rdx (no observed variation): the instance of the
-dense lemma is `bytes_decode_segment_offset_zero_inst`.
+Same limits as `Codec/FixedBytesDecodeWindow.lean` (`rX` ∈ {rdx, rsi}, `rY` ∈ {rax, rcx, rdx, rsi, rdi}, `n` ∈ {32, 48, 96}). The dense
+lemma with rdx is the instance `bytes_decode_segment_offset_zero_inst`.
 -/
 
 open Machine Runtime

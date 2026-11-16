@@ -30,7 +30,6 @@ ValidatorIndex, Gwei) are `uint64` in SSZ.
     message PartialDataColumnGroupID { bytes beacon_block_root [32]; uint64 slot [Slot]; }  // "Field order follows the spec"
     message ValidatorIdentity { uint64 index [ValidatorIndex]; bytes pubkey [48]; uint64 activation_epoch [Epoch]; }
     message BuilderPreferences { uint64 max_execution_payment [Gwei]; }
-After the split of this module, the declarations of the other types are in `Prysm/BeaconBlocksByRangeRequest/SpecDescription.lean`, `Prysm/BlobSidecarsByRangeRequest/SpecDescription.lean`, `Prysm/BuilderDepositRequest/SpecDescription.lean`, `Prysm/BuilderPreferences/SpecDescription.lean`, `Prysm/ExecutionPayloadEnvelopesByRangeRequest/SpecDescription.lean`, `Prysm/PartialDataColumnGroupID/SpecDescription.lean`, `Prysm/ValidatorIdentity/SpecDescription.lean`.
 -/
 
 namespace Prysm.DepositRequest

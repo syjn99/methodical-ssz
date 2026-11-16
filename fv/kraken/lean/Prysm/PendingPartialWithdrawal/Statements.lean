@@ -8,9 +8,7 @@ import Prysm.ValidatorIndex.Code
 import Prysm.PendingPartialWithdrawal.Code
 
 /-!
-# Independent hand STATEMENTS of the two accept theorems (statements only, no proof): the `PendingPartialWithdrawal` part
-
-The declarations of the other types of this group are in `Prysm/Deposit_Data/Statements.lean`.
+# Independent hand STATEMENTS of the PendingPartialWithdrawal accept theorem (statements only, no proof)
 -/
 
 open Machine Runtime

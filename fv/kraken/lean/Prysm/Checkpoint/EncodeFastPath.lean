@@ -15,7 +15,7 @@ import Codec.EncodeBitVecLemmas
         dst = append(dst, c.Root...); return dst, err }
 
 `(*Epoch).MarshalSSZTo` → `MarshalSSZ` → `MarshalUint64([]byte{}, e)` →
-`binary.LittleEndian.AppendUint64` are inlined (compiler `-m=2` report, `prysm/go1.26.10/evidence/gcflags-m2.txt`): the
+`binary.LittleEndian.AppendUint64` are inlined (compiler `-m=2` report): the
 compiler zeroes a 32-byte stack temp (`movups %xmm15` twice, directives 13–15),
 stores the epoch word in it (16) and copies 8 bytes from it to `dst[len:]`
 (34–35). X15 is not assumed to be zero: the temp's bytes 8–31 are existential
@@ -27,7 +27,6 @@ rbx spill), 8 `lea 0x8(%rcx),%rdx`, 9 load Epoch (offset 8), 13–16 temp,
 bytes, 36 load `Root.ptr`, 37–38 `cmpq $0x20,0x18(%rax); jne` (`len(Root)`),
 39–41 capacity for the root, 55 `L_cf`, 56–58 spills, 59–62 `memmove(dst+len+8,
 Root.ptr, 32)`, 63–70 return `(dst, len+40, cap, nil)`.
-After the split of this module, the BitVec lemma that other types use is in `Codec/EncodeBitVecLemmas.lean`.
 -/
 
 open Machine Runtime Prysm.Checkpoint.Code

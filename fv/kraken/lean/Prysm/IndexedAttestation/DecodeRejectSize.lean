@@ -16,7 +16,6 @@ import Prysm.IndexedAttestation.Code
 - `Decode.reject_offset : Decode.reject_offset_statement`: 9–10 not taken, 11 `mov (%rbx),%edx` (32-bit load of `off`),
   16–17 `cmp $0xe4,%rdx; jne L_251` taken, `L_251` (131), the two loads of `ssz.ErrInvalidVariableOffset` (132–133),
   epilogue 134–136.
-After the split of this module, the other reject path is in `Prysm/IndexedAttestation/DecodeRejectOffset.lean`.
 -/
 
 open Machine Runtime Prysm.IndexedAttestation.Code

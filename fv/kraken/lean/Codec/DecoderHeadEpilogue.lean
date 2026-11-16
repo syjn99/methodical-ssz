@@ -4,24 +4,23 @@ import Codec.SegmentAddress
 /-!
 # Shared segments for the composition of a container decoder accept path
 
-The accept path of a protoc container decoder with the frame of the development sites (`sub $0x20,%rsp`,
+The accept path of a protoc container decoder with the frame `sub $0x20,%rsp`,
 receiver spill `0x30(%rsp)`, buffer spill `0x38(%rsp)`) is: head, then per field its decode segment
 (`bytes_decode_segment` / `bytes_decode_segment_offset_zero` followed by the pointer tail below, or `uint64_decode_inline_segment`), then the
 epilogue. This file has the three pieces that are not a field segment. Each one is a segment lemma of the
 form of `Codec/SegmentTemplate.lean` (template + `IsInfixAt` hypothesis); none uses a runtime contract.
 
 * `decode_head_segment` — `decodeHead fn l0 lmore lerr sz` (13 directives: two labels, stack guard, prologue,
-  `cmp $sz,%rcx; jne lerr`, the two spills). Statement = the statement of `Prysm.BlobIdentifier.Decode.head` with the
-  size `sz` (`hlen : rcx = sz`). The frame size and the spill displacements are literals (the three
-  development decoders agree); another frame is not covered.
+  `cmp $sz,%rcx; jne lerr`, the two spills), with the size `sz` (`hlen : rcx = sz`). The frame size and the spill
+  displacements are literals; another frame is not covered.
 * `bytes_decode_tail_segment` — the code after the `jne lwb` of a byte-vector segment when the write barrier is
   off: `bytesDecodeTailReloadJump rY l dS` = `mov dS(%rsp),%rY; jmp l` and `bytesDecodeTailPointerStore rY l fP` =
-  `l: mov %rY,fP(%rdx)` (the write-barrier block between them is skipped). `rY` is rsi or rdi at the
-  development sites; the lemma takes any register of `Uint64InlineReg`.
+  `l: mov %rY,fP(%rdx)` (the write-barrier block between them is skipped). The lemma takes any register `rY` of
+  `Uint64InlineReg`.
 * `decode_epilogue_segment` — `decodeEpilogue` = `xor %eax,%eax; xor %ebx,%ebx; add $0x20,%rsp; pop %rbp; retq`.
 
 A composed accept theorem is a chain of `eventually_trans` over these lemmas; the frame of each step is an
-explicit instance (`Prysm/BlobIdentifier/DecodeAcceptComposedExample.lean` has one worked example). There is no generic combinator over a list
+explicit instance (`Prysm/SyncAggregate/DecodeAccept.lean` is one). There is no generic combinator over a list
 of segments.
 -/
 
@@ -29,7 +28,7 @@ open Machine Runtime
 
 namespace Codec
 
-/-- Head of a container decoder (directives 0–12 of the development decoders), SSZ size `sz`. -/
+/-- Head of a container decoder with the frame `0x20` (13 directives), SSZ size `sz`. -/
 def decodeHead (fn l0 lmore lerr : String) (sz : Int64) : Program :=
   [Kraken.Directive.label fn,
    Kraken.Directive.label l0,
@@ -96,8 +95,8 @@ variable [Host]
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- **Head segment**: from the entry through the stack guard, the prologue, the size check
-(`rcx = sz`) and the two spills to directive `j + 13`. The statement is that of
-`Prysm.BlobIdentifier.Decode.head` with the template and the size as parameters. -/
+(`rcx = sz`) and the two spills to directive `j + 13`. The template and the size
+are parameters. -/
 theorem decode_head_segment (fn l0 lmore lerr : String) (sz : Int64) (j : Nat)
     (hA : (decodeHead fn l0 lmore lerr sz).IsInfixAt Host.prog j)
     (s : MachineData) (ra guard : UInt64) (fp s1 s2 : List UInt8)

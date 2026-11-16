@@ -10,7 +10,7 @@ The statements are the frozen `Decode.reject_size_spec_statement`, `Decode.rejec
 paths with a machine theorem (the alignment and overflow rejects only under `e0 ≠ 0`, `Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean`).
 -/
 
-open Machine Runtime EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
+open Machine Runtime EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.IndexedAttestation

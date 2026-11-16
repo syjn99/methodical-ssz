@@ -8,7 +8,7 @@ import Prysm.ValidatorIndex.Code
 /-!
 # Witness of the generated `Decode.generated_accept` (VoluntaryExit decoder accept path)
 
-The text of `Prysm/VoluntaryExit/WitnessDecodeAccept.lean` with the VoluntaryExit host and layout. It shows that the
+It shows that the
 premises of the generated accept theorem (statement = kind instance) are satisfiable. Host: one label, the real
 Go 1.26.10 `(*v1alpha1.VoluntaryExit).UnmarshalSSZ` (index 1) and `primitives.Epoch` (108), `primitives.ValidatorIndex` (171).
 One memory block at `0x10000`: guard · input (2 × 8) · 8 unused · receiver (state, field 1, field 2, tail 32) · 8 unused · callee

@@ -6,10 +6,10 @@ import Prysm.DataColumnsByRootIdentifier.SpecDecodeBridge
 
 An input that EthLib accepts against `desc` is `SszValue.encode g` for a `g : SszValue` with `g.toValue = v`
 (`accepted_is_encode`); its bytes are `root ‖ offsetBytes ‖ uint64Bytes cols` (`encode_toList`), and the machine code decodes it
-into `g` (`Decode.accept` with `n = g.cols.length`). The text of `Prysm/IndexedAttestation/DecodeSpecAccept.lean`.
+into `g` (`Decode.accept` with `n = g.cols.length`).
 -/
 
-open Machine Runtime EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
+open Machine Runtime EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier

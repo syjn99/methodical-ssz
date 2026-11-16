@@ -12,7 +12,7 @@ exact disjunction of the two branches. Left: the block from the first growth hol
 block `pre ++ epoch ++ mid`, `rbx = len + 40`, `rcx = C1 < len + 40`, `rdi = 32`). **The run after that
 call is not proved**: `GrowsliceContract`'s result gives only `avail' + newCap ≤ avail` for the remaining heap
 (an upper bound), so the budget premise of a second `GrowsliceContract` application cannot be derived; the
-existing contract form does not chain two growslice calls. `Encode.tail_grow` proves the
+contract form does not chain two growslice calls. `Encode.tail_grow` proves the
 second call and the rest when the caller supplies its budget (first append fitted:
 `Encode.grow_second_site`).
 -/

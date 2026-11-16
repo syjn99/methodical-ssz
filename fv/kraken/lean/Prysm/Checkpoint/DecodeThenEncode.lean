@@ -7,7 +7,7 @@ import Prysm.Epoch.Code
 /-!
 # Machine-level composition decoder → encoder (real Go 1.26.10 code)
 
-`DecodeThenEncode.round_trip` (it runs the decoder; the older theorem now in `Prysm/Checkpoint/DecodeThenEncodeReceiver.lean` did not): start at the
+`DecodeThenEncode.round_trip` (it runs the decoder; the theorem of `Prysm/Checkpoint/DecodeThenEncodeReceiver.lean` does not): start at the
 **entry of `(*Checkpoint).UnmarshalSSZ`** with the premises of
 `Decode.accept` (40 input bytes `e8 ++ root`, any receiver contents). The
 decoder runs (with the real `(*primitives.Epoch).UnmarshalSSZ` through

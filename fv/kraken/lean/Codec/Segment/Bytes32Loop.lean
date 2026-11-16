@@ -5,7 +5,7 @@ import Prysm.ElfData.PrysmTarget
 import Codec.Segment.ByteSliceList
 
 /-!
-# The `[][]byte` element loop with 32-byte elements, for ANY count `n < 2^31` and any frame (generalized once)
+# The `[][]byte` element loop with 32-byte elements, for ANY count `n < 2^31` and any frame
 
 Go 1.26.10 compiles `c.F = make([][]byte, n); for i := 0; i < n; i++ { tmp := make([]byte, 0, 32);
 tmp = append(tmp, buf[src+i*32 : src+(1+i)*32]...); c.F[i] = tmp }` to the same instruction sequence for

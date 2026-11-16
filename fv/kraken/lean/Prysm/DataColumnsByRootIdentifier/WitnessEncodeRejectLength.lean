@@ -107,7 +107,7 @@ def initial_state (root : List UInt8) (nb : BitVec 64) (zmms : RegZmms) (flags :
   ⟨⟨0x10018, 0x10110, 0, 0, 0, 36, 0x100f8, 0, 0, 0, 0, 0, 0, 0, 0x10000, 0⟩, zmms, flags, mem root nb⟩
 
 -- Measured (three builds of `Prysm.DataColumnsByRootIdentifier.WitnessEncodeRejectLength`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (the 4000000 build): `simp`
--- 2.49 s in the declaration; the `whnf` part that uses the heartbeats was not broken down further.
+-- 2.49 s in the declaration; no profile breaks down the `whnf` part that uses the heartbeats.
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `Encode.reject_too_big`**, n = 129. -/
 theorem runs (root : List UInt8) (hroot : root.length = 32) (zmms : RegZmms) (flags : StatusFlags) :

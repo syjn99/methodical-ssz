@@ -5,11 +5,10 @@ import Codec.ByteSliceListLemmas
 /-!
 # List and memory-chunk lemmas of the `[][]byte` element loops, for any element width `w` and count `n`
 
-Generalized once from `Prysm.SyncCommittee.DecodeLoopLemmas` (w = 48, n = 512) and `Prysm.HistoricalBatch.DecodeLoopLemmas` (w = 32, n = 8192).
+The fixed instances are `Prysm.SyncCommittee.DecodeLoopLemmas` (w = 48, n = 512) and `Prysm.HistoricalBatch.DecodeLoopLemmas` (w = 32, n = 8192).
 Side conditions: the input bytes and the backing array fit in the address space (`w * n ≤ 2^64`,
-`24 * n ≤ 2^64`); the SyncCommittee / HistoricalBatch instances discharge them by `decide`/`omega`. The fixed instances are re-derived in
-`Codec/Segment/ByteSliceListInstances.lean`. The size-free SyncCommittee lemmas (`Codec.elementBlocks_snoc`, `Codec.sliceHeaders_length`, `Codec.sliceHeaders_snoc`,
-`Codec.flatten_split`) are imported, not restated.
+`24 * n ≤ 2^64`); the SyncCommittee / HistoricalBatch instances discharge them by `decide`/`omega`. The size-free lemmas (`Codec.elementBlocks_snoc`,
+`Codec.sliceHeaders_length`, `Codec.sliceHeaders_snoc`, `Codec.flatten_split`) are in `Codec/ByteSliceListLemmas.lean`.
 -/
 
 open Machine Runtime

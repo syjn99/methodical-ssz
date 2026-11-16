@@ -12,8 +12,8 @@ import Prysm.DataColumnsByRootIdentifier.Code
 - `Encode.reject_length : Encode.reject_length_statement`: directives 2–9 as the fast path, 10–11
   `cmpq $0x20,0x10(%rax); jne L_117` taken (`len(BlockRoot) ≠ 32`), 70–78 the two words of `ssz.ErrBytesLength`,
   rax = rbx = rcx = 0, epilogue.
-- `Encode.reject_too_big : Encode.reject_too_big_statement`: directives 2–15 and 29–54 as the fast path (the text of
-  `Encode.tail_fit` with this frame), 55 `jg L_fc` taken (`128 < n < 2^63`), 61–69 the two words of `ssz.ErrListTooBig`.
+- `Encode.reject_too_big : Encode.reject_too_big_statement`: directives 2–15 and 29–54 as the fast path
+  (`Encode.tail_fit` in this frame), 55 `jg L_fc` taken (`128 < n < 2^63`), 61–69 the two words of `ssz.ErrListTooBig`.
 -/
 
 open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code

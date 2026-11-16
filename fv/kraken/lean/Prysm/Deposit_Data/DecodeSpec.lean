@@ -5,8 +5,7 @@ import Prysm.Deposit_Data.Code
 /-!
 # Spec alignment of the real Deposit_Data decoder
 
-Hand-written: the text of `Prysm/DepositMessage/DecodeSpec.lean` with the Deposit_Data statement
-(receiver `state` word `ast` and the fourth field Signature).
+Hand-written.
 Built on the GENERATED theorems of `Prysm/Deposit_Data/GeneratedDecodeAccept.lean` (`decoder --whole-accept`;
 raw output, not edited): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`

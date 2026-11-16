@@ -39,7 +39,7 @@ theorem Decode.sub36 (c : BitVec 64) (h : 36 ≤ c.toNat) : (-36 + c).toNat = c.
 
 omit [Host] in
 /-- The `buf[36:]` pointer of directives 27–34 (`rbx + (cap − 36 > 0 ? 36 : 0)`) addresses the element bytes: when
-cap = 36 the list is empty. Uses `cap < 2⁶³` (the `sar` sign test). The text of `Prysm.IndexedAttestation.Decode.input_pointer_mask`. -/
+cap = 36 the list is empty. Uses `cap < 2⁶³` (the `sar` sign test). -/
 theorem Decode.input_pointer_mask (ib : List UInt8) (n : Nat) (hib : ib.length = 8 * n) (b c : BitVec 64) (hc : 36 + 8 * n ≤ c.toNat)
     (h63 : c.toNat < 2 ^ 63) :
     Eq (ib.At (b + BitVec.zeroExtend 64 (BitVec.extractLsb' 0 32 (BitVec.sshiftRight (-(-36 + c)) 63)

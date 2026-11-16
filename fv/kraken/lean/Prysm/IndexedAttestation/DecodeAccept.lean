@@ -68,7 +68,7 @@ theorem Decode.input_pointer_mask (ib : List UInt8) (n : Nat) (hib : ib.length =
     rw [Codec.sshiftRight_neg_63_eq_allOnes _ (by omega) (by omega), Decode.mask_ones]
 
 omit [Host] in
-/-- `cmp $0x800, a; jg` is not taken when `a ≤ 2048` (the text of `Machine.jg16_false`). -/
+/-- `cmp $0x800, a; jg` is not taken when `a ≤ 2048`. -/
 theorem Decode.jg2048_false (a : BitVec 64) (af : Bool) (h : a.toNat ≤ 2048) :
     CondCode.g.interp (StatusFlags.from_result (a - 2048)
       { cf := BitVec.unsigned (a - 2048) != a.unsigned - BitVec.unsigned (2048 : BitVec 64), af := af,

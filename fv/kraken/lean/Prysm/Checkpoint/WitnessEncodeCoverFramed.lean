@@ -18,7 +18,7 @@ capacity and the remaining heap that the runtime returns (it gives only bounds).
 of the theorem. The second-growth path (3B) on real Go 1.26.10 is differential only.
 -/
 
-open Machine Runtime Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Machine.Witness EthLib.Serialization.Ssz
 
 namespace Prysm.Checkpoint.Witness.EncodeCoverFramed
 

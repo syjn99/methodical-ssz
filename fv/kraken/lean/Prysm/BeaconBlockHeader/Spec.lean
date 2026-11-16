@@ -21,7 +21,6 @@ Hand-written. Independent hand `Desc`, written from consensus-specs phase0
 `desc_serialize_checker`: equal `serialize` on every value; `desc_deserialize_checker`:
 the same accepted inputs with the same values (EthLib error values are not compared).
 `SszValue` is the SSZ content of a Go `v1alpha1.BeaconBlockHeader` whose three roots have length 32.
-The proofs are the text of `Prysm/AttestationData/Spec.lean` (AttestationData) with the nested Checkpoints removed.
 -/
 
 namespace Prysm.BeaconBlockHeader

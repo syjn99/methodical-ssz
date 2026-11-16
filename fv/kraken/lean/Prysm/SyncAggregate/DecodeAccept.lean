@@ -6,7 +6,7 @@ import Prysm.SyncAggregate.Code
 /-!
 # `(*v1alpha1.SyncAggregate).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
-Hand composition with the text of `Prysm.Deposit_Data.Decode.accept` (`Prysm/Deposit_Data/DecodeAccept.lean`):
+Hand composition of segment lemmas:
 
 * head 0–12: `Codec.decode_head_segment` (size 160);
 * SyncCommitteeBits 13–36: `Prysm.SyncAggregate.bytes_decode_segment_offset_zero_size64` (64 bytes, offset 0); pointer tail 37–38, 45–46 (rdi);
@@ -24,7 +24,7 @@ variable [Host]
 namespace Prysm.SyncAggregate
 
 /-- SyncCommitteeBits (64 bytes, SSZ offset 0, Go offset 8): decode segment, directives 13–36 (literal-size
-statement of `bytes_decode_segment_offset_zero_size64`, as the generated `Prysm.Deposit_Data.Decode.generated_field_PublicKey_segment` is of `bytes_decode_segment_offset_zero 48`). -/
+statement of `bytes_decode_segment_offset_zero_size64`). -/
 theorem Decode.bits_segment (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB)

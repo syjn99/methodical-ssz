@@ -16,7 +16,7 @@ Code-fact hypothesis: the directive at `jc` is `callq runtime.memmove` (`callMem
 frame base `sp` (rsp at the call, any frame size), the destination `d`, the source `p`, the scratch size
 `S`, the frame `R`. `aRet` and `aLo` are the return-slot and scratch addresses in the form of the
 instance (`sp − 8 = aRet`, `sp − 8 − S = aLo`). The spilled pointer, length and capacity words and the
-receiver words of an instance are in `R`. `MemmoveContract` is the existing contract (a hypothesis, not proved).
+receiver words of an instance are in `R`. `MemmoveContract` is a contract (a hypothesis, not proved).
 
 The straight-line code before the call (length test, capacity test, spills) is stepped per site. The
 stack-guard fact of the large-frame prologue is `Codec.lea_cmp_be_false` (`StackGuard.lean`), already

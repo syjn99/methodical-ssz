@@ -20,7 +20,7 @@ array at rsp − 40 (two `movups %xmm15`, then `type:int`, `&8` (static box
 (the contract gives rax ≠ 0; the `newobject` fallback 31–38 is not executed);
 39–42 epilogue. Contracts: `ConvT64Contract Heap S` and the `FmtErrorfDecimalDecimalContract` instance
 with the format `ElfData.PrysmTarget.formatBufferLength` (40 bytes) and the type word
-`ElfData.PrysmTarget.typeInt_addr` (`type:int` of the Go 1.26.10 ELF); existing forms only.
+`ElfData.PrysmTarget.typeInt_addr` (`type:int` of the Go 1.26.10 ELF); contract forms of `Runtime/Contracts.lean` only.
 `StaticBox` uses the table `Runtime.Data.staticuint64s` at `Runtime.Data.staticuint64s_addr`.
 `Runtime/StaticUint64s.lean` reads it from the data file `staticuint64s.data` of the Prysm link set.
 Standalone obligation: from `Checkpoint.UnmarshalSSZ` this path is unreachable.

@@ -10,16 +10,14 @@ import Prysm.BuilderExitRequest.Code
 # Independent hand STATEMENTS of two decoder accept paths and two encoder fast paths with a
 20-byte vector field (statements only, no proof)
 
-Hand-written BEFORE the generators were changed for the 20-byte kind, so before any
-generated theorem of these four functions existed (the one-shot runs on the 24 flat types refused all four: "new field kind (b20)").
+Hand-written. The tree has no generated theorem of these four functions.
 Sources: the Go receiver layout (IR `go_fields` of `prysm/ir/ir-mainnet.json`, gc amd64 offsets), the SSZ layout
 (field sizes in IR order), the `.S` files of `prysm/go1.26.10/link-set/norm/` (frame, guard, spills, stack slots
 touched on the path and their contents at the return, the directive of the last call), the statement shape of the
-committed hand statements `Prysm.DepositRequest.Decode.accept_statement` (decoders, frame `0x20`, no callee) and
-`Prysm.Deposit_Data.Encode.fast_path_statement`, `Prysm.ValidatorIdentity.Encode.fast_path_statement` (encoders), and the interface rules of the encoder statements (chunk order: saved
+hand statement `Prysm.Deposit_Data.Encode.fast_path_statement` (encoders), and the interface rules of the encoder statements (chunk order: saved
 rbp, home slots ascending, other slots by first touch, the return slot; existentials in creation order).
 Independence limit: the layout rules come from that interface text and the hand statements of other types; the parameters
-are read from the `.S` by hand. Development data.
+are read from the `.S` by hand.
 
 | type | side | class |
 | --- | --- | --- |
@@ -51,10 +49,9 @@ are read from the `.S` by hand. Development data.
   (len + 84), `0x68` = − 40 (capacity), `0x80` = − 16 (pointer); last memmove directive 92 (return address 93).
   GasLimit and Timestamp are stored from a register. Receiver: `state` 0, FeeRecipient 8 / 16 / 24, GasLimit 32,
   Timestamp 40, Pubkey 48 / 56 / 64. Output: buf[0:20], buf[20:28], buf[28:36], buf[36:84].
-After the split of this module, the declarations of the other types are in `Prysm/BLSToExecutionChange/Statements.lean`, `Prysm/ValidatorRegistrationV1/Statements.lean`, `Prysm/WithdrawalRequest/Statements.lean`.
 -/
 
-open Machine Runtime Prysm.BuilderExitRequest.Code
+open Machine Runtime
 variable [Host]
 
 open Codec

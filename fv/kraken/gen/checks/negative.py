@@ -75,9 +75,9 @@ RECDEPTH = "maximum recursion depth has been reached"
 #                     | unknown syntax category | unknown category | unknown parser
 #   name resolution:  unknown identifier/constant/namespace/declaration/universe level/attribute/hypothesis
 #                     /local declaration/alternative name/tag | unknown `grind` attribute
-#                     | Invalid field `f`: The environment does not contain … (and the old lower-case form)
+#                     | Invalid field `f`: The environment does not contain … (also in lower case)
 #                     | ambiguous identifier/namespace/…, possible interpretations
-#   option / case:    Unknown option `o` | Case tag `t` not found (both were classified inside before)
+#   option / case:    Unknown option `o` | Case tag `t` not found
 # THE LIST IS NOT COMPLETE. It covers the forms named above and no others. A first error of another
 # parse or name form that is not listed here still classifies as inside; read the first error of every row.
 # Not included (elaborator-internal invariants, not a parse or user-name error): unknown metavariable,
@@ -558,7 +558,7 @@ def selftest():
     src3 = ["import X", "theorem T.d : True := trivial", "theorem T.e : True := trivial"]
     if command_start(src3, 2) != 2:
         bad.append(("range_no_prefix", command_start(src3, 2), 2))
-    # comments that are not the theorem's doc comment stop the walk (review D1): plain, module, line comment
+    # comments that are not the theorem's doc comment stop the walk: plain, module, line comment
     for name, cmt in (("range_plain_comment", ["/- plain comment", "-/"]), ("range_module_comment", ["/-! section", "-/"]),
                       ("range_line_comment", ["-- note -/"]), ("range_plain_one_line", ["/- plain -/"])):
         s4 = ["import X", "/-- doc of a -/", "theorem T.a : True := trivial", ""] + cmt + ["theorem T.b : True := trivial"]

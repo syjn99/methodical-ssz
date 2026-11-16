@@ -4,7 +4,7 @@ import Codec.SegmentTemplate
 import Prysm.HistoricalBatch.Code
 
 /-!
-# The HistoricalBatch BlockRoots loop `Prysm.HistoricalBatch.Decode.block_roots_loop` re-derived from the general loop `Codec.Segment.bytes32_loop`
+# The HistoricalBatch BlockRoots loop `Prysm.HistoricalBatch.Decode.block_roots_loop` as an instance of the general loop `Codec.Segment.bytes32_loop`
 
 The theorem below has the type of the hand lemma `Decode.block_roots_loop` (`type_of%`); its proof instantiates `bytes32_loop`
 (n = 8192, the HistoricalBatch frame slots, receiver offsets 0 and 8, src = 0) and steps the exit label (directive 85).

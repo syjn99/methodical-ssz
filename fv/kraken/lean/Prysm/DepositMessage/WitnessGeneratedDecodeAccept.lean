@@ -7,7 +7,7 @@ import Prysm.DepositMessage.Code
 /-!
 # Witness of `Decode.generated_accept` (DepositMessage decoder accept path)
 
-Hand-written (the text of `Prysm/Eth1Data/WitnessGeneratedDecodeAccept.lean` with the DepositMessage host and layout).
+Hand-written.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.DepositMessage).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (118, `bump_makeslice1`) and `MemmoveGrowsliceModel` (124, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 80-byte heap, guard word, the 88 input

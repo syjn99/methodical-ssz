@@ -12,9 +12,8 @@ import Prysm.Deposit.Code
 # Hand STATEMENTS of `(*v1alpha1.Deposit).UnmarshalSSZ` (statements only, no proof)
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
-Selection: the same family as HistoricalBatch (a `Vector[Bytes32, N]` field as `[][]byte`), not forbidden, no
-existing proof. The only such types without a pointer field are HistoricalBatch and SyncCommittee; Deposit has the
-one pointer field whose decoder already has a proof (`Prysm.Deposit_Data.Decode.generated_accept`, Deposit_Data).
+Deposit is in the same family as HistoricalBatch (a `Vector[Bytes32, N]` field as `[][]byte`). The other such types
+without a pointer field are HistoricalBatch and SyncCommittee; Deposit has one pointer field, whose decoder has a proof (`Prysm.Deposit_Data.Decode.generated_accept`, Deposit_Data).
 
     func (c *Deposit) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 1240 { return ssz.ErrSize }

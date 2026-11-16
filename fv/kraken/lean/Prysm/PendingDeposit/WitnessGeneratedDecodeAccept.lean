@@ -8,7 +8,7 @@ import Prysm.Slot.Code
 /-!
 # Witness of `Decode.generated_accept` (PendingDeposit decoder accept path)
 
-Hand-written (the text of `Prysm/SyncCommitteeMessage/WitnessGeneratedDecodeAccept.lean` with the PendingDeposit host and layout).
+Hand-written.
 It shows that the premises of the generated accept theorem `Prysm.PendingDeposit.Decode.generated_accept` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.PendingDeposit).UnmarshalSSZ` (index 9),
 `(*primitives.Slot).UnmarshalSSZ` (191), the 1-byte bump `runtime.makeslice` (254, `bump_makeslice1`) and
@@ -24,7 +24,7 @@ every old pointer word every premise holds and the decoder returns nil. The rece
 `v1alpha1.PendingDeposit`.
 -/
 
-open Machine Runtime Machine.Witness Codec Prysm.PendingDeposit.Code
+open Machine Runtime Machine.Witness Codec
 
 namespace Prysm.PendingDeposit.Witness.GeneratedDecodeAccept
 

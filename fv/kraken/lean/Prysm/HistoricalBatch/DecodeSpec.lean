@@ -5,11 +5,11 @@ import Prysm.HistoricalBatch.Spec
 /-!
 # Spec alignment of the real HistoricalBatch decoder
 
-The text of `Prysm.SyncCommittee.DecodeSpec` with the HistoricalBatch statement. The statements are the frozen
+The statements are the frozen
 `Decode.accept_spec_statement`, `Decode.reject_size_spec_statement` and `Decode.reject_complete_statement` (`Prysm/HistoricalBatch/Statements.lean`).
 -/
 
-open Machine Runtime EthLib.Serialization.Ssz Prysm.HistoricalBatch.Code
+open Machine Runtime EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.HistoricalBatch

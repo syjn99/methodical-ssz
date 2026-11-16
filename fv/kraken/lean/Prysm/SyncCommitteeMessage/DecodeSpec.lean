@@ -7,7 +7,7 @@ import Prysm.ValidatorIndex.Code
 /-!
 # Spec alignment of the real SyncCommitteeMessage decoder
 
-Hand-written: the text of `Prysm/Deposit_Data/DecodeSpec.lean` / `Prysm/PendingPartialWithdrawal/DecodeSpec.lean`, with the input chunks of `g`.
+Hand-written.
 Built on the GENERATED theorems of `Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean` (`decoder --whole-accept`;
 raw output, not edited): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
@@ -17,7 +17,7 @@ raw output, not edited): the accept path is `Decode.generated_accept`, the size 
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 144`.
 -/
 
-open Machine Runtime Prysm.SyncCommitteeMessage.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.SyncCommitteeMessage

@@ -14,7 +14,7 @@ closed `g0`; a byte-literal equality is not stated: `decide` does not reduce
 `uintBytes`/`Vector.ofFn`, and `native_decide` is not allowed).
 -/
 
-open Machine Runtime Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Machine.Witness EthLib.Serialization.Ssz
 
 namespace Prysm.Checkpoint.Witness.DecodeAccept
 

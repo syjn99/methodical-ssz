@@ -22,7 +22,7 @@ block, the guard word, `Heap`, `R`).
 | (3C) | `cap < len + 8`, `C1 < len + 40`, heap left < budget | `Encode.grow_any_site_three_cases` (C) | unchanged; **not a return** |
 
 (3C) is the entry of the second `runtime.growslice` call with the remaining heap below that call's
-budget premise: the existing `GrowsliceContract` form gives no lower bound on the remaining heap.
+budget premise: the `GrowsliceContract` form gives no lower bound on the remaining heap.
 Its return is differential only. In (1), (2), (3A), (3B) the returned block is `pre ++ bs` with
 `serialize desc g.toValue = .ok bs` (EthLib).
 

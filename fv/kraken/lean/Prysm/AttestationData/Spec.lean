@@ -27,7 +27,6 @@ the same accepted inputs with the same values (EthLib error values are not compa
 and non-nil `Source`/`Target` whose `Root`s have length 32. The proofs of the spec lemmas follow
 `Spec/TestCheckpointAndAttestationData.lean` (its text, with the names of this namespace); they
 read EthLib and `Prysm.Checkpoint.Spec` only.
-After the split of this module, the equality with the checker Desc is in `Prysm/AttestationData/SpecEquivalence.lean`.
 -/
 
 namespace Prysm.AttestationData

@@ -5,15 +5,15 @@ import Prysm.AttestationData.Code
 import Prysm.ElfData.PrysmTarget
 
 /-!
-# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`: size reject and the four unreachable error wraps
+# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`: size reject
 
 `Decode.reject_size` (`len(buf) ≠ 128`, Go source `return ssz.ErrSize`): directives
 2–7 (guard, prologue, rbx spill), 9–10 `cmp $0x80,%rcx; jne L_3ad` taken, 226 `L_3ad`,
 227–228 load the two words of `ssz.ErrSize` (`ElfData.PrysmTarget.sszErrSize_addr`, the same ELF symbol
-as the Checkpoint decoder's; `attestation_data_link.py` asserts the operand), 229–231 epilogue. The two words
+as the Checkpoint decoder's), 229–231 epilogue. The two words
 `e0`, `e1` are the global's value after package init (premise, as in `Prysm.Checkpoint.Decode.reject_size`).
 
-**`unreachable_mc` rows** (own column, never reject coverage): after each callee returns with
+**Unreachable error wraps** (not reject coverage): after each callee returns with
 `rax = 0` the code jumps over its `fmt.errorf` wrap with registers and memory unchanged:
 Slot (directive 18 → 47, skips 20–46, "Slot: %w"), CommitteeIndex (56 → 85, skips 58–84,
 "CommitteeIndex: %w"), Source (143 → 172, skips 145–171, "Source: %w"), Target (193 → 222,
@@ -21,7 +21,6 @@ skips 195–221, "Target: %w"). `Prysm.Slot.Decode.accept_function_spec`, `Prysm
 that `Decode.accept` makes with `len(buf) = 128` (rcx = 8, 8, 40, 40); that theorem
 passes through exactly these steps, so the wraps are absent from every execution with a
 128-byte input.
-After the split of this module, the four unreachable error wraps are in `Prysm/AttestationData/DecodeErrorWrapsUnreachable.lean`.
 -/
 
 open Machine Prysm.AttestationData.Code

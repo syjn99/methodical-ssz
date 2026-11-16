@@ -15,7 +15,7 @@ against the ELF by `link/check.py` (f)); the two words `e0`, `e1` are the
 global's value after package init (premise; `e0 ≠ 0` there, so the error is
 non-nil).
 
-`Decode.epoch_err_unreachable` (`unreachable_mc` row): after the Epoch call
+`Decode.epoch_err_unreachable` (an unreachable error path): after the Epoch call
 (directive 18) with `rax = 0` the code jumps to `L_b4` (directive 47) with the
 registers and memory unchanged, so directives 20–46 (`fmt.errorf("Epoch: %w")`,
 the `runtime.newobject` fallback) are not executed. The Epoch function spec
@@ -123,7 +123,7 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
          UInt64.toBitVec_ofNat, Width.bits]
        omega)
 
-/-- **`unreachable_mc`: the `fmt.errorf("Epoch: %w")` path.** From the return of the
+/-- **Unreachable: the `fmt.errorf("Epoch: %w")` path.** From the return of the
 Epoch call (directive 18) with `rax = 0`, the code reaches `L_b4` (directive 47)
 with registers and memory unchanged: directives 20–46 are not executed. -/
 theorem Decode.epoch_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)

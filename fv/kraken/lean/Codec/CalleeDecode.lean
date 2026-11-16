@@ -17,9 +17,9 @@ CommitteeIndex, ValidatorIndex, Epoch) to an argument set-up, then
     test %rax,%rax
     je L            -- nil error: continue at L
 
-`Uint64CalleeAccept fn` is the text of the four existing function specifications `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec`,
-`Prysm.ValidatorIndex.Decode.accept_function_spec`, `Prysm.Epoch.Decode.accept_function_spec` with the callee label as a parameter. It is the existing spec-hypothesis
-form (`Prysm/Slot/CalleeDecodeFunctionSpecs.lean`: each existing spec is `Uint64CalleeAccept <its label>` by `rfl`); the proved theorems
+`Uint64CalleeAccept fn` is the form of the four function specifications `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec`,
+`Prysm.ValidatorIndex.Decode.accept_function_spec`, `Prysm.Epoch.Decode.accept_function_spec`, with the callee label as a parameter.
+The proved theorems
 `Prysm.Slot.Decode.accept_function_spec_holds`, `Prysm.CommitteeIndex.Decode.accept_function_spec_holds`, `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`, `Prysm.Epoch.Decode.accept_function_spec_holds` discharge it. No runtime contract is used.
 
 * `call_decode_segment` — the reusable call block: `callDecode fn lok` (3 directives) and the label `lok`.

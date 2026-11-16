@@ -77,9 +77,8 @@ Codec <-> Prysm (at module level, both directions)
 - `Spec` imports only EthLib and `Spec`. `Machine` imports only Kraken, Std, Lean and `Machine` (`Machine/Include.lean`
   has `public meta import Lean` for its elaborators). `Runtime` imports only Kraken, `Machine` and `Runtime`. So these
   three libraries import only libraries to their left (and Lean itself).
-- `Codec` and `Prysm` import each other at module level. 18 of the 46 `Codec` modules import a `Prysm` module:
-  10 of 31 in `Codec/`, 2 of 8 in `Codec/Kind/`, 6 of 7 in `Codec/Segment/`. 92 of the 494 `Prysm` modules
-  import a `Codec` module. Lean forbids a cycle of modules, so the module graph has no cycle; only the
+- `Codec` and `Prysm` import each other at module level: some `Codec` modules import a `Prysm` module, and many `Prysm`
+  modules import a `Codec` module. Lean forbids a cycle of modules, so the module graph has no cycle; only the
   libraries have no order.
 - The `Codec` modules that import `Prysm` hold lemmas and kinds that the shared layer took from a type
   (for example `Codec/CalleeDecode.lean` uses the decoder specifications of `Prysm/Slot/`, `Prysm/Epoch/` and `Prysm/ValidatorIndex/`), and instances

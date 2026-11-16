@@ -8,7 +8,7 @@ import Prysm.ValidatorIndex.Code
 /-!
 # Witness of `Decode.accept` (PendingPartialWithdrawal decoder accept path)
 
-Hand-written (the text of `Prysm/BeaconBlockHeader/WitnessGeneratedDecodeAccept.lean` without heap and runtime callees). It shows that
+Hand-written. It shows that
 the premises of the independent hand statement `Prysm.PendingPartialWithdrawal.Decode.accept_statement` are satisfiable.
 Host: one label, the real Go 1.26.10 `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` (index 1),
 `(*primitives.ValidatorIndex).UnmarshalSSZ` (110) and `(*primitives.Epoch).UnmarshalSSZ` (173).

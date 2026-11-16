@@ -7,7 +7,7 @@ import Prysm.HistoricalBatch.Code
 /-!
 # Witness of `Decode.accept` (HistoricalBatch decoder accept path)
 
-The text of `Prysm.SyncCommittee.WitnessDecodeAccept` with the HistoricalBatch host and layout. It shows that the premises of the frozen
+It shows that the premises of the frozen
 statement `Prysm.HistoricalBatch.Decode.accept_statement` are satisfiable, the three contract hypotheses included. The contract models are the
 SyncCommittee ones, imported as they are: `Prysm.RuntimeModel.BumpMakesliceByteSliceDispatch` (`Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1`, `Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24`; the type word of the
 HistoricalBatch backing arrays is the SyncCommittee one) and `MemmoveGrowsliceModel` (`model_memmove`).
@@ -59,7 +59,8 @@ theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10000 :=
 theorem label_write_barrier : label "runtime.writeBarrier" = 0x10008 :=
   mk_label program _ 8 _ (by simp [program, dataLabels]) (by decide)
 
-/-- The text of `Prysm.SyncCommittee.Witness.DecodeAccept.uint8_ne_slice` (that module cannot be imported: it declares its own `Host` instance). -/
+/-- The type words of `uint8` and `[]uint8` differ. `Prysm.SyncCommittee.Witness.DecodeAccept.uint8_ne_slice` states the same; that module declares
+its own `Host` instance, so this module does not import it. -/
 theorem uint8_ne_slice : ElfData.PrysmTarget.typeUint8_addr ≠ ElfData.PrysmTarget.typeUint8Slice_addr := by
   simp only [ElfData.PrysmTarget.typeUint8_addr, ElfData.PrysmTarget.typeUint8Slice_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega

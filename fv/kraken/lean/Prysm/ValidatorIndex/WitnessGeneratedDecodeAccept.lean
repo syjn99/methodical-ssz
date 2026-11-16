@@ -15,8 +15,7 @@ return slot (rsp = 0x10020, return address 0), the unused spill slot rsp + 8
 8-byte input this state meets every premise (`witness_mem`), and the function
 returns nil with the receiver = the input (`runs`); three values
 below (0, a representative value, 2^64 − 1).
-Hand-written (not generator output): the text of `Prysm/CommitteeIndex/WitnessDecodeAccept.lean` with the
-names replaced (`sed`); the machine theorem used is the generated `Decode.generated_accept`.
+Hand-written (not generator output). The machine theorem used is the generated `Decode.generated_accept`.
 -/
 
 open Machine Runtime Machine.Witness Codec Prysm.ValidatorIndex.Code

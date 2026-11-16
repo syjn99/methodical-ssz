@@ -1,7 +1,7 @@
 import Kraken.X64.Parser
 
 /-!
-Run the pinned Kraken runtime x64 parser (the one behind `include_x64_rt` in
+Run the pinned Kraken runtime x64 parser (the one behind `include_x64_code` in
 `Machine/Include.lean`) on every `.S` file listed in `$PARSER_RUN_LIST`, one path per
 line. Prints `parser OK <file> <directives>` or `parser ERR <file> <message>`,
 then `parser DONE <ok> <err>`. `<file>` is the file name without its directory, so the output holds no machine path.

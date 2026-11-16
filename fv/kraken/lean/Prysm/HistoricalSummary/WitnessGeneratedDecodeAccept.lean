@@ -7,7 +7,6 @@ import Prysm.HistoricalSummary.Code
 /-!
 # Witness of the generated `Decode.generated_accept` (HistoricalSummary decoder accept path)
 
-The text of `Prysm/PowBlock/WitnessGeneratedDecodeAccept.lean` with the HistoricalSummary host and layout (two 32-byte fields).
 It shows that the premises of the generated accept theorem (statement = kind instance) are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.HistoricalSummary).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (113, `bump_makeslice1`) and `MemmoveGrowsliceModel` (119, `model_memmove`).

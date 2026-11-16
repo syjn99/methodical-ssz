@@ -7,8 +7,7 @@ import Prysm.VoluntaryExit.Code
 # Witness of the generated `Decode.generated_reject`
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.VoluntaryExit).UnmarshalSSZ` (index 1).
-The text of `Prysm/PendingConsolidation/WitnessGeneratedDecodeRejectSize.lean` with the VoluntaryExit decoder and the generated
-size-reject theorem of `Prysm/VoluntaryExit/GeneratedDecodeAccept.lean`. Memory at `0x10000`: the two words of `ssz.ErrSize` after package init
+It applies the generated size-reject theorem of `Prysm/VoluntaryExit/GeneratedDecodeAccept.lean`. Memory at `0x10000`: the two words of `ssz.ErrSize` after package init
 (a non-zero itab word `0x10e8` and a data word `0x2a`, stand-ins: the real values are set by the runtime's init
 and are not read from the ELF), the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame
 `R`) and the rbx spill slot. For every length `≠ 16` (instances 15, 17, 0) the decoder returns the two words.

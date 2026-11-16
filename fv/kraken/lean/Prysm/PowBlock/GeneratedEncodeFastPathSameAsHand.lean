@@ -11,7 +11,6 @@ import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPathSameAsHand
 
 `Prysm/PowBlock/EncodeFastPathStatements.lean` was committed before the generated theorems were read. Each identity is `rfl` at default
 transparency; a failed identity is recorded, not forced. Encoder fast path only.
-After the split of this module, the declarations of the other types are in `Prysm/Deposit_Data/GeneratedEncodeFastPathSameAsHand.lean`, `Prysm/PendingPartialWithdrawal/GeneratedEncodeFastPathSameAsHand.lean`, `Prysm/SyncCommitteeMessage/GeneratedEncodeFastPathSameAsHand.lean`.
 -/
 
 open Machine Runtime Codec

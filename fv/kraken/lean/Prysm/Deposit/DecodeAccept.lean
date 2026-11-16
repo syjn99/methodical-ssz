@@ -7,7 +7,7 @@ import Prysm.Deposit.Code
 /-!
 # Deposit accept path (Go 1.26.10 machine code), proved with the general lemmas of `Codec/Segment/`
 
-* head 0–30 (hand steps; the text of `Prysm.HistoricalBatch.Decode.accept` 0–29 with this frame);
+* head 0–30 (hand steps);
 * Proof loop 40–76, 37–39: `Codec.Segment.bytes32_loop` (n = 33), block and gap facts read from the program;
 * 84–105 (hand steps): exit label, `new(Deposit_Data)` (`NewobjectContract`), the Data pointer, the arguments
   buf[1056:1240], the call;

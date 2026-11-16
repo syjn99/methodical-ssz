@@ -3,15 +3,12 @@ import Codec.FixedBytesDecode
 /-!
 # Hand lemma: 32-byte add-form decode segment with a `nop` before `callq runtime.makeslice`
 
-Hand-written AFTER the raw generator output was committed (result (S)).
+Hand-written.
 In `(*v1alpha1.Deposit_Data).UnmarshalSSZ` the WithdrawalCredentials segment (directives 47–72) has a `nop`
-(alignment padding, directive 50) between `mov $0x20,%ecx` and `callq runtime.makeslice`; the frozen
-generator reports the field "not covered: 0 decode segments match". This module is NOT part of the frozen
-method (`Codec/FixedBytesDecode.lean`, `Kind*.lean`, `generator.py` unchanged). Its text is produced from `Codec/FixedBytesDecode.lean`:
-`bytesDecodeHeadNop` = `bytesDecodeHead 32` with one `nop` after directive 2; `bytes32_decode_segment_nop` = the statement
-of `bytes_decode_segment` with `n = 32` and `hA` on `bytesDecodeHeadNop`; proof = the `bytes_decode_add_case 32` text with the
-head indices ≥ 3 shifted by one, one extra `step_directive` step for the `nop`, and the makeslice return address
-`j1 + 4 + 1`. Contracts: `MakesliceContract`, `MemmoveContract` as in `bytes_decode_segment`.
+(alignment padding, directive 50) between `mov $0x20,%ecx` and `callq runtime.makeslice`.
+`bytesDecodeHeadNop` is `bytesDecodeHead 32` with one `nop` after directive 2. `bytes32_decode_segment_nop` has the statement
+of `bytes_decode_segment` with `n = 32` and `hA` on `bytesDecodeHeadNop`; the makeslice return address is `j1 + 4 + 1`.
+Contracts: `MakesliceContract`, `MemmoveContract` as in `bytes_decode_segment`.
 -/
 
 open Machine Runtime

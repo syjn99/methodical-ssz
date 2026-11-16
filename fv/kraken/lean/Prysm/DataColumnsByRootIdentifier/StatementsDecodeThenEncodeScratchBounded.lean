@@ -2,13 +2,13 @@ import Prysm.DataColumnsByRootIdentifier.StatementsDecodeThenEncode
 import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
-# Corrected round-trip statement: a bound on the scratch size (added after the freeze of `Prysm/DataColumnsByRootIdentifier/StatementsDecodeThenEncode.lean`)
+# Round-trip statement with a bound on the scratch size
 
 `DecodeThenEncode.round_trip_scratch_bounded_statement` is the frozen text of `DecodeThenEncode.round_trip_statement` with one added premise
 `(hS : S < 2 ^ 60)`; nothing else differs. Reason: the encoder's scratch is the decoder's scratch and return slot
 (`S + 8` bytes, `Prysm/DataColumnsByRootIdentifier/DecodeThenEncode.lean`); splitting that block needs `S + 8 < 2^64`, and nothing in the original premises
 bounds `S` (a list longer than 2^64 would cover every address, but the separation facts that refute it are not
-proved here). The precondition is stronger than the frozen one. The original stays unchanged and unproved (N).
+proved here). The precondition is stronger than the frozen one. `DecodeThenEncode.round_trip_statement` has no proof.
 Precedent: `Prysm.Checkpoint.DecodeThenEncode.round_trip` has the same premise `hS : S < 2 ^ 60`.
 -/
 

@@ -10,7 +10,7 @@ scope, because two `Host` instances in one file make instance resolution unfold 
 `Prysm.Checkpoint.witness_encode_reject_length_cover_receiver`, `Prysm.Checkpoint.witness_encode_reject_length_cover_receiver_bad`).
 -/
 
-open Machine Runtime Machine.Witness Prysm.Checkpoint.Code EthLib.Serialization.Ssz
+open Machine Runtime Machine.Witness EthLib.Serialization.Ssz
 
 namespace Prysm.Checkpoint.Witness.EncodeRejectLengthCoverFramed
 

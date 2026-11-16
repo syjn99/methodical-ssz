@@ -114,7 +114,7 @@ theorem Encode.grow_iter (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   step_directive hk marshalSSZTo 89
   have e1 := Encode.loop_rbx rbx.toBitVec L i (by simpa using hrbx) (by omega)
   split
-  · -- the capacity holds the word: `jae L_132` taken (the text of `Encode.iter`)
+  · -- the capacity holds the word: `jae L_132` taken
     rename_i h
     have hfit : L + 8 * (i + 1) ≤ cp := by
       simp only [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h

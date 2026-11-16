@@ -12,7 +12,7 @@ import Prysm.Slot.Code
 /-!
 # Witness of `Decode.accept` (IndexedAttestation decoder accept path)
 
-The text of `Prysm/SyncCommittee/WitnessDecodeAccept.lean` and `Prysm/AttestationData/WitnessDecodeAccept.lean` with the IndexedAttestation host and layout. It shows that the premises of the
+It shows that the premises of the
 frozen statement `Prysm.IndexedAttestation.Decode.accept_statement` are satisfiable for every `n ≤ 2048`, the nine contract hypotheses
 included: the four `MakesliceContract` instances come from the type-dispatching model `Prysm.RuntimeModel.BumpMakesliceUint64Dispatch` (`Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size8`,
 `Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1`), the two `NewobjectContract` instances from `Prysm.RuntimeModel.BumpNewobjectStructDispatch` (`Prysm.RuntimeModel.bump_newobject_struct_dispatch_size96`,

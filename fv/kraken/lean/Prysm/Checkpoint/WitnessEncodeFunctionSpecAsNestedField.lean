@@ -13,7 +13,7 @@ instance on this host; it does not by itself show that the premises of a main th
 (non-vacuity) comes from the run witnesses.
 -/
 
-open Machine Runtime Machine.Witness Prysm.Checkpoint.Code
+open Machine Runtime Machine.Witness
 
 namespace Prysm.Checkpoint.Witness.EncodeFunctionSpecAsNestedField
 

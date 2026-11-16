@@ -7,8 +7,7 @@ import Prysm.DataColumnsByRootIdentifier.Code
 /-!
 # Witness of `Decode.accept` (decoder accept path)
 
-The text of `Prysm/IndexedAttestation/WitnessDecodeAccept.lean` with this host and
-layout. The premises of the frozen `Decode.accept_statement` are satisfiable for every `n ≤ 128`, the three contract hypotheses
+The premises of the frozen `Decode.accept_statement` are satisfiable for every `n ≤ 128`, the three contract hypotheses
 included: both `MakesliceContract` instances from `Prysm.RuntimeModel.BumpMakesliceUint64DispatchForDataColumnsByRootIdentifier` (`Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_for_data_columns_by_root_identifier_size8`, `Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_for_data_columns_by_root_identifier_size1`), `MemmoveContract`
 from `MemmoveGrowsliceModel`. Host: data labels (bump pointer at 0, `runtime.writeBarrier` at 8), the real Go 1.26.10
 `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ` (index 9), `Prysm.RuntimeModel.BumpMakesliceUint64DispatchForDataColumnsByRootIdentifier`, `MemmoveGrowsliceModel`. One memory block at

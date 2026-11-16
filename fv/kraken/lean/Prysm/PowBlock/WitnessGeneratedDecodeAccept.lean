@@ -7,7 +7,7 @@ import Prysm.PowBlock.Code
 /-!
 # Witness of `Decode.generated_accept` (PowBlock decoder accept path)
 
-Hand-written (the text of `Prysm/Deposit_Data/WitnessGeneratedDecodeAccept.lean` with the PowBlock host and layout).
+Hand-written.
 It shows that the premises of the generated accept theorem `Prysm.PowBlock.Decode.generated_accept` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.PowBlock).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (150, `bump_makeslice1`) and `MemmoveGrowsliceModel` (156, `model_memmove`).

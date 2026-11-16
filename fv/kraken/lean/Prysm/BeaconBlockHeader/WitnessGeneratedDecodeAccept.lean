@@ -9,8 +9,7 @@ import Prysm.ValidatorIndex.Code
 /-!
 # Witness of `Decode.generated_accept` (BeaconBlockHeader decoder accept path)
 
-Hand-written (the text of `Prysm/AttestationData/WitnessDecodeAccept.lean` with the BeaconBlockHeader host
-and layout). Host: data labels, the real Go 1.26.10 `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`
+Hand-written. Host: data labels, the real Go 1.26.10 `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`
 (index 9), `(*primitives.Slot).UnmarshalSSZ` (226), `(*primitives.ValidatorIndex).UnmarshalSSZ` (289),
 the 1-byte bump `runtime.makeslice` (352, `bump_makeslice1`) and `MemmoveGrowsliceModel` (358, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 96-byte heap, guard word, the 112 input
@@ -23,7 +22,7 @@ every old root pointer word (nil = zero, or any other bytes) every premise holds
 The receiver is a Go value of `v1alpha1.BeaconBlockHeader` (zero `state`, zero-length root slices).
 -/
 
-open Machine Runtime Machine.Witness Codec Prysm.BeaconBlockHeader.Code
+open Machine Runtime Machine.Witness Codec
 
 namespace Prysm.BeaconBlockHeader.Witness.GeneratedDecodeAccept
 

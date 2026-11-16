@@ -13,8 +13,7 @@ import Prysm.ValidatorIndex.Code
 
     return fmt.Errorf("expected buffer of length %d received %d", v.SizeSSZ(), len(buf))
 
-Hand text: `Prysm.Epoch.Decode.reject_size` with the code constant `Prysm.Epoch.Code.unmarshalSSZ` replaced by
-`unmarshalSSZ`. The two `.S` files are identical modulo labels, including the format operand
+Hand-written. The two `.S` files of Epoch and ValidatorIndex are identical modulo labels, including the format operand
 `go_string._+110051` (the Go linker keeps one copy of the string), so the `FmtErrorfDecimalDecimalContract` instance with
 `ElfData.PrysmTarget.formatBufferLength` and `ElfData.PrysmTarget.typeInt_addr` is the same instance; `ConvT64Contract` likewise.
 No new contract form. The helper lemmas `Codec.uint64_reject_*` (`Codec/Uint64RejectSize.lean`) are shared with the Epoch proof.

@@ -4,9 +4,9 @@ import Prysm.ValidatorIndex.Code
 /-!
 # `Decode.accept_function_spec`: function specification of `(*primitives.ValidatorIndex).UnmarshalSSZ`, accept path
 
-Hand-written (not generator output). The text of `Prysm.CommitteeIndex.Decode.accept_function_spec` with the
-label `Prysm.CommitteeIndex.Code.unmarshalSSZLabel` replaced by `Prysm.ValidatorIndex.Code.unmarshalLabel`. `Decode.accept_function_spec_holds` proves it from the generated machine
-theorem `Prysm.ValidatorIndex.Decode.generated_accept` (the proof text of `Prysm.CommitteeIndex.Decode.accept_function_spec_holds`). The
+Hand-written (not generator output). The form of `Prysm.CommitteeIndex.Decode.accept_function_spec` at the
+label `Prysm.ValidatorIndex.Code.unmarshalLabel`. `Decode.accept_function_spec_holds` proves it from the generated machine
+theorem `Prysm.ValidatorIndex.Decode.generated_accept`. The
 BeaconBlockHeader decoder uses the callee only through this specification (no contract).
 -/
 

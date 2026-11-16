@@ -6,12 +6,12 @@ import Machine.Flags
 Go functions with a frame above the small-frame limit compare `rsp - N` (not `rsp`) with the stack guard.
 After the `lea` and the `cmp` the Kraken state holds the flags of `(rsp + d) - guard`, where `d` is the
 two's-complement displacement (`d = -N`). The lemma below states once, over `N`, that the `jbe` is not
-taken when `guard + N < rsp`. It is a thin wrapper of `Machine.cmp_be_false` (unchanged): the kernel checks one
+taken when `guard + N < rsp`. It is a thin wrapper of `Machine.cmp_be_false`: the kernel checks one
 application and a `Nat` inequality.
 
 Why a lemma: closing the same fact in the machine context with
 `simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega` fails in the kernel under
-the memory limit; the costly subterm was not profiled. After `simp` the hypothesis holds `Int` arithmetic on
+the memory limit; no profile names the costly subterm. After `simp` the hypothesis holds `Int` arithmetic on
 the literal `2^64 - N`; that this literal is the cost is an inference, not a measurement.
 
 Use (taken branch `h` of the `split` after the `jbe` directive):

@@ -7,8 +7,7 @@ import Prysm.ValidatorIndex.Code
 /-!
 # Witness of `Decode.generated_accept` (PendingConsolidation decoder accept path)
 
-Hand-written (the text of `Prysm/PendingPartialWithdrawal/WitnessDecodeAccept.lean` with the PendingConsolidation host and
-layout). It shows that the premises of the generated accept theorem `Prysm.PendingConsolidation.Decode.generated_accept` are
+Hand-written. It shows that the premises of the generated accept theorem `Prysm.PendingConsolidation.Decode.generated_accept` are
 satisfiable. Host: one label, the real Go 1.26.10 `(*v1alpha1.PendingConsolidation).UnmarshalSSZ` (index 1)
 and `(*primitives.ValidatorIndex).UnmarshalSSZ` (108).
 One memory block at `0x10000`: guard word (r14 = 0xfff0), the 16 input bytes (rbx = 0x10008), the 56-byte

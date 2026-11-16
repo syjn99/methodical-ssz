@@ -28,7 +28,7 @@ The tool gives each group exactly one class. It applies the rules in this order:
                         identity (`_same`, `_type`, a statement written as `type_of% @A`, or a name in an identity `@A = @B := rfl` or `type_of% @A` of a
                         module that sees it), an instance of a general lemma (`_inst`, or a theorem in a module
                         whose name ends with `Instances`: Lean checks that the general lemma covers it), an example or a theorem
-                        in a file that kindcheck.py reads (`Generated*.lean`, `Decode*Example*.lean`), or a name that a
+                        in a file that kindcheck.py reads (`Generated*.lean`), or a name that a
                         negative case or a generator identity (`--same-as`) names, or an end result: no module uses
                         it and a hand list of `gen/axioms-lists/` prints its axioms (the same statement proved by
                         another route, for example from generated segments; not when its text names a twin, as an
@@ -63,7 +63,7 @@ import tempfile
 
 DERIVED = re.compile(r'^(eq_\d+|eq_def|inj|injEq|sizeOf_spec|ext|ext_iff|eta|mk\.injEq|noConfusion|recOn|casesOn|elim)$')
 SECOND = re.compile(r'(_kind|_same|_type|_inst)$')
-KINDCHECK_FILE = re.compile(r'(^|/)(Generated[^/]*|Decode[^/]*Example[^/]*)\.lean$')
+KINDCHECK_FILE = re.compile(r'(^|/)Generated[^/]*\.lean$')
 DECL = re.compile(r'^(?:@\[[^\]]*\]\s*)*(?:(?:private|protected|noncomputable|partial|unsafe|nonrec|scoped|public|meta)\s+)*'
                   r'(theorem|lemma|def|abbrev|instance|structure|inductive|class|opaque|axiom)\s+([^\s:({\[⦃]+)')
 IDENTITY = re.compile(r"@\(?([A-Za-z_«][\w.'«»]*)\)?\s*=\s*@\(?([A-Za-z_«][\w.'«»]*)\)?\s*:=\s*(?:by\s+)?rfl")

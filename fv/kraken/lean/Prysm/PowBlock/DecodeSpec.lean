@@ -16,7 +16,7 @@ raw output, not edited): the accept path is `Decode.generated_accept`, the size 
   size reject site. The decoder has no other error return.
 -/
 
-open Machine Runtime Prysm.PowBlock.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.PowBlock

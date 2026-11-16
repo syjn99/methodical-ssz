@@ -7,10 +7,9 @@ import Prysm.ElfData.PrysmTarget
 # Type-dispatching bump model of `runtime.makeslice` for the decoder witness host
 
 The decoder accept path needs `MakesliceContract` with esz 1 (uint8 type word) and esz 8 (`typeUint64_addr`) in one Host.
-`Prysm/RuntimeModel/BumpMakesliceUint64DispatchForDataColumnsByRootIdentifier.S` is the text of the model `Prysm/RuntimeModel/BumpMakesliceUint64Dispatch.S` with the label
-renamed: it bumps by 8·cnt for `type__+387456` and by cnt
-otherwise. The two theorems below are the text of `Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1` / `Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size8` (`Prysm/RuntimeModel/BumpAllocatorUint64AndStructDispatch.lean`)
-with the names changed. Abstract model for non-vacuity only, not a Go refinement. The `.S` file is in
+`Prysm/RuntimeModel/BumpMakesliceUint64DispatchForDataColumnsByRootIdentifier.S` is the model `Prysm/RuntimeModel/BumpMakesliceUint64Dispatch.S` with
+another label: it bumps by 8·cnt for `type__+387456` and by cnt otherwise. The two theorems below have the form of
+`Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1` / `Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size8` (`Prysm/RuntimeModel/BumpAllocatorUint64AndStructDispatch.lean`). Abstract model for non-vacuity only, not a Go refinement. The `.S` file is in
 the Lake `input_dir` `runtime_model_S`.
 -/
 

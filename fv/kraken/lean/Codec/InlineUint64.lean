@@ -13,10 +13,9 @@ Go 1.26.10 compiles
     mov src(%rX),%rX      -- the 8 source bytes
     mov %rX,f(%rdx)       -- store to the field at Go offset f of the receiver
 
-`uint64DecodeInline rX dB src f` is this template. The three development sites differ in the scratch register
-only: `Eth1Data.DepositCount` uses rsi, `BlobIdentifier.Index` and `DepositMessage.Amount` use rcx; the
-receiver register is rdx and the addressing forms are the same at the three sites. The scratch register is
-a parameter `rX : Reg64`. The lemma holds for every register except rdx (the receiver), rsp, rbp and r14
+`uint64DecodeInline rX dB src f` is this template. The decoders differ in the scratch register only: the
+Eth1Data field DepositCount uses rsi, the BlobIdentifier field Index and the DepositMessage field Amount use rcx.
+The receiver register is rdx. The scratch register is a parameter `rX : Reg64`. The lemma holds for every register except rdx (the receiver), rsp, rbp and r14
 (kept by the statement); the hypothesis `hX` lists the twelve others. The proof is a case split on `hX`,
 since the machine step is computed for a concrete register. No runtime contract is used.
 Not covered: a decoder that keeps the receiver in another register than rdx (not observed), and a form

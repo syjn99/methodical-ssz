@@ -6,8 +6,7 @@ import Prysm.ValidatorIndex.Code
 /-!
 # Witnesses of `Prysm.ValidatorIndex.Decode.reject_size` (len 7, 9 and 300)
 
-Hand text: `Prysm/Epoch/WitnessDecodeRejectSize.lean` with `Prysm.Epoch.Code.unmarshalSSZ` replaced by `Code.unmarshalSSZ` (same directive count, same
-host layout and indices). The original description follows, with the type name replaced.
+The ValidatorIndex code has the directive count, the host layout and the indices of the Epoch code.
 
 Host: four data labels (`go_string._` at 0x10000, `runtime.gcbits._` 0x10001,
 `runtime.staticuint64s` 0x10002, `runtime.modelBumpPointer` 0x10003), the real Go 1.26.10
@@ -20,7 +19,7 @@ bytes `formatBufferLength`; the fillers between them and the unused rax spill sl
 frame `R`. With `len(buf) = 7` the decoder returns a non-nil error.
 -/
 
-open Machine Runtime Machine.Witness Prysm.ValidatorIndex.Code
+open Machine Runtime Machine.Witness
 
 namespace Prysm.ValidatorIndex.Witness.DecodeRejectSize
 

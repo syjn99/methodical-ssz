@@ -7,15 +7,13 @@ import Codec.ByteSliceListDefinitions
 /-!
 # Definitions that the SyncAggregate and SyncCommittee statements use
 
-These definitions are part of the frozen statements (`Prysm/SyncAggregate/Statements.lean`, `Prysm/SyncCommittee/Statements.lean`). A later change needs a
-new name and a reason; the original stays.
+These definitions are part of the statements (`Prysm/SyncAggregate/Statements.lean`, `Prysm/SyncCommittee/Statements.lean`).
 
 - The statements also use `Codec.elementBlocks` and `Codec.sliceHeaders` (`Codec/ByteSliceListDefinitions.lean`):
   the element blocks of a slice of byte slices, and the backing array of its slice headers.
 - `Prysm.SyncAggregate.SszValue`, `SszValue`: the SSZ content of a Go `v1alpha1.SyncAggregate` / `v1alpha1.SyncCommittee` whose byte
   fields have the lengths of the spec (64 / 96; 512 × 48 / 48). `toValue` is the EthLib `Value`,
   `Prysm.SyncAggregate.SszValue.encode` / `SszValue.encode` the 160 / 24624 bytes of the SSZ encoding (fixed-size container: the fields in order).
-After the split of this module, the declarations of the other types are in `Prysm/SyncAggregate/SpecDefinitions.lean`.
 -/
 
 open Machine Runtime EthLib.Serialization.Ssz

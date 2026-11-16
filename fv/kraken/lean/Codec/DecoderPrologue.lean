@@ -6,24 +6,22 @@ import Codec.DecoderHeadEpilogue
 
 The prologue of every flat decoder (directives 0–10) is the same up to the frame size `F`, the
 displacement `dB` of the first rbx spill, the SSZ size `sz` and the labels. Other head lemmas: one for
-the frame `0x20` (`Codec.decode_head_segment`) and one hand lemma per call-field type (`Prysm.PendingPartialWithdrawal.Decode.head`, `Prysm.BeaconBlockHeader.Decode.head_to_arguments`,
-`Prysm.SyncCommitteeMessage.Decode.head_to_arguments`, `Prysm.PendingConsolidation.Decode.head`; epilogues
-`Prysm.PendingPartialWithdrawal.Decode.epilogue`, `Prysm.PendingConsolidation.Decode.epilogue`). Here:
+the frame `0x20` (`Codec.decode_head_segment`) and the hand lemmas of PendingPartialWithdrawal (`Prysm.PendingPartialWithdrawal.Decode.head`,
+`Prysm.PendingPartialWithdrawal.Decode.epilogue`). Here:
 
 * `decode_prologue_segment fn l0 lmore lerr F dB sz` — the prologue over a window (`Codec/NopWindow.lean`; the `nop` at directive
   8 is a window nop), with `F`, `dB`, `sz` symbolic; every register except rsp / rbp is kept (register clause);
 * `step_nil_check rB` — the step `test %al,(%rB)`;
 * `decode_return_segment` — `pop %rbp; retq` over a window.
 The spills after the prologue (2–3, order differs per type) are `step_store` steps; the epilogue reloads and the
-`add $F,%rsp` are `step_load_*` / `step_add_immediate` steps (`Codec/WindowSteps.lean`). `Prysm/SyncCommitteeMessage/DecoderPrologueInstances.lean` re-proves the per-type hand
-lemmas with their committed statements from these. No runtime contract is used.
+`add $F,%rsp` are `step_load_*` / `step_add_immediate` steps (`Codec/WindowSteps.lean`). No runtime contract is used.
 -/
 
 open Machine Runtime
 
 namespace Codec
 
-/-- The fixed prologue of a decoder (directives 0–10 of the development decoders without the padding `nop`):
+/-- The fixed prologue of a decoder (11 directives without the padding `nop`):
 two labels, stack-guard check, `push %rbp; mov %rsp,%rbp; sub $F,%rsp`, the first spill `mov %rbx,dB(%rsp)`,
 the size check `cmp $sz,%rcx; jne lerr`. Frame size `F`, spill displacement `dB` and SSZ size `sz` are parameters. -/
 def decoderPrologue (fn l0 lmore lerr : String) (F dB sz : Int64) : Program :=

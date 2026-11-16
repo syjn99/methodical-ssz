@@ -9,7 +9,7 @@ import Prysm.Deposit_Data.Code
 /-!
 # Witness of `Decode.accept` (Deposit decoder accept path)
 
-The text of `Prysm.HistoricalBatch.WitnessDecodeAccept` with the Deposit host and layout. It shows that the premises of the frozen statement
+It shows that the premises of the frozen statement
 `Prysm.Deposit.Decode.accept_statement` are satisfiable, the six contract hypotheses included: both `MakesliceContract` instances of the
 Deposit decoder and the one of the Deposit_Data decoder from `Prysm.RuntimeModel.BumpMakesliceByteSliceDispatch`, `NewobjectContract … 120` from
 `BumpNewobject120`, both `MemmoveContract` from `MemmoveGrowsliceModel`.
@@ -79,7 +79,8 @@ theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10000 :=
 theorem label_write_barrier : label "runtime.writeBarrier" = 0x10008 :=
   mk_label program _ 8 _ (by simp [program, dataLabels]) (by decide)
 
-/-- The text of `Prysm.SyncCommittee.Witness.DecodeAccept.uint8_ne_slice` (that module declares its own `Host` instance). -/
+/-- The type words of `uint8` and `[]uint8` differ. `Prysm.SyncCommittee.Witness.DecodeAccept.uint8_ne_slice` states the same; that module declares
+its own `Host` instance, so this module does not import it. -/
 theorem uint8_ne_slice : ElfData.PrysmTarget.typeUint8_addr ≠ ElfData.PrysmTarget.typeUint8Slice_addr := by
   simp only [ElfData.PrysmTarget.typeUint8_addr, ElfData.PrysmTarget.typeUint8Slice_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega

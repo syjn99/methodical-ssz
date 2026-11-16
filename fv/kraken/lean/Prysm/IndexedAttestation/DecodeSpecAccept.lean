@@ -6,10 +6,10 @@ import Prysm.IndexedAttestation.Spec
 
 `Decode.accept_spec : Decode.accept_spec_statement` (frozen, `Prysm/IndexedAttestation/Statements.lean`): an input that EthLib accepts against
 `desc` is `SszValue.encode g` for a `g : SszValue` with `g.toValue = v` (`accepted_is_encode`), and the machine code
-decodes it into `g` (`Decode.accept` with `n = g.idx.length`). The text of `Prysm/AttestationData/DecodeSpec.lean`.
+decodes it into `g` (`Decode.accept` with `n = g.idx.length`).
 -/
 
-open Machine Runtime EthLib.Serialization.Ssz Prysm.IndexedAttestation.Code
+open Machine Runtime EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.IndexedAttestation

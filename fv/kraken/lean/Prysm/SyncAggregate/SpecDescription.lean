@@ -6,8 +6,8 @@ import Prysm.SyncCommittee.SpecDescription
 
 Hand-written from the consensus-specs altair container definitions
 (`specs/altair/beacon-chain.md`; the repository has no local copy of that file), BEFORE the Desc producer's
-output for these two types was printed. The producer's Desc files (`evidence/lists-and-vectors/desc/*.desc.json`, sha256 equal to
-the checker records in `gen/desc/results/main.result.json`) are compared with these terms in a later step.
+output for these two types was printed. The producer's Desc files are
+`prysm/go1.26.10/evidence/prysm_v1alpha1.SyncAggregate.desc.json` and `prysm/go1.26.10/evidence/prysm_v1alpha1.SyncCommittee.desc.json`.
 
     SYNC_COMMITTEE_SIZE = 512                       # mainnet preset
     class SyncAggregate(Container):
@@ -16,7 +16,6 @@ the checker records in `gen/desc/results/main.result.json`) are compared with th
     class SyncCommittee(Container):
         pubkeys: Vector[BLSPubkey, SYNC_COMMITTEE_SIZE]   # BLSPubkey = Bytes48
         aggregate_pubkey: BLSPubkey
-After the split of this module, the declarations of the other types are in `Prysm/SyncCommittee/SpecDescription.lean`.
 -/
 
 namespace Prysm.SyncAggregate
