@@ -327,6 +327,7 @@ Examples are `Deposit_Data`, `ENRForkID` and the label `runtime.makeslice`.
 | `Witness` + module | A witness of a theorem of that module (section 6) |
 | `WitnessBumpAllocator` | A bump allocator model for the witnesses of the type, with its `.S` file in the type directory |
 
+A plain qualifier after a role narrows it, for example `EncodeGrowAnySiteThreeCases` or `DecodeSpecRejectErrorWordNonzero`.
 If no role fits, the module name uses plain words that say what the module holds.
 A module that holds several roles has the name of its main role.
 `../README.md` section 7 tells which modules a tool writes.

@@ -64,7 +64,7 @@ Other files can quote short fragments of generated code or upstream identifiers.
   They can quote short instruction fragments of the Prysm machine code.
   Examples: `prysm/go1.26.10/functions.json`, `prysm/go1.26.10/parser-result.json` and the negative-test case files `gen/checks/negative-cases/*.json`.
 - A program scan of these files for Go source fragments (`func `, `return `, `{ return`, `inline call to`, `can inline`) found these quotes:
-  - doc comments quote short excerpts of Prysm `consensus-types/primitives` methods.
+  - doc comments quote short excerpts of generated Prysm Go methods and of Prysm `consensus-types/primitives`.
     Examples are `lean/Prysm/Epoch/DecodeAccept.lean` lines 9-11 and `lean/Codec/Uint64Decoder.lean` lines 7-8.
 - The other hits are this project's own tool code or prose.
 - The scans match these patterns only: Go `if … {`, `return `, `func (`, `dst = append`, `binary.LittleEndian`, `ssz.Err`, `fmt.Errorf(`, `for … := range`.

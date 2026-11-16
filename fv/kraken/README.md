@@ -17,7 +17,8 @@ The project has one target binary, the Prysm target.
 A proof about one ELF does not transfer to another ELF.
 
 - The source is a pinned Prysm commit, with the generated files of the pinned generator.
-- The binary is a small Go `main` package. It keeps the SSZ methods of all inventory types in the ELF.
+- The binary is a small Go `main` package.
+  It keeps the SSZ methods of all inventory types in the ELF.
 - The compiler is Go 1.26.10.
   It cross-compiles to `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0`, with `-tags purego -trimpath`.
 - The ELF identity is its sha256.
@@ -69,7 +70,7 @@ Its usage text gives the details.
 
 The IR (intermediate representation) is the type description that the generator reads.
 The generator binary is built from the pinned generator commit with Go 1.26.10, `-trimpath` and `-buildvcs=false`.
-After step 2, these commands make the IR, the inventory, the function list, the parser result and the type lists again:
+After step 2, these commands make the IR, the inventory, the function list, the parser result and the type lists:
 
 ```sh
 python3 -I fv/kraken/gen/type_inventory.py reduce <out>/ir-mainnet.json fv/kraken/prysm/ir/ir-mainnet.json   # the same for minimal
@@ -209,7 +210,8 @@ These are the main ones:
   No test compares Kraken with a real CPU.
 - The runtime contracts are not proved on the compiled runtime.
   They are hypotheses.
-- Some paths have no theorem. The premises exclude the stack growth path and the write barrier path.
+- Some paths have no theorem.
+  The premises exclude the stack growth path and the write barrier path.
   The hash tree root methods have no theorems.
 - The growslice contract gives no lower bound on the remaining heap.
   One encoder state after a second growth is not proved.

@@ -10,7 +10,8 @@ The design principles are in `../../README.md`.
 
 - A generator is untrusted.
   Lean checks every proof that a generator writes.
-- A separate check covers the statement of a generated theorem: a frozen kind (section 4) or an identity with a hand statement.
+- A separate check covers the statement of a generated theorem.
+  It is a frozen kind (section 4) or an identity with a hand statement.
 - A generated Lean file must be equal to the output of its generator.
   Do not edit a generated file by hand.
   The header comment of a generated file names its generator.
