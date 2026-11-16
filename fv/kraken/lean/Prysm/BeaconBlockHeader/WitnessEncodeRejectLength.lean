@@ -6,7 +6,6 @@ import Prysm.BeaconBlockHeader.Code
 /-!
 # Witnesses of `Encode.reject_length_parent_root`, `Encode.reject_length_state_root`, `Encode.reject_length_body_root` (BeaconBlockHeader encoder, length rejects)
 
-Hand-written (the text of `Prysm/Checkpoint/WitnessEncodeRejectLength.lean` and `Prysm/BeaconBlockHeader/WitnessEncodeFastPath.lean` with this layout).
 Host: the label `ssz.ErrBytesLength` (index 0), the real Go 1.26.10
 `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` (index 1) and `MemmoveGrowsliceModel` (index 196, `model_memmove`, S = 0).
 One memory block at `0x10000`: the two words of `ssz.ErrBytesLength` (stand-in values 0x10e8, 0x2b: the real

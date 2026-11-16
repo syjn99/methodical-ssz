@@ -239,15 +239,12 @@ How to handle a new finding is in `../README.md` section 7.
     and the renamed uses do not resolve (`Unknown identifier`). So the case namespace is `Prysm.SyncCommitteeMessage`.
   - `checkpoint-encode-generated-fast-kind-statement-prysm-checkpoint-to-eth1-data` (`…/negative-cases-fast-path.json`):
     the mutant names `Prysm.Eth1Data.encodeLayout`, which the imports of the case module do not reach.
-    So the case has `mutant_imports: ["Prysm.Eth1Data.EncodeFastPathKindInstances"]`.
-    No other case names a declaration of the two Eth1Data modules.
-- The 18 remaining cases that do not pass (id, class, cause):
+    So the case has `mutant_imports: ["Prysm.Eth1Data.EncodeLayout"]`.
+- The remaining cases that do not pass (id, class, cause):
   - An earlier theorem of the module owns the mutated directive (Lean keeps a failed theorem with `sorry` and continues,
     so the designated theorem has no error; class `outside`):
     - `sync-aggregate-decode-accept-code-movq-0x40-to-0x3f`: the segment lemma `Prysm.SyncAggregate.Decode.bits_segment` owns the directive; the case
       `sync-aggregate-decode-bits-segment-code-movq-0x40-to-0x3f` (same mutation) passes.
-    - `eth1-data-encode-encode-deposit-root-code-callq-runtime-memmove-to-runtime-growslice`: the lemma
-      `Prysm.Eth1Data.Encode.call_at` owns the `callq`; the case `eth1-data-encode-call-at-code-callq-runtime-memmove-to-runtime-growslice` passes.
     - `pending-deposit-decode-generated-reject-code-add-0x40-to-0x48`: one error is inside `Decode.generated_reject`; the other is in the identity theorem
       `Decode.generated_accept_statement` before it, which compares the generated accept theorem (renamed to the mutated
       code constant) with the hand statement of `Prysm/PendingDeposit/Statements.lean` (the original constant), so it fails

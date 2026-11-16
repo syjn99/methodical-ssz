@@ -1,6 +1,6 @@
-import Prysm.BeaconBlockHeader.EncodeFastPath
+import Prysm.BeaconBlockHeader.EncodeHead
+import Prysm.BeaconBlockHeader.EncodeRootFields
 import Codec.EncodeRejectTail
-import Prysm.Checkpoint.EncodeRejectLength
 import Runtime.CopyModel
 import Prysm.BeaconBlockHeader.Code
 
@@ -82,10 +82,10 @@ theorem Encode.reject_parent_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pr
   simp only at hrsp hrax h_mem ⊢
   subst hrsp hrax
   step_directive hk marshalSSZTo 62
-  apply load_step_at _ _ (recv + 24) _ _ (Int.toBytes 8 p1.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (recv + 24) _ _ (Int.toBytes 8 p1.toInt) _ _ (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 63
-  apply load_step_at _ _ (recv + 32) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (recv + 32) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   unfold_step
   step_directive hk marshalSSZTo 64
@@ -135,13 +135,13 @@ theorem Encode.reject_state_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.pro
   simp only at hrsp h_mem ⊢
   subst hrsp
   step_directive hk marshalSSZTo 90
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 recv.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 recv.toInt) _ _ (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 91
-  apply load_step_at _ _ (recv + 48) _ _ (Int.toBytes 8 p2.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (recv + 48) _ _ (Int.toBytes 8 p2.toInt) _ _ (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 92
-  apply load_step_at _ _ (recv + 56) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (recv + 56) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   unfold_step
   step_directive hk marshalSSZTo 93
@@ -190,13 +190,13 @@ theorem Encode.reject_body_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog
   simp only at hrsp h_mem ⊢
   subst hrsp
   step_directive hk marshalSSZTo 118
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 recv.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 recv.toInt) _ _ (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 119
-  apply load_step_at _ _ (recv + 72) _ _ (Int.toBytes 8 p3.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (recv + 72) _ _ (Int.toBytes 8 p3.toInt) _ _ (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 120
-  apply load_step_at _ _ (recv + 80) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  apply load_step_at _ _ (recv + 80) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   unfold_step
   step_directive hk marshalSSZTo 121
@@ -212,6 +212,14 @@ theorem Encode.reject_body_root (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog
     (by rfl) (by ecancel)) ?_
   rintro st ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', hrsp', hrbp', hr14', hm⟩
   exact ⟨hpc, hrax', hrbx', hrcx', hrdi', hrsi', Encode.reject_rsp _ _ hrsp', hrbp', hr14', by ecancel⟩
+
+theorem Encode.offset16_regroup (x y : BitVec 64) : x + y + 16 = x + (y + 8 + 8) := by bv_omega
+theorem Encode.offset48_regroup (x y : BitVec 64) : x + y + 48 = x + (y + 8 + 8 + 32) := by bv_omega
+
+theorem Encode.capacity_le (a b : BitVec 64) (h : a.toNat + 112 ≤ b.toNat) (h63 : b.toNat < 2 ^ 63) :
+    (a + 8 + 8).toNat + 32 ≤ b.toNat ∧ (a + 8 + 8 + 32).toNat + 32 ≤ b.toNat
+      ∧ (a + 8 + 8 + 32 + 32).toNat + 32 ≤ b.toNat := by
+  refine ⟨?_, ?_, ?_⟩ <;> bv_omega
 
 theorem Encode.reject_sum48_as_fields (y : BitVec 64) : y + 48 = y + 8 + 8 + 32 := by bv_omega
 theorem Encode.reject_sum80_as_fields (y : BitVec 64) : y + 80 = y + 8 + 8 + 32 + 32 := by bv_omega

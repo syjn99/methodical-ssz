@@ -1442,7 +1442,7 @@ def main():
     ap.add_argument("--fast-path", action="store_true",
                     help="encoder: the encoder fast-path theorem with head / field / epilogue theorems and their "
                          "kinds; refuses (exit 2, nothing on stdout) unless every theorem is emitted")
-    ap.add_argument("--hand-layout", help="encoder --fast-path: use this committed EncoderFrameLayout (chunk order of a hand statement)")
+    ap.add_argument("--hand-layout", help="encoder --fast-path: use this committed EncoderFrameLayout (its stack chunk order) instead of a generated layout")
     ap.add_argument("--hand-layout-src", help="encoder --fast-path: the Lean file that defines --hand-layout")
     ap.add_argument("--same-as-via", help="encoder --fast-path --same-as: the implication lemma (kind instance -> hand statement)")
     args = ap.parse_args()

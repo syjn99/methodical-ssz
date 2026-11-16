@@ -1,7 +1,7 @@
 import Codec.Kind.EncodeFastPathAnyFrame
 import Codec.EncodeFrameTest
 import Prysm.Eth1Data.Code
-import Prysm.Eth1Data.EncodeFastPathKindInstances
+import Prysm.Eth1Data.EncodeLayout
 
 /-!
 # Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.Eth1Data).MarshalSSZTo`
@@ -12,8 +12,7 @@ has a `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encode
 **Fast path only**: `len(dst) + 72 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path. Not a complete encoder result.
-The statement is the declared type of the committed hand theorem `Prysm.Eth1Data.Encode.fast_path`.
-FAST-PATH-JSON: {"type": "Eth1Data", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 72, "frame": 128, "guard_addend": 8, "runtime_calls": true, "fields": [["DepositRoot", "b", 32], ["DepositCount", "u", 8], ["BlockHash", "b", 32]], "boundaries": [9, 37, 56, 81], "layout": "Prysm.Eth1Data.encodeLayout", "assembly_sha256": "911a0ea1fb983c58c9be8ea72f94afdcd9bb25d9555956f7ca02f1777136b6c1", "ir_sha256": "59b783f53a4aef9ca94860df8776154d571310937304ba29b9329ce80c7a29b0", "statement_check": "same Prysm.Eth1Data.Encode.fast_path", "assembly": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Eth1Data", "kinds": [{"theorem": "Encode.generated_head", "kind": "encodeHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_2", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encodeEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encodeFastPathKindAnyFrame"}]}
+FAST-PATH-JSON: {"type": "Eth1Data", "const": "marshalSSZTo", "prefix": "Encode.generated", "size": 72, "frame": 128, "guard_addend": 8, "runtime_calls": true, "fields": [["DepositRoot", "b", 32], ["DepositCount", "u", 8], ["BlockHash", "b", 32]], "boundaries": [9, 37, 56, 81], "layout": "Prysm.Eth1Data.encodeLayout", "assembly_sha256": "911a0ea1fb983c58c9be8ea72f94afdcd9bb25d9555956f7ca02f1777136b6c1", "ir_sha256": "59b783f53a4aef9ca94860df8776154d571310937304ba29b9329ce80c7a29b0", "statement_check": "kind instance only", "assembly": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Eth1Data", "kinds": [{"theorem": "Encode.generated_head", "kind": "encodeHeadKindAnyFrame"}, {"theorem": "Encode.generated_field_0", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_1", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_field_2", "kind": "encodeFieldKindAnyFrame"}, {"theorem": "Encode.generated_epilogue", "kind": "encodeEpilogueKindAnyFrame"}, {"theorem": "Encode.generated_fast", "kind": "encodeFastPathKindAnyFrame"}]}
 -/
 
 open Machine Runtime Codec Prysm.Eth1Data.Code
@@ -795,9 +794,5 @@ theorem Encode.generated_fast : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.
 theorem Encode.generated_fast_kind : ∀ (h : Host), type_of% (@Encode.generated_fast h)
     = @Codec.encodeFastPathKindAnyFrame h marshalSSZTo Prysm.Eth1Data.encodeLayout [.bytes 32, .uint64, .bytes 32] := by
   intro h; rfl
-
-/-- Statement check: the generated theorem proves the committed hand statement. -/
-theorem Encode.generated_statement : type_of% (@Prysm.Eth1Data.Encode.fast_path ‹Host›) :=
-  Encode.generated_fast
 
 end Prysm.Eth1Data

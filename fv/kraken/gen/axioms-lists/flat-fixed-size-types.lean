@@ -11,11 +11,6 @@ import Prysm.ValidatorIndex.WitnessDecodeRejectSize
 import Prysm.Eth1Data.DecodeSpec
 import Prysm.Eth1Data.WitnessGeneratedDecodeAccept
 import Prysm.Eth1Data.WitnessGeneratedDecodeRejectSize
-import Prysm.BeaconBlockHeader.EncodeSpec
-import Prysm.BeaconBlockHeader.WitnessEncodeFastPath
-import Prysm.BeaconBlockHeader.EncodeRootFieldsThroughCallBlock
-import Prysm.Eth1Data.EncodeSpec
-import Prysm.Eth1Data.WitnessEncodeFastPath
 import Prysm.BeaconBlockHeader.WitnessEncodeRejectLength
 import Prysm.BlobIdentifier.DecodeSpec
 import Prysm.BlobIdentifier.WitnessGeneratedDecodeAccept
@@ -120,7 +115,6 @@ import Prysm.VoluntaryExit.Code
 import Codec.EncodeFieldHelpers
 import Codec.EncodeFrameTest
 import Codec.EncodeSteps
-import Prysm.BeaconBlockHeader.EncodeFastPathKindInstances
 import Prysm.BeaconBlockHeader.GeneratedEncodeFastPath
 import Prysm.BlobIdentifier.GeneratedEncodeFastPath
 import Prysm.Checkpoint.GeneratedEncodeFastPath
@@ -307,18 +301,12 @@ import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 #print axioms Prysm.Eth1Data.Decode.reject_complete
 #print axioms Prysm.Eth1Data.Witness.GeneratedDecodeAccept.runs
 #print axioms Prysm.Eth1Data.Witness.GeneratedDecodeRejectSize.runs
--- BeaconBlockHeader encoder, fast path only (hand proof)
+-- BeaconBlockHeader encoder: the segments of the length rejects
 #print axioms Codec.lea_cmp_be_false
 #print axioms Prysm.BeaconBlockHeader.Encode.encode_slot
 #print axioms Prysm.BeaconBlockHeader.Encode.encode_proposer_index
 #print axioms Prysm.BeaconBlockHeader.Encode.encode_parent_root
 #print axioms Prysm.BeaconBlockHeader.Encode.encode_state_root
-#print axioms Prysm.BeaconBlockHeader.Encode.encode_body_root
-#print axioms Prysm.BeaconBlockHeader.Encode.encode_return
-#print axioms Prysm.BeaconBlockHeader.Encode.fast_path
-#print axioms Prysm.BeaconBlockHeader.Encode.fast_path_spec
-#print axioms Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty
-#print axioms Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_prefix
 
 -- BlobIdentifier and DepositMessage (UnmarshalSSZ)
 #print axioms Prysm.BlobIdentifier.desc_checker
@@ -400,18 +388,6 @@ import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 
 -- Encoder blocks: fast paths only
 #print axioms Codec.encode32_memmove_call
-#print axioms Prysm.BeaconBlockHeader.Encode.call_at
-#print axioms Prysm.BeaconBlockHeader.Encode.encode_parent_root_via_block
-#print axioms Prysm.BeaconBlockHeader.Encode.encode_state_root_via_block
-#print axioms Prysm.BeaconBlockHeader.Encode.encode_body_root_via_block
-#print axioms Prysm.Eth1Data.Encode.call_at
-#print axioms Prysm.Eth1Data.Encode.encode_deposit_root
-#print axioms Prysm.Eth1Data.Encode.encode_deposit_count_block_hash
-#print axioms Prysm.Eth1Data.Encode.encode_return
-#print axioms Prysm.Eth1Data.Encode.fast_path
-#print axioms Prysm.Eth1Data.Encode.fast_path_spec
-#print axioms Prysm.Eth1Data.Witness.EncodeFastPath.runs_empty
-#print axioms Prysm.Eth1Data.Witness.EncodeFastPath.runs_prefix
 #print axioms Codec.encode_reject_tail
 #print axioms Prysm.BeaconBlockHeader.Encode.reject_tails_at
 #print axioms Prysm.BeaconBlockHeader.Encode.reject_parent_root
@@ -1597,7 +1573,6 @@ import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 #print axioms Prysm.BeaconBlockHeader.Encode.generated_fast_kind
 #print axioms Prysm.BeaconBlockHeader.Encode.generated_head
 #print axioms Prysm.BeaconBlockHeader.Encode.generated_head_kind
-#print axioms Prysm.BeaconBlockHeader.Encode.generated_statement
 #print axioms Prysm.BlobIdentifier.Encode.generated_epilogue
 #print axioms Prysm.BlobIdentifier.Encode.generated_epilogue_kind
 #print axioms Prysm.BlobIdentifier.Encode.generated_field_0
@@ -1660,7 +1635,6 @@ import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 #print axioms Prysm.Eth1Data.Encode.generated_fast_kind
 #print axioms Prysm.Eth1Data.Encode.generated_head
 #print axioms Prysm.Eth1Data.Encode.generated_head_kind
-#print axioms Prysm.Eth1Data.Encode.generated_statement
 #print axioms Prysm.HistoricalSummary.Encode.generated_epilogue
 #print axioms Prysm.HistoricalSummary.Encode.generated_epilogue_kind
 #print axioms Prysm.HistoricalSummary.Encode.generated_field_0
@@ -1785,13 +1759,11 @@ import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 #print axioms Prysm.VoluntaryExit.Encode.generated_head
 #print axioms Prysm.VoluntaryExit.Encode.generated_head_kind
 #print axioms Prysm.VoluntaryExit.Encode.generated_layout
-#print axioms Prysm.BeaconBlockHeader.Encode.fast_path_is_kind_any_frame
 #print axioms Codec.cmp_c_false
 #print axioms Codec.cmp_nc_true
 #print axioms Codec.cmp_nz_false
 #print axioms Codec.contentLengthFacts
 #print axioms Prysm.Checkpoint.Encode.fast_path_of_kind
-#print axioms Prysm.Eth1Data.Encode.fast_path_is_kind_any_frame
 #print axioms Codec.encodeBinders
 #print axioms Codec.encodeContentChunks
 #print axioms Codec.encodeEpilogueKindAnyFrame

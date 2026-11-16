@@ -1,13 +1,15 @@
 import Machine.StoreLemmas
 import Runtime.StaticBoxLemmas
-import Prysm.Checkpoint.EncodeFastPath
+import Codec.EncodeBitVecLemmas
+import Codec.SegmentAddress
+import Machine.Labels
 import Prysm.BeaconBlockHeader.Code
 import Codec.StackGuard
 
 /-!
-# Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, fast path, head segments
+# Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, head segments
 
-Hand proof. The generator has no encode mode; no template lemma is used.
+The length rejects of `Prysm/BeaconBlockHeader/EncodeRejectLength.lean` start with these two segments.
 
     func (b *BeaconBlockHeader) MarshalSSZTo(buf []byte) (dst []byte, err error) {
         dst = buf
@@ -128,7 +130,7 @@ theorem Encode.encode_slot (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (
     show rsp.toBitVec - 56 + 8 = rsp.toBitVec - 48 by bv_omega] at H4
   step_directive hk marshalSSZTo 18
   apply store_step_at _ _ (rsp.toBitVec - 56) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
-    _ _ (by checkpoint_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
+    _ _ (by segment_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
   intro m5 H5
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl sl hsl] at H5
   unfold_step
@@ -141,7 +143,7 @@ theorem Encode.encode_slot (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (
   label_address hk hf marshalSSZTo 33
   step_directive hk marshalSSZTo 33
   step_directive hk marshalSSZTo 34
-  apply load_step_at _ _ (rsp.toBitVec - 56) _ _ sl _ _ (by checkpoint_addr) (by ecancel) (by exact hsl)
+  apply load_step_at _ _ (rsp.toBitVec - 56) _ _ sl _ _ (by segment_addr) (by ecancel) (by exact hsl)
   unfold_step
   step_directive hk marshalSSZTo 35
   rw [Codec.add_mul_one]
@@ -196,7 +198,7 @@ theorem Encode.encode_proposer_index (k : Nat) (hk : marshalSSZTo.IsInfixAt Host
   simp only [UInt64.size] at *
   step_directive hk marshalSSZTo 36
   step_directive hk marshalSSZTo 37
-  apply load_step_at _ _ (rax.toBitVec + 16) _ _ pi _ _ (by checkpoint_addr) (by ecancel) (by exact hpi)
+  apply load_step_at _ _ (rax.toBitVec + 16) _ _ pi _ _ (by segment_addr) (by ecancel) (by exact hpi)
   unfold_step
   step_directive hk marshalSSZTo 38
   step_directive hk marshalSSZTo 39
@@ -220,7 +222,7 @@ theorem Encode.encode_proposer_index (k : Nat) (hk : marshalSSZTo.IsInfixAt Host
     show rsp.toBitVec - 88 + 8 = rsp.toBitVec - 80 by bv_omega] at H8
   step_directive hk marshalSSZTo 44
   apply store_step_at _ _ (rsp.toBitVec - 88) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
-    _ _ (by checkpoint_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
+    _ _ (by segment_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
   intro m9 H9
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl pi hpi] at H9
   unfold_step
@@ -233,7 +235,7 @@ theorem Encode.encode_proposer_index (k : Nat) (hk : marshalSSZTo.IsInfixAt Host
   label_address hk hf marshalSSZTo 59
   step_directive hk marshalSSZTo 59
   step_directive hk marshalSSZTo 60
-  apply load_step_at _ _ (rsp.toBitVec - 88) _ _ pi _ _ (by checkpoint_addr) (by ecancel) (by exact hpi)
+  apply load_step_at _ _ (rsp.toBitVec - 88) _ _ pi _ _ (by segment_addr) (by ecancel) (by exact hpi)
   unfold_step
   step_directive hk marshalSSZTo 61
   rw [Codec.add_add_8_mul_one]

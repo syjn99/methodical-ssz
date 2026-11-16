@@ -10,9 +10,8 @@ Written by hand, independently of the generated fast-path theorems and their kin
 (`GeneratedEncodeFastPath.lean` of PowBlock, SyncCommitteeMessage, PendingPartialWithdrawal and Deposit_Data).
 Sources: the Go layout in `prysm/ir/ir-mainnet.json` (`go_fields`, gc amd64 offsets), the SSZ layout
 of the four containers, the `.S` files of `prysm/go1.26.10/link-set/norm/` (frame, guard, stack slots
-touched on the fast path and their contents at the return) and the shape of the committed hand statements
-`Prysm.BeaconBlockHeader.Encode.fast_path` / `Prysm.Eth1Data.Encode.fast_path` (binder order and memory order per the
-interface rules of the encoder statements: saved rbp, home slots ascending, other slots by first touch,
+touched on the fast path and their contents at the return) and the binder order and memory order of the
+interface rules of the encoder statements (saved rbp, home slots ascending, other slots by first touch,
 the return slot; existentials in creation order).
 
 **Encoder fast path only**: `len(dst) + SizeSSZ ≤ cap(dst)` and every byte-vector field of its exact length.

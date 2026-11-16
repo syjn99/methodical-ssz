@@ -702,5 +702,13 @@
   "kind": "statement",
   "old": "st.data.regs.rax = 0x100d8",
   "new": "st.data.regs.rax = 0x100e0"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-spec-statement-parent-p2-to-state-p2",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "⋆ Eq (g.parent.toList.At p2)\n      ⋆ Eq (g.state.toList.At p3)",
+  "new": "⋆ Eq (g.state.toList.At p2)\n      ⋆ Eq (g.parent.toList.At p3)"
  }
 ]

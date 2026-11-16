@@ -12,7 +12,7 @@ cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoc
   control: optional "code_definition"/"assembly" (then an unmutated copy of the .S is included the same way)
   optional for code/control: "code_namespace" (namespace of the code constant, default Prysm.<Type>.Code) and "norm"
   (path of the .S under fv/kraken instead of prysm/go1.26.10/link-set/norm/<S>; AttestationData set);
-  optional for every kind: "mutant_imports" (list of module names, e.g. "Prysm.BeaconBlockHeader.EncodeFastPathKindInstances"):
+  optional for every kind: "mutant_imports" (list of module names, e.g. "Prysm.BeaconBlockHeader.EncodeLayout"):
   the mutated copy imports them in addition (the case module is unchanged), so that a mutant can name a declaration
   of another module, for example the layout of another type}
 For each case the mutant Lean file is the module's text up to the end of the designated theorem

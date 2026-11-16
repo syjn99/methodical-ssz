@@ -10,7 +10,17 @@ Exit 1 if a layout differs or two regions overlap.
 """
 import json, re, glob, pathlib
 bad = 0
-ties = lambda T: pathlib.Path(f"lean/Prysm/{T}/EncodeFastPathKindInstances.lean").read_text()
+
+
+def hand_layout_src(T, gen_text):
+    """The text of the module of `lean/Prysm/<T>/` that the generated file imports and that defines `encodeLayout`."""
+    for m in re.findall(rf"(?m)^import Prysm\.{T}\.(\w+)$", gen_text):
+        s = pathlib.Path(f"lean/Prysm/{T}/{m}.lean").read_text()
+        if "\ndef encodeLayout : EncoderFrameLayout where\n" in s:
+            return s
+    raise SystemExit(f"hand layout of {T}: no imported module of lean/Prysm/{T}/ defines it")
+
+
 for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
     t = pathlib.Path(f).read_text()
     J = json.loads([x for x in t.split("\n") if x.startswith("FAST-PATH-JSON: ")][0][len("FAST-PATH-JSON: "):])
@@ -19,7 +29,7 @@ for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
     for a, n in re.findall(r"window_infix_at hk (\d+) (\d+)", t):
         cov.update(range(int(a), int(a) + int(n)))
     lay = J["layout"].split(".")[-1]
-    src = ties(J["layout"].split(".")[1]) if J["layout"].endswith(".encodeLayout") else t
+    src = hand_layout_src(J["layout"].split(".")[1], t) if J["layout"].endswith(".encodeLayout") else t
     # the def line: root-qualified (a layout of another type than the block), relative to Prysm.<T>, or the last component
     full, m = J["layout"], None
     for d in (f"_root_.{full}", full.split(".", 2)[2], lay):

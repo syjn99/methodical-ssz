@@ -1,6 +1,6 @@
 """fast-path: `generator.py encoder --fast-path`, generated fast-path theorems for flat encoders (`MarshalSSZTo`).
 
-Interface: the encoder lemmas; the reference texts are `lean/Prysm/*/EncodeFastPathExample.lean`. A symbolic
+Interface: the encoder step lemmas of `lean/Codec/Encode*.lean` and the statement kinds of `lean/Codec/Kind/`. A symbolic
 dataflow walk over the fast path of the `.S` file (head; per IR field its length test not taken, its capacity test
 passed with the growslice site SKIPPED, never stepped; the store / `memmove` commit; the epilogue with the frame
 test where present) produces ONE module: the head theorem, one theorem per IR field, the epilogue theorem, the

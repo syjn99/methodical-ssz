@@ -21,13 +21,13 @@ for t in BeaconBlockHeader Eth1Data BlobIdentifier DepositMessage Deposit_Data S
   $G decoder --whole-accept --assembly $N/$P.$t.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.$t --prefix Decode.generated --imports Prysm.$t.Code --open Prysm.$t.Code > lean/Prysm/$t/GeneratedDecodeAccept.lean
 done
 # encoder --fast-path: one run per type. Encoder fast path only (premises len + SizeSSZ <= cap, byte-vector fields of
-# exact length). The statement check is the kind; kindcheck.py rule 13 recomputes its parameters. For three types the
-# identity `_statement` with the hand statement is a second check (Checkpoint through Prysm.Checkpoint.Encode.fast_path_of_kind).
-# Row: Go type name, then the options of the type: the module of its hand layout, the hand layout and the identity.
+# exact length). The statement check is the kind; kindcheck.py rule 13 recomputes its parameters. For Checkpoint the
+# identity `_statement` with the hand statement is a second check, through Prysm.Checkpoint.Encode.fast_path_of_kind.
+# Row: Go type name, then the options of the type: the module of its hand layout, the hand layout and, for Checkpoint, the identity.
 # The code constants are in Prysm.<GoTypeName>.Code.
 for row in "Checkpoint --imports=Prysm.Checkpoint.EncodeFastPathKindInstances --hand-layout=Prysm.Checkpoint.encodeLayout --hand-layout-src=lean/Prysm/Checkpoint/EncodeFastPathKindInstances.lean --same-as=Prysm.Checkpoint.Encode.fast_path --same-as-via=Prysm.Checkpoint.Encode.fast_path_of_kind" \
-  "BeaconBlockHeader --imports=Prysm.BeaconBlockHeader.EncodeFastPathKindInstances --hand-layout=Prysm.BeaconBlockHeader.encodeLayout --hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean --same-as=Prysm.BeaconBlockHeader.Encode.fast_path" \
-  "Eth1Data --imports=Prysm.Eth1Data.EncodeFastPathKindInstances --hand-layout=Prysm.Eth1Data.encodeLayout --hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean --same-as=Prysm.Eth1Data.Encode.fast_path" \
+  "BeaconBlockHeader --imports=Prysm.BeaconBlockHeader.EncodeLayout --hand-layout=Prysm.BeaconBlockHeader.encodeLayout --hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeLayout.lean" \
+  "Eth1Data --imports=Prysm.Eth1Data.EncodeLayout --hand-layout=Prysm.Eth1Data.encodeLayout --hand-layout-src=lean/Prysm/Eth1Data/EncodeLayout.lean" \
   BlobIdentifier DepositMessage Deposit_Data PendingPartialWithdrawal SyncCommitteeMessage PendingConsolidation PendingDeposit \
   PowBlock HistoricalSummary SigningData SyncAggregatorSelectionData ValidatorBalance VoluntaryExit; do
   set -- $row

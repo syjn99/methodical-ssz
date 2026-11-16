@@ -62,17 +62,6 @@
   "new": "st.data.regs.rsp = s.regs.rsp + 16"
  },
  {
-  "id": "eth1-data-encode-generated-statement-statement-type-eth1-data-to-beacon-block-header",
-  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
-  "theorem": "Prysm.Eth1Data.Encode.generated_statement",
-  "kind": "statement",
-  "old": "type_of% (@Prysm.Eth1Data.Encode.fast_path ‹Host›)",
-  "new": "type_of% (@Prysm.BeaconBlockHeader.Encode.fast_path ‹Host›)",
-  "mutant_imports": [
-   "Prysm.BeaconBlockHeader.EncodeFastPath"
-  ]
- },
- {
   "id": "validator-balance-encode-generated-fast-statement-v1-16-to-24",
   "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.generated_fast",
@@ -120,7 +109,7 @@
   "old": "Prysm.Checkpoint.encodeLayout",
   "new": "Prysm.Eth1Data.encodeLayout",
   "mutant_imports": [
-   "Prysm.Eth1Data.EncodeFastPathKindInstances"
+   "Prysm.Eth1Data.EncodeLayout"
   ]
  },
  {
@@ -174,5 +163,290 @@
   "old": "  mov $0x60,%ecx",
   "new": "  mov $0x30,%ecx",
   "code_namespace": "Prysm.Deposit_Data.Code"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-control",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-rbx-112-to-111",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 112",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 111"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-hcap-112-to-111",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 111 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-b3-b3-to-b4",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "⋆ Eq (b3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))",
+  "new": "⋆ Eq (b4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-hguard-32-to-none",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "(hguard : guard.toNat + 32 < s.regs.rsp.toNat)",
+  "new": "(hguard : guard.toNat < s.regs.rsp.toNat)"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-rsp-8-to-16",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "st.data.regs.rsp = s.regs.rsp + 8",
+  "new": "st.data.regs.rsp = s.regs.rsp + 16"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-b4-b4-to-d4",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "⋆ Eq (b4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80))",
+  "new": "⋆ Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80))"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-kind-control",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast_kind",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-kind-statement-uint64-32-to-48",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast_kind",
+  "kind": "statement",
+  "old": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32]",
+  "new": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 48]"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-field-4-control",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_field_4",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-field-4-code-mov-0x48-rdx-to-0x30-rdx",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_field_4",
+  "kind": "code",
+  "old": "  mov 0x48(%rdx),%rbx",
+  "new": "  mov 0x30(%rdx),%rbx",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-field-4-code-mov-0x20-to-0x1f",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_field_4",
+  "kind": "code",
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx",
+  "line": 146,
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-epilogue-control",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_epilogue",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-epilogue-code-mov-0x38-rsp-to-0x40-rsp",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_epilogue",
+  "kind": "code",
+  "old": "  mov 0x38(%rsp),%rbx",
+  "new": "  mov 0x40(%rsp),%rbx",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.BeaconBlockHeader.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-epilogue-statement-rdi-0-to-1",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_epilogue",
+  "kind": "statement",
+  "old": "st.data.regs.rdi = 0",
+  "new": "st.data.regs.rdi = 1"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-control",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "control"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-hcap-72-to-71",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 72 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 71 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-hguard-8-to-none",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "(hguard : guard.toNat + 8 < s.regs.rsp.toNat)",
+  "new": "(hguard : guard.toNat < s.regs.rsp.toNat)"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-rbx-72-to-73",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 72",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 73"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-v1-v1-to-d1",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "⋆ Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 32))",
+  "new": "⋆ Eq (d1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 32))"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-hb2-32-to-31",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "(hb2 : b2.length = 32)",
+  "new": "(hb2 : b2.length = 31)"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-b0-b0-to-b2",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "⋆ Eq (b0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "⋆ Eq (b2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-kind-control",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast_kind",
+  "kind": "control"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-kind-statement-prysm-eth1-data-to-beacon-block-header",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast_kind",
+  "kind": "statement",
+  "old": "marshalSSZTo Prysm.Eth1Data.encodeLayout",
+  "new": "marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout",
+  "mutant_imports": [
+   "Prysm.BeaconBlockHeader.EncodeLayout"
+  ]
+ },
+ {
+  "id": "eth1-data-encode-generated-head-code-lea-0x8-rsp-to-0x10-rsp",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_head",
+  "kind": "code",
+  "old": "  lea -0x8(%rsp),%r12",
+  "new": "  lea -0x10(%rsp),%r12",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Eth1Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
+ },
+ {
+  "id": "eth1-data-encode-generated-field-0-control",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_field_0",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Eth1Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
+ },
+ {
+  "id": "eth1-data-encode-generated-field-0-code-cmpq-0x20-to-0x21",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_field_0",
+  "kind": "code",
+  "old": "  cmpq $0x20,0x10(%rax)",
+  "new": "  cmpq $0x21,0x10(%rax)",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Eth1Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
+ },
+ {
+  "id": "eth1-data-encode-generated-field-0-code-callq-runtime-memmove-to-runtime-growslice",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_field_0",
+  "kind": "code",
+  "old": "  callq runtime.memmove",
+  "new": "  callq runtime.growslice",
+  "line": 37,
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Eth1Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
+ },
+ {
+  "id": "eth1-data-encode-generated-field-1-control",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_field_1",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Eth1Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
+ },
+ {
+  "id": "eth1-data-encode-generated-field-1-code-mov-0x20-rdx-to-0x28-rdx",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_field_1",
+  "kind": "code",
+  "old": "  mov 0x20(%rdx),%rsi",
+  "new": "  mov 0x28(%rdx),%rsi",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Eth1Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
+ },
+ {
+  "id": "eth1-data-encode-generated-field-1-code-mov-0x8-rbx-rax-1-to-0x10-rbx-rax-1",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_field_1",
+  "kind": "code",
+  "old": "  mov %rsi,-0x8(%rbx,%rax,1)",
+  "new": "  mov %rsi,-0x10(%rbx,%rax,1)",
+  "code_definition": "marshalSSZTo",
+  "code_namespace": "Prysm.Eth1Data.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  }
 ]

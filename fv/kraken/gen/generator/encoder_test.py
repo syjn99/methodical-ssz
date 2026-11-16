@@ -30,10 +30,10 @@ ROWS = [  # type, link dir, const, modules to import (code module first), prefix
     ("Checkpoint", "link-set", "marshalSSZTo", "Prysm.Checkpoint.Code,Prysm.Checkpoint.EncodeFastPathKindInstances", "checkpoint", ["--hand-layout=Prysm.Checkpoint.encodeLayout",
      "--hand-layout-src=lean/Prysm/Checkpoint/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Checkpoint.Encode.fast_path",
      "--same-as-via=Prysm.Checkpoint.Encode.fast_path_of_kind"], "GeneratedEncodeFastPath"),
-    ("BeaconBlockHeader", "link-set", "marshalSSZTo", "Prysm.BeaconBlockHeader.Code,Prysm.BeaconBlockHeader.EncodeFastPathKindInstances", "beacon-block-header", ["--hand-layout=Prysm.BeaconBlockHeader.encodeLayout",
-     "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean", "--same-as=Prysm.BeaconBlockHeader.Encode.fast_path"], "GeneratedEncodeFastPath"),
-    ("Eth1Data", "link-set", "marshalSSZTo", "Prysm.Eth1Data.Code,Prysm.Eth1Data.EncodeFastPathKindInstances", "eth1-data", ["--hand-layout=Prysm.Eth1Data.encodeLayout",
-     "--hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Eth1Data.Encode.fast_path"], "GeneratedEncodeFastPath"),
+    ("BeaconBlockHeader", "link-set", "marshalSSZTo", "Prysm.BeaconBlockHeader.Code,Prysm.BeaconBlockHeader.EncodeLayout", "beacon-block-header", ["--hand-layout=Prysm.BeaconBlockHeader.encodeLayout",
+     "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeLayout.lean"], "GeneratedEncodeFastPath"),
+    ("Eth1Data", "link-set", "marshalSSZTo", "Prysm.Eth1Data.Code,Prysm.Eth1Data.EncodeLayout", "eth1-data", ["--hand-layout=Prysm.Eth1Data.encodeLayout",
+     "--hand-layout-src=lean/Prysm/Eth1Data/EncodeLayout.lean"], "GeneratedEncodeFastPath"),
 ] + [(t, "link-set", c, f"Prysm.{t}.Code", p, [], "GeneratedEncodeFastPath") for t, c, p in [
     ("BlobIdentifier", "marshalSSZTo", "blob-identifier"), ("DepositMessage", "marshalSSZTo", "deposit-message"), ("Deposit_Data", "marshalSSZTo", "deposit-data"),
     ("PendingPartialWithdrawal", "marshalSSZTo", "pending-partial-withdrawal"), ("SyncCommitteeMessage", "marshalSSZTo", "sync-committee-message"),
@@ -203,10 +203,10 @@ def adversarial(work):
     adversarial_case("head-frame", validator_balance, [("sub $0x68,%rsp", ["sub %rax,%rsp"], 0)], "frame allocation form")
     # hand layout of another type
     C.append(("fast-path-refused-hand-layout-other", argv(beacon_block_header, extra=["--hand-layout=Prysm.Eth1Data.encodeLayout",
-                                                           "--hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean"]),
+                                                           "--hand-layout-src=lean/Prysm/Eth1Data/EncodeLayout.lean"]),
               "refuse", "hand layout of Eth1Data for BeaconBlockHeader"))
     C.append(("fast-path-refused-hand-layout-missing", argv(beacon_block_header, extra=["--hand-layout=Prysm.BeaconBlockHeader.encodeLayoutMissing",
-                                                             "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean"]),
+                                                             "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeLayout.lean"]),
               "refuse", "hand layout not in the file"))
     # valid variants: must stay covered
     adversarial_case("nops", validator_balance, [("lea 0x8(%rcx),%rdx", ["nop", "lea 0x8(%rcx),%rdx", "nop"], 0), ("cmp %rdx,%rdi", ["cmp %rdx,%rdi", "nop"], 0),
