@@ -10,7 +10,7 @@
   proof_inventory.py run <decls.tsv> <axioms-gate.json> <proof-inventory.md> <proof-inventory.json>
       read `prysm/go1.26.10/ssz-methods.json` (every SSZ method of the pinned target), `prysm/go1.26.10/functions.json`
       (the DUMPED subset: the functions with a `.S` text), `prysm/ir/ir-mainnet.json` (field shapes, for the flat
-      population), <axioms-gate.json> (the JSON of `gen/checks/axioms_gate.py run` on the built tree of the same commit;
+      types), <axioms-gate.json> (the JSON of `gen/checks/axioms_gate.py run` on the built tree of the same commit;
       its verdict must be PASS; the table records its header, declaration, theorem and module counts), the code
       constants of `lean/Prysm/**` (`def X : Program := include_x64_code "…S"`, keyed by full declared name, whatever
       module declares them), the link tables `prysm/go1.26.10/**/RESULT`, and <decls.tsv> (output of
@@ -52,13 +52,13 @@ Rule. A function's state comes ONLY from the mapping and the declarations in <de
     listed in full; a class with mapped theorems needs a premise text per theorem and a row text of what stays NOT
     proved, and the cell prints both (else FAIL); a theorem mapped to a class the function lacks FAILS. No encoder
     is complete.
-Types without a row are "not started". Exit 0 = table written, 1 = a check failed (nothing written), 2 = usage.
+Types without a row have the state "no mapping row". Exit 0 = table written, 1 = a check failed (nothing written), 2 = usage.
 
 Limits (what the checks do NOT detect; also written into proof-inventory.md):
   * `codec` and `reject_complete` are checked for existence, kind and axioms only. Their types hold no code constant
     and their proofs use no mapped theorem, so a row that names ANOTHER type's codec or reject_complete theorem passes.
-    Keying them (e.g. to the row's Desc constant) needs a new column in
-    `inventory_decls.lean`; not done.
+    Keying them (e.g. to the row's Desc constant) would need a new column in
+    `inventory_decls.lean`.
   * The subject rule uses the call graph of `functions.json`; a theorem whose type holds two target code constants
     where neither calls the other fails (no subject), it is not resolved.
   * The mapping rule chooses names by their form: the script checks the chosen theorems, not that the theorem's
@@ -283,8 +283,8 @@ WHAT_COMPLETE_EXCLUDES = [
 ]
 CANNOT_DETECT = [
     "a row whose `codec` or `reject_complete` names ANOTHER type's theorem: these two parts are checked for existence, "
-    "kind and axioms only (their types hold no code constant, their proofs use no mapped theorem; found by "
-    "an earlier review). Keying them to the row's Desc constant needs a new column in `inventory_decls.lean`; not done",
+    "kind and axioms only (their types hold no code constant, their proofs use no mapped theorem). "
+    "Keying them to the row's Desc constant would need a new column in `inventory_decls.lean`",
     "that a theorem's statement says what its part name means (accept, reject, spec): the mapping chooses names by "
     "their form (lean/README.md section 8); the statements are checked by review and by the kinds, not by this script",
     "a theorem with two target code constants of which neither calls the other (it fails: no single subject)",
@@ -632,12 +632,12 @@ def run(decls_p, gate_p, md_p, json_p):
 
     # ---------------------------------------------------------------- table and totals
     table = []
-    started_types = {(p, t) for (p, t, _) in rows}
+    types_with_row = {(p, t) for (p, t, _) in rows}
     for key in sorted(target):
         pkg, typ, meth = key
         r = rows.get(key)
         if r is None:
-            state = "not started" if (pkg, typ) not in started_types else "none"
+            state = "no mapping row" if (pkg, typ) not in types_with_row else "none"
             r = dict(state=state, missing=[], theorems={}, note="")
         f = dumped.get(key)
         table.append(dict(symbols=target[key]["symbols"], package=pkg, type=typ, method=meth,
@@ -650,7 +650,7 @@ def run(decls_p, gate_p, md_p, json_p):
         if k == "UnmarshalSSZ":
             comp = sum(t["state"] == "complete" for t in tk)
             part = sum(t["state"] == "partial" for t in tk)
-        else:  # no done-contract is defined for this kind here: a mapped function is "partial"
+        else:  # no completeness rule is defined for this kind here: a mapped function is "partial"
             comp, part = 0, len(mapped)
         by_kind[k] = dict(target=len(tk), functions_json=sum(t["dumped"] for t in tk), mapped=len(mapped),
                           complete=comp, partial=part)
@@ -658,32 +658,32 @@ def run(decls_p, gate_p, md_p, json_p):
             by_kind[k]["fast_path_complete"] = sum(t["state"] == "fast path complete" for t in tk)
             by_kind[k]["fast_path_partial"] = sum(t["state"] == "fast path partial" for t in tk)
     runtime = [f["symbol"] for f in funcs if f["type"] is None]
-    dev = {t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in CORE_FLAT_TYPES}
+    core = {t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in CORE_FLAT_TYPES}
     flat_ns = [k for k in flat_target if k not in {(V1A, t) for t in CORE_FLAT_TYPES}]
-    flat_ns_state = {f"{p.rsplit('/', 1)[-1]}.{t}": ("not started" if (p, t) not in started_types else "started")
+    flat_ns_state = {f"{p.rsplit('/', 1)[-1]}.{t}": ("no mapping row" if (p, t) not in types_with_row else "mapping row")
                      for p, t in flat_ns}
     tot = dict(
         denominators={
             "target_ssz_methods": f"{METHODS_JSON} (from the nm listing of the pinned ELF, sha256 {sm['nm_sha256']})",
             "dumped_functions": "prysm/go1.26.10/functions.json (functions with a `.S` text)",
-            "development_population": "CORE_FLAT_TYPES of gen/tools/proof_inventory.py (the 16 flat types with which "
-                                      "the generated-decoder work started)"},
+            "core_flat_types": "CORE_FLAT_TYPES of gen/tools/proof_inventory.py (a fixed list of 16 flat "
+                               "fixed-size types)"},
         target_ssz_methods=len(target), target_types=len(target_types),
         functions_json_total=len(funcs), functions_json_runtime_helpers=runtime,
         by_kind=by_kind,
-        types_not_started=sum(1 for p, t in target_types if (p, t) not in started_types),
-        development_population=CORE_FLAT_TYPES,
-        development_population_decoders_complete=f"{sum(v == 'complete' for v in dev.values())}/{len(CORE_FLAT_TYPES)}",
-        development_population_not_complete={t: rows[(V1A, t, "UnmarshalSSZ")]["missing"]
-                                             for t, v in dev.items() if v != "complete"},
+        types_without_mapping_row=sum(1 for p, t in target_types if (p, t) not in types_with_row),
+        core_flat_types=CORE_FLAT_TYPES,
+        core_flat_types_decoders_complete=f"{sum(v == 'complete' for v in core.values())}/{len(CORE_FLAT_TYPES)}",
+        core_flat_types_not_complete={t: rows[(V1A, t, "UnmarshalSSZ")]["missing"]
+                                      for t, v in core.items() if v != "complete"},
         flat_rule=FLAT_RULE,
         flat_fixed_types_in_target=len(flat_target),
-        flat_outside_development_population=flat_ns_state,
-        flat_outside_development_population_states={
+        flat_outside_core_flat_types=flat_ns_state,
+        flat_outside_core_flat_types_states={
             f"{p.rsplit('/', 1)[-1]}.{t}": dict(
-                decoder=rows.get((p, t, "UnmarshalSSZ"), {}).get("state", "not started"),
+                decoder=rows.get((p, t, "UnmarshalSSZ"), {}).get("state", "no mapping row"),
                 decoder_missing=rows.get((p, t, "UnmarshalSSZ"), {}).get("missing", []),
-                encoder=rows.get((p, t, "MarshalSSZTo"), {}).get("state", "not started"),
+                encoder=rows.get((p, t, "MarshalSSZTo"), {}).get("state", "no mapping row"),
                 **{f"{m}_refused_by_generator": c for m, c in GENERATOR_REFUSED.get(f"{p.rsplit('/', 1)[-1]}.{t}", {}).items()})
             for p, t in flat_ns},
         target_types_without_ir=[f"{p.rsplit('/', 1)[-1]}.{t}" for p, t in no_ir],
@@ -704,7 +704,7 @@ def run(decls_p, gate_p, md_p, json_p):
     json.dump(out, open(json_p, "w"), indent=1)
     bk = by_kind
     ud = bk["UnmarshalSSZ"]
-    ns_names = ", ".join(n for n, s in flat_ns_state.items() if s == "not started")
+    ns_names = ", ".join(n for n, s in flat_ns_state.items() if s == "no mapping row")
     md = ["# Inventory of the pinned target's SSZ methods", "",
           "Generated by `gen/tools/proof_inventory.py` (do not edit). Target: the Go 1.26.10 ELF of `prysm/go1.26.10/` "
           f"(sha256 `{sm['elf_sha256']}`, `build-ids.txt`).", "",
@@ -721,8 +721,8 @@ def run(decls_p, gate_p, md_p, json_p):
           f"2. Dumped functions (`functions.json`, a `.S` text exists): {len(funcs)}, of which "
           f"{len(funcs) - len(runtime)} are SSZ methods and {len(runtime)} are runtime helpers "
           f"({', '.join(r.rsplit('.', 1)[-1] for r in runtime)}). A theorem needs a dumped function.",
-          f"3. Development population: the {len(CORE_FLAT_TYPES)} flat types with which the generated-decoder work "
-          "started (`CORE_FLAT_TYPES` of the script). "
+          f"3. Core flat types: a fixed list of {len(CORE_FLAT_TYPES)} flat fixed-size types "
+          "(`CORE_FLAT_TYPES` of the script). "
           "It is not the set of flat fixed-size types of the target (see the flat types below).", "",
           "## Totals by method kind", "",
           "| method kind | in the target | in `functions.json` | with a mapping row | complete | partial |",
@@ -730,7 +730,7 @@ def run(decls_p, gate_p, md_p, json_p):
     for k, v in bk.items():
         md.append(f"| `{k}` | {v['target']} | {v['functions_json']} | {v['mapped']} | {v['complete']} | "
                   f"{v['partial']} |")
-    md += ["", "\"complete\" is defined for `UnmarshalSSZ` only (below). For the other kinds no done-contract is "
+    md += ["", "\"complete\" is defined for `UnmarshalSSZ` only (below). For the other kinds no completeness rule is "
            "defined here: a function with at least one mapped theorem is \"partial\".", "",
            "## Summary", "",
            f"- Decoders: complete {ud['complete']} of the {ud['target']} `UnmarshalSSZ` methods of the target "
@@ -750,35 +750,35 @@ def run(decls_p, gate_p, md_p, json_p):
     other = [k for k in bk if k not in ("UnmarshalSSZ", "MarshalSSZTo", "MarshalSSZ", "SizeSSZ") and k not in htr]
     if other:
         md.append("- Other: " + "; ".join(f"`{k}` {bk[k]['target']} in the target, none proved" for k in other) + ".")
-    md += [f"- Types with no mapping row (\"not started\", every method): {tot['types_not_started']} of "
+    md += [f"- Types with no mapping row (every method): {tot['types_without_mapping_row']} of "
            f"{len(target_types)}.",
-           f"- Decoders of the {len(CORE_FLAT_TYPES)}-type development population: "
-           f"{tot['development_population_decoders_complete']} complete (defined sense)."]
-    for t, miss in tot["development_population_not_complete"].items():
+           f"- Decoders of the {len(CORE_FLAT_TYPES)} core flat types: "
+           f"{tot['core_flat_types_decoders_complete']} complete (defined sense)."]
+    for t, miss in tot["core_flat_types_not_complete"].items():
         md.append(f"  - {t}: missing {', '.join(miss)}.")
-    md += [f"- Flat fixed-size types of the target (rule below): {len(flat_target)}. Outside the development "
-           f"population: {len(flat_ns)}; not started: "
-           f"{sum(s == 'not started' for s in flat_ns_state.values())} ({ns_names}).",
+    md += [f"- Flat fixed-size types of the target (rule below): {len(flat_target)}. Outside the core flat "
+           f"types: {len(flat_ns)}; with no mapping row: "
+           f"{sum(s == 'no mapping row' for s in flat_ns_state.values())} ({ns_names}).",
            f"- Nested: {', '.join(f'{t} {s}' for t, s in tot['nested'].items())} (not flat)."]
-    fs_ = tot["flat_outside_development_population_states"]
-    started_ = {k: v for k, v in fs_.items() if flat_ns_state.get(k) == "started"}
-    if started_:   # flat types outside CORE_FLAT_TYPES with a mapping row
-        md.append(f"- Flat types outside the development population with a mapping row: {len(started_)}; decoders "
-                  f"complete {sum(v['decoder'] == 'complete' for v in started_.values())}, encoders fast-path complete "
-                  f"{sum(v['encoder'] == 'fast path complete' for v in started_.values())}.")
-        for k, v in started_.items():
+    fs_ = tot["flat_outside_core_flat_types_states"]
+    with_row_ = {k: v for k, v in fs_.items() if flat_ns_state.get(k) == "mapping row"}
+    if with_row_:   # flat types outside CORE_FLAT_TYPES with a mapping row
+        md.append(f"- Flat types outside the core flat types with a mapping row: {len(with_row_)}; decoders "
+                  f"complete {sum(v['decoder'] == 'complete' for v in with_row_.values())}, encoders fast-path complete "
+                  f"{sum(v['encoder'] == 'fast path complete' for v in with_row_.values())}.")
+        for k, v in with_row_.items():
             md.append(f"  - {k}: decoder {v['decoder']}"
                       + (f" (missing {', '.join(v['decoder_missing'])})" if v["decoder_missing"] else "")
-                      + (f"; generator run refused: {v['decoder_refused_by_generator']}" if "decoder_refused_by_generator" in v else "")
+                      + (f"; the generator refuses: {v['decoder_refused_by_generator']}" if "decoder_refused_by_generator" in v else "")
                       + f"; encoder {v['encoder']}.")
-    refused_ = {k: v for k, v in fs_.items() if flat_ns_state.get(k) == "not started"}
-    if refused_:   # why the single generator run refused each not-started flat type (wording only)
-        md.append(f"- Flat types outside the development population without a mapping row: {len(refused_)}; "
-                  "why the single generator run (`decoder --whole-accept` / `encoder --fast-path`) refused it, a field kind or callee "
+    refused_ = {k: v for k, v in fs_.items() if flat_ns_state.get(k) == "no mapping row"}
+    if refused_:   # why the generators refuse each flat type with no mapping row (wording only)
+        md.append(f"- Flat types outside the core flat types without a mapping row: {len(refused_)}; "
+                  "why the generators (`decoder --whole-accept` / `encoder --fast-path`) refuse it, a field kind or callee "
                   "the generators do not support:")
         for k, v in refused_.items():
-            md.append(f"  - {k}: decoder refused ({v.get('decoder_refused_by_generator', 'no record of the run')}); encoder "
-                      f"refused ({v.get('encoder_refused_by_generator', 'no record of the run')}).")
+            md.append(f"  - {k}: decoder refused ({v.get('decoder_refused_by_generator', 'no class recorded')}); encoder "
+                      f"refused ({v.get('encoder_refused_by_generator', 'no class recorded')}).")
     if no_ir:
         md.append(f"- Target types without an IR record (not classified): {', '.join(tot['target_types_without_ir'])}.")
     md += ["", f"Flat rule: {FLAT_RULE}.", "",
@@ -789,7 +789,7 @@ def run(decls_p, gate_p, md_p, json_p):
            "| function | state | missing | theorems |", "| --- | --- | --- | --- |"]
     enc_rows = [t for t in table if t["method"] == "MarshalSSZTo" and t["theorems"]]
     for t in table:
-        if t["state"] in ("not started", "none") and not t["theorems"]:
+        if t["state"] in ("no mapping row", "none") and not t["theorems"]:
             continue
         th = "; ".join(f"{k}: {', '.join(v) if isinstance(v, list) else v}" for k, v in t["theorems"].items() if v)
         note = f" ({t['note']})" if t.get("note") else ""
@@ -802,12 +802,12 @@ def run(decls_p, gate_p, md_p, json_p):
         md.append(f"| {t['type']} | {t['state']} | {', '.join(th.get('fast', [])) or '-'} | "
                   f"{', '.join(th.get('spec', [])) or '-'} | {'yes' if t.get('witness') else 'no'} | "
                   f"{'; '.join(t.get('not_proved', []))} |")
-    ns = sorted({(t["package"].rsplit("/", 1)[-1], t["type"]) for t in table if t["state"] == "not started"})
-    md += ["", f"## Not started ({len(ns)} types, every method)", "",
+    ns = sorted({(t["package"].rsplit("/", 1)[-1], t["type"]) for t in table if t["state"] == "no mapping row"})
+    md += ["", f"## Types with no mapping row ({len(ns)} types, every method)", "",
            ", ".join(f"{p}.{t}" for p, t in ns), ""]
     open(md_p, "w").write("\n".join(md))
     print(json.dumps(dict(target_ssz_methods=len(target), by_kind=by_kind,
-                          development_population=tot["development_population_decoders_complete"],
+                          core_flat_types=tot["core_flat_types_decoders_complete"],
                           flat_fixed_types_in_target=len(flat_target), flat_outside=len(flat_ns))))
     return 0
 
