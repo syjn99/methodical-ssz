@@ -27,7 +27,6 @@ All files here belong to one ELF. Do not mix them with the files of another ELF.
 | `prysm-target-main.go.txt`, `prysm-go.mod.diff` | The `main` package of the binary and the `go.mod` change in the Prysm tree |
 | `ssz-methods.json` | Every SSZ method of the ELF. It is the denominator of the inventory |
 | `functions.json`, `parser-result.json` | The functions with a converted `.S` file, and which of them the Kraken parser reads. `gen/kraken-parser/summarize_parser_log.py` writes `parser-result.json` from a parser log that is not tracked (`../README.md` section 3) |
-| `link/` | A link table of 136 functions of this ELF. No current theorem includes it. It is a record: its data files keep the ids of its run (`x5…`) |
 | `link-set/` | The one link set of the proved functions: `target.objdump`, `norm/*.S`, `norm/all.S`, `data/*.data` and `RESULT`. `gen/checks/link_set.py` writes it. Its `RESULT` replaces the `RESULT` files of the 16 earlier link sets |
 | `evidence/` | The check records, negative case lists and generator records of the proved types (section 3) |
 
@@ -38,7 +37,6 @@ This table says what each subdirectory holds.
 
 | Subdirectory | Types or content |
 | --- | --- |
-| `negative/` | `Checkpoint` and `primitives.Epoch`, and the negative test results of their theorems |
 | `attestation-data/` | `AttestationData`, `primitives.Slot`, `primitives.CommitteeIndex` |
 | `beacon-block-header/` | `BeaconBlockHeader`, `primitives.ValidatorIndex` |
 | `eth1-data/` | `Eth1Data` |
@@ -51,17 +49,14 @@ This table says what each subdirectory holds.
 | `lists-and-vectors/` | Lists and vectors: `SyncAggregate`, `SyncCommittee`, `IndexedAttestation`, `HistoricalBatch`, `Deposit`, `DataColumnsByRootIdentifier`. The negative case lists of each group |
 | `generator-cases/` | The negative case lists of the generated proofs, the encoder specification emitter `encode-spec/encode_spec_emitter.py` and two check scripts |
 
-Other files in `evidence/`: `axioms-gate.json` and `e2e.json` are records of runs before the restructuring.
-They name files and libraries that are no longer in the tree.
-`axioms-gate.json` is the record of an axioms gate run. `e2e.json` binds the include files and the link inputs of that time by sha256.
-`gen/checks/differential.py check` writes `differential.json`. `gen/checks/negative.py` writes `negative/result.json`.
+`gen/checks/differential.py check` writes `differential.json` in `evidence/`.
 
 ## 4. Files that are inputs of checks
 
 Do not edit these files by hand. Make them again with their generator.
 
 - The `.S` and `.data` files of the link set. Lean includes them, and the link check compares them with the ELF.
-- `ir/*.json` and `inventory.json`. The generators, the `Desc` checker and the frozen lists read them. `gen/frozen/THEOREMS.json` pins the sha256 of `inventory.json`.
+- `ir/*.json` and `inventory.json`. The generators and the `Desc` checker read them.
 - The `*.desc.json` files. The `Desc` checker accepted them, and the header of each `*SpecChecker.lean` gives their sha256.
 - The negative case lists `negative-cases-*.json`. The negative test scripts read them.
 - `go1.26.10/build-ids.txt` and `go1.26.10/ssz-methods.json`. `gen/tools/proof_inventory.py` reads them. It checks the symbol listing against the sha256 in `build-ids.txt`.

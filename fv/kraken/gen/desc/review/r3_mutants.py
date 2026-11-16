@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Review phase1c-r3: new mutants against DescCheck.lean at 5c913aa.
+"""Third set of review mutants for the Desc checker desc-checker/DescChecker.lean.
 
 Usage: r3_mutants.py <author-work-dir (test_desc.py prepare output)> <out-dir>
 Writes <out>/mut/*.desc.json, <out>/mutants.txt, <out>/scen/<id>.txt (+ files), <out>/meta.json.

@@ -1,5 +1,5 @@
 {
- "schema": "type-scope/1",
+ "schema": "fv.kraken.type-scope/1",
  "status": "PROVISIONAL (classification, no proof attempted)",
  "hand_max_instructions": 395,
  "types": 135,

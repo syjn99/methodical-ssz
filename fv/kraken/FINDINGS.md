@@ -175,23 +175,18 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: `link/check.py` hashes the ELF, the `norm/*.S` files, the `data/*.data` files and `AXIOMS.txt` if it exists. It hashes no Lean file.
   A `RESULT` file that has a sha256 line for a file that is not in the tree gets a different bundle hash on a new run.
-- Where: the three `RESULT` files `link/out/RESULT`, `prysm/go1.26.10/link-set/RESULT` and `prysm/go1.26.10/link/RESULT`.
-- State: fixed. Each of the three files is the output of a new run on its pinned ELF. None has a sha256 line for a Lean file or `AXIOMS.txt`.
+- Where: the two `RESULT` files `link/out/RESULT` and `prysm/go1.26.10/link-set/RESULT`.
+- State: fixed. Each of the two files is the output of a new run on its pinned ELF. Neither has a sha256 line for a Lean file or `AXIOMS.txt`.
 
 ### Link set `prysm/go1.26.10/link` has no tracked disassembly
 
-- What: the directory of this link table (136 functions, read by no theorem) has no `target.objdump`. `link/check.py` needs it.
-  Its `norm/` directory is complete: 136 `.S` files and `all.S`, the functions of the 136 `PASS (a)` lines of its `RESULT`.
-- How to check it: filter the full disassembly of the pinned ELF (`gen/prysm-elf.sh` writes it) on the functions of `norm/`.
-  A function is kept when the clean name of `link/convert_objdump.py` of its `TEXT` line names a `.S` file of `norm/`.
-  Then run `link/check.py` on a copy of the directory with that `target.objdump`, the ELF as `target-amd64` and its symbol listing as `target-amd64.nm`.
-  The result is exit 0 and 224 PASS lines. Every PASS and DIFF line equals the committed `RESULT`.
-- Earlier attempt: a check with the whole disassembly (641 functions) needed `.S` files that `norm/` does not hold.
-  A fresh conversion of all 641 functions gives 1269 PASS lines and one FAIL: the reassembly of
-  `v1alpha1.BeaconStateBellatrix.MarshalSSZTo` at `0x93fd87`. The ELF bytes of that `jge` are `0f8d7a000000`, and clang gives a 2-byte form.
-  That function is not in the table and has no proof.
-- State: the table checks with a rebuilt disassembly. The committed `RESULT` is the output of this check on the pinned ELF.
-  The link set `prysm/go1.26.10/link-set` passes on the same ELF.
+- What: this link table of 136 functions had no `target.objdump`, and no theorem read it.
+- A conversion of all 641 functions of the full disassembly of the pinned ELF gives 1269 PASS lines and one FAIL.
+  The FAIL is the reassembly of `v1alpha1.BeaconStateBellatrix.MarshalSSZTo` at `0x93fd87`.
+  The ELF bytes of that `jge` are `0f8d7a000000`, and clang gives a 2-byte form.
+  That function has no proof.
+- State: closed. The table is not in the tree. Git keeps it at commit `320929dd`.
+  The link set `prysm/go1.26.10/link-set` is the one link set of the proofs, and it passes on the pinned ELF.
 
 ### The proof generator covers only some code forms
 
@@ -366,7 +361,7 @@ How to handle a new finding is in `../README.md` section 7.
 ### Replayed review mutants carry earlier reference names
 
 - What: `gen/desc/test_desc.py prepare` replays the review sources `gen/desc/review/r1_mutants.py`, `r2_mutants.py` and
-  `r3_mutants.py` unchanged. Their mutants set `reference` to earlier names (`Fv1.scDesc`, `Fv1.luDesc`, ...); the checker
+  `r3_mutants.py`. Their mutants set `reference` to earlier names (`Fv1.scDesc`, `Fv1.luDesc`, ...); the checker
   table names the present `Spec` names.
 - Effect: such a mutant fails at the reference check because of the name alone. `test_desc.py evaluate` asks only for a
   FAIL, so the case still counts as expected, but three mutants no longer test their own defect: `n10-ref-trailing-space`
@@ -374,7 +369,7 @@ How to handle a new finding is in `../README.md` section 7.
   reference `Fv1.luDesc` by null matches nothing.
 - Where: `gen/desc/review/r2_mutants.py` (`n10-ref-trailing-space`, reference `Fv1.luDesc`, now `Spec.listU64Desc`) and
   `r3_mutants.py` (`q27-ref-trailing-space`, reference `Fv1.scDesc`, now `Spec.scalarsDesc`; `q46-escaped-key`, reference `Fv1.luDesc`).
-- State: open. The review sources are records, copied unchanged from the review. A fix translates the names in
+- State: open. The mutant code of the review sources keeps the text of the review. A fix translates the names in
   `test_desc.py` and needs a checker run with Lean.
 
 ### A code directory is not a Lake input
@@ -448,8 +443,9 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Absolute paths in committed records
 
-- What: some generated records contain absolute paths of the original machine, for example `prysm/go1.26.10/evidence/negative/result.json`.
+- What: one tracked record contains an absolute path of the original machine: the `replace` line of `prysm/go1.26.10/prysm-go.mod.diff`.
   Two Python bytecode files in git history contain container paths. They are not in the current tree.
+  Deleted records in git history also contain such paths, for example `prysm/go1.26.10/evidence/negative/result.json` at `320929dd`.
 - How it shows: `git grep -nE "/workspace|fve2e-" -- fv/kraken ':!fv/kraken/lean/.lake'`.
 - State: open. The user decides how to treat the history before publication.
 

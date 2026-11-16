@@ -1,7 +1,6 @@
 {
  "configs": [
   {
-   "file": "/workspace/agent-runs/methodical-fv-parallel/streams/phase1c/artifacts/hand/target.yaml",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "sha256": "eef33ec0a5d212b28c792f1231dc23bbe4c3b6f9f8e65691004b9c69993dd451",
    "types": [
@@ -625,7 +624,6 @@
    ]
   },
   {
-   "file": "/workspace/agent-runs/methodical-fv-parallel/streams/phase1c/artifacts/hand/target-prysm.yaml",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
    "sha256": "88f4597f333529c2c369886aa2fea605b1bf4434e2902d52fc2ffde57ab1cdc7",
    "types": [

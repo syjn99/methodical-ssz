@@ -60,8 +60,6 @@ The inputs are the ELF, the `.S` files of `norm/` and the data files of `data/`.
 The last line is a bundle hash: the sha256 of `RESULT` up to the last PASS line.
 One bundle hash thus binds the ELF to the exact text that Lean includes.
 
-`prysm/go1.26.10/link/` has no `target.objdump`; `../FINDINGS.md` gives the way to rebuild it for a check.
-
 ## 4. Requirements
 
 - `data.py --check` on `link/out` needs Python only. The test target ELF is tracked.

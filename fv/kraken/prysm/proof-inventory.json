@@ -1,5 +1,5 @@
 {
- "schema": "fvkraken.inventory/2",
+ "schema": "fv.kraken.proof-inventory/2",
  "source": "gen/tools/proof_inventory.py",
  "decls_header": "# inventory_decls v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e",
  "methods_source": {

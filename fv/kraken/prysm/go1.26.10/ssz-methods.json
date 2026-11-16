@@ -1,5 +1,5 @@
 {
- "schema": "fvkraken.ssz-methods/1",
+ "schema": "fv.kraken.ssz-methods/1",
  "source": "`go tool nm` listing of the pinned ELF (not committed)",
  "nm_sha256": "5d47a14dc050ea4b58e9d89baa3e3df41df0af4538b0b7200398e6d8f9745673",
  "elf_sha256": "9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9",

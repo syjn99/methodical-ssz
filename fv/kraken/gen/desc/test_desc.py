@@ -6,8 +6,7 @@
       - controls (wrong Descs; each must FAIL at its designated check) and known passes (Prysm
         only: changes the inventory binding cannot see), list mutants.txt;
       - the replay of every review mutant: review/r1_mutants.py (20), r2_mutants.py (32),
-        r3_mutants.py (40), copied from the review directories unchanged except that r3_mutants.py writes
-        the forged line with the work directory path as given;
+        r3_mutants.py (40); r3_mutants.py writes the forged line with the work directory path as given;
       - list scenarios: t01-t13 of review/r3_mutants.py, the scenarios of this file, and for every wrong hand-type Desc an
         "add" (next to the originals) and a "replace" (in place of its base) scenario;
       expect.json and batch.txt.

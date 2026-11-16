@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""phase1c-r2 reviewer mutants for DescCheck.lean (114fdfc). Usage: r2_mutants.py <work-dir>
+"""Second set of review mutants for the Desc checker desc-checker/DescChecker.lean. Usage: r2_mutants.py <work-dir>
 Reads <work>/orig, writes <work>/n/*.desc.json, <work>/nmut.json, <work>/list-r2.txt
 (originals + committed controls + r1 mutants (if <work>/rmut.json exists) + these)."""
 import copy

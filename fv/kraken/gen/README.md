@@ -11,7 +11,7 @@ The design principles are in `../../README.md`.
 - The statement of a generated theorem is checked separately, by a frozen kind (section 4) or by an identity with a hand statement.
 - A generated Lean file must be equal to the output of its generator. Do not edit a generated file by hand.
   The header comment of a generated file names its generator. Some headers also give the sha256 of the inputs.
-- A generator does not write to the shared libraries (`lean/Spec`, `lean/Machine`, `lean/Runtime`, `lean/Codec`), `link/` or `gen/frozen/`.
+- A generator does not write to the shared libraries (`lean/Spec`, `lean/Machine`, `lean/Runtime`, `lean/Codec`) or `link/`.
 - The Python programs use only the standard library. Run them with `python3 -I`.
 - A generator refuses an input that it does not match. It writes nothing, or it marks a partial output as partial.
 
@@ -31,7 +31,6 @@ The design principles are in `../../README.md`.
 | `checks/link_set.py`, `checks/*_link.py` | The Prysm ELF, its disassembly and symbol listing | The link set `prysm/go1.26.10/link-set`: the filtered disassembly and the data files. The `*link.py` scripts hold the item tables |
 | `checks/callgraph.py` and the `callgraph` mode of `checks/*_link.py` | A filtered disassembly | `callgraph*.json` files. The tree holds none of them. `checks/checkpoint_and_epoch_link.py` imports the function list of `checks/callgraph.py` |
 | `checks/*_differential.py` | Nothing, or a Go output file | Go differential cases, and their comparison with the Go output |
-| `frozen/build_lists.py` | The inventory and the generated Go | `frozen/THEOREMS.json`, `frozen/ASSUMPTIONS.json` |
 | `kraken-parser/summarize_parser_log.py` | A log of `kraken-parser/ParserRun.lean` | `prysm/go1.26.10/parser-result.json`: which functions the Kraken parser reads |
 | `prysm-gen.sh`, `prysm-elf.sh` | A Prysm tree and the generator binary | Generated Go, the IR and the Prysm ELF (needs Go) |
 
@@ -153,7 +152,6 @@ These run without Lean, Go or the Prysm ELF:
   `checks/deposit_data_include_check.py`, the self-tests of `checks/axioms_gate.py`, `checks/deposit_data_include_check.py`,
   `generator/kindcheck.py` and `checks/negative.py`, `kindcheck.py` on the generated files, `negative.py --check-cases`
   and `checks/negative_case_ranges.py` on every case file, and a syntax check of every Python file under `fv/`.
-- `frozen/test_frozen.py <repo-root> <scratch>`, which runs `frozen/build_lists.py` and compares the two frozen lists.
 - `desc/test_desc.py prepare` writes the `Desc` files. The checker run after it needs Lean.
 
 These need more than Python:
@@ -174,16 +172,8 @@ These need more than Python:
 
 ## 8. Known limits
 
-These generated outputs do not reproduce from the tracked tree today:
-
-- `frozen/ASSUMPTIONS.json`: the file has a hand edit. `frozen/test_frozen.py` exits 1.
 - 11 of the 18 files that `checks/desc_to_lean.py` writes have hand-added or edited header lines.
-
-Other limits:
-
-- `frozen/THEOREMS.json` is a record of the frozen theorem lists. It names theorems of the retired test-target library
-  (for example `lu_accept_main` and `WitLuComp`). These theorems have no present name: the step that retired the
-  library deleted them.
+  So these files do not reproduce from the tracked tree.
 - The specification and witness files of five flat types (HistoricalSummary, SyncAggregatorSelectionData, SigningData, ValidatorBalance, VoluntaryExit) have no tracked generator script.
 - The commands of 12 generated files are not in `generator/gen.sh`. Their headers give the commands.
 - `prysm/go1.26.10/evidence/flat-types/runs/run_generators.sh` calls a job wrapper that is not tracked. Run its `generator.py` commands directly.

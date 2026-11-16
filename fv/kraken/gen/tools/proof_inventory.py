@@ -15,7 +15,7 @@
       constants of `lean/Prysm/**` (`def X : Program := include_x64_code "…S"`, keyed by full declared name, whatever
       module declares them), the link tables `prysm/go1.26.10/**/RESULT`, and <decls.tsv> (output of
       `gen/tools/inventory_decls.lean` for the names above, run on the built tree of the same commit), and write the
-      table. The committed record `prysm/go1.26.10/evidence/axioms-gate.json` (a past run, old names) is not read.
+      table.
   (cwd = fv/kraken)
 
 Three denominators are kept apart: (1) the SSZ methods of the target (`ssz-methods.json`, per method kind);
@@ -388,7 +388,7 @@ def methods(nm_p, out_p):
             continue
         meth.setdefault((pkg, typ, kind), []).append(parts[3].strip())
     rows = [dict(package=p, type=t, method=k, symbols=sorted(s)) for (p, t, k), s in sorted(meth.items())]
-    out = dict(schema="fvkraken.ssz-methods/1", source="`go tool nm` listing of the pinned ELF (not committed)",
+    out = dict(schema="fv.kraken.ssz-methods/1", source="`go tool nm` listing of the pinned ELF (not committed)",
                nm_sha256=h, elf_sha256=bid.get("elf sha256"),
                rule=f"text symbols (nm type T or t) `<pkg>.<Type>.<Method>` or `<pkg>.(*<Type>).<Method>` with "
                     f"<pkg> under `{SCOPE}` and <Method> in {SSZ_KINDS}; one row per (package, type, method); "
@@ -692,7 +692,7 @@ def run(decls_p, gate_p, md_p, json_p):
         target_types_without_ir=[f"{p.rsplit('/', 1)[-1]}.{t}" for p, t in no_ir],
         nested={t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in NESTED},
     )
-    out = dict(schema="fvkraken.inventory/2", source="gen/tools/proof_inventory.py", decls_header=header,
+    out = dict(schema="fv.kraken.proof-inventory/2", source="gen/tools/proof_inventory.py", decls_header=header,
                methods_source=dict(file=METHODS_JSON, nm_sha256=sm["nm_sha256"], elf_sha256=sm["elf_sha256"]),
                axioms_gate=dict(header=gate["header"], verdict=gate["verdict"],
                                 declarations=gate["declarations"], theorems=gate["theorems"], modules=gate["modules"]),

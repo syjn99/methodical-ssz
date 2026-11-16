@@ -150,7 +150,7 @@ def main():
         "three_functions_parse": sum(1 for r in rin if all(p == "OK" for p in r["kraken_parse_marshal_size_unmarshal"])),
         "some_function_does_not_parse": sum(1 for r in rin if any(p != "OK" for p in r["kraken_parse_marshal_size_unmarshal"])),
     }
-    res = {"schema": "type-scope/1", "status": "PROVISIONAL (classification, no proof attempted)",
+    res = {"schema": "fv.kraken.type-scope/1", "status": "PROVISIONAL (classification, no proof attempted)",
            "hand_max_instructions": hand_max, "types": len(rows),
            "counts": {"first_class": cnt(lambda r: r["first_class"]),
                       "first_class_transitive": cnt(lambda r: r["first_class_transitive"]),
@@ -170,7 +170,7 @@ def main():
          "\"Including callees\" is the first class that applies in the type and the closure of its generated callees. If the type alone is \"none known\" but a callee blocks it, the type is blocked.",
          "123 of the 135 Prysm types are protobuf structs. Their Go layout is different from the reduced types of the hand case (`ir/*.json` `go_fields`).",
          "Generator defect is one of the classes, but no output code defect is known, so no type has that class.",
-         "\"None known\" does not count the models for each contract instance (esz, sz, format string and argument types) or the contract recheck against the Go 1.26.10 runtime source (`gen/frozen/ASSUMPTIONS.json` revision 2). Thus it does not mean that nothing blocks the type.",
+         "\"None known\" does not count the models for each contract instance (esz, sz, format string and argument types) or the contract recheck against the Go 1.26.10 runtime source. Thus it does not mean that nothing blocks the type.",
          f"The largest function of the hand case has {hand_max} instructions. The size bands use it as the reference (we do not extrapolate time).", "",
          "## 1. Numbers", "", "| Item | Value |", "| --- | --- |"]
     for kk, v in res["counts"].items():

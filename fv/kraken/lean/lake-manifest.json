@@ -151,6 +151,6 @@
    "inputRev": "v4.35.0",
    "inherited": true,
    "configFile": "lakefile.toml"}],
- "name": "k0b",
+ "name": "fvkraken",
  "lakeDir": ".lake",
  "fixedToolchain": false}

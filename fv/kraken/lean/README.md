@@ -278,7 +278,6 @@ These names are written as their source writes them.
   So it holds register names such as `rax` and hypothesis names such as `hlen` and `hgrow`.
 - The review sources `../gen/desc/review/r1_mutants.py`, `r2_mutants.py` and `r3_mutants.py`.
   `r1`, `r2` and `r3` are review labels.
-  The docstrings have more review labels and commit ids.
   `../gen/desc/test_desc.py prepare` runs the three files on a copy of the original descriptions.
   It replays their mutants (`r1-…`, `n01-…`, `q01-…`) and the list scenarios `t01` to `t13` of `r3_mutants.py`.
   `r3_mutants.py` writes its forged checker line with the work directory path as given.
@@ -287,64 +286,6 @@ These names are written as their source writes them.
   Some mutants set `reference` to earlier names `Fv1.<xy>Desc`, for example `Fv1.scDesc` for Scalars.
   These names occur in the checker result only inside the texts of these mutants.
   `../FINDINGS.md` ("Replayed review mutants carry earlier reference names") gives the effect on three mutants.
-  The docstring labels have no reason of their own.
-  They are candidates for plain words.
-- The record link table `../prysm/go1.26.10/link/` keeps the data ids of its run, `x5CpElemType` and `x5ErrSize`.
-  Its `RESULT` names these data files.
-  No theorem includes the table.
-  `../FINDINGS.md` ("Link set `prysm/go1.26.10/link` has no tracked disassembly") gives the way to check it again.
-  The table is a candidate for deletion.
-- The schema ids `fvkraken.ssz-methods/1` and `fvkraken.inventory/2` of `../gen/tools/proof_inventory.py`.
-  The schema id `type-scope/1` of `../gen/type_scope.py`.
-  The other schema ids have the form `fv.kraken.<name>/<n>`.
-  No tool reads these three ids.
-  They are candidates for that form.
-  A change needs a change of the tool and a new run of it.
-- The Lake package name `fvkraken` in `lakefile.toml`.
-  `lake-manifest.json` gives the root package the name `k0b`.
-  Lake writes the manifest.
-  The name `k0b` is a candidate for a fix.
-  A Lake change needs user approval (section 2).
-
-### Records that hold earlier names
-
-Each of these files is a record of a run, and it keeps the names of that run.
-No tool of the tree reads them, except where the item says so.
-`../../AGENTS.md` does not accept "historical material" as a reason.
-So each one is a candidate for deletion.
-
-- `../prysm/go1.26.10/evidence/e2e.json` (schema `prysm-e2e.status/1`).
-  It names the ELF files `p1bin-amd64` and `p1bin-amd64.nm` and the libraries `E2e` and `E2eAd`.
-  It also names paths under `prysm/go1.26.10/e2e/`.
-  No tool writes it or reads it.
-- `../prysm/go1.26.10/evidence/axioms-gate.json`.
-  Its header names the libraries `E2e`, `E2eAd` and `E2eScal`.
-  `../gen/tools/proof_inventory.py` states that it does not read this record.
-- `../prysm/go1.26.10/evidence/negative/result.json`.
-  `../gen/checks/negative.py` writes such a file.
-  It has 154 case ids, for example `ep-control` and `cpa-cmp41`.
-  None of them is one of the 154 ids of `../gen/checks/negative-cases-checkpoint-and-attestation-data.json`.
-  Its mutant diffs name `ElfData.CheckpointAndEpoch.e2e*` and `MakesliceC`.
-  It has absolute container paths.
-  `../../../AGENTS.md` does not allow absolute container paths in committed files.
-  A new run on the present case list drops every old id.
-- `../prysm/go1.26.10/evidence/generator-cases/AXIOMS.txt`.
-  Nine of its 22 names are not declarations of the tree, for example `Codec.u64dec_accept` and `Codec.rootdec_seg`.
-- The frozen lists `../gen/frozen/THEOREMS.json` and `ASSUMPTIONS.json`, and the text in `../gen/frozen/build_lists.py`.
-  `build_lists.py` writes the lists.
-  `../gen/frozen/test_frozen.py` compares them with the tracked files.
-  No other tool reads them.
-  They name test-target theorems that are not in the tree.
-  Examples are `sc_accept_main`, `lu_accept_main` and `vbv_accept_main`.
-  They also hold work labels such as `P2`, `fix3`, `OUTBOX` and `phase1c-r1 S1`.
-  They also hold the obligation id `compose_hupd`.
-  `ASSUMPTIONS.json` has a hand edit (`../gen/README.md` section 8).
-  The edit adds a run-directory name, `Fk/Contracts.lean`, `MakesliceC`, `E2e.EpUAccC` and `gen/gen1c/include_adapter.py`.
-  `../../../AGENTS.md` does not allow run-directory names in committed files.
-- The input paths in `../gen/desc/hand-types-ir.json` (key `file`).
-  They are absolute container paths of an earlier run, and the files are not tracked.
-  `../gen/desc/producer.py` does not read the key `file`.
-  The paths are candidates for deletion.
 
 ### Other earlier names
 
@@ -353,10 +294,10 @@ So each one is a candidate for deletion.
   It also gives the earlier case ids in these records, for example `g4-ex-s82-*`.
   Git keeps each cited file at the cited commit.
   So these names stay as references, not as records.
-- `../THIRD-PARTY-NOTICES.md` gives its sections the letters `A` to `I`.
-  It refers to "family A" and "family B".
-  Only that file uses the letters.
-  They are candidates for plain words.
+- The docstring of `Prysm/Checkpoint/DecodeThenEncodeReceiver.lean` names the file `gen/frozen/THEOREMS.json` and its obligation `compose_hupd`.
+  The file is not in the tree.
+  Git keeps it at commit `320929dd`.
+  The docstring is a candidate for plain words.
 - `Spec/TestFixed.lean` (the structure `Spec.Fixed` and the lemmas `Spec.fixed*`) names the Go type `Fixed`.
   `../target/` has no type `Fixed`.
   `Spec/TestScalars.lean` imports the module for its byte lemmas, for example `Spec.uintBytes_size`.
