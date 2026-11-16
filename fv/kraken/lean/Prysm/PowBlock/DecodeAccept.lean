@@ -1,6 +1,6 @@
 import Codec.DecoderHeadEpilogue
 import Prysm.PowBlock.GeneratedDecodeSteps
-import Prysm.Eth1Data.DecodeAccept
+import Prysm.Eth1Data.DecodeAddressArithmetic
 import Prysm.PendingDeposit.Statements
 
 /-!

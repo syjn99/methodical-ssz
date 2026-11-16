@@ -69,7 +69,10 @@
   "theorem": "Prysm.DepositMessage.Decode.accept_generated_composition_type",
   "kind": "statement",
   "old": "type_of% (@Prysm.DepositMessage.Decode.accept h)",
-  "new": "type_of% (@Prysm.Eth1Data.Decode.accept h)"
+  "new": "type_of% (@Prysm.Eth1Data.Decode.accept h)",
+  "mutant_imports": [
+   "Prysm.Eth1Data.DecodeAccept"
+  ]
  },
  {
   "id": "deposit-message-decode-accept-from-generated-field-segments-statement-hlen-88-to-80",

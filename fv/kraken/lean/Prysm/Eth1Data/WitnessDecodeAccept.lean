@@ -4,7 +4,7 @@ import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept` (Eth1Data decoder accept path)
+# Witness of `Decode.accept` (Eth1Data decoder accept path; the generated theorem `Decode.generated_accept`)
 
 Hand-written (the text of `Prysm/BeaconBlockHeader/WitnessDecodeAccept.lean` with the Eth1Data host and layout).
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.Eth1Data).UnmarshalSSZ` (index 9), the 1-byte bump

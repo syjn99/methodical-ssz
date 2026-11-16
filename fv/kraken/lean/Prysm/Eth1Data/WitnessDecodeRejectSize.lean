@@ -1,9 +1,9 @@
-import Prysm.Eth1Data.DecodeRejectSize
+import Prysm.Eth1Data.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.reject_size`
+# Witness of `Decode.generated_reject` (Eth1Data decoder size reject)
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.Eth1Data).UnmarshalSSZ`
 (index 1). Hand-written: the text of `Prysm/BeaconBlockHeader/WitnessDecodeRejectSize.lean` with the Eth1Data decoder.
@@ -46,13 +46,13 @@ def initial_state (len : UInt64) (zmms : RegZmms) (flags : StatusFlags) : Machin
 def frame_rest : DataMem → Prop := Eq ((zeros 8).At (0x10028 : BitVec 64))
 
 set_option maxHeartbeats 4000000 in
-/-- **Non-vacuity of `Decode.reject_size`.** -/
+/-- **Non-vacuity of `Decode.generated_reject`.** -/
 theorem runs (len : UInt64) (hlen : len ≠ 72) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10e8
         ∧ st.data.regs.rbx = 0x2a)
       ⟨initial_state len zmms flags, Host.addrOf 1⟩ :=
-  eventually_mono (Decode.reject_size 1 placed_at_1 labels_fresh_at_1 (initial_state len zmms flags) 0 0 0x10e8 0x2a (zeros 8) (zeros 8) rfl rfl frame_rest
+  eventually_mono (Decode.generated_reject 1 placed_at_1 labels_fresh_at_1 (initial_state len zmms flags) 0 0 0x10e8 0x2a (zeros 8) (zeros 8) rfl rfl frame_rest
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       witness_split []

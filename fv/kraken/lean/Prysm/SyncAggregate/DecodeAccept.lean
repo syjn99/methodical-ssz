@@ -1,5 +1,5 @@
 import Codec.DecoderHeadEpilogue
-import Prysm.Eth1Data.DecodeAccept
+import Prysm.Eth1Data.DecodeAddressArithmetic
 import Prysm.SyncAggregate.DecodeFieldSegments
 import Prysm.SyncAggregate.Statements
 

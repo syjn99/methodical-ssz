@@ -1,11 +1,12 @@
 import Prysm.Eth1Data.DecodeAccept
-import Prysm.Eth1Data.DecodeRejectSize
 import Prysm.Eth1Data.Spec
 
 /-!
 # Spec alignment of the real Eth1Data decoder
 
-Hand-written (the text of `Prysm/BeaconBlockHeader/DecodeSpec.lean` with the Eth1Data statement).
+Hand-written. Built on the GENERATED theorems of `Prysm/Eth1Data/GeneratedDecodeAccept.lean` (`decoder --whole-accept`;
+raw output, not edited): `Decode.accept` is `Decode.generated_accept` under its second name
+(`Prysm/Eth1Data/DecodeAccept.lean`), and the size reject is `Decode.generated_reject`.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`, the independent consensus-specs Desc)
   as `v`, there is `g : SszValue` with `g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g`
   the machine code returns nil and the receiver holds `g` (the two roots at fresh `p1 p2` with
@@ -111,7 +112,7 @@ theorem Decode.reject_size_spec (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
           ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ :=
-  ⟨SszValue.spec_rejects bs hbs, Decode.reject_size k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
+  ⟨SszValue.spec_rejects bs hbs, Decode.generated_reject k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
     (fun h => hbs (by rw [← hlen, h]; rfl))⟩
 
 /-- **`reject_complete`**: an input that EthLib rejects reaches the `ssz.ErrSize` site (path condition

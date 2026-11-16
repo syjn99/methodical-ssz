@@ -1,7 +1,7 @@
 import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
-import Prysm.Eth1Data.DecodeAccept
+import Prysm.Eth1Data.DecodeAddressArithmetic
 import Prysm.BlobIdentifier.GeneratedDecodeRootFieldSegments
 
 /-!

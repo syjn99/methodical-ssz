@@ -1,7 +1,7 @@
 import Codec.DecoderHeadEpilogue
 import Prysm.Deposit_Data.GeneratedDecodeFieldSegmentsPartial
 import Prysm.Deposit_Data.DecodeFieldSegmentPadding
-import Prysm.Eth1Data.DecodeAccept
+import Prysm.Eth1Data.DecodeAddressArithmetic
 import Prysm.Deposit_Data.Statements
 
 /-!

@@ -198,12 +198,6 @@
   "new": "(Host.addrOf (k + 57)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 112))"
  },
  {
-  "id": "eth1-data-decode-accept-is-kind-control",
-  "module": "Prysm/Eth1Data/DecodeAcceptComposition.lean",
-  "theorem": "Prysm.Eth1Data.Decode.accept_is_kind",
-  "kind": "control"
- },
- {
   "id": "blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33",
   "module": "Prysm/BlobIdentifier/DecodeAcceptComposition.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept_is_kind",
@@ -218,14 +212,6 @@
   "kind": "statement",
   "old": "[.bytes 48, .bytes 32, .uint64] 68",
   "new": "[.bytes 32, .bytes 48, .uint64] 68"
- },
- {
-  "id": "eth1-data-decode-accept-is-kind-statement-prysm-true-to-false",
-  "module": "Prysm/Eth1Data/DecodeAcceptComposition.lean",
-  "theorem": "Prysm.Eth1Data.Decode.accept_is_kind",
-  "kind": "statement",
-  "old": "Prysm.Eth1Data.Code.unmarshalSSZ true",
-  "new": "Prysm.Eth1Data.Code.unmarshalSSZ false"
  },
  {
   "id": "deposit-data-decode-accept-is-kind-statement-bytes-96-to-48",

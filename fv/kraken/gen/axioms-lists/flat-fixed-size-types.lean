@@ -21,7 +21,6 @@ import Prysm.BeaconBlockHeader.WitnessEncodeRejectLength
 import Codec.Bytes32DecodeOffsetZero
 import Codec.Kind.Bytes32DecodeOffsetZero
 import Prysm.Eth1Data.GeneratedDecodeRootFieldSegments
-import Prysm.Eth1Data.GeneratedDecodeOffsetZeroSameAsHand
 import Prysm.BlobIdentifier.DecodeSpec
 import Prysm.BlobIdentifier.WitnessDecodeAccept
 import Prysm.BlobIdentifier.WitnessDecodeRejectSize
@@ -280,7 +279,6 @@ import Prysm.ValidatorIdentity.WitnessGeneratedDecodeAccept
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeRejectSize
 import Prysm.BlobIdentifier.DecodeAcceptAnyFrameInstances
 import Prysm.DepositMessage.DecodeAcceptAnyFrameInstances
-import Prysm.Eth1Data.DecodeAcceptAnyFrameInstances
 import Prysm.Deposit_Data.DecodeAcceptAnyFrameInstances
 import Prysm.PowBlock.DecodeAcceptAnyFrameInstances
 import Prysm.PendingConsolidation.DecodeAcceptAnyFrameInstances
@@ -290,7 +288,6 @@ import Prysm.BeaconBlockHeader.DecodeAcceptAnyFrameInstances
 import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 import Prysm.BlobIdentifier.DecodeAcceptComposition
 import Prysm.DepositMessage.DecodeAcceptComposition
-import Prysm.Eth1Data.DecodeAcceptComposition
 import Prysm.Deposit_Data.DecodeAcceptComposition
 import Prysm.SyncCommitteeMessage.WindowStepsInstances
 
@@ -344,11 +341,9 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.runs
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength9.runs9
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength300.runs300
--- Eth1Data, decoder: hand theorems
-#print axioms Prysm.Eth1Data.root_decode_segment_source_offset_zero
-#print axioms Prysm.Eth1Data.Decode.head
+-- Eth1Data, decoder: the name Decode.accept of the generated accept theorem, the stack lemma, the specification
 #print axioms Prysm.Eth1Data.Decode.accept
-#print axioms Prysm.Eth1Data.Decode.reject_size
+#print axioms Prysm.Eth1Data.Decode.stack_low_eq
 #print axioms Prysm.Eth1Data.desc_checker
 #print axioms Prysm.Eth1Data.desc_serialize_checker
 #print axioms Prysm.Eth1Data.desc_deserialize_checker
@@ -379,9 +374,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.Eth1Data.Decode.generated_root_DepositRoot_segment_kind
 #print axioms Prysm.Eth1Data.Decode.generated_root_BlockHash_segment
 #print axioms Prysm.Eth1Data.Decode.generated_root_BlockHash_segment_kind
-#print axioms Prysm.Eth1Data.rootDecodeMiddleOffsetZero_eq_hand
-#print axioms Prysm.Eth1Data.root_decode_segment_offset_zero_statement_eq_hand
-#print axioms Prysm.Eth1Data.Decode.decode_DepositRoot_segment_hand
 
 -- BlobIdentifier and DepositMessage (UnmarshalSSZ)
 #print axioms Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_segment
@@ -679,7 +671,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.DepositMessage.Decode.accept_generated_composition_is_kind
 #print axioms Prysm.DepositMessage.Decode.accept_is_kind
 #print axioms Prysm.Eth1Data.Decode.accept_generated_composition_is_kind
-#print axioms Prysm.Eth1Data.Decode.accept_is_kind
 #print axioms Codec.uint64DecodeScratchRegisterSegmentKind_of
 #print axioms Codec.uint64_decode_scratch_register_segment
 
@@ -1423,7 +1414,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.Eth1Data.Decode.generated_DepositRoot_segment_kind
 #print axioms Prysm.Eth1Data.Decode.generated_accept
 #print axioms Prysm.Eth1Data.Decode.generated_accept_kind
-#print axioms Prysm.Eth1Data.Decode.generated_accept_same
 #print axioms Prysm.Eth1Data.Decode.generated_epilogue
 #print axioms Prysm.Eth1Data.Decode.generated_epilogue_kind
 #print axioms Prysm.Eth1Data.Decode.generated_field_1
@@ -1893,9 +1883,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.DepositMessage.Decode.accept_is_kind_any_frame
 #print axioms Prysm.DepositMessage.Decode.accept_kind_any_frame_is_kind
 #print axioms Prysm.DepositMessage.Decode.reject_size_is_kind_any_frame
-#print axioms Prysm.Eth1Data.Decode.accept_is_kind_any_frame
-#print axioms Prysm.Eth1Data.Decode.accept_kind_any_frame_is_kind
-#print axioms Prysm.Eth1Data.Decode.reject_size_is_kind_any_frame
 #print axioms Codec.existentialLengthFacts
 #print axioms Codec.frame_join_three_words
 #print axioms Codec.frame_low_address_with_calls

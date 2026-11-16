@@ -1,6 +1,6 @@
 import Prysm.BlobIdentifier.DecodeAccept
 import Prysm.DepositMessage.DecodeAccept
-import Prysm.Eth1Data.DecodeAccept
+import Prysm.Eth1Data.DecodeAddressArithmetic
 import Prysm.Deposit_Data.Statements
 import Codec.Kind.DecodeAcceptComposition
 

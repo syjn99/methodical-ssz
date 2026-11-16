@@ -1,6 +1,5 @@
 import Prysm.BlobIdentifier.DecodeRejectSize
 import Prysm.DepositMessage.DecodeRejectSize
-import Prysm.Eth1Data.DecodeRejectSize
 import Prysm.BeaconBlockHeader.DecodeRejectSize
 import Prysm.Deposit_Data.DecodeRejectSize
 import Prysm.PendingPartialWithdrawal.DecodeRejectSize
