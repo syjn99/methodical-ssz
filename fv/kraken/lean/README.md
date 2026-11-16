@@ -21,7 +21,7 @@ It also has the commands that read code and data files (`Machine/Include.lean`) 
 A model is a small assembly program (`Runtime/*.S`) with theorems that it satisfies its contract. Examples are a bump allocator, a memory copy and error formatting.
 
 **`Codec`.** Lemmas that do not depend on one Prysm type: the `uint64` decoder pattern (`Codec/Uint64Decoder.lean`), the fixed-bytes field decoder and encoder patterns (`Codec/Bytes32*.lean`, `Codec/FixedBytesDecode*.lean`), the encoder step lemmas (`Codec/Encode*.lean`) and the statement kinds of the generated proofs (`Codec/Kind/`).
-`Codec/Segment/` holds segment and loop lemmas stated once for any size or element count, with the fixed instances of `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/` and `Prysm/HistoricalBatch/` as corollaries.
+`Codec/Segment/` holds segment and loop lemmas stated once for any size or element count, with the fixed instances of `Prysm/SyncCommittee/` and `Prysm/HistoricalBatch/` as corollaries.
 
 **`Prysm`.** One directory for each Prysm type, `Prysm/<GoTypeName>/<Role>.lean`, namespace `Prysm.<GoTypeName>`.
 The full name of a main theorem is the name of the work, for example `Prysm.Checkpoint.Decode.reject_size`.
@@ -74,8 +74,8 @@ Codec <-> Prysm (at module level, both directions)
 - `Spec` imports only EthLib and `Spec`. `Machine` imports only Kraken, Std, Lean and `Machine` (`Machine/Include.lean`
   has `public meta import Lean` for its elaborators). `Runtime` imports only Kraken, `Machine` and `Runtime`. So these
   three libraries import only libraries to their left (and Lean itself).
-- `Codec` and `Prysm` import each other at module level. 25 of the 60 `Codec` modules import a `Prysm` module:
-  13 of 36 in `Codec/`, 2 of 11 in `Codec/Kind/`, 10 of 13 in `Codec/Segment/`. 210 of the 662 `Prysm` modules
+- `Codec` and `Prysm` import each other at module level. 19 of the 51 `Codec` modules import a `Prysm` module:
+  11 of 33 in `Codec/`, 2 of 11 in `Codec/Kind/`, 6 of 7 in `Codec/Segment/`. 160 of the 589 `Prysm` modules
   import a `Codec` module. Lean forbids a cycle of modules, so the module graph has no cycle; only the
   libraries have no order.
 - The `Codec` modules that import `Prysm` hold lemmas and kinds that the shared layer took from a type

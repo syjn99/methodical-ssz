@@ -104,8 +104,7 @@ HOLD_OUT = {'BlobIdentifier/GeneratedDecodeRootFieldSegments': 'Decode.generated
             'Deposit_Data/GeneratedDecodeFieldSegmentsPartial': 'Decode.generated_field',
             'PendingConsolidation/GeneratedDecodeCallSegmentsPartial': 'Decode.generated_call',
             'SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial': 'Decode.generated_call'}
-for t in ('HistoricalSummary', 'PowBlock', 'PendingDeposit', 'SyncAggregatorSelectionData', 'SigningData', 'ValidatorBalance',
-          'VoluntaryExit'):
+for t in ('PowBlock', 'PendingDeposit'):
     HOLD_OUT[t + '/GeneratedDecodeSteps'] = 'Decode.generated_step'
 for f, prefix in HOLD_OUT.items():
     p = os.path.join(KRAKEN, 'lean/Prysm', f + '.lean')

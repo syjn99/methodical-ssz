@@ -184,44 +184,6 @@
   "kind": "control"
  },
  {
-  "id": "pending-partial-withdrawal-decode-example-call-index-call-control",
-  "module": "Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.example_call_Index_call",
-  "kind": "control"
- },
- {
-  "id": "pending-partial-withdrawal-decode-example-call-index-call-statement-host-1-to-2",
-  "module": "Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.example_call_Index_call",
-  "kind": "statement",
-  "old": "(Host.addrOf (k + 17 + 1))",
-  "new": "(Host.addrOf (k + 17 + 2))"
- },
- {
-  "id": "pending-partial-withdrawal-decode-example-call-amount-segment-statement-h-f-16-to-24",
-  "module": "Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.example_call_Amount_segment",
-  "kind": "statement",
-  "old": "(hF : rcv + (16 : Int64).toBitVec = aF)",
-  "new": "(hF : rcv + (24 : Int64).toBitVec = aF)"
- },
- {
-  "id": "pending-partial-withdrawal-decode-example-call-amount-segment-statement-q-r8-to-r9",
-  "module": "Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.example_call_Amount_segment",
-  "kind": "statement",
-  "old": "(q := Codec.uint64DecodeScratchRegister Reg64.r8 8 16)",
-  "new": "(q := Codec.uint64DecodeScratchRegister Reg64.r9 8 16)"
- },
- {
-  "id": "deposit-data-decode-example-call-withdrawal-credentials-segment-statement-q-true-to-false",
-  "module": "Prysm/Deposit_Data/DecodeCallSegmentExamples.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.example_call_WithdrawalCredentials_segment",
-  "kind": "statement",
-  "old": "(q := Codec.bytesDecodeHeadOptionalPadding true 32",
-  "new": "(q := Codec.bytesDecodeHeadOptionalPadding false 32"
- },
- {
   "id": "beacon-block-header-decode-head-from-call-segments-control",
   "module": "Prysm/BeaconBlockHeader/DecodeHeadFromCallSegments.lean",
   "theorem": "Prysm.BeaconBlockHeader.Decode.head_from_call_segments",
@@ -272,14 +234,6 @@
   "kind": "statement",
   "old": ".bytes 96] 106",
   "new": ".bytes 48] 106"
- },
- {
-  "id": "slot-decode-accept-function-spec-is-callee-accept-statement-prysm-slot-to-committee-index",
-  "module": "Prysm/Slot/CalleeDecodeFunctionSpecs.lean",
-  "theorem": "Prysm.Slot.Decode.accept_function_spec_is_callee_accept",
-  "kind": "statement",
-  "old": "Prysm.Slot.Code.unmarshalSSZLabel",
-  "new": "Prysm.CommitteeIndex.Code.unmarshalSSZLabel"
  },
  {
   "id": "pending-partial-withdrawal-witness-decode-accept-runs-control",

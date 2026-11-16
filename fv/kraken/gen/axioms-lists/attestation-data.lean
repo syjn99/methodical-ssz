@@ -7,7 +7,6 @@ import Prysm.Checkpoint.WitnessEncodeFunctionSpecAsNestedField
 import Prysm.AttestationData.DecodeSpec
 import Prysm.AttestationData.WitnessDecodeAccept
 import Prysm.AttestationData.WitnessDecodeRejectSize
-import Prysm.AttestationData.DecodeErrorWrapsUnreachable
 import Prysm.AttestationData.SpecEquivalence
 
 -- AttestationData set: the AttestationData, Slot and CommitteeIndex theorems and the Checkpoint function specifications.
@@ -36,10 +35,6 @@ import Prysm.AttestationData.SpecEquivalence
 #print axioms Prysm.AttestationData.Decode.target
 #print axioms Prysm.AttestationData.Decode.accept
 #print axioms Prysm.AttestationData.Decode.reject_size
-#print axioms Prysm.AttestationData.Decode.slot_err_unreachable
-#print axioms Prysm.AttestationData.Decode.committee_index_err_unreachable
-#print axioms Prysm.AttestationData.Decode.source_err_unreachable
-#print axioms Prysm.AttestationData.Decode.target_err_unreachable
 #print axioms Prysm.AttestationData.Decode.accept_spec
 #print axioms Prysm.AttestationData.Decode.reject_size_spec
 #print axioms Prysm.AttestationData.Decode.reject_complete

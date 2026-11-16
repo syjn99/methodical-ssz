@@ -195,14 +195,6 @@
   "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0)"
  },
  {
-  "id": "sync-aggregator-selection-data-decode-generated-accept-same-as-statement-statement-decode-none-to-prysm-voluntary-exit",
-  "module": "Prysm/SyncAggregatorSelectionData/GeneratedDecodeAcceptSameAsHand.lean",
-  "theorem": "Prysm.SyncAggregatorSelectionData.Decode.generated_accept_same_as_statement",
-  "kind": "statement",
-  "old": "= @Decode.accept_statement h",
-  "new": "= @Prysm.VoluntaryExit.Decode.accept_statement h"
- },
- {
   "id": "validator-balance-decode-generated-accept-control",
   "module": "Prysm/ValidatorBalance/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.ValidatorBalance.Decode.generated_accept",
@@ -268,14 +260,6 @@
   "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0)"
  },
  {
-  "id": "validator-balance-decode-generated-accept-same-as-statement-statement-prysm-validator-balance-to-voluntary-exit",
-  "module": "Prysm/ValidatorBalance/GeneratedDecodeAcceptSameAsHand.lean",
-  "theorem": "Prysm.ValidatorBalance.Decode.generated_accept_same_as_statement",
-  "kind": "statement",
-  "old": "= @Prysm.ValidatorBalance.Decode.accept_statement h",
-  "new": "= @Prysm.VoluntaryExit.Decode.accept_statement h"
- },
- {
   "id": "voluntary-exit-decode-generated-accept-control",
   "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.generated_accept",
@@ -339,14 +323,6 @@
   "kind": "statement",
   "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)",
   "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0)"
- },
- {
-  "id": "voluntary-exit-decode-generated-accept-same-as-statement-statement-prysm-voluntary-exit-to-sync-aggregator-selection-dat",
-  "module": "Prysm/VoluntaryExit/GeneratedDecodeAcceptSameAsHand.lean",
-  "theorem": "Prysm.VoluntaryExit.Decode.generated_accept_same_as_statement",
-  "kind": "statement",
-  "old": "= @Prysm.VoluntaryExit.Decode.accept_statement h",
-  "new": "= @Prysm.SyncAggregatorSelectionData.Decode.accept_statement h"
  },
  {
   "id": "sync-aggregator-selection-data-decode-accept-spec-statement-fun-0-to-1",

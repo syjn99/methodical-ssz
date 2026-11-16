@@ -49,7 +49,7 @@ Use `regen_check.sh` of the project skill. It runs the generator two times into 
 Exit 0 means the same bytes. Run it from `fv/kraken`:
 
 ```sh
-sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/generator/generator.py uint64 --assembly prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.CommitteeIndex.Code > "$REGEN_OUT"'
+sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/generator/generator.py uint64 --assembly prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --imports Codec.Uint64Decoder,Prysm.BeaconBlockHeader.Code --open Prysm.ValidatorIndex.Code > "$REGEN_OUT"'
 ```
 
 For the other files, take the command from `generator/gen.sh` or from the file header. Replace the output redirect with `> "$REGEN_OUT"`.
@@ -68,7 +68,7 @@ It does not check the kind files and the lemma files themselves. Their git-blob 
 
 ```sh
 python3 -I -B fv/kraken/gen/generator/kindcheck.py --selftest
-python3 -I -B fv/kraken/gen/generator/kindcheck.py fv/kraken/lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean
+python3 -I -B fv/kraken/gen/generator/kindcheck.py fv/kraken/lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean
 python3 -I -B fv/kraken/gen/generator/kindcheck.py --partial fv/kraken/lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean
 ```
 

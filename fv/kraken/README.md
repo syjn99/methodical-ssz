@@ -137,7 +137,7 @@ python3 -I -B gen/tools/proof_inventory.py run <scratch>/decls.tsv <scratch>/gat
 ```sh
 python3 -B fv/kraken/link/data.py --check fv/kraken/link/out
 python3 -I -B fv/kraken/gen/generator/kindcheck.py --selftest
-python3 -I -B fv/kraken/gen/generator/kindcheck.py fv/kraken/lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean
+python3 -I -B fv/kraken/gen/generator/kindcheck.py fv/kraken/lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean
 python3 -I -B fv/kraken/gen/checks/axioms_gate.py --selftest
 sh fv/kraken/gen/checks/python_checks.sh <scratch>/python-checks
 ```

@@ -993,32 +993,6 @@
   "why": "second error word read from the first"
  },
  {
-  "id": "attestation-data-decode-slot-err-unreachable-code-je-to-jne",
-  "kind": "code",
-  "module": "Prysm/AttestationData/DecodeErrorWrapsUnreachable.lean",
-  "theorem": "Prysm.AttestationData.Decode.slot_err_unreachable",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7",
-  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7",
-  "why": "nil Slot error jumps into the wrap path"
- },
- {
-  "id": "attestation-data-decode-target-err-unreachable-code-je-to-jne",
-  "kind": "code",
-  "module": "Prysm/AttestationData/DecodeErrorWrapsUnreachable.lean",
-  "theorem": "Prysm.AttestationData.Decode.target_err_unreachable",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_3a7",
-  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_3a7",
-  "why": "nil Target error jumps into the wrap path"
- },
- {
   "id": "attestation-data-decode-accept-control",
   "kind": "control",
   "module": "Prysm/AttestationData/DecodeAccept.lean",

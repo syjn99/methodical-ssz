@@ -1,5 +1,3 @@
-import Codec.Segment.ByteSliceListInstances
-import Codec.Segment.FixedBytesAnySizeInstances
 import Codec.Segment.Bytes32LoopHistoricalBatch
 import Codec.Segment.SizeRejectInstances
 import Prysm.Deposit.DecodeRejectSize
@@ -11,16 +9,6 @@ import Prysm.Deposit.DecodeAccept
 #print axioms Codec.Segment.in_split
 #print axioms Codec.Segment.backing_array_split
 #print axioms Codec.Segment.backing_array_join
-#print axioms Codec.Segment.input_split_sync_committee
-#print axioms Codec.Segment.array_join_historical_batch
-#print axioms Codec.Segment.bytes_decode_segment_any_size
-#print axioms Codec.Segment.bytes_decode_segment_offset_zero_any_size
-#print axioms Codec.Segment.bytes_decode_segment_nop_any_size
-#print axioms Codec.Segment.bytes_decode_segment_inst
-#print axioms Codec.Segment.bytes_decode_segment_offset_zero_inst
-#print axioms Codec.Segment.bytes_decode_segment_offset_zero_size64_inst
-#print axioms Codec.Segment.bytes96_decode_segment_nop_inst
-#print axioms Codec.Segment.bytes32_decode_segment_nop_inst
 #print axioms Codec.Segment.glue_nop
 #print axioms Codec.Segment.glue_source
 #print axioms Codec.Segment.bytes32_loop_iteration

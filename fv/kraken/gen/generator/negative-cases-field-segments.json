@@ -68,39 +68,6 @@
   "new": "uint64DecodeInlineSegmentKind C j dB f src :="
  },
  {
-  "id": "deposit-message-decode-example-field-public-key-segment-control",
-  "module": "Prysm/DepositMessage/DecodeFieldSegmentExamples.lean",
-  "theorem": "Prysm.DepositMessage.Decode.example_field_PublicKey_segment",
-  "kind": "control"
- },
- {
-  "id": "deposit-message-decode-example-field-public-key-segment-statement-hroot-48-to-32",
-  "module": "Prysm/DepositMessage/DecodeFieldSegmentExamples.lean",
-  "theorem": "Prysm.DepositMessage.Decode.example_field_PublicKey_segment",
-  "kind": "statement",
-  "old": "(hroot : root.length = 48)",
-  "new": "(hroot : root.length = 32)"
- },
- {
-  "id": "blob-identifier-decode-example-field-index-segment-statement-h-src-32-to-24",
-  "module": "Prysm/BlobIdentifier/DecodeFieldSegmentExamples.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.example_field_Index_segment",
-  "kind": "statement",
-  "old": "(hSrc : bf + (32 : Int64).toBitVec = aSrc)",
-  "new": "(hSrc : bf + (24 : Int64).toBitVec = aSrc)"
- },
- {
-  "id": "blob-identifier-decode-example-field-index-segment-code-mov-0x20-rcx-to-0x18-rcx",
-  "module": "Prysm/BlobIdentifier/DecodeFieldSegmentExamples.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.example_field_Index_segment",
-  "kind": "code",
-  "code_definition": "Prysm.BlobIdentifier.Code.unmarshalSSZ",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
-  "old": "  mov 0x20(%rcx),%rcx",
-  "new": "  mov 0x18(%rcx),%rcx"
- },
- {
   "id": "codec-decoder-head-epilogue-decode-head-segment-statement-hlen-none-to-1",
   "module": "Codec/DecoderHeadEpilogue.lean",
   "theorem": "decode_head_segment",
@@ -123,11 +90,5 @@
   "kind": "statement",
   "old": "⋆ Eq ((Int.toBytes 8 p.toInt).At aP) ⋆ R) st.data.dmem",
   "new": "⋆ Eq (vP.At aP) ⋆ R) st.data.dmem"
- },
- {
-  "id": "blob-identifier-decode-accept-composed-example-control",
-  "module": "Prysm/BlobIdentifier/DecodeAcceptComposedExample.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.accept_composed_example",
-  "kind": "control"
  }
 ]

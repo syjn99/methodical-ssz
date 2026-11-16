@@ -1,6 +1,6 @@
 #!/bin/sh
 # Regenerate the committed generated files (run from anywhere; paths are relative to fv/kraken):
-# three development-set files, then the two files of BeaconBlockHeader and ValidatorIndex (one run each), then
+# one development-set file (Checkpoint), then the two files of BeaconBlockHeader and ValidatorIndex (one run each), then
 # the output of the generator extension for a 32-byte field at SSZ offset 0 (Eth1Data, development data for the extension).
 # Gate it like any generator run. Check with the skill's regen_check.sh (see README).
 # Each output is in lean/Prysm/<GoTypeName>/ and its namespace is Prysm.<GoTypeName> (from the name of the .S file).
@@ -12,8 +12,6 @@ set -e
 cd "$(dirname "$0")/../.."
 G="python3 -I gen/generator/generator.py"
 N=prysm/go1.26.10/link-set/norm
-$G uint64 --assembly $N/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.CommitteeIndex.Code > lean/Prysm/CommitteeIndex/GeneratedDecodeAccept.lean
-$G decoder --assembly $N/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix Decode.generated_root --imports Codec.Bytes32Decode,Prysm.AttestationData.Code --open Prysm.AttestationData.Code > lean/Prysm/AttestationData/GeneratedDecodeRootFieldSegments.lean
 $G decoder --assembly prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.Checkpoint --prefix Decode.generated_root --imports Codec.Bytes32Decode,Prysm.Checkpoint.Code --open Prysm.Checkpoint.Code > lean/Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean
 # BeaconBlockHeader and ValidatorIndex (raw output, not edited).
 B=prysm/go1.26.10/link-set/norm
@@ -38,28 +36,23 @@ $G decoder --field-segments --compose --name Decode.accept_generated_composition
 # exits 3 with nothing on stdout. `kindcheck.py` rejects the file; `kindcheck.py --partial` exits 3.
 $G decoder --field-segments --partial-out lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean --assembly $B/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.BeaconBlockHeader --prefix Decode.generated_field --imports Codec.Bytes32Decode,Prysm.BeaconBlockHeader.Code --open Prysm.BeaconBlockHeader.Code || [ $? -eq 3 ]
 # `decoder --call-segments` on the development set
-# (PendingPartialWithdrawal, Deposit_Data, BeaconBlockHeader, AttestationData are in-sample). Separate files; the files
-# above do not change. AttestationData is partial (Source / Target are nested containers): exit 3.
+# (Deposit_Data and BeaconBlockHeader are in-sample). Separate files; the files above do not change.
 HOLD_OUT=prysm/go1.26.10/link-set/norm
-$G decoder --call-segments --assembly $HOLD_OUT/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.PendingPartialWithdrawal --prefix Decode.generated_call --imports Prysm.Deposit_Data.Code --open Prysm.PendingPartialWithdrawal.Code > lean/Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean
 $G decoder --call-segments --assembly $HOLD_OUT/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.Deposit_Data --prefix Decode.generated_call --imports Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.FixedBytesDecode,Codec.FixedBytesDecodePadding,Codec.InlineUint64,Prysm.Deposit_Data.Code --open Prysm.Deposit_Data.Code > lean/Prysm/Deposit_Data/GeneratedDecodeCallSegments.lean
 $G decoder --call-segments --assembly $B/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.BeaconBlockHeader --prefix Decode.generated_call --imports Codec.Bytes32Decode,Prysm.BeaconBlockHeader.Code --open Prysm.BeaconBlockHeader.Code > lean/Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean
-$G decoder --call-segments --partial-out lean/Prysm/AttestationData/GeneratedDecodeCallSegmentsPartial.lean --assembly $N/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix Decode.generated_call --imports Codec.Bytes32Decode,Prysm.AttestationData.Code --open Prysm.AttestationData.Code || [ $? -eq 3 ]
 # call-segment composition: Deposit_Data (byte / inline-uint64 fields, frame 0x20) with the composed-statement kind
 # `decodeAcceptKind` (`_kind`) and the identity with the hand statement `Prysm.Deposit_Data.Decode.accept_statement`. PendingPartialWithdrawal and
 # BeaconBlockHeader (callee fields) are refused by `--compose` (exit 2): their accept theorems are hand compositions.
 $G decoder --call-segments --compose --name Decode.accept_generated_composition --same-as-prop Prysm.Deposit_Data.Decode.accept_statement --assembly $HOLD_OUT/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.Deposit_Data --prefix Decode.generated_call --imports Codec.DecoderHeadEpilogue,Prysm.Deposit_Data.GeneratedDecodeCallSegments,Prysm.Deposit_Data.Statements --open Prysm.Deposit_Data.Code > lean/Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean
-# `decoder --steps` on the 10 development types
-# (all in-sample). Separate files; the files above do not change. AttestationData is partial (Source / Target are nested
-# containers): exit 3 with --partial-out.
+# `decoder --steps` on 8 development types
+# (all in-sample). Separate files; the files above do not change.
 # Row: Go type name, link set directory, module of the code constants (the code namespace is Prysm.<Go type name>.Code).
 P=github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1
 E=prysm/go1.26.10/link-set
-for row in "Checkpoint norm Prysm.Checkpoint.Code" "BeaconBlockHeader norm Prysm.BeaconBlockHeader.Code" "Eth1Data norm Prysm.Eth1Data.Code" "BlobIdentifier norm Prysm.BlobIdentifier.Code" "DepositMessage norm Prysm.BlobIdentifier.Code" "Deposit_Data norm Prysm.Deposit_Data.Code" "PendingPartialWithdrawal norm Prysm.Deposit_Data.Code" "SyncCommitteeMessage norm Prysm.SyncCommitteeMessage.Code" "PendingConsolidation norm Prysm.SyncCommitteeMessage.Code"; do
+for row in "Checkpoint norm Prysm.Checkpoint.Code" "BeaconBlockHeader norm Prysm.BeaconBlockHeader.Code" "Eth1Data norm Prysm.Eth1Data.Code" "BlobIdentifier norm Prysm.BlobIdentifier.Code" "DepositMessage norm Prysm.BlobIdentifier.Code" "Deposit_Data norm Prysm.Deposit_Data.Code" "SyncCommitteeMessage norm Prysm.SyncCommitteeMessage.Code" "PendingConsolidation norm Prysm.SyncCommitteeMessage.Code"; do
   set -- $row
   $G decoder --steps --assembly $E/$2/$P.$1.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.$1 --prefix Decode.generated_step --imports $3 --open Prysm.$1.Code > lean/Prysm/$1/GeneratedDecodeSteps.lean
 done
-$G decoder --steps --partial-out lean/Prysm/AttestationData/GeneratedDecodeStepsPartial.lean --assembly $N/$P.AttestationData.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix Decode.generated_step --imports Prysm.AttestationData.Code --open Prysm.AttestationData.Code || [ $? -eq 3 ]
 # `decoder --whole-accept` on the flat development types
 # (all in-sample). One run per type; raw output committed unedited. The statement check is the kind (parameters
 # recomputed by kindcheck.py rule 12) and, where a hand statement exists, the identity `_statement` / `_same`. Checkpoint:

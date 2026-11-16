@@ -24,12 +24,6 @@
   "kind": "control"
  },
  {
-  "id": "pending-partial-withdrawal-decode-accept-from-generated-steps-control",
-  "module": "Prysm/PendingPartialWithdrawal/DecodeAcceptFromGeneratedSteps.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.accept_from_generated_steps",
-  "kind": "control"
- },
- {
   "id": "sync-committee-message-decode-generated-step-directive-87-statement-truncate-8-to-16",
   "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_directive_87",
@@ -70,28 +64,12 @@
   "new": "(hroot : root.length = 32)"
  },
  {
-  "id": "pending-partial-withdrawal-decode-generated-step-directive-54-statement-codec-r8-to-r9",
-  "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_54",
-  "kind": "statement",
-  "old": "Codec.setRegister s Reg64.r8 (BitVec.ofInt",
-  "new": "Codec.setRegister s Reg64.r9 (BitVec.ofInt"
- },
- {
   "id": "sync-committee-message-decode-from-generated-steps-slot-field-statement-pc-46-to-47",
   "module": "Prysm/SyncCommitteeMessage/DecodeAcceptFromGeneratedSteps.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.from_generated_steps_Slot_field",
   "kind": "statement",
   "old": "st.pc = Host.addrOf (k + 46 + 1)",
   "new": "st.pc = Host.addrOf (k + 47 + 1)"
- },
- {
-  "id": "pending-partial-withdrawal-decode-from-generated-steps-amount-withdrawable-epoch-fields-statement-v-v-to-v-f",
-  "module": "Prysm/PendingPartialWithdrawal/DecodeAcceptFromGeneratedSteps.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.from_generated_steps_Amount_WithdrawableEpoch_fields",
-  "kind": "statement",
-  "old": "⋆ Eq (v.At (rcv + 16))\n",
-  "new": "⋆ Eq (vF.At (rcv + 16))\n"
  },
  {
   "id": "pending-consolidation-decode-from-generated-steps-target-index-field-statement-e8-e8-to-c0",

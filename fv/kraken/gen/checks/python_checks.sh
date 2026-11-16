@@ -10,7 +10,7 @@
 # To check a change, run it before and after the change, with two out dirs, and compare: `diff -r <before> <after>`.
 # Expected: the same rc for every check. A text difference needs a stated reason (for example a library count).
 # A check whose script is not in the tree gets the line `<name> not run (no <script>)`.
-# The default kindcheck list also has example files that no generator writes (for example the hand-written `Prysm/*/DecodeAcceptComposedExample.lean`).
+# The default kindcheck list also has example files that no generator writes (for example the hand-written `Prysm/*/DecodeStepExamples.lean`).
 # So kindcheck_generated can exit 1 on an unchanged tree too. `kindcheck.py --partial` never exits 0 (see its usage text).
 #
 # Environment:

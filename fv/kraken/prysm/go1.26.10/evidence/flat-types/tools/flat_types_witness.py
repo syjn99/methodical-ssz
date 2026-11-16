@@ -2,8 +2,8 @@
 WitnessGeneratedDecodeRejectSize (lean/Prysm/<GoTypeName>/) of the seven
 generated decoders (non-vacuity of the generated accept / size-reject theorems). Texts follow the hand
 witnesses `Prysm/Deposit_Data/WitnessDecodeAccept.lean` (frame 0x20 bytes) and `Prysm/PendingDeposit/WitnessDecodeAccept.lean`
-(frame with slices and callees); the memory block of each type is laid out here from the frame facts of its `.S`
-(the same facts as `Prysm/DepositRequest/Statements.lean`), with the addresses computed below.
+(frame with slices and callees); the memory block of each type is laid out here from the frame facts of its `.S`,
+with the addresses computed below.
 usage: python3 -I -B flat_types_witness.py <fv/kraken> [GoTypeName ...]"""
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
