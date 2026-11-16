@@ -5,14 +5,14 @@ import Prysm.SyncCommitteeMessage.DecodeStepExamples
 # `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`, accept path, re-derived with the window and step mechanisms
 
 `Decode.accept_from_window_steps : Decode.accept_statement` (the pre-committed hand statement, `Prysm/SyncCommitteeMessage/Statements.lean`, unchanged). The text of
-`Prysm/PendingConsolidation/DecodeAccept.lean` with the field that the frozen generator missed taken from the window and step mechanisms:
+`Prysm/PendingConsolidation/DecodeAccept.lean` with the TargetIndex field taken from the window and step mechanisms:
 
 * TargetIndex 48–85: `Decode.example_step_TargetIndex_field` (seven step theorems, then the call-block WINDOW
   `callq; nop; test; je`) instead of a hand-applied `call_argument_reload_segment` and the hand lemma `call_decode_nop_segment`.
 Unchanged: `Decode.head`, `Decode.epilogue` (hand, `Prysm/PendingConsolidation/DecodeAccept.lean`), the generated SourceIndex theorems
 (`Prysm/PendingConsolidation/GeneratedDecodeCallSegmentsPartial.lean`). `Prysm/PendingConsolidation/DecodeAccept.lean` is imported for `Decode.head` / `Decode.epilogue` only; `Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` checks by
 program that this proof does not reach `call_decode_nop_segment`, `bytes32_decode_segment_rax` or `Prysm.SyncCommitteeMessage.Decode.validator_index_argument`.
-In-sample (the type is development data since the frozen generator ran on it); no transfer claim.
+In-sample (the type is development data); no transfer claim.
 -/
 
 open Machine Runtime Prysm.PendingConsolidation.Code Codec

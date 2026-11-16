@@ -3,7 +3,7 @@ import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of the generated `Decode.generated_reject` (24 flat hold-out types)
+# Witness of the generated `Decode.generated_reject` (24 flat types)
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.BlobSidecarsByRangeRequest).UnmarshalSSZ` (index 1).
 Written by the evidence script `flat_types_witness.py`: the text of the generated size-reject witnesses

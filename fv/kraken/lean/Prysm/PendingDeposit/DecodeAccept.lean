@@ -4,7 +4,7 @@ import Prysm.BeaconBlockHeader.DecodeAcceptFromGeneratedCallSegments
 import Prysm.PendingDeposit.Statements
 
 /-!
-# `(*v1alpha1.PendingDeposit).UnmarshalSSZ`, accept path from the GENERATED `decoder --steps` chains (hold-out, full-proof type)
+# `(*v1alpha1.PendingDeposit).UnmarshalSSZ`, accept path from the GENERATED `decoder --steps` chains
 
 Hand-written AFTER the raw generator output (`Prysm/PendingDeposit/GeneratedDecodeSteps.lean`, `decoder --steps`, exit 0,
 5/5 walker-covered) was committed. Statement = the pre-committed hand statement `Prysm.PendingDeposit.Decode.accept_statement`

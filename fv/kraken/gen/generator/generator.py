@@ -314,9 +314,9 @@ def decoder_find(dirs, fo, src, n=32, field_segments=False, pad_ok=False):
     """The decode segment of the field at Go offset `fo`, SSZ offset `src`: (j1, j2, params), params["form"]
     "add" (`rootDecodeMiddle`, 12 directives) or "zero" (`rootDecodeMiddleOffsetZero`, 11 directives, SSZ offset 0).
     field-segment: `n` is the vector size (IR); every size immediate of the segment must be `n` (default 32: the
-    directive texts and regular expressions are exactly those of the first `decoder` generator and its offset-0 extension, `{32:#x}` = `0x20`). Only with
+    directive texts and regular expressions are exactly those of the default `decoder` mode with its offset-0 form, `{32:#x}` = `0x20`). Only with
     `field_segments` (the `--field-segments` mode) is a pointer store without displacement, `mov %rax,(%rdx)`, read as Go offset 0
-    (DepositMessage.PublicKey); the default mode keeps the reading of the first generator and its offset-0 extension (such a field does not match).
+    (DepositMessage.PublicKey); the default mode does not read it (such a field does not match).
     call-segment (`pad_ok`, only from `--call-segments`): one padding `nop` between `mov $n,%ecx` and `callq runtime.makeslice`
     is read (head `bytesDecodeHeadOptionalPadding true`, 10 directives; params["pad"]); add form only. Without `pad_ok` the text
     and the regular expressions are exactly the field-segment ones."""
@@ -389,7 +389,7 @@ class Partial(Exception):
 
 
 def root_field_segment_text(c, fname, src, fo, j1, j2, p):
-    """Lean text of one segment theorem and its `_kind` check (form "add": unchanged text of the first generator)."""
+    """Lean text of one segment theorem and its `_kind` check (form "add": the text of the default `decoder` mode)."""
     name = f"{c['prefix']}_{fname}_segment"
     k = c["const"]
     out = "set_option maxHeartbeats 16000000 in\nset_option maxRecDepth 100000 in\n"
@@ -461,11 +461,11 @@ def decoder(args):
 
 # ---------------------------------------------------------------- field-segment (`decoder --field-segments`)
 #
-# Compatibility switch: the extended coverage is ONLY behind `--field-segments`. Without the flag, `decoder` is the first
-# generator with its offset-0 extension, text for text (32-byte fields only, same stdout, same exit codes), so every committed output
-# of `gen.sh` and the commands of hold-out types BlobIdentifier and DepositMessage regenerates byte for byte. With `--field-segments` every own field of the IR type is
+# Compatibility switch: the extended coverage is ONLY behind `--field-segments`. Without the flag, `decoder` reads
+# 32-byte fields only, with the offset-0 form (fixed stdout and exit codes), so every committed output
+# of `gen.sh` and of the header commands of BlobIdentifier and DepositMessage regenerates byte for byte. With `--field-segments` every own field of the IR type is
 # classified and reported:
-#   fixed byte vector, `[]byte`, size 32  -> the theorem text of the first generator and its offset-0 extension (`root_decode_segment` / `root_decode_segment_offset_zero`);
+#   fixed byte vector, `[]byte`, size 32  -> the theorem text of the default mode and its offset-0 form (`root_decode_segment` / `root_decode_segment_offset_zero`);
 #   fixed byte vector, `[]byte`, size 48 / 96 -> `Codec.bytes_decode_segment` / `bytes_decode_segment_offset_zero` (lemmas of
 #                                             `lean/Codec/FixedBytesDecode.lean`, `lean/Codec/Kind/FixedBytesDecode.lean`), kinds `bytesDecSeg(Z)Kind`;
 #   `uint64` (IR k = uint, 64 bits)        -> `Codec.uint64_decode_inline_segment` (`{`Codec/InlineUint64.lean`,`Codec/Kind/InlineUint64.lean`}.lean`);
@@ -572,7 +572,7 @@ def _sub_once(text, old, new):
 
 
 def _size_statement(statement_text):
-    """The statement of the first generator and its offset-0 extension, with the size 32 in its five places replaced by `{n}` (interface (a)/(b))."""
+    """The statement of the default mode and its offset-0 form, with the size 32 in its five places replaced by `{n}` (interface (a)/(b))."""
     for old, new in [("(hroot : root.length = 32)", "(hroot : root.length = {n})"),
                      ("(hav : 32 ≤ avail)", "(hav : {n} ≤ avail)"),
                      ("⋆ Heap (avail - 32)", "⋆ Heap (avail - {n})"),
@@ -783,8 +783,8 @@ def decoder_field_segments(args):
 
 # ---------------------------------------------------------------- call-segment (`decoder --call-segments`, implies `--field-segments`)
 #
-# Compatibility switch: the call-segment shapes are ONLY behind `--call-segments`. Without it, `--field-segments` and the default mode are
-# the earlier text byte for byte (`regen_check.sh` of every committed file). `--call-segments` adds exactly the shapes
+# Compatibility switch: the call-segment shapes are ONLY behind `--call-segments`. Without it, `--field-segments` and the default mode emit none of these shapes
+# (`regen_check.sh` of every committed file checks the text byte for byte). `--call-segments` adds exactly the shapes
 # of the call-segment lemmas (`lean/Codec/CalleeDecode.lean`, `lean/Codec/Kind/CalleeDecode.lean`, `lean/Codec/InlineUint64RegisterBase.lean`, `lean/Codec/FixedBytesDecodePadding.lean`, `lean/Codec/Kind/DecodeAcceptComposition.lean`):
 #   uint64-overlay field decoded by a CALL to a callee decoder with a proved accept spec (Slot, CommitteeIndex,
 #     ValidatorIndex, Epoch of `consensus-types/primitives`): the call block `call_decode_segment` (`callq fn;
@@ -1184,8 +1184,8 @@ def bytes_seg_pad(c, fname, src, fo, j1, j2, p):
 # field either decoded or an opaque 8-byte slot (the `state` word of a protoc struct).
 # The statement follows the hand accept theorems (`Prysm/Eth1Data/DecodeAccept.lean`, `Prysm/BlobIdentifier/DecodeAccept.lean`, `Prysm/DepositMessage/DecodeAccept.lean`): inputs per SSZ field,
 # receiver slots per 8 bytes in Go order. STATEMENT CHECK: only `--same-as HAND` gives one, the identity
-# `NAME_type : type_of% (@NAME h) = type_of% (@HAND h)` (`with_reducible rfl`). Without a hand theorem (a
-# hold-out type) the emitted statement is NOT checked against anything: the generator says so in the file
+# `NAME_type : type_of% (@NAME h) = type_of% (@HAND h)` (`with_reducible rfl`). Without a hand theorem
+# the emitted statement is NOT checked against anything: the generator says so in the file
 # header and on stderr. There is no kind for the composed statement.
 
 def compose_read(dirs, found, ssz_size):
@@ -1492,7 +1492,7 @@ def compose(args, dirs, sha, irsha, fields, found):
     if call_segments:
         # `Codec/Kind/DecodeAcceptComposition.lean`: `rfl` at default transparency (the recursive kind must unfold); the
         # default heartbeat limit is set explicitly: a wrong parameter may not fail fast, a timeout is a FAIL
-        # (a plain comment: a doc comment cannot stand before `set_option … in`; an earlier compose run failed so)
+        # (a plain comment: a doc comment cannot stand before `set_option … in`; Lean does not parse that form)
         out += (f"\n-- Statement check: the declared type is the composed-accept kind (fields from the IR, `jret` from "
                 f"the `.S`).\nset_option maxHeartbeats 200000 in\n"
                 f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h) = @Codec.decodeAcceptKind h {C} {kst} "
@@ -2035,7 +2035,7 @@ def _step_walk(dirs, fields, head_end, slots0, F, done):
             raise StepStop(i, why, "new field kind" if cls == "none" else "new directive form")
         i += 1
         a = i
-    # the epilogue is no longer checked here; `decoder_step` checks it as its own phase from this index
+    # the epilogue is not checked here; `decoder_step` checks it as its own phase from this index
     return i
 
 
@@ -2647,7 +2647,7 @@ def main():
     ap.add_argument("--open", default="")
     ap.add_argument("--partial-out", help="decoder: on exit 3, write the matched fields here (marked PARTIAL)")
     ap.add_argument("--field-segments", action="store_true",
-                    help="decoder: field segment coverage (byte vectors of 32 / 48 / 96 bytes, inline uint64); off = the earlier text")
+                    help="decoder: field segment coverage (byte vectors of 32 / 48 / 96 bytes, inline uint64); off = the default `decoder` text")
     ap.add_argument("--call-segments", action="store_true",
                     help="decoder: call segment coverage (implies --field-segments): uint64-overlay fields decoded by a call to a callee "
                          "decoder with a proved spec, the two-directive uint64 read, the padding nop before makeslice")

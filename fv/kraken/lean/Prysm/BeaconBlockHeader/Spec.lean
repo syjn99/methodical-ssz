@@ -3,7 +3,7 @@ import Prysm.Checkpoint.SpecEquivalence
 import Prysm.BeaconBlockHeader.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.BeaconBlockHeader` (hold-out)
+# Spec bridge for the real Prysm `v1alpha1.BeaconBlockHeader`
 
 Hand-written. Independent hand `Desc`, written from consensus-specs phase0
 (`specs/phase0/beacon-chain.md`):

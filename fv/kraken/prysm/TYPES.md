@@ -22,7 +22,7 @@ The program counts all numbers. The scope classification is a first pass (provis
 
 | Item | Value |
 | --- | --- |
-| Prysm source | `ab15ff70c72a568c870b2de662474685a95de294` (slice + `ssz-size`). It replaced the old pin `5ac1d028f5`/`45394e5` |
+| Prysm source | `ab15ff70c72a568c870b2de662474685a95de294` (slice + `ssz-size`) |
 | Generator and runtime | `698c2025a73a296b55b95744a8408f3b03b2546b` |
 | Target compilation | Cross-compiled for linux/amd64 with `go version go1.26.10 linux/arm64` (host binary), `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -p 2 -tags purego -trimpath` |
 | Host | Linux aarch64 (generation is arm64 native. No x86-64 hardware) |

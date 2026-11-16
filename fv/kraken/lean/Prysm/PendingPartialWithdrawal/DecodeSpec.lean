@@ -2,7 +2,7 @@ import Prysm.PendingPartialWithdrawal.DecodeRejectSize
 import Prysm.PendingPartialWithdrawal.Spec
 
 /-!
-# Spec alignment of the real PendingPartialWithdrawal decoder, reject side (hold-out, type B)
+# Spec alignment of the real PendingPartialWithdrawal decoder, reject side
 
 Hand-written: the reject part of `Prysm/DepositMessage/DecodeSpec.lean` for PendingPartialWithdrawal.
 - `Decode.reject_size_spec`: `bs.size ≠ 24` → EthLib rejects, and the machine code returns `ssz.ErrSize`.

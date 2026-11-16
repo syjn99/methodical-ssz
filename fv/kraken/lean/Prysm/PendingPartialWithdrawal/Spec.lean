@@ -4,7 +4,7 @@ import Prysm.PendingPartialWithdrawal.SpecDescription
 import Prysm.PendingPartialWithdrawal.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.PendingPartialWithdrawal` (hold-out, type B)
+# Spec bridge for the real Prysm `v1alpha1.PendingPartialWithdrawal`
 
 Hand-written: the text of `Prysm/DepositMessage/Spec.lean` with three uint64 fields.
 `desc` (`Prysm/PendingPartialWithdrawal/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs electra; it was committed

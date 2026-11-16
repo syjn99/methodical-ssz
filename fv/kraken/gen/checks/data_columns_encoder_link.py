@@ -2,7 +2,7 @@
 """Call graph and link set of the real v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo on the
 Go 1.26.10 ELF (sha256 9a37219e...10e9), the first variable-length encoder hand proof (selected: one variable-length field, a uint64 list, and no call to
 another generated method).
-A new file in the pattern of `lists_and_vectors_link.py`. Existing scripts are not changed.
+It follows the pattern of `lists_and_vectors_link.py`.
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   data_columns_encoder_link.py callgraph <objdump> <out.json>      call targets of the candidates with contract class

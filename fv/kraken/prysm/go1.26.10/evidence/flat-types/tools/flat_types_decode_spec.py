@@ -1,6 +1,6 @@
 """Evidence tool (not part of gen/generator): write <dir>/Prysm/<GoTypeName>/DecodeSpec.lean from the generated accept
-statement text of <dir>/Prysm/<GoTypeName>/GeneratedDecodeAccept.lean (statement copied, input chunks replaced by the encoding of the EthLib-decoded value): the
-text of the script `mkspeck.py` generalised to n fields of uint64 / byte vectors.
+statement text of <dir>/Prysm/<GoTypeName>/GeneratedDecodeAccept.lean (statement copied, input chunks replaced by the encoding of the EthLib-decoded value), for
+n fields of uint64 / byte vectors.
 usage: python3 -I -B flat_types_decode_spec.py <fv/kraken/lean> [GoTypeName ...]"""
 import os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -59,7 +59,7 @@ def emit(d, X):
 import Prysm.{X}.Spec
 
 /-!
-# Spec alignment of the real `{ty}` decoder (24 flat hold-out types)
+# Spec alignment of the real `{ty}` decoder (24 flat types)
 
 Built on the GENERATED theorems of `Prysm/{X}/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`; raw output, not
 edited):

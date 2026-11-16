@@ -9,12 +9,12 @@ usage (from the repository root):
 The tree is not changed: every generator runs in a copy of fv/ under <work dir>/copy.
 Each output line is `<EQ|DIF|MIS|NOT>` TAB generator TAB tracked file TAB detail.
 EQ: the output equals the tracked file. DIF: it differs (the detail shows the first changed lines).
-MIS: the tracked file does not exist. NOT: the tracked input of a hold-out command is not in the tree.
+MIS: the tracked file does not exist. NOT: the tracked file of a header command is not in the tree.
 
 To check a change, run it before and after the change and compare the two results with `diff`.
 A difference needs a reason.
 
-The script knows these generators and their output names: gen/generator/gen.sh, the hold-out headers, the flat-type
+The script knows these generators and their output names: gen/generator/gen.sh, the commands in the headers of some generated files, the flat-type
 and encoder specification tools, desc_to_lean, list_desc_to_lean, layout and attestation_data_layout.
 Section 1 compares every Lean file that gen/generator/gen.sh writes. Sections 2 to 4 name the outputs by their paths in
 lean/Prysm/<GoTypeName>/.
@@ -86,7 +86,7 @@ for produced in sorted(p for p in stats_after if stats_before.get(p) != stats_af
 if r.returncode:
     results.append(('gen.sh', 'stderr', r.stderr.decode()[-400:]))
 
-# 2. Hold-out commands: rebuilt from the header of each file. The generator adds some imports by itself (the kind
+# 2. Header commands: rebuilt from the header of each file. The generator adds some imports by itself (the kind
 #    modules and the shared layer modules below); the command gets only the other imports.
 GENERATOR_ADDED = {
     'Codec.CalleeDecode', 'Codec.CalleeDecodeWindow', 'Codec.FieldFrame', 'Codec.FixedBytesDecodeWindow',
@@ -98,7 +98,7 @@ GENERATOR_ADDED = {
     'Prysm.BlobIdentifier.DecodeRejectSizeKindInstances', 'Prysm.BlobIdentifier.GeneratedDecodeAcceptCompositionKind',
     'Prysm.Slot.Uint64DecoderKindAnchors',
 }
-# hold-out file (path under lean/Prysm/) -> the prefix of its generated names (the --prefix of its command)
+# file with a header command (path under lean/Prysm/) -> the prefix of its generated names (the --prefix of its command)
 HOLD_OUT = {'BlobIdentifier/GeneratedDecodeRootFieldSegments': 'Decode.generated_root',
             'DepositMessage/GeneratedDecodeRootFieldSegments': 'Decode.generated_root',
             'Deposit_Data/GeneratedDecodeFieldSegmentsPartial': 'Decode.generated_field',

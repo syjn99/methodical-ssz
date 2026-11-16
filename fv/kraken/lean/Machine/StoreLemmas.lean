@@ -8,7 +8,6 @@ import Machine.Frame
 - `Machine.at_split16`: a 16-byte chunk is two 8-byte chunks.
 - `Machine.add8_neg8`: the address arithmetic `8 + y + x * 1 - 8 = x + y`.
 
-They were first proved for the Go 1.26.3 test target, whose proofs are no longer in the tree.
 -/
 
 open Machine

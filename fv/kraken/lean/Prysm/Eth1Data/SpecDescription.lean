@@ -1,7 +1,7 @@
 import Prysm.Checkpoint.Spec
 
 /-!
-# Independent hand `Desc` of `v1alpha1.Eth1Data` (hold-out)
+# Independent hand `Desc` of `v1alpha1.Eth1Data`
 
 Hand-written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`),
 BEFORE the Desc checker's Desc of `(v1alpha1, Eth1Data)` was generated or printed (rule:

@@ -261,7 +261,7 @@ def _alive(pids):
 
 def kill_tree(root):
     """SIGKILL the root, its descendants and their sessions; wait up to 10 s; raise if any survives
-    (an earlier timeout killed only memory_limit.py and left lake/lean running)."""
+    (a kill of only the memory_limit.py wrapper would leave lake and lean running)."""
     pids, sids = _tree(root)
     for p in pids:  # stop first, so that no member forks while we collect
         try:

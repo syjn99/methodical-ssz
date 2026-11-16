@@ -4,9 +4,9 @@ import Machine.Step
 /-!
 # A code view that skips padding `nop` directives
 
-On the hold-out types Deposit_Data and PendingPartialWithdrawal, and PendingConsolidation and SyncCommitteeMessage, the frozen generator missed fields because
-Go 1.26.10 put a one-byte `nop` inside a known shape (before `callq runtime.makeslice`, after a callee `callq`,
-at the end of an argument set-up). The dense lemmas answered with one
+In Deposit_Data, PendingPartialWithdrawal, PendingConsolidation and SyncCommitteeMessage, the dense templates do not match some fields because
+Go 1.26.10 puts a one-byte `nop` inside a known shape (before `callq runtime.makeslice`, after a callee `callq`,
+at the end of an argument set-up). The dense lemmas have one
 `pad` flag per observed position. This module gives ONE mechanism for every position.
 
 * `isNop d`: `d` is a `nop` instruction. `eraseNop q`: `q` without its nops. `nonNopIndex q i`: the index in `q` of

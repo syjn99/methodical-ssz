@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Hold-out of PendingDeposit and PowBlock Go differential of the v1alpha1.PendingDeposit and v1alpha1.PowBlock decoders
-(Python 3 standard library only; the text of pending_consolidation_and_sync_committee_message_differential.py with the hold-out cases).
+"""Go differential of the v1alpha1.PendingDeposit and v1alpha1.PowBlock decoders
+(Python 3 standard library only; the text of pending_consolidation_and_sync_committee_message_differential.py with the cases of these types).
 
   pending_deposit_and_pow_block_differential.py cases <cases.json>                      write the cases
   pending_deposit_and_pow_block_differential.py check <cases.json> <go-out.json> <result.json>

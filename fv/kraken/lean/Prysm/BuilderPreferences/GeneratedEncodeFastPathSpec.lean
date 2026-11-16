@@ -3,7 +3,7 @@ import Prysm.BuilderPreferences.Spec
 import Runtime.CopyModel
 
 /-!
-# BuilderPreferences encoder fast path (generated theorem) against the independent Desc (24 flat hold-out types, text of the encoder specification emitter)
+# BuilderPreferences encoder fast path (generated theorem) against the independent Desc (24 flat types, text of the encoder specification emitter)
 
 `Encode.generated_fast_spec`: for a receiver holding the Go layout of `g : SszValue` (uint64 fields = `uintBytes 8`, byte
 fields = `(p, n, cap)` with the n bytes at `p`), the generated fast-path theorem `Encode.generated_fast` writes at

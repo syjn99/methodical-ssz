@@ -3,7 +3,7 @@ import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept` (PendingConsolidation decoder accept path; hold-out, class D)
+# Witness of `Decode.accept` (PendingConsolidation decoder accept path)
 
 Hand-written (the text of `Prysm/PendingPartialWithdrawal/WitnessDecodeAccept.lean` with the PendingConsolidation host and
 layout). It shows that the premises of the independent hand statement `Prysm.PendingConsolidation.Decode.accept_statement` are

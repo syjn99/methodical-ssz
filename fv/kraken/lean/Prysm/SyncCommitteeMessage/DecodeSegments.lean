@@ -3,7 +3,7 @@ import Codec.FixedBytesDecode
 import Prysm.SyncCommitteeMessage.Code
 
 /-!
-# SyncCommitteeMessage hand lemmas (hold-out, class C; hand work after the raw generator output)
+# SyncCommitteeMessage hand lemmas
 
 Hand-written for the directives of `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`
 that the generator did not cover (`Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean`: Slot and Signature covered; BlockRoot and

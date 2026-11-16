@@ -10,13 +10,13 @@ import Prysm.SyncCommitteeMessage.Code
 import Prysm.PendingConsolidation.Statements
 
 /-!
-# Independent hand STATEMENTS of the two accept theorems (hold-out; statements only, no proof)
+# Independent hand STATEMENTS of the two accept theorems (statements only, no proof)
 
 Hand-written BEFORE the proof generator (`gen/generator/generator.py`) was run on
 either type and before any generator output for them was read.
 Sources: the Go receiver layout (IR `go_fields` in `prysm/ir/ir-mainnet.json`), the SSZ layout
 (consensus-specs; `Prysm/SyncCommitteeMessage/SpecDescription.lean`, `Prysm/PendingConsolidation/SpecDescription.lean`), the frame facts of the two `.S` files
-(`prysm/go1.26.10/link-set/norm`), and the statement shape of the earlier hand accept theorems
+(`prysm/go1.26.10/link-set/norm`), and the statement shape of the hand accept theorems
 `Prysm.BeaconBlockHeader.Decode.accept` (callee fields and fresh 32-byte slices in a `0x60` frame) and
 `Prysm.PendingPartialWithdrawal.Decode.accept_statement` (callee fields in a `0x48` frame). These abbrevs are the targets of the
 `--same-as-prop` identity check and of the hand proofs. They are not generator output.

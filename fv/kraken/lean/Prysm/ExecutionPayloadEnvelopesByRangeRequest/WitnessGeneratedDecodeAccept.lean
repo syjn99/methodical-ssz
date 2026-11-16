@@ -3,7 +3,7 @@ import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of the generated `Decode.generated_accept` (`v1alpha1.ExecutionPayloadEnvelopesByRangeRequest` decoder accept path; 24 flat hold-out types)
+# Witness of the generated `Decode.generated_accept` (`v1alpha1.ExecutionPayloadEnvelopesByRangeRequest` decoder accept path; 24 flat types)
 
 Written by the evidence script `flat_types_witness.py`: the text of the generated accept witness `Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeAccept.lean`
 (frame `0x38`, one Slot callee) with the v1alpha1.ExecutionPayloadEnvelopesByRangeRequest host and layout (2 input words). It shows that the premises of

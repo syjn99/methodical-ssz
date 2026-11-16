@@ -3,7 +3,7 @@ import Prysm.Deposit_Data.DecodeRejectSize
 import Prysm.Deposit_Data.Spec
 
 /-!
-# Spec alignment of the real Deposit_Data decoder (hold-out, type A)
+# Spec alignment of the real Deposit_Data decoder
 
 Hand-written: the text of `Prysm/DepositMessage/DecodeSpec.lean` with the Deposit_Data statement
 (receiver `state` word `ast` and the fourth field Signature).

@@ -3,7 +3,7 @@ import Prysm.Eth1Data.DecodeRejectSize
 import Prysm.Eth1Data.Spec
 
 /-!
-# Spec alignment of the real Eth1Data decoder (hold-out)
+# Spec alignment of the real Eth1Data decoder
 
 Hand-written (the text of `Prysm/BeaconBlockHeader/DecodeSpec.lean` with the Eth1Data statement).
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`, the independent consensus-specs Desc)

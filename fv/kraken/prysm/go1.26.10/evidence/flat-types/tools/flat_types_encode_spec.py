@@ -327,7 +327,7 @@ def emit_wit(X, info, cl, gsize):
     w('import Machine.WitnessHost')
     w('')
     w('/-!')
-    w('# Witness of `%s_fast` (%s encoder fast path, generated theorem; 24 flat hold-out types, text of the encoder specification emitter)' % (p, hdr['type']))
+    w('# Witness of `%s_fast` (%s encoder fast path, generated theorem; 24 flat types, text of the encoder specification emitter)' % (p, hdr['type']))
     w('')
     w('Emitted by the unit\'s evidence tool `encode_spec_emitter.py` (not the generator) from the committed statement text and')
     w('the IR; then built and kernel-checked. Host: the real Go 1.26.10 `MarshalSSZTo` (index 0)%s.' %
@@ -569,7 +569,7 @@ def emit_spec(X, info, cl):
     w('import Runtime.CopyModel')
     w('')
     w('/-!')
-    w('# %s encoder fast path (generated theorem) against the independent Desc (24 flat hold-out types, text of the encoder specification emitter)' % hdr['type'])
+    w('# %s encoder fast path (generated theorem) against the independent Desc (24 flat types, text of the encoder specification emitter)' % hdr['type'])
     w('')
     w('`Encode.generated_fast_spec`: for a receiver holding the Go layout of `g : %s` (uint64 fields = `uintBytes 8`, byte' % PS)
     w('fields = `(p, n, cap)` with the n bytes at `p`), the generated fast-path theorem `%s_fast` writes at' % p)

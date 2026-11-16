@@ -17,9 +17,9 @@ Hand-written BEFORE the author opened the generated modules `Prysm/SyncAggregato
 `Prysm/ValidatorBalance/GeneratedDecodeAccept.lean`, `Prysm/VoluntaryExit/GeneratedDecodeAccept.lean` or their kind lines. These generated files were already committed.
 The author did not read them, did not print their statements, and did not read the worked example `Prysm/VoluntaryExit/DecodeAcceptExample.lean`.
 Sources: the Go receiver layout (IR `go_fields` in `prysm/ir/ir-mainnet.json`), the SSZ layout (two 8-byte fields),
-the frame facts of the three `.S` files (`prysm/go1.26.10/link-set/norm`, read before for other types), the first directives of
-the callee `.S` files, and the statement shape of the earlier hand statement `Prysm.PendingConsolidation.Decode.accept_statement`
-(two callee fields, frame `0x48`). The identity with the generated accept theorem is checked in a later commit.
+the frame facts of the three `.S` files (`prysm/go1.26.10/link-set/norm`), the first directives of
+the callee `.S` files, and the statement shape of the hand statement `Prysm.PendingConsolidation.Decode.accept_statement`
+(two callee fields, frame `0x48`).
 SyncAggregatorSelectionData and ValidatorBalance have the frame `0x38`, a frame class that no other hand statement has.
 VoluntaryExit has the frame class `0x48`, which hand statements already tie.
 

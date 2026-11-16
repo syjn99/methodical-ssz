@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Hold-out of PendingConsolidation and SyncCommitteeMessage Go differential of the v1alpha1.SyncCommitteeMessage and v1alpha1.PendingConsolidation decoders
-(Python 3 standard library only; the text of deposit_data_and_pending_partial_withdrawal_differential.py with the hold-out cases).
+"""Go differential of the v1alpha1.SyncCommitteeMessage and v1alpha1.PendingConsolidation decoders
+(Python 3 standard library only; the text of deposit_data_and_pending_partial_withdrawal_differential.py with the cases of these types).
 
   pending_consolidation_and_sync_committee_message_differential.py cases <cases.json>                      write the cases
   pending_consolidation_and_sync_committee_message_differential.py check <cases.json> <go-out.json> <result.json>

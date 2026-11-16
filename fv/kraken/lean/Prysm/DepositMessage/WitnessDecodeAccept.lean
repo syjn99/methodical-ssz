@@ -4,7 +4,7 @@ import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept` (DepositMessage decoder accept path, hold-out)
+# Witness of `Decode.accept` (DepositMessage decoder accept path)
 
 Hand-written (the text of `Prysm/Eth1Data/WitnessDecodeAccept.lean` with the DepositMessage host and layout).
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.DepositMessage).UnmarshalSSZ` (index 9), the 1-byte bump

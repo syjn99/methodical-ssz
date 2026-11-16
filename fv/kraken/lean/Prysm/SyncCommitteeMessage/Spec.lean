@@ -4,7 +4,7 @@ import Prysm.SyncCommitteeMessage.SpecDescription
 import Prysm.SyncCommitteeMessage.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.SyncCommitteeMessage` (hold-out, class C)
+# Spec bridge for the real Prysm `v1alpha1.SyncCommitteeMessage`
 
 Hand-written: the text of `Prysm/Deposit_Data/Spec.lean` with the fields
 `[uint64, Bytes32, uint64, Bytes96]`.

@@ -3,7 +3,7 @@ import Prysm.SyncCommitteeMessage.DecodeRejectSize
 import Prysm.SyncCommitteeMessage.Spec
 
 /-!
-# Spec alignment of the real SyncCommitteeMessage decoder (hold-out, class C)
+# Spec alignment of the real SyncCommitteeMessage decoder
 
 Hand-written: the text of `Prysm/Deposit_Data/DecodeSpec.lean` / `Prysm/PendingPartialWithdrawal/DecodeSpec.lean`, with the statement
 `Decode.accept_statement` (`Prysm/SyncCommitteeMessage/Statements.lean`) and the input chunks of `g`.

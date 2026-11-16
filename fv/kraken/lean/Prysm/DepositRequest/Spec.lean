@@ -4,7 +4,7 @@ import Prysm.DepositRequest.SpecDescription
 import Prysm.DepositRequest.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1.DepositRequest` (24 flat hold-out types)
+# Spec bridge for the real Prysm `v1.DepositRequest` (24 flat types)
 
 Written by the evidence script `flat_types_spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`
 generalised to a field list). `desc` (`Prysm/DepositRequest/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).

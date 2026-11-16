@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Call graph and link tables of the real v1alpha1.BeaconBlockHeader SSZ functions and the
-primitives.ValidatorIndex methods on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; BeaconBlockHeader
-and ValidatorIndex are hold-out types; the text of `attestation_data_link.py` with the function set changed).
+primitives.ValidatorIndex methods on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set;
+the text of `attestation_data_link.py` with the function set changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   beacon_block_header_link.py callgraph <objdump> <out.json>          call targets with contract class
@@ -10,7 +10,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
                                                     <outdir>/target-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
-SizeSSZ is not in the set (excluded from the hold-out claim). The Slot callee is `Prysm.Slot.Code.unmarshalSSZ`
+SizeSSZ is not in the set. The Slot callee is `Prysm.Slot.Code.unmarshalSSZ`
 (its code is in prysm/go1.26.10/link-set); the shared items (uint8 type word, ssz.ErrSize, the
 errorString type, writeBarrier) are asserted equal to the Checkpoint / AttestationData sets' operands.
 """

@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""Copy of an earlier memory watchdog (not in this tree; that file is not edited).
-Change against the original: a per-process trigger no longer inflates the reported
-session peak (it used to set total = cap + 1 and add the other processes); it sets
-its own flag and the reported peak_session_rss is the true anonymous session sum.
+"""Memory watchdog for one command.
+A per-process trigger sets its own flag. It does not change the reported session peak:
+peak_session_rss is the true anonymous session sum.
 
 Run a command in its own session; every 0.1 s sum the
 anonymous RSS (RssAnon) of all processes in that session; if the sum exceeds

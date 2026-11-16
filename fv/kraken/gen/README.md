@@ -84,9 +84,9 @@ So a defect in the producer or in the IR does not also hide in the checker.
 `desc/run_desc_checker.sh` runs it (needs Lean). The result is `desc/results/main.result.json`.
 `desc/test_desc.py prepare` makes its inputs, `desc/run_desc_checker.sh` writes it, and `desc/test_desc.py evaluate` checks it.
 They use a relative work directory under `lean/`, so the result holds no machine path.
-The result names the present `Spec` descriptions, for example `Spec.scalarsDesc` and `Spec.listU64Desc`.
-The review sources `desc/review/*` name earlier descriptions `Fv1.<xy>Desc`, for example `Fv1.scDesc` for Scalars.
-These earlier names occur in the result only inside the texts of the replayed review mutants.
+The result names the `Spec` descriptions, for example `Spec.scalarsDesc` and `Spec.listU64Desc`.
+The review sources `desc/review/*` name descriptions `Fv1.<xy>Desc` that the Lean tree does not define, for example `Fv1.scDesc` for Scalars.
+These names occur in the result only inside the texts of the replayed review mutants.
 `../FINDINGS.md` ("Replayed review mutants carry earlier reference names") gives their effect on three mutants.
 No program checks the binding of the result where a `Desc` is used.
 The header of each `*SpecChecker.lean` states the sha256 of its `Desc` file as text only.
@@ -178,7 +178,7 @@ These need more than Python:
 - The commands of 12 generated files are not in `generator/gen.sh`. Their headers give the commands.
 - `prysm/go1.26.10/evidence/flat-types/runs/run_generators.sh` calls a job wrapper that is not tracked. Run its `generator.py` commands directly.
 - 15 of the 24 `*SpecChecker.lean` headers name a path where the `Desc` file is not. The file is in a subdirectory of
-  `prysm/go1.26.10/evidence/` (`eth1-data/`, `flat-types/`, `five-flat-types/` and the directories named after the hold-out types). Nine of these headers have a hand-added line that
+  `prysm/go1.26.10/evidence/` (`eth1-data/`, `flat-types/`, `five-flat-types/` and the directories named after the types). Nine of these headers have a hand-added line that
   gives the subdirectory; the other six do not (DepositRequest, HistoricalSummary, SigningData,
   SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit).
 - `kindcheck.py` does not bind the code constant of a theorem to the `.S` file of the header. It does not check the `.S` label against the IR type.

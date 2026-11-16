@@ -4,7 +4,7 @@ import Prysm.DepositMessage.SpecDescription
 import Prysm.DepositMessage.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.DepositMessage` (hold-out)
+# Spec bridge for the real Prysm `v1alpha1.DepositMessage`
 
 Hand-written (the text of `Prysm/Eth1Data/Spec.lean`; `obtain … rfl` on `bs = enc g` is `rw` here:
 `subst` of that equation timed out in `whnf` (seen on a minimal reproduction); with the DepositMessage fields).

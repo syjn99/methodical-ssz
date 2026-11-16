@@ -23,7 +23,7 @@ this namespace use `desc`.
 `SszValue` is the SSZ content of a Go `v1alpha1.Checkpoint` in the EthLib domain
 (`len(Root) = 32`): the other Go fields (`state`, `unknownFields`, `sizeCache`)
 carry no SSZ value. The proofs of the spec lemmas below follow
-`Spec/TestCheckpointAndAttestationData.lean` and an earlier Checkpoint spec module that is no longer in the tree (their text, with the names of this
+`Spec/TestCheckpointAndAttestationData.lean` (its text, with the names of this
 namespace); they read EthLib only.
 -/
 

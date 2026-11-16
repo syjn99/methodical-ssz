@@ -5,7 +5,7 @@ import Prysm.Eth1Data.DecodeAccept
 import Prysm.Deposit_Data.Statements
 
 /-!
-# Real Prysm `(*v1alpha1.Deposit_Data).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out, type A)
+# Real Prysm `(*v1alpha1.Deposit_Data).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
 Hand-written AFTER the raw generator outputs were committed (results (S), (C)).
 Result (C) was "refused" (`--compose needs every field covered (3 of 4)`), so the accept theorem is this hand

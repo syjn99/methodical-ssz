@@ -8,7 +8,7 @@ import Prysm.BeaconBlockHeader.Code
 import Prysm.Deposit_Data.Code
 
 /-!
-# Independent hand STATEMENTS of the two accept theorems (hold-out; statements only, no proof): the `PendingPartialWithdrawal` part
+# Independent hand STATEMENTS of the two accept theorems (statements only, no proof): the `PendingPartialWithdrawal` part
 
 The declarations of the other types of this group are in `Prysm/Deposit_Data/Statements.lean`.
 -/

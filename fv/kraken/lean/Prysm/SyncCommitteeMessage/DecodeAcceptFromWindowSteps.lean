@@ -8,7 +8,7 @@ import Prysm.SyncCommitteeMessage.Statements
 # `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path, re-derived with the window and step mechanisms
 
 `Decode.accept_from_window_steps : Decode.accept_statement` (the pre-committed hand statement, `Prysm/SyncCommitteeMessage/Statements.lean`, unchanged). The text of
-`Prysm/SyncCommitteeMessage/DecodeAccept.lean` with the two fields that the frozen generator missed taken from the window and step mechanisms:
+`Prysm/SyncCommitteeMessage/DecodeAccept.lean` with two fields taken from the window and step mechanisms:
 
 * BlockRoot 47–81: `Decode.example_step_BlockRoot_field` (byte segment over windows with the receiver register
   `rY = rax`, then the tail as four steps) instead of the hand lemma `bytes32_decode_segment_rax` and hand steps;
@@ -19,7 +19,7 @@ import Prysm.SyncCommitteeMessage.Statements
 Unchanged: `Decode.head_to_arguments` and `Decode.spill_registers` (hand, `Prysm/SyncCommitteeMessage/DecodeSegments.lean`), the generated Slot theorems (`Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean`),
 the hand steps 146–160. `Prysm/SyncCommitteeMessage/DecodeSegments.lean` is imported for `Decode.head_to_arguments` / `Decode.spill_registers` only; `Prysm/SyncCommitteeMessage/DecodeAcceptDependencyCheck.lean` checks by
 program that this proof does not reach `bytes32_decode_segment_rax`, `Decode.validator_index_argument` or `call_decode_nop_segment`.
-In-sample (the type is development data since the frozen generator ran on it); no transfer claim.
+In-sample (the type is development data); no transfer claim.
 -/
 
 open Machine Runtime Prysm.AttestationData.Code Prysm.SyncCommitteeMessage.Code Codec

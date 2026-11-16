@@ -1,10 +1,10 @@
 import Codec.Bytes32Decode
 
 /-!
-# 48-byte decode segment, source offset 0 (hold-out, hand helper; not part of the frozen method)
+# 48-byte decode segment, source offset 0 (hand helper; not generator output)
 
 Hand-written for `DepositMessage.PublicKey` (`bytes48` at SSZ offset 0, Go
-offset 0). The frozen generator reads only 32-byte `[]byte` fields (`generator.py` `ir_roots`), so it does not
+offset 0). The default `decoder` mode of `generator.py` reads only 32-byte `[]byte` fields (`ir_roots`), so it does not
 see this field. The Go 1.26.10 code of the field is the offset-0 form (memmove source at the buffer pointer itself) with the size 48:
 `bytesDecodeHead48` = the text of `Codec.rootDecodeHead` with `32` → `48`; `bytesDecodeMiddleOffsetZero48` = the text of
 `Codec.rootDecodeMiddleOffsetZero` with `32` → `48`; `bytes48_decode_segment_offset_zero` = the statement and proof text of

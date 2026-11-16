@@ -3,7 +3,7 @@ import Prysm.BeaconBlockHeader.DecodeRejectSize
 import Prysm.BeaconBlockHeader.Spec
 
 /-!
-# Spec alignment of the real BeaconBlockHeader decoder (hold-out)
+# Spec alignment of the real BeaconBlockHeader decoder
 
 Hand-written (the text of `Prysm/AttestationData/DecodeSpec.lean` with the BeaconBlockHeader
 statement).

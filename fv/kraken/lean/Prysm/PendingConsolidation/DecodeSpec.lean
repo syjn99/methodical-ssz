@@ -3,7 +3,7 @@ import Prysm.PendingConsolidation.DecodeRejectSize
 import Prysm.PendingConsolidation.Spec
 
 /-!
-# Spec alignment of the real PendingConsolidation decoder (hold-out, class D)
+# Spec alignment of the real PendingConsolidation decoder
 
 Hand-written: the text of `Prysm/Deposit_Data/DecodeSpec.lean` / `Prysm/PendingPartialWithdrawal/DecodeSpec.lean`, with the statement
 `Decode.accept_statement` (`Prysm/SyncCommitteeMessage/Statements.lean`) and the input chunks of `g`.

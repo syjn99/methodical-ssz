@@ -4,7 +4,7 @@ import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept` (BeaconBlockHeader decoder accept path, hold-out)
+# Witness of `Decode.accept` (BeaconBlockHeader decoder accept path)
 
 Hand-written (the text of `Prysm/AttestationData/WitnessDecodeAccept.lean` with the BeaconBlockHeader host
 and layout). Host: data labels, the real Go 1.26.10 `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`

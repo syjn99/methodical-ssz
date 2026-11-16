@@ -4,7 +4,7 @@ import Prysm.PendingDeposit.SpecDescription
 import Prysm.PendingDeposit.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.PendingDeposit` (hold-out, full-proof type)
+# Spec bridge for the real Prysm `v1alpha1.PendingDeposit`
 
 Hand-written: the text of `Prysm/Deposit_Data/Spec.lean` with the fifth field `slot` (uint64).
 `desc` (`Prysm/PendingDeposit/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs electra; it was committed

@@ -4,7 +4,7 @@ import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept` (Deposit_Data decoder accept path, hold-out, type A)
+# Witness of `Decode.accept` (Deposit_Data decoder accept path)
 
 Hand-written (the text of `Prysm/DepositMessage/WitnessDecodeAccept.lean` with the Deposit_Data host and layout).
 It shows that the premises of the independent hand statement `Prysm.Deposit_Data.Decode.accept_statement` are satisfiable.

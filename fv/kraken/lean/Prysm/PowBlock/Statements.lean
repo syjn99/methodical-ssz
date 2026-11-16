@@ -8,7 +8,7 @@ import Prysm.AttestationData.Code
 import Prysm.PendingDeposit.Code
 
 /-!
-# Independent hand STATEMENTS of the two accept theorems (hold-out; statements only, no proof): the `PowBlock` part
+# Independent hand STATEMENTS of the two accept theorems (statements only, no proof): the `PowBlock` part
 
 The declarations of the other types of this group are in `Prysm/PendingDeposit/Statements.lean`.
 -/

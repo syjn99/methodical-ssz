@@ -4,7 +4,7 @@ import Prysm.PendingConsolidation.SpecDescription
 import Prysm.PendingConsolidation.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.PendingConsolidation` (hold-out, class D)
+# Spec bridge for the real Prysm `v1alpha1.PendingConsolidation`
 
 Hand-written: the text of `Prysm/PendingPartialWithdrawal/Spec.lean` with two uint64 fields.
 `desc` (`Prysm/PendingConsolidation/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs electra; it was committed

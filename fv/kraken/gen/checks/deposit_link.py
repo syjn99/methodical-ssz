@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Proof of use of the `Codec/Segment/` lemmas: call graph and link set of the real v1alpha1.Deposit UnmarshalSSZ on the Go 1.26.10 ELF
-(the same ELF as prysm/go1.26.10/link-set, sha256 9a37219e...10e9). A new file. It reuses `lists_and_vectors_link.py`, `checkpoint_and_epoch_link.py`
-and `attestation_data_link.py` by import; none of them is changed.
+(the same ELF as prysm/go1.26.10/link-set, sha256 9a37219e...10e9). It reuses `lists_and_vectors_link.py`, `checkpoint_and_epoch_link.py`
+and `attestation_data_link.py` by import.
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   historical_batch_link.py callgraph <objdump> <out.json>          call targets with contract class

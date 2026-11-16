@@ -2,7 +2,7 @@ import Prysm.BeaconBlockHeader.EncodeHead
 import Prysm.BeaconBlockHeader.EncodeRootFields
 
 /-!
-# Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, fast path, Go 1.26.10 machine code (hold-out)
+# Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, fast path, Go 1.26.10 machine code
 
 Hand proof by composition of the segments of `Prysm.BeaconBlockHeader.EncodeHead` (`Encode.encode_slot`, `Encode.encode_proposer_index`) and
 `Prysm.BeaconBlockHeader.EncodeRootFields` (`Encode.encode_parent_root`, `Encode.encode_state_root`, `Encode.encode_body_root`, `Encode.encode_return`). Statement shape of

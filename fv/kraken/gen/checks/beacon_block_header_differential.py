@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Go differential of the BeaconBlockHeader hold-out (BeaconBlockHeader, ValidatorIndex) (Python 3 standard library only).
+"""Go differential of BeaconBlockHeader and ValidatorIndex (Python 3 standard library only).
 
   beacon_block_header_differential.py cases <cases.json>                      write the cases
   beacon_block_header_differential.py check <cases.json> <go-out.json> <result.json>

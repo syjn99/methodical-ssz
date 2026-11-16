@@ -26,7 +26,7 @@ Checks:
      LLVM decodes both byte strings to the same text, "padding" if it is a
      normalized nop, else FAIL. At a padding position the .S instruction must
      be `nop`, its new byte must be 0x90, and LLVM must decode the original
-     bytes as a nop (a `retq` there used to pass).
+     bytes as a nop (without this test, a `retq` there would pass).
  (e) all.S has the same directives as the per-function .S files, in order
      (instructions included, not only labels).
  (f) every data file data/<id>.data that Lean includes (`data_include`,

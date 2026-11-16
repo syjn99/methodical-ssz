@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Hold-out of Deposit_Data and PendingPartialWithdrawal Go differential of the v1alpha1.Deposit_Data and v1alpha1.PendingPartialWithdrawal decoders
-(Python 3 standard library only; the text of blob_identifier_and_deposit_message_differential.py with the hold-out cases).
+"""Go differential of the v1alpha1.Deposit_Data and v1alpha1.PendingPartialWithdrawal decoders
+(Python 3 standard library only; the text of blob_identifier_and_deposit_message_differential.py with the cases of these types).
 
   deposit_data_and_pending_partial_withdrawal_differential.py cases <cases.json>                      write the cases
   deposit_data_and_pending_partial_withdrawal_differential.py check <cases.json> <go-out.json> <result.json>

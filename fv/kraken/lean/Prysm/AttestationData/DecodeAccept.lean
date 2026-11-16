@@ -32,9 +32,9 @@ function's own `MakesliceContract … (S + 96)`, `MemmoveContract (S + 96)`, `Ne
 Checkpoint callee's frame and its own `S` scratch bytes).
 
 **Proof.** Four segment lemmas (one proof of the whole function made a Lean process exceed the 6 GiB memory cap): `Decode.head` (entry → `L_167`), `Decode.block_root`
-(→ `L_208`), `Decode.source` (→ `L_2d9`), `Decode.target` (→ return); every directive index was
-re-derived from the Go 1.26.10 `.S`. An earlier hand proof on the Go 1.26.3 test target (Checkpoint inlined,
-different frame) was not reused: only its proof style.
+(→ `L_208`), `Decode.source` (→ `L_2d9`), `Decode.target` (→ return).
+Every directive index comes from the Go 1.26.10 `.S`.
+The proof uses no proof of the Go 1.26.3 test target.
 
 Stack (rsp = s.regs.rsp at entry): return slot; saved rbp at rsp − 8; argument spills at
 rsp + 8, + 16, + 32 (rsp + 24 is not written); frame rsp − 120 … rsp − 8: argument area

@@ -3,8 +3,8 @@ import Codec.Bytes32Decode
 /-!
 # The 32-byte field decode segment, offset-0 form
 
-Added after the frozen generator ran on the hold-out types, so no hold-out type tests it. Eth1Data is
-development data for it; no hold-out claim. When the 32-byte field is at SSZ offset 0, the memmove source
+The generator form for a 32-byte field at SSZ offset 0. Eth1Data is the development data for this form.
+When the 32-byte field is at SSZ offset 0, the memmove source
 is the buffer pointer itself and Go 1.26.10 emits no `add $src,%rbx`. The first block is the frozen
 `rootDecodeHead`; the second block `rootDecodeMiddleOffsetZero` is `rootDecodeMiddle` without the `add` directive (11 directives).
 Generalised from the hand module `Prysm/Eth1Data/DecodeFieldSegmentOffsetZero.lean`: same definition body and the same statement

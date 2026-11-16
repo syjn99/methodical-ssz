@@ -6,7 +6,7 @@ import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.DecodeRejectSize
 
 /-!
-# Real Prysm `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`: size reject (hold-out)
+# Real Prysm `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`: size reject
 
 Hand-written: the text of `Prysm/Eth1Data/DecodeRejectSize.lean` with the BlobIdentifier indices.
 `Decode.reject_size` (`len(buf) ≠ 40`, Go source `return ssz.ErrSize`): directives 2–7 (guard,

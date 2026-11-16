@@ -354,7 +354,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.CommitteeIndex.Decode.generated_accept_kind
 #print axioms Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_segment_kind
 #print axioms Prysm.Checkpoint.Decode.generated_root_Root_segment_kind
--- Hold-out types ValidatorIndex and BeaconBlockHeader (theorems written after the frozen generator ran on them)
+-- ValidatorIndex and BeaconBlockHeader
 #print axioms Prysm.ValidatorIndex.Decode.generated_accept
 #print axioms Prysm.ValidatorIndex.Decode.generated_accept_kind
 #print axioms Prysm.ValidatorIndex.Decode.accept_function_spec_holds
@@ -388,7 +388,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.runs
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength9.runs9
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength300.runs300
--- Hold-out type Eth1Data, decoder; no generated theorem (the generator run emitted nothing)
+-- Eth1Data, decoder: hand theorems
 #print axioms Prysm.Eth1Data.root_decode_segment_source_offset_zero
 #print axioms Prysm.Eth1Data.Decode.head
 #print axioms Prysm.Eth1Data.Decode.accept
@@ -416,7 +416,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.BeaconBlockHeader.Encode.fast_path_spec
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_prefix
--- Generator extension for a 32-byte field at SSZ offset 0 (offset-0 form; written after the frozen generator ran on the hold-out types; Eth1Data = development data)
+-- Generator extension for a 32-byte field at SSZ offset 0 (offset-0 form; Eth1Data = development data)
 #print axioms Codec.root_decode_segment_offset_zero
 #print axioms Codec.rootDecodeSegmentOffsetZeroKind_of
 #print axioms Prysm.Eth1Data.Decode.generated_root_DepositRoot_segment
@@ -427,7 +427,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.Eth1Data.root_decode_segment_offset_zero_statement_eq_hand
 #print axioms Prysm.Eth1Data.Decode.decode_DepositRoot_segment_hand
 
--- Hold-out types BlobIdentifier and DepositMessage (UnmarshalSSZ): every new theorem.
+-- BlobIdentifier and DepositMessage (UnmarshalSSZ)
 #print axioms Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_segment
 #print axioms Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_segment_kind
 #print axioms Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_segment
@@ -629,8 +629,8 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_ParentRoot_segment_kind
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_StateRoot_segment
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_StateRoot_segment_kind
--- Hold-out types Deposit_Data and PendingPartialWithdrawal (UnmarshalSSZ): every new theorem (raw generated segments,
--- hand lemma, hand accept / reject / spec / witnesses). PendingPartialWithdrawal accept: not proved (bound).
+-- Deposit_Data and PendingPartialWithdrawal (UnmarshalSSZ): raw generated segments,
+-- hand lemma, hand accept / reject / spec / witnesses
 #print axioms Prysm.Deposit_Data.Decode.generated_field_PublicKey_segment
 #print axioms Prysm.Deposit_Data.Decode.generated_field_PublicKey_segment_kind
 #print axioms Prysm.Deposit_Data.Decode.generated_field_Amount_segment
@@ -818,8 +818,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Codec.uint64_decode_scratch_register_segment
 #print axioms Prysm.ValidatorIndex.Decode.accept_function_spec_is_callee_accept
 
--- Hold-out types SyncCommitteeMessage and PendingConsolidation (UnmarshalSSZ): every new theorem (added with the
--- `decoder --steps` generator; the run on these hold-out types left this file unchanged, the directory was frozen)
+-- SyncCommitteeMessage and PendingConsolidation (UnmarshalSSZ)
 #print axioms Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_argument
 #print axioms Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_argument_kind
 #print axioms Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_call

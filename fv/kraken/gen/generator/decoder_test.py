@@ -5,7 +5,7 @@ usage: decoder_test.py <work-dir> <result.json>      (run from anywhere; one gat
 exit 0 = every case has its expected exit code and output; 1 = a case differs; 2 = usage
 
 Cases (all on the committed Eth1Data `.S` and IR; mutants are written to <work-dir>, nothing in the repo).
-Every case runs `gen/generator/generator.py` of the working tree. No case runs an earlier generator.
+Every case runs `gen/generator/generator.py` of the working tree.
  - new-gen: the working-tree generator on Eth1Data: exit 0, both fields (DepositRoot offset-0 form,
    BlockHash add form), stdout = the committed `lean/Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean`, two runs byte-identical.
  - mutants of the `.S` (one line changed or removed, found by exact text at a 1-based line):
@@ -17,7 +17,7 @@ Every case runs `gen/generator/generator.py` of the working tree. No case runs a
 
 field-segment cases (`decoder --field-segments`; ids `field-segments-*`; mutated `.S` and IR copies in <work-dir> only):
  - field-segments-compat-*: the default mode (no `--field-segments`) on BlobIdentifier / DepositMessage still prints the committed
-   files of hold-out types BlobIdentifier and DepositMessage, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean` / `Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean` byte for byte.
+   files of BlobIdentifier and DepositMessage, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean` / `Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean` byte for byte.
  - field-segments-new-*: `--field-segments` on Eth1Data, BlobIdentifier, DepositMessage: exit 0 twice, identical, = the committed
    raw files `Prysm/Eth1Data/GeneratedDecodeFieldSegments.lean`, `Prysm/BlobIdentifier/GeneratedDecodeFieldSegments.lean`, `Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean`, with every field covered.
  - adversarial `.S` / IR mutants: wrong size immediates, a size other than 32 / 48 / 96, mismatched registers
@@ -283,7 +283,7 @@ FIELD_SEGMENT_MUT = [
 def field_segment_cases(work, new):
     res, bad = [], 0
     irt = (KR / IR).read_text()
-    # compatibility: default mode = committed files of hold-out types BlobIdentifier and DepositMessage
+    # compatibility: default mode = committed files of BlobIdentifier and DepositMessage
     for key in ("BlobIdentifier", "DepositMessage"):
         c = FIELD_SEGMENT_CASES[key]
         rc, so, se = run(["python3", "-I", str(new), "decoder", "--assembly", c["S"], "--ir", IR, "--type", c["type"]]

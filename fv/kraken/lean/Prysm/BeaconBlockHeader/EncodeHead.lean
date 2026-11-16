@@ -5,7 +5,7 @@ import Prysm.BeaconBlockHeader.Code
 import Codec.StackGuard
 
 /-!
-# Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, fast path, head segments (hold-out)
+# Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, fast path, head segments
 
 Hand proof. The generator has no encode mode; no template lemma is used.
 

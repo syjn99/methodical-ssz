@@ -6,7 +6,7 @@ import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.DecodeRejectSize
 
 /-!
-# Real Prysm `(*v1alpha1.Eth1Data).UnmarshalSSZ`: size reject (hold-out)
+# Real Prysm `(*v1alpha1.Eth1Data).UnmarshalSSZ`: size reject
 
 Hand-written: the text of `Prysm/BeaconBlockHeader/DecodeRejectSize.lean` (`Prysm.BeaconBlockHeader.Decode.reject_size`) with the
 Eth1Data indices. `Decode.reject_size` (`len(buf) ≠ 72`, Go source `return ssz.ErrSize`):

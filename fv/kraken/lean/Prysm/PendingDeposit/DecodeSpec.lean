@@ -3,7 +3,7 @@ import Prysm.PendingDeposit.DecodeRejectSize
 import Prysm.PendingDeposit.Spec
 
 /-!
-# Spec alignment of the real PendingDeposit decoder (hold-out, full-proof type)
+# Spec alignment of the real PendingDeposit decoder
 
 Hand-written: the shape of `Prysm/Deposit_Data/DecodeSpec.lean` with the PendingDeposit statement
 (`Decode.accept_statement`, `Prysm/PendingDeposit/Statements.lean`; the input chunks are those of the `g` that EthLib decodes).

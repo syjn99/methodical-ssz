@@ -1,7 +1,7 @@
 import Prysm.Checkpoint.Spec
 
 /-!
-# Independent hand `Desc` of `v1alpha1.SyncCommitteeMessage` (hold-out, class C)
+# Independent hand `Desc` of `v1alpha1.SyncCommitteeMessage`
 
 Hand-written from consensus-specs altair (`specs/altair/validator.md`),
 BEFORE the Desc checker's Desc of `(v1alpha1, SyncCommitteeMessage)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).

@@ -7,7 +7,7 @@ import Prysm.SyncCommitteeMessage.DecodeSegments
 import Prysm.PendingConsolidation.DecodeAccept
 
 /-!
-# The earlier per-shape lemmas are instances of the window and step mechanisms: the `SyncCommitteeMessage` part
+# The per-shape lemmas are instances of the window and step mechanisms: the `SyncCommitteeMessage` part
 
 The declarations of the other types of this group are in `Codec/WindowStepsInstances.lean`.
 -/

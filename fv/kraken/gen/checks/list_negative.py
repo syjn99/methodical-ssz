@@ -6,7 +6,7 @@ Usage (one gated job, Lean env, cwd anywhere):
 It imports `negative.py` and uses its `cut`, `classify`, `precheck` and `main` unchanged. Two functions differ:
 * run_case: the list/vector main theorems state `theorem X : <frozen stmt def>`, and the stmt defs live in another module
   (`Prysm/SyncAggregate/Statements.lean`, `Prysm/SyncCommittee/Statements.lean`). A case may name "statement_module" (path under fv/kraken/lean), or "inline", a list of
-  such modules in dependency order (for example `Prysm/SyncAggregate/SpecDescription.lean` then `Defs.lean` for a Desc mutant). The mutant file then
+  such modules in dependency order (for example `Prysm/SyncAggregate/SpecDescription.lean` then `Prysm/SyncAggregate/SpecDefinitions.lean` for a Desc mutant). The mutant file then
   inlines those modules' bodies (their imports are replaced by their own imports), so that the code rename
   `<code_definition>` → `<code_definition>Mut` also reaches the statement. A "statement" case names "statement_def" and mutates the text
   of that def (old → new, unique inside the def). "norm" is the .S path under fv/kraken; "code_namespace" the namespace

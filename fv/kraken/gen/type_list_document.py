@@ -67,7 +67,7 @@ def main():
     w("")
     w("| Item | Value |")
     w("| --- | --- |")
-    w("| Prysm source | `ab15ff70c72a568c870b2de662474685a95de294` (slice + `ssz-size`). It replaced the old pin `5ac1d028f5`/`45394e5` |")
+    w("| Prysm source | `ab15ff70c72a568c870b2de662474685a95de294` (slice + `ssz-size`) |")
     w("| Generator and runtime | `698c2025a73a296b55b95744a8408f3b03b2546b` |")
     w(f"| Target compilation | Cross-compiled for linux/amd64 with `{bid['go']}` (host binary), `{bid['target']}` |")
     w(f"| Host | {bid['host']} (generation is arm64 native. No x86-64 hardware) |")

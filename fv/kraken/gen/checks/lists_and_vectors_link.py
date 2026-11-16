@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Call graph and link tables of the real v1alpha1.SyncAggregate, v1alpha1.SyncCommittee and
 v1alpha1.IndexedAttestation UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set, sha256 9a37219e...10e9).
-A new file with the text of `deposit_data_and_pending_partial_withdrawal_link.py`: the function set and the data items changed. Existing scripts
-(`checkpoint_and_epoch_link.py`, `attestation_data_link.py`, `deposit_data_and_pending_partial_withdrawal_link.py`, `link/convert_objdump.py`, `link/data.py`, `link/check.py`) are not changed.
+The text of `deposit_data_and_pending_partial_withdrawal_link.py` with the function set and the data items changed.
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   lists_and_vectors_link.py callgraph <objdump> <out.json>          call targets with contract class

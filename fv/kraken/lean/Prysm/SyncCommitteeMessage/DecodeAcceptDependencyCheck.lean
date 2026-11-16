@@ -7,9 +7,9 @@ import Prysm.SyncCommitteeMessage.DecodeAccept
 
 A program (not a proof) walks the constants that the proof terms of `Decode.accept_from_window_steps` and
 `Prysm.PendingConsolidation.Decode.accept_from_window_steps` reach inside the project namespaces (`Prysm`, `Codec`, `ElfData`, `Machine`, `Runtime`) and fails the build
-if one of the hold-out hand lemmas `Prysm.SyncCommitteeMessage.bytes32_decode_segment_rax`,
+if one of the hand lemmas `Prysm.SyncCommitteeMessage.bytes32_decode_segment_rax`,
 `Prysm.SyncCommitteeMessage.Decode.validator_index_argument`, `Prysm.PendingConsolidation.call_decode_nop_segment` is among them.
-Controls: the same walk from the hold-out theorems `Prysm.SyncCommitteeMessage.Decode.accept` /
+Controls: the same walk from the hand theorems `Prysm.SyncCommitteeMessage.Decode.accept` /
 `Prysm.PendingConsolidation.Decode.accept` must reach them.
 Executable evidence only.
 -/
@@ -60,7 +60,7 @@ elab "#check_window_step_dependencies" : command => do
     for b in banned do
       if r.contains b then throwError "window step dependency check FAILED: {root} reaches {b}"
     logInfo m!"window step dependency check PASS: {root} reaches {r.size} project constants, none of {banned}"
-  -- controls: the hold-out proofs must reach the hand lemmas (the walk can fail)
+  -- controls: the hand accept proofs must reach the hand lemmas (the walk can fail)
   let r1 := reach env `Prysm.SyncCommitteeMessage.Decode.accept
   unless r1.contains `Prysm.SyncCommitteeMessage.bytes32_decode_segment_rax && r1.contains `Prysm.SyncCommitteeMessage.Decode.validator_index_argument do
     throwError "window step dependency check: control failed (Prysm.SyncCommitteeMessage.Decode.accept does not reach the hand lemmas)"

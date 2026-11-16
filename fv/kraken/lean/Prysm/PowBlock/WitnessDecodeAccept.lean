@@ -4,7 +4,7 @@ import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept_from_generated_steps` (PowBlock decoder accept path, hold-out, full-proof type)
+# Witness of `Decode.accept_from_generated_steps` (PowBlock decoder accept path)
 
 Hand-written (the text of `Prysm/Deposit_Data/WitnessDecodeAccept.lean` with the PowBlock host and layout).
 It shows that the premises of the independent hand statement `Prysm.PowBlock.Decode.accept_statement` are satisfiable.

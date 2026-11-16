@@ -9,7 +9,7 @@ import Prysm.BeaconBlockHeader.Code
 import Prysm.SyncCommitteeMessage.Code
 
 /-!
-# Independent hand STATEMENTS of the two accept theorems (hold-out; statements only, no proof): the `PendingConsolidation` part
+# Independent hand STATEMENTS of the two accept theorems (statements only, no proof): the `PendingConsolidation` part
 
 The declarations of the other types of this group are in `Prysm/SyncCommitteeMessage/Statements.lean`.
 -/

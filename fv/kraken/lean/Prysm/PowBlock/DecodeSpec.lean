@@ -3,7 +3,7 @@ import Prysm.PowBlock.DecodeRejectSize
 import Prysm.PowBlock.Spec
 
 /-!
-# Spec alignment of the real PowBlock decoder (hold-out, full-proof type)
+# Spec alignment of the real PowBlock decoder
 
 Hand-written: the shape of `Prysm/Deposit_Data/DecodeSpec.lean` with the PowBlock statement
 (`Decode.accept_statement`, `Prysm/PendingDeposit/Statements.lean`; the input chunks are those of the `g` that EthLib decodes).

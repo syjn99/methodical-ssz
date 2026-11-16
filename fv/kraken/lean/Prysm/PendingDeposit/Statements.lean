@@ -9,13 +9,13 @@ import Prysm.PendingDeposit.Code
 import Prysm.PowBlock.Statements
 
 /-!
-# Independent hand STATEMENTS of the two accept theorems (hold-out; statements only, no proof)
+# Independent hand STATEMENTS of the two accept theorems (statements only, no proof)
 
 Hand-written BEFORE the proof generator (`gen/generator/generator.py`) was run on
 either type and before any generator output for them was read.
 Sources: the Go receiver layout (IR `go_fields` in `prysm/ir/ir-mainnet.json`), the SSZ layout
 (consensus-specs; `Prysm/PendingDeposit/SpecDescription.lean`, `Prysm/PowBlock/SpecDescription.lean`), the frame facts of the two `.S` files
-(`prysm/go1.26.10/link-set/norm`), and the statement shape of the earlier hand accept theorems
+(`prysm/go1.26.10/link-set/norm`), and the statement shape of the hand accept theorems
 `Prysm.SyncCommitteeMessage.Decode.accept_statement` (fresh byte slices and a callee field) and `Prysm.Deposit_Data.Decode.accept_statement` (fresh byte
 slices in a `0x20` frame). These abbrevs are the targets of the hand proofs. They are not generator output.
 `--steps --compose` refuses, so no identity check runs against them.

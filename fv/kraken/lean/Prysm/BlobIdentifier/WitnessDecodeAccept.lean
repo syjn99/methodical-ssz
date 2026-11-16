@@ -4,7 +4,7 @@ import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept` (BlobIdentifier decoder accept path, hold-out)
+# Witness of `Decode.accept` (BlobIdentifier decoder accept path)
 
 Hand-written (the text of `Prysm/Eth1Data/WitnessDecodeAccept.lean` with the BlobIdentifier host and layout).
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.BlobIdentifier).UnmarshalSSZ` (index 9), the 1-byte bump

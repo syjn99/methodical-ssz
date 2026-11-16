@@ -18,8 +18,8 @@ Each module: `Decode.example_head` (`decodeHeadKindAnyFrame`), `Decode.example_f
 (`decodeEpilogueKindAnyFrame`), `Decode.example_accept` (`decodeAcceptKindAnyFrame`), each with its `_kind` line, and, where a hand
 statement exists, `Decode.example_accept_same_statement : <hand statement>`.
 
-The texts were produced from one description per type by a scratch emitter (not in the
-repository; it is not the generator). They are development data (in-sample). The independent checks of
+The texts are not generator output. They follow one description per type.
+They are development data (in-sample). The independent checks of
 the statements are the `rfl` ties of `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
 
 `Prysm/PendingDeposit/DecodeRejectSizeExample.lean` and `Prysm/VoluntaryExit/DecodeRejectSizeExample.lean`: size-reject

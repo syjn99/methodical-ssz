@@ -4,7 +4,7 @@ import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept_from_generated_steps` (PendingDeposit decoder accept path; hold-out, full-proof type)
+# Witness of `Decode.accept_from_generated_steps` (PendingDeposit decoder accept path)
 
 Hand-written (the text of `Prysm/SyncCommitteeMessage/WitnessDecodeAccept.lean` with the PendingDeposit host and layout).
 It shows that the premises of the independent hand statement `Prysm.PendingDeposit.Decode.accept_statement` are satisfiable.

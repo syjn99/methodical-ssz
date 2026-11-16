@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Hold-out of BlobIdentifier and DepositMessage Go differential of the v1alpha1.BlobIdentifier and v1alpha1.DepositMessage decoders
-(Python 3 standard library only; the text of eth1_data_differential.py with the hold-out cases).
+"""Go differential of the v1alpha1.BlobIdentifier and v1alpha1.DepositMessage decoders
+(Python 3 standard library only; the text of eth1_data_differential.py with the cases of these types).
 
   blob_identifier_and_deposit_message_differential.py cases <cases.json>                      write the cases
   blob_identifier_and_deposit_message_differential.py check <cases.json> <go-out.json> <result.json>

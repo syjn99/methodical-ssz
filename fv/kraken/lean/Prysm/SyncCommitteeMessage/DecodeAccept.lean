@@ -4,7 +4,7 @@ import Prysm.SyncCommitteeMessage.GeneratedDecodeCallSegmentsPartial
 import Prysm.SyncCommitteeMessage.Statements
 
 /-!
-# Real Prysm `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path, Go 1.26.10 (hold-out, class C)
+# Real Prysm `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path, Go 1.26.10
 
 Hand composition, written AFTER the raw generator output was committed. The
 statement is the independent hand statement `Prysm.SyncCommitteeMessage.Decode.accept_statement` (`Prysm/SyncCommitteeMessage/Statements.lean`, unchanged). Chain of

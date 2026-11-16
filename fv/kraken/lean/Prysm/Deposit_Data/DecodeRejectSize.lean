@@ -6,7 +6,7 @@ import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.DecodeRejectSize
 
 /-!
-# Real Prysm `(*v1alpha1.Deposit_Data).UnmarshalSSZ`: size reject (hold-out, type A)
+# Real Prysm `(*v1alpha1.Deposit_Data).UnmarshalSSZ`: size reject
 
 Hand-written: the text of `Prysm/DepositMessage/DecodeRejectSize.lean` with the Deposit_Data indices.
 `Decode.reject_size` (`len(buf) ≠ 184`, Go source `return ssz.ErrSize`): directives 2–7, 9–10

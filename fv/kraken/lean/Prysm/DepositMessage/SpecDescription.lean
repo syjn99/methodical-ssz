@@ -1,7 +1,7 @@
 import Prysm.Checkpoint.Spec
 
 /-!
-# Independent hand `Desc` of `v1alpha1.DepositMessage` (hold-out)
+# Independent hand `Desc` of `v1alpha1.DepositMessage`
 
 Hand-written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`),
 BEFORE the Desc checker's Desc of `(v1alpha1, DepositMessage)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).

@@ -9,13 +9,13 @@ import Prysm.Deposit_Data.Code
 import Prysm.PendingPartialWithdrawal.Statements
 
 /-!
-# Independent hand STATEMENTS of the two accept theorems (hold-out; statements only, no proof)
+# Independent hand STATEMENTS of the two accept theorems (statements only, no proof)
 
 Hand-written BEFORE the proof generator (`gen/generator/generator.py`) was run on
 either type and before any generator output for them was read.
 Sources: the Go receiver layout (IR `go_fields` in `prysm/ir/ir-mainnet.json`), the SSZ layout
 (consensus-specs; `Prysm/Deposit_Data/SpecDescription.lean`, `Prysm/PendingPartialWithdrawal/SpecDescription.lean`), the frame facts of the two `.S` files
-(`prysm/go1.26.10/link-set/norm`), and the statement shape of the earlier hand accept theorems
+(`prysm/go1.26.10/link-set/norm`), and the statement shape of the hand accept theorems
 `Prysm.BlobIdentifier.Decode.accept`, `Prysm.DepositMessage.Decode.accept`, `Prysm.Eth1Data.Decode.accept` and
 (for the callee form) `Prysm.BeaconBlockHeader.Decode.accept`. These abbrevs are the targets of the
 `--same-as-prop` identity check and of the hand proofs. They are not generator output.

@@ -3,7 +3,7 @@ import Prysm.DepositMessage.DecodeRejectSize
 import Prysm.DepositMessage.Spec
 
 /-!
-# Spec alignment of the real DepositMessage decoder (hold-out)
+# Spec alignment of the real DepositMessage decoder
 
 Hand-written (the text of `Prysm/Eth1Data/DecodeSpec.lean` with the DepositMessage statement;
 the equation `bsA = SszValue.encode g` is kept as a hypothesis `hb` instead of `subst`, see `Prysm/DepositMessage/Spec.lean`).

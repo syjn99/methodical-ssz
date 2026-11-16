@@ -9,7 +9,7 @@ import Prysm.PendingDeposit.GeneratedDecodeSteps
 # Worked example: `(*v1alpha1.PendingDeposit).UnmarshalSSZ`, accept theorem in generated style
 
 Text produced from one description of the type (frame facts, field list, boundary states, chain theorem names)
-by a scratch emitter (not in the tree); every theorem has a `_kind` line (`decodeHeadKindAnyFrame`, `decodeFieldKindAnyFrame`,
+(not generator output); every theorem has a `_kind` line (`decodeHeadKindAnyFrame`, `decodeFieldKindAnyFrame`,
 `decodeEpilogueKindAnyFrame`, `decodeAcceptKindAnyFrame`). The `decoder --steps` chain theorems (`Decode.generated_step_*`) are used as emitted.
 -/
 

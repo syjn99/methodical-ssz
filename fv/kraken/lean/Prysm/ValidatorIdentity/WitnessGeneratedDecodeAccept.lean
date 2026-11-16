@@ -4,7 +4,7 @@ import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of the generated `Decode.generated_accept` (`v1alpha1.ValidatorIdentity` decoder accept path; 24 flat hold-out types)
+# Witness of the generated `Decode.generated_accept` (`v1alpha1.ValidatorIdentity` decoder accept path; 24 flat types)
 
 Written by the evidence script `flat_types_witness.py`: the text of `Prysm/PendingDeposit/WitnessDecodeAccept.lean` with the
 v1alpha1.ValidatorIdentity host and layout. It shows that the premises of the generated accept theorem (statement = kind instance)

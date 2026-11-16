@@ -3,7 +3,7 @@ import Prysm.BlobIdentifier.DecodeRejectSize
 import Prysm.BlobIdentifier.Spec
 
 /-!
-# Spec alignment of the real BlobIdentifier decoder (hold-out)
+# Spec alignment of the real BlobIdentifier decoder
 
 Hand-written (the text of `Prysm/Eth1Data/DecodeSpec.lean` with the BlobIdentifier statement;
 the equation `bsA = SszValue.encode g` is kept as a hypothesis `hb` instead of `subst`, see `Prysm/BlobIdentifier/Spec.lean`).

@@ -2,7 +2,7 @@ import Prysm.DepositRequest.GeneratedDecodeAccept
 import Prysm.DepositRequest.Spec
 
 /-!
-# Spec alignment of the real `v1.DepositRequest` decoder (24 flat hold-out types)
+# Spec alignment of the real `v1.DepositRequest` decoder (24 flat types)
 
 Built on the GENERATED theorems of `Prysm/DepositRequest/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`; raw output, not
 edited):

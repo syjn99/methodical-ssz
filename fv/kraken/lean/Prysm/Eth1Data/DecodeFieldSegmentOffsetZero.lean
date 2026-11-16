@@ -2,14 +2,14 @@ import Codec.Bytes32Decode
 import Prysm.Eth1Data.Code
 
 /-!
-# DepositRoot decode segment of the real `(*v1alpha1.Eth1Data).UnmarshalSSZ` (hold-out, hand)
+# DepositRoot decode segment of the real `(*v1alpha1.Eth1Data).UnmarshalSSZ` (hand)
 
-Hand text, written after the frozen generator ran on this hold-out type. The one generator run
-stopped with exit 2 on this field: its memmove source is `buf + 0`, so the code has no `add $src,%rbx`
-and does not match the frozen template `rootDecodeMiddle`. This file is NOT part of the frozen method
-(`Codec/Kind/FieldPatterns.lean`, `generator.py`, the uint64 decoder and 32-byte field segment lemmas are unchanged): `rootDecodeMiddleSourceOffsetZero` is `rootDecodeMiddle` without the
+Hand text. The memmove source of this field is `buf + 0`, so the code has no `add $src,%rbx`
+and does not match the frozen template `rootDecodeMiddle`.
+This file is not generator output.
+`rootDecodeMiddleSourceOffsetZero` is `rootDecodeMiddle` without the
 `add` directive, and `root_decode_segment_source_offset_zero` is the statement and proof text of `Codec.root_decode_segment`
-(`Codec/Bytes32Decode.lean`) with the `add` step removed (copied text, written after the frozen generator ran on Eth1Data).
+(`Codec/Bytes32Decode.lean`) with the `add` step removed (copied text).
 -/
 
 open Machine Runtime

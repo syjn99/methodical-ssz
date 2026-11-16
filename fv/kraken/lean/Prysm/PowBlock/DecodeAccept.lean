@@ -4,7 +4,7 @@ import Prysm.Eth1Data.DecodeAccept
 import Prysm.PendingDeposit.Statements
 
 /-!
-# `(*v1alpha1.PowBlock).UnmarshalSSZ`, accept path from the GENERATED `decoder --steps` chains (hold-out, full-proof type)
+# `(*v1alpha1.PowBlock).UnmarshalSSZ`, accept path from the GENERATED `decoder --steps` chains
 
 Hand-written AFTER the raw generator output (`Prysm/PowBlock/GeneratedDecodeSteps.lean`, `decoder --steps`, exit 0,
 3/3 walker-covered) was committed. Statement = the pre-committed hand statement `Prysm.PowBlock.Decode.accept_statement`

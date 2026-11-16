@@ -17,8 +17,8 @@ The four defs below are the frozen texts of `Prysm/IndexedAttestation/Statements
 `mov ssz.Err…(%rip),%rcx; test %rcx,%rcx; je …; mov 0x8(%rcx),%rcx`; when the error's itab word is 0 the code skips the
 type-word load and passes 0 where `FmtErrorfDecimalWrapContract` needs `ity`. The Kraken Host places labels anywhere, so the itab label
 may be 0 and the frozen statements cannot refute that branch. The precondition is stronger than the frozen one (not
-equivalent). The originals in `Prysm/IndexedAttestation/Statements.lean` stay unchanged and unproved. Precedent: the misaligned reject of the Go 1.26.3 test type ListU64
-(a proof that is no longer in the tree) had the same two premises `e0 = itab` and `e0 ≠ 0`. In the real ELF `e0` is the
+equivalent). The originals in `Prysm/IndexedAttestation/Statements.lean` stay unchanged and unproved.
+In the real ELF `e0` is the
 itab address `0xd28520` (check (b) of `prysm/go1.26.10/link-set/RESULT` binds `go_itab._errors.errorString_error` to it).
 -/
 

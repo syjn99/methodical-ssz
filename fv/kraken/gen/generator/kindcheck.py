@@ -2213,7 +2213,7 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
 # ---- rule 13 selftest controls: mutants of the committed raw fast-path outputs (a missing file is a FAIL)
 FAST_PATH_SELFTEST = {"validator-balance": "lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "checkpoint": "lean/Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
                "historical-summary": "lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "beacon-block-header": "lean/Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean"}
-# the layouts of the example modules (`Prysm/*/EncodeFastPathExample.lean`, scratch emitter of the encoder lemmas): the recomputation must give them too
+# the layouts of the example modules (`Prysm/*/EncodeFastPathExample.lean`, not generator output): the recomputation must give them too
 FAST_PATH_EXAMPLE_LAYOUTS = {"ValidatorBalance": ("lean/Prysm/ValidatorBalance/EncodeFastPathExample.lean", "Prysm.ValidatorBalance.Encode.example_layout"),
                 "DepositMessage": ("lean/Prysm/DepositMessage/EncodeFastPathExample.lean", "Prysm.DepositMessage.Encode.example_layout"),
                 "HistoricalSummary": ("lean/Prysm/HistoricalSummary/EncodeFastPathExample.lean", "Prysm.HistoricalSummary.Encode.example_layout")}

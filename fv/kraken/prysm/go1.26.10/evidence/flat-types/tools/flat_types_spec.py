@@ -41,7 +41,7 @@ def emit(X, ty, fs, chk):
         w(f'import Prysm.{X}.SpecChecker')
     w('')
     w('/-!')
-    w(f'# Spec bridge for the real Prysm `{ty}` (24 flat hold-out types)')
+    w(f'# Spec bridge for the real Prysm `{ty}` (24 flat types)')
     w('')
     w('Written by the evidence script `flat_types_spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`')
     w(f'generalised to a field list). `{D}` (`Prysm/{X}/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).')

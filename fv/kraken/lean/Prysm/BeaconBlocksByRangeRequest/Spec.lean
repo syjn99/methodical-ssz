@@ -3,7 +3,7 @@ import Prysm.Checkpoint.SpecEquivalence
 import Prysm.DepositRequest.SpecDescription
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.BeaconBlocksByRangeRequest` (24 flat hold-out types)
+# Spec bridge for the real Prysm `v1alpha1.BeaconBlocksByRangeRequest` (24 flat types)
 
 Written by the evidence script `flat_types_spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`
 generalised to a field list). `desc` (`Prysm/BeaconBlocksByRangeRequest/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).

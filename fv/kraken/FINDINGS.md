@@ -12,28 +12,28 @@ How to handle a new finding is in `../README.md` section 7.
 - What: the decoder of a bitvector field accepted an input byte with bits set above the bitvector length. The specification rejects such a byte.
 - Where: the generated decoder and `ssz.ValidateBitvector`.
 - How it shows: a proof attempt on a bitvector test type found the counterexample.
-- State: fixed in commit `f0b85c7`.
+- State: fixed.
 
 ### Bitvector padding check can overflow
 
 - What: the check that the padding fix added could panic on a `uint64` overflow.
 - Where: `ssz.ValidateBitvector`.
 - How it shows: code review found it. A proof did not find it.
-- State: fixed in commit `60d4d3b`.
+- State: fixed.
 
 ### Bitlist encoder checks the length in bytes, not in bits
 
 - What: the encoder accepted a bitlist with more bits than the limit, if its byte count fit the limit.
 - Where: the generated encoder of a bitlist field. It now calls `ssz.ValidateBitlist(x, limit)` with the limit in bits.
 - How it shows: a proof attempt on a bitlist test type found the counterexample.
-- State: fixed in commit `280b752`.
+- State: fixed.
 
 ### Array field decoder emits a `make` that does not compile
 
 - What: the decoder of a `[N]T` array field had a `make` call that Go does not compile.
 - Where: the generator template for array fields.
 - How it shows: the generated code does not build.
-- State: fixed. The records connect this fix to commit `ab0fb00` only by elimination. The connection is not confirmed.
+- State: fixed. The records do not confirm which generator change fixed it.
 
 ### Nested container fields have the wrong keys in the IR
 
@@ -65,7 +65,7 @@ How to handle a new finding is in `../README.md` section 7.
 - Where: `(*v1alpha1.Checkpoint).MarshalSSZTo` writes the 8 epoch bytes before the `Root` length test.
   `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` writes `Slot`, `ProposerIndex` and earlier roots before a later root length test.
 - How it shows: `Prysm.Checkpoint.Encode.reject_length` states the written bytes. Its negative test with "dst unchanged" fails.
-- Effect: SSZ has no rule for a Go value with a wrong field length. The generator documents only that `dst[:len]` is unchanged (commit `e9cbf5c`).
+- Effect: SSZ has no rule for a Go value with a wrong field length. The generator documents only that `dst[:len]` is unchanged.
 - State: classified as known behavior, not a specification violation. The Checkpoint entry has no independent review. The BeaconBlockHeader entry is reviewed.
 
 ### AttestationData encoder writes the receiver
@@ -101,12 +101,12 @@ How to handle a new finding is in `../README.md` section 7.
 - Where: a generator branch that is not merged.
 - How it shows: the benchmark results are mixed. The fast path is slower and the error path allocates one more block.
 - State: closed. The option is not adopted and is off by default.
-  Its test ELF records, its negative cases and its Lean proofs are deleted from the tree. Git history keeps them.
+  The tree does not contain its test ELF records, its negative cases or its Lean proofs.
 
 ### In-place hash call depends on an aliasing premise
 
 - What: the in-place `gohashtree.Hash` call depends on an aliasing premise.
-- State: a test pins the premise (commit `b03a45d`). Not a defect. A hash tree root proof must state it.
+- State: a test pins the premise. Not a defect. A hash tree root proof must state it.
 
 ## 2. Verification tools and machine model
 
@@ -120,7 +120,7 @@ How to handle a new finding is in `../README.md` section 7.
 ### Kraken cannot parse some operand and instruction forms
 
 - What: the Kraken parser rejects the SIB index `%riz` and multi-byte padding `nop` forms. The `include_x64` elaborator rejects some condition codes.
-- Where: 13 generated functions had `%riz` in the Kraken parser run of the record `prysm/go1.26.10/kparse.json` (commit `f55333d1`), made before the converter dropped `%riz`.
+- Where: a Kraken parser run found `%riz` in 13 generated functions, on converter output that kept `%riz`.
 - State: worked around. `link/convert_objdump.py --norm` drops `%riz` and writes padding as `nop`. `include_x64_code` (`lean/Machine/Include.lean`) uses the runtime parser.
 
 ### Converter wrote a negative 32-bit displacement as a large positive number
@@ -128,7 +128,7 @@ How to handle a new finding is in `../README.md` section 7.
 - What: `go tool objdump -gnu` writes a displacement of −228 as `0xffffff1c`. Kraken reads that form as a positive number, so the address in the proof is not the machine address.
 - Where: `link/convert_objdump.py` output, for example `IndexedAttestation.UnmarshalSSZ`. The full Prysm disassembly had 161 such operands in 104 functions.
 - How it shows: `clang` rejected the line in the reassembly step of the link check.
-- State: fixed in commit `93b3f2a`. `link/convert_objdump.py --norm` writes the signed form. The SIB form without a base and the segment form are not handled. The Prysm ELF has none of them.
+- State: fixed. `link/convert_objdump.py --norm` writes the signed form. The SIB form without a base and the segment form are not handled. The Prysm ELF has none of them.
   A displacement range check in `link/check.py` is not added.
   Every converted file of `prysm/go1.26.10/link-set/norm/` is the output of a fresh `--norm` run and has the signed form.
 
@@ -185,7 +185,7 @@ How to handle a new finding is in `../README.md` section 7.
   The FAIL is the reassembly of `v1alpha1.BeaconStateBellatrix.MarshalSSZTo` at `0x93fd87`.
   The ELF bytes of that `jge` are `0f8d7a000000`, and clang gives a 2-byte form.
   That function has no proof.
-- State: closed. The table is not in the tree. Git keeps it at commit `320929dd`.
+- State: closed. The tree does not contain this link table.
   The link set `prysm/go1.26.10/link-set` is the one link set of the proofs, and it passes on the pinned ELF.
 
 ### The proof generator covers only some code forms
@@ -213,78 +213,68 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: a mutant passes when Lean reports an error inside the theorem. An unknown identifier or a parse error is such an error, but it does not test the code.
 - Where: `gen/checks/negative.py`.
-- State: fixed in part (commit `23eceac` and later). Such first errors get the class `wrong_target`. The list of patterns is not complete. Read the first error of every row.
+- State: fixed in part. Such first errors get the class `wrong_target`. The list of patterns is not complete. Read the first error of every row.
 
 ### Negative cases that do not pass
 
-- What: the first full run of the Lean mutant suite on the renamed tree (commit `7adfc767`, all 1062 cases) passed 1036 cases.
-  Six of the 26 others were broken by the restructuring; their case texts are corrected (below), and a Lean run of
-  these six after the correction passes all six. The count is then 1042 passing and 20 not passing (the 1036 other
-  results are from the full run; the six from the later run).
-  Each of the 20 has the same outcome in a committed result record from before the restructuring. The list below gives
-  the commit, the record path and the earlier case id of each; the records are on the archive branches of the earlier
-  history, see the commit message of `eca2b556`. Their mutation texts are the same as in the base case files, and their ranges differ only by the moved
-  lines of their modules and by the range rule below.
+- What: a full run of the Lean mutant suite (1062 cases) after the restructuring of the tree passed 1036 cases.
+  Six of the 26 other cases had case texts that did not match the restructured modules.
+  After a correction of these case texts (below), a Lean run of the six cases passes all six.
+  The count is then 1042 passing cases and 20 cases that do not pass.
+  Each of the 20 cases has the same outcome in a run on the tree before the restructuring.
+  The mutation texts of that run are the same.
+  The ranges differ only by moved lines and by the range rule below.
 - Range rule of the tool: the case range starts at the first line of the theorem's command (`set_option … in` lines and an
   attached doc comment `/-- … -/`; `negative.py` `command_start`, used by `list_negative.py`). Lean reports an error of the
   whole declaration, for example its heartbeat timeout, at that line. With this rule
   `checkpoint-encode-fast-path-of-kind-statement-encode-layout-32-to-48` (designed error inside the theorem, then a
   heartbeat timeout of the declaration at its first line) passes. A plain comment, a module comment or a line comment above
   the theorem does not widen the range (self-test fixtures).
-- Fixed by the six case-text corrections (a Lean run after the correction: the control passes and the five mutants fail inside their theorems):
+- The six cases with corrected case texts (a Lean run: the control passes and the five mutants fail inside their theorems):
   - `sync-committee-message-decode-example-step-directive-82-control` and the four code mutants
     `…-directive-82-code-mov-0x78-rsp-to-0x70-rsp`, `…-directive-86-code-add-rax-to-rdx`, `…-directive-87-code-mov-ecx-to-eax`,
     `…-block-root-segment-code-mov-rax-to-rdx` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-steps.json`): the
-    module names its code constant relatively (`Code.unmarshalSSZ` inside `namespace Prysm.SyncCommitteeMessage`), and
-    the case namespace `Prysm.SyncCommitteeMessage.Code` made the tool declare `Prysm.SyncCommitteeMessage.Code.Code.unmarshalSSZMut`,
-    so the renamed uses did not resolve (`Unknown identifier`). The case namespace is now `Prysm.SyncCommitteeMessage`.
-    Before the restructuring they passed (`4499e775`, `prysm/go1.26.10/e2e/scal/negative-gen4.json`, `g4-ex-s82-*`, `g4-ex-s86-code-reg`, `g4-ex-s87-code-clobber`, `g4-ex-br-code-reg`).
+    module names its code constant relatively (`Code.unmarshalSSZ` inside `namespace Prysm.SyncCommitteeMessage`).
+    With the case namespace `Prysm.SyncCommitteeMessage.Code`, the tool declares `Prysm.SyncCommitteeMessage.Code.Code.unmarshalSSZMut`,
+    and the renamed uses do not resolve (`Unknown identifier`). So the case namespace is `Prysm.SyncCommitteeMessage`.
   - `checkpoint-encode-generated-fast-kind-statement-prysm-checkpoint-to-eth1-data` (`…/negative-cases-fast-path.json`):
-    the mutant names `Prysm.Eth1Data.encodeLayout`, which the case module reached through
-    `Prysm.BeaconBlockHeader.EncodeFastPathKindInstances` until commit `7adfc767` removed that import. The case now has
-    `mutant_imports: ["Prysm.Eth1Data.EncodeFastPathKindInstances"]`. Before the restructuring it passed (`f6ee2b6c`,
-    `prysm/go1.26.10/e2e/scal/gen6/neg-result.json`, `g6-cp-kind-layout`, class `inside`). No other case names a declaration of the two Eth1Data modules.
-- The 18 remaining cases that do not pass (present id, class, earlier record with the same outcome, cause):
+    the mutant names `Prysm.Eth1Data.encodeLayout`, which the imports of the case module do not reach.
+    So the case has `mutant_imports: ["Prysm.Eth1Data.EncodeFastPathKindInstances"]`.
+    No other case names a declaration of the two Eth1Data modules.
+- The 18 remaining cases that do not pass (id, class, cause):
   - An earlier theorem of the module owns the mutated directive (Lean keeps a failed theorem with `sorry` and continues,
     so the designated theorem has no error; class `outside`):
-    - `sync-aggregate-decode-accept-code-movq-0x40-to-0x3f`: `3a7e90b3`, `prysm/go1.26.10/e2e/lv/negative-lv.json`,
-      `lv-sa-bitslen63`. The segment lemma `Prysm.SyncAggregate.Decode.bits_segment` owns the directive; the case
+    - `sync-aggregate-decode-accept-code-movq-0x40-to-0x3f`: the segment lemma `Prysm.SyncAggregate.Decode.bits_segment` owns the directive; the case
       `sync-aggregate-decode-bits-segment-code-movq-0x40-to-0x3f` (same mutation) passes.
-    - `eth1-data-encode-encode-deposit-root-code-callq-runtime-memmove-to-runtime-growslice`: `792c8125`,
-      `prysm/go1.26.10/e2e/scal/negative-enc.json`, `enc-e1-a-call` (recorded there as "mis-targeted"). The lemma
+    - `eth1-data-encode-encode-deposit-root-code-callq-runtime-memmove-to-runtime-growslice`: the lemma
       `Prysm.Eth1Data.Encode.call_at` owns the `callq`; the case `eth1-data-encode-call-at-code-callq-runtime-memmove-to-runtime-growslice` passes.
-    - `pending-deposit-decode-generated-reject-code-add-0x40-to-0x48`: `d3dddd1a`, `prysm/go1.26.10/e2e/scal/negative-gen5g.json`,
-      `g5g-pd-rej-code-frame`. One error is inside `Decode.generated_reject`; the other is in the identity theorem
+    - `pending-deposit-decode-generated-reject-code-add-0x40-to-0x48`: one error is inside `Decode.generated_reject`; the other is in the identity theorem
       `Decode.generated_accept_statement` before it, which compares the generated accept theorem (renamed to the mutated
       code constant) with the hand statement of `Prysm/PendingDeposit/Statements.lean` (the original constant), so it fails
       for every code mutation of this module.
   - The kind does not read the frame (entry "Kind checks do not bind every parameter"; class `no_error`):
-    `voluntary-exit-decode-generated-accept-statement-uint64-80-to-88`: `d3dddd1a`, `g5g-ve-acc-kind-frame`.
+    `voluntary-exit-decode-generated-accept-statement-uint64-80-to-88`.
   - Stuck `rfl` comparison (class `timeout_heartbeat` at 200000 heartbeats): the mutated literal is a return directive
     (`Host.addrOf (k + jret)`) or a pointer index (`ps.getD ip 0`) over the abstract `Host` and list `ps`; `rfl` finds
     no constructor clash and unfolds until the limit. The structural mutants of the same groups fail at once.
-    - `blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33`: `f5c5f528`, `prysm/go1.26.10/e2e/scal/negative-gen3.json`, `g3-kindacc-stmt-jret`.
+    - `blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33`.
     - `pending-deposit-decode-accept-is-kind-any-frame-statement-layout-mixed-frame40-131-to-130` and
-      `beacon-block-header-decode-accept-is-kind-any-frame-statement-prysm-2-to-1`: `4d330a0a`, `prysm/go1.26.10/e2e/scal/negative-gen5.json`,
-      `g5-tie-pd-kind-jret`, `g5-tie-bh-kind-ptr`.
+      `beacon-block-header-decode-accept-is-kind-any-frame-statement-prysm-2-to-1`.
   - Other heartbeat timeouts (class `timeout_heartbeat`; the cause is not analysed):
-    - `codec-window-steps-step-store-statement-get64-r-s-to-r-b`: `4499e775`, `prysm/go1.26.10/e2e/scal/negative-gen4.json`, `g4-sk-st-stmt-src`.
-    - `deposit-data-decode-accept-spec-statement-rax-96-to-48` (4000000 heartbeats): `f704f6f0`, `prysm/go1.26.10/e2e/scal/negative-h4.json`, `dd-ask-stmt-siglen`.
+    - `codec-window-steps-step-store-statement-get64-r-s-to-r-b`.
+    - `deposit-data-decode-accept-spec-statement-rax-96-to-48` (4000000 heartbeats).
     - `sync-aggregator-selection-data-decode-accept-spec-statement-uint-bytes-slot-to-subcommittee-index`,
       `validator-balance-decode-accept-spec-statement-uint-bytes-index-to-balance`,
-      `voluntary-exit-decode-accept-spec-statement-uint-bytes-epoch-to-validator-index`: `499db402`,
-      `prysm/go1.26.10/e2e/g5c/negative-g5c.json`, `g5c-sa-speck-stmt-field-swap`, `g5c-vb-speck-stmt-field-swap`, `g5c-ve-speck-stmt-field-swap`.
+      `voluntary-exit-decode-accept-spec-statement-uint-bytes-epoch-to-validator-index`.
     - `sync-committee-message-decode-accept-spec-statement-uint-bytes-validator-index-to-slot`,
       `sync-committee-message-decode-accept-spec-statement-host-141-to-140`,
       `pending-consolidation-decode-accept-spec-statement-uint-bytes-target-index-to-source-index`,
-      `pending-consolidation-decode-accept-spec-statement-host-56-to-55`: `18432398`,
-      `prysm/go1.26.10/e2e/h5/negative-h5.json`, `sm-ask-stmt-swap`, `sm-ask-stmt-ret`, `pc-ask-stmt-swap`, `pc-ask-stmt-ret`.
+      `pending-consolidation-decode-accept-spec-statement-host-56-to-55`.
   - Wall time limit of the tool, 300 s (class `timeout_wall`):
-    - `pow-block-decode-generated-accept-statement-rax-32-to-48`: `d3dddd1a`, `prysm/go1.26.10/e2e/scal/negative-gen5g.json`, `g5g-pb-acc-stmt-size`.
-  - Memory cap kill, 6 GiB (class `killed`): `deposit-data-decode-accept-spec-statement-heap-176-to-175`: `f704f6f0`,
-    `prysm/go1.26.10/e2e/scal/negative-h4.json`, `dd-ask-stmt-heap`.
-- Two more of the 20 cases had the class `timeout_wall`. They were cases of a separate test ELF.
-  That ELF, its Lean proofs and its case file are deleted from the tree, so 18 cases remain.
+    - `pow-block-decode-generated-accept-statement-rax-32-to-48`.
+  - Memory cap kill, 6 GiB (class `killed`): `deposit-data-decode-accept-spec-statement-heap-176-to-175`.
+- Two more of the 20 cases had the class `timeout_wall`. They are cases of a separate test ELF.
+  The tree does not contain that ELF, its Lean proofs or its case file, so 18 cases remain.
 - Effect: a timeout, a kill, no error or an error outside the designated theorem is not a pass (`../README.md` section 6).
   So these 18 mutants do not show that their theorem depends on the mutated text. The controls of the same groups pass.
 - State: open; a decision on the 18 is needed and not taken. Options:
@@ -309,24 +299,24 @@ How to handle a new finding is in `../README.md` section 7.
 ### A generated theorem can carry an extra hypothesis
 
 - What: a proof by `exact` checks only the text after the colon. A hypothesis added before the colon still compiles.
-- State: fixed by the `_kind` identity on the full type (commit `094e51e`) and the text check `gen/generator/kindcheck.py`. Neither check alone is enough.
+- State: fixed by the `_kind` identity on the full type and the text check `gen/generator/kindcheck.py`. Neither check alone is enough.
 
 ### `lake env lean` does not check that the build is current
 
 - What: `lake env lean` uses `.olean` files without a trace check. A stale file can make a check pass.
-- State: fixed in commit `875368f`. The drivers run `lake build --no-build` first and stop on a nonzero exit.
+- State: fixed. The drivers run `lake build --no-build` first and stop on a nonzero exit.
 
 ### Negative test time limit killed only the wrapper
 
 - What: the per-case time limit killed only the memory-limit wrapper, not the Lean process tree.
 - Where: `gen/tools/memory_limit.py`.
-- State: fixed in commit `cc61ebc`.
+- State: fixed. At the time limit, `gen/checks/negative.py` kills the whole process session. Its `--selftest` checks this.
 
 ### Slow proof steps
 
 - What: two proofs spent most of their time in one `omega` side goal each.
 - Where: the `bv_omega` of the argument `hLo` of `Codec.root_encode_segment` in `lean/Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean`. The `witness_split` side goals of the Checkpoint cover witnesses.
-- State: fixed. `lean/Machine/WitnessSplit.lean` has `witness_split_n` (commit `301300f`). The `Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean` step is a constant-only rewrite (commit `ab43cbb`).
+- State: fixed. `lean/Machine/WitnessSplit.lean` has `witness_split_n`. The `Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean` step is a constant-only rewrite.
 
 ### Limit options without a profiled cause
 
@@ -361,14 +351,14 @@ How to handle a new finding is in `../README.md` section 7.
 ### Replayed review mutants carry earlier reference names
 
 - What: `gen/desc/test_desc.py prepare` replays the review sources `gen/desc/review/r1_mutants.py`, `r2_mutants.py` and
-  `r3_mutants.py`. Their mutants set `reference` to earlier names (`Fv1.scDesc`, `Fv1.luDesc`, ...); the checker
-  table names the present `Spec` names.
+  `r3_mutants.py`. Their mutants set `reference` to names that the checker table does not have (`Fv1.scDesc`, `Fv1.luDesc`, ...).
+  The checker table names the `Spec` names.
 - Effect: such a mutant fails at the reference check because of the name alone. `test_desc.py evaluate` asks only for a
-  FAIL, so the case still counts as expected, but three mutants no longer test their own defect: `n10-ref-trailing-space`
+  FAIL, so the case still counts as expected, but three mutants do not test their own defect: `n10-ref-trailing-space`
   and `q27-ref-trailing-space` (a trailing space after a right name), and `q46-escaped-key`, whose replacement of the
   reference `Fv1.luDesc` by null matches nothing.
-- Where: `gen/desc/review/r2_mutants.py` (`n10-ref-trailing-space`, reference `Fv1.luDesc`, now `Spec.listU64Desc`) and
-  `r3_mutants.py` (`q27-ref-trailing-space`, reference `Fv1.scDesc`, now `Spec.scalarsDesc`; `q46-escaped-key`, reference `Fv1.luDesc`).
+- Where: `gen/desc/review/r2_mutants.py` (`n10-ref-trailing-space`, reference `Fv1.luDesc`, table name `Spec.listU64Desc`) and
+  `r3_mutants.py` (`q27-ref-trailing-space`, reference `Fv1.scDesc`, table name `Spec.scalarsDesc`; `q46-escaped-key`, reference `Fv1.luDesc`).
 - State: open. The mutant code of the review sources keeps the text of the review. A fix translates the names in
   `test_desc.py` and needs a checker run with Lean.
 
@@ -378,7 +368,7 @@ How to handle a new finding is in `../README.md` section 7.
   A change in such a file did not make Lake build the proofs again.
 - Where: the link set `prysm/go1.26.10/link-set` is an input.
   `ElfData.PrysmTarget.typeDeposit_Data_addr` comes from the data include of its data file. `gen/checks/deposit_data_include_check.py` checks this.
-- State: closed. The module and the directory of that test ELF are deleted from the tree. Git history keeps them.
+- State: closed. The tree does not contain the module and the directory of that test ELF.
 
 ### Inventory script trusts its method list
 
@@ -444,8 +434,8 @@ How to handle a new finding is in `../README.md` section 7.
 ### Absolute paths in committed records
 
 - What: one tracked record contains an absolute path of the original machine: the `replace` line of `prysm/go1.26.10/prysm-go.mod.diff`.
-  Two Python bytecode files in git history contain container paths. They are not in the current tree.
-  Deleted records in git history also contain such paths, for example `prysm/go1.26.10/evidence/negative/result.json` at `320929dd`.
+  Git history also has container paths: in two Python bytecode files and in deleted records.
+  The present tree does not contain these files.
 - How it shows: `git grep -nE "/workspace|fve2e-" -- fv/kraken ':!fv/kraken/lean/.lake'`.
 - State: open. The user decides how to treat the history before publication.
 
@@ -453,4 +443,4 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: `prysm/INVENTORY.json` and `prysm/inventory.json` were both tracked.
 - Effect: on a file system that ignores case, only one exists, and `git status` shows a change that is not real.
-- State: fixed. The per-method table is now `prysm/proof-inventory.json` and `prysm/proof-inventory.md`.
+- State: fixed. The per-method table is `prysm/proof-inventory.json` and `prysm/proof-inventory.md`.

@@ -8,7 +8,7 @@ Checks, on the text of the tree:
   `ElfData.PrysmTarget.typeDeposit_Data_addr`; `check.py` (f) compares the file with the ELF
   (prysm/go1.26.10/link-set/RESULT).
 - the modules of lean/Prysm/Deposit/ name `ElfData.PrysmTarget.typeDeposit_Data_addr` and write no hand address term
-  `(label "type__" + <offset>)` (an earlier version had a hand definition with that term).
+  `(label "type__" + <offset>)`.
 Exit 1 on a failed check.
 --selftest: the checks on a copy of the texts with a planted hand definition, and without the include, must fail
 (exit 0 if both fail).

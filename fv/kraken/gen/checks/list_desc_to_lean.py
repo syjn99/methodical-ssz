@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Render the `ssz` term of a Desc-checker input file (schema fv.kraken.desc/1) as Lean.
 
-A new file with the method of `desc_to_lean.py` (not changed); it also renders `bitVector`, `vector` and `list`.
+It uses the method of `desc_to_lean.py`; it also renders `bitVector`, `vector` and `list`.
 Usage: list_desc_to_lean.py <desc.json> <lean-name> > lean/Prysm/<GoTypeName>/SpecChecker.lean
 The namespace of the output is Prysm.<GoTypeName> (the `type` of the file).
 The file is the producer's Desc that the Desc checker accepted (gen/desc/results/main.result.json, same sha256;

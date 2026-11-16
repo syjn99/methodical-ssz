@@ -3,8 +3,8 @@
 import pathlib, subprocess, sys
 K = pathlib.Path("gen/generator/kindcheck.py")
 src = K.read_text()
-# Not listed: the 13b def-line test. Its broken copy passed the selftest in the first run (output not kept): the def count
-# and the layout lookup of 13b / 13c catch every def mutant of the selftest, so that sub-check is redundant.
+# Not listed: the 13b def-line test. The def count and the layout lookup of 13b / 13c catch every def mutant
+# of the selftest, so a broken copy of that sub-check does not fail the selftest. That sub-check is redundant.
 BROKEN = {
     "13a-pins-ignored": ('        if blobs.get(m) != b:\n            errs.append(f"rule 13a', '        if False:\n            errs.append(f"rule 13a'),
     "13b-banned-ignored": ('    if BANNED.search(body):\n        errs.append("rule 13b: banned token")',

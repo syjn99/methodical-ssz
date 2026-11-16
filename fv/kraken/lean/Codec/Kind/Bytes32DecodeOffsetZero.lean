@@ -3,8 +3,8 @@ import Codec.Bytes32DecodeOffsetZero
 /-!
 # Statement kind of the generated offset-0 decode segments
 
-Added after the frozen generator ran on the hold-out types, so no hold-out type tests it. `Codec/Kind/FieldPatterns.lean` is not
-changed. `rootDecodeSegmentOffsetZeroKind` is the text of `rootDecodeSegmentKind` with the
+The kind of the generated offset-0 segments is in this module, not in `Codec/Kind/FieldPatterns.lean`.
+`rootDecodeSegmentOffsetZeroKind` is the text of `rootDecodeSegmentKind` with the
 `add`-form parts removed: no `src`, no `aSrc` / `hSrc`, the source bytes at `bf`, end pc `k + j2 + 11`,
 memmove return address `k + j2 + 5 + 1`. `rootDecodeSegmentOffsetZeroKind_of` proves the kind from the lemma
 `root_decode_segment_offset_zero` (kernel check that the kind body is the lemma conclusion). `gen/generator/kindcheck.py` accepts

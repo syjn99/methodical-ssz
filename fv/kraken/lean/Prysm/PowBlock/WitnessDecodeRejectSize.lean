@@ -3,7 +3,7 @@ import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.reject_size` (hold-out)
+# Witness of `Decode.reject_size`
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.PowBlock).UnmarshalSSZ`
 (index 1). Hand-written: the text of `Prysm/Deposit_Data/WitnessDecodeRejectSize.lean` with the PowBlock decoder.

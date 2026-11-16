@@ -29,9 +29,9 @@ committed hand statements `Prysm.Deposit_Data.Decode.accept_statement`, `Prysm.S
 `Prysm.SyncCommitteeMessage.Decode.accept_statement` (decoders), `Prysm.PendingPartialWithdrawal.Encode.fast_path_statement`, `Prysm.SyncCommitteeMessage.Encode.fast_path_statement`,
 `Prysm.PowBlock.Encode.fast_path_statement` (encoders), and the interface rules of the encoder statements (chunk order: saved rbp, home slots ascending,
 other slots by first touch, the return slot; existentials in creation order). Independence limit: the layout
-rules come from that interface text and the earlier hand statements; the parameters are read from the `.S` by hand.
+rules come from that interface text and the hand statements of other types; the parameters are read from the `.S` by hand.
 
-Choice (classes with no independently tied statement before this work):
+Choice (classes with no other independently tied statement):
 | type | side | class |
 | --- | --- | --- |
 | DepositRequest | decoder | frame `0x20`, no call, 48 + 32 + u64 + 96 + a trailing in-line u64 (Deposit_Data code + one field) |

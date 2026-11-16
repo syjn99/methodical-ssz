@@ -4,7 +4,7 @@ import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept` (SyncCommitteeMessage decoder accept path; hold-out, class C)
+# Witness of `Decode.accept` (SyncCommitteeMessage decoder accept path)
 
 Hand-written (the text of `Prysm/BeaconBlockHeader/WitnessDecodeAccept.lean` with the SyncCommitteeMessage host and
 layout). It shows that the premises of the independent hand statement `Prysm.SyncCommitteeMessage.Decode.accept_statement` are

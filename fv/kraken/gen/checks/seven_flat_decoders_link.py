@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Call graph and link tables of the real UnmarshalSSZ of the seven flat decoder types (v1alpha1
 PendingDeposit, PowBlock, HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance,
-VoluntaryExit) on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; PendingDeposit and
-PowBlock are hold-out types; the text of `pending_consolidation_and_sync_committee_message_link.py` with the function set and the data items changed).
+VoluntaryExit) on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set;
+the text of `pending_consolidation_and_sync_committee_message_link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   seven_flat_decoders_link.py callgraph <objdump> <out.json>          call targets with contract class
@@ -11,7 +11,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
                                                     <outdir>/target-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
-Encoders, SizeSSZ and HashTreeRoot are not in the set (out of the hold-out scope).
+Encoders, SizeSSZ and HashTreeRoot are not in the set.
 """
 import importlib.util
 import json

@@ -2,7 +2,7 @@ import Prysm.BeaconBlocksByRangeRequest.GeneratedDecodeAccept
 import Prysm.BeaconBlocksByRangeRequest.Spec
 
 /-!
-# Spec alignment of the real `v1alpha1.BeaconBlocksByRangeRequest` decoder (24 flat hold-out types)
+# Spec alignment of the real `v1alpha1.BeaconBlocksByRangeRequest` decoder (24 flat types)
 
 Built on the GENERATED theorems of `Prysm/BeaconBlocksByRangeRequest/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`; raw output, not
 edited):

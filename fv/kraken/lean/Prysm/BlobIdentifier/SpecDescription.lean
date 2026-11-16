@@ -1,7 +1,7 @@
 import Prysm.Checkpoint.Spec
 
 /-!
-# Independent hand `Desc` of `v1alpha1.BlobIdentifier` (hold-out)
+# Independent hand `Desc` of `v1alpha1.BlobIdentifier`
 
 Hand-written from consensus-specs deneb (`specs/deneb/p2p-interface.md`),
 BEFORE the Desc checker's Desc of `(v1alpha1, BlobIdentifier)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).

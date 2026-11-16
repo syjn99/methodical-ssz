@@ -2,7 +2,7 @@ import Codec.FixedBytesDecode
 import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 
 /-!
-# Segment lemmas for the SyncAggregate field widths (new file; `Codec/FixedBytesDecode.lean` and `Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean` are unchanged)
+# Segment lemmas for the SyncAggregate field widths
 
 - `bytes_decode_segment_offset_zero_size64`: the statement of `Codec.bytes_decode_segment_offset_zero` with `hn : n = 64` (SyncCommitteeBits, offset 0).
   `Codec/FixedBytesDecode.lean` covers n ∈ {32, 48, 96}; its `hn` is a limit of the proof method (literal immediates).

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Link set of the real v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ (Go 1.26.10 ELF
-9a37219e...10e9). A new file in the pattern of `lists_and_vectors_link.py` / `data_columns_encoder_link.py`; existing scripts are not changed.
+9a37219e...10e9). It follows the pattern of `lists_and_vectors_link.py` / `data_columns_encoder_link.py`.
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   data_columns_decoder_link.py filter <outdir> <objdump> <elf> <nm>

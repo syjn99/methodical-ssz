@@ -6,7 +6,7 @@ import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.DecodeRejectSize
 
 /-!
-# Real Prysm `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`: size reject (hold-out, class D)
+# Real Prysm `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`: size reject
 
 Hand-written: the text of `Prysm/PendingPartialWithdrawal/DecodeRejectSize.lean` with the PendingConsolidation indices
 (frame `sub $0x48` as PendingPartialWithdrawal). `Decode.reject_size` (`len(buf) ≠ 16`, `return ssz.ErrSize`):

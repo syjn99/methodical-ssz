@@ -1,7 +1,7 @@
 """Evidence tool (not part of gen/generator): write the decoder witness modules WitnessGeneratedDecodeAccept and
 WitnessGeneratedDecodeRejectSize (lean/Prysm/<GoTypeName>/) of the seven
-generated decoders (non-vacuity of the generated accept / size-reject theorems). Texts follow the script
-`mkwit.py` (reject; callee frame 0x38) and the hand witnesses `Prysm/Deposit_Data/WitnessDecodeAccept.lean` (frame 0x20 bytes) and `Prysm/PendingDeposit/WitnessDecodeAccept.lean`
+generated decoders (non-vacuity of the generated accept / size-reject theorems). Texts follow the hand
+witnesses `Prysm/Deposit_Data/WitnessDecodeAccept.lean` (frame 0x20 bytes) and `Prysm/PendingDeposit/WitnessDecodeAccept.lean`
 (frame with slices and callees); the memory block of each type is laid out here from the frame facts of its `.S`
 (the same facts as `Prysm/DepositRequest/Statements.lean`), with the addresses computed below.
 usage: python3 -I -B flat_types_witness.py <fv/kraken> [GoTypeName ...]"""
@@ -46,7 +46,7 @@ import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of the generated `Decode.generated_reject` (24 flat hold-out types)
+# Witness of the generated `Decode.generated_reject` (24 flat types)
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*{ty}).UnmarshalSSZ` (index 1).
 Written by the evidence script `flat_types_witness.py`: the text of the generated size-reject witnesses
@@ -154,7 +154,7 @@ import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path; 24 flat hold-out types)
+# Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path; 24 flat types)
 
 Written by the evidence script `flat_types_witness.py`: the text of the generated accept witness `Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeAccept.lean`
 (frame `0x38`, one Slot callee) with the {ty} host and layout ({nf} input words). It shows that the premises of
@@ -353,7 +353,7 @@ import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path; 24 flat hold-out types)
+# Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path; 24 flat types)
 
 Written by the evidence script `flat_types_witness.py`: the text of `{'Prysm/Deposit_Data/WitnessDecodeAccept.lean' if frame == '20' else 'Prysm/PendingDeposit/WitnessDecodeAccept.lean'}` with the
 {ty} host and layout. It shows that the premises of the generated accept theorem (statement = kind instance)

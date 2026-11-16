@@ -3,7 +3,7 @@ import Prysm.BeaconBlockHeader.GeneratedDecodeRootFieldSegments
 import Prysm.AttestationData.DecodeAccept
 
 /-!
-# Real Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
+# Real Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
 Hand-written (composition; not generator output).
 

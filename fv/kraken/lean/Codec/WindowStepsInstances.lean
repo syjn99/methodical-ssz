@@ -8,10 +8,10 @@ import Prysm.PendingConsolidation.DecodeAccept
 import Prysm.SyncCommitteeMessage.WindowStepsInstances
 
 /-!
-# The earlier per-shape lemmas are instances of the window and step mechanisms
+# The per-shape lemmas are instances of the window and step mechanisms
 
-Each theorem below has the TYPE of an earlier lemma (`type_of%`, so the statement is the committed one) and
-is proved from the window and step lemmas only. No earlier proof is used.
+Each theorem below has the TYPE of a per-shape lemma (`type_of%`, so the statement is the committed one) and
+is proved from the window and step lemmas only. No proof of a per-shape lemma is used.
 
 * Window mechanism: `bytes_decode_segment` (dense), `bytes_decode_segment_optional_padding` (`pad` flag: the padding `nop`
   before `callq runtime.makeslice`), `Prysm.Deposit_Data.bytes32_decode_segment_nop` (hand lemma), `Prysm.SyncCommitteeMessage.bytes32_decode_segment_rax` (hand

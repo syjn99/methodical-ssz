@@ -4,10 +4,10 @@ import Machine.Bytes
 import Prysm.Eth1Data.DecodeFieldSegmentOffsetZero
 
 /-!
-# Real Prysm `(*v1alpha1.Eth1Data).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
+# Real Prysm `(*v1alpha1.Eth1Data).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
-Hand-written after the frozen generator ran on this hold-out type (not generator output: the one generator run,
-emitted nothing). The head is the text of `Prysm/BeaconBlockHeader/DecodeHead.lean` without the callees; the composition
+Hand-written (not generator output).
+The head is the text of `Prysm/BeaconBlockHeader/DecodeHead.lean` without the callees; the composition
 is the text of `Prysm/BeaconBlockHeader/DecodeAccept.lean` with the Eth1Data indices, offsets and two segments.
 
     func (e *Eth1Data) UnmarshalSSZ(buf []byte) error {
