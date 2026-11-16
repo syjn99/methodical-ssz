@@ -117,7 +117,7 @@ def main():
             classes.append("new pattern (automation)")
         if not classes:
             classes.append("none known")
-        rows.append({"type": t["name"], "package": t["package"], "fulu_reachable": t["in_B"], "scope": t["scope"],
+        rows.append({"type": t["name"], "package": t["package"], "fulu_reachable": t["fulu_reachable"], "scope": t["scope"],
                      "kind": t["kind"], "fields": t["field_count"], "shapes": shapes,
                      "hand_patterns": sorted(pats), "new_patterns": sorted(new), "missing_contracts": sorted(set(missing)),
                      "fmt_shapes": dict(sh), "calls": dict(calls), "kraken_parse_marshal_size_unmarshal": parse,

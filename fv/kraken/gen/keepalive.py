@@ -2,7 +2,7 @@
 """Write the scratch `main` package that keeps the inventory functions in the ELF.
 
 Usage: keepalive.py <inventory.json> <out main.go>
-For every type of set I it takes the method values MarshalSSZTo, SizeSSZ and
+For every type of the inventory it takes the method values MarshalSSZTo, SizeSSZ and
 UnmarshalSSZ of the pointer type, so the linker keeps the generated bodies.
 The binary is never run for a result; main only prints the count.
 Python 3 standard library only. Run with python3 -I.

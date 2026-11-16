@@ -11,14 +11,15 @@
       <prysm-dir>/inventory.json. Every count in TYPES.md comes from there.
 
 Definitions (see TYPES.md "Method"):
-  fork configs  phase0..fulu yaml of proto/prysm/v1alpha1.
-  set A         every type configured in a fork config.
-  set B         named types reached from the fulu.yaml roots through fields,
-                following a delegated field into the type's own IR
-                (Fulu-reachable in the strict sense).
-  set I         generated types in the field closure of A (inventory set).
-                Named types in a closure that no config generates are the
-                hand-written delegates (their SSZ methods are hand-written Go).
+  fork configs            phase0..fulu yaml of proto/prysm/v1alpha1.
+  fork config types       every type configured in a fork config.
+  Fulu-reachable types    named types reached from the fulu.yaml roots through
+                          fields, following a delegated field into the type's
+                          own IR.
+  inventory types         generated types in the field closure of the fork
+                          config types. Named types in a closure that no config
+                          generates are the hand-written delegates (their SSZ
+                          methods are hand-written Go).
 Python 3 standard library only. Run with python3 -I.
 """
 import json
@@ -199,22 +200,22 @@ def walk_refs(n, acc):
 
 def build(pdir):
     irs = {p: json.load(open(f"{pdir}/ir/ir-{p}.json")) for p in ("mainnet", "minimal")}
-    out = OrderedDict(schema="fv.kraken.inventory/1", inputs={}, definitions={}, configs=[], sets={}, types=[],
+    out = OrderedDict(schema="fv.kraken.inventory/2", inputs={}, definitions={}, configs=[], sets={}, types=[],
                       hand_written_delegates=[], minimal_differences=[], counts={})
     out["inputs"] = {p: {"file": f"ir/ir-{p}.json", "tags": irs[p]["tags"]} for p in irs}
     out["definitions"] = {
         "fork_configs": [V1 + c + ".yaml" for c in FORKS],
-        "set_A": "every type configured in a fork config (phase0..fulu)",
-        "set_B": "named types reached from the fulu.yaml roots through fields; a delegated field is followed into its type's own IR",
-        "set_I": "inventory set: generated types in the closure of A (A is closed under fields only through I; B is a subset because the fulu.yaml roots are in A)",
-        "fulu_reachable": "strict sense: B. The classification covers I and marks in_B per type",
-        "hand_written_delegate": "a named type in the field closure of A with SSZ methods that no config generates (its methods are hand-written Go)",
+        "fork_config_types": "every type configured in a fork config (phase0..fulu)",
+        "fulu_reachable_types": "named types reached from the fulu.yaml roots through fields; a delegated field is followed into its type's own IR",
+        "inventory_types": "generated types in the field closure of the fork config types. Every generated Fulu-reachable type is an inventory type, because the fulu.yaml roots are fork config types",
+        "fulu_reachable": "the flag of a type in fulu_reachable_types. The classification covers all inventory types",
+        "hand_written_delegate": "a named type in the field closure of the fork config types with SSZ methods that no config generates (its methods are hand-written Go)",
         "inline_depth": "list/vector levels the type's own code walks; bytesN and delegated fields count 0",
         "scope_in": "first-pass rule: not excluded, i.e. not progressive, no union, inline depth <= 1, and every field one of: "
                     "uint8..64, bool, bytesN, bitvector, bitlist (ValidateBitlist contract), vector of a uint/bool, of bytesN or "
                     "of a delegated type, list[byte], list[uint64] (a list of another uint is out), list of bytesN or of a delegated "
                     "container, a delegated container or a delegated hand-written type. Depth is the inline depth (delegated "
-                    "fields are not followed). 'in' is neither provability nor a match with a hand proof pattern (see SCOPE-P6)",
+                    "fields are not followed). 'in' is neither provability nor a match with a hand proof pattern",
         "preset": "mainnet is primary; minimal differences are listed separately",
     }
     main = irs["mainnet"]
@@ -231,7 +232,7 @@ def build(pdir):
             key = (c["package"], t["name"])
             by_key.setdefault(key, []).append((c["file"], t))
             by_cfg.setdefault(c["file"], []).append(key)
-    set_a = sorted({k for c in out["configs"] if c["group"] == "fork" for k in by_cfg[c["file"]]})
+    config_types = sorted({k for c in out["configs"] if c["group"] == "fork" for k in by_cfg[c["file"]]})
     roots = sorted(by_cfg[V1 + "fulu.yaml"])
 
     def closure(start):
@@ -247,24 +248,28 @@ def build(pdir):
                 stack.extend(sorted(refs - seen))
         return seen
 
-    set_b = sorted(closure(roots))
-    gen_b = sorted(k for k in set_b if k in by_key)
-    clo_a = closure(set_a)
-    hand = {k for k in clo_a if k not in by_key}
-    reach = sorted(k for k in clo_a if k in by_key)
+    reachable_types = sorted(closure(roots))
+    reachable_generated = sorted(k for k in reachable_types if k in by_key)
+    config_closure = closure(config_types)
+    hand = {k for k in config_closure if k not in by_key}
+    inventory = sorted(k for k in config_closure if k in by_key)
     fmt = lambda ks: [f"{p}.{n}" for p, n in ks]
     out["sets"] = {
-        "A": fmt(set_a), "B": fmt(set_b), "B_generated": fmt(gen_b), "B_hand_written": fmt(sorted(k for k in set_b if k not in by_key)),
-        "A_minus_B": fmt(sorted(set(set_a) - set(set_b))), "B_generated_minus_A": fmt(sorted(set(gen_b) - set(set_a))),
-        "I_minus_A": fmt(sorted(set(reach) - set(set_a))), "I_hand_written": fmt(sorted(hand)),
-        "I": fmt(reach), "roots": fmt(roots),
+        "fork_config_types": fmt(config_types), "fulu_reachable_types": fmt(reachable_types),
+        "fulu_reachable_generated_types": fmt(reachable_generated),
+        "fulu_reachable_hand_written_types": fmt(sorted(k for k in reachable_types if k not in by_key)),
+        "fork_config_types_not_fulu_reachable": fmt(sorted(set(config_types) - set(reachable_types))),
+        "fulu_reachable_generated_types_not_fork_config": fmt(sorted(set(reachable_generated) - set(config_types))),
+        "inventory_types_not_fork_config": fmt(sorted(set(inventory) - set(config_types))),
+        "hand_written_delegate_types": fmt(sorted(hand)),
+        "inventory_types": fmt(inventory), "roots": fmt(roots),
     }
     later = {}
     for c in out["configs"]:
         if c["group"] in ("later fork", "other"):
             for t in c["types"]:
                 k = (c["package"], t)
-                if k not in set(reach):
+                if k not in set(inventory):
                     later.setdefault(c["file"], []).append(t)
     out["not_fulu"] = [{"config": f, "reason": (LATER.get(cfg_name(f)) or "not a fork config and no type reached from the Fulu roots"),
                         "types": sorted(ts)} for f, ts in later.items()]
@@ -272,11 +277,11 @@ def build(pdir):
     for c in irs["minimal"]["configs"]:
         for t in c["types"]:
             mins[(c["package"], t["name"])] = t
-    for k in reach:
+    for k in inventory:
         cfgs = by_key[k]
         f, t = cfgs[0]
         row = OrderedDict(name=k[1], package=k[0], config=f, also_in=[x for x, _ in cfgs[1:]],
-                          in_A=k in set(set_a), in_B=k in set(set_b), is_root=k in set(roots),
+                          in_fork_config=k in set(config_types), fulu_reachable=k in set(reachable_types), is_root=k in set(roots),
                           go_file=t["go_file"], go_file_kind=t["go_file_kind"],
                           go_size_gc_amd64=t["go_size_gc_amd64"])
         row.update(classify(t))
@@ -301,11 +306,14 @@ def build(pdir):
             cnt[x] += 1
     out["counts"] = OrderedDict(
         configs_parsed=len(out["configs"]),
-        set_A=len(set_a), set_B=len(set_b), set_B_generated=len(gen_b), set_B_hand_written=len(set_b) - len(gen_b),
-        A_minus_B=len(out["sets"]["A_minus_B"]), B_generated_minus_A=len(out["sets"]["B_generated_minus_A"]),
-        set_I=len(reach), I_minus_A=len(out["sets"]["I_minus_A"]), I_hand_written=len(hand), roots=len(roots),
-        B_scope_in=sum(r["scope"] == "in" and r["in_B"] for r in rows),
-        B_scope_out=sum(r["scope"] == "out" and r["in_B"] for r in rows),
+        fork_config_types=len(config_types), fulu_reachable_types=len(reachable_types),
+        fulu_reachable_generated_types=len(reachable_generated), fulu_reachable_hand_written_types=len(reachable_types) - len(reachable_generated),
+        fork_config_types_not_fulu_reachable=len(out["sets"]["fork_config_types_not_fulu_reachable"]),
+        fulu_reachable_generated_types_not_fork_config=len(out["sets"]["fulu_reachable_generated_types_not_fork_config"]),
+        inventory_types=len(inventory), inventory_types_not_fork_config=len(out["sets"]["inventory_types_not_fork_config"]),
+        hand_written_delegate_types=len(hand), roots=len(roots),
+        fulu_reachable_scope_in=sum(r["scope"] == "in" and r["fulu_reachable"] for r in rows),
+        fulu_reachable_scope_out=sum(r["scope"] == "out" and r["fulu_reachable"] for r in rows),
         scope_in=sum(r["scope"] == "in" for r in rows), scope_out=sum(r["scope"] == "out" for r in rows),
         out_reason_types=dict(sorted(cnt.items())),
         out_primary_reason=dict(sorted(Counter(r["reasons"][0] for r in rows if r["reasons"]).items())),

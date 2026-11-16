@@ -42,23 +42,23 @@ def main():
     w("")
     w("## 1. Summary")
     w("")
-    w(f"- Inventory set I: {c['set_I']} generated types. Config types A: {c['set_A']}, Fulu-reachable B: {c['set_B']} (generated {c['set_B_generated']}, hand-written {c['set_B_hand_written']}).")
+    w(f"- Inventory types: {c['inventory_types']} generated types. Fork config types: {c['fork_config_types']}. Fulu-reachable types: {c['fulu_reachable_types']} (generated {c['fulu_reachable_generated_types']}, hand-written {c['fulu_reachable_hand_written_types']}).")
     w(f"- In scope: {c['scope_in']}, out of scope: {c['scope_out']} (provisional). Reasons for out of scope: " +
       ", ".join(f"{k} {v}" for k, v in c["out_primary_reason"].items()) + ".")
-    w(f"- For B only: in scope {c['B_scope_in']}, out of scope {c['B_scope_out']}.")
+    w(f"- For the generated Fulu-reachable types only: in scope {c['fulu_reachable_scope_in']}, out of scope {c['fulu_reachable_scope_out']}.")
     fsh = c["field_shape"]
     w("- \"In scope\" means that the first-pass rules did not remove the type. It does not mean that a proof is possible. It also does not mean that the type fits the hand proof patterns.")
-    w(f"  The in-scope rule accepts these field shapes. The types of I together have {fsh.get('vector[bytesN]', 0)} `vector[bytesN]` fields, {fsh.get('list[bytesN]', 0)} `list[bytesN]` fields "
+    w(f"  The in-scope rule accepts these field shapes. The inventory types together have {fsh.get('vector[bytesN]', 0)} `vector[bytesN]` fields, {fsh.get('list[bytesN]', 0)} `list[bytesN]` fields "
       f"and {fsh.get('vector[uint64]', 0)} `vector[uint64]` fields. The depth is the inline depth (it does not follow delegation).")
     w("  The classification by what the proofs need is in `type-scope.md`.")
-    w(f"- Hand-written delegate targets (`consensus-types/primitives`): {c['I_hand_written']}. Types that call them: {c['types_calling_hand_written']}.")
+    w(f"- Hand-written delegate targets (`consensus-types/primitives`): {c['hand_written_delegate_types']}. Types that call them: {c['types_calling_hand_written']}.")
     w(f"- Generated functions: {fc['generated_functions_inventory']} (types × 3), instructions: {fc['generated_instructions']}, maximum for each function: {fc['max_instructions']}.")
     w(f"- Mnemonic level: {fc['generated_functions_all_supported']}/{fc['generated_functions_inventory']} generated functions use only names that the Kraken runtime parser accepts.")
     # an error message without its line number, for example `unsupported instruction: bsr`
     err_kinds = Counter(re.sub(r"^line \d+: ", "", r["error"]) for r in kp["errors"])
     ok_inv = kp["counts"].get("inventory: OK", 0)
     err_inv = kp["counts"].get("inventory: ERR", 0)
-    w(f"- Real parser run: {ok_inv} generated functions of I OK, {err_inv} ERR. Errors of all parsed functions by message: "
+    w(f"- Real parser run: {ok_inv} generated functions of the inventory types OK, {err_inv} ERR. Errors of all parsed functions by message: "
       + (", ".join(f"`{m}` {n}" for m, n in sorted(err_kinds.items())) or "none") + " (section 4).")
     w(f"- Differences from the committed Prysm files: {gd['totals']['blocks']} changed blocks, {gd['totals']['classified']} classified, {gd['totals']['unclassified']} not classified.")
     w(f"- Types with a different IR in the minimal preset: {c['minimal_differs']}. Types with a changed scope classification: {c['minimal_scope_changes']}.")
@@ -116,15 +116,18 @@ def main():
     if not kp["errors"]:
         w("- none")
     w("")
-    w("Mnemonic frequency of the generated functions (I only):")
+    w("Mnemonic frequency of the generated functions (inventory types only):")
     w("")
     w(", ".join(f"`{k}` {v}" for k, v in fc["mnemonic_occurrences_inventory"].items()))
     w("")
     w("## 5. Set differences")
     w("")
-    w(f"- {c['B_generated_minus_A']} generated types in B are not in A: " + ", ".join(f"`{short(x)}`" for x in inv["sets"]["B_generated_minus_A"]) + ".")
-    w(f"- {c['I_minus_A']} types in I are not in A: " + ", ".join(f"`{short(x)}`" for x in inv["sets"]["I_minus_A"]) + ".")
-    w(f"- {c['A_minus_B']} types in A are not in B. The names are in `inventory.json` `sets.A_minus_B`.")
+    w(f"- {c['fulu_reachable_generated_types_not_fork_config']} generated Fulu-reachable types are not fork config types: "
+      + ", ".join(f"`{short(x)}`" for x in inv["sets"]["fulu_reachable_generated_types_not_fork_config"]) + ".")
+    w(f"- {c['inventory_types_not_fork_config']} inventory types are not fork config types: "
+      + ", ".join(f"`{short(x)}`" for x in inv["sets"]["inventory_types_not_fork_config"]) + ".")
+    w(f"- {c['fork_config_types_not_fulu_reachable']} fork config types are not Fulu-reachable."
+      " The names are in `inventory.json` `sets.fork_config_types_not_fulu_reachable`.")
     w("")
     w("Configs that are not Fulu:")
     w("")
@@ -144,10 +147,10 @@ def main():
     w("")
     w("## 6. Type table")
     w("")
-    w("Columns: config, B (Fulu-reachable), kind, field count, depth, scope (reasons), delegate calls (generated/hand), instruction count M/S/U (MarshalSSZTo/SizeSSZ/UnmarshalSSZ), count of mnemonic kinds, mnemonics that Kraken does not support, parser (M/S/U), runtime calls (union of the three functions).")
+    w("Columns: config, Fulu-reachable, kind, field count, depth, scope (reasons), delegate calls (generated/hand), instruction count M/S/U (MarshalSSZTo/SizeSSZ/UnmarshalSSZ), count of mnemonic kinds, mnemonics that Kraken does not support, parser (M/S/U), runtime calls (union of the three functions).")
     w("Call abbreviations: " + ", ".join(f"{v}={k}" for k, v in ABBR.items()) + ".")
     w("")
-    w("| Type | Config | B | Kind | Fields | Depth | Scope | Delegates | M/S/U | Mnemonics | Not supported | Parser | Calls |")
+    w("| Type | Config | Fulu-reachable | Kind | Fields | Depth | Scope | Delegates | M/S/U | Mnemonics | Not supported | Parser | Calls |")
     w("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |")
     hand = {tuple(h["type"].rsplit(".", 1)) for h in inv["hand_written_delegates"]}
     for t in sorted(inv["types"], key=lambda t: (t["config"], t["name"])):
@@ -169,11 +172,11 @@ def main():
         ng = sum(1 for cc in t["callees"] if tuple(cc.rsplit("/", 1)) not in hand)
         nh = sum(1 for cc in t["callees"] if tuple(cc.rsplit("/", 1)) in hand)
         scope = t["scope"] + (f" ({', '.join(t['reasons'])})" if t["reasons"] else "")
-        w(f"| `{t['name']}` | {t['config'].rsplit('/', 1)[-1].removesuffix('.yaml')} | {'B' if t['in_B'] else ''} | "
+        w(f"| `{t['name']}` | {t['config'].rsplit('/', 1)[-1].removesuffix('.yaml')} | {'yes' if t['fulu_reachable'] else ''} | "
           f"{t['kind']} | {t['field_count']} | {t['depth']} | {scope} | {ng}/{nh} | {ins} | {len(mn)} | "
           f"{', '.join(sorted(uns)) or '-'} | {'/'.join(kpst)} | {' '.join(sorted(ABBR.get(x, x) for x in calls))} |")
     w("")
-    w("Field shape frequency (all of I): " + ", ".join(f"{k} {v}" for k, v in c["field_shape"].items()) + ".")
+    w("Field shape frequency (all inventory types): " + ", ".join(f"{k} {v}" for k, v in c["field_shape"].items()) + ".")
     w("")
     open(f"{d}/TYPES.md", "w").write("\n".join(L))
     print(f"TYPES.md: {len(inv['types'])} rows")
