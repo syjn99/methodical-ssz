@@ -1,7 +1,7 @@
 import Machine.Step
 import Machine.Labels
 import Machine.Bytes
-import Prysm.Checkpoint.DecodeRejectSize
+import Prysm.ElfData.PrysmTarget
 import Prysm.HistoricalBatch.Statements
 import Prysm.HistoricalBatch.Code
 

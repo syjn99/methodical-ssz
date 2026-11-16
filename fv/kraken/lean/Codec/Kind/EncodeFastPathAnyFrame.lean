@@ -7,7 +7,7 @@ import Codec.Kind.DecodeAcceptAnyFrame
 **Fast path only**: premise `len(dst) + SizeSSZ ≤ cap(dst)` and every byte-vector field of its exact length.
 The `runtime.growslice` branches, the length rejects and the morestack path are not part of the statement.
 
-- `fields : List ContainerField` (`Codec/Kind/DecodeAcceptComposition.lean`): `.bytes n` = a `[]byte` field of SSZ size `n` (receiver words:
+- `fields : List ContainerField` (`Codec/Kind/ContainerField.lean`): `.bytes n` = a `[]byte` field of SSZ size `n` (receiver words:
   pointer, length `n`, capacity word); `.uint64` = an 8-byte field (`uint64` or an overlay type of it).
 - `L : EncoderFrameLayout`: the frame facts of the `.S` file. `stateWord` (the receiver has the protoc `state` word), `frame`
   (the `sub` amount `F`), `guardAddend` (stack-guard addend: 0 for the small guard, `N` of `lea -N(%rsp),%r12`), `callsMemmove`

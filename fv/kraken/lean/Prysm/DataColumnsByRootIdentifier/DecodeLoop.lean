@@ -1,7 +1,7 @@
 import Machine.Block
 import Machine.Labels
 import Prysm.DataColumnsByRootIdentifier.Code
-import Prysm.SyncCommittee.DecodeLoopLemmas
+import Codec.ByteSliceListLemmas
 
 /-!
 # Decoder: the element loop (the text of `Prysm/IndexedAttestation/DecodeLoop.lean`)

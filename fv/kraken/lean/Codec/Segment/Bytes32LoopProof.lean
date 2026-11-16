@@ -1,4 +1,5 @@
 import Codec.Segment.Bytes32Loop
+import Codec.SegmentAddress
 
 /-!
 # Element loop with 32-byte elements: one iteration, the exit and the whole loop, for any count `n < 2^31`
@@ -8,7 +9,7 @@ offsets, the frame slots and receiver words are parameters with address equation
 The return slot keeps the value of the last `memmove` return address (`jS + 2`), as in `Decode.state_roots_loop`.
 -/
 
-open Machine Runtime Prysm.HistoricalBatch
+open Machine Runtime
 
 namespace Codec.Segment
 

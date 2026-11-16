@@ -1,4 +1,5 @@
 import Codec.InlineUint64
+import Codec.SegmentAddress
 
 /-!
 # Shared segments for the composition of a container decoder accept path
@@ -85,6 +86,10 @@ def decodeEpilogue : Program :=
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.pop (RegOrMem.reg (Reg.low Reg64.rbp Width.W64)))),
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 Operation.ret)]
+
+/-- The two forms of the address of the stack bytes of the runtime callees in the frame `0x20`. -/
+theorem decode_stack_low_eq (x : BitVec 64) (S : Nat) : x - 40 - 8 - BitVec.ofNat 64 S = x - 48 - BitVec.ofNat 64 S := by
+  bv_omega
 
 variable [Host]
 

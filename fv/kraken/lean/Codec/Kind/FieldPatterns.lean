@@ -1,5 +1,6 @@
 import Codec.Uint64Decoder
-import Codec.Bytes32Decode
+import Codec.SegmentTemplate
+import Runtime.Contracts
 
 /-!
 # Frozen statement kinds of the generated theorems

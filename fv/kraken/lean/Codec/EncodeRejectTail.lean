@@ -1,4 +1,6 @@
-import Codec.Bytes32Decode
+import Codec.SegmentTemplate
+import Runtime.Contracts
+import Codec.SegmentAddress
 
 /-!
 # Reusable encode block: the `return nil, ssz.ErrBytesLength` tail of a generated `MarshalSSZTo`

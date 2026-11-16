@@ -1,4 +1,5 @@
-import Codec.Bytes32Decode
+import Codec.SegmentTemplate
+import Runtime.Contracts
 
 /-!
 # Inline uint64 decode, two-directive form (register base, receiver in rax)

@@ -1,12 +1,9 @@
-import Prysm.PendingPartialWithdrawal.DecodeRejectSize
-import Prysm.AttestationData.DecodeRejectSize
+import Prysm.Checkpoint.DecodeRejectSize
 import Codec.DecodeRejectSizeAnyFrame
 import Prysm.Checkpoint.Code
 
 /-!
-# Ties of `decodeRejectKindAnyFrame` to the committed size-reject theorems: the `Checkpoint` part
-
-The declarations of the other types of this group are in `Prysm/BlobIdentifier/DecodeRejectSizeKindInstances.lean`.
+# Tie of `decodeRejectKindAnyFrame` to the size-reject theorem of `Checkpoint`
 -/
 
 open Machine Runtime

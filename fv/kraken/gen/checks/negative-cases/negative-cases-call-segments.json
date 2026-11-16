@@ -52,14 +52,6 @@
   "new": "st.data.regs.rcx = 9 ∧"
  },
  {
-  "id": "codec-callee-decode-call-argument-reload-segment-statement-rbx-a-src-to-bf",
-  "module": "Codec/CalleeDecode.lean",
-  "theorem": "Codec.call_argument_reload_segment",
-  "kind": "statement",
-  "old": "st.data.regs.rbx.toBitVec = aSrc",
-  "new": "st.data.regs.rbx.toBitVec = bf"
- },
- {
   "id": "codec-callee-decode-call-argument-lea-segment-statement-rsi-a-f-to-rcv",
   "module": "Codec/CalleeDecode.lean",
   "theorem": "Codec.call_argument_lea_segment",

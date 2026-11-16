@@ -4,6 +4,7 @@ import Machine.Labels
 import Prysm.ElfData.PrysmTarget
 import Prysm.SyncCommittee.Code
 import Prysm.SyncCommittee.DecodeLoopLemmas
+import Codec.SegmentAddress
 
 /-!
 # `(*v1alpha1.SyncCommittee).UnmarshalSSZ`: the 512-iteration element loop
@@ -24,15 +25,6 @@ open Machine Runtime Prysm.SyncCommittee.Code
 variable [Host]
 
 namespace Prysm.SyncCommittee
-
-/-- Address equation by `toNat` and `omega` with products and shifts (the `address_equation` set plus `toNat_mul` and
-`toNat_shiftLeft`). -/
-macro "address_with_products" : tactic => `(tactic| (
-  apply BitVec.eq_of_toNat_eq
-  simp only [BitVec.toNat_add, BitVec.toNat_sub, BitVec.toNat_neg, BitVec.toNat_ofNat, BitVec.ofNat_eq_ofNat,
-    BitVec.toNat_mul, BitVec.toNat_shiftLeft, Nat.shiftLeft_eq, UInt64.toNat_toBitVec, UInt64.toBitVec_add,
-    UInt64.toBitVec_ofNat, Width.bits, Nat.reducePow]
-  all_goals omega))
 
 theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (sp recv bf A : BitVec 64) (pks : List (List UInt8)) (hpks : pks.length = 512)

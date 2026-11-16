@@ -1,5 +1,5 @@
 import Codec.StackGuard
-import Prysm.IndexedAttestation.DecodeAccept
+import Codec.BitVecShiftLemmas
 import Prysm.DataColumnsByRootIdentifier.EncodeTail
 import Prysm.DataColumnsByRootIdentifier.DecodeRejectSize
 import Prysm.DataColumnsByRootIdentifier.DecodeLoop

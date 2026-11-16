@@ -1,4 +1,5 @@
-import Codec.Bytes32Decode
+import Codec.SegmentTemplate
+import Runtime.Contracts
 
 /-!
 # Inline uint64 decode segment of a container decoder

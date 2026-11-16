@@ -1,4 +1,5 @@
-import Codec.Kind.CalleeDecode
+import Codec.CalleeDecode
+import Codec.InlineUint64RegisterBase
 import Codec.NopWindow
 
 /-!
@@ -125,9 +126,5 @@ theorem callDecodeSegmentKindWindow_of (C : Program) (fn lok : String) (j jc j2 
     callDecodeSegmentKindWindow C fn lok j jc j2 :=
   fun k hk hf hC => call_decode_segment_window fn lok q (k + j) (k + jc) (k + j2) (hq k hk) he (by omega) (hB k hk)
     (hl k hk hf) hC
-
-/-- The dense kind `callDecodeSegmentKind` is the `jc = j` case of the window kind. -/
-theorem callDecodeSegmentKind_eq_window (C : Program) (fn lok : String) (j j2 : Nat) :
-    callDecodeSegmentKind C fn lok j j2 = callDecodeSegmentKindWindow C fn lok j j j2 := rfl
 
 end Codec

@@ -20,7 +20,7 @@ bytes `formatBufferLength`; the fillers between them and the unused rax spill sl
 frame `R`. With `len(buf) = 7` the decoder returns a non-nil error.
 -/
 
-open Machine Runtime Machine.Witness Prysm.Checkpoint.Code Prysm.ValidatorIndex.Code
+open Machine Runtime Machine.Witness Prysm.ValidatorIndex.Code
 
 namespace Prysm.ValidatorIndex.Witness.DecodeRejectSize
 
@@ -85,7 +85,7 @@ theorem runs (zmms : RegZmms) (flags : StatusFlags) :
     (zeros 8) rfl rfl rfl rfl rfl rfl rfl 0 [] rfl bumpHeap 8280 frame_rest
     (by
       have H : Eq (block.At (0x10003 : BitVec 64)) mem := rfl
-      witness_split [eight_length, Prysm.Epoch.Decode.reject_format_len]
+      witness_split [eight_length, Codec.uint64_reject_format_len]
       -- bump pointer, F1, box 7, box 8, F2, ... : move the heap next to the pointer
       rw [Std.ExtHashMap.sep_comm_l (Eq (ElfData.PrysmTarget.boxedEight.At _)) (Eq ((zeros 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((zeros 1359).At _)) (Eq ((zeros 8280).At _)),
@@ -140,7 +140,7 @@ theorem runs9 (zmms : RegZmms) (flags : StatusFlags) :
     (zeros 8) rfl rfl rfl rfl rfl rfl rfl 0 [] rfl bumpHeap 8280 frame_rest
     (by
       have H : Eq (block.At (0x10003 : BitVec 64)) mem := rfl
-      witness_split [eight_length, Prysm.Epoch.Decode.reject_format_len]
+      witness_split [eight_length, Codec.uint64_reject_format_len]
       rw [Std.ExtHashMap.sep_comm_l (Eq (ElfData.PrysmTarget.boxedEight.At _)) (Eq ((zeros 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((zeros 1351).At _)) (Eq ((zeros 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((Int.toBytes 8 (9#64).toInt).At _)) (Eq ((zeros 8280).At _)),
@@ -187,7 +187,7 @@ theorem runs300 (zmms : RegZmms) (flags : StatusFlags) :
     (zeros 8) rfl rfl rfl rfl rfl rfl rfl 0 [] rfl bumpHeap 8280 frame_rest
     (by
       have H : Eq (block.At (0x10003 : BitVec 64)) mem := rfl
-      witness_split [eight_length, Prysm.Epoch.Decode.reject_format_len]
+      witness_split [eight_length, Codec.uint64_reject_format_len]
       rw [Std.ExtHashMap.sep_comm_l (Eq (ElfData.PrysmTarget.boxedEight.At _)) (Eq ((zeros 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((zeros 1359).At _)) (Eq ((zeros 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((Int.toBytes 8 (8#64).toInt).At _)) (Eq ((zeros 8280).At _)),

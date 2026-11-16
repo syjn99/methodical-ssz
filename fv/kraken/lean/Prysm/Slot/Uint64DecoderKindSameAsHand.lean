@@ -1,6 +1,5 @@
 import Codec.Kind.FieldPatterns
 import Prysm.Slot.DecodeAccept
-import Prysm.CommitteeIndex.Uint64DecoderKindSameAsHand
 import Prysm.Slot.Code
 
 /-!

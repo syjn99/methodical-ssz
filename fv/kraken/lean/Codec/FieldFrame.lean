@@ -11,8 +11,6 @@ Its proof uses the generated step chain of the field (the first part of a `decod
 - `frame_low_stack_split`: the low stack of a decoder with callee calls is `S` bytes and the callee's saved-`rbp` slot;
 - `frame_low_address_with_calls`, `frame_low_address_without_calls`: the low-stack address argument of a byte segment;
 - `decode_epilogue_any_frame`: the epilogue `add $F,%rsp; pop %rbp; retq` for any frame `F`.
-They are the frame-parametric forms of the per-type hand lemmas `Prysm.PendingDeposit.Decode.split_three_words`, `Prysm.PendingDeposit.Decode.low_stack_split`,
-`Prysm.PendingDeposit.Decode.stack_low_eq`, `Prysm.Eth1Data.Decode.stack_low_eq`, `Prysm.PendingDeposit.Decode.epilogue`.
 -/
 
 open Machine Runtime

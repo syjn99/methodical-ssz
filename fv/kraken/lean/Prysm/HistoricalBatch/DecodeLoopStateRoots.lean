@@ -2,7 +2,8 @@ import Runtime.Contracts
 import Machine.Step
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
-import Prysm.SyncCommittee.DecodeLoop
+import Codec.SegmentAddress
+import Codec.ByteSliceListLemmas
 import Prysm.HistoricalBatch.Code
 import Prysm.HistoricalBatch.DecodeLoopBlockRoots
 
@@ -19,6 +20,7 @@ The return slot: the last runtime call is the memmove of the last iteration (dir
 -/
 
 open Machine Runtime Prysm.HistoricalBatch.Code
+open scoped Codec
 variable [Host]
 
 namespace Prysm.HistoricalBatch

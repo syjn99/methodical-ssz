@@ -1,6 +1,6 @@
 import Machine.Frame
 import Machine.Block
-import Prysm.SyncCommittee.DecodeLoopLemmas
+import Codec.ByteSliceListLemmas
 
 /-!
 # List and memory-chunk lemmas for the HistoricalBatch element loops

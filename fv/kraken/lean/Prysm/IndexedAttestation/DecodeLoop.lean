@@ -1,7 +1,7 @@
 import Machine.Block
 import Machine.Labels
 import Prysm.IndexedAttestation.Code
-import Prysm.SyncCommittee.DecodeLoopLemmas
+import Codec.ByteSliceListLemmas
 
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: the element loop

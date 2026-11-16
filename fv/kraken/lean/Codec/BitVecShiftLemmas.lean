@@ -1,8 +1,4 @@
-import Prysm.AttestationData.DecodeAccept
-import Codec.StackGuard
-import Prysm.IndexedAttestation.AddressTactic
-import Prysm.IndexedAttestation.Statements
-import Prysm.IndexedAttestation.DecodeLoop
+import Runtime.Contracts
 
 /-!
 # `sar $0x3f` of a negated positive value
@@ -10,7 +6,7 @@ import Prysm.IndexedAttestation.DecodeLoop
 `sshiftRight_neg_63_eq_allOnes`: for `0 < d < 2^63`, the arithmetic shift right by 63 of `-d` is all ones.
 -/
 
-open Machine Runtime Prysm.IndexedAttestation.Code
+open Machine Runtime
 variable [Host]
 
 namespace Codec

@@ -3,7 +3,6 @@ import Machine.Labels
 import Machine.Bytes
 import Prysm.PendingPartialWithdrawal.Code
 import Prysm.ElfData.PrysmTarget
-import Prysm.Checkpoint.DecodeRejectSize
 
 /-!
 # Real Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`: size reject

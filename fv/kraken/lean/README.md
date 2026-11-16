@@ -61,8 +61,9 @@ The full name of a main theorem is the name of the work, for example `Prysm.Chec
 The flat fixed-size types (a flat type has only fixed-size fields and no nested container) have their directories in
 `Prysm/` too, for example `Prysm/BeaconBlockHeader/` and `Prysm/DepositRequest/`. The generated files are
 `Prysm/<GoTypeName>/Generated*.lean`. They use the patterns and kinds of `Codec`.
-The statement kinds of the composed and whole accept theorems, of the callee calls and of the encoder fast path are in
-`Codec/Kind/` (`DecodeAccept*.lean`, `CalleeDecode.lean`, `EncodeFastPathAnyFrame.lean`); some of these modules import modules of single types.
+The statement kinds of the whole accept theorems and of the encoder fast path are in `Codec/Kind/`
+(`DecodeAcceptAnyFrame.lean`, `EncodeFastPathAnyFrame.lean`, with the field list of `ContainerField.lean`).
+The statement kind of a callee call is in `Codec/CalleeDecodeWindow.lean`.
 
 ### Dependencies
 

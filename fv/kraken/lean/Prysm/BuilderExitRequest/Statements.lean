@@ -5,9 +5,6 @@ import Machine.Labels
 import Prysm.ElfData.PrysmTarget
 import Codec.Kind.EncodeFastPathAnyFrame
 import Prysm.BuilderExitRequest.Code
-import Prysm.BLSToExecutionChange.Statements
-import Prysm.ValidatorRegistrationV1.Statements
-import Prysm.WithdrawalRequest.Statements
 
 /-!
 # Independent hand STATEMENTS of two decoder accept paths and two encoder fast paths with a

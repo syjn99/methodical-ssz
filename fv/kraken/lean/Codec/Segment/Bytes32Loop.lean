@@ -2,7 +2,6 @@ import Runtime.Contracts
 import Machine.Step
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
-import Prysm.HistoricalBatch.DecodeLoopBlockRoots
 import Codec.Segment.ByteSliceList
 
 /-!
@@ -22,7 +21,7 @@ operands replaced by parameters; each use shows the equality with the real progr
 `rfl`/`decide` (`Codec/Segment/Bytes32LoopHistoricalBatch.lean`, `Prysm/Deposit/DecodeAccept.lean`).
 -/
 
-open Machine Runtime Prysm.HistoricalBatch
+open Machine Runtime
 
 namespace Codec.Segment
 

@@ -1,5 +1,7 @@
 import Codec.FieldFrame
-import Prysm.Checkpoint.DecodeRejectSize
+import Machine.Labels
+import Machine.Bytes
+import Prysm.ElfData.PrysmTarget
 
 /-!
 # Frame-parametric size reject of a container decoder, and its statement kind

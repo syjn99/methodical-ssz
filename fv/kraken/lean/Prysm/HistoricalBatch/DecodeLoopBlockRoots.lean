@@ -2,7 +2,8 @@ import Runtime.Contracts
 import Machine.Step
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
-import Prysm.SyncCommittee.DecodeLoop
+import Codec.SegmentAddress
+import Codec.ByteSliceListLemmas
 import Prysm.HistoricalBatch.Code
 import Prysm.HistoricalBatch.DecodeLoopLemmas
 
@@ -20,19 +21,15 @@ pointer, `sp` the 24-byte spill area of the callees, `sp − 8` the runtime call
 receiver (8192): not taken; 69–72 len and cap words of header i; 73–75 writeBarrier = 0; 76–77, 36–39 the pointer
 word of header i, `rax = i + 1` (loaded from `sp + 24`).
 Proof order: `Prysm.SyncCommittee.Decode.iter`, `Prysm.SyncCommittee.Decode.exit`, `Prysm.SyncCommittee.Decode.loop` (`Prysm/SyncCommittee/DecodeLoop.lean`); the step sequence is this decoder's own.
-The macro `address_with_products` and the lemmas `Codec.jge_false_of_lt`, `Codec.elementBlocks_snoc` are imported from the SyncCommittee proof.
+The macro `address_with_products` and the notation `shift_left5` are in `Codec/SegmentAddress.lean`.
+The lemmas `Codec.jge_false_of_lt` and `Codec.elementBlocks_snoc` are in `Codec/ByteSliceListLemmas.lean`.
 -/
 
 open Machine Runtime Prysm.HistoricalBatch.Code
+open scoped Codec
 variable [Host]
 
 namespace Prysm.HistoricalBatch
-
-/-- The value that `shl $5` leaves in a 64-bit register, with Kraken's width term `Width.W64.bits` in the
-shift instance (the form `shift_left64` produces; `x <<< 5` at width `64` is not syntactically equal, and `ecancel` does
-not unify the two). -/
-scoped notation "shift_left5 " x:max => @HShiftLeft.hShiftLeft Width.W64.type Nat (BitVec 64)
-  (@BitVec.instHShiftLeftNat Width.W64.bits) x 5
 
 theorem Decode.block_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (sp recv bf A : BitVec 64) (pks : List (List UInt8)) (hpks : pks.length = 8192)

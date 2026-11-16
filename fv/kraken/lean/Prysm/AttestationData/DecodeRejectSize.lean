@@ -3,7 +3,6 @@ import Machine.Labels
 import Machine.Bytes
 import Prysm.AttestationData.Code
 import Prysm.ElfData.PrysmTarget
-import Prysm.Checkpoint.DecodeRejectSize
 
 /-!
 # Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`: size reject and the four unreachable error wraps

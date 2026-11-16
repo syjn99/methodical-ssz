@@ -1,5 +1,4 @@
 import Codec.FixedBytesDecode
-import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 
 /-!
 # Segment lemmas for the SyncAggregate field widths

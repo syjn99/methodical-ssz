@@ -1,6 +1,5 @@
 import Runtime.Contracts
 import Machine.Frame
-import Prysm.Checkpoint.DecodeAccept
 import Machine.StoreLemmas
 import Runtime.StaticBoxLemmas
 
@@ -11,7 +10,7 @@ import Runtime.StaticBoxLemmas
 encoder reject (`x - 32 = 0` gives `x = 32`).
 -/
 
-open Machine Runtime Prysm.Checkpoint.Code
+open Machine Runtime
 variable [Host]
 
 namespace Codec

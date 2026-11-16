@@ -1,5 +1,4 @@
 import Codec.DecoderHeadEpilogue
-import Prysm.Eth1Data.DecodeAddressArithmetic
 import Prysm.SyncAggregate.DecodeFieldSegments
 import Prysm.SyncAggregate.Statements
 import Prysm.SyncAggregate.Code
@@ -121,7 +120,7 @@ theorem Decode.accept : Decode.accept_statement := by
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 8) (rax.toBitVec + 16) (rax.toBitVec + 24) S
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
-    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega) (Prysm.Eth1Data.Decode.stack_low_eq _ _)
+    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega) (Codec.decode_stack_low_eq _ _)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     (by simp only [Int64.toBitVec_ofNat])
     (rsp - 8) r14 bits hbits spl rslot lo l18 aP1 aL1 aC1 hspl hrs hlo hl18 haP1 haL1 haC1
@@ -147,7 +146,7 @@ theorem Decode.accept : Decode.accept_statement := by
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 32) (rax.toBitVec + 40) (rax.toBitVec + 48) (rbx.toBitVec + 64) S
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
-    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega) (Prysm.Eth1Data.Decode.stack_low_eq _ _)
+    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega) (Codec.decode_stack_low_eq _ _)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     (rsp - 8) r14 sig hsig spl1 (Int.toBytes 8 (Host.addrOf (k + 26 + 5 + 1)).toBitVec.toInt) lo1 (Int.toBytes 8 p1.toInt) aP2 aL2 aC2 hspl1 (Int.toBytes_length 8 _) hlo1 (Int.toBytes_length 8 _) haP2 haL2 haC2

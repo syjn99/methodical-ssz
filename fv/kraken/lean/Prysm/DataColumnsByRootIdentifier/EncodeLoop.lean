@@ -2,7 +2,7 @@ import Machine.Block
 import Machine.Labels
 import Machine.Frame
 import Prysm.DataColumnsByRootIdentifier.Code
-import Prysm.SyncCommittee.DecodeLoopLemmas
+import Codec.ByteSliceListLemmas
 import Runtime.CopyModel
 import Machine.StoreLemmas
 

@@ -1,4 +1,6 @@
-import Codec.Bytes32Decode
+import Codec.SegmentTemplate
+import Runtime.Contracts
+import Codec.SegmentAddress
 
 /-!
 # 32-byte field pattern, encode segment: `if len(f) != 32 { reject }; dst = append(dst, f...)` (fits case)

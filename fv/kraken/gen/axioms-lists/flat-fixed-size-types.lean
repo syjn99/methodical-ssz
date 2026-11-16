@@ -2,6 +2,7 @@ import Prysm.Checkpoint.EncodeFastPathFromBytes32Pattern
 import Prysm.Checkpoint.EncodeBytes32TemplatePlacement
 import Codec.Kind.FieldPatterns
 import Prysm.Slot.Uint64DecoderKindSameAsHand
+import Prysm.CommitteeIndex.Uint64DecoderKindSameAsHand
 import Prysm.ValidatorIndex.WitnessGeneratedDecodeAccept
 import Prysm.BeaconBlockHeader.DecodeSpec
 import Prysm.BeaconBlockHeader.WitnessGeneratedDecodeAccept
@@ -33,11 +34,9 @@ import Prysm.Deposit_Data.WitnessGeneratedDecodeRejectSize
 import Prysm.PendingPartialWithdrawal.DecodeSpec
 import Prysm.PendingPartialWithdrawal.WitnessDecodeRejectSize
 import Codec.CalleeDecode
-import Codec.Kind.CalleeDecode
 import Codec.InlineUint64RegisterBase
-import Codec.Kind.DecodeAcceptComposition
+import Codec.Kind.ContainerField
 import Prysm.PendingPartialWithdrawal.DecodeAccept
-import Prysm.BeaconBlockHeader.DecodeAddressArithmetic
 import Prysm.PendingPartialWithdrawal.WitnessDecodeAccept
 import Prysm.SyncCommitteeMessage.Code
 import Prysm.PendingConsolidation.Code
@@ -62,7 +61,6 @@ import Codec.FixedBytesDecodeWindowOffsetZero
 import Codec.Kind.FixedBytesDecodeWindow
 import Codec.DecoderPrologue
 import Codec.Kind.DecodeAcceptAnyFrame
-import Codec.Kind.DecodeAcceptAnyFrameInstances
 import Codec.FieldFrame
 import Codec.DecodeRejectSizeAnyFrame
 import Prysm.BeaconBlockHeader.GeneratedDecodeAccept
@@ -263,6 +261,7 @@ import Prysm.PartialDataColumnGroupID.WitnessGeneratedDecodeRejectSize
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeAccept
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeRejectSize
 import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
+import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 
 -- The segment lemmas, the statement-identity checks and the generated instances.
 #print axioms Codec.infix_sub
@@ -300,8 +299,7 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.runs
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength9.runs9
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength300.runs300
--- Eth1Data, decoder: the stack lemma, the specification
-#print axioms Prysm.Eth1Data.Decode.stack_low_eq
+-- Eth1Data, decoder: the specification
 #print axioms Prysm.Eth1Data.desc_checker
 #print axioms Prysm.Eth1Data.desc_serialize_checker
 #print axioms Prysm.Eth1Data.desc_deserialize_checker
@@ -487,9 +485,7 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.Deposit_Data.Witness.GeneratedDecodeAccept.runs
 #print axioms Prysm.Deposit_Data.Witness.GeneratedDecodeRejectSize.runs
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeRejectSize.runs
--- Callee decode blocks and the hand accept proofs of PendingPartialWithdrawal and BeaconBlockHeader
-#print axioms Prysm.BeaconBlockHeader.Decode.accept_guard
-#print axioms Prysm.BeaconBlockHeader.Decode.head_stack_pointer
+-- Callee decode blocks and the hand accept proof of PendingPartialWithdrawal
 #print axioms Prysm.PendingPartialWithdrawal.Decode.accept
 #print axioms Prysm.PendingPartialWithdrawal.Decode.epilogue
 #print axioms Prysm.PendingPartialWithdrawal.Decode.head
@@ -504,11 +500,9 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.placed_at_173
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.host_program_eq
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs
-#print axioms Codec.callDecodeSegmentKind_of
 #print axioms Codec.call_argument_first_segment
 #print axioms Codec.call_argument_lea_segment
 #print axioms Codec.call_argument_mov_segment
-#print axioms Codec.call_argument_reload_segment
 #print axioms Codec.call_decode_segment
 #print axioms Codec.uint64_decode_scratch_register_segment
 
@@ -620,7 +614,6 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Codec.bytes_decode_segment_offset_zero_window
 #print axioms Codec.bytes_decode_segment_offset_zero_inst
 #print axioms Codec.callDecodeSegmentKindWindow_of
-#print axioms Codec.callDecodeSegmentKind_eq_window
 #print axioms Codec.call_decode_segment_dense
 #print axioms Codec.call_decode_segment_window
 #print axioms Codec.decode_prologue_segment
@@ -1344,12 +1337,9 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Codec.frame_join_three_words
 #print axioms Codec.frame_low_address_with_calls
 #print axioms Codec.frame_low_address_without_calls
+#print axioms Codec.decode_stack_low_eq
 #print axioms Codec.frame_low_stack_split
-#print axioms Codec.layoutCalleeCalls
 #print axioms Prysm.Checkpoint.decodeLayout
-#print axioms Codec.layoutMixedFrame40
-#print axioms Codec.layoutMixedFrame60
-#print axioms Codec.layoutRuntimeCalls
 #print axioms Codec.decodeRegisterFacts
 #print axioms Codec.runtimeBinders
 #print axioms Codec.scratchBoundFacts

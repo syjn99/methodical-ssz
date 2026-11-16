@@ -1,14 +1,10 @@
 import Codec.Kind.DecodeAcceptAnyFrame
-import Prysm.PendingPartialWithdrawal.DecodeAccept
 import Prysm.Checkpoint.DecodeAccept
-import Codec.Kind.DecodeAcceptAnyFrameInstances
 import Prysm.Checkpoint.Code
 import Prysm.Epoch.Code
 
 /-!
-# Ties of `decodeAcceptKindAnyFrame` to the hand accept statements: the `Checkpoint` part
-
-The declarations of the other types of this group are in `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
+# Tie of `decodeAcceptKindAnyFrame` to the hand accept statement of `Checkpoint`
 -/
 
 open Machine Runtime

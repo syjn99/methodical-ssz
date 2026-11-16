@@ -88,8 +88,8 @@ STEP_RECEIVER_REGISTERS = r"Reg64\.(?:rax|rcx|rdx|rsi|rdi)"
 # kind -> (parameter regex after `h `, with {C} for the code constant; namespace of the kind and of its lemma; lemma
 # of the proof). The step kinds and the fixed-bytes window kinds are in Codec (`lean/Codec/Kind/WindowSteps.lean`,
 # `lean/Codec/Kind/FixedBytesDecodeWindow.lean`, lemma modules `lean/Codec/WindowSteps.lean`,
-# `lean/Codec/FixedBytesDecodeWindow*.lean`); the call-block kind is in Codec (`lean/Codec/Kind/CalleeDecode.lean`,
-# `lean/Codec/CalleeDecodeWindow.lean`).
+# `lean/Codec/FixedBytesDecodeWindow*.lean`); the call-block kind and its lemma are in
+# `lean/Codec/CalleeDecodeWindow.lean`.
 STEP_KINDS = {
     "stepMoveRegisterKind": ("{C} STEP_REGISTERS STEP_REGISTERS NAT NAT", "Codec", "step_move_register"),
     "stepLoadValueKind": ("{C} STEP_REGISTERS STEP_REGISTERS INT NAT NAT", "Codec", "step_load_value"),

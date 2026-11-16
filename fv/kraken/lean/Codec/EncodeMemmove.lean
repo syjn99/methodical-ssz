@@ -1,4 +1,6 @@
-import Codec.Bytes32Decode
+import Codec.SegmentTemplate
+import Runtime.Contracts
+import Codec.SegmentAddress
 
 /-!
 # Reusable encode block: the `runtime.memmove` call that appends a 32-byte field which fits

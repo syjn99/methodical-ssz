@@ -1,10 +1,13 @@
-import Codec.Kind.DecodeAcceptComposition
+import Codec.Kind.ContainerField
+import Machine.Labels
+import Runtime.Contracts
+import Prysm.ElfData.PrysmTarget
 
 /-!
 # Statement kinds for whole accept theorems of flat decoders, any frame
 
 `decodeAcceptKindAnyFrame C L fields` is the accept statement of a flat fixed-size container decoder `C`.
-- `fields : List ContainerField` (`Codec/Kind/DecodeAcceptComposition.lean`): fixed byte vectors (`.bytes n`, a fresh slice, `len = cap = n`) and
+- `fields : List ContainerField` (`Codec/Kind/ContainerField.lean`): fixed byte vectors (`.bytes n`, a fresh slice, `len = cap = n`) and
   8-byte fields (`.uint64`). A field decoded by a callee (`Slot`, `Epoch`, `ValidatorIndex`, `CommitteeIndex`
   `UnmarshalSSZ`) is `.uint64` here: in the receiver and in the input it is the same as an inline `uint64`. The
   callee shows only as placement premises (`L.callees`).
@@ -13,7 +16,7 @@ import Codec.Kind.DecodeAcceptComposition
   for a decoder without `makeslice` / `memmove`), the stack-guard addend (`guardAddend`), the `state` word (`stateWord`).
 
 The input chunks, the receiver words before and after, the heap chunks and the sizes are computed from
-`fields` by the functions of `Codec/Kind/DecodeAcceptComposition.lean` (unchanged). The stack part is a parameter: the kind does
+`fields` by the functions of `Codec/Kind/ContainerField.lean`. The stack part is a parameter: the kind does
 not check that `L` is the frame of the code; a proof of an instance does (a wrong slot does not close).
 The kind does not check that `L.callees` are the callees of the fields: that is a rule of the generator.
 
@@ -25,7 +28,7 @@ accept proof. These are stated over the WHOLE accept memory in entry-state terms
 A boundary state `DecodeBoundaryState` gives the directive index, the number of decoded fields, register facts and the
 stack slots; `decodeBoundaryStatePredicate` renders it. The accept proof chains the theorems with `eventually_trans` only.
 
-Ties to the hand statements: `Codec/Kind/DecodeAcceptAnyFrameInstances.lean`.
+The tie to a hand statement is in `Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean`.
 -/
 
 open Machine Runtime
