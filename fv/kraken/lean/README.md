@@ -259,41 +259,15 @@ These names are written as their source writes them.
   `b2` is the second build.
   `../gen/prysm-elf.sh` writes these lines after it builds the ELF two times.
   A new line needs a new build.
-- The set labels of the inventory `../prysm/inventory.json`.
-  The sets are `A`, `B`, `I` and their parts (`A_minus_B`, `B_generated_minus_A`, `I_minus_A`, `I_hand_written`).
-  The counts are `set_A`, `set_B`, `set_I` and similar keys.
-  Each type has the flags `in_A` and `in_B`.
-  These are keys of the inventory format.
-  `../gen/type_inventory.py` writes them.
-  `../gen/type_list_document.py`, `../gen/type_scope.py` (only `in_B`) and `../prysm/TYPES.md` read or show them.
 - Case ids that a test tool makes from the case parameters.
   `../gen/checks/differential.py` writes ids such as `dec-…` and `enc-empty-cap40-…`.
   `../prysm/go1.26.10/evidence/differential.json` records them.
-  `../gen/desc/test_desc.py` names its mutants `m-…`, `e1-…` to `e8-…`, `y1-…` to `y10-…` and `z1-…` to `z4-…`.
-  It names its scenarios `s-…`.
-  The checker result `../gen/desc/results/main.result.json` records these ids in its paths.
-  A new id needs a new differential run with Go, or a new checker run with Lean.
+  A new id needs a new differential run with Go.
 - The negative case ids, for example `epoch-decode-accept-code-cmp-0x8-to-0x9`.
   An id is the theorem name, the kind, and the old and the new text of the mutation.
   So it holds register names such as `rax` and hypothesis names such as `hlen` and `hgrow`.
-- The review sources `../gen/desc/review/r1_mutants.py`, `r2_mutants.py` and `r3_mutants.py`.
-  `r1`, `r2` and `r3` are review labels.
-  `../gen/desc/test_desc.py prepare` runs the three files on a copy of the original descriptions.
-  It replays their mutants (`r1-…`, `n01-…`, `q01-…`) and the list scenarios `t01` to `t13` of `r3_mutants.py`.
-  `r3_mutants.py` writes its forged checker line with the work directory path as given.
-  The replay writes the work directories `replay/rmut`, `replay/n` and `replay/r3`.
-  The checker result records these paths.
-  Some mutants set `reference` to earlier names `Fv1.<xy>Desc`, for example `Fv1.scDesc` for Scalars.
-  These names occur in the checker result only inside the texts of these mutants.
-  `../FINDINGS.md` ("Replayed review mutants carry earlier reference names") gives the effect on three mutants.
-
 ### Other earlier names
 
-- `../FINDINGS.md` cites earlier records by commit and path.
-  An example is `prysm/go1.26.10/e2e/scal/negative-gen4.json` at `4499e775`.
-  It also gives the earlier case ids in these records, for example `g4-ex-s82-*`.
-  Git keeps each cited file at the cited commit.
-  So these names stay as references, not as records.
 - `Spec/TestFixed.lean` (the structure `Spec.Fixed` and the lemmas `Spec.fixed*`) names the Go type `Fixed`.
   `../target/` has no type `Fixed`.
   `Spec/TestScalars.lean` imports the module for its byte lemmas, for example `Spec.uintBytes_size`.
