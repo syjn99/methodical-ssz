@@ -55,13 +55,6 @@ theorem Decode.accept_ret (x : BitVec 64) : ({ toBitVec := x - 96 } + 8 : UInt64
 
 theorem Decode.accept_guard (x : BitVec 64) (g : Nat) (h : g + 96 < x.toNat) : g < (x - 96).toNat := by bv_omega
 
-/-- Address equation by `toNat` and `omega` (as `address_equation`, with `Width.bits` reduced). -/
-macro "checkpoint_addr" : tactic => `(tactic| (
-  apply BitVec.eq_of_toNat_eq
-  simp only [BitVec.toNat_add, BitVec.toNat_sub, BitVec.toNat_neg, BitVec.toNat_ofNat, BitVec.ofNat_eq_ofNat,
-    UInt64.toNat_toBitVec, UInt64.toBitVec_add, UInt64.toBitVec_ofNat, Width.bits, Nat.reducePow]
-  all_goals omega))
-
 theorem Decode.accept_ofNat (S : Nat) (h8 : 8 ≤ S) (hS : S < 2 ^ 60) :
     BitVec.ofNat 64 S = BitVec.ofNat 64 (S - 8) + 8 := by
   apply BitVec.eq_of_toNat_eq; simp; omega
