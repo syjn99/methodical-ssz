@@ -1,6 +1,5 @@
 import Prysm.BlobIdentifier.DecodeAccept
 import Prysm.Eth1Data.DecodeAddressArithmetic
-import Prysm.Deposit_Data.Statements
 
 /-!
 # A statement kind for composed decoder accept theorems (byte-vector / inline-uint64 shapes)
@@ -15,13 +14,9 @@ field sizes, the Go offsets the running sum of 24 (slice header) / 8 from 8 (`st
 the heap use are sums. Binders of the hand statements are list elements here (`ForallChunks`, `ExistsWords`), their length
 hypotheses an implication chain (`Implications`), the memory a left fold of `⋆` (`sepAll`).
 
-Tie to the existing theorems (`rfl` at default transparency; the recursive definitions unfold on the literal
-field list): the declared type of `Prysm.BlobIdentifier.Decode.accept`
-(this is the declared type of the generated composed theorem `Decode.accept_generated_composition`, by its `_type`
-line) and the hand statement `Prysm.Deposit_Data.Decode.accept_statement`. So a composed theorem of this shape can be
-statement-checked against `decodeAcceptKind` with parameters read from the IR, without a hand theorem.
+A composed theorem of this shape can be statement-checked against `decodeAcceptKind` with parameters read from the IR,
+without a hand theorem.
 Not covered: callee-decoder fields, other frames, a first field that is not at Go offset 0 or 8.
-After the split of this module, the declarations of single types are in `Prysm/BlobIdentifier/DecodeAcceptComposition.lean`, `Prysm/Deposit_Data/DecodeAcceptComposition.lean`.
 -/
 
 open Machine Runtime

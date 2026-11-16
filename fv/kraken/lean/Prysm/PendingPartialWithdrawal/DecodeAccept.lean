@@ -2,7 +2,7 @@ import Runtime.Contracts
 import Machine.Frame
 import Prysm.Epoch.DecodeAccept
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec
-import Prysm.Deposit_Data.Statements
+import Prysm.PendingPartialWithdrawal.Statements
 import Codec.CalleeDecode
 import Codec.InlineUint64RegisterBase
 

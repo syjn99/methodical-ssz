@@ -50,8 +50,8 @@ field-segment fix cases (ids `field-segments-fix-*`):
    `Prysm.BlobIdentifier.Decode.accept`) is written to <work-dir> for a separate gated `lake env lean`.
 
 call-segment cases (`decoder --call-segments`; ids `call-segments-*`; mutated `.S` / IR copies in <work-dir> only):
- - call-segments-new-*: `--call-segments` on PendingPartialWithdrawal, Deposit_Data, BeaconBlockHeader: exit 0 twice, identical,
-   every field covered, = the committed raw files `Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean`, `Prysm/Deposit_Data/GeneratedDecodeCallSegments.lean`, `Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean` when they
+ - call-segments-new-*: `--call-segments` on PendingPartialWithdrawal, BeaconBlockHeader: exit 0 twice, identical,
+   every field covered, = the committed raw files `Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean`, `Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean` when they
    exist; AttestationData: exit 3, Slot / CommitteeIndex / BeaconBlockRoot covered, Source / Target not
    (nested containers), partial file = committed `Prysm/AttestationData/GeneratedDecodeCallSegmentsPartial.lean` when it exists; `kindcheck.py` PASS
    (`--partial`: exit 3).
@@ -64,8 +64,7 @@ call-segment cases (`decoder --call-segments`; ids `call-segments-*`; mutated `.
    callee field not 0). Expected: the field is not covered (exit 3; no theorem whose name has the field) or
    exit 2; 0 bytes on stdout whenever the exit code is not 0; `--summary` agrees.
  - call-segments-compose-*: `--call-segments --compose` refuses callee / two-directive types (PendingPartialWithdrawal,
-   BeaconBlockHeader: exit 2, 0 bytes); Deposit_Data composes (exit 0) with the `decodeAcceptKind` `_kind` line
-   and the identity with `Prysm.Deposit_Data.Decode.accept_statement`; kindcheck PASS; = committed `Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean` when it exists.
+   BeaconBlockHeader: exit 2, 0 bytes).
 
 step cases (`decoder --steps`; ids `steps-*`; mutated `.S` / IR copies in <work-dir> only):
  - steps-new-*: `--steps` on the 10 development types: exit 0 twice (AttestationData: 3), identical, the expected
@@ -538,7 +537,7 @@ CALL_SEGMENT_CASES = {
                committed="lean/Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
                args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_call", "--imports", "Prysm.Deposit_Data.Code", "--open", "Prysm.PendingPartialWithdrawal.Code"],
                fields=["Index", "Amount", "WithdrawableEpoch"]),
-    "Deposit_Data": dict(S=NORM_V1ALPHA1 + "Deposit_Data.UnmarshalSSZ.S", type="v1alpha1.Deposit_Data", committed="lean/Prysm/Deposit_Data/GeneratedDecodeCallSegments.lean",
+    "Deposit_Data": dict(S=NORM_V1ALPHA1 + "Deposit_Data.UnmarshalSSZ.S", type="v1alpha1.Deposit_Data",
                args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_call", "--imports",
                      "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.FixedBytesDecode,Codec.FixedBytesDecodePadding,Codec.InlineUint64,Prysm.Deposit_Data.Code",
                      "--open", "Prysm.Deposit_Data.Code"],
@@ -636,12 +635,12 @@ CALL_SEGMENT_MUT = [
 
 
 def call_segment_cases(work, new):
-    """The call-segment shapes, their adversarial inputs and the compose refusals / Deposit_Data (`DD`) composition."""
+    """The call-segment shapes, their adversarial inputs and the compose refusals."""
     res, bad = [], 0
     irt = (KR / IR).read_text()
     KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
     G = ["python3", "-I", "-B", str(new), "decoder", "--call-segments"]
-    for key in ("PendingPartialWithdrawal", "Deposit_Data", "BeaconBlockHeader", "AttestationData"):
+    for key in ("PendingPartialWithdrawal", "BeaconBlockHeader", "AttestationData"):
         c = CALL_SEGMENT_CASES[key]
         outs = []
         for i in range(2):
@@ -697,7 +696,7 @@ def call_segment_cases(work, new):
                         reasons=[f.get("reason") for f in sm.get("fields", []) if f.get("status") != "covered"],
                         ok=bool(ok)))
         bad |= not ok
-    # compose: refusals for callee / two-directive types, Deposit_Data composed with decAcceptKind
+    # compose: refusals for callee / two-directive types
     for key in ("PendingPartialWithdrawal", "BeaconBlockHeader"):
         c = CALL_SEGMENT_CASES[key]
         po = work / f"call-segments-compose-{key}.partial.lean"
@@ -709,26 +708,6 @@ def call_segment_cases(work, new):
         res.append(dict(id=f"call-segments-compose-refuse-{key}", expect="exit 2, 0 bytes, no file", exit=rc, stdout_bytes=len(so),
                         stderr=se.strip()[:300], ok=bool(ok)))
         bad |= not ok
-    c = CALL_SEGMENT_CASES["Deposit_Data"]
-    outs = [run(G + ["--compose", "--name", "Decode.accept_generated_composition", "--same-as-prop", "Prysm.Deposit_Data.Decode.accept_statement",
-                     "--assembly", c["S"], "--ir", IR, "--type", c["type"], "--const", "unmarshalSSZ", "--prefix", "Decode.generated_call",
-                     "--imports", "Codec.DecoderHeadEpilogue,Prysm.Deposit_Data.GeneratedDecodeCallSegments,Prysm.Deposit_Data.Statements", "--open", "Prysm.Deposit_Data.Code"], KR)
-            for _ in range(2)]
-    rc, so, se = outs[0]
-    f = work / "call-segments-compose-Deposit_Data.lean"
-    f.write_bytes(so)
-    kc = subprocess.run(KC + [str(f)], capture_output=True, text=True)
-    com = KR / "lean/Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean"
-    com = com.read_bytes() if com.exists() else None
-    t = so.decode()
-    ok = (rc == 0 and outs[0] == outs[1] and kc.returncode == 0 and "decodeAcceptKind" in kc.stdout
-          and "@Codec.decodeAcceptKind h unmarshalSSZ true [.bytes 48, .bytes 32, .uint64, .bytes 96] 106 := by" in t
-          and "set_option maxHeartbeats 200000 in\ntheorem Decode.accept_generated_composition_kind" in t
-          and "UNCHECKED" not in t and (com is None or com == so))
-    res.append(dict(id="call-segments-compose-Deposit_Data", expect="exit 0 twice, identical, decodeAcceptKind line + Prop identity, kindcheck PASS",
-                    exit=rc, stdout_bytes=len(so), kindcheck_exit=kc.returncode, committed_present=com is not None,
-                    ok=bool(ok)))
-    bad |= not ok
     return res, bad
 
 

@@ -12,12 +12,6 @@
   "kind": "control"
  },
  {
-  "id": "deposit-data-decode-generated-step-public-key-segment-control",
-  "module": "Prysm/Deposit_Data/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.generated_step_PublicKey_segment",
-  "kind": "control"
- },
- {
   "id": "sync-committee-message-decode-accept-from-generated-steps-control",
   "module": "Prysm/SyncCommitteeMessage/DecodeAcceptFromGeneratedSteps.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_from_generated_steps",
@@ -54,14 +48,6 @@
   "kind": "statement",
   "old": "(Host.addrOf (k + 55 + 1))",
   "new": "(Host.addrOf (k + 56 + 1))"
- },
- {
-  "id": "deposit-data-decode-generated-step-public-key-segment-statement-hroot-48-to-32",
-  "module": "Prysm/Deposit_Data/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.generated_step_PublicKey_segment",
-  "kind": "statement",
-  "old": "(hroot : root.length = 48)",
-  "new": "(hroot : root.length = 32)"
  },
  {
   "id": "sync-committee-message-decode-from-generated-steps-slot-field-statement-pc-46-to-47",

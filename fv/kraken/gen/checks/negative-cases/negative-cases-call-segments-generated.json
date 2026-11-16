@@ -1,11 +1,5 @@
 [
  {
-  "id": "deposit-data-decode-accept-generated-composition-control",
-  "module": "Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.accept_generated_composition",
-  "kind": "control"
- },
- {
   "id": "beacon-block-header-decode-accept-from-generated-call-segments-control",
   "module": "Prysm/BeaconBlockHeader/DecodeAcceptFromGeneratedCallSegments.lean",
   "theorem": "Prysm.BeaconBlockHeader.Decode.accept_from_generated_call_segments",
@@ -28,22 +22,6 @@
   "new": "primitives.Epoch.UnmarshalSSZ\")"
  },
  {
-  "id": "deposit-data-decode-generated-call-withdrawal-credentials-segment-statement-hroot-32-to-48",
-  "module": "Prysm/Deposit_Data/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.generated_call_WithdrawalCredentials_segment",
-  "kind": "statement",
-  "old": "(hroot : root.length = 32)",
-  "new": "(hroot : root.length = 48)"
- },
- {
-  "id": "deposit-data-decode-accept-generated-composition-kind-statement-bytes-32-to-48",
-  "module": "Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.accept_generated_composition_kind",
-  "kind": "statement",
-  "old": "[.bytes 48, .bytes 32, .uint64, .bytes 96]",
-  "new": "[.bytes 48, .bytes 48, .uint64, .bytes 96]"
- },
- {
   "id": "beacon-block-header-decode-head-from-generated-call-segments-statement-hlen-112-to-104",
   "module": "Prysm/BeaconBlockHeader/DecodeAcceptFromGeneratedCallSegments.lean",
   "theorem": "Prysm.BeaconBlockHeader.Decode.head_from_generated_call_segments",
@@ -63,18 +41,5 @@
   "code_namespace": "Prysm.BeaconBlockHeader.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S"
- },
- {
-  "id": "deposit-data-decode-generated-call-withdrawal-credentials-segment-code-nop-mov-none-to-0x20-ecx",
-  "module": "Prysm/Deposit_Data/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.generated_call_WithdrawalCredentials_segment",
-  "kind": "code",
-  "line": 51,
-  "old": "  nop",
-  "new": "  mov $0x20,%ecx",
-  "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit_Data.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  }
 ]

@@ -36,8 +36,7 @@ import Prysm.BlobIdentifier.GeneratedDecodeFieldSegments
 import Prysm.BlobIdentifier.DecodeAcceptFromGeneratedFieldSegments
 import Prysm.BlobIdentifier.GeneratedDecodeAcceptComposition
 import Prysm.BeaconBlockHeader.GeneratedDecodeFieldSegmentsPartial
-import Prysm.Deposit_Data.Statements
-import Prysm.Deposit_Data.GeneratedDecodeFieldSegmentsPartial
+import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 import Prysm.Deposit_Data.DecodeSpec
 import Prysm.Deposit_Data.WitnessDecodeAccept
 import Prysm.Deposit_Data.WitnessDecodeRejectSize
@@ -52,9 +51,7 @@ import Prysm.BlobIdentifier.GeneratedDecodeAcceptCompositionKind
 import Prysm.PendingPartialWithdrawal.DecodeAccept
 import Prysm.BeaconBlockHeader.DecodeHeadFromCallSegments
 import Prysm.PendingPartialWithdrawal.WitnessDecodeAccept
-import Prysm.Deposit_Data.GeneratedDecodeCallSegments
 import Prysm.BeaconBlockHeader.GeneratedDecodeCallSegments
-import Prysm.Deposit_Data.GeneratedDecodeAcceptComposition
 import Prysm.BeaconBlockHeader.DecodeAcceptFromGeneratedCallSegments
 import Prysm.PendingConsolidation.GeneratedDecodeCallSegmentsPartial
 import Prysm.SyncCommitteeMessage.GeneratedDecodeCallSegmentsPartial
@@ -93,7 +90,6 @@ import Prysm.SyncCommitteeMessage.DecoderPrologueInstances
 import Prysm.Checkpoint.GeneratedDecodeSteps
 import Prysm.BeaconBlockHeader.GeneratedDecodeSteps
 import Prysm.BlobIdentifier.GeneratedDecodeSteps
-import Prysm.Deposit_Data.GeneratedDecodeSteps
 import Prysm.SyncCommitteeMessage.GeneratedDecodeSteps
 import Prysm.PendingConsolidation.GeneratedDecodeSteps
 import Prysm.SyncCommitteeMessage.DecodeAcceptFromGeneratedSteps
@@ -269,7 +265,6 @@ import Prysm.PartialDataColumnGroupID.WitnessGeneratedDecodeRejectSize
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeAccept
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeRejectSize
 import Prysm.BlobIdentifier.DecodeAcceptAnyFrameInstances
-import Prysm.Deposit_Data.DecodeAcceptAnyFrameInstances
 import Prysm.PowBlock.DecodeAcceptAnyFrameInstances
 import Prysm.PendingConsolidation.DecodeAcceptAnyFrameInstances
 import Prysm.PendingDeposit.DecodeAcceptAnyFrameInstances
@@ -277,7 +272,6 @@ import Prysm.SyncCommitteeMessage.DecodeAcceptAnyFrameInstances
 import Prysm.BeaconBlockHeader.DecodeAcceptAnyFrameInstances
 import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 import Prysm.BlobIdentifier.DecodeAcceptComposition
-import Prysm.Deposit_Data.DecodeAcceptComposition
 import Prysm.SyncCommitteeMessage.WindowStepsInstances
 
 -- Scalability: the segment lemmas, the in-sample re-derivations, the
@@ -508,17 +502,9 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_ParentRoot_segment_kind
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_StateRoot_segment
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_StateRoot_segment_kind
--- Deposit_Data and PendingPartialWithdrawal (UnmarshalSSZ): raw generated segments,
--- hand lemma, hand accept / reject / spec / witnesses
-#print axioms Prysm.Deposit_Data.Decode.generated_field_PublicKey_segment
-#print axioms Prysm.Deposit_Data.Decode.generated_field_PublicKey_segment_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_field_Amount_segment
-#print axioms Prysm.Deposit_Data.Decode.generated_field_Amount_segment_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_field_Signature_segment
-#print axioms Prysm.Deposit_Data.Decode.generated_field_Signature_segment_kind
+-- Deposit_Data and PendingPartialWithdrawal (UnmarshalSSZ):
+-- hand lemma, spec / witnesses
 #print axioms Prysm.Deposit_Data.bytes32_decode_segment_nop
-#print axioms Prysm.Deposit_Data.Decode.accept
-#print axioms Prysm.Deposit_Data.Decode.reject_size
 #print axioms Prysm.PendingPartialWithdrawal.Decode.reject_size
 #print axioms Prysm.Deposit_Data.desc_checker
 #print axioms Prysm.Deposit_Data.desc_wellFormed
@@ -581,17 +567,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_call_Slot_call_kind
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_call_StateRoot_segment
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_call_StateRoot_segment_kind
-#print axioms Prysm.Deposit_Data.Decode.accept_generated_composition
-#print axioms Prysm.Deposit_Data.Decode.accept_generated_composition_kind
-#print axioms Prysm.Deposit_Data.Decode.accept_generated_composition_type
-#print axioms Prysm.Deposit_Data.Decode.generated_call_Amount_segment
-#print axioms Prysm.Deposit_Data.Decode.generated_call_Amount_segment_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_call_PublicKey_segment
-#print axioms Prysm.Deposit_Data.Decode.generated_call_PublicKey_segment_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_call_Signature_segment
-#print axioms Prysm.Deposit_Data.Decode.generated_call_Signature_segment_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_call_WithdrawalCredentials_segment
-#print axioms Prysm.Deposit_Data.Decode.generated_call_WithdrawalCredentials_segment_kind
 #print axioms Prysm.PendingPartialWithdrawal.Decode.accept
 #print axioms Prysm.PendingPartialWithdrawal.Decode.epilogue
 #print axioms Prysm.PendingPartialWithdrawal.Decode.head
@@ -627,7 +602,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Codec.call_argument_mov_segment
 #print axioms Codec.call_argument_reload_segment
 #print axioms Codec.call_decode_segment
-#print axioms Prysm.Deposit_Data.Decode.accept_is_kind
 #print axioms Codec.uint64DecodeScratchRegisterSegmentKind_of
 #print axioms Codec.uint64_decode_scratch_register_segment
 
@@ -788,42 +762,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.Checkpoint.Decode.generated_step_directive_84_kind
 #print axioms Prysm.Checkpoint.Decode.generated_step_directive_85
 #print axioms Prysm.Checkpoint.Decode.generated_step_directive_85_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_PublicKey_segment
-#print axioms Prysm.Deposit_Data.Decode.generated_step_PublicKey_segment_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_Signature_segment
-#print axioms Prysm.Deposit_Data.Decode.generated_step_Signature_segment_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_WithdrawalCredentials_segment
-#print axioms Prysm.Deposit_Data.Decode.generated_step_WithdrawalCredentials_segment_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_111
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_111_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_112
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_112_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_119
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_119_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_120
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_120_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_37
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_37_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_38
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_38_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_45
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_45_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_46
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_46_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_73
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_73_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_74
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_74_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_81
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_81_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_82
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_82_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_83
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_83_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_84
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_84_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_85
-#print axioms Prysm.Deposit_Data.Decode.generated_step_directive_85_kind
 #print axioms Prysm.PendingConsolidation.Decode.generated_step_SourceIndex_call
 #print axioms Prysm.PendingConsolidation.Decode.generated_step_SourceIndex_call_kind
 #print axioms Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call
@@ -1227,7 +1165,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.Deposit_Data.Decode.generated_WithdrawalCredentials_segment_kind
 #print axioms Prysm.Deposit_Data.Decode.generated_accept
 #print axioms Prysm.Deposit_Data.Decode.generated_accept_kind
-#print axioms Prysm.Deposit_Data.Decode.generated_accept_statement
 #print axioms Prysm.Deposit_Data.Decode.generated_epilogue
 #print axioms Prysm.Deposit_Data.Decode.generated_epilogue_kind
 #print axioms Prysm.Deposit_Data.Decode.generated_field_1
@@ -1769,9 +1706,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.Checkpoint.Decode.low_address
 #print axioms Prysm.Checkpoint.Decode.reject_size_is_kind_any_frame
 #print axioms Codec.chunkLengthFacts
-#print axioms Prysm.Deposit_Data.Decode.accept_is_kind_any_frame
-#print axioms Prysm.Deposit_Data.Decode.accept_kind_any_frame_is_kind
-#print axioms Prysm.Deposit_Data.Decode.reject_size_is_kind_any_frame
 #print axioms Codec.decodeAcceptKindAnyFrame
 #print axioms Codec.decodeBinders
 #print axioms Codec.decodeEpilogueKindAnyFrame

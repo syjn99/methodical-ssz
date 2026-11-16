@@ -14,7 +14,7 @@ import Prysm.Deposit.Code
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
 Selection: the same family as HistoricalBatch (a `Vector[Bytes32, N]` field as `[][]byte`), not forbidden, no
 existing proof. The only such types without a pointer field are HistoricalBatch and SyncCommittee; Deposit has the
-one pointer field whose decoder already has a proof (`Prysm.Deposit_Data.Decode.accept`, Deposit_Data).
+one pointer field whose decoder already has a proof (`Prysm.Deposit_Data.Decode.generated_accept`, Deposit_Data).
 
     func (c *Deposit) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 1240 { return ssz.ErrSize }
@@ -69,7 +69,7 @@ def Decode.reject_size_statement : Prop :=
 /-- **Deposit accept (machine).** On a 1240-byte input `proofs.flatten ‖ pk ‖ wc ‖ amt ‖ sig` (33 blocks of 32 bytes,
 then the 184 bytes of a Deposit_Data) the decoder returns nil; the receiver holds a fresh `[][]byte` Proof
 (len = cap = 33, headers `(ps[i], 32, 32)`, element i = `proofs[i]`) and a fresh Deposit_Data object `po` decoded
-by the real Deposit_Data decoder (the postcondition of `Prysm.Deposit_Data.Decode.accept`: PublicKey = pk,
+by the real Deposit_Data decoder (the postcondition of `Prysm.Deposit_Data.Decode.generated_accept`: PublicKey = pk,
 WithdrawalCredentials = wc, Amount = amt, Signature = sig); input, `state`, the spills, the caller's frame `R`
 and the stack guard are unchanged; 2144 heap bytes are used. -/
 def Decode.accept_statement : Prop :=

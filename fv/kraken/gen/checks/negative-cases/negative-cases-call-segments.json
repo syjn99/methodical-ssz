@@ -206,14 +206,6 @@
   "new": "[.bytes 32, .uint64] 33"
  },
  {
-  "id": "deposit-data-decode-accept-is-kind-statement-bytes-96-to-48",
-  "module": "Prysm/Deposit_Data/DecodeAcceptComposition.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.accept_is_kind",
-  "kind": "statement",
-  "old": ".bytes 96] 106",
-  "new": ".bytes 48] 106"
- },
- {
   "id": "pending-partial-withdrawal-witness-decode-accept-runs-control",
   "module": "Prysm/PendingPartialWithdrawal/WitnessDecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs",
