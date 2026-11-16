@@ -1,431 +1,333 @@
 # Findings
 
-This file lists what the proof work found in the generator, the generated code, the tools and the process.
-Each entry gives what is wrong or what the limit is, where it is, how it shows, and its state.
-The state is the state that the records give. "Open" means that no fix exists in the tree.
+This file lists the limits that are open at this commit.
+Each entry says what does not hold, what it means for a theorem or a check, and where it is.
+A change that removes a limit also removes its entry.
 How to handle a new finding is in `../README.md` section 7.
+Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or `.github/`.
 
-## 1. Generator and runtime library
+## Generator and runtime library
 
-### Bitvector decoder accepts a byte with padding bits set
+### The generator IR gives the fields of a nested container the wrong keys
 
-- What: the decoder of a bitvector field accepted an input byte with bits set above the bitvector length. The specification rejects such a byte.
-- Where: the generated decoder and `ssz.ValidateBitvector`.
-- How it shows: a proof attempt on a bitvector test type found the counterexample.
-- State: fixed.
+- What does not hold: a nested container field in the generator IR does not have its own name as key.
+  The key is the name of the container type, for example `Checkpoint` for the fields `Epoch` and `Root` of `Source`.
+- Effect: the generated Go code does not change.
+  A tool that reads these IR keys gets wrong names.
+- Where: the `case *types.Struct:` branch of `FieldParser.expand` in `sszgen/representer.go`.
+  It writes `f.name`, not `field.Name()`.
 
-### Bitvector padding check can overflow
+### The generator log does not name the package
 
-- What: the check that the padding fix added could panic on a `uint64` overflow.
-- Where: `ssz.ValidateBitvector`.
-- How it shows: code review found it. A proof did not find it.
-- State: fixed.
-
-### Bitlist encoder checks the length in bytes, not in bits
-
-- What: the encoder accepted a bitlist with more bits than the limit, if its byte count fit the limit.
-- Where: the generated encoder of a bitlist field. It now calls `ssz.ValidateBitlist(x, limit)` with the limit in bits.
-- How it shows: a proof attempt on a bitlist test type found the counterexample.
-- State: fixed.
-
-### Array field decoder emits a `make` that does not compile
-
-- What: the decoder of a `[N]T` array field had a `make` call that Go does not compile.
-- Where: the generator template for array fields.
-- How it shows: the generated code does not build.
-- State: fixed. The records do not confirm which generator change fixed it.
-
-### Nested container fields have the wrong keys in the IR
-
-- What: in the generator IR, the field keys of a nested container are the container name, not the field names.
-- Where: the `case *types.Struct:` branch of `FieldParser.expand` in `sszgen/representer.go`. It appends `f.name`, where it needs `field.Name()`.
-- How it shows: `ssz ir --type-names=AttestationData` ran on a reduced copy of the Prysm types.
-  It gave the key `Checkpoint` for the fields `Epoch` and `Root` of `Source`.
-- Effect: no effect on the generated Go code. Tools that read the IR get wrong keys.
-- State: open. The generator is not changed.
-
-### Generator log has an empty package name
-
-- What: a log line reads `Generating methods for /StatusV2`.
-- Where: `packages.Config.Mode` in `sszgen/importer.go` has no `NeedName`, so `PkgPath` is empty.
+- What does not hold: a log line of the generator does not show the package path.
+  An example is `Generating methods for /StatusV2`.
 - Effect: none on the output files.
-- State: open.
+- Where: `packages.Config.Mode` in `sszgen/importer.go` has no `NeedName`, so `PkgPath` is empty.
 
-### Hand-written primitive methods are not generated
+### The SSZ methods of the primitive types are not generator output
 
-- What: Prysm `consensus-types/primitives` has hand-written SSZ methods for `Slot`, `Epoch`, `ValidatorIndex`, `Gwei` and `CommitteeIndex`. The generated code calls them for these fields.
-- Where: 24 functions, called by 52 generated types.
-- Effect: each needs its own specification and proof. A generated decoder that calls one depends on it.
-- State: the records give proofs of the `Epoch` decoder accept path (function specification `Prysm.Epoch.Decode.accept_function_spec`) and its length reject. They give the other methods as not proved.
-  The generated table `prysm/proof-inventory.md` lists the theorems that exist now for each primitive method.
+- What does not hold: the SSZ methods of `Slot`, `Epoch`, `ValidatorIndex`, `Gwei` and `CommitteeIndex` are not generated.
+  They are hand-written Prysm code in `consensus-types/primitives`.
+  The generated code of many types calls them.
+- Effect: each of these methods needs its own specification and proof.
+  A generated decoder that calls one depends on the function specification of that method.
+- Where: `lean/Prysm/Epoch/`, `lean/Prysm/Slot/`, `lean/Prysm/CommitteeIndex/` and `lean/Prysm/ValidatorIndex/`.
+  `prysm/proof-inventory.md` gives the theorems of each method.
 
-### Encoders write into the caller array before a later length reject
+### An encoder reject does not keep the spare bytes of the caller array
 
-- What: an encoder appends the earlier fields to `dst` before it tests the length of a later field.
-  On the reject, it returns `nil` and an error, but the bytes stay in the backing array of the caller beyond `len(dst)`.
-- Where: `(*v1alpha1.Checkpoint).MarshalSSZTo` writes the 8 epoch bytes before the `Root` length test.
-  `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` writes `Slot`, `ProposerIndex` and earlier roots before a later root length test.
-- How it shows: `Prysm.Checkpoint.Encode.reject_length` states the written bytes. Its negative test with "dst unchanged" fails.
-- Effect: SSZ has no rule for a Go value with a wrong field length. The generator documents only that `dst[:len]` is unchanged.
-- State: classified as known behavior, not a specification violation. The Checkpoint entry has no independent review. The BeaconBlockHeader entry is reviewed.
+- What does not hold: on a length reject, the bytes of `dst` beyond `len(dst)` do not stay unchanged.
+  The encoder appends the earlier fields before it tests the length of a later field.
+- Effect: a reject theorem states the written bytes.
+  Only `dst[:len(dst)]` stays unchanged.
+  SSZ has no rule for a Go value with a wrong field length, so this is not a specification violation.
+- Where: `(*v1alpha1.Checkpoint).MarshalSSZTo` (`Prysm.Checkpoint.Encode.reject_length`).
+  `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` (`lean/Prysm/BeaconBlockHeader/EncodeRejectLength.lean`).
 
-### AttestationData encoder writes the receiver
+### The AttestationData encoder writes the receiver
 
-- What: if `Source` or `Target` is nil, the encoder stores a new zero `Checkpoint` in the receiver before it encodes it. The zero `Checkpoint` then fails with `ErrBytesLength`.
+- What does not hold: the encoder does not leave a nil `Source` or `Target` unchanged.
+  It stores a new zero `Checkpoint` in the receiver.
+  The encoder of that zero `Checkpoint` then fails with `ErrBytesLength`.
+- Effect: an encoder theorem of this type must state this change of the receiver.
+  No such theorem exists.
 - Where: `(*v1alpha1.AttestationData).MarshalSSZTo`.
-- Effect: an encoder theorem must state this change of the receiver.
-- State: known behavior, not a specification violation. No encoder theorem exists for this type yet.
 
-### AttestationData decoder always allocates Source and Target
+### The bitlist encoder error text differs from three Prysm tests
 
-- What: the decoder allocates a new `Source` and `Target`, also when the receiver already has them. This is the same as the Go source.
-- Where: `(*v1alpha1.AttestationData).UnmarshalSSZ`.
-- How it shows: `Prysm.AttestationData.Decode.accept` states the new pointers for every old receiver.
-- State: known behavior, proved.
+- What does not hold: three Prysm tests do not get their expected error text from the bitlist length reject.
+  The rejected inputs are the same.
+- Effect: these Prysm tests fail with the generated code.
+  This is a compatibility issue, not a generator defect.
+- Where: the Prysm `consensus-types/blocks` tests `TestMarshalPartsMetadata/available_too_large` and `/requests_too_large`.
+  Also `TestPartialDataColumn_PartsMetadata/marshal_error_due_max_bitlist_size`.
 
-### Error paths with `%d` allocate
+### The in-place hash call needs an aliasing premise
 
-- What: an error built with `fmt.Errorf` and `%d` arguments boxes each argument with `runtime.convT64`, so the error path allocates.
-- Where: for example the element offset order error of a list-of-lists decoder in the test types.
-- State: observation. It is an input for optimization work.
+- What does not hold: `merkleizeChunks` calls `gohashtree.Hash(elements, elements)` with one slice as input and output.
+  No proof covers this aliasing.
+- Effect: a hash tree root theorem must state the aliasing premise.
+- Where: `ssz/htr_test.go` pins the premise with a test.
 
-### Bitlist error messages differ from three Prysm tests
-
-- What: after the bitlist fix, the encoder rejects the same inputs as before with a different error text.
-- Where: Prysm `consensus-types/blocks` tests `TestMarshalPartsMetadata/available_too_large`, `/requests_too_large` and `TestPartialDataColumn_PartsMetadata/marshal_error_due_max_bitlist_size`.
-- State: compatibility issue, not a generator defect. The tests are not changed.
-
-### Option that reserves the encoder output once is not adopted
-
-- What: a generator option `--reserve-marshal` makes `Checkpoint.MarshalSSZTo` reserve `len + 40` bytes once.
-  With an invalid `Root` and 8 to 39 spare bytes, the new code allocates one block and does not write the spare bytes of the caller.
-- Where: a generator branch that is not merged.
-- How it shows: the benchmark results are mixed. The fast path is slower and the error path allocates one more block.
-- State: closed. The option is not adopted and is off by default.
-  The tree does not contain its test ELF records, its negative cases or its Lean proofs.
-
-### In-place hash call depends on an aliasing premise
-
-- What: the in-place `gohashtree.Hash` call depends on an aliasing premise.
-- State: a test pins the premise. Not a defect. A hash tree root proof must state it.
-
-## 2. Verification tools and machine model
+## Tools and machine model
 
 ### Kraken cannot parse `bsr`
 
-- What: the Kraken parser has no `bsr` instruction.
-- Where: `ssz.ValidateBitlist` uses `bsr` for `bits.Len8` in the `GOAMD64=v1` build.
-- Effect: the bitlist validation can only be a contract. The core bitlist checks are behind that contract.
-- State: open. It is a request to Kraken.
+- What does not hold: the Kraken parser has no `bsr` instruction.
+- Effect: `ssz.ValidateBitlist` uses `bsr` for `bits.Len8` in the `GOAMD64=v1` build.
+  So the bitlist validation can only be a contract.
+- Where: `prysm/go1.26.10/parser-result.json` lists the functions that the parser rejects.
 
-### Kraken cannot parse some operand and instruction forms
+### Kraken cannot parse some operand and padding forms
 
-- What: the Kraken parser rejects the SIB index `%riz` and multi-byte padding `nop` forms. The `include_x64` elaborator rejects some condition codes.
-- Where: a Kraken parser run found `%riz` in 13 generated functions, on converter output that kept `%riz`.
-- State: worked around. `link/convert_objdump.py --norm` drops `%riz` and writes padding as `nop`. `include_x64_code` (`lean/Machine/Include.lean`) uses the runtime parser.
+- What does not hold: the Kraken parser does not read the SIB index `%riz` or multi-byte padding `nop` forms.
+- Effect: `link/convert_objdump.py --norm` drops `%riz` and writes the padding as `nop`.
+  The link check accepts such a `nop` where its bytes differ from the ELF bytes.
+- Where: `link/convert_objdump.py`, the reassembly check of `link/check.py`, and `include_x64_code` in `lean/Machine/Include.lean`.
 
-### Converter wrote a negative 32-bit displacement as a large positive number
+### The converter does not handle every displacement form
 
-- What: `go tool objdump -gnu` writes a displacement of −228 as `0xffffff1c`. Kraken reads that form as a positive number, so the address in the proof is not the machine address.
-- Where: `link/convert_objdump.py` output, for example `IndexedAttestation.UnmarshalSSZ`. The full Prysm disassembly had 161 such operands in 104 functions.
-- How it shows: `clang` rejected the line in the reassembly step of the link check.
-- State: fixed. `link/convert_objdump.py --norm` writes the signed form. The SIB form without a base and the segment form are not handled. The Prysm ELF has none of them.
-  A displacement range check in `link/check.py` is not added.
-  Every converted file of `prysm/go1.26.10/link-set/norm/` is the output of a fresh `--norm` run and has the signed form.
-
-### Stack guard branch exhausts kernel memory
-
-- What: a `simp` and `omega` proof that the stack growth branch is not taken fails in the Lean kernel on memory, for the form `lea -N(%rsp),%r12; cmp 0x10(%r14),%r12; jbe`.
-- Where: `BeaconBlockHeader.MarshalSSZTo` and other encoders with a large frame.
-- How it shows: a pure `BitVec` reproduction fails under a 5 GiB limit. The costly subterm is not profiled.
-- State: fixed by the lemma `Codec.lea_cmp_be_false` (`lean/Codec/StackGuard.lean`), with no heartbeat increase. The docstring of that file gives a different memory value than the measurement.
+- What does not hold: `link/convert_objdump.py --norm` does not handle the SIB form without a base or the segment form.
+  `link/check.py` has no range check of a displacement.
+- Effect: none on the pinned ELF, because its link set has none of these forms.
+  A new ELF can need a converter change.
+- Where: `link/convert_objdump.py`, `link/check.py`.
 
 ### Growslice contract gives no lower bound on the remaining heap
 
-- What: `GrowsliceContract` gives the remaining heap only as an upper bound. A second growth call needs a lower bound as its budget premise.
-- Where: `lean/Runtime/Contracts.lean`. It affects every encoder growth path.
-- How it shows: in `Prysm.Checkpoint.Encode.grow_any_site_three_cases`, one case ends at the entry of the second growth call. The run after that state is not proved.
-- State: blocked until a user decision on a new contract form. That case has only Go differential checks. The growth branches of the other encoders are not proved.
+- What does not hold: `GrowsliceContract` gives the remaining heap only as an upper bound.
+  A second growth call needs a lower bound as its budget premise.
+- Effect: in `Prysm.Checkpoint.Encode.grow_any_site_three_cases`, one case ends at the entry of the second growth call.
+  The run after that state is not proved.
+  The growth branches of the other encoders are not proved.
+- Where: `lean/Runtime/Contracts.lean`.
+  A new contract form needs a user decision.
 
 ### The `ecancel` tactic fails on some atom forms
 
-- What: `ecancel` fails when two atoms print the same but elaborate differently. It times out on `uintBytes` of a symbolic value. It fails with a trailing `⋆ emp` and with some atom orders. An atom such as `StaticBox (-4 + rcx)` hits the recursion limit.
-- State: worked around. The workarounds are `generalize` of the byte lists, a re-elaboration with `rw [show a = a from rfl]`, and `simp only [sep_assoc, sep_emp]` before an AC sort. The causes are not verified.
+- What does not hold: `ecancel` does not close some goals.
+  It fails when two atoms print the same but elaborate differently, with a trailing `⋆ emp`, and with some atom orders.
+  It times out on `uintBytes` of a symbolic value.
+  An atom such as `StaticBox (-4 + rcx)` hits the recursion limit.
+- Effect: proofs use `generalize` of the byte lists, `rw [show a = a from rfl]`, or `simp only [sep_assoc, sep_emp]` before a sort.
+- Where: the separation tactics of Kraken.
+  The causes are not known.
 
 ### Other tactic gaps
 
-- `address_equation` (`lean/Machine/Step.lean`) does not reduce `Width.W64.bits`. The macro `checkpoint_addr` (`lean/Prysm/Checkpoint/DecodeAccept.lean`) is used instead.
-- A `grind` timeout inside `kstep` cannot be caught. `load_step` and `store_step` are used instead.
-- Closing register goals with symbolic `BitVec` by `trivial` or `rfl` inside `first` used more than 6 GiB. The decoder proof is split, and the goals close with `exact trivial`, `with_reducible rfl` or `toBitVec_inj`.
-- Two witness `Host` instances in one file make instance resolution choose the wrong host. Each file has one witness host.
-- State: worked around in each case.
+- What does not hold: `address_equation` (`lean/Machine/Step.lean`) does not reduce `Width.W64.bits`.
+  A `grind` timeout inside `kstep` cannot be caught.
+  `trivial` or `rfl` inside `first` on register goals with symbolic `BitVec` can use more than 6 GiB.
+- Effect: proofs use the macro `checkpoint_addr` (`lean/Prysm/Checkpoint/DecodeAccept.lean`), `load_step` and `store_step`.
+  Register goals close with `exact trivial`, `with_reducible rfl` or `toBitVec_inj`.
+- Where: `lean/Machine/Step.lean`.
 
-### Format string content is not checked
+### The content of a format string is not checked
 
-- What: Lean binds a format string only by its length and the absence of `%`. The agreement of its verbs with the contracts `FmtErrorfWrapContract`, `FmtErrorfDecimalWrapContract` and `FmtErrorfDecimalDecimalContract` is a contract hypothesis.
-- State: open.
+- What does not hold: Lean binds a format string only by its length and by the absence of `%`.
+  No check compares its verbs with `FmtErrorfWrapContract`, `FmtErrorfDecimalWrapContract` or `FmtErrorfDecimalDecimalContract`.
+- Effect: the agreement of the verbs with the contract is a contract hypothesis.
+- Where: `lean/Runtime/Contracts.lean`, `link/README.md` section 6.
 
-### Allocation type argument is not connected to the element size
+### The allocation type argument is not connected to the size
 
-- What: the type descriptor argument of `MakesliceContract` and `NewobjectContract` is not connected to the element size or object size in the contract.
-  For example, the object size 120 of the `Deposit_Data` allocation is a premise of the statement. No theorem ties it to the data file.
-- State: accepted contract hypothesis.
-
-### Link check result changes on a new run
-
-- What: `link/check.py` hashes the ELF, the `norm/*.S` files, the `data/*.data` files and `AXIOMS.txt` if it exists. It hashes no Lean file.
-  A `RESULT` file that has a sha256 line for a file that is not in the tree gets a different bundle hash on a new run.
-- Where: the `RESULT` file `prysm/go1.26.10/link-set/RESULT`.
-- State: fixed. The file is the output of a new run on the pinned ELF. It has no sha256 line for a Lean file or `AXIOMS.txt`.
-
-### Link set `prysm/go1.26.10/link` has no tracked disassembly
-
-- What: this link table of 136 functions had no `target.objdump`, and no theorem read it.
-- A conversion of all 641 functions of the full disassembly of the pinned ELF gives 1269 PASS lines and one FAIL.
-  The FAIL is the reassembly of `v1alpha1.BeaconStateBellatrix.MarshalSSZTo` at `0x93fd87`.
-  The ELF bytes of that `jge` are `0f8d7a000000`, and clang gives a 2-byte form.
-  That function has no proof.
-- State: closed. The tree does not contain this link table.
-  The link set `prysm/go1.26.10/link-set` is the one link set of the proofs, and it passes on the pinned ELF.
+- What does not hold: `MakesliceContract` and `NewobjectContract` do not connect the type descriptor argument to the size.
+  For example, the object size 120 of the `Deposit_Data` allocation is a premise.
+  No theorem ties it to the data file of the type descriptor.
+- Effect: the size is a contract hypothesis.
+- Where: `lean/Runtime/Contracts.lean`, `lean/Runtime/NewobjectContract.lean`.
 
 ### The proof generator covers only some code forms
 
-- What: `gen/generator/generator.py` matches fixed instruction templates. It refuses a field whose code has another form.
-- Where: the records give these forms as refused or not covered:
-  - 20-byte, 4-byte and 1-byte byte vectors, `bool` fields and the `Gwei` callee.
-  - The inline `DepositCount` read.
-  - A receiver reloaded into `rax`, and a call set-up with the receiver already in `rax`.
-  - A padding `nop` after a call, and compositions with call fields.
-- Encoder side: the six compiled sites that append a 32-byte field have six different instruction texts. Only the call step is shared. The steps before the call stay per site.
-- State: open proposals. A generator change needs user approval.
-- Open generator items: an internal refusal inside one phase can report full coverage in the summary (not reachable today). No summary is written on an interrupt.
+- What does not hold: `gen/generator/generator.py` does not cover every field form.
+  It covers 8-byte `uint64` fields, the four primitive callees and byte vectors of 32, 48 and 96 bytes.
+  It refuses byte vectors of other sizes, `bool` fields, the `Gwei` callee, interleaved fields and nested containers.
+  On the encoder side, the six compiled sites that append a 32-byte field have six instruction texts.
+  Only the call step is shared between them.
+- Effect: a refused type needs hand proofs.
+  A refused type of `gen/flat-types/run_generators.sh` has only `Code.lean` and, for some, `Statements.lean`.
+- Where: `gen/generator/whole_accept.py`, `gen/generator/fast_path.py`.
+  The last line of the standard error of a run gives the reason of a refusal.
+  A generator change needs user approval.
 
-### Kind checks do not bind every parameter
+### The generator summary can be incomplete
 
-- What: the accept kind `decodeAcceptKindAnyFrame` does not read the frame of its layout. An accept kind line with a wrong frame still elaborates.
-  `gen/generator/kindcheck.py` does not bind the code constant to the `.S` file of the header. It does not check the `.S` label against the IR type.
-- How it shows: a negative test with a wrong frame in the kind line gives no error. The head, field and epilogue kinds fix the frame.
-- State: open. A change of the kind needs new lemmas and a new check of every kind instance.
+- What does not hold: an internal refusal inside one phase can report full coverage in the summary.
+  An interrupted run writes no summary.
+- Effect: read the exit code of a run, not only its summary.
+- Where: the `--summary` output of `gen/generator/generator.py`.
 
-## 3. Proof process and checks
+### The accept kind does not constrain the frame size
 
-### Negative test classifier can count a wrong failure as a pass
+- What does not hold: `Codec.decodeAcceptKindAnyFrame` does not read the field `frame` of its layout `L`.
+  So Lean accepts the `_kind` line of a generated accept theorem with any frame value.
+  For example, the frame 104 changed to 96 in `Prysm.BeaconBlockHeader.Decode.generated_accept_kind` still passes Lean.
+- Effect: Lean does not check the frame of a generated accept statement.
+  `gen/generator/kindcheck.py` rule 12c recomputes the layout from the `.S` file and fails on such a file.
+  A hand instance of the kind has no such text check.
+  The head, field and epilogue kinds read the frame.
+- Where: `decodeAcceptKindAnyFrame` and `decodeFinalStatePredicate` in `lean/Codec/Kind/DecodeAcceptAnyFrame.lean`.
+  `check_whole_accept` in `gen/generator/kindcheck.py`.
 
-- What: a mutant passes when Lean reports an error inside the theorem. An unknown identifier or a parse error is such an error, but it does not test the code.
-- Where: `gen/checks/negative.py`.
-- State: fixed in part. Such first errors get the class `wrong_target`. The list of patterns is not complete. Read the first error of every row.
+### `kindcheck.py` does not bind the code constant to the `.S` file
 
-### Negative cases that do not pass
+- What does not hold: `gen/generator/kindcheck.py` does not check that the code constant of a theorem includes the `.S` file of the header.
+  It does not check the `.S` label against the IR type.
+- Effect: the kind parameters come from the `.S` file of the header.
+  The theorems can name another code constant.
+  A reader checks the `Code.lean` include of each generated file.
+- Where: `gen/generator/kindcheck.py`.
 
-- What: a full run of the Lean mutant suite (1062 cases) after the restructuring of the tree passed 1036 cases.
-  Six of the 26 other cases had case texts that did not match the restructured modules.
-  After a correction of these case texts (below), a Lean run of the six cases passes all six.
-  The count is then 1042 passing cases and 20 cases that do not pass.
-  Each of the 20 cases has the same outcome in a run on the tree before the restructuring.
-  The mutation texts of that run are the same.
-  The ranges differ only by moved lines and by the range rule below.
-- Range rule of the tool: the case range starts at the first line of the theorem's command (`set_option … in` lines and an
-  attached doc comment `/-- … -/`; `negative.py` `command_start`, used by `list_negative.py`). Lean reports an error of the
-  whole declaration, for example its heartbeat timeout, at that line. With this rule
-  `checkpoint-encode-fast-path-of-kind-statement-encode-layout-32-to-48` (designed error inside the theorem, then a
-  heartbeat timeout of the declaration at its first line) passes. A plain comment, a module comment or a line comment above
-  the theorem does not widen the range (self-test fixtures).
-- The six cases with corrected case texts (a Lean run: the control passes and the five mutants fail inside their theorems):
-  - `sync-committee-message-decode-example-step-directive-82-control` and the four code mutants
-    `…-directive-82-code-mov-0x78-rsp-to-0x70-rsp`, `…-directive-86-code-add-rax-to-rdx`, `…-directive-87-code-mov-ecx-to-eax`,
-    `…-block-root-segment-code-mov-rax-to-rdx` (`gen/checks/negative-cases/negative-cases-steps.json`): the
-    module names its code constant relatively (`Code.unmarshalSSZ` inside `namespace Prysm.SyncCommitteeMessage`).
-    With the case namespace `Prysm.SyncCommitteeMessage.Code`, the tool declares `Prysm.SyncCommitteeMessage.Code.Code.unmarshalSSZMut`,
-    and the renamed uses do not resolve (`Unknown identifier`). So the case namespace is `Prysm.SyncCommitteeMessage`.
-  - `checkpoint-encode-generated-fast-kind-statement-prysm-checkpoint-to-eth1-data` (`…/negative-cases-fast-path.json`):
-    the mutant names `Prysm.Eth1Data.encodeLayout`, which the imports of the case module do not reach.
-    So the case has `mutant_imports: ["Prysm.Eth1Data.EncodeLayout"]`.
-- The remaining cases that do not pass (id, class, cause):
-  - An earlier theorem of the module owns the mutated directive (Lean keeps a failed theorem with `sorry` and continues,
-    so the designated theorem has no error; class `outside`):
-    - `sync-aggregate-decode-accept-code-movq-0x40-to-0x3f`: the segment lemma `Prysm.SyncAggregate.Decode.bits_segment` owns the directive; the case
-      `sync-aggregate-decode-bits-segment-code-movq-0x40-to-0x3f` (same mutation) passes.
-    - `pending-deposit-decode-generated-reject-code-add-0x40-to-0x48`: one error is inside `Decode.generated_reject`; the other is in the identity theorem
-      `Decode.generated_accept_statement` before it, which compares the generated accept theorem (renamed to the mutated
-      code constant) with the hand statement of `Prysm/PendingDeposit/Statements.lean` (the original constant), so it fails
-      for every code mutation of this module.
-  - The kind does not read the frame (entry "Kind checks do not bind every parameter"; class `no_error`):
-    `voluntary-exit-decode-generated-accept-statement-uint64-80-to-88`.
-  - Stuck `rfl` comparison (class `timeout_heartbeat` at 200000 heartbeats): the mutated literal is a return directive
-    (`Host.addrOf (k + jret)`) or a pointer index (`ps.getD ip 0`) over the abstract `Host` and list `ps`; `rfl` finds
-    no constructor clash and unfolds until the limit. The structural mutants of the same groups fail at once.
-    - `blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33`.
-    - `pending-deposit-decode-accept-is-kind-any-frame-statement-layout-mixed-frame40-131-to-130` and
-      `beacon-block-header-decode-accept-is-kind-any-frame-statement-prysm-2-to-1`.
-  - Other heartbeat timeouts (class `timeout_heartbeat`; the cause is not analysed):
-    - `codec-window-steps-step-store-statement-get64-r-s-to-r-b`.
-    - `deposit-data-decode-accept-spec-statement-rax-96-to-48` (4000000 heartbeats).
-    - `sync-aggregator-selection-data-decode-accept-spec-statement-uint-bytes-slot-to-subcommittee-index`,
-      `validator-balance-decode-accept-spec-statement-uint-bytes-index-to-balance`,
-      `voluntary-exit-decode-accept-spec-statement-uint-bytes-epoch-to-validator-index`.
-    - `sync-committee-message-decode-accept-spec-statement-uint-bytes-validator-index-to-slot`,
-      `sync-committee-message-decode-accept-spec-statement-host-141-to-140`,
-      `pending-consolidation-decode-accept-spec-statement-uint-bytes-target-index-to-source-index`,
-      `pending-consolidation-decode-accept-spec-statement-host-56-to-55`.
-  - Wall time limit of the tool, 300 s (class `timeout_wall`):
-    - `pow-block-decode-generated-accept-statement-rax-32-to-48`.
-  - Memory cap kill, 6 GiB (class `killed`): `deposit-data-decode-accept-spec-statement-heap-176-to-175`.
-- Two more of the 20 cases had the class `timeout_wall`. They are cases of a separate test ELF.
-  The tree does not contain that ELF, its Lean proofs or its case file, so 18 cases remain.
-- Effect: a timeout, a kill, no error or an error outside the designated theorem is not a pass (`../README.md` section 6).
-  So these 18 mutants do not show that their theorem depends on the mutated text. The controls of the same groups pass.
-- State: open; a decision on the 18 is needed and not taken. Options:
-  - cases whose directive an earlier theorem owns: designate the case to that theorem (it then repeats the passing
-    sibling case), let a case name the supporting theorems whose errors also count, or mutate a directive that the
-    designated theorem proves itself; for the PendingDeposit reject case, keep the identity theorem out of the mutant or
-    give the mutant the hand statement with the mutated constant;
-  - the stuck `rfl` cases: a stated heartbeat limit for these mutants (if a run without limit ends in a definite `rfl`
-    failure), mutations that Lean refutes definitely (for example the same literal in the hand statement, which the accept
-    proof checks), or keeping them as recorded limits;
-  - the other timeouts, the wall-time case and the memory kill: a per-case limit, a different mutation of the same fault,
-    or keeping them as recorded limits;
-  - the frame case: it depends on the open item "Kind checks do not bind every parameter".
+### Open items of the encoder checker
 
-### A theorem can look closed when it is not
+- What does not hold: the macro `encoder_address_equation` has no namespace.
+  A broken checker copy fails with a `KeyError`, not with a check result.
+  The negative tests that compare the IR with the code change one theorem only.
+  No mutant changes a whole file.
+- Effect: each item needs a checker or a test change.
+- Where: `lean/Codec/EncodeFieldHelpers.lean`, `gen/checks/fast_path_layout.py`, `gen/checks/negative-cases/`.
 
-- What: Lean registers a theorem that the kernel rejects as an axiom. `case tag => tac` logs an error, admits the goal and continues.
-- How it shows: in a scratch file, segment theorems depended on `sorryAx` although the run looked clean.
-- State: rule. A scratch result is closed only when `#print axioms` of every theorem that it uses has no `sorryAx` and does not list the theorem itself.
-- A job command must end with the Lean exit code. A command that ends with `echo` hides a failure.
+## Proofs and checks
 
-### A generated theorem can carry an extra hypothesis
+### CI does not run the Python checks
 
-- What: a proof by `exact` checks only the text after the colon. A hypothesis added before the colon still compiles.
-- State: fixed by the `_kind` identity on the full type and the text check `gen/generator/kindcheck.py`. Neither check alone is enough.
+- What does not hold: the CI workflow runs only the Lean build and the axioms gate.
+  It does not run `kindcheck.py`, `regenerate_and_compare.py` or `gen/checks/python_checks.sh`.
+- Effect: the statement check of a generated theorem holds only after a run of `kindcheck.py` by hand.
+- Where: `.github/workflows/fv-lean.yaml`.
 
-### `lake env lean` does not check that the build is current
+### The negative suite with Lean runs only on Linux
 
-- What: `lake env lean` uses `.olean` files without a trace check. A stale file can make a check pass.
-- State: fixed. The drivers run `lake build --no-build` first and stop on a nonzero exit.
+- What does not hold: `gen/checks/negative.py` does not run its cases on a system without `/proc`, for example macOS.
+  It runs each case under `gen/tools/memory_limit.py`.
+  Both programs read `/proc`.
+- Effect: on macOS, the suite runs in a Linux container with the toolchain of `lean/lean-toolchain`.
+- Where: `gen/checks/negative.py`, `gen/tools/memory_limit.py`.
 
-### Negative test time limit killed only the wrapper
+### The negative classifier sees only the error text
 
-- What: the per-case time limit killed only the memory-limit wrapper, not the Lean process tree.
-- Where: `gen/tools/memory_limit.py`.
-- State: fixed. At the time limit, `gen/checks/negative.py` kills the whole process session. Its `--selftest` checks this.
+- What does not hold: `gen/checks/negative.py` does not see whether an error comes from the mutated text.
+  It classifies a mutant by the text and the line of the Lean errors.
+  A first error that is a parse error or an unknown name gets the class `wrong_target`.
+  The pattern list `WRONG_TARGET` can be incomplete.
+- Effect: an `inside` result can come from an error that does not test the code.
+  Read the first error of each result row.
+- Where: `classify` and `WRONG_TARGET` in `gen/checks/negative.py`.
 
-### Slow proof steps
+### A Lean error does not stop the file
 
-- What: the Checkpoint cover witnesses spent most of their time in the `omega` side goals of `witness_split`.
-- Where: the `witness_split` side goals of the Checkpoint cover witnesses.
-- State: fixed. `lean/Machine/WitnessSplit.lean` has `witness_split_n`.
+- What does not hold: Lean does not stop at a failed proof.
+  It registers the theorem with `sorryAx` and continues.
+  `case tag => tac` logs an error, admits the goal and continues.
+- Effect: a file can look clean when one of its theorems is not proved.
+  A result counts only when `#print axioms` of every theorem that it uses has no `sorryAx`.
+  A job command must end with the Lean exit code.
+  A command that ends with `echo` hides a failure.
+- Where: every Lean run.
+  The axioms gate (`gen/checks/axioms_gate.py`) checks the built tree.
 
 ### Limit options without a profiled cause
 
-- What: many files set `maxHeartbeats` or `maxRecDepth` above the default with no written, profiled cause.
-  The flat encoder and the 24 other flat types add `maxHeartbeats 16000000` and `4000000` and `maxRecDepth 100000` in many files.
-- State: open. They stay until a profile exists or the user accepts them as model-file values. Do not copy them for new work.
-
-### Theorems that end with `⋆ True`
-
-- What: five Checkpoint theorems do not state the rest of memory: `Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver`, `Prysm.Checkpoint.Encode.fast_path_spec`, `Prysm.Checkpoint.DecodeThenEncode.round_trip`, `Prysm.Checkpoint.Encode.cover` and `Prysm.Checkpoint.Encode.reject_length_cover`.
-- State: disclosed. The component theorems and the `*_framed` cover theorems state the exact frame. The composition has no framed version.
-- Related: `Prysm.BeaconBlockHeader.Decode.generated_accept` hides three argument-area slots in one 24-byte existential. They are dead stack only. The statement is not changed.
-
-### Docstrings that say more than their theorem
-
-- What: the docstrings of the `Decode.reject_complete` theorems of `PendingDeposit`, `PowBlock`, `SyncCommitteeMessage` and `PendingConsolidation` say that the code reaches the `ssz.ErrSize` site. The theorem proves only `size ≠ N`.
-  A comment in `lean/Prysm/ValidatorBalance/SpecDescription.lean` names the wrong Prysm tree.
-- State: open. The fix is a `.lean` edit.
-
-### Unreachable error wraps hold only with the callee specifications
-
-- What: the theorems of an unreachable error wrap state a conditional skip: if the callee returns `rax = 0`, the code skips the wrap.
-  Unreachability for every input holds only together with the callee specifications, such as `Prysm.Slot.Decode.accept_function_spec` and `Prysm.ValidatorIndex.Decode.accept_function_spec`.
-- State: recorded. The theorems are not changed.
-
-### Hand `Desc` is independent in content, not always in time
-
-- What: for some types, the hand `Desc` is younger than the printed checker `Desc` of the same type.
-- Effect: the hand `Desc` copies consensus-specs, but its independence from the checker is by content only.
-- State: recorded. A new type must have its hand `Desc` written before the checker `Desc` is printed.
-
-### A code directory is not a Lake input
-
-- What: a Lean module of a separate test ELF included `.S` files from a directory that `lean/lakefile.toml` did not declare as an input.
-  A change in such a file did not make Lake build the proofs again.
-- Where: the link set `prysm/go1.26.10/link-set` is an input.
-  `ElfData.PrysmTarget.typeDeposit_Data_addr` comes from the data include of its data file. `gen/checks/deposit_data_include_check.py` checks this.
-- State: closed. The tree does not contain the module and the directory of that test ELF.
-
-### Inventory script trusts its method list
-
-- What: `gen/tools/proof_inventory.py run` trusts `prysm/go1.26.10/ssz-methods.json` for methods without a converted `.S` file. Only the `methods` mode and a `cmp` bind that file to the ELF.
-  A development type without a mapping row ends in a `KeyError`, not in a FAIL line.
-  19 mapped names are not in the `#print axioms` hand list `gen/axioms-lists/flat-fixed-size-types.lean`. `gen/tools/inventory_decls.lean` checks their axioms on every run.
-- State: open.
-
-### Open checker items of the flat encoder generator
-
-- The macro `encoder_address_equation` is declared at the root level (`lean/Codec/EncodeFieldHelpers.lean`).
-- A broken checker copy fails with a `KeyError`, not with a check result.
-- The IR reader of the encoder generator accepts any untagged 8-byte field as `uint64`.
-- The negative tests that compare the IR with the code change one theorem only. There are no whole-file mutants.
-- `gen/checks/fast_path_layout.py` is a step of `gen/checks/python_checks.sh`. It is not a step of the CI gate.
-- State: open. Each needs a checker or test change.
-
-### Paths that the proofs do not cover
-
-- The stack growth path and the write barrier path of every function. The premises exclude them.
-- The encoder growth branches (see the growslice entry), the length rejects with a small capacity, and the `moveSliceNoCapNoScan` branch of `PowBlock`, `HistoricalSummary` and `SigningData`.
-- The frame separation premise of the encoders is not justified for every Go caller.
-- The `IndexedAttestation` alignment and overflow rejects are proved only with the added premise that the error word is not zero.
-- State: open. `prysm/proof-inventory.md` lists the paths not proved for each method.
+- What does not hold: many files set `maxHeartbeats` or `maxRecDepth` above the default without a written, profiled cause.
+  Generated files and the files that the tools of `gen/flat-types/` write do this too.
+- Effect: these values are not a model for new work.
+  They stay until a profile exists or the user accepts them.
+- Where: `grep -rn "set_option max" lean/Prysm lean/Codec`.
 
 ### Recursion depth limits without a located cause
 
-- What: four witness examples raise `maxRecDepth` and the cause is not known. The rule asks for a profiled cause for each raised limit.
-- Where: `lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeFastPath.lean` (one place, limit 4000) and `lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeGrowFirstSite.lean` (three places, limit 8000).
-- How it shows: the examples fail at 512 and at 2000. `WitnessEncodeGrowFirstSite.lean` also fails at 4000. The comment at each place says that the cause is not located.
-- State: open.
+- What does not hold: four witness examples raise `maxRecDepth`, and the cause is not located.
+- Effect: the rule asks for a profiled cause for each raised limit.
+- Where: `lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeFastPath.lean` (one place, limit 4000).
+  `lean/Prysm/DataColumnsByRootIdentifier/WitnessEncodeGrowFirstSite.lean` (three places, limit 8000).
+  The comment at each place gives the measured values.
 
-## 4. Target and environment
+### Theorems that end with `⋆ True`
+
+- What does not hold: five Checkpoint theorems do not state the rest of memory.
+  They are `Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver` and `Prysm.Checkpoint.Encode.fast_path_spec`.
+  They are also `Prysm.Checkpoint.DecodeThenEncode.round_trip`, `Prysm.Checkpoint.Encode.cover` and `Prysm.Checkpoint.Encode.reject_length_cover`.
+- Effect: the component theorems and the `*_framed` cover theorems state the exact frame.
+  The composition has no framed version.
+  `Prysm.BeaconBlockHeader.Decode.generated_accept` hides three argument-area slots in one 24-byte existential.
+  They are dead stack only.
+- Where: `lean/Prysm/Checkpoint/`, `lean/Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean`.
+
+### Docstrings that say more than their theorem
+
+- What does not hold: some docstrings of `Decode.reject_complete` say more than the theorem.
+  They say that the input reaches the `ssz.ErrSize` site.
+  The theorem proves only `size ≠ N`.
+- Effect: a reader must take the statement, not the docstring.
+- Where: `lean/Prysm/<GoTypeName>/DecodeSpec.lean` of `PendingDeposit`, `PowBlock`, `SyncCommitteeMessage` and `PendingConsolidation`.
+  The fix is a `.lean` edit.
+
+### Unreachable error wraps hold only with the callee specifications
+
+- What does not hold: an unreachable error wrap theorem does not say that the wrap is unreachable for every input.
+  They state a conditional skip: if the callee returns `rax = 0`, the code skips the wrap.
+- Effect: unreachability for every input holds only with the callee specifications.
+  Examples are `Prysm.Slot.Decode.accept_function_spec` and `Prysm.ValidatorIndex.Decode.accept_function_spec`.
+- Where: `lean/Prysm/BeaconBlockHeader/DecodeErrorUnreachable.lean`.
+
+### No check shows that a hand `Desc` is independent of the checker `Desc`
+
+- What does not hold: no check shows that a hand `Desc` was written without the checker `Desc`.
+  The independence is by content only: the hand `Desc` copies the consensus-specs definition.
+  The hand `Desc` of `ValidatorBalance` comes from the Prysm proto, because consensus-specs has no such container.
+- Effect: the specification side of a theorem rests on a review of the hand `Desc` against consensus-specs.
+- Where: `lean/Prysm/<GoTypeName>/Spec.lean`, `SpecDescription.lean` or `SpecDefinitions.lean`.
+
+### The proof inventory trusts its method list
+
+- What does not hold: `gen/tools/proof_inventory.py run` does not bind `prysm/go1.26.10/ssz-methods.json` to the ELF.
+  Only the `methods` mode and a comparison of its output bind that file to the ELF.
+  A type directory without a mapping row ends in a `KeyError`, not in a FAIL line.
+- Effect: the inventory table is correct only for a method list that matches the ELF.
+- Where: `gen/tools/proof_inventory.py`.
+
+### Paths that the proofs do not cover
+
+- What does not hold: no theorem covers these paths.
+  - The stack growth path and the write barrier path of every function, which the premises exclude.
+  - The encoder growth branches (see the growslice entry) and the length rejects with a small capacity.
+  - The `moveSliceNoCapNoScan` branch of `PowBlock`, `HistoricalSummary` and `SigningData`.
+- Effect: the frame separation premise of the encoders is not justified for every Go caller.
+  The `IndexedAttestation` alignment and overflow rejects are proved only with the premise that the error word is not zero.
+- Where: `prysm/proof-inventory.md` lists the paths not proved for each method.
+
+## Target and environment
 
 ### No run on x86-64 hardware
 
-- What: no test compares Kraken with a real x86-64 CPU. The hosts are arm64.
-- Effect: the Go differential checks run on arm64. They check Go semantics, not the amd64 machine code.
-- State: open.
+- What does not hold: no test compares Kraken with a real x86-64 CPU.
+- Effect: the Go differential checks run on the host.
+  They check Go semantics, not the amd64 machine code.
+- Where: `gen/checks/differential.py`.
 
-### Go layout comes from `go/types`
+### The Go layout comes from `go/types`
 
-- What: the receiver layout of the theorems comes from the gc amd64 size rules of `go/types` (`prysm/ir/ir-mainnet.json`, `go_fields`). The ELF `abi.Type` has no named symbol, so the proofs do not read it.
-- State: open. No amd64 run confirms it.
+- What does not hold: the proofs do not read the receiver layout from the ELF.
+  The layout comes from the gc amd64 size rules of `go/types` (`prysm/ir/ir-mainnet.json`, `go_fields`).
+  The ELF `abi.Type` of a receiver type has no named symbol.
+- Effect: the receiver layout is a trust item.
+  No amd64 run confirms it.
+- Where: `prysm/ir/ir-mainnet.json`, `lean/Prysm/<GoTypeName>/Layout.lean`.
 
-### Runtime contracts are not proved on the compiled runtime
+### The runtime contracts are not proved on the compiled runtime
 
-- What: the contracts come from a reading of the Go 1.26.3 runtime source. A source comparison (`gen/checks/runtime_diff.py`) found the functions behind each contract unchanged in Go 1.26.10.
-  `growslice` and `nextslicecap` are byte-identical. The changed functions (`moveSliceNoCap`, `itabInit`, `adjustframe`, GC stack scanning) carry no contract.
-  The compiled runtime code is not compared. The contracts also assume no garbage collection during a call and a successful allocation.
-- State: accepted trust item.
+- What does not hold: no proof shows that the compiled Go runtime satisfies the contracts.
+  The contracts come from a reading of the Go 1.26.3 runtime source.
+  `gen/checks/runtime_diff.py` compares the sources of the functions behind each contract in Go 1.26.3 and Go 1.26.10.
+  No check compares the compiled runtime code.
+- Effect: the contracts are an accepted trust item.
+  They also assume no garbage collection during a call and a successful allocation.
+- Where: `lean/Runtime/Contracts.lean`, `gen/checks/runtime_diff.py`.
 
-### Minimal preset failures in Prysm
+### A pinned record holds a container path
 
-- What: with `-tags minimal`, the `consensus-types/blocks` tests do not compile, and `encoding/ssz/detect` `TestByState` panics.
-- State: the records give the same failures with the committed Prysm files. Not related to the generated code.
-
-### Reduced Prysm types of the test target differ from Prysm
-
-- What: `lean/Spec/TestCheckpointAndAttestationData.lean` specifies `Checkpoint` and `AttestationData` without the protobuf fields.
-  The reduced Go types and their ELF are not in the tree.
-- State: by design. The Prysm proofs use the real protobuf types of the Prysm ELF.
-
-### Absolute paths in committed records
-
-- What: the `replace` line of `prysm/go1.26.10/prysm-go.mod.diff` names the container path `/workspace/methodical-ssz-generator`.
-  The ELF records this path, so the line keeps it. It is not a path of a machine.
-  Git history also has container paths: in two Python bytecode files and in deleted records.
-  The present tree does not contain these files.
-- How it shows: `git grep -nE "/workspace|fve2e-" -- fv/kraken ':!fv/kraken/lean/.lake'`.
-- State: open. The user decides how to treat the history before publication.
-
-### Two tracked files differ only in case
-
-- What: `prysm/INVENTORY.json` and `prysm/inventory.json` were both tracked.
-- Effect: on a file system that ignores case, only one exists, and `git status` shows a change that is not real.
-- State: fixed. The per-method table is `prysm/proof-inventory.json` and `prysm/proof-inventory.md`.
+- What does not hold: `prysm/go1.26.10/prysm-go.mod.diff` is not free of absolute paths.
+  Its `replace` line names the container path `/workspace/methodical-ssz-generator`.
+- Effect: the ELF records this path, so the line must keep it.
+  A rebuild needs the generator tree at this path.
+- Where: `prysm/go1.26.10/prysm-go.mod.diff`, `README.md` section 3.
