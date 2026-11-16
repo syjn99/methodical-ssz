@@ -17,7 +17,7 @@ The build info of the test target ELF names its main package `github.com/Offchai
 Its line table names the source files `cmd/test-target/main.go`, `target/types.ssz.go` and `target/types_bits_and_nesting.ssz.go`.
 The generator writes `types_bits_and_nesting.ssz.go` from `types_bits_and_nesting.go`.
 In each link directory, the ELF file is `target-amd64` and its symbol listing is `target-amd64.nm`.
-`check.py`, `data.py`, `gen/checks/link_set.py` and the `gen/checks/*link.py` scripts use these names. The header line of each data file names the ELF file.
+`check.py`, `data.py` and `gen/checks/link_set.py` use these names. The header line of each data file names the ELF file.
 The data ids of `link/out/data/` follow the rule of `data.py` `item_id`.
 `staticuint64s` keeps its id: it is the symbol `runtime.staticuint64s`, and `Runtime/StaticUint64s.lean` includes it.
 
@@ -106,3 +106,27 @@ Rules for a new data file:
 5. Declare the directory as a Lake `input_dir` of the library that includes it.
 
 A format string is bound only by its length and by the absence of `%` where the contract needs that. Its content is not checked against the contract.
+
+## 7. The Prysm link set and its item table
+
+`gen/checks/link_set.py` makes the one link set of the Prysm target, `prysm/go1.26.10/link-set`.
+It reads the ELF, its disassembly, its symbol listing and the item table `prysm/go1.26.10/link-set.tsv`.
+The table has one row per function and one row per data item. The columns are in the usage text of `link_set.py`.
+The labels and offsets of the table belong to this one ELF.
+
+```sh
+python3 -I -B fv/kraken/gen/checks/link_set.py <scratch>/link-set <elf> <objdump> <nm>
+python3 -B fv/kraken/link/check.py <scratch>/link-set
+```
+
+`link_set.py` checks each data row against the converted code before it writes a data file.
+The function in `used_by` must name the address as an operand.
+A format string must have the text of `what` in the ELF, and the function must load its length.
+
+To add a type:
+
+1. Add one `function` row for each method that a proof reads.
+2. Run `link_set.py`. Read the operands of the new `.S` files: each `lea` or `mov` of a data address is a data item.
+3. For each data item that no row has, add a `data` row. Take the label, the offset and the length from the code (rule 1 of section 6).
+4. Run `link_set.py` and `check.py` again. Copy the new set to `prysm/go1.26.10/link-set`.
+
