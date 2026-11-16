@@ -31,7 +31,7 @@ Python 3 standard library only. Usage:
                    --imports M1,M2 [--open NS] [--summary FILE.json]
   generator.py encoder --fast-path --assembly FILE --const LEAN_CONST --ir IR.json --type PKGSUFFIX.TYPE --prefix NAME
                    --imports M1,M2 [--open NS] [--hand-layout NAME --hand-layout-src FILE]
-                   [--same-as HAND_THM [--same-as-via LEMMA] | --same-as-prop PROP] [--summary FILE.json]
+                   [--same-as HAND_THM [--same-as-via LEMMA]] [--summary FILE.json]
 `--imports` can repeat. The output imports the modules of all its values, in order.
 """
 import argparse, hashlib, json, pathlib, re, sys
@@ -1391,16 +1391,11 @@ def _encoder_fast_path(args, flags):
         tail = (f"/-- Statement check: the generated theorem proves the committed hand statement"
                 f"{' (implication tie)' if via else ''}. -/\n"
                 f"theorem {px}_statement : type_of% (@{args.same_as} ‹Host›) :=\n  {via}{px}_fast\n\n")
-    elif args.same_as_prop:
-        tie = f"\nThe statement is the hand-written Prop `{args.same_as_prop}`."
-        tail = (f"/-- Statement check: the generated theorem proves the hand-written Prop. -/\n"
-                f"theorem {px}_statement : {args.same_as_prop} :=\n  {px}_fast\n\n")
-    if (args.same_as or args.same_as_prop) and tail.count(f"\ntheorem {px}_statement : ") != 1:
+    if args.same_as and tail.count(f"\ntheorem {px}_statement : ") != 1:
         raise fast_path_gen.FastPathRefuse("statement identity `_statement` missing")
     flags["statement_check"] = True
     meta = dict(g.meta(), statement_check=(f"same {args.same_as}" + (f" via {args.same_as_via}" if args.same_as_via else "")
-                                           if args.same_as else f"prop {args.same_as_prop}" if args.same_as_prop
-                                           else "kind instance only"),
+                                           if args.same_as else "kind instance only"),
                 assembly=args.assembly, ir=args.ir, ir_type=args.type, kinds=[dict(theorem=a, kind=b) for a, b in want])
     imports = [m for m in fast_path_gen.FAST_PATH_IMPORTS] + [m for m in args.imports.split(",") if m and m not in fast_path_gen.FAST_PATH_IMPORTS]
     opens = " ".join(["Machine", "Runtime", "Codec"] + [o for o in args.open.split(",") if o])
@@ -1433,7 +1428,6 @@ def main():
     ap.add_argument("--same-as", help="encoder --fast-path: NAME must be an independently written hand statement (a theorem "
                     "written by hand, not generated); emits `P_statement : type_of% (@NAME ‹Host›)`. A generated NAME is no "
                     "statement check (kindcheck rejects it)")
-    ap.add_argument("--same-as-prop", help="encoder --fast-path: NAME is a hand-written Prop; emits `P_statement : NAME`")
     ap.add_argument("--ir")
     ap.add_argument("--type")
     ap.add_argument("--prefix")
@@ -1462,8 +1456,6 @@ def main():
             ap.error("encoder --fast-path excludes --whole-accept / --name")
         if not (args.ir and args.type and args.prefix):
             ap.error("encoder --fast-path needs --ir, --type, --prefix")
-        if args.same_as_prop and args.same_as:
-            ap.error("--same-as and --same-as-prop exclude each other")
         if bool(args.hand_layout) != bool(args.hand_layout_src):
             ap.error("--hand-layout and --hand-layout-src go together")
         if args.same_as_via and not args.same_as:
@@ -1480,8 +1472,8 @@ def main():
             pathlib.Path(args.summary).write_text(json.dumps(dict(args.fast_path_summary, exit=0), indent=1) + "\n")
         sys.stdout.write(out)
         return
-    if args.same_as or args.same_as_prop:
-        ap.error("--same-as / --same-as-prop are encoder --fast-path options")
+    if args.same_as:
+        ap.error("--same-as is an encoder --fast-path option")
     if args.whole_accept:
         if args.mode != "decoder":
             ap.error("--whole-accept is a decoder option")

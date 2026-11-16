@@ -43,7 +43,7 @@ The design principles are in `../../README.md`.
 - `uint64`: the accept path of a uint64 primitive decoder.
 - `decoder --whole-accept`: the step chain of the accept path over windows, with a padding `nop` anywhere.
   After it, the head, field, epilogue, accept and size-reject theorems.
-- `encoder --fast-path`: the encoder fast path theorem. `--same-as`, `--same-as-prop` and `--same-as-via` add an identity with a hand statement.
+- `encoder --fast-path`: the encoder fast path theorem. `--same-as` and `--same-as-via` add an identity with a hand statement.
 
 `generator/decoder_test.py` tests `decoder --whole-accept`, and `generator/encoder_test.py` tests `encoder --fast-path`.
 They run the generator on real and mutated inputs.

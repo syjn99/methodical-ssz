@@ -323,7 +323,7 @@ def checked_names(root):
             elif f.endswith(('.sh', '.lean')):
                 text = open(p, encoding='utf-8', errors='replace').read()
                 if '--same-as' in text:
-                    for m in re.finditer(r'--same-as(?:-prop)?[ =]+([A-Za-z_][\w.\']*)', text):
+                    for m in re.finditer(r'--same-as[ =]+([A-Za-z_][\w.\']*)', text):
                         names.setdefault(('same-as', m.group(1), ''), rel)
     return names
 

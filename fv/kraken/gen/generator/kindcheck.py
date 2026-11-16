@@ -1008,7 +1008,7 @@ def whole_accept_selftest():
 #       `def C : Program := include_x64_code "../<S of FAST-PATH-JSON>"`.
 #  13d. P_fast's proof uses P_head, every P_field_i and P_epilogue exactly once.
 #  13e. P_statement, if present, is `theorem P_statement : type_of% (@X ‹Host›) :=` + `  [V ]P_fast` with X not generated and V
-#       empty or in FAST_PATH_VIA, or `theorem P_statement : X :=` + `  P_fast` (hand Prop).
+#       empty or in FAST_PATH_VIA.
 # Limits: the kind fixes the statement only up to what the kind reads (`hcap63` is a fixed premise; an extra
 # chunk in L.pre would be a stronger premise, and the recomputation would reject it); that the code walk is the
 # function's whole fast path is the generator's claim, checked by the proofs, not here.
@@ -1565,8 +1565,7 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
         c = chunk[f"{P}_statement"].rstrip()
         if c.endswith(f"\nend Prysm.{J['type']}"):
             c = c[: -len(f"\nend Prysm.{J['type']}")].rstrip()
-        m = re.fullmatch(rf"theorem {P}_statement : type_of% \(@(\S+) ‹Host›\) :=\n  (?:(\S+) )?{P}_fast", c) or \
-            re.fullmatch(rf"theorem {P}_statement : (\S+) :=\n  {P}_fast()", c)
+        m = re.fullmatch(rf"theorem {P}_statement : type_of% \(@(\S+) ‹Host›\) :=\n  (?:(\S+) )?{P}_fast", c)
         if not m:
             errs.append(f"rule 13e: {P}_statement: not the identity form")
         else:
