@@ -1,7 +1,8 @@
 # prysm: the Prysm target and its evidence files
 
-This directory holds the Prysm target: the type inventory, the generator IR, the generated Go, the link set and the check records.
-Paths in section 1 and section 4 are relative to this directory. Paths in the tables of sections 2 and 3 are relative to `go1.26.10/` and `go1.26.10/evidence/`.
+This directory holds the Prysm target: the type inventory, the generator IR, the generated Go and the link set.
+It also holds the Go differential cases and the check records.
+Paths in sections 1 and 3 are relative to this directory. Paths in the table of section 2 are relative to `go1.26.10/`.
 A path that starts with `gen/` or `lean/` is relative to `fv/kraken/`.
 How to build the target ELF again is in `../README.md` section 3.
 
@@ -15,6 +16,7 @@ How to build the target ELF again is in `../README.md` section 3.
 | `proof-inventory.md`, `proof-inventory.json` | The per-method table of theorems, witnesses and paths not proved | `gen/tools/proof_inventory.py run` (with the outputs of `inventory_decls.lean` and of an axioms gate run on the built tree) |
 | `_generated/` | The Go files that the pinned generator wrote for Prysm, with `SHA256SUMS` | `gen/prysm-gen.sh` |
 | `diff/` | A classification of the differences between these files and the Prysm files | `gen/generated_go_diff.py` |
+| `differential-cases/` | The Go differential cases, one file `<package>.<Type>.json` per Go type | `gen/checks/differential.py cases` |
 | `go1.26.10/` | The target namespace of the Go 1.26.10 ELF (section 2) | |
 
 ## 2. The target namespace `go1.26.10/`
@@ -27,39 +29,21 @@ All files here belong to one ELF. Do not mix them with the files of another ELF.
 | `prysm-target-main.go.txt`, `prysm-go.mod.diff` | The `main` package of the binary and the `go.mod` change in the Prysm tree |
 | `ssz-methods.json` | Every SSZ method of the ELF. It is the denominator of the inventory |
 | `functions.json`, `parser-result.json` | The functions with a converted `.S` file, and which of them the Kraken parser reads. `gen/kraken-parser/summarize_parser_log.py` writes `parser-result.json` from a parser log that is not tracked (`../README.md` section 3) |
-| `link-set/` | The one link set of the proved functions: `target.objdump`, `norm/*.S`, `norm/all.S`, `data/*.data` and `RESULT`. `gen/checks/link_set.py` writes it. |
-| `evidence/` | The check records, negative case lists and generator records of the proved types (section 3) |
+| `link-set.tsv` | The item table of the link set: one row per function and per data item, with its Go type and what it is |
+| `link-set/` | The one link set of the proved functions: `target.objdump`, `norm/*.S`, `norm/all.S`, `data/*.data` and `RESULT`. `gen/checks/link_set.py` writes it from `link-set.tsv`, and `link/check.py` writes `RESULT` |
+| `evidence/` | The `Desc` files `<package>.<Type>.desc.json` that the `Desc` checker accepted. The headers of `lean/Prysm/*/SpecChecker.lean` name this directory |
 
-## 3. Records under `go1.26.10/evidence/`
-
-The code and data files of all these types are in the one link set `link-set/` (section 2).
-This table says what each subdirectory holds.
-
-| Subdirectory | Types or content |
-| --- | --- |
-| `attestation-data/` | `AttestationData`, `primitives.Slot`, `primitives.CommitteeIndex` |
-| `beacon-block-header/` | `BeaconBlockHeader`, `primitives.ValidatorIndex` |
-| `eth1-data/` | `Eth1Data` |
-| `blob-identifier-and-deposit-message/` | `BlobIdentifier`, `DepositMessage` decoders |
-| `deposit-data-and-pending-partial-withdrawal/` | `Deposit_Data`, `PendingPartialWithdrawal` decoders |
-| `pending-consolidation-and-sync-committee-message/` | `SyncCommitteeMessage`, `PendingConsolidation` decoders |
-| `pending-deposit-and-pow-block/` | `PendingDeposit`, `PowBlock` decoders (the link script `gen/checks/seven_flat_decoders_link.py` also covers the five types of `five-flat-types/`) |
-| `five-flat-types/` | `Desc` files, Go differential cases and negative case lists of five flat decoders |
-| `flat-types/` | The 24 other flat fixed-size types, with their generator tools |
-| `lists-and-vectors/` | Lists and vectors: `SyncAggregate`, `SyncCommittee`, `IndexedAttestation`, `HistoricalBatch`, `Deposit`, `DataColumnsByRootIdentifier`. The negative case lists of each group |
-| `generator-cases/` | The negative case lists of the generated proofs, the encoder specification emitter `encode-spec/encode_spec_emitter.py` and two check scripts |
-
-`gen/checks/differential.py check` writes `differential.json` in `evidence/`.
-
-## 4. Files that are inputs of checks
+## 3. Files that are inputs of checks
 
 Do not edit these files by hand. Make them again with their generator.
 
 - The `.S` and `.data` files of the link set. Lean includes them, and the link check compares them with the ELF.
 - `ir/*.json` and `inventory.json`. The generators and the `Desc` checker read them.
 - The `*.desc.json` files. The `Desc` checker accepted them, and the header of each `*SpecChecker.lean` gives their sha256.
-- The negative case lists `negative-cases-*.json`. The negative test scripts read them.
+- The case files of `differential-cases/`. `gen/checks/differential.py cases` writes them again, and the Go program reads them.
 - `go1.26.10/build-ids.txt` and `go1.26.10/ssz-methods.json`. `gen/tools/proof_inventory.py` reads them. It checks the symbol listing against the sha256 in `build-ids.txt`.
+
+`go1.26.10/link-set.tsv` is a hand table. `gen/checks/link_set.py` reads it and checks each data row against the converted code.
 
 Some records are also inputs of checks. Do not edit them by hand either:
 `go1.26.10/parser-result.json` (`gen/type_scope.py` and `gen/type_list_document.py` read it) and `go1.26.10/build-ids.txt`.

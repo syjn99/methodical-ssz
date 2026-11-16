@@ -46,21 +46,26 @@ Read each pin from the file that holds it. Do not copy the values into other fil
 You need Go 1.26.10, a clean Prysm tree at the pinned commit, and a generator binary built from the pinned generator commit.
 Run heavy jobs one at a time, under a memory limit.
 
-1. Add the `replace` line of `prysm/go1.26.10/prysm-go.mod.diff` to the Prysm `go.mod`. Change its path to your generator tree.
+1. Add the `replace` line of `prysm/go1.26.10/prysm-go.mod.diff` to the Prysm `go.mod`. Do not change its path.
+   The ELF records this path. So the generator tree must be at this path when Go builds the ELF, for example as a Docker mount.
 2. Generate the SSZ files and the generator IR with `sh fv/kraken/gen/prysm-gen.sh <prysm-tree> <generator-binary> <out>`.
 3. Copy the generated files from `<out>/gen/` into the Prysm tree.
 4. Write the `main` package with `python3 -I fv/kraken/gen/keepalive.py fv/kraken/prysm/inventory.json <prysm-tree>/fv/prysm-target/main.go`.
 5. Build and dump the ELF with `sh fv/kraken/gen/prysm-elf.sh <prysm-tree> <elf-out> <empty-gocache-dir>`.
 6. Compare the sha256 of the ELF with `prysm/go1.26.10/build-ids.txt`. If they differ, stop. The proofs do not apply.
 
+`sh fv/kraken/gen/prysm-rebuild-and-check.sh <prysm-tree> <generator-tree> <scratch>` does steps 5 and 6 in Docker.
+Then it runs the link check and the Go differential check (section 5). Its usage text gives the details.
+
 The IR (intermediate representation) is the type description that the generator reads.
-The generator binary is built from the pinned generator commit with Go 1.26.10 and `-trimpath`.
+The generator binary is built from the pinned generator commit with Go 1.26.10, `-trimpath` and `-buildvcs=false`.
 After step 2, these commands make the IR, the inventory, the function list, the parser result and the type documents again:
 
 ```sh
 python3 -I fv/kraken/gen/type_inventory.py reduce <out>/ir-mainnet.json fv/kraken/prysm/ir/ir-mainnet.json   # the same for minimal
 python3 -I fv/kraken/gen/type_inventory.py build fv/kraken/prysm
 python3 -I fv/kraken/gen/mnemonics.py <elf-out>/prysm-target-amd64.objdump fv/kraken/lean/.lake/packages/Kraken/Kraken/X64/Parser/Basic.lean fv/kraken/link/convert_objdump.py fv/kraken/prysm/inventory.json fv/kraken/prysm/go1.26.10/functions.json
+mkdir -p <norm-out>
 python3 -I fv/kraken/link/convert_objdump.py <elf-out>/prysm-target-amd64.objdump <elf-out>/prysm-target-amd64.nm <norm-out> --norm
 ls <norm-out>/*.S | grep -v '/all\.S$' > <scratch>/parser-list.txt
 cd fv/kraken/lean && PARSER_RUN_LIST=<scratch>/parser-list.txt lake env lean ../gen/kraken-parser/ParserRun.lean > <scratch>/parser-log.txt
@@ -69,6 +74,7 @@ python3 -I fv/kraken/gen/type_list_document.py fv/kraken/prysm
 python3 -I fv/kraken/gen/type_scope.py fv/kraken
 ```
 
+The converter does not make its output directory. Make it first.
 The `.S` list has one file for each function of `prysm/go1.26.10/functions.json`, without `all.S`.
 The parser log is not tracked. `kraken-parser/summarize_parser_log.py` makes `prysm/go1.26.10/parser-result.json` from it.
 
@@ -113,13 +119,12 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
 - The gate also checks that each name of the hand lists in `gen/axioms-lists/` is in the dump. Each `*.lean` file of that directory is a hand list.
 - A new library or a new hand list needs no change to the gate.
 - The gate overwrites its JSON argument. Give a scratch path, unless you intend to update a committed record.
-- The negative test files are the `negative-cases-*.json` files in `gen/checks/`, `gen/generator/`
-  and the subdirectories of `prysm/go1.26.10/evidence/`.
+- The negative test files are the `negative-cases-*.json` files in `gen/checks/negative-cases/`.
   A case id says what the case does: the Go type, the theorem without
   the namespace of its type, the kind (control, statement or code), and for a mutant the changed words or operands
   (for example `epoch-decode-accept-code-cmp-0x8-to-0x9`). A case may name `mutant_imports` (module names): `negative.py`
   imports them into the mutated copy only, so that a mutant can use a declaration of another module.
-  Run one case per job. The cases of `prysm/go1.26.10/evidence/lists-and-vectors/negative-cases-sync-aggregate-and-sync-committee.json`
+  Run one case per job. The cases of `negative-cases-sync-aggregate-and-sync-committee.json`
   and `negative-cases-indexed-attestation.json` use `gen/checks/list_negative.py` with the same arguments.
 - The drift check compares a dump with the dump of a reviewed tree.
 
@@ -153,11 +158,21 @@ python3 -B fv/kraken/link/check.py --selftest fv/kraken/link/out
 
 **The Prysm target ELF.** You must build it first (section 3). Then these checks can run:
 
-- The link check of the Prysm link set `prysm/go1.26.10/link-set`. `gen/checks/link_set.py` filters the disassembly and writes the data files with the item tables of the `gen/checks/*link.py` scripts. Then `link/check.py` runs on the set.
+- The link check of the Prysm link set `prysm/go1.26.10/link-set`.
+  `gen/checks/link_set.py` makes the set again from the ELF, its disassembly, its symbol listing and the item table `prysm/go1.26.10/link-set.tsv`.
+  Then `link/check.py` runs on the set. `link/README.md` section 7 tells how to add a function or a data item.
+
+```sh
+python3 -I -B fv/kraken/gen/checks/link_set.py <scratch>/link-set <elf> <objdump> <nm>
+python3 -B fv/kraken/link/check.py <scratch>/link-set
+```
+
 - The method list of the inventory: `python3 -I -B fv/kraken/gen/tools/proof_inventory.py methods <nm-listing> <scratch>/ssz-methods.json`. Compare the output with `prysm/go1.26.10/ssz-methods.json`.
 
-**A Prysm tree and Go 1.26.10.** The Go differential scripts `gen/checks/*diff.py` write test cases. A Go program in a temporary Prysm tree runs them.
+**A Prysm tree and Go 1.26.10.** `gen/checks/differential.py` writes the Go differential cases, one file per Go type (`prysm/differential-cases/`).
+The Go program `gen/checks/differential-main.go.txt` runs them as a package of a Prysm tree. `differential.py check` compares the output.
 These runs check Go semantics on the host. They do not run the amd64 machine code.
+`gen/prysm-rebuild-and-check.sh` runs all steps, with a negative control.
 
 ## 6. Known limits
 

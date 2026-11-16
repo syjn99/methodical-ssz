@@ -233,7 +233,7 @@ How to handle a new finding is in `../README.md` section 7.
 - The six cases with corrected case texts (a Lean run: the control passes and the five mutants fail inside their theorems):
   - `sync-committee-message-decode-example-step-directive-82-control` and the four code mutants
     `…-directive-82-code-mov-0x78-rsp-to-0x70-rsp`, `…-directive-86-code-add-rax-to-rdx`, `…-directive-87-code-mov-ecx-to-eax`,
-    `…-block-root-segment-code-mov-rax-to-rdx` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-steps.json`): the
+    `…-block-root-segment-code-mov-rax-to-rdx` (`gen/checks/negative-cases/negative-cases-steps.json`): the
     module names its code constant relatively (`Code.unmarshalSSZ` inside `namespace Prysm.SyncCommitteeMessage`).
     With the case namespace `Prysm.SyncCommitteeMessage.Code`, the tool declares `Prysm.SyncCommitteeMessage.Code.Code.unmarshalSSZMut`,
     and the renamed uses do not resolve (`Unknown identifier`). So the case namespace is `Prysm.SyncCommitteeMessage`.
@@ -369,7 +369,7 @@ How to handle a new finding is in `../README.md` section 7.
 - A broken checker copy fails with a `KeyError`, not with a check result.
 - The IR reader of the encoder generator accepts any untagged 8-byte field as `uint64`.
 - The negative tests that compare the IR with the code change one theorem only. There are no whole-file mutants.
-- `prysm/go1.26.10/evidence/generator-cases/encode-spec/layout_recomputation.py` is not a step of a gate script.
+- `gen/checks/fast_path_layout.py` is a step of `gen/checks/python_checks.sh`. It is not a step of the CI gate.
 - State: open. Each needs a checker or test change.
 
 ### Paths that the proofs do not cover

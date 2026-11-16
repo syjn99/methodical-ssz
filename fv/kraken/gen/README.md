@@ -28,14 +28,15 @@ The design principles are in `../../README.md`.
 | `type_list_document.py`, `type_scope.py` | `prysm/inventory.json` | `prysm/TYPES.md`, `prysm/type-scope.json`, `prysm/type-scope.md` |
 | `keepalive.py` | `prysm/inventory.json` | The `main.go` of the Prysm target |
 | `tools/proof_inventory.py` | The symbol listing of the ELF (`methods`); a declaration list from `tools/inventory_decls.lean` and the JSON of an axioms gate run, both on the built tree (`run`) | `prysm/go1.26.10/ssz-methods.json`, `prysm/proof-inventory.md`, `prysm/proof-inventory.json` |
-| `checks/link_set.py`, `checks/*_link.py` | The Prysm ELF, its disassembly and symbol listing | The link set `prysm/go1.26.10/link-set`: the filtered disassembly and the data files. The `*link.py` scripts hold the item tables |
-| `checks/callgraph.py` and the `callgraph` mode of `checks/*_link.py` | A filtered disassembly | `callgraph*.json` files. The tree holds none of them. `checks/checkpoint_and_epoch_link.py` imports the function list of `checks/callgraph.py` |
-| `checks/*_differential.py` | Nothing, or a Go output file | Go differential cases, and their comparison with the Go output |
+| `checks/link_set.py` | The Prysm ELF, its disassembly and symbol listing, and the item table `prysm/go1.26.10/link-set.tsv` | The link set `prysm/go1.26.10/link-set`: the filtered disassembly, the `.S` files and the data files (`../link/README.md` section 7) |
+| `checks/differential.py` | Nothing (`cases`), or the output of `checks/differential-main.go.txt` (`check`) | The Go differential cases `prysm/differential-cases/<package>.<Type>.json`, and their comparison with the Go output |
+| `flat-types/flat_types_spec.py`, `flat-types/flat_types_decode_spec.py`, `flat-types/flat_types_witness.py`, `flat-types/flat_types_encode_spec.py`, `flat-types/encode_spec_emitter.py` | The generated theorems of the flat types | The specification, witness and specification corollary modules of the flat types in `lean/Prysm/<GoTypeName>/` |
+| `flat-types/flat_types_negative_cases.py` | The Lean files of the flat types | `checks/negative-cases/negative-cases-flat-types.json` |
+| `flat-types/flat_types_hand_list.py` | A declaration dump | New names in the hand list `axioms-lists/flat-fixed-size-types.lean` |
+| `flat-types/run_generators.sh` | The `.S` files of the flat types | The generator outputs of the flat types, in a scratch directory |
+| `prysm-rebuild-and-check.sh` | A Prysm tree and the generator tree | The Prysm ELF, the link set and the differential results, in a scratch directory (needs Docker) |
 | `kraken-parser/summarize_parser_log.py` | A log of `kraken-parser/ParserRun.lean` | `prysm/go1.26.10/parser-result.json`: which functions the Kraken parser reads |
 | `prysm-gen.sh`, `prysm-elf.sh` | A Prysm tree and the generator binary | Generated Go, the IR and the Prysm ELF (needs Go) |
-
-The tools for the 24 other flat types are in `prysm/go1.26.10/evidence/flat-types/tools/` and `prysm/go1.26.10/evidence/flat-types/runs/run_generators.sh`.
-The encoder specification and witness emitter of the flat types is `prysm/go1.26.10/evidence/generator-cases/encode-spec/encode_spec_emitter.py`.
 
 `generator/generator.py` has three modes. `uint64`: the accept path of a uint64 primitive decoder. `decoder`: a container
 decoder. Without an option it writes the 32-byte field segments. `--field-segments` adds byte vectors of 32, 48 and
@@ -118,7 +119,6 @@ python3 -I -B fv/kraken/gen/checks/axioms_gate.py --selftest
 - A new library or a new hand list needs no change to the gate.
 - Each declaration must use only `propext`, `Classical.choice` and `Quot.sound`. `sorryAx` fails.
 - The `check` mode reads a dump that `run` wrote. It needs only Python.
-- `checks/axioms.py` reads the output of `lake env lean <hand list>` for one hand list.
 
 ### Theorems with the same statement
 
@@ -150,10 +150,12 @@ These run without Lean, Go or the Prysm ELF:
 - `regen_check.sh` with `generator/generator.py`, `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py`, `checks/layout.py` and `checks/attestation_data_layout.py`.
 - `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`.
 - `checks/regenerate_and_compare.py <scratch>/<work dir>`, the regeneration comparison of all Python generators of Lean files.
+- `checks/fast_path_layout.py`, an independent recomputation of the layouts of the generated encoder fast-path theorems (cwd `fv/kraken`).
+- `checks/differential.py cases <dir>`. Its output must be equal to `prysm/differential-cases/`.
 - `checks/python_checks.sh <scratch>/<out dir>`. It runs `link/data.py --check`, `checks/check_include.py`,
   `checks/deposit_data_include_check.py`, the self-tests of `checks/axioms_gate.py`, `checks/deposit_data_include_check.py`,
-  `generator/kindcheck.py` and `checks/negative.py`, `kindcheck.py` on the generated files, `negative.py --check-cases`
-  and `checks/negative_case_ranges.py` on every case file, and a syntax check of every Python file under `fv/`.
+  `generator/kindcheck.py` and `checks/negative.py`, `checks/fast_path_layout.py`, `kindcheck.py` on the generated files,
+  `negative.py --check-cases` and `checks/negative_case_ranges.py` on every case file, and a syntax check of every Python file under `fv/`.
 - `desc/test_desc.py prepare` writes the `Desc` files. The checker run after it needs Lean.
 
 These need more than Python:
@@ -162,13 +164,16 @@ These need more than Python:
 - `kraken-parser/summarize_parser_log.py` needs a log of `kraken-parser/ParserRun.lean` (Lean) on the `.S` files of the
   Prysm ELF (`../README.md` section 3). The log is not tracked.
 - The link checks need the ELF and the LLVM tools.
-- The differential checks need Go and a Prysm tree.
+- The differential check needs Go and a Prysm tree.
   A Prysm tree at the pinned commit with the generated files of `prysm/_generated/` is enough; nothing is written into it.
-  Copy the `differential-main.go.txt` file of the script to `<scratch>/main.go`.
+  Copy `checks/differential-main.go.txt` to `<scratch>/main.go`.
   Then build it with an overlay that adds it as a package of the Prysm module:
-  `go build -overlay <ov.json> -o <scratch>/diff ./fvdiffscratch/<name>` in the Prysm tree, with Go 1.26.10.
-  `<ov.json>` is `{"Replace": {"<prysm-tree>/fvdiffscratch/<name>/main.go": "<scratch>/main.go"}}`.
-  The program reads the cases on stdin, or from the path in its first argument where the Go text reads `os.Args[1]`.
+  `go build -overlay <ov.json> -o <scratch>/differential ./fv/differential` in the Prysm tree, with Go 1.26.10.
+  `<ov.json>` is `{"Replace": {"<prysm-tree>/fv/differential/main.go": "<scratch>/main.go"}}`.
+  The program reads the case files in its arguments: `<scratch>/differential prysm/differential-cases/*.json > <scratch>/go-out.json`.
+  Then run `checks/differential.py check prysm/differential-cases <scratch>/go-out.json <scratch>/result.json`.
+  For the negative control, run `check` on the output of `checks/differential.py plant`. It must exit 1.
+  `prysm-rebuild-and-check.sh` runs all of these steps in Docker.
 - `tools/proof_inventory.py methods` needs the symbol listing of the Prysm ELF. Its `run` mode needs Lean: the output of
   `tools/inventory_decls.lean` and the JSON of an axioms gate run on the built tree.
 
@@ -178,9 +183,9 @@ These need more than Python:
   So these files do not reproduce from the tracked tree.
 - The specification and witness files of five flat types (HistoricalSummary, SyncAggregatorSelectionData, SigningData, ValidatorBalance, VoluntaryExit) have no tracked generator script.
 - The commands of 12 generated files are not in `generator/gen.sh`. Their headers give the commands.
-- `prysm/go1.26.10/evidence/flat-types/runs/run_generators.sh` calls a job wrapper that is not tracked. Run its `generator.py` commands directly.
-- 15 of the 24 `*SpecChecker.lean` headers name a path where the `Desc` file is not. The file is in a subdirectory of
-  `prysm/go1.26.10/evidence/` (`eth1-data/`, `flat-types/`, `five-flat-types/` and the directories named after the types). Nine of these headers have a hand-added line that
-  gives the subdirectory; the other six do not (DepositRequest, HistoricalSummary, SigningData,
-  SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit).
+- The `Desc` files are in `prysm/go1.26.10/evidence/`. `desc_to_lean.py` names this directory in its headers.
+  `list_desc_to_lean.py` names a subdirectory `lists-and-vectors/desc/` that does not exist, and two hand-edited headers
+  (AttestationData, BeaconBlockHeader) name another subdirectory. Nine headers have a hand-added line that names an
+  earlier subdirectory. A change of these headers changes tracked Lean files. `checks/regenerate_and_compare.py` finds a
+  `Desc` file by its base name.
 - `kindcheck.py` does not bind the code constant of a theorem to the `.S` file of the header. It does not check the `.S` label against the IR type.

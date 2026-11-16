@@ -57,16 +57,15 @@ Scope: the path lists come from program scans of the tracked files for Go source
 
 - `prysm/ir/ir-mainnet.json`, `prysm/ir/ir-minimal.json` (2): the generator IR of the Prysm types, with Go field names, types, tags and gc amd64 offsets.
   Produced by `gen/inventory-tool` (front end of generator `698c202`) in the Prysm tree, via `gen/prysm-gen.sh`, then `gen/type_inventory.py reduce`.
-- `prysm/inventory.json`, `prysm/TYPES.md` (2) and `prysm/go1.26.10/evidence/**/*.desc.json` (24): type sets, counts and SSZ descriptors made from the IR
+- `prysm/inventory.json`, `prysm/TYPES.md` (2) and `prysm/go1.26.10/evidence/*.desc.json` (24): type sets, counts and SSZ descriptors made from the IR
   by `gen/type_inventory.py build`, `gen/type_list_document.py` and `gen/desc/producer.py`.
-- `prysm/go1.26.10/evidence/gcflags-m2.txt` (1): Go 1.26.10 `-gcflags=-m=2` output on the Prysm tree. It prints inlined Prysm function bodies.
 - `prysm/go1.26.10/prysm-go.mod.diff` (1): a diff of Prysm `go.mod`; its context lines are Prysm text.
-- Total 30. Upstream: Prysm, as for the Prysm machine code.
+- Total 29. Upstream: Prysm, as for the Prysm machine code.
 
 ## Files that only name upstream symbols
 
-- Other files under `fv/kraken/` (934 tracked files outside the sections above) may name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of the Prysm machine code and of the Go 1.26.3 ELF.
-  Examples: `prysm/go1.26.10/functions.json`, `prysm/go1.26.10/parser-result.json` (1) and the negative-test case files `**/negative-cases*.json` (32).
+- Other files under `fv/kraken/` (the tracked files outside the sections above) may name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of the Prysm machine code and of the Go 1.26.3 ELF.
+  Examples: `prysm/go1.26.10/functions.json`, `prysm/go1.26.10/parser-result.json` (1) and the negative-test case files `gen/checks/negative-cases/*.json` (32).
 - A program scan of these files for Go source fragments (`func `, `return `, `{ return`, `inline call to`, `can inline`) found these quotes:
   - doc comments in `lean/Prysm/` quote short excerpts of the generated Prysm Go methods and of Prysm `consensus-types/primitives` (`lean/Prysm/Epoch/DecodeAccept.lean` lines 9-11, `lean/Codec/Uint64Decoder.lean` lines 7-8);
 - The other hits are this project's own tool code or prose. The `.py`, `.go` and `.sh` hits were not each read. The files were not each read in full.
