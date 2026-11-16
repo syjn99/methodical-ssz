@@ -1,6 +1,5 @@
 import Codec.Kind.DecodeAcceptAnyFrame
 import Prysm.PendingPartialWithdrawal.DecodeAccept
-import Prysm.SyncCommitteeMessage.Statements
 import Prysm.PendingDeposit.Statements
 import Prysm.Checkpoint.DecodeAccept
 

@@ -1,12 +1,12 @@
-import Prysm.PendingConsolidation.DecodeAccept
+import Prysm.PendingConsolidation.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept` (PendingConsolidation decoder accept path)
+# Witness of `Decode.generated_accept` (PendingConsolidation decoder accept path)
 
 Hand-written (the text of `Prysm/PendingPartialWithdrawal/WitnessDecodeAccept.lean` with the PendingConsolidation host and
-layout). It shows that the premises of the independent hand statement `Prysm.PendingConsolidation.Decode.accept_statement` are
+layout). It shows that the premises of the generated accept theorem `Prysm.PendingConsolidation.Decode.generated_accept` are
 satisfiable. Host: one label, the real Go 1.26.10 `(*v1alpha1.PendingConsolidation).UnmarshalSSZ` (index 1)
 and `(*primitives.ValidatorIndex).UnmarshalSSZ` (108).
 One memory block at `0x10000`: guard word (r14 = 0xfff0), the 16 input bytes (rbx = 0x10008), the 56-byte
@@ -61,13 +61,13 @@ def frame_rest : DataMem → Prop :=
     ⋆ Eq ((zeros 8).At (0x100c8 : BitVec 64))
 
 set_option maxHeartbeats 16000000 in
-/-- **Non-vacuity of `Decode.accept`** (premises of `Decode.accept_statement`). -/
+/-- **Non-vacuity of `Decode.generated_accept`** (its premises are satisfiable). -/
 theorem runs (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
     (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
       ⟨initial_state in0 in1 zmms flags, Host.addrOf 1⟩ :=
-  eventually_mono (Decode.accept 1 placed_at_1 labels_fresh_at_1 108 placed_at_108 labels_fresh_at_108
+  eventually_mono (Decode.generated_accept 1 placed_at_1 labels_fresh_at_1 108 placed_at_108 labels_fresh_at_108
     in0 in1 hin0 hin1 (initial_state in0 in1 zmms flags)
     0 0 (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8)
     rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl

@@ -50,20 +50,12 @@ import Prysm.BlobIdentifier.GeneratedDecodeAcceptCompositionKind
 import Prysm.PendingPartialWithdrawal.DecodeAccept
 import Prysm.BeaconBlockHeader.DecodeAddressArithmetic
 import Prysm.PendingPartialWithdrawal.WitnessDecodeAccept
-import Prysm.PendingConsolidation.GeneratedDecodeCallSegmentsPartial
-import Prysm.SyncCommitteeMessage.GeneratedDecodeCallSegmentsPartial
 import Prysm.SyncCommitteeMessage.Code
-import Prysm.SyncCommitteeMessage.Statements
-import Prysm.PendingConsolidation.DecodeAccept
 import Prysm.PendingConsolidation.SpecDescription
-import Prysm.PendingConsolidation.DecodeRejectSize
 import Prysm.PendingConsolidation.Spec
 import Prysm.PendingConsolidation.SpecChecker
 import Prysm.PendingConsolidation.DecodeSpec
-import Prysm.SyncCommitteeMessage.DecodeAccept
 import Prysm.SyncCommitteeMessage.SpecDescription
-import Prysm.SyncCommitteeMessage.DecodeRejectSize
-import Prysm.SyncCommitteeMessage.DecodeSegments
 import Prysm.SyncCommitteeMessage.Spec
 import Prysm.SyncCommitteeMessage.SpecChecker
 import Prysm.SyncCommitteeMessage.DecodeSpec
@@ -79,17 +71,9 @@ import Codec.FixedBytesDecodeWindow
 import Codec.FixedBytesDecodeWindowOffsetZero
 import Codec.Kind.FixedBytesDecodeWindow
 import Prysm.SyncCommitteeMessage.DecodeStepExamples
-import Prysm.SyncCommitteeMessage.DecodeAcceptFromWindowSteps
-import Prysm.PendingConsolidation.DecodeAcceptFromWindowSteps
-import Prysm.SyncCommitteeMessage.DecodeAcceptDependencyCheck
 import Codec.DecoderPrologue
-import Prysm.SyncCommitteeMessage.DecoderPrologueInstances
 import Prysm.Checkpoint.GeneratedDecodeSteps
 import Prysm.BlobIdentifier.GeneratedDecodeSteps
-import Prysm.SyncCommitteeMessage.GeneratedDecodeSteps
-import Prysm.PendingConsolidation.GeneratedDecodeSteps
-import Prysm.SyncCommitteeMessage.DecodeAcceptFromGeneratedSteps
-import Prysm.PendingConsolidation.DecodeAcceptFromGeneratedSteps
 import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.Kind.DecodeAcceptAnyFrameInstances
 import Codec.FieldFrame
@@ -262,12 +246,9 @@ import Prysm.ValidatorIdentity.WitnessGeneratedDecodeAccept
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeRejectSize
 import Prysm.BlobIdentifier.DecodeAcceptAnyFrameInstances
 import Prysm.PowBlock.DecodeAcceptAnyFrameInstances
-import Prysm.PendingConsolidation.DecodeAcceptAnyFrameInstances
 import Prysm.PendingDeposit.DecodeAcceptAnyFrameInstances
-import Prysm.SyncCommitteeMessage.DecodeAcceptAnyFrameInstances
 import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 import Prysm.BlobIdentifier.DecodeAcceptComposition
-import Prysm.SyncCommitteeMessage.WindowStepsInstances
 
 -- Scalability: the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/checks/axioms.py <log> <out> <this file>.
@@ -563,33 +544,12 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Codec.uint64_decode_scratch_register_segment
 
 -- SyncCommitteeMessage and PendingConsolidation (UnmarshalSSZ)
-#print axioms Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_argument
-#print axioms Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_argument_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_call
-#print axioms Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_call_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_call_Signature_segment
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_call_Signature_segment_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_call_Slot_argument
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_call_Slot_argument_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_call_Slot_call
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_call_Slot_call_kind
-#print axioms Prysm.SyncCommitteeMessage.bytes32_decode_segment_rax
-#print axioms Prysm.PendingConsolidation.call_decode_nop_segment
-#print axioms Prysm.PendingConsolidation.Decode.accept
 #print axioms Prysm.PendingConsolidation.Decode.accept_spec
 #print axioms Prysm.PendingConsolidation.Decode.reject_complete
-#print axioms Prysm.PendingConsolidation.Decode.reject_size
 #print axioms Prysm.PendingConsolidation.Decode.reject_size_spec
-#print axioms Prysm.PendingConsolidation.Decode.epilogue
-#print axioms Prysm.PendingConsolidation.Decode.head
-#print axioms Prysm.SyncCommitteeMessage.Decode.accept
 #print axioms Prysm.SyncCommitteeMessage.Decode.accept_spec
 #print axioms Prysm.SyncCommitteeMessage.Decode.reject_complete
-#print axioms Prysm.SyncCommitteeMessage.Decode.reject_size
 #print axioms Prysm.SyncCommitteeMessage.Decode.reject_size_spec
-#print axioms Prysm.SyncCommitteeMessage.Decode.head_to_arguments
-#print axioms Prysm.SyncCommitteeMessage.Decode.spill_registers
-#print axioms Prysm.SyncCommitteeMessage.Decode.validator_index_argument
 #print axioms Prysm.PendingConsolidation.Witness.DecodeAccept.program_length
 #print axioms Prysm.PendingConsolidation.Witness.DecodeAccept.labels_fresh_at_1
 #print axioms Prysm.PendingConsolidation.Witness.DecodeAccept.labels_fresh_at_108
@@ -626,7 +586,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 
 -- `decoder --steps`: every new theorem of the lemma, example, relation, generated (`decoder --steps`, raw)
 -- and accept modules
-#print axioms Prysm.SyncCommitteeMessage.Decode.validator_index_argument_inst
 #print axioms Prysm.BlobIdentifier.Decode.generated_step_BlockRoot_segment
 #print axioms Prysm.BlobIdentifier.Decode.generated_step_BlockRoot_segment_kind
 #print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_37
@@ -663,72 +622,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.Checkpoint.Decode.generated_step_directive_84_kind
 #print axioms Prysm.Checkpoint.Decode.generated_step_directive_85
 #print axioms Prysm.Checkpoint.Decode.generated_step_directive_85_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_SourceIndex_call
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_SourceIndex_call_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_15
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_15_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_16
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_16_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_48
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_48_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_49
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_49_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_50
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_50_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_51
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_51_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_52
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_52_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_53
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_53_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_54
-#print axioms Prysm.PendingConsolidation.Decode.generated_step_directive_54_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_BlockRoot_segment
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_BlockRoot_segment_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_Signature_segment
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_Signature_segment_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_Slot_call
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_Slot_call_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_ValidatorIndex_call
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_ValidatorIndex_call_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_118
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_118_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_119
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_119_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_146
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_146_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_147
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_147_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_15
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_154
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_154_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_155
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_155_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_15_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_16
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_16_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_72
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_72_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_73
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_73_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_80
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_80_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_81
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_81_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_82
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_82_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_83
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_83_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_84
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_84_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_85
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_85_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_86
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_86_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_87
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_step_directive_87_kind
 #print axioms Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call
 #print axioms Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call_kind
 #print axioms Prysm.PendingConsolidation.Decode.example_step_TargetIndex_field
@@ -774,20 +667,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_86_kind
 #print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_87
 #print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_87_kind
-#print axioms Prysm.PendingConsolidation.Decode.accept_from_window_steps
-#print axioms Prysm.PendingConsolidation.Decode.accept_from_generated_steps
-#print axioms Prysm.PendingConsolidation.Decode.from_generated_steps_SourceIndex_field
-#print axioms Prysm.PendingConsolidation.Decode.from_generated_steps_TargetIndex_field
-#print axioms Prysm.SyncCommitteeMessage.Decode.accept_from_window_steps
-#print axioms Prysm.SyncCommitteeMessage.Decode.accept_from_generated_steps
-#print axioms Prysm.SyncCommitteeMessage.Decode.from_generated_steps_BlockRoot_field
-#print axioms Prysm.SyncCommitteeMessage.Decode.from_generated_steps_Signature_field
-#print axioms Prysm.SyncCommitteeMessage.Decode.from_generated_steps_Slot_field
-#print axioms Prysm.SyncCommitteeMessage.Decode.from_generated_steps_ValidatorIndex_field
-#print axioms Prysm.PendingConsolidation.Decode.epilogue_inst
-#print axioms Prysm.PendingConsolidation.Decode.head_inst
-#print axioms Prysm.SyncCommitteeMessage.Decode.head_to_arguments_inst
-#print axioms Prysm.SyncCommitteeMessage.Decode.spill_registers_inst
 #print axioms Codec.bytesDecodeSegmentKindWindow_of
 #print axioms Codec.bytesDecodeSegmentOffsetZeroKindWindow_of
 #print axioms Codec.bytes_decode_window_32_rdx_rax
@@ -1270,7 +1149,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.PendingConsolidation.Decode.generated_TargetIndex_call_kind
 #print axioms Prysm.PendingConsolidation.Decode.generated_accept
 #print axioms Prysm.PendingConsolidation.Decode.generated_accept_kind
-#print axioms Prysm.PendingConsolidation.Decode.generated_accept_statement
 #print axioms Prysm.PendingConsolidation.Decode.generated_epilogue
 #print axioms Prysm.PendingConsolidation.Decode.generated_epilogue_kind
 #print axioms Prysm.PendingConsolidation.Decode.generated_field_1
@@ -1436,7 +1314,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.SyncCommitteeMessage.Decode.generated_ValidatorIndex_call_kind
 #print axioms Prysm.SyncCommitteeMessage.Decode.generated_accept
 #print axioms Prysm.SyncCommitteeMessage.Decode.generated_accept_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.generated_accept_statement
 #print axioms Prysm.SyncCommitteeMessage.Decode.generated_epilogue
 #print axioms Prysm.SyncCommitteeMessage.Decode.generated_epilogue_kind
 #print axioms Prysm.SyncCommitteeMessage.Decode.generated_field_1
@@ -1626,15 +1503,11 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Codec.layoutRuntimeCalls
 #print axioms Prysm.PowBlock.Decode.accept_is_kind_any_frame
 #print axioms Prysm.PowBlock.Decode.reject_size_is_kind_any_frame
-#print axioms Prysm.PendingConsolidation.Decode.accept_is_kind_any_frame
-#print axioms Prysm.PendingConsolidation.Decode.reject_size_is_kind_any_frame
 #print axioms Prysm.PendingDeposit.Decode.accept_is_kind_any_frame
 #print axioms Prysm.PendingDeposit.Decode.reject_size_is_kind_any_frame
 #print axioms Codec.decodeRegisterFacts
 #print axioms Codec.runtimeBinders
 #print axioms Codec.scratchBoundFacts
-#print axioms Prysm.SyncCommitteeMessage.Decode.accept_is_kind_any_frame
-#print axioms Prysm.SyncCommitteeMessage.Decode.reject_size_is_kind_any_frame
 #print axioms Prysm.HistoricalSummary.checker_wellFormed
 #print axioms Prysm.HistoricalSummary.SszValue.accepted_is_encoding
 #print axioms Prysm.HistoricalSummary.SszValue.encode_size

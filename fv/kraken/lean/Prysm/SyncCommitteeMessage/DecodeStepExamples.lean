@@ -20,8 +20,8 @@ without their namespaces (`open` below), as in the generated modules, so that th
   (PendingConsolidation) is inside the window;
 * a byte-segment theorem (`…_seg`, `bytesDecodeSegmentKindWindow`) over two windows;
 * the two fully worked compositions: a whole call field (`Decode.example_step_ValidatorIndex_field`, `Prysm.PendingConsolidation.Decode.example_step_TargetIndex_field`)
-  and a whole byte field (`Decode.example_step_BlockRoot_field`). These have no kind: they only apply kinded theorems, and
-  their statements are checked by the accept proofs that use them (`Prysm/SyncCommitteeMessage/DecodeAcceptFromWindowSteps.lean`, `Prysm/PendingConsolidation/DecodeAcceptFromWindowSteps.lean`).
+  and a whole byte field (`Decode.example_step_BlockRoot_field`). These have no kind: they only apply kinded theorems.
+  No proof in the tree uses them, so nothing else checks their statements.
 The callee specification stays a hypothesis `Uint64CalleeAccept "<callee label>"` of each call-block theorem.
 After the split of this module, the declarations of the other types are in `Prysm/BeaconBlockHeader/DecodeStepExamples.lean`, `Prysm/Checkpoint/DecodeStepExamples.lean`, `Prysm/Deposit_Data/DecodeStepExamples.lean`, `Prysm/PendingConsolidation/DecodeStepExamples.lean`, `Prysm/PendingPartialWithdrawal/DecodeStepExamples.lean`.
 -/

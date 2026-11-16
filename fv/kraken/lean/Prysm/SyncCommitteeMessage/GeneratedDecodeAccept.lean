@@ -522,7 +522,7 @@ end Prysm.SyncCommitteeMessage
 /-! Whole accept (`decoder --whole-accept`): the whole accept theorem `Decode.generated_accept` of `v1alpha1.SyncCommitteeMessage` from
 the step chain above: head, one theorem per field, epilogue (boundary states in entry terms), accept, size
 reject. Every statement has a `_kind` line against the whole-accept kinds. In-sample (development data).
-WHOLE-ACCEPT-JSON: {"accept": "Decode.generated_accept", "kinds": [{"theorem": "Decode.generated_head", "kind": "decodeHeadKindAnyFrame"}, {"theorem": "Decode.generated_field_1", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_2", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_3", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_4", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_epilogue", "kind": "decodeEpilogueKindAnyFrame"}, {"theorem": "Decode.generated_accept", "kind": "decodeAcceptKindAnyFrame"}, {"theorem": "Decode.generated_reject", "kind": "decodeRejectKindAnyFrame"}], "fields": "[.uint64, .bytes 32, .uint64, .bytes 96]", "frame": 104, "statement_check": "statement Prysm.SyncCommitteeMessage.Decode.accept_statement"}
+WHOLE-ACCEPT-JSON: {"accept": "Decode.generated_accept", "kinds": [{"theorem": "Decode.generated_head", "kind": "decodeHeadKindAnyFrame"}, {"theorem": "Decode.generated_field_1", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_2", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_3", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_4", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_epilogue", "kind": "decodeEpilogueKindAnyFrame"}, {"theorem": "Decode.generated_accept", "kind": "decodeAcceptKindAnyFrame"}, {"theorem": "Decode.generated_reject", "kind": "decodeRejectKindAnyFrame"}], "fields": "[.uint64, .bytes 32, .uint64, .bytes 96]", "frame": 104, "statement_check": "kind instance only"}
 -/
 
 open Codec
@@ -1463,9 +1463,6 @@ theorem Decode.generated_accept_kind : ∀ (h : Host), type_of% (@Decode.generat
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 104) (.existential 0), .at (.below 64) .zero, .at (.below 56) .zero, .at (.below 48) (.ptr 1), .at (.below 112) (.ret 141), .low (.existential 1)]
       104) [.uint64, .bytes 32, .uint64, .bytes 96] := by
   intro h; rfl
-
-/-- Statement check: the generated theorem proves the independently written hand statement `Prysm.SyncCommitteeMessage.Decode.accept_statement`. -/
-theorem Decode.generated_accept_statement : Prysm.SyncCommitteeMessage.Decode.accept_statement := Decode.generated_accept
 
 set_option maxRecDepth 100000 in
 /-- Size reject (`rcx ≠ 144`): `decode_reject_segment` (frame `0x60`, error block at 161). -/

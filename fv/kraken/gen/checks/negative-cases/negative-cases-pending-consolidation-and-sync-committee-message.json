@@ -1,8 +1,8 @@
 [
  {
-  "id": "sync-committee-message-decode-generated-call-signature-segment-control",
-  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_call_Signature_segment",
+  "id": "sync-committee-message-decode-generated-signature-segment-control",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_Signature_segment",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
   "code_namespace": "Prysm.SyncCommitteeMessage.Code",
@@ -10,9 +10,9 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-decode-generated-call-signature-segment-code-mov-0x60-to-0x50",
-  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_call_Signature_segment",
+  "id": "sync-committee-message-decode-generated-signature-segment-code-mov-0x60-to-0x50",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_Signature_segment",
   "kind": "code",
   "line": 123,
   "old": "  mov $0x60,%ecx",
@@ -23,17 +23,17 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-decode-generated-call-signature-segment-statement-h-src-48-to-40",
-  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_call_Signature_segment",
+  "id": "sync-committee-message-decode-generated-signature-segment-statement-h-src-48-to-40",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_Signature_segment",
   "kind": "statement",
   "old": "(hSrc : bf + (48 : Int64).toBitVec = aSrc)",
   "new": "(hSrc : bf + (40 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "sync-committee-message-decode-validator-index-argument-control",
-  "module": "Prysm/SyncCommitteeMessage/DecodeSegments.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.validator_index_argument",
+  "id": "sync-committee-message-decode-generated-directive-83-control",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_directive_83",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
   "code_namespace": "Prysm.SyncCommitteeMessage.Code",
@@ -41,9 +41,9 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-decode-validator-index-argument-code-add-0x28-to-0x20",
-  "module": "Prysm/SyncCommitteeMessage/DecodeSegments.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.validator_index_argument",
+  "id": "sync-committee-message-decode-generated-directive-83-code-add-0x28-to-0x20",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_directive_83",
   "kind": "code",
   "old": "  add $0x28,%rbx",
   "new": "  add $0x20,%rbx",
@@ -53,31 +53,31 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-decode-validator-index-argument-statement-h-src-40-to-32",
-  "module": "Prysm/SyncCommitteeMessage/DecodeSegments.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.validator_index_argument",
+  "id": "sync-committee-message-decode-generated-directive-83-statement-rbx-40-to-32",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_directive_83",
   "kind": "statement",
-  "old": "(hSrc : bf + (40 : Int64).toBitVec = aSrc)",
-  "new": "(hSrc : bf + (32 : Int64).toBitVec = aSrc)"
+  "old": "Reg64.rbx (s.regs.get64 Reg64.rbx + (40 : Int64).toBitVec)",
+  "new": "Reg64.rbx (s.regs.get64 Reg64.rbx + (32 : Int64).toBitVec)"
  },
  {
-  "id": "sync-committee-message-bytes32-decode-segment-rax-control",
-  "module": "Prysm/SyncCommitteeMessage/DecodeSegments.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.bytes32_decode_segment_rax",
+  "id": "sync-committee-message-decode-generated-block-root-segment-control",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_BlockRoot_segment",
   "kind": "control"
  },
  {
-  "id": "sync-committee-message-bytes32-decode-segment-rax-statement-heap-32-to-0",
-  "module": "Prysm/SyncCommitteeMessage/DecodeSegments.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.bytes32_decode_segment_rax",
+  "id": "sync-committee-message-decode-generated-block-root-segment-statement-heap-32-to-0",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_BlockRoot_segment",
   "kind": "statement",
   "old": "⋆ Heap (avail - 32)\n          ⋆ Eq ((Int.toBytes 8 p.toInt).At aP) ⋆ Eq ((Int.toBytes 8 32).At aL)",
   "new": "⋆ Heap (avail - 32)\n          ⋆ Eq ((Int.toBytes 8 p.toInt).At aP) ⋆ Eq ((Int.toBytes 8 0).At aL)"
  },
  {
-  "id": "sync-committee-message-decode-reject-size-control",
-  "module": "Prysm/SyncCommitteeMessage/DecodeRejectSize.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.reject_size",
+  "id": "sync-committee-message-decode-generated-reject-control",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_reject",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
   "code_namespace": "Prysm.SyncCommitteeMessage.Code",
@@ -85,17 +85,17 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-decode-reject-size-statement-rbx-e1-to-e0",
-  "module": "Prysm/SyncCommitteeMessage/DecodeRejectSize.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.reject_size",
+  "id": "sync-committee-message-decode-generated-reject-statement-rbx-e1-to-e0",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_reject",
   "kind": "statement",
   "old": "st.data.regs.rbx = e1",
   "new": "st.data.regs.rbx = e0"
  },
  {
-  "id": "sync-committee-message-decode-reject-size-code-cmp-0x90-to-0x91",
-  "module": "Prysm/SyncCommitteeMessage/DecodeRejectSize.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.reject_size",
+  "id": "sync-committee-message-decode-generated-head-code-cmp-0x90-to-0x91",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_head",
   "kind": "code",
   "old": "  cmp $0x90,%rcx",
   "new": "  cmp $0x91,%rcx",
@@ -189,9 +189,9 @@
   "new": "(hlen : len ≠ 145)"
  },
  {
-  "id": "pending-consolidation-decode-generated-call-source-index-argument-control",
-  "module": "Prysm/PendingConsolidation/GeneratedDecodeCallSegmentsPartial.lean",
-  "theorem": "Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_argument",
+  "id": "pending-consolidation-decode-generated-directive-15-control",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_directive_15",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
   "code_namespace": "Prysm.PendingConsolidation.Code",
@@ -199,9 +199,9 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-consolidation-decode-generated-call-source-index-argument-code-add-0x8-to-0x10",
-  "module": "Prysm/PendingConsolidation/GeneratedDecodeCallSegmentsPartial.lean",
-  "theorem": "Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_argument",
+  "id": "pending-consolidation-decode-generated-directive-15-code-add-0x8-to-0x10",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_directive_15",
   "kind": "code",
   "old": "  add $0x8,%rax",
   "new": "  add $0x10,%rax",
@@ -211,31 +211,31 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-consolidation-decode-generated-call-source-index-argument-statement-h-f-8-to-16",
-  "module": "Prysm/PendingConsolidation/GeneratedDecodeCallSegmentsPartial.lean",
-  "theorem": "Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_argument",
+  "id": "pending-consolidation-decode-generated-directive-15-statement-rax-8-to-16",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_directive_15",
   "kind": "statement",
-  "old": "(hF : rcv + (8 : Int64).toBitVec = aF)",
-  "new": "(hF : rcv + (16 : Int64).toBitVec = aF)"
+  "old": "Reg64.rax (s.regs.get64 Reg64.rax + (8 : Int64).toBitVec)",
+  "new": "Reg64.rax (s.regs.get64 Reg64.rax + (16 : Int64).toBitVec)"
  },
  {
-  "id": "pending-consolidation-call-decode-nop-segment-control",
-  "module": "Prysm/PendingConsolidation/DecodeAccept.lean",
-  "theorem": "Prysm.PendingConsolidation.call_decode_nop_segment",
+  "id": "pending-consolidation-decode-generated-target-index-call-control",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_TargetIndex_call",
   "kind": "control"
  },
  {
-  "id": "pending-consolidation-call-decode-nop-segment-statement-h-s2-8-to-16",
-  "module": "Prysm/PendingConsolidation/DecodeAccept.lean",
-  "theorem": "Prysm.PendingConsolidation.call_decode_nop_segment",
+  "id": "pending-consolidation-decode-generated-target-index-call-statement-h-s2-8-to-16",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_TargetIndex_call",
   "kind": "statement",
   "old": "(hS2 : sp + 8 = aS2)",
   "new": "(hS2 : sp + 16 = aS2)"
  },
  {
-  "id": "pending-consolidation-decode-head-control",
-  "module": "Prysm/PendingConsolidation/DecodeAccept.lean",
-  "theorem": "Prysm.PendingConsolidation.Decode.head",
+  "id": "pending-consolidation-decode-generated-head-control",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_head",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
   "code_namespace": "Prysm.PendingConsolidation.Code",
@@ -243,9 +243,9 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-consolidation-decode-head-code-mov-0x70-rsp-to-0x68-rsp",
-  "module": "Prysm/PendingConsolidation/DecodeAccept.lean",
-  "theorem": "Prysm.PendingConsolidation.Decode.head",
+  "id": "pending-consolidation-decode-generated-head-code-mov-0x70-rsp-to-0x68-rsp",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_head",
   "kind": "code",
   "old": "  mov %rdi,0x70(%rsp)",
   "new": "  mov %rdi,0x68(%rsp)",
@@ -255,9 +255,9 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-consolidation-decode-reject-size-control",
-  "module": "Prysm/PendingConsolidation/DecodeRejectSize.lean",
-  "theorem": "Prysm.PendingConsolidation.Decode.reject_size",
+  "id": "pending-consolidation-decode-generated-reject-control",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_reject",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
   "code_namespace": "Prysm.PendingConsolidation.Code",
@@ -265,17 +265,17 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-consolidation-decode-reject-size-statement-rbx-e1-to-e0",
-  "module": "Prysm/PendingConsolidation/DecodeRejectSize.lean",
-  "theorem": "Prysm.PendingConsolidation.Decode.reject_size",
+  "id": "pending-consolidation-decode-generated-reject-statement-rbx-e1-to-e0",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_reject",
   "kind": "statement",
   "old": "st.data.regs.rbx = e1",
   "new": "st.data.regs.rbx = e0"
  },
  {
-  "id": "pending-consolidation-decode-reject-size-code-cmp-0x10-to-0x18",
-  "module": "Prysm/PendingConsolidation/DecodeRejectSize.lean",
-  "theorem": "Prysm.PendingConsolidation.Decode.reject_size",
+  "id": "pending-consolidation-decode-generated-head-code-cmp-0x10-to-0x18",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_head",
   "kind": "code",
   "old": "  cmp $0x10,%rcx",
   "new": "  cmp $0x18,%rcx",
@@ -351,5 +351,126 @@
   "kind": "statement",
   "old": "(hlen : len ≠ 16)",
   "new": "(hlen : len ≠ 17)"
+ },
+ {
+  "id": "sync-committee-message-decode-generated-validator-index-call-control",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_ValidatorIndex_call",
+  "kind": "control"
+ },
+ {
+  "id": "sync-committee-message-decode-generated-accept-control",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_accept",
+  "kind": "control"
+ },
+ {
+  "id": "sync-committee-message-decode-generated-directive-87-statement-truncate-8-to-16",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_directive_87",
+  "kind": "statement",
+  "old": "(BitVec.truncate 32 (8 : Int64).toBitVec)",
+  "new": "(BitVec.truncate 32 (16 : Int64).toBitVec)"
+ },
+ {
+  "id": "sync-committee-message-decode-generated-directive-82-statement-ha-120-to-112",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_directive_82",
+  "kind": "statement",
+  "old": "(ha : base + (120 : Int64).toBitVec = a)",
+  "new": "(ha : base + (112 : Int64).toBitVec = a)"
+ },
+ {
+  "id": "sync-committee-message-decode-generated-block-root-segment-statement-get64-rax-to-rdx",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_BlockRoot_segment",
+  "kind": "statement",
+  "old": "st.data.regs.get64 Reg64.rax = rcv",
+  "new": "st.data.regs.get64 Reg64.rdx = rcv"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-target-index-call-statement-host-55-to-56",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_TargetIndex_call",
+  "kind": "statement",
+  "old": "(Host.addrOf (k + 55 + 1))",
+  "new": "(Host.addrOf (k + 56 + 1))"
+ },
+ {
+  "id": "sync-committee-message-decode-generated-slot-call-statement-pc-46-to-47",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_Slot_call",
+  "kind": "statement",
+  "old": "st.pc = Host.addrOf (k + 46 + 1)",
+  "new": "st.pc = Host.addrOf (k + 47 + 1)"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-target-index-call-statement-e8-dst-to-c0",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_TargetIndex_call",
+  "kind": "statement",
+  "old": "⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem",
+  "new": "⋆ Eq (e8.At src) ⋆ Eq (c0.At dst) ⋆ F) st.data.dmem"
+ },
+ {
+  "id": "sync-committee-message-decode-generated-directive-86-code-add-0x28-to-0x30",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_directive_86",
+  "kind": "code",
+  "line": 87,
+  "old": "  add $0x28,%rax",
+  "new": "  add $0x30,%rax",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sync-committee-message-decode-generated-block-root-segment-code-mov-rax-to-rcx",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_BlockRoot_segment",
+  "kind": "code",
+  "line": 68,
+  "old": "  mov 0x70(%rsp),%rax",
+  "new": "  mov 0x70(%rsp),%rcx",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-target-index-call-code-nop-mov-none-to-rax-rax",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_TargetIndex_call",
+  "kind": "code",
+  "line": 57,
+  "old": "  nop",
+  "new": "  mov %rax,%rax",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingConsolidation.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-accept-control",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_accept",
+  "kind": "control"
+ },
+ {
+  "id": "sync-committee-message-decode-generated-accept-kind-statement-callee-order-swapped",
+  "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_accept_kind",
+  "kind": "statement",
+  "old": "Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 12",
+  "new": "Codec.DecoderFrameLayout.mk [Prysm.ValidatorIndex.Code.unmarshalSSZ, Prysm.Slot.Code.unmarshalSSZ] 12"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-accept-kind-statement-fields-two-to-three-uint64",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_accept_kind",
+  "kind": "statement",
+  "old": "80) [.uint64, .uint64] :=",
+  "new": "80) [.uint64, .uint64, .uint64] :="
  }
 ]

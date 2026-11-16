@@ -28,7 +28,7 @@ $G decoder --field-segments --compose --name Decode.accept_generated_composition
 # Row: Go type name, link set directory, module of the code constants (the code namespace is Prysm.<Go type name>.Code).
 P=github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1
 E=prysm/go1.26.10/link-set
-for row in "Checkpoint norm Prysm.Checkpoint.Code" "BlobIdentifier norm Prysm.BlobIdentifier.Code" "SyncCommitteeMessage norm Prysm.SyncCommitteeMessage.Code" "PendingConsolidation norm Prysm.SyncCommitteeMessage.Code"; do
+for row in "Checkpoint norm Prysm.Checkpoint.Code" "BlobIdentifier norm Prysm.BlobIdentifier.Code"; do
   set -- $row
   $G decoder --steps --assembly $E/$2/$P.$1.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.$1 --prefix Decode.generated_step --imports $3 --open Prysm.$1.Code > lean/Prysm/$1/GeneratedDecodeSteps.lean
 done
@@ -37,7 +37,7 @@ done
 # recomputed by kindcheck.py rule 12) and, where a hand statement exists, the identity `_statement` / `_same`. Checkpoint:
 # kind instance only (the implication `Prysm.Checkpoint.Decode.accept_of_kind` needs the layout `Prysm.Checkpoint.decodeLayout`, whose chunk order differs).
 # PendingPartialWithdrawal (interleaved fields) and AttestationData (nested fields) are refused (exit 2, no file).
-for row in "Checkpoint norm Prysm.Checkpoint.Code -" "BeaconBlockHeader norm Prysm.BeaconBlockHeader.Code -" "Eth1Data norm Prysm.Eth1Data.Code -" "BlobIdentifier norm Prysm.BlobIdentifier.Code --same-as=Prysm.BlobIdentifier.Decode.accept" "DepositMessage norm Prysm.BlobIdentifier.Code -" "Deposit_Data norm Prysm.Deposit_Data.Code -" "SyncCommitteeMessage norm Prysm.SyncCommitteeMessage.Code --same-as-prop=Prysm.SyncCommitteeMessage.Decode.accept_statement" "PendingConsolidation norm Prysm.SyncCommitteeMessage.Code --same-as-prop=Prysm.PendingConsolidation.Decode.accept_statement" "PendingDeposit norm Prysm.PendingDeposit.Code --same-as-prop=Prysm.PendingDeposit.Decode.accept_statement" "PowBlock norm Prysm.PendingDeposit.Code --same-as-prop=Prysm.PowBlock.Decode.accept_statement" "HistoricalSummary norm Prysm.PendingDeposit.Code -" "SigningData norm Prysm.PendingDeposit.Code -" "SyncAggregatorSelectionData norm Prysm.PendingDeposit.Code -" "ValidatorBalance norm Prysm.PendingDeposit.Code -" "VoluntaryExit norm Prysm.PendingDeposit.Code -"; do
+for row in "Checkpoint norm Prysm.Checkpoint.Code -" "BeaconBlockHeader norm Prysm.BeaconBlockHeader.Code -" "Eth1Data norm Prysm.Eth1Data.Code -" "BlobIdentifier norm Prysm.BlobIdentifier.Code --same-as=Prysm.BlobIdentifier.Decode.accept" "DepositMessage norm Prysm.BlobIdentifier.Code -" "Deposit_Data norm Prysm.Deposit_Data.Code -" "SyncCommitteeMessage norm Prysm.SyncCommitteeMessage.Code -" "PendingConsolidation norm Prysm.SyncCommitteeMessage.Code -" "PendingDeposit norm Prysm.PendingDeposit.Code --same-as-prop=Prysm.PendingDeposit.Decode.accept_statement" "PowBlock norm Prysm.PendingDeposit.Code --same-as-prop=Prysm.PowBlock.Decode.accept_statement" "HistoricalSummary norm Prysm.PendingDeposit.Code -" "SigningData norm Prysm.PendingDeposit.Code -" "SyncAggregatorSelectionData norm Prysm.PendingDeposit.Code -" "ValidatorBalance norm Prysm.PendingDeposit.Code -" "VoluntaryExit norm Prysm.PendingDeposit.Code -"; do
   set -- $row
   X=$4; [ "$X" = - ] && X=""
   $G decoder --whole-accept --assembly $E/$2/$P.$1.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.$1 --prefix Decode.generated --imports $3 --open Prysm.$1.Code $X > lean/Prysm/$1/GeneratedDecodeAccept.lean

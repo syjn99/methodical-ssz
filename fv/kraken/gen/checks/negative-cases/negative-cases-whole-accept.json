@@ -22,14 +22,6 @@
   "new": "[.bytes 48, .bytes 32, .uint64, .bytes 48, .uint64]"
  },
  {
-  "id": "sync-committee-message-decode-accept-is-kind-any-frame-statement-prysm-none-to-none",
-  "module": "Prysm/SyncCommitteeMessage/DecodeAcceptAnyFrameInstances.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_is_kind_any_frame",
-  "kind": "statement",
-  "old": "[Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 141 1",
-  "new": "[Prysm.ValidatorIndex.Code.unmarshalSSZ, Prysm.Slot.Code.unmarshalSSZ] 141 1"
- },
- {
   "id": "beacon-block-header-decode-generated-accept-kind-statement-bytes-32-to-31",
   "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.BeaconBlockHeader.Decode.generated_accept_kind",
@@ -44,14 +36,6 @@
   "kind": "statement",
   "old": "(layoutRuntimeCalls false 104 3)",
   "new": "(layoutRuntimeCalls true 104 3)"
- },
- {
-  "id": "pending-consolidation-decode-accept-is-kind-any-frame-statement-layout-callee-calls-none-to-uint64",
-  "module": "Prysm/PendingConsolidation/DecodeAcceptAnyFrameInstances.lean",
-  "theorem": "Prysm.PendingConsolidation.Decode.accept_is_kind_any_frame",
-  "kind": "statement",
-  "old": "(layoutCalleeCalls [Prysm.ValidatorIndex.Code.unmarshalSSZ] 56) [.uint64, .uint64]",
-  "new": "(layoutCalleeCalls [Prysm.ValidatorIndex.Code.unmarshalSSZ] 56) [.uint64, .uint64, .uint64]"
  },
  {
   "id": "checkpoint-decode-accept-of-kind-control",

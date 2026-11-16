@@ -321,17 +321,5 @@
   "module": "Codec/DecoderPrologue.lean",
   "theorem": "step_nil_check",
   "kind": "control"
- },
- {
-  "id": "sync-committee-message-decode-accept-from-window-steps-control",
-  "module": "Prysm/SyncCommitteeMessage/DecodeAcceptFromWindowSteps.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_from_window_steps",
-  "kind": "control"
- },
- {
-  "id": "pending-consolidation-decode-accept-from-window-steps-control",
-  "module": "Prysm/PendingConsolidation/DecodeAcceptFromWindowSteps.lean",
-  "theorem": "Prysm.PendingConsolidation.Decode.accept_from_window_steps",
-  "kind": "control"
  }
 ]

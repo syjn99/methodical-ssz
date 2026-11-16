@@ -1,12 +1,12 @@
-import Prysm.SyncCommitteeMessage.DecodeAccept
-import Prysm.SyncCommitteeMessage.DecodeRejectSize
+import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
 import Prysm.SyncCommitteeMessage.Spec
 
 /-!
 # Spec alignment of the real SyncCommitteeMessage decoder
 
-Hand-written: the text of `Prysm/Deposit_Data/DecodeSpec.lean` / `Prysm/PendingPartialWithdrawal/DecodeSpec.lean`, with the statement
-`Decode.accept_statement` (`Prysm/SyncCommitteeMessage/Statements.lean`) and the input chunks of `g`.
+Hand-written: the text of `Prysm/Deposit_Data/DecodeSpec.lean` / `Prysm/PendingPartialWithdrawal/DecodeSpec.lean`, with the input chunks of `g`.
+Built on the GENERATED theorems of `Prysm/SyncCommitteeMessage/GeneratedDecodeAccept.lean` (`decoder --whole-accept`;
+raw output, not edited): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
 - `Decode.reject_size_spec`: `bs.size ≠ 144` → EthLib rejects, and the machine code returns `ssz.ErrSize`.
@@ -21,7 +21,7 @@ namespace Prysm.SyncCommitteeMessage
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Accept side: the hand statement `Decode.accept_statement` for the input chunks of the `g` that EthLib decodes. -/
+/-- Accept side: the generated accept statement for the input chunks of the `g` that EthLib decodes. -/
 theorem Decode.accept_spec (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Code.unmarshalSSZ k)
     (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
     (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)
@@ -90,7 +90,7 @@ theorem Decode.accept_spec (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 144 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.encode_size]; rfl
-  exact Decode.accept k hk hf kS hkS hfS kV hkV hfV _ _ _ _ (by simp [Spec.uintBytes_size]) (by simp) (by simp [Spec.uintBytes_size]) (by simp)
+  exact Decode.generated_accept k hk hf kS hkS hfS kV hkV hfV _ _ _ _ (by simp [Spec.uintBytes_size]) (by simp) (by simp [Spec.uintBytes_size]) (by simp)
     s ra guard fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 aP1 aL1 aC1 a40 aP2 aL2 aC2
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrs hast ha8 haP1 haL1 haC1 ha40 haP2 haL2 haC2
     R S hS hlo Heap avail (Pm g hb) hguard hn hav hms hmm
@@ -117,7 +117,7 @@ theorem Decode.reject_size_spec (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host
           ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ :=
-  ⟨SszValue.spec_rejects bs hbs, Decode.reject_size k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
+  ⟨SszValue.spec_rejects bs hbs, Decode.generated_reject k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
     (fun h => hbs (by rw [← hlen, h]; rfl))⟩
 
 /-- **`reject_complete`**: an input that EthLib rejects reaches the `ssz.ErrSize` site (path condition

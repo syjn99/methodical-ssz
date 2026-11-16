@@ -1,13 +1,13 @@
-import Prysm.SyncCommitteeMessage.DecodeAccept
+import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept` (SyncCommitteeMessage decoder accept path)
+# Witness of `Decode.generated_accept` (SyncCommitteeMessage decoder accept path)
 
 Hand-written (the text of `Prysm/BeaconBlockHeader/WitnessDecodeAccept.lean` with the SyncCommitteeMessage host and
-layout). It shows that the premises of the independent hand statement `Prysm.SyncCommitteeMessage.Decode.accept_statement` are
+layout). It shows that the premises of the generated accept theorem `Prysm.SyncCommitteeMessage.Decode.generated_accept` are
 satisfiable. Host: data labels, the real Go 1.26.10 `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ` (index 9),
 `(*primitives.Slot).UnmarshalSSZ` (188), `(*primitives.ValidatorIndex).UnmarshalSSZ` (251), the 1-byte bump
 `runtime.makeslice` (314, `bump_makeslice1`) and `MemmoveGrowsliceModel` (320, `model_memmove`).
@@ -96,7 +96,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
 set_option maxHeartbeats 16000000 in
-/-- **Non-vacuity of `Decode.accept`** (premises of `Decode.accept_statement`). -/
+/-- **Non-vacuity of `Decode.generated_accept`** (its premises are satisfiable). -/
 theorem runs (in0 rt in1 sig oP1 oP2 : List UInt8) (hin0 : in0.length = 8)
     (hrt : rt.length = 32) (hin1 : in1.length = 8) (hsig : sig.length = 96)
     (h1 : oP1.length = 8) (h2 : oP2.length = 8)
@@ -104,7 +104,7 @@ theorem runs (in0 rt in1 sig oP1 oP2 : List UInt8) (hin0 : in0.length = 8)
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
       ⟨initial_state in0 rt in1 sig oP1 oP2 zmms flags, Host.addrOf 9⟩ :=
-  eventually_mono (Decode.accept 9 placed_at_9 labels_fresh_at_9 188 placed_at_188 labels_fresh_at_188 251 placed_at_251 labels_fresh_at_251
+  eventually_mono (Decode.generated_accept 9 placed_at_9 labels_fresh_at_9 188 placed_at_188 labels_fresh_at_188 251 placed_at_251 labels_fresh_at_251
     in0 rt in1 sig hin0 hrt hin1 hsig (initial_state in0 rt in1 sig oP1 oP2 zmms flags)
     0 0 (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 16) (zeros 8) (zeros 8)
     oP1 (zeros 8) (zeros 8) (zeros 8) oP2 (zeros 8) (zeros 8)
