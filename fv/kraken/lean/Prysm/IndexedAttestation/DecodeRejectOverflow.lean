@@ -9,7 +9,7 @@ import Prysm.IndexedAttestation.Code
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: overflow reject
 
-Statement: the corrected `Decode.reject_overflow_error_word_nonzero_statement`
+Statement: `Decode.reject_overflow_error_word_nonzero_statement`
 (`Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean`, the frozen text plus `e0 ≠ 0`). Overflow reject: `jg L_105`
 taken (57), the array at rsp − 80, `convT64(numElem)`, 66–69, `fmt.errorf`, `jne L_199`, epilogue 91–93. The address
 lemmas and the alignment reject are in `Prysm/IndexedAttestation/DecodeRejectAlignment.lean`.

@@ -5,7 +5,7 @@ import Prysm.DataColumnsByRootIdentifier.EncodeFastPath
 /-!
 # Round trip (machine): decoder entry → `Decode.accept` → (caller: `hupd`) → `Encode.fast_path`
 
-The order of `Prysm.Checkpoint.DecodeThenEncode.round_trip` (`Prysm/Checkpoint/DecodeThenEncode.lean`). Statement: the corrected
+The order of `Prysm.Checkpoint.DecodeThenEncode.round_trip` (`Prysm/Checkpoint/DecodeThenEncode.lean`). Statement:
 `DecodeThenEncode.round_trip_scratch_bounded_statement` (`Prysm/DataColumnsByRootIdentifier/StatementsDecodeThenEncodeScratchBounded.lean`, the frozen text plus `S < 2^60`). Frame mapping (x = rsp at both entries):
 the decoder leaves the saved rbp at x − 8 and the rax/rbx spills at x + 8, x + 16; these are the encoder's `fp`, `s1`,
 `s2`. The encoder slots x − 24, x − 32, x − 40, x − 56, x − 64 are the caller's `g24 … g64`. The encoder's return slot

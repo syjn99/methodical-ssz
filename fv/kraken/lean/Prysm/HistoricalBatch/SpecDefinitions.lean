@@ -13,7 +13,7 @@ The slice objects `Codec.sliceHeaders` and `Codec.elementBlocks` are imported fr
           block_roots: Vector[Root, SLOTS_PER_HISTORICAL_ROOT]   # Root = Bytes32
           state_roots: Vector[Root, SLOTS_PER_HISTORICAL_ROOT]
 
-  The producer's Desc file was printed before this term was written (less independent than SyncCommittee).
+  This term is not independent of the producer `Desc` file.
 - `SszValue`: the SSZ content of a Go `v1alpha1.HistoricalBatch` whose byte fields have the spec lengths
   (8192 × 32 each). `toValue` is the EthLib `Value`, `SszValue.encode` the 524288 bytes of the SSZ encoding.
 -/

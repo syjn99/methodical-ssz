@@ -8,14 +8,14 @@ import Prysm.IndexedAttestation.Code
 import Prysm.IndexedAttestation.SpecDefinitions
 
 /-!
-# Corrected IndexedAttestation statements for the alignment reject and the overflow reject: the itab word is non-zero (user-approved correction after the freeze)
+# IndexedAttestation statements for the alignment reject and the overflow reject with a non-zero itab word
 
 The four defs below are the frozen texts of `Prysm/IndexedAttestation/Statements.lean` with one added premise `(he0nz : e0 ≠ 0)` and the suffix
 `_error_word_nonzero` in the name; nothing else differs. Reason: directives 103–106 (alignment reject) and 66–69 (overflow reject) are
 `mov ssz.Err…(%rip),%rcx; test %rcx,%rcx; je …; mov 0x8(%rcx),%rcx`; when the error's itab word is 0 the code skips the
 type-word load and passes 0 where `FmtErrorfDecimalWrapContract` needs `ity`. The Kraken Host places labels anywhere, so the itab label
 may be 0 and the frozen statements cannot refute that branch. The precondition is stronger than the frozen one (not
-equivalent). The originals in `Prysm/IndexedAttestation/Statements.lean` stay unchanged and unproved.
+equivalent). The frozen texts in `Prysm/IndexedAttestation/Statements.lean` have no proof.
 In the real ELF `e0` is the
 itab address `0xd28520` (check (b) of `prysm/go1.26.10/link-set/RESULT` binds `go_itab._errors.errorString_error` to it).
 -/

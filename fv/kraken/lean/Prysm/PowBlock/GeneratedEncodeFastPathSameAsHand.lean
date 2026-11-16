@@ -9,8 +9,8 @@ import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPathSameAsHand
 /-!
 # Identities of the generated encoder fast-path theorems with the independent hand statements
 
-`Prysm/PowBlock/EncodeFastPathStatements.lean` was committed before the generated theorems were read. Each identity is `rfl` at default
-transparency; a failed identity is recorded, not forced. Encoder fast path only.
+The hand statements of `Prysm/PowBlock/EncodeFastPathStatements.lean` do not refer to the generated theorems.
+Each identity is `rfl` at default transparency. Encoder fast path only.
 -/
 
 open Machine Runtime Codec

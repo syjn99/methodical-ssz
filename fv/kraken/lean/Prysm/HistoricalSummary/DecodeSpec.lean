@@ -9,8 +9,8 @@ Built on the GENERATED theorems of `Prysm/HistoricalSummary/GeneratedDecodeAccep
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
   The statement is the generated accept statement (kind instance) with the input chunks replaced by the
-  encoding of `g` (text written by a scratch script from the generated statement; then checked by Lean
-  against `Prysm.HistoricalSummary.Decode.generated_accept`).
+  encoding of `g`.
+  The proof applies `Prysm.HistoricalSummary.Decode.generated_accept`, so Lean checks the text against it.
 - `Decode.reject_size_spec`: `bs.size ≠ 64` → EthLib rejects, and the machine code returns `ssz.ErrSize`
   (generated `Decode.generated_reject`).
 - `Decode.reject_complete`: every input that EthLib rejects has `size ≠ 64` (the path condition of the size reject).

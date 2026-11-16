@@ -11,7 +11,7 @@ callee field to
     mov src(%rbx),%rX     -- the 8 source bytes; the buffer pointer is already in rbx
     mov %rX,f(%rax)       -- store to the field at Go offset f; the receiver is in rax
 
-(`rX` = r8 at the one development site). `uint64DecodeScratchRegister rX src f` is this template; it differs from
+(`rX` = r8 at its one site in the Prysm target). `uint64DecodeScratchRegister rX src f` is this template; it differs from
 `uint64DecodeInline` (`Codec/InlineUint64.lean`: reload from the spill slot, receiver in rdx, one scratch register for
 both roles). The lemma holds for every scratch register except rax, rbx (the bases), rsp, rbp, r14; `hX`
 lists the eleven others. Every register except `rX` is kept (the neighbouring set-up directives hold live

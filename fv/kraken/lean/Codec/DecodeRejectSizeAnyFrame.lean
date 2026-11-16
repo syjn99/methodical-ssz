@@ -38,7 +38,7 @@ variable [Host]
 set_option linter.unusedVariables false in
 /-- **Size-reject statement kind of a container decoder**: with `len(buf) ≠ sz` the decoder returns the two
 words `e0`, `e1` of `ssz.ErrSize`; the receiver and the input are not read (they are in `R`). The text is the
-statement of the committed theorems `Prysm.<Type>.Decode.reject_size` with the code constant and the size replaced. -/
+statement of the hand theorems `Prysm.<Type>.Decode.reject_size` with the code constant and the size replaced. -/
 abbrev decodeRejectKindAnyFrame (C : Program) (sz : UInt64) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)

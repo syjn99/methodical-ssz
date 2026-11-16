@@ -2,21 +2,22 @@ import Prysm.DataColumnsByRootIdentifier.StatementsEncodeGrowAnySite
 import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
-# Corrected any-site grow path statements (one-growth path): growth at any one site (added after the freeze of `Prysm/DataColumnsByRootIdentifier/StatementsEncodeGrowAnySite.lean`)
+# Grow path statements of the encoder with one growth at any one site
 
-`Encode.grow_one_site_statement` / `Encode.grow_one_site_spec_statement` are the frozen texts of `Encode.grow_any_site_statement` /
-`Encode.grow_any_site_spec_statement` with the heap premise `(n + 2)·K ≤ avail` replaced by two premises:
+`Encode.grow_one_site_statement` / `Encode.grow_one_site_spec_statement` are the texts of `Encode.grow_any_site_statement` /
+`Encode.grow_any_site_spec_statement` (`Prysm/DataColumnsByRootIdentifier/StatementsEncodeGrowAnySite.lean`)
+with the heap premise `(n + 2)·K ≤ avail` replaced by two premises:
 
 - `hbud : K ≤ avail` (one growth, K = 4·(len + 36 + 8n) + 8576);
 - `hone`: for every new length `m ≤ L` above `cap`, `L ≤ nextSliceCap m cap` (L = len + 36 + 8n). So the first site that
   grows (any of the n + 2) gets a capacity that holds the whole output, and no second growth happens.
 
-Reason (attempt 1 of `Prysm/DataColumnsByRootIdentifier/EncodeLoopGrowAnySite.lean`): `GrowsliceContract` bounds the heap after a call only from above
+Reason: `GrowsliceContract` bounds the heap after a call only from above
 (`avail' + esz·newCap ≤ avail`). After one growth nothing bounds the remaining heap from below, so the budget premise of
 a second `growslice` call cannot be discharged: `Encode.grow_any_site_statement` does not follow from the contract forms of
 `Runtime/Contracts.lean` (a form with a lower bound, e.g. `avail' + esz·newCap = avail`, is missing; a new form needs user
-approval). The two statements without these premises have no proof. The new premises are not implied by the old ones and the old
-ones are not implied by the new ones (the new statement allows a smaller heap and forbids a second growth).
+approval). The two any-site statements have no proof. Neither premise set implies the other
+(the one-site statement allows a smaller heap and forbids a second growth).
 -/
 
 open Machine Runtime EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code
