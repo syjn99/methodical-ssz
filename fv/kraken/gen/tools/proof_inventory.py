@@ -19,9 +19,9 @@
   (cwd = fv/kraken)
 
 Three denominators are kept apart: (1) the SSZ methods of the target (`ssz-methods.json`, per method kind);
-(2) the dumped functions (`functions.json`); (3) the development population: the 16 flat types with which the generated-decoder work
-started (`DEVELOPMENT_TYPES`).
-The flat fixed-size types of the target are computed from the IR by `FLAT_RULE`; those outside `DEVELOPMENT_TYPES` are listed.
+(2) the dumped functions (`functions.json`); (3) the core flat types: a fixed list of 16 flat fixed-size types
+(`CORE_FLAT_TYPES`).
+The flat fixed-size types of the target are computed from the IR by `FLAT_RULE`; those outside `CORE_FLAT_TYPES` are listed.
 
 Mapping. The rows are derived by a rule, not written by hand: for every directory `lean/Prysm/<GoTypeName>/` and
 every part, the first candidate name of `DEC_CANDIDATES` / `ENC_FORMS` / `SIZE_FORM` (the name forms of
@@ -77,16 +77,15 @@ V1A = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
 PRIM = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
 V1E = "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
 
-# The development population: the 16 flat fixed-size types with which the generated-decoder work (`generator.py decoder
-# --whole-accept`) started (decoders; AttestationData has nested fields and is listed apart).
-DEVELOPMENT_TYPES = ["Checkpoint", "BeaconBlockHeader", "Eth1Data", "BlobIdentifier", "DepositMessage", "Deposit_Data",
+# The core flat types: a fixed list of 16 flat fixed-size types. The inventory counts their decoders as one group.
+# AttestationData has nested fields and is listed apart (`NESTED`).
+CORE_FLAT_TYPES = ["Checkpoint", "BeaconBlockHeader", "Eth1Data", "BlobIdentifier", "DepositMessage", "Deposit_Data",
           "PendingPartialWithdrawal", "SyncCommitteeMessage", "PendingConsolidation", "PendingDeposit", "PowBlock",
           "HistoricalSummary", "SigningData", "SyncAggregatorSelectionData", "ValidatorBalance", "VoluntaryExit"]
 NESTED = ["AttestationData"]
-# Why the generators refused a flat type outside DEVELOPMENT_TYPES (wording only, no state rule). Source: the single
-# generator runs on the flat types outside the development population (`decoder --whole-accept`, `encoder --fast-path`), the class read
-# at the directive of the `.S` where the run stopped; the per-type run record is in git history only. A type or method
-# missing here was generated (exit 0) by that run. The class is a field kind or a callee the generators do not support.
+# Why the generators refuse a flat type outside CORE_FLAT_TYPES (wording only, no state rule). The class is the field kind
+# or the callee at the directive of the `.S` file where `decoder --whole-accept` or `encoder --fast-path` stops.
+# The generators do not support that class.
 GENERATOR_REFUSED = {
     "v1.BuilderExitRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
     "v1.ConsolidationRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
@@ -117,7 +116,7 @@ GENERATOR_REFUSED = {
 # The checks of the Rule above apply to every chosen theorem exactly as to a hand-written row.
 V1A_PREFIX = "Prysm."
 DEC_CANDIDATES = {
-    "accept": ["Decode.accept", "Decode.accept_from_generated_steps", "Decode.generated_accept"],
+    "accept": ["Decode.accept", "Decode.generated_accept"],
     "reject": ["Decode.reject_size", "Decode.generated_reject"],
     "accept_spec": ["Decode.accept_spec"],
     "reject_size_spec": ["Decode.reject_size_spec"],
@@ -236,8 +235,6 @@ def derive(D, target_key):
         notes = []
         if acc_form == "Decode.generated_accept":
             notes.append("generated accept theorem (statement = kind instance)")
-        if acc_form == "Decode.accept_from_generated_steps":
-            notes.append("accept composed from generated steps")
         if r["codec"] and len(r["codec"]) == 2:
             notes.append("codec: same accepted inputs + number / LE-bytes correspondence (spec uint256)")
         r["note"] = "; ".join(notes)
@@ -620,9 +617,9 @@ def run(decls_p, gate_p, md_p, json_p):
             no_ir.append(key)
         elif rec.get("variable") is False and rec.get("fields") and all(field_flat(f["v"]) for f in rec["fields"]):
             flat_target.append(key)
-    for t in DEVELOPMENT_TYPES:
+    for t in CORE_FLAT_TYPES:
         if (V1A, t) not in flat_target:
-            fails.append(f"DEVELOPMENT_TYPES type {t}: not a flat fixed-size type of the target by FLAT_RULE")
+            fails.append(f"CORE_FLAT_TYPES type {t}: not a flat fixed-size type of the target by FLAT_RULE")
     for t in NESTED:
         if (V1A, t) in flat_target:
             fails.append(f"NESTED type {t}: flat by FLAT_RULE")
@@ -661,22 +658,22 @@ def run(decls_p, gate_p, md_p, json_p):
             by_kind[k]["fast_path_complete"] = sum(t["state"] == "fast path complete" for t in tk)
             by_kind[k]["fast_path_partial"] = sum(t["state"] == "fast path partial" for t in tk)
     runtime = [f["symbol"] for f in funcs if f["type"] is None]
-    dev = {t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in DEVELOPMENT_TYPES}
-    flat_ns = [k for k in flat_target if k not in {(V1A, t) for t in DEVELOPMENT_TYPES}]
+    dev = {t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in CORE_FLAT_TYPES}
+    flat_ns = [k for k in flat_target if k not in {(V1A, t) for t in CORE_FLAT_TYPES}]
     flat_ns_state = {f"{p.rsplit('/', 1)[-1]}.{t}": ("not started" if (p, t) not in started_types else "started")
                      for p, t in flat_ns}
     tot = dict(
         denominators={
             "target_ssz_methods": f"{METHODS_JSON} (from the nm listing of the pinned ELF, sha256 {sm['nm_sha256']})",
             "dumped_functions": "prysm/go1.26.10/functions.json (functions with a `.S` text)",
-            "development_population": "DEVELOPMENT_TYPES of gen/tools/proof_inventory.py (the 16 flat types with which "
+            "development_population": "CORE_FLAT_TYPES of gen/tools/proof_inventory.py (the 16 flat types with which "
                                       "the generated-decoder work started)"},
         target_ssz_methods=len(target), target_types=len(target_types),
         functions_json_total=len(funcs), functions_json_runtime_helpers=runtime,
         by_kind=by_kind,
         types_not_started=sum(1 for p, t in target_types if (p, t) not in started_types),
-        development_population=DEVELOPMENT_TYPES,
-        development_population_decoders_complete=f"{sum(v == 'complete' for v in dev.values())}/{len(DEVELOPMENT_TYPES)}",
+        development_population=CORE_FLAT_TYPES,
+        development_population_decoders_complete=f"{sum(v == 'complete' for v in dev.values())}/{len(CORE_FLAT_TYPES)}",
         development_population_not_complete={t: rows[(V1A, t, "UnmarshalSSZ")]["missing"]
                                              for t, v in dev.items() if v != "complete"},
         flat_rule=FLAT_RULE,
@@ -724,8 +721,8 @@ def run(decls_p, gate_p, md_p, json_p):
           f"2. Dumped functions (`functions.json`, a `.S` text exists): {len(funcs)}, of which "
           f"{len(funcs) - len(runtime)} are SSZ methods and {len(runtime)} are runtime helpers "
           f"({', '.join(r.rsplit('.', 1)[-1] for r in runtime)}). A theorem needs a dumped function.",
-          f"3. Development population: the {len(DEVELOPMENT_TYPES)} flat types with which the generated-decoder work "
-          "started (`DEVELOPMENT_TYPES` of the script). "
+          f"3. Development population: the {len(CORE_FLAT_TYPES)} flat types with which the generated-decoder work "
+          "started (`CORE_FLAT_TYPES` of the script). "
           "It is not the set of flat fixed-size types of the target (see the flat types below).", "",
           "## Totals by method kind", "",
           "| method kind | in the target | in `functions.json` | with a mapping row | complete | partial |",
@@ -755,7 +752,7 @@ def run(decls_p, gate_p, md_p, json_p):
         md.append("- Other: " + "; ".join(f"`{k}` {bk[k]['target']} in the target, none proved" for k in other) + ".")
     md += [f"- Types with no mapping row (\"not started\", every method): {tot['types_not_started']} of "
            f"{len(target_types)}.",
-           f"- Decoders of the {len(DEVELOPMENT_TYPES)}-type development population: "
+           f"- Decoders of the {len(CORE_FLAT_TYPES)}-type development population: "
            f"{tot['development_population_decoders_complete']} complete (defined sense)."]
     for t, miss in tot["development_population_not_complete"].items():
         md.append(f"  - {t}: missing {', '.join(miss)}.")
@@ -765,7 +762,7 @@ def run(decls_p, gate_p, md_p, json_p):
            f"- Nested: {', '.join(f'{t} {s}' for t, s in tot['nested'].items())} (not flat)."]
     fs_ = tot["flat_outside_development_population_states"]
     started_ = {k: v for k, v in fs_.items() if flat_ns_state.get(k) == "started"}
-    if started_:   # flat types outside DEVELOPMENT_TYPES with a mapping row
+    if started_:   # flat types outside CORE_FLAT_TYPES with a mapping row
         md.append(f"- Flat types outside the development population with a mapping row: {len(started_)}; decoders "
                   f"complete {sum(v['decoder'] == 'complete' for v in started_.values())}, encoders fast-path complete "
                   f"{sum(v['encoder'] == 'fast path complete' for v in started_.values())}.")
