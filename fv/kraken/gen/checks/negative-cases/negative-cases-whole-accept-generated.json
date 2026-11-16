@@ -1,23 +1,5 @@
 [
  {
-  "id": "voluntary-exit-decode-generated-accept-control",
-  "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.VoluntaryExit.Decode.generated_accept",
-  "kind": "control"
- },
- {
-  "id": "pending-deposit-decode-generated-field-3-control",
-  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.generated_field_3",
-  "kind": "control"
- },
- {
-  "id": "historical-summary-decode-generated-accept-control",
-  "module": "Prysm/HistoricalSummary/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.HistoricalSummary.Decode.generated_accept",
-  "kind": "control"
- },
- {
   "id": "voluntary-exit-decode-generated-accept-statement-hguard-88-to-80",
   "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.generated_accept",
@@ -56,14 +38,6 @@
   "kind": "statement",
   "old": "Eq (fv0.At (s.regs.rax.toBitVec + 8))",
   "new": "Eq (fv1.At (s.regs.rax.toBitVec + 8))"
- },
- {
-  "id": "pending-deposit-decode-generated-field-3-statement-fv2-56-to-48",
-  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.generated_field_3",
-  "kind": "statement",
-  "old": "Eq (fv2.At (s.regs.rax.toBitVec + 56))",
-  "new": "Eq (fv2.At (s.regs.rax.toBitVec + 48))"
  },
  {
   "id": "sync-committee-message-decode-generated-field-2-statement-heap-32-to-24",

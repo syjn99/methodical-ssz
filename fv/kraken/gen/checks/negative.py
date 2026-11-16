@@ -14,8 +14,14 @@ cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoc
   (path of the .S under fv/kraken instead of prysm/go1.26.10/link-set/norm/<S>; AttestationData set);
   optional for every kind: "mutant_imports" (list of module names, e.g. "Prysm.BeaconBlockHeader.EncodeLayout"):
   the mutated copy imports them in addition (the case module is unchanged), so that a mutant can name a declaration
-  of another module, for example the layout of another type}
-For each case the mutant Lean file is the module's text up to the end of the designated theorem
+  of another module, for example the layout of another type;
+  optional for every kind: "statement_module" (path under fv/kraken/lean) or "inline" (a list of such paths in
+  dependency order), the modules that hold the statement `def` of the theorem (`theorem X : <statement def>`), and
+  "statement_def" (full name of that `def`). Then the mutant inlines the bodies of those modules above the case module
+  text (their imports replace the import lines of the inlined modules), so that the code rename also reaches the
+  statement; a statement case mutates the text of the `def` (old -> new, unique inside the def), and the case range
+  is the theorem's command up to the next top-level line. "mutant_imports" is not allowed with them}
+For each case without "statement_def" and inlined modules the mutant Lean file is the module's text up to the end of the designated theorem
 (the next top-level `theorem`/`def`/`end`/`example`/`/--` after it is cut; a `theorem <thm>_kind` that
 directly follows it is kept and belongs to the case range). The case range starts at the first line of the
 theorem's command: the `set_option … in` lines and the doc comment directly above the `theorem` line belong to it
@@ -304,9 +310,92 @@ def run_capped(argv, cwd, timeout):
         return (out or "") + (err or ""), None, True, reaped
 
 
+def split_imports(text):
+    tl = text.split("\n")
+    k = max(i for i, l in enumerate(tl) if l.startswith("import ")) + 1
+    return tl[:k], tl[k:]
+
+
+def inlined_modules(c):
+    """The statement modules that a case inlines into its mutant: "inline", else ["statement_module"], else []."""
+    return c.get("inline", [c["statement_module"]] if c.get("statement_module") else [])
+
+
+def mutated_program(c, d):
+    """Write the .S copy of a code or control case to <d>/mut.S; return the diff (empty for a control)."""
+    S = (KR / c["norm"] if "norm" in c else NORM / c["assembly"]).read_text()
+    diff = ""
+    if c["kind"] == "code":
+        if "line" in c:  # 1-based line of the .S file (for an instruction that occurs twice)
+            sl = S.split("\n")
+            assert sl[c["line"] - 1] == c["old"], (c["id"], "line does not hold the old instruction")
+            sl[c["line"] - 1] = c["new"]
+            S2 = "\n".join(sl)
+        else:
+            assert S.count(c["old"] + "\n") == 1, (c["id"], "old instruction not unique")
+            S2 = S.replace(c["old"] + "\n", c["new"] + "\n")
+        diff = "".join(difflib.unified_diff(S.splitlines(True), S2.splitlines(True), "orig.S", "mut.S"))
+    else:
+        S2 = S
+    (d / "mut.S").write_text(S2)
+    return diff
+
+
+def rename_code(c, text):
+    """Every whole-word use of <code_definition> in `text` renamed to <code_definition>Mut."""
+    name = c["code_definition"]
+    return re.sub(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", name + "Mut", text)
+
+
+def mutant_with_statement_def(c, d):
+    """Mutant text, case range and diff of a case whose statement is a `def` ("statement_def") in the case module or
+    in the inlined statement modules. The mutant inlines the bodies of those modules (dependency order) above the
+    case module text, so that the code rename also reaches the statement. A statement case mutates the text of the
+    `def` (old -> new, unique inside the def). The case range is the theorem's command up to the next top-level line."""
+    src = (LEAN / c["module"]).read_text()
+    lines, _, _ = cut(src, c["theorem"])
+    imps, body = split_imports("\n".join(lines))
+    inl = inlined_modules(c)
+    if inl:
+        names = {m.removesuffix(".lean").replace("/", ".") for m in inl}
+        pre_imps, pre_body = [], []
+        for m in inl:
+            mi, mb = split_imports((LEAN / m).read_text())
+            pre_imps += [l for l in mi if l not in pre_imps]
+            pre_body += mb + [""]
+        imps = list(dict.fromkeys(l for l in pre_imps + imps if l.split()[1] not in names))
+        body = pre_body + body
+    rest = "\n".join(body)
+    diff = ""
+    if c.get("code_definition"):
+        diff = mutated_program(c, d)
+        decl = f'def {code_namespace_of(c)}.{c["code_definition"]}Mut : Program := include_x64_code "{d / "mut.S"}"'
+        rest = decl + "\n\n" + rename_code(c, rest)
+    if c["kind"] == "statement":
+        rl = rest.split("\n")
+        a, _ = find_decl(rl, c["statement_def"], ("def",))
+        b = next((i for i in range(a + 1, len(rl)) if TOP.match(rl[i])), len(rl))
+        seg = "\n".join(rl[a:b])
+        assert seg.count(c["old"]) == 1, (c["id"], "statement text not unique in the stmt def")
+        seg2 = seg.replace(c["old"], c["new"])
+        diff = "".join(difflib.unified_diff(seg.splitlines(True), seg2.splitlines(True), "orig", "mut"))
+        rest = "\n".join(rl[:a] + seg2.split("\n") + rl[b:])
+    text = "\n".join(imps) + "\n\n" + rest
+    tl = text.split("\n")
+    start, _ = find_decl(tl, c["theorem"])
+    end = next((i for i in range(start + 1, len(tl)) if TOP.match(tl[i])), len(tl))
+    while end > start and tl[end - 1].strip() == "":
+        end -= 1
+    return text, command_start(tl, start) + 1, end, diff
+
+
 def run_case(c, work):
     d = work / c["id"]
     d.mkdir(parents=True, exist_ok=True)
+    if inlined_modules(c) or c.get("statement_def"):
+        assert not c.get("mutant_imports"), (c["id"], "mutant_imports and inlined statement modules together")
+        text, lo, hi, diff = mutant_with_statement_def(c, d)
+        return run_mutant(c, work, d, text, lo, hi, diff)
     src = (LEAN / c["module"]).read_text()
     lines, lo, hi = cut(src, c["theorem"])
     # lines of the theorem's command above its `theorem` line (set_option … in, doc comment); the inserted import
@@ -321,26 +410,11 @@ def run_case(c, work):
     text = "\n".join(lines)
     diff = ""
     if c.get("code_definition"):
-        S = (KR / c["norm"] if "norm" in c else NORM / c["assembly"]).read_text()
-        if c["kind"] == "code":
-            if "line" in c:  # 1-based line of the .S file (for an instruction that occurs twice)
-                sl = S.split("\n")
-                assert sl[c["line"] - 1] == c["old"], (c["id"], "line does not hold the old instruction")
-                sl[c["line"] - 1] = c["new"]
-                S2 = "\n".join(sl)
-            else:
-                assert S.count(c["old"] + "\n") == 1, (c["id"], "old instruction not unique")
-                S2 = S.replace(c["old"] + "\n", c["new"] + "\n")
-            diff = "".join(difflib.unified_diff(S.splitlines(True), S2.splitlines(True), "orig.S", "mut.S"))
-        else:
-            S2 = S
-        (d / "mut.S").write_text(S2)
-        name = c["code_definition"]
+        diff = mutated_program(c, d)
         tl = text.split("\n")
         k = max(i for i, l in enumerate(tl) if l.startswith("import ")) + 1
-        rest = re.sub(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", name + "Mut", "\n".join(tl[k:]))
-        ns = code_namespace_of(c)
-        decl = f'def {ns}.{name}Mut : Program := include_x64_code "{d / "mut.S"}"'
+        rest = rename_code(c, "\n".join(tl[k:]))
+        decl = f'def {code_namespace_of(c)}.{c["code_definition"]}Mut : Program := include_x64_code "{d / "mut.S"}"'
         text = "\n".join(tl[:k] + ["", decl] + [rest])
         lo += 2
         hi += 2
@@ -351,6 +425,11 @@ def run_case(c, work):
         seg2 = seg.replace(c["old"], c["new"])
         diff = "".join(difflib.unified_diff(seg.splitlines(True), seg2.splitlines(True), "orig", "mut"))
         text = "\n".join(tl[:lo - 1] + seg2.split("\n") + tl[hi:])
+    return run_mutant(c, work, d, text, lo - head, hi, diff)
+
+
+def run_mutant(c, work, d, text, lo, hi, diff):
+    """Write <d>/mut.lean and <d>/diff, run Lean on the mutant and classify the result (case range [lo, hi])."""
     f = d / "mut.lean"
     f.write_text(text)
     (d / "diff").write_text(diff)
@@ -366,7 +445,7 @@ def run_case(c, work):
     # no absolute work-dir path in the committed result file
     first, later = [x.replace(str(work), "<work>") if x else x for x in (first, later)]
     r = {"id": c["id"], "kind": c["kind"], "module": c["module"], "theorem": c["theorem"],
-         "range": [lo - head, hi], "error_lines": errs, "first_error": first, "rc": rc,
+         "range": [lo, hi], "error_lines": errs, "first_error": first, "rc": rc,
          "killed": killed, "timeout": timed_out, "timeout_reaped_pids": reaped, "later_resource_error": later,
          "seconds": round(time.time() - t0, 1), "diff": diff}
     return classify(r)
@@ -588,6 +667,14 @@ def selftest():
                   "later_resource_error": "x:36:0: error: (deterministic) timeout at `whnf`"})
     if r["class"] != "inside":
         bad.append(("command_start_error", r["class"], "inside"))
+    # a case id must be unique over all case files, also over two files
+    dup = duplicate_ids([("f1", [{"id": "a"}, {"id": "b"}]), ("f2", [{"id": "c"}, {"id": "a"}])])
+    if dup != [("a", ["f1", "f2"])]:
+        bad.append(("duplicate_id_two_files", dup, [("a", ["f1", "f2"])]))
+    if duplicate_ids([("f1", [{"id": "a"}, {"id": "a"}])]) != [("a", ["f1", "f1"])]:
+        bad.append(("duplicate_id_one_file", duplicate_ids([("f1", [{"id": "a"}, {"id": "a"}])]), "a"))
+    if duplicate_ids([("f1", [{"id": "a"}]), ("f2", [{"id": "b"}])]):
+        bad.append(("duplicate_id_none", "", []))
     print("selftest", "PASS" if not bad else f"FAIL {bad}")
     return 1 if bad else 0
 
@@ -613,15 +700,26 @@ def selftest_timeout():
     return 0 if ok and ok2 else 1
 
 
+def duplicate_ids(files):
+    """[(id, [file, ...])] of every case id that occurs more than once over the given (file, cases) pairs."""
+    where = {}
+    for p, cs in files:
+        for c in cs:
+            where.setdefault(c["id"], []).append(p)
+    return [(i, ps) for i, ps in where.items() if len(ps) > 1]
+
+
 def check_cases(*paths):
-    """Dry run (no Lean): every case of every given cases file resolves to exactly one theorem line of its module
+    """Dry run (no Lean): a case id occurs once over all given cases files, and every case of every given cases file resolves to exactly one theorem line of its module
     (`find_decl`), and a case with `code_definition` has a whole-word use of it after the imports (else the mutant
-    would not use the mutated program). A case with "statement_def" (list_negative.py) also resolves its def line in
+    would not use the mutated program). A case with "statement_def" also resolves its def line in
     "statement_module" or the inlined modules. Each module of "mutant_imports" exists under lean/, is not the case
     module and not one of its imports, and occurs once. Prints one line per failure and a summary."""
-    bad, n = [], 0
-    for p in paths:
-        for c in json.load(open(p)):
+    files = [(p, json.load(open(p))) for p in paths]
+    bad = [f"{i}: the id occurs {len(ps)} times: {' '.join(ps)}" for i, ps in duplicate_ids(files)]
+    n = 0
+    for p, cs in files:
+        for c in cs:
             n += 1
             try:
                 src = (LEAN / c["module"]).read_text()
