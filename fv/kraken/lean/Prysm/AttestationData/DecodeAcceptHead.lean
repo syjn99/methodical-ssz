@@ -6,7 +6,7 @@ import Prysm.ElfData.PrysmTarget
 import Prysm.AttestationData.Code
 
 /-!
-# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 1
+# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, head segment
 
     func (a *AttestationData) UnmarshalSSZ(buf []byte) error {        // phase0.ssz.go:273
         if uint64(len(buf)) != 128 { return ssz.ErrSize }
@@ -46,7 +46,7 @@ theorem Decode.accept_guard (x : BitVec 64) (g : Nat) (h : g + 224 < x.toNat) : 
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- Segment 1: from the entry to `L_167` (directive 85), through the length check and
+/-- Head segment: from the entry to `L_167` (directive 85), through the length check and
 the Slot and CommitteeIndex callees. -/
 theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (hsl : Prysm.Slot.Decode.accept_function_spec) (hci : Prysm.CommitteeIndex.Decode.accept_function_spec)

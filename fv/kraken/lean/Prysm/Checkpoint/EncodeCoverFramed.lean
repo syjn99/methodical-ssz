@@ -15,15 +15,15 @@ block, the guard word, `Heap`, `R`).
 `Encode.cover_framed` (`len(Root) = 32`), by the code's own capacity tests:
 
 | disjunct | range | member | caller's array after |
-| (1) | `len + 40 ≤ cap` | `Encode.fast_path` | `pre ++ serialize ++ spare[40:]` (written in place, returned) |
-| (2) | `len + 8 ≤ cap < len + 40` | `Encode.grow_second_site` | `pre ++ epoch ++ spare[8:]` (epoch written before the root test); new block returned |
-| (3A) | `cap < len + 8`, `C1 ≥ len + 40` | `Encode.grow_any_site_three_cases` (A) | unchanged `pre ++ spare` |
-| (3B) | `cap < len + 8`, `C1 < len + 40`, heap left ≥ budget | `Encode.grow_any_site_three_cases` (B) | unchanged |
-| (3C) | `cap < len + 8`, `C1 < len + 40`, heap left < budget | `Encode.grow_any_site_three_cases` (C) | unchanged; **not a return** |
+| in place | `len + 40 ≤ cap` | `Encode.fast_path` | `pre ++ serialize ++ spare[40:]` (written in place, returned) |
+| growth at the second site | `len + 8 ≤ cap < len + 40` | `Encode.grow_second_site` | `pre ++ epoch ++ spare[8:]` (epoch written before the root test); new block returned |
+| growth at the first site, root fits | `cap < len + 8`, `C1 ≥ len + 40` | `Encode.grow_any_site_three_cases`, root fits | unchanged `pre ++ spare` |
+| growth at the first site, second growth | `cap < len + 8`, `C1 < len + 40`, heap left ≥ budget | `Encode.grow_any_site_three_cases`, second growth | unchanged |
+| growth at the first site, second call entry | `cap < len + 8`, `C1 < len + 40`, heap left < budget | `Encode.grow_any_site_three_cases`, second call entry | unchanged; **not a return** |
 
-(3C) is the entry of the second `runtime.growslice` call with the remaining heap below that call's
+The second call entry is the entry of the second `runtime.growslice` call with the remaining heap below that call's
 budget premise: the `GrowsliceContract` form gives no lower bound on the remaining heap.
-Its return is differential only. In (1), (2), (3A), (3B) the returned block is `pre ++ bs` with
+Its return is differential only. In the other disjuncts the returned block is `pre ++ bs` with
 `serialize desc g.toValue = .ok bs` (EthLib).
 
 `Encode.reject_length_cover_framed` (`len(Root) ≠ 32`): `len + 8 ≤ cap`: the epoch bytes are in the
@@ -73,7 +73,7 @@ theorem Encode.cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) 
         (st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40
           ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0
           ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
-          -- (1) len + 40 ≤ cap: written into the caller's array and returned (Encode.fast_path)
+          -- in place, len + 40 ≤ cap: written into the caller's array and returned (Encode.fast_path)
           ((s.regs.rcx.toNat + 40 ≤ s.regs.rdi.toNat ∧ st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rcx = s.regs.rdi ∧
             ∃ (t u scr : List UInt8), t.length = 8 ∧ u.length = 16 ∧ scr.length = S ∧
             (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -97,7 +97,7 @@ theorem Encode.cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) 
               ⋆ Eq ((pre ++ bs.toList).At s.regs.rbx.toBitVec)
               ⋆ Eq ((spare.drop 40).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))
               ⋆ Heap avail ⋆ R) st.data.dmem)
-          -- (2) len + 8 ≤ cap < len + 40: epoch into the caller's array, then one growth (Encode.grow_second_site)
+          -- growth at the second site, len + 8 ≤ cap < len + 40: epoch into the caller's array, then one growth (Encode.grow_second_site)
           ∨ (s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat ∧ s.regs.rdi.toNat < s.regs.rcx.toNat + 40
             ∧ nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat ≤ st.data.regs.rcx.toNat ∧
             ∃ (t u scr spl' rest : List UInt8) (av' : Nat), t.length = 8 ∧ u.length = 16 ∧ scr.length = S
@@ -127,7 +127,7 @@ theorem Encode.cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) 
               ⋆ Eq ((pre ++ bs.toList).At st.data.regs.rax.toBitVec)
               ⋆ Eq (rest.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 40))
               ⋆ Heap av' ⋆ R) st.data.dmem)
-          -- (3A) cap < len + 8, the first new block holds the root (Encode.grow_any_site_three_cases (A))
+          -- root fits, cap < len + 8, the first new block holds the root (Encode.grow_any_site_three_cases)
           ∨ (s.regs.rdi.toNat < s.regs.rcx.toNat + 8
             ∧ nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat ≤ st.data.regs.rcx.toNat ∧
             ∃ (t u scr spl' rest : List UInt8) (av' : Nat), t.length = 8 ∧ u.length = 16 ∧ scr.length = S
@@ -155,7 +155,7 @@ theorem Encode.cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) 
               ⋆ Eq ((pre ++ bs.toList).At st.data.regs.rax.toBitVec)
               ⋆ Eq (rest.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 40))
               ⋆ Heap av' ⋆ R) st.data.dmem)
-          -- (3B) cap < len + 8, first growth then second growth (Encode.grow_any_site_three_cases (B))
+          -- second growth, cap < len + 8, first growth then second growth (Encode.grow_any_site_three_cases)
           ∨ (s.regs.rdi.toNat < s.regs.rcx.toNat + 8 ∧
             ∃ (t u scr spl' mid rest : List UInt8) (nb : BitVec 64) (C1 av1 av' : Nat), t.length = 8 ∧ u.length = 16
               ∧ scr.length = S ∧ spl'.length = 40
@@ -189,7 +189,7 @@ theorem Encode.cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) 
               ⋆ Eq ((pre ++ bs.toList).At st.data.regs.rax.toBitVec)
               ⋆ Eq (rest.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 40))
               ⋆ Heap av' ⋆ R) st.data.dmem)))
-        -- (3C) cap < len + 8, C1 < len + 40, heap left below the second call's budget: entry of that call
+        -- second call entry, cap < len + 8, C1 < len + 40, heap left below the second call's budget: entry of that call
         ∨ (st.pc = label "runtime.growslice" ∧ s.regs.rdi.toNat < s.regs.rcx.toNat + 8
           ∧ st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 120 }
           ∧ st.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8#64 } ∧ st.data.regs.r14 = s.regs.r14
@@ -235,7 +235,7 @@ theorem Encode.cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) 
   have := rcx.toNat_lt_size; have := rdi.toNat_lt_size; simp only [UInt64.size] at *
   have hL : rcx.toNat + 40 < 2 ^ 64 := by unfold maxAlloc at hmax; omega
   by_cases c1 : rcx.toNat + 40 ≤ rdi.toNat
-  · -- (1) fast path
+  · -- in place: fast path
     have htl : 40 ≤ spare.length := by omega
     rw [Encode.grow_first_site_split rbx.toBitVec rcx.toBitVec pre spare hpre htl (by omega)] at h_mem
     refine eventually_mono (Encode.fast_path k hk hf cst _ cC ctl _ pre (spare.take 8) ((spare.drop 8).take 32)
@@ -247,7 +247,7 @@ theorem Encode.cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) 
     rw [Encode.cover_out rbx.toBitVec rcx pre _ _ hpre he8 hroot hL]
     ecancel
   by_cases c2 : rcx.toNat + 8 ≤ rdi.toNat
-  · -- (2) first append fits, second grows
+  · -- growth at the second site: first append fits, second grows
     have htl : 8 ≤ spare.length := by omega
     rw [Encode.grow_any_site_split8 rbx.toBitVec rcx pre spare hpre htl (by omega)] at h_mem
     have hn := nextSliceCap_le (rcx.toNat + 40) rdi.toNat (by omega)
@@ -261,7 +261,7 @@ theorem Encode.cover_framed (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) 
       hscr, hspl', hrest, hav', ?_⟩)⟩
     rw [Encode.cover_out _ rcx pre _ _ hpre he8 hroot hL]
     ecancel
-  · -- (3) first append grows
+  · -- growth at the first site: first append grows
     have hlc : rcx.toNat ≤ rdi.toNat := by omega
     have c3 : rdi.toNat < rcx.toNat + 8 := by omega
     rw [Encode.cover_pre rbx.toBitVec rcx pre spare hpre (by omega)] at h_mem

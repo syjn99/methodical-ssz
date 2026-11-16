@@ -4,7 +4,7 @@ import Prysm.ElfData.PrysmTarget
 import Prysm.AttestationData.Code
 
 /-!
-# `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 2
+# `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, BeaconBlockRoot segment
 
     a.BeaconBlockRoot = make([]byte, 0, 32)
     a.BeaconBlockRoot = append(a.BeaconBlockRoot, buf[16:48]...)
@@ -34,7 +34,7 @@ theorem Decode.accept_low_address (x : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) :
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- Segment 2: from `L_167` (directive 85) to `L_208` (directive 120): the
+/-- BeaconBlockRoot segment: from `L_167` (directive 85) to `L_208` (directive 120): the
 BeaconBlockRoot slice (makeslice + memmove of buf[16:48]); rbx holds the new
 slice pointer at the end. -/
 theorem Decode.block_root (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)

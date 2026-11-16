@@ -5,7 +5,7 @@ import Runtime.NewobjectContract
 import Prysm.AttestationData.Code
 
 /-!
-# `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 3
+# `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, Source segment
 
     a.Source = new(Checkpoint)                      // always: the old pointer is overwritten
     if err = a.Source.UnmarshalSSZ(buf[48:88]); err != nil { return fmt.Errorf("Source: %w", err) }
@@ -103,7 +103,7 @@ theorem Decode.accept_guard96 (x : BitVec 64) (g : Nat) (h : g + 224 < x.toNat) 
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- Segment 3: from `L_208` (directive 120) to `L_2d9` (directive 172): `Root.ptr`, a new
+/-- Source segment: from `L_208` (directive 120) to `L_2d9` (directive 172): `Root.ptr`, a new
 Source object (`NewobjectContract`), and the Source decoder through `Prysm.Checkpoint.Decode.accept_function_spec`. -/
 theorem Decode.source (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (rsp0 r140 guard : UInt64) (rcv bf pb : BitVec 64) (se sroot : List UInt8) (hse : se.length = 8)

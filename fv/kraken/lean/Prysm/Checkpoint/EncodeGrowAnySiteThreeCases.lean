@@ -8,19 +8,19 @@ import Prysm.Checkpoint.Code
 `cap < len + 8`, nil / cap 0 `dst` included; no new premise, no new contract form: `GrowsliceContract` esz 1 and
 `MemmoveContract`). Its conclusion is a three-way disjunction, each with the exact frame:
 
-- (A) the block `C1` from the first growth holds the root (`len + 40 ≤ C1`): return through `Encode.tail_fit`
+- Root fits: the block `C1` from the first growth holds the root (`len + 40 ≤ C1`): return through `Encode.tail_fit`
   (same as the left disjunct of `Encode.grow_any_site`).
-- (B) `C1 < len + 40` and the heap that the first call left is at least the budget of the second call
+- Second growth: `C1 < len + 40` and the heap that the first call left is at least the budget of the second call
   (`2·nextSliceCap (len+40) C1 + 8192 ≤ av1`): return through the second `runtime.growslice` call
   (`Encode.tail_grow`). The caller's block keeps `pre`; the first new block `nb` keeps `pre ++ epoch ++ mid`;
   the returned block is `pre ++ epoch ++ root ++ rest`.
-- (C) `C1 < len + 40` and the heap left is **below** that budget: the code is at the entry of the second
+- Second call entry: `C1 < len + 40` and the heap left is **below** that budget: the code is at the entry of the second
   call in the exact state of `Encode.tail_grow_call`, with `Heap av'` in memory and
   `av' < 2·nextSliceCap (len+40) C1 + 8192`.
 
-Only (C) is not a return. It is the one state that the contract form cannot continue: `GrowsliceContract`
+Only the second call entry is not a return. It is the one state that the contract form cannot continue: `GrowsliceContract`
 gives the remaining heap of the first call only as an upper bound (`av' + C1 ≤ avail`), so the budget
-premise of the second call is not derivable. The return in (C) is differential only.
+premise of the second call is not derivable. The return after the second call entry is differential only.
 
 -/
 
@@ -61,7 +61,7 @@ theorem Encode.grow_any_site_three_cases (k : Nat) (hk : marshalSSZTo.IsInfixAt 
     (hgs : GrowsliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) :
     Eventually (step1 Host.exe)
       (fun st =>
-        -- (A) first growth, the new block holds the root: return
+        -- root fits: first growth, the new block holds the root: return
         (st.pc = Int64.ofBitVec ra.toBitVec
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -92,7 +92,7 @@ theorem Encode.grow_any_site_three_cases (k : Nat) (hk : marshalSSZTo.IsInfixAt 
           ⋆ Eq (root.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 8))
           ⋆ Eq (rest.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 40))
           ⋆ Heap av' ⋆ R) st.data.dmem))
-        -- (B) first growth, then second growth (the heap left covers the second call's budget): return
+        -- second growth: first growth, then second growth (the heap left covers the second call's budget): return
         ∨ (st.pc = Int64.ofBitVec ra.toBitVec
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -129,7 +129,7 @@ theorem Encode.grow_any_site_three_cases (k : Nat) (hk : marshalSSZTo.IsInfixAt 
           ⋆ Eq (root.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 8))
           ⋆ Eq (rest.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 40))
           ⋆ Heap av' ⋆ R) st.data.dmem))
-        -- (C) first growth, the heap left is below the second call's budget: entry of the second call
+        -- second call entry: first growth, the heap left is below the second call's budget: entry of the second call
         ∨ (st.pc = label "runtime.growslice" ∧ st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 120 }
           ∧ st.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8#64 } ∧ st.data.regs.r14 = s.regs.r14
           ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 ∧ st.data.regs.rdi.toNat = 32
@@ -178,7 +178,7 @@ theorem Encode.grow_any_site_three_cases (k : Nat) (hk : marshalSSZTo.IsInfixAt 
   have hC1 := d1.regs.rdi.toNat_lt_size
   simp only [UInt64.size] at hC1
   by_cases hfit2 : rcx.toNat + 40 ≤ d1.regs.rdi.toNat
-  · -- (A): the block from the first growth holds the root (Encode.tail_fit)
+  · -- root fits: the block from the first growth holds the root (Encode.tail_fit)
     have htl : 40 ≤ tail.length := by omega
     have ht8 : (tail.take 8).length = 8 := by simp only [List.length_take]; omega
     have ht32 : ((tail.drop 8).take 32).length = 32 := by simp only [List.length_take, List.length_drop]; omega
@@ -201,7 +201,7 @@ theorem Encode.grow_any_site_three_cases (k : Nat) (hk : marshalSSZTo.IsInfixAt 
     have ht8 : (tail.take 8).length = 8 := by simp only [List.length_take]; omega
     rw [Encode.grow_any_site_split8 d1.regs.rbx.toBitVec rcx pre tail hpre htl (by omega)] at Hm1
     by_cases hb2 : 2 * nextSliceCap (rcx.toNat + 40) d1.regs.rdi.toNat + 8192 ≤ av1
-    · -- (B): the heap left covers the second call's budget (Encode.tail_grow, GrowsliceContract esz 1)
+    · -- second growth: the heap left covers the second call's budget (Encode.tail_grow, GrowsliceContract esz 1)
       refine eventually_mono (Encode.tail_grow k hk hf rsp r14 rbp ra rcx d1.regs.rdi rax.toBitVec d1.regs.rbx.toBitVec p
         e8 root pre (tail.take 8) l16 l24 l32 l72 spl1 (Int.toBytes 8 (Host.addrOf (k + 28)).toBitVec.toInt) scr1
         he8 hroot hpre ht8 hl16 hl24 hl32 hl72 hspl1 (Int.toBytes_length 8 _) S hscr1 _ Heap av1 d1 hrsp1 hrbp1 hr141
@@ -213,7 +213,7 @@ theorem Encode.grow_any_site_three_cases (k : Nat) (hk : marshalSSZTo.IsInfixAt 
       simp only [Std.ExtHashMap.sep_assoc, Std.ExtHashMap.sep_emp] at Hm ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at Hm ⊢
       exact Hm
-    · -- (C): no lower bound on av1 from the contract; the run is at the second call, av1 below its budget
+    · -- second call entry: no lower bound on av1 from the contract; the run is at the second call, av1 below its budget
       refine eventually_mono (Encode.tail_grow_call k hk hf rsp r14 rbp ra rcx d1.regs.rdi rax.toBitVec d1.regs.rbx.toBitVec p
         e8 root pre (tail.take 8) l16 l24 l32 l72 spl1 (Int.toBytes 8 (Host.addrOf (k + 28)).toBitVec.toInt) scr1
         he8 hroot hpre ht8 hl16 hl24 hl32 hl72 hspl1 (Int.toBytes_length 8 _) S hscr1 _ d1 hrsp1 hrbp1 hr141

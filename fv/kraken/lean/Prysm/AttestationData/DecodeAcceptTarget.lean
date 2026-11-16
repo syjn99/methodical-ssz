@@ -3,7 +3,7 @@ import Prysm.AttestationData.DecodeAcceptSource
 import Prysm.AttestationData.Code
 
 /-!
-# `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 4
+# `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, Target segment
 
     a.Target = new(Checkpoint)                      // always: the old pointer is overwritten
     if err = a.Target.UnmarshalSSZ(buf[88:128]); err != nil { return fmt.Errorf("Target: %w", err) }
@@ -14,7 +14,7 @@ callq runtime.newobject`, 175–176 writeBarrier test (`jne`, not taken), 177–
 receiver, `jmp L_310`, 185 `L_310`, 186 store `Target`, 187–192 arguments (rbx = buf + 88,
 rdi = cap − 88, rcx = 40) and `callq Checkpoint.UnmarshalSSZ`, 193–194 `test %rax,%rax;
 je L_3a7`, 222 `L_3a7`, 223–225 epilogue and `retq` with the callee's nil error (rax = rbx = 0).
-The text is segment 3's with the Target offsets and the epilogue.
+The text is the text of the Source segment with the Target offsets and the epilogue.
 -/
 
 open Machine Runtime Prysm.AttestationData.Code
@@ -24,7 +24,7 @@ namespace Prysm.AttestationData
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- Segment 4: from `L_2d9` (directive 172) to the return: a new Target object
+/-- Target segment: from `L_2d9` (directive 172) to the return: a new Target object
 (`NewobjectContract`), the Target decoder through `Prysm.Checkpoint.Decode.accept_function_spec`, and the epilogue. -/
 theorem Decode.target (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (rsp0 r140 guard ra rbp0 : UInt64) (rcv bf : BitVec 64) (se sroot : List UInt8) (hse : se.length = 8)

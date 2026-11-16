@@ -166,13 +166,13 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
     conv => lhs; rw [← List.take_append_drop (S + 88) lo]
     exact Decode.accept_low_stack_split _ S hS _ _ hl88 hl8
   rw [hlos] at h_mem
-  -- segment 1: entry → L_167 (Slot, CommitteeIndex)
+  -- head segment: entry → L_167 (Slot, CommitteeIndex)
   refine eventually_trans _ _ _ _ (Decode.head k hk hf hsl hci in0 in1 hin0 hin1 _ ra guard fp s1 s2 s4 sp1 rslot
     (lo.drop (S + 88)) ast a8 a16 hfp h1 h2 h4 hsp1 hrs hl8 hast ha8 ha16 _ (by dsimp only; ecancel) hguard hlen) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 Hm1
   subst hpc1
-  -- segment 2: L_167 → L_208 (BeaconBlockRoot)
+  -- BeaconBlockRoot segment: L_167 → L_208 (BeaconBlockRoot)
   refine eventually_trans _ _ _ _ (Decode.block_root k hk hf rsp r14 rax.toBitVec rbx.toBitVec root hroot
     (sp0 ++ (Int.toBytes 8 (rbx.toBitVec + 8).toInt ++ sp2)) (Int.toBytes 8 (Host.addrOf (k + 56)).toBitVec.toInt)
     (lo.take (S + 88) ++ Int.toBytes 8 (rsp.toBitVec - 8#64).toInt) l68 aP aL aC
@@ -186,7 +186,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hrdx2 Hm2
   subst hpc2
   rw [Decode.accept_split_spill_words _ _ hspl] at Hm2
-  -- segment 3: L_208 → L_2d9 (Source)
+  -- Source segment: L_208 → L_2d9 (Source)
   refine eventually_trans _ _ _ _ (Decode.source k hk hf rsp r14 guard rax.toBitVec rbx.toBitVec p se sroot hse hsroot
     (Int.toBytes 8 rdi.toBitVec.toInt) (spl.take 8) ((spl.drop 8).take 8)
     (Int.toBytes 8 (Host.addrOf (k + 107)).toBitVec.toInt) lo2 (Int.toBytes 8 p.toInt) aS
@@ -195,7 +195,7 @@ theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hrbp3, hr143, ps, p1, lo3, hlo3, Hm3⟩
   dsimp only at hpc3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
-  -- segment 4: L_2d9 → return (Target)
+  -- Target segment: L_2d9 → return (Target)
   refine eventually_mono (Decode.target k hk hf rsp r14 guard ra rbp rax.toBitVec rbx.toBitVec te troot hte htroot
     (Int.toBytes 8 rdi.toBitVec.toInt) (Int.toBytes 8 ps.toInt) (Int.toBytes 8 (rbx.toBitVec + 48).toInt)
     (Int.toBytes 8 (Host.addrOf (k + 143)).toBitVec.toInt) lo3 aT

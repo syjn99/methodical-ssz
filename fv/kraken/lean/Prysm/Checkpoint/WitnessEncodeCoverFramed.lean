@@ -8,14 +8,14 @@ import Machine.WitnessSplit
 Same host, block, registers and instances as `Prysm/Checkpoint/WitnessEncodeCover.lean` (the `Prysm/Checkpoint/WitnessEncodeCover.lean` Host is the only one in
 scope, because two `Host` instances in one file make instance resolution unfold both programs): len 30, cap 30 + n (n ≤ 64), and nil `dst`. The witness conclusion names the capacity range
 that the run takes (the range conjunct of each disjunct of the framed cover decides it):
-n ≥ 40: disjunct (1), returned in place (`rax = dst`, `rcx = cap`); 8 ≤ n < 40: disjunct (2), returned
-with `nextSliceCap 70 (30+n) ≤ rcx`; n < 8 and nil: disjunct (3A)/(3B) (return) or (3C) (entry of
-the second growslice call).
+n ≥ 40: the in-place disjunct, returned in place (`rax = dst`, `rcx = cap`); 8 ≤ n < 40: growth at the second
+site, returned with `nextSliceCap 70 (30+n) ≤ rcx`; n < 8 and nil: growth at the first site, with the root fits or
+the second growth disjunct (return) or the second call entry disjunct (entry of the second growslice call).
 
-Which of (3A)/(3B)/(3C) the run takes is not decidable through the contract: `GrowsliceContract` hides the
-capacity and the remaining heap that the runtime returns (it gives only bounds). With the witness model
-`model_growslice` (capacity `2·newLen + 192`) the real run takes (3A); this is a property of the model, not
-of the theorem. The second-growth path (3B) on real Go 1.26.10 is differential only.
+Which of the three disjuncts of growth at the first site the run takes is not decidable through the contract:
+`GrowsliceContract` hides the capacity and the remaining heap that the runtime returns (it gives only bounds).
+With the witness model `model_growslice` (capacity `2·newLen + 192`) the real run takes the root fits disjunct.
+This is a property of the model, not of the theorem. The second growth on real Go 1.26.10 is differential only.
 -/
 
 open Machine Runtime Machine.Witness EthLib.Serialization.Ssz
@@ -80,7 +80,7 @@ theorem runs (g : SszValue) (n : Nat) (hn : n ≤ 64) (zmms : RegZmms) (flags : 
     exact ⟨fun h40 => by omega, fun h8 => by omega, fun _ => Or.inr ⟨e1, by rw [e6]; rfl, e7⟩⟩
 
 set_option maxHeartbeats 64000000 in
-/-- Nil `dst` (rbx = 0, len = cap = 0): range (3) only. -/
+/-- Nil `dst` (rbx = 0, len = cap = 0): growth at the first site only. -/
 theorem runs_nil (g : SszValue) (zmms : RegZmms) (flags : StatusFlags) :
     ∃ bs, serialize desc g.toValue = .ok bs ∧ bs.toList = (uintBytes 8 g.epoch.toNat).toList ++ g.root.toList ∧
     Eventually (step1 Host.exe)
