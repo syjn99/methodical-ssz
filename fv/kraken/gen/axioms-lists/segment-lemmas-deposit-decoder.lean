@@ -1,5 +1,5 @@
-import Codec.Segment.Bytes32LoopHistoricalBatch
-import Codec.Segment.SizeRejectInstances
+import Codec.Segment.Bytes32LoopProof
+import Codec.Segment.SizeReject
 import Prysm.Deposit.DecodeRejectSize
 import Prysm.Deposit.DecodeAccept
 
@@ -11,13 +11,10 @@ import Prysm.Deposit.DecodeAccept
 #print axioms Codec.Segment.backing_array_join
 #print axioms Codec.Segment.glue_nop
 #print axioms Codec.Segment.glue_source
+#print axioms Codec.Segment.glue_of
 #print axioms Codec.Segment.bytes32_loop_iteration
 #print axioms Codec.Segment.bytes32_loop_exit
 #print axioms Codec.Segment.bytes32_loop
-#print axioms Codec.Segment.historical_batch_block_roots_loop
-#print axioms Codec.Segment.historical_batch_state_roots_loop
 #print axioms Codec.Segment.reject_size_any_frame
-#print axioms Codec.Segment.sync_committee_reject_size
-#print axioms Codec.Segment.historical_batch_reject_size
 #print axioms Prysm.Deposit.Decode.reject_size
 #print axioms Prysm.Deposit.Decode.accept

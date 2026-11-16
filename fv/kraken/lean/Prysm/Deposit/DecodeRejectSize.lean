@@ -1,4 +1,5 @@
-import Codec.Segment.SizeRejectInstances
+import Codec.Segment.SizeReject
+import Codec.SegmentTemplate
 import Prysm.Deposit.Statements
 import Prysm.Deposit.Code
 

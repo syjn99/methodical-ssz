@@ -18,7 +18,7 @@ The element size is fixed at 32: other sizes compile to other sequences (48: `le
 `shl $5` is stepped with `shift_left64 5` (a literal count).
 The templates are the Kraken terms of HistoricalBatch directives 36–77 (link set `prysm/go1.26.10/link-set`) (printed with `repr`) with the varying
 operands replaced by parameters; each use shows the equality with the real program by `infix_sub` and
-`rfl`/`decide` (`Codec/Segment/Bytes32LoopHistoricalBatch.lean`, `Prysm/Deposit/DecodeAccept.lean`).
+`rfl`/`decide` (`Prysm/Deposit/DecodeAccept.lean`).
 -/
 
 open Machine Runtime
@@ -95,6 +95,13 @@ def Glue (a b : Nat) : Prop := b = a ∨ (b = a + 1 ∧ Host.prog[a]? = some byt
 /-- The gap before the `memmove` count: nothing (src = 0), or `lea src(%rbx),%rbx` at `a`. -/
 def GlueSource (a b : Nat) (src : Int64) : Prop :=
   (src = 0 ∧ b = a) ∨ (b = a + 1 ∧ Host.prog[a]? = some (bytes32LoopLeaSource src))
+
+theorem glue_of {p : Program} {k a : Nat} (hk : p.IsInfixAt Host.prog k) (h : p[a]? = some bytes32LoopNop) :
+    Glue (k + a) (k + a + 1) := by
+  refine Or.inr ⟨rfl, ?_⟩
+  have ha : a < p.length := by
+    rcases (List.getElem?_eq_some_iff.mp h) with ⟨ha, -⟩; exact ha
+  rw [List.isInfixAt_iff_getElem?.mp hk a ha, ← List.getElem?_eq_getElem ha]; exact h
 
 theorem infix_one {d : Directive} {a : Nat} (h : Host.prog[a]? = some d) : [d].IsInfixAt Host.prog a := by
   rw [List.isInfixAt_iff_getElem?]; intro i hi

@@ -12,7 +12,7 @@ Go 1.26.10 compiles `if uint64(len(buf)) != sz { return ssz.ErrSize }` at the to
 `cmp $sz,%rcx; jne L_err`, and the error block `mov ssz.ErrSize, ssz.ErrSize+8; add $F,%rsp; pop %rbp; ret`.
 The templates are the Kraken terms of HistoricalBatch directives 0–10 and 30–35 (link set `prysm/go1.26.10/link-set`) with F, sz and the labels as
 parameters. The address equations are closed by `bv_omega`, and the jne condition is read for any `sz`.
-The instances for SyncCommittee and HistoricalBatch are in `Codec/Segment/SizeRejectInstances.lean`.
+`Prysm/Deposit/DecodeRejectSize.lean` applies it.
 -/
 
 open Machine Runtime

@@ -1,5 +1,5 @@
-import Codec.Segment.Bytes32LoopHistoricalBatch
-import Codec.Segment.SizeRejectInstances
+import Codec.Segment.Bytes32LoopProof
+import Codec.SegmentTemplate
 import Prysm.Deposit_Data.GeneratedDecodeAccept
 import Prysm.Deposit.Statements
 import Prysm.Deposit.Code
