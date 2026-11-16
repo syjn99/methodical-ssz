@@ -2,7 +2,7 @@
 # Run the Desc checker for test_desc.py. Run inside the heavy-job gate with the Lean env.
 # Usage: run_desc_checker.sh <work-dir> <fv/kraken/lean>
 #   main : DESC_LIST=list.txt (originals), DESC_MUTANTS=mutants.txt (controls, known passes,
-#          review replay) -> <work>/main.result.json, <work>/logs/main.log
+#          review mutants) -> <work>/main.result.json, <work>/logs/main.log
 #   batch: DESC_BATCH=batch.txt (list scenarios, one result file each) -> <work>/logs/batch.log
 # The expected key set is the checker's table + the committed inventory (DESC_INVENTORY
 # defaults to ../prysm/inventory.json relative to fv/kraken/lean).

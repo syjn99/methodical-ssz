@@ -85,9 +85,11 @@ So a defect in the producer or in the IR does not also hide in the checker.
 `desc/test_desc.py prepare` makes its inputs, `desc/run_desc_checker.sh` writes it, and `desc/test_desc.py evaluate` checks it.
 They use a relative work directory under `lean/`, so the result holds no machine path.
 The result names the `Spec` descriptions, for example `Spec.scalarsDesc` and `Spec.listU64Desc`.
-The review sources `desc/review/*` name descriptions `Fv1.<xy>Desc` that the Lean tree does not define, for example `Fv1.scDesc` for Scalars.
-These names occur in the result only inside the texts of the replayed review mutants.
-`../FINDINGS.md` ("Replayed review mutants carry earlier reference names") gives their effect on three mutants.
+`desc/review_mutants.py` writes the review mutants and 13 list scenarios.
+`desc/test_desc.py prepare` runs it.
+A mutant or scenario id tells in plain words what the case changes or tests.
+An example is `list-uint64-limit-16-to-17-reference-null`.
+One mutant holds a forged checker line with a path in the work directory.
 No program checks the binding of the result where a `Desc` is used.
 The header of each `*SpecChecker.lean` states the sha256 of its `Desc` file as text only.
 

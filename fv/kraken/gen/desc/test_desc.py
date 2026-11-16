@@ -5,10 +5,10 @@
       Produce the 144 originals (9 hand types + the 135 types of the Prysm inventory), then
       - controls (wrong Descs; each must FAIL at its designated check) and known passes (Prysm
         only: changes the inventory binding cannot see), list mutants.txt;
-      - the replay of every review mutant: review/r1_mutants.py (20), r2_mutants.py (32),
-        r3_mutants.py (40); r3_mutants.py writes the forged line with the work directory path as given;
-      - list scenarios: t01-t13 of review/r3_mutants.py, the scenarios of this file, and for every wrong hand-type Desc an
-        "add" (next to the originals) and a "replace" (in place of its base) scenario;
+      - the review mutants of review_mutants.py (92); it writes its forged checker line with the work
+        directory path as given, so give a relative work directory;
+      - list scenarios: the 13 scenarios of review_mutants.py, the scenarios of this file, and for every wrong
+        hand-type Desc an "added" (next to the originals) and an "in-place" (in place of its base) scenario;
       expect.json and batch.txt.
   run_desc_checker.sh <work-dir> <fv/kraken/lean>       (gated; writes the checker result files)
   test_desc.py evaluate <work-dir> <out.json>
@@ -72,7 +72,7 @@ def _swap(i, k):
 
 
 def _swap01(d):
-    """Swap fields 0 and 1 with consistent offsets (mutant r6 of review/r1_mutants.py)."""
+    """Swap fields 0 and 1 with consistent offsets (the same change as prysm-status-v2-swap-fields-0-and-1 of review_mutants.py)."""
     s = d["ssz"]
     s["names"][0], s["names"][1] = s["names"][1], s["names"][0]
     s["fields"][0], s["fields"][1] = s["fields"][1], s["fields"][0]
@@ -89,78 +89,78 @@ _uintw = _both(_set(["ssz", "fields", 1, "w"], 4), _set(["fields", 1, "width"], 
 
 # (id, base file, what, designated check, mutation)
 MUTANTS = [
-    ("m-fixed-size", "Scalars", "wrong fixed size (16 -> 17)", "fixed", _set(["fixed_size"], 17)),
-    ("m-offset", "AttestationData", "wrong field offset (field 2: 16 -> 17)", "offset[2]", _set(["fields", 2, "offset"], 17)),
-    ("m-width", "Checkpoint", "wrong field width (field 1: 32 -> 31)", "width[1]", _set(["fields", 1, "width"], 31)),
-    ("m-head", "Nested", "wrong head size (28 -> 32)", "head", _set(["fixed_part_size"], 32)),
-    ("m-variable", "Nested", "variable field claimed fixed (field 2)", "variable[2]", _set(["fields", 2, "variable"], False)),
-    ("m-limit-claim", "ListU64", "wrong limit claim (16 -> 17)", "limit[0]", _set(["fields", 0, "limit"], 17)),
-    ("m-elem", "ListU64", "wrong element size (8 -> 4)", "elem[0]", _set(["fields", 0, "elem_size"], 4)),
-    ("m-limit-spec", "ListU64", "wrong limit against the spec (term and claim 16 -> 17)", "ref", _limit17),
-    ("m-kind-spec", "BitL", "wrong kind against the spec (bitList -> byteList, claims follow)", "ref",
+    ("scalars-fixed-size-claim-16-to-17", "Scalars", "wrong fixed size (16 -> 17)", "fixed", _set(["fixed_size"], 17)),
+    ("attestation-data-field-2-offset-16-to-17", "AttestationData", "wrong field offset (field 2: 16 -> 17)", "offset[2]", _set(["fields", 2, "offset"], 17)),
+    ("checkpoint-field-1-width-32-to-31", "Checkpoint", "wrong field width (field 1: 32 -> 31)", "width[1]", _set(["fields", 1, "width"], 31)),
+    ("nested-head-size-28-to-32", "Nested", "wrong head size (28 -> 32)", "head", _set(["fixed_part_size"], 32)),
+    ("nested-field-2-variable-claim-false", "Nested", "variable field claimed fixed (field 2)", "variable[2]", _set(["fields", 2, "variable"], False)),
+    ("list-uint64-limit-claim-16-to-17", "ListU64", "wrong limit claim (16 -> 17)", "limit[0]", _set(["fields", 0, "limit"], 17)),
+    ("list-uint64-element-size-claim-8-to-4", "ListU64", "wrong element size (8 -> 4)", "elem[0]", _set(["fields", 0, "elem_size"], 4)),
+    ("list-uint64-limit-16-to-17", "ListU64", "wrong limit against the spec (term and claim 16 -> 17)", "ref", _limit17),
+    ("bit-list-kind-bit-list-to-byte-list", "BitL", "wrong kind against the spec (bitList -> byteList, claims follow)", "ref",
      _both(_set(["ssz", "fields", 0, "k"], "byteList"), _set(["fields", 0, "kind"], "byteList"))),
-    ("m-uint-width", "Scalars", "wrong uint width against the spec (field 1: 2 -> 4, claims follow)", "ref", _uintw),
-    ("m-wf", "FixedVec", "ill-formed type (vector length 4 -> 0)", "wf", _set(["ssz", "fields", 1, "n"], 0)),
-    ("m-order", "prysm_v1alpha1.BeaconBlockBodyAltair", "wrong variable-field order (reversed)", "order",
+    ("scalars-field-1-uint16-to-uint32", "Scalars", "wrong uint width against the spec (field 1: 2 -> 4, claims follow)", "ref", _uintw),
+    ("fixed-vector-term-length-4-to-0", "FixedVec", "ill-formed type (vector length 4 -> 0)", "wf", _set(["ssz", "fields", 1, "n"], 0)),
+    ("prysm-beacon-block-body-altair-variable-order-reversed", "prysm_v1alpha1.BeaconBlockBodyAltair", "wrong variable-field order (reversed)", "order",
      _set(["variable_order"], lambda o: list(reversed(o)))),
-    ("m-kind-claim", "prysm_v1alpha1.StatusV2", "wrong kind claim (field 0 byteVector -> byteList)", "kind[0]",
+    ("prysm-status-v2-field-0-kind-claim-byte-vector-to-byte-list", "prysm_v1alpha1.StatusV2", "wrong kind claim (field 0 byteVector -> byteList)", "kind[0]",
      _set(["fields", 0, "kind"], "byteList")),
-    ("m-offset-prysm", "prysm_v1alpha1.StatusV2", "wrong field offset (field 3: 44 -> 45)", "offset[3]", _set(["fields", 3, "offset"], 45)),
-    ("r1-ref-dropped", "ListU64", "limit 16 -> 17 in term and claim, reference set to null", "ref-claim",
+    ("prysm-status-v2-field-3-offset-44-to-45", "prysm_v1alpha1.StatusV2", "wrong field offset (field 3: 44 -> 45)", "offset[3]", _set(["fields", 3, "offset"], 45)),
+    ("list-uint64-limit-16-to-17-reference-null", "ListU64", "limit 16 -> 17 in term and claim, reference set to null", "ref-claim",
      _both(_limit17, _set(["reference"], None))),
-    ("r2-ref-key-removed", "BitL", "bitList -> byteList in term and claim, reference key deleted", "ref-claim",
+    ("bit-list-kind-byte-list-reference-key-deleted", "BitL", "bitList -> byteList in term and claim, reference key deleted", "ref-claim",
      _both(_set(["ssz", "fields", 0, "k"], "byteList"), _set(["fields", 0, "kind"], "byteList"), _del(["reference"]))),
-    ("r12-type", "Scalars", "type name Scalars -> Checkpoint (reference stays Spec.scalarsDesc)", "hand-name", _set(["type"], "Checkpoint")),
-    ("r7-claim-name", "Scalars", "claim name of field 0 changed (term names unchanged)", "name[0]", _set(["fields", 0, "name"], "Zzz")),
-    ("r11-index", "Checkpoint", "index claim of field 1 -> 7", "index[1]", _set(["fields", 1, "index"], 7)),
-    ("r8-term-names-swapped", "Scalars", "term field names reversed, claims follow (shapes unchanged)", "go-names",
+    ("scalars-type-name-to-checkpoint", "Scalars", "type name Scalars -> Checkpoint (reference stays Spec.scalarsDesc)", "hand-name", _set(["type"], "Checkpoint")),
+    ("scalars-field-0-claim-name-to-zzz", "Scalars", "claim name of field 0 changed (term names unchanged)", "name[0]", _set(["fields", 0, "name"], "Zzz")),
+    ("checkpoint-field-1-index-claim-1-to-7", "Checkpoint", "index claim of field 1 -> 7", "index[1]", _set(["fields", 1, "index"], 7)),
+    ("scalars-names-reversed-claims-follow", "Scalars", "term field names reversed, claims follow (shapes unchanged)", "go-names",
      lambda d: d["ssz"].__setitem__("names", list(reversed(d["ssz"]["names"])))
      or [f.__setitem__("name", n) for f, n in zip(d["fields"], d["ssz"]["names"])]),
-    ("r9-elem-variable", "ListC", "claim key elem_variable (removed from the format) put back", "claim-keys[0]",
+    ("list-of-containers-claim-key-elem-variable-added", "ListC", "claim key elem_variable (removed from the format) put back", "claim-keys[0]",
      _set(["fields", 0, "elem_variable"], False)),
-    ("r10-callee", "AttestationData", "claim key callee (removed from the format) put back", "claim-keys[3]",
+    ("attestation-data-field-3-claim-key-callee-added", "AttestationData", "claim key callee (removed from the format) put back", "claim-keys[3]",
      _set(["fields", 3, "callee"], "github.com/x/y.Other")),
     # escapes of the table key (per file)
-    ("n01-esc-pkg-slash", "ListU64", "limit 16 -> 17, package gets a trailing '/', reference null", "package",
+    ("list-uint64-limit-16-to-17-package-trailing-slash", "ListU64", "limit 16 -> 17, package gets a trailing '/', reference null", "package",
      _both(_limit17, _set(["package"], lambda p: p + "/"), _set(["reference"], None))),
-    ("n02-esc-type-missing", "BitL", "bitList -> byteList, type key deleted, reference null", "type",
+    ("bit-list-kind-byte-list-type-key-deleted", "BitL", "bitList -> byteList, type key deleted, reference null", "type",
      _both(_set(["ssz", "fields", 0, "k"], "byteList"), _set(["fields", 0, "kind"], "byteList"), _del(["type"]),
            _set(["reference"], None))),
-    ("n03-esc-pkg-missing", "Scalars", "uint16 -> uint32 (claims follow), package key deleted, reference null", "package",
+    ("scalars-field-1-uint16-to-uint32-package-key-deleted", "Scalars", "uint16 -> uint32 (claims follow), package key deleted, reference null", "package",
      _both(_uintw, _del(["package"]), _set(["reference"], None))),
-    ("n05-esc-type-zwsp", "FixedVec", "vector length 4 -> 5 (claims follow), type name gets U+200B, reference null", "type",
+    ("fixed-vector-length-4-to-5-type-zero-width-space", "FixedVec", "vector length 4 -> 5 (claims follow), type name gets U+200B, reference null", "type",
      _both(_set(["ssz", "fields", 1, "n"], 5), _set(["fields", 1, "length"], 5), _set(["fields", 1, "width"], 40),
            _set(["fixed_size"], 72), _set(["fixed_part_size"], 72), _set(["type"], "FixedVec​"),
            _set(["reference"], None))),
     # reordered / renamed fields of equal shape (table types)
-    ("n11-ad-swap-slot-index", "AttestationData", "Slot and CommitteeIndex swapped in term, names and claims", "go-names", _swap(0, 1)),
-    ("n12-ad-swap-source-target", "AttestationData", "Source and Target swapped in term, names and claims", "go-names", _swap(3, 4)),
-    ("n14-cp-names-crossed", "Checkpoint", "uint64 field named Root, bytes32 field named Epoch (term and claims)", "go-names",
+    ("attestation-data-swap-slot-and-committee-index", "AttestationData", "Slot and CommitteeIndex swapped in term, names and claims", "go-names", _swap(0, 1)),
+    ("attestation-data-swap-source-and-target", "AttestationData", "Source and Target swapped in term, names and claims", "go-names", _swap(3, 4)),
+    ("checkpoint-field-names-crossed", "Checkpoint", "uint64 field named Root, bytes32 field named Epoch (term and claims)", "go-names",
      _both(_set(["ssz", "names"], ["Root", "Epoch"]), _set(["fields", 0, "name"], "Root"), _set(["fields", 1, "name"], "Epoch"))),
-    # own escapes against this fix
-    ("e1-nested-inner-names", "Nested", "inner Scalars field names B and C swapped inside Nested (claims cover only the top)", "go-names",
+    # changes that the claims do not cover, and keys outside the table
+    ("nested-inner-scalars-names-b-and-c-swapped", "Nested", "inner Scalars field names B and C swapped inside Nested (claims cover only the top)", "go-names",
      _set(["ssz", "fields", 1, "names"], ["A", "C", "B", "D", "E"])),
-    ("e2-hand-type-other-hand-pkg", "ListU64", "hand ListU64 under the hand prysm package (a known package)", "hand-name",
+    ("list-uint64-under-hand-prysm-package", "ListU64", "hand ListU64 under the hand prysm package (a known package)", "hand-name",
      _set(["package"], TGTP)),
-    ("e3-cyrillic-type", "Checkpoint", "type name with Cyrillic 'С' (U+0421) instead of 'C'", "type", _set(["type"], "Сheckpoint")),
-    ("e4-status-key", "Scalars", "extra top-level key status = SPEC", "keys", _set(["status"], "SPEC")),
-    ("e5-pkg-case", "Scalars", "package with a lower-case path segment (offchainlabs)", "package",
+    ("checkpoint-type-name-cyrillic-c", "Checkpoint", "type name with Cyrillic 'С' (U+0421) instead of 'C'", "type", _set(["type"], "Сheckpoint")),
+    ("scalars-extra-key-status", "Scalars", "extra top-level key status = SPEC", "keys", _set(["status"], "SPEC")),
+    ("scalars-package-lower-case-offchainlabs", "Scalars", "package with a lower-case path segment (offchainlabs)", "package",
      _set(["package"], lambda p: p.replace("OffchainLabs", "offchainlabs"))),
-    ("e6-ad-inner-cp-names", "AttestationData", "Checkpoint names crossed inside Source (claims cover only the top)", "go-names",
+    ("attestation-data-source-checkpoint-names-crossed", "AttestationData", "Checkpoint names crossed inside Source (claims cover only the top)", "go-names",
      _set(["ssz", "fields", 3, "names"], ["Root", "Epoch"])),
-    ("e7-schema", "ListU64", "schema fv.kraken.desc/2", "schema", _set(["schema"], "fv.kraken.desc/2")),
-    ("e8-term-extra-key", "BitL", "unknown key inside a term (limit2 next to limit)", "keys", _set(["ssz", "fields", 0, "limit2"], 1)),
+    ("list-uint64-schema-version-2", "ListU64", "schema fv.kraken.desc/2", "schema", _set(["schema"], "fv.kraken.desc/2")),
+    ("bit-list-term-extra-key-limit2", "BitL", "unknown key inside a term (limit2 next to limit)", "keys", _set(["ssz", "fields", 0, "limit2"], 1)),
 ]
 
-# own escape attempts against the closed-world design (checker level)
-def _y1(d):
+# attempts to escape the closed-world design (checker level)
+def _scalars_as_prysm_checkpoint(d):
     # hand Scalars content relabelled as the real Prysm Checkpoint key (an excepted name)
     d["package"] = PRYSM
     d["type"] = "Checkpoint"
     d["reference"] = None
 
 
-def _y2(d):
+def _prysm_checkpoint_epoch_bytes8(d):
     # real Prysm Checkpoint with Epoch rewritten as byteVector 8 (same size, same names)
     d["ssz"]["fields"][0] = {"k": "byteVector", "n": 8}
     d["fields"][0]["kind"] = "byteVector"
@@ -168,61 +168,61 @@ def _y2(d):
 
 
 MUTANTS += [
-    ("r6-prysm-field-swap", "prysm_v1alpha1.StatusV2", "fields 0 and 1 swapped consistently (offsets recomputed)",
+    ("prysm-status-v2-swap-fields-0-and-1", "prysm_v1alpha1.StatusV2", "fields 0 and 1 swapped consistently (offsets recomputed)",
      "inventory", None),   # function set below (needs _swap01)
-    ("y1-scalars-as-prysm-checkpoint", "Scalars", "hand Scalars content under the real Prysm Checkpoint key", "inventory", _y1),
-    ("y2-prysm-cp-epoch-bytes8", "prysm_v1alpha1.Checkpoint", "Prysm Checkpoint Epoch uint64 -> byteVector 8", "inventory", _y2),
-    ("y3-name-with-space", "prysm_v1alpha1.StatusV2", "field name 'Fork Digest' (space) in term and claim", "names",
+    ("scalars-under-prysm-checkpoint-key", "Scalars", "hand Scalars content under the real Prysm Checkpoint key", "inventory", _scalars_as_prysm_checkpoint),
+    ("prysm-checkpoint-epoch-uint64-to-byte-vector-8", "prysm_v1alpha1.Checkpoint", "Prysm Checkpoint Epoch uint64 -> byteVector 8", "inventory", _prysm_checkpoint_epoch_bytes8),
+    ("prysm-status-v2-field-name-with-space", "prysm_v1alpha1.StatusV2", "field name 'Fork Digest' (space) in term and claim", "names",
      _both(_set(["ssz", "names", 0], "Fork Digest"), _set(["fields", 0, "name"], "Fork Digest"))),
-    ("y4-name-digit-first", "prysm_v1alpha1.StatusV2", "field name '0ForkDigest' (digit first)", "names",
+    ("prysm-status-v2-field-name-digit-first", "prysm_v1alpha1.StatusV2", "field name '0ForkDigest' (digit first)", "names",
      _both(_set(["ssz", "names", 0], "0ForkDigest"), _set(["fields", 0, "name"], "0ForkDigest"))),
-    ("y5-pkg-dotdot", "prysm_v1alpha1.StatusV2", "package with a '..' segment", "package",
+    ("prysm-status-v2-package-dot-dot-segment", "prysm_v1alpha1.StatusV2", "package with a '..' segment", "package",
      _set(["package"], lambda q: q + "/../v1alpha1")),
-    ("r3-prysm-bool-uint8", "prysm_v1alpha1.Validator", "Slashed bool -> uint8 (claims follow): the inventory kind binding sees it",
+    ("prysm-validator-slashed-bool-to-uint8", "prysm_v1alpha1.Validator", "Slashed bool -> uint8 (claims follow): the inventory kind binding sees it",
      "inventory", _both(_set(["ssz", "fields", 3], {"k": "uint", "w": 1}), _set(["fields", 3, "kind"], "uint"))),
-    ("y6-claim-limit-on-uint", "Scalars", "uint claim carries limit (a key of another kind)", "claim-keys[0]", _set(["fields", 0, "limit"], 16)),
-    # delegated containers bound recursively (r17 was a known pass), and fixed_size required
-    ("r17-prysm-inner-kind", "prysm_v1alpha1.Attestation", "inner AttestationData.Slot uint64 -> byteVector 8 (inside a delegated container)",
+    ("scalars-field-0-uint-claim-with-limit", "Scalars", "uint claim carries limit (a key of another kind)", "claim-keys[0]", _set(["fields", 0, "limit"], 16)),
+    # delegated containers bound recursively, and fixed_size required
+    ("prysm-attestation-inner-slot-uint64-to-byte-vector-8", "prysm_v1alpha1.Attestation", "inner AttestationData.Slot uint64 -> byteVector 8 (inside a delegated container)",
      "inventory", _set(["ssz", "fields", 1, "fields", 0], {"k": "byteVector", "n": 8})),
-    ("z3-no-fixed-size", "Scalars", "top-level key fixed_size removed", "required-keys", _del(["fixed_size"])),
-    ("z4-no-fixed-size-prysm", "prysm_v1alpha1.StatusV2", "top-level key fixed_size removed (Prysm, variable type)", "required-keys",
+    ("scalars-fixed-size-key-deleted", "Scalars", "top-level key fixed_size removed", "required-keys", _del(["fixed_size"])),
+    ("prysm-status-v2-fixed-size-key-deleted", "prysm_v1alpha1.StatusV2", "top-level key fixed_size removed (Prysm, variable type)", "required-keys",
      _del(["fixed_size"])),
 ]
 MUTANTS = [m if m[4] is not None else (m[0], m[1], m[2], m[3], _swap01) for m in MUTANTS]
 TEXT_MUTANTS = [   # raw-text mutants: (id, base, what, designated, text transform)
-    ("y7-dup-type-key-same-value", "ListU64", "the key 'type' twice with the same value", "strict-json",
+    ("list-uint64-type-key-twice-same-value", "ListU64", "the key 'type' twice with the same value", "strict-json",
      lambda t: t.replace('"type": "ListU64",', '"type": "ListU64",\n "type": "ListU64",', 1)),
-    ("y8-int-as-exponent", "Checkpoint", "fixed_size written 4e1", "strict-json", lambda t: t.replace('"fixed_size": 40', '"fixed_size": 4e1', 1)),
-    ("y9-leading-zero", "Checkpoint", "fixed_size written 040", "strict-json", lambda t: t.replace('"fixed_size": 40', '"fixed_size": 040', 1)),
-    # bounds before parsing (small depth only; the 200000-level probe is not replayed)
-    ("z1-depth-100", "ListU64", "an extra key holding arrays nested 100 deep", "bounds",
+    ("checkpoint-fixed-size-written-as-exponent", "Checkpoint", "fixed_size written 4e1", "strict-json", lambda t: t.replace('"fixed_size": 40', '"fixed_size": 4e1', 1)),
+    ("checkpoint-fixed-size-written-with-leading-zero", "Checkpoint", "fixed_size written 040", "strict-json", lambda t: t.replace('"fixed_size": 40', '"fixed_size": 040', 1)),
+    # bounds before parsing (small depth only; a 200000-level probe is not in this suite)
+    ("list-uint64-arrays-nested-100-deep", "ListU64", "an extra key holding arrays nested 100 deep", "bounds",
      lambda t: t.replace('"type": "ListU64",', '"type": "ListU64",\n "x": ' + "[" * 100 + "]" * 100 + ",", 1)),
-    ("z2-size-1100000", "ListU64", "1100000 bytes of trailing white space (valid JSON)", "bounds", lambda t: t + " " * 1100000),
-    ("y10-escaped-key", "Scalars", "key 'refer\\u0065nce' written with an escape next to 'reference'", "strict-json",
+    ("list-uint64-1100000-bytes-trailing-white-space", "ListU64", "1100000 bytes of trailing white space (valid JSON)", "bounds", lambda t: t + " " * 1100000),
+    ("scalars-escaped-reference-key", "Scalars", "key 'refer\\u0065nce' written with an escape next to 'reference'", "strict-json",
      lambda t: t.replace('"reference": "Spec.scalarsDesc"', '"reference": "Spec.scalarsDesc",\n "refer\\u0065nce": null', 1)),
 ]
 
 # Prysm types only: no independent spec Desc offline (consensus-specs is not available); these
 # changes keep names, head sizes and kinds of the committed inventory, so the binding cannot see them.
 KNOWN_PASS = [
-    ("r4-prysm-bitvec-505", "prysm_v1alpha1.SyncAggregate", "Bitvector 512 -> 505 bits (still 64 bytes), claim follows",
+    ("prysm-sync-aggregate-bit-vector-512-to-505", "prysm_v1alpha1.SyncAggregate", "Bitvector 512 -> 505 bits (still 64 bytes), claim follows",
      _both(_set(["ssz", "fields", 0, "n"], 505), _set(["fields", 0, "length"], 505))),
-    ("r5-prysm-limit", "prysm_v1alpha1.IndexedAttestation", "list[uint64] limit 2048 -> 4096 in term and claim",
+    ("prysm-indexed-attestation-limit-2048-to-4096", "prysm_v1alpha1.IndexedAttestation", "list[uint64] limit 2048 -> 4096 in term and claim",
      _both(_set(["ssz", "fields", 0, "limit"], 4096), _set(["fields", 0, "limit"], 4096))),
 ]
 
 # List-level scenarios of my own: (id, what, {base -> mutant id | None (drop) | "dup"}, list-level finding)
 SCENARIOS = [
-    ("s-n01", "n01 replaces the hand ListU64 original", {"ListU64": "n01-esc-pkg-slash"}, "failed_originals"),
-    ("s-n02", "n02 replaces the hand BitL original", {"BitL": "n02-esc-type-missing"}, "missing"),
-    ("s-n03", "n03 replaces the hand Scalars original", {"Scalars": "n03-esc-pkg-missing"}, "missing"),
-    ("s-n05", "n05 replaces the hand FixedVec original", {"FixedVec": "n05-esc-type-zwsp"}, "missing"),
-    ("s-drop-nested", "the hand Nested original is missing", {"Nested": None}, "missing"),
-    ("s-dup-listc", "the hand ListC original appears twice", {"ListC": "dup"}, "duplicate_keys"),
-    ("s-y1-replace-prysm-cp", "y1 (hand Scalars as Prysm Checkpoint) replaces the Prysm Checkpoint original",
-     {"prysm_v1alpha1.Checkpoint": "y1-scalars-as-prysm-checkpoint"}, "failed_originals"),
-    ("s-y2-replace-prysm-cp", "y2 (Prysm Checkpoint, Epoch byteVector 8) replaces the Prysm Checkpoint original",
-     {"prysm_v1alpha1.Checkpoint": "y2-prysm-cp-epoch-bytes8"}, "failed_originals"),
+    ("list-uint64-replaced-by-package-trailing-slash", "list-uint64-limit-16-to-17-package-trailing-slash replaces the hand ListU64 original", {"ListU64": "list-uint64-limit-16-to-17-package-trailing-slash"}, "failed_originals"),
+    ("bit-list-replaced-by-type-key-deleted", "bit-list-kind-byte-list-type-key-deleted replaces the hand BitL original", {"BitL": "bit-list-kind-byte-list-type-key-deleted"}, "missing"),
+    ("scalars-replaced-by-package-key-deleted", "scalars-field-1-uint16-to-uint32-package-key-deleted replaces the hand Scalars original", {"Scalars": "scalars-field-1-uint16-to-uint32-package-key-deleted"}, "missing"),
+    ("fixed-vector-replaced-by-type-zero-width-space", "fixed-vector-length-4-to-5-type-zero-width-space replaces the hand FixedVec original", {"FixedVec": "fixed-vector-length-4-to-5-type-zero-width-space"}, "missing"),
+    ("originals-without-nested", "the hand Nested original is missing", {"Nested": None}, "missing"),
+    ("list-of-containers-listed-twice", "the hand ListC original appears twice", {"ListC": "dup"}, "duplicate_keys"),
+    ("prysm-checkpoint-replaced-by-scalars", "scalars-under-prysm-checkpoint-key replaces the Prysm Checkpoint original",
+     {"prysm_v1alpha1.Checkpoint": "scalars-under-prysm-checkpoint-key"}, "failed_originals"),
+    ("prysm-checkpoint-replaced-by-epoch-byte-vector-8", "prysm-checkpoint-epoch-uint64-to-byte-vector-8 replaces the Prysm Checkpoint original",
+     {"prysm_v1alpha1.Checkpoint": "prysm-checkpoint-epoch-uint64-to-byte-vector-8"}, "failed_originals"),
 ]
 
 
@@ -241,8 +241,8 @@ def hand_base(base):
 def prepare(work):
     if os.path.exists(work):
         shutil.rmtree(work)
-    orig, mut, scen, rep = (os.path.join(work, x) for x in ("orig", "mut", "scen", "replay"))
-    for d in (mut, scen, rep):
+    orig, mut, scen = (os.path.join(work, x) for x in ("orig", "mut", "scen"))
+    for d in (mut, scen):
         os.makedirs(d)
     py = [sys.executable, "-I"]
     subprocess.run(py + [f"{HERE}/producer.py", orig, f"{HERE}/hand-types-ir.json", f"--refs={HERE}/hand-types-references.json"],
@@ -253,7 +253,7 @@ def prepare(work):
                        check=True, capture_output=True, text=True)
     prod = json.loads(r.stdout)
     originals = [f"{orig}/{f}" for f in sorted(os.listdir(orig))]
-    exp = {"originals": originals, "controls": {}, "known_pass": {}, "replay": {}, "scenarios": {},
+    exp = {"originals": originals, "controls": {}, "known_pass": {}, "review": {}, "scenarios": {},
            "producer_skipped": prod["skipped"]}
     L = lambda base: json.load(open(f"{orig}/{base}.desc.json"))
     for mid, base, what, check, fn in MUTANTS:
@@ -271,24 +271,15 @@ def prepare(work):
         fn(d)
         write(f"{mut}/{mid}.desc.json", d)
         exp["known_pass"][f"{mut}/{mid}.desc.json"] = {"id": mid, "base": base, "what": what}
-    # replay: the reviewers' generators, unchanged, on a copy of the originals
-    shutil.copytree(orig, f"{rep}/orig")
-    write(f"{rep}/list.txt", "\n".join(f"{rep}/orig/{os.path.basename(p)}" for p in originals) + "\n")
-    subprocess.run(py + [f"{HERE}/review/r1_mutants.py", rep], check=True, capture_output=True)
-    subprocess.run(py + [f"{HERE}/review/r2_mutants.py", rep], check=True, capture_output=True)
-    subprocess.run(py + [f"{HERE}/review/r3_mutants.py", rep, f"{rep}/r3"], check=True, capture_output=True)
-    for src, fn in (("r1", f"{rep}/rmut.json"), ("r2", f"{rep}/nmut.json")):
-        for m in json.load(open(fn)):
-            exp["replay"][m["file"]] = {"review": src, "id": m["id"], "base": m["base"], "what": m["what"],
-                                       "reviewer_expects": m["sound_checker_should"]}
-    r3 = json.load(open(f"{rep}/r3/meta.json"))
-    for m in r3["mutants"]:
-        exp["replay"][m["file"]] = {"review": "r3", "id": m["id"], "base": m["base"], "what": m["what"],
-                                   "reviewer_expects": m["sound_checker_should"]}
+    # review mutants and their list scenarios
+    subprocess.run(py + [f"{HERE}/review_mutants.py", orig, work], check=True, capture_output=True)
+    review = json.load(open(f"{work}/review-mutants.json"))
+    for m in review["mutants"]:
+        exp["review"][m["file"]] = {"id": m["id"], "base": m["base"], "what": m["what"],
+                                    "reviewer_expects": m["sound_checker_should"]}
     batch = []
-    # list scenarios t01-t13 of review/r3_mutants.py (their lists name files under replay/)
-    for sc in r3["scenarios"]:
-        exp["scenarios"][sc["id"]] = {"source": "r3", "what": sc["what"], "list": sc["list"], "expect": "FAIL"}
+    for sc in review["scenarios"]:
+        exp["scenarios"][sc["id"]] = {"source": "review", "what": sc["what"], "list": sc["list"], "expect": "FAIL"}
     # the scenarios of this file
     for sid, what, repl, finding in SCENARIOS:
         lst = []
@@ -304,15 +295,21 @@ def prepare(work):
                 v = f"{mut}/{v}.desc.json"
             lst.append(v)
         write(f"{scen}/{sid}.txt", "\n".join(lst) + "\n")
+        if sid in exp["scenarios"]:
+            raise SystemExit(f"duplicate scenario id {sid}")
         exp["scenarios"][sid] = {"source": "test_desc", "what": what, "list": f"{scen}/{sid}.txt", "expect": "FAIL", "finding": finding}
-    # add-and-replace scenarios (key "boundary"): every wrong hand-type Desc (controls and replay mutants with a hand
-    # base that a sound checker must reject), added next to the originals and in place of its base
-    wrong = [(m["id"], m["base"], p) for p, m in exp["controls"].items() if hand_base(m["base"])]
-    wrong += [(m["id"], m["base"], p) for p, m in exp["replay"].items() if hand_base(m["base"]) and m["reviewer_expects"] == "FAIL"]
-    for mid, base, p in wrong:
+    # added and in-place scenarios (source "boundary"): every wrong hand-type Desc (controls and review mutants with a
+    # hand base that a sound checker must reject), added next to the originals and in place of its base.
+    # The id starts with the set of the mutant, because a control and a review mutant can have the same id.
+    wrong = [("control", m["id"], m["base"], p) for p, m in exp["controls"].items() if hand_base(m["base"])]
+    wrong += [("review", m["id"], m["base"], p) for p, m in exp["review"].items()
+              if hand_base(m["base"]) and m["reviewer_expects"] == "FAIL"]
+    for kind, mid, base, p in wrong:
         bp = f"{orig}/{base}.desc.json"
-        for how, lst in (("add", originals + [p]), ("replace", [p if q == bp else q for q in originals])):
-            sid = f"b-{how}-{exp['replay'].get(p, {}).get('review', 'c')}-{mid}"
+        for how, lst in (("added", originals + [p]), ("in-place", [p if q == bp else q for q in originals])):
+            sid = f"{kind}-{mid}-{how}"
+            if sid in exp["scenarios"]:
+                raise SystemExit(f"duplicate scenario id {sid}")
             write(f"{scen}/{sid}.txt", "\n".join(lst) + "\n")
             exp["scenarios"][sid] = {"source": "boundary", "what": f"{mid} {how}", "list": f"{scen}/{sid}.txt", "expect": "FAIL",
                                      "mutant": p, "base": base}
@@ -321,10 +318,10 @@ def prepare(work):
         sc["result"] = f"{scen}/{sid}.result.json"
     write(f"{work}/batch.txt", "\n".join(batch) + "\n")
     write(f"{work}/list.txt", "\n".join(originals) + "\n")
-    write(f"{work}/mutants.txt", "\n".join(list(exp["controls"]) + list(exp["known_pass"]) + list(exp["replay"])) + "\n")
+    write(f"{work}/mutants.txt", "\n".join(list(exp["controls"]) + list(exp["known_pass"]) + list(exp["review"])) + "\n")
     json.dump(exp, open(f"{work}/expect.json", "w"), indent=1)
     print(json.dumps({"originals": len(originals), "controls": len(exp["controls"]), "known_pass": len(exp["known_pass"]),
-                      "replay": len(exp["replay"]), "scenarios": len(exp["scenarios"]),
+                      "review": len(exp["review"]), "scenarios": len(exp["scenarios"]),
                       "boundary_wrong_hand_descs": len(wrong), "producer_skipped": prod["skipped"]}))
 
 
@@ -371,7 +368,7 @@ def evaluate(work, out):
                           "findings": {k: v for k, v in lst.items() if v and k != "table_self_check"}, "expected_finding": sc.get("finding"),
                           "as_expected": ok})
     rep_rows = []
-    for p, m in exp["replay"].items():
+    for p, m in exp["review"].items():
         g = get("mutant", p)
         want = m["reviewer_expects"]
         hand = hand_base(m["base"])
@@ -380,7 +377,7 @@ def evaluate(work, out):
         else:
             ok = True
         bad += not ok
-        rep_rows.append({"review": m["review"], "id": m["id"], "base": m["base"], "hand_type": hand, "what": m["what"],
+        rep_rows.append({"id": m["id"], "base": m["base"], "hand_type": hand, "what": m["what"],
                          "reviewer_expects": want, "result": g["result"], "status": g["status"], "failed_checks": g["failed"],
                          "as_expected": ok,
                          "note": "" if g["result"] == "FAIL" or want != "FAIL" else "Prysm type: known limit"})
@@ -396,19 +393,19 @@ def evaluate(work, out):
         "controls": len(exp["controls"]), "controls_as_expected": sum(r["role"] == "control" and r["as_expected"] for r in rows),
         "known_pass_prysm": len(exp["known_pass"]),
         "known_pass_result": {r["id"]: r["result"] for r in rows if r["role"] == "known-pass"},
-        "replay": len(rep_rows), "replay_by_review": {k: sum(r["review"] == k for r in rep_rows) for k in ("r1", "r2", "r3")},
-        "replay_fail": sum(r["result"] == "FAIL" for r in rep_rows), "replay_pass": sum(r["result"] == "PASS" for r in rep_rows),
-        "replay_pass_ids": [r["id"] for r in rep_rows if r["result"] == "PASS"],
+        "review": len(rep_rows),
+        "review_fail": sum(r["result"] == "FAIL" for r in rep_rows), "review_pass": sum(r["result"] == "PASS" for r in rep_rows),
+        "review_pass_ids": [r["id"] for r in rep_rows if r["result"] == "PASS"],
         "wrong_hand_type_descs_passing_per_file": wrong_hand_pass,
         "scenarios": len(scen_rows), "scenarios_as_expected": sum(r["as_expected"] for r in scen_rows),
         "boundary_scenarios": len(boundary), "boundary_scenarios_verdict_fail": sum(r["verdict"] == "FAIL" for r in boundary),
         "unexpected": bad, "producer_skipped": exp["producer_skipped"],
     }
     strip = lambda s: s.replace(work + "/", "")
-    full = json.loads(strip(json.dumps({"schema": "fv.kraken.desc-test/3", "summary": summary, "rows": rows,
-                                        "scenarios": scen_rows, "replay": rep_rows})))
+    full = json.loads(strip(json.dumps({"schema": "fv.kraken.desc-test/4", "summary": summary, "rows": rows,
+                                        "scenarios": scen_rows, "review": rep_rows})))
     json.dump(full, open(out, "w"), indent=1)
-    md = ["# Desc checker: controls, replay and list scenarios", "",
+    md = ["# Desc checker: controls, review mutants and list scenarios", "",
           "Generated by `gen/desc/test_desc.py evaluate` from the checker result files. Do not edit.", "",
           "## Summary", "", "```", json.dumps(full["summary"], indent=1), "```", "",
           "## Controls and known passes", "", "| id | role | base | expected | result | status | failed checks |",
@@ -417,12 +414,12 @@ def evaluate(work, out):
         if r["role"] != "original":
             md.append(f"| {r['id']} | {r['role']} | {r['base']} | {r.get('designated', 'PASS or FAIL')} | {r['result']} | {r['status']} | "
                       f"{', '.join(r.get('failed_checks', []))} |")
-    md += ["", "## Replay of the mutants of review/r1_mutants.py (r1: 20), r2_mutants.py (r2: 32) and r3_mutants.py (r3)", "",
-           "| mutant file | id | base | expected by the mutant file | result | status | failed checks | note |", "| --- | --- | --- | --- | --- | --- | --- | --- |"]
-    for r in full["replay"]:
-        md.append(f"| {r['review']} | {r['id']} | {r['base']} | {r['reviewer_expects']} | {r['result']} | {r['status']} | "
+    md += ["", "## Review mutants of review_mutants.py", "",
+           "| id | base | expected by the mutant file | result | status | failed checks | note |", "| --- | --- | --- | --- | --- | --- | --- |"]
+    for r in full["review"]:
+        md.append(f"| {r['id']} | {r['base']} | {r['reviewer_expects']} | {r['result']} | {r['status']} | "
                   f"{', '.join(r['failed_checks'])} | {r['note']} |")
-    md += ["", "## List scenarios (t01-t13 of review/r3_mutants.py, the scenarios of this file, add-and-replace scenarios)", "",
+    md += ["", "## List scenarios (review_mutants.py, this file, added and in-place scenarios)", "",
            "| id | source | verdict | findings | as expected |", "| --- | --- | --- | --- | --- |"]
     for r in full["scenarios"]:
         f = "; ".join(f"{k}: {len(v) if isinstance(v, list) else v}" for k, v in r["findings"].items())
