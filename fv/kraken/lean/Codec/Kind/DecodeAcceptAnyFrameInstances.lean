@@ -21,7 +21,7 @@ Layouts: three frame classes.
 
 Checkpoint (`Prysm.Checkpoint.Decode.accept`) is not `rfl`: see `Prysm.Checkpoint.Decode.accept_of_kind` (the kind instance implies the
 hand statement; the converse does not hold).
-After the split of this module, the declarations of single types are in `Prysm/BeaconBlockHeader/DecodeAcceptAnyFrameInstances.lean`, `Prysm/BlobIdentifier/DecodeAcceptAnyFrameInstances.lean`, `Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean`, `Prysm/DepositMessage/DecodeAcceptAnyFrameInstances.lean`, `Prysm/Deposit_Data/DecodeAcceptAnyFrameInstances.lean`, `Prysm/Eth1Data/DecodeAcceptAnyFrameInstances.lean`, `Prysm/PendingConsolidation/DecodeAcceptAnyFrameInstances.lean`, `Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean`, `Prysm/PendingPartialWithdrawal/DecodeAcceptAnyFrameInstances.lean`, `Prysm/PowBlock/DecodeAcceptAnyFrameInstances.lean`, `Prysm/SyncCommitteeMessage/DecodeAcceptAnyFrameInstances.lean`.
+After the split of this module, the declarations of single types are in `Prysm/BeaconBlockHeader/DecodeAcceptAnyFrameInstances.lean`, `Prysm/BlobIdentifier/DecodeAcceptAnyFrameInstances.lean`, `Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean`, `Prysm/Deposit_Data/DecodeAcceptAnyFrameInstances.lean`, `Prysm/Eth1Data/DecodeAcceptAnyFrameInstances.lean`, `Prysm/PendingConsolidation/DecodeAcceptAnyFrameInstances.lean`, `Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean`, `Prysm/PendingPartialWithdrawal/DecodeAcceptAnyFrameInstances.lean`, `Prysm/PowBlock/DecodeAcceptAnyFrameInstances.lean`, `Prysm/SyncCommitteeMessage/DecodeAcceptAnyFrameInstances.lean`.
 -/
 
 open Machine Runtime

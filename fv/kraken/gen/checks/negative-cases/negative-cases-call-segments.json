@@ -206,14 +206,6 @@
   "new": "[.bytes 32, .uint64] 33"
  },
  {
-  "id": "deposit-message-decode-accept-is-kind-statement-bytes-none-to-none",
-  "module": "Prysm/DepositMessage/DecodeAcceptComposition.lean",
-  "theorem": "Prysm.DepositMessage.Decode.accept_is_kind",
-  "kind": "statement",
-  "old": "[.bytes 48, .bytes 32, .uint64] 68",
-  "new": "[.bytes 32, .bytes 48, .uint64] 68"
- },
- {
   "id": "deposit-data-decode-accept-is-kind-statement-bytes-96-to-48",
   "module": "Prysm/Deposit_Data/DecodeAcceptComposition.lean",
   "theorem": "Prysm.Deposit_Data.Decode.accept_is_kind",

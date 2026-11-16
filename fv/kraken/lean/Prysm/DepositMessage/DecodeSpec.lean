@@ -1,5 +1,4 @@
-import Prysm.DepositMessage.DecodeAccept
-import Prysm.DepositMessage.DecodeRejectSize
+import Prysm.DepositMessage.GeneratedDecodeAccept
 import Prysm.DepositMessage.Spec
 
 /-!
@@ -7,6 +6,8 @@ import Prysm.DepositMessage.Spec
 
 Hand-written (the text of `Prysm/Eth1Data/DecodeSpec.lean` with the DepositMessage statement;
 the equation `bsA = SszValue.encode g` is kept as a hypothesis `hb` instead of `subst`, see `Prysm/DepositMessage/Spec.lean`).
+Built on the GENERATED theorems of `Prysm/DepositMessage/GeneratedDecodeAccept.lean` (`decoder --whole-accept`;
+raw output, not edited): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`, the independent consensus-specs Desc)
   as `v`, there is `g : SszValue` with `g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g`
   the machine code returns nil and the receiver holds `g` (PublicKey at a fresh `p1` with len = cap = 48,
@@ -80,7 +81,7 @@ theorem Decode.accept_spec (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (
   refine ⟨g, rfl, hb, ?_⟩
   have h88 : s.regs.rcx = 88 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, SszValue.encode_size]; rfl
-  exact Decode.accept k hk hf _ _ _ (by simp) (by simp) (by simp [Spec.uintBytes_size]) s ra guard
+  exact Decode.generated_accept k hk hf _ _ _ (by simp) (by simp) (by simp [Spec.uintBytes_size]) s ra guard
     fp s1 s2 spl l18 rslot lo aP1 aL1 aC1 aP2 aL2 aC2 aN
     hfp h1 h2 hspl hl18 hrs haP1 haL1 haC1 haP2 haL2 haC2 haN
     R S hlo Heap avail (Pm g hb) hguard h88 hav hms hmm
@@ -107,7 +108,7 @@ theorem Decode.reject_size_spec (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
           ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ :=
-  ⟨SszValue.spec_rejects bs hbs, Decode.reject_size k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
+  ⟨SszValue.spec_rejects bs hbs, Decode.generated_reject k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
     (fun h => hbs (by rw [← hlen, h]; rfl))⟩
 
 /-- **`reject_complete`**: an input that EthLib rejects reaches the `ssz.ErrSize` site (path condition

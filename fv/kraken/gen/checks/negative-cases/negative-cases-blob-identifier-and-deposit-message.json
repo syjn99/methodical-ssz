@@ -126,45 +126,45 @@
   "new": "(hlen : len ≠ 41)"
  },
  {
-  "id": "deposit-message-decode-generated-root-withdrawal-credentials-segment-control",
-  "module": "Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_segment",
+  "id": "deposit-message-decode-generated-withdrawal-credentials-segment-control",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_WithdrawalCredentials_segment",
   "kind": "control"
  },
  {
-  "id": "deposit-message-decode-generated-root-withdrawal-credentials-segment-statement-h-src-48-to-40",
-  "module": "Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_segment",
+  "id": "deposit-message-decode-generated-withdrawal-credentials-segment-statement-h-src-48-to-40",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_WithdrawalCredentials_segment",
   "kind": "statement",
   "old": "(hSrc : bf + (48 : Int64).toBitVec = aSrc)",
   "new": "(hSrc : bf + (40 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "deposit-message-bytes48-decode-segment-offset-zero-control",
-  "module": "Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean",
-  "theorem": "Prysm.DepositMessage.bytes48_decode_segment_offset_zero",
+  "id": "deposit-message-decode-generated-public-key-segment-control",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_PublicKey_segment",
   "kind": "control"
  },
  {
-  "id": "deposit-message-bytes48-decode-segment-offset-zero-statement-heap-48-to-32",
-  "module": "Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean",
-  "theorem": "Prysm.DepositMessage.bytes48_decode_segment_offset_zero",
+  "id": "deposit-message-decode-generated-public-key-segment-statement-heap-48-to-32",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_PublicKey_segment",
   "kind": "statement",
   "old": "⋆ Heap (avail - 48)",
   "new": "⋆ Heap (avail - 32)"
  },
  {
-  "id": "deposit-message-bytes48-decode-segment-offset-zero-statement-a-l-48-to-32",
-  "module": "Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean",
-  "theorem": "Prysm.DepositMessage.bytes48_decode_segment_offset_zero",
+  "id": "deposit-message-decode-generated-public-key-segment-statement-a-l-48-to-32",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_PublicKey_segment",
   "kind": "statement",
   "old": "Eq ((Int.toBytes 8 48).At aL)",
   "new": "Eq ((Int.toBytes 8 32).At aL)"
  },
  {
-  "id": "deposit-message-decode-accept-control",
-  "module": "Prysm/DepositMessage/DecodeAccept.lean",
-  "theorem": "Prysm.DepositMessage.Decode.accept",
+  "id": "deposit-message-decode-generated-accept-control",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_accept",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
   "code_namespace": "Prysm.DepositMessage.Code",
@@ -172,9 +172,9 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-message-decode-accept-code-mov-0x50-rcx-to-0x48-rcx",
-  "module": "Prysm/DepositMessage/DecodeAccept.lean",
-  "theorem": "Prysm.DepositMessage.Decode.accept",
+  "id": "deposit-message-decode-generated-directive-84-code-mov-0x50-rcx-to-0x48-rcx",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_directive_84",
   "kind": "code",
   "old": "  mov 0x50(%rcx),%rcx",
   "new": "  mov 0x48(%rcx),%rcx",
@@ -184,9 +184,9 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-message-decode-accept-code-mov-0x30-to-0x20",
-  "module": "Prysm/DepositMessage/DecodeAccept.lean",
-  "theorem": "Prysm.DepositMessage.Decode.accept",
+  "id": "deposit-message-decode-generated-public-key-segment-code-mov-0x30-to-0x20",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_PublicKey_segment",
   "kind": "code",
   "line": 31,
   "old": "  mov $0x30,%ecx",
@@ -197,25 +197,25 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-message-decode-accept-statement-pk-none-to-none",
-  "module": "Prysm/DepositMessage/DecodeAccept.lean",
-  "theorem": "Prysm.DepositMessage.Decode.accept",
+  "id": "deposit-message-decode-generated-accept-statement-fv0-p1-fv1-p2-to-fv1-p1-fv0-p2",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_accept",
   "kind": "statement",
-  "old": "⋆ Eq (pk.At p1) ⋆ Eq (wc.At p2)",
-  "new": "⋆ Eq (wc.At p1) ⋆ Eq (pk.At p2)"
+  "old": "⋆ Eq (fv0.At p1)\n          ⋆ Eq (fv1.At p2)",
+  "new": "⋆ Eq (fv1.At p1)\n          ⋆ Eq (fv0.At p2)"
  },
  {
-  "id": "deposit-message-decode-accept-statement-amt-48-to-40",
-  "module": "Prysm/DepositMessage/DecodeAccept.lean",
-  "theorem": "Prysm.DepositMessage.Decode.accept",
+  "id": "deposit-message-decode-generated-accept-statement-fv2-48-to-40",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_accept",
   "kind": "statement",
-  "old": "⋆ Eq (amt.At (s.regs.rax.toBitVec + 48))",
-  "new": "⋆ Eq (amt.At (s.regs.rax.toBitVec + 40))"
+  "old": "⋆ Eq (fv2.At (s.regs.rax.toBitVec + 48))",
+  "new": "⋆ Eq (fv2.At (s.regs.rax.toBitVec + 40))"
  },
  {
-  "id": "deposit-message-decode-reject-size-control",
-  "module": "Prysm/DepositMessage/DecodeRejectSize.lean",
-  "theorem": "Prysm.DepositMessage.Decode.reject_size",
+  "id": "deposit-message-decode-generated-reject-control",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_reject",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
   "code_namespace": "Prysm.DepositMessage.Code",
@@ -223,12 +223,68 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-message-decode-reject-size-statement-rbx-e1-to-e0",
-  "module": "Prysm/DepositMessage/DecodeRejectSize.lean",
-  "theorem": "Prysm.DepositMessage.Decode.reject_size",
+  "id": "deposit-message-decode-generated-reject-statement-rbx-e1-to-e0",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_reject",
   "kind": "statement",
   "old": "st.data.regs.rbx = e1",
   "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "deposit-message-decode-generated-public-key-segment-statement-hroot-48-to-32",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_PublicKey_segment",
+  "kind": "statement",
+  "old": "(hroot : root.length = 48)",
+  "new": "(hroot : root.length = 32)"
+ },
+ {
+  "id": "deposit-message-decode-generated-field-3-statement-fv2-to-a-n2",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_field_3",
+  "kind": "statement",
+  "old": "⋆ Eq (fv2.At (s.regs.rax.toBitVec + 48))",
+  "new": "⋆ Eq (aN2.At (s.regs.rax.toBitVec + 48))"
+ },
+ {
+  "id": "deposit-message-decode-generated-accept-statement-heap-80-to-48",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_accept",
+  "kind": "statement",
+  "old": "Heap (avail - 80)",
+  "new": "Heap (avail - 48)"
+ },
+ {
+  "id": "deposit-message-decode-generated-accept-statement-hlen-88-to-80",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_accept",
+  "kind": "statement",
+  "old": "(hlen : s.regs.rcx = 88)",
+  "new": "(hlen : s.regs.rcx = 80)"
+ },
+ {
+  "id": "deposit-message-decode-generated-directive-46-code-mov-rdx-to-0x8-rdx",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_directive_46",
+  "kind": "code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DepositMessage.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "old": "  mov %rdi,(%rdx)",
+  "new": "  mov %rdi,0x8(%rdx)"
+ },
+ {
+  "id": "deposit-message-decode-generated-head-code-cmp-0x58-to-0x50",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_head",
+  "kind": "code",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.DepositMessage.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "old": "  cmp $0x58,%rcx",
+  "new": "  cmp $0x50,%rcx"
  },
  {
   "id": "deposit-message-ssz-value-spec-accepts-iff-statement-size-88-to-89",

@@ -14,10 +14,10 @@ Every case runs `gen/generator/generator.py` of the working tree.
    missing field; stdout stays empty.
 
 field-segment cases (`decoder --field-segments`; ids `field-segments-*`; mutated `.S` and IR copies in <work-dir> only):
- - field-segments-compat-*: the default mode (no `--field-segments`) on BlobIdentifier / DepositMessage still prints the committed
-   files of BlobIdentifier and DepositMessage, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean` / `Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean` byte for byte.
- - field-segments-new-*: `--field-segments` on BlobIdentifier, DepositMessage: exit 0 twice, identical, = the committed
-   raw files `Prysm/BlobIdentifier/GeneratedDecodeFieldSegments.lean`, `Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean`, with every field covered.
+ - field-segments-compat-*: the default mode (no `--field-segments`) on BlobIdentifier still prints the committed
+   file of BlobIdentifier, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean`, byte for byte.
+ - field-segments-new-*: `--field-segments` on BlobIdentifier: exit 0 twice, identical, = the committed
+   raw file `Prysm/BlobIdentifier/GeneratedDecodeFieldSegments.lean`, with every field covered.
  - adversarial `.S` / IR mutants: wrong size immediates, a size other than 32 / 48 / 96, mismatched registers
    in the uint64 triple, base register not rsp / rdx, a scratch register outside the lemma's list, wrong
    displacement against the IR, truncated `.S`, swapped field order (IR and code), a delegated overlay
@@ -27,7 +27,7 @@ field-segment cases (`decoder --field-segments`; ids `field-segments-*`; mutated
    (no development site has one): the theorem text has the add-form 48 shape and the parameters of the
    synthetic code. Text check only (no Lean code constant for a synthetic `.S`: not kernel-checked).
  - field-segments-partial: a mutant with `--partial-out`: the file is marked PARTIAL and `kindcheck.py` rejects it.
- - field-segments-compose-*: `--compose` = the committed `Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean` / `Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean` (two runs,
+ - field-segments-compose-*: `--compose` = the committed `Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean` (two runs,
    identical; kindcheck PASS "identity-checked"); without `--same-as` the run warns on stderr and kindcheck
    rejects the file (no statement check); a field not covered, a tail store from another register and a
    shifted epilogue give exit 2 and 0 bytes.
@@ -183,11 +183,8 @@ FIELD_SEGMENT_CASES = {
                          "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Prysm.BlobIdentifier.Code", "--open", "Prysm.BlobIdentifier.Code"],
                fields=["BlockRoot", "Index"]),
     "DepositMessage": dict(S=NORM_V1ALPHA1 + "DepositMessage.UnmarshalSSZ.S", type="v1alpha1.DepositMessage",
-               committed="lean/Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean", old="lean/Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean",
                args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_field", "--imports",
                      "Codec.Bytes32Decode,Codec.FixedBytesDecode,Codec.InlineUint64,Prysm.BlobIdentifier.Code", "--open", "Prysm.DepositMessage.Code"],
-               old_args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_root", "--imports",
-                         "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Prysm.BlobIdentifier.Code", "--open", "Prysm.DepositMessage.Code"],
                fields=["PublicKey", "WithdrawalCredentials", "Amount"]),
     "BeaconBlockHeader": dict(S="prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
                  "BeaconBlockHeader.UnmarshalSSZ.S", type="v1alpha1.BeaconBlockHeader",
@@ -280,8 +277,8 @@ FIELD_SEGMENT_MUT = [
 def field_segment_cases(work, new):
     res, bad = [], 0
     irt = (KR / IR).read_text()
-    # compatibility: default mode = committed files of BlobIdentifier and DepositMessage
-    for key in ("BlobIdentifier", "DepositMessage"):
+    # compatibility: default mode = committed file of BlobIdentifier
+    for key in ("BlobIdentifier",):
         c = FIELD_SEGMENT_CASES[key]
         rc, so, se = run(["python3", "-I", str(new), "decoder", "--assembly", c["S"], "--ir", IR, "--type", c["type"]]
                          + c["old_args"], KR)
@@ -290,7 +287,7 @@ def field_segment_cases(work, new):
                         stdout_bytes=len(so), ok=bool(ok)))
         bad |= not ok
     # field-segment runs, twice, = committed raw output
-    for key in ("BlobIdentifier", "DepositMessage"):
+    for key in ("BlobIdentifier",):
         c = FIELD_SEGMENT_CASES[key]
         outs = []
         for i in range(2):
@@ -390,7 +387,7 @@ def field_segment_cases(work, new):
         return (["decoder", "--field-segments", "--compose", "--name", nm] + (["--same-as", ha] if same else [])
                 + ["--ir", IR, "--type", c["type"]] + a)
 
-    for key in ("BlobIdentifier", "DepositMessage"):
+    for key in ("BlobIdentifier",):
         outs = [run(["python3", "-I", str(new)] + cargs(key) + ["--assembly", FIELD_SEGMENT_CASES[key]["S"]], KR) for _ in range(2)]
         com = (KR / COMPOSITION_CASES[key][2]).read_bytes() if (KR / COMPOSITION_CASES[key][2]).exists() else None
         tf = work / f"field-segments-compose-{key}.lean"
