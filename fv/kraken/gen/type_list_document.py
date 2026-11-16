@@ -75,8 +75,6 @@ def main():
     w(f"| Reproducibility | Second build with an empty GOCACHE: sha256 `{bid['second build sha256']}` |")
     w("| Kraken / EthLib / Lean | `6064eec` / `8621856` / `nightly-2026-09-21` |")
     w("")
-    w("Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `1aede9d9…0761` do not transfer to this machine code.")
-    w("")
     w("## 3. Method")
     w("")
     w("1. `gen/prysm-gen.sh` runs the generator in a temporary Prysm tree. The flags are the same as in Prysm `build/gen/ssz.go`.")

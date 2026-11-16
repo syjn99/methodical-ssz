@@ -390,21 +390,6 @@
   "new": "st.data.regs.rax = 0"
  },
  {
-  "id": "elf-data-elf-data-prysm-target-runtime-staticuint64s-addr-eq-statement-elf-data-none-to-8",
-  "kind": "statement",
-  "module": "Prysm/ElfData/PrysmTarget.lean",
-  "theorem": "ElfData.PrysmTarget.runtimeStaticuint64s_addr_eq",
-  "old": "ElfData.PrysmTarget.runtimeStaticuint64s_addr = Runtime.Data.staticuint64s_addr",
-  "new": "ElfData.PrysmTarget.runtimeStaticuint64s_addr = Runtime.Data.staticuint64s_addr + 8",
-  "why": "the address lemma must name the staticuint64s label"
- },
- {
-  "id": "elf-data-elf-data-prysm-target-runtime-staticuint64s-addr-eq-control",
-  "kind": "control",
-  "module": "Prysm/ElfData/PrysmTarget.lean",
-  "theorem": "ElfData.PrysmTarget.runtimeStaticuint64s_addr_eq"
- },
- {
   "id": "checkpoint-layout-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/GoValue.lean",

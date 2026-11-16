@@ -20,12 +20,13 @@
 #   1. The ELF build: BUILD-INFO is equal to prysm/go1.26.10/build-ids.txt.
 #   2. The link set from gen/checks/link_set.py is equal to prysm/go1.26.10/link-set (target.objdump, norm/, data/).
 #   3. link/check.py passes, and its RESULT is equal to the tracked RESULT.
+#      link/check.py --selftest passes: each changed copy of the link set fails, and the unchanged copy passes.
 #   4. The case files from gen/checks/differential.py are equal to prysm/differential-cases/.
 #   5. The Go program gives no mismatch on these cases.
 #   6. The negative control: on the planted copy of the cases, the check reports mismatches (exit 1).
 set -eu
 if [ $# -ne 3 ]; then
-  sed -n '2,27p' "$0" >&2
+  sed -n '2,26p' "$0" >&2
   exit 2
 fi
 if [ -e "$3" ]; then
@@ -84,6 +85,8 @@ python3 -B "$K/link/check.py" "$S/link-set" > "$S/link-check.log"
 echo "PASS lines: $(grep -c '^PASS' "$S/link-set/RESULT"), FAIL lines: $(grep -c FAIL "$S/link-set/RESULT" || true)"
 diff "$S/link-set/RESULT" "$T/link-set/RESULT"
 echo "RESULT is equal to the tracked RESULT"
+python3 -B "$K/link/check.py" --selftest "$S/link-set" > "$S/link-check-selftest.log"
+echo "the self-test of the link check passes"
 
 echo "### 4. differential cases"
 D=$S/differential

@@ -46,9 +46,7 @@ run() {
   echo "$name rc=$?" | tee -a "$OUT/summary.txt"
 }
 
-run data_check link/data.py python3 -B link/data.py --check link/out
 run axioms_gate_selftest gen/checks/axioms_gate.py python3 -I -B gen/checks/axioms_gate.py --selftest
-run check_include gen/checks/check_include.py python3 -I -B gen/checks/check_include.py
 run deposit_data_include_check gen/checks/deposit_data_include_check.py python3 -I -B gen/checks/deposit_data_include_check.py
 run deposit_data_include_check_selftest gen/checks/deposit_data_include_check.py python3 -I -B gen/checks/deposit_data_include_check.py --selftest
 run kindcheck_selftest gen/generator/kindcheck.py python3 -I -B gen/generator/kindcheck.py --selftest

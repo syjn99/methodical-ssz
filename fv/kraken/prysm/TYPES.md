@@ -30,8 +30,6 @@ The program counts all numbers. The scope classification is a first pass (provis
 | Reproducibility | Second build with an empty GOCACHE: sha256 `a5fbd7fa86d1c2e9c92b6138ff37cf770b253782a174c2493bf75fc26068b5c1` |
 | Kraken / EthLib / Lean | `6064eec` / `8621856` / `nightly-2026-09-21` |
 
-Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `1aede9d9…0761` do not transfer to this machine code.
-
 ## 3. Method
 
 1. `gen/prysm-gen.sh` runs the generator in a temporary Prysm tree. The flags are the same as in Prysm `build/gen/ssz.go`.

@@ -4,8 +4,8 @@ import Machine.Include
 /-!
 # The table `runtime.staticuint64s` of the Go runtime
 
-`data_include staticuint64s` (`Machine/Include.lean`) reads `link/out/data/staticuint64s.data`.
-`link/data.py` writes that file from the ELF, and `link/check.py` compares it with the ELF.
+`data_include staticuint64s` (`Machine/Include.lean`) reads `prysm/go1.26.10/link-set/data/staticuint64s.data`.
+`gen/checks/link_set.py` writes that file from the Prysm ELF, and `link/check.py` compares it with the ELF.
 The address is the label `runtime.staticuint64s` of the `Host` program, so the definition holds for every Go ELF.
 The contract form `StaticBox` (`Runtime/Contracts.lean`) reads the table.
 -/

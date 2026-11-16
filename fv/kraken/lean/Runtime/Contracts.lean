@@ -175,8 +175,8 @@ def ErrStr (e sp : BitVec 64) (msg : List UInt8) : DataMem → Prop :=
   ErrObj e sp msg ⋆ Eq (msg.At sp)
 
 /-- `FmtErrorfWrapContract Heap fs RO MsgIn S`: the internal `fmt.errorf` for one fixed format
-`fs` with one `%w` verb (the generated `"J: %w"`, `"B: %w"`; the theorems name
-the included ELF bytes of the Go 1.26.3 test target)
+`fs` with one `%w` verb (for example the generated `"Slot: %w"`; the theorems name
+the included ELF bytes of the Prysm target)
 and one argument: an `*errors.errorString` error, type word `ity` (the word at
 `itab + 8` of the errorString itab, read there by the code), data word `e`. The
 object `ErrObj e sp msg` and the message are in the footprint: `MsgIn sp msg hm`
@@ -245,7 +245,7 @@ def FmtErrorfDecimalWrapContract (Heap : Nat → DataMem → Prop) (fs : List UI
       ⟨st, label "fmt.errorf"⟩
 
 /-- `FmtErrorfDecimalDecimalContract Heap fs tw S`: the internal `fmt.errorf` for one fixed
-format `fs` with two `%d` verbs (the ListC offset-order format of the Go 1.26.3 test target)
+format `fs` with two `%d` verbs (for example `formatBufferLength`, "expected buffer of length %d received %d")
 and two arguments: two `uint64` boxes (type word `tw` each, the theorems fix it to
 the address of the `type:uint64` descriptor; data words `bx1`, `bx2`, the `convT64` boxes of `v1`,
 `v2`, `BoxIn`). Budget from the format and the arguments: `fs.length + 40 + 8192

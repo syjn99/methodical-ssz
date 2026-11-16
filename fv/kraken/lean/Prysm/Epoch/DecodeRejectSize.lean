@@ -18,10 +18,8 @@ array at rsp − 40 (two `movups %xmm15`, then `type:int`, `&8` (static box
 39–42 epilogue. Contracts: `ConvT64Contract Heap S` and the `FmtErrorfDecimalDecimalContract` instance
 with the format `ElfData.PrysmTarget.formatBufferLength` (40 bytes) and the type word
 `ElfData.PrysmTarget.typeInt_addr` (`type:int` of the Go 1.26.10 ELF); existing forms only.
-`StaticBox` uses the table `Runtime.Data.staticuint64s` at `Runtime.Data.staticuint64s_addr` (the existing
-contract form reads the Runtime.Data namespace); `Decode.reject_static_table` shows that the Go 1.26.10 ELF's table
-(`runtimeStaticuint64s`) has the same bytes and `ElfData.PrysmTarget.runtimeStaticuint64s_addr_eq` that the two addresses are the same
-term.
+`StaticBox` uses the table `Runtime.Data.staticuint64s` at `Runtime.Data.staticuint64s_addr`.
+`Runtime/StaticUint64s.lean` reads it from the data file `staticuint64s.data` of the Prysm link set.
 Standalone obligation: from `Checkpoint.UnmarshalSSZ` this path is unreachable.
 -/
 
@@ -30,9 +28,6 @@ variable [Host]
 
 namespace Prysm.Epoch
 
-set_option maxRecDepth 100000 in
-theorem Decode.reject_static_table : ElfData.PrysmTarget.runtimeStaticuint64s = Runtime.Data.staticuint64s := by rfl
--- The address that `Runtime.StaticBox` reads is the Go 1.26.10 label `runtime.staticuint64s`.
 theorem Decode.reject_eight_bytes : ElfData.PrysmTarget.boxedEight = Int.toBytes 8 (8 : BitVec 64).toInt := by decide
 theorem Decode.reject_format_len : ElfData.PrysmTarget.formatBufferLength.length = 40 := by decide
 theorem Decode.reject_eq (x : BitVec 64) (h : x - 8#64 = 0#64) : x = 8 := by bv_omega

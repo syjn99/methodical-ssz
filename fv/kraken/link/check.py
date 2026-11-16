@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Link-level check: the converted assembly that Lean reads is the code in the ELF.
 
-Usage: check.py <outdir>      (outdir = fv/kraken/link/out, after build.sh)
+Usage: check.py <outdir>      (outdir = a link set: the output of gen/checks/link_set.py)
        check.py --selftest <outdir>
 
 Inputs in <outdir>: target-amd64 (ELF), target.objdump, target-amd64.nm, norm/*.S,
-data/*.data (link/data.py).
+data/*.data (gen/checks/link_set.py with link/data.py).
 Writes <outdir>/RESULT. Exit status 1 on any failure.
 
 Checks:
@@ -40,7 +40,7 @@ Checks:
      read from the theorem statements, not checked here. Items that the
      proven code addresses with `lea` (the format strings, the int and uint64
      type words) are bound to their id by the proofs; the items that only a
-     contract uses (messageBitlistEmpty, messageTrailingByteZero, messageTooManyBits, staticuint64s) are bound by the contract
+     contract uses (staticuint64s) are bound by the contract
      hypothesis. This check binds neither.
 The bundle hash (sha256 over RESULT up to and including the last PASS line,
 which covers the ELF, the .S files, the data files and the AXIOMS.txt
@@ -415,8 +415,11 @@ def main(outdir):
 
 
 def selftest(outdir):
-    """Sensitivity (C22): mutated inputs must fail; a pure relabeling must pass."""
+    """Sensitivity: mutated copies of a Prysm link set must fail; an unchanged copy must pass.
+    <outdir> is a link set of the Prysm target with its ELF (gen/checks/link_set.py)."""
     outdir = pathlib.Path(outdir)
+    fn = "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ"
+    fn_err = "github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderDepositRequest.UnmarshalSSZ"
     cases = []
     with tempfile.TemporaryDirectory() as d:
         def copy():
@@ -424,53 +427,52 @@ def selftest(outdir):
             shutil.copytree(outdir, t, dirs_exist_ok=True)
             return t
         # 1. drop one instruction from a .S
-        t = copy(); p = t / "norm" / "target.Scalars.UnmarshalSSZ.S"
+        t = copy(); p = t / "norm" / f"{fn}.S"
         ls = p.read_text().splitlines(); del ls[5]; p.write_text("\n".join(ls) + "\n")
         cases.append(("drop an instruction", t, False))
         # 2. change an immediate
-        t = copy(); p = t / "norm" / "target.Scalars.UnmarshalSSZ.S"
-        p.write_text(p.read_text().replace("cmp $0x10,%rcx", "cmp $0x11,%rcx"))
+        t = copy(); p = t / "norm" / f"{fn}.S"
+        s = p.read_text(); assert "cmp $0x8,%rcx" in s; p.write_text(s.replace("cmp $0x8,%rcx", "cmp $0x9,%rcx"))
         cases.append(("change an immediate", t, False))
         # 3. move a label one instruction later
-        t = copy(); p = t / "norm" / "target.Scalars.UnmarshalSSZ.S"
+        t = copy(); p = t / "norm" / f"{fn}.S"
         ls = p.read_text().splitlines()
         i = next(j for j, l in enumerate(ls) if l.startswith("L_") and j > 2)
         ls[i], ls[i + 1] = ls[i + 1], ls[i]; p.write_text("\n".join(ls) + "\n")
         cases.append(("move a label", t, False))
         # 4. objdump line without // (converter must fail)
         t = copy(); p = t / "target.objdump"
-        s = p.read_text(); p.write_text(s.replace("// mov $0x10,%eax", "", 1))
+        s = p.read_text(); assert "// cmp $0x8,%rcx" in s; p.write_text(s.replace("// cmp $0x8,%rcx", "", 1))
         cases.append(("objdump line without //", t, False))
         # 5. global reference to the wrong symbol
-        t = copy(); p = t / "norm" / "target.Scalars.UnmarshalSSZ.S"
-        p.write_text(p.read_text().replace("ssz.ErrSize+8(%rip)", "ssz.ErrSize(%rip)", 1))
+        t = copy(); p = t / "norm" / f"{fn_err}.S"
+        s = p.read_text(); assert "ssz.ErrSize+8(%rip)" in s; p.write_text(s.replace("ssz.ErrSize+8(%rip)", "ssz.ErrSize(%rip)", 1))
         cases.append(("wrong global offset", t, False))
         # 6. a padding nop becomes retq in the function file and in all.S
-        t = copy(); p = t / "norm" / "target.BitVec.UnmarshalSSZ.S"
+        t = copy(); p = t / "norm" / f"{fn}.S"
         ls = p.read_text().split("\n"); assert ls[8] == "  nop"; ls[8] = "  retq"; p.write_text("\n".join(ls))
         p = t / "norm" / "all.S"
-        ls = p.read_text().split("\n"); i = ls.index("target.BitVec.UnmarshalSSZ:") + 8
+        ls = p.read_text().split("\n"); i = ls.index(f"{fn}:") + 8
         assert ls[i] == "  nop"; ls[i] = "  retq"; p.write_text("\n".join(ls))
         cases.append(("padding nop -> retq", t, False))
         # 7. all.S instruction differs from the function file (labels unchanged)
         t = copy(); p = t / "norm" / "all.S"
-        p.write_text(p.read_text().replace("cmp $0x10,%rcx", "cmp $0x11,%rcx", 1))
+        p.write_text(p.read_text().replace("cmp $0x8,%rcx", "cmp $0x9,%rcx", 1))
         cases.append(("all.S instruction changed", t, False))
-        # 8. a data file byte: formatB "B: %w" -> "C: %w"
-        t = copy(); p = t / "data" / "formatB.data"
-        s = p.read_text(); assert "bytes 42 3a 20 25 77" in s; p.write_text(s.replace("bytes 42 3a", "bytes 43 3a"))
+        # 8. a data file byte: formatSlot "Slot: %w" -> "Tlot: %w"
+        t = copy(); p = t / "data" / "formatSlot.data"
+        s = p.read_text(); assert "bytes 53 6c 6f 74" in s; p.write_text(s.replace("bytes 53 6c", "bytes 54 6c"))
         cases.append(("data file byte changed", t, False))
-        # 9. the ELF range of a data file: the errorString itab's type word points to
-        #    another *uint64 descriptor (0x4cbf00)
+        # 9. the ELF range of a data file: the type word of the errorString itab points elsewhere
         t = copy(); p = t / "target-amd64"
         e = bytearray(p.read_bytes()); _, es, sy = read_elf(p)
         ia = sy["go:itab.*errors.errorString,error"][0] + 8
         o = next(s["off"] + ia - s["addr"] for s in es if s["typ"] == 1 and s["addr"] <= ia < s["addr"] + s["size"])
-        assert struct.unpack_from("<Q", e, o)[0] == 0x4d4a00
-        struct.pack_into("<Q", e, o, 0x4cbf00); p.write_bytes(bytes(e))
+        w = struct.unpack_from("<Q", e, o)[0]; assert w != 0
+        struct.pack_into("<Q", e, o, w + 0x40); p.write_bytes(bytes(e))
         cases.append(("ELF itab type word changed", t, False))
         # 10. a carriage return inside a data file (data_include splits on \n only)
-        t = copy(); p = t / "data" / "messageTooManyBits.data"
+        t = copy(); p = t / "data" / "formatSlot.data"
         p.write_bytes(p.read_bytes().replace(b"\nat ", b"\rat ", 1))
         cases.append(("data file with a carriage return", t, False))
         # 11. unchanged copy passes
@@ -488,7 +490,6 @@ def selftest(outdir):
             print(f"selftest {name}: {'pass' if got else 'fail'} (expected {'pass' if expect else 'fail'}) {why}")
             ok &= got == expect
     return 0 if ok else 1
-
 
 if __name__ == "__main__":
     if sys.argv[1] == "--selftest":

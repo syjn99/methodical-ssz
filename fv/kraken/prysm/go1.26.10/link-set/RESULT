@@ -214,13 +214,13 @@ PASS (f) formatTargetIndex.data: 0xc41e63, 15 bytes and 0 words = ELF
 PASS (f) formatValidatorIndex.data: 0xc442a7, 18 bytes and 0 words = ELF
 PASS (f) formatWithdrawableEpoch.data: 0xc4679d, 21 bytes and 0 words = ELF
 PASS (f) itabErrorStringError.data: 0xd28520, 8 bytes and 3 words = ELF
-PASS (f) runtimeStaticuint64s.data: 0xd45780, 2048 bytes and 0 words = ELF
 PASS (f) sszErrBytesLength.data: 0x137fc50, 0 bytes and 0 words = ELF
 PASS (f) sszErrIncorrectListSize.data: 0x13a1af0, 0 bytes and 0 words = ELF
 PASS (f) sszErrInvalidSerialization.data: 0x137fc70, 0 bytes and 0 words = ELF
 PASS (f) sszErrInvalidVariableOffset.data: 0x137fc80, 0 bytes and 0 words = ELF
 PASS (f) sszErrListTooBig.data: 0x137fc90, 0 bytes and 0 words = ELF
 PASS (f) sszErrSize.data: 0x137fcb0, 0 bytes and 0 words = ELF
+PASS (f) staticuint64s.data: 0xd45780, 2048 bytes and 0 words = ELF
 PASS (f) typeAttestationData.data: 0xbf08c0, 32 bytes and 2 words = ELF
 PASS (f) typeCheckpoint.data: 0xbc5c60, 32 bytes and 2 words = ELF
 PASS (f) typeDeposit_Data.data: 0xbe6280, 32 bytes and 2 words = ELF
@@ -576,13 +576,13 @@ data sha256 dfd16ea4f67db6ae8dbc8ef185a519b2d528d18695f867ee541f28b34886eef7 for
 data sha256 95be15b17399e65a4ba418431f63faae17aab4410dbba9513a18c7d7ada97cfc formatValidatorIndex.data
 data sha256 ca8c82b650bf7e7ea55c5ac295905dfa64d7ec2f34018cd526ff1618ceabee57 formatWithdrawableEpoch.data
 data sha256 b3f3ed5daa76150ca3cf79a6ec37af1721eec44fe14d34ac971fba3277c00ba0 itabErrorStringError.data
-data sha256 fd976bfaa6b3122ea4c450fac17715d7934ced58366e60895749845ceca62057 runtimeStaticuint64s.data
 data sha256 7e6b1d069643725f59f0569fbfd90744d185c1bb26febde54e294fe656efd93e sszErrBytesLength.data
 data sha256 c3acb36c23a28370f90f84dd4986516055358475020fe84d40580ffbf740c601 sszErrIncorrectListSize.data
 data sha256 b6388af29072c51fc613243fa028add64f738e57dc2f81fe18d093c370a8d41e sszErrInvalidSerialization.data
 data sha256 52498b95e604ed14e7e3b1c2dcb5d00a75913ab92fe8711cc5af394226b2c6a5 sszErrInvalidVariableOffset.data
 data sha256 f10d523a7d970ad2409ef8783dab69859d1cf938c5135419689baca0a95804a4 sszErrListTooBig.data
 data sha256 ced1616c9629a21c6626016bda08308b73a51f37aed3b72b9660cad8399f748c sszErrSize.data
+data sha256 ae15f36b0d1e7bfadefc19e61a07a4ec8e73f723621342755393f749a6482fb7 staticuint64s.data
 data sha256 e03cfdaf7e80562bde149b692d75d21fbea23e9ce8aac3df86084953208090e9 typeAttestationData.data
 data sha256 471b7dea3ff1b12250de254715f290d37f30f31e390486a54468b7be07cb0620 typeCheckpoint.data
 data sha256 0e0f36ca87fce9f82a8e2e30617e83c6fab93fc15b53304753b4977258c5b522 typeDeposit_Data.data
@@ -592,4 +592,4 @@ data sha256 7bdf265aa415b2da505fedd8bb28d4f2e1967f02d4d5316429ddada866a0d81d typ
 data sha256 8deef8f0909153fb9334cd1a30ca1a2b0464cc1b0ee8a1b38a2d7d8c999ea3af typeUint8.data
 data sha256 9641a9076be2a02999564ad70d6eb1951ada211f0cff7ae34a64dd7fb6577eec typeUint8Slice.data
 PASS all
-BUNDLE sha256 6ee781c1ccb4128a85b866be92b968de3600c0f16bcd7f136f1a0c702cc92fcd
+BUNDLE sha256 fd3a20f0940f588afd4825268192d13652f191d523c8bcc1be38507dc158941a

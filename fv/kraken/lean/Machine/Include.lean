@@ -20,8 +20,8 @@ elab "include_x64_code" path:str : term => do
   | .error e => throwError "Kraken runtime parser: {e}"
 
 /-!
-`data_include id`: the ELF data item `id` (`link/data.py`, format in
-`link/README.md` section 5). Reads `../link/out/data/<id>.data` (relative to `fv/kraken/lean`,
+`data_include id`: the ELF data item `id` of the Prysm link set (`gen/checks/link_set.py`, format in
+`link/README.md` section 5). Reads `../prysm/go1.26.10/link-set/data/<id>.data` (relative to `fv/kraken/lean`,
 as `include_x64_code`) and elaborates, in the current namespace,
 
 - `def <id>_addr [Host] : BitVec 64 := (label "<label>" + <off>).toBitVec`
@@ -93,7 +93,7 @@ meta def dataSource (id text : String) : Except String String := do
 open Lean Elab Command in
 elab "data_include " id:ident : command => do
   let n := id.getId.toString
-  let text ← IO.FS.readFile s!"../link/out/data/{n}.data"
+  let text ← IO.FS.readFile s!"../prysm/go1.26.10/link-set/data/{n}.data"
   match dataSource n text with
   | .error e => throwError "data_include {n}: {e}"
   | .ok src =>

@@ -137,13 +137,13 @@ data	string	formatTargetIndex	format string "TargetIndex: %w"	go_string._	34171	
 data	string	formatValidatorIndex	format string "ValidatorIndex: %w"	go_string._	43455	18	github.com/OffchainLabs/prysm/v7/proto/engine/v1.Withdrawal.UnmarshalSSZ
 data	string	formatWithdrawableEpoch	format string "WithdrawableEpoch: %w"	go_string._	52917	21	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Builder.UnmarshalSSZ
 data	internal/abi.ITab	itabErrorStringError	itab of *errors.errorString for the interface error	go_itab._errors.errorString_error	0	32	github.com/OffchainLabs/prysm/v7/consensus-types/primitives.CommitteeIndex.UnmarshalSSZ
-data	[256]uint64	runtimeStaticuint64s	the runtime table of the values 0 to 255 that runtime.convT64 points into	runtime.staticuint64s	0	2048	-
 data	error	sszErrBytesLength	address of the variable ssz.ErrBytesLength; the runtime sets its value at start	ssz.ErrBytesLength	0	0	github.com/OffchainLabs/prysm/v7/proto/engine/v1.BuilderDepositRequest.MarshalSSZTo
 data	error	sszErrIncorrectListSize	address of the variable ssz.ErrIncorrectListSize; the runtime sets its value at start	ssz.ErrIncorrectListSize	0	0	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ
 data	error	sszErrInvalidSerialization	address of the variable ssz.ErrInvalidSerialization; the runtime sets its value at start	ssz.ErrInvalidSerialization	0	0	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.PayloadAttestationData.UnmarshalSSZ
 data	error	sszErrInvalidVariableOffset	address of the variable ssz.ErrInvalidVariableOffset; the runtime sets its value at start	ssz.ErrInvalidVariableOffset	0	0	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ
 data	error	sszErrListTooBig	address of the variable ssz.ErrListTooBig; the runtime sets its value at start	ssz.ErrListTooBig	0	0	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo
 data	error	sszErrSize	address of the variable ssz.ErrSize; the runtime sets its value at start	ssz.ErrSize	0	0	github.com/OffchainLabs/prysm/v7/proto/engine/v1.BuilderDepositRequest.UnmarshalSSZ
+data	[256]uint64	staticuint64s	the runtime table of the values 0 to 255 that runtime.convT64 points into	runtime.staticuint64s	0	2048	-
 data	internal/abi.Type	typeAttestationData	type descriptor of v1alpha1.AttestationData	type__	1464512	48	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.IndexedAttestation.UnmarshalSSZ
 data	internal/abi.Type	typeCheckpoint	type descriptor of v1alpha1.Checkpoint	type__	1289312	48	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.AttestationData.MarshalSSZTo
 data	internal/abi.Type	typeDeposit_Data	type descriptor of v1alpha1.Deposit_Data	type__	1421952	48	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Deposit.UnmarshalSSZ

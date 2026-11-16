@@ -4,7 +4,7 @@
 Usage: deposit_data_include_check.py [--selftest]      (from any cwd; Python 3 standard library only)
 Checks, on the text of the tree:
 - lean/Prysm/ElfData/PrysmTarget.lean includes the data file prysm/go1.26.10/link-set/data/typeDeposit_Data.data
-  (`prysm_data_include typeDeposit_Data`), and that file exists. The reader turns its `at` line into
+  (`data_include typeDeposit_Data`), and that file exists. The reader turns its `at` line into
   `ElfData.PrysmTarget.typeDeposit_Data_addr`; `check.py` (f) compares the file with the ELF
   (prysm/go1.26.10/link-set/RESULT).
 - the modules of lean/Prysm/Deposit/ name `ElfData.PrysmTarget.typeDeposit_Data_addr` and write no hand address term
@@ -25,7 +25,7 @@ DEPOSIT = KR / "lean/Prysm/Deposit"
 
 def check(target_text, deposit_texts, data_exists):
     errs = []
-    if not re.search(r"^prysm_data_include typeDeposit_Data$", target_text, re.M):
+    if not re.search(r"^data_include typeDeposit_Data$", target_text, re.M):
         errs.append("PrysmTarget.lean does not include typeDeposit_Data")
     if not data_exists:
         errs.append(f"no data file {DATA.relative_to(KR)}")
@@ -44,7 +44,7 @@ def main():
         planted = dict(deposit_modules)
         planted["Code.lean"] = deposit_modules.get("Code.lean", "") + '\ndef hand_address [Host] : BitVec 64 := (label "type__" + 1421952).toBitVec\n'
         a = check(target, planted, True)
-        b = check(target.replace("prysm_data_include typeDeposit_Data\n", ""), deposit_modules, True)
+        b = check(target.replace("data_include typeDeposit_Data\n", ""), deposit_modules, True)
         ok = bool(a) and bool(b)
         print("SELFTEST", "PASS (planted hand definition and missing include both fail)" if ok else "FAIL", a, b)
         return 0 if ok else 1

@@ -57,13 +57,17 @@ def fmt_shapes(go_dir, typ):
     return shapes
 
 
+# The size of the largest function of the small hand test types: 395 instructions (the ListC decoder).
+# The size bands use it as a fixed reference. The test types have no ELF in the tree, so the number is fixed here.
+HAND_MAX = 395
+
+
 def main():
     k = sys.argv[1]
     inv = json.load(open(f"{k}/prysm/inventory.json"))
     fn = json.load(open(f"{k}/prysm/go1.26.10/functions.json"))
     kp = {r["symbol"]: r for r in json.load(open(f"{k}/prysm/go1.26.10/parser-result.json"))["functions"]}
-    hand_max = max(sum(1 for l in open(os.path.join(f"{k}/link/out/norm", f)) if l.startswith("  "))
-                   for f in os.listdir(f"{k}/link/out/norm") if f.startswith("target"))
+    hand_max = HAND_MAX
     funcs = {(f["package"], f["type"], f["method"]): f for f in fn["functions"]}
     hand_types = {tuple(h["type"].rsplit(".", 1)) for h in inv["hand_written_delegates"]}
     go_dir = f"{k}/prysm/_generated/mainnet"
