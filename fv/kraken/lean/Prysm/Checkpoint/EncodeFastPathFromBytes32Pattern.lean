@@ -2,7 +2,7 @@ import Codec.Bytes32Encode
 import Prysm.Checkpoint.EncodeFastPath
 
 /-!
-# In-sample check of the 32-byte field pattern (encode): the Checkpoint encoder fast path through `root_encode_segment`
+# The Checkpoint encoder fast path through the 32-byte field encode segment `root_encode_segment`
 
 `Encode.fast_path_from_bytes32_pattern` has the statement of `Prysm.Checkpoint.Encode.fast_path` (`Prysm/Checkpoint/EncodeFastPath.lean`)
 word for word. Its proof is the hand proof with directives 36–62 (the `Root` length test,
@@ -215,7 +215,7 @@ theorem Encode.fast_path_from_bytes32_pattern (k : Nat) (hk : marshalSSZTo.IsInf
     | (apply UInt64.toBitVec_inj.mp; simp; done)
     | (apply UInt64.toBitVec_inj.mp; checkpoint_addr)
 
-/-- The in-sample statement is the hand statement (same proposition). -/
+/-- The statement of `Encode.fast_path_from_bytes32_pattern` is the hand statement `Encode.fast_path` (same proposition). -/
 theorem Encode.fast_path_from_bytes32_pattern_same_statement : @Prysm.Checkpoint.Encode.fast_path = @Encode.fast_path_from_bytes32_pattern := rfl
 
 end Prysm.Checkpoint
