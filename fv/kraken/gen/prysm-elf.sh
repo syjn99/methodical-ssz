@@ -5,8 +5,8 @@
 # fv/prysm-target/main.go (fv/kraken/gen/keepalive.py).
 #
 # Usage: prysm-elf.sh <prysm-tree> <outdir> <fresh-gocache-dir>
-#   <outdir>/prysm-target-amd64      build 1 (shared GOCACHE)
-#   <outdir>/prysm-target-amd64.b2   build 2 (empty GOCACHE <fresh-gocache-dir>)
+#   <outdir>/prysm-target-amd64                the first build (shared GOCACHE)
+#   <outdir>/prysm-target-amd64.second-build   the second build (empty GOCACHE <fresh-gocache-dir>)
 #   <outdir>/prysm-target-amd64.objdump, .nm, BUILD-INFO
 set -eu
 P=$1
@@ -15,13 +15,13 @@ C2=$3
 cd "$P"
 mkdir -p "$O"
 FLAGS="-p 2 -tags purego -trimpath"
-echo "### build 1"
+echo "### first build"
 # shellcheck disable=SC2086
 GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build $FLAGS -o "$O/prysm-target-amd64" ./fv/prysm-target
-echo "### build 2 (empty GOCACHE)"
+echo "### second build (empty GOCACHE)"
 mkdir -p "$C2"
 # shellcheck disable=SC2086
-GOCACHE=$C2 GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build $FLAGS -o "$O/prysm-target-amd64.b2" ./fv/prysm-target
+GOCACHE=$C2 GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build $FLAGS -o "$O/prysm-target-amd64.second-build" ./fv/prysm-target
 RE='(proto/prysm/v1alpha1|proto/engine/v1)\.\(\*[A-Za-z0-9_]+\)\.(MarshalSSZTo|SizeSSZ|UnmarshalSSZ)$|consensus-types/primitives\.\(\*[A-Za-z0-9_]+\)\.(MarshalSSZTo|MarshalSSZ|SizeSSZ|UnmarshalSSZ)$|methodical-ssz/ssz\.Validate(Bitlist|Bitvector)$'
 echo "### objdump"
 go tool objdump -gnu -s "$RE" "$O/prysm-target-amd64" > "$O/prysm-target-amd64.objdump"
@@ -32,9 +32,9 @@ go tool nm -size -sort address "$O/prysm-target-amd64" > "$O/prysm-target-amd64.
   echo "host: $(uname -sm)"
   echo "elf sha256: $(sha256sum "$O/prysm-target-amd64" | cut -d' ' -f1)"
   echo "elf size: $(stat -c %s "$O/prysm-target-amd64")"
-  echo "elf b2 sha256: $(sha256sum "$O/prysm-target-amd64.b2" | cut -d' ' -f1)"
+  echo "second build sha256: $(sha256sum "$O/prysm-target-amd64.second-build" | cut -d' ' -f1)"
   echo "go build id: $(go tool buildid "$O/prysm-target-amd64")"
-  echo "go build id b2: $(go tool buildid "$O/prysm-target-amd64.b2")"
+  echo "second build go build id: $(go tool buildid "$O/prysm-target-amd64.second-build")"
   echo "objdump sha256: $(sha256sum "$O/prysm-target-amd64.objdump" | cut -d' ' -f1)"
   echo "nm sha256: $(sha256sum "$O/prysm-target-amd64.nm" | cut -d' ' -f1)"
   echo "main.go sha256: $(sha256sum fv/prysm-target/main.go | cut -d' ' -f1)"
@@ -42,7 +42,7 @@ go tool nm -size -sort address "$O/prysm-target-amd64" > "$O/prysm-target-amd64.
 go version -m "$O/prysm-target-amd64" > "$O/prysm-target-amd64.version-m.txt"
 cat "$O/BUILD-INFO"
 # The two builds must be byte-identical; a difference is a failure of this script.
-if cmp "$O/prysm-target-amd64" "$O/prysm-target-amd64.b2"; then
+if cmp "$O/prysm-target-amd64" "$O/prysm-target-amd64.second-build"; then
   echo "REPRODUCIBLE: identical"
 else
   echo "REPRODUCIBLE: DIFFERENT"

@@ -245,10 +245,6 @@ These names are written as their source writes them.
 
 ### Names that a pinned file or a tool needs
 
-- The keys `elf b2 sha256` and `go build id b2` of `../prysm/go1.26.10/build-ids.txt`.
-  `b2` is the second build.
-  `../gen/prysm-elf.sh` writes these lines after it builds the ELF two times.
-  A new line needs a new build.
 - Case ids that a test tool makes from the case parameters.
   `../gen/checks/differential.py` writes ids such as `dec-…` and `enc-empty-cap40-…`.
   `../prysm/go1.26.10/evidence/differential.json` records them.

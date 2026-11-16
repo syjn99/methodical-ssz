@@ -72,7 +72,7 @@ def main():
     w(f"| Target compilation | Cross-compiled for linux/amd64 with `{bid['go']}` (host binary), `{bid['target']}` |")
     w(f"| Host | {bid['host']} (generation is arm64 native. No x86-64 hardware) |")
     w(f"| ELF | sha256 `{bid['elf sha256']}`, {bid['elf size']} bytes. Not committed (`../README.md` section 3 tells how to build it again) |")
-    w(f"| Reproducibility | Second build with an empty GOCACHE: sha256 `{bid['elf b2 sha256']}` |")
+    w(f"| Reproducibility | Second build with an empty GOCACHE: sha256 `{bid['second build sha256']}` |")
     w("| Kraken / EthLib / Lean | `6064eec` / `8621856` / `nightly-2026-09-21` |")
     w("")
     w("Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `1aede9d9…0761` do not transfer to this machine code.")
