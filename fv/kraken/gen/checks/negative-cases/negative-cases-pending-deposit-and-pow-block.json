@@ -188,9 +188,9 @@
   "new": "(hlen : len ≠ 193)"
  },
  {
-  "id": "pow-block-decode-generated-step-total-difficulty-segment-control",
-  "module": "Prysm/PowBlock/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.PowBlock.Decode.generated_step_TotalDifficulty_segment",
+  "id": "pow-block-decode-generated-total-difficulty-segment-control",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_TotalDifficulty_segment",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
   "code_namespace": "Prysm.PowBlock.Code",
@@ -198,9 +198,9 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
  },
  {
-  "id": "pow-block-decode-generated-step-total-difficulty-segment-code-mov-0x20-to-0x18",
-  "module": "Prysm/PowBlock/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.PowBlock.Decode.generated_step_TotalDifficulty_segment",
+  "id": "pow-block-decode-generated-total-difficulty-segment-code-mov-0x20-to-0x18",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_TotalDifficulty_segment",
   "kind": "code",
   "line": 103,
   "old": "  mov $0x20,%ecx",
@@ -211,17 +211,17 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
  },
  {
-  "id": "pow-block-decode-generated-step-total-difficulty-segment-statement-h-src-64-to-56",
-  "module": "Prysm/PowBlock/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.PowBlock.Decode.generated_step_TotalDifficulty_segment",
+  "id": "pow-block-decode-generated-total-difficulty-segment-statement-h-src-64-to-56",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_TotalDifficulty_segment",
   "kind": "statement",
   "old": "(hSrc : bf + (64 : Int64).toBitVec = aSrc)",
   "new": "(hSrc : bf + (56 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "pow-block-decode-generated-step-directive-118-code-mov-0x30-rdx-to-0x28-rdx",
-  "module": "Prysm/PowBlock/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.PowBlock.Decode.generated_step_directive_118",
+  "id": "pow-block-decode-generated-directive-118-code-mov-0x30-rdx-to-0x28-rdx",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_directive_118",
   "kind": "code",
   "old": "  mov %rsi,0x30(%rdx)",
   "new": "  mov %rsi,0x28(%rdx)",
@@ -231,31 +231,31 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
  },
  {
-  "id": "pow-block-decode-from-generated-steps-parent-hash-field-control",
-  "module": "Prysm/PowBlock/DecodeAccept.lean",
-  "theorem": "Prysm.PowBlock.Decode.from_generated_steps_ParentHash_field",
+  "id": "pow-block-decode-generated-field-2-control",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_field_2",
   "kind": "control"
  },
  {
-  "id": "pow-block-decode-from-generated-steps-parent-hash-field-statement-h-src-32-to-24",
-  "module": "Prysm/PowBlock/DecodeAccept.lean",
-  "theorem": "Prysm.PowBlock.Decode.from_generated_steps_ParentHash_field",
+  "id": "pow-block-decode-generated-parent-hash-segment-statement-h-src-32-to-24",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_ParentHash_segment",
   "kind": "statement",
   "old": "(hSrc : bf + (32 : Int64).toBitVec = aSrc)",
   "new": "(hSrc : bf + (24 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "pow-block-decode-from-generated-steps-total-difficulty-field-statement-pc-119-to-118",
-  "module": "Prysm/PowBlock/DecodeAccept.lean",
-  "theorem": "Prysm.PowBlock.Decode.from_generated_steps_TotalDifficulty_field",
+  "id": "pow-block-decode-generated-field-3-statement-pc-119-to-118",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_field_3",
   "kind": "statement",
   "old": "st.pc = Host.addrOf (k + 119)",
   "new": "st.pc = Host.addrOf (k + 118)"
  },
  {
-  "id": "pow-block-decode-reject-size-control",
-  "module": "Prysm/PowBlock/DecodeRejectSize.lean",
-  "theorem": "Prysm.PowBlock.Decode.reject_size",
+  "id": "pow-block-decode-generated-reject-control",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_reject",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
   "code_namespace": "Prysm.PowBlock.Code",
@@ -263,17 +263,17 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
  },
  {
-  "id": "pow-block-decode-reject-size-statement-rbx-e1-to-e0",
-  "module": "Prysm/PowBlock/DecodeRejectSize.lean",
-  "theorem": "Prysm.PowBlock.Decode.reject_size",
+  "id": "pow-block-decode-generated-reject-statement-rbx-e1-to-e0",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_reject",
   "kind": "statement",
   "old": "st.data.regs.rbx = e1",
   "new": "st.data.regs.rbx = e0"
  },
  {
-  "id": "pow-block-decode-reject-size-code-cmp-0x60-to-0x68",
-  "module": "Prysm/PowBlock/DecodeRejectSize.lean",
-  "theorem": "Prysm.PowBlock.Decode.reject_size",
+  "id": "pow-block-decode-generated-head-code-cmp-0x60-to-0x68",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_head",
   "kind": "code",
   "old": "  cmp $0x60,%rcx",
   "new": "  cmp $0x68,%rcx",

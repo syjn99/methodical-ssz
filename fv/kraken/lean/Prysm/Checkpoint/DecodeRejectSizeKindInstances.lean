@@ -1,7 +1,6 @@
 import Prysm.BlobIdentifier.DecodeRejectSize
 import Prysm.PendingPartialWithdrawal.DecodeRejectSize
 import Prysm.PendingDeposit.DecodeRejectSize
-import Prysm.PowBlock.DecodeRejectSize
 import Prysm.AttestationData.DecodeRejectSize
 import Codec.DecodeRejectSizeAnyFrame
 

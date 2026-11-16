@@ -1,13 +1,13 @@
-import Prysm.PowBlock.DecodeAccept
+import Prysm.PowBlock.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept_from_generated_steps` (PowBlock decoder accept path)
+# Witness of `Decode.generated_accept` (PowBlock decoder accept path)
 
 Hand-written (the text of `Prysm/Deposit_Data/WitnessDecodeAccept.lean` with the PowBlock host and layout).
-It shows that the premises of the independent hand statement `Prysm.PowBlock.Decode.accept_statement` are satisfiable.
+It shows that the premises of the generated accept theorem `Prysm.PowBlock.Decode.generated_accept` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.PowBlock).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (150, `bump_makeslice1`) and `MemmoveGrowsliceModel` (156, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 96-byte heap, guard word, the 96 input bytes,
@@ -83,14 +83,14 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
 set_option maxHeartbeats 16000000 in
-/-- **Non-vacuity of `Decode.accept_from_generated_steps` (the premises of the hand statement `Decode.accept_statement` are satisfiable).** -/
+/-- **Non-vacuity of `Decode.generated_accept` (its premises are satisfiable).** -/
 theorem runs (bh ph td oP1 oP2 oP3 : List UInt8) (hbh : bh.length = 32) (hph : ph.length = 32)
     (htd : td.length = 32) (h1 : oP1.length = 8) (h2 : oP2.length = 8) (h3 : oP3.length = 8)
     (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
       ⟨initial_state bh ph td oP1 oP2 oP3 zmms flags, Host.addrOf 9⟩ :=
-  eventually_mono (Decode.accept_from_generated_steps 9 placed_at_9 labels_fresh_at_9 bh ph td hbh hph htd (initial_state bh ph td oP1 oP2 oP3 zmms flags)
+  eventually_mono (Decode.generated_accept 9 placed_at_9 labels_fresh_at_9 bh ph td hbh hph htd (initial_state bh ph td oP1 oP2 oP3 zmms flags)
     0 0 (zeros 8) (zeros 8) (zeros 8) (zeros 24) (zeros 8) (zeros 8) (zeros 16) oP1 (zeros 8) (zeros 8) oP2 (zeros 8) (zeros 8) oP3 (zeros 8) (zeros 8)
     rfl rfl rfl rfl rfl rfl h1 rfl rfl h2 rfl rfl h3 rfl rfl
     frame_rest 16 rfl bumpHeap 96

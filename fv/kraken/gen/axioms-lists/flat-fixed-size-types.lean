@@ -245,7 +245,6 @@ import Prysm.PartialDataColumnGroupID.WitnessGeneratedDecodeRejectSize
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeAccept
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeRejectSize
 import Prysm.BlobIdentifier.DecodeAcceptAnyFrameInstances
-import Prysm.PowBlock.DecodeAcceptAnyFrameInstances
 import Prysm.PendingDeposit.DecodeAcceptAnyFrameInstances
 import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 import Prysm.BlobIdentifier.DecodeAcceptComposition
@@ -1106,7 +1105,6 @@ import Prysm.BlobIdentifier.DecodeAcceptComposition
 #print axioms Prysm.PowBlock.Decode.generated_TotalDifficulty_segment_kind
 #print axioms Prysm.PowBlock.Decode.generated_accept
 #print axioms Prysm.PowBlock.Decode.generated_accept_kind
-#print axioms Prysm.PowBlock.Decode.generated_accept_statement
 #print axioms Prysm.PowBlock.Decode.generated_epilogue
 #print axioms Prysm.PowBlock.Decode.generated_epilogue_kind
 #print axioms Prysm.PowBlock.Decode.generated_field_1
@@ -1501,8 +1499,6 @@ import Prysm.BlobIdentifier.DecodeAcceptComposition
 #print axioms Codec.layoutMixedFrame40
 #print axioms Codec.layoutMixedFrame60
 #print axioms Codec.layoutRuntimeCalls
-#print axioms Prysm.PowBlock.Decode.accept_is_kind_any_frame
-#print axioms Prysm.PowBlock.Decode.reject_size_is_kind_any_frame
 #print axioms Prysm.PendingDeposit.Decode.accept_is_kind_any_frame
 #print axioms Prysm.PendingDeposit.Decode.reject_size_is_kind_any_frame
 #print axioms Codec.decodeRegisterFacts

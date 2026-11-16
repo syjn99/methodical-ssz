@@ -30,12 +30,12 @@
   "new": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 31] := by"
  },
  {
-  "id": "pow-block-decode-accept-is-kind-any-frame-statement-layout-runtime-calls-false-to-true",
-  "module": "Prysm/PowBlock/DecodeAcceptAnyFrameInstances.lean",
-  "theorem": "Prysm.PowBlock.Decode.accept_is_kind_any_frame",
+  "id": "pow-block-decode-generated-accept-kind-statement-state-word-false-to-true",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_accept_kind",
   "kind": "statement",
-  "old": "(layoutRuntimeCalls false 104 3)",
-  "new": "(layoutRuntimeCalls true 104 3)"
+  "old": "0 false [.fixed 24, .low]",
+  "new": "0 true [.fixed 24, .low]"
  },
  {
   "id": "checkpoint-decode-accept-of-kind-control",
