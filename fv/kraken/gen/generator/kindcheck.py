@@ -18,14 +18,11 @@ Checks, per file (text only):
     `t_kind` whose whole header is
         theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.uint64DecodeAcceptKind h C := by
         (`generator.py uint64`)
-    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.rootDecodeSegmentKind h C n1 … n9 := by
-    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.rootDecodeSegmentOffsetZeroKind h C n1 … n8 := by
-        (`generator.py decoder`; the second form for a 32-byte field at SSZ offset 0)
     or  a step kind (rule 10),
-    with C the code constant of `t`'s `hk : C.IsInfixAt Host.prog k` binder and n1..n9 natural literals,
+    with C the code constant of `t`'s `hk : C.IsInfixAt Host.prog k` binder,
     and the next line is exactly `  intro h; with_reducible rfl`.
  5. Every `_kind` theorem belongs to a theorem of the file.
-10. step (`generator.py decoder --steps`): the step kinds of `lean/Codec/Kind/WindowSteps.lean`,
+10. step chain (the first part of a `generator.py decoder --whole-accept` file): the step kinds of `lean/Codec/Kind/WindowSteps.lean`,
     `lean/Codec/Kind/FixedBytesDecodeWindow.lean` and `lean/Codec/CalleeDecodeWindow.lean`:
         @Codec.stepMoveRegisterKind h C Reg64.rD Reg64.rS j e          @Codec.stepAddKind h C Reg64.rD imm j e
         @Codec.stepLoadValueKind / stepLoadBytesKind / stepStoreKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
@@ -218,8 +215,7 @@ def check_text(text):
                 errs.append(f"{t}_kind: proof line is not `  intro h; with_reducible rfl`")
             continue
         want = (rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
-                rf"@Codec\.(?:uint64DecodeAcceptKind h {C}|rootDecodeSegmentKind h {C}(?: {NAT}){{9}}"
-                rf"|rootDecodeSegmentOffsetZeroKind h {C}(?: {NAT}){{8}}) := by")
+                rf"@Codec\.uint64DecodeAcceptKind h {C} := by")
         if not re.fullmatch(want, lines[j]):
             errs.append(f"{t}_kind: header is not a frozen kind: {lines[j][:160]}")
         if j + 1 >= len(lines) or lines[j + 1] != "  intro h; with_reducible rfl":
@@ -326,19 +322,6 @@ theorem t (k : Nat) (hk : VxUnmarshal.IsInfixAt Host.prog k)
 theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.uint64DecodeAcceptKind h VxUnmarshal := by
   intro h; with_reducible rfl
 
-/-- doc -/
-theorem s (k : Nat) (hk : Prysm.BeaconBlockHeader.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.BeaconBlockHeader.Code.unmarshalSSZ k) :
-    Q := by
-  exact bar
-theorem s_kind : ∀ (h : Host), type_of% (@s h) = @Codec.rootDecodeSegmentKind h Prysm.BeaconBlockHeader.Code.unmarshalSSZ 86 100 128 136 104 24 32 40 16 := by
-  intro h; with_reducible rfl
-
-theorem z (k : Nat) (hk : Prysm.Eth1Data.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.Eth1Data.Code.unmarshalSSZ k) :
-    Z := by
-  with_reducible exact baz
-theorem z_kind : ∀ (h : Host), type_of% (@z h) = @Codec.rootDecodeSegmentOffsetZeroKind h Prysm.Eth1Data.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by
-  intro h; with_reducible rfl
-
 end Prysm.Fixture
 """
 
@@ -350,25 +333,14 @@ def selftest():
         ("degenerate_rhs_self", deg, False),
         ("degenerate_rhs_true", GOOD.replace("= @Codec.uint64DecodeAcceptKind h VxUnmarshal := by", "= True := by"), False),
         ("other_kind_const", GOOD.replace("uint64DecodeAcceptKind h VxUnmarshal", "uint64DecodeAcceptKind h Prysm.CommitteeIndex.Code.unmarshalSSZ"), False),
-        ("eight_params", GOOD.replace(" 128 136 104 24 32 40 16", " 128 136 104 24 32 40"), False),
+        ("extra_param", GOOD.replace("uint64DecodeAcceptKind h VxUnmarshal :=", "uint64DecodeAcceptKind h VxUnmarshal 0 :="), False),
         ("missing_kind", GOOD.replace("theorem t_kind", "theorem t_kinx"), False),
         ("kind_not_next", GOOD.replace("theorem t_kind :", "theorem zz (hk : VxUnmarshal.IsInfixAt Host.prog k) : True := trivial\ntheorem t_kind :"), False),
-        ("proof_not_rfl", GOOD.replace("intro h; with_reducible rfl\n\n/--", "intro h; simp\n\n/--"), False),
+        ("proof_not_rfl", GOOD.replace("intro h; with_reducible rfl\n", "intro h; simp\n"), False),
         ("local_abbrev", GOOD.replace("namespace Prysm.Fixture\n", "namespace Prysm.Fixture\nabbrev Codec.uint64DecodeAcceptKind := True\n"), False),
         ("sorry", GOOD.replace("with_reducible exact foo", "sorry"), False),
         ("kind_other_namespace", GOOD.replace("@Codec.uint64DecodeAcceptKind", "@Prysm.Fixture.uint64DecodeAcceptKind"), False),
         ("orphan_kind", GOOD + "theorem q_kind : True := trivial\n", False),
-    ]
-    # the offset-0 kind (rootDecodeSegmentOffsetZeroKind, 8 parameters)
-    zk = "= @Codec.rootDecodeSegmentOffsetZeroKind h Prysm.Eth1Data.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by"
-    assert zk in GOOD
-    cases = cases + [
-        ("z_degenerate_rhs_self", GOOD.replace(zk, "= type_of% (@z h) := by"), False),
-        ("z_degenerate_rhs_true", GOOD.replace(zk, "= True := by"), False),
-        ("z_nine_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 24 0 :=")), False),
-        ("z_seven_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 :=")), False),
-        ("z_other_const", GOOD.replace(zk, zk.replace("Prysm.Eth1Data.Code.unmarshalSSZ", "Prysm.BeaconBlockHeader.Code.unmarshalSSZ")), False),
-        ("z_as_add_kind", GOOD.replace(zk, zk.replace("rootDecodeSegmentOffsetZeroKind", "rootDecodeSegmentKind")), False),
     ]
     cases = cases + step_cases()
     bad = []
@@ -394,7 +366,7 @@ def selftest():
 VALIDATOR_INDEX_DECODER_LABEL = '"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ"'
 
 
-# step controls: kind lines and proof lemma as `generator.py decoder --steps` writes them
+# step controls: kind lines and proof lemma as the step front end of `generator.py decoder --whole-accept` writes them
 STEP_TEST_KINDS = {
     "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50": ("@Codec.stepLoadBytesKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rbx 8 50 51", "step_load_bytes Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
     "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rax 16 51 52", "step_store Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
@@ -494,7 +466,7 @@ def exit_code_cases():
     """main() exit codes on temporary files: 0 for a good file, 1 for a bad one."""
     import contextlib, io, os
     out = []
-    for name, text, want in [("exit_good", GOOD, 0), ("exit_bad", GOOD.replace(" 16 24 :=", " 16 :="), 1)]:
+    for name, text, want in [("exit_good", GOOD, 0), ("exit_bad", GOOD.replace("= @Codec.uint64DecodeAcceptKind h VxUnmarshal := by", "= True := by"), 1)]:
         fd, path = tempfile.mkstemp(suffix=".lean")
         os.close(fd)
         pathlib.Path(path).write_text(text)
