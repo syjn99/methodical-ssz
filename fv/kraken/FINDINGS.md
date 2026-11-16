@@ -314,9 +314,9 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Slow proof steps
 
-- What: two proofs spent most of their time in one `omega` side goal each.
-- Where: the `bv_omega` of the argument `hLo` of `Codec.root_encode_segment` in `lean/Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean`. The `witness_split` side goals of the Checkpoint cover witnesses.
-- State: fixed. `lean/Machine/WitnessSplit.lean` has `witness_split_n`. The `Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean` step is a constant-only rewrite.
+- What: the Checkpoint cover witnesses spent most of their time in the `omega` side goals of `witness_split`.
+- Where: the `witness_split` side goals of the Checkpoint cover witnesses.
+- State: fixed. `lean/Machine/WitnessSplit.lean` has `witness_split_n`.
 
 ### Limit options without a profiled cause
 

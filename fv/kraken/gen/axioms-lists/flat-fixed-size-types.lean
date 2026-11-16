@@ -1,4 +1,3 @@
-import Prysm.Checkpoint.EncodeFastPathFromBytes32Pattern
 import Prysm.Checkpoint.EncodeBytes32TemplatePlacement
 import Codec.Kind.FieldPatterns
 import Prysm.Slot.Uint64DecoderKindSameAsHand
@@ -266,8 +265,6 @@ import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 #print axioms Codec.infix_sub
 #print axioms Codec.uint64_decode_accept
 #print axioms Codec.root_encode_segment
-#print axioms Prysm.Checkpoint.Encode.fast_path_from_bytes32_pattern
-#print axioms Prysm.Checkpoint.Encode.fast_path_from_bytes32_pattern_same_statement
 #print axioms Prysm.Checkpoint.Encode.bytes32_template_at
 -- Frozen statement kinds, their lemma ties and anchors, and the generated `_kind` identities
 #print axioms Codec.uint64DecodeAcceptKind_of

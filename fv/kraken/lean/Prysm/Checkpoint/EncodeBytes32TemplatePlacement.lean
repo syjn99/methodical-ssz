@@ -4,10 +4,10 @@ import Prysm.Checkpoint.Code
 /-!
 # Code placement of the 32-byte field encode template in the Checkpoint encoder (negative-test target)
 
-`Encode.bytes32_template_at` is the template check that `Encode.fast_path_from_bytes32_pattern` (`Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean`) does inside its
-proof: the two blocks of `rootEncodeHead` / `rootEncodeTail` with the Checkpoint parameters are directives
-36–41 and 55–62 of `Prysm.Checkpoint.Code.marshalSSZTo`, and `L_cf` is at k + 55. It exists so that code mutants of
-the encode template run inside the negative suite's 300 s case limit (`Prysm/Checkpoint/EncodeFastPathFromBytes32Pattern.lean` builds in about 730 s).
+`Encode.bytes32_template_at` is the placement check of the 32-byte field encode template of `Codec.Bytes32Encode`:
+the two blocks of `rootEncodeHead` / `rootEncodeTail` with the Checkpoint parameters are directives
+36–41 and 55–62 of `Prysm.Checkpoint.Code.marshalSSZTo`, and `L_cf` is at k + 55.
+Code mutants of the encode template are negative cases of this theorem.
 -/
 
 open Machine Runtime Prysm.Checkpoint.Code
