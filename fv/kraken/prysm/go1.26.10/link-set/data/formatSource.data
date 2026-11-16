@@ -1,3 +1,3 @@
-# formatSource: link/data.py, target-amd64 bytes [0xc3ec2c, 0xc3ec36)
-at go_string._ 21316
+# formatSource: link/data.py, target-amd64 bytes [0xc3ec26, 0xc3ec30)
+at go_string._ 21310
 bytes 53 6f 75 72 63 65 3a 20 25 77

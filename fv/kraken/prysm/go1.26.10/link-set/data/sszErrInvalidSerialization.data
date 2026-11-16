@@ -1,2 +1,2 @@
-# sszErrInvalidSerialization: link/data.py, target-amd64 bytes [0x137fc90, 0x137fc90)
+# sszErrInvalidSerialization: link/data.py, target-amd64 bytes [0x137fc70, 0x137fc70)
 at ssz.ErrInvalidSerialization 0

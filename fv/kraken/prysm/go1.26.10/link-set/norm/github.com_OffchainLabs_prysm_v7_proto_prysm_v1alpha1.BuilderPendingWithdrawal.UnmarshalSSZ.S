@@ -62,7 +62,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.UnmarshalSSZ_106:
   mov %rax,0x40(%rsp)
   mov %rbx,0x48(%rsp)
-  lea go_string._+21296(%rip),%rax
+  lea go_string._+21290(%rip),%rax
   mov $0xa,%ebx
   lea 0x40(%rsp),%rcx
   mov $0x1,%edi
@@ -75,7 +75,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal
   nop
   callq runtime.newobject
   movq $0xa,0x8(%rax)
-  lea go_string._+21296(%rip),%rcx
+  lea go_string._+21290(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -100,7 +100,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.UnmarshalSSZ_19d:
   mov %rax,0x30(%rsp)
   mov %rbx,0x38(%rsp)
-  lea go_string._+37034(%rip),%rax
+  lea go_string._+37028(%rip),%rax
   mov $0x10,%ebx
   lea 0x30(%rsp),%rcx
   mov $0x1,%edi
@@ -112,7 +112,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0x10,0x8(%rax)
-  lea go_string._+37034(%rip),%rcx
+  lea go_string._+37028(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

@@ -131,96 +131,96 @@ PASS (b) type__+828672 = 0xb55500 .rodata group(nearest preceding symbol)
 PASS (b) type__+1289312 = 0xbc5c60 .rodata group(nearest preceding symbol)
 PASS (b) type__+1421952 = 0xbe6280 .rodata group(nearest preceding symbol)
 PASS (b) type__+1464512 = 0xbf08c0 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+14986 = 0xc3d372 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+15010 = 0xc3d38a .rodata group(nearest preceding symbol)
-PASS (b) go_string._+18141 = 0xc3dfc5 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+18159 = 0xc3dfd7 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+21296 = 0xc3ec18 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+21316 = 0xc3ec2c .rodata group(nearest preceding symbol)
-PASS (b) go_string._+21326 = 0xc3ec36 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+23990 = 0xc3f69e .rodata group(nearest preceding symbol)
-PASS (b) go_string._+26459 = 0xc40043 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+29259 = 0xc40b33 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+29272 = 0xc40b40 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+34162 = 0xc41e5a .rodata group(nearest preceding symbol)
-PASS (b) go_string._+34177 = 0xc41e69 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+37034 = 0xc42992 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+37050 = 0xc429a2 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+37066 = 0xc429b2 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+40193 = 0xc435e9 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+40312 = 0xc43660 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+43461 = 0xc442ad .rodata group(nearest preceding symbol)
-PASS (b) go_string._+43515 = 0xc442e3 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+43533 = 0xc442f5 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+46529 = 0xc44ea9 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+52923 = 0xc467a3 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+58620 = 0xc47de4 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+64155 = 0xc49383 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+79927 = 0xc4d11f .rodata group(nearest preceding symbol)
-PASS (b) go_string._+110057 = 0xc546d1 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+110097 = 0xc546f9 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+151877 = 0xc5ea2d .rodata group(nearest preceding symbol)
-PASS (b) go_string._+163839 = 0xc618e7 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+164572 = 0xc61bc4 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+171319 = 0xc6361f .rodata group(nearest preceding symbol)
+PASS (b) go_string._+14980 = 0xc3d36c .rodata group(nearest preceding symbol)
+PASS (b) go_string._+15004 = 0xc3d384 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+18135 = 0xc3dfbf .rodata group(nearest preceding symbol)
+PASS (b) go_string._+18153 = 0xc3dfd1 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+21290 = 0xc3ec12 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+21310 = 0xc3ec26 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+21320 = 0xc3ec30 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+23984 = 0xc3f698 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+26453 = 0xc4003d .rodata group(nearest preceding symbol)
+PASS (b) go_string._+29253 = 0xc40b2d .rodata group(nearest preceding symbol)
+PASS (b) go_string._+29266 = 0xc40b3a .rodata group(nearest preceding symbol)
+PASS (b) go_string._+34156 = 0xc41e54 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+34171 = 0xc41e63 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+37028 = 0xc4298c .rodata group(nearest preceding symbol)
+PASS (b) go_string._+37044 = 0xc4299c .rodata group(nearest preceding symbol)
+PASS (b) go_string._+37060 = 0xc429ac .rodata group(nearest preceding symbol)
+PASS (b) go_string._+40187 = 0xc435e3 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+40306 = 0xc4365a .rodata group(nearest preceding symbol)
+PASS (b) go_string._+43455 = 0xc442a7 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+43509 = 0xc442dd .rodata group(nearest preceding symbol)
+PASS (b) go_string._+43527 = 0xc442ef .rodata group(nearest preceding symbol)
+PASS (b) go_string._+46523 = 0xc44ea3 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+52917 = 0xc4679d .rodata group(nearest preceding symbol)
+PASS (b) go_string._+58614 = 0xc47dde .rodata group(nearest preceding symbol)
+PASS (b) go_string._+64149 = 0xc4937d .rodata group(nearest preceding symbol)
+PASS (b) go_string._+79921 = 0xc4d119 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+110051 = 0xc546cb .rodata group(nearest preceding symbol)
+PASS (b) go_string._+110091 = 0xc546f3 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+151871 = 0xc5ea27 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+163833 = 0xc618e1 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+164566 = 0xc61bbe .rodata group(nearest preceding symbol)
+PASS (b) go_string._+171313 = 0xc63619 .rodata group(nearest preceding symbol)
 PASS (b) runtime.gcbits._+1432 = 0xd232a8 .rodata group(nearest preceding symbol)
 PASS (b) go_itab._errors.errorString_error = 0xd28520 .rodata in-symbol
-PASS (b) ssz.ErrBytesLength = 0x137fc70 .data in-symbol
-PASS (b) ssz.ErrBytesLength+8 = 0x137fc78 .data in-symbol
-PASS (b) ssz.ErrInvalidSerialization = 0x137fc90 .data in-symbol
-PASS (b) ssz.ErrInvalidSerialization+8 = 0x137fc98 .data in-symbol
-PASS (b) ssz.ErrInvalidVariableOffset = 0x137fca0 .data in-symbol
-PASS (b) ssz.ErrInvalidVariableOffset+8 = 0x137fca8 .data in-symbol
-PASS (b) ssz.ErrListTooBig = 0x137fcb0 .data in-symbol
-PASS (b) ssz.ErrListTooBig+8 = 0x137fcb8 .data in-symbol
-PASS (b) ssz.ErrSize = 0x137fcd0 .data in-symbol
-PASS (b) ssz.ErrSize+8 = 0x137fcd8 .data in-symbol
-PASS (b) ssz.ErrIncorrectListSize = 0x13a1b10 .bss in-symbol
-PASS (b) ssz.ErrIncorrectListSize+8 = 0x13a1b18 .bss in-symbol
-PASS (b) runtime.zerobase = 0x13c64e0 .noptrbss in-symbol
-PASS (b) runtime.writeBarrier = 0x13c6e40 .noptrbss in-symbol
+PASS (b) ssz.ErrBytesLength = 0x137fc50 .data in-symbol
+PASS (b) ssz.ErrBytesLength+8 = 0x137fc58 .data in-symbol
+PASS (b) ssz.ErrInvalidSerialization = 0x137fc70 .data in-symbol
+PASS (b) ssz.ErrInvalidSerialization+8 = 0x137fc78 .data in-symbol
+PASS (b) ssz.ErrInvalidVariableOffset = 0x137fc80 .data in-symbol
+PASS (b) ssz.ErrInvalidVariableOffset+8 = 0x137fc88 .data in-symbol
+PASS (b) ssz.ErrListTooBig = 0x137fc90 .data in-symbol
+PASS (b) ssz.ErrListTooBig+8 = 0x137fc98 .data in-symbol
+PASS (b) ssz.ErrSize = 0x137fcb0 .data in-symbol
+PASS (b) ssz.ErrSize+8 = 0x137fcb8 .data in-symbol
+PASS (b) ssz.ErrIncorrectListSize = 0x13a1af0 .bss in-symbol
+PASS (b) ssz.ErrIncorrectListSize+8 = 0x13a1af8 .bss in-symbol
+PASS (b) runtime.zerobase = 0x13c64c0 .noptrbss in-symbol
+PASS (b) runtime.writeBarrier = 0x13c6e20 .noptrbss in-symbol
 PASS (c) all.S: 1070 labels, each defined once; 68 external references not defined in all.S; 8 calls to target functions at their entry: ['github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ']
 PASS (e) all.S: 12560 directives equal the 105 function files in order
 PASS (f) boxedEight.data: 0xd232a8, 8 bytes and 0 words = ELF
-PASS (f) formatActivationEligibilityEpoch.data: 0xc4d11f, 30 bytes and 0 words = ELF
-PASS (f) formatActivationEpoch.data: 0xc44ea9, 19 bytes and 0 words = ELF
-PASS (f) formatAmount.data: 0xc3ec18, 10 bytes and 0 words = ELF
-PASS (f) formatAttestingIndicesMisaligned.data: 0xc6361f, 83 bytes and 0 words = ELF
-PASS (f) formatAttestingIndicesTooBig.data: 0xc618e7, 73 bytes and 0 words = ELF
-PASS (f) formatBalance.data: 0xc3f69e, 11 bytes and 0 words = ELF
-PASS (f) formatBufferLength.data: 0xc546d1, 40 bytes and 0 words = ELF
-PASS (f) formatBuilderIndex.data: 0xc42992, 16 bytes and 0 words = ELF
-PASS (f) formatColumnsMisaligned.data: 0xc61bc4, 74 bytes and 0 words = ELF
-PASS (f) formatColumnsTooBig.data: 0xc5ea2d, 63 bytes and 0 words = ELF
-PASS (f) formatCommitteeIndex.data: 0xc442f5, 18 bytes and 0 words = ELF
-PASS (f) formatData.data: 0xc3d38a, 8 bytes and 0 words = ELF
-PASS (f) formatDepositEpoch.data: 0xc429a2, 16 bytes and 0 words = ELF
-PASS (f) formatEarliestAvailableSlot.data: 0xc49383, 25 bytes and 0 words = ELF
-PASS (f) formatEpoch.data: 0xc3dfd7, 9 bytes and 0 words = ELF
-PASS (f) formatExitEpoch.data: 0xc40b40, 13 bytes and 0 words = ELF
-PASS (f) formatFinalizedEpoch.data: 0xc442e3, 18 bytes and 0 words = ELF
-PASS (f) formatHeadSlot.data: 0xc40043, 12 bytes and 0 words = ELF
-PASS (f) formatIndex.data: 0xc3dfc5, 9 bytes and 0 words = ELF
-PASS (f) formatMaxExecutionPayment.data: 0xc47de4, 23 bytes and 0 words = ELF
-PASS (f) formatNextForkEpoch.data: 0xc43660, 17 bytes and 0 words = ELF
-PASS (f) formatProposalSlot.data: 0xc429b2, 16 bytes and 0 words = ELF
-PASS (f) formatProposerIndex.data: 0xc435e9, 17 bytes and 0 words = ELF
-PASS (f) formatSlot.data: 0xc3d372, 8 bytes and 0 words = ELF
-PASS (f) formatSource.data: 0xc3ec2c, 10 bytes and 0 words = ELF
-PASS (f) formatSourceIndex.data: 0xc41e5a, 15 bytes and 0 words = ELF
-PASS (f) formatStartSlot.data: 0xc40b33, 13 bytes and 0 words = ELF
-PASS (f) formatTarget.data: 0xc3ec36, 10 bytes and 0 words = ELF
-PASS (f) formatTargetIndex.data: 0xc41e69, 15 bytes and 0 words = ELF
-PASS (f) formatValidatorIndex.data: 0xc442ad, 18 bytes and 0 words = ELF
-PASS (f) formatWithdrawableEpoch.data: 0xc467a3, 21 bytes and 0 words = ELF
+PASS (f) formatActivationEligibilityEpoch.data: 0xc4d119, 30 bytes and 0 words = ELF
+PASS (f) formatActivationEpoch.data: 0xc44ea3, 19 bytes and 0 words = ELF
+PASS (f) formatAmount.data: 0xc3ec12, 10 bytes and 0 words = ELF
+PASS (f) formatAttestingIndicesMisaligned.data: 0xc63619, 83 bytes and 0 words = ELF
+PASS (f) formatAttestingIndicesTooBig.data: 0xc618e1, 73 bytes and 0 words = ELF
+PASS (f) formatBalance.data: 0xc3f698, 11 bytes and 0 words = ELF
+PASS (f) formatBufferLength.data: 0xc546cb, 40 bytes and 0 words = ELF
+PASS (f) formatBuilderIndex.data: 0xc4298c, 16 bytes and 0 words = ELF
+PASS (f) formatColumnsMisaligned.data: 0xc61bbe, 74 bytes and 0 words = ELF
+PASS (f) formatColumnsTooBig.data: 0xc5ea27, 63 bytes and 0 words = ELF
+PASS (f) formatCommitteeIndex.data: 0xc442ef, 18 bytes and 0 words = ELF
+PASS (f) formatData.data: 0xc3d384, 8 bytes and 0 words = ELF
+PASS (f) formatDepositEpoch.data: 0xc4299c, 16 bytes and 0 words = ELF
+PASS (f) formatEarliestAvailableSlot.data: 0xc4937d, 25 bytes and 0 words = ELF
+PASS (f) formatEpoch.data: 0xc3dfd1, 9 bytes and 0 words = ELF
+PASS (f) formatExitEpoch.data: 0xc40b3a, 13 bytes and 0 words = ELF
+PASS (f) formatFinalizedEpoch.data: 0xc442dd, 18 bytes and 0 words = ELF
+PASS (f) formatHeadSlot.data: 0xc4003d, 12 bytes and 0 words = ELF
+PASS (f) formatIndex.data: 0xc3dfbf, 9 bytes and 0 words = ELF
+PASS (f) formatMaxExecutionPayment.data: 0xc47dde, 23 bytes and 0 words = ELF
+PASS (f) formatNextForkEpoch.data: 0xc4365a, 17 bytes and 0 words = ELF
+PASS (f) formatProposalSlot.data: 0xc429ac, 16 bytes and 0 words = ELF
+PASS (f) formatProposerIndex.data: 0xc435e3, 17 bytes and 0 words = ELF
+PASS (f) formatSlot.data: 0xc3d36c, 8 bytes and 0 words = ELF
+PASS (f) formatSource.data: 0xc3ec26, 10 bytes and 0 words = ELF
+PASS (f) formatSourceIndex.data: 0xc41e54, 15 bytes and 0 words = ELF
+PASS (f) formatStartSlot.data: 0xc40b2d, 13 bytes and 0 words = ELF
+PASS (f) formatTarget.data: 0xc3ec30, 10 bytes and 0 words = ELF
+PASS (f) formatTargetIndex.data: 0xc41e63, 15 bytes and 0 words = ELF
+PASS (f) formatValidatorIndex.data: 0xc442a7, 18 bytes and 0 words = ELF
+PASS (f) formatWithdrawableEpoch.data: 0xc4679d, 21 bytes and 0 words = ELF
 PASS (f) itabErrorStringError.data: 0xd28520, 8 bytes and 3 words = ELF
 PASS (f) runtimeStaticuint64s.data: 0xd45780, 2048 bytes and 0 words = ELF
-PASS (f) sszErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
-PASS (f) sszErrIncorrectListSize.data: 0x13a1b10, 0 bytes and 0 words = ELF
-PASS (f) sszErrInvalidSerialization.data: 0x137fc90, 0 bytes and 0 words = ELF
-PASS (f) sszErrInvalidVariableOffset.data: 0x137fca0, 0 bytes and 0 words = ELF
-PASS (f) sszErrListTooBig.data: 0x137fcb0, 0 bytes and 0 words = ELF
-PASS (f) sszErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
+PASS (f) sszErrBytesLength.data: 0x137fc50, 0 bytes and 0 words = ELF
+PASS (f) sszErrIncorrectListSize.data: 0x13a1af0, 0 bytes and 0 words = ELF
+PASS (f) sszErrInvalidSerialization.data: 0x137fc70, 0 bytes and 0 words = ELF
+PASS (f) sszErrInvalidVariableOffset.data: 0x137fc80, 0 bytes and 0 words = ELF
+PASS (f) sszErrListTooBig.data: 0x137fc90, 0 bytes and 0 words = ELF
+PASS (f) sszErrSize.data: 0x137fcb0, 0 bytes and 0 words = ELF
 PASS (f) typeAttestationData.data: 0xbf08c0, 32 bytes and 2 words = ELF
 PASS (f) typeCheckpoint.data: 0xbc5c60, 32 bytes and 2 words = ELF
 PASS (f) typeDeposit_Data.data: 0xbe6280, 32 bytes and 2 words = ELF
@@ -436,22 +436,22 @@ DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.Unm
 DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ 0xa2a39e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
 DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ 0xa2a43b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
 PASS (d) 11490 instructions reassembled by clang x86_64-linux-gnu: 11284 byte-identical, 0 encoding, 206 padding
-elf sha256 9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9
-S sha256 eea1e8451a3417f198442450c0e5df947fac08d691c08dfda8620e9e6a31cfd7 all.S
+elf sha256 a5fbd7fa86d1c2e9c92b6138ff37cf770b253782a174c2493bf75fc26068b5c1
+S sha256 64b338d765175c9855015f2bbaf2156d341848d2e616392f15acc78f0e15e9da all.S
 S sha256 4a18137fa8425622fa26773a049f67d655839d1320824063ada686158e11a9b0 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S
 S sha256 bcc78481c1a6cbfa050454db14d05543acc257997c3e8fa4c891eaf48296df5b github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S
 S sha256 d137ed535c8d663d43734c9d5ce55f2ffd15cbe7aeebd39da9f28734eff2e47c github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.SizeSSZ.S
-S sha256 0b9dc57f630babfd55c1faf389be146d20c1ce5915425e398f5c641fee55f6b2 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S
+S sha256 6fdd3d4c2cd3c6989ac593f8d3a21b957f9e0df33c1e9c76638240d2c2ea3bff github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S
 S sha256 845514f00d134ac7944b7152b5b8c959dcce84dd64530152d0e25f29fff4d275 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZ.S
 S sha256 085e64fedf8a9a8e30535dcf1cbf14e3354385a4cee0e6b1755c596c3dc75c1c github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZTo.S
 S sha256 ebabe700fb1ee9f1da429d3c878cde9b67c9a7ab57a83e01c63f043ebd3da64d github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.SizeSSZ.S
-S sha256 69391f32e54e1760d88607c250316c7935c936339c62b37c14e82ccf0952d9c7 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S
+S sha256 bdbb34b48234a313892bc93b78bafff5f9af95466f1cd6c69228a4c016367efa github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S
 S sha256 aff1f3707de50dee5a7ce4e83f1c4224175bb2e06e252827e3b404beac56be12 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZ.S
 S sha256 1908baad20a47cc9521b05cd5624799c7e941db8fe64e5057e9d58a2e4a5fd25 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo.S
 S sha256 0cfd8e07ed73677ad43855459b8894872ee781f01f336f3641510b1c37965705 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.SizeSSZ.S
-S sha256 cd839a1bdadef3475c3205edc8a7a1f83bc2edcadd39e0a38d307a3857491cf6 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S
+S sha256 5fcadfd46f8dab131a2dfd4e2126d61358f4773f57900a2c724fb2faaf86e5a5 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S
 S sha256 3354984f6558cad952fd3d47d66d75d7f3860dc0113123f42376cdf492f44442 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S
-S sha256 25311d53cc5fb3c16a22285139126d9295b8ec258d7411d5f7a8297e89c53be4 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S
+S sha256 6c8e3eafbceac7bc94cd506579bd951e49adb10172623dc0afc6364525a4559f github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S
 S sha256 59519d5d17eaa9367839b3da6cadf5ca9d78c60fad644e2aac6333d8d64fd7f3 github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderDepositRequest.MarshalSSZTo.S
 S sha256 787084f6a5bdd1eb03f3053bcb95b548559365a5408cad42bba604b49876369f github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderDepositRequest.UnmarshalSSZ.S
 S sha256 8aa6c4e61709e8ed5ed2a962c6048444667e1912a183862647faaf57c3c739b0 github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderExitRequest.MarshalSSZTo.S
@@ -461,135 +461,135 @@ S sha256 d1fe9239fd43a8269b592635d8f26db470d8f3c50774d772589c105bbd1d2e61 github
 S sha256 8ec8e5eb71c2161abf46bb29a9f0e45b515aabae6cff7a14e58b090b76e27c33 github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.MarshalSSZTo.S
 S sha256 b79b053dc1cbdb8af87622355c682be06263eb830721870ef82bb1de56cfd6c9 github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.UnmarshalSSZ.S
 S sha256 339dcaafed3026a771fcb9ebfc15b9ee6f299fc1f5d5ccc25630167d2adef6ea github.com_OffchainLabs_prysm_v7_proto_engine_v1.Withdrawal.MarshalSSZTo.S
-S sha256 3527c17d679ac8bc291e446dce8ebf13a1b26ae1fbf8972c4684604e4106db39 github.com_OffchainLabs_prysm_v7_proto_engine_v1.Withdrawal.UnmarshalSSZ.S
+S sha256 0dfd83a2e4111d3cddc2f3f00ce0feed23fcbf9fc08ad3bf75b56b42a3fd7abb github.com_OffchainLabs_prysm_v7_proto_engine_v1.Withdrawal.UnmarshalSSZ.S
 S sha256 c77644a82b273477f8b845a84e4b4f2bc4daa3ea1a2fda57c8b577cda7bcafcc github.com_OffchainLabs_prysm_v7_proto_engine_v1.WithdrawalRequest.MarshalSSZTo.S
 S sha256 8ba31afb585b0172296ee42167c9858d1bcf5728a7540d3ef180530c3b42241a github.com_OffchainLabs_prysm_v7_proto_engine_v1.WithdrawalRequest.UnmarshalSSZ.S
-S sha256 939e0d3a172bafa9c2ce6aca9e4b6b08ac98c8e92290a4e9927023ee47472018 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S
+S sha256 c065f7da72dd010c7716cae3f14a143d5f2d663ad75e205c612f9d5fe6178ba2 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S
 S sha256 a944b1ce48bd830bb077e263d8ed7893ce54bbbed7ef3b4cef1140cc9d9f7725 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.SizeSSZ.S
-S sha256 70ca7f6820ce748263b71a4fc44468ab01bd69bc9665008ad540469b2fa62081 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S
+S sha256 8213fd321b64ae7d8c619e8b7ec023eb21a6943cd4ce6e1aeab334ed611ea510 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S
 S sha256 76e6337926a7a75507a363f2de8f4f6470f2d8249b151e1eff729283e5cd97ae github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.MarshalSSZTo.S
-S sha256 fc812cfb56247e42ef2d11461352e3dc5fd838c6235fbc53eba27de7be56181a github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.UnmarshalSSZ.S
+S sha256 96ca963305747a9194992cc0a50aaadc89b10319c0c8f95037c142871394fbab github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.UnmarshalSSZ.S
 S sha256 c76a57703af0f5d5889921baf6b3844b81d043b466b5e17df02a8b5d218124f3 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S
-S sha256 e18ac244d9dcfe0a5981de56a454c197a63511a186974b38d6a8baccf55924c5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S
+S sha256 b2a732407cdbe8569788cf4efb2c9780658c1129c343d64e9cb4cd0102f84a40 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S
 S sha256 6599236ed7c2489476a9f2a9fadeff055e7a0edbf4e848d316d20bb3dc6fc9a4 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.MarshalSSZTo.S
-S sha256 ab94259b7f2ad22b04ab70161d1e2c5cc5194f32b82ba2af09b2885b913917ef github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.UnmarshalSSZ.S
+S sha256 5605a0a1d4a6a6adb80c9a652605f334371dfc02462f85833ea157d0c37e6fa2 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.UnmarshalSSZ.S
 S sha256 5b6cf43a99468b780beb96ad6a2daaf32a9d44339a62db132229845f66922c9d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.MarshalSSZTo.S
 S sha256 5b02b0cc5f24ce7a31f8d3c2c963181dd2f0c7bfff6b43b500dd041a8a6494e0 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S
 S sha256 ae16635f5634b6326b9d74327a59a6b73ab1356a6ead9e13259ecf82b3c8350f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecarsByRangeRequest.MarshalSSZTo.S
-S sha256 782d05c953e5164531c8f5cb4bebe5f62dd75e7a31b84e568cb7f9c0216c22f3 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecarsByRangeRequest.UnmarshalSSZ.S
+S sha256 2274ac2f0d68e75f374068006f3dc9dd7297d8c42e9f9550a82d779a7834b812 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecarsByRangeRequest.UnmarshalSSZ.S
 S sha256 856d5e8ad61bceaf2398db9da9014c3d3189a7a322e7812a833d00345754b997 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.MarshalSSZTo.S
-S sha256 dfa1b6eac274938528cd6e44b0f536acf49349d1c0e8108d80372ffc8fd775ed github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.UnmarshalSSZ.S
+S sha256 a4c700bb61f9d2d5e964d5247c2caa2f02688834c6e887928f82acfa5dd64b2c github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.UnmarshalSSZ.S
 S sha256 21b29973838e97486071c5f739fa47da7d84913a761c950e5258837d0b29c8ec github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.MarshalSSZTo.S
-S sha256 3ab670e1067ffcaa35f10b8c7d93b3251bfe3215669b7a73fa7a6415b7f6881e github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.UnmarshalSSZ.S
+S sha256 90f3cbbb8fec3268b1ebc520ea6609d9d713dfa99ce29929d385cd6d02f61409 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.UnmarshalSSZ.S
 S sha256 e21892cbe54a798fd0e798ad727b5201c979e46c184d63cc012fb826f2375377 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.MarshalSSZTo.S
-S sha256 9cb2f23659dda3b3a9d84ed0f4c0990cbb3fbbe6c7980e371e438ba8324991b4 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.UnmarshalSSZ.S
+S sha256 b063010f3c329820ec5e45537a4876ec85d638570e0769818def62d63d76b7e1 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.UnmarshalSSZ.S
 S sha256 c4345527c651c0a3ff8319af3f35df1e375b8c58a6a45054762da0a0dcef1b1d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S
 S sha256 389e8f65adb01b47b0347e705a58767992d5488785ffe14a5065ff4df5137646 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ.S
-S sha256 4b3fc17e5a75f8369353c5a7d937479e03667b975c93dfb4290ad7f866d006dc github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S
+S sha256 dc2ee89f4143d54da41316043a258939cfd8eebf98051b7a67d839c247f17e5e github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S
 S sha256 b008d0eebce1f6d8222cc9ee3470e1961c5823963c0c9a06da20731eb9822687 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S
-S sha256 40b5013e0d06e5471ccdd29989c2cc303bc3f0f5e259a811d84c426f23f52d62 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S
-S sha256 ef7d252bb6df08fe3734fa203a21dd66e21d7c8ab7150eb7fb51fdeb0e8895fe github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S
+S sha256 635812f3bd3cb8089bcda0b060600cad23e9c28730c260f863f34b9a49982af6 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S
+S sha256 8fde636ebb91274ceb4852e94db60b3767e0949b2c81a14e0611d615ae7e5e52 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S
 S sha256 e35191e9ca09807491be85e751725c784993c64668f2fee19ca337fe5b1e055c github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo.S
 S sha256 13cdd1a3b22bdd83488fe130d4e5b5ea296f61e0688585bdc7afe73d383cf581 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S
 S sha256 db979ece9c1498621be59879fa3c4ed466d3f9e0ed0a3a70201ef0a6aa21226e github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.MarshalSSZTo.S
 S sha256 f062e0f9be56aef921ad33347d21ac292c6a02f9119e0b70b0dabd22385acae6 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S
 S sha256 a5742e1f40be7f95c23072a9b26f84442bf2d64312f3b3fd4a3c59b03ad6c173 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.MarshalSSZTo.S
-S sha256 bed16dc9ddd4ac4b5463d3e4b0a35583949fa765286b115af63c1a5ecb9495c5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.UnmarshalSSZ.S
+S sha256 7f1857f44a473cd679c8207c89ba6c73e6c38eb44af028daebe5b41f9ce8e147 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.UnmarshalSSZ.S
 S sha256 911a0ea1fb983c58c9be8ea72f94afdcd9bb25d9555956f7ca02f1777136b6c1 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S
 S sha256 395e0529ba10332430fb7e9353144dae7fbea672396734b95e0e5a1885ba5691 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S
 S sha256 bfed2e86bc9fb7d6f644dffececfe48c495d93789d9d7b86141e11afe19ee9ce github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest.MarshalSSZTo.S
-S sha256 6754a0f95fa7d2af949396c0a83a18b94072509fe002fb7e85bc2281afbefec7 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest.UnmarshalSSZ.S
+S sha256 4d9d2aa064a0c3e6710e461f6d05781aa4dbcaca99853245b8e49d1210a18788 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest.UnmarshalSSZ.S
 S sha256 4325a595fefaa188215185eacfc3595389256c5157a5d6fcf2421aeab973e942 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.MarshalSSZTo.S
-S sha256 d8e4a6b8d32c587a9b307a1dabbd0c42a8a03891f74968da37b947135fd9f1af github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.UnmarshalSSZ.S
+S sha256 b6e2a015a5b0b24af84e4d62b6aa031e5020e3065c76a94e99f1fc38241762b6 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.UnmarshalSSZ.S
 S sha256 03613fb460d5902baa753803982bf04f6f9fb6bf90fad64fc6011ba334f7077b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ForkData.MarshalSSZTo.S
 S sha256 2bf3550e3e21f1cbb81f4d9f4adc4fbd53119427b96e940b5d1cfa3e96569e15 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ForkData.UnmarshalSSZ.S
 S sha256 fd1e2555085e084f3047606258775c5847882a823bd70378d1a3c2f2423cdedb github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S
 S sha256 f04300448cac1c966740f6004b54b33b630f3d463065f122790078f86b7d8af5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S
 S sha256 cb7e6f1310c41a0647dc45bcc15258750ad331cf55b0745dec96db7736b8cfee github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.UnmarshalSSZ.S
-S sha256 7f11339431100789da12402eed80c577b8b067d3ea84a239442996f398e5d8a7 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S
+S sha256 d8a5f90be1f7fcf6c4e481e980bbb660462c47293e6aa2e22dd01657151d7ba1 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S
 S sha256 e1331a1bb0344f6d900049a91a8e4a3fd8acea7de21cd25546dd82bc47509d4f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.MarshalSSZTo.S
-S sha256 8022ef1ab476cc040e9dc5d7786fd6abe36deea1b2c5151b8422ca4f34686a45 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.UnmarshalSSZ.S
+S sha256 fcdd46f1a39341f2e769e6cd0ef3aabc1ae923a5edc5736d4c485ca620d49f4e github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.UnmarshalSSZ.S
 S sha256 5041b386202e88744b91188748aef9dedad834431b290204ce061416a637b0c2 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.MarshalSSZTo.S
-S sha256 44588d589561031d774d17680ce31225caf7606637f2f5db1ccbcdacb8ef7846 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.UnmarshalSSZ.S
+S sha256 a4fb0545944a83e11926358b7e8a06cf555e79f5da02d58f9ce91c8fa94acee4 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.UnmarshalSSZ.S
 S sha256 06564f29c3d2813bf0ee98d06c9ddcf6fd0a78b15d1b7091bc399ef628bcd0cb github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.MarshalSSZTo.S
-S sha256 2abcd12970d381d6f9d70627cebf313eab4ec852b93aa89bfc942115f365f381 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S
+S sha256 953f67de2756f505285fc9298f8ad88c5dd3bf54c75b8e12b9032b2e6e7b9d42 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S
 S sha256 3348a1c858523052c4cc0abc11ae4396b4f9898b66aed42a71a2987152505f28 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.MarshalSSZTo.S
-S sha256 8d3695b973563bf7a3cd43ea0c8c803729fb9e3676feeb683464134d64322db0 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S
+S sha256 3d6f142fb34e0e56de5fed48cc70bea5d575f96cfa9aa62887b37bf21a6d0592 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S
 S sha256 a07abdd277fcd8bfbc134c52fbb9a82839003da6df2e7a21afefa821f4a2b8fe github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.MarshalSSZTo.S
-S sha256 cc2ed8cb5235994c08e76f81da16755f2aa0ee6f7aea3b12bf0cb2f6a3b70434 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S
+S sha256 84aa1bfe987011734c4e50b1ef7553d79c9907ac68bddf174c2904e09b790647 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S
 S sha256 916684c4fed2239b036a8c706022dcd16c35ce7d6376fded8535e2d3fa344a1b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.MarshalSSZTo.S
 S sha256 c69880d92be48b471e55be9a152f94119ad810e1f3c1bfa9680b42dbd1994cad github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S
 S sha256 4157c38e788ee0af4fd3abb4452709fd096654e44e320334404ffc6721734e2c github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.MarshalSSZTo.S
-S sha256 9660b1b48335b0ecb0698bad9de3cfc362ea836b0e9d330ee89cf17ed7e58e40 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.UnmarshalSSZ.S
+S sha256 cb4fe9c1f79f5178326c1a3ad7df52d8cd9c9f03b4840aed4b22e6a05ce8b848 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.UnmarshalSSZ.S
 S sha256 65be2f0e02190d370e5762b30610233d9412a259bbd0b6770a6219192955955a github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.MarshalSSZTo.S
 S sha256 1c4f50c64cb684dcfbf5e689680cd002d14fddffbded67e42c2be959660c8b27 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ.S
 S sha256 7dc2617991d9358707041f16fc60e0eccf0b7d583d0bba0f0dc8be9e555c74c6 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.MarshalSSZTo.S
-S sha256 994ba72e0f55326781afca433ca247ca0e04cd83dc0e439b3feb69e7f299f51c github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.UnmarshalSSZ.S
+S sha256 027c51d594fd781e3ea1b6c31fbcf6ccdd4943396fd74e292dbbd80cef34dab0 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.UnmarshalSSZ.S
 S sha256 bd82cde7140af6a9cede4e185c0b4fa2fe2088c874421d42059b13aae10995cd github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.MarshalSSZTo.S
-S sha256 296af28e087495e28d5dba7db255ec6e120599e25788c86fc0227b20f8a9656c github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ.S
+S sha256 d45640a1c70cbef720333f58dd81f00cff23231cfaf91feafbfd3d0876e6a52a github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ.S
 S sha256 11284daa02037a3a69adc071415f061de5c1e4c29892b369b7b3aa356ebe107f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S
 S sha256 1dce3a7c8c0cbe2eb0e219e9ba83ce392e9ab137585e19734b991309ba4efaee github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.MarshalSSZTo.S
-S sha256 9897b99a7a9f687ca5d3e25eb591c2f60c9551925358a31e992787035c914688 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.UnmarshalSSZ.S
+S sha256 0543fd6e2cfb5a3c30206e9f63252f76a330e1f0b3b258dc4ea1c07ece5d5dc4 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.UnmarshalSSZ.S
 S sha256 1e61d5de7908d4df8378d4e464dc8ebf899c65f74d0c2e3affda41bd8eb35e4b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S
 S sha256 7f8d9761a2459f5065669cac92bf6a420d6b28539c7e07449f8158882dcf7ea5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.MarshalSSZTo.S
-S sha256 87d5158eac60e879d58b1fee20347c2d353a37e04bdf88ceb28335ab8099e109 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S
+S sha256 7a9a6ca460262b9c955cf63310cc898de6861edc4ee7c94b7c8027462adee7a5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S
 S sha256 f4d569bf5650d7a9b7c507560f38790dce8fe267293d8111f70447deead85c1f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.MarshalSSZTo.S
-S sha256 d293d08502d0bc38032ab3eced76adcd3777bea9356ce467be387fd543383dab github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.UnmarshalSSZ.S
+S sha256 a9450062c756f016e662b0af765e4fdb30fbc08b298a57b18c63a6fbca6a320d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.UnmarshalSSZ.S
 S sha256 6b9b4f919293fcb9cc7dd61f59b3c55f0dbbb44c85e04d9fc5edd469c2927edc github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S
-S sha256 cd239e36faa09475986967f45b8530065c5a029a7590a36b167d4d3febcf0ee5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S
+S sha256 8fde9d088c4f4484037b82b2befa96c6b361b5b034eac8af1327ddb728828530 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S
 S sha256 cdfd21b3d578e12dc28267992dc650230ca9c15b2e3ec1a13b66fccd337e77f7 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.MarshalSSZTo.S
-S sha256 e756bd0a4e922ec1afe852ebd638c4670c9733f06c6f189474bb0519cbf0745d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ.S
+S sha256 911c4637e7b92ad6556f9f03b02d771f73ad430d81da072bea212de4b5dea299 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ.S
 S sha256 111850ffd00f7188a34bce524ab2b6c46806d250bb91b13060924f977b4448db github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.MarshalSSZTo.S
 S sha256 f0e2bf0a7e902b2aa2af067b0f5e2747102adbf47c2b00d551a25194be5a5505 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.UnmarshalSSZ.S
 S sha256 bd095ba28de869327ec6b2aa03921ae4f3a4bbfcedfaf723460d8b1931ba8b72 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.MarshalSSZTo.S
-S sha256 31c930db64b0b1f3d1a7f081d4a40062a56c6abfb7c9256257eb1cb5a14bf726 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S
+S sha256 c0cc2479bf81cd1ae82e55b2148a1e56b602b9cefbbcd800e892430118464eda github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S
 data sha256 d5a63b5aa7292e581dbe8cb36901452347f344509707484d9670b8b22477d80a boxedEight.data
-data sha256 806bcdcbcaa3cfad5c88dde051db2e88ac09a7c0fc951e898cf8767cf21f83b6 formatActivationEligibilityEpoch.data
-data sha256 134caeed3ba29ef9193202eab97c722ad23588c30bc0fec71b1a7cf3dfb3f706 formatActivationEpoch.data
-data sha256 dcf8bf72ba136235f80d9f73bb57f3b745dda3aa5f7d5bf7246eb4760b03ebc7 formatAmount.data
-data sha256 693614cb9840d16d4c8b362e00934ffcec194848a36512b14c205ecdf48240b5 formatAttestingIndicesMisaligned.data
-data sha256 6a88280d208ae5b2e0b49cf3b4a8dbb3400f41be7b0bc5d6bdd00ab03a989deb formatAttestingIndicesTooBig.data
-data sha256 016b4b69b5bb6bbb5c75b3ae3a3583913a06f12de96fd0472fa3d2d9c5b512ac formatBalance.data
-data sha256 2b8a1e05cc61d25b413f82cbe8c45456e1dcfa7151c59335e8ecc889e2886dd5 formatBufferLength.data
-data sha256 ffb52e5b15e962e2de7dccc4a4edf48d74b2a9cd2665ba0f1d5976078f260759 formatBuilderIndex.data
-data sha256 903f77a1c737c9ee74864a7e137bf7727165ceda1e916a665345cb837923f096 formatColumnsMisaligned.data
-data sha256 46caed81c0e51192735d98fdac6c4a70d99ae331dfe57d5bca469c9b7f54a02d formatColumnsTooBig.data
-data sha256 e336a21a96a2bc70fd77ecd4e5387cc51a8a01e96d77e4e7b7bb7d984be10c67 formatCommitteeIndex.data
-data sha256 6c84c388f699047d7dc1a699373671819360ad10edfd4ac859c62bbc95556ed7 formatData.data
-data sha256 5a43272795e1b5ee164c71e793c72d6be5fb8cc41d15ea8ba5ff273b5bb17e70 formatDepositEpoch.data
-data sha256 e084c1273cb30f2852a609b153b91c7223f70ae7b8e2c6087a031cf8d6b35514 formatEarliestAvailableSlot.data
-data sha256 c899b612566928c75ad810f98257ecd485efefe350a54fbd5a99dd1d6aed13f7 formatEpoch.data
-data sha256 27fde91b7f1ec90a22f7896c14cf6bc5542145eb2520db53b155348d0f816030 formatExitEpoch.data
-data sha256 84ea2ef64fbff85041f45c54770d859c11dc988ad766dd02b791cb9ac5624540 formatFinalizedEpoch.data
-data sha256 8b989409973d39ff9dfdf031b74c718f3a1dd21ba43fdf26f45488f3967efe32 formatHeadSlot.data
-data sha256 2394dbbdf44c2c7c8b4470dd2fd4fbdb3e1a425d46a8d85df1f9d230fd2f1913 formatIndex.data
-data sha256 01c7f01bc9bfafcb43def68dcf57750bdef79ca6de7321f25e8ec6d0eaebcc59 formatMaxExecutionPayment.data
-data sha256 13f1bbdca8d25e41e40a0f6ce0912d684acd4b489f6b35f5912f4d3fa80d4d8f formatNextForkEpoch.data
-data sha256 06dd3546351ae9a82bbcbe9d5950fdeb82ccae67fccbdee599f005a8336c8a48 formatProposalSlot.data
-data sha256 44347dbb7cae5fbd9717390951274e5904ae9ae42d001f4b775a161fe9acec68 formatProposerIndex.data
-data sha256 fc37f574b8ef49c386f30e8a561ab59e7530135c5bd86eee2518c434478091b1 formatSlot.data
-data sha256 dcfe9cbaad2beb5de2d37aa84f006541b773ed767fb964a7af23fcaa9018487e formatSource.data
-data sha256 bb25fec8e557836760162581ed6bdbf71d486f56a706a3ae11490e7923eb26fc formatSourceIndex.data
-data sha256 0a8278f57e6f2ef591b31b2a4f3f114906f9889827bfdaf5ab1a00c695481e5e formatStartSlot.data
-data sha256 cd7957fe58e6c0f5e6506be1ec56b7842ea62e12dccc56df7fdb5b1be3462407 formatTarget.data
-data sha256 6e46585f14202b092cc116d408865b495f9c3bb6d07b113c26ae2f7466c1c48a formatTargetIndex.data
-data sha256 2e28485a092bcbe089c01138ed7e9eb85e17691644317ba82508f86542a8b1bd formatValidatorIndex.data
-data sha256 c272caeb5313bbf0cdcf7f0b88c509f6638c4eab9a8212b725ed40d2629fbeb0 formatWithdrawableEpoch.data
+data sha256 a1b8bff027a9c53975b09e5d6a9f7d5d51b66c37dc5f54e3645dd5d65c86d98b formatActivationEligibilityEpoch.data
+data sha256 2f1cf8d3fe8e576461add9fb9a51bf03e085082fdf1262b0131a59948419bc74 formatActivationEpoch.data
+data sha256 0b70da4bb0901698e19646a5243e89b41e448be79b2e1c17945df0d0229b57c0 formatAmount.data
+data sha256 e7c8345c3bc3ca00f35a29a8907d3f09d87a74a7fcab5e8b46f3ef590af6e626 formatAttestingIndicesMisaligned.data
+data sha256 64cdf2092fa3adf115b2f0584514147477d68db5af24caa3409e1c6ec7475d54 formatAttestingIndicesTooBig.data
+data sha256 b70f48735a494a578d50e5f89e886a2f3c4477703e9fa445e9effba7bc3ecf53 formatBalance.data
+data sha256 254f373f38c3811cf36a1f1d38e6836dedf7acd48bd26d93eaa6b5b7c196d6bb formatBufferLength.data
+data sha256 0399442bf567a594aa59a24e5b84f256b4abbd1f3ec930eb9e55cf2bab1eb7d5 formatBuilderIndex.data
+data sha256 3c128b04345686f96f9f970ae8436867e108ed99fb93367ed0071d020f7fae52 formatColumnsMisaligned.data
+data sha256 72e0138ee3b1a01d772754238ed33fa2cefc923c251eb9d2c1a09572eea85dfe formatColumnsTooBig.data
+data sha256 20dbbf0a4ed2e43092d0dd24ebcb8374b24a27f4fe214b18d35d19a97e97a445 formatCommitteeIndex.data
+data sha256 6ee86666b3d0ac92e88367ce73066c082dfcdf545285c030e79101cf04c5a2e0 formatData.data
+data sha256 723b1573e339275977a29c4b0a3dbbd8068b2b4dcd3dd1549590b23e80375553 formatDepositEpoch.data
+data sha256 c26513836538d20df81e200302a6bd1f6e246e2e7c70665415d6d77d7e9eb847 formatEarliestAvailableSlot.data
+data sha256 4ebaab2d157b28ee0cbf19903a2d8dfde9a0365aad60da636edced3688467d0e formatEpoch.data
+data sha256 de3f701b3982efaa0f7db1495c350c3dc1470f5cc111a7101fe0a9c451feb3ce formatExitEpoch.data
+data sha256 a3cc0c37c03c1694c9bc9af87fdc0fece6b0e11613f667b5264b11c6a405c737 formatFinalizedEpoch.data
+data sha256 30db53b640cac008aea97136320b96ef03800cc868cbfc028914ef0a77e22b77 formatHeadSlot.data
+data sha256 00b9df41cc22fa086de957a8be559eea4d1d562db8e5479caf8d96455b5152bd formatIndex.data
+data sha256 5c65f7846b29875680257e95689b46bb62a406a1c9eb6ef5ec3b4411bd4327e7 formatMaxExecutionPayment.data
+data sha256 a6714364ac5e5407f76e074995e81b5745d6b2af613068e9eaeebb1d0296b2a6 formatNextForkEpoch.data
+data sha256 aa3fe7e7e72ee7882fa313407691e064b64aa2ddc1fb24137c1351d35c5198ba formatProposalSlot.data
+data sha256 ef5fbd8d0360c4059aa1b6f316d5deeaa38d6c1bbd6141ba01296cdcc927a1e7 formatProposerIndex.data
+data sha256 773443495e451f014445085237b222cce33a60347073101f8ffab7acfdb965e3 formatSlot.data
+data sha256 6ba2048ea918c1eba14d56abee3457c8f6bd029c8a5fa563aa2108281b7a0ed8 formatSource.data
+data sha256 133cf4884eb3a4dec54f2a5e59eafc77359d3fb823dfd9129262fc9b21ce616f formatSourceIndex.data
+data sha256 17e5e16ddfcf8e01a12dba2066bbd787d6db7be89d692a1bf1b498c9ba77bc93 formatStartSlot.data
+data sha256 da956a3b5add433415fa3dfce071f45c731b64071aabf0cb50d66c94718f9b5c formatTarget.data
+data sha256 dfd16ea4f67db6ae8dbc8ef185a519b2d528d18695f867ee541f28b34886eef7 formatTargetIndex.data
+data sha256 95be15b17399e65a4ba418431f63faae17aab4410dbba9513a18c7d7ada97cfc formatValidatorIndex.data
+data sha256 ca8c82b650bf7e7ea55c5ac295905dfa64d7ec2f34018cd526ff1618ceabee57 formatWithdrawableEpoch.data
 data sha256 b3f3ed5daa76150ca3cf79a6ec37af1721eec44fe14d34ac971fba3277c00ba0 itabErrorStringError.data
 data sha256 fd976bfaa6b3122ea4c450fac17715d7934ced58366e60895749845ceca62057 runtimeStaticuint64s.data
-data sha256 f863c3320dc957516a9709f5a8a39693c2a9aca877ad7712cb2ad7d59fd97878 sszErrBytesLength.data
-data sha256 5227fefc2809db5cf3e67d7c7662b75bb2d8387a6b1b5e876920c27abac48339 sszErrIncorrectListSize.data
-data sha256 0ee9361bd70465b81714159eb6b4b76047d106aefcb17f5040912a1a70f7ebda sszErrInvalidSerialization.data
-data sha256 96aeca98225e6bab1a3735737cf69dd6ed38ff0f8d01f13a15fda71fc1426786 sszErrInvalidVariableOffset.data
-data sha256 a0bbde246704902f15df1d57d6893ce24c3a8d1b4f8fa0619ed88cbb98c7c399 sszErrListTooBig.data
-data sha256 0d926dcb2afb948d6739f207e4b40b3c04eba0ec5ae2e4b3c58258957322fe15 sszErrSize.data
+data sha256 7e6b1d069643725f59f0569fbfd90744d185c1bb26febde54e294fe656efd93e sszErrBytesLength.data
+data sha256 c3acb36c23a28370f90f84dd4986516055358475020fe84d40580ffbf740c601 sszErrIncorrectListSize.data
+data sha256 b6388af29072c51fc613243fa028add64f738e57dc2f81fe18d093c370a8d41e sszErrInvalidSerialization.data
+data sha256 52498b95e604ed14e7e3b1c2dcb5d00a75913ab92fe8711cc5af394226b2c6a5 sszErrInvalidVariableOffset.data
+data sha256 f10d523a7d970ad2409ef8783dab69859d1cf938c5135419689baca0a95804a4 sszErrListTooBig.data
+data sha256 ced1616c9629a21c6626016bda08308b73a51f37aed3b72b9660cad8399f748c sszErrSize.data
 data sha256 e03cfdaf7e80562bde149b692d75d21fbea23e9ce8aac3df86084953208090e9 typeAttestationData.data
 data sha256 471b7dea3ff1b12250de254715f290d37f30f31e390486a54468b7be07cb0620 typeCheckpoint.data
 data sha256 0e0f36ca87fce9f82a8e2e30617e83c6fab93fc15b53304753b4977258c5b522 typeDeposit_Data.data
-data sha256 e405047a8e53a0aa6d8fa46fac13b6b3bab9102701ea5648580dbb4c441f19c9 typeErrorString.data
+data sha256 9142e3abd54d156b6fba9efdb5f6c354f2eab3fba73153ee73e2a9ce3fb6aef3 typeErrorString.data
 data sha256 13fc56523935586e6b0ab8184aaef8e68bb6f4a1b4a9956f97d32d8c463601d6 typeInt.data
 data sha256 7bdf265aa415b2da505fedd8bb28d4f2e1967f02d4d5316429ddada866a0d81d typeUint64.data
 data sha256 8deef8f0909153fb9334cd1a30ca1a2b0464cc1b0ee8a1b38a2d7d8c999ea3af typeUint8.data
 data sha256 9641a9076be2a02999564ad70d6eb1951ada211f0cff7ae34a64dd7fb6577eec typeUint8Slice.data
 PASS all
-BUNDLE sha256 1e4c536e2c593c4ff846a94d4ac9b359b5046c7ef771e64fadd5b54fd5548448
+BUNDLE sha256 6ee781c1ccb4128a85b866be92b968de3600c0f16bcd7f136f1a0c702cc92fcd

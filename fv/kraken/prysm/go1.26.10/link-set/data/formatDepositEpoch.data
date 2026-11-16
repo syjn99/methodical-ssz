@@ -1,3 +1,3 @@
-# formatDepositEpoch: link/data.py, target-amd64 bytes [0xc429a2, 0xc429b2)
-at go_string._ 37050
+# formatDepositEpoch: link/data.py, target-amd64 bytes [0xc4299c, 0xc429ac)
+at go_string._ 37044
 bytes 44 65 70 6f 73 69 74 45 70 6f 63 68 3a 20 25 77

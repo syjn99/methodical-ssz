@@ -109,7 +109,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentif
   mov ssz.ErrListTooBig+8(%rip),%rdx
   mov %rcx,0x58(%rsp)
   mov %rdx,0x60(%rsp)
-  lea go_string._+151877(%rip),%rax
+  lea go_string._+151871(%rip),%rax
   mov $0x3f,%ebx
   lea 0x48(%rsp),%rcx
   mov $0x2,%edi
@@ -121,7 +121,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentif
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0x3f,0x8(%rax)
-  lea go_string._+151877(%rip),%rcx
+  lea go_string._+151871(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -146,7 +146,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentif
   mov ssz.ErrIncorrectListSize+8(%rip),%rdx
   mov %rcx,0x78(%rsp)
   mov %rdx,0x80(%rsp)
-  lea go_string._+164572(%rip),%rax
+  lea go_string._+164566(%rip),%rax
   mov $0x4a,%ebx
   lea 0x68(%rsp),%rcx
   mov $0x2,%edi
@@ -158,7 +158,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentif
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0x4a,0x8(%rax)
-  lea go_string._+164572(%rip),%rcx
+  lea go_string._+164566(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

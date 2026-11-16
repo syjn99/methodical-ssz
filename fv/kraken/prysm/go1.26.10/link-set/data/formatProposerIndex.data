@@ -1,4 +1,4 @@
-# formatProposerIndex: link/data.py, target-amd64 bytes [0xc435e9, 0xc435fa)
-at go_string._ 40193
+# formatProposerIndex: link/data.py, target-amd64 bytes [0xc435e3, 0xc435f4)
+at go_string._ 40187
 bytes 50 72 6f 70 6f 73 65 72 49 6e 64 65 78 3a 20 25
 bytes 77

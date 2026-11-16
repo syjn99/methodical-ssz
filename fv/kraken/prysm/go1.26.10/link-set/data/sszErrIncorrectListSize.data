@@ -1,2 +1,2 @@
-# sszErrIncorrectListSize: link/data.py, target-amd64 bytes [0x13a1b10, 0x13a1b10)
+# sszErrIncorrectListSize: link/data.py, target-amd64 bytes [0x13a1af0, 0x13a1af0)
 at ssz.ErrIncorrectListSize 0

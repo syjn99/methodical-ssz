@@ -91,7 +91,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ_15
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ_189:
   mov %rax,0x48(%rsp)
   mov %rbx,0x50(%rsp)
-  lea go_string._+43515(%rip),%rax
+  lea go_string._+43509(%rip),%rax
   mov $0x12,%ebx
   lea 0x48(%rsp),%rcx
   mov $0x1,%edi
@@ -104,7 +104,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ_18
   nop
   callq runtime.newobject
   movq $0x12,0x8(%rax)
-  lea go_string._+43515(%rip),%rcx
+  lea go_string._+43509(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -164,7 +164,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ_28
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ_2ba:
   mov %rax,0x38(%rsp)
   mov %rbx,0x40(%rsp)
-  lea go_string._+26459(%rip),%rax
+  lea go_string._+26453(%rip),%rax
   mov $0xc,%ebx
   lea 0x38(%rsp),%rcx
   mov $0x1,%edi
@@ -177,7 +177,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ_2b
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0xc,0x8(%rax)
-  lea go_string._+26459(%rip),%rcx
+  lea go_string._+26453(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -203,7 +203,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ_31
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ_356:
   mov %rax,0x28(%rsp)
   mov %rbx,0x30(%rsp)
-  lea go_string._+64155(%rip),%rax
+  lea go_string._+64149(%rip),%rax
   mov $0x19,%ebx
   lea 0x28(%rsp),%rcx
   mov $0x1,%edi
@@ -216,7 +216,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ_35
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0x19,0x8(%rax)
-  lea go_string._+64155(%rip),%rcx
+  lea go_string._+64149(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

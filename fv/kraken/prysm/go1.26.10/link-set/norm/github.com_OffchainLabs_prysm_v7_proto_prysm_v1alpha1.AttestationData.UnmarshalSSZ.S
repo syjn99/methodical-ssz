@@ -24,7 +24,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.Unmarsha
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_66:
   mov %rax,0x58(%rsp)
   mov %rbx,0x60(%rsp)
-  lea go_string._+14986(%rip),%rax
+  lea go_string._+14980(%rip),%rax
   mov $0x8,%ebx
   lea 0x58(%rsp),%rcx
   mov $0x1,%edi
@@ -37,7 +37,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.Unmarsha
   nop
   callq runtime.newobject
   movq $0x8,0x8(%rax)
-  lea go_string._+14986(%rip),%rcx
+  lea go_string._+14980(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -62,7 +62,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.Unmarsha
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_106:
   mov %rax,0x48(%rsp)
   mov %rbx,0x50(%rsp)
-  lea go_string._+43533(%rip),%rax
+  lea go_string._+43527(%rip),%rax
   mov $0x12,%ebx
   lea 0x48(%rsp),%rcx
   mov $0x1,%edi
@@ -75,7 +75,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.Unmarsha
   nop
   callq runtime.newobject
   movq $0x12,0x8(%rax)
-  lea go_string._+43533(%rip),%rcx
+  lea go_string._+43527(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -149,7 +149,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.Unmarsha
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_27b:
   mov %rax,0x38(%rsp)
   mov %rbx,0x40(%rsp)
-  lea go_string._+21316(%rip),%rax
+  lea go_string._+21310(%rip),%rax
   mov $0xa,%ebx
   lea 0x38(%rsp),%rcx
   mov $0x1,%edi
@@ -162,7 +162,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.Unmarsha
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0xa,0x8(%rax)
-  lea go_string._+21316(%rip),%rcx
+  lea go_string._+21310(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -199,7 +199,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.Unmarsha
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_347:
   mov %rax,0x28(%rsp)
   mov %rbx,0x30(%rsp)
-  lea go_string._+21326(%rip),%rax
+  lea go_string._+21320(%rip),%rax
   mov $0xa,%ebx
   lea 0x28(%rsp),%rcx
   mov $0x1,%edi
@@ -212,7 +212,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.Unmarsha
   nop
   callq runtime.newobject
   movq $0xa,0x8(%rax)
-  lea go_string._+21326(%rip),%rcx
+  lea go_string._+21320(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

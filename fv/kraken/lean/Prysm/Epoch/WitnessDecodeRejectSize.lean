@@ -9,7 +9,7 @@ Host: four data labels (`go_string._` at 0x10000, `runtime.gcbits._` 0x10001,
 `runtime.staticuint64s` 0x10002, `runtime.modelBumpPointer` 0x10003), the real Go 1.26.10
 `(*primitives.Epoch).UnmarshalSSZ` (index 4) and `ErrorfConvT64Model` (index 67: the
 `model_convT64` model on the bump heap, `model_errorf_decimal_decimal`). One memory block from
-0x10003 to the format string at `go_string._ + 110057`: bump pointer, the
+0x10003 to the format string at `go_string._ + 110051`: bump pointer, the
 `staticuint64s` entries 7 and 8, the static box `boxedEight`, an 8280-byte heap,
 the guard word, the 112-byte stack window (rsp = 0x12659), and the 40 format
 bytes `formatBufferLength`; the fillers between them and the unused rax spill slot are the
@@ -54,7 +54,7 @@ abbrev word_bytes (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
 def block : List UInt8 :=
   Int.toBytes 8 (0x105a1 : BitVec 64).toInt ++ (zeros 47 ++ (Int.toBytes 8 (7 : BitVec 64).toInt
     ++ (Int.toBytes 8 (8 : BitVec 64).toInt ++ (zeros 1359 ++ (ElfData.PrysmTarget.boxedEight ++ (zeros 8280 ++ (word_bytes 0 ++ (zeros 8 ++ (zeros 8
-    ++ (zeros 32 ++ (zeros 16 ++ (zeros 16 ++ (zeros 8 ++ (word_bytes 0 ++ (zeros 8 ++ (zeros 8 ++ (zeros 100216 ++ ElfData.PrysmTarget.formatBufferLength)))))))))))))))))
+    ++ (zeros 32 ++ (zeros 16 ++ (zeros 16 ++ (zeros 8 ++ (word_bytes 0 ++ (zeros 8 ++ (zeros 8 ++ (zeros 100210 ++ ElfData.PrysmTarget.formatBufferLength)))))))))))))))))
 
 def mem : DataMem := block.At (0x10003 : BitVec 64)
 
@@ -63,7 +63,7 @@ def initial_state (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
 
 def frame_rest : DataMem → Prop :=
   Eq ((zeros 47).At (0x1000b : BitVec 64)) ⋆ Eq ((zeros 1359).At (0x1004a : BitVec 64))
-    ⋆ Eq ((zeros 8).At (0x12661 : BitVec 64)) ⋆ Eq ((zeros 100216).At (0x12671 : BitVec 64))
+    ⋆ Eq ((zeros 8).At (0x12661 : BitVec 64)) ⋆ Eq ((zeros 100210).At (0x12671 : BitVec 64))
 
 theorem lift_heap {X : DataMem → Prop} {m : DataMem}
     (h : (Eq ((Int.toBytes 8 (0x105a1 : BitVec 64).toInt).At (0x10003 : BitVec 64))
@@ -115,7 +115,7 @@ namespace InputLength9
 def block : List UInt8 :=
   Int.toBytes 8 (0x105a1 : BitVec 64).toInt ++ (zeros 55 ++ (Int.toBytes 8 (8 : BitVec 64).toInt
     ++ (Int.toBytes 8 (9 : BitVec 64).toInt ++ (zeros 1351 ++ (ElfData.PrysmTarget.boxedEight ++ (zeros 8280 ++ (word_bytes 0 ++ (zeros 8 ++ (zeros 8
-    ++ (zeros 32 ++ (zeros 16 ++ (zeros 16 ++ (zeros 8 ++ (word_bytes 0 ++ (zeros 8 ++ (zeros 8 ++ (zeros 100216 ++ ElfData.PrysmTarget.formatBufferLength)))))))))))))))))
+    ++ (zeros 32 ++ (zeros 16 ++ (zeros 16 ++ (zeros 8 ++ (word_bytes 0 ++ (zeros 8 ++ (zeros 8 ++ (zeros 100210 ++ ElfData.PrysmTarget.formatBufferLength)))))))))))))))))
 
 def mem : DataMem := block.At (0x10003 : BitVec 64)
 
@@ -124,7 +124,7 @@ def initial_state (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
 
 def frame_rest : DataMem → Prop :=
   Eq ((zeros 55).At (0x1000b : BitVec 64)) ⋆ Eq ((zeros 1351).At (0x10052 : BitVec 64))
-    ⋆ Eq ((zeros 8).At (0x12661 : BitVec 64)) ⋆ Eq ((zeros 100216).At (0x12671 : BitVec 64))
+    ⋆ Eq ((zeros 8).At (0x12661 : BitVec 64)) ⋆ Eq ((zeros 100210).At (0x12671 : BitVec 64))
 
 set_option maxHeartbeats 16000000 in
 /-- **Non-vacuity of `Decode.reject_size`** (len 9, static box). -/
@@ -162,7 +162,7 @@ namespace InputLength300
 def block : List UInt8 :=
   Int.toBytes 8 (0x105a1 : BitVec 64).toInt ++ (zeros 55 ++ (Int.toBytes 8 (8 : BitVec 64).toInt
     ++ (zeros 1359 ++ (ElfData.PrysmTarget.boxedEight ++ (zeros 8280 ++ (word_bytes 0 ++ (zeros 8 ++ (zeros 8
-    ++ (zeros 32 ++ (zeros 16 ++ (zeros 16 ++ (zeros 8 ++ (word_bytes 0 ++ (zeros 8 ++ (zeros 8 ++ (zeros 100216 ++ ElfData.PrysmTarget.formatBufferLength))))))))))))))))
+    ++ (zeros 32 ++ (zeros 16 ++ (zeros 16 ++ (zeros 8 ++ (word_bytes 0 ++ (zeros 8 ++ (zeros 8 ++ (zeros 100210 ++ ElfData.PrysmTarget.formatBufferLength))))))))))))))))
 
 def mem : DataMem := block.At (0x10003 : BitVec 64)
 
@@ -171,7 +171,7 @@ def initial_state (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
 
 def frame_rest : DataMem → Prop :=
   Eq ((zeros 55).At (0x1000b : BitVec 64)) ⋆ Eq ((zeros 1359).At (0x1004a : BitVec 64))
-    ⋆ Eq ((zeros 8).At (0x12661 : BitVec 64)) ⋆ Eq ((zeros 100216).At (0x12671 : BitVec 64))
+    ⋆ Eq ((zeros 8).At (0x12661 : BitVec 64)) ⋆ Eq ((zeros 100210).At (0x12671 : BitVec 64))
 
 set_option maxHeartbeats 16000000 in
 /-- **Non-vacuity of `Decode.reject_size`** (len 300 ≥ 256: heap box). -/

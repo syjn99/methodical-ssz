@@ -8,7 +8,7 @@ import Prysm.BeaconBlockHeader.Code
 
 Hand text: `Prysm.Epoch.Decode.reject_size` with the code constant `Prysm.Epoch.Code.unmarshalSSZ` replaced by
 `unmarshalSSZ`. The two `.S` files are identical modulo labels, including the format operand
-`go_string._+110057` (the Go linker keeps one copy of the string), so the `FmtErrorfDecimalDecimalContract` instance with
+`go_string._+110051` (the Go linker keeps one copy of the string), so the `FmtErrorfDecimalDecimalContract` instance with
 `ElfData.PrysmTarget.formatBufferLength` and `ElfData.PrysmTarget.typeInt_addr` is the same instance; `ConvT64Contract` likewise.
 No new contract form. The helper lemmas `Prysm.Epoch.Decode.reject_*` and `Prysm.Epoch.Decode.reject_eight_bytes` / `Prysm.Epoch.Decode.reject_format_len` are reused.
 -/
@@ -183,7 +183,7 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
       (Int.toBytes_length _ _) (rsp.toBitVec - 40)
       (Eq ((Int.toBytes 8 (Host.addrOf (k + 28 + 1)).toBitVec.toInt).At (rsp.toBitVec - 88))
         ⋆ Eq (stk2.At (rsp.toBitVec - 88 - BitVec.ofNat 64 S)) ⋆ Eq (sp2.At (rsp.toBitVec - 80))
-        ⋆ Eq (sp32.At (rsp.toBitVec - 80 + 8)) ⋆ Eq (ElfData.PrysmTarget.formatBufferLength.At (label "go_string._" + 110057).toBitVec))]
+        ⋆ Eq (sp32.At (rsp.toBitVec - 80 + 8)) ⋆ Eq (ElfData.PrysmTarget.formatBufferLength.At (label "go_string._" + 110051).toBitVec))]
     rw [show rsp.toBitVec - 80 + 8 = rsp.toBitVec - 72 by bv_omega,
       show rsp.toBitVec - 40 + 8 = rsp.toBitVec - 32 by bv_omega,
       show rsp.toBitVec - 40 + 16 = rsp.toBitVec - 24 by bv_omega,

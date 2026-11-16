@@ -21,7 +21,7 @@ L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ
   lea type__+387520(%rip),%rcx
   mov %rcx,0x38(%rsp)
   mov %rax,0x40(%rsp)
-  lea go_string._+110057(%rip),%rax
+  lea go_string._+110051(%rip),%rax
   mov $0x28,%ebx
   lea 0x28(%rsp),%rcx
   mov $0x2,%edi
@@ -33,7 +33,7 @@ L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0x28,0x8(%rax)
-  lea go_string._+110057(%rip),%rcx
+  lea go_string._+110051(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

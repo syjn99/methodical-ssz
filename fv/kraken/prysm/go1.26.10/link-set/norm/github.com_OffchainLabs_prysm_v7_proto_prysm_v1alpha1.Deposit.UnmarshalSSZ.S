@@ -112,7 +112,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ_197
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ_1d6:
   mov %rax,0x48(%rsp)
   mov %rbx,0x50(%rsp)
-  lea go_string._+15010(%rip),%rax
+  lea go_string._+15004(%rip),%rax
   mov $0x8,%ebx
   lea 0x48(%rsp),%rcx
   mov $0x1,%edi
@@ -125,7 +125,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ_1d6
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0x8,0x8(%rax)
-  lea go_string._+15010(%rip),%rcx
+  lea go_string._+15004(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

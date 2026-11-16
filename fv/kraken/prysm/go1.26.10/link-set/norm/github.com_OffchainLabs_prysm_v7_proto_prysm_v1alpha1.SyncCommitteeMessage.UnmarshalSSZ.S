@@ -24,7 +24,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.Unm
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_60:
   mov %rax,0x50(%rsp)
   mov %rbx,0x58(%rsp)
-  lea go_string._+14986(%rip),%rax
+  lea go_string._+14980(%rip),%rax
   mov $0x8,%ebx
   lea 0x50(%rsp),%rcx
   mov $0x1,%edi
@@ -36,7 +36,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.Unm
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0x8,0x8(%rax)
-  lea go_string._+14986(%rip),%rcx
+  lea go_string._+14980(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -95,7 +95,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.Unm
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_18b:
   mov %rax,0x40(%rsp)
   mov %rbx,0x48(%rsp)
-  lea go_string._+43461(%rip),%rax
+  lea go_string._+43455(%rip),%rax
   mov $0x12,%ebx
   lea 0x40(%rsp),%rcx
   mov $0x1,%edi
@@ -107,7 +107,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.Unm
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0x12,0x8(%rax)
-  lea go_string._+43461(%rip),%rcx
+  lea go_string._+43455(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

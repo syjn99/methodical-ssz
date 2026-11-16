@@ -2,7 +2,7 @@ import Kraken.X64.Parser
 import Machine.Include
 
 /-!
-# Code of the HistoricalBatch decoder (Go 1.26.10 ELF `9a37219e…10e9`)
+# Code of the HistoricalBatch decoder (the Go 1.26.10 ELF of `prysm/go1.26.10/build-ids.txt`)
 
 `unmarshalSSZ` includes the `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
 (`gen/checks/historical_batch_link.py filter`, `link/convert_objdump.py --norm`, `historical_batch_link.py data`; `link/check.py` (a)–(f) PASS in

@@ -83,7 +83,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.UnmarshalSSZ_1
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.UnmarshalSSZ_15e:
   mov %rax,0x28(%rsp)
   mov %rbx,0x30(%rsp)
-  lea go_string._+40312(%rip),%rax
+  lea go_string._+40306(%rip),%rax
   mov $0x11,%ebx
   lea 0x28(%rsp),%rcx
   mov $0x1,%edi
@@ -95,7 +95,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.UnmarshalSSZ_1
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0x11,0x8(%rax)
-  lea go_string._+40312(%rip),%rcx
+  lea go_string._+40306(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

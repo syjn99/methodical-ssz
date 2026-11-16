@@ -1,8 +1,8 @@
 {
  "schema": "fv.kraken.ssz-methods/1",
  "source": "`go tool nm` listing of the pinned ELF (not committed)",
- "nm_sha256": "5d47a14dc050ea4b58e9d89baa3e3df41df0af4538b0b7200398e6d8f9745673",
- "elf_sha256": "9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9",
+ "nm_sha256": "a9d677cdfdbf28f2b1f5de26878126ec544f8e63cf8a9403d8e2577aaaab7574",
+ "elf_sha256": "a5fbd7fa86d1c2e9c92b6138ff37cf770b253782a174c2493bf75fc26068b5c1",
  "rule": "text symbols (nm type T or t) `<pkg>.<Type>.<Method>` or `<pkg>.(*<Type>).<Method>` with <pkg> under `github.com/OffchainLabs/prysm/v7/` and <Method> in ['UnmarshalSSZ', 'MarshalSSZTo', 'MarshalSSZ', 'SizeSSZ', 'HashTreeRoot', 'HashTreeRootWith', 'ProgressiveHashTreeRoot', 'ProgressiveHashTreeRootWith', 'MaxSizeSSZ']; one row per (package, type, method); `symbols` lists the receiver forms present (a value-receiver method also has its compiler pointer wrapper)",
  "out_of_scope_symbols": {
   "github.com/holiman/uint256": 4

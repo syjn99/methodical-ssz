@@ -419,5 +419,5 @@ var keep = []any{
 }
 
 func main() {
-	fmt.Println("p1cbin", len(keep))
+	fmt.Println(len(keep))
 }

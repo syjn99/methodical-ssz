@@ -1,2 +1,2 @@
-# sszErrBytesLength: link/data.py, target-amd64 bytes [0x137fc70, 0x137fc70)
+# sszErrBytesLength: link/data.py, target-amd64 bytes [0x137fc50, 0x137fc50)
 at ssz.ErrBytesLength 0

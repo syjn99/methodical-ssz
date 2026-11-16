@@ -24,7 +24,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.Unmars
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ_5a:
   mov %rax,0x40(%rsp)
   mov %rbx,0x48(%rsp)
-  lea go_string._+18141(%rip),%rax
+  lea go_string._+18135(%rip),%rax
   mov $0x9,%ebx
   lea 0x40(%rsp),%rcx
   mov $0x1,%edi
@@ -37,7 +37,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.Unmars
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0x9,0x8(%rax)
-  lea go_string._+18141(%rip),%rcx
+  lea go_string._+18135(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -97,7 +97,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.Unmars
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ_186:
   mov %rax,0x30(%rsp)
   mov %rbx,0x38(%rsp)
-  lea go_string._+46529(%rip),%rax
+  lea go_string._+46523(%rip),%rax
   mov $0x13,%ebx
   lea 0x30(%rsp),%rcx
   mov $0x1,%edi
@@ -110,7 +110,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.Unmars
   nop
   callq runtime.newobject
   movq $0x13,0x8(%rax)
-  lea go_string._+46529(%rip),%rcx
+  lea go_string._+46523(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

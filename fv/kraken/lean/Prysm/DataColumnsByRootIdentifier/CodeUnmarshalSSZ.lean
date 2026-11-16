@@ -2,7 +2,7 @@ import Kraken.X64.Parser
 import Machine.Include
 
 /-!
-# Code of the `DataColumnsByRootIdentifier` decoder (Go 1.26.10 ELF `9a37219e…10e9`)
+# Code of the `DataColumnsByRootIdentifier` decoder (the Go 1.26.10 ELF of `prysm/go1.26.10/build-ids.txt`)
 
 `unmarshalSSZ` includes the `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
 (`link/convert_objdump.py --norm`; `gen/checks/data_columns_decoder_link.py filter/data`;

@@ -21,7 +21,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.Unmar
 L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.UnmarshalSSZ_4b:
   mov %rax,0x28(%rsp)
   mov %rbx,0x30(%rsp)
-  lea go_string._+58620(%rip),%rax
+  lea go_string._+58614(%rip),%rax
   mov $0x17,%ebx
   lea 0x28(%rsp),%rcx
   mov $0x1,%edi
@@ -33,7 +33,7 @@ L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.Unmar
   lea type__+828672(%rip),%rax
   callq runtime.newobject
   movq $0x17,0x8(%rax)
-  lea go_string._+58620(%rip),%rcx
+  lea go_string._+58614(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

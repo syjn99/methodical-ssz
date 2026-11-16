@@ -26,8 +26,8 @@ The program counts all numbers. The scope classification is a first pass (provis
 | Generator and runtime | `698c2025a73a296b55b95744a8408f3b03b2546b` |
 | Target compilation | Cross-compiled for linux/amd64 with `go version go1.26.10 linux/arm64` (host binary), `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -p 2 -tags purego -trimpath` |
 | Host | Linux aarch64 (generation is arm64 native. No x86-64 hardware) |
-| ELF | sha256 `9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9`, 23485993 bytes. Not committed (`../README.md` section 3 tells how to build it again) |
-| Reproducibility | Second build with an empty GOCACHE: sha256 `9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9` |
+| ELF | sha256 `a5fbd7fa86d1c2e9c92b6138ff37cf770b253782a174c2493bf75fc26068b5c1`, 23486113 bytes. Not committed (`../README.md` section 3 tells how to build it again) |
+| Reproducibility | Second build with an empty GOCACHE: sha256 `a5fbd7fa86d1c2e9c92b6138ff37cf770b253782a174c2493bf75fc26068b5c1` |
 | Kraken / EthLib / Lean | `6064eec` / `8621856` / `nightly-2026-09-21` |
 
 Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `1aede9d9…0761` do not transfer to this machine code.

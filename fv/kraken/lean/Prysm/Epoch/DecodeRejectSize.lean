@@ -220,7 +220,7 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
       (Int.toBytes_length _ _) (rsp.toBitVec - 40)
       (Eq ((Int.toBytes 8 (Host.addrOf (k + 28 + 1)).toBitVec.toInt).At (rsp.toBitVec - 88))
         ⋆ Eq (stk2.At (rsp.toBitVec - 88 - BitVec.ofNat 64 S)) ⋆ Eq (sp2.At (rsp.toBitVec - 80))
-        ⋆ Eq (sp32.At (rsp.toBitVec - 80 + 8)) ⋆ Eq (ElfData.PrysmTarget.formatBufferLength.At (label "go_string._" + 110057).toBitVec))]
+        ⋆ Eq (sp32.At (rsp.toBitVec - 80 + 8)) ⋆ Eq (ElfData.PrysmTarget.formatBufferLength.At (label "go_string._" + 110051).toBitVec))]
     rw [show rsp.toBitVec - 80 + 8 = rsp.toBitVec - 72 by bv_omega,
       show rsp.toBitVec - 40 + 8 = rsp.toBitVec - 32 by bv_omega,
       show rsp.toBitVec - 40 + 16 = rsp.toBitVec - 24 by bv_omega,

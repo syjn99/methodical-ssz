@@ -1,4 +1,4 @@
-# formatFinalizedEpoch: link/data.py, target-amd64 bytes [0xc442e3, 0xc442f5)
-at go_string._ 43515
+# formatFinalizedEpoch: link/data.py, target-amd64 bytes [0xc442dd, 0xc442ef)
+at go_string._ 43509
 bytes 46 69 6e 61 6c 69 7a 65 64 45 70 6f 63 68 3a 20
 bytes 25 77

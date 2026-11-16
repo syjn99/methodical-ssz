@@ -75,8 +75,8 @@ theorem sszErrBytesLength_addr_eq : ElfData.PrysmTarget.sszErrBytesLength_addr =
 theorem runtimeStaticuint64s_addr_eq : ElfData.PrysmTarget.runtimeStaticuint64s_addr = Runtime.Data.staticuint64s_addr := rfl
 theorem sszErrIncorrectListSize_addr_eq : ElfData.PrysmTarget.sszErrIncorrectListSize_addr = (label "ssz.ErrIncorrectListSize").toBitVec := rfl
 theorem sszErrListTooBig_addr_eq : ElfData.PrysmTarget.sszErrListTooBig_addr = (label "ssz.ErrListTooBig").toBitVec := rfl
-theorem formatAttestingIndicesMisaligned_addr_eq : ElfData.PrysmTarget.formatAttestingIndicesMisaligned_addr = (label "go_string._" + 171319).toBitVec := rfl
-theorem formatAttestingIndicesTooBig_addr_eq : ElfData.PrysmTarget.formatAttestingIndicesTooBig_addr = (label "go_string._" + 163839).toBitVec := rfl
+theorem formatAttestingIndicesMisaligned_addr_eq : ElfData.PrysmTarget.formatAttestingIndicesMisaligned_addr = (label "go_string._" + 171313).toBitVec := rfl
+theorem formatAttestingIndicesTooBig_addr_eq : ElfData.PrysmTarget.formatAttestingIndicesTooBig_addr = (label "go_string._" + 163833).toBitVec := rfl
 theorem typeInt_addr_eq : ElfData.PrysmTarget.typeInt_addr = (label "type__" + 387520).toBitVec := rfl
 
 end ElfData.PrysmTarget
