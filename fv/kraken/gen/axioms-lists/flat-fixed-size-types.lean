@@ -1,4 +1,4 @@
-import Prysm.Checkpoint.EncodeBytes32TemplatePlacement
+import Codec.SegmentTemplate
 import Codec.Kind.FieldPatterns
 import Prysm.Slot.Uint64DecoderKindSameAsHand
 import Prysm.CommitteeIndex.Uint64DecoderKindSameAsHand
@@ -258,8 +258,6 @@ import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 -- The segment lemmas, the statement-identity checks and the generated instances.
 #print axioms Codec.infix_sub
 #print axioms Codec.uint64_decode_accept
-#print axioms Codec.root_encode_segment
-#print axioms Prysm.Checkpoint.Encode.bytes32_template_at
 -- Frozen statement kinds, their lemma ties and anchors, and the generated `_kind` identities
 #print axioms Codec.uint64DecodeAcceptKind_of
 #print axioms Prysm.Slot.Decode.accept_kind_anchor
