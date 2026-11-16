@@ -127,7 +127,11 @@ python3 -I -B fv/kraken/gen/generator/kindcheck.py fv/kraken/lean/Prysm/Validato
 ```
 
 `kindcheck_broken_copies_test.py` makes one copy of `kindcheck.py` for each sub-rule of rule 13, with that sub-rule switched off.
-The selftest of every copy must fail.
+The replacement text removes only the error report of the sub-rule and keeps the control flow.
+Each variant has a set of expected selftest cases.
+A copy is detected only when its selftest exits with code 1, writes no Python traceback and prints a `selftest FAIL` line.
+That line must name at least one expected case of the variant.
+A crash, a passing selftest or a failure only in other cases is `BAD`.
 Run Lean and `kindcheck.py` together on every generated file.
 Each one alone lets a defect through.
 For the `uint64` file, `kindcheck.py` does not check the kind parameters.

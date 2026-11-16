@@ -185,7 +185,6 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 ### Open items of the encoder checker
 
 - What does not hold: the macro `encoder_address_equation` has no namespace.
-  A broken checker copy fails with a `KeyError`, not with a check result.
   The negative tests that compare the IR with the code change one theorem only.
   No mutant changes a whole file.
 - Effect: each item needs a checker or a test change.
