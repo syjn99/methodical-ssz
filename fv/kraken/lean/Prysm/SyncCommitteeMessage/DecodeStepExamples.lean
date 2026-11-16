@@ -5,12 +5,7 @@ import Prysm.SyncCommitteeMessage.Code
 import Prysm.Deposit_Data.Code
 import Prysm.BeaconBlockHeader.Code
 import Prysm.Checkpoint.Code
-import Prysm.BeaconBlockHeader.DecodeStepExamples
-import Prysm.Checkpoint.DecodeStepExamples
-import Prysm.Deposit_Data.DecodeStepExamples
 import Prysm.PendingConsolidation.DecodeStepExamples
-import Prysm.PendingPartialWithdrawal.DecodeStepExamples
-
 /-!
 # Example instances of the window and step mechanisms on the development sites
 
