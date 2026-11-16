@@ -35,7 +35,6 @@ import Codec.DecoderHeadEpilogue
 import Prysm.BlobIdentifier.GeneratedDecodeFieldSegments
 import Prysm.BlobIdentifier.DecodeAcceptFromGeneratedFieldSegments
 import Prysm.BlobIdentifier.GeneratedDecodeAcceptComposition
-import Prysm.BeaconBlockHeader.GeneratedDecodeFieldSegmentsPartial
 import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 import Prysm.Deposit_Data.DecodeSpec
 import Prysm.Deposit_Data.WitnessDecodeAccept
@@ -49,10 +48,8 @@ import Codec.FixedBytesDecodePadding
 import Codec.Kind.DecodeAcceptComposition
 import Prysm.BlobIdentifier.GeneratedDecodeAcceptCompositionKind
 import Prysm.PendingPartialWithdrawal.DecodeAccept
-import Prysm.BeaconBlockHeader.DecodeHeadFromCallSegments
+import Prysm.BeaconBlockHeader.DecodeAddressArithmetic
 import Prysm.PendingPartialWithdrawal.WitnessDecodeAccept
-import Prysm.BeaconBlockHeader.GeneratedDecodeCallSegments
-import Prysm.BeaconBlockHeader.DecodeAcceptFromGeneratedCallSegments
 import Prysm.PendingConsolidation.GeneratedDecodeCallSegmentsPartial
 import Prysm.SyncCommitteeMessage.GeneratedDecodeCallSegmentsPartial
 import Prysm.SyncCommitteeMessage.Code
@@ -88,7 +85,6 @@ import Prysm.SyncCommitteeMessage.DecodeAcceptDependencyCheck
 import Codec.DecoderPrologue
 import Prysm.SyncCommitteeMessage.DecoderPrologueInstances
 import Prysm.Checkpoint.GeneratedDecodeSteps
-import Prysm.BeaconBlockHeader.GeneratedDecodeSteps
 import Prysm.BlobIdentifier.GeneratedDecodeSteps
 import Prysm.SyncCommitteeMessage.GeneratedDecodeSteps
 import Prysm.PendingConsolidation.GeneratedDecodeSteps
@@ -269,7 +265,6 @@ import Prysm.PowBlock.DecodeAcceptAnyFrameInstances
 import Prysm.PendingConsolidation.DecodeAcceptAnyFrameInstances
 import Prysm.PendingDeposit.DecodeAcceptAnyFrameInstances
 import Prysm.SyncCommitteeMessage.DecodeAcceptAnyFrameInstances
-import Prysm.BeaconBlockHeader.DecodeAcceptAnyFrameInstances
 import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 import Prysm.BlobIdentifier.DecodeAcceptComposition
 import Prysm.SyncCommitteeMessage.WindowStepsInstances
@@ -297,15 +292,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.ValidatorIndex.Witness.DecodeAccept.witness_mem
 #print axioms Prysm.ValidatorIndex.Witness.DecodeAccept.runs
 #print axioms Prysm.ValidatorIndex.Witness.DecodeAccept.runs_function_spec
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_root_ParentRoot_segment
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_root_ParentRoot_segment_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_root_StateRoot_segment
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_root_StateRoot_segment_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_root_BodyRoot_segment
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_root_BodyRoot_segment_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.head
-#print axioms Prysm.BeaconBlockHeader.Decode.accept
-#print axioms Prysm.BeaconBlockHeader.Decode.reject_size
 #print axioms Prysm.BeaconBlockHeader.Decode.slot_err_unreachable
 #print axioms Prysm.BeaconBlockHeader.Decode.validator_index_err_unreachable
 #print axioms Prysm.BeaconBlockHeader.Witness.DecodeErrorUnreachable.runs
@@ -495,13 +481,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.BlobIdentifier.Decode.generated_field_BlockRoot_segment_kind
 #print axioms Prysm.BlobIdentifier.Decode.generated_field_Index_segment
 #print axioms Prysm.BlobIdentifier.Decode.generated_field_Index_segment_kind
--- Partial output of `decoder --field-segments` (raw `--partial-out` output for BeaconBlockHeader, 3 of 5 fields)
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_field_BodyRoot_segment
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_field_BodyRoot_segment_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_field_ParentRoot_segment
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_field_ParentRoot_segment_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_field_StateRoot_segment
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_field_StateRoot_segment_kind
 -- Deposit_Data and PendingPartialWithdrawal (UnmarshalSSZ):
 -- hand lemma, spec / witnesses
 #print axioms Prysm.Deposit_Data.bytes32_decode_segment_nop
@@ -543,30 +522,8 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.Deposit_Data.Witness.DecodeRejectSize.runs
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeRejectSize.runs
 -- `decoder --call-segments`: every new theorem of the lemma, example, generated and composition modules
-#print axioms Prysm.BeaconBlockHeader.Decode.accept_from_generated_call_segments
-#print axioms Prysm.BeaconBlockHeader.Decode.accept_from_generated_call_segments_type
-#print axioms Prysm.BeaconBlockHeader.Decode.head_from_call_segments
-#print axioms Prysm.BeaconBlockHeader.Decode.head_from_call_segments_type
-#print axioms Prysm.BeaconBlockHeader.Decode.head_from_generated_call_segments
-#print axioms Prysm.BeaconBlockHeader.Decode.head_from_generated_call_segments_type
-#print axioms Prysm.BeaconBlockHeader.Decode.head_to_arguments
-#print axioms Prysm.BeaconBlockHeader.Decode.spill_registers
 #print axioms Prysm.BeaconBlockHeader.Decode.accept_guard
 #print axioms Prysm.BeaconBlockHeader.Decode.head_stack_pointer
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_BodyRoot_segment
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_BodyRoot_segment_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_ParentRoot_segment
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_ParentRoot_segment_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_ProposerIndex_argument
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_ProposerIndex_argument_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_ProposerIndex_call
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_ProposerIndex_call_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_Slot_argument
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_Slot_argument_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_Slot_call
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_Slot_call_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_StateRoot_segment
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_call_StateRoot_segment_kind
 #print axioms Prysm.PendingPartialWithdrawal.Decode.accept
 #print axioms Prysm.PendingPartialWithdrawal.Decode.epilogue
 #print axioms Prysm.PendingPartialWithdrawal.Decode.head
@@ -670,62 +627,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 -- `decoder --steps`: every new theorem of the lemma, example, relation, generated (`decoder --steps`, raw)
 -- and accept modules
 #print axioms Prysm.SyncCommitteeMessage.Decode.validator_index_argument_inst
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_BodyRoot_segment
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_BodyRoot_segment_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_ParentRoot_segment
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_ParentRoot_segment_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_ProposerIndex_call
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_ProposerIndex_call_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_Slot_call
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_Slot_call_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_StateRoot_segment
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_StateRoot_segment_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_113
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_113_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_115
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_115_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_122
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_122_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_123
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_123_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_149
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_149_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_15
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_150
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_150_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_157
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_157_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_158
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_158_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_15_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_16
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_16_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_184
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_184_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_185
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_185_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_193
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_193_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_194
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_194_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_47
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_47_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_48
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_48_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_49
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_49_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_50
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_50_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_51
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_51_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_52
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_52_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_53
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_53_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_86
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_86_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_87
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_step_directive_87_kind
 #print axioms Prysm.BlobIdentifier.Decode.generated_step_BlockRoot_segment
 #print axioms Prysm.BlobIdentifier.Decode.generated_step_BlockRoot_segment_kind
 #print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_37
@@ -883,8 +784,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.SyncCommitteeMessage.Decode.from_generated_steps_Signature_field
 #print axioms Prysm.SyncCommitteeMessage.Decode.from_generated_steps_Slot_field
 #print axioms Prysm.SyncCommitteeMessage.Decode.from_generated_steps_ValidatorIndex_field
-#print axioms Prysm.BeaconBlockHeader.Decode.head_to_arguments_inst
-#print axioms Prysm.BeaconBlockHeader.Decode.spill_registers_inst
 #print axioms Prysm.PendingConsolidation.Decode.epilogue_inst
 #print axioms Prysm.PendingConsolidation.Decode.head_inst
 #print axioms Prysm.SyncCommitteeMessage.Decode.head_to_arguments_inst
@@ -1033,7 +932,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_StateRoot_segment_kind
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_accept
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_accept_kind
-#print axioms Prysm.BeaconBlockHeader.Decode.generated_accept_same
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_epilogue
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_epilogue_kind
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_1
@@ -1697,8 +1595,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Codec.DecodeBoundaryState.regs
 #print axioms Codec.DecodeBoundaryState.stackSlots
 #print axioms Codec.addExtra
-#print axioms Prysm.BeaconBlockHeader.Decode.accept_is_kind_any_frame
-#print axioms Prysm.BeaconBlockHeader.Decode.reject_size_is_kind_any_frame
 #print axioms Prysm.BlobIdentifier.Decode.accept_is_kind_any_frame
 #print axioms Prysm.BlobIdentifier.Decode.accept_kind_any_frame_is_kind
 #print axioms Prysm.BlobIdentifier.Decode.reject_size_is_kind_any_frame

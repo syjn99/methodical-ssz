@@ -70,7 +70,7 @@ It does not check the kind files and the lemma files themselves. Their git-blob 
 ```sh
 python3 -I -B fv/kraken/gen/generator/kindcheck.py --selftest
 python3 -I -B fv/kraken/gen/generator/kindcheck.py fv/kraken/lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean
-python3 -I -B fv/kraken/gen/generator/kindcheck.py --partial fv/kraken/lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean
+python3 -I -B fv/kraken/gen/generator/kindcheck.py --partial fv/kraken/lean/Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean
 ```
 
 Run Lean and `kindcheck.py` together on every generated file. Each one alone lets a defect through.

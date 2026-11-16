@@ -1,45 +1,4 @@
 [
  {
-  "id": "beacon-block-header-decode-accept-from-generated-call-segments-control",
-  "module": "Prysm/BeaconBlockHeader/DecodeAcceptFromGeneratedCallSegments.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Decode.accept_from_generated_call_segments",
-  "kind": "control"
- },
- {
-  "id": "beacon-block-header-decode-generated-call-proposer-index-argument-statement-k-true-to-false",
-  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_call_ProposerIndex_argument",
-  "kind": "statement",
-  "old": "(k + 47 + 7 + padLen true)",
-  "new": "(k + 47 + 7 + padLen false)"
- },
- {
-  "id": "beacon-block-header-decode-generated-call-slot-call-statement-primitives-slot-to-epoch",
-  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_call_Slot_call",
-  "kind": "statement",
-  "old": "primitives.Slot.UnmarshalSSZ\")",
-  "new": "primitives.Epoch.UnmarshalSSZ\")"
- },
- {
-  "id": "beacon-block-header-decode-head-from-generated-call-segments-statement-hlen-112-to-104",
-  "module": "Prysm/BeaconBlockHeader/DecodeAcceptFromGeneratedCallSegments.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Decode.head_from_generated_call_segments",
-  "kind": "statement",
-  "old": "(hlen : s.regs.rcx = 112)",
-  "new": "(hlen : s.regs.rcx = 104)"
- },
- {
-  "id": "beacon-block-header-decode-generated-call-proposer-index-argument-code-add-0x8-to-0x10",
-  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeCallSegments.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_call_ProposerIndex_argument",
-  "kind": "code",
-  "line": 51,
-  "old": "  add $-0x8,%rdi",
-  "new": "  add $-0x10,%rdi",
-  "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S"
  }
 ]

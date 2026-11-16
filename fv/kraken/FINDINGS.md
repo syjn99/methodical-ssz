@@ -328,7 +328,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: five Checkpoint theorems do not state the rest of memory: `Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver`, `Prysm.Checkpoint.Encode.fast_path_spec`, `Prysm.Checkpoint.DecodeThenEncode.round_trip`, `Prysm.Checkpoint.Encode.cover` and `Prysm.Checkpoint.Encode.reject_length_cover`.
 - State: disclosed. The component theorems and the `*_framed` cover theorems state the exact frame. The composition has no framed version.
-- Related: `Prysm.BeaconBlockHeader.Decode.accept` hides three argument-area slots in one 24-byte existential. They are dead stack only. The statement is not changed.
+- Related: `Prysm.BeaconBlockHeader.Decode.generated_accept` hides three argument-area slots in one 24-byte existential. They are dead stack only. The statement is not changed.
 
 ### Docstrings that say more than their theorem
 

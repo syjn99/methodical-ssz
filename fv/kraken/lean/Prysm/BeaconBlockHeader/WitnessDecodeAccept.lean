@@ -1,10 +1,10 @@
-import Prysm.BeaconBlockHeader.DecodeAccept
+import Prysm.BeaconBlockHeader.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept` (BeaconBlockHeader decoder accept path)
+# Witness of `Decode.generated_accept` (BeaconBlockHeader decoder accept path)
 
 Hand-written (the text of `Prysm/AttestationData/WitnessDecodeAccept.lean` with the BeaconBlockHeader host
 and layout). Host: data labels, the real Go 1.26.10 `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`
@@ -95,7 +95,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
 set_option maxHeartbeats 16000000 in
-/-- **Non-vacuity of `Decode.accept`.** -/
+/-- **Non-vacuity of `Decode.generated_accept`.** -/
 theorem runs (in0 in1 r1 r2 r3 oP1 oP2 oP3 : List UInt8) (hin0 : in0.length = 8)
     (hin1 : in1.length = 8) (hr1 : r1.length = 32) (hr2 : r2.length = 32) (hr3 : r3.length = 32)
     (h1 : oP1.length = 8) (h2 : oP2.length = 8) (h3 : oP3.length = 8)
@@ -103,7 +103,7 @@ theorem runs (in0 in1 r1 r2 r3 oP1 oP2 oP3 : List UInt8) (hin0 : in0.length = 8)
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
       ⟨initial_state in0 in1 r1 r2 r3 oP1 oP2 oP3 zmms flags, Host.addrOf 9⟩ :=
-  eventually_mono (Decode.accept 9 placed_at_9 labels_fresh_at_9 226 placed_at_226 labels_fresh_at_226 289 placed_at_289 labels_fresh_at_289
+  eventually_mono (Decode.generated_accept 9 placed_at_9 labels_fresh_at_9 226 placed_at_226 labels_fresh_at_226 289 placed_at_289 labels_fresh_at_289
     in0 in1 r1 r2 r3 hin0 hin1 hr1 hr2 hr3 (initial_state in0 in1 r1 r2 r3 oP1 oP2 oP3 zmms flags)
     0 0 (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 16) (zeros 8) (zeros 8) (zeros 8)
     oP1 (zeros 8) (zeros 8) oP2 (zeros 8) (zeros 8) oP3 (zeros 8) (zeros 8)

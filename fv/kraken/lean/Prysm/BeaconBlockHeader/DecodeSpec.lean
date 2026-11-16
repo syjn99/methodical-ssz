@@ -1,5 +1,4 @@
-import Prysm.BeaconBlockHeader.DecodeAccept
-import Prysm.BeaconBlockHeader.DecodeRejectSize
+import Prysm.BeaconBlockHeader.GeneratedDecodeAccept
 import Prysm.BeaconBlockHeader.Spec
 
 /-!
@@ -14,7 +13,9 @@ statement).
 - `Decode.reject_size_spec`: `bs.size ≠ 112` → EthLib rejects, and the machine code (with `rcx = bs.size`)
   returns the two words of `ssz.ErrSize`.
 - `Decode.reject_complete`: every input that EthLib rejects has `size ≠ 112`, the path condition of the one
-  reachable reject site. The two `fmt.Errorf` wraps are not reached on 112-byte inputs (`Prysm/BeaconBlockHeader/DecodeRejectSize.lean`).
+  reachable reject site. The two `fmt.Errorf` wraps are not reached on 112-byte inputs (`Prysm/BeaconBlockHeader/DecodeErrorUnreachable.lean`).
+
+The machine-code theorems used are the generated `Decode.generated_accept` and `Decode.generated_reject`.
 -/
 
 open Machine Runtime Prysm.AttestationData.Code Prysm.BeaconBlockHeader.Code Codec EthLib.Serialization.Ssz
@@ -102,7 +103,7 @@ theorem Decode.accept_spec (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host.prog
   refine ⟨g, rfl, rfl, ?_⟩
   have h112 : s.regs.rcx = 112 := by
     apply UInt64.toNat_inj.mp; rw [hlen, SszValue.encode_size]; rfl
-  exact Decode.accept k hk hf kS hkS hfS kV hkV hfV _ _ _ _ _
+  exact Decode.generated_accept k hk hf kS hkS hfS kV hkV hfV _ _ _ _ _
     (by simp [Spec.uintBytes_size]) (by simp [Spec.uintBytes_size]) (by simp) (by simp) (by simp) s ra guard
     fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 a16 aP1 aL1 aC1 aP2 aL2 aC2 aP3 aL3 aC3
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrs hast ha8 ha16 haP1 haL1 haC1 haP2 haL2 haC2 haP3 haL3 haC3
@@ -130,7 +131,7 @@ theorem Decode.reject_size_spec (k : Nat) (hk : Code.unmarshalSSZ.IsInfixAt Host
           ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.sszErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ :=
-  ⟨SszValue.spec_rejects bs hbs, Decode.reject_size k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
+  ⟨SszValue.spec_rejects bs hbs, Decode.generated_reject k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard
     (fun h => hbs (by rw [← hlen, h]; rfl))⟩
 
 /-- **`reject_complete`**: an input that EthLib rejects reaches the `ssz.ErrSize` site (path condition

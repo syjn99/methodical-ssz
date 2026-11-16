@@ -1,4 +1,5 @@
 import Prysm.BeaconBlockHeader.WitnessDecodeRejectSize
+import Prysm.BeaconBlockHeader.DecodeErrorUnreachable
 
 /-!
 # Witness of the two `unreachable_mc` theorems of the BeaconBlockHeader decoder

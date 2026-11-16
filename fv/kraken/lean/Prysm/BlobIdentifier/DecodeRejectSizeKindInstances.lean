@@ -1,5 +1,4 @@
 import Prysm.BlobIdentifier.DecodeRejectSize
-import Prysm.BeaconBlockHeader.DecodeRejectSize
 import Prysm.PendingPartialWithdrawal.DecodeRejectSize
 import Prysm.SyncCommitteeMessage.DecodeRejectSize
 import Prysm.PendingConsolidation.DecodeRejectSize
@@ -7,7 +6,6 @@ import Prysm.PendingDeposit.DecodeRejectSize
 import Prysm.PowBlock.DecodeRejectSize
 import Prysm.AttestationData.DecodeRejectSize
 import Codec.DecodeRejectSizeAnyFrame
-import Prysm.BeaconBlockHeader.DecodeRejectSizeKindInstances
 import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 import Prysm.PendingConsolidation.DecodeRejectSizeKindInstances
 import Prysm.PendingDeposit.DecodeRejectSizeKindInstances

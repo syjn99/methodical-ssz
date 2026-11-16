@@ -35,9 +35,6 @@ field-segment cases (`decoder --field-segments`; ids `field-segments-*`; mutated
 field-segment fix cases (ids `field-segments-fix-*`):
  - field-segments-partial (changed): the `--field-segments --partial-out` file is a Lean module: imports first, then the PARTIAL header
    with an `UNCOVERED-JSON:` line; `kindcheck.py` exit 1 by default, exit 3 with `--partial`.
- - field-segments-fix-beacon-block-header-partial: real BeaconBlockHeader (Slot, ProposerIndex are delegated overlay fields): exit 3, 0 bytes on
-   stdout, partial file = the committed `lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean`, two runs identical, kindcheck
-   default exit 1, `--partial` exit 3 with `PARTIAL 3/5 fields`.
  - field-segments-fix-compose-*: `--compose` refusals, exit 2, 0 bytes, no partial file even with `--partial-out`: partial
    coverage (BeaconBlockHeader), frame 0x28, a non-contiguous field (a `nop` between two fields), uint64 first
    field (IR order of BlobIdentifier swapped: displacement 0, not covered).
@@ -422,36 +419,11 @@ def field_segment_cases(work, new):
     return res + r2, bad | b2
 
 
-FIELD_SEGMENT_BEACON_BLOCK_HEADER_PARTIAL = "lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean"
-
-
 def field_segment_fix_cases(work, new, cargs, COMPOSITION_CASES, irt):
     """field-segment fix cases: partial output as a Lean module, compose refusals, statement markers."""
     res, bad = [], 0
     KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
     c = FIELD_SEGMENT_CASES["BeaconBlockHeader"]
-    outs = []
-    for i in range(2):
-        po = work / f"field-segments-fix-beacon-block-header-partial-{i}.lean"
-        if po.exists():
-            po.unlink()
-        rc, so, se = run(["python3", "-I", "-B", str(new), "decoder", "--field-segments", "--partial-out", str(po), "--assembly", c["S"],
-                          "--ir", IR, "--type", c["type"]] + c["args"], KR)
-        outs.append((rc, so, po.read_bytes() if po.exists() else b""))
-    po = work / "field-segments-fix-beacon-block-header-partial-0.lean"
-    kc = subprocess.run(KC + [str(po)], capture_output=True, text=True)
-    kp = subprocess.run(KC + ["--partial", str(po)], capture_output=True, text=True)
-    com = (KR / FIELD_SEGMENT_BEACON_BLOCK_HEADER_PARTIAL).read_bytes() if (KR / FIELD_SEGMENT_BEACON_BLOCK_HEADER_PARTIAL).exists() else None
-    pt = outs[0][2].decode()
-    uj = [json.loads(l.split(": ", 1)[1]) for l in pt.split("\n") if l.startswith("UNCOVERED-JSON: ")]
-    ok = (all(o[0] == 3 and o[1] == b"" for o in outs) and outs[0][2] == outs[1][2] and outs[0][2] == com
-          and uj and [u["field"] for u in uj[0]] == ["Slot", "ProposerIndex"]
-          and all("delegated overlay" in u["reason"] for u in uj[0])
-          and kc.returncode == 1 and kp.returncode == 3 and "PARTIAL 3/5 fields" in kp.stdout)
-    res.append(dict(id="field-segments-fix-beacon-block-header-partial", expect=f"exit 3 twice, 0 bytes, file = {FIELD_SEGMENT_BEACON_BLOCK_HEADER_PARTIAL}, kindcheck 1, --partial 3",
-                    exit=[o[0] for o in outs], stdout_bytes=len(outs[0][1]), equals_committed=outs[0][2] == com,
-                    uncovered=uj, kindcheck_exit=kc.returncode, kindcheck_partial_exit=kp.returncode, ok=bool(ok)))
-    bad |= not ok
     # --compose refusals
     dm = (KR / FIELD_SEGMENT_CASES["DepositMessage"]["S"]).read_text().split("\n")
     bia = ["decoder", "--field-segments", "--compose", "--name", "Decode.accept_generated_composition", "--same-as", "Prysm.BlobIdentifier.Decode.accept"]

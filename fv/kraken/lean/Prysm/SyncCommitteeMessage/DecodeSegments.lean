@@ -1,4 +1,4 @@
-import Prysm.BeaconBlockHeader.DecodeHeadFromCallSegments
+import Prysm.BeaconBlockHeader.DecodeAddressArithmetic
 import Codec.FixedBytesDecode
 import Prysm.SyncCommitteeMessage.Code
 

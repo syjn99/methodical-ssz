@@ -1,6 +1,5 @@
 import Codec.DecoderPrologue
 import Prysm.PendingDeposit.GeneratedDecodeSteps
-import Prysm.BeaconBlockHeader.DecodeAcceptFromGeneratedCallSegments
 import Prysm.PendingDeposit.Statements
 
 /-!

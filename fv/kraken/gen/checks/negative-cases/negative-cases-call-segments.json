@@ -184,20 +184,6 @@
   "kind": "control"
  },
  {
-  "id": "beacon-block-header-decode-head-from-call-segments-control",
-  "module": "Prysm/BeaconBlockHeader/DecodeHeadFromCallSegments.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Decode.head_from_call_segments",
-  "kind": "control"
- },
- {
-  "id": "beacon-block-header-decode-head-from-call-segments-statement-host-56-to-57",
-  "module": "Prysm/BeaconBlockHeader/DecodeHeadFromCallSegments.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Decode.head_from_call_segments",
-  "kind": "statement",
-  "old": "(Host.addrOf (k + 56)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 112))",
-  "new": "(Host.addrOf (k + 57)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 112))"
- },
- {
   "id": "blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33",
   "module": "Prysm/BlobIdentifier/DecodeAcceptComposition.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept_is_kind",

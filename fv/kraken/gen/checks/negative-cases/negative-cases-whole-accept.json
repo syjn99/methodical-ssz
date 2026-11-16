@@ -30,12 +30,12 @@
   "new": "[Prysm.ValidatorIndex.Code.unmarshalSSZ, Prysm.Slot.Code.unmarshalSSZ] 141 1"
  },
  {
-  "id": "beacon-block-header-decode-accept-is-kind-any-frame-statement-prysm-2-to-1",
-  "module": "Prysm/BeaconBlockHeader/DecodeAcceptAnyFrameInstances.lean",
-  "theorem": "Prysm.BeaconBlockHeader.Decode.accept_is_kind_any_frame",
+  "id": "beacon-block-header-decode-generated-accept-kind-statement-bytes-32-to-31",
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_accept_kind",
   "kind": "statement",
-  "old": "[Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 179 2",
-  "new": "[Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 179 1"
+  "old": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32] := by",
+  "new": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 31] := by"
  },
  {
   "id": "pow-block-decode-accept-is-kind-any-frame-statement-layout-runtime-calls-false-to-true",

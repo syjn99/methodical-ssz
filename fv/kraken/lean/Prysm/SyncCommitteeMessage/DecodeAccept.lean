@@ -1,4 +1,4 @@
-import Prysm.BeaconBlockHeader.DecodeAcceptFromGeneratedCallSegments
+import Prysm.BeaconBlockHeader.DecodeAddressArithmetic
 import Prysm.SyncCommitteeMessage.DecodeSegments
 import Prysm.SyncCommitteeMessage.GeneratedDecodeCallSegmentsPartial
 import Prysm.SyncCommitteeMessage.Statements

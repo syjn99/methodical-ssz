@@ -1,5 +1,4 @@
 import Prysm.BlobIdentifier.DecodeRejectSize
-import Prysm.BeaconBlockHeader.DecodeRejectSize
 import Prysm.PendingPartialWithdrawal.DecodeRejectSize
 import Prysm.SyncCommitteeMessage.DecodeRejectSize
 import Prysm.PendingConsolidation.DecodeRejectSize
