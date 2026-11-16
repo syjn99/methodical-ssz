@@ -1,15 +1,40 @@
 #!/usr/bin/env python3
-"""The text of `encode_spec_emitter.py` with the type table of the flat types of `flat_types_spec.py`. Emitter: per generated encoder fast-path theorem
+"""Emitter: per generated encoder fast-path theorem
 `Encode.generated_fast`, emit a witness module and a spec-corollary module:
 <out dir>/Prysm/<T>/WitnessGeneratedEncodeFastPath.lean and <out dir>/Prysm/<T>/GeneratedEncodeFastPathSpec.lean.
 
 Reads the committed Prysm/<T>/GeneratedEncodeFastPath.lean (statement text, FAST-PATH-JSON header) and the IR (Go struct size).
-usage: encode_spec_emitter.py <lean dir> <out dir> [<T> ...]      (<T>: a Go type name of TYPES)
+usage: flat_types_encode_spec.py <lean dir> <out dir> [<T> ...]      (<T>: a Go type name of TYPES)
 """
 import json, re, sys, os
 
 TYPES = {
     # Go type name: (spec module, SSZ value structure, encoding, serialize lemma, Desc, [(field accessor kind, expr)])
+    'Checkpoint': ('Prysm.Checkpoint.Spec', 'Prysm.Checkpoint.SszValue', 'Prysm.Checkpoint.SszValue.encode', 'Prysm.Checkpoint.SszValue.serialize_eq', 'Prysm.Checkpoint.desc', ['u:epoch', 'b:root']),
+    'BeaconBlockHeader': ('Prysm.BeaconBlockHeader.Spec', 'Prysm.BeaconBlockHeader.SszValue', 'Prysm.BeaconBlockHeader.SszValue.encode', 'Prysm.BeaconBlockHeader.SszValue.serialize_eq', 'Prysm.BeaconBlockHeader.desc',
+           ['u:slot', 'u:proposer', 'b:parent', 'b:state', 'b:body']),
+    'Eth1Data': ('Prysm.Eth1Data.Spec', 'Prysm.Eth1Data.SszValue', 'Prysm.Eth1Data.SszValue.encode', 'Prysm.Eth1Data.SszValue.serialize_eq', 'Prysm.Eth1Data.desc',
+           ['b:depositRoot', 'u:depositCount', 'b:blockHash']),
+    'BlobIdentifier': ('Prysm.BlobIdentifier.Spec', 'Prysm.BlobIdentifier.SszValue', 'Prysm.BlobIdentifier.SszValue.encode', 'Prysm.BlobIdentifier.SszValue.serialize_eq', 'Prysm.BlobIdentifier.desc', ['b:blockRoot', 'u:index']),
+    'DepositMessage': ('Prysm.DepositMessage.Spec', 'Prysm.DepositMessage.SszValue', 'Prysm.DepositMessage.SszValue.encode', 'Prysm.DepositMessage.SszValue.serialize_eq', 'Prysm.DepositMessage.desc',
+           ['b:pubkey', 'b:withdrawalCredentials', 'u:amount']),
+    'Deposit_Data': ('Prysm.Deposit_Data.Spec', 'Prysm.Deposit_Data.SszValue', 'Prysm.Deposit_Data.SszValue.encode', 'Prysm.Deposit_Data.SszValue.serialize_eq', 'Prysm.Deposit_Data.desc',
+           ['b:pubkey', 'b:withdrawalCredentials', 'u:amount', 'b:signature']),
+    'PendingPartialWithdrawal': ('Prysm.PendingPartialWithdrawal.Spec', 'Prysm.PendingPartialWithdrawal.SszValue', 'Prysm.PendingPartialWithdrawal.SszValue.encode', 'Prysm.PendingPartialWithdrawal.SszValue.serialize_eq', 'Prysm.PendingPartialWithdrawal.desc',
+           ['u:index', 'u:amount', 'u:withdrawableEpoch']),
+    'SyncCommitteeMessage': ('Prysm.SyncCommitteeMessage.Spec', 'Prysm.SyncCommitteeMessage.SszValue', 'Prysm.SyncCommitteeMessage.SszValue.encode', 'Prysm.SyncCommitteeMessage.SszValue.serialize_eq', 'Prysm.SyncCommitteeMessage.desc',
+           ['u:slot', 'b:blockRoot', 'u:validatorIndex', 'b:signature']),
+    'PendingConsolidation': ('Prysm.PendingConsolidation.Spec', 'Prysm.PendingConsolidation.SszValue', 'Prysm.PendingConsolidation.SszValue.encode', 'Prysm.PendingConsolidation.SszValue.serialize_eq', 'Prysm.PendingConsolidation.desc', ['u:sourceIndex', 'u:targetIndex']),
+    'PendingDeposit': ('Prysm.PendingDeposit.Spec', 'Prysm.PendingDeposit.SszValue', 'Prysm.PendingDeposit.SszValue.encode', 'Prysm.PendingDeposit.SszValue.serialize_eq', 'Prysm.PendingDeposit.desc',
+           ['b:pubkey', 'b:withdrawalCredentials', 'u:amount', 'b:signature', 'u:slot']),
+    'PowBlock': ('Prysm.PowBlock.Spec', 'Prysm.PowBlock.SszValue', 'Prysm.PowBlock.SszValue.encode', 'Prysm.PowBlock.SszValue.serialize_eq', 'Prysm.PowBlock.desc',
+           ['b:blockHash', 'b:parentHash', 'n:totalDifficulty']),
+    'HistoricalSummary': ('Prysm.HistoricalSummary.Spec', 'Prysm.HistoricalSummary.SszValue', 'Prysm.HistoricalSummary.SszValue.encode', 'Prysm.HistoricalSummary.SszValue.serialize_eq', 'Prysm.HistoricalSummary.desc',
+           ['b:blockSummaryRoot', 'b:stateSummaryRoot']),
+    'SigningData': ('Prysm.SigningData.Spec', 'Prysm.SigningData.SszValue', 'Prysm.SigningData.SszValue.encode', 'Prysm.SigningData.SszValue.serialize_eq', 'Prysm.SigningData.desc', ['b:objectRoot', 'b:domain']),
+    'SyncAggregatorSelectionData': ('Prysm.SyncAggregatorSelectionData.Spec', 'Prysm.SyncAggregatorSelectionData.SszValue', 'Prysm.SyncAggregatorSelectionData.SszValue.encode', 'Prysm.SyncAggregatorSelectionData.SszValue.serialize_eq', 'Prysm.SyncAggregatorSelectionData.desc', ['u:slot', 'u:subcommitteeIndex']),
+    'ValidatorBalance': ('Prysm.ValidatorBalance.Spec', 'Prysm.ValidatorBalance.SszValue', 'Prysm.ValidatorBalance.SszValue.encode', 'Prysm.ValidatorBalance.SszValue.serialize_eq', 'Prysm.ValidatorBalance.desc', ['u:index', 'u:balance']),
+    'VoluntaryExit': ('Prysm.VoluntaryExit.Spec', 'Prysm.VoluntaryExit.SszValue', 'Prysm.VoluntaryExit.SszValue.encode', 'Prysm.VoluntaryExit.SszValue.serialize_eq', 'Prysm.VoluntaryExit.desc', ['u:epoch', 'u:validatorIndex']),
     'BeaconBlocksByRangeRequest': ('Prysm.BeaconBlocksByRangeRequest.Spec', 'Prysm.BeaconBlocksByRangeRequest.SszValue', 'Prysm.BeaconBlocksByRangeRequest.SszValue.encode', 'Prysm.BeaconBlocksByRangeRequest.SszValue.serialize_eq', 'Prysm.BeaconBlocksByRangeRequest.desc', ['u:startSlot', 'u:count', 'u:step']),
     'BuilderDepositRequest': ('Prysm.BuilderDepositRequest.Spec', 'Prysm.BuilderDepositRequest.SszValue', 'Prysm.BuilderDepositRequest.SszValue.encode', 'Prysm.BuilderDepositRequest.SszValue.serialize_eq', 'Prysm.BuilderDepositRequest.desc',
             ['b:pubkey', 'b:withdrawalCredentials', 'u:amount', 'b:signature']),
@@ -26,7 +51,7 @@ RTCOPY_LEN = 26
 
 
 def die(msg):
-    sys.stderr.write('encode_spec_emitter: ' + msg + '\n')
+    sys.stderr.write('flat_types_encode_spec: ' + msg + '\n')
     sys.exit(2)
 
 
@@ -83,8 +108,8 @@ def parse(lean_dir, X):
     m = re.search(r'theorem %s_fast : ∀ (.*?):= by' % p, src, re.S)
     if not m:
         die('no fast theorem in ' + path)
-    statement_text = m.group(1)
-    gs, rest = groups(statement_text)
+    stmt = m.group(1)
+    gs, rest = groups(stmt)
     binders = []
     for g in gs:
         names, ty = g.split(' : ', 1)
@@ -141,7 +166,7 @@ def classify(info):
     lists = [b for b in B if b[1] == 'List UInt8']
     xs = lists[0][0]
     st = info['st']
-    if st is None:   # hand layouts (Checkpoint, BeaconBlockHeader, Eth1Data) live in `Prysm/<Type>/EncodeFastPathKindInstances.lean`: decide from the binder count
+    if st is None:   # a hand layout (Checkpoint, BeaconBlockHeader, Eth1Data) is not in the generated file: decide from the binder count
         st = len(xs) == 1 + nU + 2 * nB + 1 + len(fields)
     exp = (1 if st else 0) + nU + 2 * nB + 1 + len(fields)
     if len(xs) != exp:
@@ -327,10 +352,10 @@ def emit_wit(X, info, cl, gsize):
     w('import Prysm.%s.Code' % X)
     w('')
     w('/-!')
-    w('# Witness of `%s_fast` (%s encoder fast path, generated theorem; 24 flat types, text of the encoder specification emitter)' % (p, hdr['type']))
+    w('# Witness of `%s_fast` (%s encoder fast path, generated theorem)' % (p, hdr['type']))
     w('')
-    w('Written by `gen/flat-types/flat_types_encode_spec.py` (not by `generator.py`) from the committed statement text and')
-    w('the IR; then built and kernel-checked. Host: the real Go 1.26.10 `MarshalSSZTo` (index 0)%s.' %
+    w('Written by `gen/flat-types/flat_types_encode_spec.py` from the statement text of `%s_fast` and the IR.' % p)
+    w('Host: the real Go 1.26.10 `MarshalSSZTo` (index 0)%s.' %
       (' and `MemmoveGrowsliceModel` (index %d, `model_memmove`, S = 0)' % Pl if rt else '; no call on the fast path'))
     w('One memory block at `0x10000`: guard word (r14 = 0xfff0); the receiver at 0x10008 (`prysm/ir/ir-mainnet.json`')
     w('gc amd64 layout, %d bytes; byte fields = (pointer, n, n) with the n bytes after the receiver; unexported tail' % gsize)
@@ -570,13 +595,13 @@ def emit_spec(X, info, cl):
     w('import Prysm.%s.Code' % X)
     w('')
     w('/-!')
-    w('# %s encoder fast path (generated theorem) against the independent Desc (24 flat types, text of the encoder specification emitter)' % hdr['type'])
+    w('# %s encoder fast path (generated theorem) against the independent Desc' % hdr['type'])
     w('')
     w('`Encode.generated_fast_spec`: for a receiver holding the Go layout of `g : %s` (uint64 fields = `uintBytes 8`, byte' % PS)
     w('fields = `(p, n, cap)` with the n bytes at `p`), the generated fast-path theorem `%s_fast` writes at' % p)
     w('`dst[len:len+%d]` exactly the bytes of `serialize %s g.toValue` (the Desc of the decoder\'s spec alignment).' % (hdr['size'], desc))
-    w('Shape of `Prysm.BeaconBlockHeader.Encode.fast_path_spec`. Encoder fast path only (`len + %d ≤ cap`, exact field' % hdr['size'])
-    w('lengths). Written by `gen/flat-types/flat_types_encode_spec.py`, then built and kernel-checked.')
+    w('Encoder fast path only (`len + %d ≤ cap`, exact field lengths).' % hdr['size'])
+    w('Written by `gen/flat-types/flat_types_encode_spec.py`.')
     w('-/')
     w('')
     w('open Machine Runtime Codec %s EthLib.Serialization.Ssz' % ' '.join(info['open'].split()[3:]))
@@ -623,7 +648,7 @@ def emit_spec(X, info, cl):
     w('    (fun st ⟨%s⟩ =>' % pat)
     w('      ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, ?_⟩)')
     w('  rw [SszValue.encode_toList_generated, Encode.generated_fast_split %s %s]' % (' '.join(['_'] * (nfl + 1)), ' '.join('hF%d' % k for k in range(nfl))))
-    w(('  try simp only [← Std.ExtHashMap.sep_assoc]  -- one output chunk: nothing to reassociate (second attempt)'
+    w(('  try simp only [← Std.ExtHashMap.sep_assoc]  -- one output chunk: nothing to reassociate'
        if len(hdr['fields']) == 1 else '  simp only [← Std.ExtHashMap.sep_assoc]'))
     for k, fe in enumerate(fexpr):
         w('  generalize %s = F%d at hm ⊢' % (fe[0], k))

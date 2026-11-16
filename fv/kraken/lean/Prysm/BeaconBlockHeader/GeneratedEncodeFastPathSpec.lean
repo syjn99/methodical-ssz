@@ -9,8 +9,8 @@ import Prysm.BeaconBlockHeader.Code
 `Encode.generated_fast_spec`: for a receiver holding the Go layout of `g : SszValue` (uint64 fields = `uintBytes 8`, byte
 fields = `(p, n, cap)` with the n bytes at `p`), the generated fast-path theorem `Encode.generated_fast` writes at
 `dst[len:len+112]` exactly the bytes of `serialize desc g.toValue` (the Desc of the decoder's spec alignment).
-Shape of `Prysm.BeaconBlockHeader.Encode.fast_path_spec`. Encoder fast path only (`len + 112 ≤ cap`, exact field
-lengths). Written by `gen/flat-types/encode_spec_emitter.py`, then built and kernel-checked.
+Encoder fast path only (`len + 112 ≤ cap`, exact field lengths).
+Written by `gen/flat-types/flat_types_encode_spec.py`.
 -/
 
 open Machine Runtime Codec Prysm.BeaconBlockHeader.Code EthLib.Serialization.Ssz

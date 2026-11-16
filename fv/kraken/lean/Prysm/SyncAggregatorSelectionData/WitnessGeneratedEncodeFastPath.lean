@@ -6,8 +6,8 @@ import Prysm.SyncAggregatorSelectionData.Code
 /-!
 # Witness of `Encode.generated_fast` (SyncAggregatorSelectionData encoder fast path, generated theorem)
 
-Written by `gen/flat-types/encode_spec_emitter.py` (not by `generator.py`) from the committed statement text and
-the IR; then built and kernel-checked. Host: the real Go 1.26.10 `MarshalSSZTo` (index 0); no call on the fast path.
+Written by `gen/flat-types/flat_types_encode_spec.py` from the statement text of `Encode.generated_fast` and the IR.
+Host: the real Go 1.26.10 `MarshalSSZTo` (index 0); no call on the fast path.
 One memory block at `0x10000`: guard word (r14 = 0xfff0); the receiver at 0x10008 (`prysm/ir/ir-mainnet.json`
 gc amd64 layout, 56 bytes; byte fields = (pointer, n, n) with the n bytes after the receiver; unexported tail
 zero); the stack window (rsp = 0x100b8: rsp − 120 … rsp + 23); `dst` at 0x100d0: the prefix, the old output

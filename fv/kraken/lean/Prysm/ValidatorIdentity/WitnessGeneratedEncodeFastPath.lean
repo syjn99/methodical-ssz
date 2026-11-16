@@ -4,10 +4,10 @@ import Machine.WitnessHost
 import Prysm.ValidatorIdentity.Code
 
 /-!
-# Witness of `Encode.generated_fast` (ValidatorIdentity encoder fast path, generated theorem; 24 flat types, text of the encoder specification emitter)
+# Witness of `Encode.generated_fast` (ValidatorIdentity encoder fast path, generated theorem)
 
-Written by `gen/flat-types/flat_types_encode_spec.py` (not by `generator.py`) from the committed statement text and
-the IR; then built and kernel-checked. Host: the real Go 1.26.10 `MarshalSSZTo` (index 0) and `MemmoveGrowsliceModel` (index 119, `model_memmove`, S = 0).
+Written by `gen/flat-types/flat_types_encode_spec.py` from the statement text of `Encode.generated_fast` and the IR.
+Host: the real Go 1.26.10 `MarshalSSZTo` (index 0) and `MemmoveGrowsliceModel` (index 119, `model_memmove`, S = 0).
 One memory block at `0x10000`: guard word (r14 = 0xfff0); the receiver at 0x10008 (`prysm/ir/ir-mainnet.json`
 gc amd64 layout, 80 bytes; byte fields = (pointer, n, n) with the n bytes after the receiver; unexported tail
 zero); the stack window (rsp = 0x10128: rsp − 160 … rsp + 23); `dst` at 0x10140: the prefix, the old output

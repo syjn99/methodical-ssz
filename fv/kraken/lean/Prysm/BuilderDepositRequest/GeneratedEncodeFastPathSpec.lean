@@ -4,13 +4,13 @@ import Runtime.CopyModel
 import Prysm.BuilderDepositRequest.Code
 
 /-!
-# BuilderDepositRequest encoder fast path (generated theorem) against the independent Desc (24 flat types, text of the encoder specification emitter)
+# BuilderDepositRequest encoder fast path (generated theorem) against the independent Desc
 
 `Encode.generated_fast_spec`: for a receiver holding the Go layout of `g : SszValue` (uint64 fields = `uintBytes 8`, byte
 fields = `(p, n, cap)` with the n bytes at `p`), the generated fast-path theorem `Encode.generated_fast` writes at
 `dst[len:len+184]` exactly the bytes of `serialize desc g.toValue` (the Desc of the decoder's spec alignment).
-Shape of `Prysm.BeaconBlockHeader.Encode.fast_path_spec`. Encoder fast path only (`len + 184 ≤ cap`, exact field
-lengths). Written by `gen/flat-types/flat_types_encode_spec.py`, then built and kernel-checked.
+Encoder fast path only (`len + 184 ≤ cap`, exact field lengths).
+Written by `gen/flat-types/flat_types_encode_spec.py`.
 -/
 
 open Machine Runtime Codec Prysm.BuilderDepositRequest.Code EthLib.Serialization.Ssz

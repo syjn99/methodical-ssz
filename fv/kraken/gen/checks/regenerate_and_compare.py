@@ -110,9 +110,7 @@ for kind, go_type in rows:
 TOOLS = 'gen/flat-types'
 for name, cmdf, glob in (
         ('flat_types_spec', lambda o: ['python3', '-I', '-B', f'{TOOLS}/flat_types_spec.py', o], r'Spec\.lean$'),
-        ('flat_types_encode_spec', lambda o: ['python3', '-I', '-B', f'{TOOLS}/flat_types_encode_spec.py', 'lean', o], r'.*\.lean$'),
-        ('encode_spec_emitter', lambda o: ['python3', '-I', '-B', f'{TOOLS}/encode_spec_emitter.py', 'lean', o],
-         r'.*\.lean$')):
+        ('flat_types_encode_spec', lambda o: ['python3', '-I', '-B', f'{TOOLS}/flat_types_encode_spec.py', 'lean', o], r'.*\.lean$')):
     o = os.path.join(work, name)
     os.makedirs(o)
     r = run(cmdf(o), COPY_KRAKEN)
