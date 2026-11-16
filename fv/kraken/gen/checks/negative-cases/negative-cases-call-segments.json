@@ -112,7 +112,7 @@
   "new": "(hlen : s.regs.rcx = 25)"
  },
  {
-  "id": "pending-partial-withdrawal-decode-head-control-2",
+  "id": "pending-partial-withdrawal-decode-head-control-with-code-copy",
   "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.head",
   "kind": "control",

@@ -189,7 +189,7 @@
   "kind": "statement",
   "old": "= serialize checkerDesc v :=",
   "new": "= serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 2 (.byteVector 31)) | x => x) v :=",
-  "id": "eth1-data-desc-serialize-checker-statement-serialize-none-to-match-with-container"
+  "id": "eth1-data-desc-serialize-checker-statement-serialize-none-to-match-field-2-byte-vector-31"
  },
  {
   "module": "Prysm/Eth1Data/Spec.lean",
@@ -197,7 +197,7 @@
   "kind": "statement",
   "old": "= serialize checkerDesc v :=",
   "new": "= serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 1 (.uint 4)) | x => x) v :=",
-  "id": "eth1-data-desc-serialize-checker-statement-serialize-none-to-match-with-container-2"
+  "id": "eth1-data-desc-serialize-checker-statement-serialize-none-to-match-field-1-uint-4"
  },
  {
   "module": "Prysm/Eth1Data/Spec.lean",

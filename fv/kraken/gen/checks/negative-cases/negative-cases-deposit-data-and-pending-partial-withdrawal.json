@@ -14,7 +14,7 @@
   "new": "(hSrc : bf + (80 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "deposit-data-decode-generated-signature-segment-control-2",
+  "id": "deposit-data-decode-generated-signature-segment-control-with-code-copy",
   "module": "Prysm/Deposit_Data/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.Deposit_Data.Decode.generated_Signature_segment",
   "kind": "control",

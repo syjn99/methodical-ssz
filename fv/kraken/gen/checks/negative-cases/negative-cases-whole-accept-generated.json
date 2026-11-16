@@ -1,6 +1,6 @@
 [
  {
-  "id": "voluntary-exit-decode-generated-accept-control-2",
+  "id": "voluntary-exit-decode-generated-accept-control",
   "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.generated_accept",
   "kind": "control"
@@ -12,7 +12,7 @@
   "kind": "control"
  },
  {
-  "id": "historical-summary-decode-generated-accept-control-2",
+  "id": "historical-summary-decode-generated-accept-control",
   "module": "Prysm/HistoricalSummary/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.HistoricalSummary.Decode.generated_accept",
   "kind": "control"
