@@ -1,0 +1,70 @@
+[
+ {
+  "id": "blob-sidecars-by-range-request-decode-accept-spec-control",
+  "module": "Prysm/BlobSidecarsByRangeRequest/DecodeSpec.lean",
+  "theorem": "Prysm.BlobSidecarsByRangeRequest.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "blob-sidecars-by-range-request-decode-generated-accept-statement-rax-0-to-1",
+  "module": "Prysm/BlobSidecarsByRangeRequest/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BlobSidecarsByRangeRequest.Decode.generated_accept",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "blob-sidecars-by-range-request-decode-generated-reject-statement-rax-e0-to-e1",
+  "module": "Prysm/BlobSidecarsByRangeRequest/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BlobSidecarsByRangeRequest.Decode.generated_reject",
+  "kind": "statement",
+  "old": "st.data.regs.rax = e0",
+  "new": "st.data.regs.rax = e1"
+ },
+ {
+  "id": "blob-sidecars-by-range-request-decode-accept-spec-statement-hlen-none-to-1",
+  "module": "Prysm/BlobSidecarsByRangeRequest/DecodeSpec.lean",
+  "theorem": "Prysm.BlobSidecarsByRangeRequest.Decode.accept_spec",
+  "kind": "statement",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
+ },
+ {
+  "id": "blob-sidecars-by-range-request-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/BlobSidecarsByRangeRequest/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.runs",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encode-generated-fast-spec-control",
+  "module": "Prysm/BlobSidecarsByRangeRequest/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BlobSidecarsByRangeRequest.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encode-generated-fast-statement-rax-rbx-to-rcx",
+  "module": "Prysm/BlobSidecarsByRangeRequest/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BlobSidecarsByRangeRequest.Encode.generated_fast",
+  "kind": "statement",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encode-generated-fast-spec-statement-hcap-16-to-8",
+  "module": "Prysm/BlobSidecarsByRangeRequest/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BlobSidecarsByRangeRequest.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "blob-sidecars-by-range-request-witness-generated-encode-fast-path-runs-empty-statement-rax-0x100d0-to-0x8",
+  "module": "Prysm/BlobSidecarsByRangeRequest/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x100d0",
+  "new": "st.data.regs.rax = 0x8"
+ }
+]

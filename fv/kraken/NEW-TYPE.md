@@ -192,7 +192,7 @@ python3 -I -B gen/flat-types/flat_types_spec.py lean
 python3 -I -B gen/flat-types/flat_types_decode_spec.py lean
 python3 -I -B gen/flat-types/flat_types_witness.py .
 python3 -I -B gen/flat-types/flat_types_encode_spec.py lean lean
-python3 -I -B gen/flat-types/flat_types_negative_cases.py lean gen/checks/negative-cases/negative-cases-flat-types.json
+python3 -I -B gen/flat-types/flat_types_negative_cases.py lean gen/checks/negative-cases
 ```
 
 Expected: exit 0 for each tool.
@@ -243,9 +243,13 @@ A check that did not run is "not run" in the pull request.
    Expected: every line starts with `EQ`.
 5. The negative cases.
    Add one control and at least one mutant for each main theorem.
-   For a type of `DECODER_CASE_TYPES` or `ENCODER_CASE_TYPES`, `flat_types_negative_cases.py` writes them into `negative-cases-flat-types.json`.
-   For any other new type, make a new file `gen/checks/negative-cases/negative-cases-<type>.json`, with the type name as in step 2.
+   Each case file of `gen/checks/negative-cases/` holds the cases of one type, or of one shared library.
+   The hand cases of a type go into `negative-cases-<type>.json`, with the type name as in item 2.
    An example is `negative-cases-historical-batch.json`.
+   For a type of `DECODER_CASE_TYPES` or `ENCODER_CASE_TYPES`, `flat_types_negative_cases.py` writes `negative-cases-<type>-generated.json`.
+   An example is `negative-cases-validator-identity-generated.json`.
+   Do not put a hand case into a file that ends with `-generated.json`.
+   A type can have both files, for example `negative-cases-deposit-request.json` and `negative-cases-deposit-request-generated.json`.
    `python_checks.sh` reads every tracked file with `negative-cases` in its name.
    A control has `id`, `module`, `theorem` and `kind: "control"`.
    A statement mutant also has `old` and `new`: a text that occurs once in the statement, and its change.

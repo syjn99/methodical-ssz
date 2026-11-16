@@ -1,125 +1,5 @@
 [
  {
-  "id": "blob-identifier-decode-generated-block-root-segment-control",
-  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.generated_BlockRoot_segment",
-  "kind": "control"
- },
- {
-  "id": "blob-identifier-decode-generated-block-root-segment-statement-pc-37-to-38",
-  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.generated_BlockRoot_segment",
-  "kind": "statement",
-  "old": "st.pc = Host.addrOf (k + 37)",
-  "new": "st.pc = Host.addrOf (k + 38)"
- },
- {
-  "id": "blob-identifier-decode-generated-accept-control",
-  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.generated_accept",
-  "kind": "control",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
- },
- {
-  "id": "blob-identifier-decode-generated-directive-48-code-mov-0x20-rcx-to-0x18-rcx",
-  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.generated_directive_48",
-  "kind": "code",
-  "old": "  mov 0x20(%rcx),%rcx",
-  "new": "  mov 0x18(%rcx),%rcx",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
- },
- {
-  "id": "blob-identifier-decode-generated-accept-statement-heap-32-to-31",
-  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.generated_accept",
-  "kind": "statement",
-  "old": "⋆ Heap (avail - 32)",
-  "new": "⋆ Heap (avail - 31)"
- },
- {
-  "id": "blob-identifier-decode-generated-accept-statement-fv1-32-to-24",
-  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.generated_accept",
-  "kind": "statement",
-  "old": "⋆ Eq (fv1.At (s.regs.rax.toBitVec + 32))",
-  "new": "⋆ Eq (fv1.At (s.regs.rax.toBitVec + 24))"
- },
- {
-  "id": "blob-identifier-decode-generated-accept-statement-hav-32-avail-to-true",
-  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.generated_accept",
-  "kind": "statement",
-  "old": "(hav : 32 ≤ avail)",
-  "new": "(hav : True)"
- },
- {
-  "id": "blob-identifier-decode-generated-reject-control",
-  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.generated_reject",
-  "kind": "control",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
- },
- {
-  "id": "blob-identifier-decode-generated-reject-statement-rbx-e1-to-e0",
-  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.generated_reject",
-  "kind": "statement",
-  "old": "st.data.regs.rbx = e1",
-  "new": "st.data.regs.rbx = e0"
- },
- {
-  "id": "blob-identifier-ssz-value-spec-accepts-iff-statement-size-40-to-41",
-  "module": "Prysm/BlobIdentifier/Spec.lean",
-  "theorem": "Prysm.BlobIdentifier.SszValue.spec_accepts_iff",
-  "kind": "statement",
-  "old": "bs.size = 40",
-  "new": "bs.size = 41"
- },
- {
-  "id": "blob-identifier-desc-serialize-checker-statement-serialize-none-to-match-with-container",
-  "module": "Prysm/BlobIdentifier/Spec.lean",
-  "theorem": "Prysm.BlobIdentifier.desc_serialize_checker",
-  "kind": "statement",
-  "old": "= serialize checkerDesc v :=",
-  "new": "= serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 1 (.uint 4)) | x => x) v :="
- },
- {
-  "id": "blob-identifier-desc-deserialize-checker-statement-deserialize-v-to-seq",
-  "module": "Prysm/BlobIdentifier/Spec.lean",
-  "theorem": "Prysm.BlobIdentifier.desc_deserialize_checker",
-  "kind": "statement",
-  "old": "deserialize checkerDesc bs = .ok v",
-  "new": "deserialize checkerDesc bs = .ok (.seq [])"
- },
- {
-  "id": "blob-identifier-decode-accept-spec-statement-hav-32-avail-to-true",
-  "module": "Prysm/BlobIdentifier/DecodeSpec.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.accept_spec",
-  "kind": "statement",
-  "old": "(hav : 32 ≤ avail)",
-  "new": "(hav : True)"
- },
- {
-  "id": "blob-identifier-decode-reject-complete-statement-size-40-to-39",
-  "module": "Prysm/BlobIdentifier/DecodeSpec.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.reject_complete",
-  "kind": "statement",
-  "old": "bs.size ≠ 40 :=",
-  "new": "bs.size ≠ 39 :="
- },
- {
-  "id": "blob-identifier-witness-generated-decode-reject-size-runs-statement-hlen-40-to-41",
-  "module": "Prysm/BlobIdentifier/WitnessGeneratedDecodeRejectSize.lean",
-  "theorem": "Prysm.BlobIdentifier.Witness.GeneratedDecodeRejectSize.runs",
-  "kind": "statement",
-  "old": "(hlen : len ≠ 40)",
-  "new": "(hlen : len ≠ 41)"
- },
- {
   "id": "deposit-message-decode-generated-withdrawal-credentials-segment-control",
   "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.DepositMessage.Decode.generated_WithdrawalCredentials_segment",
@@ -315,5 +195,91 @@
   "kind": "statement",
   "old": "(hlen : len ≠ 88)",
   "new": "(hlen : len ≠ 89)"
+ },
+ {
+  "id": "deposit-message-encode-generated-fast-spec-control",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-message-witness-generated-encode-fast-path-runs-empty-control",
+  "module": "Prysm/DepositMessage/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-message-encode-generated-fast-statement-v2-80-to-88",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_fast",
+  "kind": "statement",
+  "old": "Eq (v2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (v2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 88))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "deposit-message-encode-generated-fast-spec-statement-rbx-none-to-8",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "deposit-message-encode-generated-fast-spec-statement-hcap-88-to-80",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 88 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 80 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "deposit-message-witness-generated-encode-fast-path-runs-empty-statement-rax-0x10138-to-0x10140",
+  "module": "Prysm/DepositMessage/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x10138",
+  "new": "st.data.regs.rax = 0x10140"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo.S",
+  "id": "deposit-message-encode-generated-field-0-control",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_field_0",
+  "kind": "control",
+  "code_definition": "marshalSSZTo"
+ },
+ {
+  "id": "deposit-message-encode-generated-field-0-statement-hb0-48-to-32",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_field_0",
+  "kind": "statement",
+  "old": "(hb0 : b0.length = 48)",
+  "new": "(hb0 : b0.length = 32)"
+ },
+ {
+  "id": "deposit-message-encode-generated-fast-statement-b1-48-to-40",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_fast",
+  "kind": "statement",
+  "old": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))",
+  "new": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo.S",
+  "id": "deposit-message-encode-generated-field-0-code-cmpq-0x30-to-0x20",
+  "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.DepositMessage.Encode.generated_field_0",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "old": "  cmpq $0x30,0x8(%rax)",
+  "new": "  cmpq $0x20,0x8(%rax)"
+ },
+ {
+  "id": "deposit-message-decode-generated-accept-statement-bytes-none-to-none",
+  "module": "Prysm/DepositMessage/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.DepositMessage.Decode.generated_accept",
+  "kind": "statement",
+  "old": "[.bytes 48, .bytes 32, .uint64] := by",
+  "new": "[.bytes 32, .bytes 48, .uint64] := by"
  }
 ]

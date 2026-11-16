@@ -1,0 +1,40 @@
+[
+ {
+  "id": "deposit-request-decode-reject-complete-control",
+  "module": "Prysm/DepositRequest/DecodeSpec.lean",
+  "theorem": "Prysm.DepositRequest.Decode.reject_complete",
+  "kind": "control"
+ },
+ {
+  "id": "deposit-request-decode-reject-size-spec-statement-hbs-192-to-191",
+  "module": "Prysm/DepositRequest/DecodeSpec.lean",
+  "theorem": "Prysm.DepositRequest.Decode.reject_size_spec",
+  "kind": "statement",
+  "old": "(hbs : bs.size ≠ 192)",
+  "new": "(hbs : bs.size ≠ 191)"
+ },
+ {
+  "id": "deposit-request-decode-reject-complete-statement-size-192-to-191",
+  "module": "Prysm/DepositRequest/DecodeSpec.lean",
+  "theorem": "Prysm.DepositRequest.Decode.reject_complete",
+  "kind": "statement",
+  "old": "bs.size ≠ 192",
+  "new": "bs.size ≠ 191"
+ },
+ {
+  "id": "deposit-request-encode-generated-fast-spec-statement-serialize-none-to-prysm-builder-deposit-request",
+  "module": "Prysm/DepositRequest/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.DepositRequest.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "serialize desc g.toValue",
+  "new": "serialize Prysm.BuilderDepositRequest.desc g.toValue"
+ },
+ {
+  "id": "deposit-request-encode-generated-fast-spec-statement-rbx-192-to-184",
+  "module": "Prysm/DepositRequest/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.DepositRequest.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 192",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 184"
+ }
+]

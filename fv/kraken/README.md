@@ -143,6 +143,10 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
 - The gate overwrites its JSON argument.
   Give a scratch path.
 - The negative test files are the `negative-cases-*.json` files in `gen/checks/negative-cases/`.
+  Each file holds the cases of one type directory `lean/Prysm/<T>/`, or of one shared library.
+  The file name is `negative-cases-<type>.json`, with the Go type name in kebab case, for example `negative-cases-deposit-data.json`.
+  A shared library has its library name, for example `negative-cases-codec.json`.
+  A file whose name ends with `-generated.json` is tool-written, and all other files are hand files.
   A case id is the Go type, the theorem without its type namespace, and the kind (`control`, `statement` or `code`).
   For a mutant, the id ends with the changed words or operands, for example `epoch-decode-accept-code-cmp-0x8-to-0x9`.
   The usage text of `gen/checks/negative.py` gives the case fields.
@@ -293,6 +297,7 @@ Change the tool and run it again.
 | Kind | Written by | Command that makes it again | What checks it |
 | --- | --- | --- | --- |
 | `gen/axioms-lists/*.lean` | Hand. `gen/flat-types/flat_types_hand_list.py` adds names of its types to `flat-fixed-size-types.lean` | `python3 -I gen/flat-types/flat_types_hand_list.py <dump.tsv> gen/axioms-lists/flat-fixed-size-types.lean <module list>` | `gen/checks/axioms_gate.py run`: each name is in the dump and has only the standard axioms |
-| `gen/checks/negative-cases/*.json` | Hand. `gen/flat-types/flat_types_negative_cases.py` writes `negative-cases-flat-types.json` | `python3 -I -B gen/flat-types/flat_types_negative_cases.py lean gen/checks/negative-cases/negative-cases-flat-types.json` | `negative.py --check-cases` and `negative_case_ranges.py` (in `python_checks.sh`), `regenerate_and_compare.py`, the run of `negative.py` with Lean |
+| `gen/checks/negative-cases/negative-cases-<type>.json` | Hand | None | `negative.py --check-cases` and `negative_case_ranges.py` (in `python_checks.sh`), the run of `negative.py` with Lean |
+| `gen/checks/negative-cases/negative-cases-<type>-generated.json` | `gen/flat-types/flat_types_negative_cases.py`, for the types of its lists | `python3 -I -B gen/flat-types/flat_types_negative_cases.py lean gen/checks/negative-cases` | `negative.py --check-cases` and `negative_case_ranges.py` (in `python_checks.sh`), `regenerate_and_compare.py`, the run of `negative.py` with Lean |
 | `gen/desc/results/main.result.json` | `gen/desc/run_desc_checker.sh` (its `<work-dir>/main.result.json`) | `gen/desc/test_desc.py prepare`, then `run_desc_checker.sh` (needs Lean), then copy | `gen/desc/test_desc.py evaluate` on the work directory |
 | `gen/desc/hand-types-ir.json`, `gen/desc/hand-types-references.json` | Hand | None | The `Desc` checker tests (`gen/README.md` section 5) |

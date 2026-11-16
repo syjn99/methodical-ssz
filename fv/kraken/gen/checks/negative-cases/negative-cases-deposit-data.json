@@ -210,67 +210,57 @@
   "new": "(hroot : root.length = 32)"
  },
  {
-  "id": "pending-partial-withdrawal-decode-reject-size-control",
-  "module": "Prysm/PendingPartialWithdrawal/DecodeRejectSize.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
-  "kind": "control",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
- },
- {
-  "id": "pending-partial-withdrawal-decode-reject-size-statement-rbx-e1-to-e0",
-  "module": "Prysm/PendingPartialWithdrawal/DecodeRejectSize.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
-  "kind": "statement",
-  "old": "st.data.regs.rbx = e1",
-  "new": "st.data.regs.rbx = e0"
- },
- {
-  "id": "pending-partial-withdrawal-decode-reject-size-code-cmp-0x18-to-0x10",
-  "module": "Prysm/PendingPartialWithdrawal/DecodeRejectSize.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
-  "kind": "code",
-  "old": "  cmp $0x18,%rcx",
-  "new": "  cmp $0x10,%rcx",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
- },
- {
-  "id": "pending-partial-withdrawal-ssz-value-spec-accepts-iff-control",
-  "module": "Prysm/PendingPartialWithdrawal/Spec.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.SszValue.spec_accepts_iff",
+  "id": "deposit-data-encode-generated-fast-spec-control",
+  "module": "Prysm/Deposit_Data/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Encode.generated_fast_spec",
   "kind": "control"
  },
  {
-  "id": "pending-partial-withdrawal-ssz-value-spec-accepts-iff-statement-size-24-to-25",
-  "module": "Prysm/PendingPartialWithdrawal/Spec.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.SszValue.spec_accepts_iff",
-  "kind": "statement",
-  "old": "bs.size = 24",
-  "new": "bs.size = 25"
+  "id": "deposit-data-witness-generated-encode-fast-path-runs-empty-control",
+  "module": "Prysm/Deposit_Data/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Deposit_Data.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
  },
  {
-  "id": "pending-partial-withdrawal-desc-deserialize-checker-statement-deserialize-v-to-seq",
-  "module": "Prysm/PendingPartialWithdrawal/Spec.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.desc_deserialize_checker",
+  "id": "deposit-data-encode-generated-fast-statement-b3-88-to-96",
+  "module": "Prysm/Deposit_Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Deposit_Data.Encode.generated_fast",
   "kind": "statement",
-  "old": "deserialize checkerDesc bs = .ok v",
-  "new": "deserialize checkerDesc bs = .ok (.seq [])"
+  "old": "Eq (b3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 88))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 96))\n          ⋆ R) st.data.dmem)"
  },
  {
-  "id": "pending-partial-withdrawal-decode-reject-complete-statement-size-24-to-23",
-  "module": "Prysm/PendingPartialWithdrawal/DecodeSpec.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_complete",
+  "id": "deposit-data-encode-generated-fast-spec-statement-rbx-none-to-8",
+  "module": "Prysm/Deposit_Data/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Encode.generated_fast_spec",
   "kind": "statement",
-  "old": "bs.size ≠ 24 :=",
-  "new": "bs.size ≠ 23 :="
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
  },
  {
-  "id": "pending-partial-withdrawal-witness-decode-reject-size-runs-statement-hlen-24-to-25",
-  "module": "Prysm/PendingPartialWithdrawal/WitnessDecodeRejectSize.lean",
-  "theorem": "Prysm.PendingPartialWithdrawal.Witness.DecodeRejectSize.runs",
+  "id": "deposit-data-encode-generated-fast-spec-statement-hcap-184-to-176",
+  "module": "Prysm/Deposit_Data/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Deposit_Data.Encode.generated_fast_spec",
   "kind": "statement",
-  "old": "(hlen : len ≠ 24)",
-  "new": "(hlen : len ≠ 25)"
+  "old": "(hcap : s.regs.rcx.toNat + 184 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 176 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "deposit-data-witness-generated-encode-fast-path-runs-empty-statement-rax-0x101e0-to-0x101e8",
+  "module": "Prysm/Deposit_Data/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Deposit_Data.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x101e0",
+  "new": "st.data.regs.rax = 0x101e8"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.MarshalSSZTo.S",
+  "id": "deposit-data-encode-generated-field-3-code-mov-0x60-to-0x30",
+  "module": "Prysm/Deposit_Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Deposit_Data.Encode.generated_field_3",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "old": "  mov $0x60,%ecx",
+  "new": "  mov $0x30,%ecx"
  }
 ]

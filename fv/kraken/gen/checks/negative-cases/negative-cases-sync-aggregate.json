@@ -1,0 +1,134 @@
+[
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "id": "sync-aggregate-decode-accept-control",
+  "kind": "control",
+  "module": "Prysm/SyncAggregate/DecodeAccept.lean",
+  "theorem": "Prysm.SyncAggregate.Decode.accept",
+  "code_definition": "unmarshalSSZ",
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "id": "sync-aggregate-decode-accept-code-cmp-0xa0-to-0xa1",
+  "kind": "code",
+  "old": "  cmp $0xa0,%rcx",
+  "new": "  cmp $0xa1,%rcx",
+  "module": "Prysm/SyncAggregate/DecodeAccept.lean",
+  "theorem": "Prysm.SyncAggregate.Decode.accept",
+  "code_definition": "unmarshalSSZ",
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "id": "sync-aggregate-decode-accept-code-add-0x40-to-0x48",
+  "kind": "code",
+  "old": "  add $0x40,%rbx",
+  "new": "  add $0x48,%rbx",
+  "module": "Prysm/SyncAggregate/DecodeAccept.lean",
+  "theorem": "Prysm.SyncAggregate.Decode.accept",
+  "code_definition": "unmarshalSSZ",
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "id": "sync-aggregate-decode-accept-statement-heap-160-to-159",
+  "kind": "statement",
+  "statement_def": "Prysm.SyncAggregate.Decode.accept_statement",
+  "old": "Heap (avail - 160)",
+  "new": "Heap (avail - 159)",
+  "module": "Prysm/SyncAggregate/DecodeAccept.lean",
+  "theorem": "Prysm.SyncAggregate.Decode.accept",
+  "code_definition": "unmarshalSSZ",
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "id": "sync-aggregate-decode-accept-statement-rax-96-to-95",
+  "kind": "statement",
+  "statement_def": "Prysm.SyncAggregate.Decode.accept_statement",
+  "old": "Eq ((Int.toBytes 8 96).At (s.regs.rax.toBitVec + 48))",
+  "new": "Eq ((Int.toBytes 8 95).At (s.regs.rax.toBitVec + 48))",
+  "module": "Prysm/SyncAggregate/DecodeAccept.lean",
+  "theorem": "Prysm.SyncAggregate.Decode.accept",
+  "code_definition": "unmarshalSSZ",
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "id": "sync-aggregate-decode-reject-size-control",
+  "kind": "control",
+  "module": "Prysm/SyncAggregate/DecodeRejectSize.lean",
+  "theorem": "Prysm.SyncAggregate.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "id": "sync-aggregate-decode-reject-size-code-mov-ssz-err-size-8-rip-to-ssz-err-size-rip",
+  "kind": "code",
+  "old": "  mov ssz.ErrSize+8(%rip),%rbx",
+  "new": "  mov ssz.ErrSize(%rip),%rbx",
+  "module": "Prysm/SyncAggregate/DecodeRejectSize.lean",
+  "theorem": "Prysm.SyncAggregate.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "id": "sync-aggregate-decode-bits-segment-code-movq-0x40-to-0x3f",
+  "kind": "code",
+  "line": 34,
+  "old": "  movq $0x40,0x10(%rdx)",
+  "new": "  movq $0x3f,0x10(%rdx)",
+  "module": "Prysm/SyncAggregate/DecodeAccept.lean",
+  "theorem": "Prysm.SyncAggregate.Decode.bits_segment",
+  "code_definition": "unmarshalSSZ",
+  "statement_module": "Prysm/SyncAggregate/Statements.lean",
+  "note": "the first theorem whose proof steps the mutated directive is Prysm.SyncAggregate.Decode.bits_segment, the segment lemma before the main theorem"
+ },
+ {
+  "id": "sync-aggregate-spec-rejects-control",
+  "kind": "control",
+  "module": "Prysm/SyncAggregate/Spec.lean",
+  "theorem": "Prysm.SyncAggregate.spec_rejects",
+  "inline": [
+   "Prysm/SyncAggregate/SpecDescription.lean",
+   "Prysm/SyncAggregate/SpecDefinitions.lean",
+   "Codec/ByteSliceListDefinitions.lean",
+   "Prysm/SyncCommittee/SpecDefinitions.lean"
+  ]
+ },
+ {
+  "id": "sync-aggregate-desc-fixed-size-statement-byte-vector-96-to-95",
+  "kind": "statement",
+  "module": "Prysm/SyncAggregate/Spec.lean",
+  "theorem": "Prysm.SyncAggregate.desc_fixedSize",
+  "inline": [
+   "Prysm/SyncAggregate/SpecDescription.lean",
+   "Prysm/SyncAggregate/SpecDefinitions.lean",
+   "Codec/ByteSliceListDefinitions.lean",
+   "Prysm/SyncCommittee/SpecDefinitions.lean"
+  ],
+  "statement_def": "Prysm.SyncAggregate.desc",
+  "old": ".byteVector 96]",
+  "new": ".byteVector 95]",
+  "note": "Desc mutant; the first theorem that reads the size is Prysm.SyncAggregate.desc_fixedSize"
+ },
+ {
+  "id": "sync-aggregate-to-value-fits-statement-bit-vector-bit-vector-512-to-64-byte-vector",
+  "kind": "statement",
+  "module": "Prysm/SyncAggregate/Spec.lean",
+  "theorem": "Prysm.SyncAggregate.toValue_fits",
+  "inline": [
+   "Prysm/SyncAggregate/SpecDescription.lean",
+   "Prysm/SyncAggregate/SpecDefinitions.lean",
+   "Codec/ByteSliceListDefinitions.lean",
+   "Prysm/SyncCommittee/SpecDefinitions.lean"
+  ],
+  "statement_def": "Prysm.SyncAggregate.desc",
+  "old": "[.bitVector 512, .byteVector 96]",
+  "new": "[.byteVector 64, .byteVector 96]",
+  "note": "Desc kind mutant (same fixed size 160); first theorem that reads the kind"
+ }
+]

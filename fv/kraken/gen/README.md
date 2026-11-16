@@ -41,7 +41,7 @@ The design principles are in `../../README.md`.
 | `flat-types/flat_types_decode_spec.py` | `GeneratedDecodeAccept.lean` of the types of its list `DECODE_SPEC_TYPES` | `DecodeSpec.lean` of these types |
 | `flat-types/flat_types_witness.py` | The `.S` files and the IR of the types of its list `WITNESS_TYPES` | `WitnessGeneratedDecodeAccept.lean` and `WitnessGeneratedDecodeRejectSize.lean` of these types |
 | `flat-types/flat_types_encode_spec.py` | `GeneratedEncodeFastPath.lean` and the IR of the types of its table `ENCODE_SPEC_TYPES` | `GeneratedEncodeFastPathSpec.lean` and `WitnessGeneratedEncodeFastPath.lean` of these types |
-| `flat-types/flat_types_negative_cases.py` | The Lean files of the types of its lists `DECODER_CASE_TYPES` and `ENCODER_CASE_TYPES` | `checks/negative-cases/negative-cases-flat-types.json` |
+| `flat-types/flat_types_negative_cases.py` | The Lean files of the types of its lists `DECODER_CASE_TYPES` and `ENCODER_CASE_TYPES` | `checks/negative-cases/negative-cases-<type>-generated.json`, one file for each type |
 | `flat-types/flat_types_hand_list.py` | A declaration dump and its list `HAND_LIST_TYPES` | New names in the hand list `axioms-lists/flat-fixed-size-types.lean` |
 | `flat-types/run_generators.sh` | The `.S` files of the flat types | The generator outputs of the flat types, in a scratch directory |
 | `prysm-rebuild-and-check.sh` | A Prysm tree and the generator tree | The Prysm ELF, the link set and the differential results, in a scratch directory (needs Docker) |

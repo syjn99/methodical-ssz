@@ -1,5 +1,49 @@
 [
  {
+  "id": "eth1-data-encode-generated-fast-spec-control",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "eth1-data-witness-generated-encode-fast-path-runs-empty-control",
+  "module": "Prysm/Eth1Data/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-b2-40-to-48",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "Eq (b2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-spec-statement-rbx-none-to-8",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-spec-statement-hcap-72-to-64",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 72 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 64 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "eth1-data-witness-generated-encode-fast-path-runs-empty-statement-rax-0x10150-to-0x10158",
+  "module": "Prysm/Eth1Data/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x10150",
+  "new": "st.data.regs.rax = 0x10158"
+ },
+ {
   "module": "Prysm/Eth1Data/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.Eth1Data.Decode.generated_head",
   "kind": "control",
@@ -204,5 +248,143 @@
   "old": "(hlen : len ≠ 72)",
   "new": "(hlen : len ≠ 73)",
   "id": "eth1-data-witness-generated-decode-reject-size-runs-statement-hlen-72-to-73"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-control",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "control"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-hcap-72-to-71",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 72 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 71 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-hguard-8-to-none",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "(hguard : guard.toNat + 8 < s.regs.rsp.toNat)",
+  "new": "(hguard : guard.toNat < s.regs.rsp.toNat)"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-rbx-72-to-73",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 72",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 73"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-v1-v1-to-d1",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "⋆ Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 32))",
+  "new": "⋆ Eq (d1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 32))"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-hb2-32-to-31",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "(hb2 : b2.length = 32)",
+  "new": "(hb2 : b2.length = 31)"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-statement-b0-b0-to-b2",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast",
+  "kind": "statement",
+  "old": "⋆ Eq (b0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "⋆ Eq (b2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-kind-control",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast_kind",
+  "kind": "control"
+ },
+ {
+  "id": "eth1-data-encode-generated-fast-kind-statement-prysm-eth1-data-to-beacon-block-header",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_fast_kind",
+  "kind": "statement",
+  "old": "marshalSSZTo Prysm.Eth1Data.encodeLayout",
+  "new": "marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout",
+  "mutant_imports": [
+   "Prysm.BeaconBlockHeader.EncodeLayout"
+  ]
+ },
+ {
+  "id": "eth1-data-encode-generated-head-code-lea-0x8-rsp-to-0x10-rsp",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_head",
+  "kind": "code",
+  "old": "  lea -0x8(%rsp),%r12",
+  "new": "  lea -0x10(%rsp),%r12",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
+ },
+ {
+  "id": "eth1-data-encode-generated-field-0-control",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_field_0",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
+ },
+ {
+  "id": "eth1-data-encode-generated-field-0-code-cmpq-0x20-to-0x21",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_field_0",
+  "kind": "code",
+  "old": "  cmpq $0x20,0x10(%rax)",
+  "new": "  cmpq $0x21,0x10(%rax)",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
+ },
+ {
+  "id": "eth1-data-encode-generated-field-0-code-callq-runtime-memmove-to-runtime-growslice",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_field_0",
+  "kind": "code",
+  "old": "  callq runtime.memmove",
+  "new": "  callq runtime.growslice",
+  "line": 37,
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
+ },
+ {
+  "id": "eth1-data-encode-generated-field-1-control",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_field_1",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
+ },
+ {
+  "id": "eth1-data-encode-generated-field-1-code-mov-0x20-rdx-to-0x28-rdx",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_field_1",
+  "kind": "code",
+  "old": "  mov 0x20(%rdx),%rsi",
+  "new": "  mov 0x28(%rdx),%rsi",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
+ },
+ {
+  "id": "eth1-data-encode-generated-field-1-code-mov-0x8-rbx-rax-1-to-0x10-rbx-rax-1",
+  "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Eth1Data.Encode.generated_field_1",
+  "kind": "code",
+  "old": "  mov %rsi,-0x8(%rbx,%rax,1)",
+  "new": "  mov %rsi,-0x10(%rbx,%rax,1)",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  }
 ]

@@ -1,4 +1,11 @@
-"""Write the negative cases of the flat types (gen/checks/negative-cases/negative-cases-flat-types.json) for gen/checks/negative.py.
+"""Write the negative cases of the flat types for gen/checks/negative.py.
+
+usage (cwd fv/kraken):
+  python3 -I -B gen/flat-types/flat_types_negative_cases.py lean gen/checks/negative-cases
+
+The tool writes one file for each type: <out dir>/negative-cases-<type>-generated.json.
+<type> is the Go type name in kebab case, for example negative-cases-deposit-request-generated.json.
+The hand cases of a type are in negative-cases-<type>.json, a different file.
 Per decoder type: accept_spec control; mutants of the generated accept theorem (post rax), the generated size-reject
 theorem (post rax), accept_spec (hlen + 1), the accept witness (post rax). Per encoder type: spec control; mutants of the
 generated fast-path theorem (post rax), the spec corollary (hcap weakened by 8), the witness (post rax)."""
@@ -80,5 +87,8 @@ for type_name in ENCODER_CASE_TYPES:
                   f'(hcap : s.regs.rcx.toNat + {n} ≤ s.regs.rdi.toNat)', f'(hcap : s.regs.rcx.toNat + {n - 8} ≤ s.regs.rdi.toNat)'))
     CASES.append(case(f'Prysm/{type_name}/WitnessGeneratedEncodeFastPath.lean', f'Prysm.{type_name}.Witness.GeneratedEncodeFastPath.runs_empty',
                   f'st.data.regs.rax = {rax}', 'st.data.regs.rax = 0x8'))
-json.dump(CASES, open(sys.argv[2], 'w'), indent=1, ensure_ascii=False)
+for type_name in dict.fromkeys(DECODER_CASE_TYPES + ENCODER_CASE_TYPES):
+    own = [c for c in CASES if c['module'].split('/')[1] == type_name]
+    json.dump(own, open(os.path.join(sys.argv[2], f'negative-cases-{kebab(type_name)}-generated.json'), 'w'),
+              indent=1, ensure_ascii=False)
 print(len(CASES), sum(1 for c in CASES if c['kind'] == 'control'))

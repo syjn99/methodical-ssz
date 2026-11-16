@@ -19,7 +19,8 @@ cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoc
   "statement_def" (full name of that `def`). Then the mutant inlines the bodies of those modules above the case module
   text (their imports replace the import lines of the inlined modules), so that the code rename also reaches the
   statement; a statement case mutates the text of the `def` (old -> new, unique inside the def), and the case range
-  is the theorem's command up to the next top-level line. "mutant_imports" is not allowed with them}
+  is the theorem's command up to the next top-level line. "mutant_imports" is not allowed with them;
+  optional for every kind: "note" (free text for the reader, for example why the mutant must fail; no program reads it)}
 For each case without "statement_def" and inlined modules the mutant Lean file is the module's text up to the end of the designated theorem
 (the next top-level `theorem`/`def`/`end`/`example`/`/--` after it is cut; a `theorem <thm>_kind` that
 directly follows it is kept and belongs to the case range). The case range starts at the first line of the

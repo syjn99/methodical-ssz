@@ -1,52 +1,5 @@
 [
  {
-  "id": "epoch-decode-accept-control",
-  "kind": "control",
-  "module": "Prysm/Epoch/DecodeAccept.lean",
-  "theorem": "Prysm.Epoch.Decode.accept",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S"
- },
- {
-  "id": "epoch-decode-accept-code-cmp-0x8-to-0x9",
-  "kind": "code",
-  "module": "Prysm/Epoch/DecodeAccept.lean",
-  "theorem": "Prysm.Epoch.Decode.accept",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
-  "old": "  cmp $0x8,%rcx",
-  "new": "  cmp $0x9,%rcx"
- },
- {
-  "id": "epoch-decode-accept-code-mov-rbx-to-0x8-rbx",
-  "kind": "code",
-  "module": "Prysm/Epoch/DecodeAccept.lean",
-  "theorem": "Prysm.Epoch.Decode.accept",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
-  "old": "  mov (%rbx),%rcx",
-  "new": "  mov 0x8(%rbx),%rcx"
- },
- {
-  "id": "epoch-decode-accept-code-mov-rax-to-0x8-rax",
-  "kind": "code",
-  "module": "Prysm/Epoch/DecodeAccept.lean",
-  "theorem": "Prysm.Epoch.Decode.accept",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
-  "line": 47,
-  "old": "  mov %rcx,(%rax)",
-  "new": "  mov %rcx,0x8(%rax)"
- },
- {
-  "id": "epoch-decode-accept-statement-rax-0-to-1",
-  "kind": "statement",
-  "module": "Prysm/Epoch/DecodeAccept.lean",
-  "theorem": "Prysm.Epoch.Decode.accept",
-  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
-  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
- },
- {
   "id": "checkpoint-decode-accept-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/DecodeAccept.lean",
@@ -309,7 +262,7 @@
   "theorem": "Prysm.Checkpoint.Encode.reject_length",
   "old": " ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n      ⋆ Eq ((Int.toBytes 8 e0",
   "new": "\n      ⋆ Eq ((Int.toBytes 8 e0",
-  "why": "without ownership of dst[len..len+8] the epoch store before the length test cannot be stepped"
+  "note": "without ownership of dst[len..len+8] the epoch store before the length test cannot be stepped"
  },
  {
   "id": "checkpoint-size-result-control",
@@ -344,52 +297,6 @@
   "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))"
  },
  {
-  "id": "epoch-decode-reject-size-control",
-  "kind": "control",
-  "module": "Prysm/Epoch/DecodeRejectSize.lean",
-  "theorem": "Prysm.Epoch.Decode.reject_size",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S"
- },
- {
-  "id": "epoch-decode-reject-size-code-cmp-0x8-to-0x7",
-  "kind": "code",
-  "module": "Prysm/Epoch/DecodeRejectSize.lean",
-  "theorem": "Prysm.Epoch.Decode.reject_size",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
-  "old": "  cmp $0x8,%rcx",
-  "new": "  cmp $0x7,%rcx"
- },
- {
-  "id": "epoch-decode-reject-size-code-mov-0x28-to-0x27",
-  "kind": "code",
-  "module": "Prysm/Epoch/DecodeRejectSize.lean",
-  "theorem": "Prysm.Epoch.Decode.reject_size",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
-  "old": "  mov $0x28,%ebx",
-  "new": "  mov $0x27,%ebx"
- },
- {
-  "id": "epoch-decode-reject-size-code-mov-0x2-to-0x1",
-  "kind": "code",
-  "module": "Prysm/Epoch/DecodeRejectSize.lean",
-  "theorem": "Prysm.Epoch.Decode.reject_size",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
-  "old": "  mov $0x2,%edi",
-  "new": "  mov $0x1,%edi"
- },
- {
-  "id": "epoch-decode-reject-size-statement-rax-none-to-none",
-  "kind": "statement",
-  "module": "Prysm/Epoch/DecodeRejectSize.lean",
-  "theorem": "Prysm.Epoch.Decode.reject_size",
-  "old": "st.data.regs.rax ≠ 0",
-  "new": "st.data.regs.rax = 0"
- },
- {
   "id": "checkpoint-layout-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/GoValue.lean",
@@ -416,7 +323,7 @@
   "theorem": "Prysm.Checkpoint.after_decode_goValue",
   "old": "goValue (afterDecode b e8 p) = true",
   "new": "goValue (afterDecode b e8 0) = true",
-  "why": "Root = (nil, 32, 32) is not a Go value"
+  "note": "Root = (nil, 32, 32) is not a Go value"
  },
  {
   "id": "checkpoint-decode-then-encode-round-trip-control",
@@ -535,7 +442,7 @@
   "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
   "old": "(hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)",
   "new": "(hgrow : s.regs.rdi.toNat ≤ s.regs.rcx.toNat + 8)",
-  "why": "with cap = len+8 the first site does not grow"
+  "note": "with cap = len+8 the first site does not grow"
  },
  {
   "id": "checkpoint-encode-grow-first-site-code-mov-rdi-to-rdx",
@@ -547,7 +454,7 @@
   "line": 24,
   "old": "  mov %rdi,%rcx",
   "new": "  mov %rdx,%rcx",
-  "why": "growslice oldCap argument := newLen at the first site"
+  "note": "growslice oldCap argument := newLen at the first site"
  },
  {
   "id": "checkpoint-encode-grow-first-site-statement-hfit-40-to-39",
@@ -614,150 +521,6 @@
   "new": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 1"
  },
  {
-  "id": "slot-decode-accept-control",
-  "kind": "control",
-  "module": "Prysm/Slot/DecodeAccept.lean",
-  "theorem": "Prysm.Slot.Decode.accept",
-  "code_definition": "Code.unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.Slot"
- },
- {
-  "id": "slot-decode-accept-code-cmp-0x8-to-0x9",
-  "kind": "code",
-  "module": "Prysm/Slot/DecodeAccept.lean",
-  "theorem": "Prysm.Slot.Decode.accept",
-  "code_definition": "Code.unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
-  "old": "  cmp $0x8,%rcx",
-  "new": "  cmp $0x9,%rcx",
-  "code_namespace": "Prysm.Slot"
- },
- {
-  "id": "slot-decode-accept-code-mov-rbx-to-0x8-rbx",
-  "kind": "code",
-  "module": "Prysm/Slot/DecodeAccept.lean",
-  "theorem": "Prysm.Slot.Decode.accept",
-  "code_definition": "Code.unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
-  "old": "  mov (%rbx),%rcx",
-  "new": "  mov 0x8(%rbx),%rcx",
-  "code_namespace": "Prysm.Slot"
- },
- {
-  "id": "slot-decode-accept-code-mov-rax-to-0x8-rax",
-  "kind": "code",
-  "module": "Prysm/Slot/DecodeAccept.lean",
-  "theorem": "Prysm.Slot.Decode.accept",
-  "code_definition": "Code.unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
-  "line": 47,
-  "old": "  mov %rcx,(%rax)",
-  "new": "  mov %rcx,0x8(%rax)",
-  "code_namespace": "Prysm.Slot"
- },
- {
-  "id": "slot-decode-accept-statement-rax-0-to-1",
-  "kind": "statement",
-  "module": "Prysm/Slot/DecodeAccept.lean",
-  "theorem": "Prysm.Slot.Decode.accept",
-  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
-  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
- },
- {
-  "id": "committee-index-decode-accept-control",
-  "kind": "control",
-  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
-  "theorem": "Prysm.CommitteeIndex.Decode.accept",
-  "code_definition": "Code.unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.CommitteeIndex"
- },
- {
-  "id": "committee-index-decode-accept-code-cmp-0x8-to-0x9",
-  "kind": "code",
-  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
-  "theorem": "Prysm.CommitteeIndex.Decode.accept",
-  "code_definition": "Code.unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
-  "old": "  cmp $0x8,%rcx",
-  "new": "  cmp $0x9,%rcx",
-  "code_namespace": "Prysm.CommitteeIndex"
- },
- {
-  "id": "committee-index-decode-accept-code-mov-rbx-to-0x8-rbx",
-  "kind": "code",
-  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
-  "theorem": "Prysm.CommitteeIndex.Decode.accept",
-  "code_definition": "Code.unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
-  "old": "  mov (%rbx),%rcx",
-  "new": "  mov 0x8(%rbx),%rcx",
-  "code_namespace": "Prysm.CommitteeIndex"
- },
- {
-  "id": "committee-index-decode-accept-code-mov-rax-to-0x8-rax",
-  "kind": "code",
-  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
-  "theorem": "Prysm.CommitteeIndex.Decode.accept",
-  "code_definition": "Code.unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
-  "line": 47,
-  "old": "  mov %rcx,(%rax)",
-  "new": "  mov %rcx,0x8(%rax)",
-  "code_namespace": "Prysm.CommitteeIndex"
- },
- {
-  "id": "committee-index-decode-accept-statement-rax-0-to-1",
-  "kind": "statement",
-  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
-  "theorem": "Prysm.CommitteeIndex.Decode.accept",
-  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
-  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
- },
- {
-  "id": "attestation-data-ssz-value-spec-accepts-iff-control",
-  "kind": "control",
-  "module": "Prysm/AttestationData/Spec.lean",
-  "theorem": "Prysm.AttestationData.SszValue.spec_accepts_iff"
- },
- {
-  "id": "attestation-data-ssz-value-spec-accepts-iff-statement-size-128-to-127",
-  "kind": "statement",
-  "module": "Prysm/AttestationData/Spec.lean",
-  "theorem": "Prysm.AttestationData.SszValue.spec_accepts_iff",
-  "old": "↔ bs.size = 128",
-  "new": "↔ bs.size = 127"
- },
- {
-  "id": "attestation-data-desc-serialize-checker-control",
-  "kind": "control",
-  "module": "Prysm/AttestationData/SpecEquivalence.lean",
-  "theorem": "Prysm.AttestationData.desc_serialize_checker"
- },
- {
-  "id": "attestation-data-desc-serialize-checker-statement-checker-desc-field-0-to-uint-4",
-  "kind": "statement",
-  "module": "Prysm/AttestationData/SpecEquivalence.lean",
-  "theorem": "Prysm.AttestationData.desc_serialize_checker",
-  "old": "serialize checkerDesc v",
-  "new": "serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 0 (.uint 4)) | x => x) v"
- },
- {
-  "id": "attestation-data-desc-deserialize-checker-control",
-  "kind": "control",
-  "module": "Prysm/AttestationData/SpecEquivalence.lean",
-  "theorem": "Prysm.AttestationData.desc_deserialize_checker"
- },
- {
-  "id": "attestation-data-desc-deserialize-checker-statement-deserialize-checker-desc-to-prysm-checkpoint-desc",
-  "kind": "statement",
-  "module": "Prysm/AttestationData/SpecEquivalence.lean",
-  "theorem": "Prysm.AttestationData.desc_deserialize_checker",
-  "old": "deserialize checkerDesc bs = .ok v",
-  "new": "deserialize Prysm.Checkpoint.desc bs = .ok v"
- },
- {
   "id": "checkpoint-decode-accept-function-spec-holds-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/FunctionSpecsAsNestedField.lean",
@@ -770,7 +533,7 @@
   "theorem": "Prysm.Checkpoint.Decode.accept_function_spec_holds",
   "old": "(hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) : Decode.accept_function_spec Heap S",
   "new": "(hms : True) (hmm : MemmoveContract S) : Decode.accept_function_spec Heap S",
-  "why": "the makeslice hypothesis keeps its name with type True; without the makeslice contract the decoder spec cannot be derived"
+  "note": "the makeslice hypothesis keeps its name with type True; without the makeslice contract the decoder spec cannot be derived"
  },
  {
   "id": "checkpoint-encode-fast-path-function-spec-holds-control",
@@ -785,216 +548,7 @@
   "theorem": "Prysm.Checkpoint.Encode.fast_path_function_spec_holds",
   "old": "(S : Nat) (hmm : MemmoveContract S) : Encode.fast_path_function_spec S",
   "new": "(S : Nat) (hmm : True) : Encode.fast_path_function_spec S",
-  "why": "the memmove hypothesis keeps its name with type True; without the memmove contract the encoder spec cannot be derived"
- },
- {
-  "id": "attestation-data-decode-head-control",
-  "kind": "control",
-  "module": "Prysm/AttestationData/DecodeAcceptHead.lean",
-  "theorem": "Prysm.AttestationData.Decode.head",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
- },
- {
-  "id": "attestation-data-decode-head-code-cmp-0x80-to-0x81",
-  "kind": "code",
-  "module": "Prysm/AttestationData/DecodeAcceptHead.lean",
-  "theorem": "Prysm.AttestationData.Decode.head",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "old": "  cmp $0x80,%rcx",
-  "new": "  cmp $0x81,%rcx",
-  "why": "length check against 129: the accept branch is not taken"
- },
- {
-  "id": "attestation-data-decode-head-code-mov-0x8-to-0x9",
-  "kind": "code",
-  "module": "Prysm/AttestationData/DecodeAcceptHead.lean",
-  "theorem": "Prysm.AttestationData.Decode.head",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "old": "  mov $0x8,%ecx",
-  "new": "  mov $0x9,%ecx",
-  "line": 17,
-  "why": "Slot called with len 9: Prysm.Slot.Decode.accept_function_spec premise rcx = 8 fails"
- },
- {
-  "id": "attestation-data-decode-head-code-add-0x10-to-0x18",
-  "kind": "code",
-  "module": "Prysm/AttestationData/DecodeAcceptHead.lean",
-  "theorem": "Prysm.AttestationData.Decode.head",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "old": "  add $0x10,%rax",
-  "new": "  add $0x18,%rax",
-  "why": "CommitteeIndex decoded into the Root.ptr word"
- },
- {
-  "id": "attestation-data-decode-block-root-control",
-  "kind": "control",
-  "module": "Prysm/AttestationData/DecodeAcceptBlockRoot.lean",
-  "theorem": "Prysm.AttestationData.Decode.block_root",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
- },
- {
-  "id": "attestation-data-decode-block-root-code-add-0x10-to-0x18",
-  "kind": "code",
-  "module": "Prysm/AttestationData/DecodeAcceptBlockRoot.lean",
-  "theorem": "Prysm.AttestationData.Decode.block_root",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "old": "  add $0x10,%rbx",
-  "new": "  add $0x18,%rbx",
-  "why": "Root copied from buf[24:56]"
- },
- {
-  "id": "attestation-data-decode-block-root-code-movq-0x20-to-0x21",
-  "kind": "code",
-  "module": "Prysm/AttestationData/DecodeAcceptBlockRoot.lean",
-  "theorem": "Prysm.AttestationData.Decode.block_root",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "old": "  movq $0x20,0x28(%rdx)",
-  "new": "  movq $0x21,0x28(%rdx)",
-  "line": 110,
-  "why": "Root.cap = 33 after the copy"
- },
- {
-  "id": "attestation-data-decode-source-control",
-  "kind": "control",
-  "module": "Prysm/AttestationData/DecodeAcceptSource.lean",
-  "theorem": "Prysm.AttestationData.Decode.source",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
- },
- {
-  "id": "attestation-data-decode-source-code-mov-0x30-rdx-to-0x40-rdx",
-  "kind": "code",
-  "module": "Prysm/AttestationData/DecodeAcceptSource.lean",
-  "theorem": "Prysm.AttestationData.Decode.source",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "old": "  mov %rax,0x30(%rdx)",
-  "new": "  mov %rax,0x40(%rdx)",
-  "why": "Source pointer stored into unknownFields"
- },
- {
-  "id": "attestation-data-decode-source-code-add-0x30-to-0x38",
-  "kind": "code",
-  "module": "Prysm/AttestationData/DecodeAcceptSource.lean",
-  "theorem": "Prysm.AttestationData.Decode.source",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "old": "  add $0x30,%rbx",
-  "new": "  add $0x38,%rbx",
-  "why": "Source decoded from buf[56:96]"
- },
- {
-  "id": "attestation-data-decode-target-control",
-  "kind": "control",
-  "module": "Prysm/AttestationData/DecodeAcceptTarget.lean",
-  "theorem": "Prysm.AttestationData.Decode.target",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
- },
- {
-  "id": "attestation-data-decode-target-code-mov-0x38-rdx-to-0x30-rdx",
-  "kind": "code",
-  "module": "Prysm/AttestationData/DecodeAcceptTarget.lean",
-  "theorem": "Prysm.AttestationData.Decode.target",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "old": "  mov %rax,0x38(%rdx)",
-  "new": "  mov %rax,0x30(%rdx)",
-  "why": "Target pointer stored into the Source field"
- },
- {
-  "id": "attestation-data-decode-target-code-je-to-jne",
-  "kind": "code",
-  "module": "Prysm/AttestationData/DecodeAcceptTarget.lean",
-  "theorem": "Prysm.AttestationData.Decode.target",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_3a7",
-  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_3a7",
-  "why": "nil error from the Target callee goes to the wrap path"
- },
- {
-  "id": "attestation-data-decode-reject-size-control",
-  "kind": "control",
-  "module": "Prysm/AttestationData/DecodeRejectSize.lean",
-  "theorem": "Prysm.AttestationData.Decode.reject_size",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
- },
- {
-  "id": "attestation-data-decode-reject-size-code-mov-ssz-err-size-8-rip-to-ssz-err-size-rip",
-  "kind": "code",
-  "module": "Prysm/AttestationData/DecodeRejectSize.lean",
-  "theorem": "Prysm.AttestationData.Decode.reject_size",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "old": "  mov ssz.ErrSize+8(%rip),%rbx",
-  "new": "  mov ssz.ErrSize(%rip),%rbx",
-  "why": "second error word read from the first"
- },
- {
-  "id": "attestation-data-decode-accept-control",
-  "kind": "control",
-  "module": "Prysm/AttestationData/DecodeAccept.lean",
-  "theorem": "Prysm.AttestationData.Decode.accept"
- },
- {
-  "id": "attestation-data-decode-accept-statement-heap-240-to-232",
-  "kind": "statement",
-  "module": "Prysm/AttestationData/DecodeAccept.lean",
-  "theorem": "Prysm.AttestationData.Decode.accept",
-  "old": "⋆ Heap (avail - 240)",
-  "new": "⋆ Heap (avail - 232)",
-  "why": "the decoder takes 240 heap bytes (32 + 2 × (72 + 32))"
- },
- {
-  "id": "attestation-data-decode-accept-statement-in0-in0-to-in1",
-  "kind": "statement",
-  "module": "Prysm/AttestationData/DecodeAccept.lean",
-  "theorem": "Prysm.AttestationData.Decode.accept",
-  "old": "⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))",
-  "new": "⋆ Eq (in1.At (s.regs.rax.toBitVec + 8))",
-  "why": "Slot field = buf[0:8], not buf[8:16]"
- },
- {
-  "id": "attestation-data-decode-accept-statement-se-se-to-te",
-  "kind": "statement",
-  "module": "Prysm/AttestationData/DecodeAccept.lean",
-  "theorem": "Prysm.AttestationData.Decode.accept",
-  "old": "⋆ Eq (se.At (ps + 8))",
-  "new": "⋆ Eq (te.At (ps + 8))",
-  "why": "Source.Epoch = buf[48:56], not the Target epoch"
- },
- {
-  "id": "attestation-data-decode-accept-statement-hms-makeslice-contract-heap-elf-data-to-true",
-  "kind": "statement",
-  "module": "Prysm/AttestationData/DecodeAccept.lean",
-  "theorem": "Prysm.AttestationData.Decode.accept",
-  "old": "(hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S)",
-  "new": "(hms : True) (hmm : MemmoveContract S)",
-  "why": "the Checkpoint callee's makeslice hypothesis keeps its name with type True; without it Prysm.Checkpoint.Decode.accept_function_spec cannot be discharged"
- },
- {
-  "id": "attestation-data-decode-accept-spec-control",
-  "kind": "control",
-  "module": "Prysm/AttestationData/DecodeSpec.lean",
-  "theorem": "Prysm.AttestationData.Decode.accept_spec"
- },
- {
-  "id": "attestation-data-decode-accept-spec-statement-hlen-none-to-1",
-  "kind": "statement",
-  "module": "Prysm/AttestationData/DecodeSpec.lean",
-  "theorem": "Prysm.AttestationData.Decode.accept_spec",
-  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
-  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)",
-  "why": "rcx must be the input length 128"
+  "note": "the memmove hypothesis keeps its name with type True; without the memmove contract the encoder spec cannot be derived"
  },
  {
   "id": "checkpoint-encode-tail-fit-control",
@@ -1013,7 +567,7 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf",
   "new": "  jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf",
-  "why": "second capacity test inverted"
+  "note": "second capacity test inverted"
  },
  {
   "id": "checkpoint-encode-tail-reject-control",
@@ -1032,7 +586,7 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  mov ssz.ErrBytesLength+8(%rip),%rsi",
   "new": "  mov ssz.ErrBytesLength(%rip),%rsi",
-  "why": "second error word read from the first (reject path only)"
+  "note": "second error word read from the first (reject path only)"
  },
  {
   "id": "checkpoint-encode-tail-grow-control",
@@ -1051,7 +605,7 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  mov $0x20,%edi",
   "new": "  mov $0x28,%edi",
-  "why": "growslice num 40: old = len bytes, not len + 8"
+  "note": "growslice num 40: old = len bytes, not len + 8"
  },
  {
   "id": "checkpoint-encode-tail-grow-code-mov-0x28-rsp-to-0x30-rsp",
@@ -1062,7 +616,7 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  mov 0x28(%rsp),%rdx",
   "new": "  mov 0x30(%rsp),%rdx",
-  "why": "restored len + 8 read from the wrong slot"
+  "note": "restored len + 8 read from the wrong slot"
  },
  {
   "id": "checkpoint-encode-tail-grow-call-control",
@@ -1077,7 +631,7 @@
   "kind": "statement",
   "module": "Prysm/Checkpoint/EncodeTailGrow.lean",
   "theorem": "Prysm.Checkpoint.Encode.tail_grow_call",
-  "why": "the second growslice is called with num = 32",
+  "note": "the second growslice is called with num = 32",
   "old": "∧ st.data.regs.rdi.toNat = 32 ∧",
   "new": "∧ st.data.regs.rdi.toNat = 8 ∧"
  },
@@ -1098,7 +652,7 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b",
   "new": "  jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b",
-  "why": "first capacity test inverted"
+  "note": "first capacity test inverted"
  },
  {
   "id": "checkpoint-encode-head-grow-control",
@@ -1117,7 +671,7 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  mov %rax,0x78(%rsp)",
   "new": "  mov %rax,0x70(%rsp)",
-  "why": "receiver spilled to the wrong slot on the growslice path (later reload reads rsp + 8)"
+  "note": "receiver spilled to the wrong slot on the growslice path (later reload reads rsp + 8)"
  },
  {
   "id": "checkpoint-encode-grow-second-site-control",
@@ -1132,7 +686,7 @@
   "theorem": "Prysm.Checkpoint.Encode.grow_second_site",
   "old": "(hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 40)",
   "new": "(hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 41)",
-  "why": "cap = len + 40 takes the fast path, not the growslice"
+  "note": "cap = len + 40 takes the fast path, not the growslice"
  },
  {
   "id": "checkpoint-encode-grow-any-site-control",
@@ -1147,7 +701,7 @@
   "theorem": "Prysm.Checkpoint.Encode.grow_any_site",
   "old": "st.data.regs.rdi.toNat = 32",
   "new": "st.data.regs.rdi.toNat = 40",
-  "why": "the second growslice is called with num = 32 (the root length)"
+  "note": "the second growslice is called with num = 32 (the root length)"
  },
  {
   "id": "checkpoint-encode-reject-length-grow-first-site-control",
@@ -1162,7 +716,7 @@
   "theorem": "Prysm.Checkpoint.Encode.reject_length_grow_first_site",
   "old": "          ⋆ Eq (pre.At s.regs.rbx.toBitVec)\n          ⋆ Eq (pre.At nb)",
   "new": "          ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n          ⋆ Eq (pre.At nb)",
-  "why": "after growth: the epoch bytes are in the new block, not in the caller's spare capacity"
+  "note": "after growth: the epoch bytes are in the new block, not in the caller's spare capacity"
  },
  {
   "id": "checkpoint-encode-cover-control",
@@ -1177,7 +731,7 @@
   "theorem": "Prysm.Checkpoint.Encode.cover",
   "old": "(Eq ((pre ++ bs.toList).At st.data.regs.rax.toBitVec)",
   "new": "(Eq ((bs.toList ++ pre).At st.data.regs.rax.toBitVec)",
-  "why": "output is dst ++ serialize, not serialize ++ dst"
+  "note": "output is dst ++ serialize, not serialize ++ dst"
  },
  {
   "id": "checkpoint-encode-reject-length-cover-control",
@@ -1192,7 +746,7 @@
   "theorem": "Prysm.Checkpoint.Encode.reject_length_cover",
   "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0\n        ∧ st.data.regs.rcx = 0",
   "new": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rbx = 0\n        ∧ st.data.regs.rcx = 0",
-  "why": "the reject returns a nil slice"
+  "note": "the reject returns a nil slice"
  },
  {
   "id": "checkpoint-encode-grow-any-site-three-cases-control",
@@ -1207,7 +761,7 @@
   "theorem": "Prysm.Checkpoint.Encode.grow_any_site_three_cases",
   "old": "∧ av' < 2 * nextSliceCap (s.regs.rcx.toNat + 40) st.data.regs.rcx.toNat + 8192 ∧",
   "new": "∧ av' < 2 * nextSliceCap (s.regs.rcx.toNat + 40) st.data.regs.rcx.toNat + 8191 ∧",
-  "why": "the second call entry is reached only with the remaining heap strictly below the budget of the second call; a tighter bound is not derivable"
+  "note": "the second call entry is reached only with the remaining heap strictly below the budget of the second call; a tighter bound is not derivable"
  },
  {
   "id": "checkpoint-encode-grow-any-site-three-cases-statement-pre-none-to-8",
@@ -1216,7 +770,7 @@
   "theorem": "Prysm.Checkpoint.Encode.grow_any_site_three_cases",
   "old": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec)) ⋆ Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))",
   "new": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec + 8)) ⋆ Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))",
-  "why": "second growth: the first new block holds the epoch at nb + len, not after it"
+  "note": "second growth: the first new block holds the epoch at nb + len, not after it"
  },
  {
   "id": "checkpoint-encode-grow-any-site-three-cases-statement-next-slice-cap-40-to-41",
@@ -1225,7 +779,7 @@
   "theorem": "Prysm.Checkpoint.Encode.grow_any_site_three_cases",
   "old": "∧ nextSliceCap (s.regs.rcx.toNat + 40) C1 ≤ st.data.regs.rcx.toNat",
   "new": "∧ nextSliceCap (s.regs.rcx.toNat + 41) C1 ≤ st.data.regs.rcx.toNat",
-  "why": "second growth: the second growslice is called with newLen = len + 40"
+  "note": "second growth: the second growslice is called with newLen = len + 40"
  },
  {
   "id": "checkpoint-encode-cover-framed-control",
@@ -1240,7 +794,7 @@
   "theorem": "Prysm.Checkpoint.Encode.cover_framed",
   "old": "⋆ Eq ((spare.drop 40).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))",
   "new": "⋆ Eq ((spare.drop 39).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))",
-  "why": "in place: the spare bytes after the 40 written bytes are unchanged"
+  "note": "in place: the spare bytes after the 40 written bytes are unchanged"
  },
  {
   "id": "checkpoint-encode-cover-framed-statement-pre-none-to-8",
@@ -1249,7 +803,7 @@
   "theorem": "Prysm.Checkpoint.Encode.cover_framed",
   "old": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
   "new": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))",
-  "why": "growth at the second site: the epoch is written into the caller's spare at dst + len"
+  "note": "growth at the second site: the epoch is written into the caller's spare at dst + len"
  },
  {
   "id": "checkpoint-encode-cover-framed-statement-pc-label-runtime-growslice-to-int64-of-bit-vec-ra",
@@ -1258,7 +812,7 @@
   "theorem": "Prysm.Checkpoint.Encode.cover_framed",
   "old": "∨ (st.pc = label \"runtime.growslice\" ∧ s.regs.rdi.toNat < s.regs.rcx.toNat + 8",
   "new": "∨ (st.pc = Int64.ofBitVec ra.toBitVec ∧ s.regs.rdi.toNat < s.regs.rcx.toNat + 8",
-  "why": "the second call entry is the entry of the second growslice call, not a return"
+  "note": "the second call entry is the entry of the second growslice call, not a return"
  },
  {
   "id": "checkpoint-encode-reject-length-cover-framed-control",
@@ -1273,7 +827,7 @@
   "theorem": "Prysm.Checkpoint.Encode.reject_length_cover_framed",
   "old": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
   "new": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))",
-  "why": "len + 8 <= cap: blk = dst, the epoch is at dst + len"
+  "note": "len + 8 <= cap: blk = dst, the epoch is at dst + len"
  },
  {
   "id": "checkpoint-encode-reject-length-cover-framed-statement-e8-at-nb-rcx-to-nb-rcx-1",
@@ -1282,7 +836,7 @@
   "theorem": "Prysm.Checkpoint.Encode.reject_length_cover_framed",
   "old": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec))",
   "new": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec + 1))",
-  "why": "cap < len + 8: the epoch is in the new block at nb + len only"
+  "note": "cap < len + 8: the epoch is in the new block at nb + len only"
  },
  {
   "id": "checkpoint-witness-encode-reject-length-cover-receiver-control",
@@ -1297,7 +851,7 @@
   "theorem": "Prysm.Checkpoint.witness_encode_reject_length_cover_receiver",
   "old": "goValue (receiverAt (Witness.EncodeRejectLengthCover.block (Int.toBytes 8 7) 48 []) 9032) = true",
   "new": "goValue (receiverAt (Witness.EncodeRejectLengthCover.block (Int.toBytes 8 7) 49 []) 9032) = true",
-  "why": "len(Root) 49 > cap 48 is not a Go value"
+  "note": "len(Root) 49 > cap 48 is not a Go value"
  },
  {
   "id": "checkpoint-witness-encode-cover-receiver-statement-0x12380-32-to-33",
@@ -1306,6 +860,95 @@
   "theorem": "Prysm.Checkpoint.witness_encode_cover_receiver",
   "old": "++ Int.toBytes 8 0x12380 ++ Int.toBytes 8 32 ++ Int.toBytes 8 32",
   "new": "++ Int.toBytes 8 0x12380 ++ Int.toBytes 8 33 ++ Int.toBytes 8 32",
-  "why": "the cover witness receiver has len(Root) = 32"
+  "note": "the cover witness receiver has len(Root) = 32"
+ },
+ {
+  "id": "checkpoint-encode-generated-fast-spec-control",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "checkpoint-witness-generated-encode-fast-path-runs-empty-control",
+  "module": "Prysm/Checkpoint/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "checkpoint-encode-generated-fast-statement-b1-8-to-16",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast",
+  "kind": "statement",
+  "old": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "checkpoint-encode-generated-fast-spec-statement-rbx-none-to-8",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "checkpoint-encode-generated-fast-spec-statement-hcap-40-to-32",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 40 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 32 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "checkpoint-witness-generated-encode-fast-path-runs-empty-statement-rax-0x10100-to-0x10108",
+  "module": "Prysm/Checkpoint/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x10100",
+  "new": "st.data.regs.rax = 0x10108"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-of-kind-control",
+  "module": "Prysm/Checkpoint/EncodeFastPathKindInstances.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path_of_kind",
+  "kind": "control"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-of-kind-statement-encode-layout-32-to-48",
+  "module": "Prysm/Checkpoint/EncodeFastPathKindInstances.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path_of_kind",
+  "kind": "statement",
+  "old": "encodeLayout [.uint64, .bytes 32]",
+  "new": "encodeLayout [.uint64, .bytes 48]"
+ },
+ {
+  "id": "checkpoint-encode-generated-statement-control",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_statement",
+  "kind": "control"
+ },
+ {
+  "id": "checkpoint-encode-generated-fast-kind-statement-prysm-checkpoint-to-eth1-data",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_kind",
+  "kind": "statement",
+  "old": "Prysm.Checkpoint.encodeLayout",
+  "new": "Prysm.Eth1Data.encodeLayout",
+  "mutant_imports": [
+   "Prysm.Eth1Data.EncodeLayout"
+  ]
+ },
+ {
+  "id": "checkpoint-decode-accept-of-kind-control",
+  "module": "Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept_of_kind",
+  "kind": "control"
+ },
+ {
+  "id": "checkpoint-decode-accept-of-kind-statement-decode-layout-32-to-48",
+  "module": "Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept_of_kind",
+  "kind": "statement",
+  "old": "decodeLayout [.uint64, .bytes 32]",
+  "new": "decodeLayout [.uint64, .bytes 48]"
  }
 ]
