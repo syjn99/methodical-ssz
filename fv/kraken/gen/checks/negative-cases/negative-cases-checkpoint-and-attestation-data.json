@@ -564,12 +564,12 @@
   "theorem": "Prysm.Checkpoint.desc_serialize_checker"
  },
  {
-  "id": "checkpoint-desc-serialize-checker-statement-serialize-checker-desc-to-container-epoch-root",
+  "id": "checkpoint-desc-serialize-checker-statement-checker-desc-field-0-to-uint-4",
   "kind": "statement",
   "module": "Prysm/Checkpoint/SpecEquivalence.lean",
   "theorem": "Prysm.Checkpoint.desc_serialize_checker",
   "old": "serialize desc v = serialize checkerDesc v",
-  "new": "serialize desc v = serialize (.container [\"Epoch\", \"Root\"] [.uint 4, .byteVector 32]) v"
+  "new": "serialize desc v = serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 0 (.uint 4)) | x => x) v"
  },
  {
   "id": "checkpoint-desc-deserialize-checker-control",
@@ -578,12 +578,12 @@
   "theorem": "Prysm.Checkpoint.desc_deserialize_checker"
  },
  {
-  "id": "checkpoint-desc-deserialize-checker-statement-deserialize-checker-desc-to-container-epoch-root",
+  "id": "checkpoint-desc-deserialize-checker-statement-checker-desc-field-1-to-byte-vector-31",
   "kind": "statement",
   "module": "Prysm/Checkpoint/SpecEquivalence.lean",
   "theorem": "Prysm.Checkpoint.desc_deserialize_checker",
   "old": "deserialize desc bs = deserialize checkerDesc bs",
-  "new": "deserialize desc bs = deserialize (.container [\"Epoch\", \"Root\"] [.uint 8, .byteVector 31]) bs"
+  "new": "deserialize desc bs = deserialize (match checkerDesc with | .container ns ds => .container ns (ds.set 1 (.byteVector 31)) | x => x) bs"
  },
  {
   "id": "checkpoint-witness-decode-reject-size-runs-spec-control",
@@ -744,12 +744,12 @@
   "theorem": "Prysm.AttestationData.desc_serialize_checker"
  },
  {
-  "id": "attestation-data-desc-serialize-checker-statement-serialize-checker-desc-to-prysm-checkpoint-desc",
+  "id": "attestation-data-desc-serialize-checker-statement-checker-desc-field-0-to-uint-4",
   "kind": "statement",
   "module": "Prysm/AttestationData/SpecEquivalence.lean",
   "theorem": "Prysm.AttestationData.desc_serialize_checker",
   "old": "serialize checkerDesc v",
-  "new": "serialize Prysm.Checkpoint.desc v"
+  "new": "serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 0 (.uint 4)) | x => x) v"
  },
  {
   "id": "attestation-data-desc-deserialize-checker-control",
