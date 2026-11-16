@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Diff the 698c202 outputs against the committed Prysm files and classify the changes.
+"""Diff the outputs of the pinned generator against the committed Prysm files and classify the changes.
 
 Usage: generated_go_diff.py <prysm-tree> <gen-dir> <out-dir>
   <gen-dir>/{mainnet,minimal}/*.ssz.go are the new outputs. The committed twin
@@ -7,9 +7,8 @@ Usage: generated_go_diff.py <prysm-tree> <gen-dir> <out-dir>
   file already replaced in the work tree does not matter.
 Writes <out-dir>/<preset>/<file>.diff and <out-dir>/generated-go-diff.json.
 
-A change block is a run of +/- lines. The rules are the three generator
-commits that the prysm-fv-pin-smoke run found (its tools/classify_hunks.py);
-they are rewritten here, not imported. A block that matches no rule is
+A change block is a run of +/- lines. Each rule in RULES matches the change of
+one generator commit; its first item is that commit. A block that matches no rule is
 "unclassified" and needs a reading by hand.
 Python 3 standard library only. Run with python3 -I.
 """

@@ -19,7 +19,7 @@
   (cwd = fv/kraken)
 
 Three denominators are kept apart: (1) the SSZ methods of the target (`ssz-methods.json`, per method kind);
-(2) the dumped functions (`functions.json`); (3) the core flat types: a fixed list of 16 flat fixed-size types
+(2) the dumped functions (`functions.json`); (3) the core flat types: a fixed list of flat fixed-size types
 (`CORE_FLAT_TYPES`).
 The flat fixed-size types of the target are computed from the IR by `FLAT_RULE`; those outside `CORE_FLAT_TYPES` are listed.
 

@@ -5,7 +5,7 @@ usage: encoder_test.py <work-dir> <result.json>     (cwd = fv/kraken; one gated 
 exit 0 = every case has its expected outcome; 1 = a case differs; 2 = usage
 
 Cases (mutated `.S` / IR copies are written to <work-dir>, nothing in the repository changes):
- - fast-path-real-*: the 16 types of the fast-path rows of `gen/generator/gen.sh`: exit 0, two runs
+ - fast-path-real-*: the types of the fast-path rows of `gen/generator/gen.sh`: exit 0, two runs
    byte-identical, every theorem with its kind line; equal to the committed `lean/Prysm/<T>/GeneratedEncodeFastPath.lean` when it
    exists.
  - fast-path-refused-*: adversarial `.S` / IR mutants (capacity test altered so that the growslice site is on the walked path,

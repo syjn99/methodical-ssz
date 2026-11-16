@@ -2,12 +2,12 @@
 """Tests of the Desc producer and the closed-world checker.
 
   test_desc.py prepare <work-dir>
-      Produce the 144 originals (9 hand types + the 135 types of the Prysm inventory), then
+      Produce the originals (the hand types and the types of the Prysm inventory), then
       - controls (wrong Descs; each must FAIL at its designated check) and known passes (Prysm
         only: changes the inventory binding cannot see), list mutants.txt;
-      - the review mutants of review_mutants.py (92); it writes its forged checker line with the work
+      - the review mutants of review_mutants.py; it writes its forged checker line with the work
         directory path as given, so give a relative work directory;
-      - list scenarios: the 13 scenarios of review_mutants.py, the scenarios of this file, and for every wrong
+      - list scenarios: the scenarios of review_mutants.py, the scenarios of this file, and for every wrong
         hand-type Desc an "added" (next to the originals) and an "in-place" (in place of its base) scenario;
       expect.json and batch.txt.
   run_desc_checker.sh <work-dir> <fv/kraken/lean>       (gated; writes the checker result files)
