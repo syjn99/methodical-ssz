@@ -292,6 +292,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   - The stack growth path and the write barrier path of every function, which the premises exclude.
   - The encoder growth branches (see the growslice entry) and the length rejects with a small capacity.
   - The `moveSliceNoCapNoScan` branch of `PowBlock`, `HistoricalSummary` and `SigningData`.
+  - The hash tree root methods of every type.
 - Effect: the frame separation premise of the encoders is not justified for every Go caller.
   The `IndexedAttestation` alignment and overflow rejects are proved only with the premise that the error word is not zero.
 - Where: `prysm/proof-inventory.md` lists the paths not proved for each method.
