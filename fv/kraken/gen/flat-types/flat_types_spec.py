@@ -43,11 +43,11 @@ def emit(X, ty, fs, chk):
     w('/-!')
     w(f'# Spec bridge for the real Prysm `{ty}` (24 flat types)')
     w('')
-    w('Written by the evidence script `flat_types_spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`')
+    w('Written by `gen/flat-types/flat_types_spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`')
     w(f'generalised to a field list). `{D}` (`Prysm/{X}/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).')
     if chk:
         w(f'`{chk[0]}` (`Prysm/{X}/SpecChecker.lean`, rendered by `gen/checks/desc_to_lean.py`) is the Desc checker\'s Desc of the type')
-        w('(the producer output recorded in `gen/desc/results/main.result.json`, same sha256; copy in `prysm/go1.26.10/evidence/flat-types/`).')
+        w('(the producer output recorded in `gen/desc/results/main.result.json`, same sha256; copy in `prysm/go1.26.10/evidence/`).')
     else:
         w('No Desc-checker record exists for this type (`gen/desc/results/main.result.json`): no codec equality here.')
     w(f'`{P}` is the SSZ content of a Go `{ty}`.')

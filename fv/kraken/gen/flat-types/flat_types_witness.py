@@ -49,7 +49,7 @@ import Machine.WitnessHost
 # Witness of the generated `Decode.generated_reject` (24 flat types)
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*{ty}).UnmarshalSSZ` (index 1).
-Written by the evidence script `flat_types_witness.py`: the text of the generated size-reject witnesses
+Written by `gen/flat-types/flat_types_witness.py`: the text of the generated size-reject witnesses
 (`Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeRejectSize.lean`) with the {ty} decoder and the generated size-reject theorem of `Prysm/{X}/GeneratedDecodeAccept.lean`. Memory at
 `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a data word `0x2a`,
 stand-ins: the real values are set by the runtime's init and are not read from the ELF), the guard word, saved-rbp
@@ -156,7 +156,7 @@ import Machine.WitnessHost
 /-!
 # Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path; 24 flat types)
 
-Written by the evidence script `flat_types_witness.py`: the text of the generated accept witness `Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeAccept.lean`
+Written by `gen/flat-types/flat_types_witness.py`: the text of the generated accept witness `Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeAccept.lean`
 (frame `0x38`, one Slot callee) with the {ty} host and layout ({nf} input words). It shows that the premises of
 the generated accept theorem (statement = kind instance) are satisfiable. Host: one label, the real Go 1.26.10
 `(*{ty}).UnmarshalSSZ` (index 1) and `primitives.Slot` UnmarshalSSZ ({1 + n}).
@@ -355,7 +355,7 @@ import Machine.WitnessHost
 /-!
 # Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path; 24 flat types)
 
-Written by the evidence script `flat_types_witness.py`: the text of `{'Prysm/Deposit_Data/WitnessDecodeAccept.lean' if frame == '20' else 'Prysm/PendingDeposit/WitnessDecodeAccept.lean'}` with the
+Written by `gen/flat-types/flat_types_witness.py`: the text of `{'Prysm/Deposit_Data/WitnessDecodeAccept.lean' if frame == '20' else 'Prysm/PendingDeposit/WitnessDecodeAccept.lean'}` with the
 {ty} host and layout. It shows that the premises of the generated accept theorem (statement = kind instance)
 are satisfiable. Host: data labels, the real Go 1.26.10 `(*{ty}).UnmarshalSSZ` (index 9){', ' + cdoc if cdoc else ''},
 the 1-byte bump `runtime.makeslice` ({bi}, `bump_makeslice1`) and `MemmoveGrowsliceModel` ({ri}, `model_memmove`).

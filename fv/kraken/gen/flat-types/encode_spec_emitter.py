@@ -342,7 +342,7 @@ def emit_wit(X, info, cl, gsize):
     w('/-!')
     w('# Witness of `%s_fast` (%s encoder fast path, generated theorem)' % (p, hdr['type']))
     w('')
-    w('Emitted by the unit\'s evidence tool `encode_spec_emitter.py` (not the generator) from the committed statement text and')
+    w('Written by `gen/flat-types/encode_spec_emitter.py` (not by `generator.py`) from the committed statement text and')
     w('the IR; then built and kernel-checked. Host: the real Go 1.26.10 `MarshalSSZTo` (index 0)%s.' %
       (' and `MemmoveGrowsliceModel` (index %d, `model_memmove`, S = 0)' % Pl if rt else '; no call on the fast path'))
     w('One memory block at `0x10000`: guard word (r14 = 0xfff0); the receiver at 0x10008 (`prysm/ir/ir-mainnet.json`')
@@ -588,7 +588,7 @@ def emit_spec(X, info, cl):
     w('fields = `(p, n, cap)` with the n bytes at `p`), the generated fast-path theorem `%s_fast` writes at' % p)
     w('`dst[len:len+%d]` exactly the bytes of `serialize %s g.toValue` (the Desc of the decoder\'s spec alignment).' % (hdr['size'], desc))
     w('Shape of `Prysm.BeaconBlockHeader.Encode.fast_path_spec`. Encoder fast path only (`len + %d ≤ cap`, exact field' % hdr['size'])
-    w('lengths). Emitted by the unit\'s evidence tool `encode_spec_emitter.py`, then built and kernel-checked.')
+    w('lengths). Written by `gen/flat-types/encode_spec_emitter.py`, then built and kernel-checked.')
     w('-/')
     w('')
     w('open Machine Runtime Codec %s EthLib.Serialization.Ssz' % ' '.join(info['open'].split()[3:]))

@@ -168,14 +168,7 @@ for dp, dn, fs in os.walk(os.path.join(KRAKEN, 'lean')):
         if script.endswith('layout.py'):
             r = run(['python3', '-I', script], COPY_KRAKEN)
         else:
-            real = source
-            if not os.path.exists(os.path.join(COPY_KRAKEN, real)):
-                # the header can name a directory that differs from the place of the input file
-                b = os.path.basename(source)
-                found = [os.path.relpath(os.path.join(a, x), COPY_KRAKEN)
-                         for a, _, xs in os.walk(os.path.join(COPY_KRAKEN, 'prysm')) for x in xs if x == b]
-                real = found[0] if found else source
-            r = run(['python3', '-I', script, real, name[1]], COPY_KRAKEN)
+            r = run(['python3', '-I', script, source, name[1]], COPY_KRAKEN)
         cmp(f'{os.path.basename(script)} rc={r.returncode}', p, r.stdout)
 
 for label, f, res in results:

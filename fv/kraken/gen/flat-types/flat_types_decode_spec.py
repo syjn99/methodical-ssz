@@ -61,12 +61,11 @@ import Prysm.{X}.Spec
 /-!
 # Spec alignment of the real `{ty}` decoder (24 flat types)
 
-Built on the GENERATED theorems of `Prysm/{X}/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`; raw output, not
-edited):
+Built on the GENERATED theorems of `Prysm/{X}/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`):
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : {P}` with `g.toValue = v`
   and `bsA = {pe} g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
   The statement is the generated accept statement (kind instance) with the input chunks replaced by the
-  encoding of `g` (text written by the evidence script `flat_types_decode_spec.py` from the generated statement; then checked
+  encoding of `g` (text written by `gen/flat-types/flat_types_decode_spec.py` from the generated statement; then checked
   by Lean against `{gname}`).
 - `Decode.reject_size_spec`: `bs.size ≠ {N}` → EthLib rejects, and the machine code returns `ssz.ErrSize`
   (generated `Decode.generated_reject`).
