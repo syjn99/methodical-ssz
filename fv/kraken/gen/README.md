@@ -19,7 +19,7 @@ The design principles are in `../../README.md`.
 
 | Program | Reads | Writes |
 | --- | --- | --- |
-| `generator/generator.py`, with `generator/whole_accept.py` and `generator/fast_path.py` | A converted `.S` file and the IR entry of one type | `lean/Prysm/<GoTypeName>/Generated*.lean`: segment, step, accept, size reject and encoder fast path theorems |
+| `generator/generator.py`, with `generator/whole_accept.py` and `generator/fast_path.py` | A converted `.S` file and the IR entry of one type | `lean/Prysm/<GoTypeName>/Generated*.lean`: step, accept, size reject and encoder fast path theorems |
 | `generator/gen.sh` | | Runs `generator.py` once for each generated file of the types that are not in `flat-types/run_generators.sh` |
 | `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py` | A `Desc` JSON file that the checker accepted | `*SpecChecker.lean`: the checker `Desc` as Lean |
 | `checks/layout.py`, `checks/attestation_data_layout.py` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/Checkpoint/Layout.lean`, `lean/Prysm/AttestationData/Layout.lean` |
@@ -41,12 +41,12 @@ The design principles are in `../../README.md`.
 `generator/generator.py` has these modes:
 
 - `uint64`: the accept path of a uint64 primitive decoder.
-- `decoder`: the 32-byte field segments of a container decoder.
-- `decoder --steps`: the step chain of the accept path over windows (a padding `nop` anywhere).
-- `decoder --whole-accept`: the step chain with the head, field, epilogue, accept and size-reject theorems.
+- `decoder --whole-accept`: the step chain of the accept path over windows, with a padding `nop` anywhere.
+  After it, the head, field, epilogue, accept and size-reject theorems.
 - `encoder --fast-path`: the encoder fast path theorem. `--same-as`, `--same-as-prop` and `--same-as-via` add an identity with a hand statement.
 
-`generator/decoder_test.py` and `generator/encoder_test.py` test the modes. They run the generator on real and mutated inputs.
+`generator/decoder_test.py` tests `decoder --whole-accept`, and `generator/encoder_test.py` tests `encoder --fast-path`.
+They run the generator on real and mutated inputs.
 
 ## 3. Check that a generated file is the generator output
 

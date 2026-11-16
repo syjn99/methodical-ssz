@@ -291,7 +291,6 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.BeaconBlockHeader.Encode.fast_path_spec
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_prefix
--- Generator extension for a 32-byte field at SSZ offset 0 (offset-0 form)
 
 -- BlobIdentifier and DepositMessage (UnmarshalSSZ)
 #print axioms Prysm.BlobIdentifier.desc_checker
@@ -520,7 +519,7 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.label_err_size
 #print axioms Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.runs
 
--- `decoder --steps`: the step lemmas, the generated step chain of Checkpoint and the accept modules
+-- The step chain of `decoder --whole-accept`: the step lemmas, their kinds and the accept modules
 #print axioms Codec.bytesDecodeSegmentKindWindow_of
 #print axioms Codec.bytesDecodeSegmentOffsetZeroKindWindow_of
 #print axioms Codec.bytes_decode_window_32_rdx_rax

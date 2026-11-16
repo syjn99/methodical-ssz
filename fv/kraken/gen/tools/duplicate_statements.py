@@ -21,8 +21,7 @@ The tool gives each group exactly one class. It applies the rules in this order:
   1. lean-derived       a member is an equation or structure lemma that Lean makes (`eq_1`, `eq_def`, `inj`, `injEq`,
                         `sizeOf_spec`, ...). Lean makes it again from its definition, so it is not text to remove.
   2. generated          every member is in a generated file. A generated file must equal a fresh generator run.
-                        Usually one generator writes the same statement in two modes (for example root field segment
-                        and step), or for two types with the same layout.
+                        Usually one generator writes the same statement for two types with the same layout.
   3. generated-and-hand a member is in a generated file, and each other member is the hand statement that a generator
                         identity names (`--same-as`), or a second derivation (rule 4). The generated theorem stays (rule 2).
   4. checked-derivation each hand member is a second derivation that a check compares: a kind identity (`_kind`), an
