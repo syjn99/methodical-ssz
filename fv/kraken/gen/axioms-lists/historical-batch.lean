@@ -1,10 +1,15 @@
 import Prysm.HistoricalBatch.DecodeRejectSize
+import Prysm.HistoricalBatch.DecodeLoopBlockRoots
+import Prysm.HistoricalBatch.DecodeLoopStateRoots
 import Prysm.HistoricalBatch.DecodeAccept
 import Prysm.HistoricalBatch.DecodeSpec
+import Prysm.HistoricalBatch.Spec
 import Prysm.HistoricalBatch.SpecEquivalence
 import Prysm.HistoricalBatch.WitnessDecodeAccept
+import Prysm.HistoricalBatch.WitnessDecodeRejectSize
 
-/-! Hand list for `gen/checks/axioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
+/-! Hand list of the `HistoricalBatch` declarations for `gen/checks/axioms_gate.py`.
+Each name must be in the declaration dump and use only the standard axioms. -/
 
 #print axioms Prysm.HistoricalBatch.Decode.reject_size
 #print axioms Prysm.HistoricalBatch.Decode.block_roots_iter
@@ -20,3 +25,4 @@ import Prysm.HistoricalBatch.WitnessDecodeAccept
 #print axioms Prysm.HistoricalBatch.spec_accepts_iff
 #print axioms Prysm.HistoricalBatch.desc_deserialize_checker
 #print axioms Prysm.HistoricalBatch.Witness.DecodeAccept.runs
+#print axioms Prysm.HistoricalBatch.Witness.DecodeRejectSize.runs

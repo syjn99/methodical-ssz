@@ -1,0 +1,99 @@
+import Prysm.SyncAggregatorSelectionData.GeneratedDecodeAccept
+import Prysm.SyncAggregatorSelectionData.Spec
+import Prysm.SyncAggregatorSelectionData.DecodeSpec
+import Prysm.SyncAggregatorSelectionData.WitnessGeneratedDecodeAccept
+import Prysm.SyncAggregatorSelectionData.WitnessGeneratedDecodeRejectSize
+import Prysm.SyncAggregatorSelectionData.Code
+import Prysm.SyncAggregatorSelectionData.GeneratedEncodeFastPath
+import Prysm.SyncAggregatorSelectionData.GeneratedEncodeFastPathSpec
+import Prysm.SyncAggregatorSelectionData.WitnessGeneratedEncodeFastPath
+
+/-! Hand list of the `SyncAggregatorSelectionData` declarations for `gen/checks/axioms_gate.py`.
+Each name must be in the declaration dump and use only the standard axioms. -/
+
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_Slot_call
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_Slot_call_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_accept
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_accept_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_epilogue
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_epilogue_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_field_1
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_field_1_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_field_2
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_field_2_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_head
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_head_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_reject
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_reject_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_14
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_14_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_15
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_15_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_48
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_48_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_49
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_49_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_50
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_50_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_51
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_51_kind
+#print axioms Prysm.SyncAggregatorSelectionData.desc_checker
+#print axioms Prysm.SyncAggregatorSelectionData.desc_deserialize_checker
+#print axioms Prysm.SyncAggregatorSelectionData.desc_fixedSize
+#print axioms Prysm.SyncAggregatorSelectionData.desc_serialize_checker
+#print axioms Prysm.SyncAggregatorSelectionData.desc_wellFormed
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.accepted_is_encoding
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.encode_size
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.roundtrip
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.serialize_eq
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.serialize_eq_checker
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.spec_accepts_iff
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.spec_rejects
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.toValue_fits
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.toValue_fits_checker
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.toValue_injective
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.toValue_surjective
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.toValue_surjective'
+#print axioms Prysm.SyncAggregatorSelectionData.checker_wellFormed
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.accept_spec
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.reject_complete
+#print axioms Prysm.SyncAggregatorSelectionData.Decode.reject_size_spec
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeAccept.program_length
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeAccept.labels_fresh_at_1
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeAccept.labels_fresh_at_74
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeAccept.placed_at_1
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeAccept.placed_at_74
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeAccept.host_program_eq
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeAccept.runs
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeRejectSize.program_length
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeRejectSize.labels_fresh_at_1
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeRejectSize.placed_at_1
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeRejectSize.label_err_size
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedDecodeRejectSize.runs
+#print axioms Prysm.SyncAggregatorSelectionData.Code.marshalSSZTo
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_epilogue
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_epilogue_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_field_0
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_field_0_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_field_1
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_field_1_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_fast
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_fast_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_head
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_head_kind
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_layout
+#print axioms Prysm.SyncAggregatorSelectionData.SszValue.encode_toList_generated
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_fast_spec
+#print axioms Prysm.SyncAggregatorSelectionData.Encode.generated_fast_split
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.program
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.program_length
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.block
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.initial_state
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.labels_fresh_at_0
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.placed_at_0
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.host
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.mem
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.runs_empty
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.runs_prefix
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.word_bytes
+#print axioms Prysm.SyncAggregatorSelectionData.Witness.GeneratedEncodeFastPath.zeros

@@ -138,6 +138,7 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
 - The gate writes a declaration dump.
   It checks that every declaration uses only `propext`, `Classical.choice` and `Quot.sound`.
 - The gate also checks that each name of the hand lists in `gen/axioms-lists/` is in the dump.
+  Each list holds the names of one type directory or one shared library, for example `checkpoint.lean` or `codec.lean`.
   Each `*.lean` file of that directory is a hand list.
 - A new library or a new hand list needs no change to the gate.
 - The gate overwrites its JSON argument.
@@ -296,7 +297,7 @@ Change the tool and run it again.
 
 | Kind | Written by | Command that makes it again | What checks it |
 | --- | --- | --- | --- |
-| `gen/axioms-lists/*.lean` | Hand. `gen/flat-types/flat_types_hand_list.py` adds names of its types to `flat-fixed-size-types.lean` | `python3 -I gen/flat-types/flat_types_hand_list.py <dump.tsv> gen/axioms-lists/flat-fixed-size-types.lean <module list>` | `gen/checks/axioms_gate.py run`: each name is in the dump and has only the standard axioms |
+| `gen/axioms-lists/<type>.lean`, one for each type directory and one for each shared library | Hand. `gen/flat-types/flat_types_hand_list.py` adds the names of its types to the list of each type | `python3 -I gen/flat-types/flat_types_hand_list.py <dump.tsv> gen/axioms-lists <module list>` | `gen/checks/axioms_gate.py run`: each name is in the dump and has only the standard axioms |
 | `gen/checks/negative-cases/negative-cases-<type>.json` | Hand | None | `negative.py --check-cases` and `negative_case_ranges.py` (in `python_checks.sh`), the run of `negative.py` with Lean |
 | `gen/checks/negative-cases/negative-cases-<type>-generated.json` | `gen/flat-types/flat_types_negative_cases.py`, for the types of its lists | `python3 -I -B gen/flat-types/flat_types_negative_cases.py lean gen/checks/negative-cases` | `negative.py --check-cases` and `negative_case_ranges.py` (in `python_checks.sh`), `regenerate_and_compare.py`, the run of `negative.py` with Lean |
 | `gen/desc/results/main.result.json` | `gen/desc/run_desc_checker.sh` (its `<work-dir>/main.result.json`) | `gen/desc/test_desc.py prepare`, then `run_desc_checker.sh` (needs Lean), then copy | `gen/desc/test_desc.py evaluate` on the work directory |

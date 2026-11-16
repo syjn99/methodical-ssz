@@ -1,20 +1,19 @@
 import Prysm.IndexedAttestation.DecodeRejectSize
+import Prysm.IndexedAttestation.DecodeRejectOffset
 import Prysm.IndexedAttestation.DecodeSpecReject
 import Prysm.IndexedAttestation.DecodeLoop
 import Prysm.IndexedAttestation.DecodeAccept
 import Prysm.IndexedAttestation.DecodeSpecAccept
 import Prysm.IndexedAttestation.SpecEquivalence
-import Prysm.RuntimeModel.BumpAllocatorUint64AndStructDispatch
 import Prysm.IndexedAttestation.WitnessDecodeAccept
 import Prysm.IndexedAttestation.DecodeRejectAlignment
+import Prysm.IndexedAttestation.DecodeRejectOverflow
 import Prysm.IndexedAttestation.DecodeSpecRejectErrorWordNonzero
 import Prysm.IndexedAttestation.WitnessDecodeRejectAlignment
 import Prysm.IndexedAttestation.WitnessDecodeRejectSize
-import Prysm.IndexedAttestation.DecodeRejectOverflow
-import Prysm.IndexedAttestation.DecodeRejectOffset
 
-/-! Hand list of the IndexedAttestation decoder theorems for `gen/checks/axioms_gate.py` ("must exist" names;
-every name also gets the axiom check). -/
+/-! Hand list of the `IndexedAttestation` declarations for `gen/checks/axioms_gate.py`.
+Each name must be in the declaration dump and use only the standard axioms. -/
 
 #print axioms Prysm.IndexedAttestation.Decode.reject_size
 #print axioms Prysm.IndexedAttestation.Decode.reject_offset
@@ -27,10 +26,6 @@ every name also gets the axiom check). -/
 #print axioms Prysm.IndexedAttestation.Decode.accept
 #print axioms Prysm.IndexedAttestation.Decode.accept_spec
 #print axioms Prysm.IndexedAttestation.desc_deserialize_checker
-#print axioms Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size1
-#print axioms Prysm.RuntimeModel.bump_makeslice_uint64_dispatch_size8
-#print axioms Prysm.RuntimeModel.bump_newobject_struct_dispatch_size72
-#print axioms Prysm.RuntimeModel.bump_newobject_struct_dispatch_size96
 #print axioms Prysm.IndexedAttestation.Witness.DecodeAccept.runs
 #print axioms Prysm.IndexedAttestation.Decode.reject_alignment_error_word_nonzero
 #print axioms Prysm.IndexedAttestation.Decode.reject_overflow_error_word_nonzero

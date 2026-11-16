@@ -183,7 +183,7 @@ A type whose decoder the generator refuses goes only into the tables of the enco
 | `gen/flat-types/flat_types_witness.py` | the frame forms in `__main__` | The accept witness form: frame `0x38`, frame `0x20`, or the frame with slices and callees |
 | `gen/flat-types/flat_types_encode_spec.py` | `ENCODE_SPEC_TYPES` | Every type with a generated fast path, also the types of `gen.sh` |
 | `gen/flat-types/flat_types_negative_cases.py` | `DECODER_CASE_TYPES` and `ENCODER_CASE_TYPES` | The negative cases of the decoder and of the encoder |
-| `gen/flat-types/flat_types_hand_list.py` | `HAND_LIST_TYPES` | The names that go into `gen/axioms-lists/flat-fixed-size-types.lean` |
+| `gen/flat-types/flat_types_hand_list.py` | `HAND_LIST_TYPES` | The types whose names go into their hand list `gen/axioms-lists/<type>.lean` |
 
 From `fv/kraken`:
 
@@ -213,12 +213,14 @@ A check that did not run is "not run" in the pull request.
 
    Expected: exit 0 for both.
 2. The axioms gate, with a hand list entry.
-   Add the imports and one `#print axioms <name>` line for each main theorem and witness to a file of `gen/axioms-lists/`.
-   For a type of `HAND_LIST_TYPES`, `gen/flat-types/flat_types_hand_list.py` adds the lines to `flat-fixed-size-types.lean`:
-   `python3 -I gen/flat-types/flat_types_hand_list.py <dump.tsv> gen/axioms-lists/flat-fixed-size-types.lean <module list>`.
-   For any other new type, make a new file `gen/axioms-lists/<type>.lean`.
+   Each type has one hand list `gen/axioms-lists/<type>.lean`.
    `<type>` is the Go type name in lower case, with `-` between the words.
    An example is `gen/axioms-lists/historical-batch.lean`.
+   A shared library has one hand list with its name, for example `gen/axioms-lists/codec.lean`.
+   Put into the list of the type one `#print axioms <name>` line for each main theorem and witness.
+   Also put the import of each module that declares one of these names.
+   For a type of `HAND_LIST_TYPES`, `gen/flat-types/flat_types_hand_list.py` adds the lines to the list of the type:
+   `python3 -I gen/flat-types/flat_types_hand_list.py <dump.tsv> gen/axioms-lists <module list>`.
    The gate reads every `*.lean` file of the directory.
 
    ```sh

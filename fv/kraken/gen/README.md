@@ -42,7 +42,7 @@ The design principles are in `../../README.md`.
 | `flat-types/flat_types_witness.py` | The `.S` files and the IR of the types of its list `WITNESS_TYPES` | `WitnessGeneratedDecodeAccept.lean` and `WitnessGeneratedDecodeRejectSize.lean` of these types |
 | `flat-types/flat_types_encode_spec.py` | `GeneratedEncodeFastPath.lean` and the IR of the types of its table `ENCODE_SPEC_TYPES` | `GeneratedEncodeFastPathSpec.lean` and `WitnessGeneratedEncodeFastPath.lean` of these types |
 | `flat-types/flat_types_negative_cases.py` | The Lean files of the types of its lists `DECODER_CASE_TYPES` and `ENCODER_CASE_TYPES` | `checks/negative-cases/negative-cases-<type>-generated.json`, one file for each type |
-| `flat-types/flat_types_hand_list.py` | A declaration dump and its list `HAND_LIST_TYPES` | New names in the hand list `axioms-lists/flat-fixed-size-types.lean` |
+| `flat-types/flat_types_hand_list.py` | A declaration dump and its list `HAND_LIST_TYPES` | New names in the hand list `axioms-lists/<type>.lean` of each of these types |
 | `flat-types/run_generators.sh` | The `.S` files of the flat types | The generator outputs of the flat types, in a scratch directory |
 | `prysm-rebuild-and-check.sh` | A Prysm tree and the generator tree | The Prysm ELF, the link set and the differential results, in a scratch directory (needs Docker) |
 | `kraken-parser/summarize_parser_log.py` | A log of `kraken-parser/ParserRun.lean` | `prysm/go1.26.10/parser-result.json`: which functions the Kraken parser reads |
@@ -204,6 +204,7 @@ python3 -I -B fv/kraken/gen/checks/axioms_gate.py --selftest
   Its modules are the `*.lean` files under `lean/<name>/`.
   Another glob form stops the gate.
 - The hand lists are the `*.lean` files in `axioms-lists/`.
+  There is one list for each type directory `lean/Prysm/<GoTypeName>/` and one for each shared library, for example `codec.lean`.
   Each file has `#print axioms` lines and the imports that the names need.
   The gate checks that each name of a hand list is in the declaration dump.
 - A new library or a new hand list needs no change to the gate.
