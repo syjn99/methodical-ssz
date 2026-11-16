@@ -89,7 +89,9 @@ One ELF hash binds the conversion result, `Code.lean`, the data files and the li
 
 ## Session operation
 
-- Run only one heavy Lean build at a time. Check with `pgrep -lx lean` and `pgrep -lx lake`, and wait.
+- Keep heavy Lean builds within the memory of the machine. If memory is short, run one build at a time.
+- To see other builds, use `pgrep -lx lean` and `pgrep -lx lake`. Do not wait for `lean --server` or `lake serve`: they are editor processes.
+- Do not print the environment or the full command line of other processes. Do not use `pgrep -f` or `ps e`.
 - Do not use absolute home directory paths in commands. Use `~` or `$HOME`.
 - Delete directories with `trash`, not `rm`.
 - Make a commit for each work unit. Update the progress with `orca worktree set --worktree active --comment "..."`.

@@ -7,8 +7,8 @@ A claim is about one exact set of inputs. Record all of them before work starts 
 | Pin | Where it is read |
 | --- | --- |
 | Reviewed base commit (full SHA) | the review that accepted it; `git rev-parse <sha>^{commit}` |
-| Target ELF sha256 | `link/out/build-ids.txt` or the project's `build-ids.txt` |
-| Generator commit (`sszgen/`, `ssz/`) | the commit recorded in `fv/kraken/README.md`. `link/out/build-ids.txt` records only the `ssz/` tree id (`ssz tree:`, the value of `git rev-parse HEAD:ssz`); a tree id is not a commit, record it only as "`ssz/` tree id" |
+| Target ELF sha256 | `fv/kraken/prysm/go1.26.10/build-ids.txt` |
+| Generator commit (`sszgen/`, `ssz/`) | the commit recorded in `fv/kraken/README.md` |
 | Go version and build flags | `build-ids.txt`, `fv/kraken/README.md` |
 | Kraken commit | `lean/lake-manifest.json` |
 | Lean toolchain | `lean/lean-toolchain` |
