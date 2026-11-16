@@ -9,7 +9,7 @@ import Prysm.HistoricalBatch.SpecDefinitions
 /-!
 # Hand STATEMENTS of the target `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (statements only, no proof)
 
-Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
+A change to a statement needs a new name and a reason.
 Statement shape: `Prysm.SyncCommittee.Statements` with two 8192-element `[][]byte` fields and no tail field.
 
     func (c *HistoricalBatch) UnmarshalSSZ(buf []byte) error {
@@ -36,7 +36,7 @@ word as SyncCommittee, asserted by `gen/checks/historical_batch_link.py data`), 
 Heap: 2 · (24·8192 + 32·8192) = 917504 bytes. The last runtime call is the memmove at directive 132, so the
 return slot holds directive 133 at the end. The four loop locals are dead after the loops; the postcondition owns
 them with unnamed 8-byte values.
-`runtime.panicBounds` (directives 161, 164, 166, 168) is class (a): the bounds checks are to be proved not taken.
+`runtime.panicBounds` (directives 161, 164, 166, 168) is not reached: the proof shows that the bounds checks are not taken.
 Size reject: directives 2–10, `cmp $0x80000,%rcx; jne L_7b` taken, 30–35.
 -/
 

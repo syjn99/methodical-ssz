@@ -10,15 +10,13 @@ import Prysm.ValidatorIdentity.SpecDescription
 /-!
 # Independent hand `Desc` of the eight types with a generated theorem
 
-Hand-written from the Prysm proto definitions (the Prysm source tree that the Go differential
-uses, read only; `proto/engine/v1/electra.proto`, `proto/engine/v1/gloas.proto`, `proto/prysm/v1alpha1/p2p_messages.proto`,
-`p2p_messages_gloas.proto`, `partial_data_columns.proto`, `validator.proto`, `gloas_builder_api.proto`), BEFORE the
-Desc checker's Desc of any of these types was printed or copied into this tree (so that the hand Desc is independent of the checker output in time, not only in content).
-No consensus-specs clone was available to the author, so every Desc here comes from
-the producer's own source tree: it is independent of the Desc checker's output only, not of the producer's source
-(as `Prysm/ValidatorBalance/SpecDescription.lean`). Where the proto cites a spec definition, the comment is quoted.
-This file is committed before any `Prysm/<Type>/SpecChecker.lean` text of the 24 flat types exists. Overlay types (`cast_type` Slot, Epoch,
-ValidatorIndex, Gwei) are `uint64` in SSZ.
+These descriptions are written by hand from the Prysm proto definitions in the Prysm source tree that the Go differential uses.
+The files are `proto/engine/v1/electra.proto`, `proto/engine/v1/gloas.proto` and `proto/prysm/v1alpha1/p2p_messages.proto`.
+The other files are `p2p_messages_gloas.proto`, `partial_data_columns.proto`, `validator.proto` and `gloas_builder_api.proto`.
+They do not use the checker descriptions `Prysm/<Type>/SpecChecker.lean`.
+They are not independent of the source of the Desc producer (as `Prysm/ValidatorBalance/SpecDescription.lean`).
+Where the proto cites a spec definition, the comment is quoted.
+Overlay types (`cast_type` Slot, Epoch, ValidatorIndex, Gwei) are `uint64` in SSZ.
 
     message DepositRequest { bytes pubkey [48]; bytes withdrawal_credentials [32]; uint64 amount;
                              bytes signature [96]; uint64 index; }                       // engine/v1, Electra

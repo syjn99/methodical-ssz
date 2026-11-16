@@ -9,7 +9,7 @@ import Prysm.SyncCommittee.SpecDefinitions
 /-!
 # Hand STATEMENTS of the target `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (statements only, no proof)
 
-Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
+A change to a statement needs a new name and a reason.
 Statement shape: as `Prysm/SyncAggregate/Statements.lean`, with a 512-element
 `[][]byte` field.
 
@@ -37,7 +37,7 @@ uint8 makeslice (len 0, cap 48) + memmove (48) pairs in the loop, one uint8 make
 AggregatePubkey. Heap: 24·512 + 48·512 + 48 = 36912 bytes. The last runtime call is the memmove at directive
 100, so the return slot holds directive 101 at the end. The two loop locals x − 32 and x − 24 are dead after
 the loop; the postcondition owns them with unnamed 8-byte values (`l18'`, `l20'`).
-`runtime.panicBounds` (directive 124) is class (a): the bounds check is to be proved not taken.
+`runtime.panicBounds` (directive 124) is not reached: the proof shows that the bounds check is not taken.
 Size reject: directives 2–10, `cmp $0x6030,%rcx; jne L_7d` taken, 30–35.
 -/
 

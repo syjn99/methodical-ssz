@@ -2,7 +2,7 @@ import Prysm.DataColumnsByRootIdentifier.StatementsDecode
 import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
-# Frozen STATEMENT of the round trip: decoder entry → accept → encoder fast path
+# Statement of the round trip: decoder entry → accept → encoder fast path
 
 The shape of `Prysm.Checkpoint.DecodeThenEncode.round_trip` (`Prysm/Checkpoint/DecodeThenEncode.lean`). Start at the entry of
 `(*DataColumnsByRootIdentifier).UnmarshalSSZ` with the premises of `Decode.accept_statement`; the decoder returns nil to `ra`.

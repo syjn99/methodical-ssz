@@ -9,7 +9,7 @@ import Prysm.DataColumnsByRootIdentifier.Code
 /-!
 # Hand STATEMENTS of the round-trip decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`
 
-Statements only. Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
+Statements only. A change to a statement needs a new name and a reason.
 Statement shape: `Prysm/IndexedAttestation/Statements.lean`.
 
     func (c *DataColumnsByRootIdentifier) UnmarshalSSZ(buf []byte) error {              // fulu.ssz.go:1778

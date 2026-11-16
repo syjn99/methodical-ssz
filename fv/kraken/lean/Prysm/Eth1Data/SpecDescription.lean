@@ -3,9 +3,8 @@ import Prysm.Checkpoint.Spec
 /-!
 # Independent hand `Desc` of `v1alpha1.Eth1Data`
 
-Hand-written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`),
-BEFORE the Desc checker's Desc of `(v1alpha1, Eth1Data)` was generated or printed (rule:
-independence in time). This file is committed before `Prysm/Eth1Data/SpecChecker.lean` exists.
+This description is written by hand from consensus-specs phase0 (`specs/phase0/beacon-chain.md`).
+It does not use the checker description `Prysm/Eth1Data/SpecChecker.lean`.
 
     class Eth1Data(Container):
         deposit_root: Root      # Bytes32

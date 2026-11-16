@@ -3,9 +3,8 @@ import Prysm.Checkpoint.Spec
 /-!
 # Independent hand `Desc` of `v1alpha1.SyncAggregatorSelectionData`
 
-Hand-written from consensus-specs altair (`specs/altair/validator.md`, local clone at commit `aa16bb4`),
-BEFORE the Desc checker's Desc of `(v1alpha1, SyncAggregatorSelectionData)` was printed or copied into this tree (so that the hand Desc is independent of the checker output in time, not only in content).
-This file is committed before `Prysm/SyncAggregatorSelectionData/SpecChecker.lean` exists.
+This description is written by hand from consensus-specs altair (`specs/altair/validator.md`, local clone at commit `aa16bb4`).
+It does not use the checker description `Prysm/SyncAggregatorSelectionData/SpecChecker.lean`.
 
     class SyncAggregatorSelectionData(Container):
         slot: Slot                          # uint64

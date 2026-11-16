@@ -3,9 +3,8 @@ import Prysm.Checkpoint.Spec
 /-!
 # Independent hand `Desc` of `v1alpha1.VoluntaryExit`
 
-Hand-written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`, local clone at commit `aa16bb4`),
-BEFORE the Desc checker's Desc of `(v1alpha1, VoluntaryExit)` was printed or copied into this tree (so that the hand Desc is independent of the checker output in time, not only in content).
-This file is committed before `Prysm/VoluntaryExit/SpecChecker.lean` exists.
+This description is written by hand from consensus-specs phase0 (`specs/phase0/beacon-chain.md`, local clone at commit `aa16bb4`).
+It does not use the checker description `Prysm/VoluntaryExit/SpecChecker.lean`.
 
     class VoluntaryExit(Container):
         epoch: Epoch                        # uint64

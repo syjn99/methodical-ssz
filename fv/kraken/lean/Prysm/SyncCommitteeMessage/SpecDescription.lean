@@ -3,9 +3,8 @@ import Prysm.Checkpoint.Spec
 /-!
 # Independent hand `Desc` of `v1alpha1.SyncCommitteeMessage`
 
-Hand-written from consensus-specs altair (`specs/altair/validator.md`),
-BEFORE the Desc checker's Desc of `(v1alpha1, SyncCommitteeMessage)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).
-This file is committed before `Prysm/SyncCommitteeMessage/SpecChecker.lean` exists.
+This description is written by hand from consensus-specs altair (`specs/altair/validator.md`).
+It does not use the checker description `Prysm/SyncCommitteeMessage/SpecChecker.lean`.
 
     class SyncCommitteeMessage(Container):
         slot: Slot                          # uint64

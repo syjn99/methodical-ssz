@@ -15,7 +15,7 @@ import Prysm.IndexedAttestation.SpecDefinitions
 /-!
 # Hand STATEMENTS of the target `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (statements only, no proof)
 
-Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
+A change to a statement needs a new name and a reason.
 Statement shape: `Prysm/SyncAggregate/Statements.lean` / `Prysm/SyncCommittee/Statements.lean` (exact frame, contracts as hypotheses, input and receiver kept) and, for
 the two `fmt.errorf` rejects, the contract forms `ConvT64Contract` and `FmtErrorfDecimalWrapContract` (`Runtime/Contracts.lean`).
 

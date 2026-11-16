@@ -3,9 +3,8 @@ import Prysm.Checkpoint.Spec
 /-!
 # Independent hand `Desc` of `v1alpha1.BlobIdentifier`
 
-Hand-written from consensus-specs deneb (`specs/deneb/p2p-interface.md`),
-BEFORE the Desc checker's Desc of `(v1alpha1, BlobIdentifier)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).
-This file is committed before `Prysm/BlobIdentifier/SpecChecker.lean` exists.
+This description is written by hand from consensus-specs deneb (`specs/deneb/p2p-interface.md`).
+It does not use the checker description `Prysm/BlobIdentifier/SpecChecker.lean`.
 
     class BlobIdentifier(Container):
         block_root: Root        # Bytes32

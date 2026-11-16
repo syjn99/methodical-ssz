@@ -4,10 +4,9 @@ import Prysm.SyncCommittee.SpecDescription
 /-!
 # Independent hand `Desc` of `v1alpha1.SyncAggregate` and `v1alpha1.SyncCommittee`
 
-Hand-written from the consensus-specs altair container definitions
-(`specs/altair/beacon-chain.md`; the repository has no local copy of that file), BEFORE the Desc producer's
-output for these two types was printed. The producer's Desc files are
-`prysm/go1.26.10/evidence/prysm_v1alpha1.SyncAggregate.desc.json` and `prysm/go1.26.10/evidence/prysm_v1alpha1.SyncCommittee.desc.json`.
+This description is written by hand from the consensus-specs altair container definitions (`specs/altair/beacon-chain.md`).
+It does not use the Desc files of the producer.
+These files are `prysm/go1.26.10/evidence/prysm_v1alpha1.SyncAggregate.desc.json` and `prysm/go1.26.10/evidence/prysm_v1alpha1.SyncCommittee.desc.json`.
 
     SYNC_COMMITTEE_SIZE = 512                       # mainnet preset
     class SyncAggregate(Container):

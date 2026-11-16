@@ -2,9 +2,9 @@ import Prysm.DataColumnsByRootIdentifier.StatementsEncode
 import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
-# Frozen STATEMENTS of the encoder for every capacity (any-site grow path: growslice at any site, any number of times)
+# Statements of the encoder for every capacity (any-site grow path: growslice at any site, any number of times)
 
-Statements only. Frozen at their commit; a later change needs a new name and a reason.
+Statements only. A change to a statement needs a new name and a reason.
 The fast path and the first-site grow path (site 1 only) of
 `Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean` are the special cases with no growth and with one growth at site 1.
 

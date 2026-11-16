@@ -9,7 +9,7 @@ import Prysm.SyncCommittee.SpecDefinitions
 /-!
 # Hand STATEMENTS of the target `(*v1alpha1.SyncAggregate).UnmarshalSSZ` (statements only, no proof)
 
-Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
+A change to a statement needs a new name and a reason.
 Statement shape: the shape of the Deposit_Data decoder statements (the same makeslice + memmove field idiom).
 
     func (c *SyncAggregate) UnmarshalSSZ(buf []byte) error {

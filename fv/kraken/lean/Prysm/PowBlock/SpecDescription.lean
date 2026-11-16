@@ -3,9 +3,8 @@ import Prysm.Checkpoint.Spec
 /-!
 # Independent hand `Desc` of `v1alpha1.PowBlock`
 
-Hand-written from consensus-specs bellatrix (`specs/bellatrix/fork-choice.md`),
-BEFORE the Desc checker's Desc of `(v1alpha1, PowBlock)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).
-This file is committed before `Prysm/PowBlock/SpecChecker.lean` exists.
+This description is written by hand from consensus-specs bellatrix (`specs/bellatrix/fork-choice.md`).
+It does not use the checker description `Prysm/PowBlock/SpecChecker.lean`.
 
     class PowBlock(Container):
         block_hash: Hash32                  # Bytes32

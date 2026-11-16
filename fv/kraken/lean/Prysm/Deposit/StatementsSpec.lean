@@ -6,8 +6,9 @@ import Prysm.Deposit_Data.Code
 /-!
 # Hand STATEMENTS of the Deposit spec companions (statements only, no proof)
 
-Frozen at their commit. The hand `Desc` below is written from consensus-specs phase0 BEFORE the producer's Desc of
-`(v1alpha1, Deposit)` is generated or printed:
+A change to a statement needs a new name and a reason.
+The hand `Desc` below is written from consensus-specs phase0.
+It does not use the Desc of `(v1alpha1, Deposit)` that the producer writes:
 
     DEPOSIT_CONTRACT_TREE_DEPTH = 32
     class Deposit(Container):
