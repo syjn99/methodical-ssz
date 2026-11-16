@@ -1,3 +1,4 @@
+import Codec.SegmentAddress
 import Runtime.Contracts
 import Machine.Frame
 import Prysm.Slot.DecodeAccept
@@ -42,13 +43,6 @@ theorem Decode.accept_ret (x : BitVec 64) : ({ toBitVec := x - 128 } + 8 : UInt6
   apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
 
 theorem Decode.accept_guard (x : BitVec 64) (g : Nat) (h : g + 224 < x.toNat) : g < (x - 128).toNat := by bv_omega
-
-/-- Address equation by `toNat` and `omega` (as `address_equation`, with `Width.bits` reduced). -/
-macro "attestation_data_addr" : tactic => `(tactic| (
-  apply BitVec.eq_of_toNat_eq
-  simp only [BitVec.toNat_add, BitVec.toNat_sub, BitVec.toNat_neg, BitVec.toNat_ofNat, BitVec.ofNat_eq_ofNat,
-    UInt64.toNat_toBitVec, UInt64.toBitVec_add, UInt64.toBitVec_ofNat, Width.bits, Nat.reducePow]
-  all_goals omega))
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -180,17 +174,17 @@ theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
   label_address hk hf unmarshalSSZ 47
   step_directive hk unmarshalSSZ 47
   step_directive hk unmarshalSSZ 48
-  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by attestation_data_addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk unmarshalSSZ 49
   step_directive hk unmarshalSSZ 50
-  apply load_step_at _ _ (rsp.toBitVec + 32) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by attestation_data_addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 32) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk unmarshalSSZ 51
   step_directive hk unmarshalSSZ 52
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by attestation_data_addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk unmarshalSSZ 53

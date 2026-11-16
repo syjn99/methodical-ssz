@@ -1,3 +1,4 @@
+import Codec.SegmentAddress
 import Prysm.AttestationData.DecodeAcceptBlockRoot
 import Prysm.Checkpoint.FunctionSpecsAsNestedField
 import Runtime.NewobjectContract
@@ -152,7 +153,7 @@ theorem Decode.source (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   have := rsp0.toNat_lt_size; have := guard.toNat_lt_size; simp only [UInt64.size] at *
   step_directive hk unmarshalSSZ 120
   step_directive hk unmarshalSSZ 121
-  apply store_step_at _ _ (rdx.toBitVec + 24) _ _ _ aP _ _ (by attestation_data_addr) (by ecancel) (by exact haP)
+  apply store_step_at _ _ (rdx.toBitVec + 24) _ _ _ aP _ _ (by segment_addr) (by ecancel) (by exact haP)
   intro m1' H1
   simp only [Width.bytes, Width.bits] at H1
   unfold_step
@@ -184,24 +185,24 @@ theorem Decode.source (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : 
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   step_directive hk unmarshalSSZ 127
-  apply load_step_at _ _ (rsp0.toBitVec + 8) _ _ (Int.toBytes 8 rdx.toBitVec.toInt) _ _ (by attestation_data_addr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec + 8) _ _ (Int.toBytes 8 rdx.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk unmarshalSSZ 128
   label_address hk hf unmarshalSSZ 135
   step_directive hk unmarshalSSZ 135
   step_directive hk unmarshalSSZ 136
-  apply store_step_at _ _ (rdx.toBitVec + 48) _ _ _ aS _ _ (by attestation_data_addr) (by ecancel) (by exact haS)
+  apply store_step_at _ _ (rdx.toBitVec + 48) _ _ _ aS _ _ (by segment_addr) (by ecancel) (by exact haS)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   unfold_step
   step_directive hk unmarshalSSZ 137
-  apply load_step_at _ _ (rsp0.toBitVec + 16) _ _ (Int.toBytes 8 bf.toInt) _ _ (by attestation_data_addr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec + 16) _ _ (Int.toBytes 8 bf.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk unmarshalSSZ 138
   step_directive hk unmarshalSSZ 139
-  apply load_step_at _ _ (rsp0.toBitVec + 32) _ _ s4 _ _ (by attestation_data_addr) (by ecancel) (by exact h4)
+  apply load_step_at _ _ (rsp0.toBitVec + 32) _ _ s4 _ _ (by segment_addr) (by ecancel) (by exact h4)
   unfold_step
   step_directive hk unmarshalSSZ 140
   step_directive hk unmarshalSSZ 141

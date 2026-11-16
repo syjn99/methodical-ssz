@@ -1,3 +1,4 @@
+import Codec.SegmentAddress
 import Prysm.Checkpoint.EncodeTailGrow
 import Prysm.Checkpoint.Code
 
@@ -104,7 +105,7 @@ theorem Encode.head_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
     show rsp.toBitVec - 64 + 8 = rsp.toBitVec - 56 by bv_omega] at H4
   step_directive hk marshalSSZTo 16
   apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
-    _ _ (by checkpoint_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
+    _ _ (by segment_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
   intro m5 H5
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H5
   unfold_step
@@ -123,7 +124,7 @@ theorem Encode.head_fit (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf 
   all_goals first
     | with_reducible rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)
-    | (apply UInt64.toBitVec_inj.mp; checkpoint_addr)
+    | (apply UInt64.toBitVec_inj.mp; segment_addr)
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -231,7 +232,7 @@ theorem Encode.head_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
     show rsp.toBitVec - 64 + 8 = rsp.toBitVec - 56 by bv_omega] at H4
   step_directive hk marshalSSZTo 16
   apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
-    _ _ (by checkpoint_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
+    _ _ (by segment_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
   intro m5 H5
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H5
   unfold_step
@@ -243,12 +244,12 @@ theorem Encode.head_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   simp only [Effects.All]
   -- growslice call (directives 19–27)
   step_directive hk marshalSSZTo 19
-  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by checkpoint_addr) (by ecancel) (by exact h1)
+  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by segment_addr) (by ecancel) (by exact h1)
   intro m6 H6
   simp only [Width.bytes, Width.bits] at H6
   unfold_step
   step_directive hk marshalSSZTo 20
-  apply store_step_at _ _ (rsp.toBitVec + 24) _ _ _ s3 _ _ (by checkpoint_addr) (by ecancel) (by exact h3)
+  apply store_step_at _ _ (rsp.toBitVec + 24) _ _ _ s3 _ _ (by segment_addr) (by ecancel) (by exact h3)
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
   unfold_step
@@ -287,12 +288,12 @@ theorem Encode.head_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   step_directive hk marshalSSZTo 28
   step_directive hk marshalSSZTo 29
   step_directive hk marshalSSZTo 30
-  apply load_step_at _ _ (rsp.toBitVec + 24) _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 24) _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 31
   step_directive hk marshalSSZTo 32
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   try simp only [ofInt_ofBytes_toBytes64]
@@ -305,6 +306,6 @@ theorem Encode.head_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   all_goals first
     | with_reducible rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)
-    | (apply UInt64.toBitVec_inj.mp; checkpoint_addr)
+    | (apply UInt64.toBitVec_inj.mp; segment_addr)
 
 end Prysm.Checkpoint

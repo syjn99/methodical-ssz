@@ -1,3 +1,4 @@
+import Codec.SegmentAddress
 import Prysm.Checkpoint.EncodeTail
 import Prysm.Checkpoint.Code
 
@@ -99,7 +100,7 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   have hn40 := Encode.fast_path_len40 L (by omega)
   step_directive hk marshalSSZTo 33
   step_directive hk marshalSSZTo 34
-  apply load_step_at _ _ (rsp0.toBitVec - 64) _ _ e8 _ _ (by checkpoint_addr) (by ecancel) (by exact he8)
+  apply load_step_at _ _ (rsp0.toBitVec - 64) _ _ e8 _ _ (by segment_addr) (by ecancel) (by exact he8)
   unfold_step
   step_directive hk marshalSSZTo 35
   rw [Codec.add_mul_one]
@@ -108,11 +109,11 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6
   unfold_step
   step_directive hk marshalSSZTo 36
-  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 p.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 p.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 37
-  apply load_step_at _ _ (rax.toBitVec + 24) _ _ (Int.toBytes 8 32) _ _ (by checkpoint_addr) (by ecancel) (by rfl)
+  apply load_step_at _ _ (rax.toBitVec + 24) _ _ (Int.toBytes 8 32) _ _ (by segment_addr) (by ecancel) (by rfl)
   simp only [show Int.ofBytes (Int.toBytes 8 32) = 32 by decide]
   unfold_step
   step_directive hk marshalSSZTo 38
@@ -128,12 +129,12 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   simp only [Effects.All]
   -- second growslice call (directives 42–49)
   step_directive hk marshalSSZTo 42
-  apply store_step_at _ _ (rsp0.toBitVec - 72) _ _ _ l72 _ _ (by checkpoint_addr) (by ecancel) (by exact hl72)
+  apply store_step_at _ _ (rsp0.toBitVec - 72) _ _ _ l72 _ _ (by segment_addr) (by ecancel) (by exact hl72)
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
   unfold_step
   step_directive hk marshalSSZTo 43
-  apply store_step_at _ _ (rsp0.toBitVec - 16) _ _ _ l16 _ _ (by checkpoint_addr) (by ecancel) (by exact hl16)
+  apply store_step_at _ _ (rsp0.toBitVec - 16) _ _ _ l16 _ _ (by segment_addr) (by ecancel) (by exact hl16)
   intro m8 H8
   simp only [Width.bytes, Width.bits] at H8
   unfold_step
@@ -175,11 +176,11 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
     Encode.tail_grow_join rbx.toBitVec L pre e8 hpre he8 (by omega),
     show rsp0.toBitVec - 120 + 8 = rsp0.toBitVec - 112 by bv_omega] at Hm1
   step_directive hk marshalSSZTo 50
-  apply load_step_at _ _ (rsp0.toBitVec - 72) _ _ (Int.toBytes 8 (L.toBitVec + 8).toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec - 72) _ _ (Int.toBytes 8 (L.toBitVec + 8).toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 51
-  apply load_step_at _ _ (rsp0.toBitVec - 16) _ _ (Int.toBytes 8 p.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec - 16) _ _ (Int.toBytes 8 p.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 52
@@ -187,17 +188,17 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   step_directive hk marshalSSZTo 54
   step_directive hk marshalSSZTo 55
   step_directive hk marshalSSZTo 56
-  apply store_step_at _ _ (rsp0.toBitVec - 24) _ _ _ l24 _ _ (by checkpoint_addr) (by ecancel) (by exact hl24)
+  apply store_step_at _ _ (rsp0.toBitVec - 24) _ _ _ l24 _ _ (by segment_addr) (by ecancel) (by exact hl24)
   intro m10 H10
   simp only [Width.bytes, Width.bits] at H10
   unfold_step
   step_directive hk marshalSSZTo 57
-  apply store_step_at _ _ (rsp0.toBitVec - 32) _ _ _ l32 _ _ (by checkpoint_addr) (by ecancel) (by exact hl32)
+  apply store_step_at _ _ (rsp0.toBitVec - 32) _ _ _ l32 _ _ (by segment_addr) (by ecancel) (by exact hl32)
   intro m11 H11
   simp only [Width.bytes, Width.bits] at H11
   unfold_step
   step_directive hk marshalSSZTo 58
-  apply store_step_at _ _ (rsp0.toBitVec - 16) _ _ _ (Int.toBytes 8 p.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply store_step_at _ _ (rsp0.toBitVec - 16) _ _ _ (Int.toBytes 8 p.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   intro m12 H12
   simp only [Width.bytes, Width.bits] at H12
@@ -207,7 +208,7 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   step_directive hk marshalSSZTo 61
   step_directive hk marshalSSZTo 62
   apply store_step_at _ _ (rsp0.toBitVec - 120) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 49 + 1)).toBitVec.toInt) _ _
-    (by checkpoint_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by segment_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m13 H13
   simp only [Width.bytes, Width.bits] at H13
   unfold_step
@@ -224,15 +225,15 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   rw [Encode.fast_path_ret] at hrsp2
   subst rsp2 r142 rbp2
   step_directive hk marshalSSZTo 63
-  apply load_step_at _ _ (rsp0.toBitVec - 16) _ _ (Int.toBytes 8 rax1.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec - 16) _ _ (Int.toBytes 8 rax1.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 64
-  apply load_step_at _ _ (rsp0.toBitVec - 32) _ _ (Int.toBytes 8 (L.toBitVec + 8 + 32).toInt) _ _ (by checkpoint_addr)
+  apply load_step_at _ _ (rsp0.toBitVec - 32) _ _ (Int.toBytes 8 (L.toBitVec + 8 + 32).toInt) _ _ (by segment_addr)
     (by ecancel) (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 65
-  apply load_step_at _ _ (rsp0.toBitVec - 24) _ _ (Int.toBytes 8 rcx1.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec - 24) _ _ (Int.toBytes 8 rcx1.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 66
@@ -241,11 +242,11 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
   intro _
   step_directive hk marshalSSZTo 68
   step_directive hk marshalSSZTo 69
-  apply load_step_at _ _ (rsp0.toBitVec - 8) _ _ (Int.toBytes 8 rbp0.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec - 8) _ _ (Int.toBytes 8 rbp0.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 70
-  apply load_step_at _ _ rsp0.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ rsp0.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   apply Eventually.done
@@ -264,7 +265,7 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
     | (exact hnc1)
     | (dsimp only; omega)
     | (apply UInt64.toBitVec_inj.mp; simp; done)
-    | (apply UInt64.toBitVec_inj.mp; checkpoint_addr)
+    | (apply UInt64.toBitVec_inj.mp; segment_addr)
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -311,7 +312,7 @@ theorem Encode.tail_grow_call (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k
   have hn40 := Encode.fast_path_len40 L (by omega)
   step_directive hk marshalSSZTo 33
   step_directive hk marshalSSZTo 34
-  apply load_step_at _ _ (rsp0.toBitVec - 64) _ _ e8 _ _ (by checkpoint_addr) (by ecancel) (by exact he8)
+  apply load_step_at _ _ (rsp0.toBitVec - 64) _ _ e8 _ _ (by segment_addr) (by ecancel) (by exact he8)
   unfold_step
   step_directive hk marshalSSZTo 35
   rw [Codec.add_mul_one]
@@ -320,11 +321,11 @@ theorem Encode.tail_grow_call (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6
   unfold_step
   step_directive hk marshalSSZTo 36
-  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 p.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 p.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 37
-  apply load_step_at _ _ (rax.toBitVec + 24) _ _ (Int.toBytes 8 32) _ _ (by checkpoint_addr) (by ecancel) (by rfl)
+  apply load_step_at _ _ (rax.toBitVec + 24) _ _ (Int.toBytes 8 32) _ _ (by segment_addr) (by ecancel) (by rfl)
   simp only [show Int.ofBytes (Int.toBytes 8 32) = 32 by decide]
   unfold_step
   step_directive hk marshalSSZTo 38
@@ -340,12 +341,12 @@ theorem Encode.tail_grow_call (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k
   simp only [Effects.All]
   -- second growslice call (directives 42–49)
   step_directive hk marshalSSZTo 42
-  apply store_step_at _ _ (rsp0.toBitVec - 72) _ _ _ l72 _ _ (by checkpoint_addr) (by ecancel) (by exact hl72)
+  apply store_step_at _ _ (rsp0.toBitVec - 72) _ _ _ l72 _ _ (by segment_addr) (by ecancel) (by exact hl72)
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
   unfold_step
   step_directive hk marshalSSZTo 43
-  apply store_step_at _ _ (rsp0.toBitVec - 16) _ _ _ l16 _ _ (by checkpoint_addr) (by ecancel) (by exact hl16)
+  apply store_step_at _ _ (rsp0.toBitVec - 16) _ _ _ l16 _ _ (by segment_addr) (by ecancel) (by exact hl16)
   intro m8 H8
   simp only [Width.bytes, Width.bits] at H8
   unfold_step

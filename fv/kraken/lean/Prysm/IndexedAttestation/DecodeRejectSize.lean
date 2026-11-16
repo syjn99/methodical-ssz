@@ -4,7 +4,7 @@ import Machine.Bytes
 import Prysm.ElfData.PrysmTarget
 import Codec.StackGuard
 import Prysm.IndexedAttestation.Statements
-import Prysm.IndexedAttestation.AddressTactic
+import Codec.SegmentAddress
 import Prysm.IndexedAttestation.Code
 
 /-!
@@ -48,14 +48,14 @@ theorem Decode.reject_size : Decode.reject_size_statement := by
     exact Bool.noConfusion h
   simp only [Effects.All]
   step_directive hk unmarshalSSZ 5
-  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by indexed_attestation_addr) (by ecancel) (by exact hfp)
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by segment_addr) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   unfold_step
   step_directive hk unmarshalSSZ 6
   step_directive hk unmarshalSSZ 7
   step_directive hk unmarshalSSZ 8
-  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by indexed_attestation_addr) (by ecancel) (by exact h2)
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by segment_addr) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   unfold_step
@@ -75,11 +75,11 @@ theorem Decode.reject_size : Decode.reject_size_statement := by
   unfold_step
   step_directive hk unmarshalSSZ 140
   step_directive hk unmarshalSSZ 141
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by indexed_attestation_addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk unmarshalSSZ 142
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by indexed_attestation_addr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   apply Eventually.done
@@ -93,6 +93,6 @@ theorem Decode.reject_size : Decode.reject_size_statement := by
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; indexed_attestation_addr)
+    | (apply UInt64.toBitVec_inj.mp; segment_addr)
 
 end Prysm.IndexedAttestation

@@ -1,3 +1,4 @@
+import Codec.SegmentAddress
 import Prysm.Checkpoint.EncodeFastPath
 import Prysm.ElfData.PrysmTarget
 import Codec.EncodeBitVecLemmas
@@ -121,7 +122,7 @@ theorem Encode.reject_length (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
     show rsp.toBitVec - 64 + 8 = rsp.toBitVec - 56 by bv_omega] at H4
   step_directive hk marshalSSZTo 16
   apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
-    _ _ (by checkpoint_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
+    _ _ (by segment_addr) (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
   intro m5 H5
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H5
   unfold_step
@@ -134,7 +135,7 @@ theorem Encode.reject_length (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
   label_address hk hf marshalSSZTo 33
   step_directive hk marshalSSZTo 33
   step_directive hk marshalSSZTo 34
-  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ e8 _ _ (by checkpoint_addr) (by ecancel) (by exact he8)
+  apply load_step_at _ _ (rsp.toBitVec - 64) _ _ e8 _ _ (by segment_addr) (by ecancel) (by exact he8)
   unfold_step
   step_directive hk marshalSSZTo 35
   rw [Codec.add_mul_one]
@@ -143,11 +144,11 @@ theorem Encode.reject_length (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6
   unfold_step
   step_directive hk marshalSSZTo 36
-  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 p.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ (rax.toBitVec + 16) _ _ (Int.toBytes 8 p.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 37
-  apply load_step_at _ _ (rax.toBitVec + 24) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ (rax.toBitVec + 24) _ _ (Int.toBytes 8 rl.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   unfold_step
@@ -173,11 +174,11 @@ theorem Encode.reject_length (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
   step_directive hk marshalSSZTo 76
   step_directive hk marshalSSZTo 77
   step_directive hk marshalSSZTo 78
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk marshalSSZTo 79
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by checkpoint_addr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   apply Eventually.done
@@ -190,6 +191,6 @@ theorem Encode.reject_length (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
     | exact trivial
     | with_reducible rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)
-    | (apply UInt64.toBitVec_inj.mp; checkpoint_addr)
+    | (apply UInt64.toBitVec_inj.mp; segment_addr)
 
 end Prysm.Checkpoint

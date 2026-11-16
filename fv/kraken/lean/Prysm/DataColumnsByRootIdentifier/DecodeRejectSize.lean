@@ -1,3 +1,4 @@
+import Codec.SegmentAddress
 import Machine.Step
 import Machine.Labels
 import Machine.Bytes
@@ -19,13 +20,6 @@ open Machine Runtime Prysm.DataColumnsByRootIdentifier.Code
 variable [Host]
 
 namespace Prysm.DataColumnsByRootIdentifier
-
-/-- Address equation by `toNat` and `omega` (`address_equation` plus `Width.bits`). -/
-macro "data_columns_by_root_identifier_decode_addr" : tactic => `(tactic| (
-  apply BitVec.eq_of_toNat_eq
-  simp only [BitVec.toNat_add, BitVec.toNat_sub, BitVec.toNat_neg, BitVec.toNat_ofNat, BitVec.ofNat_eq_ofNat,
-    UInt64.toNat_toBitVec, UInt64.toBitVec_add, UInt64.toBitVec_ofNat, Width.bits, Nat.reducePow]
-  all_goals omega))
 
 -- Measured cause (`Prysm.IndexedAttestation.DecodeRejectSize` builds): `step_directive` unfolds the program literal (`Prysm.IndexedAttestation.Code.unmarshalSSZ`, 279 directives) with `simp`; at the
 -- default `maxRecDepth` (512) that `simp` stops with "maximum recursion depth has been reached"; 1024 passes.
@@ -52,14 +46,14 @@ theorem Decode.reject_size : Decode.reject_size_statement := by
     exact Bool.noConfusion h
   simp only [Effects.All]
   step_directive hk unmarshalSSZ 5
-  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact hfp)
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by segment_addr) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   unfold_step
   step_directive hk unmarshalSSZ 6
   step_directive hk unmarshalSSZ 7
   step_directive hk unmarshalSSZ 8
-  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact h2)
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by segment_addr) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   unfold_step
@@ -79,11 +73,11 @@ theorem Decode.reject_size : Decode.reject_size_statement := by
   unfold_step
   step_directive hk unmarshalSSZ 177
   step_directive hk unmarshalSSZ 178
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk unmarshalSSZ 179
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   apply Eventually.done
@@ -97,7 +91,7 @@ theorem Decode.reject_size : Decode.reject_size_statement := by
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; data_columns_by_root_identifier_decode_addr)
+    | (apply UInt64.toBitVec_inj.mp; segment_addr)
 
 -- Same measured cause and value as `Prysm.IndexedAttestation.Decode.reject_size`.
 set_option maxRecDepth 1024 in
@@ -122,14 +116,14 @@ theorem Decode.reject_offset : Decode.reject_offset_statement := by
     exact Bool.noConfusion h
   simp only [Effects.All]
   step_directive hk unmarshalSSZ 5
-  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact hfp)
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by segment_addr) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   unfold_step
   step_directive hk unmarshalSSZ 6
   step_directive hk unmarshalSSZ 7
   step_directive hk unmarshalSSZ 8
-  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact h2)
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by segment_addr) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   unfold_step
@@ -140,7 +134,7 @@ theorem Decode.reject_offset : Decode.reject_offset_statement := by
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega
   simp only [Effects.All]
   step_directive hk unmarshalSSZ 11
-  apply load_step_at _ _ (rbx.toBitVec + 32) _ _ off _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel) (by exact hoff4)
+  apply load_step_at _ _ (rbx.toBitVec + 32) _ _ off _ _ (by segment_addr) (by ecancel) (by exact hoff4)
   unfold_step
   step_directive hk unmarshalSSZ 12
   step_directive hk unmarshalSSZ 13
@@ -174,11 +168,11 @@ theorem Decode.reject_offset : Decode.reject_offset_statement := by
   unfold_step
   step_directive hk unmarshalSSZ 171
   step_directive hk unmarshalSSZ 172
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk unmarshalSSZ 173
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by data_columns_by_root_identifier_decode_addr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   apply Eventually.done
@@ -192,6 +186,6 @@ theorem Decode.reject_offset : Decode.reject_offset_statement := by
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; data_columns_by_root_identifier_decode_addr)
+    | (apply UInt64.toBitVec_inj.mp; segment_addr)
 
 end Prysm.DataColumnsByRootIdentifier

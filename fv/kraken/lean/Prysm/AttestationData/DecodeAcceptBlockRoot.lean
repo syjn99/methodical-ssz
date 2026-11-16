@@ -1,3 +1,4 @@
+import Codec.SegmentAddress
 import Prysm.AttestationData.DecodeAcceptHead
 import Prysm.ElfData.PrysmTarget
 import Prysm.AttestationData.Code
@@ -99,16 +100,16 @@ theorem Decode.block_root (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (h
   rw [Decode.accept_low_address _ _ hS, show rsp0.toBitVec - 128 + 8 = rsp0.toBitVec - 120 by bv_omega] at Hm3
   simp only [Nat.one_mul] at Hm3
   step_directive hk unmarshalSSZ 90
-  apply load_step_at _ _ (rsp0.toBitVec + 8) _ _ (Int.toBytes 8 rcv.toInt) _ _ (by attestation_data_addr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec + 8) _ _ (Int.toBytes 8 rcv.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk unmarshalSSZ 91
-  apply store_step_at _ _ (rcv + 32) _ _ _ aL _ _ (by attestation_data_addr) (by ecancel) (by exact haL)
+  apply store_step_at _ _ (rcv + 32) _ _ _ aL _ _ (by segment_addr) (by ecancel) (by exact haL)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
   unfold_step
   step_directive hk unmarshalSSZ 92
-  apply store_step_at _ _ (rcv + 40) _ _ _ aC _ _ (by attestation_data_addr) (by ecancel) (by exact haC)
+  apply store_step_at _ _ (rcv + 40) _ _ _ aC _ _ (by segment_addr) (by ecancel) (by exact haC)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   unfold_step
@@ -123,17 +124,17 @@ theorem Decode.block_root (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (h
   label_address hk hf unmarshalSSZ 100
   step_directive hk unmarshalSSZ 100
   step_directive hk unmarshalSSZ 101
-  apply store_step_at _ _ (rsp0.toBitVec - 16) _ _ _ l68 _ _ (by attestation_data_addr) (by ecancel) (by exact hl68)
+  apply store_step_at _ _ (rsp0.toBitVec - 16) _ _ _ l68 _ _ (by segment_addr) (by ecancel) (by exact hl68)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
   unfold_step
   step_directive hk unmarshalSSZ 102
-  apply store_step_at _ _ (rcv + 24) _ _ _ aP _ _ (by attestation_data_addr) (by ecancel) (by exact haP)
+  apply store_step_at _ _ (rcv + 24) _ _ _ aP _ _ (by segment_addr) (by ecancel) (by exact haP)
   intro m5' H5
   simp only [Width.bytes, Width.bits] at H5
   unfold_step
   step_directive hk unmarshalSSZ 103
-  apply load_step_at _ _ (rsp0.toBitVec + 16) _ _ (Int.toBytes 8 bf.toInt) _ _ (by attestation_data_addr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec + 16) _ _ (Int.toBytes 8 bf.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk unmarshalSSZ 104
@@ -158,17 +159,17 @@ theorem Decode.block_root (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (h
   subst hrsp4 hr144 hrbp4
   rw [Decode.accept_low_address _ _ hS, show (16 : BitVec 64) + bf = bf + 16 from BitVec.add_comm _ _] at Hm4
   step_directive hk unmarshalSSZ 107
-  apply load_step_at _ _ (rsp0.toBitVec + 8) _ _ (Int.toBytes 8 rcv.toInt) _ _ (by attestation_data_addr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec + 8) _ _ (Int.toBytes 8 rcv.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk unmarshalSSZ 108
-  apply store_step_at _ _ (rcv + 32) _ _ _ (Int.toBytes 8 (BitVec.toInt (0 : BitVec 64))) _ _ (by attestation_data_addr)
+  apply store_step_at _ _ (rcv + 32) _ _ _ (Int.toBytes 8 (BitVec.toInt (0 : BitVec 64))) _ _ (by segment_addr)
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m7' H7
   simp only [Width.bytes, Width.bits] at H7
   unfold_step
   step_directive hk unmarshalSSZ 109
-  apply store_step_at _ _ (rcv + 40) _ _ _ (Int.toBytes 8 (BitVec.toInt (32 : BitVec 64))) _ _ (by attestation_data_addr)
+  apply store_step_at _ _ (rcv + 40) _ _ _ (Int.toBytes 8 (BitVec.toInt (32 : BitVec 64))) _ _ (by segment_addr)
     (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m8' H8
   simp only [Width.bytes, Width.bits] at H8
@@ -182,7 +183,7 @@ theorem Decode.block_root (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (h
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   step_directive hk unmarshalSSZ 112
-  apply load_step_at _ _ (rsp0.toBitVec - 16) _ _ (Int.toBytes 8 rax3.toBitVec.toInt) _ _ (by attestation_data_addr) (by ecancel)
+  apply load_step_at _ _ (rsp0.toBitVec - 16) _ _ (Int.toBytes 8 rax3.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   unfold_step
   step_directive hk unmarshalSSZ 113
