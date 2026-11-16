@@ -41,7 +41,7 @@
    "Prysm/IndexedAttestation/Statements.lean",
    "Codec/BitVecShiftLemmas.lean"
   ],
-  "id": "indexed-attestation-decode-accept-code-cmp-0xe4-to-0xe5",
+  "id": "indexed-attestation-decode-accept-code-cmp-0xe4-rcx-to-0xe5-rcx",
   "kind": "code",
   "old": "  cmp $0xe4,%rcx",
   "new": "  cmp $0xe5,%rcx",
@@ -56,7 +56,7 @@
    "Prysm/IndexedAttestation/Statements.lean",
    "Codec/BitVecShiftLemmas.lean"
   ],
-  "id": "indexed-attestation-decode-accept-code-cmp-0xe4-to-0xe5-2",
+  "id": "indexed-attestation-decode-accept-code-cmp-0xe4-rdx-to-0xe5-rdx",
   "kind": "code",
   "old": "  cmp $0xe4,%rdx",
   "new": "  cmp $0xe5,%rdx",

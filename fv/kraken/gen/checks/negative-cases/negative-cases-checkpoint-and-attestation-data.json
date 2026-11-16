@@ -1305,7 +1305,7 @@
   "theorem": "Prysm.Checkpoint.Encode.reject_length_cover_framed"
  },
  {
-  "id": "checkpoint-encode-reject-length-cover-framed-statement-pre-none-to-1",
+  "id": "checkpoint-encode-reject-length-cover-framed-statement-e8-at-rbx-rcx-to-rbx-rcx-1",
   "kind": "statement",
   "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
   "theorem": "Prysm.Checkpoint.Encode.reject_length_cover_framed",
@@ -1314,7 +1314,7 @@
   "why": "len + 8 <= cap: blk = dst, the epoch is at dst + len"
  },
  {
-  "id": "checkpoint-encode-reject-length-cover-framed-statement-pre-none-to-1-2",
+  "id": "checkpoint-encode-reject-length-cover-framed-statement-e8-at-nb-rcx-to-nb-rcx-1",
   "kind": "statement",
   "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
   "theorem": "Prysm.Checkpoint.Encode.reject_length_cover_framed",
