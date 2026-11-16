@@ -3,21 +3,14 @@ import Prysm.PendingPartialWithdrawal.DecodeAccept
 import Prysm.Checkpoint.DecodeAccept
 
 /-!
-# Ties of `decodeAcceptKindAnyFrame` to the hand accept statements
+# Four frame layouts of `DecoderFrameLayout`
 
-For every flat development type with a hand-written accept statement, the kind instance is that statement.
-`rfl` at default transparency (the recursive definitions of the kind unfold on the literal layout and field
-list), as the ties of the composed accept kind `decodeAcceptKind`. The hand statements and theorems are used as committed.
+Three frame classes:
+- `layoutRuntimeCalls st jret nb` (frame `0x20`, `makeslice` / `memmove` only).
+- `layoutCalleeCalls callees jret` (frame `0x48`, callee decoders only).
+- `layoutMixedFrame40`, `layoutMixedFrame60` (frames `0x40`, `0x60`, both).
 
-Layouts: three frame classes.
-- `layoutRuntimeCalls st jret nb` (frame `0x20`, `makeslice` / `memmove` only): DepositMessage, Eth1Data,
-  Deposit_Data, PowBlock.
-- `layoutCalleeCalls callees jret` (frame `0x48`, callee decoders only): PendingPartialWithdrawal, PendingConsolidation.
-- `layoutMixedFrame40`, `layoutMixedFrame60` (frames `0x40`, `0x60`, both): PendingDeposit; SyncCommitteeMessage,
-  BeaconBlockHeader.
-
-Checkpoint (`Prysm.Checkpoint.Decode.accept`) is not `rfl`: see `Prysm.Checkpoint.Decode.accept_of_kind` (the kind instance implies the
-hand statement; the converse does not hold).
+No proof uses these layouts. `Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean` imports this module.
 -/
 
 open Machine Runtime
@@ -89,9 +82,5 @@ def layoutMixedFrame60 (callees : List Program) (jret ip : Nat) : DecoderFrameLa
     .at (.below 104) (.existential 0), .at (.below 64) .zero, .at (.below 56) .zero, .at (.below 48) (.ptr ip),
     .at (.below 112) (.ret jret), .low (.existential 1)]
   frame := 104
-
-/-! ## Checkpoint: implication, not `rfl` -/
-
-variable [Host]
 
 end Codec

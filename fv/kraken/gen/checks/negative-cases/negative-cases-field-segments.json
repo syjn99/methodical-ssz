@@ -52,22 +52,6 @@
   "new": "(hX : rX = Reg64.rax ∨ rX = Reg64.rbx ∨ rX = Reg64.rcx ∨ rX = Reg64.rsi ∨ rX = Reg64.rdi ∨ rX = Reg64.r8 ∨ rX = Reg64.r9 ∨ rX = Reg64.r10 ∨ rX = Reg64.r11 ∨ rX = Reg64.r12 ∨ rX = Reg64.r13 ∨ rX = Reg64.rdx)"
  },
  {
-  "id": "codec-kind-fixed-bytes-decode-bytes-decode-segment-kind-of-statement-bytes-decode-segment-kind-none-to-none",
-  "module": "Codec/Kind/FixedBytesDecode.lean",
-  "theorem": "bytesDecodeSegmentKind_of",
-  "kind": "statement",
-  "old": "bytesDecodeSegmentKind n C j1 j2 dR dB dS fP fL fC src :=",
-  "new": "bytesDecodeSegmentKind n C j1 j2 dR dB dS fP fC fL src :="
- },
- {
-  "id": "codec-kind-inline-uint64-uint64-decode-inline-segment-kind-of-statement-uint64-decode-inline-segment-kind-none-to-none",
-  "module": "Codec/Kind/InlineUint64.lean",
-  "theorem": "uint64DecodeInlineSegmentKind_of",
-  "kind": "statement",
-  "old": "uint64DecodeInlineSegmentKind C j dB src f :=",
-  "new": "uint64DecodeInlineSegmentKind C j dB f src :="
- },
- {
   "id": "codec-decoder-head-epilogue-decode-head-segment-statement-hlen-none-to-1",
   "module": "Codec/DecoderHeadEpilogue.lean",
   "theorem": "decode_head_segment",

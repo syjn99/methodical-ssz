@@ -1,11 +1,11 @@
 import Prysm.Eth1Data.Code
-import Codec.Kind.DecodeAcceptAnyFrameInstances
+import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.FieldFrame
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec
 import Prysm.Epoch.DecodeAccept
 import Prysm.Slot.DecodeAccept
 import Codec.DecoderHeadEpilogue
-import Prysm.BlobIdentifier.DecodeRejectSizeKindInstances
+import Codec.DecodeRejectSizeAnyFrame
 import Codec.Kind.FieldPatterns
 import Codec.Kind.WindowSteps
 import Codec.Kind.FixedBytesDecodeWindow

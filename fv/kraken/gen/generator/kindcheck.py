@@ -79,7 +79,7 @@ import tempfile
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
 PRYSM = KR / "lean" / "Prysm"   # rule 13e: the type directories with the generated modules
-GENNS = re.compile(r"^Prysm\.\w+\.(?:Decode|Encode)\.(?:generated|example)")  # rule 13e: generated and example names
+GENNS = re.compile(r"^Prysm\.\w+\.(?:Decode|Encode)\.generated")  # rule 13e: generated names
 DECL = re.compile(r"^(?:private |protected |noncomputable )*(?:theorem|lemma|def|abbrev) (\S+)")
 
 CALLEES = tuple(f'"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"'
@@ -122,10 +122,9 @@ NAT = r"(?:0|[1-9][0-9]*)"
 
 
 def gen_names(lean_dir=PRYSM):
-    """Rule 13e: last name components of every declaration in a generated module `<Type>/Generated*.lean` or an example
-    module `<Type>/Decode*Example*.lean`."""
+    """Rule 13e: last name components of every declaration in a generated module `<Type>/Generated*.lean`."""
     out = set()
-    for f in sorted(list(lean_dir.glob("*/Generated*.lean")) + list(lean_dir.glob("*/Decode*Example*.lean"))):
+    for f in sorted(lean_dir.glob("*/Generated*.lean")):
         for l in f.read_text().split("\n"):
             if (m := DECL.match(l)):
                 out.add(m.group(1).rsplit(".", 1)[-1])

@@ -21,10 +21,10 @@ WHOLE_ACCEPT_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('Prysm.Slot.Code.unmarshalS
               PRIM + 'CommitteeIndex.UnmarshalSSZ': ('Prysm.CommitteeIndex.Code.unmarshalSSZ', 'C', 'Prysm.CommitteeIndex.Decode.accept_function_spec_holds'),
               PRIM + 'ValidatorIndex.UnmarshalSSZ': ('Prysm.ValidatorIndex.Code.unmarshalSSZ', 'V', 'Prysm.ValidatorIndex.Decode.accept_function_spec_holds'),
               PRIM + 'Epoch.UnmarshalSSZ': ('Prysm.Epoch.Code.unmarshalSSZ', 'E', 'Prysm.Epoch.Decode.accept_function_spec_holds')}
-WHOLE_ACCEPT_IMPORTS = ['Codec.Kind.DecodeAcceptAnyFrameInstances', 'Codec.FieldFrame', 'Prysm.ValidatorIndex.DecodeAcceptFunctionSpec', 'Prysm.Epoch.DecodeAccept', 'Prysm.Slot.DecodeAccept',
-              'Codec.DecoderHeadEpilogue', 'Prysm.BlobIdentifier.DecodeRejectSizeKindInstances']
+WHOLE_ACCEPT_IMPORTS = ['Codec.Kind.DecodeAcceptAnyFrame', 'Codec.FieldFrame', 'Prysm.ValidatorIndex.DecodeAcceptFunctionSpec', 'Prysm.Epoch.DecodeAccept', 'Prysm.Slot.DecodeAccept',
+              'Codec.DecoderHeadEpilogue', 'Codec.DecodeRejectSizeAnyFrame']
 WHOLE_ACCEPT_OPENS = 'Codec'
-# the statement kinds of the whole-accept lemmas (kindcheck.py pins their modules)
+# the statement kinds of the whole-accept lemmas (`lean/Codec/Kind/DecodeAcceptAnyFrame.lean`, `lean/Codec/DecodeRejectSizeAnyFrame.lean`)
 WHOLE_ACCEPT_KINDS = ('decodeHeadKindAnyFrame', 'decodeFieldKindAnyFrame', 'decodeEpilogueKindAnyFrame', 'decodeAcceptKindAnyFrame', 'decodeRejectKindAnyFrame')
 
 

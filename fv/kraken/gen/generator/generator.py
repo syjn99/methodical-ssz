@@ -1124,7 +1124,7 @@ def step_epilogue(dirs, i, F):
                            f"a decoded field", "other")
 
 
-# statement texts of the step kinds (`Codec/Kind/WindowSteps.lean`) with the parameters in place (`Prysm/SyncCommitteeMessage/DecodeStepExamples.lean`)
+# statement texts of the step kinds (`Codec/Kind/WindowSteps.lean`) with the parameters in place
 STEP_HEAD = "theorem {name} (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : LabelsFresh {C} k) :\n    ∀\n"
 STEP_TAIL = "    Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + {j})⟩ := by\n"
 STEP_FINAL_BINDERS = "    (final : MachineState → Prop) (s : MachineData)\n"
@@ -1167,7 +1167,7 @@ def step_label_have(name, j, C):
 
 
 def step_step_text(C, prefix, u):
-    """One step theorem + `_kind` (the shape of `Prysm/SyncCommitteeMessage/DecodeStepExamples.lean`)."""
+    """One step theorem + `_kind`."""
     k = u["kind"] if u["kind"] != "ld" else ("ldv" if u["form"] == "v" else "ldb")
     lem, kind = STEP_LEMMA[k]
     j, e, jd = u["j"], u["e"], u["jd"]

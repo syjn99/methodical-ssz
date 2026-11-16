@@ -27,9 +27,7 @@ import Prysm.DepositMessage.DecodeSpec
 import Prysm.DepositMessage.WitnessDecodeAccept
 import Prysm.DepositMessage.WitnessDecodeRejectSize
 import Codec.FixedBytesDecode
-import Codec.Kind.FixedBytesDecode
 import Codec.InlineUint64
-import Codec.Kind.InlineUint64
 import Codec.DecoderHeadEpilogue
 import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 import Prysm.Deposit_Data.DecodeSpec
@@ -40,7 +38,6 @@ import Prysm.PendingPartialWithdrawal.WitnessDecodeRejectSize
 import Codec.CalleeDecode
 import Codec.Kind.CalleeDecode
 import Codec.InlineUint64RegisterBase
-import Codec.FixedBytesDecodePadding
 import Codec.Kind.DecodeAcceptComposition
 import Prysm.PendingPartialWithdrawal.DecodeAccept
 import Prysm.BeaconBlockHeader.DecodeAddressArithmetic
@@ -65,14 +62,12 @@ import Codec.CalleeDecodeWindow
 import Codec.FixedBytesDecodeWindow
 import Codec.FixedBytesDecodeWindowOffsetZero
 import Codec.Kind.FixedBytesDecodeWindow
-import Prysm.SyncCommitteeMessage.DecodeStepExamples
 import Codec.DecoderPrologue
 import Prysm.Checkpoint.GeneratedDecodeSteps
 import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.Kind.DecodeAcceptAnyFrameInstances
 import Codec.FieldFrame
 import Codec.DecodeRejectSizeAnyFrame
-import Prysm.BlobIdentifier.DecodeRejectSizeKindInstances
 import Prysm.Checkpoint.GeneratedDecodeAccept
 import Prysm.BeaconBlockHeader.GeneratedDecodeAccept
 import Prysm.Eth1Data.GeneratedDecodeAccept
@@ -240,8 +235,7 @@ import Prysm.ValidatorIdentity.WitnessGeneratedDecodeAccept
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeRejectSize
 import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 
--- Scalability: the segment lemmas, the in-sample re-derivations, the
--- statement-identity checks and the generated instances. Checked with gen/checks/axioms.py <log> <out> <this file>.
+-- The segment lemmas, the statement-identity checks and the generated instances.
 #print axioms Codec.infix_sub
 #print axioms Codec.uint64_decode_accept
 #print axioms Codec.root_decode_segment
@@ -388,7 +382,7 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.DepositMessage.Witness.DecodeRejectSize.label_err_size
 #print axioms Prysm.DepositMessage.Witness.DecodeRejectSize.runs
 
--- Encoder block (reuse first; Eth1Data = development data): fast paths only
+-- Encoder blocks: fast paths only
 #print axioms Codec.encode32_memmove_call
 #print axioms Prysm.BeaconBlockHeader.Encode.call_at
 #print axioms Prysm.BeaconBlockHeader.Encode.encode_parent_root_via_block
@@ -414,15 +408,11 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeRejectLength.runs_state_root
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeRejectLength.runs_body_root
 
--- Lemmas for `decoder --field-segments` (lemmas, kinds, relations, examples, composition pieces; theorems and definitions)
+-- Lemmas of the byte and inline uint64 decode segments, the decoder head and the epilogue (theorems and definitions)
 #print axioms Codec.Uint64InlineReg
 #print axioms Codec.bytesDecodeHead
 #print axioms Codec.bytesDecodeMiddle
 #print axioms Codec.bytesDecodeMiddleOffsetZero
-#print axioms Codec.bytesDecodeSegmentKind
-#print axioms Codec.bytesDecodeSegmentKind_of
-#print axioms Codec.bytesDecodeSegmentOffsetZeroKind
-#print axioms Codec.bytesDecodeSegmentOffsetZeroKind_of
 #print axioms Codec.bytesDecodeTailReloadJump
 #print axioms Codec.bytesDecodeTailPointerStore
 #print axioms Codec.bytes_decode_segment
@@ -433,12 +423,8 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Codec.decode_epilogue_segment
 #print axioms Codec.decode_head_segment
 #print axioms Codec.uint64DecodeInline
-#print axioms Codec.uint64DecodeInlineSegmentKind
-#print axioms Codec.uint64DecodeInlineSegmentKind_of
 #print axioms Codec.uint64_decode_inline_segment
 
--- Generator output of `decoder --field-segments` (raw segments and kinds, raw `--compose` accept theorems and identities,
--- the `Decode.accept_from_generated_field_segments` theorems)
 -- Deposit_Data and PendingPartialWithdrawal (UnmarshalSSZ):
 -- hand lemma, spec / witnesses
 #print axioms Prysm.Deposit_Data.bytes32_decode_segment_nop
@@ -479,7 +465,7 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.Deposit_Data.Witness.DecodeAccept.runs
 #print axioms Prysm.Deposit_Data.Witness.DecodeRejectSize.runs
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeRejectSize.runs
--- `decoder --call-segments`: every new theorem of the lemma, example, generated and composition modules
+-- Callee decode blocks and the hand accept proofs of PendingPartialWithdrawal and BeaconBlockHeader
 #print axioms Prysm.BeaconBlockHeader.Decode.accept_guard
 #print axioms Prysm.BeaconBlockHeader.Decode.head_stack_pointer
 #print axioms Prysm.PendingPartialWithdrawal.Decode.accept
@@ -496,15 +482,6 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.placed_at_173
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.host_program_eq
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs
-#print axioms Codec.bytes32_decode_segment_nop_is_optional_padding32
-#print axioms Codec.bytes32_decode_segment_nop_is_pad32
-#print axioms Codec.bytesDecodeHeadOptionalPadding_false
-#print axioms Codec.bytesDecodeHeadOptionalPadding_true
-#print axioms Codec.bytesDecodeHeadPad32_eq_nop
-#print axioms Codec.bytesDecodeSegmentKind_of_optional_padding
-#print axioms Codec.bytes_decode_segment_optional_padding
-#print axioms Codec.bytes_decode_segment_optional_padding_false_is_bytes_decode_segment
-#print axioms Codec.bytes_decode_segment_pad
 #print axioms Codec.callArgumentFirstKind_of
 #print axioms Codec.callArgumentLeaKind_of
 #print axioms Codec.callArgumentMovKind_of
@@ -559,8 +536,7 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.label_err_size
 #print axioms Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.runs
 
--- `decoder --steps`: every new theorem of the lemma, example, relation, generated (`decoder --steps`, raw)
--- and accept modules
+-- `decoder --steps`: the step lemmas, the generated step chain of Checkpoint and the accept modules
 #print axioms Prysm.Checkpoint.Decode.generated_step_Epoch_call
 #print axioms Prysm.Checkpoint.Decode.generated_step_Epoch_call_kind
 #print axioms Prysm.Checkpoint.Decode.generated_step_Root_segment
@@ -581,51 +557,6 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.Checkpoint.Decode.generated_step_directive_84_kind
 #print axioms Prysm.Checkpoint.Decode.generated_step_directive_85
 #print axioms Prysm.Checkpoint.Decode.generated_step_directive_85_kind
-#print axioms Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call
-#print axioms Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call_kind
-#print axioms Prysm.PendingConsolidation.Decode.example_step_TargetIndex_field
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_48
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_48_kind
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_49
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_49_kind
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_50
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_50_kind
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_51
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_51_kind
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_52
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_52_kind
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_53
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_53_kind
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_54
-#print axioms Prysm.PendingConsolidation.Decode.example_step_directive_54_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_BlockRoot_field
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_BlockRoot_segment
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_BlockRoot_segment_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_Signature_segment
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_Signature_segment_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_ValidatorIndex_call
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_ValidatorIndex_call_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_ValidatorIndex_field
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_72
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_72_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_73
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_73_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_80
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_80_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_81
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_81_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_82
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_82_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_83
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_83_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_84
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_84_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_85
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_85_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_86
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_86_kind
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_87
-#print axioms Prysm.SyncCommitteeMessage.Decode.example_step_directive_87_kind
 #print axioms Codec.bytesDecodeSegmentKindWindow_of
 #print axioms Codec.bytesDecodeSegmentOffsetZeroKindWindow_of
 #print axioms Codec.bytes_decode_window_32_rdx_rax

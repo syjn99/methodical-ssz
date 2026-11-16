@@ -106,28 +106,6 @@
   "new": "(∀ r : Reg64, st.data.regs.get64 r = s.regs.get64 r)"
  },
  {
-  "id": "codec-fixed-bytes-decode-padding-bytes-decode-segment-pad-control",
-  "module": "Codec/FixedBytesDecodePadding.lean",
-  "theorem": "Codec.bytes_decode_segment_pad",
-  "kind": "control"
- },
- {
-  "id": "codec-fixed-bytes-decode-padding-bytes-decode-segment-pad-statement-heap-n-to-none",
-  "module": "Codec/FixedBytesDecodePadding.lean",
-  "theorem": "Codec.bytes_decode_segment_pad",
-  "kind": "statement",
-  "old": "⋆ Heap (avail - n)",
-  "new": "⋆ Heap avail"
- },
- {
-  "id": "codec-fixed-bytes-decode-padding-bytes-decode-segment-pad-statement-h-a-bytes-decode-head-pad-to-bytes-decode-head",
-  "module": "Codec/FixedBytesDecodePadding.lean",
-  "theorem": "Codec.bytes_decode_segment_pad",
-  "kind": "statement",
-  "old": "(hA : (bytesDecodeHeadPad (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)",
-  "new": "(hA : (bytesDecodeHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)"
- },
- {
   "id": "pending-partial-withdrawal-decode-head-control",
   "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.head",
