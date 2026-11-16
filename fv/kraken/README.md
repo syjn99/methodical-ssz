@@ -148,7 +148,7 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
   A case may name `mutant_imports`: `negative.py` imports these modules into the mutated copy only.
   So a mutant can use a declaration of another module.
   Run one case per job.
-  A case file whose cases name `statement_module`, `inline` or `statement_def` runs with `gen/checks/list_negative.py`, with the same arguments.
+  A case may name `statement_module` or `inline`, with `statement_def`: the mutant then holds the module of the statement `def`.
 - The negative run with Lean needs Linux, because `negative.py` and `gen/tools/memory_limit.py` read `/proc`.
   On macOS, run it in a Linux container that has the toolchain of `lean/lean-toolchain`.
 - The drift check compares a dump with the dump of a reviewed tree.
