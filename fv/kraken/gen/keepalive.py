@@ -32,8 +32,7 @@ def main():
     for t in sorted(inv["types"], key=lambda t: (t["package"], t["name"])):
         for m in METHODS:
             lines.append(f"\t(*{ALIAS[t['package']]}.{t['name']}).{m},")
-    # The word "p1cbin" is a string of the pinned ELF. Another word moves the string addresses that the proofs name.
-    lines += ["}", "", "func main() {", '\tfmt.Println("p1cbin", len(keep))', "}", ""]
+    lines += ["}", "", "func main() {", "\tfmt.Println(len(keep))", "}", ""]
     with open(sys.argv[2], "w") as f:
         f.write("\n".join(lines))
     print(f"{len(inv['types'])} types, {len(inv['types']) * len(METHODS)} method values")

@@ -245,16 +245,6 @@ These names are written as their source writes them.
 
 ### Names that a pinned file or a tool needs
 
-- The word `"p1cbin"`.
-  `../gen/keepalive.py` writes it into the `main` function of the Prysm target.
-  The copy of that file is `../prysm/go1.26.10/prysm-target-main.go.txt`.
-  The program prints the word, so the word is a string of the pinned ELF.
-  `../prysm/go1.26.10/build-ids.txt` records the sha256 of this `main.go`.
-  Each byte of `main.go` goes into the ELF.
-  Another word moves the string data, and with it the string addresses that the proofs name.
-  The message of commit `6c759123` records a scratch build with another word of the same length.
-  In that build, 232 lines in 36 `.S` files of the link set changed.
-  A new ELF hash needs user approval (`../../../AGENTS.md`).
 - The keys `elf b2 sha256` and `go build id b2` of `../prysm/go1.26.10/build-ids.txt`.
   `b2` is the second build.
   `../gen/prysm-elf.sh` writes these lines after it builds the ELF two times.
