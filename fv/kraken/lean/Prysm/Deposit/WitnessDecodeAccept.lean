@@ -79,12 +79,6 @@ theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10000 :=
 theorem label_write_barrier : label "runtime.writeBarrier" = 0x10008 :=
   mk_label program _ 8 _ (by simp [program, dataLabels]) (by decide)
 
-/-- The type words of `uint8` and `[]uint8` differ. `Prysm.SyncCommittee.Witness.DecodeAccept.uint8_ne_slice` states the same; that module declares
-its own `Host` instance, so this module does not import it. -/
-theorem uint8_ne_slice : ElfData.PrysmTarget.typeUint8_addr ≠ ElfData.PrysmTarget.typeUint8Slice_addr := by
-  simp only [ElfData.PrysmTarget.typeUint8_addr, ElfData.PrysmTarget.typeUint8Slice_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
-  bv_omega
-
 abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
 abbrev zero_word_bytes : List UInt8 := Int.toBytes 8 (0 : UInt64).toBitVec.toInt
 
@@ -145,9 +139,9 @@ theorem runs (proofs : List (List UInt8)) (pk wc amt sig oP oD : List UInt8) (hp
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
       exact H2)
     (by simp [initial_state]) rfl (Nat.le_refl _)
-    (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24 308 placed_at_308 no_label_before_308 labels_fresh_at_308) (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1 308 placed_at_308 no_label_before_308 _ uint8_ne_slice)
+    (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24 308 placed_at_308 no_label_before_308 labels_fresh_at_308) (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1 308 placed_at_308 no_label_before_308 _ Prysm.RuntimeModel.uint8_ne_slice)
     (model_memmove 330 placed_at_330 labels_fresh_at_330 _) (bump_newobject120 324 placed_at_324 no_label_before_324 _)
-    (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1 308 placed_at_308 no_label_before_308 _ uint8_ne_slice) (model_memmove 330 placed_at_330 labels_fresh_at_330 _))
+    (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1 308 placed_at_308 no_label_before_308 _ Prysm.RuntimeModel.uint8_ne_slice) (model_memmove 330 placed_at_330 labels_fresh_at_330 _))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
 /-- Zero input with a fresh `&Deposit{}`; a representative input; all-0xff input. -/

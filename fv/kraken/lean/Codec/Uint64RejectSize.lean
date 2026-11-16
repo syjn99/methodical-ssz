@@ -9,7 +9,8 @@ import Prysm.ElfData.PrysmTarget
 The size reject path of `(*primitives.Epoch).UnmarshalSSZ` and `(*primitives.ValidatorIndex).UnmarshalSSZ` returns
 `fmt.Errorf("expected buffer of length %d received %d", ...)`.
 The two decoders have the same frame, so their proofs use these facts:
-- `uint64_reject_eight_bytes`, `uint64_reject_format_len`: the static box of `8` and the length of the format string;
+- `uint64_reject_eight_bytes`, `uint64_reject_eight_len`, `uint64_reject_format_len`: the static box of `8`, its length
+  and the length of the format string;
 - `uint64_reject_eq`: the length check `x - 8 = 0` gives `x = 8`;
 - `uint64_reject_call`, `uint64_reject_second_call`, `uint64_reject_ret`: the stack addresses of the two runtime calls;
 - `uint64_reject_args`, `uint64_reject_join_spill`: the 32-byte argument array and the spill area as one chunk.
@@ -21,6 +22,7 @@ variable [Host]
 namespace Codec
 
 theorem uint64_reject_eight_bytes : ElfData.PrysmTarget.boxedEight = Int.toBytes 8 (8 : BitVec 64).toInt := by decide
+theorem uint64_reject_eight_len : ElfData.PrysmTarget.boxedEight.length = 8 := by decide
 theorem uint64_reject_format_len : ElfData.PrysmTarget.formatBufferLength.length = 40 := by decide
 theorem uint64_reject_eq (x : BitVec 64) (h : x - 8#64 = 0#64) : x = 8 := by bv_omega
 theorem uint64_reject_call (x : BitVec 64) : x - 8#64 - 72 - 8#64 = x - 88 := by bv_omega

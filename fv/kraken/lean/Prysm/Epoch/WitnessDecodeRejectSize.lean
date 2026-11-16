@@ -46,8 +46,6 @@ theorem label_gcbits : label "runtime.gcbits._" = 0x10001 := mk_label program _ 
 theorem label_staticuint64s : label "runtime.staticuint64s" = 0x10002 := mk_label program _ 2 _ (by simp [program, dataLabels]) (by decide)
 theorem label_bump_pointer : label "runtime.modelBumpPointer" = 0x10003 := mk_label program _ 3 _ (by simp [program, dataLabels]) (by decide)
 
-theorem eight_len : ElfData.PrysmTarget.boxedEight.length = 8 := by decide
-
 abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
 abbrev word_bytes (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
 
@@ -82,7 +80,7 @@ theorem runs (zmms : RegZmms) (flags : StatusFlags) :
     (zeros 8) rfl rfl rfl rfl rfl rfl rfl 0 [] rfl bumpHeap 8280 frame_rest
     (by
       have H : Eq (block.At (0x10003 : BitVec 64)) mem := rfl
-      witness_split [eight_len, Codec.uint64_reject_format_len]
+      witness_split [Codec.uint64_reject_eight_len, Codec.uint64_reject_format_len]
       -- bump pointer, F1, box 7, box 8, F2, ... : move the heap next to the pointer
       rw [Std.ExtHashMap.sep_comm_l (Eq (ElfData.PrysmTarget.boxedEight.At _)) (Eq ((zeros 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((zeros 1359).At _)) (Eq ((zeros 8280).At _)),
@@ -137,7 +135,7 @@ theorem runs (zmms : RegZmms) (flags : StatusFlags) :
     (zeros 8) rfl rfl rfl rfl rfl rfl rfl 0 [] rfl bumpHeap 8280 frame_rest
     (by
       have H : Eq (block.At (0x10003 : BitVec 64)) mem := rfl
-      witness_split [eight_len, Codec.uint64_reject_format_len]
+      witness_split [Codec.uint64_reject_eight_len, Codec.uint64_reject_format_len]
       rw [Std.ExtHashMap.sep_comm_l (Eq (ElfData.PrysmTarget.boxedEight.At _)) (Eq ((zeros 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((zeros 1351).At _)) (Eq ((zeros 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((Int.toBytes 8 (9#64).toInt).At _)) (Eq ((zeros 8280).At _)),
@@ -184,7 +182,7 @@ theorem runs (zmms : RegZmms) (flags : StatusFlags) :
     (zeros 8) rfl rfl rfl rfl rfl rfl rfl 0 [] rfl bumpHeap 8280 frame_rest
     (by
       have H : Eq (block.At (0x10003 : BitVec 64)) mem := rfl
-      witness_split [eight_len, Codec.uint64_reject_format_len]
+      witness_split [Codec.uint64_reject_eight_len, Codec.uint64_reject_format_len]
       rw [Std.ExtHashMap.sep_comm_l (Eq (ElfData.PrysmTarget.boxedEight.At _)) (Eq ((zeros 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((zeros 1359).At _)) (Eq ((zeros 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((Int.toBytes 8 (8#64).toInt).At _)) (Eq ((zeros 8280).At _)),

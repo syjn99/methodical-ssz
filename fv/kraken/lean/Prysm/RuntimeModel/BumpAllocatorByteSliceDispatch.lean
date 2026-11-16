@@ -23,6 +23,11 @@ def BumpMakesliceByteSliceDispatch : Program := include_x64_code "Prysm/RuntimeM
 
 variable [Host]
 
+/-- The type words of `uint8` and `[]uint8` differ. -/
+theorem uint8_ne_slice : ElfData.PrysmTarget.typeUint8_addr ≠ ElfData.PrysmTarget.typeUint8Slice_addr := by
+  simp only [ElfData.PrysmTarget.typeUint8_addr, ElfData.PrysmTarget.typeUint8Slice_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+  bv_omega
+
 /-- The esz-1 branch: any type word other than `typeUint8Slice_addr`. -/
 theorem bump_makeslice_byte_slice_dispatch_size1 (j : Nat) (hj : BumpMakesliceByteSliceDispatch.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.makeslice")) (ty : BitVec 64)

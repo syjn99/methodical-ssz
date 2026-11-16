@@ -1,6 +1,7 @@
 import Codec.SegmentTemplate
 import Runtime.Contracts
 import Codec.SegmentAddress
+import Codec.EncodeBitVecLemmas
 
 /-!
 # 32-byte field pattern, encode segment: `if len(f) != 32 { reject }; dst = append(dst, f...)` (fits case)
@@ -66,8 +67,6 @@ def rootEncodeTail (lcf : String) (dCap dLen dPtr : Int64) : Program :=
      (Operation.call (RelRegOrMem.rel ((ConstExpr.label "runtime.memmove").sub ConstExpr.after_current_instruction))))]
 
 variable [Host]
-
-theorem bytes32_encode_add_mul_one (x y : BitVec 64) : x + y * 1#64 = x + y := by rw [BitVec.mul_one]
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -157,7 +156,7 @@ theorem root_encode_segment (lrej lcf : String) (fP fL dCap dLen dPtr : Int64) (
   simp only [Width.bytes, Width.bits] at H4
   unfold_step
   try rw [show sp - 8#64 = sp - 8 from rfl] at *
-  rw [bytes32_encode_add_mul_one, hDst] at *
+  rw [add_mul_one, hDst] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (j2 + 7 + 1)) root d1 scratch _
     (by rw [hroot]; rfl) (by rw [hroot, hd1]) hsc (by dsimp only; ecancel)) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hr141, hrbp1, stk1, hstk1, Hm1⟩

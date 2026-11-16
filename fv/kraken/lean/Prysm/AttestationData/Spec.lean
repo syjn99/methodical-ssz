@@ -61,11 +61,6 @@ def SszValue.encode (g : SszValue) : Array UInt8 :=
 theorem SszValue.encode_size (g : SszValue) : (SszValue.encode g).size = 128 := by
   simp [SszValue.encode, Spec.uintBytes_size, Prysm.Checkpoint.SszValue.encode_size]
 
-theorem checkpoint_toValue_injective (g h : Prysm.Checkpoint.SszValue) (e : g.toValue = h.toValue) : g = h := by
-  obtain ⟨a, r⟩ := g; obtain ⟨a', r'⟩ := h
-  simp only [Prysm.Checkpoint.SszValue.toValue, Value.seq.injEq, List.cons.injEq, Value.uint.injEq, Value.bytes.injEq, and_true] at e
-  rw [UInt64.toNat_inj.mp e.1, Vector.toArray_inj.mp e.2]
-
 theorem SszValue.toValue_fits (g : SszValue) : Value.fits desc g.toValue = true := by
   have := g.slot.toNat_lt; have := g.index.toNat_lt
   have h1 := Prysm.Checkpoint.SszValue.toValue_fits g.source; have h2 := Prysm.Checkpoint.SszValue.toValue_fits g.target
@@ -77,8 +72,8 @@ theorem SszValue.toValue_injective (g h : SszValue) (e : g.toValue = h.toValue) 
   simp only [SszValue.toValue, Value.seq.injEq, List.cons.injEq, Value.uint.injEq, Value.bytes.injEq,
     and_true] at e
   obtain ⟨e1, e2, e3, e4, e5⟩ := e
-  rw [UInt64.toNat_inj.mp e1, UInt64.toNat_inj.mp e2, Vector.toArray_inj.mp e3, checkpoint_toValue_injective s s' e4,
-    checkpoint_toValue_injective t t' e5]
+  rw [UInt64.toNat_inj.mp e1, UInt64.toNat_inj.mp e2, Vector.toArray_inj.mp e3, Prysm.Checkpoint.SszValue.toValue_injective s s' e4,
+    Prysm.Checkpoint.SszValue.toValue_injective t t' e5]
 
 theorem SszValue.toValue_surjective (v : Value) (h : Value.fits desc v = true) :
     ∃ g : SszValue, g.toValue = v := by

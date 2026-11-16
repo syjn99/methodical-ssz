@@ -8,7 +8,7 @@ Same Host and memory as `Prysm.Checkpoint.WitnessDecodeAccept` (decoder, Epoch c
 MemmoveGrowsliceModel). The input array is `SszValue.encode g0` (the consensus-specs encoding of `g0`),
 with the EthLib premise `deserialize desc (SszValue.encode g0) = .ok g0.toValue`
 discharged by `SszValue.roundtrip`; the memory premise `Pm` holds for every `g` with
-`SszValue.encode g0 = SszValue.encode g` (such a `g` is `g0`: `sszValue_toValue_inj`). The examples fix
+`SszValue.encode g0 = SszValue.encode g` (such a `g` is `g0`: `SszValue.toValue_injective`). The examples fix
 `g0` to the three epoch × root values of `Prysm/Checkpoint/WitnessDecodeAccept.lean` (input arrays `SszValue.encode g0` of
 closed `g0`; a byte-literal equality is not stated: `decide` does not reduce
 `uintBytes`/`Vector.ofFn`, and `native_decide` is not allowed).
@@ -17,15 +17,6 @@ closed `g0`; a byte-literal equality is not stated: `decide` does not reduce
 open Machine Runtime Machine.Witness EthLib.Serialization.Ssz
 
 namespace Prysm.Checkpoint.Witness.DecodeAccept
-
-theorem sszValue_toValue_inj {g h : SszValue} (e : g.toValue = h.toValue) : g = h := by
-  obtain ⟨a, r⟩ := g
-  obtain ⟨b, q⟩ := h
-  simp only [SszValue.toValue, Value.seq.injEq, List.cons.injEq, Value.uint.injEq, Value.bytes.injEq, and_true] at e
-  obtain ⟨e1, e2⟩ := e
-  have : a = b := UInt64.toNat_inj.mp e1
-  have : r = q := Vector.toArray_inj.mp e2
-  subst_vars; rfl
 
 set_option maxHeartbeats 16000000 in
 /-- **Non-vacuity of `Decode.accept_spec`** on the input array `SszValue.encode g0`. -/
@@ -40,7 +31,7 @@ theorem runs_spec (g0 : SszValue) (zmms : RegZmms) (flags : StatusFlags) :
     rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl frame_rest 8 (Nat.le_refl _) (by decide) (zeros 8) rfl
     bumpHeap 32
     (fun g hg => by
-      have hgg : g = g0 := sszValue_toValue_inj (by
+      have hgg : g = g0 := SszValue.toValue_injective _ _ (by
         have h := SszValue.roundtrip g
         rw [← hg, SszValue.roundtrip g0] at h
         exact (Except.ok.inj h).symm)

@@ -81,7 +81,7 @@ import Prysm.Checkpoint.GoValueWitness
 #print axioms Prysm.Checkpoint.Witness.EncodeGrowFirstSite.receiver_go_value
 #print axioms Prysm.Checkpoint.desc_serialize_checker
 #print axioms Prysm.Checkpoint.desc_deserialize_checker
-#print axioms Prysm.Checkpoint.Witness.DecodeAccept.sszValue_toValue_inj
+#print axioms Prysm.Checkpoint.SszValue.toValue_injective
 #print axioms Prysm.Checkpoint.Witness.DecodeAccept.runs_spec
 #print axioms Prysm.Checkpoint.Witness.DecodeRejectSize.runs_spec
 #print axioms Prysm.Checkpoint.Encode.tail_fit

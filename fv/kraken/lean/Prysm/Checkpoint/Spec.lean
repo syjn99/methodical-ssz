@@ -62,6 +62,11 @@ theorem SszValue.toValue_fits (g : SszValue) : Value.fits desc g.toValue = true 
   have := g.epoch.toNat_lt
   simp [SszValue.toValue, desc, Value.fits, Value.fieldsFit]; omega
 
+theorem SszValue.toValue_injective (g h : Prysm.Checkpoint.SszValue) (e : g.toValue = h.toValue) : g = h := by
+  obtain ⟨a, r⟩ := g; obtain ⟨a', r'⟩ := h
+  simp only [Prysm.Checkpoint.SszValue.toValue, Value.seq.injEq, List.cons.injEq, Value.uint.injEq, Value.bytes.injEq, and_true] at e
+  rw [UInt64.toNat_inj.mp e.1, Vector.toArray_inj.mp e.2]
+
 theorem SszValue.toValue_surjective (v : Value) (h : Value.fits desc v = true) :
     ∃ g : SszValue, g.toValue = v := by
   obtain ⟨vs, rfl, hf⟩ := fits_container h
