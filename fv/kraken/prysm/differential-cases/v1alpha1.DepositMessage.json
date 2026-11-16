@@ -1,0 +1,482 @@
+[
+ {
+  "id": "deposit-message-decoder-accept-values-0",
+  "type": "v1alpha1.DepositMessage",
+  "method": "UnmarshalSSZ",
+  "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "PublicKey",
+     "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "len": 48,
+     "cap": 48
+    },
+    {
+     "name": "WithdrawalCredentials",
+     "bytes": "0000000000000000000000000000000000000000000000000000000000000000",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "Amount",
+     "uint64": 0
+    }
+   ]
+  }
+ },
+ {
+  "id": "deposit-message-decoder-accept-values-1",
+  "type": "v1alpha1.DepositMessage",
+  "method": "UnmarshalSSZ",
+  "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f2222222222222222222222222222222222222222222222222222222222222222efcdab8967452301",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "PublicKey",
+     "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+     "len": 48,
+     "cap": 48
+    },
+    {
+     "name": "WithdrawalCredentials",
+     "bytes": "2222222222222222222222222222222222222222222222222222222222222222",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "Amount",
+     "uint64": 81985529216486895
+    }
+   ]
+  }
+ },
+ {
+  "id": "deposit-message-decoder-accept-values-2",
+  "type": "v1alpha1.DepositMessage",
+  "method": "UnmarshalSSZ",
+  "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "PublicKey",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 48,
+     "cap": 48
+    },
+    {
+     "name": "WithdrawalCredentials",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "Amount",
+     "uint64": 18446744073709551615
+    }
+   ]
+  }
+ },
+ {
+  "id": "deposit-message-decoder-reject-size-0",
+  "type": "v1alpha1.DepositMessage",
+  "method": "UnmarshalSSZ",
+  "in": "",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "deposit-message-decoder-reject-size-87",
+  "type": "v1alpha1.DepositMessage",
+  "method": "UnmarshalSSZ",
+  "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "deposit-message-decoder-reject-size-89",
+  "type": "v1alpha1.DepositMessage",
+  "method": "UnmarshalSSZ",
+  "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "deposit-message-encoder-fast-path-values-0-prefix-0-spare-0",
+  "type": "v1alpha1.DepositMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "PublicKey",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 88
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 88,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "deposit-message-encoder-fast-path-values-0-prefix-0-spare-5",
+  "type": "v1alpha1.DepositMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "PublicKey",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 93
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 93,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "deposit-message-encoder-fast-path-values-0-prefix-7-spare-0",
+  "type": "v1alpha1.DepositMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "PublicKey",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 95
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 95,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "deposit-message-encoder-fast-path-values-0-prefix-7-spare-5",
+  "type": "v1alpha1.DepositMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "PublicKey",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 100
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 100,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "deposit-message-encoder-fast-path-values-1-prefix-0-spare-0",
+  "type": "v1alpha1.DepositMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "PublicKey",
+    "bytes": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 88
+  },
+  "exp": {
+   "error": null,
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 88,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "deposit-message-encoder-fast-path-values-1-prefix-0-spare-5",
+  "type": "v1alpha1.DepositMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "PublicKey",
+    "bytes": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 93
+  },
+  "exp": {
+   "error": null,
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 93,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "deposit-message-encoder-fast-path-values-1-prefix-7-spare-0",
+  "type": "v1alpha1.DepositMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "PublicKey",
+    "bytes": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 95
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 95,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "deposit-message-encoder-fast-path-values-1-prefix-7-spare-5",
+  "type": "v1alpha1.DepositMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "PublicKey",
+    "bytes": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 100
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 100,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "deposit-message-encoder-fast-path-values-2-prefix-0-spare-0",
+  "type": "v1alpha1.DepositMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "PublicKey",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 88
+  },
+  "exp": {
+   "error": null,
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000",
+   "same_array": true,
+   "out_cap": 88,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "deposit-message-encoder-fast-path-values-2-prefix-0-spare-5",
+  "type": "v1alpha1.DepositMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "PublicKey",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 93
+  },
+  "exp": {
+   "error": null,
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000",
+   "same_array": true,
+   "out_cap": 93,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "deposit-message-encoder-fast-path-values-2-prefix-7-spare-0",
+  "type": "v1alpha1.DepositMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "PublicKey",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 95
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000",
+   "same_array": true,
+   "out_cap": 95,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "deposit-message-encoder-fast-path-values-2-prefix-7-spare-5",
+  "type": "v1alpha1.DepositMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "PublicKey",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 100
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000",
+   "same_array": true,
+   "out_cap": 100,
+   "receiver_unchanged": true
+  }
+ }
+]

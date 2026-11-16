@@ -1,0 +1,470 @@
+[
+ {
+  "id": "pending-partial-withdrawal-decoder-accept-values-0",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "UnmarshalSSZ",
+  "in": "000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Index",
+     "uint64": 0
+    },
+    {
+     "name": "Amount",
+     "uint64": 0
+    },
+    {
+     "name": "WithdrawableEpoch",
+     "uint64": 0
+    }
+   ]
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-decoder-accept-values-1",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "UnmarshalSSZ",
+  "in": "efcdab896745230100405973070000001032547698badcfe",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Index",
+     "uint64": 81985529216486895
+    },
+    {
+     "name": "Amount",
+     "uint64": 32000000000
+    },
+    {
+     "name": "WithdrawableEpoch",
+     "uint64": 18364758544493064720
+    }
+   ]
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-decoder-accept-values-2",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "UnmarshalSSZ",
+  "in": "ffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Index",
+     "uint64": 18446744073709551615
+    },
+    {
+     "name": "Amount",
+     "uint64": 18446744073709551615
+    },
+    {
+     "name": "WithdrawableEpoch",
+     "uint64": 18446744073709551615
+    }
+   ]
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-decoder-reject-size-0",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "UnmarshalSSZ",
+  "in": "",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-decoder-reject-size-23",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "UnmarshalSSZ",
+  "in": "0101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-decoder-reject-size-25",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "UnmarshalSSZ",
+  "in": "01010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-encoder-fast-path-values-0-prefix-0-spare-0",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 0
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 24
+  },
+  "exp": {
+   "error": null,
+   "out": "000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 24,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-encoder-fast-path-values-0-prefix-0-spare-5",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 0
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 29
+  },
+  "exp": {
+   "error": null,
+   "out": "000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 29,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-encoder-fast-path-values-0-prefix-7-spare-0",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 0
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 31
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 31,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-encoder-fast-path-values-0-prefix-7-spare-5",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 0
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 36
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 36,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-encoder-fast-path-values-1-prefix-0-spare-0",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Amount",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 24
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 24,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-encoder-fast-path-values-1-prefix-0-spare-5",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Amount",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 29
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 29,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-encoder-fast-path-values-1-prefix-7-spare-0",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Amount",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 31
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 31,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-encoder-fast-path-values-1-prefix-7-spare-5",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Amount",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 36
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 36,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-encoder-fast-path-values-2-prefix-0-spare-0",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Amount",
+    "uint64": 7
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 24
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff07000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 24,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-encoder-fast-path-values-2-prefix-0-spare-5",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Amount",
+    "uint64": 7
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 29
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff07000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 29,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-encoder-fast-path-values-2-prefix-7-spare-0",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Amount",
+    "uint64": 7
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 31
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff07000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 31,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pending-partial-withdrawal-encoder-fast-path-values-2-prefix-7-spare-5",
+  "type": "v1alpha1.PendingPartialWithdrawal",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Amount",
+    "uint64": 7
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 36
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff07000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 36,
+   "receiver_unchanged": true
+  }
+ }
+]

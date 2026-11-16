@@ -1,0 +1,69 @@
+[
+ {
+  "id": "epoch-decoder-reject-size-7",
+  "type": "primitives.Epoch",
+  "method": "UnmarshalSSZ",
+  "receiver": [
+   {
+    "name": "value",
+    "uint64": 119
+   }
+  ],
+  "in": "01010101010101",
+  "exp": {
+   "error": {
+    "text": "expected buffer of length 8 received 7"
+   },
+   "fields": [
+    {
+     "name": "value",
+     "uint64": 119
+    }
+   ]
+  }
+ },
+ {
+  "id": "epoch-decoder-reject-size-9",
+  "type": "primitives.Epoch",
+  "method": "UnmarshalSSZ",
+  "receiver": [
+   {
+    "name": "value",
+    "uint64": 119
+   }
+  ],
+  "in": "010101010101010101",
+  "exp": {
+   "error": {
+    "text": "expected buffer of length 8 received 9"
+   },
+   "fields": [
+    {
+     "name": "value",
+     "uint64": 119
+    }
+   ]
+  }
+ },
+ {
+  "id": "epoch-decoder-accept",
+  "type": "primitives.Epoch",
+  "method": "UnmarshalSSZ",
+  "receiver": [
+   {
+    "name": "value",
+    "uint64": 119
+   }
+  ],
+  "in": "0807060504030201",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "value",
+     "uint64": 72623859790382856
+    }
+   ]
+  }
+ }
+]

@@ -1,0 +1,271 @@
+// The Go program of the differential check (fv/kraken/gen/checks/differential.py).
+// It is not part of Prysm. Build it as a package of a Prysm tree with an overlay (fv/kraken/gen/README.md).
+// It reads the case files in its arguments, runs the real SSZ method of each case, and prints what it observes as JSON.
+// It computes no expected value. differential.py computes them from the specification and compares.
+//
+// A receiver field is read and set by reflection, by its Go field name.
+// A uint64 field (also a named uint64 type such as primitives.Slot) uses "uint64". A []byte field uses "bytes" (hex).
+// The receiver of a named uint64 type (such as primitives.Epoch) has the one field "value".
+package main
+
+import (
+	"bytes"
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"os"
+	"reflect"
+
+	"github.com/OffchainLabs/methodical-ssz/ssz"
+	"github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
+	enginev1 "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+	ethpb "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+)
+
+// Field is one receiver field: its value before a call (case) or after a call (result).
+type Field struct {
+	Name   string  `json:"name"`
+	Uint64 *uint64 `json:"uint64,omitempty"`
+	Bytes  *string `json:"bytes,omitempty"`
+	Len    *int    `json:"len,omitempty"`
+	Cap    *int    `json:"cap,omitempty"`
+}
+
+type Dst struct {
+	Prefix string `json:"prefix"`
+	Cap    int    `json:"cap"`
+}
+
+type Case struct {
+	ID       string  `json:"id"`
+	Type     string  `json:"type"`
+	Method   string  `json:"method"`
+	Receiver []Field `json:"receiver"`
+	In       string  `json:"in"`
+	Dst      *Dst    `json:"dst"`
+}
+
+type Error struct {
+	Text string   `json:"text"`
+	Is   []string `json:"is"`
+}
+
+type Result struct {
+	ID                string  `json:"id"`
+	Error             *Error  `json:"error"`
+	Fields            []Field `json:"fields"`
+	ReceiverUnchanged bool    `json:"receiver_unchanged"`
+	Out               string  `json:"out"`
+	OutNil            bool    `json:"out_nil"`
+	OutCap            int     `json:"out_cap"`
+	SameArray         bool    `json:"same_array"`
+	Backing           string  `json:"backing"`
+}
+
+// The receiver types. The key is the Go package name and the type name.
+var types = map[string]func() any{
+	"primitives.Epoch":                                 func() any { return new(primitives.Epoch) },
+	"primitives.ValidatorIndex":                        func() any { return new(primitives.ValidatorIndex) },
+	"v1.BuilderDepositRequest":                         func() any { return &enginev1.BuilderDepositRequest{} },
+	"v1.DepositRequest":                                func() any { return &enginev1.DepositRequest{} },
+	"v1alpha1.BeaconBlockHeader":                       func() any { return &ethpb.BeaconBlockHeader{} },
+	"v1alpha1.BeaconBlocksByRangeRequest":              func() any { return &ethpb.BeaconBlocksByRangeRequest{} },
+	"v1alpha1.BlobIdentifier":                          func() any { return &ethpb.BlobIdentifier{} },
+	"v1alpha1.BlobSidecarsByRangeRequest":              func() any { return &ethpb.BlobSidecarsByRangeRequest{} },
+	"v1alpha1.BuilderPreferences":                      func() any { return &ethpb.BuilderPreferences{} },
+	"v1alpha1.Checkpoint":                              func() any { return &ethpb.Checkpoint{} },
+	"v1alpha1.DepositMessage":                          func() any { return &ethpb.DepositMessage{} },
+	"v1alpha1.Deposit_Data":                            func() any { return &ethpb.Deposit_Data{} },
+	"v1alpha1.Eth1Data":                                func() any { return &ethpb.Eth1Data{} },
+	"v1alpha1.ExecutionPayloadEnvelopesByRangeRequest": func() any { return &ethpb.ExecutionPayloadEnvelopesByRangeRequest{} },
+	"v1alpha1.HistoricalSummary":                       func() any { return &ethpb.HistoricalSummary{} },
+	"v1alpha1.PartialDataColumnGroupID":                func() any { return &ethpb.PartialDataColumnGroupID{} },
+	"v1alpha1.PendingConsolidation":                    func() any { return &ethpb.PendingConsolidation{} },
+	"v1alpha1.PendingDeposit":                          func() any { return &ethpb.PendingDeposit{} },
+	"v1alpha1.PendingPartialWithdrawal":                func() any { return &ethpb.PendingPartialWithdrawal{} },
+	"v1alpha1.PowBlock":                                func() any { return &ethpb.PowBlock{} },
+	"v1alpha1.SigningData":                             func() any { return &ethpb.SigningData{} },
+	"v1alpha1.SyncAggregatorSelectionData":             func() any { return &ethpb.SyncAggregatorSelectionData{} },
+	"v1alpha1.SyncCommitteeMessage":                    func() any { return &ethpb.SyncCommitteeMessage{} },
+	"v1alpha1.ValidatorBalance":                        func() any { return &ethpb.ValidatorBalance{} },
+	"v1alpha1.ValidatorIdentity":                       func() any { return &ethpb.ValidatorIdentity{} },
+	"v1alpha1.VoluntaryExit":                           func() any { return &ethpb.VoluntaryExit{} },
+}
+
+// The error values that a result names when the error wraps them (errors.Is).
+var sentinels = []struct {
+	name string
+	err  error
+}{
+	{"ErrSize", ssz.ErrSize},
+	{"ErrBytesLength", ssz.ErrBytesLength},
+}
+
+func unhex(s string) []byte {
+	b, err := hex.DecodeString(s)
+	if err != nil {
+		panic(err)
+	}
+	return b
+}
+
+// fields returns the uint64 and []byte fields of the receiver (or the receiver value), in declaration order.
+func fields(m any) map[string]reflect.Value {
+	v := reflect.ValueOf(m).Elem()
+	out := map[string]reflect.Value{}
+	if v.Kind() == reflect.Uint64 {
+		out["value"] = v
+		return out
+	}
+	t := v.Type()
+	for i := 0; i < t.NumField(); i++ {
+		f := t.Field(i)
+		if !f.IsExported() {
+			continue
+		}
+		k := v.Field(i).Kind()
+		if k == reflect.Uint64 || (k == reflect.Slice && f.Type.Elem().Kind() == reflect.Uint8) {
+			out[f.Name] = v.Field(i)
+		}
+	}
+	return out
+}
+
+func set(m any, fs []Field) {
+	all := fields(m)
+	for _, f := range fs {
+		fv, ok := all[f.Name]
+		if !ok {
+			panic("no field " + f.Name)
+		}
+		switch {
+		case f.Uint64 != nil && fv.Kind() == reflect.Uint64:
+			fv.SetUint(*f.Uint64)
+		case f.Bytes != nil && fv.Kind() == reflect.Slice:
+			fv.SetBytes(unhex(*f.Bytes))
+		default:
+			panic("field kind " + f.Name)
+		}
+	}
+}
+
+func observe(m any) []Field {
+	v := reflect.ValueOf(m).Elem()
+	names := []string{"value"}
+	if v.Kind() == reflect.Struct {
+		names = nil
+		for i := 0; i < v.Type().NumField(); i++ {
+			names = append(names, v.Type().Field(i).Name)
+		}
+	}
+	all := fields(m)
+	out := []Field{}
+	for _, n := range names {
+		fv, ok := all[n]
+		if !ok {
+			continue
+		}
+		if fv.Kind() == reflect.Uint64 {
+			u := fv.Uint()
+			out = append(out, Field{Name: n, Uint64: &u})
+		} else {
+			b := fv.Bytes()
+			h, l, c := hex.EncodeToString(b), len(b), cap(b)
+			out = append(out, Field{Name: n, Bytes: &h, Len: &l, Cap: &c})
+		}
+	}
+	return out
+}
+
+// snapshot holds every field value and, for a slice, its array address, length and capacity.
+func snapshot(m any) string {
+	var buf bytes.Buffer
+	for _, f := range observe(m) {
+		fmt.Fprintf(&buf, "%s=", f.Name)
+		if f.Uint64 != nil {
+			fmt.Fprintf(&buf, "%d;", *f.Uint64)
+		} else {
+			b := fields(m)[f.Name]
+			fmt.Fprintf(&buf, "%s/%d/%d/%x;", *f.Bytes, *f.Len, *f.Cap, b.Pointer())
+		}
+	}
+	return buf.String()
+}
+
+func setError(r *Result, err error) {
+	if err == nil {
+		return
+	}
+	r.Error = &Error{Text: err.Error(), Is: []string{}}
+	for _, s := range sentinels {
+		if errors.Is(err, s.err) {
+			r.Error.Is = append(r.Error.Is, s.name)
+		}
+	}
+}
+
+func run(c Case) Result {
+	newT, ok := types[c.Type]
+	if !ok {
+		panic("unknown type " + c.Type)
+	}
+	m := newT()
+	set(m, c.Receiver)
+	before := snapshot(m)
+	r := Result{ID: c.ID}
+	marshal := func(dst []byte) {
+		o, err := m.(interface {
+			MarshalSSZTo([]byte) ([]byte, error)
+		}).MarshalSSZTo(dst)
+		setError(&r, err)
+		r.Out, r.OutNil, r.OutCap = hex.EncodeToString(o), o == nil, cap(o)
+		r.SameArray = cap(o) > 0 && cap(dst) > 0 && &o[:cap(o)][0] == &dst[:cap(dst)][0]
+		if dst != nil {
+			r.Backing = hex.EncodeToString(dst[:cap(dst)])
+		}
+	}
+	switch c.Method {
+	case "UnmarshalSSZ", "roundtrip":
+		err := m.(interface{ UnmarshalSSZ([]byte) error }).UnmarshalSSZ(unhex(c.In))
+		setError(&r, err)
+		if c.Method == "roundtrip" && err == nil {
+			marshal(nil)
+		}
+	case "MarshalSSZTo":
+		var dst []byte
+		if c.Dst != nil {
+			pre := unhex(c.Dst.Prefix)
+			dst = make([]byte, len(pre), c.Dst.Cap)
+			copy(dst, pre)
+		}
+		marshal(dst)
+	default:
+		panic("method " + c.Method)
+	}
+	r.Fields = observe(m)
+	r.ReceiverUnchanged = snapshot(m) == before
+	return r
+}
+
+func main() {
+	out := []Result{}
+	for _, path := range os.Args[1:] {
+		b, err := os.ReadFile(path)
+		if err != nil {
+			panic(err)
+		}
+		var cs []Case
+		if err := json.Unmarshal(b, &cs); err != nil {
+			panic(err)
+		}
+		for _, c := range cs {
+			out = append(out, run(c))
+		}
+	}
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", " ")
+	if err := enc.Encode(out); err != nil {
+		panic(err)
+	}
+}
