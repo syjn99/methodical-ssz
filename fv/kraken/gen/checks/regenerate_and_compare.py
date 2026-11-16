@@ -100,7 +100,6 @@ GENERATOR_ADDED = {
 }
 # file with a header command (path under lean/Prysm/) -> the prefix of its generated names (the --prefix of its command)
 HEADER_COMMANDS = {'BlobIdentifier/GeneratedDecodeRootFieldSegments': 'Decode.generated_root',
-            'Deposit_Data/GeneratedDecodeFieldSegmentsPartial': 'Decode.generated_field',
             'PendingConsolidation/GeneratedDecodeCallSegmentsPartial': 'Decode.generated_call',
             'SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial': 'Decode.generated_call'}
 for t in ('PowBlock', 'PendingDeposit'):
