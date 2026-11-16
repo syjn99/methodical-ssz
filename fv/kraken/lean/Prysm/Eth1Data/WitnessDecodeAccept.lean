@@ -1,10 +1,10 @@
-import Prysm.Eth1Data.DecodeAccept
+import Prysm.Eth1Data.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept` (Eth1Data decoder accept path; the generated theorem `Decode.generated_accept`)
+# Witness of `Decode.generated_accept` (Eth1Data decoder accept path)
 
 Hand-written (the text of `Prysm/BeaconBlockHeader/WitnessDecodeAccept.lean` with the Eth1Data host and layout).
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.Eth1Data).UnmarshalSSZ` (index 9), the 1-byte bump
@@ -84,14 +84,14 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
 set_option maxHeartbeats 16000000 in
-/-- **Non-vacuity of `Decode.accept`.** -/
+/-- **Non-vacuity of `Decode.generated_accept`.** -/
 theorem runs (r1 cnt r2 oP1 oP2 : List UInt8) (hr1 : r1.length = 32) (hcnt : cnt.length = 8)
     (hr2 : r2.length = 32) (h1 : oP1.length = 8) (h2 : oP2.length = 8)
     (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
       ⟨initial_state r1 cnt r2 oP1 oP2 zmms flags, Host.addrOf 9⟩ :=
-  eventually_mono (Decode.accept 9 placed_at_9 labels_fresh_at_9 r1 cnt r2 hr1 hcnt hr2 (initial_state r1 cnt r2 oP1 oP2 zmms flags)
+  eventually_mono (Decode.generated_accept 9 placed_at_9 labels_fresh_at_9 r1 cnt r2 hr1 hcnt hr2 (initial_state r1 cnt r2 oP1 oP2 zmms flags)
     0 0 (zeros 8) (zeros 8) (zeros 8) (zeros 24) (zeros 8) (zeros 8) (zeros 16) (zeros 8) oP1 (zeros 8) (zeros 8) (zeros 8) oP2 (zeros 8) (zeros 8)
     rfl rfl rfl rfl rfl rfl rfl h1 rfl rfl rfl h2 rfl rfl
     frame_rest 16 rfl bumpHeap 64

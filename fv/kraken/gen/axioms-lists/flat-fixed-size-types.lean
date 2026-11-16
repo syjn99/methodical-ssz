@@ -20,7 +20,6 @@ import Prysm.Eth1Data.WitnessEncodeFastPath
 import Prysm.BeaconBlockHeader.WitnessEncodeRejectLength
 import Codec.Bytes32DecodeOffsetZero
 import Codec.Kind.Bytes32DecodeOffsetZero
-import Prysm.Eth1Data.GeneratedDecodeRootFieldSegments
 import Prysm.BlobIdentifier.DecodeSpec
 import Prysm.BlobIdentifier.WitnessDecodeAccept
 import Prysm.BlobIdentifier.WitnessDecodeRejectSize
@@ -34,14 +33,12 @@ import Codec.Kind.FixedBytesDecode
 import Codec.InlineUint64
 import Codec.Kind.InlineUint64
 import Codec.DecoderHeadEpilogue
-import Prysm.Eth1Data.GeneratedDecodeFieldSegments
 import Prysm.BlobIdentifier.GeneratedDecodeFieldSegments
 import Prysm.DepositMessage.GeneratedDecodeFieldSegments
 import Prysm.BlobIdentifier.DecodeAcceptFromGeneratedFieldSegments
 import Prysm.DepositMessage.DecodeAcceptFromGeneratedFieldSegments
 import Prysm.BlobIdentifier.GeneratedDecodeAcceptComposition
 import Prysm.DepositMessage.GeneratedDecodeAcceptComposition
-import Prysm.Eth1Data.GeneratedDecodeAcceptComposition
 import Prysm.BeaconBlockHeader.GeneratedDecodeFieldSegmentsPartial
 import Prysm.Deposit_Data.Statements
 import Prysm.Deposit_Data.GeneratedDecodeFieldSegmentsPartial
@@ -99,7 +96,6 @@ import Codec.DecoderPrologue
 import Prysm.SyncCommitteeMessage.DecoderPrologueInstances
 import Prysm.Checkpoint.GeneratedDecodeSteps
 import Prysm.BeaconBlockHeader.GeneratedDecodeSteps
-import Prysm.Eth1Data.GeneratedDecodeSteps
 import Prysm.BlobIdentifier.GeneratedDecodeSteps
 import Prysm.DepositMessage.GeneratedDecodeSteps
 import Prysm.Deposit_Data.GeneratedDecodeSteps
@@ -341,8 +337,7 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.runs
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength9.runs9
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength300.runs300
--- Eth1Data, decoder: the name Decode.accept of the generated accept theorem, the stack lemma, the specification
-#print axioms Prysm.Eth1Data.Decode.accept
+-- Eth1Data, decoder: the stack lemma, the specification
 #print axioms Prysm.Eth1Data.Decode.stack_low_eq
 #print axioms Prysm.Eth1Data.desc_checker
 #print axioms Prysm.Eth1Data.desc_serialize_checker
@@ -367,13 +362,9 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.BeaconBlockHeader.Encode.fast_path_spec
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_prefix
--- Generator extension for a 32-byte field at SSZ offset 0 (offset-0 form; Eth1Data = development data)
+-- Generator extension for a 32-byte field at SSZ offset 0 (offset-0 form)
 #print axioms Codec.root_decode_segment_offset_zero
 #print axioms Codec.rootDecodeSegmentOffsetZeroKind_of
-#print axioms Prysm.Eth1Data.Decode.generated_root_DepositRoot_segment
-#print axioms Prysm.Eth1Data.Decode.generated_root_DepositRoot_segment_kind
-#print axioms Prysm.Eth1Data.Decode.generated_root_BlockHash_segment
-#print axioms Prysm.Eth1Data.Decode.generated_root_BlockHash_segment_kind
 
 -- BlobIdentifier and DepositMessage (UnmarshalSSZ)
 #print axioms Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_segment
@@ -533,14 +524,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.DepositMessage.Decode.generated_field_PublicKey_segment_kind
 #print axioms Prysm.DepositMessage.Decode.generated_field_WithdrawalCredentials_segment
 #print axioms Prysm.DepositMessage.Decode.generated_field_WithdrawalCredentials_segment_kind
-#print axioms Prysm.Eth1Data.Decode.accept_generated_composition
-#print axioms Prysm.Eth1Data.Decode.accept_generated_composition_type
-#print axioms Prysm.Eth1Data.Decode.generated_field_BlockHash_segment
-#print axioms Prysm.Eth1Data.Decode.generated_field_BlockHash_segment_kind
-#print axioms Prysm.Eth1Data.Decode.generated_field_DepositCount_segment
-#print axioms Prysm.Eth1Data.Decode.generated_field_DepositCount_segment_kind
-#print axioms Prysm.Eth1Data.Decode.generated_field_DepositRoot_segment
-#print axioms Prysm.Eth1Data.Decode.generated_field_DepositRoot_segment_kind
 -- Partial output of `decoder --field-segments` (raw `--partial-out` output for BeaconBlockHeader, 3 of 5 fields)
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_BodyRoot_segment
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_BodyRoot_segment_kind
@@ -670,7 +653,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.Deposit_Data.Decode.accept_is_kind
 #print axioms Prysm.DepositMessage.Decode.accept_generated_composition_is_kind
 #print axioms Prysm.DepositMessage.Decode.accept_is_kind
-#print axioms Prysm.Eth1Data.Decode.accept_generated_composition_is_kind
 #print axioms Codec.uint64DecodeScratchRegisterSegmentKind_of
 #print axioms Codec.uint64_decode_scratch_register_segment
 
@@ -893,32 +875,6 @@ import Prysm.SyncCommitteeMessage.WindowStepsInstances
 #print axioms Prysm.DepositMessage.Decode.generated_step_directive_84_kind
 #print axioms Prysm.DepositMessage.Decode.generated_step_directive_85
 #print axioms Prysm.DepositMessage.Decode.generated_step_directive_85_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_BlockHash_segment
-#print axioms Prysm.Eth1Data.Decode.generated_step_BlockHash_segment_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_DepositRoot_segment
-#print axioms Prysm.Eth1Data.Decode.generated_step_DepositRoot_segment_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_37
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_37_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_38
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_38_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_45
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_45_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_46
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_46_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_47
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_47_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_48
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_48_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_49
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_49_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_75
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_75_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_76
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_76_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_84
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_84_kind
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_85
-#print axioms Prysm.Eth1Data.Decode.generated_step_directive_85_kind
 #print axioms Prysm.PendingConsolidation.Decode.generated_step_SourceIndex_call
 #print axioms Prysm.PendingConsolidation.Decode.generated_step_SourceIndex_call_kind
 #print axioms Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call

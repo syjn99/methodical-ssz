@@ -6,8 +6,6 @@ exit 0 = every case has its expected exit code and output; 1 = a case differs; 2
 
 Cases (all on the committed Eth1Data `.S` and IR; mutants are written to <work-dir>, nothing in the repo).
 Every case runs `gen/generator/generator.py` of the working tree.
- - new-gen: the working-tree generator on Eth1Data: exit 0, both fields (DepositRoot offset-0 form,
-   BlockHash add form), stdout = the committed `lean/Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean`, two runs byte-identical.
  - mutants of the `.S` (one line changed or removed, found by exact text at a 1-based line):
    wrong length, missing memmove, an add on another register, offset-0 form with a wrong destination,
    offset-0 form at a non-zero SSZ offset, broken head of the first field, unrecognised directive in place
@@ -18,8 +16,8 @@ Every case runs `gen/generator/generator.py` of the working tree.
 field-segment cases (`decoder --field-segments`; ids `field-segments-*`; mutated `.S` and IR copies in <work-dir> only):
  - field-segments-compat-*: the default mode (no `--field-segments`) on BlobIdentifier / DepositMessage still prints the committed
    files of BlobIdentifier and DepositMessage, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean` / `Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean` byte for byte.
- - field-segments-new-*: `--field-segments` on Eth1Data, BlobIdentifier, DepositMessage: exit 0 twice, identical, = the committed
-   raw files `Prysm/Eth1Data/GeneratedDecodeFieldSegments.lean`, `Prysm/BlobIdentifier/GeneratedDecodeFieldSegments.lean`, `Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean`, with every field covered.
+ - field-segments-new-*: `--field-segments` on BlobIdentifier, DepositMessage: exit 0 twice, identical, = the committed
+   raw files `Prysm/BlobIdentifier/GeneratedDecodeFieldSegments.lean`, `Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean`, with every field covered.
  - adversarial `.S` / IR mutants: wrong size immediates, a size other than 32 / 48 / 96, mismatched registers
    in the uint64 triple, base register not rsp / rdx, a scratch register outside the lemma's list, wrong
    displacement against the IR, truncated `.S`, swapped field order (IR and code), a delegated overlay
@@ -29,7 +27,7 @@ field-segment cases (`decoder --field-segments`; ids `field-segments-*`; mutated
    (no development site has one): the theorem text has the add-form 48 shape and the parameters of the
    synthetic code. Text check only (no Lean code constant for a synthetic `.S`: not kernel-checked).
  - field-segments-partial: a mutant with `--partial-out`: the file is marked PARTIAL and `kindcheck.py` rejects it.
- - field-segments-compose-*: `--compose` = the committed `Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean` / `Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean` / `Prysm/Eth1Data/GeneratedDecodeAcceptComposition.lean` (two runs,
+ - field-segments-compose-*: `--compose` = the committed `Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean` / `Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean` (two runs,
    identical; kindcheck PASS "identity-checked"); without `--same-as` the run warns on stderr and kindcheck
    rejects the file (no statement check); a field not covered, a tail store from another register and a
    shifted epilogue give exit 2 and 0 bytes.
@@ -136,7 +134,6 @@ import sys
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
 S = "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S"
-COMMITTED = "lean/Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean"
 ARGS = ["--const", "unmarshalSSZ", "--ir", "prysm/ir/ir-mainnet.json", "--type", "v1alpha1.Eth1Data",
         "--prefix", "Decode.generated_root", "--imports", "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Prysm.Eth1Data.Code", "--open", "Prysm.Eth1Data.Code"]
 
@@ -174,7 +171,7 @@ NORM_V1ALPHA1 = "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_
 ETH1_DATA_S = S
 IR = "prysm/ir/ir-mainnet.json"
 FIELD_SEGMENT_CASES = {
-    "Eth1Data": dict(S=ETH1_DATA_S, type="v1alpha1.Eth1Data", committed="lean/Prysm/Eth1Data/GeneratedDecodeFieldSegments.lean",
+    "Eth1Data": dict(S=ETH1_DATA_S, type="v1alpha1.Eth1Data",
                args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_field", "--imports",
                      "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.InlineUint64,Prysm.Eth1Data.Code", "--open", "Prysm.Eth1Data.Code"],
                fields=["DepositRoot", "DepositCount", "BlockHash"]),
@@ -293,7 +290,7 @@ def field_segment_cases(work, new):
                         stdout_bytes=len(so), ok=bool(ok)))
         bad |= not ok
     # field-segment runs, twice, = committed raw output
-    for key in ("Eth1Data", "BlobIdentifier", "DepositMessage"):
+    for key in ("BlobIdentifier", "DepositMessage"):
         c = FIELD_SEGMENT_CASES[key]
         outs = []
         for i in range(2):
@@ -383,9 +380,7 @@ def field_segment_cases(work, new):
     COMPOSITION_CASES = {"BlobIdentifier": ("Decode.accept_generated_composition", "Prysm.BlobIdentifier.Decode.accept", "lean/Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
                  "Codec.DecoderHeadEpilogue,Prysm.BlobIdentifier.GeneratedDecodeFieldSegments,Prysm.BlobIdentifier.DecodeAccept"),
           "DepositMessage": ("Decode.accept_generated_composition", "Prysm.DepositMessage.Decode.accept", "lean/Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean",
-                 "Codec.DecoderHeadEpilogue,Prysm.DepositMessage.GeneratedDecodeFieldSegments,Prysm.DepositMessage.DecodeAccept"),
-          "Eth1Data": ("Decode.accept_generated_composition", "Prysm.Eth1Data.Decode.accept", "lean/Prysm/Eth1Data/GeneratedDecodeAcceptComposition.lean",
-                 "Codec.DecoderHeadEpilogue,Prysm.Eth1Data.GeneratedDecodeFieldSegments,Prysm.Eth1Data.DecodeAccept")}
+                 "Codec.DecoderHeadEpilogue,Prysm.DepositMessage.GeneratedDecodeFieldSegments,Prysm.DepositMessage.DecodeAccept")}
 
     def cargs(key, same=True):
         c = FIELD_SEGMENT_CASES[key]
@@ -395,7 +390,7 @@ def field_segment_cases(work, new):
         return (["decoder", "--field-segments", "--compose", "--name", nm] + (["--same-as", ha] if same else [])
                 + ["--ir", IR, "--type", c["type"]] + a)
 
-    for key in ("BlobIdentifier", "DepositMessage", "Eth1Data"):
+    for key in ("BlobIdentifier", "DepositMessage"):
         outs = [run(["python3", "-I", str(new)] + cargs(key) + ["--assembly", FIELD_SEGMENT_CASES[key]["S"]], KR) for _ in range(2)]
         com = (KR / COMPOSITION_CASES[key][2]).read_bytes() if (KR / COMPOSITION_CASES[key][2]).exists() else None
         tf = work / f"field-segments-compose-{key}.lean"
@@ -736,15 +731,6 @@ def call_segment_cases(work, new):
     res.append(dict(id="call-segments-compose-Deposit_Data", expect="exit 0 twice, identical, decodeAcceptKind line + Prop identity, kindcheck PASS",
                     exit=rc, stdout_bytes=len(so), kindcheck_exit=kc.returncode, committed_present=com is not None,
                     ok=bool(ok)))
-    bad |= not ok
-    # --call-segments without a call-segment shape (Eth1Data) covers what --field-segments covers, with the same theorem text
-    c2 = FIELD_SEGMENT_CASES["Eth1Data"]
-    rc, so, se = run(G + ["--assembly", c2["S"], "--ir", IR, "--type", c2["type"]] + c2["args"], KR)
-    com = (KR / c2["committed"]).read_text()
-    body = lambda s: s.split("namespace Prysm.Eth1Data\n", 1)[1]
-    ok = rc == 0 and body(so.decode()) == body(com)
-    res.append(dict(id="call-segments-eth1-data-same-theorems-as-field-segment", expect="exit 0, theorem text = committed Prysm/Eth1Data/GeneratedDecodeFieldSegments.lean body",
-                    exit=rc, stdout_bytes=len(so), ok=bool(ok)))
     bad |= not ok
     return res, bad
 
@@ -1547,19 +1533,6 @@ def main(work, out):
     work.mkdir(parents=True, exist_ok=True)
     res, bad = [], 0
     new = KR / "gen" / "generator" / "generator.py"
-
-    # new generator, two runs, committed output
-    outs = []
-    for _ in range(2):
-        rc, so, se = run(["python3", "-I", str(new), "decoder", "--assembly", S] + ARGS, KR)
-        outs.append((rc, so, se))
-    com = (KR / COMMITTED).read_bytes() if (KR / COMMITTED).exists() else None
-    ok = all(r == 0 for r, _, _ in outs) and outs[0][1] == outs[1][1] and outs[0][1] == com
-    t = outs[0][1].decode()
-    res.append(dict(id="new-gen", expect="exit 0 twice, identical, = committed Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean", exit=[r for r, _, _ in outs],
-                    stdout_bytes=len(outs[0][1]), deterministic=outs[0][1] == outs[1][1], equals_committed=outs[0][1] == com,
-                    theorems=[l.split()[1] for l in t.split("\n") if l.startswith("theorem ")], ok=bool(ok)))
-    bad |= not ok
 
     base = (KR / S).read_text().split("\n")
     for (mid, what, line, o, n, want, match) in MUTANTS:

@@ -1,18 +1,16 @@
 import Codec.Kind.DecodeAcceptComposition
 import Prysm.BlobIdentifier.GeneratedDecodeAcceptComposition
 import Prysm.DepositMessage.GeneratedDecodeAcceptComposition
-import Prysm.Eth1Data.GeneratedDecodeAcceptComposition
 import Prysm.DepositMessage.GeneratedDecodeAcceptCompositionKind
-import Prysm.Eth1Data.GeneratedDecodeAcceptCompositionKind
 
 /-!
-# The three generated composed accept theorems have the kind `decodeAcceptKind`
+# The two generated composed accept theorems have the kind `decodeAcceptKind`
 
-The declared type of each in-sample generated composed theorem (`Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean`, `Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean`,
-`Prysm/Eth1Data/GeneratedDecodeAcceptComposition.lean`; generator output, unchanged) is `decodeAcceptKind` at the parameters of its type, by `rfl`
+The declared type of each in-sample generated composed theorem (`Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean`, `Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean`;
+generator output, unchanged) is `decodeAcceptKind` at the parameters of its type, by `rfl`
 at default transparency. This is the `_kind` line a generated composed theorem of this shape can carry
 instead of the identity with a hand theorem.
-After the split of this module, the declarations of the other types are in `Prysm/DepositMessage/GeneratedDecodeAcceptCompositionKind.lean`, `Prysm/Eth1Data/GeneratedDecodeAcceptCompositionKind.lean`.
+After the split of this module, the declarations of the other types are in `Prysm/DepositMessage/GeneratedDecodeAcceptCompositionKind.lean`.
 -/
 
 open Machine Runtime

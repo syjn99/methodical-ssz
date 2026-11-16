@@ -1,12 +1,11 @@
-import Prysm.Eth1Data.DecodeAccept
+import Prysm.Eth1Data.GeneratedDecodeAccept
 import Prysm.Eth1Data.Spec
 
 /-!
 # Spec alignment of the real Eth1Data decoder
 
 Hand-written. Built on the GENERATED theorems of `Prysm/Eth1Data/GeneratedDecodeAccept.lean` (`decoder --whole-accept`;
-raw output, not edited): `Decode.accept` is `Decode.generated_accept` under its second name
-(`Prysm/Eth1Data/DecodeAccept.lean`), and the size reject is `Decode.generated_reject`.
+raw output, not edited): the accept path is `Decode.generated_accept`, the size reject is `Decode.generated_reject`.
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`, the independent consensus-specs Desc)
   as `v`, there is `g : SszValue` with `g.toValue = v` and `bsA = SszValue.encode g`; with the input chunks of that `g`
   the machine code returns nil and the receiver holds `g` (the two roots at fresh `p1 p2` with
@@ -85,7 +84,7 @@ theorem Decode.accept_spec (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (
   refine ⟨g, rfl, rfl, ?_⟩
   have h72 : s.regs.rcx = 72 := by
     apply UInt64.toNat_inj.mp; rw [hlen, SszValue.encode_size]; rfl
-  exact Decode.accept k hk hf _ _ _ (by simp) (by simp [Spec.uintBytes_size]) (by simp) s ra guard
+  exact Decode.generated_accept k hk hf _ _ _ (by simp) (by simp [Spec.uintBytes_size]) (by simp) s ra guard
     fp s1 s2 spl l18 rslot lo ast aP1 aL1 aC1 aN aP2 aL2 aC2
     hfp h1 h2 hspl hl18 hrs hast haP1 haL1 haC1 haN haP2 haL2 haC2
     R S hlo Heap avail (Pm g rfl) hguard h72 hav hms hmm

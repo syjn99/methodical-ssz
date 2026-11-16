@@ -1,10 +1,9 @@
 import Codec.Kind.DecodeAcceptComposition
 import Prysm.BlobIdentifier.GeneratedDecodeAcceptComposition
 import Prysm.DepositMessage.GeneratedDecodeAcceptComposition
-import Prysm.Eth1Data.GeneratedDecodeAcceptComposition
 
 /-!
-# The three generated composed accept theorems have the kind `decodeAcceptKind`: the `DepositMessage` part
+# The two generated composed accept theorems have the kind `decodeAcceptKind`: the `DepositMessage` part
 
 The declarations of the other types of this group are in `Prysm/BlobIdentifier/GeneratedDecodeAcceptCompositionKind.lean`.
 -/

@@ -40,14 +40,6 @@
   "new": "⋆ Eq (vF.At aF) ⋆ R) st.data.dmem"
  },
  {
-  "id": "eth1-data-decode-generated-field-deposit-count-segment-statement-h-f-32-to-40",
-  "module": "Prysm/Eth1Data/GeneratedDecodeFieldSegments.lean",
-  "theorem": "Prysm.Eth1Data.Decode.generated_field_DepositCount_segment",
-  "kind": "statement",
-  "old": "(hF : rcv + (32 : Int64).toBitVec = aF)",
-  "new": "(hF : rcv + (40 : Int64).toBitVec = aF)"
- },
- {
   "id": "deposit-message-decode-accept-generated-composition-statement-heap-80-to-48",
   "module": "Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept_generated_composition",
@@ -69,9 +61,9 @@
   "theorem": "Prysm.DepositMessage.Decode.accept_generated_composition_type",
   "kind": "statement",
   "old": "type_of% (@Prysm.DepositMessage.Decode.accept h)",
-  "new": "type_of% (@Prysm.Eth1Data.Decode.accept h)",
+  "new": "type_of% (@Prysm.Eth1Data.Decode.generated_accept h)",
   "mutant_imports": [
-   "Prysm.Eth1Data.DecodeAccept"
+   "Prysm.Eth1Data.GeneratedDecodeAccept"
   ]
  },
  {
