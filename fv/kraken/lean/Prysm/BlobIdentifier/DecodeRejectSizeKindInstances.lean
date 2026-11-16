@@ -10,7 +10,6 @@ import Prysm.PendingDeposit.DecodeRejectSize
 import Prysm.PowBlock.DecodeRejectSize
 import Prysm.AttestationData.DecodeRejectSize
 import Codec.DecodeRejectSizeAnyFrame
-import Prysm.AttestationData.DecodeRejectSizeKindInstances
 import Prysm.BeaconBlockHeader.DecodeRejectSizeKindInstances
 import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 import Prysm.DepositMessage.DecodeRejectSizeKindInstances
@@ -18,7 +17,6 @@ import Prysm.Deposit_Data.DecodeRejectSizeKindInstances
 import Prysm.Eth1Data.DecodeRejectSizeKindInstances
 import Prysm.PendingConsolidation.DecodeRejectSizeKindInstances
 import Prysm.PendingDeposit.DecodeRejectSizeKindInstances
-import Prysm.PendingPartialWithdrawal.DecodeRejectSizeKindInstances
 import Prysm.PowBlock.DecodeRejectSizeKindInstances
 import Prysm.SyncCommitteeMessage.DecodeRejectSizeKindInstances
 

@@ -4,7 +4,6 @@ import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPath
 import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPath
 import Prysm.Deposit_Data.GeneratedEncodeFastPath
 import Prysm.Deposit_Data.GeneratedEncodeFastPathSameAsHand
-import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPathSameAsHand
 import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPathSameAsHand
 
 /-!

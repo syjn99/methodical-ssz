@@ -1,7 +1,6 @@
 import Codec.Kind.EncodeFastPathAnyFrame
 import Prysm.BlobIdentifier.EncoderCode
 import Prysm.Deposit_Data.EncodeFastPathStatements
-import Prysm.PendingPartialWithdrawal.EncodeFastPathStatements
 import Prysm.SyncCommitteeMessage.EncodeFastPathStatements
 
 /-!

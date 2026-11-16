@@ -5,8 +5,6 @@ import Prysm.PendingPartialWithdrawal.DecodeAccept
 import Prysm.BeaconBlockHeader.DecodeHeadFromCallSegments
 import Prysm.BeaconBlockHeader.DecoderPrologueInstances
 import Prysm.PendingConsolidation.DecoderPrologueInstances
-import Prysm.PendingPartialWithdrawal.DecoderPrologueInstances
-
 /-!
 # The per-type hand head / epilogue / spill lemmas are instances of the frame-parametric mechanism
 
