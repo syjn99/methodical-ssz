@@ -27,7 +27,6 @@ import Prysm.DepositMessage.WitnessGeneratedDecodeRejectSize
 import Codec.FixedBytesDecode
 import Codec.InlineUint64
 import Codec.DecoderHeadEpilogue
-import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 import Prysm.Deposit_Data.DecodeSpec
 import Prysm.Deposit_Data.WitnessGeneratedDecodeAccept
 import Prysm.Deposit_Data.WitnessGeneratedDecodeRejectSize
@@ -446,8 +445,7 @@ import Prysm.Checkpoint.DecodeRejectSizeKindInstances
 #print axioms Codec.uint64_decode_inline_segment
 
 -- Deposit_Data and PendingPartialWithdrawal (UnmarshalSSZ):
--- hand lemma, spec / witnesses
-#print axioms Prysm.Deposit_Data.bytes32_decode_segment_nop
+-- spec / witnesses
 #print axioms Prysm.PendingPartialWithdrawal.Decode.reject_size
 #print axioms Prysm.Deposit_Data.desc_checker
 #print axioms Prysm.Deposit_Data.desc_wellFormed

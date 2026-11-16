@@ -49,28 +49,6 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-data-bytes32-decode-segment-nop-control",
-  "module": "Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean",
-  "theorem": "Prysm.Deposit_Data.bytes32_decode_segment_nop",
-  "kind": "control"
- },
- {
-  "id": "deposit-data-bytes32-decode-segment-nop-statement-heap-32-to-31",
-  "module": "Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean",
-  "theorem": "Prysm.Deposit_Data.bytes32_decode_segment_nop",
-  "kind": "statement",
-  "old": "⋆ Heap (avail - 32)",
-  "new": "⋆ Heap (avail - 31)"
- },
- {
-  "id": "deposit-data-bytes32-decode-segment-nop-statement-host-6-to-7",
-  "module": "Prysm/Deposit_Data/DecodeFieldSegmentPadding.lean",
-  "theorem": "Prysm.Deposit_Data.bytes32_decode_segment_nop",
-  "kind": "statement",
-  "old": "⋆ Eq ((Int.toBytes 8 (Host.addrOf (j2 + 6 + 1)).toBitVec.toInt).At aRet)",
-  "new": "⋆ Eq ((Int.toBytes 8 (Host.addrOf (j2 + 7 + 1)).toBitVec.toInt).At aRet)"
- },
- {
   "id": "deposit-data-decode-generated-reject-control",
   "module": "Prysm/Deposit_Data/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.Deposit_Data.Decode.generated_reject",
