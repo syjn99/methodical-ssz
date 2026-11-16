@@ -5,23 +5,18 @@
 # name of the .S file).
 # The code constant (--const) is the short name in the code namespace that --open opens.
 # The prefix of the generated names (--prefix) names the mode:
-#   Decode.generated_root (decoder), Decode.generated_accept (uint64), Decode.generated_step (decoder --steps),
-#   Decode.generated (decoder --whole-accept), Encode.generated (encoder --fast-path).
+#   Decode.generated_accept (uint64), Decode.generated (decoder --whole-accept), Encode.generated (encoder --fast-path).
 set -e
 cd "$(dirname "$0")/../.."
 G="python3 -I gen/generator/generator.py"
 N=prysm/go1.26.10/link-set/norm
 P=github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1
-# decoder: the 32-byte field segments of Checkpoint
-$G decoder --assembly $N/$P.Checkpoint.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.Checkpoint --prefix Decode.generated_root --imports Codec.Bytes32Decode,Prysm.Checkpoint.Code --open Prysm.Checkpoint.Code > lean/Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean
 # uint64: the accept path of the ValidatorIndex decoder
 $G uint64 --assembly $N/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --imports Codec.Uint64Decoder,Prysm.BeaconBlockHeader.Code --open Prysm.ValidatorIndex.Code > lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean
-# decoder --steps: the step chain of Checkpoint
-$G decoder --steps --assembly $N/$P.Checkpoint.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.Checkpoint --prefix Decode.generated_step --imports Prysm.Checkpoint.Code --open Prysm.Checkpoint.Code > lean/Prysm/Checkpoint/GeneratedDecodeSteps.lean
 # decoder --whole-accept: one run per type. Row: Go type name, module of the code constants.
 # The statement check is the kind; kindcheck.py rule 12 recomputes its parameters.
 # The generator refuses PendingPartialWithdrawal (interleaved fields) and AttestationData (nested containers): exit 2, no file.
-for row in "Checkpoint Prysm.Checkpoint.Code" "BeaconBlockHeader Prysm.BeaconBlockHeader.Code" "Eth1Data Prysm.Eth1Data.Code" \
+for row in "BeaconBlockHeader Prysm.BeaconBlockHeader.Code" "Eth1Data Prysm.Eth1Data.Code" \
   "BlobIdentifier Prysm.BlobIdentifier.Code" "DepositMessage Prysm.BlobIdentifier.Code" "Deposit_Data Prysm.Deposit_Data.Code" \
   "SyncCommitteeMessage Prysm.SyncCommitteeMessage.Code" "PendingConsolidation Prysm.SyncCommitteeMessage.Code" \
   "PendingDeposit Prysm.PendingDeposit.Code" "PowBlock Prysm.PendingDeposit.Code" "HistoricalSummary Prysm.PendingDeposit.Code" \

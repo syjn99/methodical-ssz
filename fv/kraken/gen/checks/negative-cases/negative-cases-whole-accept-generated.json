@@ -12,12 +12,6 @@
   "kind": "control"
  },
  {
-  "id": "checkpoint-decode-generated-accept-control",
-  "module": "Prysm/Checkpoint/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.Checkpoint.Decode.generated_accept",
-  "kind": "control"
- },
- {
   "id": "historical-summary-decode-generated-accept-control-2",
   "module": "Prysm/HistoricalSummary/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.HistoricalSummary.Decode.generated_accept",
@@ -86,14 +80,6 @@
   "kind": "statement",
   "old": "(Int.toBytes 8 (Host.addrOf (k + 56)).toBitVec.toInt)",
   "new": "(Int.toBytes 8 (Host.addrOf (k + 55)).toBitVec.toInt)"
- },
- {
-  "id": "checkpoint-decode-generated-field-1-statement-get64-0-to-s-regs-rbx",
-  "module": "Prysm/Checkpoint/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.Checkpoint.Decode.generated_field_1",
-  "kind": "statement",
-  "old": "st.data.regs.get64 Reg64.rbx = 0",
-  "new": "st.data.regs.get64 Reg64.rbx = s.regs.rbx.toBitVec"
  },
  {
   "id": "historical-summary-decode-generated-head-statement-rbp-8-to-16",

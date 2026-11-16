@@ -1,32 +1,5 @@
 [
  {
-  "id": "checkpoint-decode-generated-root-root-segment-control",
-  "kind": "control",
-  "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_segment",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
- },
- {
-  "id": "checkpoint-decode-generated-root-root-segment-code-add-0x8-to-0x10",
-  "kind": "code",
-  "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_segment",
-  "old": "  add $0x8,%rbx",
-  "new": "  add $0x10,%rbx",
-  "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
- },
- {
-  "id": "checkpoint-decode-generated-root-root-segment-statement-hmm-none-to-hextra-1-nat",
-  "kind": "statement",
-  "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_segment",
-  "old": "(hmm : MemmoveContract St),",
-  "new": "(hmm : MemmoveContract St) (hextra : (1 : Nat) = 2),",
-  "why": "an extra false hypothesis in the generated statement must fail (the statement is kernel-checked against the root_decode_segment instance); with the old fixed-text statement this mutant compiled (rc 0)"
- },
- {
   "id": "checkpoint-encode-bytes32-template-at-control",
   "kind": "control",
   "module": "Prysm/Checkpoint/EncodeBytes32TemplatePlacement.lean",
@@ -61,13 +34,5 @@
   "theorem": "Prysm.Checkpoint.Encode.bytes32_template_at",
   "old": "88 80 96",
   "new": "88 80 104"
- },
- {
-  "id": "checkpoint-decode-generated-root-root-segment-statement-hf-none-to-hextra-1-nat",
-  "kind": "statement",
-  "module": "Prysm/Checkpoint/GeneratedDecodeRootFieldSegments.lean",
-  "theorem": "Prysm.Checkpoint.Decode.generated_root_Root_segment",
-  "old": "(hf : LabelsFresh unmarshalSSZ k) :",
-  "new": "(hf : LabelsFresh unmarshalSSZ k) (hextra : (1 : Nat) = 2) :"
  }
 ]

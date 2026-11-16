@@ -1,5 +1,4 @@
 import Prysm.Checkpoint.EncodeFastPathFromBytes32Pattern
-import Prysm.Checkpoint.GeneratedDecodeRootFieldSegments
 import Prysm.Checkpoint.EncodeBytes32TemplatePlacement
 import Codec.Kind.FieldPatterns
 import Prysm.Slot.Uint64DecoderKindSameAsHand
@@ -63,12 +62,10 @@ import Codec.FixedBytesDecodeWindow
 import Codec.FixedBytesDecodeWindowOffsetZero
 import Codec.Kind.FixedBytesDecodeWindow
 import Codec.DecoderPrologue
-import Prysm.Checkpoint.GeneratedDecodeSteps
 import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.Kind.DecodeAcceptAnyFrameInstances
 import Codec.FieldFrame
 import Codec.DecodeRejectSizeAnyFrame
-import Prysm.Checkpoint.GeneratedDecodeAccept
 import Prysm.BeaconBlockHeader.GeneratedDecodeAccept
 import Prysm.Eth1Data.GeneratedDecodeAccept
 import Prysm.BlobIdentifier.GeneratedDecodeAccept
@@ -243,13 +240,11 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.Checkpoint.Encode.fast_path_from_bytes32_pattern
 #print axioms Prysm.Checkpoint.Encode.fast_path_from_bytes32_pattern_same_statement
 #print axioms Prysm.Checkpoint.Encode.bytes32_template_at
-#print axioms Prysm.Checkpoint.Decode.generated_root_Root_segment
 -- Frozen statement kinds, their lemma ties and anchors, and the generated `_kind` identities
 #print axioms Codec.uint64DecodeAcceptKind_of
 #print axioms Codec.rootDecodeSegmentKind_of
 #print axioms Prysm.Slot.Decode.accept_kind_anchor
 #print axioms Prysm.CommitteeIndex.Decode.accept_kind_anchor
-#print axioms Prysm.Checkpoint.Decode.generated_root_Root_segment_kind
 -- ValidatorIndex and BeaconBlockHeader
 #print axioms Prysm.ValidatorIndex.Decode.generated_accept
 #print axioms Prysm.ValidatorIndex.Decode.generated_accept_kind
@@ -537,26 +532,6 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.runs
 
 -- `decoder --steps`: the step lemmas, the generated step chain of Checkpoint and the accept modules
-#print axioms Prysm.Checkpoint.Decode.generated_step_Epoch_call
-#print axioms Prysm.Checkpoint.Decode.generated_step_Epoch_call_kind
-#print axioms Prysm.Checkpoint.Decode.generated_step_Root_segment
-#print axioms Prysm.Checkpoint.Decode.generated_step_Root_segment_kind
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_14
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_14_kind
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_15
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_15_kind
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_48
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_48_kind
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_49
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_49_kind
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_75
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_75_kind
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_77
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_77_kind
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_84
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_84_kind
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_85
-#print axioms Prysm.Checkpoint.Decode.generated_step_directive_85_kind
 #print axioms Codec.bytesDecodeSegmentKindWindow_of
 #print axioms Codec.bytesDecodeSegmentOffsetZeroKindWindow_of
 #print axioms Codec.bytes_decode_window_32_rdx_rax
@@ -791,38 +766,6 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.BlobIdentifier.Decode.generated_directive_48_kind
 #print axioms Prysm.BlobIdentifier.Decode.generated_directive_49
 #print axioms Prysm.BlobIdentifier.Decode.generated_directive_49_kind
-#print axioms Prysm.Checkpoint.Decode.generated_Epoch_call
-#print axioms Prysm.Checkpoint.Decode.generated_Epoch_call_kind
-#print axioms Prysm.Checkpoint.Decode.generated_Root_segment
-#print axioms Prysm.Checkpoint.Decode.generated_Root_segment_kind
-#print axioms Prysm.Checkpoint.Decode.generated_accept
-#print axioms Prysm.Checkpoint.Decode.generated_accept_kind
-#print axioms Prysm.Checkpoint.Decode.generated_epilogue
-#print axioms Prysm.Checkpoint.Decode.generated_epilogue_kind
-#print axioms Prysm.Checkpoint.Decode.generated_field_1
-#print axioms Prysm.Checkpoint.Decode.generated_field_1_kind
-#print axioms Prysm.Checkpoint.Decode.generated_field_2
-#print axioms Prysm.Checkpoint.Decode.generated_field_2_kind
-#print axioms Prysm.Checkpoint.Decode.generated_head
-#print axioms Prysm.Checkpoint.Decode.generated_head_kind
-#print axioms Prysm.Checkpoint.Decode.generated_reject
-#print axioms Prysm.Checkpoint.Decode.generated_reject_kind
-#print axioms Prysm.Checkpoint.Decode.generated_directive_14
-#print axioms Prysm.Checkpoint.Decode.generated_directive_14_kind
-#print axioms Prysm.Checkpoint.Decode.generated_directive_15
-#print axioms Prysm.Checkpoint.Decode.generated_directive_15_kind
-#print axioms Prysm.Checkpoint.Decode.generated_directive_48
-#print axioms Prysm.Checkpoint.Decode.generated_directive_48_kind
-#print axioms Prysm.Checkpoint.Decode.generated_directive_49
-#print axioms Prysm.Checkpoint.Decode.generated_directive_49_kind
-#print axioms Prysm.Checkpoint.Decode.generated_directive_75
-#print axioms Prysm.Checkpoint.Decode.generated_directive_75_kind
-#print axioms Prysm.Checkpoint.Decode.generated_directive_77
-#print axioms Prysm.Checkpoint.Decode.generated_directive_77_kind
-#print axioms Prysm.Checkpoint.Decode.generated_directive_84
-#print axioms Prysm.Checkpoint.Decode.generated_directive_84_kind
-#print axioms Prysm.Checkpoint.Decode.generated_directive_85
-#print axioms Prysm.Checkpoint.Decode.generated_directive_85_kind
 #print axioms Prysm.Deposit_Data.Decode.generated_PublicKey_segment
 #print axioms Prysm.Deposit_Data.Decode.generated_PublicKey_segment_kind
 #print axioms Prysm.Deposit_Data.Decode.generated_Signature_segment
