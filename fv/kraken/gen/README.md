@@ -96,6 +96,30 @@ It checks by text that every `t_kind` names a frozen kind and has the fixed proo
 It does not check the kind files and the lemma files themselves.
 For the whole-accept and the encoder fast-path files it recomputes the kind parameters from the `.S` file and the IR.
 
+The rule numbers are labels.
+The error messages of `kindcheck.py` and its tests use them.
+The usage text of `kindcheck.py` gives the details.
+
+| Rule | What it checks |
+| --- | --- |
+| 2 | The top-level lines are only imports, `open`, `variable`, `namespace`, `end`, `set_option … in`, theorems, comments and blank lines. |
+| 3 | No `sorry`, `admit`, `native_decide`, `bv_decide` or `axiom` token occurs. |
+| 4 | Each theorem `t` has one theorem `t_kind` with a frozen kind of its code constant and the fixed proof line. |
+| 5 | Each `_kind` theorem belongs to a theorem of the file. |
+| 10 | A step theorem names one of the step kinds, with the parameter forms of the usage text. |
+| 10b | The proof of a step theorem uses the lemma of its kind and no other step lemma. |
+| 10c | The one `FIELDS-JSON` line lists each step theorem in exactly one field. |
+| 11 | The one coverage header `step coverage: n of m fields` has n = m = the number of fields. |
+| 12 | A file with a whole-accept kind has exactly one whole-accept block. |
+| 12b | The whole-accept theorems are the expected list, each with its kind and the code constant. |
+| 12c | The kind parameters equal a recomputation from the `.S` file and the IR that the header names. |
+| 12d | The accept proof uses each whole-accept theorem exactly once. |
+| 13 | A fast-path file gets only the checks 13b to 13e. |
+| 13b | A fast-path file has one layout `def` or a pinned hand layout, the expected theorem list and the code constant. |
+| 13c | Each kind line equals the line of an own recomputation from the `.S` file and the IR. An imported code module includes that `.S` file as the code constant. |
+| 13d | The fast-path proof uses each theorem exactly once. |
+| 13e | The identity `_statement` names no generated theorem. |
+
 ```sh
 python3 -I -B fv/kraken/gen/generator/kindcheck.py --selftest
 python3 -I -B fv/kraken/gen/generator/kindcheck_broken_copies_test.py
