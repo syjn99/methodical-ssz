@@ -243,9 +243,58 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 ### Some code constants have no theorem
 
 - What does not hold: `Prysm.AttestationData.Code.marshalSSZTo` and `Prysm.AttestationData.Code.sizeSSZ` have no theorem.
-- Effect: the AttestationData encoder and `SizeSSZ` are not proved.
+  The constants of a type directory that holds only `Code.lean` have no theorem.
+  These are the types that the generator refuses (`gen/flat-types/run_generators.sh`).
+  Some `.S` files of the link set have no constant: no `include_x64_code` line of `lean/` names them.
+  The rule to find them: a file of `prysm/go1.26.10/link-set/norm/`, other than `all.S`, whose name no `include_x64_code` line names.
+  They are the encoder and size functions of the primitive types of `consensus-types/primitives`.
+- Effect: the functions of these constants and files are not proved.
   The link check covers their `.S` files.
-- Where: `lean/Prysm/AttestationData/Code.lean`.
+- Where: `lean/Prysm/AttestationData/Code.lean`, `lean/Prysm/<GoTypeName>/Code.lean` of the types with only that module, `prysm/go1.26.10/link-set/norm/`.
+
+### The uint64 primitive decoders do not use one proof path
+
+- What does not hold: the uint64 primitive decoders do not use one proof path.
+  ValidatorIndex has the generated accept theorem of the `uint64` mode of `gen/generator/gen.sh`.
+  Epoch, Slot and CommitteeIndex have hand accept proofs `DecodeAccept.lean` of the same code form.
+  `Uint64DecoderKindSameAsHand.lean` of Slot and CommitteeIndex ties the hand theorem to the kind, and Epoch has no such tie.
+- Effect: three proofs repeat the work of the `uint64` mode.
+  A change of the code form needs a change in each of them.
+- Where: `lean/Prysm/Epoch/`, `lean/Prysm/Slot/`, `lean/Prysm/CommitteeIndex/`, `lean/Prysm/ValidatorIndex/`, `gen/generator/gen.sh`.
+
+### Two bump allocator models differ only in a label
+
+- What does not hold: `Prysm/RuntimeModel/BumpMakesliceUint64DispatchForDataColumnsByRootIdentifier.S` is `Prysm/RuntimeModel/BumpMakesliceUint64Dispatch.S` with another label.
+  `diff` of the two files shows only the label `L_model_bump_uint64` and `L_model_bump_uint64_columns`.
+  Each has its own module with the same two theorems.
+  No witness host holds both models, so the tree shows no reason for two labels.
+- Effect: an open duplicate of a runtime model and of its proofs.
+- Where: `lean/Prysm/RuntimeModel/BumpAllocatorUint64DispatchForDataColumnsByRootIdentifier.lean`, `lean/Prysm/RuntimeModel/BumpAllocatorUint64AndStructDispatch.lean`.
+
+### The broken copies of `kindcheck.py` cover only some checks
+
+- What does not hold: `gen/generator/kindcheck_broken_copies_test.py` switches off only the sub-rules of its table `BROKEN`.
+  All of them are sub-rules of rule 13.
+  These checks of rule 13 have no broken copy:
+  - 13b: the layout name, the layout field line, the top-level line, the namespace, the count of layout defs, the `hk` binder and the first binder line;
+  - 13c: the proof line, the tail and the `sep` of a kind line, the count of boundary states, the layout field set and the missing layout def;
+  - 13e: the identity form of the `_statement`;
+  - the one valid `FAST-PATH-JSON` line.
+  Rules 2 to 12 have no broken copy.
+  The selftest has no case for a wrong order of the theorem list of rule 13b.
+- Effect: no test shows that the selftest fails when one of these checks is switched off.
+- Where: `gen/generator/kindcheck_broken_copies_test.py`, `check_fast_path` and the selftest of `gen/generator/kindcheck.py`.
+
+### Some result files need the ELF, Go or Lean to make them again
+
+- What does not hold: these tracked files cannot be made again from tracked files alone.
+  - They need the Prysm ELF: the link set `prysm/go1.26.10/link-set/**` with its `RESULT`, `build-ids.txt`, `functions.json` and `ssz-methods.json` of `prysm/go1.26.10/`.
+  - They need the ELF and Lean: `prysm/go1.26.10/parser-result.json` (a log of `gen/kraken-parser/ParserRun.lean`).
+  - They need Lean: `gen/desc/results/main.result.json` and `prysm/proof-inventory.md`, `prysm/proof-inventory.json`.
+  - They need a Prysm tree and Go: `prysm/_generated/**`, `prysm/ir/*.json` and `prysm/diff/generated-go-diff.json`.
+- Effect: `gen/checks/regenerate_and_compare.py` and `gen/checks/python_checks.sh` do not cover them.
+  A check of these files needs the tools of `README.md` sections 3 and 5.
+- Where: `README.md` section 7 gives the command of each file.
 
 ### A Lean error does not stop the file
 
@@ -306,9 +355,14 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 ### No check shows that a hand `Desc` is independent of the checker `Desc`
 
 - What does not hold: no check shows that a hand `Desc` was written without the checker `Desc`.
-  The independence is by content only: the hand `Desc` copies the consensus-specs definition.
-  The hand `Desc` of `ValidatorBalance` comes from the Prysm proto, because consensus-specs has no such container.
+  The independence is by content only: most hand `Desc` copy the consensus-specs definition.
+  Some hand `Desc` are written from the Prysm proto definition, not from consensus-specs.
+  `grep -l 'from the Prysm proto' lean/Prysm/*/SpecDescription.lean` lists them.
+  Such a `Desc` has the same source as the `Desc` producer, so it is not independent of the checker `Desc`.
+  The tree does not record whether consensus-specs defines these containers.
 - Effect: the specification side of a theorem rests on a review of the hand `Desc` against consensus-specs.
+  For a type with a hand `Desc` from the proto, no theorem compares the code with an independent specification.
+  Its codec equality with the checker `Desc`, where one exists, compares two descriptions of one source.
 - Where: `lean/Prysm/<GoTypeName>/Spec.lean`, `SpecDescription.lean` or `SpecDefinitions.lean`.
 
 ### The proof inventory trusts its method list

@@ -126,7 +126,9 @@ python3 -I -B fv/kraken/gen/generator/kindcheck_broken_copies_test.py
 python3 -I -B fv/kraken/gen/generator/kindcheck.py fv/kraken/lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean
 ```
 
-`kindcheck_broken_copies_test.py` makes one copy of `kindcheck.py` for each sub-rule of rule 13, with that sub-rule switched off.
+`kindcheck_broken_copies_test.py` makes one copy of `kindcheck.py` for each sub-rule of its table `BROKEN`, with that sub-rule switched off.
+These are sub-rules of rule 13.
+`../FINDINGS.md` lists the checks that have no copy.
 The replacement text removes only the error report of the sub-rule and keeps the control flow.
 Each variant has a set of expected selftest cases.
 A copy is detected only when its selftest exits with code 1, writes no Python traceback and prints a `selftest FAIL` line.
@@ -182,6 +184,7 @@ The header of each `*SpecChecker.lean` states the sha256 of its `Desc` file as t
   This is a consistency check, not a specification check.
 
 Thus the Prysm theorems use a hand `Desc` written from consensus-specs.
+For some types, the hand `Desc` is written from the Prysm proto definition (`../FINDINGS.md`).
 A theorem shows that it has the same codec as the checker `Desc`.
 
 ## 6. The axioms gate

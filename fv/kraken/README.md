@@ -19,6 +19,11 @@ A proof about one ELF does not transfer to another ELF.
 - The source is a pinned Prysm commit, with the generated files of the pinned generator.
 - The binary is a small Go `main` package.
   It keeps the SSZ methods of all inventory types in the ELF.
+  The inventory is the list `sets.inventory_types` of `prysm/inventory.json`.
+- The ELF also holds the SSZ methods of other types.
+  These are generated types outside the inventory, and the hand-written types of `consensus-types/primitives`.
+  `prysm/go1.26.10/functions.json` (list `functions`) and `prysm/go1.26.10/ssz-methods.json` hold the methods of every type.
+  `NEW-TYPE.md` step 1 tells what a type outside the inventory lacks.
 - The compiler is Go 1.26.10.
   It cross-compiles to `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0`, with `-tags purego -trimpath`.
 - The ELF identity is its sha256.
@@ -243,10 +248,10 @@ Change the tool and run it again.
 
 | Kind | Written by | Command that makes it again | What checks it |
 | --- | --- | --- | --- |
-| `Code.lean` | Hand: one `include_x64_code` constant for each function that a proof reads | None | The build, the link check of its `.S` files, `gen/tools/proof_inventory.py` |
+| `Code.lean` | Hand: one `include_x64_code` constant for each `.S` file of the type in the link set. The primitive types Epoch, Slot, CommitteeIndex and ValidatorIndex include only `UnmarshalSSZ`. A constant can have no theorem (`FINDINGS.md`) | None | The build, the link check of its `.S` files, `gen/tools/proof_inventory.py` |
 | `Layout.lean` (Checkpoint) | `gen/checks/layout.py` | `python3 -I gen/checks/layout.py > lean/Prysm/Checkpoint/Layout.lean` | `regenerate_and_compare.py`, the build |
 | `Spec.lean` | Hand. For the types of the table `SPEC_TYPES` of `gen/flat-types/flat_types_spec.py`: that tool | `python3 -I -B gen/flat-types/flat_types_spec.py lean` | The build, the axioms gate, `regenerate_and_compare.py` |
-| `SpecDescription.lean`, `SpecDefinitions.lean` | Hand, from consensus-specs | None | The build, a review against consensus-specs |
+| `SpecDescription.lean`, `SpecDefinitions.lean` | Hand, from consensus-specs. For some types, from the Prysm proto definition: `grep -l 'from the Prysm proto' lean/Prysm/*/SpecDescription.lean` lists them (`FINDINGS.md`) | None | The build, a review against the source that the module names |
 | `SpecChecker.lean` | `gen/checks/desc_to_lean.py` | `python3 -I gen/checks/desc_to_lean.py prysm/go1.26.10/evidence/<package>.<T>.desc.json checkerDesc > lean/Prysm/<T>/SpecChecker.lean` | `regenerate_and_compare.py`, the build |
 | `SpecEquivalence.lean` | Hand | None | The build, the axioms gate |
 | `GeneratedDecodeAccept.lean` | `gen/generator/generator.py`: mode `uint64` for ValidatorIndex, `decoder --whole-accept` for the other types | `sh gen/generator/gen.sh` for its types. For the types of `gen/flat-types/run_generators.sh`: `sh gen/flat-types/run_generators.sh <out dir>`, then copy `<out dir>/<T>.whole-accept.lean` when `<T>.whole-accept.rc` is 0 | The build, `gen/generator/kindcheck.py`, `regenerate_and_compare.py`, the axioms gate, the negative cases |

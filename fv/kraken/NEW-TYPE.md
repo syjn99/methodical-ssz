@@ -7,36 +7,58 @@ Run the commands from the repository root, unless a command starts with `cd`.
 Paths without `fv/kraken/` are relative to `fv/kraken/`.
 `<T>` is the Go type name, for example `HistoricalSummary`.
 
-Two finished types show the two paths:
+Finished types show the paths:
 
 - The generated path: `lean/Prysm/HistoricalSummary/`.
   A generator writes `GeneratedDecodeAccept.lean` and `GeneratedEncodeFastPath.lean`.
   `gen/flat-types/flat_types_encode_spec.py` writes `GeneratedEncodeFastPathSpec.lean` and `WitnessGeneratedEncodeFastPath.lean`.
   A person writes `Code.lean`, `SpecDescription.lean`, `Spec.lean`, `DecodeSpec.lean` and the two decoder witnesses.
   `gen/checks/desc_to_lean.py` writes `SpecChecker.lean`.
-- The hand path: the decoder of `lean/Prysm/Checkpoint/`.
-  A person writes `DecodeAccept.lean`, `DecodeRejectSize.lean`, `DecodeSpec.lean`, `WitnessDecodeAccept.lean` and `WitnessDecodeRejectSize.lean`.
+- The hand path of a decoder: `lean/Prysm/HistoricalBatch/`.
+  A person writes `Statements.lean` (the statements), `DecodeAccept.lean`, `DecodeRejectSize.lean` and `DecodeSpec.lean`.
+  `DecodeSpec.lean` holds `Decode.accept_spec`, `Decode.reject_size_spec` and `Decode.reject_complete`.
+  `WitnessDecodeAccept.lean` and `WitnessDecodeRejectSize.lean` are the witnesses of the two main theorems.
+- The hand path of an encoder fast path: `lean/Prysm/DataColumnsByRootIdentifier/`.
+  A person writes `StatementsEncode.lean`, `EncodeFastPath.lean` (`Encode.fast_path`), `EncodeSpec.lean` (`Encode.fast_path_spec`) and `WitnessEncodeFastPath.lean`.
 
 `README.md` section 7 gives the writer and the check of each kind of file.
 `lean/README.md` section 8 gives the module and theorem names.
 
-## 1. The type is in the inventory, and its code is in the ELF
+## 1. The code of the type is in the ELF
 
-What you check: the full Go type name is in the list `sets.inventory_types` of `prysm/inventory.json`.
-It is a key of `per_type` in `prysm/go1.26.10/functions.json`, with one entry for each method.
+What you check: the list `functions` of `prysm/go1.26.10/functions.json` has one entry for each method of the type.
+This list holds every function of the ELF that has a `.S` text.
 Each method has the status `OK` in `prysm/go1.26.10/parser-result.json`.
+The third command tells if the type is in the type inventory.
 
 ```sh
-python3 -I -c "import json; print('github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.HistoricalSummary' in json.load(open('fv/kraken/prysm/inventory.json'))['sets']['inventory_types'])"
-python3 -I -c "import json; print(sorted(json.load(open('fv/kraken/prysm/go1.26.10/functions.json'))['per_type']['github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.HistoricalSummary']))"
+python3 -I -c "import json, sys; print(sorted((f['package'].rsplit('/', 1)[1], f['method'], f['kind']) for f in json.load(open('fv/kraken/prysm/go1.26.10/functions.json'))['functions'] if f['type'] == sys.argv[1]))" HistoricalSummary
 grep -n -A3 'v1alpha1.(\*HistoricalSummary).UnmarshalSSZ' fv/kraken/prysm/go1.26.10/parser-result.json
+python3 -I -c "import json, sys; print([t for t in json.load(open('fv/kraken/prysm/inventory.json'))['sets']['inventory_types'] if t.endswith('.' + sys.argv[1])])" HistoricalSummary
 ```
 
-Expected: `True`, then the list `['MarshalSSZTo', 'SizeSSZ', 'UnmarshalSSZ']`, then a line `"status": "OK"`.
-If the type is not in the inventory, its code is not in the pinned ELF.
+Expected for HistoricalSummary: the list `[('v1alpha1', 'MarshalSSZTo', 'generated'), ('v1alpha1', 'SizeSSZ', 'generated'), ('v1alpha1', 'UnmarshalSSZ', 'generated')]`.
+Then the lines `"group": "inventory"` and `"status": "OK"`, and the full Go type name in a list.
+If the first list is empty, the code of the type is not in the pinned ELF.
 A new ELF needs user approval.
 If the status is not `OK`, the Kraken parser cannot read the function (`FINDINGS.md`, entry "Kraken cannot parse `bsr`").
 `README.md` section 3 tells how these files are made again.
+
+The type inventory is the list `sets.inventory_types` of `prysm/inventory.json`.
+It holds the generated types in the field closure of the fork configuration types.
+The ELF also holds the code of types outside the inventory.
+The `group` of `parser-result.json` tells the kind of a function: `inventory`, `generated (not inventory)` or `hand-written`.
+For ValidatorIdentity, the first command gives the same three methods, the group is `generated (not inventory)`, and the last list is empty.
+For Slot, the first command gives four methods of the kind `hand-written`, from `consensus-types/primitives`.
+
+A type outside the inventory has its code in the ELF, but it lacks these items:
+
+- It has no key in `per_type` of `prysm/go1.26.10/functions.json`, and no record in the list `types` of `prysm/inventory.json`.
+- `gen/desc/test_desc.py prepare` writes no `Desc` file for it, and the `Desc` checker has no record of it.
+  So step 4.2 does not exist for it.
+  The type has no `SpecChecker.lean` and no codec equality with a checker `Desc`, as `lean/Prysm/ValidatorIdentity/` shows.
+- A hand-written type of `consensus-types/primitives` (Epoch, Slot, CommitteeIndex, ValidatorIndex) also has no entry in the IR.
+  So the generator modes that read the IR do not apply to it (step 5).
 
 ## 2. The link set holds the functions and the data items
 
@@ -81,7 +103,9 @@ What you make, in this order:
    Write it before you read the checker `Desc`.
    Quote the consensus-specs container in the module text.
    Example: `lean/Prysm/HistoricalSummary/SpecDescription.lean`.
-2. The checker `Desc`.
+   If you write it from the Prysm proto definition, say so in the module text, as `lean/Prysm/ValidatorBalance/SpecDescription.lean` does.
+   Such a `Desc` has the same source as the `Desc` producer, so it is not an independent specification (`FINDINGS.md`).
+2. The checker `Desc`, for an inventory type only (step 1).
    `gen/desc/test_desc.py prepare` runs the producer `gen/desc/producer.py` on every inventory type.
    `gen/desc/run_desc_checker.sh` runs the checker (needs Lean).
    `gen/desc/test_desc.py evaluate` checks its result.
@@ -107,7 +131,7 @@ What you make, in this order:
 
 3. `lean/Prysm/<T>/Spec.lean`: the structure `SszValue`, `SszValue.toValue`, `SszValue.encode` and the bridge lemmas.
    The tools of `gen/flat-types/` read `desc`, `SszValue.serialize_eq`, `SszValue.spec_rejects` and `SszValue.spec_accepts_iff`.
-   It also holds the codec equality of `desc` and `checkerDesc`, for example `desc_serialize_checker`.
+   For a type with a checker `Desc`, it also holds the codec equality of `desc` and `checkerDesc`, for example `desc_serialize_checker`.
    Example: `lean/Prysm/HistoricalSummary/Spec.lean`.
    For a flat type of uint64 and byte vector fields, `gen/flat-types/flat_types_spec.py` can write it.
    Add the type to its table `SPEC_TYPES`, then run `python3 -I -B gen/flat-types/flat_types_spec.py lean` from `fv/kraken`.
@@ -145,14 +169,29 @@ The last line of `<T>.whole-accept.stderr` or `<T>.fast-path.stderr` gives the r
 Do not add a refused type to `gen.sh`: its output redirect writes an empty file, and the script stops.
 A refused method needs hand proofs with the roles `DecodeAccept`, `DecodeRejectSize`, `EncodeFastPath` and their witnesses.
 Put the statements first in a `Statements` module.
-`lean/Prysm/SyncAggregate/` is the model of a hand decoder.
-Its `Statements.lean` holds the statements.
-`DecodeAccept.lean` and `DecodeRejectSize.lean` prove them from the `Codec` segment lemmas.
+The models are the hand paths of the header of this document.
+The proofs use the `Codec` segment lemmas.
 `Codec/FixedBytesDecode.lean` covers byte vectors of 32, 48 and 96 bytes.
 For another size, prove the segment lemma in the type directory.
 `lean/Prysm/SyncAggregate/DecodeFieldSegments.lean` does this for 64 bytes: `bytes_decode_segment_offset_zero_size64`.
 It has the statement of `Codec.bytes_decode_segment_offset_zero` with `hn : n = 64`, and the proof method of `Codec/FixedBytesDecode.lean`.
 A generator change needs user approval.
+
+A hand decoder that calls a callee decoder uses the function specification of the callee.
+`Codec/CalleeDecode.lean` gives the call block lemma `Codec.call_decode_segment`.
+Its premise `Uint64CalleeAccept fn` is the form of `Decode.accept_function_spec` of the callee type, for example `Prysm.Epoch.Decode.accept_function_spec`.
+The proof gives it with `Decode.accept_function_spec_holds` of the callee type.
+`lean/Prysm/PendingPartialWithdrawal/DecodeAccept.lean` does this for the callees ValidatorIndex and Epoch.
+
+A new uint64 primitive decoder uses the `uint64` mode of `gen/generator/gen.sh`, as the ValidatorIndex row does.
+The files of ValidatorIndex are the model:
+
+- `Code.lean`, and `GeneratedDecodeAccept.lean` with `Decode.generated_accept` (the `uint64` mode writes it);
+- `DecodeAcceptFunctionSpec.lean`: the hand function specification `Decode.accept_function_spec` and its proof `Decode.accept_function_spec_holds`;
+- `DecodeRejectSize.lean`, `WitnessGeneratedDecodeAccept.lean` and `WitnessDecodeRejectSize.lean`.
+
+Epoch, Slot and CommitteeIndex have hand accept proofs `DecodeAccept.lean` of the same code form.
+They do not use the `uint64` mode (`FINDINGS.md`).
 
 What checks it: `gen/generator/kindcheck.py` (step 7).
 It recomputes the kind parameters from the `.S` file and the IR.
@@ -180,7 +219,7 @@ A type whose decoder the generator refuses goes only into the tables of the enco
 | `gen/flat-types/flat_types_spec.py` | `SPEC_TYPES` | The Go type and the fields. The decoder and witness tools read this table too |
 | `gen/flat-types/flat_types_decode_spec.py` | `DECODE_SPEC_TYPES` | The types that get `DecodeSpec.lean` |
 | `gen/flat-types/flat_types_witness.py` | `WITNESS_TYPES` and `ASSEMBLY_NAMES` | The types that get the two decoder witnesses, and the name of the `.S` file |
-| `gen/flat-types/flat_types_witness.py` | the frame forms in `__main__` | The accept witness form: frame `0x38`, frame `0x20`, or the frame with slices and callees |
+| `gen/flat-types/flat_types_witness.py` | the frame forms in `__main__`, and the tables `gsize`, `callees`, `Fr` and `lsave` of `accbytes` | The accept witness form: frame `0x38`, frame `0x20`, or the frame with slices and callees |
 | `gen/flat-types/flat_types_encode_spec.py` | `ENCODE_SPEC_TYPES` | Every type with a generated fast path, also the types of `gen.sh` |
 | `gen/flat-types/flat_types_negative_cases.py` | `DECODER_CASE_TYPES` and `ENCODER_CASE_TYPES` | The negative cases of the decoder and of the encoder |
 | `gen/flat-types/flat_types_hand_list.py` | `HAND_LIST_TYPES` | The types whose names go into their hand list `gen/axioms-lists/<type>.lean` |
@@ -197,6 +236,20 @@ python3 -I -B gen/flat-types/flat_types_negative_cases.py lean gen/checks/negati
 
 Expected: exit 0 for each tool.
 `flat_types_hand_list.py` needs the declaration dump of the axioms gate (step 7).
+
+`flat_types_witness.py` chooses the accept witness form by the type name, in `__main__`.
+The decoder code of the type decides the form: its frame size (`sub $…,%rsp` of the `.S` file) and its callees.
+
+- Frame `0x38` (`accept_witness_frame_0x38`): one Slot callee and then inline uint64 fields, no byte field.
+  BeaconBlocksByRangeRequest has this form.
+- Frame `0x20` (`accbytes`, form `no_callee_frame_0x20`): byte fields and uint64 fields, no callee.
+  DepositRequest has this form.
+- The frame with slices and callees (`accbytes`, form `slices_and_callees`): byte fields and callees.
+  The table `Fr` gives the frame size.
+  ValidatorIdentity has this form.
+
+Read the `.S` file of the new type and choose the form.
+Add the type to the lists of `__main__` and to the tables of the form.
 What checks it: the build and the axioms gate (step 7), and `regenerate_and_compare.py` for the tool-written files.
 
 ## 7. The checks
