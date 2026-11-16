@@ -27,7 +27,10 @@
   "theorem": "Prysm.DepositRequest.Encode.generated_fast_spec",
   "kind": "statement",
   "old": "serialize desc g.toValue",
-  "new": "serialize Prysm.BuilderDepositRequest.desc g.toValue"
+  "new": "serialize Prysm.BuilderDepositRequest.desc g.toValue",
+  "mutant_imports": [
+   "Prysm.BuilderDepositRequest.SpecDescription"
+  ]
  },
  {
   "id": "deposit-request-encode-generated-fast-spec-statement-rbx-192-to-184",
