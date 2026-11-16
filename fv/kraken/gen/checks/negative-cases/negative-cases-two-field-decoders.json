@@ -150,14 +150,6 @@
   "new": "⋆ Eq (fv1.At (s.regs.rax.toBitVec + 8))"
  },
  {
-  "id": "sync-aggregator-selection-data-decode-accept-spec-statement-uint-bytes-slot-to-subcommittee-index",
-  "module": "Prysm/SyncAggregatorSelectionData/DecodeSpec.lean",
-  "theorem": "Prysm.SyncAggregatorSelectionData.Decode.accept_spec",
-  "kind": "statement",
-  "old": "⋆ Eq ((uintBytes 8 g.slot.toNat).toList.At (s.regs.rax.toBitVec + 8))",
-  "new": "⋆ Eq ((uintBytes 8 g.subcommitteeIndex.toNat).toList.At (s.regs.rax.toBitVec + 8))"
- },
- {
   "id": "sync-aggregator-selection-data-decode-generated-reject-statement-hlen-16-to-15",
   "module": "Prysm/SyncAggregatorSelectionData/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.SyncAggregatorSelectionData.Decode.generated_reject",
@@ -215,14 +207,6 @@
   "new": "⋆ Eq (fv1.At (s.regs.rax.toBitVec + 8))"
  },
  {
-  "id": "validator-balance-decode-accept-spec-statement-uint-bytes-index-to-balance",
-  "module": "Prysm/ValidatorBalance/DecodeSpec.lean",
-  "theorem": "Prysm.ValidatorBalance.Decode.accept_spec",
-  "kind": "statement",
-  "old": "⋆ Eq ((uintBytes 8 g.index.toNat).toList.At (s.regs.rax.toBitVec + 8))",
-  "new": "⋆ Eq ((uintBytes 8 g.balance.toNat).toList.At (s.regs.rax.toBitVec + 8))"
- },
- {
   "id": "validator-balance-decode-generated-reject-statement-hlen-16-to-15",
   "module": "Prysm/ValidatorBalance/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.ValidatorBalance.Decode.generated_reject",
@@ -278,14 +262,6 @@
   "kind": "statement",
   "old": "⋆ Eq (fv0.At (s.regs.rax.toBitVec + 8))",
   "new": "⋆ Eq (fv1.At (s.regs.rax.toBitVec + 8))"
- },
- {
-  "id": "voluntary-exit-decode-accept-spec-statement-uint-bytes-epoch-to-validator-index",
-  "module": "Prysm/VoluntaryExit/DecodeSpec.lean",
-  "theorem": "Prysm.VoluntaryExit.Decode.accept_spec",
-  "kind": "statement",
-  "old": "⋆ Eq ((uintBytes 8 g.epoch.toNat).toList.At (s.regs.rax.toBitVec + 8))",
-  "new": "⋆ Eq ((uintBytes 8 g.validatorIndex.toNat).toList.At (s.regs.rax.toBitVec + 8))"
  },
  {
   "id": "voluntary-exit-decode-generated-reject-statement-hlen-16-to-15",

@@ -20,18 +20,6 @@
   "statement_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
-  "id": "sync-aggregate-decode-accept-code-movq-0x40-to-0x3f",
-  "kind": "code",
-  "line": 34,
-  "old": "  movq $0x40,0x10(%rdx)",
-  "new": "  movq $0x3f,0x10(%rdx)",
-  "module": "Prysm/SyncAggregate/DecodeAccept.lean",
-  "theorem": "Prysm.SyncAggregate.Decode.accept",
-  "code_definition": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
-  "statement_module": "Prysm/SyncAggregate/Statements.lean"
- },
- {
   "id": "sync-aggregate-decode-accept-code-add-0x40-to-0x48",
   "kind": "code",
   "old": "  add $0x40,%rbx",
@@ -189,7 +177,7 @@
   "code_definition": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
   "statement_module": "Prysm/SyncAggregate/Statements.lean",
-  "note": "the same mutation as sync-aggregate-decode-accept-code-movq-0x40-to-0x3f: its error is in Prysm.SyncAggregate.Decode.bits_segment (the segment lemma that holds the mutated directive), which precedes the main theorem"
+  "note": "the first theorem whose proof steps the mutated directive is Prysm.SyncAggregate.Decode.bits_segment, the segment lemma before the main theorem"
  },
  {
   "id": "sync-committee-decode-reject-size-control",

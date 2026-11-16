@@ -36,12 +36,12 @@
   "new": "(s.regs.get64 rD - imm.toBitVec), zmms"
  },
  {
-  "id": "codec-window-steps-step-store-statement-get64-r-s-to-r-b",
+  "id": "codec-window-steps-step-store-statement-host-e-to-e-1",
   "module": "Codec/WindowSteps.lean",
   "theorem": "step_store",
   "kind": "statement",
-  "old": "(@BitVec.toInt 64 (s.regs.get64 rS))",
-  "new": "(@BitVec.toInt 64 (s.regs.get64 rB))"
+  "old": "final ⟨{ s with dmem := m' }, Host.addrOf e⟩",
+  "new": "final ⟨{ s with dmem := m' }, Host.addrOf (e + 1)⟩"
  },
  {
   "id": "codec-window-steps-step-move-immediate-statement-truncate-32-to-16",

@@ -141,22 +141,6 @@
   "new": "⋆ Heap (avail - 96)"
  },
  {
-  "id": "sync-committee-message-decode-accept-spec-statement-uint-bytes-validator-index-to-slot",
-  "module": "Prysm/SyncCommitteeMessage/DecodeSpec.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_spec",
-  "kind": "statement",
-  "old": "(uintBytes 8 g.validatorIndex.toNat).toList.At (s.regs.rax.toBitVec + 40)",
-  "new": "(uintBytes 8 g.slot.toNat).toList.At (s.regs.rax.toBitVec + 40)"
- },
- {
-  "id": "sync-committee-message-decode-accept-spec-statement-host-141-to-140",
-  "module": "Prysm/SyncCommitteeMessage/DecodeSpec.lean",
-  "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_spec",
-  "kind": "statement",
-  "old": "(Host.addrOf (k + 141))",
-  "new": "(Host.addrOf (k + 140))"
- },
- {
   "id": "sync-committee-message-decode-accept-spec-statement-hav-128-avail-to-true",
   "module": "Prysm/SyncCommitteeMessage/DecodeSpec.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_spec",
@@ -311,22 +295,6 @@
   "module": "Prysm/PendingConsolidation/DecodeSpec.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.accept_spec",
   "kind": "control"
- },
- {
-  "id": "pending-consolidation-decode-accept-spec-statement-uint-bytes-target-index-to-source-index",
-  "module": "Prysm/PendingConsolidation/DecodeSpec.lean",
-  "theorem": "Prysm.PendingConsolidation.Decode.accept_spec",
-  "kind": "statement",
-  "old": "(uintBytes 8 g.targetIndex.toNat).toList.At (s.regs.rax.toBitVec + 16)",
-  "new": "(uintBytes 8 g.sourceIndex.toNat).toList.At (s.regs.rax.toBitVec + 16)"
- },
- {
-  "id": "pending-consolidation-decode-accept-spec-statement-host-56-to-55",
-  "module": "Prysm/PendingConsolidation/DecodeSpec.lean",
-  "theorem": "Prysm.PendingConsolidation.Decode.accept_spec",
-  "kind": "statement",
-  "old": "(Host.addrOf (k + 56))",
-  "new": "(Host.addrOf (k + 55))"
  },
  {
   "id": "pending-consolidation-decode-reject-complete-statement-size-16-to-15",

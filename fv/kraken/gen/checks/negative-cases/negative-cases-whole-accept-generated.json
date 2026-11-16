@@ -24,20 +24,12 @@
   "new": "Eq (fv1.At (s.regs.rax.toBitVec + 24))"
  },
  {
-  "id": "pow-block-decode-generated-accept-statement-rax-32-to-48",
+  "id": "pow-block-decode-generated-accept-kind-statement-bytes-32-to-48",
   "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.PowBlock.Decode.generated_accept",
+  "theorem": "Prysm.PowBlock.Decode.generated_accept_kind",
   "kind": "statement",
-  "old": "Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 8))",
-  "new": "Eq ((Int.toBytes 8 48).At (s.regs.rax.toBitVec + 8))"
- },
- {
-  "id": "validator-balance-decode-generated-accept-statement-fv0-fv0-to-fv1-2",
-  "module": "Prysm/ValidatorBalance/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.ValidatorBalance.Decode.generated_accept",
-  "kind": "statement",
-  "old": "Eq (fv0.At (s.regs.rax.toBitVec + 8))",
-  "new": "Eq (fv1.At (s.regs.rax.toBitVec + 8))"
+  "old": "[.bytes 32, .bytes 32, .bytes 32]",
+  "new": "[.bytes 48, .bytes 32, .bytes 32]"
  },
  {
   "id": "sync-committee-message-decode-generated-field-2-statement-heap-32-to-24",
@@ -70,14 +62,6 @@
   "kind": "statement",
   "old": "st.data.regs.rsp = s.regs.rsp + 8",
   "new": "st.data.regs.rsp = s.regs.rsp + 16"
- },
- {
-  "id": "voluntary-exit-decode-generated-accept-statement-uint64-80-to-88",
-  "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.VoluntaryExit.Decode.generated_accept",
-  "kind": "statement",
-  "old": "\n      80) [.uint64, .uint64] := by",
-  "new": "\n      88) [.uint64, .uint64] := by"
  },
  {
   "id": "sync-aggregator-selection-data-decode-generated-field-1-statement-48-to-47",
@@ -154,19 +138,6 @@
   "code_namespace": "Prysm.SyncCommitteeMessage.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
- },
- {
-  "id": "voluntary-exit-decode-generated-reject-code-add-0x48-to-0x40-2",
-  "module": "Prysm/VoluntaryExit/GeneratedDecodeAccept.lean",
-  "theorem": "Prysm.VoluntaryExit.Decode.generated_reject",
-  "kind": "code",
-  "old": "  add $0x48,%rsp",
-  "new": "  add $0x40,%rsp",
-  "line": 93,
-  "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.VoluntaryExit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
   "id": "pow-block-decode-generated-field-1-statement-rax-32-to-48",

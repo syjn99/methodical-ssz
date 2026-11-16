@@ -115,28 +115,12 @@
   "kind": "control"
  },
  {
-  "id": "deposit-data-decode-accept-spec-statement-heap-176-to-175",
-  "module": "Prysm/Deposit_Data/DecodeSpec.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
-  "kind": "statement",
-  "old": "⋆ Heap (avail - 176)",
-  "new": "⋆ Heap (avail - 175)"
- },
- {
   "id": "deposit-data-decode-accept-spec-statement-g-none-to-none",
   "module": "Prysm/Deposit_Data/DecodeSpec.lean",
   "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
   "kind": "statement",
   "old": "⋆ Eq (g.pubkey.toList.At p1) ⋆ Eq (g.withdrawalCredentials.toList.At p2)",
   "new": "⋆ Eq (g.withdrawalCredentials.toList.At p1) ⋆ Eq (g.pubkey.toList.At p2)"
- },
- {
-  "id": "deposit-data-decode-accept-spec-statement-rax-96-to-48",
-  "module": "Prysm/Deposit_Data/DecodeSpec.lean",
-  "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
-  "kind": "statement",
-  "old": "Eq ((Int.toBytes 8 96).At (s.regs.rax.toBitVec + 72))",
-  "new": "Eq ((Int.toBytes 8 48).At (s.regs.rax.toBitVec + 72))"
  },
  {
   "id": "deposit-data-decode-accept-spec-statement-hav-176-avail-to-true",
