@@ -46,8 +46,10 @@ Read each pin from the file that holds it. Do not copy the values into other fil
 You need Go 1.26.10, a clean Prysm tree at the pinned commit, and a generator binary built from the pinned generator commit.
 Run heavy jobs one at a time, under a memory limit.
 
-1. Add the `replace` line of `prysm/go1.26.10/prysm-go.mod.diff` to the Prysm `go.mod`. Do not change its path.
-   The ELF records this path. So the generator tree must be at this path when Go builds the ELF, for example as a Docker mount.
+1. Apply `prysm/go1.26.10/prysm-go.mod.diff` to the Prysm `go.mod` with `git apply`. Do not change the diff.
+   It sets the required version of the generator module to the pinned generator commit.
+   It adds a `replace` line with the path `/workspace/methodical-ssz-generator`.
+   The ELF records the version and the path. So the generator tree must be at this path when Go builds the ELF, for example as a Docker mount.
 2. Generate the SSZ files and the generator IR with `sh fv/kraken/gen/prysm-gen.sh <prysm-tree> <generator-binary> <out>`.
 3. Copy the generated files from `<out>/gen/` into the Prysm tree.
 4. Write the `main` package with `python3 -I fv/kraken/gen/keepalive.py fv/kraken/prysm/inventory.json <prysm-tree>/fv/prysm-target/main.go`.

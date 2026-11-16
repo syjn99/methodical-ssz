@@ -5,7 +5,7 @@
 #   sh fv/kraken/gen/prysm-rebuild-and-check.sh <prysm-tree> <generator-tree> <scratch-dir>
 #
 #   <prysm-tree>      a Prysm tree at the pinned commit. It holds the generated files of the pinned generator,
-#                     fv/prysm-target/main.go (gen/keepalive.py) and the replace line of prysm/go1.26.10/prysm-go.mod.diff.
+#                     fv/prysm-target/main.go (gen/keepalive.py) and the go.mod changes of prysm/go1.26.10/prysm-go.mod.diff.
 #   <generator-tree>  the methodical-ssz tree at the pinned generator commit.
 #   <scratch-dir>     a new directory for all outputs. It must not exist.
 # The script writes nothing into the two trees. Docker mounts them read only.
@@ -40,10 +40,15 @@ K=$(cd "$(dirname "$0")/.." && pwd)
 T=$K/prysm/go1.26.10
 IMAGE=${GO_IMAGE:-golang:1.26.10}
 
-# The ELF records the path of the replace line. So the generator tree must be at that path in the container.
+# The ELF records the required version and the path of the replace line. So the generator tree must be at that path in the container.
 GPATH=$(sed -n 's|^+replace github.com/OffchainLabs/methodical-ssz => ||p' "$T/prysm-go.mod.diff")
+GREQ=$(sed -n 's|^+[[:space:]]github.com/OffchainLabs/methodical-ssz ||p' "$T/prysm-go.mod.diff")
 grep -q "^replace github.com/OffchainLabs/methodical-ssz => $GPATH\$" "$P/go.mod" || {
   echo "error: $P/go.mod has not the replace line of $T/prysm-go.mod.diff" >&2
+  exit 2
+}
+grep -q "^[[:space:]]github.com/OffchainLabs/methodical-ssz $GREQ\$" "$P/go.mod" || {
+  echo "error: $P/go.mod has not the require line of $T/prysm-go.mod.diff" >&2
   exit 2
 }
 if [ -n "${GO_MODULE_CACHE:-}" ]; then

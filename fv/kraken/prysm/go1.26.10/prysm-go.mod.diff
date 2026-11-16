@@ -1,10 +1,19 @@
 diff --git a/go.mod b/go.mod
-index 70f1c91bd..525eb1375 100644
+index 70f1c91bd..a3cef7bbc 100644
 --- a/go.mod
 +++ b/go.mod
+@@ -5,7 +5,7 @@ go 1.26.10
+ require (
+ 	github.com/OffchainLabs/go-bitfield v0.0.0-20260504143531-5cbb6d0f5f2e
+ 	github.com/OffchainLabs/hashtree v0.2.6
+-	github.com/OffchainLabs/methodical-ssz v0.0.0-20261026091435-c3f77ce44447
++	github.com/OffchainLabs/methodical-ssz v0.0.0-20261105170857-698c2025a73a
+ 	github.com/aristanetworks/goarista v0.0.0-20200805130819-fd197cf57d96
+ 	github.com/bazelbuild/buildtools v0.0.0-20260528135316-84fa6c32aee6
+ 	github.com/bazelbuild/rules_go v0.23.2
 @@ -318,3 +318,5 @@ tool (
  	go.uber.org/mock/mockgen
  	gotest.tools/gotestsum
  )
 +
-+replace github.com/OffchainLabs/methodical-ssz => /workspace/worktrees/methodical-ssz/fv-pin-smoke-generator
++replace github.com/OffchainLabs/methodical-ssz => /workspace/methodical-ssz-generator
