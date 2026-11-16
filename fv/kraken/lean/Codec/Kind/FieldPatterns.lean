@@ -10,8 +10,8 @@ hypothesis anywhere in the statement makes `t_kind` fail. A theorem that only ha
 lemma instance does not have this property: `theorem t (hx : 1 = 2) : P := p` compiles when `p` does not use `hx`.
 
 The kinds are hand text, written once, and do not depend on a hand theorem of the instance type.
-`uint64DecodeAcceptKind_of` and `rootDecodeSegmentKind_of` prove each kind from the code facts of its lemma, so the kind
-body is kernel-checked against the lemma conclusion. They are `abbrev`s: `with_reducible rfl` unfolds
+`uint64DecodeAcceptKind_of` proves the kind of this module from the code facts of its lemma, so the kind
+body is kernel-checked against the lemma conclusion. The kinds are `abbrev`s: `with_reducible rfl` unfolds
 them, but not `Int.toBytes` or other semireducible definitions. A wrong literal fails fast and does not run
 into a long unfolding.
 The anchors in `Prysm/Slot/Uint64DecoderKindSameAsHand.lean` show that the uint64 decoder kind is the statement of the reviewed hand
@@ -57,57 +57,5 @@ theorem uint64DecodeAcceptKind_of (C : Program) (fn l0 lcc lbb : String) (fs dsp
     (hl : ∀ k, C.IsInfixAt Host.prog k → LabelsFresh C k → label lbb = Host.addrOf (k + jb)) :
     uint64DecodeAcceptKind C :=
   fun k hk hf => uint64_decode_accept fn l0 lcc lbb fs dsp hdsp k (k + jb) (hA k hk) (hB k hk) (hl k hk hf)
-
-set_option linter.unusedVariables false in
-/-- P2 decode statement kind: the decode segment of one 32-byte field of the decoder `C`, head block at
-`k + j1`, second block at `k + j2`, with the stack displacements `dR dB dS`, the Go field offsets
-`fP fL fC` and the SSZ source offset `src`. The text is the conclusion of `root_decode_segment` with
-`j1 := k + j1`, `j2 := k + j2`, after the binders `k hk hf`. -/
-abbrev rootDecodeSegmentKind (C : Program) (j1 j2 : Nat) (dR dB dS fP fL fC src : Int64) : Prop :=
-  ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)
-    (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
-    (hR : sp + dR.toBitVec = aR) (hB' : sp + dB.toBitVec = aB) (hS : sp + dS.toBitVec = aS)
-    (hRet : sp - 8 = aRet) (hLo : sp - 8 - BitVec.ofNat 64 St = aLo)
-    (hP : rcv + fP.toBitVec = aP) (hL : rcv + fL.toBitVec = aL) (hC : rcv + fC.toBitVec = aC)
-    (hSrc : bf + src.toBitVec = aSrc)
-    (rbp0 r140 : UInt64) (root : List UInt8) (hroot : root.length = 32)
-    (spl rslot lo lS vP vL vC : List UInt8)
-    (hspl : spl.length = 24) (hrs : rslot.length = 8) (hlo : lo.length = St) (hlS : lS.length = 8)
-    (hvP : vP.length = 8) (hvL : vL.length = 8) (hvC : vC.length = 8)
-    (R : DataMem → Prop) (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 32 ≤ avail)
-    (s : MachineData) (hrsp : s.regs.rsp = { toBitVec := sp }) (hrbp : s.regs.rbp = rbp0)
-    (hr14 : s.regs.r14 = r140)
-    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ Eq ((Int.toBytes 8 bf.toInt).At aB)
-      ⋆ Eq (spl.At sp) ⋆ Eq (rslot.At aRet) ⋆ Eq (lo.At aLo) ⋆ Eq (lS.At aS)
-      ⋆ Heap avail
-      ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
-      ⋆ Eq (root.At aSrc)
-      ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St) (hmm : MemmoveContract St),
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + j2 + 12) ∧ st.data.regs.rsp = { toBitVec := sp }
-        ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
-        ∃ (p : BitVec 64) (spl' lo' : List UInt8), spl'.length = 24 ∧ lo'.length = St
-          ∧ st.data.regs.rdx.toBitVec = rcv ∧
-        (Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ Eq ((Int.toBytes 8 bf.toInt).At aB)
-          ⋆ Eq (spl'.At sp)
-          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + j2 + 6 + 1)).toBitVec.toInt).At aRet)
-          ⋆ Eq (lo'.At aLo)
-          ⋆ Eq ((Int.toBytes 8 p.toInt).At aS)
-          ⋆ Heap (avail - 32)
-          ⋆ Eq ((Int.toBytes 8 p.toInt).At aP) ⋆ Eq ((Int.toBytes 8 32).At aL)
-          ⋆ Eq ((Int.toBytes 8 32).At aC) ⋆ Eq (root.At p)
-          ⋆ Eq (root.At aSrc)
-          ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
-      ⟨s, Host.addrOf (k + j1)⟩
-
-/-- The P2 decode kind follows from `root_decode_segment` and the code facts of an instance (kernel check that the
-kind body is the lemma conclusion at `j1 := k + j1`, `j2 := k + j2`). -/
-theorem rootDecodeSegmentKind_of (C : Program) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
-    (hA : ∀ k, C.IsInfixAt Host.prog k → (rootDecodeHead lff dR fL fC).IsInfixAt Host.prog (k + j1))
-    (hB : ∀ k, C.IsInfixAt Host.prog k → (rootDecodeMiddle lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog (k + j2))
-    (hl : ∀ k, C.IsInfixAt Host.prog k → LabelsFresh C k → label lff = Host.addrOf (k + j2)) :
-    rootDecodeSegmentKind C j1 j2 dR dB dS fP fL fC src :=
-  fun k hk hf => root_decode_segment lff lwb dR dB dS fP fL fC src (k + j1) (k + j2) (hA k hk) (hB k hk) (hl k hk hf)
 
 end Codec

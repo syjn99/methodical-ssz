@@ -17,8 +17,6 @@ import Prysm.BeaconBlockHeader.EncodeRootFieldsThroughCallBlock
 import Prysm.Eth1Data.EncodeSpec
 import Prysm.Eth1Data.WitnessEncodeFastPath
 import Prysm.BeaconBlockHeader.WitnessEncodeRejectLength
-import Codec.Bytes32DecodeOffsetZero
-import Codec.Kind.Bytes32DecodeOffsetZero
 import Prysm.BlobIdentifier.DecodeSpec
 import Prysm.BlobIdentifier.WitnessDecodeAccept
 import Prysm.BlobIdentifier.WitnessDecodeRejectSize
@@ -235,14 +233,12 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 -- The segment lemmas, the statement-identity checks and the generated instances.
 #print axioms Codec.infix_sub
 #print axioms Codec.uint64_decode_accept
-#print axioms Codec.root_decode_segment
 #print axioms Codec.root_encode_segment
 #print axioms Prysm.Checkpoint.Encode.fast_path_from_bytes32_pattern
 #print axioms Prysm.Checkpoint.Encode.fast_path_from_bytes32_pattern_same_statement
 #print axioms Prysm.Checkpoint.Encode.bytes32_template_at
 -- Frozen statement kinds, their lemma ties and anchors, and the generated `_kind` identities
 #print axioms Codec.uint64DecodeAcceptKind_of
-#print axioms Codec.rootDecodeSegmentKind_of
 #print axioms Prysm.Slot.Decode.accept_kind_anchor
 #print axioms Prysm.CommitteeIndex.Decode.accept_kind_anchor
 -- ValidatorIndex and BeaconBlockHeader
@@ -296,8 +292,6 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_prefix
 -- Generator extension for a 32-byte field at SSZ offset 0 (offset-0 form)
-#print axioms Codec.root_decode_segment_offset_zero
-#print axioms Codec.rootDecodeSegmentOffsetZeroKind_of
 
 -- BlobIdentifier and DepositMessage (UnmarshalSSZ)
 #print axioms Prysm.BlobIdentifier.desc_checker
@@ -477,17 +471,12 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.placed_at_173
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.host_program_eq
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs
-#print axioms Codec.callArgumentFirstKind_of
-#print axioms Codec.callArgumentLeaKind_of
-#print axioms Codec.callArgumentMovKind_of
-#print axioms Codec.callArgumentReloadKind_of
 #print axioms Codec.callDecodeSegmentKind_of
 #print axioms Codec.call_argument_first_segment
 #print axioms Codec.call_argument_lea_segment
 #print axioms Codec.call_argument_mov_segment
 #print axioms Codec.call_argument_reload_segment
 #print axioms Codec.call_decode_segment
-#print axioms Codec.uint64DecodeScratchRegisterSegmentKind_of
 #print axioms Codec.uint64_decode_scratch_register_segment
 
 -- SyncCommitteeMessage and PendingConsolidation (UnmarshalSSZ)

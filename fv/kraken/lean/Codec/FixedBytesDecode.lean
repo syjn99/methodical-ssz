@@ -1,15 +1,12 @@
 import Codec.Bytes32Decode
-import Codec.Bytes32DecodeOffsetZero
 
 /-!
 # Size-parametric fixed-bytes decode segments (`[]byte` vector field of 32, 48 or 96 bytes)
 
-This form covers a byte vector of another size than 32.
-`Codec/Bytes32Decode.lean`, `Codec/Bytes32DecodeOffsetZero.lean`, `Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`
-and the `Kind*.lean` files are unchanged. Go 1.26.10 compiles `f = append(make([]byte, 0, n), buf[src:src+n]...)`
-to the two blocks of `Codec/Bytes32Decode.lean` with the size `n` in three (head: two) immediates. The templates here
-are the texts of `rootDecodeHead`, `rootDecodeMiddle`, `rootDecodeMiddleOffsetZero` with each size immediate `32` replaced by the
-parameter `n : Int64`:
+Go 1.26.10 compiles the decode of a fixed `[]byte` field, `f = append(make([]byte, 0, n), buf[src:src+n]...)`,
+to two code blocks with the size `n` in three (head: two) immediates.
+The write-barrier blocks between them (not taken when `runtime.writeBarrier` is 0) differ per instance and are not part of
+the templates. The templates take the size as the parameter `n : Int64`:
 
 * `bytesDecodeHead n lff dR fL fC` (9 directives): `mov $n,%ecx` and `movq $n,fC(%rdx)`;
 * `bytesDecodeMiddle n lff lwb dR dB dS fP fL fC src` (12 directives): `mov $n,%ecx`, `movq $n,fL(%rdx)`,
@@ -18,18 +15,17 @@ parameter `n : Int64`:
 
 The lemmas `bytes_decode_segment` (add form) and `bytes_decode_segment_offset_zero` (offset-0 form) take the size as `n : Nat` with
 `hn : n = 32 ∨ n = 48 ∨ n = 96`; the templates get `OfNat.ofNat n`. The proof is a case split; each case
-runs the proof text of the model lemma (`root_decode_segment`, `root_decode_segment_offset_zero`) with the literal size. The
+runs the same proof text with the literal size. The
 hypothesis `hn` is a limit of the proof method (the machine steps are computed with a literal immediate),
-not of the code shape; another size needs one more case. Contracts: `MakesliceContract` and `MemmoveContract` exactly as
-in `root_decode_segment`. `Codec/FixedBytesDecodeSizeInstances.lean` shows that the 32-byte lemmas and `Prysm.DepositMessage.bytes48_decode_segment_offset_zero` are the
-`n = 32` / `n = 48` instances (`rfl`).
+not of the code shape; another size needs one more case. Contracts: `MakesliceContract` and `MemmoveContract` with
+stack `St`.
 -/
 
 open Machine Runtime
 
 namespace Codec
 
-/-- First block of the fixed-bytes decode segment: `rootDecodeHead` with the size immediate `n`. -/
+/-- First block of the fixed-bytes decode segment (from the `lea` of `type:uint8` to `je lff`), with the size immediate `n`. -/
 def bytesDecodeHead (n : Int64) (lff : String) (dR fL fC : Int64) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.lea (Reg.low Reg64.rax Width.W64)
@@ -55,7 +51,7 @@ def bytesDecodeHead (n : Int64) (lff : String) (dR fL fC : Int64) : Program :=
        (Operand.imm (ConstExpr.int64 0)))),
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.z lff))]
 
-/-- Second block, add form: `rootDecodeMiddle` with the size immediate `n`. -/
+/-- Second block, add form (from `lff:` to `jne lwb`), with the size immediate `n`. -/
 def bytesDecodeMiddle (n : Int64) (lff lwb : String) (dR dB dS fP fL fC src : Int64) : Program :=
   [Kraken.Directive.label lff,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
@@ -87,7 +83,7 @@ def bytesDecodeMiddle (n : Int64) (lff lwb : String) (dR dB dS fP fL fC src : In
        (Operand.imm (ConstExpr.int64 0)))),
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.nz lwb))]
 
-/-- Second block, offset-0 form: `rootDecodeMiddleOffsetZero` with the size immediate `n`. -/
+/-- Second block, offset-0 form: the add form without `add $src,%rbx`, with the size immediate `n`. -/
 def bytesDecodeMiddleOffsetZero (n : Int64) (lff lwb : String) (dR dB dS fP fL fC : Int64) : Program :=
   [Kraken.Directive.label lff,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
@@ -243,8 +239,8 @@ local macro "bytes_decode_add_case " n:num : tactic => `(tactic| (
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- **Fixed-bytes decode segment, add form** (`n` = 32, 48 or 96): the statement of `root_decode_segment` with the
-size `n`. The field gets a new `n`-byte heap chunk `p` holding the source bytes, length and capacity `n`;
+/-- **Fixed-bytes decode segment, add form** (`n` = 32, 48 or 96): from the first block (at `j1`) to the `jne` of the
+second block (at `j2`, `label lff = Host.addrOf j2`), with `runtime.writeBarrier` = 0. The field gets a new `n`-byte heap chunk `p` holding the source bytes, length and capacity `n`;
 `p` is also in the slot `aS`; rdx holds the receiver. -/
 theorem bytes_decode_segment (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
     (hA : (bytesDecodeHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
@@ -412,8 +408,8 @@ local macro "bytes_decode_offset_zero_case " n:num : tactic => `(tactic| (
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **Fixed-bytes decode segment, offset-0 form** (`n` = 32, 48 or 96): the statement of `root_decode_segment_offset_zero`
-with the size `n` (source bytes at `bf`). -/
+/-- **Fixed-bytes decode segment, offset-0 form** (`n` = 32, 48 or 96): the add form statement with the source bytes
+at `bf` (no `aSrc`). -/
 theorem bytes_decode_segment_offset_zero (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat)
     (hA : (bytesDecodeHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
     (hB : (bytesDecodeMiddleOffsetZero (OfNat.ofNat n) lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog j2)

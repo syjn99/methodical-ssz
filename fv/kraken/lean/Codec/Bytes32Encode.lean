@@ -16,7 +16,7 @@ code blocks (the growslice block between them is not taken when the field fits):
 Registers at the segment: rax = receiver `rcv`, rbx = destination base `dstp`, rdx = current
 length `off`, rdi = capacity `cap`. Parameters: labels `lrej`, `lcf`; field displacements
 `fP`, `fL`; stack displacements `dCap`, `dLen`, `dPtr`; the places `j1`, `j2`; the address of
-`lcf`; addresses with equations as in `root_decode_segment`. The lemma ends at the return of
+`lcf`; addresses are parameters with equations, so that an instance states them in its own form. The lemma ends at the return of
 `memmove` (directive `j2 + 8`).
 -/
 
