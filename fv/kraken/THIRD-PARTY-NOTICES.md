@@ -1,15 +1,15 @@
 # Third-party notices: source attribution of derived evidence files
 
 This repository's `LICENSE` is Apache-2.0. Some files under `fv/kraken/` are derived from other projects. This file names those files, how they were produced, and the upstream project and licence name.
-Counts are `git ls-files` counts. Paths are relative to `fv/kraken/`.
+Paths are relative to `fv/kraken/`.
 Scope: the path lists come from program scans of the tracked files for Go source, generated Go, disassembly, `-m` and diff lines (section "Files that only name upstream symbols"). They are best-effort, not a guarantee of completeness; other files may quote short fragments of generated code or upstream identifiers.
 
 ## Machine code compiled in a Prysm tree (Go 1.26.10)
 
-- Paths: `prysm/go1.26.10/**/norm/*.S` (106), `prysm/go1.26.10/**/target.objdump` (1), `prysm/go1.26.10/**/data/*` (48), `prysm/go1.26.10/**/link*/RESULT` (1). Total 156.
+- Paths: `prysm/go1.26.10/**/norm/*.S`, `prysm/go1.26.10/**/target.objdump`, `prysm/go1.26.10/**/data/*`, `prysm/go1.26.10/**/link*/RESULT`.
 - What: normalised disassembly (`.S`), filtered `go tool objdump -gnu` output, byte extracts of ELF data symbols, and link-check tables.
 - The `.S` files hold functions of the Prysm packages `proto/prysm/v1alpha1`, `proto/engine/v1` and `consensus-types/primitives`.
-- Before the build, the 16 `*.ssz.go` files of the tree were replaced by the generated Prysm Go (`README.md` section 3, step 3).
+- Before the build, the `*.ssz.go` files of the tree were replaced by the generated Prysm Go (`README.md` section 3, step 3).
   So the `proto/*` method bodies come from this repository's generator. `consensus-types/primitives` is Prysm source.
 - The data extracts and tables also name or hold Go runtime and standard-library symbols (for example `runtime.memmove`, type descriptors).
 - Produced by: `link/convert_objdump.py --norm` and `link/check.py` on an ELF cross-compiled by Go 1.26.10 (`GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 -tags purego -trimpath`).
@@ -20,40 +20,40 @@ Scope: the path lists come from program scans of the tracked files for Go source
 
 ## Generator output for Prysm type definitions
 
-- Paths: `prysm/_generated/**` (17: 16 `*.ssz.go`, `SHA256SUMS`).
+- Paths: `prysm/_generated/**` (the generated `*.ssz.go` files and `SHA256SUMS`).
 - What: output of this repository's generator (`sszgen/`, `ssz/` at `698c2025a73a296b55b95744a8408f3b03b2546b`) applied to Prysm type definitions at the Prysm commit of the Prysm machine code.
 - The input specs are the configs that `gen/prysm-gen.sh` names. Upstream and licence of the inputs: Prysm, as for the Prysm machine code.
 
 ## Diffs against Prysm's committed generated files
 
-- Paths: `prysm/diff/**` (1: `generated-go-diff.json`). The 16 `*.ssz.go.diff` files are not tracked. `generated-go-diff.json` holds file names, counts and commit titles only.
+- Paths: `prysm/diff/**` (`generated-go-diff.json`). The `*.ssz.go.diff` files are not tracked. `generated-go-diff.json` holds file names, counts and commit titles only.
 - What: unified diffs between the `*.ssz.go` files in the Prysm tree and the generated Prysm Go. The removed lines are Prysm text.
 - Upstream: Prysm, as for the Prysm machine code.
 
 ## Driver sources that import Prysm
 
-- Paths: `prysm/go1.26.10/**/*-main.go.txt` (12).
+- Paths: `prysm/go1.26.10/**/*-main.go.txt`.
 - What: copies of the scratch `main` packages used to build or check the Prysm ELF. They import Prysm packages.
 - Written for this project. Upstream of the imported packages: Prysm, as for the Prysm machine code.
 
 ## Prysm type records and other text derived from Prysm files
 
-- `prysm/ir/ir-mainnet.json`, `prysm/ir/ir-minimal.json` (2): the generator IR of the Prysm types, with Go field names, types, tags and gc amd64 offsets.
+- `prysm/ir/ir-mainnet.json`, `prysm/ir/ir-minimal.json`: the generator IR of the Prysm types, with Go field names, types, tags and gc amd64 offsets.
   Produced by `gen/inventory-tool` (front end of generator `698c202`) in the Prysm tree, via `gen/prysm-gen.sh`, then `gen/type_inventory.py reduce`.
-- `prysm/inventory.json`, `prysm/TYPES.md` (2) and `prysm/go1.26.10/evidence/*.desc.json` (24): type sets, counts and SSZ descriptors made from the IR
+- `prysm/inventory.json`, `prysm/TYPES.md` and `prysm/go1.26.10/evidence/*.desc.json`: type sets, counts and SSZ descriptors made from the IR
   by `gen/type_inventory.py build`, `gen/type_list_document.py` and `gen/desc/producer.py`.
-- `prysm/go1.26.10/prysm-go.mod.diff` (1): a diff of Prysm `go.mod`; its context lines are Prysm text.
-- Total 29. Upstream: Prysm, as for the Prysm machine code.
+- `prysm/go1.26.10/prysm-go.mod.diff`: a diff of Prysm `go.mod`; its context lines are Prysm text.
+- Upstream: Prysm, as for the Prysm machine code.
 
 ## Files that only name upstream symbols
 
 - Other files under `fv/kraken/` (the tracked files outside the sections above) may name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of the Prysm machine code.
-  Examples: `prysm/go1.26.10/functions.json`, `prysm/go1.26.10/parser-result.json` (1) and the negative-test case files `gen/checks/negative-cases/*.json`.
+  Examples: `prysm/go1.26.10/functions.json`, `prysm/go1.26.10/parser-result.json` and the negative-test case files `gen/checks/negative-cases/*.json`.
 - A program scan of these files for Go source fragments (`func `, `return `, `{ return`, `inline call to`, `can inline`) found these quotes:
   - doc comments in `lean/Prysm/` quote short excerpts of the generated Prysm Go methods and of Prysm `consensus-types/primitives` (`lean/Prysm/Epoch/DecodeAccept.lean` lines 9-11, `lean/Codec/Uint64Decoder.lean` lines 7-8);
 - The other hits are this project's own tool code or prose. The `.py`, `.go` and `.sh` hits were not each read. The files were not each read in full.
 - The scans matched these patterns only: Go `if … {`, `return `, `func (`, `dst = append`, `binary.LittleEndian`, `ssz.Err`, `fmt.Errorf(`, `for … := range`, AT&T/objdump instruction lines and `-m` lines. Short one-line quotes can also occur in other files.
-- `lean/**/*.S` (13) are stubs written for this project under Go runtime and `ssz` symbol names. They are not disassembly.
+- `lean/**/*.S` are stubs written for this project under Go runtime and `ssz` symbol names. They are not disassembly.
 
 ## Lean dependencies and skill material
 
@@ -63,7 +63,7 @@ Scope: the path lists come from program scans of the tracked files for Go source
 
 ## Per-directory licence files in the Prysm tree
 
-- At `ab15ff70`, the Prysm tree tracks `LICENSE.md` (GPL-3.0) and seven subdirectory licence files, none in the packages of the Prysm machine code.
+- At `ab15ff70`, the Prysm tree tracks `LICENSE.md` (GPL-3.0) and other subdirectory licence files, none in the packages of the Prysm machine code.
 - `proto/eth/LICENSE` is Apache-2.0. `proto/eth` is not a package of the Prysm machine code.
 - `encoding/ssz/equality/deep_equal.go` has a Go Authors copyright header. No `encoding/ssz` function is in the Prysm machine code.
 
