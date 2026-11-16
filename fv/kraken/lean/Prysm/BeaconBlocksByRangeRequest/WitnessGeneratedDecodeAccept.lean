@@ -5,10 +5,10 @@ import Prysm.BeaconBlocksByRangeRequest.Code
 import Prysm.Slot.Code
 
 /-!
-# Witness of the generated `Decode.generated_accept` (`v1alpha1.BeaconBlocksByRangeRequest` decoder accept path; 24 flat types)
+# Witness of the generated `Decode.generated_accept` (`v1alpha1.BeaconBlocksByRangeRequest` decoder accept path)
 
-Written by `gen/flat-types/flat_types_witness.py`: the text of the generated accept witness `Prysm/SyncAggregatorSelectionData/WitnessGeneratedDecodeAccept.lean`
-(frame `0x38`, one Slot callee) with the v1alpha1.BeaconBlocksByRangeRequest host and layout (3 input words). It shows that the premises of
+Written by `gen/flat-types/flat_types_witness.py`, for the frame `0x38` with one Slot callee and 3 input words.
+It shows that the premises of
 the generated accept theorem (statement = kind instance) are satisfiable. Host: one label, the real Go 1.26.10
 `(*v1alpha1.BeaconBlocksByRangeRequest).UnmarshalSSZ` (index 1) and `primitives.Slot` UnmarshalSSZ (76).
 One memory block at `0x10000`: guard · input (3 × 8) · receiver (state, 3 fields,

@@ -1,13 +1,13 @@
 # whole_accept.py -- `generator.py decoder --whole-accept`: the whole accept theorem (and the size-reject theorem) of a
 # flat fixed-size decoder, emitted from the step walk (front end) with the statement kinds of the whole-accept lemmas
-# (`Codec/Kind/DecodeAcceptAnyFrame.lean`: decHeadKindAnyFrame, decFieldKindAnyFrame, decEpilogueKindAnyFrame, decAcceptKindAnyFrame; `Codec/DecodeRejectSizeAnyFrame.lean`: decRejectKindAnyFrame).
+# (`Codec/Kind/DecodeAcceptAnyFrame.lean`: decodeHeadKindAnyFrame, decodeFieldKindAnyFrame, decodeEpilogueKindAnyFrame, decodeAcceptKindAnyFrame;
+# `Codec/DecodeRejectSizeAnyFrame.lean`: decodeRejectKindAnyFrame).
 #
 # Untrusted generator: every emitted theorem is checked by Lean; every statement has a `_kind` line; the kind
 # parameters are recomputed independently from the IR and the `.S` by `kindcheck.py`.
 #
 # FAIL-CLOSED: `whole_accept_derive` and the renderers raise `WholeAcceptRefuse` (or any other exception) on every input they do not
 # model; `decoder_whole_accept` in `generator.py` returns a text at ONE place only, after all success flags are set.
-# The proof recipes are the ones of the whole-accept lemmas (`Prysm/*/DecodeAcceptExample.lean`).
 import re
 
 REGS16 = 'rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15'.split()

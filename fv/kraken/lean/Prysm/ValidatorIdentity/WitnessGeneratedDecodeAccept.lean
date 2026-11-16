@@ -7,10 +7,10 @@ import Prysm.Epoch.Code
 import Prysm.ValidatorIndex.Code
 
 /-!
-# Witness of the generated `Decode.generated_accept` (`v1alpha1.ValidatorIdentity` decoder accept path; 24 flat types)
+# Witness of the generated `Decode.generated_accept` (`v1alpha1.ValidatorIdentity` decoder accept path)
 
-Written by `gen/flat-types/flat_types_witness.py`: the text of `Prysm/PendingDeposit/WitnessGeneratedDecodeAccept.lean` with the
-v1alpha1.ValidatorIdentity host and layout. It shows that the premises of the generated accept theorem (statement = kind instance)
+Written by `gen/flat-types/flat_types_witness.py`.
+It shows that the premises of the generated accept theorem (statement = kind instance)
 are satisfiable. Host: data labels, the real Go 1.26.10 `(*v1alpha1.ValidatorIdentity).UnmarshalSSZ` (index 9), `primitives.ValidatorIndex` UnmarshalSSZ, `primitives.Epoch` UnmarshalSSZ,
 the 1-byte bump `runtime.makeslice` (276, `bump_makeslice1`) and `MemmoveGrowsliceModel` (282, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 48-byte heap, guard word, the 64 input bytes,

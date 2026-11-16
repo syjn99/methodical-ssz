@@ -4,7 +4,7 @@ import Prysm.PartialDataColumnGroupID.Code
 import Prysm.Slot.Code
 
 /-!
-# Spec alignment of the real `v1alpha1.PartialDataColumnGroupID` decoder (24 flat types)
+# Spec alignment of the real `v1alpha1.PartialDataColumnGroupID` decoder
 
 Built on the GENERATED theorems of `Prysm/PartialDataColumnGroupID/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`):
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`

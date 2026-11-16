@@ -6,10 +6,10 @@ import Prysm.PartialDataColumnGroupID.Code
 import Prysm.Slot.Code
 
 /-!
-# Witness of the generated `Decode.generated_accept` (`v1alpha1.PartialDataColumnGroupID` decoder accept path; 24 flat types)
+# Witness of the generated `Decode.generated_accept` (`v1alpha1.PartialDataColumnGroupID` decoder accept path)
 
-Written by `gen/flat-types/flat_types_witness.py`: the text of `Prysm/PendingDeposit/WitnessGeneratedDecodeAccept.lean` with the
-v1alpha1.PartialDataColumnGroupID host and layout. It shows that the premises of the generated accept theorem (statement = kind instance)
+Written by `gen/flat-types/flat_types_witness.py`.
+It shows that the premises of the generated accept theorem (statement = kind instance)
 are satisfiable. Host: data labels, the real Go 1.26.10 `(*v1alpha1.PartialDataColumnGroupID).UnmarshalSSZ` (index 9), `primitives.Slot` UnmarshalSSZ,
 the 1-byte bump `runtime.makeslice` (178, `bump_makeslice1`) and `MemmoveGrowsliceModel` (184, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 32-byte heap, guard word, the 40 input bytes,

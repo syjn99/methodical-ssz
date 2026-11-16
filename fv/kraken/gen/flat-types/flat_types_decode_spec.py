@@ -59,7 +59,7 @@ def emit(d, X):
 import Prysm.{X}.Spec
 
 /-!
-# Spec alignment of the real `{ty}` decoder (24 flat types)
+# Spec alignment of the real `{ty}` decoder
 
 Built on the GENERATED theorems of `Prysm/{X}/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`):
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : {P}` with `g.toValue = v`

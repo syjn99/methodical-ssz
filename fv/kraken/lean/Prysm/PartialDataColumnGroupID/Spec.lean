@@ -3,10 +3,10 @@ import Prysm.Checkpoint.SpecEquivalence
 import Prysm.DepositRequest.SpecDescription
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.PartialDataColumnGroupID` (24 flat types)
+# Spec bridge for the real Prysm `v1alpha1.PartialDataColumnGroupID`
 
-Written by `gen/flat-types/flat_types_spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`
-generalised to a field list). `desc` (`Prysm/PartialDataColumnGroupID/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).
+Written by `gen/flat-types/flat_types_spec.py`.
+`desc` (`Prysm/PartialDataColumnGroupID/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).
 No Desc-checker record exists for this type (`gen/desc/results/main.result.json`): no codec equality here.
 `SszValue` is the SSZ content of a Go `v1alpha1.PartialDataColumnGroupID`.
 -/

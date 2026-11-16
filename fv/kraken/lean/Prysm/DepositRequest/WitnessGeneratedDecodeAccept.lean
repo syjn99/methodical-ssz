@@ -5,10 +5,10 @@ import Machine.WitnessHost
 import Prysm.DepositRequest.Code
 
 /-!
-# Witness of the generated `Decode.generated_accept` (`v1.DepositRequest` decoder accept path; 24 flat types)
+# Witness of the generated `Decode.generated_accept` (`v1.DepositRequest` decoder accept path)
 
-Written by `gen/flat-types/flat_types_witness.py`: the text of `Prysm/Deposit_Data/WitnessGeneratedDecodeAccept.lean` with the
-v1.DepositRequest host and layout. It shows that the premises of the generated accept theorem (statement = kind instance)
+Written by `gen/flat-types/flat_types_witness.py`.
+It shows that the premises of the generated accept theorem (statement = kind instance)
 are satisfiable. Host: data labels, the real Go 1.26.10 `(*v1.DepositRequest).UnmarshalSSZ` (index 9),
 the 1-byte bump `runtime.makeslice` (155, `bump_makeslice1`) and `MemmoveGrowsliceModel` (161, `model_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 176-byte heap, guard word, the 192 input bytes,

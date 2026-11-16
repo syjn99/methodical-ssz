@@ -1,5 +1,5 @@
 """Write <out>/Prysm/<GoTypeName>/Spec.lean, the spec bridge of each type
-(the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean` generalised to a field list: P structure, encoding, serialize, roundtrip,
+(for a field list: P structure, encoding, serialize, roundtrip,
 accepts-iff-size, spec reject; codec equality with the checker Desc where a Desc-checker record exists).
 usage: python3 -I -B flat_types_spec.py <out dir>"""
 import sys, os
@@ -52,10 +52,10 @@ def emit(X, ty, fs, chk):
         w(f'import Prysm.{X}.SpecChecker')
     w('')
     w('/-!')
-    w(f'# Spec bridge for the real Prysm `{ty}` (24 flat types)')
+    w(f'# Spec bridge for the real Prysm `{ty}`')
     w('')
-    w('Written by `gen/flat-types/flat_types_spec.py` (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean`')
-    w(f'generalised to a field list). `{D}` (`Prysm/{X}/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).')
+    w('Written by `gen/flat-types/flat_types_spec.py`.')
+    w(f'`{D}` (`Prysm/{X}/SpecDescription.lean`) is the independent hand `Desc` (Prysm proto).')
     if chk:
         w(f'`{chk[0]}` (`Prysm/{X}/SpecChecker.lean`, rendered by `gen/checks/desc_to_lean.py`) is the Desc checker\'s Desc of the type')
         w('(the producer output recorded in `gen/desc/results/main.result.json`, same sha256; copy in `prysm/go1.26.10/evidence/`).')

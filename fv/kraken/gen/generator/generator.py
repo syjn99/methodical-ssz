@@ -1194,7 +1194,7 @@ def _decoder_step(args, flags):
         raise NoMatch("; ".join(report))
     kinds = ["Codec.Kind.WindowSteps", "Codec.Kind.FixedBytesDecodeWindow", "Codec.CalleeDecodeWindow"] + (["Codec.FixedBytesDecodeWindowOffsetZero"] if "segz" in used else [])
     # the coverage header text is fixed: `kindcheck.py` rule 11 reads it
-    extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); step coverage (`decoder --steps`): "
+    extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); step coverage: "
              f"{ncov} of {len(fields)} fields; step chain from directive {head_end} (end of the head)")
     body += f"end {GEN_NS}\n"
     # the theorems of each covered field, machine-readable (`kindcheck.py` rule 10 counts the fields from it: a
