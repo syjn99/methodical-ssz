@@ -146,13 +146,12 @@ These run without Lean, Go or the Prysm ELF:
 
 - `generator/kindcheck.py`, and the `--selftest` mode of `checks/axioms_gate.py`.
 - `tools/duplicate_statements.py`, on a dump of the axioms gate (the dump itself needs Lean).
-- `python3 -B fv/kraken/link/data.py --check fv/kraken/link/out`.
 - `regen_check.sh` with `generator/generator.py`, `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py`, `checks/layout.py` and `checks/attestation_data_layout.py`.
 - `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`.
 - `checks/regenerate_and_compare.py <scratch>/<work dir>`, the regeneration comparison of all Python generators of Lean files.
 - `checks/fast_path_layout.py`, an independent recomputation of the layouts of the generated encoder fast-path theorems (cwd `fv/kraken`).
 - `checks/differential.py cases <dir>`. Its output must be equal to `prysm/differential-cases/`.
-- `checks/python_checks.sh <scratch>/<out dir>`. It runs `link/data.py --check`, `checks/check_include.py`,
+- `checks/python_checks.sh <scratch>/<out dir>`. It runs
   `checks/deposit_data_include_check.py`, the self-tests of `checks/axioms_gate.py`, `checks/deposit_data_include_check.py`,
   `generator/kindcheck.py` and `checks/negative.py`, `checks/fast_path_layout.py`, `kindcheck.py` on the generated files,
   `negative.py --check-cases` and `checks/negative_case_ranges.py` on every case file, and a syntax check of every Python file under `fv/`.
@@ -163,7 +162,7 @@ These need more than Python:
 - `checks/negative.py` and the `run` mode of the axioms gate need Lean.
 - `kraken-parser/summarize_parser_log.py` needs a log of `kraken-parser/ParserRun.lean` (Lean) on the `.S` files of the
   Prysm ELF (`../README.md` section 3). The log is not tracked.
-- The link checks need the ELF and the LLVM tools.
+- The link checks and the self-test of `link/check.py` need the ELF and the LLVM tools.
 - The differential check needs Go and a Prysm tree.
   A Prysm tree at the pinned commit with the generated files of `prysm/_generated/` is enough; nothing is written into it.
   Copy `checks/differential-main.go.txt` to `<scratch>/main.go`.

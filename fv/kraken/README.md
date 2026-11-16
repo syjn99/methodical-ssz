@@ -9,23 +9,19 @@ Do not copy its numbers into other documents. Run the inventory again instead (s
 
 ## 1. Targets
 
-The project has two target binaries. Their proofs are separate, because a proof about one ELF does not transfer to another.
-
-**The Prysm target.** This is the main target.
+The project has one target binary, the Prysm target.
+A proof about one ELF does not transfer to another ELF.
 
 - The source is a pinned Prysm commit, with the generated files of the pinned generator.
 - The binary is a small Go `main` package that keeps the SSZ methods of all inventory types in the ELF.
 - The compiler is Go 1.26.10. It cross-compiles to `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0`, with `-tags purego -trimpath`.
-- The ELF identity is its sha256 `9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9`.
+- The ELF identity is its sha256.
   The file `prysm/go1.26.10/build-ids.txt` records it, with the Go build ID and the sha256 of the symbol listing and the disassembly.
 - The ELF is about 23 MB. It is not in the repository. Section 3 tells how to build it again.
+- The proofs read the code and the data of the ELF from the link set `prysm/go1.26.10/link-set`.
 
-**The test target.** This is an older binary of small test types, compiled with Go 1.26.3.
-
-- The Go types are in `target/`. The `main` package is `cmd/test-target/`.
-- The ELF, its symbol listing and its disassembly are in `link/out/`. Their sha256 values are in `link/out/build-ids.txt`.
-- `Runtime/StaticUint64s.lean` reads one data file of this binary (`link/out/data/staticuint64s.data`).
-- `link/build.sh` builds this ELF again from the repository root.
+The small hand test types of `lean/Spec/Test*.lean` and `gen/desc/hand-types-ir.json` have no ELF.
+The description checker tests use them (`gen/README.md` section 5).
 
 ## 2. Pinned versions
 
@@ -35,10 +31,8 @@ Read each pin from the file that holds it. Do not copy the values into other fil
 | --- | --- |
 | Generator commit (`sszgen/`, `ssz/`) and Prysm source commit | This file: generator `698c2025a73a296b55b95744a8408f3b03b2546b`, Prysm `ab15ff70c72a568c870b2de662474685a95de294` |
 | Go version, build flags, ELF sha256 of the Prysm target | `prysm/go1.26.10/build-ids.txt` |
-| Go version, ELF sha256 and generated file hashes of the test target | `link/out/build-ids.txt` |
 | Kraken commit and EthLib commit | `lean/lakefile.toml` (`rev`) and `lean/lake-manifest.json` |
 | Lean toolchain | `lean/lean-toolchain` |
-| Go module versions of the test target | `../../go.mod` |
 | Sources of derived evidence files and their licenses | `THIRD-PARTY-NOTICES.md` |
 
 ## 3. Build the Prysm target again
@@ -57,7 +51,8 @@ Run heavy jobs one at a time, under a memory limit.
 6. Compare the sha256 of the ELF with `prysm/go1.26.10/build-ids.txt`. If they differ, stop. The proofs do not apply.
 
 `sh fv/kraken/gen/prysm-rebuild-and-check.sh <prysm-tree> <generator-tree> <scratch>` does steps 5 and 6 in Docker.
-Then it runs the link check and the Go differential check (section 5). Its usage text gives the details.
+Then it runs the link check, the self-test of the link check and the Go differential check (section 5).
+Its usage text gives the details.
 
 The IR (intermediate representation) is the type description that the generator reads.
 The generator binary is built from the pinned generator commit with Go 1.26.10, `-trimpath` and `-buildvcs=false`.
@@ -84,10 +79,7 @@ The parser log is not tracked. `kraken-parser/summarize_parser_log.py` makes `pr
 
 | Directory | Content |
 | --- | --- |
-| `cmd/test-target/` | The `main` package of the test target |
-| `target/` | The Go test types, two reduced Prysm types and their generated code (test target) |
 | `link/` | The converter, the data extractor and the link check (see `link/README.md`) |
-| `link/out/` | The test target ELF, its listings, the converted `.S` files, the data files and the link result |
 | `lean/` | The Lean project: specifications, contracts and proofs (see `lean/README.md`) |
 | `gen/` | Generators and check tools (see `gen/README.md`) |
 | `prysm/` | The Prysm target: inventory, IR, generated Go, link set and check records (see `prysm/README.md`) |
@@ -142,7 +134,6 @@ python3 -I -B gen/tools/proof_inventory.py run <scratch>/decls.tsv <scratch>/gat
 **Python only.** These use only tracked files.
 
 ```sh
-python3 -B fv/kraken/link/data.py --check fv/kraken/link/out
 python3 -I -B fv/kraken/gen/generator/kindcheck.py --selftest
 python3 -I -B fv/kraken/gen/generator/kindcheck.py fv/kraken/lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean
 python3 -I -B fv/kraken/gen/checks/axioms_gate.py --selftest
@@ -150,13 +141,6 @@ sh fv/kraken/gen/checks/python_checks.sh <scratch>/python-checks
 ```
 
 `gen/README.md` tells how to regenerate a generated Lean file and compare it with the tracked file.
-
-**The test target ELF and LLVM tools.** The ELF is in the repository. The check also needs `llvm-objdump` and `clang`.
-
-```sh
-python3 -B fv/kraken/link/check.py fv/kraken/link/out
-python3 -B fv/kraken/link/check.py --selftest fv/kraken/link/out
-```
 
 **The Prysm target ELF.** You must build it first (section 3). Then these checks can run:
 
@@ -167,7 +151,11 @@ python3 -B fv/kraken/link/check.py --selftest fv/kraken/link/out
 ```sh
 python3 -I -B fv/kraken/gen/checks/link_set.py <scratch>/link-set <elf> <objdump> <nm>
 python3 -B fv/kraken/link/check.py <scratch>/link-set
+python3 -B fv/kraken/link/check.py --selftest <scratch>/link-set
 ```
+
+- The link check needs `llvm-objdump` and `clang`.
+  The self-test changes copies of the link set. Each changed copy must fail, and the unchanged copy must pass.
 
 - The method list of the inventory: `python3 -I -B fv/kraken/gen/tools/proof_inventory.py methods <nm-listing> <scratch>/ssz-methods.json`. Compare the output with `prysm/go1.26.10/ssz-methods.json`.
 

@@ -10,7 +10,8 @@ The libraries `Spec`, `Machine`, `Runtime` and `Codec` are the shared layer.
 The library `Prysm` holds the proofs of the Prysm types (one directory for each type).
 
 **`Spec`.** EthLib specifications that several types share, and the ones that the `Desc` checker imports (`../gen/desc-checker/`).
-They are the specifications of the small test types (`Spec/Test*.lean`) and of two reduced Prysm types (`Spec/TestCheckpointAndAttestationData.lean`).
+They are the specifications of the small hand test types (`Spec/Test*.lean`) and of two reduced Prysm types (`Spec/TestCheckpointAndAttestationData.lean`).
+These test types have no ELF. The description checker tests use them.
 They import only EthLib and each other. `Spec/DeserializeOfSerialize.lean` holds a general lemma: if `serialize` of every Go value gives `enc g`, then every input that EthLib accepts is `enc g` of one value.
 So a machine proof only has to say what the code does on `enc g`, and that the code rejects every other input.
 
@@ -45,7 +46,8 @@ The full name of a main theorem is the name of the work, for example `Prysm.Chec
 - `Prysm/RuntimeModel/`: witness-only models of runtime functions that read ELF data of a link set
   (bump allocators that dispatch on a type word). The library `Runtime` does not import `Prysm`.
 - `Prysm/ElfData/`: the ELF data of the link set `../prysm/go1.26.10/link-set` (`PrysmTarget.lean`, namespace
-  `ElfData.PrysmTarget`) and the command `prysm_data_include` that reads it (`PrysmTargetReader.lean`).
+  `ElfData.PrysmTarget`). The command `data_include` (`Machine/Include.lean`) reads it.
+  The table `runtime.staticuint64s` of the same link set is `Runtime.Data.staticuint64s` (`Runtime/StaticUint64s.lean`).
   The data namespace has the root `ElfData`, not `Prysm`, because of the order of names in `simp`.
   `simp` with the commutativity lemmas `Std.ExtHashMap.sep_comm` and `sep_comm_l` orders the parts of a separating
   conjunction by the names of their constants (Lean `Name.cmp`, root component first).
@@ -53,7 +55,7 @@ The full name of a main theorem is the name of the work, for example `Prysm.Chec
   Some `simp` proofs depend on that order, so a data name with another root can make them fail. Only a build shows such a failure.
   A data name is the id of its data file, and the id names the ELF item: `sszErrSize` is the address of the global
   `ssz.ErrSize`, `typeUint8` the type descriptor of `uint8`, `formatSlot` the format string `Slot: %w`.
-  `../link/data.py` (`item_id`) gives the rule; a type descriptor gets its id in the item table of its link script.
+  The item table `../prysm/go1.26.10/link-set.tsv` gives each id.
   The lemmas `<id>_addr_eq` restate an address.
 
 The flat fixed-size types (a flat type has only fixed-size fields and no nested container) have their directories in
@@ -75,7 +77,7 @@ Codec <-> Prysm (at module level, both directions)
   has `public meta import Lean` for its elaborators). `Runtime` imports only Kraken, `Machine` and `Runtime`. So these
   three libraries import only libraries to their left (and Lean itself).
 - `Codec` and `Prysm` import each other at module level. 19 of the 51 `Codec` modules import a `Prysm` module:
-  11 of 33 in `Codec/`, 2 of 11 in `Codec/Kind/`, 6 of 7 in `Codec/Segment/`. 160 of the 589 `Prysm` modules
+  11 of 33 in `Codec/`, 2 of 11 in `Codec/Kind/`, 6 of 7 in `Codec/Segment/`. 160 of the 588 `Prysm` modules
   import a `Codec` module. Lean forbids a cycle of modules, so the module graph has no cycle; only the
   libraries have no order.
 - The `Codec` modules that import `Prysm` hold lemmas and kinds that the shared layer took from a type
@@ -89,7 +91,8 @@ A new type gets its own directory `Prysm/<GoTypeName>/`. Do not change a reviewe
 1. `../link/convert_objdump.py` converts the disassembly of one function into a labeled `.S` file.
 2. `include_x64_code "<path>.S"` (`Machine/Include.lean`) parses the file with the Kraken parser when Lean elaborates it. The result is a `Program` constant, for example `Prysm.SyncAggregate.Code.unmarshalSSZ`.
 3. A data file holds the bytes or the address of one ELF data item, for example a format string or a type descriptor.
-   `data_include <id>` (`Machine/Include.lean`) and its copy `prysm_data_include` for the Prysm link set define `<id> : List UInt8` and `<id>_addr : BitVec 64`. No byte or offset is written by hand.
+   `data_include <id>` (`Machine/Include.lean`) reads it from the Prysm link set.
+   It defines `<id> : List UInt8` and `<id>_addr : BitVec 64`. No byte or offset is written by hand.
 4. `../link/check.py` compares the `.S` files and the data files with the ELF.
 
 The `.S` and data files are not Lean imports. So `lakefile.toml` declares their directories as `input_dir` entries in the `needs` of each library.
@@ -228,18 +231,18 @@ These names are written as their source writes them.
   It writes `_` for a character outside `[A-Za-z0-9_.]`, for example `target_prysm.Checkpoint`.
   A jump target inside a function gets the label `L_<function>_<hex offset>`.
   The `Code` constants of `include_x64_code` and the runtime labels (`runtime.makeslice`, `fmt.errorf`) use these names.
-- Go names of Prysm and of the test target `../target/`: type, field, method and package names.
+- Go names of Prysm and of the hand test types: type, field, method and package names.
   Examples are `Deposit_Data` (a protobuf name), `ENRForkID`, `ListC` (a list of containers) and `BitL` (a bit list).
   `Spec/Test*.lean` writes the type names in full words, for example `Spec.ListOfContainersValue` for `ListC`.
   It keeps the Go field names in lower case as structure fields.
-  The test type `ListU64` (`../target/types.go`) keeps its Go name in `Spec`.
+  The test type `ListU64` keeps its Go name in `Spec`.
   The names made from it keep it too.
   These are the module `Spec/TestListU64.lean`, the structure `Spec.ListU64` and the lemmas `Spec.listU64Desc*`.
   The lemmas `Spec.listU64Encode`, `Spec.listU64_*`, `Spec.allFit_listU64_inv` and `Spec.serializeEach_listU64` also keep it.
   The checker input `../gen/desc/hand-types-ir.json` and the checker table use the Go names `ListU64`, `ListC` and `BitL`.
   So do `../gen/desc/hand-types-references.json` and the checker result `../gen/desc/results/main.result.json`.
-- Data ids that `../link/data.py` (`item_id`) makes from a Go name, for example `formatJ` for the format string `J: %w`.
-  `J`, `B` and `L` are Go field names of the test target (`../link/out/data/`).
+- Data ids that the item table `../prysm/go1.26.10/link-set.tsv` makes from a Go name.
+  An example is `formatSlot` for the format string `Slot: %w`.
 - The Go compiler flag in the file name `../prysm/go1.26.10/evidence/gcflags-m2.txt` (output of `-gcflags=-m=2`).
 - The names of Kraken, Lean, Mathlib and EthLib, and of their declarations.
 
@@ -255,7 +258,7 @@ These names are written as their source writes them.
 ### Other earlier names
 
 - `Spec/TestFixed.lean` (the structure `Spec.Fixed` and the lemmas `Spec.fixed*`) names the Go type `Fixed`.
-  `../target/` has no type `Fixed`.
+  No hand test type is `Fixed`.
   `Spec/TestScalars.lean` imports the module for its byte lemmas, for example `Spec.uintBytes_size`.
   The type part of the module is a candidate for deletion.
 

@@ -39,7 +39,8 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: in the generator IR, the field keys of a nested container are the container name, not the field names.
 - Where: the `case *types.Struct:` branch of `FieldParser.expand` in `sszgen/representer.go`. It appends `f.name`, where it needs `field.Name()`.
-- How it shows: `ssz ir --type-names=AttestationData` on `fv/kraken/target/prysm` gives the key `Checkpoint` for the fields `Epoch` and `Root` of `Source`.
+- How it shows: `ssz ir --type-names=AttestationData` ran on a reduced copy of the Prysm types.
+  It gave the key `Checkpoint` for the fields `Epoch` and `Root` of `Source`.
 - Effect: no effect on the generated Go code. Tools that read the IR get wrong keys.
 - State: open. The generator is not changed.
 
@@ -157,7 +158,6 @@ How to handle a new finding is in `../README.md` section 7.
 - A `grind` timeout inside `kstep` cannot be caught. `load_step` and `store_step` are used instead.
 - Closing register goals with symbolic `BitVec` by `trivial` or `rfl` inside `first` used more than 6 GiB. The decoder proof is split, and the goals close with `exact trivial`, `with_reducible rfl` or `toBitVec_inj`.
 - Two witness `Host` instances in one file make instance resolution choose the wrong host. Each file has one witness host.
-- `lean/Machine/Include.lean` keeps the data reader private. `lean/Prysm/ElfData/PrysmTargetReader.lean` has one copy, and `gen/checks/check_include.py` compares it with the original.
 - State: worked around in each case.
 
 ### Format string content is not checked
@@ -175,8 +175,8 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: `link/check.py` hashes the ELF, the `norm/*.S` files, the `data/*.data` files and `AXIOMS.txt` if it exists. It hashes no Lean file.
   A `RESULT` file that has a sha256 line for a file that is not in the tree gets a different bundle hash on a new run.
-- Where: the two `RESULT` files `link/out/RESULT` and `prysm/go1.26.10/link-set/RESULT`.
-- State: fixed. Each of the two files is the output of a new run on its pinned ELF. Neither has a sha256 line for a Lean file or `AXIOMS.txt`.
+- Where: the `RESULT` file `prysm/go1.26.10/link-set/RESULT`.
+- State: fixed. The file is the output of a new run on the pinned ELF. It has no sha256 line for a Lean file or `AXIOMS.txt`.
 
 ### Link set `prysm/go1.26.10/link` has no tracked disassembly
 
@@ -414,12 +414,14 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Reduced Prysm types of the test target differ from Prysm
 
-- What: `target/prysm/types.go` copies the SSZ schema of `Checkpoint` and `AttestationData`, without the protobuf fields. Their Go layout is not the Prysm layout.
+- What: `lean/Spec/TestCheckpointAndAttestationData.lean` specifies `Checkpoint` and `AttestationData` without the protobuf fields.
+  The reduced Go types and their ELF are not in the tree.
 - State: by design. The Prysm proofs use the real protobuf types of the Prysm ELF.
 
 ### Absolute paths in committed records
 
-- What: one tracked record contains an absolute path of the original machine: the `replace` line of `prysm/go1.26.10/prysm-go.mod.diff`.
+- What: the `replace` line of `prysm/go1.26.10/prysm-go.mod.diff` names the container path `/workspace/methodical-ssz-generator`.
+  The ELF records this path, so the line keeps it. It is not a path of a machine.
   Git history also has container paths: in two Python bytecode files and in deleted records.
   The present tree does not contain these files.
 - How it shows: `git grep -nE "/workspace|fve2e-" -- fv/kraken ':!fv/kraken/lean/.lake'`.

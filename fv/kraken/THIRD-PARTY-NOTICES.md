@@ -13,7 +13,7 @@ Scope: the path lists come from program scans of the tracked files for Go source
   So the `proto/*` method bodies come from this repository's generator. `consensus-types/primitives` is Prysm source.
 - The data extracts and tables also name or hold Go runtime and standard-library symbols (for example `runtime.memmove`, type descriptors).
 - Produced by: `link/convert_objdump.py --norm` and `link/check.py` on an ELF cross-compiled by Go 1.26.10 (`GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 -tags purego -trimpath`).
-- ELF sha256 `9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9` (`prysm/go1.26.10/build-ids.txt`).
+- The file `prysm/go1.26.10/build-ids.txt` records the ELF sha256.
 - The ELF is not committed.
 - Upstream: Prysm, <https://github.com/OffchainLabs/prysm>, commit `ab15ff70c72a568c870b2de662474685a95de294` (`README.md` section 2). Licence: GNU General Public License version 3 (root `LICENSE.md`).
 - Upstream: Go, <https://go.dev/>, <https://github.com/golang/go>. Licence: BSD-3-Clause (Go 1.26.10 `LICENSE`).
@@ -36,23 +36,6 @@ Scope: the path lists come from program scans of the tracked files for Go source
 - What: copies of the scratch `main` packages used to build or check the Prysm ELF. They import Prysm packages.
 - Written for this project. Upstream of the imported packages: Prysm, as for the Prysm machine code.
 
-## Go 1.26.3 ELF of this repository's own target
-
-- Paths: `link/out/target-amd64`, `link/out/target-amd64.nm`, `link/out/target.objdump`, `link/out/RESULT`, `link/out/build-ids.txt`, `link/out/norm/*` (30), `link/out/data/*` (23). Total 58.
-- What: the ELF built from `cmd/test-target`, `target/` and `ssz/` by Go 1.26.3 (`link/build.sh`), its symbol table, filtered disassembly, link tables, `.S` and data extracts.
-- ELF sha256 `1aede9d9ccf58f7102e1765d56a4a95688a705f2632593a4e8f213f51f080761` (`link/out/build-ids.txt`).
-- Besides this repository's code, `target-amd64.nm` shows linked code of the Go runtime and standard library,
-  `github.com/prysmaticlabs/gohashtree`, `github.com/minio/sha256-simd` and `github.com/klauspost/cpuid/v2` (versions in the root `go.mod`).
-- The `.S` files in `link/out/norm/` hold only `ssz.*`, `target.*` and `target_prysm.*` functions.
-- Upstream: Go, as for the Prysm machine code (the BSD-3-Clause name was read from the Go 1.26.10 tree, not from a Go 1.26.3 tree).
-- The ELF build info also lists `github.com/OffchainLabs/go-bitfield`. `target-amd64.nm` has no symbol of it. The licences of gohashtree, sha256-simd, cpuid and go-bitfield were not read for this file.
-
-## Prysm field definitions in the target package
-
-- Paths: `target/prysm/types.go`, `target/prysm/types.ssz.go` (2).
-- What: the SSZ fields of `Checkpoint` and `AttestationData`, copied from Prysm v7.1.8 (`51b5a75ebbadf05af22bd2601b5baf7a9e99b66d`) per the header of `types.go`, and the generator output for them.
-- Upstream: Prysm, as for the Prysm machine code. `LICENSE.md` at `51b5a75` is also GNU General Public License version 3.
-
 ## Prysm type records and other text derived from Prysm files
 
 - `prysm/ir/ir-mainnet.json`, `prysm/ir/ir-minimal.json` (2): the generator IR of the Prysm types, with Go field names, types, tags and gc amd64 offsets.
@@ -64,7 +47,7 @@ Scope: the path lists come from program scans of the tracked files for Go source
 
 ## Files that only name upstream symbols
 
-- Other files under `fv/kraken/` (the tracked files outside the sections above) may name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of the Prysm machine code and of the Go 1.26.3 ELF.
+- Other files under `fv/kraken/` (the tracked files outside the sections above) may name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of the Prysm machine code.
   Examples: `prysm/go1.26.10/functions.json`, `prysm/go1.26.10/parser-result.json` (1) and the negative-test case files `gen/checks/negative-cases/*.json` (32).
 - A program scan of these files for Go source fragments (`func `, `return `, `{ return`, `inline call to`, `can inline`) found these quotes:
   - doc comments in `lean/Prysm/` quote short excerpts of the generated Prysm Go methods and of Prysm `consensus-types/primitives` (`lean/Prysm/Epoch/DecodeAccept.lean` lines 9-11, `lean/Codec/Uint64Decoder.lean` lines 7-8);
@@ -75,7 +58,7 @@ Scope: the path lists come from program scans of the tracked files for Go source
 ## Lean dependencies and skill material
 
 - Kraken, EthLib and their dependencies are fetched by Lake at the revisions in `lean/lake-manifest.json`. They are not committed (`**/.lake/` is ignored).
-- Lean files such as `lean/Prysm/Checkpoint/Code.lean` include `.S` files of the Prysm machine code and of the Go 1.26.3 ELF by path. They do not copy them.
+- Lean files such as `lean/Prysm/Checkpoint/Code.lean` include `.S` files of the Prysm machine code by path. They do not copy them.
 - Text adapted from third-party agent-skill material is attributed in `.claude/skills/maintaining-methodical-fv/references/ATTRIBUTION.md`.
 
 ## Per-directory licence files in the Prysm tree

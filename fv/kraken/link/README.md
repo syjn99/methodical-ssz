@@ -9,17 +9,14 @@ Paths in this file are relative to `fv/kraken/`. A command that starts with `fv/
 | Program | Task |
 | --- | --- |
 | `link/convert_objdump.py` | Converts `go tool objdump -gnu` output into one labeled `.S` file per function, plus `all.S` with all functions in address order |
-| `link/data.py` | Writes one data file per ELF data item of the test target. With `--check`, it compares a new extraction with the tracked files |
+| `link/data.py` | Writes one data file per ELF data item. `gen/checks/link_set.py` gives it the items of the item table |
 | `link/check.py` | The link check. It writes the result file `RESULT` |
-| `link/build.sh` | Builds the test target ELF and runs the steps above for it |
 
-The build info of the test target ELF names its main package `github.com/OffchainLabs/methodical-ssz/fv/kraken/cmd/test-target`.
-Its line table names the source files `cmd/test-target/main.go`, `target/types.ssz.go` and `target/types_bits_and_nesting.ssz.go`.
-The generator writes `types_bits_and_nesting.ssz.go` from `types_bits_and_nesting.go`.
-In each link directory, the ELF file is `target-amd64` and its symbol listing is `target-amd64.nm`.
+The one link set is `prysm/go1.26.10/link-set` (section 7).
+In a link directory, the ELF file is `target-amd64` and its symbol listing is `target-amd64.nm`.
 `check.py`, `data.py` and `gen/checks/link_set.py` use these names. The header line of each data file names the ELF file.
-The data ids of `link/out/data/` follow the rule of `data.py` `item_id`.
-`staticuint64s` keeps its id: it is the symbol `runtime.staticuint64s`, and `Runtime/StaticUint64s.lean` includes it.
+The item table gives the id of each data file.
+The id `staticuint64s` names the symbol `runtime.staticuint64s`. `Runtime/StaticUint64s.lean` includes it.
 
 `convert_objdump.py` changes only what Kraken cannot read directly:
 
@@ -47,7 +44,7 @@ The converter stops with exit 1 in these cases: a line without the GNU form, a g
 - **Data.** Each data file names one ELF symbol. Its bytes are the ELF bytes at that place, and each pointer word is the address of its symbol plus its offset.
 
 Three independent decoders read the same bytes: the Go disassembler, LLVM and the Kraken parser.
-`check.py --selftest fv/kraken/link/out` changes copies of the test target inputs. Each mutated copy must fail, and a pure relabeling must pass.
+`check.py --selftest <link set>` changes copies of a Prysm link set with its ELF. Each changed copy must fail, and the unchanged copy must pass.
 
 The check does not read the Lean sources. It does not show that a theorem uses the included definitions.
 A reader confirms that from the theorem statement.
@@ -62,15 +59,13 @@ One bundle hash thus binds the ELF to the exact text that Lean includes.
 
 ## 4. Requirements
 
-- `data.py --check` on `link/out` needs Python only. The test target ELF is tracked.
 - `convert_objdump.py` needs Python only, and a disassembly and symbol listing as input.
 - `check.py` needs the ELF, `llvm-objdump` and `clang`.
-- A Prysm link set needs the Prysm ELF and its symbol listing, which are not tracked (`../README.md` section 3).
+- A link set needs the Prysm ELF and its symbol listing, which are not tracked (`../README.md` section 3).
 
 ```sh
-python3 -B fv/kraken/link/data.py --check fv/kraken/link/out
-python3 -B fv/kraken/link/check.py fv/kraken/link/out
-python3 -B fv/kraken/link/check.py --selftest fv/kraken/link/out
+python3 -B fv/kraken/link/check.py <link set>
+python3 -B fv/kraken/link/check.py --selftest <link set>
 ```
 
 ## 5. Data file format
@@ -89,13 +84,12 @@ An item with only an `at` line gives only an address. The error globals `ssz.Err
 
 ## 6. The include interface
 
-`data_include <id>` (`lean/Machine/Include.lean`) reads `link/out/data/<id>.data` and defines:
+`data_include <id>` (`lean/Machine/Include.lean`) reads `prysm/go1.26.10/link-set/data/<id>.data` and defines:
 
 - `<id> : List UInt8`: the bytes of the item. A `word` line gives the 8 bytes of `(label "<label>" + <offset>)`. Then the definition depends on the `Host`.
 - `<id>_addr : BitVec 64`: `(label "<label>" + <offset>).toBitVec`, without `+ 0` for offset 0.
 
-The Prysm library uses one copy of this reader, `prysm_data_include` in `lean/Prysm/ElfData/PrysmTargetReader.lean`, for `prysm/go1.26.10/link-set/data`.
-`gen/checks/check_include.py` compares this copy with the original text.
+This is the one data reader. The libraries `Runtime` and `Prysm` use it.
 
 Rules for a new data file:
 
