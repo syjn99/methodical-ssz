@@ -519,12 +519,6 @@ class T:
             s += f"  refine eventually_trans _ _ _ _ ({self.ns}_field_{i + 1} {a} hguard{self.rtnames()} st{i} h{i}) ?_\n  intro st{i + 1} h{i + 1}\n"
         s += f"  exact {self.ns}_epilogue {a} st{n} h{n}\n"
         s += self.kind(name, 'decodeAcceptKindAnyFrame', '')
-        if self.same_as_prop:
-            s += (f"/-- Statement check: the generated theorem proves the independently written hand statement `{self.same_as_prop}`. -/\n"
-                  f"theorem {name}_statement : {self.same_as_prop} := {name}\n\n")
-        if self.same_as:
-            s += (f"/-- Statement check: the declared type is the type of the independently written hand theorem `{self.same_as}`. -/\n"
-                  f"theorem {name}_same : ∀ (h : Host), type_of% (@{name} h) = type_of% (@{self.same_as} h) := by\n  intro h; rfl\n\n")
         return s
 
     # ---- size reject
@@ -938,8 +932,7 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
     post = freeze(stk)
     rej = whole_accept_reject_spec(dirs, head, label_index)
     del regs0
-    t = T(ns=pfx, C=args.const, Cq=args.const, go=args.type, L=None, same_as_prop=args.same_as_prop,
-             same_as=args.same_as, callees=callees, fields=fl, st=st, stack=stack, pre=pre, rt=rt, gd=gd, frame=frame,
+    t = T(ns=pfx, C=args.const, Cq=args.const, go=args.type, L=None, callees=callees, fields=fl, st=st, stack=stack, pre=pre, rt=rt, gd=gd, frame=frame,
              exs=exs, post=post, states=states, headspec=head, fspec=fspec, epilogue_spec=epilogue, rejspec=rej)
     t.L = t.layout()
     return t

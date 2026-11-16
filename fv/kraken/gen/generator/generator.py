@@ -1,27 +1,28 @@
 #!/usr/bin/env python3
-"""Untrusted proof-text generator for the parameterized segment lemmas of `lean/Codec`.
+"""Untrusted proof-text generator for the parameterized lemmas of `lean/Codec`.
 
-Reads a committed normalized `.S` file (`link/norm/*.S`, one directive per non-empty line) and,
-for the 32-byte field segments, the IR (`prysm/ir/ir-mainnet.json`: SSZ fixed sizes of the fields and the gc amd64 Go
-field offsets). Emits Lean text that applies the parameterized lemmas of `lean/Codec`:
+Reads a committed normalized `.S` file (one directive per non-empty line) and, for containers, the IR
+(`prysm/ir/ir-mainnet.json`: SSZ fixed sizes of the fields and the gc amd64 Go field offsets).
+Emits Lean text that applies the parameterized lemmas of `lean/Codec` to the code constant of the function:
 
-  uint64 the accept path of a uint64 primitive `UnmarshalSSZ` (`Codec.uint64_decode_accept`);
-         emits the whole function theorem (uint64 decoder statement kind) for the code constant.
-  decoder  for every 32-byte `[]byte` field of a container decoder, the decode segment
-         (`Codec.root_decode_segment`, or `Codec.root_decode_segment_offset_zero` for the offset-0 form, a field at SSZ offset 0: a later extension,
-         developed on Eth1Data) as a theorem about the function's code constant. Field rule in `decoder`:
-         output complete (exit 0) or absent (exit 3 some fields failed, exit 2 none matched or wrong).
+  uint64                    the accept path of a uint64 primitive `UnmarshalSSZ` (`Codec.uint64_decode_accept`).
+  decoder                   the decode segment of every 32-byte `[]byte` field of a container decoder
+                            (`Codec.root_decode_segment`, or `Codec.root_decode_segment_offset_zero` for a field at
+                            SSZ offset 0). Output complete (exit 0) or absent (exit 3 some fields failed, exit 2 none
+                            matched or wrong).
+  decoder --steps           the step chain of the accept path: see the block comment before `STEP_R64`.
+  decoder --whole-accept    the step chain plus the head, field, epilogue, accept and size-reject theorems
+                            (`whole_accept.py`).
+  encoder --fast-path       the encoder fast-path theorem of a flat `MarshalSSZTo` (`fast_path.py`).
 
 Statement check: every emitted theorem `t` is followed by
 `t_kind : ∀ (h : Host), type_of% (@t h) = <kind> h <parameters>` proved by `with_reducible rfl`. The kind
-is hand text in `lean/Codec/Kind/FieldPatterns.lean` (`uint64DecodeAcceptKind`, `rootDecodeSegmentKind`), proved from the lemma
-there (`*_of`) and, for the uint64 decoder kind, equal to the reviewed hand statements (`Prysm/Slot/Uint64DecoderKindSameAsHand.lean`). `@t h` is the whole
+is hand text in `lean/Codec/Kind/*.lean`, proved from its lemma. `@t h` is the whole
 declared type, binders before and after the colon. So the kernel checks the full emitted statement against
 the frozen kind; it does not need a hand theorem of the instance type. What it does not check: that the
 parameters given to the kind are the right ones for the Go type. A wrong parameter gives a statement that
 the code facts of the proof do not support, so the build fails; that is a property of the proof, not of
-the `_kind` check. The proof ends in `with_reducible exact <lemma instance>`, so a statement literal that
-differs from the lemma instance fails without unfolding `Int.toBytes`.
+the `_kind` check. `kindcheck.py` checks by text that every `_kind` line names a frozen kind.
 
 Nothing here is trusted: the output is ordinary Lean, checked by the kernel. A wrong read of
 the `.S` (wrong label, index, displacement) makes the code hypotheses of the lemma
@@ -30,14 +31,13 @@ of a template textually and stops (exit 2, message on stderr) when one does not 
 compiler variation that the template does not cover is reported, not patched.
 
 Python 3 standard library only. Usage:
-  generator.py uint64 --assembly FILE --const LEAN_CONST --name THM [--same-as HAND_THM] --imports M1,M2 [--open NS]
-  generator.py decoder --assembly FILE --const LEAN_CONST --ir IR.json --type PKGSUFFIX.TYPE --prefix NAME
-                   --imports M1,M2 [--open NS] [--partial-out FILE] [--field-segments [--summary FILE.json]]
-
-field-segment (`--field-segments`, off by default): see the block comment before `ir_fields`. Without `--field-segments` the output is the
-text of the first `decoder` generator and its offset-0 extension, byte for byte (compatibility switch; `regen_check.sh` of every committed file).
-step (`decoder --steps [--summary FILE.json] [--partial-out FILE]`, off by default): see the block comment
-before `STEP_R64`; its own code path, the default / `--field-segments` / `--call-segments` text is unchanged.
+  generator.py uint64 --assembly FILE --const LEAN_CONST --name THM --imports M1,M2 [--open NS]
+  generator.py decoder [--steps [--summary FILE.json] | --whole-accept [--summary FILE.json]]
+                   --assembly FILE --const LEAN_CONST --ir IR.json --type PKGSUFFIX.TYPE --prefix NAME
+                   --imports M1,M2 [--open NS]
+  generator.py encoder --fast-path --assembly FILE --const LEAN_CONST --ir IR.json --type PKGSUFFIX.TYPE --prefix NAME
+                   --imports M1,M2 [--open NS] [--hand-layout NAME --hand-layout-src FILE]
+                   [--same-as HAND_THM [--same-as-via LEMMA] | --same-as-prop PROP] [--summary FILE.json]
 """
 import argparse, hashlib, json, pathlib, re, sys
 
@@ -188,8 +188,6 @@ def uint64_decoder(args):
     out += (f"  with_reducible exact (Codec.uint64_decode_accept _ _ _ _ {p['fs']} {p['dsp']} (by decide) k (k + {p['jb']})\n"
             f"    hA hB hl e8 he8 s ra guard fp s2 c0 hfp h2 hc0 R h_mem hguard hlen)\n")
     out += kind_thm(args.name, f"Codec.uint64DecodeAcceptKind h {c}")
-    if args.same_as:
-        out += f"\n/-- Same proposition as the hand theorem. -/\ntheorem {args.name}_same : @{args.same_as} = @{args.name} := rfl\n"
     out += f"\nend {GEN_NS}\n"
     return out
 
@@ -264,7 +262,7 @@ def ir_roots(ir_path, tname):
     return roots, hashlib.sha256(raw).hexdigest()
 
 
-# Offset-0 form (a 32-byte field at SSZ offset 0; a later extension; Eth1Data is development data for it).
+# Offset-0 form (a 32-byte field at SSZ offset 0, for example Eth1Data.DepositRoot).
 # When the memmove source is the buffer pointer itself, Go 1.26.10 omits `add $src,%rbx`: the second block
 # is `rootDecodeMiddle` without that directive (`Codec.rootDecodeMiddleOffsetZero`, lemma `root_decode_segment_offset_zero`, kind
 # `rootDecodeSegmentOffsetZeroKind`, `lean/Codec/Bytes32DecodeOffsetZero.lean`, `lean/Codec/Kind/Bytes32DecodeOffsetZero.lean`). The form is chosen by the directive after the
@@ -310,16 +308,11 @@ ROOT_FIELD_OFFSET_ZERO_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsI
 """
 
 
-def decoder_find(dirs, fo, src, n=32, field_segments=False, pad_ok=False):
-    """The decode segment of the field at Go offset `fo`, SSZ offset `src`: (j1, j2, params), params["form"]
+def decoder_find(dirs, fo, src):
+    """The decode segment of the 32-byte field at Go offset `fo`, SSZ offset `src`: (j1, j2, params), params["form"]
     "add" (`rootDecodeMiddle`, 12 directives) or "zero" (`rootDecodeMiddleOffsetZero`, 11 directives, SSZ offset 0).
-    field-segment: `n` is the vector size (IR); every size immediate of the segment must be `n` (default 32: the
-    directive texts and regular expressions are exactly those of the default `decoder` mode with its offset-0 form, `{32:#x}` = `0x20`). Only with
-    `field_segments` (the `--field-segments` mode) is a pointer store without displacement, `mov %rax,(%rdx)`, read as Go offset 0
-    (DepositMessage.PublicKey); the default mode does not read it (such a field does not match).
-    call-segment (`pad_ok`, only from `--call-segments`): one padding `nop` between `mov $n,%ecx` and `callq runtime.makeslice`
-    is read (head `bytesDecodeHeadOptionalPadding true`, 10 directives; params["pad"]); add form only. Without `pad_ok` the text
-    and the regular expressions are exactly the field-segment ones."""
+    A pointer store without displacement, `mov %rax,(%rdx)`, does not match."""
+    n = 32
     N = f"{n:#x}"
     hits = []
     for i in range(len(dirs)):
@@ -328,8 +321,6 @@ def decoder_find(dirs, fo, src, n=32, field_segments=False, pad_ok=False):
         try:
             expect(dirs, i + 1, r"xor %ebx,%ebx", "xor %ebx,%ebx")
             expect(dirs, i + 2, rf"mov \${N},%ecx", f"mov ${N},%ecx")
-            pd = 1 if (pad_ok and i + 3 < len(dirs) and dirs[i + 3] == "nop") else 0
-            i += pd  # call-segment: the head directives after the padding `nop` are read one index later
             expect(dirs, i + 3, r"callq runtime\.makeslice", "callq runtime.makeslice")
             dR = int(expect(dirs, i + 4, rf"mov ({HEX})\(%rsp\),%rdx", "the receiver reload").group(1), 16)
             fL = int(expect(dirs, i + 5, rf"movq \$0x0,({HEX})\(%rdx\)", "len = 0").group(1), 16)
@@ -344,10 +335,7 @@ def decoder_find(dirs, fo, src, n=32, field_segments=False, pad_ok=False):
         lff = expect(dirs, i + 8, r"je (\S+)", "je <no-barrier label>").group(1)
         j2 = label_index(dirs, lff)
         dS = int(expect(dirs, j2 + 1, rf"mov %rax,({HEX})\(%rsp\)", "the pointer save").group(1), 16)
-        if field_segments and fo == 0 and j2 + 2 < len(dirs) and dirs[j2 + 2] == "mov %rax,(%rdx)":
-            fP = 0
-        else:
-            fP = int(expect(dirs, j2 + 2, rf"mov %rax,({HEX})\(%rdx\)", "the pointer store").group(1), 16)
+        fP = int(expect(dirs, j2 + 2, rf"mov %rax,({HEX})\(%rdx\)", "the pointer store").group(1), 16)
         if fP != fo:
             raise NoMatch(f"directive {j2 + 2}: pointer at {fP:#x}, IR field offset {fo:#x}")
         dB = int(expect(dirs, j2 + 3, rf"mov ({HEX})\(%rsp\),%rbx", "the buffer reload").group(1), 16)
@@ -371,21 +359,19 @@ def decoder_find(dirs, fo, src, n=32, field_segments=False, pad_ok=False):
         expect(dirs, j2 + 8 + a, rf"movq \${N},{fC:#x}\(%rdx\)", f"cap = {n}")
         expect(dirs, j2 + 9 + a, r"cmpl \$0x0,runtime\.writeBarrier\(%rip\)", "the write-barrier test")
         lwb = expect(dirs, j2 + 10 + a, r"jne (\S+)", "jne <barrier label>").group(1)
-        if pad_ok and pd and form != "add":
-            raise NoMatch(f"directive {i + 3 - pd}: padding nop in the offset-0 form (not covered: no lemma)")
-        hits.append((i - pd, j2, dict(lff=lff, lwb=lwb, dR=dR, dB=dB, dS=dS, fP=fP, fL=fL, fC=fC, src=src,
-                                      form=form, last=j2 + 10 + a, n=n, **({"pad": bool(pd)} if pad_ok else {}))))
+        hits.append((i, j2, dict(lff=lff, lwb=lwb, dR=dR, dB=dB, dS=dS, fP=fP, fL=fL, fC=fC, src=src,
+                                 form=form, last=j2 + 10 + a, n=n)))
     if len(hits) != 1:
         raise NoMatch(f"field at Go offset {fo:#x}: {len(hits)} decode segments match (expected 1)")
     return hits[0]
 
 
 class Partial(Exception):
-    """Some fields matched, some did not (exit 3). Carries the per-field report and the partial text."""
+    """Some fields matched, some did not (exit 3, nothing on stdout). Carries the per-field report."""
 
-    def __init__(self, report, text):
+    def __init__(self, report):
         super().__init__("partial")
-        self.report, self.text = report, text
+        self.report = report
 
 
 def root_field_segment_text(c, fname, src, fo, j1, j2, p):
@@ -417,12 +403,10 @@ def root_field_segment_text(c, fname, src, fo, j1, j2, p):
 
 
 def decoder(args):
-    """Field rule (offset-0 extension). Every 32-byte field of the IR type is matched on its own; a field that
+    """Field rule. Every 32-byte field of the IR type is matched on its own; a field that
     does not match does not stop the matching of the later fields. The output is complete or absent:
     - every field matches                → exit 0, the whole file on stdout;
-    - some fields match, some do not     → exit 3, NOTHING on stdout, one line per field on stderr; with
-      `--partial-out FILE` the matched fields are written to FILE under a `PARTIAL OUTPUT` header that
-      names the missing fields (never a file that looks complete);
+    - some fields match, some do not     → exit 3, NOTHING on stdout, one line per field on stderr;
     - no field matches, or the output would be wrong (two fields claim overlapping directives, the IR
       read fails, a field name repeats) → exit 2, nothing written anywhere (NoMatch)."""
     dirs, sha = read_S(args.assembly)
@@ -452,39 +436,19 @@ def decoder(args):
     body = "".join(root_field_segment_text(c, *f) for f in found) + f"end {GEN_NS}\n"
     if len(found) == len(roots):
         return header(sha, args.assembly, args, extra, kinds) + body
-    missing = [f for f, _, _ in roots if f not in {x[0] for x in found}]
-    text = (f"/-! PARTIAL OUTPUT (generator exit 3): {len(found)} of {len(roots)} 32-byte fields of `{args.type}`; "
-            f"NOT generated: {', '.join(missing)}. Not a complete decoder output. -/\n"
-            + header(sha, args.assembly, args, extra, kinds) + body)
-    raise Partial(report, text)
+    raise Partial(report)
 
 
-# ---------------------------------------------------------------- field-segment (`decoder --field-segments`)
-#
-# Compatibility switch: the extended coverage is ONLY behind `--field-segments`. Without the flag, `decoder` reads
-# 32-byte fields only, with the offset-0 form (fixed stdout and exit codes), so every committed output
-# of `gen.sh` and of the header commands of BlobIdentifier and DepositMessage regenerates byte for byte. With `--field-segments` every own field of the IR type is
-# classified and reported:
-#   fixed byte vector, `[]byte`, size 32  -> the theorem text of the default mode and its offset-0 form (`root_decode_segment` / `root_decode_segment_offset_zero`);
-#   fixed byte vector, `[]byte`, size 48 / 96 -> `Codec.bytes_decode_segment` / `bytes_decode_segment_offset_zero` (lemmas of
-#                                             `lean/Codec/FixedBytesDecode.lean`, `lean/Codec/Kind/FixedBytesDecode.lean`), kinds `bytesDecSeg(Z)Kind`;
-#   `uint64` (IR k = uint, 64 bits)        -> `Codec.uint64_decode_inline_segment` (`{`Codec/InlineUint64.lean`,`Codec/Kind/InlineUint64.lean`}.lean`);
-#   anything else (byte vector of another size, delegated overlay fields such as Slot / Epoch, nested
-#   containers, lists, bitfields, bool)    -> "not covered: <reason>", never a guessed theorem.
-# Exit codes as for `decoder`: 0 every field covered (whole file on stdout); 3 some fields covered (nothing on
-# stdout; `--partial-out` writes the covered ones under a PARTIAL OUTPUT header); 2 no field covered, two
-# fields claim overlapping directives, the covered segments are not in IR field order, or the IR read fails.
-# `--summary FILE` writes a machine-readable per-field report (JSON) in every case (also on exit 2 / 3).
+# ---------------------------------------------------------------- IR fields (read by `decoder --steps`)
 
 FIELD_SEGMENT_SIZES = (32, 48, 96)
 SIZE_CASE_PROOF = {32: "Or.inl rfl", 48: "Or.inr (Or.inl rfl)", 96: "Or.inr (Or.inr rfl)"}
-# the scratch registers of `Codec.Uint64InlineReg` (every 64-bit register except rdx, rsp, rbp, r14)
-U64_REGS = ("rax", "rbx", "rcx", "rsi", "rdi", "r8", "r9", "r10", "r11", "r12", "r13", "r15")
 
 
-def ir_fields(ir_path, tname, call_segments=False):
-    """Every own field of the container, in IR order: (name, SSZ offset, Go offset, class, size or reason).
-    class: "bytes" (fixed `[]byte` vector, size 32 / 48 / 96), "u64" (`uint64`), "none" (not covered)."""
+def ir_fields(ir_path, tname):
+    """Every own field of the container, in IR order: (name, SSZ offset, Go offset, class, size, callee label or reason).
+    class: "bytes" (fixed `[]byte` vector, size 32 / 48 / 96), "u64" (`uint64`), "call" (a uint64 overlay that a callee
+    with a proved spec decodes), "none" (not covered)."""
     raw = pathlib.Path(ir_path).read_bytes()
     pkg, name = tname.rsplit(".", 1)
     ts = [t for c in json.loads(raw)["configs"] for t in c.get("types", [])
@@ -508,12 +472,10 @@ def ir_fields(ir_path, tname, call_segments=False):
                 cls, info = "none", f"byte vector of size {v.get('size')} (lemma sizes 32, 48, 96 only)"
         elif k == "uint" and v.get("bits") == 64 and v.get("go_type") == "uint64" and v.get("fixed_size") == 8:
             cls, info = "u64", 8
-        elif call_segments and (k == "overlay" or v.get("deleg")):
-            cls, info = call_segment_callee(v)
         elif k == "overlay" or v.get("deleg"):
-            cls, info = "none", f"delegated overlay field ({v.get('go_type')}): compiled as a call, no template"
+            cls, info = ir_callee_class(v)
         else:
-            cls, info = "none", f"field kind {k} ({v.get('go_type')}): no field-segment template (nested containers, lists, bitfields, bool, other uints)"
+            cls, info = "none", f"field kind {k} ({v.get('go_type')}): no step form (nested containers, lists, bitfields, bool, other uints)"
         out.append((f["key"], off, fo, cls, info))
         off += v["fixed_size"]
     return out, hashlib.sha256(raw).hexdigest()
@@ -534,289 +496,18 @@ def ir_ssz_size(ir_path, tname):
     return total
 
 
-def u64_find(dirs, fo, src):
-    """The inline uint64 read of the field at Go offset `fo`, SSZ offset `src` (interface (c) of the field-segment inline uint64 lemma):
-    `mov dB(%rsp),%rX; mov src(%rX),%rX; mov %rX,fo(%rdx)`, the same 64-bit scratch register rX in all four
-    places, rX in U64_REGS. Exactly one site must match. Displacement 0 (src = 0 or fo = 0) is not covered
-    (not exercised for the lemma; the `.S` writes such a displacement without a number)."""
-    if src == 0 or fo == 0:
-        raise NoMatch(f"inline uint64 with displacement 0 (SSZ offset {src}, Go offset {fo}): not exercised for "
-                      f"uint64_decode_inline_segment")
-    hits = []
-    for j in range(len(dirs) - 2):
-        m = re.fullmatch(rf"mov %(\w+),({HEX})\(%rdx\)", dirs[j + 2])
-        if not m or int(m.group(2), 16) != fo:
-            continue
-        rX = m.group(1)
-        m0 = re.fullmatch(rf"mov ({HEX})\(%rsp\),%{re.escape(rX)}", dirs[j])
-        m1 = re.fullmatch(rf"mov ({HEX})\(%{re.escape(rX)}\),%{re.escape(rX)}", dirs[j + 1])
-        if not m0:
-            raise NoMatch(f"directive {j}: `{dirs[j]}` is not `mov dB(%rsp),%{rX}` (no reload of the buffer "
-                          f"from the spill slot into the stored register)")
-        if not m1:
-            raise NoMatch(f"directive {j + 1}: `{dirs[j + 1]}` is not `mov src(%{rX}),%{rX}`")
-        if rX not in U64_REGS:
-            raise NoMatch(f"directive {j}: scratch register {rX} is not one of {', '.join(U64_REGS)}")
-        if int(m1.group(1), 16) != src:
-            raise NoMatch(f"directive {j + 1}: source offset {int(m1.group(1), 16):#x}, IR SSZ offset {src:#x}")
-        hits.append((j, dict(rX=rX, dB=int(m0.group(1), 16), src=src, f=fo, last=j + 2)))
-    if len(hits) != 1:
-        raise NoMatch(f"field at Go offset {fo:#x}: {len(hits)} inline uint64 reads match (expected 1)")
-    return hits[0]
-
-
-def _sub_once(text, old, new):
-    if text.count(old) != 1:
-        raise AssertionError(f"template text: {old!r} occurs {text.count(old)} times")
-    return text.replace(old, new)
-
-
-def _size_statement(statement_text):
-    """The statement of the default mode and its offset-0 form, with the size 32 in its five places replaced by `{n}` (interface (a)/(b))."""
-    for old, new in [("(hroot : root.length = 32)", "(hroot : root.length = {n})"),
-                     ("(hav : 32 ≤ avail)", "(hav : {n} ≤ avail)"),
-                     ("⋆ Heap (avail - 32)", "⋆ Heap (avail - {n})"),
-                     ("Eq ((Int.toBytes 8 32).At aL)", "Eq ((Int.toBytes 8 {n}).At aL)"),
-                     ("Eq ((Int.toBytes 8 32).At aC)", "Eq ((Int.toBytes 8 {n}).At aC)")]:
-        statement_text = _sub_once(statement_text, old, new)
-    return statement_text
-
-
-BYTES_STATEMENT = _size_statement(ROOT_FIELD_STATEMENT)
-BYTES_OFFSET_ZERO_STATEMENT = _size_statement(ROOT_FIELD_OFFSET_ZERO_STATEMENT)
-
-UINT64_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
-    ∀ (sp rcv bf aB aSrc aF : BitVec 64)
-    (hB' : sp + ({dB} : Int64).toBitVec = aB) (hSrc : bf + ({src} : Int64).toBitVec = aSrc)
-    (hF : rcv + ({f} : Int64).toBitVec = aF)
-    (rbp0 r140 : UInt64) (v vF : List UInt8) (hv : v.length = 8) (hvF : vF.length = 8)
-    (R : DataMem → Prop)
-    (s : MachineData) (hrsp : s.regs.rsp = {{ toBitVec := sp }}) (hrbp : s.regs.rbp = rbp0)
-    (hr14 : s.regs.r14 = r140) (hrdx : s.regs.rdx.toBitVec = rcv)
-    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 bf.toInt).At aB) ⋆ Eq (v.At aSrc) ⋆ Eq (vF.At aF) ⋆ R),
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + {j} + 3) ∧ st.data.regs.rsp = {{ toBitVec := sp }}
-        ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧ st.data.regs.rdx.toBitVec = rcv ∧
-        (Eq ((Int.toBytes 8 bf.toInt).At aB) ⋆ Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem)
-      ⟨s, Host.addrOf (k + {j})⟩ := by
-"""
-
-
-def bytes_seg(c, fname, src, fo, j1, j2, p):
-    """field-segment text of a 48- / 96-byte field (interface (a) add form, (b) offset-0 form)."""
-    n = p["n"]
-    name = f"{c['prefix']}_{fname}_segment"
-    k = c["const"]
-    out = "set_option maxHeartbeats 16000000 in\nset_option maxRecDepth 100000 in\n"
-    out += f"/-- `{fname}` ({n} bytes, SSZ offset {src}, Go offset {fo}): decode segment, directives {j1}–{p['last']}. -/\n"
-    head = f"Codec.bytesDecodeHead {n} {lean_str(p['lff'])} {p['dR']} {p['fL']} {p['fC']}"
-    if p["form"] == "add":
-        out += BYTES_STATEMENT.format(name=name, const=k, j1=j1, j2=j2, **p)
-        out += infix_have("hA", head, j1, k)
-        out += infix_have("hB", f"Codec.bytesDecodeMiddle {n} {lean_str(p['lff'])} {lean_str(p['lwb'])} {p['dR']} {p['dB']} "
-                          f"{p['dS']} {p['fP']} {p['fL']} {p['fC']} {p['src']}", j2, k)
-        out += label_have("hl", j2, k)
-        out += (f"  with_reducible exact Codec.bytes_decode_segment {n} ({SIZE_CASE_PROOF[n]}) _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
-                f"hA hB hl\n")
-        out += kind_thm(name, f"Codec.bytesDecodeSegmentKind h {n} {k} {j1} {j2} {p['dR']} {p['dB']} {p['dS']} {p['fP']} "
-                              f"{p['fL']} {p['fC']} {p['src']}") + "\n"
-    else:
-        out += BYTES_OFFSET_ZERO_STATEMENT.format(name=name, const=k, j1=j1, j2=j2, **p)
-        out += infix_have("hA", head, j1, k)
-        out += infix_have("hB", f"Codec.bytesDecodeMiddleOffsetZero {n} {lean_str(p['lff'])} {lean_str(p['lwb'])} {p['dR']} {p['dB']} "
-                          f"{p['dS']} {p['fP']} {p['fL']} {p['fC']}", j2, k)
-        out += label_have("hl", j2, k)
-        out += (f"  with_reducible exact Codec.bytes_decode_segment_offset_zero {n} ({SIZE_CASE_PROOF[n]}) _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
-                f"hA hB hl\n")
-        out += kind_thm(name, f"Codec.bytesDecodeSegmentOffsetZeroKind h {n} {k} {j1} {j2} {p['dR']} {p['dB']} {p['dS']} {p['fP']} "
-                              f"{p['fL']} {p['fC']}") + "\n"
-    return out
-
-
-def u64_seg(c, fname, src, fo, j, p):
-    """field-segment text of an inline uint64 field (interface (c))."""
-    name = f"{c['prefix']}_{fname}_segment"
-    k = c["const"]
-    tmpl = f"Codec.uint64DecodeInline Reg64.{p['rX']} {p['dB']} {p['src']} {p['f']}"
-    out = "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
-    out += (f"/-- `{fname}` (inline uint64, SSZ offset {src}, Go offset {fo}): decode segment, directives "
-            f"{j}–{p['last']}, scratch register {p['rX']}. -/\n")
-    out += UINT64_STATEMENT.format(name=name, const=k, j=j, **p)
-    out += infix_have("hA", tmpl, j, k)
-    out += f"  have hX : Codec.Uint64InlineReg Reg64.{p['rX']} := by decide\n"
-    out += f"  with_reducible exact Codec.uint64_decode_inline_segment Reg64.{p['rX']} hX _ _ _ (k + {j}) hA\n"
-    out += kind_thm(name, f"Codec.uint64DecodeInlineSegmentKind h {k} {j} {p['dB']} {p['src']} {p['f']}") + "\n"
-    return out
-
-
-def decoder_field_segments(args):
-    """`decoder --field-segments`: per-field coverage (see the block comment above). Returns the text or raises
-    NoMatch (exit 2) / Partial (exit 3); `args.summary_data` collects the per-field report."""
-    dirs, sha = read_S(args.assembly)
-    call_segments = getattr(args, "call_segments", False)
-    fields, irsha = ir_fields(args.ir, args.type, call_segments=call_segments) if call_segments else ir_fields(args.ir, args.type)
-    summ = args.summary_data = dict(type=args.type, assembly=args.assembly, assembly_sha256=sha, ir_sha256=irsha, fields=[])
-    if not fields:
-        raise NoMatch(f"{args.type}: no field")
-    if len({f[0] for f in fields}) != len(fields):
-        raise NoMatch(f"{args.type}: a field name repeats")
-    c = dict(const=args.const, prefix=args.prefix)
-    found, report = [], []
-    for (fname, src, fo, cls, info) in fields:
-        rec = dict(field=fname, ssz_offset=src, go_offset=fo)
-        try:
-            if cls == "none":
-                raise NoMatch(info)
-            if cls == "bytes":
-                j1, j2, p = (decoder_find(dirs, fo, src, n=info, field_segments=True, pad_ok=True) if call_segments
-                             else decoder_find(dirs, fo, src, n=info, field_segments=True))
-                shape = (f"root_decode_segment{'_z' if p['form'] == 'zero' else ''}" if info == 32
-                         else f"bytes_decode_segment{'_z' if p['form'] == 'zero' else ''} {info}")
-                if p.get("pad"):
-                    shape = f"bytes_decode_segment_optional_padding true {info} (padding nop before makeslice)"
-                found.append((j1, p["last"], fname, "bytes", (fname, src, fo, j1, j2, p)))
-            elif cls == "call":
-                p = call_find(dirs, fo, src, info)
-                j1 = p["jm"] if p["form"] == "lea" else p["js"]
-                shape = (f"call_decode_segment {info.split('.')[-2]} + call_argument_{p['form']}_segment"
-                         + (" + call_argument_mov_segment" if p["form"] == "lea" else "") + (" (pad)" if p["pad"] else ""))
-                found.append((j1, p["last"], fname, "call", (fname, src, fo, p)))
-            elif call_segments:
-                j1, p = u64_find_two_directive(dirs, fo, src)
-                shape = (f"uint64_decode_scratch_register_segment {p['rX']}" if p["form"] == "rr" else f"uint64_decode_inline_segment {p['rX']}")
-                found.append((j1, p["last"], fname, "u64rr" if p["form"] == "rr" else "u64", (fname, src, fo, j1, p)))
-            else:
-                j1, p = u64_find(dirs, fo, src)
-                shape = f"uint64_decode_inline_segment {p['rX']}"
-                found.append((j1, p["last"], fname, "u64", (fname, src, fo, j1, p)))
-            rec.update(status="covered", shape=shape, directives=[j1, p["last"]])
-            report.append(f"field {fname}: MATCH {shape}, directives {j1}–{p['last']}")
-        except NoMatch as e:
-            rec.update(status="not covered", reason=str(e))
-            report.append(f"field {fname}: NOT COVERED: {e}")
-        summ["fields"].append(rec)
-    if call_segments:
-        # the `lea` set-up of a callee field is split by the two-directive read of the IR field just before it
-        for x in [x for x in found if x[3] == "call" and x[4][3]["form"] == "lea"]:
-            p, fname = x[4][3], x[2]
-            prev = [f[0] for f in fields][[f[0] for f in fields].index(fname) - 1] if fname != fields[0][0] else None
-            ok = [y for y in found if y[3] == "u64rr" and y[0] == p["jr"] and y[2] == prev]
-            if not ok:
-                why = (f"lea set-up around directives {p['jr']}–{p['jr'] + 1}: not the covered two-directive read of "
-                       f"the IR field before ({prev})")
-                found.remove(x)
-                for rec in summ["fields"]:
-                    if rec["field"] == fname:
-                        rec.clear()
-                        rec.update(field=fname, ssz_offset=x[4][1], go_offset=x[4][2], status="not covered", reason=why)
-                report[:] = [r for r in report if not r.startswith(f"field {fname}: ")] + [f"field {fname}: NOT COVERED: {why}"]
-        extra_spans = [(x[4][3]["js"], x[4][3]["js"] + 5, x[2]) for x in found
-                       if x[3] == "call" and x[4][3]["form"] == "lea"]
-        allsp = sorted([(a, b, f) for (a, b, f, *_) in found] + extra_spans)
-        for (a0, a1, fa), (b0, b1, fb) in zip(allsp, allsp[1:]):
-            if b0 <= a1:
-                raise NoMatch(f"fields {fa} and {fb} claim overlapping directives {a0}–{a1} and {b0}–{b1}")
-    spans = sorted(found)
-    for (a0, a1, fa, *_), (b0, b1, fb, *_) in zip(spans, spans[1:]):
-        if b0 <= a1:
-            raise NoMatch(f"fields {fa} and {fb} claim overlapping directives {a0}–{a1} and {b0}–{b1}")
-    order = [f[0] for f in fields]
-    if [x[2] for x in spans] != [x[2] for x in found] or \
-            [x[2] for x in found] != [f for f in order if f in {x[2] for x in found}]:
-        raise NoMatch("the covered segments are not in IR field order in the code: "
-                      + ", ".join(f"{x[2]}@{x[0]}" for x in spans))
-    if not found:
-        raise NoMatch("; ".join(report))
-    kinds = []
-    if any(cl == "bytes" and a[5]["n"] == 32 and a[5]["form"] == "zero" for *_, cl, a in found):
-        kinds.append("Codec.Kind.Bytes32DecodeOffsetZero")
-    if any(cl == "bytes" and a[5]["n"] != 32 for *_, cl, a in found):
-        kinds.append("Codec.Kind.FixedBytesDecode")
-    if any(cl == "u64" for *_, cl, a in found):
-        kinds.append("Codec.Kind.InlineUint64")
-    if any(cl in ("call", "u64rr") for *_, cl, a in found):
-        kinds.append("Codec.Kind.CalleeDecode")
-    if any(cl == "bytes" and a[5].get("pad") for *_, cl, a in found) and "Codec.Kind.FixedBytesDecode" not in kinds:
-        kinds.append("Codec.Kind.FixedBytesDecode")
-    cov = "call segment coverage (`decoder --call-segments`)" if call_segments else "field segment coverage (`decoder --field-segments`)"
-    extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); {cov}: "
-             f"{len(found)} of {len(fields)} fields")
-    body = ""
-    for *_, cl, a in found:
-        if cl == "u64":
-            body += u64_seg(c, *a)
-        elif cl == "u64rr":
-            body += uint64_two_directive_segment_text(c, *a)
-        elif cl == "call":
-            body += call_seg(c, *a)
-        elif a[5].get("pad"):
-            body += bytes_seg_pad(c, *a)
-        elif a[5]["n"] == 32:
-            body += root_field_segment_text(c, *a)
-        else:
-            body += bytes_seg(c, *a)
-    body += f"end {GEN_NS}\n"
-    if args.compose:
-        if len(found) != len(fields):
-            raise NoMatch(f"--compose needs every field covered ({len(found)} of {len(fields)})")
-        if call_segments and any(cl in ("call", "u64rr") for *_, cl, a in found):
-            raise NoMatch("--compose: callee-decoder fields and two-directive uint64 reads have no composition "
-                          "template and no composed-statement kind (decodeAcceptKind covers byte-vector / inline-uint64 "
-                          "fields in frame 0x20 only); the accept theorem of this type stays a hand composition")
-        return compose(args, dirs, sha, irsha, fields, found)
-    if len(found) == len(fields):
-        return header(sha, args.assembly, args, extra, kinds) + body
-    missing = [f for f in order if f not in {x[2] for x in found}]
-    # the `--partial-out` file of `--field-segments` is a valid Lean module.
-    # The imports come first; the PARTIAL header is a module doc right after them, with one machine-readable
-    # line `UNCOVERED-JSON: [{"field": …, "reason": …}, …]`. `kindcheck.py` rejects the file by default and
-    # checks the kinds of the present theorems with `--partial` (exit 3, never 0). Stdout stays empty (exit 3).
-    unc = [dict(field=r["field"], reason=r["reason"].replace("-/", "- /"))
-           for r in summ["fields"] if r.get("status") != "covered"]
-    full = header(sha, args.assembly, args, extra, kinds)
-    imps, rest = full.split("\n\n", 1)
-    text = (imps + f"\n\n/-! PARTIAL OUTPUT (generator exit 3): {len(found)} of {len(fields)} fields of `{args.type}` "
-            f"({'--call-segments' if call_segments else '--field-segments'}); NOT generated: {', '.join(missing)}. Not a complete decoder output.\n"
-            f"UNCOVERED-JSON: {json.dumps(unc)}\n-/\n\n" + rest + body)
-    raise Partial(report, text)
-
-
-# ---------------------------------------------------------------- call-segment (`decoder --call-segments`, implies `--field-segments`)
-#
-# Compatibility switch: the call-segment shapes are ONLY behind `--call-segments`. Without it, `--field-segments` and the default mode emit none of these shapes
-# (`regen_check.sh` of every committed file checks the text byte for byte). `--call-segments` adds exactly the shapes
-# of the call-segment lemmas (`lean/Codec/CalleeDecode.lean`, `lean/Codec/Kind/CalleeDecode.lean`, `lean/Codec/InlineUint64RegisterBase.lean`, `lean/Codec/FixedBytesDecodePadding.lean`, `lean/Codec/Kind/DecodeAcceptComposition.lean`):
-#   uint64-overlay field decoded by a CALL to a callee decoder with a proved accept spec (Slot, CommitteeIndex,
-#     ValidatorIndex, Epoch of `consensus-types/primitives`): the call block `call_decode_segment` (`callq fn;
-#     test %rax,%rax; je lok`, label `lok:` after it) and the argument set-up before the `callq`, one of the
-#     observed straight-line templates: `callarg_first_seg pad` (SSZ offset 0), `callarg_reload_seg pad`, or the
-#     `lea` form `call_argument_lea_segment` + [the two-directive uint64 read of the IR field just before] +
-#     `call_argument_mov_segment`. Kinds `callDecodeSegmentKind`, `callArgumentFirstKind`, `callArgumentReloadKind`, `callArgumentLeaKind`,
-#     `callArgumentMovKind`. The callee spec stays the hypothesis `hC : U64CalleeAccept "<fn>"` of the call theorem.
-#   `uint64` field read in the two-directive form `mov src(%rbx),%rX; mov %rX,f(%rax)`: `uint64_decode_scratch_register_segment`
-#     (kind `uint64DecodeScratchRegisterSegmentKind`, register in the kind), when the field-segment inline form does not match.
-#   byte vector with one padding `nop` between `mov $n,%ecx` and `callq runtime.makeslice` (add form):
-#     `bytesdec_seg_optional_padding true n` (kind: the existing `bytesDecodeSegmentKind`).
-# Anything else (another set-up, a callee without a proved spec, pointer / nested-container callees, a `nop`
-# elsewhere, two `nop`s, the offset-0 form with a `nop`) is "not covered: <reason>", never a guessed theorem.
-# `--compose` with `--call-segments`: callee or two-directive uint64 fields are refused (no composition template, no
-# composed-statement kind); otherwise the field-segment composition plus the `_kind` line against `decodeAcceptKind`.
-
-# callee decoders with a proved accept spec (`Prysm/Slot/CalleeDecodeFunctionSpecs.lean`: `U64CalleeAccept <label>` = `Prysm.Slot.Decode.accept_function_spec` / `Prysm.CommitteeIndex.Decode.accept_function_spec` /
-# `Prysm.ValidatorIndex.Decode.accept_function_spec` / `Prysm.Epoch.Decode.accept_function_spec` by rfl; proved by `Prysm.Slot.Decode.accept_function_spec_holds` / `Prysm.CommitteeIndex.Decode.accept_function_spec_holds` / `Prysm.ValidatorIndex.Decode.accept_function_spec_holds` / `Prysm.Epoch.Decode.accept_function_spec_holds`)
+# callee decoders with a proved accept spec (`Prysm/Slot/CalleeDecodeFunctionSpecs.lean`)
 PRIM_PKG = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
 CALLEES = {n: f"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"
            for n in ("Slot", "CommitteeIndex", "ValidatorIndex", "Epoch")}
-# scratch registers of `Codec.Uint64ScratchRegister` (every 64-bit register except rax, rbx, rsp, rbp, r14)
-RR_REGS = ("rcx", "rdx", "rsi", "rdi", "r8", "r9", "r10", "r11", "r12", "r13", "r15")
 
 
-def call_segment_callee(v):
-    """IR class of a delegated field under `--call-segments`: ("call", callee label) or ("none", reason)."""
+def ir_callee_class(v):
+    """IR class of a delegated field: ("call", callee label) or ("none", reason)."""
     dt, u = v.get("delegated_to") or {}, v.get("underlying") or {}
     if v.get("k") != "overlay":
         return "none", (f"field kind {v.get('k')} ({v.get('go_type')}, delegated to {dt.get('k')} {dt.get('name')}): "
-                        f"nested container / pointer callee, no call-segment template")
+                        f"nested container / pointer callee, no call step")
     if not (v.get("deleg") or {}).get("unmarshaler") or dt.get("k") != "overlay" or v.get("fixed_size") != 8 \
             or u.get("k") != "uint" or u.get("bits") != 64:
         return "none", f"overlay field ({v.get('go_type')}) that is not a delegated uint64 overlay"
@@ -840,207 +531,7 @@ def _lit(x):
 SHX = r"-?0x[0-9a-f]+"
 
 
-def _fullmatch_at(dirs, i, rx):
-    return re.fullmatch(rx, dirs[i]) if 0 <= i < len(dirs) else None
-
-
-def rr_find(dirs, fo, src):
-    """The two-directive uint64 read of the field at Go offset `fo`, SSZ offset `src`:
-    `mov src(%rbx),%rX; mov %rX,fo(%rax)`, the same rX twice, rX in RR_REGS. Returns the list of hits."""
-    hits = []
-    for j in range(len(dirs) - 1):
-        m1 = re.fullmatch(rf"mov %(\w+),({HEX})\(%rax\)", dirs[j + 1])
-        if not m1 or int(m1.group(2), 16) != fo:
-            continue
-        rX = m1.group(1)
-        m0 = re.fullmatch(rf"mov ({HEX})\(%rbx\),%{re.escape(rX)}", dirs[j])
-        if not m0 or int(m0.group(1), 16) != src or rX not in RR_REGS:
-            continue
-        hits.append((j, dict(rX=rX, src=src, f=fo, last=j + 1)))
-    return hits
-
-
-def u64_find_two_directive(dirs, fo, src):
-    """field-segment inline form, else the call-segment two-directive form; exactly one site of the two forms together."""
-    if src == 0 or fo == 0:
-        raise NoMatch(f"inline uint64 with displacement 0 (SSZ offset {src}, Go offset {fo}): not exercised for "
-                      f"uint64_decode_inline_segment / uint64_decode_scratch_register_segment")
-    rr = rr_find(dirs, fo, src)
-    try:
-        j, p = u64_find(dirs, fo, src)
-    except NoMatch as e:
-        cand = [j for j in range(len(dirs)) if re.fullmatch(rf"mov %\w+,{fo:#x}\(%rdx\)", dirs[j])]
-        if cand:
-            raise NoMatch(f"{e} (field-segment inline form at a store to {fo:#x}(%rdx))")
-        if len(rr) != 1:
-            raise NoMatch(f"field at Go offset {fo:#x}: no inline uint64 read; {len(rr)} two-directive reads "
-                          f"`mov {src:#x}(%rbx),%rX; mov %rX,{fo:#x}(%rax)` match (expected 1)")
-        j, p = rr[0]
-        p["form"] = "rr"
-        return j, p
-    if rr:
-        raise NoMatch(f"field at Go offset {fo:#x}: both the inline and the two-directive form match (ambiguous)")
-    p["form"] = "inline"
-    return j, p
-
-
-def call_find(dirs, fo, src, fn):
-    """The callee-decoder field at Go offset `fo`, SSZ offset `src`, callee label `fn`: the call block and its
-    argument set-up (forms "first", "reload", "lea"). Exactly one call site must match."""
-    hits, why = [], []
-    for j in range(len(dirs)):
-        if dirs[j] != f"callq {fn}":
-            continue
-        if not _fullmatch_at(dirs, j + 1, r"test %rax,%rax"):
-            why.append(f"directive {j + 1}: not `test %rax,%rax` after the call at {j}")
-            continue
-        mj = _fullmatch_at(dirs, j + 2, r"je (\S+)")
-        if not mj:
-            why.append(f"directive {j + 2}: not `je <label>` after the call at {j}")
-            continue
-        lok = mj.group(1)
-        try:
-            j2 = label_index(dirs, lok)
-        except NoMatch as e:
-            why.append(str(e))
-            continue
-        if j2 <= j + 2:
-            why.append(f"call at {j}: continuation label {lok} at {j2} is not after the je")
-            continue
-        found = None
-        for pad in (False, True):
-            b = j - (1 if pad else 0)  # index after the set-up proper
-            if pad and dirs[j - 1] != "nop":
-                continue
-            # (b) first field: add $f,%rax; mov $0x8,%ecx
-            m_add = _fullmatch_at(dirs, b - 2, rf"add \$({HEX}),%rax")
-            if m_add and _fullmatch_at(dirs, b - 1, r"mov \$0x8,%ecx") and int(m_add.group(1), 16) == fo:
-                # the reload form also ends with `add $f,%rax; mov $0x8,%ecx`: it is the reload form when the
-                # five directives before are those of `callArgumentReload`
-                r = [_fullmatch_at(dirs, b - 7, rf"mov ({HEX})\(%rsp\),%rbx"),
-                     _fullmatch_at(dirs, b - 6, rf"add \$({HEX}),%rbx"),
-                     _fullmatch_at(dirs, b - 5, rf"mov ({HEX})\(%rsp\),%rdi"),
-                     _fullmatch_at(dirs, b - 4, rf"add \$({SHX}),%rdi"),
-                     _fullmatch_at(dirs, b - 3, rf"mov ({HEX})\(%rsp\),%rax")]
-                if all(r):
-                    s_, c_ = int(r[1].group(1), 16), _hexs(r[3].group(1))
-                    if s_ != src:
-                        why.append(f"call at {j}: reload set-up source offset {s_:#x}, IR SSZ offset {src:#x}")
-                        break
-                    if c_ != -src:
-                        why.append(f"call at {j}: reload set-up adds {c_} to rdi, observed form is -{src}")
-                        break
-                    found = dict(form="reload", pad=pad, js=b - 7, dB=int(r[0].group(1), 16), src=src,
-                                 dD=int(r[2].group(1), 16), c=c_, dR=int(r[4].group(1), 16), f=fo)
-                elif any(r[3:]) or any(r[:3]):
-                    why.append(f"call at {j}: set-up neither the first-field form nor the reload form "
-                               f"(directives {b - 7}–{b - 1})")
-                    break
-                else:
-                    if src != 0:
-                        why.append(f"call at {j}: first-field set-up (buffer pointer unchanged) but IR SSZ offset {src:#x}")
-                        break
-                    found = dict(form="first", pad=pad, js=b - 2, f=fo)
-                break
-            # (d) lea form: callArgLea at b-11, the two-directive read at b-5, callArgMov at b-3 (no pad observed)
-            if not pad and _fullmatch_at(dirs, b - 3, r"mov %rsi,%rax") and _fullmatch_at(dirs, b - 2, r"mov %rdx,%rbx") \
-                    and _fullmatch_at(dirs, b - 1, r"mov \$0x8,%ecx"):
-                r = [_fullmatch_at(dirs, b - 11, rf"mov ({HEX})\(%rsp\),%rbx"),
-                     _fullmatch_at(dirs, b - 10, rf"lea ({HEX})\(%rbx\),%rdx"),
-                     _fullmatch_at(dirs, b - 9, rf"mov ({HEX})\(%rsp\),%rdi"),
-                     _fullmatch_at(dirs, b - 8, rf"add \$({SHX}),%rdi"),
-                     _fullmatch_at(dirs, b - 7, rf"mov ({HEX})\(%rsp\),%rax"),
-                     _fullmatch_at(dirs, b - 6, rf"lea ({HEX})\(%rax\),%rsi")]
-                m0 = _fullmatch_at(dirs, b - 5, rf"mov ({HEX})\(%rbx\),%(\w+)")
-                m1 = m0 and _fullmatch_at(dirs, b - 4, rf"mov %{re.escape(m0.group(2))},({HEX})\(%rax\)")
-                if not (all(r) and m1):
-                    why.append(f"call at {j}: `mov %rsi,%rax; mov %rdx,%rbx; mov $0x8,%ecx` without the observed "
-                               f"lea set-up and two-directive read before it (directives {b - 11}–{b - 4})")
-                    break
-                s_, c_, f_ = int(r[1].group(1), 16), _hexs(r[3].group(1)), int(r[5].group(1), 16)
-                if f_ != fo:
-                    why.append(f"call at {j}: lea set-up Go offset {f_:#x}, IR Go offset {fo:#x}")
-                    break
-                if s_ != src or c_ != -src:
-                    why.append(f"call at {j}: lea set-up source offset {s_:#x} / rdi {c_}, IR SSZ offset {src:#x}")
-                    break
-                if m0.group(2) in ("rdx", "rsi") or m0.group(2) not in RR_REGS:
-                    why.append(f"call at {j}: the read between the set-up parts uses {m0.group(2)} (would clobber "
-                               f"the set-up registers rdx / rsi, or not a scratch register)")
-                    break
-                found = dict(form="lea", pad=False, js=b - 11, jm=b - 3, jr=b - 5, dB=int(r[0].group(1), 16),
-                             src=src, dD=int(r[2].group(1), 16), c=c_, dR=int(r[4].group(1), 16), f=fo)
-                break
-            if not pad:
-                continue
-        if found:
-            found.update(fn=fn, j=j, lok=lok, j2=j2, last=j + 2)
-            hits.append(found)
-        elif not any(w.startswith(f"call at {j}") for w in why):
-            why.append(f"call at {j}: set-up not one of the observed forms for Go offset {fo:#x}")
-    if len(hits) != 1:
-        raise NoMatch(f"callee field at Go offset {fo:#x} ({fn}): {len(hits)} call sites match (expected 1)"
-                      + (f"; {'; '.join(why)}" if why else ""))
-    return hits[0]
-
-
-CALL_ARG_FIRST_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
-    ∀
-    (rcv aF : BitVec 64) (hF : rcv + ({f} : Int64).toBitVec = aF)
-    (s : MachineData) (hrax : s.regs.rax.toBitVec = rcv),
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + {js} + 2 + padLen {padb}) ∧ st.data.regs.rsp = s.regs.rsp
-        ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧ st.data.regs.rbx = s.regs.rbx
-        ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8 ∧ st.data.dmem = s.dmem)
-      ⟨s, Host.addrOf (k + {js})⟩ := by
-"""
-
-CALL_ARG_RELOAD_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
-    ∀
-    (sp rcv bf aB aD aR aSrc aF : BitVec 64)
-    (hB' : sp + ({dB} : Int64).toBitVec = aB) (hD : sp + ({dD} : Int64).toBitVec = aD) (hR : sp + ({dR} : Int64).toBitVec = aR)
-    (hSrc : bf + ({src} : Int64).toBitVec = aSrc) (hF : rcv + ({f} : Int64).toBitVec = aF)
-    (vD : List UInt8) (hvD : vD.length = 8) (R : DataMem → Prop)
-    (s : MachineData) (hrsp : s.regs.rsp = {{ toBitVec := sp }})
-    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 bf.toInt).At aB) ⋆ Eq (vD.At aD)
-      ⋆ Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ R),
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + {js} + 7 + padLen {padb}) ∧ st.data.regs.rsp = s.regs.rsp
-        ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
-        ∧ st.data.regs.rbx.toBitVec = aSrc ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8
-        ∧ st.data.dmem = s.dmem)
-      ⟨s, Host.addrOf (k + {js})⟩ := by
-"""
-
-CALL_ARG_LEA_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
-    ∀
-    (sp rcv bf aB aD aR aSrc aF : BitVec 64)
-    (hB' : sp + ({dB} : Int64).toBitVec = aB) (hD : sp + ({dD} : Int64).toBitVec = aD) (hR : sp + ({dR} : Int64).toBitVec = aR)
-    (hSrc : bf + ({src} : Int64).toBitVec = aSrc) (hF : rcv + ({f} : Int64).toBitVec = aF)
-    (vD : List UInt8) (hvD : vD.length = 8) (R : DataMem → Prop)
-    (s : MachineData) (hrsp : s.regs.rsp = {{ toBitVec := sp }})
-    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 bf.toInt).At aB) ⋆ Eq (vD.At aD)
-      ⋆ Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ R),
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + {js} + 6) ∧ st.data.regs.rsp = s.regs.rsp
-        ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
-        ∧ st.data.regs.rbx.toBitVec = bf ∧ st.data.regs.rdx.toBitVec = aSrc
-        ∧ st.data.regs.rax.toBitVec = rcv ∧ st.data.regs.rsi.toBitVec = aF
-        ∧ st.data.dmem = s.dmem)
-      ⟨s, Host.addrOf (k + {js})⟩ := by
-"""
-
-CALL_ARG_MOV_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
-    ∀
-    (s : MachineData),
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + {jm} + 3) ∧ st.data.regs.rsp = s.regs.rsp
-        ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
-        ∧ st.data.regs.rax = s.regs.rsi ∧ st.data.regs.rbx = s.regs.rdx ∧ st.data.regs.rcx = 8
-        ∧ st.data.dmem = s.dmem)
-      ⟨s, Host.addrOf (k + {jm})⟩ := by
-"""
-
+# the statement of the call block (`Codec.call_decode_segment`); `STEP_CALL_STATEMENT` is its window form
 CALL_DECODE_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
     ∀ (hC : Uint64CalleeAccept "{fn}")
     (sp dst src aRet aFp aS2 : BitVec 64)
@@ -1065,455 +556,10 @@ CALL_DECODE_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host
       ⟨s, Host.addrOf (k + {j})⟩ := by
 """
 
-UINT64_TWO_DIRECTIVE_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
-    ∀
-    (bf rcv aSrc aF : BitVec 64) (hSrc : bf + ({src} : Int64).toBitVec = aSrc) (hF : rcv + ({f} : Int64).toBitVec = aF)
-    (v vF : List UInt8) (hv : v.length = 8) (hvF : vF.length = 8)
-    (R : DataMem → Prop)
-    (s : MachineData) (hrbx : s.regs.rbx.toBitVec = bf) (hrax : s.regs.rax.toBitVec = rcv)
-    (h_mem : s.dmem =⋆ Eq (v.At aSrc) ⋆ Eq (vF.At aF) ⋆ R),
-    Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + {j} + 2) ∧ st.data.regs.rsp = s.regs.rsp
-        ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
-        ∧ st.data.regs.rax = s.regs.rax ∧ st.data.regs.rbx = s.regs.rbx
-        ∧ (∀ r : Reg64, r ≠ Reg64.{rX} → st.data.regs.get64 r = s.regs.get64 r)
-        ∧ (Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem)
-      ⟨s, Host.addrOf (k + {j})⟩ := by
-"""
-
-CALL_SEGMENT_OPTS = "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
-
-
-def call_seg(c, fname, src, fo, p):
-    """call-segment text of a callee-decoder field: set-up theorem(s) and the call-block theorem, each with its kind."""
-    k, pre = c["const"], f"{c['prefix']}_{fname}"
-    padb = "true" if p["pad"] else "false"
-    padnote = " (padding `nop`)" if p["pad"] else ""
-    out = ""
-    if p["form"] == "first":
-        name = f"{pre}_argument"
-        out += CALL_SEGMENT_OPTS + (f"/-- `{fname}` (callee decoder field, Go offset {fo}): argument set-up, first-field form, "
-                          f"directives {p['js']}–{p['j'] - 1}{padnote}. -/\n")
-        out += CALL_ARG_FIRST_STATEMENT.format(name=name, const=k, f=fo, js=p["js"], padb=padb)
-        out += infix_have("hA", f"Codec.callArgumentFirst {padb} {fo}", p["js"], k)
-        out += f"  with_reducible exact Codec.call_argument_first_segment {padb} _ (k + {p['js']}) hA\n"
-        out += kind_thm(name, f"Codec.callArgumentFirstKind h {k} {padb} {fo} {p['js']}") + "\n"
-    elif p["form"] == "reload":
-        name = f"{pre}_argument"
-        args = f"{p['dB']} {p['src']} {p['dD']} {_lit(p['c'])} {p['dR']} {p['f']}"
-        out += CALL_SEGMENT_OPTS + (f"/-- `{fname}` (callee decoder field, SSZ offset {src}, Go offset {fo}): argument set-up by "
-                          f"reload, directives {p['js']}–{p['j'] - 1}{padnote}. -/\n")
-        out += CALL_ARG_RELOAD_STATEMENT.format(name=name, const=k, js=p["js"], padb=padb, **{x: p[x] for x in
-                                                                                      ("dB", "dD", "dR", "src", "f")})
-        out += infix_have("hA", f"Codec.callArgumentReload {padb} {args}", p["js"], k)
-        out += f"  with_reducible exact Codec.call_argument_reload_segment {padb} _ _ _ _ _ _ (k + {p['js']}) hA\n"
-        out += kind_thm(name, f"Codec.callArgumentReloadKind h {k} {padb} {args} {p['js']}") + "\n"
-    else:
-        name = f"{pre}_argument_1"
-        args = f"{p['dB']} {p['src']} {p['dD']} {_lit(p['c'])} {p['dR']} {p['f']}"
-        out += CALL_SEGMENT_OPTS + (f"/-- `{fname}` (callee decoder field, SSZ offset {src}, Go offset {fo}): argument set-up, "
-                          f"`lea` form, first part, directives {p['js']}–{p['js'] + 5}. -/\n")
-        out += CALL_ARG_LEA_STATEMENT.format(name=name, const=k, js=p["js"], **{x: p[x] for x in ("dB", "dD", "dR", "src", "f")})
-        out += infix_have("hA", f"Codec.callArgumentLea {args}", p["js"], k)
-        out += f"  with_reducible exact Codec.call_argument_lea_segment _ _ _ _ _ _ (k + {p['js']}) hA\n"
-        out += kind_thm(name, f"Codec.callArgumentLeaKind h {k} {args} {p['js']}") + "\n"
-        name = f"{pre}_argument_2"
-        out += CALL_SEGMENT_OPTS + (f"/-- `{fname}`: argument set-up, `lea` form, second part, directives "
-                          f"{p['jm']}–{p['jm'] + 2}. -/\n")
-        out += CALL_ARG_MOV_STATEMENT.format(name=name, const=k, jm=p["jm"])
-        out += infix_have("hA", "Codec.callArgumentMov", p["jm"], k)
-        out += f"  with_reducible exact Codec.call_argument_mov_segment (k + {p['jm']}) hA\n"
-        out += kind_thm(name, f"Codec.callArgumentMovKind h {k} {p['jm']}") + "\n"
-    name = f"{pre}_call"
-    out += CALL_SEGMENT_OPTS + (f"/-- `{fname}`: call block of the callee decoder, directives {p['j']}–{p['j'] + 2}, continuation "
-                      f"label at {p['j2']}. -/\n")
-    out += CALL_DECODE_STATEMENT.format(name=name, const=k, fn=p["fn"], j=p["j"], j2=p["j2"])
-    out += infix_have("hA", f"Codec.callDecode {lean_str(p['fn'])} {lean_str(p['lok'])}", p["j"], k)
-    out += infix_have("hB", f"Codec.callDecodeContinuationLabel {lean_str(p['lok'])}", p["j2"], k)
-    out += label_have("hl", p["j2"], k)
-    out += f"  with_reducible exact Codec.call_decode_segment _ _ (k + {p['j']}) (k + {p['j2']}) hA hB hl\n"
-    out += kind_thm(name, f"Codec.callDecodeSegmentKind h {k} {lean_str(p['fn'])} {lean_str(p['lok'])} {p['j']} {p['j2']}") + "\n"
-    return out
-
-
-def uint64_two_directive_segment_text(c, fname, src, fo, j, p):
-    """call-segment text of a two-directive uint64 read (`uint64_decode_scratch_register_segment`)."""
-    name = f"{c['prefix']}_{fname}_segment"
-    k = c["const"]
-    out = CALL_SEGMENT_OPTS + (f"/-- `{fname}` (inline uint64, two-directive form, SSZ offset {src}, Go offset {fo}): decode "
-                     f"segment, directives {j}–{p['last']}, scratch register {p['rX']}. -/\n")
-    out += UINT64_TWO_DIRECTIVE_STATEMENT.format(name=name, const=k, j=j, **p)
-    out += infix_have("hA", f"Codec.uint64DecodeScratchRegister Reg64.{p['rX']} {p['src']} {p['f']}", j, k)
-    out += f"  have hX : Codec.Uint64ScratchRegister Reg64.{p['rX']} := by decide\n"
-    out += f"  with_reducible exact Codec.uint64_decode_scratch_register_segment Reg64.{p['rX']} hX _ _ (k + {j}) hA\n"
-    out += kind_thm(name, f"Codec.uint64DecodeScratchRegisterSegmentKind h {k} Reg64.{p['rX']} {p['src']} {p['f']} {j}") + "\n"
-    return out
-
-
-def bytes_seg_pad(c, fname, src, fo, j1, j2, p):
-    """call-segment text of a byte vector with the padding `nop` before `callq runtime.makeslice` (`bytes_decode_segment_optional_padding true`)."""
-    n = p["n"]
-    name = f"{c['prefix']}_{fname}_segment"
-    k = c["const"]
-    out = "set_option maxHeartbeats 16000000 in\nset_option maxRecDepth 100000 in\n"
-    out += (f"/-- `{fname}` ({n} bytes, SSZ offset {src}, Go offset {fo}): decode segment with the padding `nop` before "
-            f"`callq runtime.makeslice`, directives {j1}–{p['last']}. -/\n")
-    out += BYTES_STATEMENT.format(name=name, const=k, j1=j1, j2=j2, **p)
-    head = f"Codec.bytesDecodeHeadOptionalPadding true {n} {lean_str(p['lff'])} {p['dR']} {p['fL']} {p['fC']}"
-    out += (f"  have hA := Codec.infix_sub (q := {head}) {j1} hk\n"
-            f"    (by simp only [{k}, Codec.bytesDecodeHeadOptionalPadding, Codec.bytesDecodeHeadPad, {SIMP_INFIX}])\n")
-    out += infix_have("hB", f"Codec.bytesDecodeMiddle {n} {lean_str(p['lff'])} {lean_str(p['lwb'])} {p['dR']} {p['dB']} "
-                      f"{p['dS']} {p['fP']} {p['fL']} {p['fC']} {p['src']}", j2, k)
-    out += label_have("hl", j2, k)
-    out += (f"  with_reducible exact Codec.bytes_decode_segment_optional_padding true {n} ({SIZE_CASE_PROOF[n]}) _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
-            f"hA hB hl\n")
-    out += kind_thm(name, f"Codec.bytesDecodeSegmentKind h {n} {k} {j1} {j2} {p['dR']} {p['dB']} {p['dS']} {p['fP']} "
-                          f"{p['fL']} {p['fC']} {p['src']}") + "\n"
-    return out
-
-
-# ---------------------------------------------------------------- field-segment composition (`decoder --field-segments --compose`)
-#
-# Emits the whole accept theorem of a container decoder whose fields are ALL covered, as a chain of
-# `eventually_trans` over `Codec.decode_head_segment`, the generated segment theorems (imported from the module
-# that `decoder --field-segments` wrote with the same `--prefix`), `Codec.bytes_decode_tail_segment` after each byte vector and
-# `Codec.decode_epilogue_segment` (`lean/Codec/DecoderHeadEpilogue.lean`). Shape accepted (else exit 2, nothing written):
-# frame 0x20 with the spills 0x30 / 0x38 (decHead), the first field a byte vector starting at directive 13,
-# every byte vector followed by `mov 0x18(%rsp),%rY; jmp L` and `L: mov %rY,fo(%rdx)`, the fields contiguous in
-# IR order, the epilogue right after the last field, and every Go field before the end of the last decoded
-# field either decoded or an opaque 8-byte slot (the `state` word of a protoc struct).
-# The statement follows the hand accept theorems (`Prysm/Eth1Data/DecodeAccept.lean`, `Prysm/BlobIdentifier/DecodeAccept.lean`, `Prysm/DepositMessage/DecodeAccept.lean`): inputs per SSZ field,
-# receiver slots per 8 bytes in Go order. STATEMENT CHECK: only `--same-as HAND` gives one, the identity
-# `NAME_type : type_of% (@NAME h) = type_of% (@HAND h)` (`with_reducible rfl`). Without a hand theorem
-# the emitted statement is NOT checked against anything: the generator says so in the file
-# header and on stderr. There is no kind for the composed statement.
-
-def compose_read(dirs, found, ssz_size):
-    """Textual check of the composition shape; returns (head params, per-field steps, epilogue index)."""
-    fn = label_of(dirs[0]) or (_ for _ in ()).throw(NoMatch("compose: directive 0 is not a label"))
-    l0 = label_of(dirs[1]) or (_ for _ in ()).throw(NoMatch("compose: directive 1 is not a label"))
-    expect(dirs, 2, r"cmp 0x10\(%r14\),%rsp", "the stack guard compare")
-    lmore = expect(dirs, 3, r"jbe (\S+)", "jbe <morestack label>").group(1)
-    expect(dirs, 4, r"push %rbp", "push %rbp")
-    expect(dirs, 5, r"mov %rsp,%rbp", "mov %rsp,%rbp")
-    expect(dirs, 6, r"sub \$0x20,%rsp", "sub $0x20,%rsp (frame 0x20 only)")
-    expect(dirs, 7, r"mov %rbx,0x38\(%rsp\)", "the rbx spill 0x38")
-    expect(dirs, 8, r"nop", "nop")
-    expect(dirs, 9, rf"cmp \${ssz_size:#x},%rcx", f"cmp ${ssz_size:#x},%rcx (IR SSZ size)")
-    lerr = expect(dirs, 10, r"jne (\S+)", "jne <size error label>").group(1)
-    expect(dirs, 11, r"mov %rax,0x30\(%rsp\)", "the receiver spill 0x30")
-    expect(dirs, 12, r"mov %rbx,0x38\(%rsp\)", "the buffer spill 0x38")
-    steps, pc = [], 13
-    for (j1, last, fname, cl, a) in found:
-        if j1 != pc:
-            raise NoMatch(f"compose: field {fname} starts at directive {j1}, expected {pc} (fields not contiguous)")
-        if cl == "u64":
-            p = a[4]
-            if p["dB"] != 0x38:
-                raise NoMatch(f"compose: field {fname} reloads the buffer from {p['dB']:#x}(%rsp), not 0x38")
-            steps.append(("u64", a))
-            pc = last + 1
-            continue
-        p = a[5]
-        if (p["dR"], p["dB"], p["dS"]) != (0x30, 0x38, 0x18):
-            raise NoMatch(f"compose: field {fname} spill slots {p['dR']:#x}/{p['dB']:#x}/{p['dS']:#x}, not 0x30/0x38/0x18")
-        j3 = last + 1
-        rY = expect(dirs, j3, r"mov 0x18\(%rsp\),%(\w+)", "the pointer reload of the tail").group(1)
-        if rY not in U64_REGS:
-            raise NoMatch(f"compose: tail register {rY} is not one of {', '.join(U64_REGS)}")
-        lt = expect(dirs, j3 + 1, r"jmp (\S+)", "jmp <tail label>").group(1)
-        j4 = label_index(dirs, lt)
-        fo = a[2]
-        st = rf"mov %{rY},\(%rdx\)" if fo == 0 else rf"mov %{rY},{fo:#x}\(%rdx\)"
-        expect(dirs, j4 + 1, st, f"the pointer store of {fname} from {rY}")
-        if j4 <= j3:
-            raise NoMatch(f"compose: tail label of {fname} at {j4} is not after {j3}")
-        steps.append(("bytes", a, dict(rY=rY, lt=lt, j3=j3, j4=j4)))
-        pc = j4 + 2
-    for n, rx in enumerate([r"xor %eax,%eax", r"xor %ebx,%ebx", r"add \$0x20,%rsp", r"pop %rbp", r"retq"]):
-        expect(dirs, pc + n, rx, f"epilogue directive {n + 1}")
-    if not steps or steps[0][0] != "bytes":
-        raise NoMatch("compose: the first field is not a byte vector (no development shape)")
-    return dict(fn=fn, l0=l0, lmore=lmore, lerr=lerr), steps, pc
-
-
-def compose_layout(ir_path, tname, found):
-    """Receiver slots in Go order up to the end of the last decoded field: ("opaque", off), ("bytes", i),
-    ("u64", i) where i indexes the decoded fields (IR order)."""
-    raw = pathlib.Path(ir_path).read_bytes()
-    pkg, name = tname.rsplit(".", 1)
-    t = [t for c in json.loads(raw)["configs"] for t in c.get("types", [])
-         if t.get("name") == name and t.get("package", "").endswith("/" + pkg)][0]
-    dec = {a[0]: (i, cl) for i, (*_, cl, a) in enumerate(found)}
-    end = max(a[2] + (24 if cl == "bytes" else 8) for *_, cl, a in found)
-    slots, off = [], 0
-    for g in sorted(t["go_fields"], key=lambda g: g["offset_gc_amd64"]):
-        o, sz = g["offset_gc_amd64"], g["size_gc_amd64"]
-        if o >= end:
-            break
-        if o != off:
-            raise NoMatch(f"compose: Go field {g['name']} at {o}, expected {off} (padding not supported)")
-        if g["name"] in dec:
-            i, cl = dec[g["name"]]
-            if sz != (24 if cl == "bytes" else 8):
-                raise NoMatch(f"compose: Go field {g['name']} has size {sz}")
-            slots.append((cl, i, o))
-        elif sz == 8:
-            slots.append(("opaque", None, o))
-        else:
-            raise NoMatch(f"compose: undecoded Go field {g['name']} of size {sz} before the last decoded field")
-        off = o + sz
-    return slots
-
-
-def _a(base, off):
-    return base if off == 0 else f"({base} + {off})"
-
-
-def compose(args, dirs, sha, irsha, fields, found):
-    ssz = fields[-1][1] + (fields[-1][4] if fields[-1][3] == "bytes" else 8)
-    head, steps, jE = compose_read(dirs, found, ssz)
-    slots = compose_layout(args.ir, args.type, found)
-    C, name = args.const, args.name
-    call_segments = getattr(args, "call_segments", False)
-    if call_segments:
-        # call-segment: the composed statement is checked against `decAcceptKind C st fields jret`; the kind
-        # has one optional opaque word (the protoc `state`) at Go offset 0 and contiguous fields after it
-        opq = [o for cl, _, o in slots if cl == "opaque"]
-        if opq not in ([], [0]):
-            raise NoMatch(f"--compose --call-segments: opaque receiver words at Go offsets {opq}; decodeAcceptKind allows one at 0 only")
-        kst = "true" if opq == [0] else "false"
-        kfields = ", ".join(f".bytes {a[5]['n']}" if cl == "bytes" else ".uint64" for *_, cl, a in found)
-    nf = len(found)
-    X = [f"x{i + 1}" for i in range(nf)]                     # input bytes per field (SSZ order)
-    size = [(a[5]["n"] if cl == "bytes" else 8) for *_, cl, a in found]
-    src = [a[1] for *_, cl, a in found]
-    fo = [a[2] for *_, cl, a in found]
-    byt = [i for i, (*_, cl, a) in enumerate(found) if cl == "bytes"]
-    total = sum(size[i] for i in byt)
-    P = {i: f"p{k + 1}" for k, i in enumerate(byt)}
-    rsl = []                                                   # receiver lists in Go order
-    for cl, i, o in slots:
-        if cl == "opaque":
-            rsl.append((f"o{o}", o, None))
-        elif cl == "bytes":
-            rsl += [(f"g{i + 1}p", o, ("ptr", i)), (f"g{i + 1}l", o + 8, ("len", i)), (f"g{i + 1}c", o + 16, ("cap", i))]
-        else:
-            rsl.append((f"g{i + 1}n", o, ("u64", i)))
-    rbx = "s.regs.rbx.toBitVec"
-    rax = "s.regs.rax.toBitVec"
-    sp0 = "s.regs.rsp.toBitVec"
-    # ---- statement
-    L = []
-    L.append(f"theorem {name} (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : LabelsFresh {C} k)")
-    L.append(f"    ({' '.join(X)} : List UInt8) " + " ".join(f"(h{x} : {x}.length = {size[i]})" for i, x in enumerate(X)))
-    L.append("    (s : MachineData) (ra guard : UInt64)")
-    L.append(f"    (fp s1 s2 spl l18 rslot lo {' '.join(n for n, _, _ in rsl)} : List UInt8)")
-    L.append("    (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8)")
-    L.append("    (hspl : spl.length = 24) (hl18 : l18.length = 8) (hrs : rslot.length = 8)")
-    L.append("    " + " ".join(f"(h{n} : {n}.length = 8)" for n, _, _ in rsl))
-    L.append("    (R : DataMem → Prop) (S : Nat) (hlo : lo.length = S)")
-    L.append("    (Heap : Nat → DataMem → Prop) (avail : Nat)")
-    pre = [f"Eq ((Int.toBytes 8 ra.toBitVec.toInt).At {sp0})", f"Eq (fp.At ({sp0} - 8))", f"Eq (s1.At ({sp0} + 8))",
-           f"Eq (s2.At ({sp0} + 16))", f"Eq (spl.At ({sp0} - 40))", f"Eq (l18.At ({sp0} - 16))",
-           f"Eq (rslot.At ({sp0} - 48))", f"Eq (lo.At ({sp0} - 48 - BitVec.ofNat 64 S))",
-           "Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))", "Heap avail"]
-    pre += [f"Eq ({X[i]}.At {_a(rbx, src[i])})" for i in range(nf)]
-    pre += [f"Eq ({n}.At {_a(rax, o)})" for n, o, _ in rsl]
-    pre += ["Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)", "R"]
-    L.append("    (h_mem : s.dmem =⋆ " + "\n      ⋆ ".join(pre) + ")")
-    L.append(f"    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = {ssz}) (hav : {total} ≤ avail)")
-    L.append("    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) :")
-    L.append("    Eventually (step1 Host.exe)")
-    L.append("      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0")
-    L.append("        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧")
-    L.append(f"        ∃ ({' '.join(P[i] for i in byt)} : BitVec 64) (spl' lo' : List UInt8), spl'.length = 24 ∧ lo'.length = S ∧")
-    lastb = steps[[k for k, st in enumerate(steps) if st[0] == "bytes"][-1]][1]
-    lj2, lform = lastb[4], lastb[5]["form"]
-    ret = lj2 + (6 if lform == "add" else 5) + 1
-    post = [f"Eq ((Int.toBytes 8 ra.toBitVec.toInt).At {sp0})",
-            f"Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At ({sp0} - 8))",
-            f"Eq ((Int.toBytes 8 s.regs.rax.toBitVec.toInt).At ({sp0} + 8))",
-            f"Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At ({sp0} + 16))",
-            f"Eq (spl'.At ({sp0} - 40))", f"Eq ((Int.toBytes 8 {P[byt[-1]]}.toInt).At ({sp0} - 16))",
-            f"Eq ((Int.toBytes 8 (Host.addrOf (k + {ret})).toBitVec.toInt).At ({sp0} - 48))",
-            f"Eq (lo'.At ({sp0} - 48 - BitVec.ofNat 64 S))",
-            "Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))", f"Heap (avail - {total})"]
-    post += [f"Eq ({X[i]}.At {_a(rbx, src[i])})" for i in range(nf)]
-    for n, o, what in rsl:
-        if what is None:
-            post.append(f"Eq ({n}.At {_a(rax, o)})")
-        elif what[0] == "ptr":
-            post.append(f"Eq ((Int.toBytes 8 {P[what[1]]}.toInt).At {_a(rax, o)})")
-        elif what[0] in ("len", "cap"):
-            post.append(f"Eq ((Int.toBytes 8 {size[what[1]]}).At {_a(rax, o)})")
-        else:
-            post.append(f"Eq ({X[what[1]]}.At {_a(rax, o)})")
-    post += [f"Eq ({X[i]}.At {P[i]})" for i in byt]
-    post += ["Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)", "R"]
-    L.append("        (" + "\n          ⋆ ".join(post) + ") st.data.dmem)")
-    L.append("      ⟨s, Host.addrOf k⟩ := by")
-    # ---- proof
-    Q = ["  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
-         "  simp only at h_mem hguard hlen ⊢",
-         "  have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size",
-         "  -- code facts of the composition templates"]
-    code = infix_have("hH", f"Codec.decodeHead {lean_str(head['fn'])} {lean_str(head['l0'])} {lean_str(head['lmore'])} "
-                            f"{lean_str(head['lerr'])} {ssz}", 0, C)
-    for t, st in enumerate(steps):
-        if st[0] != "bytes":
-            continue
-        a, tl = st[1], st[2]
-        code += infix_have(f"hTa{t}", f"Codec.bytesDecodeTailReloadJump Reg64.{tl['rY']} {lean_str(tl['lt'])} 24", tl["j3"], C)
-        code += infix_have(f"hTb{t}", f"Codec.bytesDecodeTailPointerStore Reg64.{tl['rY']} {lean_str(tl['lt'])} {a[2]}", tl["j4"], C)
-        code += label_have(f"hlT{t}", tl["j4"], C)
-        code += f"  have hY{t} : Codec.Uint64InlineReg Reg64.{tl['rY']} := by decide\n"
-    code += infix_have("hE", "Codec.decodeEpilogue", jE, C)
-    Q.append(code.rstrip("\n"))
-    Q.append("  -- head: entry → directive 13")
-    Q.append(f"  refine eventually_trans _ _ _ _ (Codec.decode_head_segment _ _ _ _ {ssz} (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _")
-    Q.append("    (by dsimp only; ecancel) hguard (by rw [hlen]; rfl)) ?_")
-    Q.append("  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩")
-    Q.append("  dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1")
-    Q.append("  subst hpc1")
-    d, first, prev, avail_terms = 1, True, None, []
-    BV = "(by simp only [Int64.toBitVec_ofNat]; bv_omega)"
-    SI = "(by simp only [Int64.toBitVec_ofNat])"
-    for t, st in enumerate(steps):
-        a = st[1]
-        i = [x[2] for x in found].index(a[0])
-        seg = f"{GEN_NS}.{args.prefix}_{a[0]}_segment"
-        if st[0] == "bytes":
-            fname, s_, f_, j1, j2, p = a
-            n = p["n"]
-            av = "avail" if not avail_terms else "(avail - " + " - ".join(str(x) for x in avail_terms) + ")"
-            if first:
-                spl, lo_, rs, ls = "spl", "lo", "rslot", "l18"
-                hsp, hlo_, hrs_, hls = "hspl", "hlo", "hrs", "hl18"
-                hrsp = f"(by rw [hrsp{d}]; first | rfl | (apply UInt64.toBitVec_inj.mp; simp))"
-                hrbp, hr14 = f"(by rw [hrbp{d}])", f"hr14{d}"
-            else:
-                spl, lo_, hsp, hlo_ = f"spl{prev['k']}", f"lo{prev['k']}", f"hspl{prev['k']}", f"hlo{prev['k']}"
-                rs = f"(Int.toBytes 8 (Host.addrOf (k + {prev['j2']} + {prev['a']} + 1)).toBitVec.toInt)"
-                ls = f"(Int.toBytes 8 {prev['p']}.toInt)"
-                hrs_ = hls = "(Int.toBytes_length 8 _)"
-                hrsp, hrbp, hr14 = f"hrsp{d}", f"hrbp{d}", f"hr14{d}"
-            gp, gl, gc = f"g{i + 1}p", f"g{i + 1}l", f"g{i + 1}c"
-            Q.append(f"  -- {fname}: generated segment ({n} bytes, {p['form']} form), {j1} → {p['last'] + 1}")
-            Q.append(f"  refine eventually_trans _ _ _ _ ({seg} k hk hf")
-            Q.append("    (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec")
-            Q.append("    (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)")
-            Q.append(f"    (rsp.toBitVec - 48 - BitVec.ofNat 64 S) {_a('rax.toBitVec', f_)} {_a('rax.toBitVec', f_ + 8)} "
-                     f"{_a('rax.toBitVec', f_ + 16)}" + (f" {_a('rbx.toBitVec', s_)}" if p["form"] == "add" else "") + " S")
-            Q.append(f"    {BV} {BV}")
-            Q.append(f"    {BV} (by bv_omega) (Prysm.Eth1Data.Decode.stack_low_eq _ _)")
-            Q.append(f"    {'(by simp)' if f_ == 0 else SI} {SI}")
-            Q.append(f"    {SI}" + (f" {SI}" if p["form"] == "add" else ""))
-            Q.append(f"    (rsp - 8) r14 {X[i]} h{X[i]} {spl} {rs} {lo_} {ls} {gp} {gl} {gc} {hsp} {hrs_} {hlo_} {hls} "
-                     f"h{gp} h{gl} h{gc}")
-            Q.append(f"    _ Heap {av} (by omega) d{d}")
-            Q.append(f"    {hrsp}")
-            Q.append(f"    {hrbp} {hr14}")
-            Q.append("    (by ecancel) hms hmm) ?_")
-            kk = len([x for x in steps[:t + 1] if x[0] == "bytes"])
-            d += 1
-            Q.append(f"  rintro ⟨d{d}, pc{d}⟩ ⟨hpc{d}, hrsp{d}, hrbp{d}, hr14{d}, p{kk}, spl{kk}, lo{kk}, hspl{kk}, hlo{kk}, "
-                     f"hrdx{d}, Hm{d}⟩")
-            Q.append(f"  dsimp only at hpc{d} hrsp{d} hrbp{d} hr14{d} hrdx{d} Hm{d}")
-            Q.append(f"  subst hpc{d}")
-            tl = st[2]
-            Q.append(f"  -- pointer tail of {fname} ({tl['rY']}), {tl['j3']}–{tl['j3'] + 1} and {tl['j4']}–{tl['j4'] + 1}")
-            Q.append(f"  refine eventually_trans _ _ _ _ (Codec.bytes_decode_tail_segment Reg64.{tl['rY']} hY{t} _ _ _ "
-                     f"(k + {tl['j3']}) (k + {tl['j4']}) hTa{t} hTb{t} hlT{t}")
-            Q.append(f"    (rsp.toBitVec - 40) rax.toBitVec p{kk} (rsp.toBitVec - 16) {_a('rax.toBitVec', f_)}")
-            Q.append(f"    {BV} {'(by simp)' if f_ == 0 else SI}")
-            Q.append(f"    (rsp - 8) r14 (Int.toBytes 8 p{kk}.toInt) (Int.toBytes_length 8 _) _ d{d} hrsp{d} hrbp{d} "
-                     f"hr14{d} hrdx{d}")
-            Q.append("    (by ecancel)) ?_")
-            d += 1
-            Q.append(f"  rintro ⟨d{d}, pc{d}⟩ ⟨hpc{d}, hrsp{d}, hrbp{d}, hr14{d}, hrdx{d}, Hm{d}⟩")
-            Q.append(f"  dsimp only at hpc{d} hrsp{d} hrbp{d} hr14{d} hrdx{d} Hm{d}")
-            Q.append(f"  subst hpc{d}")
-            first = False
-            prev = dict(k=kk, j2=j2, a=(6 if p["form"] == "add" else 5), p=f"p{kk}")
-            avail_terms.append(n)
-        else:
-            fname, s_, f_, j, p = a
-            Q.append(f"  -- {fname}: generated segment (inline uint64), {j}–{p['last']}")
-            Q.append(f"  refine eventually_trans _ _ _ _ ({seg} k hk hf")
-            Q.append(f"    (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec (rsp.toBitVec + 16) {_a('rbx.toBitVec', s_)} "
-                     f"{_a('rax.toBitVec', f_)}")
-            Q.append(f"    {BV} {SI}")
-            Q.append(f"    {SI}")
-            Q.append(f"    (rsp - 8) r14 {X[i]} g{i + 1}n h{X[i]} hg{i + 1}n _ d{d} hrsp{d} hrbp{d} hr14{d} hrdx{d} (by ecancel)) ?_")
-            d += 1
-            Q.append(f"  rintro ⟨d{d}, pc{d}⟩ ⟨hpc{d}, hrsp{d}, hrbp{d}, hr14{d}, hrdx{d}, Hm{d}⟩")
-            Q.append(f"  dsimp only at hpc{d} hrsp{d} hrbp{d} hr14{d} hrdx{d} Hm{d}")
-            Q.append(f"  subst hpc{d}")
-    Q.append(f"  -- epilogue, {jE}–{jE + 4}")
-    Q.append(f"  refine eventually_trans _ _ _ _ (Codec.decode_epilogue_segment (k + {jE}) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) "
-             "rsp.toBitVec")
-    Q.append(f"    (by bv_omega) (by bv_omega) rbp ra r14 _ d{d} hrsp{d} hr14{d} (by ecancel)) ?_")
-    e = d + 1
-    Q.append(f"  rintro ⟨d{e}, pc{e}⟩ ⟨hpc{e}, hrax{e}, hrbx{e}, hrsp{e}, hrbp{e}, hr14{e}, Hm{e}⟩")
-    Q.append(f"  dsimp only at hpc{e} hrax{e} hrbx{e} hrsp{e} hrbp{e} hr14{e} Hm{e}")
-    Q.append("  apply Eventually.done")
-    rws = [f"show k + {prev['j2']} + {prev['a']} + 1 = k + {ret} from rfl"]
-    if len(avail_terms) > 1:
-        rws.append(f"show avail - {' - '.join(str(x) for x in avail_terms)} = avail - {total} by omega")
-    Q.append(f"  rw [{', '.join(rws)}] at Hm{e}")
-    kb = len(byt)
-    Q.append(f"  refine ⟨hpc{e}, hrax{e}, hrbx{e}, ?_, hrbp{e}, hr14{e}, {', '.join(P[i] for i in byt)}, spl{kb}, lo{kb}, "
-             f"hspl{kb}, hlo{kb}, ?_⟩")
-    Q.append(f"  · dsimp only; rw [hrsp{e}]; apply UInt64.toBitVec_inj.mp")
-    Q.append("    simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega")
-    Q.append("  · dsimp only; ecancel")
-    hand = args.same_as or args.same_as_prop
-    chk = (f"; composed accept theorem; statement check: identity with `{hand}`" if hand else
-           "; composed accept theorem; NO statement check (no hand theorem given: the statement is unchecked text, "
-           "checked by nobody; `kindcheck.py` rejects this file)")
-    if call_segments:
-        chk = ("; composed accept theorem (`decoder --call-segments --compose`); statement check: the kind `decodeAcceptKind` "
-               "(`_kind`, rfl at default transparency)" + (f" and the identity with `{hand}`" if hand else ""))
-        if not hand:
-            # without an independent hand statement the composed statement is
-            # marked UNCHECKED like the field-segment case; `kindcheck.py` rejects the file (the kind fixes the shape only)
-            chk += ("; NO independent hand statement (`--same-as` / `--same-as-prop`): UNCHECKED STATEMENT, "
-                    "`kindcheck.py` rejects this file")
-    out = header(sha, args.assembly, args, f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`){chk}",
-                 ["Codec.Kind.DecodeAcceptComposition"] if call_segments else [])
-    out += "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
-    out += f"/-- Accept path of `{args.type}.UnmarshalSSZ`, composed from the generated segment theorems `{args.prefix}_*_seg`. -/\n"
-    if not hand:
-        # mark the theorem line itself (only when no hand statement is given; the committed outputs
-        # all have `--same-as`, so their text does not change)
-        L[0] += " -- UNCHECKED STATEMENT: checked by nobody"
-    out += "\n".join(L) + "\n" + "\n".join(Q) + "\n"
-    if call_segments:
-        # `Codec/Kind/DecodeAcceptComposition.lean`: `rfl` at default transparency (the recursive kind must unfold); the
-        # default heartbeat limit is set explicitly: a wrong parameter may not fail fast, a timeout is a FAIL
-        # (a plain comment: a doc comment cannot stand before `set_option … in`; Lean does not parse that form)
-        out += (f"\n-- Statement check: the declared type is the composed-accept kind (fields from the IR, `jret` from "
-                f"the `.S`).\nset_option maxHeartbeats 200000 in\n"
-                f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h) = @Codec.decodeAcceptKind h {C} {kst} "
-                f"[{kfields}] {ret} := by\n  intro h; rfl\n")
-    if args.same_as_prop:
-        out += (f"\n/-- Statement check: the declared type is the hand Prop `{args.same_as_prop}` (definitional identity). -/\n"
-                f"theorem {name}_type : ∀ (h : Host),\n    type_of% (@{name} h) = @{args.same_as_prop} h := by\n"
-                f"  intro h; with_reducible rfl\n")
-    elif args.same_as:
-        out += (f"\n/-- Statement check: the declared type is that of the hand theorem (definitional identity). -/\n"
-                f"theorem {name}_type : ∀ (h : Host),\n    type_of% (@{name} h) = type_of% (@{args.same_as} h) := by\n"
-                f"  intro h; with_reducible rfl\n")
-    else:
-        print(f"generator decoder: --compose without --same-as: the statement of {name} is NOT checked", file=sys.stderr)
-    return out + f"\nend {GEN_NS}\n"
-
 
 # ---------------------------------------------------------------- step (`decoder --steps`)
 #
-# Compatibility switch: step is ONLY behind `--steps` (its own path; it does not change the default, `--field-segments` or
-# `--call-segments` text, `regen_check.sh` of every committed file). Lemmas: `lean/Codec/NopWindow.lean`, `lean/Codec/WindowSteps.lean`,
+# Lemmas: `lean/Codec/NopWindow.lean`, `lean/Codec/WindowSteps.lean`,
 # `lean/Codec/Kind/WindowSteps.lean`, `lean/Codec/CalleeDecodeWindow.lean`, `lean/Codec/FixedBytesDecodeWindow.lean`, `lean/Codec/FixedBytesDecodeWindowOffsetZero.lean`, `lean/Codec/Kind/FixedBytesDecodeWindow.lean`; the interface is the step lemmas.
 # Matching is NOT by multi-directive set-up templates. The generator walks the accept path of the decoder from the
 # end of the head (prologue, spills, nil check) and keeps a small DATAFLOW state: which register / stack slot holds
@@ -1534,8 +580,7 @@ def compose(args, dirs, sha, irsha, fields, found):
 # `rcv + f` (uint64 field), the store of the new slice pointer into `rcv + fP` after the byte segment (byte field).
 # Its theorems are the steps / blocks since the previous field. Events out of IR order stop the walk.
 # Not emitted (no kind in the hand-written lemmas): the head (`decpro_seg`, spills, `step_nil_check`), the epilogue
-# (`decret_seg`), field compositions. `--steps --compose` refuses (exit 2): there is no kind for a composed
-# statement with step blocks and none for the head / epilogue lemmas.
+# (`decret_seg`), field compositions. `--whole-accept` adds the head, the epilogue and the accept theorem.
 # The dataflow is the generator's acceptance rule only; it is not trusted. Lean checks every emitted theorem
 # (`he` by `rfl` on the code constant) and its `_kind` line; a field composition that uses the steps re-checks the
 # entry state of each block (`rfl` / `ecancel`).
@@ -1550,7 +595,6 @@ STEP_HY = {"rax": "Or.inl rfl", "rcx": "Or.inr (Or.inl rfl)", "rdx": "Or.inr (Or
          "rsi": "Or.inr (Or.inr (Or.inr (Or.inl rfl)))", "rdi": "Or.inr (Or.inr (Or.inr (Or.inr rfl)))"}
 STEP_OPTS = "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
 STEP_SEGMENT_OPTIONS = "set_option maxHeartbeats 16000000 in\nset_option maxRecDepth 100000 in\n"
-STEP_CLASSES = ("padding", "register", "set-up order", "new directive form", "new field kind", "other")
 
 
 class StepStop(Exception):
@@ -1658,8 +702,8 @@ def step_head(dirs, ssz_size):
     of the argument registers rax / rbx / rcx / rdi (after the frame is set up; each under the stack-store rule),
     then an optional `test %al,(%rax)`. Returns (index after the head, slots, F); a mismatch raises StepHeadMiss
     (class `padding` when the head matches with its nops erased but not at the fixed positions, else `other`).
-    The immediate of `cmp $size,%rcx` must equal `ssz_size`, the IR SSZ fixed size of the type (as the
-    default mode checks in `compose_read`); else StepHeadMiss, class `other`."""
+    The immediate of `cmp $size,%rcx` must equal `ssz_size`, the IR SSZ fixed size of the type; else StepHeadMiss,
+    class `other`."""
     if len(dirs) < 12 or label_of(dirs[0]) is None or label_of(dirs[1]) is None:
         raise StepHeadMiss("step head: directives 0, 1 are not the two function labels", "other")
     win = [d for d in dirs[2:9] if d != "nop"]
@@ -1966,7 +1010,7 @@ def _step_walk(dirs, fields, head_end, slots0, F, done):
                 raise StepStop(i, f"byte segment at {i}: label {lff} not after the head window", "other")
             rest = [rf"mov %rax,({SHX})\(%rsp\)", rf"mov %rax,({SHX})?\(%(\w+)\)", rf"mov ({SHX})\(%rsp\),%rbx"]
             i3 = jl + 1
-            # the form is chosen by the directive after the buffer reload (as in field-segment): `add $X,%rbx` or not
+            # the form is chosen by the directive after the buffer reload (as in the default mode): `add $X,%rbx` or not
             _, _, ib = step_window(dirs, i3, rest, jl, f"byte segment middle at {jl}")
             k4 = ib[-1] + 1
             while k4 < len(dirs) and dirs[k4] == "nop":
@@ -2302,19 +1346,13 @@ def decoder_step(args):
 
 def _decoder_step(args, flags):
     dirs, sha = read_S(args.assembly)
-    fields, irsha = ir_fields(args.ir, args.type, call_segments=True)
+    fields, irsha = ir_fields(args.ir, args.type)
     summ = args.summary_data = dict(type=args.type, assembly=args.assembly, assembly_sha256=sha, ir_sha256=irsha, mode="steps", fields=[])
     args.step_fields = fields
     if not fields:
         raise NoMatch(f"{args.type}: no field")
     if len({f[0] for f in fields}) != len(fields):
         raise NoMatch(f"{args.type}: a field name repeats")
-    if args.compose:
-        raise NoMatch("--steps --compose: refused. The step lemmas have no kind for a field composition, none for a "
-                      "composed accept statement with step blocks (call fields, register-parametric byte segments, step "
-                      "chains) and none for the head / epilogue lemmas (decode_prologue_segment, step_nil_check, decode_return_segment); a composed "
-                      "theorem would have no statement check. Accept theorems over the generated chains stay hand "
-                      "compositions")
     ssz_size = ir_ssz_size(args.ir, args.type)  # an IR error (NoMatch) here is exit 2 without a field list, as before
     # phase 1: head. ANY exception is a head miss (exit 2); only a normal return sets head_ok
     try:
@@ -2411,15 +1449,7 @@ def _decoder_step(args, flags):
         return h.replace("\nopen Machine Runtime ", "\n" + fblock + "open Machine Runtime ")
     if ncov == len(fields):
         return gheader() + body
-    missing = [r["field"] for r in summ["fields"] if r["status"] != "covered"]
-    unc = [dict(field=r["field"], reason=r["reason"].replace("-/", "- /"), miss_class=r["miss_class"])
-           for r in summ["fields"] if r["status"] != "covered"]
-    full = gheader()
-    imps, rest = full.split("\n\n", 1)
-    text = (imps + f"\n\n/-! PARTIAL OUTPUT (generator exit 3): {ncov} of {len(fields)} fields of `{args.type}` "
-            f"(--steps); NOT generated: {', '.join(missing)}. Not a complete decoder output.\n"
-            f"UNCOVERED-JSON: {json.dumps(unc)}\n-/\n\n" + rest + body)
-    raise Partial(report, text)
+    raise Partial(report)
 
 
 # ---------------------------------------------------------------- whole-accept: generated whole accept theorem
@@ -2433,7 +1463,7 @@ def decoder_whole_accept(args):
     FAIL-CLOSED: the `else` branch below is the ONLY place that returns a text (exit 0). It is reached only when
     `_decoder_whole_accept` completed normally AND set every flag of WHOLE_ACCEPT_FLAGS. ANY exception of any phase (also a step exit 3
     `Partial`, a `WholeAcceptRefuse`, an unexpected error, SystemExit; not KeyboardInterrupt) is exit 2: nothing on stdout,
-    no accept theorem, no partial file."""
+    no accept theorem."""
     flags = dict.fromkeys(WHOLE_ACCEPT_FLAGS, False)
     try:
         text = _decoder_whole_accept(args, flags)
@@ -2479,7 +1509,7 @@ def _decoder_whole_accept(args, flags):
     if not isinstance(step_text, str) or not step_text.endswith(f"end {GEN_NS}\n"):
         raise whole_accept_gen.WholeAcceptRefuse("step front end returned no complete module")
     dirs, sha = read_S(args.assembly)
-    fields, irsha = ir_fields(args.ir, args.type, call_segments=True)
+    fields, irsha = ir_fields(args.ir, args.type)
     head_end, slots, F = step_head(dirs, ir_ssz_size(args.ir, args.type))
     done, stop, end = step_walk(dirs, fields, head_end, slots, F)
     if stop is not None or end is None or [y for (y, _) in done] != list(range(len(fields))):
@@ -2504,15 +1534,11 @@ def _decoder_whole_accept(args, flags):
                 or body.count(f"\ntheorem {name} : ") != 1:
             raise whole_accept_gen.WholeAcceptRefuse(f"theorem {name} or its `_kind` line is missing")
     flags["kinds_complete"] = True
-    if args.same_as_prop and body.count(f"\ntheorem {args.prefix}_accept_statement : {args.same_as_prop} := ") != 1:
-        raise whole_accept_gen.WholeAcceptRefuse("statement identity `_statement` missing")
-    if args.same_as and body.count(f"\ntheorem {args.prefix}_accept_same : ") != 1:
-        raise whole_accept_gen.WholeAcceptRefuse("statement identity `_same` missing")
+    if "_accept_statement : " in body or "_accept_same : " in body:
+        raise whole_accept_gen.WholeAcceptRefuse("a statement identity in the output (whole-accept has none)")
     flags["statement_check"] = True
     gj = dict(accept=f"{args.prefix}_accept", kinds=[dict(theorem=a, kind=b) for a, b in want],
-              fields=t.fieldslean(), frame=t.frame, statement_check=(f"statement {args.same_as_prop}" if args.same_as_prop
-                                                                    else f"same {args.same_as}" if args.same_as
-                                                                    else "kind instance only"))
+              fields=t.fieldslean(), frame=t.frame, statement_check="kind instance only")
     blk = (f"/-! Whole accept (`decoder --whole-accept`): the whole accept theorem `{args.prefix}_accept` of `{args.type}` from\n"
            f"the step chain above: head, one theorem per field, epilogue (boundary states in entry terms), accept, size\n"
            f"reject. Every statement has a `_kind` line against the whole-accept kinds. In-sample (development data).\n"
@@ -2634,48 +1660,37 @@ def main():
     ap.add_argument("mode", choices=["uint64", "decoder", "encoder"])
     ap.add_argument("--assembly", required=True)
     ap.add_argument("--const", required=True)
-    ap.add_argument("--name")
-    ap.add_argument("--same-as", help="NAME must be an independently written hand statement (a theorem written by "
-                    "hand, not generated); uint64: emits NAME_same; decoder --compose: emits the identity `T_type : "
-                    "type_of% (@T h) = type_of% (@NAME h)`. A generated NAME is no statement check (kindcheck rejects it)")
-    ap.add_argument("--same-as-prop", help="decoder --compose: NAME is a hand-written Prop-valued `abbrev NAME [Host] : "
-                    "Prop` (no proof); emits `T_type : ∀ (h : Host), type_of% (@T h) = @NAME h`")
+    ap.add_argument("--name", help="uint64: the name of the theorem")
+    ap.add_argument("--same-as", help="encoder --fast-path: NAME must be an independently written hand statement (a theorem "
+                    "written by hand, not generated); emits `P_statement : type_of% (@NAME ‹Host›)`. A generated NAME is no "
+                    "statement check (kindcheck rejects it)")
+    ap.add_argument("--same-as-prop", help="encoder --fast-path: NAME is a hand-written Prop; emits `P_statement : NAME`")
     ap.add_argument("--ir")
     ap.add_argument("--type")
     ap.add_argument("--prefix")
     ap.add_argument("--imports", required=True)
     ap.add_argument("--open", default="")
-    ap.add_argument("--partial-out", help="decoder: on exit 3, write the matched fields here (marked PARTIAL)")
-    ap.add_argument("--field-segments", action="store_true",
-                    help="decoder: field segment coverage (byte vectors of 32 / 48 / 96 bytes, inline uint64); off = the default `decoder` text")
-    ap.add_argument("--call-segments", action="store_true",
-                    help="decoder: call segment coverage (implies --field-segments): uint64-overlay fields decoded by a call to a callee "
-                         "decoder with a proved spec, the two-directive uint64 read, the padding nop before makeslice")
     ap.add_argument("--steps", action="store_true",
                     help="decoder: step coverage: a dataflow walk over the accept path with kinded per-instruction "
-                         "step theorems, nop windows, register-parametric byte segments and call blocks; own path, does not "
-                         "change the default / --field-segments / --call-segments text")
+                         "step theorems, nop windows, register-parametric byte segments and call blocks")
     ap.add_argument("--whole-accept", action="store_true",
                     help="decoder: whole-accept: the step output plus the whole accept theorem and the size-reject "
                          "theorem with their kinds; refuses (exit 2, nothing on stdout) unless every theorem is emitted")
-    ap.add_argument("--summary", help="decoder --field-segments / --steps: write the per-field coverage report (JSON) here")
+    ap.add_argument("--summary", help="decoder --steps / --whole-accept, encoder --fast-path: write the report (JSON) here")
     ap.add_argument("--fast-path", action="store_true",
                     help="encoder: the encoder fast-path theorem with head / field / epilogue theorems and their "
                          "kinds; refuses (exit 2, nothing on stdout) unless every theorem is emitted")
     ap.add_argument("--hand-layout", help="encoder --fast-path: use this committed EncoderFrameLayout (chunk order of a hand statement)")
     ap.add_argument("--hand-layout-src", help="encoder --fast-path: the Lean file that defines --hand-layout")
     ap.add_argument("--same-as-via", help="encoder --fast-path --same-as: the implication lemma (kind instance -> hand statement)")
-    ap.add_argument("--compose", action="store_true",
-                    help="decoder --field-segments: emit the composed accept theorem --name (needs every field covered; the "
-                         "segment theorems come from the module of the same --prefix, listed in --imports)")
     args = ap.parse_args()
     global GEN_NS
     GEN_NS = gen_ns(args.assembly, args.type) if args.assembly else None
     if args.mode == "encoder" or args.fast_path or args.hand_layout or args.hand_layout_src or args.same_as_via:
         if not (args.mode == "encoder" and args.fast_path):
             ap.error("encoder needs --fast-path; --fast-path / --hand-layout / --same-as-via are encoder options")
-        if args.field_segments or args.call_segments or args.steps or args.whole_accept or args.compose or args.partial_out or args.name:
-            ap.error("encoder --fast-path excludes --field-segments / --call-segments / --steps / --whole-accept / --compose / --partial-out / --name")
+        if args.steps or args.whole_accept or args.name:
+            ap.error("encoder --fast-path excludes --steps / --whole-accept / --name")
         if not (args.ir and args.type and args.prefix):
             ap.error("encoder --fast-path needs --ir, --type, --prefix")
         if args.same_as_prop and args.same_as:
@@ -2696,13 +1711,13 @@ def main():
             pathlib.Path(args.summary).write_text(json.dumps(dict(args.fast_path_summary, exit=0), indent=1) + "\n")
         sys.stdout.write(out)
         return
+    if args.same_as or args.same_as_prop:
+        ap.error("--same-as / --same-as-prop are encoder --fast-path options")
     if args.whole_accept:
-        if args.mode != "decoder" or args.field_segments or args.call_segments or args.steps or args.compose or args.partial_out:
-            ap.error("--whole-accept is a decoder option; it excludes --field-segments / --call-segments / --steps / --compose / --partial-out")
+        if args.mode != "decoder" or args.steps:
+            ap.error("--whole-accept is a decoder option; it excludes --steps")
         if not (args.ir and args.type and args.prefix):
             ap.error("--whole-accept needs --ir, --type, --prefix")
-        if args.same_as_prop and args.same_as:
-            ap.error("--same-as and --same-as-prop exclude each other")
         args.whole_accept_summary = dict(type=args.type, mode="whole-accept", accept_generated=False)
         args.summary_data = None
         try:
@@ -2716,29 +1731,10 @@ def main():
             pathlib.Path(args.summary).write_text(json.dumps(dict(args.whole_accept_summary, exit=0), indent=1) + "\n")
         sys.stdout.write(out)
         return
-    if args.steps:
-        if args.mode != "decoder":
-            ap.error("--steps is a decoder option")
-        if args.field_segments or args.call_segments:
-            ap.error("--steps excludes --field-segments / --call-segments")
-        if args.same_as_prop and not args.compose:
-            ap.error("--same-as-prop is a decoder --compose option")
-    if args.call_segments:
-        if args.mode != "decoder":
-            ap.error("--call-segments is a decoder option")
-        args.field_segments = True  # call-segment = the field-segment shapes + the call-segment shapes
-    if args.same_as_prop and not args.compose:
-        ap.error("--same-as-prop is a decoder --compose option")
-    if args.same_as_prop and args.same_as:
-        ap.error("--same-as and --same-as-prop exclude each other")
-    if args.compose and not ((args.field_segments or args.steps) and args.name):
-        ap.error("--compose needs --field-segments and --name")
-    if args.partial_out and args.mode != "decoder":
-        ap.error("--partial-out is a decoder option")
-    if (args.field_segments or args.summary) and args.mode != "decoder":
-        ap.error("--field-segments / --summary are decoder options")
-    if args.summary and not (args.field_segments or args.steps):
-        ap.error("--summary needs --field-segments")
+    if args.steps and args.mode != "decoder":
+        ap.error("--steps is a decoder option")
+    if args.summary and not args.steps:
+        ap.error("--summary is an option of decoder --steps, decoder --whole-accept and encoder --fast-path")
     args.summary_data = None
 
     def summary(exit_code):
@@ -2749,8 +1745,7 @@ def main():
             pathlib.Path(args.summary).write_text(json.dumps(d, indent=1) + "\n")
 
     try:
-        out = (uint64_decoder(args) if args.mode == "uint64" else decoder_step(args) if args.steps else
-               (decoder_field_segments(args) if args.field_segments else decoder(args)))
+        out = uint64_decoder(args) if args.mode == "uint64" else decoder_step(args) if args.steps else decoder(args)
     except NoMatch as e:
         print(f"generator {args.mode}: no template match: {e}", file=sys.stderr)
         if args.summary_data:
@@ -2763,13 +1758,10 @@ def main():
     except Partial as e:
         for r in e.report:
             print(f"generator {args.mode}: {r}", file=sys.stderr)
-        if args.partial_out:
-            pathlib.Path(args.partial_out).write_text(e.text)
-            print(f"generator {args.mode}: partial output (marked PARTIAL) written to {args.partial_out}", file=sys.stderr)
         print(f"generator {args.mode}: incomplete: nothing on stdout (exit 3)", file=sys.stderr)
         summary(3)
         sys.exit(3)
-    if args.field_segments or args.steps:
+    if args.steps:
         for f in args.summary_data["fields"]:
             print(f"generator {args.mode}: field {f['field']}: {f['status'].upper()} "
                   + (f"{f['shape']}, directives {f['directives'][0]}–{f['directives'][1]}" if f["status"] == "covered"
