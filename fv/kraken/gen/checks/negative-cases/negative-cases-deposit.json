@@ -1,8 +1,7 @@
 [
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeRejectSize.lean",
   "theorem": "Prysm.Deposit.Decode.reject_size",
@@ -10,9 +9,8 @@
   "kind": "control"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeAccept.lean",
   "theorem": "Prysm.Deposit.Decode.accept",
@@ -20,9 +18,8 @@
   "kind": "control"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeRejectSize.lean",
   "theorem": "Prysm.Deposit.Decode.reject_size",
@@ -33,9 +30,8 @@
   "new": "(hlen : s.regs.rcx ≠ 1241)"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeRejectSize.lean",
   "theorem": "Prysm.Deposit.Decode.reject_size",
@@ -45,9 +41,8 @@
   "new": "  cmp $0x4d9,%rcx"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeAccept.lean",
   "theorem": "Prysm.Deposit.Decode.accept",
@@ -58,9 +53,8 @@
   "new": "  cmp $0x20,%rax"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeAccept.lean",
   "theorem": "Prysm.Deposit.Decode.accept",
@@ -71,9 +65,8 @@
   "new": "  mov $0x1f,%ecx"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeAccept.lean",
   "theorem": "Prysm.Deposit.Decode.accept",
@@ -84,9 +77,8 @@
   "new": "  add $0x421,%rbx"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeAccept.lean",
   "theorem": "Prysm.Deposit.Decode.accept",
@@ -97,9 +89,8 @@
   "new": "  mov $0xb7,%ecx"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
   "statement_module": "Prysm/Deposit/Statements.lean",
   "module": "Prysm/Deposit/DecodeAccept.lean",
   "theorem": "Prysm.Deposit.Decode.accept",

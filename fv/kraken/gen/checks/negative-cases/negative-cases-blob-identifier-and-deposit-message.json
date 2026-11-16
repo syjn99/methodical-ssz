@@ -19,8 +19,6 @@
   "theorem": "Prysm.BlobIdentifier.Decode.generated_accept",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.BlobIdentifier.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
  },
  {
@@ -31,8 +29,6 @@
   "old": "  mov 0x20(%rcx),%rcx",
   "new": "  mov 0x18(%rcx),%rcx",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.BlobIdentifier.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
  },
  {
@@ -65,8 +61,6 @@
   "theorem": "Prysm.BlobIdentifier.Decode.generated_reject",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.BlobIdentifier.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
  },
  {
@@ -167,8 +161,6 @@
   "theorem": "Prysm.DepositMessage.Decode.generated_accept",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DepositMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
  },
  {
@@ -179,8 +171,6 @@
   "old": "  mov 0x50(%rcx),%rcx",
   "new": "  mov 0x48(%rcx),%rcx",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DepositMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
  },
  {
@@ -192,8 +182,6 @@
   "old": "  mov $0x30,%ecx",
   "new": "  mov $0x20,%ecx",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DepositMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
  },
  {
@@ -218,8 +206,6 @@
   "theorem": "Prysm.DepositMessage.Decode.generated_reject",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DepositMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
  },
  {
@@ -268,8 +254,6 @@
   "theorem": "Prysm.DepositMessage.Decode.generated_directive_46",
   "kind": "code",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DepositMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
   "old": "  mov %rdi,(%rdx)",
   "new": "  mov %rdi,0x8(%rdx)"
@@ -280,8 +264,6 @@
   "theorem": "Prysm.DepositMessage.Decode.generated_head",
   "kind": "code",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DepositMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
   "old": "  cmp $0x58,%rcx",
   "new": "  cmp $0x50,%rcx"

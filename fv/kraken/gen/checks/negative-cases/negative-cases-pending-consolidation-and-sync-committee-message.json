@@ -5,8 +5,6 @@
   "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_Signature_segment",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
@@ -18,8 +16,6 @@
   "old": "  mov $0x60,%ecx",
   "new": "  mov $0x50,%ecx",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
@@ -36,8 +32,6 @@
   "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_directive_83",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
@@ -48,8 +42,6 @@
   "old": "  add $0x28,%rbx",
   "new": "  add $0x20,%rbx",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
@@ -80,8 +72,6 @@
   "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_reject",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
@@ -100,8 +90,6 @@
   "old": "  cmp $0x90,%rcx",
   "new": "  cmp $0x91,%rcx",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
@@ -178,8 +166,6 @@
   "theorem": "Prysm.PendingConsolidation.Decode.generated_directive_15",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingConsolidation.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
@@ -190,8 +176,6 @@
   "old": "  add $0x8,%rax",
   "new": "  add $0x10,%rax",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingConsolidation.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
@@ -222,8 +206,6 @@
   "theorem": "Prysm.PendingConsolidation.Decode.generated_head",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingConsolidation.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
@@ -234,8 +216,6 @@
   "old": "  mov %rdi,0x70(%rsp)",
   "new": "  mov %rdi,0x68(%rsp)",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingConsolidation.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
@@ -244,8 +224,6 @@
   "theorem": "Prysm.PendingConsolidation.Decode.generated_reject",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingConsolidation.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
@@ -264,8 +242,6 @@
   "old": "  cmp $0x10,%rcx",
   "new": "  cmp $0x18,%rcx",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingConsolidation.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
@@ -389,8 +365,6 @@
   "old": "  add $0x28,%rax",
   "new": "  add $0x30,%rax",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
@@ -402,8 +376,6 @@
   "old": "  mov 0x70(%rsp),%rax",
   "new": "  mov 0x70(%rsp),%rcx",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
@@ -415,8 +387,6 @@
   "old": "  nop",
   "new": "  mov %rax,%rax",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingConsolidation.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {

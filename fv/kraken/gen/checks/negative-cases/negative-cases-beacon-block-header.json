@@ -5,8 +5,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "control",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
@@ -15,8 +13,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "code",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "old": "  lea -0x20(%rsp),%r12",
   "new": "  lea -0x28(%rsp),%r12"
@@ -27,8 +23,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "code",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "old": "  mov 0x8(%rax),%r8",
   "new": "  mov 0x10(%rax),%r8"
@@ -39,8 +33,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "code",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "old": "  sub $0x98,%rsp",
   "new": "  sub $0x90,%rsp"
@@ -67,8 +59,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
   "kind": "control",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
@@ -77,8 +67,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
   "kind": "code",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "old": "  mov 0x10(%rax),%r9",
   "new": "  mov 0x8(%rax),%r9"
@@ -89,8 +77,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
   "kind": "code",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "old": "  lea 0x8(%rdx),%r8",
   "new": "  lea 0x10(%rdx),%r8"
@@ -101,8 +87,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
   "kind": "control",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
@@ -111,8 +95,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
   "kind": "code",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "old": "  cmpq $0x20,0x20(%rax)",
   "new": "  cmpq $0x21,0x20(%rax)"
@@ -123,8 +105,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
   "kind": "code",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "old": "  mov 0x18(%rax),%rdx",
   "new": "  mov 0x30(%rax),%rdx"
@@ -135,8 +115,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
   "kind": "code",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "line": 67,
   "old": "  lea 0x20(%r8),%r9",
@@ -148,8 +126,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
   "kind": "control",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
@@ -158,8 +134,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
   "kind": "code",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "old": "  mov 0x30(%rdx),%rbx",
   "new": "  mov 0x18(%rdx),%rbx"
@@ -170,8 +144,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
   "kind": "code",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "old": "  cmpq $0x20,0x38(%rdx)",
   "new": "  cmpq $0x1f,0x38(%rdx)"
@@ -182,8 +154,6 @@
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
   "kind": "code",
   "code_definition": "marshalSSZTo",
-  "code_namespace": "Prysm.BeaconBlockHeader.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
   "old": "  add %r8,%rax",
   "new": "  add %r9,%rax"

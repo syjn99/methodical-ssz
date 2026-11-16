@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Negative suite: every mutant must fail inside its designated theorem; every control passes.
 
-Usage (run inside one gated job, Lean env, cwd anywhere):
+Usage (one heavy job at a time, Lean in the environment, cwd anywhere):
   negative.py <cases.json> <work-dir> <result.json> [<case-id>...]
 cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoch/DecodeAccept.lean"), "theorem",
   "kind": "code" | "statement" | "control",
@@ -10,8 +10,7 @@ cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoc
          or at the 1-based "line" of the file)
   statement:  "old", "new" (exact text, unique inside the theorem statement)
   control: optional "code_definition"/"assembly" (then an unmutated copy of the .S is included the same way)
-  optional for code/control: "code_namespace" (namespace of the code constant, default Prysm.<Type>.Code) and "norm"
-  (path of the .S under fv/kraken instead of prysm/go1.26.10/link-set/norm/<S>; AttestationData set);
+  optional for code/control: "code_namespace" (namespace of the code constant, when it is not the default below);
   optional for every kind: "mutant_imports" (list of module names, e.g. "Prysm.BeaconBlockHeader.EncodeLayout"):
   the mutated copy imports them in addition (the case module is unchanged), so that a mutant can name a declaration
   of another module, for example the layout of another type;
@@ -38,7 +37,7 @@ depth has been reached") or wrong_target (the FIRST error is a parse error or an
 constant, or another parse / name-resolution form listed at WRONG_TARGET: the mutant does not reach its
 target); the resource classes are decided by the FIRST error line (a later resource
 error is kept in "later_resource_error"). These three resource classes and wrong_target are never a pass.
-negative.py --reclassify <result.json> [<work-dir>] recomputes the classes of a result file; --selftest checks them.
+negative.py --selftest checks the classes on fixed inputs.
 negative.py --check-cases <cases.json>... resolves every case to one theorem line and checks the code_definition use (no Lean).
 "theorem" is the full Lean name or the name as written on the declaration line; the full name selects the namespace
 block when one module holds the same written name twice. Without "code_namespace", a full name in "code_definition" is declared
@@ -323,7 +322,7 @@ def inlined_modules(c):
 
 def mutated_program(c, d):
     """Write the .S copy of a code or control case to <d>/mut.S; return the diff (empty for a control)."""
-    S = (KR / c["norm"] if "norm" in c else NORM / c["assembly"]).read_text()
+    S = (NORM / c["assembly"]).read_text()
     diff = ""
     if c["kind"] == "code":
         if "line" in c:  # 1-based line of the .S file (for an instruction that occurs twice)
@@ -482,23 +481,6 @@ def classify(r):
     r["class"] = k
     r["pass"] = k in ("control_pass", "inside")
     return r
-
-
-def reclassify(out, work=None):
-    d = json.load(open(out))
-    for c in d["cases"]:  # fill the later-resource flag from the archived log when it is there
-        lp = pathlib.Path(work) / c["id"] / "log" if work else None
-        if lp and lp.exists():
-            errl = [l for l in lp.read_text(errors="replace").splitlines() if ": error" in l]
-            c["later_resource_error"] = next((l for l in errl[1:] if HEARTBEAT in l or RECDEPTH in l), None)
-    d["cases"] = [classify(c) for c in d["cases"]]
-    cls = {}
-    for c in d["cases"]:
-        cls[c["class"]] = cls.get(c["class"], 0) + 1
-    d.update({"pass": sum(c["pass"] for c in d["cases"]), "total": len(d["cases"]), "classes": cls})
-    json.dump(d, open(out, "w"), indent=1)
-    print(json.dumps({"pass": d["pass"], "total": d["total"], "classes": cls}))
-    return 0
 
 
 def imports_of(modules):
@@ -765,6 +747,4 @@ if __name__ == "__main__":
         sys.exit(selftest())
     if sys.argv[1:] == ["--selftest-timeout"]:
         sys.exit(selftest_timeout())
-    if sys.argv[1:2] == ["--reclassify"]:
-        sys.exit(reclassify(*sys.argv[2:4]))
     sys.exit(main(*sys.argv[1:]))

@@ -19,8 +19,6 @@
   "theorem": "Prysm.Deposit_Data.Decode.generated_Signature_segment",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit_Data.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
@@ -32,8 +30,6 @@
   "old": "  mov $0x60,%ecx",
   "new": "  mov $0x50,%ecx",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit_Data.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
@@ -44,8 +40,6 @@
   "old": "  mov 0x50(%rsi),%rsi",
   "new": "  mov 0x48(%rsi),%rsi",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit_Data.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
@@ -54,8 +48,6 @@
   "theorem": "Prysm.Deposit_Data.Decode.generated_reject",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit_Data.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
@@ -74,8 +66,6 @@
   "old": "  cmp $0xb8,%rcx",
   "new": "  cmp $0xb0,%rcx",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit_Data.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
@@ -168,8 +158,6 @@
   "theorem": "Prysm.Deposit_Data.Decode.generated_accept",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit_Data.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
@@ -197,8 +185,6 @@
   "old": "  nop",
   "new": "  mov $0x20,%ecx",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.Deposit_Data.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
  },
  {
@@ -229,8 +215,6 @@
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingPartialWithdrawal.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {
@@ -249,8 +233,6 @@
   "old": "  cmp $0x18,%rcx",
   "new": "  cmp $0x10,%rcx",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingPartialWithdrawal.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {

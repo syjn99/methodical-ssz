@@ -1,8 +1,7 @@
 [
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-reject-size-control",
   "kind": "control",
   "module": "Prysm/DataColumnsByRootIdentifier/DecodeRejectSize.lean",
@@ -10,18 +9,16 @@
   "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-iter-control",
   "kind": "control",
   "module": "Prysm/DataColumnsByRootIdentifier/DecodeLoop.lean",
   "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.iter"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-reject-size-code-cmp-0x24-to-0x23",
   "kind": "code",
   "old": "  cmp $0x24,%rcx",
@@ -31,9 +28,8 @@
   "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-reject-offset-code-cmp-0x24-to-0x25",
   "kind": "code",
   "old": "  cmp $0x24,%rdx",
@@ -43,9 +39,8 @@
   "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-accept-code-test-0x7-to-0xf",
   "kind": "code",
   "old": "  test $0x7,%rcx",
@@ -58,9 +53,8 @@
   ]
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-accept-code-cmp-0x80-to-0x7f",
   "kind": "code",
   "old": "  cmp $0x80,%rcx",
@@ -73,9 +67,8 @@
   ]
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-iter-code-mov-r8-r10-8-to-0x8-r8-r10-8",
   "kind": "code",
   "old": "  mov %r11,(%r8,%r10,8)",
@@ -84,9 +77,8 @@
   "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.iter"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-reject-size-statement-hlen-36-to-37",
   "kind": "statement",
   "statement_def": "Prysm.DataColumnsByRootIdentifier.Decode.reject_size_statement",
@@ -97,9 +89,8 @@
   "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean"
  },
  {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "data-columns-by-root-identifier-decode-accept-statement-heap-32-to-31",
   "kind": "statement",
   "statement_def": "Prysm.DataColumnsByRootIdentifier.Decode.accept_statement",

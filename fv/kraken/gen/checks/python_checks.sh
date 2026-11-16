@@ -7,17 +7,12 @@
 #   <out dir>  directory for the outputs. It must not exist. Delete it later with `trash`.
 #
 # Each check writes <name>.txt and one line `<name> rc=<n>` to summary.txt.
-# To check a change, run it before and after the change, with two out dirs, and compare: `diff -r <before> <after>`.
-# Expected: the same rc for every check. A text difference needs a stated reason (for example a library count).
-# A check whose script is not in the tree gets the line `<name> not run (no <script>)`.
-#
-# Environment:
-#   KINDCHECK_FILES  the generated Lean files for kindcheck.py, as paths relative to fv/kraken.
-#                    Default: the outputs of gen/generator/generator.py, lean/Prysm/*/Generated*.lean, without the
-#                    identity and specification modules whose names also start with Generated.
+# Expected: rc=0 for every check.
+# kindcheck.py runs on the outputs of gen/generator/generator.py: lean/Prysm/*/Generated*.lean, without the
+# identity and specification modules whose names also start with Generated.
 set -u
 if [ $# -ne 1 ]; then
-  sed -n '2,17p' "$0" >&2
+  sed -n '2,12p' "$0" >&2
   exit 2
 fi
 OUT=$1
@@ -32,43 +27,34 @@ cd "$REPO/fv/kraken" || exit 2
 : > "$OUT/summary.txt"
 
 run() {
-  name=$1; script=$2; shift 2
-  if [ ! -f "$script" ]; then
-    echo "$name not run (no $script)" | tee -a "$OUT/summary.txt"
-    return
-  fi
+  name=$1; shift
   "$@" > "$OUT/$name.txt" 2>&1
   echo "$name rc=$?" | tee -a "$OUT/summary.txt"
 }
 
-run axioms_gate_selftest gen/checks/axioms_gate.py python3 -I -B gen/checks/axioms_gate.py --selftest
-run deposit_data_include_check gen/checks/deposit_data_include_check.py python3 -I -B gen/checks/deposit_data_include_check.py
-run deposit_data_include_check_selftest gen/checks/deposit_data_include_check.py python3 -I -B gen/checks/deposit_data_include_check.py --selftest
-run kindcheck_selftest gen/generator/kindcheck.py python3 -I -B gen/generator/kindcheck.py --selftest
-run kindcheck_broken_copies_test gen/generator/kindcheck_broken_copies_test.py python3 -I -B gen/generator/kindcheck_broken_copies_test.py
-run fast_path_layout gen/checks/fast_path_layout.py python3 -I -B gen/checks/fast_path_layout.py
+run axioms_gate_selftest python3 -I -B gen/checks/axioms_gate.py --selftest
+run deposit_data_include_check python3 -I -B gen/checks/deposit_data_include_check.py
+run deposit_data_include_check_selftest python3 -I -B gen/checks/deposit_data_include_check.py --selftest
+run kindcheck_selftest python3 -I -B gen/generator/kindcheck.py --selftest
+run kindcheck_broken_copies_test python3 -I -B gen/generator/kindcheck_broken_copies_test.py
+run fast_path_layout python3 -I -B gen/checks/fast_path_layout.py
 
-if [ -z "${KINDCHECK_FILES:-}" ]; then
-  KINDCHECK_FILES=$(ls lean/Prysm/*/Generated*.lean 2>/dev/null | grep -v -e SameAsHand -e GeneratedEncodeFastPathSpec)
-fi
-if [ -n "$KINDCHECK_FILES" ]; then
-  # shellcheck disable=SC2086
-  run kindcheck_generated gen/generator/kindcheck.py python3 -I -B gen/generator/kindcheck.py $KINDCHECK_FILES
-else
-  echo "kindcheck_generated not run (no files)" | tee -a "$OUT/summary.txt"
-fi
-run negative_selftest gen/checks/negative.py python3 -I -B gen/checks/negative.py --selftest
+KINDCHECK_INPUTS=$(ls lean/Prysm/*/Generated*.lean | grep -v -e SameAsHand -e GeneratedEncodeFastPathSpec)
+# shellcheck disable=SC2086
+run kindcheck_generated python3 -I -B gen/generator/kindcheck.py $KINDCHECK_INPUTS
+run negative_selftest python3 -I -B gen/checks/negative.py --selftest
+run negative_selftest_timeout python3 -I -B gen/checks/negative.py --selftest-timeout
 # git ls-files in fv/kraken prints paths relative to fv/kraken.
 CASES=$(git ls-files '*negative-cases*.json' | sort)
 echo "$CASES" > "$OUT/negative_case_files.txt"
 # shellcheck disable=SC2086
-run negative_check_cases gen/checks/negative.py python3 -I -B gen/checks/negative.py --check-cases $CASES
+run negative_check_cases python3 -I -B gen/checks/negative.py --check-cases $CASES
 # shellcheck disable=SC2086
-run negative_case_ranges gen/checks/negative_case_ranges.py \
+run negative_case_ranges \
   python3 -I -B gen/checks/negative_case_ranges.py $CASES
 
 # Every tracked Python file under fv/ parses (the py_compile check without .pyc files).
-run python_syntax gen/checks/python_checks.sh python3 -I -B -c '
+run python_syntax python3 -I -B -c '
 import ast, subprocess, sys
 root = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True).stdout.strip()
 files = subprocess.run(["git", "-C", root, "ls-files", "fv/*.py"], capture_output=True, text=True).stdout.split()

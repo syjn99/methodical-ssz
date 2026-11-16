@@ -620,8 +620,7 @@
   "theorem": "Prysm.Slot.Decode.accept",
   "code_definition": "Code.unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.Slot",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+  "code_namespace": "Prysm.Slot"
  },
  {
   "id": "slot-decode-accept-code-cmp-0x8-to-0x9",
@@ -632,8 +631,7 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
   "old": "  cmp $0x8,%rcx",
   "new": "  cmp $0x9,%rcx",
-  "code_namespace": "Prysm.Slot",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+  "code_namespace": "Prysm.Slot"
  },
  {
   "id": "slot-decode-accept-code-mov-rbx-to-0x8-rbx",
@@ -644,8 +642,7 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
   "old": "  mov (%rbx),%rcx",
   "new": "  mov 0x8(%rbx),%rcx",
-  "code_namespace": "Prysm.Slot",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+  "code_namespace": "Prysm.Slot"
  },
  {
   "id": "slot-decode-accept-code-mov-rax-to-0x8-rax",
@@ -657,8 +654,7 @@
   "line": 47,
   "old": "  mov %rcx,(%rax)",
   "new": "  mov %rcx,0x8(%rax)",
-  "code_namespace": "Prysm.Slot",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+  "code_namespace": "Prysm.Slot"
  },
  {
   "id": "slot-decode-accept-statement-rax-0-to-1",
@@ -675,8 +671,7 @@
   "theorem": "Prysm.CommitteeIndex.Decode.accept",
   "code_definition": "Code.unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.CommitteeIndex",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+  "code_namespace": "Prysm.CommitteeIndex"
  },
  {
   "id": "committee-index-decode-accept-code-cmp-0x8-to-0x9",
@@ -687,8 +682,7 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
   "old": "  cmp $0x8,%rcx",
   "new": "  cmp $0x9,%rcx",
-  "code_namespace": "Prysm.CommitteeIndex",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+  "code_namespace": "Prysm.CommitteeIndex"
  },
  {
   "id": "committee-index-decode-accept-code-mov-rbx-to-0x8-rbx",
@@ -699,8 +693,7 @@
   "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
   "old": "  mov (%rbx),%rcx",
   "new": "  mov 0x8(%rbx),%rcx",
-  "code_namespace": "Prysm.CommitteeIndex",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+  "code_namespace": "Prysm.CommitteeIndex"
  },
  {
   "id": "committee-index-decode-accept-code-mov-rax-to-0x8-rax",
@@ -712,8 +705,7 @@
   "line": 47,
   "old": "  mov %rcx,(%rax)",
   "new": "  mov %rcx,0x8(%rax)",
-  "code_namespace": "Prysm.CommitteeIndex",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+  "code_namespace": "Prysm.CommitteeIndex"
  },
  {
   "id": "committee-index-decode-accept-statement-rax-0-to-1",
@@ -801,9 +793,7 @@
   "module": "Prysm/AttestationData/DecodeAcceptHead.lean",
   "theorem": "Prysm.AttestationData.Decode.head",
   "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
   "id": "attestation-data-decode-head-code-cmp-0x80-to-0x81",
@@ -812,8 +802,6 @@
   "theorem": "Prysm.AttestationData.Decode.head",
   "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "old": "  cmp $0x80,%rcx",
   "new": "  cmp $0x81,%rcx",
   "why": "length check against 129: the accept branch is not taken"
@@ -825,8 +813,6 @@
   "theorem": "Prysm.AttestationData.Decode.head",
   "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "old": "  mov $0x8,%ecx",
   "new": "  mov $0x9,%ecx",
   "line": 17,
@@ -839,8 +825,6 @@
   "theorem": "Prysm.AttestationData.Decode.head",
   "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "old": "  add $0x10,%rax",
   "new": "  add $0x18,%rax",
   "why": "CommitteeIndex decoded into the Root.ptr word"
@@ -851,9 +835,7 @@
   "module": "Prysm/AttestationData/DecodeAcceptBlockRoot.lean",
   "theorem": "Prysm.AttestationData.Decode.block_root",
   "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
   "id": "attestation-data-decode-block-root-code-add-0x10-to-0x18",
@@ -862,8 +844,6 @@
   "theorem": "Prysm.AttestationData.Decode.block_root",
   "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "old": "  add $0x10,%rbx",
   "new": "  add $0x18,%rbx",
   "why": "Root copied from buf[24:56]"
@@ -875,8 +855,6 @@
   "theorem": "Prysm.AttestationData.Decode.block_root",
   "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "old": "  movq $0x20,0x28(%rdx)",
   "new": "  movq $0x21,0x28(%rdx)",
   "line": 110,
@@ -888,9 +866,7 @@
   "module": "Prysm/AttestationData/DecodeAcceptSource.lean",
   "theorem": "Prysm.AttestationData.Decode.source",
   "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
   "id": "attestation-data-decode-source-code-mov-0x30-rdx-to-0x40-rdx",
@@ -899,8 +875,6 @@
   "theorem": "Prysm.AttestationData.Decode.source",
   "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "old": "  mov %rax,0x30(%rdx)",
   "new": "  mov %rax,0x40(%rdx)",
   "why": "Source pointer stored into unknownFields"
@@ -912,8 +886,6 @@
   "theorem": "Prysm.AttestationData.Decode.source",
   "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "old": "  add $0x30,%rbx",
   "new": "  add $0x38,%rbx",
   "why": "Source decoded from buf[56:96]"
@@ -924,9 +896,7 @@
   "module": "Prysm/AttestationData/DecodeAcceptTarget.lean",
   "theorem": "Prysm.AttestationData.Decode.target",
   "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
   "id": "attestation-data-decode-target-code-mov-0x38-rdx-to-0x30-rdx",
@@ -935,8 +905,6 @@
   "theorem": "Prysm.AttestationData.Decode.target",
   "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "old": "  mov %rax,0x38(%rdx)",
   "new": "  mov %rax,0x30(%rdx)",
   "why": "Target pointer stored into the Source field"
@@ -948,8 +916,6 @@
   "theorem": "Prysm.AttestationData.Decode.target",
   "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_3a7",
   "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_3a7",
   "why": "nil error from the Target callee goes to the wrap path"
@@ -960,9 +926,7 @@
   "module": "Prysm/AttestationData/DecodeRejectSize.lean",
   "theorem": "Prysm.AttestationData.Decode.reject_size",
   "code_definition": "unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
   "id": "attestation-data-decode-reject-size-code-mov-ssz-err-size-8-rip-to-ssz-err-size-rip",
@@ -971,8 +935,6 @@
   "theorem": "Prysm.AttestationData.Decode.reject_size",
   "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "old": "  mov ssz.ErrSize+8(%rip),%rbx",
   "new": "  mov ssz.ErrSize(%rip),%rbx",
   "why": "second error word read from the first"

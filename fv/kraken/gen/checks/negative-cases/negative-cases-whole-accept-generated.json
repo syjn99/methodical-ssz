@@ -96,8 +96,6 @@
   "new": "  mov %rax,0x40(%rsp)",
   "line": 12,
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.ValidatorBalance.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S"
  },
  {
@@ -109,8 +107,6 @@
   "new": "  add $0x40,%rsp",
   "line": 87,
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.VoluntaryExit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
@@ -122,8 +118,6 @@
   "new": "  add $0x48,%rsp",
   "line": 168,
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingDeposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
  },
  {
@@ -135,8 +129,6 @@
   "new": "  mov 0x38(%rsp),%rax",
   "line": 157,
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.SyncCommitteeMessage.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {

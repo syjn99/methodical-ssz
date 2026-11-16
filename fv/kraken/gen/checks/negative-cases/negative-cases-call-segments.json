@@ -117,8 +117,6 @@
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.head",
   "kind": "control",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingPartialWithdrawal.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {
@@ -130,8 +128,6 @@
   "old": "  mov %rdi,0x70(%rsp)",
   "new": "  mov %rdi,0x68(%rsp)",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingPartialWithdrawal.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {
@@ -143,8 +139,6 @@
   "old": "  add $0x48,%rsp",
   "new": "  add $0x40,%rsp",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingPartialWithdrawal.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {

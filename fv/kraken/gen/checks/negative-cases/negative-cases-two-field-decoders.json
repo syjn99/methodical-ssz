@@ -44,8 +44,6 @@
   "old": "  add $0x20,%rsp",
   "new": "  add $0x18,%rsp",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.HistoricalSummary.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.UnmarshalSSZ.S"
  },
  {
@@ -109,8 +107,6 @@
   "old": "  add $0x20,%rsp",
   "new": "  add $0x18,%rsp",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.SigningData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ.S"
  },
  {
@@ -166,8 +162,6 @@
   "old": "  add $0x38,%rsp",
   "new": "  add $0x30,%rsp",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.SyncAggregatorSelectionData.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.UnmarshalSSZ.S"
  },
  {
@@ -223,8 +217,6 @@
   "old": "  add $0x38,%rsp",
   "new": "  add $0x30,%rsp",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.ValidatorBalance.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S"
  },
  {
@@ -280,8 +272,6 @@
   "old": "  add $0x48,%rsp",
   "new": "  add $0x40,%rsp",
   "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.VoluntaryExit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
