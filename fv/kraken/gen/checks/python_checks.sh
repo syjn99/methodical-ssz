@@ -52,6 +52,7 @@ run check_include gen/checks/check_include.py python3 -I -B gen/checks/check_inc
 run deposit_data_include_check gen/checks/deposit_data_include_check.py python3 -I -B gen/checks/deposit_data_include_check.py
 run deposit_data_include_check_selftest gen/checks/deposit_data_include_check.py python3 -I -B gen/checks/deposit_data_include_check.py --selftest
 run kindcheck_selftest gen/generator/kindcheck.py python3 -I -B gen/generator/kindcheck.py --selftest
+run fast_path_layout gen/checks/fast_path_layout.py python3 -I -B gen/checks/fast_path_layout.py
 
 if [ -z "${KINDCHECK_FILES:-}" ]; then
   KINDCHECK_FILES=$(ls lean/Prysm/*/Generated*.lean lean/Prysm/*/Decode*Example*.lean 2>/dev/null | grep -v -e 'Partial\.lean$' -e SameAsHand -e GeneratedEncodeFastPathSpec -e CompositionKind)

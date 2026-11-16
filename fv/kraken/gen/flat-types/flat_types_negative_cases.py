@@ -1,4 +1,4 @@
-"""Write prysm/go1.26.10/evidence/flat-types/negative-cases-flat-types.json (cases for gen/checks/negative.py).
+"""Write the negative cases of the flat types (gen/checks/negative-cases/negative-cases-flat-types.json) for gen/checks/negative.py.
 Per decoder type: accept_spec control; mutants of the generated accept theorem (post rax), the generated size-reject
 theorem (post rax), accept_spec (hlen + 1), the accept witness (post rax). Per encoder type: spec control; mutants of the
 generated fast-path theorem (post rax), the spec corollary (hcap weakened by 8), the witness (post rax)."""

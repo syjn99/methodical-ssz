@@ -1,10 +1,13 @@
-# Reviewer script (own_layout.py), copied unchanged as the non-author
-# recomputation of frame, gd, rt and the first-touch stack regions (pre) of every generated fast-path layout. Run from fv/kraken:
-#   python3 -I -B prysm/go1.26.10/evidence/generator-cases/encode-spec/layout_recomputation.py
+"""Recompute the layout of every generated encoder fast-path theorem, independently of the generator and kindcheck.py.
 
-"""Third, independent recomputation of the free layout parameters from the `.S` and the directive windows
-that the Lean proofs step (`window_infix_at hk a n`): frame, gd, rt, and the set of first-touch stack regions (pre) with sizes.
-Reads the layout def of the generated file or the pinned hand layout. No import of generator or kindcheck."""
+Usage (from fv/kraken; Python 3 standard library only):
+  python3 -I -B gen/checks/fast_path_layout.py
+For each lean/Prysm/*/GeneratedEncodeFastPath.lean, it reads the `.S` file and the instruction windows that the proof
+steps (`window_infix_at hk a n`). From them it computes the frame size, gd, rt and the first-touch stack regions with
+their sizes. It compares them with the layout definition of the generated file, or with the pinned hand layout.
+It also checks that the regions do not overlap. It imports neither the generator nor kindcheck.py.
+Exit 1 if a layout differs or two regions overlap.
+"""
 import json, re, glob, pathlib
 bad = 0
 ties = lambda T: pathlib.Path(f"lean/Prysm/{T}/EncodeFastPathKindInstances.lean").read_text()
@@ -65,3 +68,4 @@ for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
     bad += (not ok) or (not disj)
     print(("OK  " if ok and disj else "DIFF"), J["type"], "F", F, "gd", gd, "rt", rt, "pre regions", len(mine), "disjoint", disj, "" if ok else f"\n   mine   {mine}\n   theirs {theirs} frame {L['frame']} gd {L['gd']} rt {L['rt']}")
 print("layouts that differ from the independent recomputation or are not disjoint:", bad)
+raise SystemExit(1 if bad else 0)

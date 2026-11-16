@@ -1,4 +1,4 @@
-"""Evidence tool (not part of gen/generator): write <dir>/Prysm/<GoTypeName>/DecodeSpec.lean from the generated accept
+"""Write <dir>/Prysm/<GoTypeName>/DecodeSpec.lean from the generated accept
 statement text of <dir>/Prysm/<GoTypeName>/GeneratedDecodeAccept.lean (statement copied, input chunks replaced by the encoding of the EthLib-decoded value), for
 n fields of uint64 / byte vectors.
 usage: python3 -I -B flat_types_decode_spec.py <fv/kraken/lean> [GoTypeName ...]"""

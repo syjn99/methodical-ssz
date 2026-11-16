@@ -14,8 +14,8 @@ MIS: the tracked file does not exist. NOT: the tracked file of a header command 
 To check a change, run it before and after the change and compare the two results with `diff`.
 A difference needs a reason.
 
-The script knows these generators and their output names: gen/generator/gen.sh, the commands in the headers of some generated files, the flat-type
-and encoder specification tools, desc_to_lean, list_desc_to_lean, layout and attestation_data_layout.
+The script knows these generators and their output names: gen/generator/gen.sh, the commands in the headers of some generated files,
+the generators of gen/flat-types/, desc_to_lean, list_desc_to_lean, layout and attestation_data_layout.
 Section 1 compares every Lean file that gen/generator/gen.sh writes. Sections 2 to 4 name the outputs by their paths in
 lean/Prysm/<GoTypeName>/.
 """
@@ -99,17 +99,17 @@ GENERATOR_ADDED = {
     'Prysm.Slot.Uint64DecoderKindAnchors',
 }
 # file with a header command (path under lean/Prysm/) -> the prefix of its generated names (the --prefix of its command)
-HOLD_OUT = {'BlobIdentifier/GeneratedDecodeRootFieldSegments': 'Decode.generated_root',
+HEADER_COMMANDS = {'BlobIdentifier/GeneratedDecodeRootFieldSegments': 'Decode.generated_root',
             'DepositMessage/GeneratedDecodeRootFieldSegments': 'Decode.generated_root',
             'Deposit_Data/GeneratedDecodeFieldSegmentsPartial': 'Decode.generated_field',
             'PendingConsolidation/GeneratedDecodeCallSegmentsPartial': 'Decode.generated_call',
             'SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial': 'Decode.generated_call'}
 for t in ('PowBlock', 'PendingDeposit'):
-    HOLD_OUT[t + '/GeneratedDecodeSteps'] = 'Decode.generated_step'
-for f, prefix in HOLD_OUT.items():
+    HEADER_COMMANDS[t + '/GeneratedDecodeSteps'] = 'Decode.generated_step'
+for f, prefix in HEADER_COMMANDS.items():
     p = os.path.join(KRAKEN, 'lean/Prysm', f + '.lean')
     if not os.path.exists(p):
-        results.append(('holdout', os.path.relpath(p, KRAKEN), 'NOT RUN: the file is not in the tree'))
+        results.append(('header command', os.path.relpath(p, KRAKEN), 'NOT RUN: the file is not in the tree'))
         continue
     tx = open(p).read()
     imps = re.findall(r"^import (\S+)$", tx, re.M)
@@ -121,7 +121,7 @@ for f, prefix in HOLD_OUT.items():
     opened = re.search(r"^open (?:Fk|Machine Runtime) (\S+)", tx, re.M)[1]
     user = [i for i in imps if i not in GENERATOR_ADDED]
     cmd = ["python3", "-I", "-B", "gen/generator/generator.py", "decoder"] + ([mode] if mode else [])
-    out = os.path.join(work, f'holdout.{f.replace("/", ".")}.lean')
+    out = os.path.join(work, f'header-command.{f.replace("/", ".")}.lean')
     partial = "PARTIAL OUTPUT" in tx[:600]
     if partial:
         cmd += ["--partial-out", out]
@@ -129,11 +129,11 @@ for f, prefix in HOLD_OUT.items():
             "--imports", ",".join(user), "--open", opened]
     r = run(cmd, COPY_KRAKEN)
     gen = open(out, 'rb').read() if partial and os.path.exists(out) else r.stdout
-    cmp('holdout rc=%d' % r.returncode, p, gen)
+    cmp('header command rc=%d' % r.returncode, p, gen)
 
 # 3. The generator run of the flat types (the committed outputs only).
-part1 = open(os.path.join(COPY_KRAKEN, 'prysm/go1.26.10/evidence/flat-types/runs/run_generators.sh')).read()
-rows = [l.split() for l in part1.split("<<'TYPES'\n")[1].split('TYPES')[0].strip().split('\n')]
+run_generators = open(os.path.join(COPY_KRAKEN, 'gen/flat-types/run_generators.sh')).read()
+rows = [l.split() for l in run_generators.split("<<'TYPES'\n")[1].split('TYPES')[0].strip().split('\n')]
 NORM = 'prysm/go1.26.10/link-set/norm'
 for kind, go_type in rows:
     PK = ('github.com_OffchainLabs_prysm_v7_proto_engine_v1' if kind == 'v1'
@@ -151,12 +151,12 @@ for kind, go_type in rows:
         r = run(cmd, COPY_KRAKEN)
         cmp('flat-type run rc=%d' % r.returncode, tr, r.stdout)
 
-# 4. Evidence tools of the flat types and the encoder specification emitter.
-TOOLS = 'prysm/go1.26.10/evidence/flat-types/tools'
+# 4. The specification, witness and negative case generators of the flat types (gen/flat-types/).
+TOOLS = 'gen/flat-types'
 for name, cmdf, glob in (
         ('flat_types_spec', lambda o: ['python3', '-I', '-B', f'{TOOLS}/flat_types_spec.py', o], r'Spec\.lean$'),
         ('flat_types_encode_spec', lambda o: ['python3', '-I', '-B', f'{TOOLS}/flat_types_encode_spec.py', 'lean', o], r'.*\.lean$'),
-        ('encode_spec_emitter', lambda o: ['python3', '-I', '-B', 'prysm/go1.26.10/evidence/generator-cases/encode-spec/encode_spec_emitter.py', 'lean', o],
+        ('encode_spec_emitter', lambda o: ['python3', '-I', '-B', f'{TOOLS}/encode_spec_emitter.py', 'lean', o],
          r'.*\.lean$')):
     o = os.path.join(work, name)
     os.makedirs(o)
@@ -188,7 +188,7 @@ for produced in sorted(p for p in stats_after if stats_before.get(p) != stats_af
         open(produced, 'rb').read())
 neg_out = os.path.join(work, 'negative-cases-flat-types.json')
 r = run(['python3', '-I', '-B', f'{TOOLS}/flat_types_negative_cases.py', 'lean', neg_out], COPY_KRAKEN)
-cmp(f'flat_types_negative_cases rc={r.returncode}', os.path.join(KRAKEN, 'prysm/go1.26.10/evidence/flat-types/negative-cases-flat-types.json'),
+cmp(f'flat_types_negative_cases rc={r.returncode}', os.path.join(KRAKEN, 'gen/checks/negative-cases/negative-cases-flat-types.json'),
     open(neg_out, 'rb').read() if os.path.exists(neg_out) else None)
 
 # 5. desc_to_lean, list_desc_to_lean, layout and attestation_data_layout: found by the "Generated by" header of every SpecChecker.lean and

@@ -5,6 +5,7 @@ Usage: desc_to_lean.py <desc.json> <lean-name> > lean/Prysm/Checkpoint/SpecCheck
 The namespace of the output is Prysm.<GoTypeName> (the `type` of the file).
 The file is the producer's Desc for (v1alpha1, Checkpoint) that the Desc checker accepted
 (gen/desc/results/main.result.json, record orig/prysm_v1alpha1.Checkpoint.desc.json, same sha256).
+The tracked copies of the Desc files are in prysm/go1.26.10/evidence/, the directory that the header names.
 Only the kinds of that term are rendered (container, uint, byteVector); any other kind is an error.
 Python 3 standard library only.
 """

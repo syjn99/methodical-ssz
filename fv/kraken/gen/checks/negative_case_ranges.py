@@ -3,7 +3,7 @@
 usage (from the repository root):
   python3 -I -B fv/kraken/gen/checks/negative_case_ranges.py <case file>...
 
-A case file path is relative to fv/kraken (for example gen/checks/negative-cases-checkpoint-and-attestation-data.json).
+A case file path is relative to fv/kraken (for example gen/checks/negative-cases/negative-cases-checkpoint-and-attestation-data.json).
 A case file is a JSON list of cases, or an object with the key "cases".
 Each output line is: case file, case id, first line, last line, number of lines.
 The ranges come from `cut` of fv/kraken/gen/checks/negative.py, the function that the negative runner uses.

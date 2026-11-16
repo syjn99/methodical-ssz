@@ -1,4 +1,4 @@
-"""Evidence tool (not part of gen/generator): write the decoder witness modules WitnessGeneratedDecodeAccept and
+"""Write the decoder witness modules WitnessGeneratedDecodeAccept and
 WitnessGeneratedDecodeRejectSize (lean/Prysm/<GoTypeName>/) of the seven
 generated decoders (non-vacuity of the generated accept / size-reject theorems). Texts follow the hand
 witnesses `Prysm/Deposit_Data/WitnessDecodeAccept.lean` (frame 0x20 bytes) and `Prysm/PendingDeposit/WitnessDecodeAccept.lean`

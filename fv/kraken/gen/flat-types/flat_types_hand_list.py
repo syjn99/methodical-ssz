@@ -4,7 +4,7 @@ import re, sys
 dump, axs, lean = sys.argv[1:4]
 TYPES = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest',
          'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity', 'BuilderPreferences']
-# the declarations that the evidence tools and the generator runs of these types write
+# the declarations that the tools of gen/flat-types/ and the generator runs of these types write
 pats = [r'^Prysm\.(%s)\.(Decode\.(generated_|accept_spec$|reject_size_spec$|reject_complete$)|Encode\.generated_|'
         r'Witness\.Generated|SszValue\b|desc\b|desc_|checker|Code\.)' % '|'.join(TYPES)]
 names = []

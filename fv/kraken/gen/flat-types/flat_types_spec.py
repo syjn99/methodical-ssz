@@ -1,4 +1,4 @@
-"""Evidence tool (not part of gen/generator): write <out>/Prysm/<GoTypeName>/Spec.lean, the spec bridge of each type
+"""Write <out>/Prysm/<GoTypeName>/Spec.lean, the spec bridge of each type
 (the text of `Prysm/SyncCommitteeMessage/Spec.lean` / `Prysm/SyncAggregatorSelectionData/Spec.lean` generalised to a field list: P structure, encoding, serialize, roundtrip,
 accepts-iff-size, spec reject; codec equality with the checker Desc where a Desc-checker record exists).
 usage: python3 -I -B flat_types_spec.py <out dir>"""
