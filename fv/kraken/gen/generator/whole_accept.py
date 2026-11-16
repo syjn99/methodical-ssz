@@ -1,7 +1,7 @@
 # whole_accept.py -- `generator.py decoder --whole-accept`: the whole accept theorem (and the size-reject theorem) of a
 # flat fixed-size decoder, emitted from the step walk (front end) with the statement kinds of the whole-accept lemmas
 # (`Codec/Kind/DecodeAcceptAnyFrame.lean`: decodeHeadKindAnyFrame, decodeFieldKindAnyFrame, decodeEpilogueKindAnyFrame, decodeAcceptKindAnyFrame;
-# `Codec/DecodeRejectSizeAnyFrame.lean`: decodeRejectKindAnyFrame).
+# `Codec/Kind/DecodeRejectAnyFrame.lean`: decodeRejectKindAnyFrame).
 #
 # Untrusted generator: every emitted theorem is checked by Lean; every statement has a `_kind` line; the kind
 # parameters are recomputed independently from the IR and the `.S` by `kindcheck.py`.
@@ -24,7 +24,7 @@ WHOLE_ACCEPT_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('Prysm.Slot.Code.unmarshalS
 WHOLE_ACCEPT_IMPORTS = ['Codec.Kind.DecodeAcceptAnyFrame', 'Codec.FieldFrame', 'Prysm.ValidatorIndex.DecodeAcceptFunctionSpec', 'Prysm.Epoch.DecodeAccept', 'Prysm.Slot.DecodeAccept',
               'Codec.DecoderHeadEpilogue', 'Codec.DecodeRejectSizeAnyFrame']
 WHOLE_ACCEPT_OPENS = 'Codec'
-# the statement kinds of the whole-accept lemmas (`lean/Codec/Kind/DecodeAcceptAnyFrame.lean`, `lean/Codec/DecodeRejectSizeAnyFrame.lean`)
+# the statement kinds of the whole-accept lemmas (`lean/Codec/Kind/DecodeAcceptAnyFrame.lean`, `lean/Codec/Kind/DecodeRejectAnyFrame.lean`)
 WHOLE_ACCEPT_KINDS = ('decodeHeadKindAnyFrame', 'decodeFieldKindAnyFrame', 'decodeEpilogueKindAnyFrame', 'decodeAcceptKindAnyFrame', 'decodeRejectKindAnyFrame')
 
 
