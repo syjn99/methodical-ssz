@@ -1,13 +1,13 @@
-import Prysm.PendingDeposit.DecodeAccept
+import Prysm.PendingDeposit.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 
 /-!
-# Witness of `Decode.accept_from_generated_steps` (PendingDeposit decoder accept path)
+# Witness of `Decode.generated_accept` (PendingDeposit decoder accept path)
 
 Hand-written (the text of `Prysm/SyncCommitteeMessage/WitnessDecodeAccept.lean` with the PendingDeposit host and layout).
-It shows that the premises of the independent hand statement `Prysm.PendingDeposit.Decode.accept_statement` are satisfiable.
+It shows that the premises of the generated accept theorem `Prysm.PendingDeposit.Decode.generated_accept` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.PendingDeposit).UnmarshalSSZ` (index 9),
 `(*primitives.Slot).UnmarshalSSZ` (191), the 1-byte bump `runtime.makeslice` (254, `bump_makeslice1`) and
 `MemmoveGrowsliceModel` (260, `model_memmove`).
@@ -93,7 +93,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
 set_option maxHeartbeats 16000000 in
-/-- **Non-vacuity of `Decode.accept_from_generated_steps`** (premises of `Decode.accept_statement`). -/
+/-- **Non-vacuity of `Decode.generated_accept` (its premises are satisfiable).** -/
 theorem runs (pk wc amt sig sl oP1 oP2 oP3 : List UInt8) (hpk : pk.length = 48)
     (hwc : wc.length = 32) (hamt : amt.length = 8) (hsig : sig.length = 96) (hsl : sl.length = 8)
     (h1 : oP1.length = 8) (h2 : oP2.length = 8) (h3 : oP3.length = 8)
@@ -101,7 +101,7 @@ theorem runs (pk wc amt sig sl oP1 oP2 oP3 : List UInt8) (hpk : pk.length = 48)
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
       ⟨initial_state pk wc amt sig sl oP1 oP2 oP3 zmms flags, Host.addrOf 9⟩ :=
-  eventually_mono (Decode.accept_from_generated_steps 9 placed_at_9 labels_fresh_at_9 191 placed_at_191 labels_fresh_at_191
+  eventually_mono (Decode.generated_accept 9 placed_at_9 labels_fresh_at_9 191 placed_at_191 labels_fresh_at_191
     pk wc amt sig sl hpk hwc hamt hsig hsl (initial_state pk wc amt sig sl oP1 oP2 oP3 zmms flags)
     0 0 (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 16) (zeros 8)
     oP1 (zeros 8) (zeros 8) oP2 (zeros 8) (zeros 8) (zeros 8) oP3 (zeros 8) (zeros 8) (zeros 8)

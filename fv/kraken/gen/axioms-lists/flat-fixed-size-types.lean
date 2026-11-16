@@ -238,7 +238,6 @@ import Prysm.PartialDataColumnGroupID.WitnessGeneratedDecodeAccept
 import Prysm.PartialDataColumnGroupID.WitnessGeneratedDecodeRejectSize
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeAccept
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeRejectSize
-import Prysm.PendingDeposit.DecodeAcceptAnyFrameInstances
 import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 
 -- Scalability: the segment lemmas, the in-sample re-derivations, the
@@ -1145,7 +1144,6 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Prysm.PendingDeposit.Decode.generated_WithdrawalCredentials_segment_kind
 #print axioms Prysm.PendingDeposit.Decode.generated_accept
 #print axioms Prysm.PendingDeposit.Decode.generated_accept_kind
-#print axioms Prysm.PendingDeposit.Decode.generated_accept_statement
 #print axioms Prysm.PendingDeposit.Decode.generated_epilogue
 #print axioms Prysm.PendingDeposit.Decode.generated_epilogue_kind
 #print axioms Prysm.PendingDeposit.Decode.generated_field_1
@@ -1456,8 +1454,6 @@ import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
 #print axioms Codec.layoutMixedFrame40
 #print axioms Codec.layoutMixedFrame60
 #print axioms Codec.layoutRuntimeCalls
-#print axioms Prysm.PendingDeposit.Decode.accept_is_kind_any_frame
-#print axioms Prysm.PendingDeposit.Decode.reject_size_is_kind_any_frame
 #print axioms Codec.decodeRegisterFacts
 #print axioms Codec.runtimeBinders
 #print axioms Codec.scratchBoundFacts

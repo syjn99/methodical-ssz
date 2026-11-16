@@ -1,147 +1,5 @@
 [
  {
-  "id": "pending-deposit-decode-generated-step-signature-segment-control",
-  "module": "Prysm/PendingDeposit/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.generated_step_Signature_segment",
-  "kind": "control",
-  "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingDeposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
- },
- {
-  "id": "pending-deposit-decode-generated-step-signature-segment-code-mov-0x60-to-0x50",
-  "module": "Prysm/PendingDeposit/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.generated_step_Signature_segment",
-  "kind": "code",
-  "line": 107,
-  "old": "  mov $0x60,%ecx",
-  "new": "  mov $0x50,%ecx",
-  "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingDeposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
- },
- {
-  "id": "pending-deposit-decode-generated-step-signature-segment-statement-h-src-88-to-80",
-  "module": "Prysm/PendingDeposit/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.generated_step_Signature_segment",
-  "kind": "statement",
-  "old": "(hSrc : bf + (88 : Int64).toBitVec = aSrc)",
-  "new": "(hSrc : bf + (80 : Int64).toBitVec = aSrc)"
- },
- {
-  "id": "pending-deposit-decode-generated-step-directive-124-code-add-0xb8-to-0xb0",
-  "module": "Prysm/PendingDeposit/GeneratedDecodeSteps.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.generated_step_directive_124",
-  "kind": "code",
-  "old": "  add $0xb8,%rbx",
-  "new": "  add $0xb0,%rbx",
-  "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingDeposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
- },
- {
-  "id": "pending-deposit-decode-head-control",
-  "module": "Prysm/PendingDeposit/DecodeAccept.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.head",
-  "kind": "control",
-  "code_definition": "Code.unmarshalSSZ",
-  "code_namespace": "Prysm.PendingDeposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
- },
- {
-  "id": "pending-deposit-decode-head-code-mov-0x68-rsp-to-0x60-rsp",
-  "module": "Prysm/PendingDeposit/DecodeAccept.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.head",
-  "kind": "code",
-  "old": "  mov %rdi,0x68(%rsp)",
-  "new": "  mov %rdi,0x60(%rsp)",
-  "code_definition": "Code.unmarshalSSZ",
-  "code_namespace": "Prysm.PendingDeposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
- },
- {
-  "id": "pending-deposit-decode-head-code-cmp-0xc0-to-0xc8",
-  "module": "Prysm/PendingDeposit/DecodeAccept.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.head",
-  "kind": "code",
-  "old": "  cmp $0xc0,%rcx",
-  "new": "  cmp $0xc8,%rcx",
-  "code_definition": "Code.unmarshalSSZ",
-  "code_namespace": "Prysm.PendingDeposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
- },
- {
-  "id": "pending-deposit-decode-epilogue-code-add-0x40-to-0x48",
-  "module": "Prysm/PendingDeposit/DecodeAccept.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.epilogue",
-  "kind": "code",
-  "line": 162,
-  "old": "  add $0x40,%rsp",
-  "new": "  add $0x48,%rsp",
-  "code_definition": "Code.unmarshalSSZ",
-  "code_namespace": "Prysm.PendingDeposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
- },
- {
-  "id": "pending-deposit-decode-from-generated-steps-amount-field-control",
-  "module": "Prysm/PendingDeposit/DecodeAccept.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.from_generated_steps_Amount_field",
-  "kind": "control"
- },
- {
-  "id": "pending-deposit-decode-from-generated-steps-amount-field-statement-v-56-to-48",
-  "module": "Prysm/PendingDeposit/DecodeAccept.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.from_generated_steps_Amount_field",
-  "kind": "statement",
-  "old": "Eq (v.At (rcv + 56)) ⋆ F) st.data.dmem",
-  "new": "Eq (v.At (rcv + 48)) ⋆ F) st.data.dmem"
- },
- {
-  "id": "pending-deposit-decode-from-generated-steps-slot-field-statement-c0-88-to-80",
-  "module": "Prysm/PendingDeposit/DecodeAccept.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.from_generated_steps_Slot_field",
-  "kind": "statement",
-  "old": "Eq (c0.At (rcv + 88)) ⋆ F),",
-  "new": "Eq (c0.At (rcv + 80)) ⋆ F),"
- },
- {
-  "id": "pending-deposit-decode-reject-size-control",
-  "module": "Prysm/PendingDeposit/DecodeRejectSize.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.reject_size",
-  "kind": "control",
-  "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingDeposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
- },
- {
-  "id": "pending-deposit-decode-reject-size-statement-rbx-e1-to-e0",
-  "module": "Prysm/PendingDeposit/DecodeRejectSize.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.reject_size",
-  "kind": "statement",
-  "old": "st.data.regs.rbx = e1",
-  "new": "st.data.regs.rbx = e0"
- },
- {
-  "id": "pending-deposit-decode-reject-size-code-cmp-0xc0-to-0xc8",
-  "module": "Prysm/PendingDeposit/DecodeRejectSize.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.reject_size",
-  "kind": "code",
-  "old": "  cmp $0xc0,%rcx",
-  "new": "  cmp $0xc8,%rcx",
-  "code_definition": "unmarshalSSZ",
-  "code_namespace": "Prysm.PendingDeposit.Code",
-  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
-  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
- },
- {
   "id": "pending-deposit-ssz-value-spec-accepts-iff-control",
   "module": "Prysm/PendingDeposit/Spec.lean",
   "theorem": "Prysm.PendingDeposit.SszValue.spec_accepts_iff",
@@ -327,5 +185,149 @@
   "kind": "statement",
   "old": "(hlen : len ≠ 96)",
   "new": "(hlen : len ≠ 97)"
+ },
+ {
+  "id": "pending-deposit-decode-generated-signature-segment-control",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_Signature_segment",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingDeposit.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-deposit-decode-generated-signature-segment-code-mov-0x60-to-0x50",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_Signature_segment",
+  "kind": "code",
+  "line": 107,
+  "old": "  mov $0x60,%ecx",
+  "new": "  mov $0x50,%ecx",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingDeposit.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-deposit-decode-generated-signature-segment-statement-h-src-88-to-80",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_Signature_segment",
+  "kind": "statement",
+  "old": "(hSrc : bf + (88 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (80 : Int64).toBitVec = aSrc)"
+ },
+ {
+  "id": "pending-deposit-decode-generated-directive-124-code-add-0xb8-to-0xb0",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_directive_124",
+  "kind": "code",
+  "old": "  add $0xb8,%rbx",
+  "new": "  add $0xb0,%rbx",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingDeposit.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-deposit-decode-generated-head-control",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_head",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingDeposit.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-deposit-decode-generated-head-code-mov-0x68-rsp-to-0x60-rsp",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_head",
+  "kind": "code",
+  "old": "  mov %rdi,0x68(%rsp)",
+  "new": "  mov %rdi,0x60(%rsp)",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingDeposit.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-deposit-decode-generated-head-code-cmp-0xc0-to-0xc8",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_head",
+  "kind": "code",
+  "old": "  cmp $0xc0,%rcx",
+  "new": "  cmp $0xc8,%rcx",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingDeposit.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-deposit-decode-generated-epilogue-code-add-0x40-to-0x48",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_epilogue",
+  "kind": "code",
+  "line": 162,
+  "old": "  add $0x40,%rsp",
+  "new": "  add $0x48,%rsp",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingDeposit.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-deposit-decode-generated-field-3-control",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_field_3",
+  "kind": "control"
+ },
+ {
+  "id": "pending-deposit-decode-generated-field-3-statement-fv2-56-to-48",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_field_3",
+  "kind": "statement",
+  "old": "Eq (fv2.At (s.regs.rax.toBitVec + 56))",
+  "new": "Eq (fv2.At (s.regs.rax.toBitVec + 48))"
+ },
+ {
+  "id": "pending-deposit-decode-generated-field-5-statement-fv4-88-to-80",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_field_5",
+  "kind": "statement",
+  "old": "Eq (fv4.At (s.regs.rax.toBitVec + 88))",
+  "new": "Eq (fv4.At (s.regs.rax.toBitVec + 80))"
+ },
+ {
+  "id": "pending-deposit-decode-generated-reject-control",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_reject",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.PendingDeposit.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-deposit-decode-generated-reject-statement-rbx-e1-to-e0",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_reject",
+  "kind": "statement",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "pending-deposit-decode-generated-accept-kind-control",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_accept_kind",
+  "kind": "control"
+ },
+ {
+  "id": "pending-deposit-decode-generated-accept-kind-statement-bytes-96-to-48",
+  "module": "Prysm/PendingDeposit/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingDeposit.Decode.generated_accept_kind",
+  "kind": "statement",
+  "old": "[.bytes 48, .bytes 32, .uint64, .bytes 96, .uint64]",
+  "new": "[.bytes 48, .bytes 32, .uint64, .bytes 48, .uint64]"
  }
 ]

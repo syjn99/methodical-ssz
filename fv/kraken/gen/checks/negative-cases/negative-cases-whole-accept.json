@@ -1,27 +1,5 @@
 [
  {
-  "id": "pending-deposit-decode-accept-is-kind-any-frame-control",
-  "module": "Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.accept_is_kind_any_frame",
-  "kind": "control"
- },
- {
-  "id": "pending-deposit-decode-accept-is-kind-any-frame-statement-layout-mixed-frame40-131-to-130",
-  "module": "Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.accept_is_kind_any_frame",
-  "kind": "statement",
-  "old": "(layoutMixedFrame40 [Prysm.Slot.Code.unmarshalSSZ] 131 2)",
-  "new": "(layoutMixedFrame40 [Prysm.Slot.Code.unmarshalSSZ] 130 2)"
- },
- {
-  "id": "pending-deposit-decode-accept-is-kind-any-frame-statement-bytes-96-to-48",
-  "module": "Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean",
-  "theorem": "Prysm.PendingDeposit.Decode.accept_is_kind_any_frame",
-  "kind": "statement",
-  "old": "[.bytes 48, .bytes 32, .uint64, .bytes 96, .uint64]",
-  "new": "[.bytes 48, .bytes 32, .uint64, .bytes 48, .uint64]"
- },
- {
   "id": "beacon-block-header-decode-generated-accept-kind-statement-bytes-32-to-31",
   "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.BeaconBlockHeader.Decode.generated_accept_kind",
