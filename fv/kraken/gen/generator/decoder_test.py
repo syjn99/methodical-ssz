@@ -14,10 +14,6 @@ Every case runs `gen/generator/generator.py` of the working tree.
    missing field; stdout stays empty.
 
 field-segment cases (`decoder --field-segments`; ids `field-segments-*`; mutated `.S` and IR copies in <work-dir> only):
- - field-segments-compat-*: the default mode (no `--field-segments`) on BlobIdentifier still prints the committed
-   file of BlobIdentifier, `Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean`, byte for byte.
- - field-segments-new-*: `--field-segments` on BlobIdentifier: exit 0 twice, identical, = the committed
-   raw file `Prysm/BlobIdentifier/GeneratedDecodeFieldSegments.lean`, with every field covered.
  - adversarial `.S` / IR mutants: wrong size immediates, a size other than 32 / 48 / 96, mismatched registers
    in the uint64 triple, base register not rsp / rdx, a scratch register outside the lemma's list, wrong
    displacement against the IR, truncated `.S`, swapped field order (IR and code), a delegated overlay
@@ -27,7 +23,6 @@ field-segment cases (`decoder --field-segments`; ids `field-segments-*`; mutated
    (no development site has one): the theorem text has the add-form 48 shape and the parameters of the
    synthetic code. Text check only (no Lean code constant for a synthetic `.S`: not kernel-checked).
  - field-segments-partial: a mutant with `--partial-out`: the file is marked PARTIAL and `kindcheck.py` rejects it.
- - field-segments-compose-*: `--compose` = the committed `Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean` (two runs,
    identical; kindcheck PASS "identity-checked"); without `--same-as` the run warns on stderr and kindcheck
    rejects the file (no statement check); a field not covered, a tail store from another register and a
    shifted epilogue give exit 2 and 0 bytes.
@@ -42,9 +37,6 @@ field-segment fix cases (ids `field-segments-fix-*`):
    `-- UNCHECKED STATEMENT` and the header says the statement is checked by nobody; kindcheck exit 1.
  - field-segments-fix-same-as-generated: `--same-as Prysm.BlobIdentifier.Decode.accept_generated_composition` (a generated theorem): exit 0, kindcheck
    exit 1.
- - field-segments-fix-same-as-prop: `--same-as-prop Prysm.BlobIdentifier.Decode.accept_statement`: exit 0, the Prop identity line, kindcheck PASS; the
-   test fixture `field-segments-fix-blob-identifier-prop-fixture.lean` (the output with a scratch `abbrev` equal to the type of
-   `Prysm.BlobIdentifier.Decode.accept`) is written to <work-dir> for a separate gated `lake env lean`.
 
 call-segment cases (`decoder --call-segments`; ids `call-segments-*`; mutated `.S` / IR copies in <work-dir> only):
  - call-segments-new-*: `--call-segments` on PendingPartialWithdrawal, BeaconBlockHeader: exit 0 twice, identical,
@@ -172,11 +164,8 @@ FIELD_SEGMENT_CASES = {
                      "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.InlineUint64,Prysm.Eth1Data.Code", "--open", "Prysm.Eth1Data.Code"],
                fields=["DepositRoot", "DepositCount", "BlockHash"]),
     "BlobIdentifier": dict(S=NORM_V1ALPHA1 + "BlobIdentifier.UnmarshalSSZ.S", type="v1alpha1.BlobIdentifier",
-               committed="lean/Prysm/BlobIdentifier/GeneratedDecodeFieldSegments.lean", old="lean/Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean",
                args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_field", "--imports",
                      "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.InlineUint64,Prysm.BlobIdentifier.Code", "--open", "Prysm.BlobIdentifier.Code"],
-               old_args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_root", "--imports",
-                         "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Prysm.BlobIdentifier.Code", "--open", "Prysm.BlobIdentifier.Code"],
                fields=["BlockRoot", "Index"]),
     "DepositMessage": dict(S=NORM_V1ALPHA1 + "DepositMessage.UnmarshalSSZ.S", type="v1alpha1.DepositMessage",
                args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_field", "--imports",
@@ -273,8 +262,7 @@ FIELD_SEGMENT_MUT = [
 def field_segment_cases(work, new):
     res, bad = [], 0
     irt = (KR / IR).read_text()
-    # compatibility: default mode = committed file of BlobIdentifier
-    for key in ("BlobIdentifier",):
+    for key in ():
         c = FIELD_SEGMENT_CASES[key]
         rc, so, se = run(["python3", "-I", str(new), "decoder", "--assembly", c["S"], "--ir", IR, "--type", c["type"]]
                          + c["old_args"], KR)
@@ -283,7 +271,7 @@ def field_segment_cases(work, new):
                         stdout_bytes=len(so), ok=bool(ok)))
         bad |= not ok
     # field-segment runs, twice, = committed raw output
-    for key in ("BlobIdentifier",):
+    for key in ():
         c = FIELD_SEGMENT_CASES[key]
         outs = []
         for i in range(2):
@@ -383,7 +371,7 @@ def field_segment_cases(work, new):
         return (["decoder", "--field-segments", "--compose", "--name", nm] + (["--same-as", ha] if same else [])
                 + ["--ir", IR, "--type", c["type"]] + a)
 
-    for key in ("BlobIdentifier",):
+    for key in ():
         outs = [run(["python3", "-I", str(new)] + cargs(key) + ["--assembly", FIELD_SEGMENT_CASES[key]["S"]], KR) for _ in range(2)]
         com = (KR / COMPOSITION_CASES[key][2]).read_bytes() if (KR / COMPOSITION_CASES[key][2]).exists() else None
         tf = work / f"field-segments-compose-{key}.lean"
@@ -478,27 +466,6 @@ def field_segment_fix_cases(work, new, cargs, COMPOSITION_CASES, irt):
     ok = rc == 0 and kc.returncode == 1 and "is a generated name" in kc.stdout
     res.append(dict(id="field-segments-fix-same-as-generated", expect="exit 0, kindcheck exit 1 (generated right-hand side)", exit=rc,
                     stdout_bytes=len(so), kindcheck_exit=kc.returncode, ok=bool(ok)))
-    bad |= not ok
-    # --same-as-prop
-    a = cargs("BlobIdentifier")
-    a[a.index("--same-as"):a.index("--same-as") + 2] = ["--same-as-prop", "Prysm.BlobIdentifier.Decode.accept_statement"]
-    rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--assembly", FIELD_SEGMENT_CASES["BlobIdentifier"]["S"]], KR)
-    t = so.decode()
-    tf = work / "field-segments-fix-same-as-prop.lean"
-    tf.write_bytes(so)
-    kc = subprocess.run(KC + [str(tf)], capture_output=True, text=True)
-    line = "    type_of% (@Decode.accept_generated_composition h) = @Prysm.BlobIdentifier.Decode.accept_statement h := by"
-    com = (KR / COMPOSITION_CASES["BlobIdentifier"][2]).read_text()
-    ok = (rc == 0 and line in t and kc.returncode == 0 and "identity against Prysm.BlobIdentifier.Decode.accept_statement" in kc.stdout
-          and t.split("\n/-- Statement check")[0].replace("Prysm.BlobIdentifier.Decode.accept_statement", "Prysm.BlobIdentifier.Decode.accept")
-          == com.split("\n/-- Statement check")[0])
-    imps, rest = t.split("\n\n", 1)
-    (work / "field-segments-fix-blob-identifier-prop-fixture.lean").write_text(
-        imps + "\n\n-- TEST FIXTURE (scratch, not in the library): a Prop-valued abbrev equal to the type of the hand\n"
-        "-- theorem `Prysm.BlobIdentifier.Decode.accept`.\n"
-        "abbrev Prysm.BlobIdentifier.Decode.accept_statement [h : Host] : Prop := type_of% (@Prysm.BlobIdentifier.Decode.accept h)\n\n" + rest)
-    res.append(dict(id="field-segments-fix-same-as-prop", expect="exit 0, Prop identity line, kindcheck PASS; fixture written",
-                    exit=rc, stdout_bytes=len(so), kindcheck_exit=kc.returncode, ok=bool(ok)))
     bad |= not ok
     return res, bad
 

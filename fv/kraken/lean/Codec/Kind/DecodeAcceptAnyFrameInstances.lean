@@ -11,7 +11,7 @@ For every flat development type with a hand-written accept statement, the kind i
 list), as the ties of the composed accept kind `decodeAcceptKind`. The hand statements and theorems are used as committed.
 
 Layouts: three frame classes.
-- `layoutRuntimeCalls st jret nb` (frame `0x20`, `makeslice` / `memmove` only): BlobIdentifier, DepositMessage, Eth1Data,
+- `layoutRuntimeCalls st jret nb` (frame `0x20`, `makeslice` / `memmove` only): DepositMessage, Eth1Data,
   Deposit_Data, PowBlock.
 - `layoutCalleeCalls callees jret` (frame `0x48`, callee decoders only): PendingPartialWithdrawal, PendingConsolidation.
 - `layoutMixedFrame40`, `layoutMixedFrame60` (frames `0x40`, `0x60`, both): PendingDeposit; SyncCommitteeMessage,

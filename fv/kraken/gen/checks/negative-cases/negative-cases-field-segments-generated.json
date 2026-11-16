@@ -1,37 +1,41 @@
 [
  {
-  "id": "blob-identifier-decode-accept-generated-composition-type-control",
-  "module": "Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.accept_generated_composition_type",
-  "kind": "control"
+  "id": "blob-identifier-decode-generated-epilogue-control",
+  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BlobIdentifier.Decode.generated_epilogue",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "code_namespace": "Prysm.BlobIdentifier.Code",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
  },
  {
-  "id": "blob-identifier-decode-accept-generated-composition-statement-x2-x2-to-g2n",
-  "module": "Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.accept_generated_composition",
+  "id": "blob-identifier-decode-generated-accept-statement-fv1-to-a-n1",
+  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BlobIdentifier.Decode.generated_accept",
   "kind": "statement",
-  "old": "⋆ Eq (x2.At (s.regs.rax.toBitVec + 32))",
-  "new": "⋆ Eq (g2n.At (s.regs.rax.toBitVec + 32))"
+  "old": "⋆ Eq (fv1.At (s.regs.rax.toBitVec + 32))",
+  "new": "⋆ Eq (aN1.At (s.regs.rax.toBitVec + 32))"
  },
  {
-  "id": "blob-identifier-decode-accept-from-generated-field-segments-statement-rsp-8-to-16",
-  "module": "Prysm/BlobIdentifier/DecodeAcceptFromGeneratedFieldSegments.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.accept_from_generated_field_segments",
+  "id": "blob-identifier-decode-generated-accept-statement-rsp-8-to-16",
+  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BlobIdentifier.Decode.generated_accept",
   "kind": "statement",
   "old": "∧ st.data.regs.rsp = s.regs.rsp + 8",
   "new": "∧ st.data.regs.rsp = s.regs.rsp + 16"
  },
  {
-  "id": "blob-identifier-decode-accept-generated-composition-code-add-0x20-to-0x28",
-  "module": "Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.accept_generated_composition",
+  "id": "blob-identifier-decode-generated-epilogue-code-add-0x20-to-0x28",
+  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BlobIdentifier.Decode.generated_epilogue",
   "kind": "code",
+  "old": "  add $0x20,%rsp",
+  "new": "  add $0x28,%rsp",
   "code_definition": "unmarshalSSZ",
   "code_namespace": "Prysm.BlobIdentifier.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
   "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
-  "old": "  add $0x20,%rsp",
-  "new": "  add $0x28,%rsp",
   "line": 53
  }
 ]

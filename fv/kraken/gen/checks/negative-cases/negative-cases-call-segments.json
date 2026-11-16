@@ -184,14 +184,6 @@
   "kind": "control"
  },
  {
-  "id": "blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33",
-  "module": "Prysm/BlobIdentifier/DecodeAcceptComposition.lean",
-  "theorem": "Prysm.BlobIdentifier.Decode.accept_is_kind",
-  "kind": "statement",
-  "old": "[.bytes 32, .uint64] 32",
-  "new": "[.bytes 32, .uint64] 33"
- },
- {
   "id": "pending-partial-withdrawal-witness-decode-accept-runs-control",
   "module": "Prysm/PendingPartialWithdrawal/WitnessDecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs",
@@ -204,5 +196,13 @@
   "kind": "statement",
   "old": "0 0 (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8)",
   "new": "0 0x10040 (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8)"
+ },
+ {
+  "id": "blob-identifier-decode-generated-accept-kind-statement-bytes-32-to-33",
+  "module": "Prysm/BlobIdentifier/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BlobIdentifier.Decode.generated_accept_kind",
+  "kind": "statement",
+  "old": "40) [.bytes 32, .uint64]",
+  "new": "40) [.bytes 33, .uint64]"
  }
 ]

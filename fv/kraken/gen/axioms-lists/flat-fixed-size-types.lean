@@ -26,15 +26,11 @@ import Prysm.BlobIdentifier.WitnessDecodeRejectSize
 import Prysm.DepositMessage.DecodeSpec
 import Prysm.DepositMessage.WitnessDecodeAccept
 import Prysm.DepositMessage.WitnessDecodeRejectSize
-import Prysm.BlobIdentifier.GeneratedDecodeRootFieldSegments
 import Codec.FixedBytesDecode
 import Codec.Kind.FixedBytesDecode
 import Codec.InlineUint64
 import Codec.Kind.InlineUint64
 import Codec.DecoderHeadEpilogue
-import Prysm.BlobIdentifier.GeneratedDecodeFieldSegments
-import Prysm.BlobIdentifier.DecodeAcceptFromGeneratedFieldSegments
-import Prysm.BlobIdentifier.GeneratedDecodeAcceptComposition
 import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 import Prysm.Deposit_Data.DecodeSpec
 import Prysm.Deposit_Data.WitnessDecodeAccept
@@ -46,7 +42,6 @@ import Codec.Kind.CalleeDecode
 import Codec.InlineUint64RegisterBase
 import Codec.FixedBytesDecodePadding
 import Codec.Kind.DecodeAcceptComposition
-import Prysm.BlobIdentifier.GeneratedDecodeAcceptCompositionKind
 import Prysm.PendingPartialWithdrawal.DecodeAccept
 import Prysm.BeaconBlockHeader.DecodeAddressArithmetic
 import Prysm.PendingPartialWithdrawal.WitnessDecodeAccept
@@ -73,7 +68,6 @@ import Codec.Kind.FixedBytesDecodeWindow
 import Prysm.SyncCommitteeMessage.DecodeStepExamples
 import Codec.DecoderPrologue
 import Prysm.Checkpoint.GeneratedDecodeSteps
-import Prysm.BlobIdentifier.GeneratedDecodeSteps
 import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.Kind.DecodeAcceptAnyFrameInstances
 import Codec.FieldFrame
@@ -244,10 +238,8 @@ import Prysm.PartialDataColumnGroupID.WitnessGeneratedDecodeAccept
 import Prysm.PartialDataColumnGroupID.WitnessGeneratedDecodeRejectSize
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeAccept
 import Prysm.ValidatorIdentity.WitnessGeneratedDecodeRejectSize
-import Prysm.BlobIdentifier.DecodeAcceptAnyFrameInstances
 import Prysm.PendingDeposit.DecodeAcceptAnyFrameInstances
 import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
-import Prysm.BlobIdentifier.DecodeAcceptComposition
 
 -- Scalability: the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/checks/axioms.py <log> <out> <this file>.
@@ -320,11 +312,6 @@ import Prysm.BlobIdentifier.DecodeAcceptComposition
 #print axioms Codec.rootDecodeSegmentOffsetZeroKind_of
 
 -- BlobIdentifier and DepositMessage (UnmarshalSSZ)
-#print axioms Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_segment
-#print axioms Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_segment_kind
-#print axioms Prysm.BlobIdentifier.Decode.head
-#print axioms Prysm.BlobIdentifier.Decode.accept
-#print axioms Prysm.BlobIdentifier.Decode.reject_size
 #print axioms Prysm.BlobIdentifier.desc_checker
 #print axioms Prysm.BlobIdentifier.desc_wellFormed
 #print axioms Prysm.BlobIdentifier.desc_fixedSize
@@ -453,14 +440,6 @@ import Prysm.BlobIdentifier.DecodeAcceptComposition
 
 -- Generator output of `decoder --field-segments` (raw segments and kinds, raw `--compose` accept theorems and identities,
 -- the `Decode.accept_from_generated_field_segments` theorems)
-#print axioms Prysm.BlobIdentifier.Decode.accept_from_generated_field_segments
-#print axioms Prysm.BlobIdentifier.Decode.accept_from_generated_field_segments_type
-#print axioms Prysm.BlobIdentifier.Decode.accept_generated_composition
-#print axioms Prysm.BlobIdentifier.Decode.accept_generated_composition_type
-#print axioms Prysm.BlobIdentifier.Decode.generated_field_BlockRoot_segment
-#print axioms Prysm.BlobIdentifier.Decode.generated_field_BlockRoot_segment_kind
-#print axioms Prysm.BlobIdentifier.Decode.generated_field_Index_segment
-#print axioms Prysm.BlobIdentifier.Decode.generated_field_Index_segment_kind
 -- Deposit_Data and PendingPartialWithdrawal (UnmarshalSSZ):
 -- hand lemma, spec / witnesses
 #print axioms Prysm.Deposit_Data.bytes32_decode_segment_nop
@@ -518,8 +497,6 @@ import Prysm.BlobIdentifier.DecodeAcceptComposition
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.placed_at_173
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.host_program_eq
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs
-#print axioms Prysm.BlobIdentifier.Decode.accept_generated_composition_is_kind
-#print axioms Prysm.BlobIdentifier.Decode.accept_is_kind
 #print axioms Codec.bytes32_decode_segment_nop_is_optional_padding32
 #print axioms Codec.bytes32_decode_segment_nop_is_pad32
 #print axioms Codec.bytesDecodeHeadOptionalPadding_false
@@ -585,22 +562,6 @@ import Prysm.BlobIdentifier.DecodeAcceptComposition
 
 -- `decoder --steps`: every new theorem of the lemma, example, relation, generated (`decoder --steps`, raw)
 -- and accept modules
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_BlockRoot_segment
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_BlockRoot_segment_kind
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_37
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_37_kind
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_38
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_38_kind
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_45
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_45_kind
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_46
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_46_kind
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_47
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_47_kind
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_48
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_48_kind
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_49
-#print axioms Prysm.BlobIdentifier.Decode.generated_step_directive_49_kind
 #print axioms Prysm.Checkpoint.Decode.generated_step_Epoch_call
 #print axioms Prysm.Checkpoint.Decode.generated_step_Epoch_call_kind
 #print axioms Prysm.Checkpoint.Decode.generated_step_Root_segment
@@ -876,7 +837,6 @@ import Prysm.BlobIdentifier.DecodeAcceptComposition
 #print axioms Prysm.BlobIdentifier.Decode.generated_BlockRoot_segment_kind
 #print axioms Prysm.BlobIdentifier.Decode.generated_accept
 #print axioms Prysm.BlobIdentifier.Decode.generated_accept_kind
-#print axioms Prysm.BlobIdentifier.Decode.generated_accept_same
 #print axioms Prysm.BlobIdentifier.Decode.generated_epilogue
 #print axioms Prysm.BlobIdentifier.Decode.generated_epilogue_kind
 #print axioms Prysm.BlobIdentifier.Decode.generated_field_1
@@ -1470,9 +1430,6 @@ import Prysm.BlobIdentifier.DecodeAcceptComposition
 #print axioms Codec.DecodeBoundaryState.regs
 #print axioms Codec.DecodeBoundaryState.stackSlots
 #print axioms Codec.addExtra
-#print axioms Prysm.BlobIdentifier.Decode.accept_is_kind_any_frame
-#print axioms Prysm.BlobIdentifier.Decode.accept_kind_any_frame_is_kind
-#print axioms Prysm.BlobIdentifier.Decode.reject_size_is_kind_any_frame
 #print axioms Prysm.Checkpoint.Decode.accept_of_kind
 #print axioms Prysm.Checkpoint.Decode.low_address
 #print axioms Prysm.Checkpoint.Decode.reject_size_is_kind_any_frame

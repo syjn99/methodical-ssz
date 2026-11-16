@@ -1,4 +1,3 @@
-import Prysm.BlobIdentifier.DecodeAccept
 import Prysm.Eth1Data.DecodeAddressArithmetic
 
 /-!

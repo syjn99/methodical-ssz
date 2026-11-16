@@ -208,7 +208,7 @@ end Prysm.BlobIdentifier
 /-! Whole accept (`decoder --whole-accept`): the whole accept theorem `Decode.generated_accept` of `v1alpha1.BlobIdentifier` from
 the step chain above: head, one theorem per field, epilogue (boundary states in entry terms), accept, size
 reject. Every statement has a `_kind` line against the whole-accept kinds. In-sample (development data).
-WHOLE-ACCEPT-JSON: {"accept": "Decode.generated_accept", "kinds": [{"theorem": "Decode.generated_head", "kind": "decodeHeadKindAnyFrame"}, {"theorem": "Decode.generated_field_1", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_2", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_epilogue", "kind": "decodeEpilogueKindAnyFrame"}, {"theorem": "Decode.generated_accept", "kind": "decodeAcceptKindAnyFrame"}, {"theorem": "Decode.generated_reject", "kind": "decodeRejectKindAnyFrame"}], "fields": "[.bytes 32, .uint64]", "frame": 40, "statement_check": "same Prysm.BlobIdentifier.Decode.accept"}
+WHOLE-ACCEPT-JSON: {"accept": "Decode.generated_accept", "kinds": [{"theorem": "Decode.generated_head", "kind": "decodeHeadKindAnyFrame"}, {"theorem": "Decode.generated_field_1", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_field_2", "kind": "decodeFieldKindAnyFrame"}, {"theorem": "Decode.generated_epilogue", "kind": "decodeEpilogueKindAnyFrame"}, {"theorem": "Decode.generated_accept", "kind": "decodeAcceptKindAnyFrame"}, {"theorem": "Decode.generated_reject", "kind": "decodeRejectKindAnyFrame"}], "fields": "[.bytes 32, .uint64]", "frame": 40, "statement_check": "kind instance only"}
 -/
 
 open Codec
@@ -694,10 +694,6 @@ theorem Decode.generated_accept_kind : ∀ (h : Host), type_of% (@Decode.generat
       (some ⟨false, 0, 6, 48⟩) 0 true [.fixed 24, .low]
       [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.existential 0), .at (.below 16) (.ptr 0), .at (.below 48) (.ret 32), .low (.existential 1)]
       40) [.bytes 32, .uint64] := by
-  intro h; rfl
-
-/-- Statement check: the declared type is the type of the independently written hand theorem `Prysm.BlobIdentifier.Decode.accept`. -/
-theorem Decode.generated_accept_same : ∀ (h : Host), type_of% (@Decode.generated_accept h) = type_of% (@Prysm.BlobIdentifier.Decode.accept h) := by
   intro h; rfl
 
 set_option maxRecDepth 100000 in

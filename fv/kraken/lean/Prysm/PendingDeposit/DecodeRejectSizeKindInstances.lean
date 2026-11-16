@@ -1,4 +1,3 @@
-import Prysm.BlobIdentifier.DecodeRejectSize
 import Prysm.PendingPartialWithdrawal.DecodeRejectSize
 import Prysm.PendingDeposit.DecodeRejectSize
 import Prysm.AttestationData.DecodeRejectSize

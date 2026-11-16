@@ -99,7 +99,7 @@ GENERATOR_ADDED = {
     'Prysm.Slot.Uint64DecoderKindAnchors',
 }
 # file with a header command (path under lean/Prysm/) -> the prefix of its generated names (the --prefix of its command)
-HEADER_COMMANDS = {'BlobIdentifier/GeneratedDecodeRootFieldSegments': 'Decode.generated_root'}
+HEADER_COMMANDS = {}
 for t in ('PendingDeposit',):
     HEADER_COMMANDS[t + '/GeneratedDecodeSteps'] = 'Decode.generated_step'
 for f, prefix in HEADER_COMMANDS.items():

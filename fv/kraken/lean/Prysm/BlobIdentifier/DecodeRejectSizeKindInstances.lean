@@ -1,4 +1,3 @@
-import Prysm.BlobIdentifier.DecodeRejectSize
 import Prysm.PendingPartialWithdrawal.DecodeRejectSize
 import Prysm.PendingDeposit.DecodeRejectSize
 import Prysm.AttestationData.DecodeRejectSize
@@ -16,10 +15,3 @@ AttestationData; the other types have the generated `Decode.generated_reject`, e
 open Machine Runtime
 
 open Codec
-namespace Prysm.BlobIdentifier
-
-theorem Decode.reject_size_is_kind_any_frame : ∀ (h : Host), type_of% (@Prysm.BlobIdentifier.Decode.reject_size h)
-    = @decodeRejectKindAnyFrame h Prysm.BlobIdentifier.Code.unmarshalSSZ 40 := by
-  intro h; with_reducible rfl
-
-end Prysm.BlobIdentifier
