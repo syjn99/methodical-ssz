@@ -1,6 +1,7 @@
 import Prysm.BlobIdentifier.GeneratedEncodeFastPath
 import Prysm.BlobIdentifier.Spec
 import Runtime.CopyModel
+import Prysm.BlobIdentifier.Code
 
 /-!
 # BlobIdentifier encoder fast path (generated theorem) against the independent Desc

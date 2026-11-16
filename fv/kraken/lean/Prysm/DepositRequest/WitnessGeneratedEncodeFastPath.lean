@@ -1,6 +1,7 @@
 import Prysm.DepositRequest.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.DepositRequest.Code
 
 /-!
 # Witness of `Encode.generated_fast` (DepositRequest encoder fast path, generated theorem; 24 flat types, text of the encoder specification emitter)

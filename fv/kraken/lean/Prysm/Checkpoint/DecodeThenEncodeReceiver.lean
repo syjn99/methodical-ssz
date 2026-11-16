@@ -1,6 +1,7 @@
 import Prysm.Checkpoint.EncodeFastPath
 import Prysm.Checkpoint.DecodeSpec
 import Runtime.CopyModel
+import Prysm.Checkpoint.Code
 
 /-!
 # Encoder on a decoded-form receiver (NOT the machine-level composition)

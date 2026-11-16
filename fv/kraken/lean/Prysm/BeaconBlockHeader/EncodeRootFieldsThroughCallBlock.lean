@@ -1,5 +1,6 @@
 import Prysm.BeaconBlockHeader.EncodeRootFields
 import Codec.EncodeMemmove
+import Prysm.BeaconBlockHeader.Code
 
 /-!
 # The three root blocks of `BeaconBlockHeader.MarshalSSZTo` through `Codec.encode32_memmove_call`

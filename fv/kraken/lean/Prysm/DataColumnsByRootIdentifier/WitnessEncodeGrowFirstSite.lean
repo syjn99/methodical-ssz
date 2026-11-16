@@ -1,6 +1,7 @@
 import Prysm.DataColumnsByRootIdentifier.EncodeGrowFirstSite
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # Witnesses of `Encode.grow_first_site` (grow at site 1): n = 0, 1, 128

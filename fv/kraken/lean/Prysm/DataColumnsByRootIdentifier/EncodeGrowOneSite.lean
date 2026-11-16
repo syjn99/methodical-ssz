@@ -2,6 +2,7 @@ import Prysm.DataColumnsByRootIdentifier.StatementsEncodeGrowOneSite
 import Prysm.DataColumnsByRootIdentifier.EncodeFastPath
 import Prysm.DataColumnsByRootIdentifier.EncodeGrowFirstSite
 import Prysm.DataColumnsByRootIdentifier.EncodeTailGrow
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # One-growth path, main theorem: growth at any one site (`Encode.grow_one_site_statement`)

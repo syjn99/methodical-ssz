@@ -2,6 +2,7 @@ import Prysm.BlobIdentifier.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
+import Prysm.BlobIdentifier.Code
 
 /-!
 # Witness of `Decode.generated_accept` (BlobIdentifier decoder accept path)

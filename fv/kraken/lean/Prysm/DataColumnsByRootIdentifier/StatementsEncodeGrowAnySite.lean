@@ -1,4 +1,5 @@
 import Prysm.DataColumnsByRootIdentifier.StatementsEncode
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # Frozen STATEMENTS of the encoder for every capacity (any-site grow path: growslice at any site, any number of times)

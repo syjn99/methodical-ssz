@@ -1,4 +1,5 @@
 import Prysm.Checkpoint.EncodeFastPath
+import Prysm.Checkpoint.Code
 
 /-!
 # Real Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, growslice path, Go 1.26.10 machine code

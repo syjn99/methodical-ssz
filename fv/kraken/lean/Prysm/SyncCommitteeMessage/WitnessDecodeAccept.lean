@@ -2,6 +2,9 @@ import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
+import Prysm.SyncCommitteeMessage.Code
+import Prysm.Slot.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Witness of `Decode.generated_accept` (SyncCommitteeMessage decoder accept path)
@@ -21,7 +24,7 @@ the untouched receiver tail (32 bytes), the untouched frame bytes rsp − 80 …
 decoder returns nil. The receiver is a Go value of `v1alpha1.SyncCommitteeMessage`.
 -/
 
-open Machine Runtime Machine.Witness Prysm.AttestationData.Code Codec Prysm.SyncCommitteeMessage.Code
+open Machine Runtime Machine.Witness Codec Prysm.SyncCommitteeMessage.Code
 
 namespace Prysm.SyncCommitteeMessage.Witness.DecodeAccept
 

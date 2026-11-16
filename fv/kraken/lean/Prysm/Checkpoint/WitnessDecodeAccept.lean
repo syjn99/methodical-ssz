@@ -2,6 +2,8 @@ import Prysm.Checkpoint.DecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
+import Prysm.Checkpoint.Code
+import Prysm.Epoch.Code
 
 /-!
 # Witness of `Decode.accept` (decoder accept path)

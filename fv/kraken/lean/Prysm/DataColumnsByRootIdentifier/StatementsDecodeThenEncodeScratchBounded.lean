@@ -1,4 +1,5 @@
 import Prysm.DataColumnsByRootIdentifier.StatementsDecodeThenEncode
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # Corrected round-trip statement: a bound on the scratch size (added after the freeze of `Prysm/DataColumnsByRootIdentifier/StatementsDecodeThenEncode.lean`)

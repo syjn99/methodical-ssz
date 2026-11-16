@@ -1,5 +1,6 @@
 import Prysm.Checkpoint.EncodeHead
 import Runtime.CopyModel
+import Prysm.Checkpoint.Code
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo`: the remaining capacity cases and the reject after growth

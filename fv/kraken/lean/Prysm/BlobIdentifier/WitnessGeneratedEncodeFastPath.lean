@@ -1,6 +1,7 @@
 import Prysm.BlobIdentifier.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.BlobIdentifier.Code
 
 /-!
 # Witness of `Encode.generated_fast` (BlobIdentifier encoder fast path, generated theorem)

@@ -1,5 +1,7 @@
 import Prysm.SyncAggregatorSelectionData.GeneratedDecodeAccept
 import Prysm.SyncAggregatorSelectionData.Spec
+import Prysm.SyncAggregatorSelectionData.Code
+import Prysm.Slot.Code
 
 /-!
 # Spec alignment of the real SyncAggregatorSelectionData decoder

@@ -1,5 +1,8 @@
 import Prysm.PendingPartialWithdrawal.DecodeAccept
 import Prysm.PendingPartialWithdrawal.Spec
+import Prysm.PendingPartialWithdrawal.Code
+import Prysm.Epoch.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Spec alignment of the real PendingPartialWithdrawal decoder, accept side
@@ -13,7 +16,7 @@ The statement text is `Decode.accept_statement` (`Prysm/Deposit_Data/Statements.
 `g`. Not stated here: that the two callee error paths (`fmt.errorf` wraps) are unreachable when `size = 24`.
 -/
 
-open Machine Runtime Prysm.AttestationData.Code Prysm.PendingPartialWithdrawal.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Prysm.PendingPartialWithdrawal.Code Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.PendingPartialWithdrawal

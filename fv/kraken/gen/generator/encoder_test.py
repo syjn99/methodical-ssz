@@ -34,7 +34,7 @@ ROWS = [  # type, link dir, const, modules to import (code module first), prefix
      "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean", "--same-as=Prysm.BeaconBlockHeader.Encode.fast_path"], "GeneratedEncodeFastPath"),
     ("Eth1Data", "link-set", "marshalSSZTo", "Prysm.Eth1Data.Code,Prysm.Eth1Data.EncodeFastPathKindInstances", "eth1-data", ["--hand-layout=Prysm.Eth1Data.encodeLayout",
      "--hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Eth1Data.Encode.fast_path"], "GeneratedEncodeFastPath"),
-] + [(t, "link-set", c, f"Prysm.{t}.EncoderCode", p, [], "GeneratedEncodeFastPath") for t, c, p in [
+] + [(t, "link-set", c, f"Prysm.{t}.Code", p, [], "GeneratedEncodeFastPath") for t, c, p in [
     ("BlobIdentifier", "marshalSSZTo", "blob-identifier"), ("DepositMessage", "marshalSSZTo", "deposit-message"), ("Deposit_Data", "marshalSSZTo", "deposit-data"),
     ("PendingPartialWithdrawal", "marshalSSZTo", "pending-partial-withdrawal"), ("SyncCommitteeMessage", "marshalSSZTo", "sync-committee-message"),
     ("PendingConsolidation", "marshalSSZTo", "pending-consolidation"), ("PendingDeposit", "marshalSSZTo", "pending-deposit"), ("PowBlock", "marshalSSZTo", "pow-block"),

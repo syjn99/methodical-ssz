@@ -1,5 +1,7 @@
 import Prysm.ValidatorBalance.GeneratedDecodeAccept
 import Prysm.ValidatorBalance.Spec
+import Prysm.ValidatorBalance.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Spec alignment of the real ValidatorBalance decoder

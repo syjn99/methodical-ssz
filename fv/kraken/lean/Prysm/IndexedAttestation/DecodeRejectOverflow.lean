@@ -3,6 +3,7 @@ import Runtime.StaticBoxLemmas
 import Prysm.IndexedAttestation.StatementsErrorWordNonzero
 import Prysm.IndexedAttestation.DecodeAccept
 import Prysm.IndexedAttestation.DecodeRejectAlignment
+import Prysm.IndexedAttestation.Code
 
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: overflow reject

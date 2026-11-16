@@ -1,6 +1,7 @@
 import Prysm.ValidatorIdentity.GeneratedEncodeFastPath
 import Prysm.ValidatorIdentity.Spec
 import Runtime.CopyModel
+import Prysm.ValidatorIdentity.Code
 
 /-!
 # ValidatorIdentity encoder fast path (generated theorem) against the independent Desc (24 flat types, text of the encoder specification emitter)

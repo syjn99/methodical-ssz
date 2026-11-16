@@ -1,5 +1,6 @@
 import Prysm.PendingPartialWithdrawal.DecodeRejectSize
 import Prysm.PendingPartialWithdrawal.Spec
+import Prysm.PendingPartialWithdrawal.Code
 
 /-!
 # Spec alignment of the real PendingPartialWithdrawal decoder, reject side

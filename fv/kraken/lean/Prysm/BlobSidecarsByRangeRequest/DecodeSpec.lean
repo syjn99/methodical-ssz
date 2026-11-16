@@ -1,5 +1,7 @@
 import Prysm.BlobSidecarsByRangeRequest.GeneratedDecodeAccept
 import Prysm.BlobSidecarsByRangeRequest.Spec
+import Prysm.BlobSidecarsByRangeRequest.Code
+import Prysm.Slot.Code
 
 /-!
 # Spec alignment of the real `v1alpha1.BlobSidecarsByRangeRequest` decoder (24 flat types)

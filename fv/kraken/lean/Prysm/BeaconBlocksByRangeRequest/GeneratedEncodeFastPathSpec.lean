@@ -1,6 +1,7 @@
 import Prysm.BeaconBlocksByRangeRequest.GeneratedEncodeFastPath
 import Prysm.BeaconBlocksByRangeRequest.Spec
 import Runtime.CopyModel
+import Prysm.BeaconBlocksByRangeRequest.Code
 
 /-!
 # BeaconBlocksByRangeRequest encoder fast path (generated theorem) against the independent Desc (24 flat types, text of the encoder specification emitter)

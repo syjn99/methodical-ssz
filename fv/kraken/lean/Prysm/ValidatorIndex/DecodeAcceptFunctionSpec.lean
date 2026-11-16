@@ -1,4 +1,5 @@
 import Prysm.ValidatorIndex.GeneratedDecodeAccept
+import Prysm.ValidatorIndex.Code
 
 /-!
 # `Decode.accept_function_spec`: function specification of `(*primitives.ValidatorIndex).UnmarshalSSZ`, accept path

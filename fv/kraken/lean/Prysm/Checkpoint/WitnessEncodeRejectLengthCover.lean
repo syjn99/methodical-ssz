@@ -2,6 +2,7 @@ import Prysm.Checkpoint.EncodeCover
 import Runtime.CopyModel
 import Machine.WitnessHost
 import Machine.WitnessSplit
+import Prysm.Checkpoint.Code
 
 /-!
 # Witness of `Encode.reject_length_cover`: `len(Root) ≠ 32`, every capacity range

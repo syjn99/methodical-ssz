@@ -5,6 +5,9 @@ import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec
 import Prysm.PendingPartialWithdrawal.Statements
 import Codec.CalleeDecode
 import Codec.InlineUint64RegisterBase
+import Prysm.PendingPartialWithdrawal.Code
+import Prysm.Epoch.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Real Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`, accept path, Go 1.26.10 (first instance of the call-site lemmas)

@@ -1,4 +1,5 @@
 import Prysm.Checkpoint.EncodeTailGrow
+import Prysm.Checkpoint.Code
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo`: the two prefixes up to `L_7b` (directive 33)

@@ -1,4 +1,5 @@
 import Prysm.AttestationData.DecodeAcceptSource
+import Prysm.AttestationData.Code
 
 /-!
 # `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 4

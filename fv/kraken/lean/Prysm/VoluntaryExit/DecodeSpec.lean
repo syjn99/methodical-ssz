@@ -1,5 +1,8 @@
 import Prysm.VoluntaryExit.GeneratedDecodeAccept
 import Prysm.VoluntaryExit.Spec
+import Prysm.VoluntaryExit.Code
+import Prysm.Epoch.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Spec alignment of the real VoluntaryExit decoder

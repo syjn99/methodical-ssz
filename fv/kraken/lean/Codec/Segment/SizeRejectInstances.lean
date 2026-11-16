@@ -2,6 +2,8 @@ import Codec.Segment.SizeReject
 import Codec.Segment.Bytes32LoopHistoricalBatch
 import Prysm.SyncCommittee.Statements
 import Prysm.HistoricalBatch.Statements
+import Prysm.HistoricalBatch.Code
+import Prysm.SyncCommittee.Code
 
 /-!
 # The SyncCommittee and HistoricalBatch size-reject statements re-derived from `Codec.Segment.reject_size_any_frame`

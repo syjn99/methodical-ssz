@@ -1,6 +1,6 @@
 import Prysm.BeaconBlockHeader.EncodeFastPathKindInstances
 import Codec.EncodeFrameTest
-import Prysm.PendingPartialWithdrawal.EncoderCode
+import Prysm.PendingPartialWithdrawal.Code
 
 /-!
 # Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.PendingPartialWithdrawal).MarshalSSZTo`

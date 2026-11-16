@@ -4,7 +4,7 @@ n fields of uint64 / byte vectors.
 usage: python3 -I -B flat_types_decode_spec.py <fv/kraken/lean> [GoTypeName ...]"""
 import os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from flat_types_spec import T  # noqa: E402
+from flat_types_spec import T, with_code_imports  # noqa: E402
 
 DEC = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
 
@@ -126,5 +126,5 @@ end Prysm.{X}
 if __name__ == '__main__':
     d = sys.argv[1]
     for X in (sys.argv[2:] or DEC):
-        open(os.path.join(d, 'Prysm', X, 'DecodeSpec.lean'), 'w').write(emit(d, X))
+        open(os.path.join(d, 'Prysm', X, 'DecodeSpec.lean'), 'w').write(with_code_imports(emit(d, X), X))
         print(X)

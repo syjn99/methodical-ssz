@@ -1,5 +1,8 @@
 import Prysm.ValidatorIdentity.GeneratedDecodeAccept
 import Prysm.ValidatorIdentity.Spec
+import Prysm.ValidatorIdentity.Code
+import Prysm.Epoch.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Spec alignment of the real `v1alpha1.ValidatorIdentity` decoder (24 flat types)

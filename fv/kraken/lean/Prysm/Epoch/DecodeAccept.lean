@@ -1,7 +1,7 @@
 import Machine.Step
 import Machine.Labels
 import Machine.Bytes
-import Prysm.Checkpoint.Code
+import Prysm.Epoch.Code
 
 /-!
 # `(*primitives.Epoch).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

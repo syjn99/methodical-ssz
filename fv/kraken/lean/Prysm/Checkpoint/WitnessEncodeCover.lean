@@ -2,6 +2,7 @@ import Prysm.Checkpoint.EncodeCover
 import Runtime.CopyModel
 import Machine.WitnessHost
 import Machine.WitnessSplit
+import Prysm.Checkpoint.Code
 
 /-!
 # Witness of `Encode.cover`: every capacity range on one host

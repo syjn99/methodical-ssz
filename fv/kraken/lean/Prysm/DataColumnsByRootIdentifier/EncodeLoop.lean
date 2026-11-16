@@ -1,7 +1,7 @@
 import Machine.Block
 import Machine.Labels
 import Machine.Frame
-import Prysm.DataColumnsByRootIdentifier.CodeMarshalSSZTo
+import Prysm.DataColumnsByRootIdentifier.Code
 import Prysm.SyncCommittee.DecodeLoopLemmas
 import Runtime.CopyModel
 import Machine.StoreLemmas

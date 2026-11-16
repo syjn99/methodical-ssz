@@ -2,6 +2,7 @@ import Prysm.DepositMessage.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
+import Prysm.DepositMessage.Code
 
 /-!
 # Witness of `Decode.generated_accept` (DepositMessage decoder accept path)

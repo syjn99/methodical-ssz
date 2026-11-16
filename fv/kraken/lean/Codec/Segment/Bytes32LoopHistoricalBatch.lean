@@ -1,6 +1,7 @@
 import Codec.Segment.Bytes32LoopProof
 import Prysm.HistoricalBatch.DecodeLoopStateRoots
 import Codec.SegmentTemplate
+import Prysm.HistoricalBatch.Code
 
 /-!
 # The HistoricalBatch BlockRoots loop `Prysm.HistoricalBatch.Decode.block_roots_loop` re-derived from the general loop `Codec.Segment.bytes32_loop`

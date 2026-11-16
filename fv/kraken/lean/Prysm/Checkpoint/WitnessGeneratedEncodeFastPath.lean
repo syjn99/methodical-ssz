@@ -1,6 +1,7 @@
 import Prysm.Checkpoint.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.Checkpoint.Code
 
 /-!
 # Witness of `Encode.generated_fast` (Checkpoint encoder fast path, generated theorem)

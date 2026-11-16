@@ -1,5 +1,6 @@
 import Prysm.Checkpoint.EncodeSpec
 import Machine.WitnessHost
+import Prysm.Checkpoint.Code
 
 /-! # Witness of `Size.result`: the real SizeSSZ code alone; memory = the return slot. -/
 

@@ -3,7 +3,7 @@ import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
-import Prysm.DataColumnsByRootIdentifier.CodeMarshalSSZTo
+import Prysm.DataColumnsByRootIdentifier.Code
 import Prysm.DataColumnsByRootIdentifier.SpecDefinitions
 
 /-!

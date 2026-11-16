@@ -1,6 +1,11 @@
 import Prysm.AttestationData.DecodeAccept
 import Prysm.AttestationData.DecodeRejectSize
 import Prysm.AttestationData.Spec
+import Prysm.AttestationData.Code
+import Prysm.Checkpoint.Code
+import Prysm.CommitteeIndex.Code
+import Prysm.Epoch.Code
+import Prysm.Slot.Code
 
 /-!
 # Spec alignment of the real AttestationData decoder

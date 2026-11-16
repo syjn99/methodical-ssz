@@ -10,7 +10,7 @@ cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoc
          or at the 1-based "line" of the file)
   statement:  "old", "new" (exact text, unique inside the theorem statement)
   control: optional "code_definition"/"assembly" (then an unmutated copy of the .S is included the same way)
-  optional for code/control: "code_namespace" (namespace of the code constant, default Prysm.Checkpoint.Code) and "norm"
+  optional for code/control: "code_namespace" (namespace of the code constant, default Prysm.<Type>.Code) and "norm"
   (path of the .S under fv/kraken instead of prysm/go1.26.10/link-set/norm/<S>; AttestationData set);
   optional for every kind: "mutant_imports" (list of module names, e.g. "Prysm.BeaconBlockHeader.EncodeFastPathKindInstances"):
   the mutated copy imports them in addition (the case module is unchanged), so that a mutant can name a declaration
@@ -20,7 +20,7 @@ For each case the mutant Lean file is the module's text up to the end of the des
 directly follows it is kept and belongs to the case range). The case range starts at the first line of the
 theorem's command: the `set_option … in` lines and the doc comment directly above the `theorem` line belong to it
 (Lean reports an error of the whole declaration, for example its heartbeat timeout, at that line). For code cases, a
-new constant `Prysm.Checkpoint.Code.<code_definition>Mut` that includes the mutated .S copy (absolute path in <work-dir>)
+new constant `<code namespace>.<code_definition>Mut` that includes the mutated .S copy (absolute path in <work-dir>)
 and every whole-word use of <code_definition> after the imports renamed to it. `lake env lean <file>` runs
 under the memory cap from fv/kraken/lean. A mutant passes the suite when Lean reports an error,
 every error line lies inside the case range, and the FIRST error is neither a resource error nor a wrong_target
@@ -134,7 +134,7 @@ def find_decl(lines, name, kinds=("theorem",)):
 
 def code_namespace_of(c):
     """Namespace of the code constant of a case: `code_namespace`, else `_root_` for a full name in `code_definition`, else
-    `Prysm.<Type>.Code` for a module under Prysm/<Type>/, else Prysm.Checkpoint.Code (the old default set)."""
+    `Prysm.<Type>.Code` for a module under Prysm/<Type>/."""
     if "code_namespace" in c:
         return c["code_namespace"]
     if "." in c["code_definition"]:
@@ -142,7 +142,7 @@ def code_namespace_of(c):
     p = c["module"].split("/")
     if p[0] == "Prysm" and len(p) > 2:
         return f"Prysm.{p[1]}.Code"
-    return "Prysm.Checkpoint.Code"
+    raise ValueError(f"{c['id']}: no code namespace for module {c['module']}")
 
 
 ATTRIBUTE_LINE = re.compile(r"^@\[[^\]]*\]\s*$")

@@ -1,5 +1,5 @@
 import Prysm.Epoch.DecodeRejectSize
-import Prysm.BeaconBlockHeader.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # `(*primitives.ValidatorIndex).UnmarshalSSZ`, reject `len(buf) ≠ 8` (Go 1.26.10 machine code)

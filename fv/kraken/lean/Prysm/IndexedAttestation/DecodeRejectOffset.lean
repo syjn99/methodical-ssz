@@ -6,6 +6,7 @@ import Codec.StackGuard
 import Prysm.IndexedAttestation.Statements
 import Prysm.IndexedAttestation.AddressTactic
 import Prysm.IndexedAttestation.DecodeRejectSize
+import Prysm.IndexedAttestation.Code
 
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: offset reject

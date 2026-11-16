@@ -2,6 +2,7 @@ import Codec.DecoderHeadEpilogue
 import Codec.FixedBytesDecode
 import Prysm.SyncCommittee.DecodeLoop
 import Prysm.SyncCommittee.Statements
+import Prysm.SyncCommittee.Code
 
 /-!
 # `(*v1alpha1.SyncCommittee).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

@@ -1,6 +1,6 @@
 import Machine.Block
 import Machine.Labels
-import Prysm.DataColumnsByRootIdentifier.CodeUnmarshalSSZ
+import Prysm.DataColumnsByRootIdentifier.Code
 import Prysm.SyncCommittee.DecodeLoopLemmas
 
 /-!

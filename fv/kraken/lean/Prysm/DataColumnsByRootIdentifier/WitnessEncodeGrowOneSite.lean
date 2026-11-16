@@ -1,6 +1,7 @@
 import Prysm.DataColumnsByRootIdentifier.EncodeGrowOneSite
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # Witnesses of `Encode.grow_one_site` (one-growth path: growth at any one site)

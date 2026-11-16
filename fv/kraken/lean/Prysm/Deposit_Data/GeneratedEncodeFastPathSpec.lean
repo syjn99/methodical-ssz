@@ -1,6 +1,7 @@
 import Prysm.Deposit_Data.GeneratedEncodeFastPath
 import Prysm.Deposit_Data.Spec
 import Runtime.CopyModel
+import Prysm.Deposit_Data.Code
 
 /-!
 # Deposit_Data encoder fast path (generated theorem) against the independent Desc

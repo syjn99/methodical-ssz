@@ -1,6 +1,7 @@
 import Prysm.ValidatorBalance.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.ValidatorBalance.Code
 
 /-!
 # Witness of the generated `Decode.generated_reject`

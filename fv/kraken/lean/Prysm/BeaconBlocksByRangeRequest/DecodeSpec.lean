@@ -1,5 +1,7 @@
 import Prysm.BeaconBlocksByRangeRequest.GeneratedDecodeAccept
 import Prysm.BeaconBlocksByRangeRequest.Spec
+import Prysm.BeaconBlocksByRangeRequest.Code
+import Prysm.Slot.Code
 
 /-!
 # Spec alignment of the real `v1alpha1.BeaconBlocksByRangeRequest` decoder (24 flat types)

@@ -1,6 +1,7 @@
 import Prysm.PowBlock.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.PowBlock.Code
 
 /-!
 # Witness of `Encode.generated_fast` (PowBlock encoder fast path, generated theorem)

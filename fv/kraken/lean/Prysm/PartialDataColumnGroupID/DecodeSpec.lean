@@ -1,5 +1,7 @@
 import Prysm.PartialDataColumnGroupID.GeneratedDecodeAccept
 import Prysm.PartialDataColumnGroupID.Spec
+import Prysm.PartialDataColumnGroupID.Code
+import Prysm.Slot.Code
 
 /-!
 # Spec alignment of the real `v1alpha1.PartialDataColumnGroupID` decoder (24 flat types)

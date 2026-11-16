@@ -1,5 +1,8 @@
 import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
 import Prysm.SyncCommitteeMessage.Spec
+import Prysm.SyncCommitteeMessage.Code
+import Prysm.Slot.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Spec alignment of the real SyncCommitteeMessage decoder
@@ -14,7 +17,7 @@ raw output, not edited): the accept path is `Decode.generated_accept`, the size 
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 144`.
 -/
 
-open Machine Runtime Prysm.AttestationData.Code Prysm.SyncCommitteeMessage.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Prysm.SyncCommitteeMessage.Code Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.SyncCommitteeMessage

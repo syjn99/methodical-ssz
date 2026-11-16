@@ -1,6 +1,7 @@
 import Prysm.AttestationData.DecodeAcceptBlockRoot
 import Prysm.Checkpoint.FunctionSpecsAsNestedField
 import Runtime.NewobjectContract
+import Prysm.AttestationData.Code
 
 /-!
 # `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 3

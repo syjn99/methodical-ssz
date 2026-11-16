@@ -1,6 +1,7 @@
 import Prysm.PendingConsolidation.GeneratedEncodeFastPath
 import Prysm.PendingConsolidation.Spec
 import Runtime.CopyModel
+import Prysm.PendingConsolidation.Code
 
 /-!
 # PendingConsolidation encoder fast path (generated theorem) against the independent Desc

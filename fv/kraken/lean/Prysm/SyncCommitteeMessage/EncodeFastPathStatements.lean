@@ -1,5 +1,5 @@
 import Codec.Kind.EncodeFastPathAnyFrame
-import Prysm.BlobIdentifier.EncoderCode
+import Prysm.SyncCommitteeMessage.Code
 
 /-!
 # Independent hand statements of four encoder fast paths: the `SyncCommitteeMessage` part
@@ -7,7 +7,7 @@ import Prysm.BlobIdentifier.EncoderCode
 The declarations of the other types of this group are in `Prysm/PowBlock/EncodeFastPathStatements.lean`.
 -/
 
-open Machine Runtime Codec Prysm.PowBlock.Code
+open Machine Runtime Codec
 variable [Host]
 
 namespace Prysm.SyncCommitteeMessage

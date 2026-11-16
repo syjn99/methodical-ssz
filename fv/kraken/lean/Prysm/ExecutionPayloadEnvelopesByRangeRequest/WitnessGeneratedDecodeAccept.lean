@@ -1,6 +1,8 @@
 import Prysm.ExecutionPayloadEnvelopesByRangeRequest.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code
+import Prysm.Slot.Code
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`v1alpha1.ExecutionPayloadEnvelopesByRangeRequest` decoder accept path; 24 flat types)

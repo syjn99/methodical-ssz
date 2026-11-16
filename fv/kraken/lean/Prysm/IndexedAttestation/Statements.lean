@@ -5,7 +5,10 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.Code
+import Prysm.Epoch.Code
 import Prysm.AttestationData.Code
+import Prysm.CommitteeIndex.Code
+import Prysm.Slot.Code
 import Prysm.IndexedAttestation.Code
 import Prysm.IndexedAttestation.SpecDefinitions
 

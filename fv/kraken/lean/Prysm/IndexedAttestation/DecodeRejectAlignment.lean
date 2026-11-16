@@ -2,6 +2,7 @@ import Machine.StoreLemmas
 import Runtime.StaticBoxLemmas
 import Prysm.IndexedAttestation.StatementsErrorWordNonzero
 import Prysm.IndexedAttestation.DecodeAccept
+import Prysm.IndexedAttestation.Code
 
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: alignment reject and overflow reject

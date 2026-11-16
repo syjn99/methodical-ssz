@@ -2,6 +2,7 @@ import Codec.DecoderHeadEpilogue
 import Prysm.Eth1Data.DecodeAddressArithmetic
 import Prysm.SyncAggregate.DecodeFieldSegments
 import Prysm.SyncAggregate.Statements
+import Prysm.SyncAggregate.Code
 
 /-!
 # `(*v1alpha1.SyncAggregate).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

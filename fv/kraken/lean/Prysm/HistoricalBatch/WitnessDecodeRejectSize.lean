@@ -1,6 +1,7 @@
 import Prysm.HistoricalBatch.DecodeRejectSize
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.HistoricalBatch.Code
 
 /-!
 # Witness of `Decode.reject_size` (HistoricalBatch size reject)

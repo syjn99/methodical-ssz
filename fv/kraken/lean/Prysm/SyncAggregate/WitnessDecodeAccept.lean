@@ -2,6 +2,7 @@ import Prysm.SyncAggregate.DecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
+import Prysm.SyncAggregate.Code
 
 /-!
 # Witness of `Decode.accept` (SyncAggregate decoder accept path)

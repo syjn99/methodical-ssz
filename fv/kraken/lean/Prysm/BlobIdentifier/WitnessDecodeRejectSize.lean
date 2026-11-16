@@ -1,6 +1,7 @@
 import Prysm.BlobIdentifier.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.BlobIdentifier.Code
 
 /-!
 # Witness of `Decode.generated_reject` (BlobIdentifier decoder size reject)

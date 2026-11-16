@@ -4,6 +4,7 @@ import Machine.Labels
 import Codec.StackGuard
 import Prysm.DataColumnsByRootIdentifier.StatementsEncode
 import Prysm.DataColumnsByRootIdentifier.EncodeTail
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: the two rejects

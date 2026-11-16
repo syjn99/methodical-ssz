@@ -1,6 +1,7 @@
 import Prysm.Eth1Data.GeneratedEncodeFastPath
 import Prysm.Eth1Data.Spec
 import Runtime.CopyModel
+import Prysm.Eth1Data.Code
 
 /-!
 # Eth1Data encoder fast path (generated theorem) against the independent Desc

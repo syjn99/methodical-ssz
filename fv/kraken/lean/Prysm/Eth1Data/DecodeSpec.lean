@@ -1,5 +1,6 @@
 import Prysm.Eth1Data.GeneratedDecodeAccept
 import Prysm.Eth1Data.Spec
+import Prysm.Eth1Data.Code
 
 /-!
 # Spec alignment of the real Eth1Data decoder

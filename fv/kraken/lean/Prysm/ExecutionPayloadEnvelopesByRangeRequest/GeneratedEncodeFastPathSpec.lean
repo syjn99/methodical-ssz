@@ -1,6 +1,7 @@
 import Prysm.ExecutionPayloadEnvelopesByRangeRequest.GeneratedEncodeFastPath
 import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Spec
 import Runtime.CopyModel
+import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code
 
 /-!
 # ExecutionPayloadEnvelopesByRangeRequest encoder fast path (generated theorem) against the independent Desc (24 flat types, text of the encoder specification emitter)

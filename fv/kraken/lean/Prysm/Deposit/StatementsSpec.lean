@@ -1,5 +1,7 @@
 import Prysm.Deposit.Statements
 import Prysm.Deposit_Data.Spec
+import Prysm.Deposit.Code
+import Prysm.Deposit_Data.Code
 
 /-!
 # Hand STATEMENTS of the Deposit spec companions (statements only, no proof)

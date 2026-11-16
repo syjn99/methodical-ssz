@@ -2,6 +2,7 @@ import Prysm.HistoricalBatch.DecodeAccept
 import Prysm.RuntimeModel.BumpAllocatorByteSliceDispatch
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.HistoricalBatch.Code
 
 /-!
 # Witness of `Decode.accept` (HistoricalBatch decoder accept path)

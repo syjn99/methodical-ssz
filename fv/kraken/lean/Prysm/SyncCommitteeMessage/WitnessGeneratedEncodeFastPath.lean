@@ -1,6 +1,7 @@
 import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.SyncCommitteeMessage.Code
 
 /-!
 # Witness of `Encode.generated_fast` (SyncCommitteeMessage encoder fast path, generated theorem)

@@ -1,5 +1,6 @@
 import Prysm.SigningData.GeneratedDecodeAccept
 import Prysm.SigningData.Spec
+import Prysm.SigningData.Code
 
 /-!
 # Spec alignment of the real SigningData decoder

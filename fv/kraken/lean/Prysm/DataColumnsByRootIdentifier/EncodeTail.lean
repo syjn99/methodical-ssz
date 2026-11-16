@@ -2,6 +2,7 @@ import Runtime.Contracts
 import Machine.Step
 import Prysm.DataColumnsByRootIdentifier.SpecDefinitions
 import Prysm.DataColumnsByRootIdentifier.EncodeLoop
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # From `L_7c` (directive 29) to the return, sites 2 and 3 do not grow

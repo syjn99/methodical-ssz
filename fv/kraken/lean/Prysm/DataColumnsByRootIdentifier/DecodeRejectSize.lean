@@ -4,6 +4,7 @@ import Machine.Bytes
 import Prysm.Checkpoint.DecodeRejectSize
 import Codec.StackGuard
 import Prysm.DataColumnsByRootIdentifier.StatementsDecode
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # Decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`: size reject and offset reject

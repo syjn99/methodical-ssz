@@ -1,6 +1,7 @@
 import Prysm.BuilderDepositRequest.GeneratedEncodeFastPath
 import Prysm.BuilderDepositRequest.Spec
 import Runtime.CopyModel
+import Prysm.BuilderDepositRequest.Code
 
 /-!
 # BuilderDepositRequest encoder fast path (generated theorem) against the independent Desc (24 flat types, text of the encoder specification emitter)

@@ -1,4 +1,6 @@
-import Prysm.PendingDeposit.Code
+import Prysm.VoluntaryExit.Code
+import Prysm.Epoch.Code
+import Prysm.ValidatorIndex.Code
 import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.FieldFrame
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec

@@ -1,6 +1,7 @@
 import Prysm.DataColumnsByRootIdentifier.DecodeRejectSize
 import Machine.WitnessHost
 import Runtime.CopyModel
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # Witnesses of the decoder size reject and offset reject

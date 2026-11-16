@@ -2,6 +2,7 @@ import Prysm.DataColumnsByRootIdentifier.DecodeAccept
 import Prysm.RuntimeModel.BumpAllocatorUint64DispatchForDataColumnsByRootIdentifier
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # Witness of `Decode.accept` (decoder accept path)

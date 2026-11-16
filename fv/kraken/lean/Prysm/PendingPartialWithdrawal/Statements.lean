@@ -3,9 +3,9 @@ import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
-import Prysm.Checkpoint.Code
-import Prysm.BeaconBlockHeader.Code
-import Prysm.Deposit_Data.Code
+import Prysm.Epoch.Code
+import Prysm.ValidatorIndex.Code
+import Prysm.PendingPartialWithdrawal.Code
 
 /-!
 # Independent hand STATEMENTS of the two accept theorems (statements only, no proof): the `PendingPartialWithdrawal` part
@@ -13,7 +13,7 @@ import Prysm.Deposit_Data.Code
 The declarations of the other types of this group are in `Prysm/Deposit_Data/Statements.lean`.
 -/
 
-open Machine Runtime Prysm.Deposit_Data.Code
+open Machine Runtime
 variable [Host]
 
 namespace Prysm.PendingPartialWithdrawal

@@ -1,5 +1,5 @@
 import Codec.Kind.EncodeFastPathAnyFrame
-import Prysm.BlobIdentifier.EncoderCode
+import Prysm.PowBlock.Code
 import Prysm.Deposit_Data.EncodeFastPathStatements
 import Prysm.SyncCommitteeMessage.EncodeFastPathStatements
 

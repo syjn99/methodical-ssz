@@ -2,10 +2,12 @@ import Kraken.X64.Parser
 import Machine.Include
 
 /-!
-# Code of the decoder and the encoder of `v1alpha1.ExecutionPayloadEnvelopesByRangeRequest` (the Go 1.26.10 ELF of `prysm/go1.26.10/build-ids.txt`)
+# Code of `v1alpha1.ExecutionPayloadEnvelopesByRangeRequest`
 
-The constants include `.S` files of `fv/kraken/prysm/go1.26.10/link-set/norm`.
-`link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`. `Prysm/BuilderDepositRequest/Code.lean` imports this module.
+This module holds the program constants `Code.unmarshalSSZ` and `Code.marshalSSZTo` of `v1alpha1.ExecutionPayloadEnvelopesByRangeRequest`.
+Each program constant includes a `.S` file of the link set `prysm/go1.26.10/link-set/norm`.
+The link set comes from the ELF of `prysm/go1.26.10/build-ids.txt`.
+This file is written by hand.
 -/
 
 namespace Prysm.ExecutionPayloadEnvelopesByRangeRequest

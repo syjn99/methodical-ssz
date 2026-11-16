@@ -1,5 +1,6 @@
 import Prysm.BeaconBlockHeader.EncodeHead
 import Prysm.BeaconBlockHeader.EncodeRootFields
+import Prysm.BeaconBlockHeader.Code
 
 /-!
 # Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, fast path, Go 1.26.10 machine code

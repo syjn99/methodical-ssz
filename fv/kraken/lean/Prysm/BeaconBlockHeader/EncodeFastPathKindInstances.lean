@@ -2,6 +2,7 @@ import Codec.Kind.EncodeFastPathAnyFrame
 import Prysm.BeaconBlockHeader.EncodeFastPath
 import Prysm.Checkpoint.EncodeFastPath
 import Prysm.Checkpoint.EncodeFastPathKindInstances
+import Prysm.BeaconBlockHeader.Code
 
 /-!
 # Ties of `encodeFastPathKindAnyFrame` to the hand-written encoder fast-path statements

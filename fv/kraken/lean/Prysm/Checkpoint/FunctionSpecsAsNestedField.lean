@@ -1,6 +1,7 @@
 import Prysm.Checkpoint.DecodeAccept
 import Prysm.Checkpoint.EncodeFastPath
-import Prysm.AttestationData.Code
+import Prysm.Checkpoint.Code
+import Prysm.Epoch.Code
 import Runtime.CopyModel
 
 /-!

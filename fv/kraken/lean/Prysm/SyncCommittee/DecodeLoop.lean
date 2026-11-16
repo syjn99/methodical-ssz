@@ -2,7 +2,7 @@ import Runtime.Contracts
 import Machine.Step
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
-import Prysm.SyncAggregate.Code
+import Prysm.SyncCommittee.Code
 import Prysm.SyncCommittee.DecodeLoopLemmas
 
 /-!

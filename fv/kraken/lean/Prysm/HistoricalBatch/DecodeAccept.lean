@@ -1,5 +1,6 @@
 import Prysm.HistoricalBatch.DecodeLoopStateRoots
 import Prysm.HistoricalBatch.Statements
+import Prysm.HistoricalBatch.Code
 
 /-!
 # `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

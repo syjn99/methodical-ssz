@@ -3,9 +3,8 @@ import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
-import Prysm.Checkpoint.Code
 import Codec.Kind.EncodeFastPathAnyFrame
-import Prysm.BuilderDepositRequest.Code
+import Prysm.BuilderExitRequest.Code
 import Prysm.BLSToExecutionChange.Statements
 import Prysm.ValidatorRegistrationV1.Statements
 import Prysm.WithdrawalRequest.Statements
@@ -58,7 +57,7 @@ are read from the `.S` by hand. Development data.
 After the split of this module, the declarations of the other types are in `Prysm/BLSToExecutionChange/Statements.lean`, `Prysm/ValidatorRegistrationV1/Statements.lean`, `Prysm/WithdrawalRequest/Statements.lean`.
 -/
 
-open Machine Runtime Prysm.Checkpoint.Code Prysm.BuilderExitRequest.Code
+open Machine Runtime Prysm.BuilderExitRequest.Code
 variable [Host]
 
 open Codec

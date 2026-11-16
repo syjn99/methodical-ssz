@@ -2,6 +2,12 @@ import Prysm.IndexedAttestation.DecodeAccept
 import Prysm.RuntimeModel.BumpAllocatorUint64AndStructDispatch
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.IndexedAttestation.Code
+import Prysm.AttestationData.Code
+import Prysm.Checkpoint.Code
+import Prysm.CommitteeIndex.Code
+import Prysm.Epoch.Code
+import Prysm.Slot.Code
 
 /-!
 # Witness of `Decode.accept` (IndexedAttestation decoder accept path)

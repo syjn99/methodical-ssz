@@ -1,7 +1,7 @@
 import Machine.Step
 import Machine.Labels
 import Machine.Bytes
-import Prysm.AttestationData.Code
+import Prysm.CommitteeIndex.Code
 
 /-!
 # `(*primitives.Slot).UnmarshalSSZ` and `(*primitives.CommitteeIndex).UnmarshalSSZ`, accept path: the `CommitteeIndex` part
@@ -9,7 +9,7 @@ import Prysm.AttestationData.Code
 The declarations of the other types of this group are in `Prysm/Slot/DecodeAccept.lean`.
 -/
 
-open Machine Prysm.AttestationData.Code
+open Machine
 variable [Host]
 
 namespace Prysm.CommitteeIndex

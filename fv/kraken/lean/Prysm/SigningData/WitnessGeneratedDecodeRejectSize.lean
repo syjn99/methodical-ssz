@@ -1,6 +1,7 @@
 import Prysm.SigningData.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.SigningData.Code
 
 /-!
 # Witness of the generated `Decode.generated_reject`

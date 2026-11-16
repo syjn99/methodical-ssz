@@ -2,6 +2,9 @@ import Prysm.ValidatorIdentity.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
+import Prysm.ValidatorIdentity.Code
+import Prysm.Epoch.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`v1alpha1.ValidatorIdentity` decoder accept path; 24 flat types)

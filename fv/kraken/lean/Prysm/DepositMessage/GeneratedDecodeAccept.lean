@@ -1,4 +1,4 @@
-import Prysm.BlobIdentifier.Code
+import Prysm.DepositMessage.Code
 import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.FieldFrame
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec

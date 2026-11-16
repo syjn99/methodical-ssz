@@ -1,6 +1,7 @@
 import Codec.Kind.FieldPatterns
 import Prysm.Slot.DecodeAccept
 import Prysm.CommitteeIndex.Uint64DecoderKindSameAsHand
+import Prysm.Slot.Code
 
 /-!
 # Anchors of the uint64 decoder statement kind
@@ -11,7 +12,7 @@ statement kind, not new text.
 The anchor of `Prysm.CommitteeIndex` is in `Prysm/CommitteeIndex/Uint64DecoderKindSameAsHand.lean`.
 -/
 
-open Machine Runtime Prysm.AttestationData.Code
+open Machine Runtime
 
 open Codec
 namespace Prysm.Slot

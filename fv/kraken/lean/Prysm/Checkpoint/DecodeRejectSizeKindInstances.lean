@@ -1,6 +1,7 @@
 import Prysm.PendingPartialWithdrawal.DecodeRejectSize
 import Prysm.AttestationData.DecodeRejectSize
 import Codec.DecodeRejectSizeAnyFrame
+import Prysm.Checkpoint.Code
 
 /-!
 # Ties of `decodeRejectKindAnyFrame` to the committed size-reject theorems: the `Checkpoint` part

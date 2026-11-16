@@ -1,6 +1,7 @@
 import Prysm.BeaconBlockHeader.EncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.BeaconBlockHeader.Code
 
 /-!
 # Witness of `Encode.fast_path` (BeaconBlockHeader encoder, fast path only)

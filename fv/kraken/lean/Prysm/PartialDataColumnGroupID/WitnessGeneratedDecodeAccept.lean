@@ -2,6 +2,8 @@ import Prysm.PartialDataColumnGroupID.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
+import Prysm.PartialDataColumnGroupID.Code
+import Prysm.Slot.Code
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`v1alpha1.PartialDataColumnGroupID` decoder accept path; 24 flat types)

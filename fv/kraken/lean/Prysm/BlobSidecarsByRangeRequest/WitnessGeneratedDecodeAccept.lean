@@ -1,6 +1,8 @@
 import Prysm.BlobSidecarsByRangeRequest.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.BlobSidecarsByRangeRequest.Code
+import Prysm.Slot.Code
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`v1alpha1.BlobSidecarsByRangeRequest` decoder accept path; 24 flat types)

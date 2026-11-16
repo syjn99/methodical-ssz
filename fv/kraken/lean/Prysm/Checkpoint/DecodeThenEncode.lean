@@ -1,6 +1,8 @@
 import Prysm.Checkpoint.DecodeAccept
 import Prysm.Checkpoint.EncodeFastPath
 import Prysm.Checkpoint.DecodeThenEncodeReceiver
+import Prysm.Checkpoint.Code
+import Prysm.Epoch.Code
 
 /-!
 # Machine-level composition decoder → encoder (real Go 1.26.10 code)

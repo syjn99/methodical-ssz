@@ -3,6 +3,7 @@ import Runtime.ErrorModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 import Prysm.IndexedAttestation.DecodeRejectOverflow
+import Prysm.IndexedAttestation.Code
 
 /-!
 # Witnesses of `Decode.reject_alignment_error_word_nonzero` (alignment reject) and `Decode.reject_overflow_error_word_nonzero` (overflow reject)

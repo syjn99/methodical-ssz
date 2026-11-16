@@ -1,6 +1,9 @@
 import Prysm.VoluntaryExit.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.VoluntaryExit.Code
+import Prysm.Epoch.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Witness of the generated `Decode.generated_accept` (VoluntaryExit decoder accept path)

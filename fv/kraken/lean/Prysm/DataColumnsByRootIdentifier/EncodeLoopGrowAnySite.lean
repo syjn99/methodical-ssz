@@ -2,6 +2,7 @@ import Runtime.Contracts
 import Prysm.DataColumnsByRootIdentifier.EncodeLoop
 import Prysm.DataColumnsByRootIdentifier.EncodeTail
 import Prysm.ElfData.PrysmTarget
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # Any-site grow path: the Columns loop when any iteration may grow the block

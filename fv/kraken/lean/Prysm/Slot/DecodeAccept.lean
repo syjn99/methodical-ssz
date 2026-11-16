@@ -1,7 +1,7 @@
 import Machine.Step
 import Machine.Labels
 import Machine.Bytes
-import Prysm.AttestationData.Code
+import Prysm.Slot.Code
 import Prysm.CommitteeIndex.DecodeAccept
 
 /-!
@@ -22,7 +22,7 @@ through them.
 After the split of this module, the declarations of the other types are in `Prysm/CommitteeIndex/DecodeAccept.lean`.
 -/
 
-open Machine Prysm.AttestationData.Code
+open Machine
 variable [Host]
 
 namespace Prysm.Slot

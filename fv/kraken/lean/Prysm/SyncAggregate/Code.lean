@@ -1,22 +1,18 @@
 import Kraken.X64.Parser
 import Machine.Include
-import Prysm.SyncCommittee.Code
 
 /-!
-# Code of the SyncAggregate and SyncCommittee function set (the Go 1.26.10 ELF of `prysm/go1.26.10/build-ids.txt`)
+# Code of `v1alpha1.SyncAggregate`
 
-Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code` and `Prysm.Deposit_Data.Code`;
-written by `gen/checks/lists_and_vectors_link.py filter` and `convert_objdump.py`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`).
-The directory is a Lake `input_dir` of the `Prysm` library (`lakefile.toml`), so Lake rebuilds
-these modules when a `.S` file changes. `IndexedAttestation` is not in the committed set
-(link check (d) failed on this host's clang: Apple clang 21 rejects the GNU objdump spelling
-`0xffffff1c(%rdi)` of the displacement -228).
-After the split of this module, the declarations of the other types are in `Prysm/SyncCommittee/Code.lean`.
+This module holds the program constant `Code.unmarshalSSZ` of `v1alpha1.SyncAggregate`.
+Each program constant includes a `.S` file of the link set `prysm/go1.26.10/link-set/norm`.
+The link set comes from the ELF of `prysm/go1.26.10/build-ids.txt`.
+This file is written by hand.
 -/
 
 namespace Prysm.SyncAggregate.Code
 
 /-- `(*v1alpha1.SyncAggregate).UnmarshalSSZ` (protoc type, `altair.ssz.go`). -/
 def unmarshalSSZ : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S"
+
 end Prysm.SyncAggregate.Code

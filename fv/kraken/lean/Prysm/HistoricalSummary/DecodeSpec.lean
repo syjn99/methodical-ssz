@@ -1,5 +1,6 @@
 import Prysm.HistoricalSummary.GeneratedDecodeAccept
 import Prysm.HistoricalSummary.Spec
+import Prysm.HistoricalSummary.Code
 
 /-!
 # Spec alignment of the real HistoricalSummary decoder

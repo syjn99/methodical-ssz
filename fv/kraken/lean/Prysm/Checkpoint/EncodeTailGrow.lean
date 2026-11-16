@@ -1,4 +1,5 @@
 import Prysm.Checkpoint.EncodeTail
+import Prysm.Checkpoint.Code
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo` from `L_7b`: the second growslice site

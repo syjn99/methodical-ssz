@@ -3,9 +3,8 @@ import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
-import Prysm.Checkpoint.Code
 import Codec.Kind.EncodeFastPathAnyFrame
-import Prysm.BuilderDepositRequest.Code
+import Prysm.ValidatorRegistrationV1.Code
 
 /-!
 # Independent hand STATEMENTS of two decoder accept paths and two encoder fast paths with a: the `ValidatorRegistrationV1` part
@@ -13,7 +12,7 @@ import Prysm.BuilderDepositRequest.Code
 The declarations of the other types of this group are in `Prysm/BuilderExitRequest/Statements.lean`.
 -/
 
-open Machine Runtime Prysm.Checkpoint.Code Prysm.BuilderExitRequest.Code
+open Machine Runtime
 variable [Host]
 
 open Codec

@@ -2,7 +2,6 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Codec.Bytes32Decode
-import Prysm.Eth1Data.Code
 
 /-!
 # Address and stack arithmetic of the decoders with the frame `sub $0x20`

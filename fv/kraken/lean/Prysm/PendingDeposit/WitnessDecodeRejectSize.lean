@@ -1,6 +1,7 @@
 import Prysm.PendingDeposit.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.PendingDeposit.Code
 
 /-!
 # Witness of `Decode.generated_reject`

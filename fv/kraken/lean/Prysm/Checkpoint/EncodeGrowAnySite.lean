@@ -1,4 +1,5 @@
 import Prysm.Checkpoint.EncodeGrowSecondSite
+import Prysm.Checkpoint.Code
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo`: first growth in every case, and the reject after the first growth

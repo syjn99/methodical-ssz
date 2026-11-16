@@ -1,7 +1,7 @@
 import Machine.Step
 import Machine.Labels
 import Machine.Bytes
-import Prysm.Deposit_Data.Code
+import Prysm.PendingPartialWithdrawal.Code
 import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.DecodeRejectSize
 

@@ -2,6 +2,7 @@ import Codec.Segment.Bytes32LoopHistoricalBatch
 import Codec.Segment.SizeRejectInstances
 import Prysm.Deposit_Data.GeneratedDecodeAccept
 import Prysm.Deposit.Statements
+import Prysm.Deposit.Code
 
 /-!
 # Deposit accept path (Go 1.26.10 machine code), proved with the general lemmas of `Codec/Segment/`

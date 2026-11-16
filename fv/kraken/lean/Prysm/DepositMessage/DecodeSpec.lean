@@ -1,5 +1,6 @@
 import Prysm.DepositMessage.GeneratedDecodeAccept
 import Prysm.DepositMessage.Spec
+import Prysm.DepositMessage.Code
 
 /-!
 # Spec alignment of the real DepositMessage decoder

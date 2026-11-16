@@ -1,6 +1,7 @@
 import Prysm.SyncAggregatorSelectionData.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.SyncAggregatorSelectionData.Code
 
 /-!
 # Witness of `Encode.generated_fast` (SyncAggregatorSelectionData encoder fast path, generated theorem)

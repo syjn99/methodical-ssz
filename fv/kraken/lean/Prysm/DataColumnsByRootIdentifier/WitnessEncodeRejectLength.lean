@@ -1,6 +1,7 @@
 import Prysm.DataColumnsByRootIdentifier.EncodeRejectLength
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # Witnesses of the two encoder rejects

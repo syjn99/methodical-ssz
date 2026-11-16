@@ -1,5 +1,6 @@
 import Codec.Kind.EncodeFastPathAnyFrame
 import Prysm.Checkpoint.EncodeFastPath
+import Prysm.Checkpoint.Code
 
 /-!
 # Tie of `encodeFastPathKindAnyFrame` to the hand-written encoder fast-path statement of Checkpoint

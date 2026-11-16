@@ -3,6 +3,8 @@ import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
 import Prysm.Checkpoint.GoValue
+import Prysm.Checkpoint.Code
+import Prysm.Epoch.Code
 
 /-!
 # Witness of `DecodeThenEncode.round_trip` (machine-level composition, one Host for decoder and encoder)

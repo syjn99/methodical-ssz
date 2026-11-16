@@ -1,6 +1,7 @@
 import Prysm.PendingConsolidation.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.PendingConsolidation.Code
 
 /-!
 # Witness of `Encode.generated_fast` (PendingConsolidation encoder fast path, generated theorem)

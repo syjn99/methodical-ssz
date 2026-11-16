@@ -7,7 +7,7 @@ with the addresses computed below.
 usage: python3 -I -B flat_types_witness.py <fv/kraken> [GoTypeName ...]"""
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from flat_types_spec import T  # noqa: E402
+from flat_types_spec import T, with_code_imports  # noqa: E402
 
 NORM = 'prysm/go1.26.10/link-set/norm'
 SFILE = {'DepositRequest': 'engine_v1.DepositRequest', 'BuilderDepositRequest': 'engine_v1.BuilderDepositRequest',
@@ -473,12 +473,12 @@ if __name__ == '__main__':
     for X in which:
         n = slen(kr, X)
         d = os.path.join(kr, 'lean', 'Prysm', X)
-        open(os.path.join(d, 'WitnessGeneratedDecodeRejectSize.lean'), 'w').write(reject(X, n))
+        open(os.path.join(d, 'WitnessGeneratedDecodeRejectSize.lean'), 'w').write(with_code_imports(reject(X, n), X))
         if X in ('BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest'):
             a = accept_witness_frame_0x38(X, n)
         elif X in ('DepositRequest', 'BuilderDepositRequest'):
             a = accbytes(X, n, '20')
         else:
             a = accbytes(X, n, 'pd')
-        open(os.path.join(d, 'WitnessGeneratedDecodeAccept.lean'), 'w').write(a)
+        open(os.path.join(d, 'WitnessGeneratedDecodeAccept.lean'), 'w').write(with_code_imports(a, X))
         print(X, n)

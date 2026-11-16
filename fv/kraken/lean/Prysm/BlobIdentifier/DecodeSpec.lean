@@ -1,5 +1,6 @@
 import Prysm.BlobIdentifier.GeneratedDecodeAccept
 import Prysm.BlobIdentifier.Spec
+import Prysm.BlobIdentifier.Code
 
 /-!
 # Spec alignment of the real BlobIdentifier decoder

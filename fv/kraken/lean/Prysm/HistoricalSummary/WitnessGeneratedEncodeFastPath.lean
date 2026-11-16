@@ -1,6 +1,7 @@
 import Prysm.HistoricalSummary.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.HistoricalSummary.Code
 
 /-!
 # Witness of `Encode.generated_fast` (HistoricalSummary encoder fast path, generated theorem)

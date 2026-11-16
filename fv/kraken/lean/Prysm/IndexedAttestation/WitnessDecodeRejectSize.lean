@@ -2,6 +2,7 @@ import Prysm.IndexedAttestation.DecodeRejectSize
 import Runtime.CopyModel
 import Machine.WitnessHost
 import Prysm.IndexedAttestation.DecodeRejectOffset
+import Prysm.IndexedAttestation.Code
 
 /-!
 # Witnesses of `Decode.reject_size` (size reject) and `Decode.reject_offset` (offset reject)

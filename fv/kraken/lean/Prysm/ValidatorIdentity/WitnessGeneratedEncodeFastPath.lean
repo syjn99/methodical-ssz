@@ -1,6 +1,7 @@
 import Prysm.ValidatorIdentity.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.ValidatorIdentity.Code
 
 /-!
 # Witness of `Encode.generated_fast` (ValidatorIdentity encoder fast path, generated theorem; 24 flat types, text of the encoder specification emitter)

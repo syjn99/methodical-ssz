@@ -1,6 +1,7 @@
 import Prysm.SigningData.GeneratedEncodeFastPath
 import Prysm.SigningData.Spec
 import Runtime.CopyModel
+import Prysm.SigningData.Code
 
 /-!
 # SigningData encoder fast path (generated theorem) against the independent Desc

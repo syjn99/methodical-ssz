@@ -1,5 +1,7 @@
 import Prysm.ExecutionPayloadEnvelopesByRangeRequest.GeneratedDecodeAccept
 import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Spec
+import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code
+import Prysm.Slot.Code
 
 /-!
 # Spec alignment of the real `v1alpha1.ExecutionPayloadEnvelopesByRangeRequest` decoder (24 flat types)

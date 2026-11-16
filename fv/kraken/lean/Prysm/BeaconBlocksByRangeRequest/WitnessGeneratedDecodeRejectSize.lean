@@ -1,6 +1,7 @@
 import Prysm.BeaconBlocksByRangeRequest.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.BeaconBlocksByRangeRequest.Code
 
 /-!
 # Witness of the generated `Decode.generated_reject` (24 flat types)

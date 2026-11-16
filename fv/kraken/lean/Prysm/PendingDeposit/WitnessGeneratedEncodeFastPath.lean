@@ -1,6 +1,7 @@
 import Prysm.PendingDeposit.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.PendingDeposit.Code
 
 /-!
 # Witness of `Encode.generated_fast` (PendingDeposit encoder fast path, generated theorem)

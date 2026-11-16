@@ -1,6 +1,7 @@
 import Prysm.Slot.DecodeAccept
 import Machine.WitnessHost
 import Runtime.CopyModel
+import Prysm.Slot.Code
 
 /-!
 # Witness of `Decode.accept` and `Decode.accept_function_spec_holds`
@@ -16,7 +17,7 @@ returns nil with the receiver = the input (`runs`); three values
 below (0, a representative value, 2^64 − 1).
 -/
 
-open Machine Runtime Machine.Witness Prysm.AttestationData.Code
+open Machine Runtime Machine.Witness
 
 namespace Prysm.Slot.Witness.DecodeAccept
 

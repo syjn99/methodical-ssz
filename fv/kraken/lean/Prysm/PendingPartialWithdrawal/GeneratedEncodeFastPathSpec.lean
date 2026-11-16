@@ -1,6 +1,7 @@
 import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPath
 import Prysm.PendingPartialWithdrawal.Spec
 import Runtime.CopyModel
+import Prysm.PendingPartialWithdrawal.Code
 
 /-!
 # PendingPartialWithdrawal encoder fast path (generated theorem) against the independent Desc

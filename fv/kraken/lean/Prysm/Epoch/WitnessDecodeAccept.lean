@@ -1,6 +1,7 @@
 import Prysm.Epoch.DecodeAccept
 import Machine.WitnessHost
 import Runtime.CopyModel
+import Prysm.Epoch.Code
 
 /-!
 # Witness of `Decode.accept` and `Decode.accept_function_spec_holds`

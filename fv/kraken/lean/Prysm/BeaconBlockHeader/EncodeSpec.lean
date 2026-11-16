@@ -1,6 +1,7 @@
 import Prysm.BeaconBlockHeader.EncodeFastPath
 import Prysm.BeaconBlockHeader.Spec
 import Runtime.CopyModel
+import Prysm.BeaconBlockHeader.Code
 
 /-!
 # BeaconBlockHeader encoder (fast path) against EthLib

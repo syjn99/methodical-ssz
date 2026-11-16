@@ -1,5 +1,7 @@
 import Prysm.PendingConsolidation.GeneratedDecodeAccept
 import Prysm.PendingConsolidation.Spec
+import Prysm.PendingConsolidation.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Spec alignment of the real PendingConsolidation decoder
@@ -14,7 +16,7 @@ raw output, not edited): the accept path is `Decode.generated_accept`, the size 
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 16`.
 -/
 
-open Machine Runtime Prysm.AttestationData.Code Prysm.PendingConsolidation.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Prysm.PendingConsolidation.Code Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.PendingConsolidation

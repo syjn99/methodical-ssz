@@ -1,6 +1,7 @@
 import Prysm.ValidatorBalance.GeneratedEncodeFastPath
 import Prysm.ValidatorBalance.Spec
 import Runtime.CopyModel
+import Prysm.ValidatorBalance.Code
 
 /-!
 # ValidatorBalance encoder fast path (generated theorem) against the independent Desc

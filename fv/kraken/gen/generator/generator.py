@@ -32,6 +32,7 @@ Python 3 standard library only. Usage:
   generator.py encoder --fast-path --assembly FILE --const LEAN_CONST --ir IR.json --type PKGSUFFIX.TYPE --prefix NAME
                    --imports M1,M2 [--open NS] [--hand-layout NAME --hand-layout-src FILE]
                    [--same-as HAND_THM [--same-as-via LEMMA] | --same-as-prop PROP] [--summary FILE.json]
+`--imports` can repeat. The output imports the modules of all its values, in order.
 """
 import argparse, hashlib, json, pathlib, re, sys
 
@@ -1261,7 +1262,17 @@ def whole_accept_module():
 
 def _decoder_whole_accept(args, flags):
     whole_accept_gen = whole_accept_module()
-    args.imports = ",".join(args.imports.split(",") + [m for m in whole_accept_gen.WHOLE_ACCEPT_IMPORTS if m not in args.imports.split(",")])
+    # the generated proofs name the code constant of each callee: import its code module
+    callee_mods = []
+    for d in read_S(args.assembly)[0]:
+        m = re.fullmatch(r"callq (\S+)", d)
+        if m and m.group(1) in whole_accept_gen.WHOLE_ACCEPT_CALLEES:
+            mod = whole_accept_gen.WHOLE_ACCEPT_CALLEES[m.group(1)][0].rsplit(".", 1)[0]
+            if mod not in callee_mods:
+                callee_mods.append(mod)
+    mods = args.imports.split(",")
+    mods += [m for m in callee_mods if m not in mods]
+    args.imports = ",".join(mods + [m for m in whole_accept_gen.WHOLE_ACCEPT_IMPORTS if m not in mods])
     # phase 1: the step front end; a complete step chain (every field, head, epilogue) or no accept theorem
     step_text = decoder_step(args)
     if not isinstance(step_text, str) or not step_text.endswith(f"end {GEN_NS}\n"):
@@ -1426,7 +1437,7 @@ def main():
     ap.add_argument("--ir")
     ap.add_argument("--type")
     ap.add_argument("--prefix")
-    ap.add_argument("--imports", required=True)
+    ap.add_argument("--imports", required=True, action="append", help="modules to import, comma separated; the option can repeat")
     ap.add_argument("--open", default="")
     ap.add_argument("--whole-accept", action="store_true",
                     help="decoder: whole-accept: the step chain (a dataflow walk over the accept path with kinded "
@@ -1441,6 +1452,7 @@ def main():
     ap.add_argument("--hand-layout-src", help="encoder --fast-path: the Lean file that defines --hand-layout")
     ap.add_argument("--same-as-via", help="encoder --fast-path --same-as: the implication lemma (kind instance -> hand statement)")
     args = ap.parse_args()
+    args.imports = ",".join(args.imports)
     global GEN_NS
     GEN_NS = gen_ns(args.assembly, args.type) if args.assembly else None
     if args.mode == "encoder" or args.fast_path or args.hand_layout or args.hand_layout_src or args.same_as_via:

@@ -4,6 +4,7 @@ import Prysm.IndexedAttestation.AddressTactic
 import Prysm.IndexedAttestation.Statements
 import Prysm.IndexedAttestation.DecodeLoop
 import Codec.BitVecShiftLemmas
+import Prysm.IndexedAttestation.Code
 
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

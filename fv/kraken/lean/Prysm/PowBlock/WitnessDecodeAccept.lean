@@ -2,6 +2,7 @@ import Prysm.PowBlock.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
+import Prysm.PowBlock.Code
 
 /-!
 # Witness of `Decode.generated_accept` (PowBlock decoder accept path)

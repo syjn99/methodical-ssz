@@ -1,6 +1,7 @@
 import Prysm.ExecutionPayloadEnvelopesByRangeRequest.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code
 
 /-!
 # Witness of `Encode.generated_fast` (ExecutionPayloadEnvelopesByRangeRequest encoder fast path, generated theorem; 24 flat types, text of the encoder specification emitter)

@@ -3,6 +3,7 @@ import Machine.Labels
 import Machine.Bytes
 import Prysm.Checkpoint.DecodeRejectSize
 import Prysm.HistoricalBatch.Statements
+import Prysm.HistoricalBatch.Code
 
 /-!
 # `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`: size reject

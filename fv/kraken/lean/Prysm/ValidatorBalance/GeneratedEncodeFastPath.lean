@@ -1,6 +1,6 @@
 import Prysm.BeaconBlockHeader.EncodeFastPathKindInstances
 import Codec.EncodeFrameTest
-import Prysm.ValidatorBalance.EncoderCode
+import Prysm.ValidatorBalance.Code
 
 /-!
 # Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.ValidatorBalance).MarshalSSZTo`

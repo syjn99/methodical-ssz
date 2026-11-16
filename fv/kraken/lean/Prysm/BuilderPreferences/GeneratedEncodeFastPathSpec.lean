@@ -1,6 +1,7 @@
 import Prysm.BuilderPreferences.GeneratedEncodeFastPath
 import Prysm.BuilderPreferences.Spec
 import Runtime.CopyModel
+import Prysm.BuilderPreferences.Code
 
 /-!
 # BuilderPreferences encoder fast path (generated theorem) against the independent Desc (24 flat types, text of the encoder specification emitter)

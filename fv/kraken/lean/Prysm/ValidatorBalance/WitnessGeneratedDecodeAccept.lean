@@ -1,6 +1,8 @@
 import Prysm.ValidatorBalance.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.ValidatorBalance.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Witness of the generated `Decode.generated_accept` (ValidatorBalance decoder accept path)

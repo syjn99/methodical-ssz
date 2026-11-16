@@ -2,6 +2,7 @@ import Prysm.SyncCommittee.DecodeAccept
 import Prysm.RuntimeModel.BumpAllocatorByteSliceDispatch
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.SyncCommittee.Code
 
 /-!
 # Witness of `Decode.accept` (SyncCommittee decoder accept path)

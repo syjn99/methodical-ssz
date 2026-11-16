@@ -1,4 +1,5 @@
-import Prysm.PendingDeposit.Code
+import Prysm.SyncAggregatorSelectionData.Code
+import Prysm.Slot.Code
 import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.FieldFrame
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec

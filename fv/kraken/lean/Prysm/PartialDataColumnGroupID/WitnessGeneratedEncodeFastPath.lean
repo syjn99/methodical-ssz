@@ -1,6 +1,7 @@
 import Prysm.PartialDataColumnGroupID.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.PartialDataColumnGroupID.Code
 
 /-!
 # Witness of `Encode.generated_fast` (PartialDataColumnGroupID encoder fast path, generated theorem; 24 flat types, text of the encoder specification emitter)

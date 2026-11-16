@@ -1,5 +1,6 @@
 import Codec.Segment.SizeRejectInstances
 import Prysm.Deposit.Statements
+import Prysm.Deposit.Code
 
 /-! Deposit size reject from the general lemma `Codec.Segment.reject_size_any_frame` (frame 88, size 1240). Statement: the frozen
 `Decode.reject_size_statement`. -/

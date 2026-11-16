@@ -5,6 +5,7 @@ import Prysm.Checkpoint.DecodeRejectSize
 import Codec.StackGuard
 import Prysm.IndexedAttestation.Statements
 import Prysm.IndexedAttestation.AddressTactic
+import Prysm.IndexedAttestation.Code
 
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: size reject and offset reject

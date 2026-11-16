@@ -19,6 +19,17 @@ T = {  # Go type name: (Go type with package, fields [(name, 'u'|'b', n)], check
 }
 
 
+def with_code_imports(text, X):
+    """`text` with an import of `Prysm.<T>.Code` after its last import line, for `X` and for each type `T` whose code
+    constants the text names (`Prysm.<T>.Code.<name>`) and that the text does not import yet."""
+    import re
+    ts = [X] + sorted(set(re.findall(r'\bPrysm\.(\w+)\.Code\.\w', text)) - {X})
+    lines = text.split('\n')
+    last = max(i for i, l in enumerate(lines) if l.startswith('import '))
+    new = [f'import Prysm.{t}.Code' for t in ts if f'import Prysm.{t}.Code' not in lines]
+    return '\n'.join(lines[:last + 1] + new + lines[last + 1:])
+
+
 def kind(f):
     return '.uint 8' if f[1] == 'u' else f'.byteVector {f[2]}'
 

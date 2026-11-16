@@ -1,6 +1,7 @@
 import Prysm.BlobSidecarsByRangeRequest.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.BlobSidecarsByRangeRequest.Code
 
 /-!
 # Witness of `Encode.generated_fast` (BlobSidecarsByRangeRequest encoder fast path, generated theorem; 24 flat types, text of the encoder specification emitter)

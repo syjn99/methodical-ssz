@@ -1,6 +1,7 @@
 import Prysm.VoluntaryExit.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.VoluntaryExit.Code
 
 /-!
 # Witness of the generated `Decode.generated_reject`

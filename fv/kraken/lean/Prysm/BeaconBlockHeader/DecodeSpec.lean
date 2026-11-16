@@ -1,5 +1,8 @@
 import Prysm.BeaconBlockHeader.GeneratedDecodeAccept
 import Prysm.BeaconBlockHeader.Spec
+import Prysm.BeaconBlockHeader.Code
+import Prysm.Slot.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Spec alignment of the real BeaconBlockHeader decoder
@@ -18,7 +21,7 @@ statement).
 The machine-code theorems used are the generated `Decode.generated_accept` and `Decode.generated_reject`.
 -/
 
-open Machine Runtime Prysm.AttestationData.Code Prysm.BeaconBlockHeader.Code Codec EthLib.Serialization.Ssz
+open Machine Runtime Prysm.BeaconBlockHeader.Code Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace Prysm.BeaconBlockHeader

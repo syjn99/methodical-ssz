@@ -1,6 +1,8 @@
 import Prysm.PendingConsolidation.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.PendingConsolidation.Code
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Witness of `Decode.generated_accept` (PendingConsolidation decoder accept path)

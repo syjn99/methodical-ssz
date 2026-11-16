@@ -1,13 +1,14 @@
 import Kraken.X64.Parser
 import Machine.Include
-import Prysm.Epoch.Code
 
 /-!
-# Code of the `Checkpoint` functions (the Go 1.26.10 ELF of `prysm/go1.26.10/build-ids.txt`)
+# Code of `v1alpha1.Checkpoint`
 
-Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`link/convert_objdump.py --norm` of the Go 1.26.10 ELF; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). The files are Lake inputs of the `Prysm` library (`lakefile.toml`).
-After the split of this module, the declarations of the other types are in `Prysm/Epoch/Code.lean`.
+This module holds the program constants `Code.unmarshalSSZ`, `Code.marshalSSZTo` and `Code.sizeSSZ` of `v1alpha1.Checkpoint`.
+It also holds the label abbreviations `Code.unmarshalSSZLabel` and `Code.marshalSSZToLabel`.
+Each program constant includes a `.S` file of the link set `prysm/go1.26.10/link-set/norm`.
+The link set comes from the ELF of `prysm/go1.26.10/build-ids.txt`.
+This file is written by hand.
 -/
 
 namespace Prysm.Checkpoint.Code

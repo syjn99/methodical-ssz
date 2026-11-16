@@ -1,4 +1,4 @@
-import Prysm.PendingDeposit.Code
+import Prysm.SigningData.Code
 import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.FieldFrame
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec

@@ -1,6 +1,7 @@
 import Prysm.PowBlock.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.PowBlock.Code
 
 /-!
 # Witness of `Decode.generated_reject`

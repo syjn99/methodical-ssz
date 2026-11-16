@@ -3,6 +3,7 @@ import Machine.Labels
 import Machine.Bytes
 import Prysm.Checkpoint.DecodeRejectSize
 import Prysm.SyncAggregate.Statements
+import Prysm.SyncAggregate.Code
 
 /-!
 # `(*v1alpha1.SyncAggregate).UnmarshalSSZ`: size reject

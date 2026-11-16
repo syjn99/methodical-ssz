@@ -1,6 +1,7 @@
 import Prysm.BeaconBlockHeader.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.BeaconBlockHeader.Code
 
 /-!
 # Witness of `Encode.generated_fast` (BeaconBlockHeader encoder fast path, generated theorem)

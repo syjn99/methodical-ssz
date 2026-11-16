@@ -3,6 +3,8 @@ import Prysm.RuntimeModel.BumpAllocatorByteSliceDispatch
 import Prysm.Deposit.WitnessBumpAllocator
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.Deposit.Code
+import Prysm.Deposit_Data.Code
 
 /-!
 # Witness of `Decode.accept` (Deposit decoder accept path)

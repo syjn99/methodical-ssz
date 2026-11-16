@@ -1,4 +1,9 @@
 import Prysm.AttestationData.DecodeAcceptTarget
+import Prysm.AttestationData.Code
+import Prysm.Checkpoint.Code
+import Prysm.CommitteeIndex.Code
+import Prysm.Epoch.Code
+import Prysm.Slot.Code
 
 /-!
 # Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

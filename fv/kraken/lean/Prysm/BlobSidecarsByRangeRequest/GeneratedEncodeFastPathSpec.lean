@@ -1,6 +1,7 @@
 import Prysm.BlobSidecarsByRangeRequest.GeneratedEncodeFastPath
 import Prysm.BlobSidecarsByRangeRequest.Spec
 import Runtime.CopyModel
+import Prysm.BlobSidecarsByRangeRequest.Code
 
 /-!
 # BlobSidecarsByRangeRequest encoder fast path (generated theorem) against the independent Desc (24 flat types, text of the encoder specification emitter)

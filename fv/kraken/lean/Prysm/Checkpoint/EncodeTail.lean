@@ -1,5 +1,6 @@
 import Prysm.Checkpoint.EncodeGrowFirstSite
 import Prysm.Checkpoint.EncodeRejectLength
+import Prysm.Checkpoint.Code
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo` from `L_7b` (directive 33): the three tails

@@ -1,6 +1,7 @@
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec
 import Machine.WitnessHost
 import Runtime.CopyModel
+import Prysm.ValidatorIndex.Code
 
 /-!
 # Witness of `Decode.generated_accept` and `Decode.accept_function_spec_holds`

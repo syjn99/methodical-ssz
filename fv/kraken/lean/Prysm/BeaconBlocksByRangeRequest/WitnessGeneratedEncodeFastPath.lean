@@ -1,6 +1,7 @@
 import Prysm.BeaconBlocksByRangeRequest.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.BeaconBlocksByRangeRequest.Code
 
 /-!
 # Witness of `Encode.generated_fast` (BeaconBlocksByRangeRequest encoder fast path, generated theorem; 24 flat types, text of the encoder specification emitter)

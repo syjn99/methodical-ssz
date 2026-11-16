@@ -1,6 +1,7 @@
 import Prysm.PowBlock.GeneratedEncodeFastPath
 import Prysm.PowBlock.Spec
 import Runtime.CopyModel
+import Prysm.PowBlock.Code
 
 /-!
 # PowBlock encoder fast path (generated theorem) against the independent Desc

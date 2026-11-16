@@ -1,4 +1,6 @@
 import Prysm.SyncCommitteeMessage.Code
+import Prysm.Slot.Code
+import Prysm.ValidatorIndex.Code
 import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.FieldFrame
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec

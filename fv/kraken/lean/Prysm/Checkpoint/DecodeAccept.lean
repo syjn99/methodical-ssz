@@ -2,6 +2,8 @@ import Runtime.Contracts
 import Machine.Frame
 import Prysm.Epoch.DecodeAccept
 import Prysm.ElfData.PrysmTarget
+import Prysm.Checkpoint.Code
+import Prysm.Epoch.Code
 
 /-!
 # Real Prysm `(*v1alpha1.Checkpoint).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

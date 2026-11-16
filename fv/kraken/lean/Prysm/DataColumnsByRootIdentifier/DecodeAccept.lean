@@ -3,6 +3,7 @@ import Prysm.IndexedAttestation.DecodeAccept
 import Prysm.DataColumnsByRootIdentifier.EncodeTail
 import Prysm.DataColumnsByRootIdentifier.DecodeRejectSize
 import Prysm.DataColumnsByRootIdentifier.DecodeLoop
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # Decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`, accept path (Go 1.26.10 machine code)

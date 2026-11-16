@@ -1,6 +1,7 @@
 import Prysm.ValidatorBalance.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.ValidatorBalance.Code
 
 /-!
 # Witness of `Encode.generated_fast` (ValidatorBalance encoder fast path, generated theorem)

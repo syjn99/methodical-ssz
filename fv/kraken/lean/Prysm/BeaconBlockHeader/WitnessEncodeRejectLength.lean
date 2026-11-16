@@ -1,6 +1,7 @@
 import Prysm.BeaconBlockHeader.EncodeRejectLength
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.BeaconBlockHeader.Code
 
 /-!
 # Witnesses of `Encode.reject_length_parent_root`, `Encode.reject_length_state_root`, `Encode.reject_length_body_root` (BeaconBlockHeader encoder, length rejects)

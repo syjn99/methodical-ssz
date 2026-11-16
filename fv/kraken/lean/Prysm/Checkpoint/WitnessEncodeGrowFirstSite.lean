@@ -2,6 +2,7 @@ import Prysm.Checkpoint.EncodeGrowFirstSite
 import Runtime.CopyModel
 import Machine.WitnessHost
 import Prysm.Checkpoint.GoValue
+import Prysm.Checkpoint.Code
 
 /-!
 # Witness of `Encode.grow_first_site` (encoder growslice path)

@@ -1,6 +1,7 @@
 import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.PendingPartialWithdrawal.Code
 
 /-!
 # Witness of `Encode.generated_fast` (PendingPartialWithdrawal encoder fast path, generated theorem)

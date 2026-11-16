@@ -1,5 +1,5 @@
 import Prysm.DataColumnsByRootIdentifier.StatementsDecode
-import Prysm.DataColumnsByRootIdentifier.CodeMarshalSSZTo
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # Frozen STATEMENT of the round trip: decoder entry → accept → encoder fast path

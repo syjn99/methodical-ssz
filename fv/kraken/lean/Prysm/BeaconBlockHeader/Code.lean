@@ -1,16 +1,13 @@
 import Kraken.X64.Parser
 import Machine.Include
-import Prysm.ValidatorIndex.Code
 
 /-!
-# Code of the `BeaconBlockHeader` functions (the Go 1.26.10 ELF of `prysm/go1.26.10/build-ids.txt`)
+# Code of `v1alpha1.BeaconBlockHeader`
 
-Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code` and `Prysm.AttestationData.Code`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). The Slot callee is `Prysm.Slot.Code.unmarshalSSZ`.
-Hand-written include file (not generator output).
-The directory `prysm/go1.26.10/link-set/norm` is a Lake `input_dir` of the `Prysm` library,
-so Lake rebuilds these modules when a `.S` file changes.
-After the split of this module, the declarations of the other types are in `Prysm/ValidatorIndex/Code.lean`.
+This module holds the program constants `Code.unmarshalSSZ` and `Code.marshalSSZTo` of `v1alpha1.BeaconBlockHeader`.
+Each program constant includes a `.S` file of the link set `prysm/go1.26.10/link-set/norm`.
+The link set comes from the ELF of `prysm/go1.26.10/build-ids.txt`.
+This file is written by hand.
 -/
 
 namespace Prysm.BeaconBlockHeader

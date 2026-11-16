@@ -1,15 +1,13 @@
 import Kraken.X64.Parser
 import Machine.Include
-import Prysm.Checkpoint.Code
-import Prysm.CommitteeIndex.Code
-import Prysm.Slot.Code
 
 /-!
-# Code of the `AttestationData` functions (the Go 1.26.10 ELF of `prysm/go1.26.10/build-ids.txt`)
+# Code of `v1alpha1.AttestationData`
 
-Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). The Checkpoint callees are `Prysm.Checkpoint.Code.unmarshalSSZ` and
-`Prysm.Checkpoint.Code.marshalSSZTo` (the call targets of these files are their labels).
+This module holds the program constants `Code.unmarshalSSZ`, `Code.marshalSSZTo` and `Code.sizeSSZ` of `v1alpha1.AttestationData`.
+Each program constant includes a `.S` file of the link set `prysm/go1.26.10/link-set/norm`.
+The link set comes from the ELF of `prysm/go1.26.10/build-ids.txt`.
+This file is written by hand.
 -/
 
 namespace Prysm.AttestationData.Code
@@ -20,4 +18,5 @@ def unmarshalSSZ : Program := include_x64_code "../prysm/go1.26.10/link-set/norm
 def marshalSSZTo : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S"
 /-- `(*v1alpha1.AttestationData).SizeSSZ`. -/
 def sizeSSZ : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.SizeSSZ.S"
+
 end Prysm.AttestationData.Code

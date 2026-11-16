@@ -1,6 +1,7 @@
 import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.SyncCommitteeMessage.Code
 
 /-!
 # Witness of `Decode.generated_reject`

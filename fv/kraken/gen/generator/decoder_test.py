@@ -109,20 +109,13 @@ def rv(eds):
 
 # ---------------------------------------------------------------------------------------------- whole-accept
 
-def whole_accept_case(sdir, tname, const, mod):
-    return dict(S=f"prysm/go1.26.10/link-set/{sdir}/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
-                args=["--const", const, "--prefix", "Decode.generated", "--imports", mod, "--open", f"Prysm.{tname}.Code"])
+def whole_accept_case(tname):
+    return dict(S=f"prysm/go1.26.10/link-set/norm/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
+                args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated", "--imports", f"Prysm.{tname}.Code", "--open", f"Prysm.{tname}.Code"])
 
 
-WHOLE_ACCEPT_CASES = {
-    "PendingDeposit": whole_accept_case("norm", "PendingDeposit", "unmarshalSSZ", "Prysm.PendingDeposit.Code"),
-    "SyncCommitteeMessage": whole_accept_case("norm", "SyncCommitteeMessage", "unmarshalSSZ", "Prysm.SyncCommitteeMessage.Code"),
-    "VoluntaryExit": whole_accept_case("norm", "VoluntaryExit", "unmarshalSSZ", "Prysm.PendingDeposit.Code"),
-    "PowBlock": whole_accept_case("norm", "PowBlock", "unmarshalSSZ", "Prysm.PendingDeposit.Code"),
-    "ValidatorBalance": whole_accept_case("norm", "ValidatorBalance", "unmarshalSSZ", "Prysm.PendingDeposit.Code"),
-    "PendingPartialWithdrawal": whole_accept_case("norm", "PendingPartialWithdrawal", "unmarshalSSZ", "Prysm.Deposit_Data.Code"),
-    "AttestationData": whole_accept_case("norm", "AttestationData", "unmarshalSSZ", "Prysm.AttestationData.Code"),
-}
+WHOLE_ACCEPT_CASES = {t: whole_accept_case(t) for t in ["PendingDeposit", "SyncCommitteeMessage", "VoluntaryExit", "PowBlock",
+                                                         "ValidatorBalance", "PendingPartialWithdrawal", "AttestationData"]}
 
 
 def ir_goff(field, off):

@@ -1,6 +1,7 @@
 import Prysm.Eth1Data.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.Eth1Data.Code
 
 /-!
 # Witness of `Encode.generated_fast` (Eth1Data encoder fast path, generated theorem)

@@ -1,6 +1,7 @@
 import Prysm.DepositMessage.GeneratedEncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.DepositMessage.Code
 
 /-!
 # Witness of `Encode.generated_fast` (DepositMessage encoder fast path, generated theorem)

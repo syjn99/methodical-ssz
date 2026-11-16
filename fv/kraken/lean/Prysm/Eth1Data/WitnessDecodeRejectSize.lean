@@ -1,6 +1,7 @@
 import Prysm.Eth1Data.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.Eth1Data.Code
 
 /-!
 # Witness of `Decode.generated_reject` (Eth1Data decoder size reject)

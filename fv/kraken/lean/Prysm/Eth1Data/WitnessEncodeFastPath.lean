@@ -1,6 +1,7 @@
 import Prysm.Eth1Data.EncodeFastPath
 import Runtime.CopyModel
 import Machine.WitnessHost
+import Prysm.Eth1Data.Code
 
 /-!
 # Witness of `Encode.fast_path` (Eth1Data encoder, fast path only)

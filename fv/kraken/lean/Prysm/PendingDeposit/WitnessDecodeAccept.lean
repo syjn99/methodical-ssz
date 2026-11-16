@@ -2,6 +2,8 @@ import Prysm.PendingDeposit.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
+import Prysm.PendingDeposit.Code
+import Prysm.Slot.Code
 
 /-!
 # Witness of `Decode.generated_accept` (PendingDeposit decoder accept path)
@@ -22,7 +24,7 @@ every old pointer word every premise holds and the decoder returns nil. The rece
 `v1alpha1.PendingDeposit`.
 -/
 
-open Machine Runtime Machine.Witness Prysm.AttestationData.Code Codec Prysm.PendingDeposit.Code
+open Machine Runtime Machine.Witness Codec Prysm.PendingDeposit.Code
 
 namespace Prysm.PendingDeposit.Witness.DecodeAccept
 

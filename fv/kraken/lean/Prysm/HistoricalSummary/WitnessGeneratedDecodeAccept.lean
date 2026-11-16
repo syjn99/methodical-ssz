@@ -2,6 +2,7 @@ import Prysm.HistoricalSummary.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
+import Prysm.HistoricalSummary.Code
 
 /-!
 # Witness of the generated `Decode.generated_accept` (HistoricalSummary decoder accept path)

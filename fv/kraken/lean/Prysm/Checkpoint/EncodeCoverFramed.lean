@@ -1,5 +1,6 @@
 import Prysm.Checkpoint.EncodeGrowAnySiteThreeCases
 import Prysm.Checkpoint.EncodeCover
+import Prysm.Checkpoint.Code
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo`: case covers with the exact frame

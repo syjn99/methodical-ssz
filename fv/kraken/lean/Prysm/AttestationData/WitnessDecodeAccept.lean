@@ -3,6 +3,11 @@ import Prysm.AttestationData.WitnessBumpAllocator
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
+import Prysm.AttestationData.Code
+import Prysm.Checkpoint.Code
+import Prysm.CommitteeIndex.Code
+import Prysm.Epoch.Code
+import Prysm.Slot.Code
 
 /-!
 # Witness of `Decode.accept` (AttestationData decoder accept path)

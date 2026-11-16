@@ -1,6 +1,5 @@
 import Runtime.Contracts
 import Machine.Frame
-import Prysm.Checkpoint.Code
 import Prysm.Checkpoint.DecodeAccept
 import Machine.StoreLemmas
 import Runtime.StaticBoxLemmas

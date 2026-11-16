@@ -1,6 +1,6 @@
 import Prysm.BeaconBlockHeader.EncodeFastPathKindInstances
 import Codec.EncodeFrameTest
-import Prysm.VoluntaryExit.EncoderCode
+import Prysm.VoluntaryExit.Code
 
 /-!
 # Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.VoluntaryExit).MarshalSSZTo`

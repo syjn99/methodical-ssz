@@ -2,6 +2,7 @@ import Prysm.SigningData.GeneratedDecodeAccept
 import Runtime.CopyModel
 import Runtime.BumpAllocatorVariants
 import Machine.WitnessHost
+import Prysm.SigningData.Code
 
 /-!
 # Witness of the generated `Decode.generated_accept` (SigningData decoder accept path)

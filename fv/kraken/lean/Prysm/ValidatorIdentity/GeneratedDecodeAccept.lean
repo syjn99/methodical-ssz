@@ -1,4 +1,6 @@
 import Prysm.ValidatorIdentity.Code
+import Prysm.ValidatorIndex.Code
+import Prysm.Epoch.Code
 import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.FieldFrame
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec

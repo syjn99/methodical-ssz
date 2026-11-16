@@ -1,6 +1,7 @@
 import Prysm.Checkpoint.EncodeFastPath
 import Prysm.ElfData.PrysmTarget
 import Codec.EncodeBitVecLemmas
+import Prysm.Checkpoint.Code
 
 /-!
 # Real Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, reject `len(c.Root) != 32` (Go 1.26.10)

@@ -1,5 +1,6 @@
 import Codec.Bytes32Encode
 import Prysm.Checkpoint.EncodeFastPath
+import Prysm.Checkpoint.Code
 
 /-!
 # The Checkpoint encoder fast path through the 32-byte field encode segment `root_encode_segment`

@@ -4,7 +4,7 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
 import Prysm.DataColumnsByRootIdentifier.SpecDefinitions
-import Prysm.DataColumnsByRootIdentifier.CodeUnmarshalSSZ
+import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!
 # Hand STATEMENTS of the round-trip decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`

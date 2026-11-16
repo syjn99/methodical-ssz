@@ -1,21 +1,21 @@
 import Kraken.X64.Parser
 import Machine.Include
-import Prysm.DepositMessage.Code
 
 /-!
-# Code of the `BlobIdentifier` functions (the Go 1.26.10 ELF of `prysm/go1.26.10/build-ids.txt`)
+# Code of `v1alpha1.BlobIdentifier`
 
-Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code`, `Prysm.BeaconBlockHeader.Code` and `Prysm.Eth1Data.Code`;
-`link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`).
-Hand-written include file (not generator output; the text of `Prysm/Eth1Data/Code.lean`).
-The directory `prysm/go1.26.10/link-set/norm` is a Lake `input_dir` of the `Prysm` library,
-so Lake rebuilds these modules when a `.S` file changes.
-After the split of this module, the declarations of the other types are in `Prysm/DepositMessage/Code.lean`.
+This module holds the program constants `Code.unmarshalSSZ` and `Code.marshalSSZTo` of `v1alpha1.BlobIdentifier`.
+Each program constant includes a `.S` file of the link set `prysm/go1.26.10/link-set/norm`.
+The link set comes from the ELF of `prysm/go1.26.10/build-ids.txt`.
+This file is written by hand.
 -/
 
 namespace Prysm.BlobIdentifier
 
 /-- `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`. -/
 def Code.unmarshalSSZ : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
+
+/-- `(*v1alpha1.BlobIdentifier).MarshalSSZTo`. -/
+def Code.marshalSSZTo : Program := include_x64_code "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.MarshalSSZTo.S"
+
 end Prysm.BlobIdentifier

@@ -1,5 +1,6 @@
 import Codec.Kind.EncodeFastPathAnyFrame
 import Prysm.Eth1Data.EncodeFastPath
+import Prysm.Eth1Data.Code
 
 /-!
 # Hand layout of the Eth1Data encoder fast-path statement, and its tie to `encodeFastPathKindAnyFrame`

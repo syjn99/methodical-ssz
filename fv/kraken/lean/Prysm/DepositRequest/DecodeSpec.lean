@@ -1,5 +1,6 @@
 import Prysm.DepositRequest.GeneratedDecodeAccept
 import Prysm.DepositRequest.Spec
+import Prysm.DepositRequest.Code
 
 /-!
 # Spec alignment of the real `v1.DepositRequest` decoder (24 flat types)

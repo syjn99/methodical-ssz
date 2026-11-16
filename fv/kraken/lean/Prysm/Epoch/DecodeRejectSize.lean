@@ -4,6 +4,7 @@ import Machine.StoreLemmas
 import Runtime.StaticBoxLemmas
 import Prysm.Checkpoint.DecodeAccept
 import Prysm.ElfData.PrysmTarget
+import Prysm.Epoch.Code
 
 /-!
 # `(*primitives.Epoch).UnmarshalSSZ`, reject `len(buf) ≠ 8` (Go 1.26.10 machine code)

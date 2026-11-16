@@ -2,6 +2,7 @@ import Prysm.BeaconBlockHeader.EncodeFastPath
 import Codec.EncodeRejectTail
 import Prysm.Checkpoint.EncodeRejectLength
 import Runtime.CopyModel
+import Prysm.BeaconBlockHeader.Code
 
 /-!
 # Length rejects of `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` through `Codec.encode_reject_tail`
