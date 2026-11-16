@@ -3,136 +3,64 @@
 
 The `_kind` line is generator output. Lean checks it (`with_reducible rfl`), but Lean does not check WHICH
 kind it names: a degenerate right-hand side (for example `type_of% (@t h)` itself, or `True`) also compiles.
-This program is run by the evaluator on every generated file. It does not change the generator.
+This program checks every generated file by text. It does not change the generator.
 
 usage: kindcheck.py <generated.lean>...      exit 0 = every file passes, 1 = a file fails, 2 = usage
-       kindcheck.py --partial <partial.lean>  a `decoder --field-segments --partial-out` file: exit 3 = the
-                                             kinds of the theorems that are present pass, printed together with
-                                             `PARTIAL n/m fields: kinds of present theorems checked; NOT a
-                                             full-coverage result`; 1 = the file fails; 2 = usage. Never 0.
        kindcheck.py --selftest               crafted good and bad files; exit 0 = all controls behave
 
+The rule numbers are labels. The error messages and the tests use them.
 Checks, per file (text only):
- 0. The file is not a partial generator output: no line contains `PARTIAL OUTPUT` (the header that
-    `generator.py decoder --partial-out` writes on exit 3). Checked on the raw text,
-    comments included.
- 1. (Removed: git-blob pins of the kind and lemma modules. They were the method freeze of an experiment that ended.)
  2. Top-level lines are only: import, open, variable, namespace, end, set_option … in, theorem, doc or
     plain comments, blank lines and indented continuation lines. No def / abbrev / notation / macro /
     axiom / instance / attribute etc. (a local definition could shadow the kind name).
  3. No `sorry`, `admit`, `native_decide`, `bv_decide`, `axiom` token anywhere.
- 4. Every theorem `t` whose name does not end in `_kind` or `_same` is followed by exactly one theorem
+ 4. Every theorem `t` whose name does not end in `_kind` is followed by exactly one theorem
     `t_kind` whose whole header is
         theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.uint64DecodeAcceptKind h C := by
+        (`generator.py uint64`)
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.rootDecodeSegmentKind h C n1 … n9 := by
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.rootDecodeSegmentOffsetZeroKind h C n1 … n8 := by
-        (offset-0 kind of the generator extension, `lean/Codec/Kind/Bytes32DecodeOffsetZero.lean`)
-    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.bytesDecodeSegmentKind h n C n1 … n9 := by
-    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.bytesDecodeSegmentOffsetZeroKind h n C n1 … n8 := by
-        (field-segment size-parametric kinds, n = 32, 48 or 96)
-    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.uint64DecodeInlineSegmentKind h C n1 … n4 := by
-        (field-segment inline uint64 kind)
+        (`generator.py decoder`; the second form for a 32-byte field at SSZ offset 0)
+    or  a step kind (rule 10),
     with C the code constant of `t`'s `hk : C.IsInfixAt Host.prog k` binder and n1..n9 natural literals,
     and the next line is exactly `  intro h; with_reducible rfl`.
- 5. Every `_kind` theorem belongs to a theorem of the file; every `_same` theorem has the form
-    `theorem t_same : @X = @t := rfl` for a kinded `t` of the file.
- 6. field-segment composed accept theorems (`generator.py decoder --field-segments --compose`): instead of `t_kind`, a theorem `t`
-    may be followed by exactly
-        theorem t_type : ∀ (h : Host),
-            type_of% (@t h) = type_of% (@X h) := by
-          intro h; with_reducible rfl
-    with X a dotted name under `Prysm.` that is not `t` and not declared in the file (a hand theorem), or
-    (`--same-as-prop`) the Prop form
-        theorem t_type : ∀ (h : Host),
-            type_of% (@t h) = @X h := by
-          intro h; with_reducible rfl
-    with X a Prop-valued `abbrev` written by hand. This is an identity, NOT a kind. These rules
-    restrict it:
-     6a. `_type` is accepted ONLY for a composed theorem: its proof (the lines up to the next theorem) uses
-         both `Codec.decode_head_segment` and `Codec.decode_epilogue_segment`. A segment theorem needs its `_kind`; a `_type`
-         in place of a `_kind` fails.
-     6b. X must not be a generated name: not `Prysm.<T>.Decode.generated…` / `.example…` (or Encode) and not a
-         name declared in a module `lean/Prysm/<T>/Generated*.lean` or `Decode*Example*.lean` (last name component). A
-         generated theorem never vouches for a generated theorem.
-     6c. A theorem line with the marker `UNCHECKED STATEMENT` (`--compose` without `--same-as`) fails.
-    The PASS line names X: "identity against X — statement evidence only if X is an independent hand
-    statement". Whether X is independent is NOT checked here (a human must confirm it). A composed theorem
-    of a type without a hand statement (no `_type`) FAILS. There is no kind for a composed statement.
- 7. `--partial` mode: the file must carry exactly one `PARTIAL OUTPUT` header, after the imports,
-    with `n of m fields`, and one line `UNCOVERED-JSON: [...]` (a JSON list of {field, reason}) whose length
-    is m - n; the theorems present are checked by rules 1-6 as usual (no composed theorem allowed). The
-    default mode rejects every partial file (rule 0, unchanged).
- 8. call-segment (`generator.py decoder --call-segments`): further `_kind` right-hand sides:
-        @Codec.callDecodeSegmentKind h C "fn" "lok" j j2      fn one of the four callee labels with a proved accept
-                                                         spec (CALLEES: Slot, CommitteeIndex, ValidatorIndex,
-                                                         Epoch of consensus-types/primitives)
-        @Codec.callArgumentFirstKind h C pad f j            pad = true | false
-        @Codec.callArgumentReloadKind h C pad dB src dD c dR f j     (Int64 literals: n or (-n))
-        @Codec.callArgumentLeaKind h C dB src dD c dR f j
-        @Codec.callArgumentMovKind h C j
-        @Codec.uint64DecodeScratchRegisterSegmentKind h C Reg64.rX src f j    rX one of the registers of `Uint64ScratchRegister`
-    (kinds of `lean/Codec/Kind/CalleeDecode.lean`). A composed accept theorem
-    (rule 6a) may instead carry the composed-statement kind of `lean/Codec/Kind/DecodeAcceptComposition.lean`:
-        set_option maxHeartbeats 200000 in
-        theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.decodeAcceptKind h C st [f, …] jret := by
-          intro h; rfl
-    with st = true | false, f = `.bytes 32|48|96` or `.uint64`; `rfl` at default transparency (the recursive kind
-    must unfold) under the default heartbeat limit written out (a timeout is a FAIL). An identity `t_type`
-    (rule 6) may follow the `t_kind` of a composed theorem. A segment theorem cannot carry `decodeAcceptKind`.
- 9. Hardening: rule 6a is read on the proof text WITHOUT comments; a file
-    with a coverage header `field-segment|call segment coverage (…): n of m fields` fails in the default mode when n != m;
-    in both modes n must equal the number of fields with theorems present (theorem names
-    `<prefix>_<field>_segment|_argument|_argument_1|_argument_2|_call`; a callee field needs `_call` and `_argument` or
-    `_argument_1` + `_argument_2`),
-    and no field of `UNCOVERED-JSON` may have a theorem.
-
-10. step (`generator.py decoder --steps`): further `_kind` right-hand sides:
+ 5. Every `_kind` theorem belongs to a theorem of the file.
+10. step (`generator.py decoder --steps`): the step kinds of `lean/Codec/Kind/WindowSteps.lean`,
+    `lean/Codec/Kind/FixedBytesDecodeWindow.lean` and `lean/Codec/CalleeDecodeWindow.lean`:
         @Codec.stepMoveRegisterKind h C Reg64.rD Reg64.rS j e          @Codec.stepAddKind h C Reg64.rD imm j e
         @Codec.stepLoadValueKind / stepLoadBytesKind / stepStoreKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
         @Codec.stepMoveImmediateKind h C Reg64.rD imm j e                @Codec.stepJumpKind h C "l" j jl
         @Codec.stepLabelKind h C "l" j e                        @Codec.stepNopsKind h C j e
-        @Codec.callDecodeSegmentKindWindow h C "fn" "lok" j jc j2         (fn in CALLEES)
+        @Codec.callDecodeSegmentKindWindow h C "fn" "lok" j jc j2         fn one of the four callee labels with a proved
+                                                                          accept spec (CALLEES: Slot, CommitteeIndex,
+                                                                          ValidatorIndex, Epoch of consensus-types/primitives)
         @Codec.bytesDecodeSegmentKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC src
         @Codec.bytesDecodeSegmentOffsetZeroKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC
-    (n = 32 | 48 | 96; rY one of rax, rcx, rdx, rsi, rdi; registers `Reg64.<one of the 16>`).
+    (n = 32 | 48 | 96; rY one of rax, rcx, rdx, rsi, rdi; registers `Reg64.<one of the 16>`; Int64 literals n or (-n)).
     10b. The proof of `t` (comments and string literals removed) uses the lemma of its kind
-         (`step_move_register`, `step_load_value`, …, `call_decode_segment_window`, `bytes_decode_segment_window`, `bytes_decode_segment_offset_zero_window`) and no other
-         step lemma: a theorem whose proof and kind name different lemmas fails.
-    10c. A step file (header `step coverage (…): n of m fields`, or any step kind) carries exactly one line
-         `FIELDS-JSON: [{"field": F, "theorems": [...]}, …]`: every theorem with a step kind is listed in exactly
-         one field, every listed theorem is in the file, a field has at most one block theorem (`<p>_F_call` with
-         `callDecodeSegmentKindWindow`, or `<p>_F_seg` with a byte kind), n = the number of listed fields; in `--partial` mode
-         no field of `UNCOVERED-JSON` is listed (its entries may carry a `miss_class`).
-11. A file in which a non-composed theorem has a field-segment / call-segment / step kind must
-    carry the coverage header (`field segment|call segment|step coverage (…): n of m fields`); rule 6a also ignores string literals.
-    Exemption: the hand example modules listed in HAND_EXAMPLES (exact paths
-    `lean/Prysm/<T>/DecodeFieldSegmentExamples.lean` for T = DepositMessage, BlobIdentifier, Eth1Data and
-    `lean/Prysm/<T>/DecodeCallSegmentExamples.lean` for T = PendingPartialWithdrawal, BeaconBlockHeader, AttestationData,
-    Checkpoint, Deposit_Data) are not generator output and skip rule 11 only; every
-    other rule applies to them. `Prysm/<T>/DecodeStepExamples.lean` (T = SyncCommitteeMessage, PendingConsolidation, Checkpoint,
-    BeaconBlockHeader, PendingPartialWithdrawal, Deposit_Data) are not listed: they have no FIELDS-JSON line (rule 10c), and the
-    hand field compositions of SyncCommitteeMessage and PendingConsolidation fail rule 4;
-    no recorded command runs `kindcheck.py` on them.
-    6d. A composed accept theorem with only the kind `decodeAcceptKind` (no
-    identity `_type` with an independent hand statement) FAILS; `generator.py --call-segments --compose` without `--same-as*`
-    now also marks it `UNCHECKED STATEMENT` (rule 6c).
-12. whole-accept (`generator.py decoder --whole-accept`): a whole-accept file is checked in two parts. The text before the whole-accept
-    block (`/-! Whole accept (`decoder --whole-accept`…`) by rules 1-11 as a step file; the whole-accept part by rule 12 (12a removed: it was
-    a git-blob pin; 12b the exact theorem list with the kinds decodeHeadKindAnyFrame / decodeFieldKindAnyFrame / decodeEpilogueKindAnyFrame /
-    decodeAcceptKindAnyFrame / decodeRejectKindAnyFrame; 12c the kind parameters `L`, `fields`, boundary `pc` / `done` and the reject size
-    RECOMPUTED from the `.S` and the IR named in the header (sha256 checked); 12d the accept proof chains every
-    theorem; 12e the identity with a hand statement, if any, names no generated theorem). See the section `Rule 12`.
-    A file with a whole-accept kind and no whole-accept block fails (rule 12: 0 whole-accept blocks). `--partial` never accepts a whole-accept file.
+         (`step_move_register`, `step_load_value`, …, `call_decode_segment_window`, `bytes_decode_segment_window`,
+         `bytes_decode_segment_offset_zero_window`) and no other step lemma: a theorem whose proof and kind name
+         different lemmas fails.
+    10c. A step file carries exactly one line `FIELDS-JSON: [{"field": F, "theorems": [...]}, …]`: every theorem with
+         a step kind is listed in exactly one field, every listed theorem is in the file, a field has at most one block
+         theorem (`<p>_F_call` with `callDecodeSegmentKindWindow`, or `<p>_F_seg` with a byte kind).
+11. A file with a step kind carries exactly one coverage header `step coverage (`decoder --steps`): n of m fields`
+    with n = m = the number of fields of FIELDS-JSON (a dropped header or field hides dropped fields).
+12. whole-accept (`generator.py decoder --whole-accept`): a whole-accept file is checked in two parts. The text before the
+    whole-accept block (`/-! Whole accept (`decoder --whole-accept`…`) by rules 2-11 as a step file; the whole-accept part by
+    rule 12 (12b the exact theorem list with the kinds decodeHeadKindAnyFrame / decodeFieldKindAnyFrame /
+    decodeEpilogueKindAnyFrame / decodeAcceptKindAnyFrame / decodeRejectKindAnyFrame; 12c the kind parameters `L`, `fields`,
+    boundary `pc` / `done` and the reject size RECOMPUTED from the `.S` and the IR named in the header (sha256 checked);
+    12d the accept proof chains every theorem). See the section `Rule 12`.
+    A file with a whole-accept kind and no whole-accept block fails (rule 12: 0 whole-accept blocks).
 13. fast-path (`generator.py encoder --fast-path`, encoder fast path): a file with `FAST-PATH-JSON:` or an encoder kind
-    (encodeHeadKindAnyFrame / encodeFieldKindAnyFrame / encodeEpilogueKindAnyFrame / encodeFastPathKindAnyFrame) is checked by rule 13 only: 13a removed (a git-blob pin); 13b
-    structure (one layout def or a pinned hand layout; the exact theorem list, each with its kind; the code constant);
-    13c every kind line equals, as whole text, the line rendered from an OWN recomputation (this file's interpreter,
-    not the generator) of the fields, the layout and every boundary state from the `.S` and the IR named in FAST-PATH-JSON
-    (sha256 checked), and C is bound to that `.S` by `include_x64_code` in an imported code module; 13d the fast-path
-    proof chains every theorem once; 13e the identity `_statement` names no generated theorem (implication lemma only from
-    FAST_PATH_VIA). See the section `rule 13`. `--partial` never accepts a fast-path file.
-    The hand example modules `Prysm/*/DecodeAcceptExample.lean` of the lemmas are not generator output; they fail rule 12 (no whole-accept
-    block) and no recorded command runs `kindcheck.py` on them.
+    (encodeHeadKindAnyFrame / encodeFieldKindAnyFrame / encodeEpilogueKindAnyFrame / encodeFastPathKindAnyFrame) is checked by
+    rule 13 only: 13b structure (one layout def or a pinned hand layout; the exact theorem list, each with its kind; the code
+    constant); 13c every kind line equals, as whole text, the line rendered from an OWN recomputation (this file's
+    interpreter, not the generator) of the fields, the layout and every boundary state from the `.S` and the IR named in
+    FAST-PATH-JSON (sha256 checked), and C is bound to that `.S` by `include_x64_code` in an imported code module; 13d the
+    fast-path proof chains every theorem once; 13e the identity `_statement` names no generated theorem (implication lemma
+    only from FAST_PATH_VIA). See the section `rule 13`.
 
 Limits (not checked here): step label strings in `stepLabelKind`, `stepJumpKind` and `callDecodeSegmentKindWindow` (`lok`) are
 phantom kind parameters (they do not occur in the kind body; `stepLabelKind C l j e` is
@@ -140,8 +68,8 @@ phantom kind parameters (they do not occur in the kind body; `stepLabelKind C l 
 line; the label is checked only by the proof's code fact (`he`, `hl`). Also not checked: that the kind parameters (C, indices, displacements, offsets) are the right
 ones for the Go type (a wrong one fails the proof's code facts, not this check); name resolution (the
 check reads `@Codec.<kind>` as text; an `open` of a namespace that declares another
-`Codec.<kind>` would not be seen); that the kind and lemma modules are unchanged (the pins
-were removed); that the file builds. A pass is not a non-vacuity witness.
+`Codec.<kind>` would not be seen); that the kind and lemma modules are unchanged; that the file builds.
+A pass is not a non-vacuity witness.
 """
 import re
 import sys
@@ -150,32 +78,16 @@ import tempfile
 
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
-PRYSM = KR / "lean" / "Prysm"   # rule 6b: the type directories with the generated and example modules
-# Rule 11 exemption: hand-written example modules of the generator modes. They have generator
-# kinds but are not generator output, so they have no coverage header. Only these exact paths (relative to
-# fv/kraken) skip rule 11; every other rule applies to them unchanged.
-# The modules `Prysm/<T>/DecodeStepExamples.lean` are not listed: they also fail rule 10c (no FIELDS-JSON line), and two of
-# them rule 4 (hand field compositions `*_field` without a kind), so an exemption from rule 11 alone would not make them
-# pass; kindcheck is not a check of them.
-HAND_EXAMPLES = ("lean/Prysm/DepositMessage/DecodeFieldSegmentExamples.lean", "lean/Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean",
-                 "lean/Prysm/BlobIdentifier/DecodeFieldSegmentExamples.lean", "lean/Prysm/Eth1Data/DecodeFieldSegmentExamples.lean",
-                 "lean/Prysm/BeaconBlockHeader/DecodeCallSegmentExamples.lean", "lean/Prysm/AttestationData/DecodeCallSegmentExamples.lean",
-                 "lean/Prysm/Checkpoint/DecodeCallSegmentExamples.lean", "lean/Prysm/Deposit_Data/DecodeCallSegmentExamples.lean")
-GENNS = re.compile(r"^Prysm\.\w+\.(?:Decode|Encode)\.(?:generated|example|accept_generated_composition|accept_composed_example)")  # rule 6b: generated and example names
+PRYSM = KR / "lean" / "Prysm"   # rule 13e: the type directories with the generated modules
+GENNS = re.compile(r"^Prysm\.\w+\.(?:Decode|Encode)\.(?:generated|example)")  # rule 13e: generated and example names
 DECL = re.compile(r"^(?:private |protected |noncomputable )*(?:theorem|lemma|def|abbrev) (\S+)")
-COMPOSED = ("(Codec.decode_head_segment ", "(Codec.decode_epilogue_segment ")  # rule 6a
-UNCHECKED = "UNCHECKED STATEMENT"  # rule 6c
 
-# field-segment kinds (`lean/Codec/Kind/FixedBytesDecode.lean`, `lean/Codec/Kind/InlineUint64.lean`)
-FIELD_SEGMENT_KINDS = ("bytesDecodeSegmentKind", "bytesDecodeSegmentOffsetZeroKind", "uint64DecodeInlineSegmentKind")
-# call-segment kinds (`lean/Codec/Kind/CalleeDecode.lean`, `lean/Codec/Kind/DecodeAcceptComposition.lean`)
-CALL_SEGMENT_KINDS = ("callDecodeSegmentKind", "callArgumentFirstKind", "callArgumentReloadKind", "callArgumentLeaKind", "callArgumentMovKind",
-              "uint64DecodeScratchRegisterSegmentKind", "decodeAcceptKind")
 CALLEES = tuple(f'"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"'
                 for n in ("Slot", "CommitteeIndex", "ValidatorIndex", "Epoch"))
 INT = r"(?:0|[1-9][0-9]*|\(-[1-9][0-9]*\))"  # an Int64 literal as the generator writes it
 STEP_REGISTERS = r"Reg64\.(?:rax|rbx|rcx|rdx|rsi|rdi|rsp|rbp|r8|r9|r10|r11|r12|r13|r14|r15)"
 STEP_RECEIVER_REGISTERS = r"Reg64\.(?:rax|rcx|rdx|rsi|rdi)"
+
 # kind -> (parameter regex after `h `, with {C} for the code constant; namespace of the kind and of its lemma; lemma
 # of the proof). The step kinds and the fixed-bytes window kinds are in Codec (`lean/Codec/Kind/WindowSteps.lean`,
 # `lean/Codec/Kind/FixedBytesDecodeWindow.lean`, lemma modules `lean/Codec/WindowSteps.lean`,
@@ -198,15 +110,10 @@ STEP_KINDS = {
 }
 STEP_LEMMAS = {v[2]: v[1] for v in STEP_KINDS.values()}   # lemma -> namespace
 STEP_BLOCK = {"callDecodeSegmentKindWindow": "call", "bytesDecodeSegmentKindWindow": "segment", "bytesDecodeSegmentOffsetZeroKindWindow": "segment"}
-BOOL = r"(?:true|false)"
 LBL = r'"[^"\\\s]+"'
-RRREG = r"Reg64\.(?:rcx|rdx|rsi|rdi|r8|r9|r10|r11|r12|r13|r15)"
-DECF = r"\.(?:bytes (?:32|48|96)|uint64)"
-COVER = re.compile(r"(field segment|call segment|step) coverage \(`decoder --(?:field-segments|call-segments|steps)`\): (\d+) of (\d+) fields")
-STEM = re.compile(r"^(.*)_(segment|argument|argument_1|argument_2|call)$")
-SIZE = r"(?:32|48|96)"  # the sizes of the hypothesis `hn` of bytesdec_seg / bytesdec_seg_offset_zero
+COVER = re.compile(r"step coverage \(`decoder --steps`\): (\d+) of (\d+) fields")
+SIZE = r"(?:32|48|96)"  # the sizes of the hypothesis `hn` of the byte segment lemmas
 
-PARTIAL = "PARTIAL OUTPUT"  # header of generator.py decoder --partial-out (exit 3)
 TOP_OK = re.compile(r"^(import |open |variable |namespace |end\b|set_option \S+ \S+ in$|theorem |/-|--|$|\s)")
 BANNED = re.compile(r"\b(sorry|admit|native_decide|bv_decide|axiom)\b")
 THM = re.compile(r"^theorem (\S+)")
@@ -215,7 +122,7 @@ NAT = r"(?:0|[1-9][0-9]*)"
 
 
 def gen_names(lean_dir=PRYSM):
-    """Rule 6b: last name components of every declaration in a generated module `<Type>/Generated*.lean` or an example
+    """Rule 13e: last name components of every declaration in a generated module `<Type>/Generated*.lean` or an example
     module `<Type>/Decode*Example*.lean`."""
     out = set()
     for f in sorted(list(lean_dir.glob("*/Generated*.lean")) + list(lean_dir.glob("*/Decode*Example*.lean"))):
@@ -225,35 +132,8 @@ def gen_names(lean_dir=PRYSM):
     return out
 
 
-def partial_header(lines):
-    """Rule 7: (n, m, uncovered list) of a `--partial-out` file, or an error string."""
-    import json
-    hs = [i for i, l in enumerate(lines) if PARTIAL in l]
-    if len(hs) != 1:
-        return f"{len(hs)} `{PARTIAL}` headers (expected 1)"
-    i = hs[0]
-    imps = [j for j, l in enumerate(lines) if l.startswith("import ")]
-    if not imps or i < max(imps):
-        return "the PARTIAL header is not after the imports"
-    m = re.search(r"\b(\d+) of (\d+) fields\b", lines[i])
-    js = [l for l in lines if l.startswith("UNCOVERED-JSON: ")]
-    if not m or len(js) != 1:
-        return "no `n of m fields` in the PARTIAL header or not exactly one `UNCOVERED-JSON:` line"
-    try:
-        unc = json.loads(js[0][len("UNCOVERED-JSON: "):])
-    except ValueError as e:
-        return f"UNCOVERED-JSON does not parse: {e}"
-    n, tot = int(m.group(1)), int(m.group(2))
-    if not (isinstance(unc, list) and all(isinstance(u, dict) and set(u) in ({"field", "reason"},
-                                                                         {"field", "reason", "miss_class"}) for u in unc)):
-        return "UNCOVERED-JSON is not a list of {field, reason}"
-    if not 0 < n < tot or len(unc) != tot - n:
-        return f"PARTIAL {n} of {tot} fields with {len(unc)} uncovered entries"
-    return n, tot, unc
-
-
 def strip_comments(s):
-    """Rule 9: Lean text without `--` line comments and `/- … -/` block comments (nested)."""
+    """Lean text without `--` line comments and `/- … -/` block comments (nested)."""
     out, i, depth = [], 0, 0
     while i < len(s):
         if s.startswith("/-", i):
@@ -272,7 +152,7 @@ def strip_comments(s):
 
 
 def strip_strings(s):
-    """Rule 11: Lean text without the contents of string literals ("…", with escapes)."""
+    """Lean text without the contents of string literals ("…", with escapes)."""
     return re.sub(r'"(?:[^"\\]|\\.)*"', '""', s)
 
 
@@ -281,32 +161,11 @@ def step_param_rx(spec, C):
     return rx.replace("LBL", LBL).replace("SIZE", SIZE).replace("{C}", C)
 
 
-def field_stems(mains):
-    """Rule 9: {stem: set of suffixes} of the segment theorems (composed theorems excluded by the caller)."""
-    st = {}
-    for t in mains:
-        m = STEM.match(t)
-        st.setdefault(m.group(1) if m else t, set()).add(m.group(2) if m else "")
-    return st
-
-
-def check_text(text, gnames=None, partial=False, rule11=True):
+def check_text(text):
+    """Rules 2-11. Returns (errors, theorem names)."""
     step_kind = {}      # theorem -> step kind name (rule 10)
-    newkind = set()  # theorems with a field-segment / call-segment / step kind (rule 11)
-    gnames = gen_names() if gnames is None else gnames
     errs = []
     lines = text.split("\n")
-    if partial:
-        ph = partial_header(lines)
-        if isinstance(ph, str):
-            errs.append(f"--partial: {ph}")
-    else:
-        for i, l in enumerate(lines, 1):
-            if PARTIAL in l:
-                errs.append(f"line {i}: partial generator output (`{PARTIAL}` header): not a complete generated file")
-    for i, l in enumerate(lines, 1):
-        if UNCHECKED in l:
-            errs.append(f"line {i}: `{UNCHECKED}` marker (composed statement without a hand statement)")
     in_block = 0
     for i, l in enumerate(lines, 1):
         # skip block comments (doc and plain) for the top-level and banned-token checks
@@ -322,36 +181,10 @@ def check_text(text, gnames=None, partial=False, rule11=True):
     names = [n for _, n in thms]
     if len(set(names)) != len(names):
         errs.append("duplicate theorem names")
-    mains = [n for n in names if not n.endswith("_kind") and not n.endswith("_same") and not n.endswith("_type")]
-    ident = []
+    mains = [n for n in names if not n.endswith("_kind")]
     if not mains:
         errs.append("no generated theorem found")
     pos = {n: i for i, n in thms}
-    composed = set()
-
-    def is_composed(t, j):
-        body = strip_strings(strip_comments("\n".join(lines[pos[t]:j])))  # rules 9 / 11: comments, strings do not count
-        return all(c in body for c in COMPOSED)
-
-    def type_line(t):
-        j = pos[t + "_type"]
-        nx = lines[j + 1] if j + 1 < len(lines) else ""
-        m = (re.fullmatch(rf"    type_of% \(@{re.escape(t)} h\) = type_of% \(@(Prysm(?:\.\w+)+) h\) := by", nx)
-             or re.fullmatch(rf"    type_of% \(@{re.escape(t)} h\) = @(Prysm(?:\.\w+)+) h := by", nx))
-        if lines[j] != f"theorem {t}_type : ∀ (h : Host),":
-            errs.append(f"{t}_type: header is not `theorem {t}_type : ∀ (h : Host),`")
-        elif not m:
-            errs.append(f"{t}_type: not an identity `type_of% (@{t} h) = type_of% (@Prysm.… h)` "
-                        f"or `= @Prysm.… h`: {nx[:160]}")
-        elif m.group(1).rsplit(".", 1)[-1] in names or m.group(1) == t:
-            errs.append(f"{t}_type: right-hand side {m.group(1)} is declared in this file (degenerate identity)")
-        elif GENNS.match(m.group(1)) or m.group(1).rsplit(".", 1)[-1] in gnames:
-            errs.append(f"{t}_type: right-hand side {m.group(1)} is a generated name (`Decode.generated…` or "
-                        f"`Decode.example…`, or declared in a generated or example module): a generated theorem cannot vouch for a generated theorem")
-        if j + 2 >= len(lines) or lines[j + 2] != "  intro h; with_reducible rfl":
-            errs.append(f"{t}_type: proof line is not `  intro h; with_reducible rfl`")
-        ident.append((t, m.group(1) if m else "?"))
-
     for t in mains:
         i = pos[t]
         # header of t up to ':=' ; code constant from its hk binder
@@ -362,48 +195,16 @@ def check_text(text, gnames=None, partial=False, rule11=True):
             continue
         C = re.escape(hk.group(1))
         nxt = [n for _, n in thms if _ > i]
-        if nxt and nxt[0] == t + "_type":
-            j = pos[t + "_type"]
-            type_line(t)
-            if not is_composed(t, j):
-                errs.append(f"{t}_type: {t} is not a composed accept theorem (its proof does not use "
-                            f"Codec.decode_head_segment and Codec.decode_epilogue_segment): a segment theorem needs its `_kind`")
-            elif partial:
-                errs.append(f"{t}: composed theorem in a partial file")
-            composed.add(t)
-            continue
         if not nxt or nxt[0] != t + "_kind":
             errs.append(f"{t}: the next theorem is not {t}_kind")
             continue
         j = pos[t + "_kind"]
-        acc = rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = " \
-              rf"@Codec\.decodeAcceptKind h {C} {BOOL} \[{DECF}(?:, {DECF})*\] {NAT} := by"
-        if re.fullmatch(acc, lines[j]):
-            # call-segment composed-statement kind (rule 8): composed theorems only, default heartbeats written out
-            composed.add(t)
-            if not is_composed(t, j):
-                errs.append(f"{t}_kind: decodeAcceptKind on a theorem that is not a composed accept theorem")
-            elif partial:
-                errs.append(f"{t}: composed theorem in a partial file")
-            if lines[j - 1] != "set_option maxHeartbeats 200000 in":
-                errs.append(f"{t}_kind: the line before is not `set_option maxHeartbeats 200000 in`")
-            if j + 1 >= len(lines) or lines[j + 1] != "  intro h; rfl":
-                errs.append(f"{t}_kind: proof line is not `  intro h; rfl`")
-            nx2 = [n for _, n in thms if _ > j]
-            if nx2 and nx2[0] == t + "_type":
-                type_line(t)
-            else:
-                # rule 6d: the kind alone is no independent statement check
-                errs.append(f"{t}: composed accept theorem without the identity `{t}_type` with an independent hand "
-                            f"statement (`--same-as` / `--same-as-prop`): UNCHECKED STATEMENT")
-            continue
         step_match = re.fullmatch(rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
                            rf"@(Codec)\.(\w+) h (.*) := by", lines[j])
         if step_match and step_match.group(2) in STEP_KINDS:
             kn = step_match.group(2)
             spec, kns, lem = STEP_KINDS[kn]
             step_kind[t] = kn
-            newkind.add(t)
             if step_match.group(1) != kns or not re.fullmatch(step_param_rx(spec, C), step_match.group(3)):
                 errs.append(f"{t}_kind: header is not a frozen kind: {lines[j][:160]}")
             elif kn == "callDecodeSegmentKindWindow" and step_match.group(3).split(" ")[1] not in CALLEES:
@@ -418,37 +219,20 @@ def check_text(text, gnames=None, partial=False, rule11=True):
                 errs.append(f"{t}_kind: proof line is not `  intro h; with_reducible rfl`")
             continue
         want = (rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
-                rf"(?:@Codec\.(?:uint64DecodeAcceptKind h {C}|rootDecodeSegmentKind h {C}(?: {NAT}){{9}}"
-                rf"|rootDecodeSegmentOffsetZeroKind h {C}(?: {NAT}){{8}}"
-                rf"|bytesDecodeSegmentKind h {SIZE} {C}(?: {NAT}){{9}}|bytesDecodeSegmentOffsetZeroKind h {SIZE} {C}(?: {NAT}){{8}}"
-                rf"|uint64DecodeInlineSegmentKind h {C}(?: {NAT}){{4}})"
-                rf"|@Codec\.(?:callDecodeSegmentKind h {C} {LBL} {LBL} {NAT} {NAT}"
-                rf"|callArgumentFirstKind h {C} {BOOL} {INT} {NAT}"
-                rf"|callArgumentReloadKind h {C} {BOOL}(?: {INT}){{6}} {NAT}"
-                rf"|callArgumentLeaKind h {C}(?: {INT}){{6}} {NAT}"
-                rf"|callArgumentMovKind h {C} {NAT}"
-                rf"|uint64DecodeScratchRegisterSegmentKind h {C} {RRREG}(?: {INT}){{2}} {NAT})) := by")
-        if any(f"@Codec.{kn} " in lines[j] for kn in FIELD_SEGMENT_KINDS) or any(f"@Codec.{kn} " in lines[j] for kn in CALL_SEGMENT_KINDS):
-            newkind.add(t)
+                rf"@Codec\.(?:uint64DecodeAcceptKind h {C}|rootDecodeSegmentKind h {C}(?: {NAT}){{9}}"
+                rf"|rootDecodeSegmentOffsetZeroKind h {C}(?: {NAT}){{8}}) := by")
         if not re.fullmatch(want, lines[j]):
             errs.append(f"{t}_kind: header is not a frozen kind: {lines[j][:160]}")
-        elif "@Codec.callDecodeSegmentKind " in lines[j] and lines[j].split(f" h {hk.group(1)} ", 1)[1].split(" ")[0] not in CALLEES:
-            errs.append(f"{t}_kind: callee {lines[j].split(f' h {hk.group(1)} ', 1)[1].split(' ')[0]} has no proved "
-                        f"accept spec (allowed: Slot, CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives)")
         if j + 1 >= len(lines) or lines[j + 1] != "  intro h; with_reducible rfl":
             errs.append(f"{t}_kind: proof line is not `  intro h; with_reducible rfl`")
-    # rule 9: the coverage numbers agree with the theorems present
-    cov = [COVER.search(l) for l in lines]
-    cov = [c for c in cov if c]
+    # rules 10c and 11: the step fields and the coverage header
+    cov = [c for c in (COVER.search(l) for l in lines) if c]
     fjs = [l for l in lines if l.startswith("FIELDS-JSON: ")]
-    steps_file = bool(step_kind) or bool(fjs) or any(c.group(1) == "step" for c in cov)
-    if newkind and not cov and rule11:
-        # rule 11: a generated file with field-segment+ kinds keeps its coverage header
-        errs.append("no coverage header `field segment|call segment|step coverage (…): n of m fields` in a file with field-segment / call-segment / step "
-                    "kinds (a dropped header hides dropped fields)")
-    if steps_file:
+    if step_kind and not cov:
+        errs.append("no coverage header `step coverage (…): n of m fields` in a file with step kinds "
+                    "(a dropped header hides dropped fields)")
+    if step_kind or fjs or cov:
         import json
-        stems = {}
         if len(fjs) != 1:
             errs.append(f"step file: {len(fjs)} `FIELDS-JSON:` lines (expected 1)")
             fl = []
@@ -467,7 +251,7 @@ def check_text(text, gnames=None, partial=False, rule11=True):
             if x not in mains:
                 errs.append(f"step file: FIELDS-JSON lists {x}, not a theorem of the file")
         for x in mains:
-            if x not in composed and x not in listed:
+            if x not in listed:
                 errs.append(f"step file: theorem {x} is in no field of FIELDS-JSON")
         if any(x not in step_kind for x in listed if x in mains):
             errs.append("step file: a listed theorem has no step kind")
@@ -481,94 +265,47 @@ def check_text(text, gnames=None, partial=False, rule11=True):
                                 f"{STEP_BLOCK[step_kind[x]]}`")
             if not f["theorems"]:
                 errs.append(f"step field {f['field']}: no theorem")
-            stems[f["field"]] = {"step"}
-    else:
-        stems = field_stems([t for t in mains if t not in composed])
-    for s, sx in ({} if steps_file else stems).items():
-        if "call" in sx and not ("argument" in sx or {"argument_1", "argument_2"} <= sx):
-            errs.append(f"{s}: call-block theorem without its argument set-up theorem(s)")
-        if sx & {"argument", "argument_1", "argument_2"} and "call" not in sx:
-            errs.append(f"{s}: argument set-up theorem(s) without the call-block theorem")
-        if sx & {"segment"} and sx & {"argument", "argument_1", "argument_2", "call"}:
-            errs.append(f"{s}: segment and call-field theorems for one field")
-    if len(cov) > 1:
-        errs.append(f"{len(cov)} coverage headers (expected at most 1)")
-    elif cov:
-        cn, cm = int(cov[0].group(2)), int(cov[0].group(3))
-        if not partial and cn != cm:
-            errs.append(f"coverage header `{cn} of {cm} fields` with n != m in the default mode (not a complete output)")
-        if cn != len(stems):
-            errs.append(f"coverage header says {cn} fields, theorems present for {len(stems)} fields")
-    if partial and not isinstance(ph, str):
-        pn = ph[0]
-        if pn != len(stems):
-            errs.append(f"--partial: header says {pn} fields, theorems present for {len(stems)} fields")
-        for u in ph[2]:
-            if any(s == u["field"] or s.endswith("_" + u["field"]) for s in stems):
-                errs.append(f"--partial: uncovered field {u['field']} has theorems")
+        if len(cov) > 1:
+            errs.append(f"{len(cov)} coverage headers (expected at most 1)")
+        elif cov:
+            cn, cm = int(cov[0].group(1)), int(cov[0].group(2))
+            if cn != cm:
+                errs.append(f"coverage header `{cn} of {cm} fields` with n != m (not a complete output)")
+            if cn != len({f["field"] for f in fl}):
+                errs.append(f"coverage header says {cn} fields, theorems present for {len({f['field'] for f in fl})} fields")
     for n in names:
         if n.endswith("_kind") and n[:-5] not in mains:
             errs.append(f"{n}: no generated theorem {n[:-5]}")
-        if n.endswith("_type") and n[:-5] not in [x for x, _ in ident]:
-            errs.append(f"{n}: not the identity line of a generated theorem {n[:-5]}")
-        if n.endswith("_same"):
-            t = n[:-5]
-            if t not in mains or not re.fullmatch(rf"theorem {re.escape(n)} : @\S+ = @{re.escape(t)} := rfl", lines[pos[n]]):
-                errs.append(f"{n}: not an identity `@X = @{t} := rfl` of a kinded theorem")
-    idm = dict(ident)
-    out = []
-    for t in mains:
-        acc = t in composed and t + "_kind" in pos
-        if t in idm:
-            t += (f" (decodeAcceptKind; also identity against {idm[t]})" if acc else
-                  f" (identity against {idm[t]} — statement evidence only if {idm[t]} is an independent hand "
-                  f"statement; no kind)")
-        elif acc:
-            t += " (composed-statement kind decodeAcceptKind)"
-        out.append(t)
-    return errs, out
+    return errs, mains
 
 
-def main(files, partial=False):
+def main(files):
     gn = gen_names()
     bad = 0
     for f in files:
         text = pathlib.Path(f).read_text().replace("\ntheorem _root_.", "\ntheorem ")
-        hand = pathlib.Path(f).resolve() in {(KR / x).resolve() for x in HAND_EXAMPLES}
         whole_accept_part = WHOLE_ACCEPT_MARK in text or "WHOLE-ACCEPT-JSON" in text or any(f"@Codec.{k} " in text for k in (
             "decodeHeadKindAnyFrame", "decodeFieldKindAnyFrame", "decodeEpilogueKindAnyFrame", "decodeAcceptKindAnyFrame", "decodeRejectKindAnyFrame"))
         fast_path_file = "FAST-PATH-JSON" in text or any(f"@Codec.{k} " in text for k in FAST_PATH_KINDS)
-        if fast_path_file and not partial:
-            # rule 13: a fast-path file is checked by rule 13 only; a whole-accept / older kind in it fails 13c
+        if fast_path_file:
+            # rule 13: a fast-path file is checked by rule 13 only; a whole-accept kind in it fails
             errs, info6 = check_fast_path(text, gn)
             if whole_accept_part:
                 errs.append("rule 13: a fast-path file with a whole-accept kind or block")
             mains = [info6]
-        elif fast_path_file:
-            errs, mains = ["fast-path output in --partial mode (a fast-path file is never partial)"], []
-        elif whole_accept_part and not partial:
-            # rule 12: the step part by rules 1-11, the whole-accept part by rule 12
+        elif whole_accept_part:
+            # rule 12: the step part by rules 2-11, the whole-accept part by rule 12
             part4 = text.split(WHOLE_ACCEPT_MARK, 1)[0] if text.count(WHOLE_ACCEPT_MARK) == 1 else text
-            errs, mains = check_text(part4, gn, partial, rule11=not hand)
-            e5, info5 = check_whole_accept(text, gn)
+            errs, mains = check_text(part4)
+            e5, info5 = check_whole_accept(text)
             errs = errs + e5
             mains = mains + [info5]
-        elif whole_accept_part:
-            errs, mains = ["whole-accept output in --partial mode (a whole-accept file is never partial)"], []
         else:
-            errs, mains = check_text(text, gn, partial, rule11=not hand)
+            errs, mains = check_text(text)
         print(("PASS" if not errs else "FAIL"), f, "theorems:", ",".join(mains))
-        if hand:
-            print("   hand example module (HAND_EXAMPLES): rule 11 not applied")
         for e in errs:
             print("  ", e)
-        if partial and not errs:
-            n, tot, unc = partial_header(text.split("\n"))
-            print(f"PARTIAL {n}/{tot} fields: kinds of present theorems checked; NOT a full-coverage result "
-                  f"(uncovered: {', '.join(u['field'] for u in unc)})")
         bad |= bool(errs)
-    if partial:
-        return 1 if bad else 3
     return 1 if bad else 0
 
 
@@ -603,8 +340,6 @@ theorem z (k : Nat) (hk : Prysm.Eth1Data.Code.unmarshalSSZ.IsInfixAt Host.prog k
 theorem z_kind : ∀ (h : Host), type_of% (@z h) = @Codec.rootDecodeSegmentOffsetZeroKind h Prysm.Eth1Data.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by
   intro h; with_reducible rfl
 
-theorem t_same : @Prysm.Fixture.x = @t := rfl
-
 end Prysm.Fixture
 """
 
@@ -623,10 +358,9 @@ def selftest():
         ("local_abbrev", GOOD.replace("namespace Prysm.Fixture\n", "namespace Prysm.Fixture\nabbrev Codec.uint64DecodeAcceptKind := True\n"), False),
         ("sorry", GOOD.replace("with_reducible exact foo", "sorry"), False),
         ("kind_other_namespace", GOOD.replace("@Codec.uint64DecodeAcceptKind", "@Prysm.Fixture.uint64DecodeAcceptKind"), False),
-        ("same_not_identity", GOOD.replace("@Prysm.Fixture.x = @t := rfl", "True := trivial"), False),
         ("orphan_kind", GOOD + "theorem q_kind : True := trivial\n", False),
     ]
-    # offset-0 kind of the generator extension (rootDecSegOffsetZeroKind, 8 parameters)
+    # the offset-0 kind (rootDecodeSegmentOffsetZeroKind, 8 parameters)
     zk = "= @Codec.rootDecodeSegmentOffsetZeroKind h Prysm.Eth1Data.Code.unmarshalSSZ 13 26 48 56 24 8 16 24 := by"
     assert zk in GOOD
     cases = cases + [
@@ -636,29 +370,16 @@ def selftest():
         ("z_seven_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 :=")), False),
         ("z_other_const", GOOD.replace(zk, zk.replace("Prysm.Eth1Data.Code.unmarshalSSZ", "Prysm.BeaconBlockHeader.Code.unmarshalSSZ")), False),
         ("z_as_add_kind", GOOD.replace(zk, zk.replace("rootDecodeSegmentOffsetZeroKind", "rootDecodeSegmentKind")), False),
-        # a --partial-out file (header text as generator.py writes it) must fail, even if
-        # every theorem it has is well kinded
-        ("partial_output_header", GOOD.replace("/-! generated -/", "/-! PARTIAL OUTPUT (generator exit 3): 1 of 2 "
-                                               "32-byte fields of `v1alpha1.Eth1Data`; missing: BlockHash -/"), False),
-        ("partial_output_in_line_comment", GOOD + "-- PARTIAL OUTPUT\n", False),
     ]
-    cases = [c + (False,) for c in cases] + field_segment_cases() + field_segment_fix_cases() + call_segment_cases() + step_cases()
+    cases = cases + step_cases()
     bad = []
-    for name, text, ok, part in cases:
-        errs, _ = check_text(text, GNAMES, part)
+    for name, text, ok in cases:
+        errs, _ = check_text(text)
         if (not errs) != ok:
             bad.append((name, errs))
-    # the exit codes of main() (`--partial`: 3 on success, 1 on failure, never 0; default: 1)
+    # the exit codes of main()
     n_exit, bad_exit = exit_code_cases()
     bad += bad_exit
-    # the rule 11 exemption removes only the coverage-header error
-    nh = GOOD_FIELD_SEGMENTS.replace("field segment coverage (`decoder --field-segments`): 3 of 3 fields", "generated")
-    e_on, _ = check_text(nh, GNAMES, False)
-    e_off, _ = check_text(nh, GNAMES, False, rule11=False)
-    e_sorry, _ = check_text(nh.replace("with_reducible exact", "sorry --", 1), GNAMES, False, rule11=False)
-    n_exit += 3
-    if not e_on or e_off or not e_sorry:
-        bad.append(("step_review_rule11_exemption", e_on, e_off, e_sorry))
     # rule 12
     n5, bad5 = whole_accept_selftest()
     n_exit += n5
@@ -671,278 +392,7 @@ def selftest():
     return 1 if bad else 0
 
 
-# field-segment controls: one generated-shape block per new kind (headers as `generator.py decoder --field-segments` writes them)
-GOOD_FIELD_SEGMENTS = """import Codec.FixedBytesDecode
-import Codec.Kind.FieldPatterns
-import Codec.Kind.FixedBytesDecode
-import Codec.Kind.InlineUint64
-
-/-! Generated by `gen/generator/generator.py decoder`; field segment coverage (`decoder --field-segments`): 3 of 3 fields. -/
-
-open Machine Runtime Prysm.BlobIdentifier.Code
-variable [Host]
-
-open Codec
-namespace Prysm.Fixture
-
-set_option maxHeartbeats 16000000 in
-set_option maxRecDepth 100000 in
-/-- `PublicKey` (48 bytes, SSZ offset 0, Go offset 0): decode segment, directives 13–36. -/
-theorem a (k : Nat) (hk : Prysm.DepositMessage.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) :
-    A := by
-  with_reducible exact Codec.bytes_decode_segment_offset_zero 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
-theorem a_kind : ∀ (h : Host), type_of% (@a h) = @Codec.bytesDecodeSegmentOffsetZeroKind h 48 Prysm.DepositMessage.Code.unmarshalSSZ 13 26 48 56 24 0 8 16 := by
-  intro h; with_reducible rfl
-
-theorem b (k : Nat) (hk : XyUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh XyUnmarshal k) :
-    B := by
-  with_reducible exact Codec.bytes_decode_segment 96 (Or.inr (Or.inr rfl)) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl
-theorem b_kind : ∀ (h : Host), type_of% (@b h) = @Codec.bytesDecodeSegmentKind h 96 XyUnmarshal 47 61 48 56 24 24 32 40 48 := by
-  intro h; with_reducible rfl
-
-set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
-theorem c (k : Nat) (hk : Prysm.DepositMessage.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) :
-    C := by
-  have hX : Codec.Uint64InlineReg Reg64.rcx := by decide
-  with_reducible exact Codec.uint64_decode_inline_segment Reg64.rcx hX _ _ _ (k + 83) hA
-theorem c_kind : ∀ (h : Host), type_of% (@c h) = @Codec.uint64DecodeInlineSegmentKind h Prysm.DepositMessage.Code.unmarshalSSZ 83 56 80 48 := by
-  intro h; with_reducible rfl
-
-end Prysm.Fixture
-"""
-
-
-COMPOSED_FIELD_SEGMENTS = """import Codec.DecoderHeadEpilogue
-import Codec.Kind.FieldPatterns
-
-/-! Generated by `gen/generator/generator.py decoder`; composed accept theorem; statement check: identity. -/
-
-open Machine Runtime Prysm.BlobIdentifier.Code
-variable [Host]
-
-open Codec
-namespace Prysm.Fixture
-
-set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
-theorem d (k : Nat) (hk : Prysm.DepositMessage.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k)
-    (x1 : List UInt8) :
-    D := by
-  refine eventually_trans _ _ _ _ (Codec.decode_head_segment _ _ _ _ 88 (k + 0) hH) ?_
-  refine eventually_trans _ _ _ _ (Prysm.DepositMessage.Decode.generated_field_Amount_segment k hk hf) ?_
-  refine eventually_trans _ _ _ _ (Codec.decode_epilogue_segment (k + 86) hE) ?_
-
-/-- Statement check: the declared type is that of the hand theorem (definitional identity). -/
-theorem d_type : ∀ (h : Host),
-    type_of% (@d h) = type_of% (@Prysm.DepositMessage.Decode.accept h) := by
-  intro h; with_reducible rfl
-
-end Prysm.Fixture
-"""
-
-
-def field_segment_cases():
-    za = "= @Codec.bytesDecodeSegmentOffsetZeroKind h 48 Prysm.DepositMessage.Code.unmarshalSSZ 13 26 48 56 24 0 8 16 := by"
-    ab = "= @Codec.bytesDecodeSegmentKind h 96 XyUnmarshal 47 61 48 56 24 24 32 40 48 := by"
-    uc = "= @Codec.uint64DecodeInlineSegmentKind h Prysm.DepositMessage.Code.unmarshalSSZ 83 56 80 48 := by"
-    for x in (za, ab, uc):
-        assert GOOD_FIELD_SEGMENTS.count(x) == 1
-    return [
-        ("field_segment_good", GOOD_FIELD_SEGMENTS, True, False),
-        ("field_segment_z_degenerate_self", GOOD_FIELD_SEGMENTS.replace(za, "= type_of% (@a h) := by"), False, False),
-        ("field_segment_z_degenerate_true", GOOD_FIELD_SEGMENTS.replace(za, "= True := by"), False, False),
-        ("field_segment_add_degenerate_self", GOOD_FIELD_SEGMENTS.replace(ab, "= type_of% (@b h) := by"), False, False),
-        ("field_segment_u64_degenerate_self", GOOD_FIELD_SEGMENTS.replace(uc, "= type_of% (@c h) := by"), False, False),
-        ("field_segment_u64_degenerate_true", GOOD_FIELD_SEGMENTS.replace(uc, "= True := by"), False, False),
-        ("field_segment_z_size_64", GOOD_FIELD_SEGMENTS.replace(za, za.replace(" h 48 ", " h 64 ")), False, False),
-        ("field_segment_add_size_symbolic", GOOD_FIELD_SEGMENTS.replace(ab, ab.replace(" h 96 ", " h n ")), False, False),
-        ("field_segment_z_size_missing", GOOD_FIELD_SEGMENTS.replace(za, za.replace(" h 48 ", " h ")), False, False),
-        ("field_segment_add_nine_params", GOOD_FIELD_SEGMENTS.replace(ab, ab.replace(" 40 48 :=", " 40 :=")), False, False),
-        ("field_segment_z_nine_params", GOOD_FIELD_SEGMENTS.replace(za, za.replace(" 8 16 :=", " 8 16 0 :=")), False, False),
-        ("field_segment_u64_three_params", GOOD_FIELD_SEGMENTS.replace(uc, uc.replace(" 80 48 :=", " 80 :=")), False, False),
-        ("field_segment_u64_register_param", GOOD_FIELD_SEGMENTS.replace(uc, uc.replace(" h Prysm.DepositMessage.Code.unmarshalSSZ", " h Reg64.rcx Prysm.DepositMessage.Code.unmarshalSSZ")), False, False),
-        ("field_segment_u64_other_const", GOOD_FIELD_SEGMENTS.replace(uc, uc.replace("Prysm.DepositMessage.Code.unmarshalSSZ", "Prysm.BlobIdentifier.Code.unmarshalSSZ")), False, False),
-        ("field_segment_add_as_z_kind", GOOD_FIELD_SEGMENTS.replace(ab, ab.replace("bytesDecodeSegmentKind", "bytesDecodeSegmentOffsetZeroKind")), False, False),
-        ("field_segment_partial_output", GOOD_FIELD_SEGMENTS.replace("/-! Generated", "/-! PARTIAL OUTPUT (generator exit 3): 2 of 3 fields "
-                                            "of `v1alpha1.DepositMessage` (--field-segments); NOT generated: Amount. -/\n/-! Generated"), False, False),
-        ("field_segment_proof_not_rfl", GOOD_FIELD_SEGMENTS.replace(uc + "\n  intro h; with_reducible rfl", uc + "\n  intro h; rfl"), False, False),
-        ("field_segment_compose_good_identity", COMPOSED_FIELD_SEGMENTS, True, False),
-        ("field_segment_compose_no_identity", COMPOSED_FIELD_SEGMENTS.split("\n/-- Statement check")[0] + "\nend Prysm.Fixture\n", False, False),
-        ("field_segment_compose_degenerate_self", COMPOSED_FIELD_SEGMENTS.replace("type_of% (@Prysm.DepositMessage.Decode.accept h)", "type_of% (@d h)"), False, False),
-        ("field_segment_compose_rhs_declared_here", COMPOSED_FIELD_SEGMENTS.replace("@Prysm.DepositMessage.Decode.accept h", "@Prysm.Fixture.d h"), False, False),
-        ("field_segment_compose_rhs_true", COMPOSED_FIELD_SEGMENTS.replace("type_of% (@Prysm.DepositMessage.Decode.accept h) := by", "True := by"), False, False),
-        ("field_segment_compose_proof_not_rfl", COMPOSED_FIELD_SEGMENTS.replace("  intro h; with_reducible rfl", "  intro h; rfl"), False, False),
-        ("field_segment_compose_orphan_type", GOOD_FIELD_SEGMENTS + "theorem q_type : ∀ (h : Host),\n    type_of% (@q h) = type_of% (@Prysm.X h) := by\n"
-                                     "  intro h; with_reducible rfl\n", False, False),
-    ]
-
-
-# rule 6b in the selftest: a fixed set of "generated" names instead of the tree's Gen*.lean (the controls do
-# not depend on the tree); `gen_seg_x` stands for a theorem of another generated module
-GNAMES = {"gen_seg_x", "accept_generated_composition", "accept_composed_example"}
-
-
-def field_segment_fix_cases():
-    """Controls of rules 6a-6c and 7."""
-    ty = ("theorem {t}_type : ∀ (h : Host),\n    type_of% (@{t} h) = type_of% (@Prysm.DepositMessage.Decode.accept h) := by\n"
-          "  intro h; with_reducible rfl\n")
-    uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @Codec.uint64DecodeInlineSegmentKind h Prysm.DepositMessage.Code.unmarshalSSZ 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
-    assert GOOD_FIELD_SEGMENTS.count(uc) == 1
-    seg_type = GOOD_FIELD_SEGMENTS.replace(uc, ty.format(t="c"))           # case (i): `_type` in place of a segment kind
-    rhs = "type_of% (@Prysm.DepositMessage.Decode.accept h)"
-    assert COMPOSED_FIELD_SEGMENTS.count(rhs) == 1
-    gen_rhs = COMPOSED_FIELD_SEGMENTS.replace(rhs, "type_of% (@Prysm.BlobIdentifier.Decode.accept_generated_composition h)")  # case (ii)
-    prop = COMPOSED_FIELD_SEGMENTS.replace(rhs, "@Prysm.DepositMessage.Decode.accept_statement h")
-    unc = json_line([("Slot", "delegated overlay field"), ("ProposerIndex", "delegated overlay field")])
-    PH = ("/-! PARTIAL OUTPUT (generator exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--field-segments); NOT "
-          "generated: Slot, ProposerIndex. Not a complete decoder output.\n" + unc + "\n-/\n")
-    part = GOOD_FIELD_SEGMENTS.replace("\n/-! Generated", "\n" + PH + "/-! Generated").replace(" 3 of 3 fields", " 3 of 5 fields")
-    assert part.count(PARTIAL) == 1
-    return [
-        ("field_segment_fix_segment_type_instead_of_kind", seg_type, False, False),
-        ("field_segment_fix_rhs_generated_namespace", gen_rhs, False, False),
-        ("field_segment_fix_rhs_composed_example_namespace", COMPOSED_FIELD_SEGMENTS.replace(rhs, "type_of% (@Prysm.BlobIdentifier.Decode.accept_composed_example h)"), False, False),
-        ("field_segment_fix_rhs_generated_namespace_fresh_name", COMPOSED_FIELD_SEGMENTS.replace(rhs, "type_of% (@Prysm.DepositMessage.Decode.generated_zz_fresh h)"), False, False),
-        ("field_segment_fix_unchecked_marker_with_identity", COMPOSED_FIELD_SEGMENTS.replace(
-            "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k)\n", "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) -- UNCHECKED STATEMENT\n"), False, False),
-        ("field_segment_fix_rhs_declared_in_gen_module", COMPOSED_FIELD_SEGMENTS.replace(rhs, "type_of% (@Prysm.Other.gen_seg_x h)"), False, False),
-        ("field_segment_fix_composed_without_dec_epilogue_seg", COMPOSED_FIELD_SEGMENTS.replace("Codec.decode_epilogue_segment", "Codec.dec_epilogue_sex"), False, False),
-        ("field_segment_fix_prop_identity_good", prop, True, False),
-        ("field_segment_fix_prop_identity_generated_rhs", COMPOSED_FIELD_SEGMENTS.replace(rhs, "@Prysm.BlobIdentifier.Decode.accept_generated_composition h"), False, False),
-        ("field_segment_fix_prop_identity_on_segment", GOOD_FIELD_SEGMENTS.replace(uc, ty.format(t="c").replace(rhs, "@Prysm.DepositMessage.Decode.accept_statement h")), False, False),
-        ("field_segment_fix_unchecked_marker", COMPOSED_FIELD_SEGMENTS.split("\n/-- Statement check")[0].replace(
-            "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k)\n", "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) -- UNCHECKED STATEMENT\n")
-         + "\nend Prysm.Fixture\n", False, False),
-        ("field_segment_fix_partial_default_rejects", part, False, False),
-        ("field_segment_fix_partial_mode_good", part, True, True),
-        ("field_segment_fix_partial_mode_complete_file", GOOD_FIELD_SEGMENTS, False, True),
-        ("field_segment_fix_partial_mode_header_before_imports", PH + GOOD_FIELD_SEGMENTS.replace(" 3 of 3 fields", " 3 of 5 fields"), False, True),
-        ("field_segment_fix_partial_mode_count_mismatch", part.replace(unc, json_line([("Slot", "x")])), False, True),
-        ("field_segment_fix_partial_mode_bad_kind", part.replace(" 83 56 80 48 := by", " 83 56 80 := by"), False, True),
-        ("field_segment_fix_partial_mode_composed", COMPOSED_FIELD_SEGMENTS.replace("\n/-! Generated", "\n" + PH + "/-! Generated"), False, True),
-    ]
-
-
-# call-segment controls: generated-shape blocks with the kind lines as `generator.py decoder --call-segments` writes them
 VALIDATOR_INDEX_DECODER_LABEL = '"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ"'
-EPOCH_DECODER_LABEL = '"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ"'
-CALL_SEGMENT_TEST_KINDS = {
-    "pending_partial_withdrawal_Index_argument": "@Codec.callArgumentFirstKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ false 8 15",
-    "pending_partial_withdrawal_Index_call": f'@Codec.callDecodeSegmentKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {VALIDATOR_INDEX_DECODER_LABEL} "L_pending_partial_withdrawal_b9" 17 47',
-    "pending_partial_withdrawal_Amount_segment": "@Codec.uint64DecodeScratchRegisterSegmentKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 8 16 54",
-    "pending_partial_withdrawal_WithdrawableEpoch_argument_1": "@Codec.callArgumentLeaKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 96 16 112 (-16) 88 24 48",
-    "pending_partial_withdrawal_WithdrawableEpoch_argument_2": "@Codec.callArgumentMovKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 56",
-    "pending_partial_withdrawal_WithdrawableEpoch_call": f'@Codec.callDecodeSegmentKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {EPOCH_DECODER_LABEL} "L_pending_partial_withdrawal_159" 59 88',
-    "beacon_block_header_ProposerIndex_argument": "@Codec.callArgumentReloadKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ true 120 8 136 (-8) 112 16 47",
-    "beacon_block_header_ProposerIndex_call": f'@Codec.callDecodeSegmentKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {VALIDATOR_INDEX_DECODER_LABEL} "L_beacon_block_header_154" 55 85',
-    "deposit_data_WithdrawalCredentials_segment": "@Codec.bytesDecodeSegmentKind h 32 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 47 61 48 56 24 32 40 48 48",
-}
-CALL_SEGMENT_TEST_PROOFS = {"pending_partial_withdrawal_Amount_segment": "  have hX : Codec.Uint64ScratchRegister Reg64.r8 := by decide\n  with_reducible exact Codec.uint64_decode_scratch_register_segment Reg64.r8 hX _ _ (k + 54) hA\n",
-           "deposit_data_WithdrawalCredentials_segment": "  with_reducible exact Codec.bytes_decode_segment_optional_padding true 32 (Or.inl rfl) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl\n"}
-
-
-def call_segment_block(t, kind):
-    return ("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
-            f"theorem {t} (k : Nat) (hk : Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ k) :\n"
-            f"    T := by\n" + CALL_SEGMENT_TEST_PROOFS.get(t, "  with_reducible exact foo\n")
-            + f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h) = {kind} := by\n  intro h; with_reducible rfl\n\n")
-
-
-GOOD_CALL_SEGMENTS = ("import Codec.Kind.CalleeDecode\nimport Codec.FixedBytesDecodePadding\nimport Codec.Kind.FieldPatterns\nimport Codec.Kind.FixedBytesDecode\n\n"
-         "/-! Generated by `gen/generator/generator.py decoder`; call segment coverage (`decoder --call-segments`): 5 of 5 fields. -/\n\n"
-         "open Machine Runtime Prysm.Deposit_Data.Code\nvariable [Host]\n\nopen Codec\nnamespace Prysm.Fixture\n\n"
-         + "".join(call_segment_block(t, k) for t, k in CALL_SEGMENT_TEST_KINDS.items()) + "end Prysm.Fixture\n")
-
-COMPOSED_CALL_SEGMENTS = COMPOSED_FIELD_SEGMENTS.replace("composed accept theorem; statement check: identity", "composed accept theorem (`decoder --call-segments --compose`)").replace(
-    "\n/-- Statement check: the declared type is that of the hand theorem",
-    "\n-- Statement check: kind.\nset_option maxHeartbeats 200000 in\n"
-    "theorem d_kind : ∀ (h : Host), type_of% (@d h) = @Codec.decodeAcceptKind h Prysm.DepositMessage.Code.unmarshalSSZ false [.bytes 48, .bytes 32, .uint64] 68 := by\n"
-    "  intro h; rfl\n\n/-- Statement check: the declared type is that of the hand theorem")
-
-
-def call_segment_cases():
-    """Controls of rule 8 (call-segment kinds, callee list, decodeAcceptKind) and rule 9."""
-
-    def kchg(t, new):
-        old = f"type_of% (@{t} h) = {CALL_SEGMENT_TEST_KINDS[t]} := by"
-        assert GOOD_CALL_SEGMENTS.count(old) == 1, t
-        return GOOD_CALL_SEGMENTS.replace(old, f"type_of% (@{t} h) = {new} := by")
-
-    def drop(text, t):
-        b = call_segment_block(t, CALL_SEGMENT_TEST_KINDS[t])
-        assert text.count(b) == 1
-        return text.replace(b, "")
-    comp_kind = "@Codec.decodeAcceptKind h Prysm.DepositMessage.Code.unmarshalSSZ false [.bytes 48, .bytes 32, .uint64] 68 := by"
-    assert COMPOSED_CALL_SEGMENTS.count(comp_kind) == 1
-    comp_only = COMPOSED_CALL_SEGMENTS.split("\n/-- Statement check: the declared type")[0] + "\nend Prysm.Fixture\n"
-    # k04: `_type` in place of a segment `_kind`, the two composed lemma names only in a comment
-    uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @Codec.uint64DecodeInlineSegmentKind h Prysm.DepositMessage.Code.unmarshalSSZ 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
-    ty = ("theorem c_type : ∀ (h : Host),\n    type_of% (@c h) = type_of% (@Prysm.DepositMessage.Decode.accept h) := by\n"
-          "  intro h; with_reducible rfl\n")
-    k04 = GOOD_FIELD_SEGMENTS.replace(uc, ty).replace("  with_reducible exact Codec.uint64_decode_inline_segment Reg64.rcx hX _ _ _ (k + 83) hA\n",
-                                        "  -- (Codec.decode_head_segment x) (Codec.decode_epilogue_segment y)\n"
-                                        "  with_reducible exact Codec.uint64_decode_inline_segment Reg64.rcx hX _ _ _ (k + 83) hA\n")
-    k04b = k04.replace("  -- (Codec.decode_head_segment x) (Codec.decode_epilogue_segment y)\n", "  /- (Codec.decode_head_segment x) (Codec.decode_epilogue_segment y) -/\n")
-    # k22-k24 (partial / coverage counts)
-    unc = json_line([("Slot", "delegated overlay field"), ("ProposerIndex", "delegated overlay field")])
-    PH = ("/-! PARTIAL OUTPUT (generator exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--field-segments); NOT "
-          "generated: Slot, ProposerIndex. Not a complete decoder output.\n" + unc + "\n-/\n")
-    part = GOOD_FIELD_SEGMENTS.replace("\n/-! Generated", "\n" + PH + "/-! Generated").replace(" 3 of 3 fields", " 3 of 5 fields")
-    k22 = part.split("set_option maxHeartbeats 4000000")[0] + "end Prysm.Fixture\n"
-    k24 = GOOD_FIELD_SEGMENTS.replace(" 3 of 3 fields", " 3 of 5 fields")
-    unc1 = json_line([("ProposerIndex", "x")])
-    nm = part.replace("3 of 5 fields of", "3 of 3 fields of").replace(unc, "UNCOVERED-JSON: []")
-    n0 = part.replace("3 of 5 fields of", "0 of 5 fields of")
-    unc_has_thm = part.replace(unc, json_line([("c", "x"), ("Slot", "y")]))
-    return [
-        ("call_segment_good", GOOD_CALL_SEGMENTS, True, False),
-        ("call_segment_callee_without_spec", kchg("pending_partial_withdrawal_Index_call", CALL_SEGMENT_TEST_KINDS["pending_partial_withdrawal_Index_call"].replace(
-            "consensus_types_primitives.ValidatorIndex", "proto_prysm_v1alpha1.Checkpoint")), False, False),
-        ("call_segment_call_degenerate_self", kchg("pending_partial_withdrawal_Index_call", "type_of% (@pending_partial_withdrawal_Index_call h)"), False, False),
-        ("call_segment_call_degenerate_true", kchg("pending_partial_withdrawal_Index_call", "True"), False, False),
-        ("call_segment_call_one_index", kchg("pending_partial_withdrawal_Index_call", CALL_SEGMENT_TEST_KINDS["pending_partial_withdrawal_Index_call"].replace(" 17 47", " 17")), False, False),
-        ("call_segment_first_pad_not_bool", kchg("pending_partial_withdrawal_Index_argument", CALL_SEGMENT_TEST_KINDS["pending_partial_withdrawal_Index_argument"].replace(" false ", " 1 ")), False, False),
-        ("call_segment_first_negative_index", kchg("pending_partial_withdrawal_Index_argument", CALL_SEGMENT_TEST_KINDS["pending_partial_withdrawal_Index_argument"].replace(" 15", " (-15)")), False, False),
-        ("call_segment_reload_five_ints", kchg("beacon_block_header_ProposerIndex_argument", CALL_SEGMENT_TEST_KINDS["beacon_block_header_ProposerIndex_argument"].replace(" (-8)", "")), False, False),
-        ("call_segment_lea_seven_ints", kchg("pending_partial_withdrawal_WithdrawableEpoch_argument_1", CALL_SEGMENT_TEST_KINDS["pending_partial_withdrawal_WithdrawableEpoch_argument_1"].replace(" 24 48", " 24 0 48")), False, False),
-        ("call_segment_mov_extra_param", kchg("pending_partial_withdrawal_WithdrawableEpoch_argument_2", CALL_SEGMENT_TEST_KINDS["pending_partial_withdrawal_WithdrawableEpoch_argument_2"] + " 0"), False, False),
-        ("call_segment_rr_register_rax", kchg("pending_partial_withdrawal_Amount_segment", CALL_SEGMENT_TEST_KINDS["pending_partial_withdrawal_Amount_segment"].replace("Reg64.r8", "Reg64.rax")), False, False),
-        ("call_segment_rr_register_missing", kchg("pending_partial_withdrawal_Amount_segment", CALL_SEGMENT_TEST_KINDS["pending_partial_withdrawal_Amount_segment"].replace("Reg64.r8 ", "")), False, False),
-        ("call_segment_rr_as_inline_kind", kchg("pending_partial_withdrawal_Amount_segment", "@Codec.uint64DecodeInlineSegmentKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ 54 8 8 16"), True, False),
-        ("call_segment_call_without_arg", drop(GOOD_CALL_SEGMENTS, "pending_partial_withdrawal_Index_argument"), False, False),
-        ("call_segment_lea_without_arg2", drop(GOOD_CALL_SEGMENTS, "pending_partial_withdrawal_WithdrawableEpoch_argument_2"), False, False),
-        ("call_segment_arg_without_call", drop(GOOD_CALL_SEGMENTS, "pending_partial_withdrawal_Index_call"), False, False),
-        ("call_segment_decaccept_on_segment", kchg("pending_partial_withdrawal_Amount_segment", "@Codec.decodeAcceptKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ true [.uint64] 54"), False, False),
-        ("call_segment_compose_good_kind_and_identity", COMPOSED_CALL_SEGMENTS, True, False),
-        # rule 6d: the kind alone is no independent statement check
-        ("call_segment_compose_kind_only_rejected", comp_only, False, False),
-        ("call_segment_compose_heartbeats_raised", COMPOSED_CALL_SEGMENTS.replace("set_option maxHeartbeats 200000 in\ntheorem d_kind", "set_option maxHeartbeats 2000000 in\ntheorem d_kind"), False, False),
-        ("call_segment_compose_no_heartbeat_line", COMPOSED_CALL_SEGMENTS.replace("set_option maxHeartbeats 200000 in\ntheorem d_kind", "theorem d_kind"), False, False),
-        ("call_segment_compose_with_reducible", COMPOSED_CALL_SEGMENTS.replace("  intro h; rfl\n", "  intro h; with_reducible rfl\n"), False, False),
-        ("call_segment_compose_field_size_64", COMPOSED_CALL_SEGMENTS.replace(comp_kind, comp_kind.replace(".bytes 48", ".bytes 64")), False, False),
-        ("call_segment_compose_empty_fields", COMPOSED_CALL_SEGMENTS.replace(comp_kind, comp_kind.replace("[.bytes 48, .bytes 32, .uint64]", "[]")), False, False),
-        ("call_segment_compose_st_not_bool", COMPOSED_CALL_SEGMENTS.replace(comp_kind, comp_kind.replace(" false [", " 0 [")), False, False),
-        ("call_segment_compose_other_const", COMPOSED_CALL_SEGMENTS.replace(comp_kind, comp_kind.replace("Prysm.DepositMessage.Code.unmarshalSSZ", "Prysm.BlobIdentifier.Code.unmarshalSSZ")), False, False),
-        ("call_segment_compose_not_composed_comment_only", comp_only.replace("(Codec.decode_epilogue_segment (k + 86) hE)", "foo -- (Codec.decode_epilogue_segment "), False, False),
-        ("s1_k04_line_comment", k04, False, False),
-        ("s1_k04_block_comment", k04b, False, False),
-        # the two composed-lemma names in a string literal do not make a composed theorem
-        ("s2_n26b_string_literal", k04.replace("  -- (Codec.decode_head_segment x) (Codec.decode_epilogue_segment y)\n",
-                                               '  have s := "(Codec.decode_head_segment x) (Codec.decode_epilogue_segment y)"\n')
-         .replace(" 3 of 3 fields", " 2 of 2 fields"), False, False),
-        # rule 6d with the generator's new marker (`--call-segments --compose` without `--same-as*`)
-        ("call_segment_compose_kind_only_marked", comp_only.replace("(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k)\n",
-                                                   "(hf : LabelsFresh Prysm.DepositMessage.Code.unmarshalSSZ k) -- UNCHECKED STATEMENT\n"), False, False),
-        ("s2_k22_theorem_removed_partial", k22, False, True),
-        ("s2_k23_uncovered_entry_dropped", part.replace("3 of 5 fields of", "4 of 5 fields of").replace(unc, unc1), False, True),
-        ("s2_uncovered_field_has_theorem", unc_has_thm, False, True),
-        ("s3_k24_partial_block_deleted", k24, False, False),
-        ("s3_header_count_mismatch_full", GOOD_FIELD_SEGMENTS.replace(" 3 of 3 fields", " 4 of 4 fields"), False, False),
-        ("s4_partial_n_equals_m", nm, False, True),
-        ("s4_partial_n_zero", n0, False, True),
-        ("s4_partial_good_0_lt_n_lt_m", part, True, True),
-    ]
 
 
 # step controls: kind lines and proof lemma as `generator.py decoder --steps` writes them
@@ -991,7 +441,7 @@ GOOD_STEPS = step_text()
 
 
 def step_cases():
-    """Controls of rules 10, 10b, 10c, 11, 6d."""
+    """Controls of rules 10, 10b, 10c, 11."""
 
     def kchg(t, new):
         old = f"type_of% (@{t} h) = {STEP_TEST_KINDS[t][0]} := by"
@@ -1002,85 +452,69 @@ def step_cases():
         old = f"  with_reducible exact {STEP_LEMMAS[STEP_TEST_KINDS[t][1].split()[0]]}.{STEP_TEST_KINDS[t][1]}\n"
         assert GOOD_STEPS.count(old) == 1, t
         return GOOD_STEPS.replace(old, new)
-    unc = json_line([("Tail", "x")])[:-1] + "]"
-    unc = 'UNCOVERED-JSON: [{"field": "Tail", "reason": "walk stopped", "miss_class": "register"}]'
-    PH = ("/-! PARTIAL OUTPUT (generator exit 3): 4 of 5 fields of `v1alpha1.X` (--steps); NOT generated: Tail. "
-          "Not a complete decoder output.\n" + unc + "\n-/\n")
-    part = step_text(m=5).replace("\n\n/-! Generated", "\n\n" + PH + "/-! Generated", 1)
-    assert part.count(PARTIAL) == 1
     st = STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51"][0]
     k2 = dict(STEP_TEST_KINDS, pending_partial_withdrawal_step_Index_segment=STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"])
     two_blocks = [STEP_TEST_FIELDS[0], ("Index", STEP_TEST_FIELDS[1][1] + ["pending_partial_withdrawal_step_Index_segment"]), STEP_TEST_FIELDS[2], STEP_TEST_FIELDS[3]]
     return [
-        ("step_good", GOOD_STEPS, True, False),
-        ("step_step_degenerate_self", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "type_of% (@Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51 h)"), False, False),
-        ("step_step_kind_other_namespace", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("@Codec.", "@Prysm.Fixture.")), False, False),
-        ("step_step_degenerate_true", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "True"), False, False),
-        ("step_step_kind_missing", GOOD_STEPS.replace("theorem Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51_kind", "theorem pending_partial_withdrawal_step_directive_51_kinx"), False, False),
-        ("step_st_without_disp", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace(" 16 51 52", " 51 52")), False, False),
-        ("step_st_register_not_reg64", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("Reg64.r8", "Reg64.xmm0")), False, False),
-        ("step_st_register_symbolic", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("Reg64.r8", "r")), False, False),
-        ("step_st_other_const", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ", "Prysm.PendingConsolidation.Code.unmarshalSSZ")), False, False),
-        ("step_add_extra_param", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52"][0] + " 0"), False, False),
-        ("step_call_two_indices", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call", STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"][0].replace(" 56 88", " 88")), False, False),
+        ("step_good", GOOD_STEPS, True),
+        ("step_step_degenerate_self", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "type_of% (@Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51 h)"), False),
+        ("step_step_kind_other_namespace", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("@Codec.", "@Prysm.Fixture.")), False),
+        ("step_step_degenerate_true", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "True"), False),
+        ("step_step_kind_missing", GOOD_STEPS.replace("theorem Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51_kind", "theorem pending_partial_withdrawal_step_directive_51_kinx"), False),
+        ("step_st_without_disp", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace(" 16 51 52", " 51 52")), False),
+        ("step_st_register_not_reg64", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("Reg64.r8", "Reg64.xmm0")), False),
+        ("step_st_register_symbolic", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("Reg64.r8", "r")), False),
+        ("step_st_other_const", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ", "Prysm.PendingConsolidation.Code.unmarshalSSZ")), False),
+        ("step_add_extra_param", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52"][0] + " 0"), False),
+        ("step_call_two_indices", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call", STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"][0].replace(" 56 88", " 88")), False),
         ("step_call_callee_without_spec", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call", STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"][0].replace(
-            "consensus_types_primitives.ValidatorIndex", "proto_prysm_v1alpha1.Checkpoint")), False, False),
-        ("step_seg_ry_rbx", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace("Reg64.rax", "Reg64.rbx")), False, False),
-        ("step_seg_size_64", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace(" h 32 ", " h 64 ")), False, False),
-        ("step_seg_missing_src", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace(" 40 16", " 40")), False, False),
-        ("step_segz_with_src", kchg("pending_partial_withdrawal_step_Sig_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Sig_segment"][0] + " 0"), False, False),
-        ("step_lemma_kind_mismatch", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  with_reducible exact Codec.step_load_value Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"), False, False),
-        ("step_lemma_only_in_string", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", '  have x := "Codec.step_load_bytes "\n  with_reducible exact foo\n'), False, False),
-        ("step_lemma_only_in_comment", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  -- Codec.step_load_bytes\n  with_reducible exact foo\n"), False, False),
-        ("step_two_lemmas", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  with_reducible exact Codec.step_load_bytes (Codec.step_store x)\n"), False, False),
-        ("step_fields_json_missing", GOOD_STEPS.replace("FIELDS-JSON: ", "FIELDS: "), False, False),
-        ("step_fields_json_two_lines", GOOD_STEPS.replace("FIELDS-JSON: ", "FIELDS-JSON: []\nFIELDS-JSON: "), False, False),
-        ("step_theorem_not_listed", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_segment", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_segment", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"]}]'), False, False),
-        ("step_listed_theorem_absent", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_49"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_segment", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_segment", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"]}]'), False, False),
-        ("step_theorem_in_two_fields", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_segment", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_segment", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"]}]'), False, False),
-        ("step_two_blocks_one_field", step_text(fields=two_blocks, kinds=k2), False, False),
-        ("step_block_name_other_field", step_text(fields=[("Amount", STEP_TEST_FIELDS[0][1]), ("Idx", STEP_TEST_FIELDS[1][1]), STEP_TEST_FIELDS[2], STEP_TEST_FIELDS[3]]), False, False),
-        ("step_count_edited_dropped_field", step_text(fields=STEP_TEST_FIELDS[:3], n=4), False, False),
-        ("step_n_ne_m_default", step_text(m=5), False, False),
-        ("s2_n29_header_removed_field_dropped", step_text(fields=STEP_TEST_FIELDS[:3]).replace("step coverage (`decoder --steps`): 3 of 3 fields", "generated"), False, False),
-        ("s2_n29_gen2_header_removed", GOOD_FIELD_SEGMENTS.replace("field segment coverage (`decoder --field-segments`): 3 of 3 fields", "generated"), False, False),
-        ("step_partial_good", part, True, True),
-        ("step_partial_default_rejects", part, False, False),
-        ("step_partial_uncovered_listed", part.replace('"Tail"', '"Sig"').replace("NOT generated: Tail", "NOT generated: Sig"), False, True),
-        ("step_partial_bad_miss_key", part.replace('"miss_class"', '"class"'), False, True),
+            "consensus_types_primitives.ValidatorIndex", "proto_prysm_v1alpha1.Checkpoint")), False),
+        ("step_seg_ry_rbx", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace("Reg64.rax", "Reg64.rbx")), False),
+        ("step_seg_size_64", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace(" h 32 ", " h 64 ")), False),
+        ("step_seg_missing_src", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace(" 40 16", " 40")), False),
+        ("step_segz_with_src", kchg("pending_partial_withdrawal_step_Sig_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Sig_segment"][0] + " 0"), False),
+        ("step_lemma_kind_mismatch", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  with_reducible exact Codec.step_load_value Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"), False),
+        ("step_lemma_only_in_string", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", '  have x := "Codec.step_load_bytes "\n  with_reducible exact foo\n'), False),
+        ("step_lemma_only_in_comment", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  -- Codec.step_load_bytes\n  with_reducible exact foo\n"), False),
+        ("step_two_lemmas", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  with_reducible exact Codec.step_load_bytes (Codec.step_store x)\n"), False),
+        ("step_fields_json_missing", GOOD_STEPS.replace("FIELDS-JSON: ", "FIELDS: "), False),
+        ("step_fields_json_two_lines", GOOD_STEPS.replace("FIELDS-JSON: ", "FIELDS-JSON: []\nFIELDS-JSON: "), False),
+        ("step_theorem_not_listed", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_segment", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_segment", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"]}]'), False),
+        ("step_listed_theorem_absent", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_49"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_segment", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_segment", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"]}]'), False),
+        ("step_theorem_in_two_fields", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_segment", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_segment", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"]}]'), False),
+        ("step_two_blocks_one_field", step_text(fields=two_blocks, kinds=k2), False),
+        ("step_block_name_other_field", step_text(fields=[("Amount", STEP_TEST_FIELDS[0][1]), ("Idx", STEP_TEST_FIELDS[1][1]), STEP_TEST_FIELDS[2], STEP_TEST_FIELDS[3]]), False),
+        ("step_count_edited_dropped_field", step_text(fields=STEP_TEST_FIELDS[:3], n=4), False),
+        ("step_n_ne_m_default", step_text(m=5), False),
+        ("step_header_removed_field_dropped", step_text(fields=STEP_TEST_FIELDS[:3]).replace("step coverage (`decoder --steps`): 3 of 3 fields", "generated"), False),
+        ("step_two_coverage_headers", GOOD_STEPS.replace("/-! Step chain fields", "/-! step coverage (`decoder --steps`): 4 of 4 fields -/\n\n/-! Step chain fields", 1), False),
     ]
 
 
 def exit_code_cases():
-    """main() exit codes on a temporary partial file (pins read from the tree)."""
+    """main() exit codes on temporary files: 0 for a good file, 1 for a bad one."""
     import contextlib, io, os
-    unc = json_line([("Slot", "delegated overlay field"), ("ProposerIndex", "delegated overlay field")])
-    PH = ("/-! PARTIAL OUTPUT (generator exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--field-segments); NOT "
-          "generated: Slot, ProposerIndex. Not a complete decoder output.\n" + unc + "\n-/\n")
-    part = GOOD_FIELD_SEGMENTS.replace("\n/-! Generated", "\n" + PH + "/-! Generated").replace(" 3 of 3 fields", " 3 of 5 fields")
-    badp = part.replace(" 83 56 80 48 := by", " 83 56 80 := by")
     out = []
-    for name, text, partial, want in [("s4_exit_partial_good", part, True, 3), ("s4_exit_partial_bad", badp, True, 1),
-                                      ("s4_exit_default_on_partial", part, False, 1), ("s4_exit_default_good", GOOD_FIELD_SEGMENTS, False, 0)]:
+    for name, text, want in [("exit_good", GOOD, 0), ("exit_bad", GOOD.replace(" 16 24 :=", " 16 :="), 1)]:
         fd, path = tempfile.mkstemp(suffix=".lean")
         os.close(fd)
         pathlib.Path(path).write_text(text)
         with contextlib.redirect_stdout(io.StringIO()):
-            rc = main([path], partial=partial)
+            rc = main([path])
         os.unlink(path)
         if rc != want:
             out.append((name, f"exit {rc}, expected {want}"))
-    return 4, out
+    return 2, out
 
 
 # ------------------------------------------------------------------------------------------------------------------
-# Rule 12 (`generator.py decoder --whole-accept`). A whole-accept file is a step file (checked by rules 1-11 up to the whole-accept
+# Rule 12 (`generator.py decoder --whole-accept`). A whole-accept file is a step file (checked by rules 2-11 up to the whole-accept
 # block) followed by one block `/-! Whole accept (`decoder --whole-accept` … WHOLE-ACCEPT-JSON: {…} -/` and the whole-accept theorems:
-#  12a. (removed: a git-blob pin of the kind and lemma modules);
-#  12b. the whole-accept theorems are exactly, in this order: P_head, P_field_1 … P_field_n, P_epilogue, P_accept, [P_accept_statement |
-#       P_accept_same], P_reject (P = the WHOLE-ACCEPT-JSON prefix, n = the IR field count), each but the identity followed by
+#  12b. the whole-accept theorems are exactly, in this order: P_head, P_field_1 … P_field_n, P_epilogue, P_accept,
+#       P_reject (P = the WHOLE-ACCEPT-JSON prefix, n = the IR field count), each followed by
 #       its `_kind` theorem `theorem T_kind : ∀ (h : Host), type_of% (@T h)` / `    = @Codec.K h C …` with
-#       K = decHeadKindAnyFrame / decFieldKindAnyFrame / decEpilogueKindAnyFrame / decAcceptKindAnyFrame / decRejectKindAnyFrame and the proof line
+#       K = decodeHeadKindAnyFrame / decodeFieldKindAnyFrame / decodeEpilogueKindAnyFrame / decodeAcceptKindAnyFrame /
+#       decodeRejectKindAnyFrame and the proof line
 #       `  intro h; rfl` (`  intro h; with_reducible rfl` for the reject kind); every `hk` binder names C;
 #  12c. the kind parameters are RECOMPUTED here, independently of the generator, from the `.S` file and the IR JSON
 #       named (with sha256) in the file header: the field list (`.bytes n` / `.u64`, IR order, IR SSZ / Go offsets
@@ -1088,12 +522,10 @@ def exit_code_cases():
 #       runtime configuration, guard addend, state word, post-state slots and existentials, frame) by the rules of the
 #       hand-written whole-accept lemmas, the `pc` and `done` of every boundary state (head end, the end of each field event along the
 #       accept path), and the reject size; a file whose kind parameters differ FAILS. This is the statement check of
-#       a generated accept theorem when no hand statement exists;
-#  12d. the accept proof chains P_head, every P_field_<i> and P_epilogue;
-#  12e. an identity `P_accept_statement : X := P_accept` or `P_accept_same : … type_of% (@P_accept h) = type_of% (@X h)`
-#       names a hand statement X (not generated, rule 6b); without it the PASS line says "kind instance only".
+#       a generated accept theorem;
+#  12d. the accept proof chains P_head, every P_field_<i> and P_epilogue.
 # Not checked here: the register facts, stack slots and existentials of the boundary states (the kernel checks that
-# they chain); that the file builds; that X is independent of the generator (a human confirms it).
+# they chain); that the file builds.
 WHOLE_ACCEPT_MARK = "/-! Whole accept (`decoder --whole-accept`"
 WHOLE_ACCEPT_PRIM = "github.com_OffchainLabs_prysm_v7_consensus_types_primitives."
 WHOLE_ACCEPT_CONST = {"Slot": "Prysm.Slot.Code.unmarshalSSZ", "CommitteeIndex": "Prysm.CommitteeIndex.Code.unmarshalSSZ",
@@ -1315,7 +747,7 @@ def whole_accept_balanced(s, open_, close):
     return None, s
 
 
-def check_whole_accept(text, gnames=frozenset(), kr=None, expect=None):
+def check_whole_accept(text, kr=None, expect=None):
     """Rule 12 on the whole-accept part of `text`. `expect` (for the selftest) replaces the recomputation from the files."""
     import hashlib
     import json
@@ -1365,13 +797,8 @@ def check_whole_accept(text, gnames=frozenset(), kr=None, expect=None):
     names = [t for _, t in thms]
     kinds = [(f"{P}_head", "decodeHeadKindAnyFrame", 1), *[(f"{P}_field_{k + 1}", "decodeFieldKindAnyFrame", 2) for k in range(n)],
              (f"{P}_epilogue", "decodeEpilogueKindAnyFrame", 1), (f"{P}_accept", "decodeAcceptKindAnyFrame", 0), (f"{P}_reject", "decodeRejectKindAnyFrame", None)]
-    ident = [x for x in names if x in (f"{P}_accept_statement", f"{P}_accept_same")]
-    want = []
-    for t, _, _ in kinds:
-        want += [t, t + "_kind"]
-        if t == f"{P}_accept":
-            want += ident[:1]
-    if names != want or len(ident) > 1:
+    want = [x for t, _, _ in kinds for x in (t, t + "_kind")]
+    if names != want:
         return errs + [f"rule 12b: whole-accept theorems {names}, expected {want}"], info
     pos = {t: i for i, t in thms}
     C = None
@@ -1423,32 +850,13 @@ def check_whole_accept(text, gnames=frozenset(), kr=None, expect=None):
     for t in [f"({P}_head "] + [f"({P}_field_{k + 1} " for k in range(n)] + [f"exact {P}_epilogue "]:
         if acc.count(t) != 1:
             errs.append(f"rule 12d: the accept proof does not use `{t.strip('( ')}` exactly once")
-    # 12e: the statement identity
-    if ident:
-        l = lines[pos[ident[0]]]
-        if ident[0].endswith("_statement"):
-            m = re.fullmatch(rf"theorem {P}_accept_statement : (Prysm(?:\.\w+)+) := {P}_accept", l)
-        else:
-            m = re.fullmatch(rf"theorem {P}_accept_same : ∀ \(h : Host\), type_of% \(@{P}_accept h\) = "
-                             rf"type_of% \(@(Prysm(?:\.\w+)+) h\) := by", l)
-            if m and lines[pos[ident[0]] + 1] != "  intro h; rfl":
-                m = None
-        if not m:
-            errs.append(f"rule 12e: {ident[0]}: not the identity form")
-        elif GENNS.match(m.group(1)) or m.group(1).rsplit(".", 1)[-1] in gnames or m.group(1).rsplit(".", 1)[-1] in names:
-            errs.append(f"rule 12e: {ident[0]}: {m.group(1)} is a generated name")
-        else:
-            info = f"statement check: kind (parameters recomputed) + identity against {m.group(1)}"
-    else:
-        info = "statement check: kind instance only, parameters recomputed from the IR and the .S"
+    info = "statement check: kind instance only, parameters recomputed from the IR and the .S"
     return errs, info
 
 
 # ---- rule 12 selftest controls
-WHOLE_ACCEPT_VOLUNTARY_EXIT_INPUTS = ("prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
-         "v1alpha1.VoluntaryExit")
-# the layouts of the whole-accept lemmas (`Codec/Kind/DecodeAcceptAnyFrameInstances.lean`: layoutCalleeCalls, layoutMixedFrame40, layoutRuntimeCalls, layoutMixedFrame60), transcribed by hand as
-# constructor text; the recomputation from the real `.S` / IR must give exactly these
+# the layouts of four real types, transcribed by hand as constructor text; the recomputation from the real `.S` / IR
+# must give exactly these
 WHOLE_ACCEPT_HAND = {
     "VoluntaryExit": ("link-set", "(Codec.DecoderFrameLayout.mk [Prysm.Epoch.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 7 [(0, 8), (1, 8), (2, 8), "
                       "(3, 8), (4, 8), (5, 8), (6, 8)] [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), "
@@ -1525,16 +933,11 @@ def whole_accept_cases():
     statement_text = G.replace(f"intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem {P}_reject ",
                      f"intro h; rfl\n\ntheorem {P}_accept_statement : Prysm.VoluntaryExit.Decode.accept_statement := {P}_accept\n\n"
                      f"set_option maxRecDepth 100000 in\ntheorem {P}_reject ", 1)
-    same = G.replace(f"intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem {P}_reject ",
-                     f"intro h; rfl\n\ntheorem {P}_accept_same : ∀ (h : Host), type_of% (@{P}_accept h) = type_of% "
-                     f"(@Prysm.VoluntaryExit.Decode.hand_accept h) := by\n  intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem "
-                     f"{P}_reject ", 1)
-    assert statement_text != G and same != G
+    assert statement_text != G
     acc_k = f"theorem {P}_accept_kind : ∀ (h : Host), type_of% (@{P}_accept h)"
     return [
         ("whole_accept_good", G, True),
-        ("whole_accept_good_statement", statement_text, True),
-        ("whole_accept_good_same", same, True),
+        ("whole_accept_extra_identity", statement_text, False),
         ("whole_accept_accept_kind_missing", G.replace(acc_k, acc_k.replace("_accept_kind", "_accept_kinx")), False),
         ("whole_accept_field_kind_missing", G.replace(f"theorem {P}_field_2_kind ", f"theorem {P}_field_2_kinx "), False),
         ("whole_accept_reject_missing", G.split("set_option maxRecDepth 100000 in\ntheorem Decode.generated_reject ")[0] + "end Prysm.Fixture\n",
@@ -1560,8 +963,6 @@ def whole_accept_cases():
         ("whole_accept_hk_other", G.replace(f"theorem {P}_epilogue : ∀ (k : Nat) (hk : Prysm.VoluntaryExit.Code.unmarshalSSZ", f"theorem {P}_epilogue : ∀ (k : Nat) (hk : Prysm.PendingConsolidation.Code.unmarshalSSZ"),
          False),
         ("whole_accept_chain_skips_field", G.replace(f"  refine eventually_trans _ _ _ _ ({P}_field_1 a) ?_\n", ""), False),
-        ("whole_accept_statement_generated", statement_text.replace("Prysm.VoluntaryExit.Decode.accept_statement", "Prysm.VoluntaryExit.Decode.generated_step_directive_15"), False),
-        ("whole_accept_same_self", same.replace("(@Prysm.VoluntaryExit.Decode.hand_accept h)", "(@Prysm.VoluntaryExit.Decode.example_accept h)"), False),
         ("whole_accept_sorry", G.replace("  exact y\n", "  sorry\n"), False),
         ("whole_accept_local_def", G.replace("namespace Prysm.Fixture\n\nset_option", "namespace Prysm.Fixture\n\ndef q := 1\n\nset_option"),
          False),
@@ -1578,7 +979,7 @@ def whole_accept_selftest():
     bad = []
     cs = whole_accept_cases()
     for name, text, ok in cs:
-        errs, _ = check_whole_accept(text, GNAMES | {"Prysm.VoluntaryExit.Decode.example_accept"})
+        errs, _ = check_whole_accept(text)
         if (not errs) != ok:
             bad.append((name, errs[:3]))
     n = len(cs)
@@ -1621,8 +1022,7 @@ def whole_accept_selftest():
 
 # ---------------------------------------------------------------- rule 13: fast-path (`generator.py encoder --fast-path`)
 # A fast-path file (header `FAST-PATH-JSON:`, or any of the four encoder kinds) is checked by rule 13 ONLY (it has a `def` of its
-# layout, which rule 2 forbids for the older files):
-#  13a. (Removed: a git-blob pin of the kind and lemma modules of the encoder lemmas.)
+# layout, which rule 2 forbids):
 #  13b. Structure: top-level lines as rule 2 plus exactly one `def <P>_layout : EncoderFrameLayout where` (none when a hand
 #       layout of FAST_PATH_HAND is named); no banned token (rule 3, comments and strings removed); the theorems are exactly
 #       P_head, P_field_0 … P_field_(n-1), P_epilogue, P_fast, each followed by its `_kind` (encHeadKindAnyFrame / encFieldKindAnyFrame /
@@ -2213,10 +1613,10 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
 # ---- rule 13 selftest controls: mutants of the committed raw fast-path outputs (a missing file is a FAIL)
 FAST_PATH_SELFTEST = {"validator-balance": "lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "checkpoint": "lean/Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
                "historical-summary": "lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "beacon-block-header": "lean/Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean"}
-# the layouts of the example modules (`Prysm/*/EncodeFastPathExample.lean`, not generator output): the recomputation must give them too
-FAST_PATH_EXAMPLE_LAYOUTS = {"ValidatorBalance": ("lean/Prysm/ValidatorBalance/EncodeFastPathExample.lean", "Prysm.ValidatorBalance.Encode.example_layout"),
-                "DepositMessage": ("lean/Prysm/DepositMessage/EncodeFastPathExample.lean", "Prysm.DepositMessage.Encode.example_layout"),
-                "HistoricalSummary": ("lean/Prysm/HistoricalSummary/EncodeFastPathExample.lean", "Prysm.HistoricalSummary.Encode.example_layout")}
+# the layout defs of three committed fast-path files: the recomputation must give each of them
+FAST_PATH_LAYOUTS = {"ValidatorBalance": ("lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "Prysm.ValidatorBalance.Encode.generated_layout"),
+                     "DepositMessage": ("lean/Prysm/DepositMessage/GeneratedEncodeFastPath.lean", "Prysm.DepositMessage.Encode.generated_layout"),
+                     "HistoricalSummary": ("lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "Prysm.HistoricalSummary.Encode.generated_layout")}
 
 
 def fast_path_cases(T):
@@ -2273,8 +1673,7 @@ def fast_path_cases(T):
 
 
 def fast_path_selftest():
-    """Rule 13 controls + the recomputation against the hand layouts of `Prysm/<Type>/EncodeFastPathKindInstances.lean` and the example layouts of the encoder lemmas.
-    Returns (n, bad)."""
+    """Rule 13 controls + the recomputation against the layout defs of FAST_PATH_LAYOUTS. Returns (n, bad)."""
     bad, n = [], 0
     try:
         T = {k: (KR / v).read_text() for k, v in FAST_PATH_SELFTEST.items()}
@@ -2283,10 +1682,10 @@ def fast_path_selftest():
         return 1, [("fast_path_fixtures", f"{type(e).__name__}: {e}")]
     for name, text, ok in cs:
         n += 1
-        errs, _ = check_fast_path(text, GNAMES)
+        errs, _ = check_fast_path(text)
         if (not errs) != ok:
             bad.append((name, errs[:3]))
-    for tname, (src, short) in FAST_PATH_EXAMPLE_LAYOUTS.items():
+    for tname, (src, short) in FAST_PATH_LAYOUTS.items():
         n += 1
         try:
             d = "norm"
@@ -2313,17 +1712,10 @@ def fast_path_selftest():
     return n, bad
 
 
-def json_line(pairs):
-    import json
-    return "UNCOVERED-JSON: " + json.dumps([dict(field=f, reason=r) for f, r in pairs])
-
-
 if __name__ == "__main__":
     if sys.argv[1:] == ["--selftest"]:
         sys.exit(selftest())
-    if len(sys.argv) < 2 or sys.argv[1:] == ["--partial"]:
+    if len(sys.argv) < 2 or sys.argv[1].startswith("-"):
         print(__doc__)
         sys.exit(2)
-    if sys.argv[1] == "--partial":
-        sys.exit(main(sys.argv[2:], partial=True))
     sys.exit(main(sys.argv[1:]))

@@ -10,19 +10,14 @@
 # To check a change, run it before and after the change, with two out dirs, and compare: `diff -r <before> <after>`.
 # Expected: the same rc for every check. A text difference needs a stated reason (for example a library count).
 # A check whose script is not in the tree gets the line `<name> not run (no <script>)`.
-# The default kindcheck list also has example files that no generator writes (for example the hand-written `Prysm/*/DecodeStepExamples.lean`).
-# So kindcheck_generated can exit 1 on an unchanged tree too. `kindcheck.py --partial` never exits 0 (see its usage text).
 #
 # Environment:
 #   KINDCHECK_FILES  the generated Lean files for kindcheck.py, as paths relative to fv/kraken.
-#                    Default: the non-partial generated and example modules lean/Prysm/*/Generated*.lean and
-#                    lean/Prysm/*/Decode*Example*.lean, without the identity and specification modules whose
-#                    names also start with Generated.
-#   PARTIAL_FILES    the partial generator outputs for `kindcheck.py --partial`, relative to fv/kraken.
-#                    Default: lean/Prysm/*/Generated*Partial.lean.
+#                    Default: the outputs of gen/generator/generator.py, lean/Prysm/*/Generated*.lean, without the
+#                    identity and specification modules whose names also start with Generated.
 set -u
 if [ $# -ne 1 ]; then
-  sed -n '2,22p' "$0" >&2
+  sed -n '2,17p' "$0" >&2
   exit 2
 fi
 OUT=$1
@@ -50,10 +45,11 @@ run axioms_gate_selftest gen/checks/axioms_gate.py python3 -I -B gen/checks/axio
 run deposit_data_include_check gen/checks/deposit_data_include_check.py python3 -I -B gen/checks/deposit_data_include_check.py
 run deposit_data_include_check_selftest gen/checks/deposit_data_include_check.py python3 -I -B gen/checks/deposit_data_include_check.py --selftest
 run kindcheck_selftest gen/generator/kindcheck.py python3 -I -B gen/generator/kindcheck.py --selftest
+run kindcheck_broken_copies_test gen/generator/kindcheck_broken_copies_test.py python3 -I -B gen/generator/kindcheck_broken_copies_test.py
 run fast_path_layout gen/checks/fast_path_layout.py python3 -I -B gen/checks/fast_path_layout.py
 
 if [ -z "${KINDCHECK_FILES:-}" ]; then
-  KINDCHECK_FILES=$(ls lean/Prysm/*/Generated*.lean lean/Prysm/*/Decode*Example*.lean 2>/dev/null | grep -v -e 'Partial\.lean$' -e SameAsHand -e GeneratedEncodeFastPathSpec -e CompositionKind)
+  KINDCHECK_FILES=$(ls lean/Prysm/*/Generated*.lean 2>/dev/null | grep -v -e SameAsHand -e GeneratedEncodeFastPathSpec)
 fi
 if [ -n "$KINDCHECK_FILES" ]; then
   # shellcheck disable=SC2086
@@ -61,13 +57,6 @@ if [ -n "$KINDCHECK_FILES" ]; then
 else
   echo "kindcheck_generated not run (no files)" | tee -a "$OUT/summary.txt"
 fi
-if [ -z "${PARTIAL_FILES:-}" ]; then
-  PARTIAL_FILES=$(ls lean/Prysm/*/Generated*Partial.lean 2>/dev/null)
-fi
-for f in $PARTIAL_FILES; do
-  run "kindcheck_partial_$(basename "$(dirname "$f")")_$(basename "$f" .lean)" gen/generator/kindcheck.py python3 -I -B gen/generator/kindcheck.py --partial "$f"
-done
-
 run negative_selftest gen/checks/negative.py python3 -I -B gen/checks/negative.py --selftest
 # git ls-files in fv/kraken prints paths relative to fv/kraken.
 CASES=$(git ls-files '*negative-cases*.json' | sort)

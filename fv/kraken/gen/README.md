@@ -65,17 +65,19 @@ Lean checks the identity. So a hypothesis that the generator adds, removes or ch
 
 Lean does not check which kind the line names. A line that compares `t` with itself also compiles.
 `generator/kindcheck.py` closes this gap. It checks by text that every `t_kind` names a frozen kind and has the fixed proof line.
-It does not check the kind files and the lemma files themselves. Their git-blob pins were removed when the shared layer moved to `lean/Codec/`.
+It does not check the kind files and the lemma files themselves.
+For the whole-accept and the encoder fast-path files it recomputes the kind parameters from the `.S` file and the IR.
 
 ```sh
 python3 -I -B fv/kraken/gen/generator/kindcheck.py --selftest
+python3 -I -B fv/kraken/gen/generator/kindcheck_broken_copies_test.py
 python3 -I -B fv/kraken/gen/generator/kindcheck.py fv/kraken/lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean
-python3 -I -B fv/kraken/gen/generator/kindcheck.py --partial fv/kraken/lean/Prysm/SyncCommitteeMessage/GeneratedDecodeCallSegmentsPartial.lean
 ```
 
+`kindcheck_broken_copies_test.py` makes one copy of `kindcheck.py` for each sub-rule of rule 13, with that sub-rule switched off.
+The selftest of every copy must fail.
 Run Lean and `kindcheck.py` together on every generated file. Each one alone lets a defect through.
-`kindcheck.py` does not check the kind parameters. Only the proof checks them, through its code facts.
-A partial file gives exit 3, never 0. Exit 3 is not a full-coverage result.
+For the other files, `kindcheck.py` does not check the kind parameters. Only the proof checks them, through its code facts.
 A kind identity is not a witness. It does not show that the premises can hold.
 
 ## 5. The independent `Desc` checker
