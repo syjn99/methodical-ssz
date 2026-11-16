@@ -4,15 +4,15 @@
  "decls_header": "# inventory_decls v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e",
  "methods_source": {
   "file": "prysm/go1.26.10/ssz-methods.json",
-  "nm_sha256": "5d47a14dc050ea4b58e9d89baa3e3df41df0af4538b0b7200398e6d8f9745673",
-  "elf_sha256": "9a37219e2d683e21bd7c3bebc8476b3ca130a3f40a6ac7ede0d161a4ee3b10e9"
+  "nm_sha256": "a9d677cdfdbf28f2b1f5de26878126ec544f8e63cf8a9403d8e2577aaaab7574",
+  "elf_sha256": "a5fbd7fa86d1c2e9c92b6138ff37cf770b253782a174c2493bf75fc26068b5c1"
  },
  "axioms_gate": {
   "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=Spec,Machine,Runtime,Codec,Prysm",
   "verdict": "PASS",
-  "declarations": 17567,
-  "theorems": 14336,
-  "modules": 657
+  "declarations": 17651,
+  "theorems": 14436,
+  "modules": 667
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -33,7 +33,7 @@
  ],
  "totals": {
   "denominators": {
-   "target_ssz_methods": "prysm/go1.26.10/ssz-methods.json (from the nm listing of the pinned ELF, sha256 5d47a14dc050ea4b58e9d89baa3e3df41df0af4538b0b7200398e6d8f9745673)",
+   "target_ssz_methods": "prysm/go1.26.10/ssz-methods.json (from the nm listing of the pinned ELF, sha256 a9d677cdfdbf28f2b1f5de26878126ec544f8e63cf8a9403d8e2577aaaab7574)",
    "dumped_functions": "prysm/go1.26.10/functions.json (functions with a `.S` text)",
    "development_population": "DEVELOPMENT_TYPES of gen/tools/proof_inventory.py (the 16 flat types with which the generated-decoder work started)"
   },
@@ -9854,8 +9854,8 @@
    "state": "complete",
    "missing": [],
    "theorems": {
-    "accept": "Prysm.Eth1Data.Decode.generated_accept",
-    "reject": "Prysm.Eth1Data.Decode.generated_reject",
+    "accept": "Prysm.Eth1Data.Decode.accept",
+    "reject": "Prysm.Eth1Data.Decode.reject_size",
     "accept_spec": "Prysm.Eth1Data.Decode.accept_spec",
     "reject_size_spec": "Prysm.Eth1Data.Decode.reject_size_spec",
     "reject_complete": "Prysm.Eth1Data.Decode.reject_complete",
@@ -9865,7 +9865,7 @@
     "witness_accept": "Prysm.Eth1Data.Witness.DecodeAccept.runs",
     "witness_reject": "Prysm.Eth1Data.Witness.DecodeRejectSize.runs"
    },
-   "note": "generated accept theorem (statement = kind instance)"
+   "note": ""
   },
   {
    "symbols": [
