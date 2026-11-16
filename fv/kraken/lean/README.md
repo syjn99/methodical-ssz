@@ -35,15 +35,18 @@ Examples are a bump allocator, a memory copy and error formatting.
 A runtime model that reads ELF data of the link set is in `Prysm/RuntimeModel/`.
 `Runtime` does not import `Prysm`.
 
-**`Codec`.** Lemmas and statement kinds that name no single Prysm type.
+**`Codec`.** Lemmas and statement kinds with the size, the count, the registers or the frame as parameters.
 Examples are the `uint64` decoder pattern (`Codec/Uint64Decoder.lean`) and the fixed-bytes field patterns (`Codec/FixedBytesDecode*.lean`).
-Others are the encoder step lemmas (`Codec/Encode*.lean`, `Codec/Bytes32Encode.lean`) and the stack guard lemma (`Codec/StackGuard.lean`).
+Others are the encoder step lemmas (`Codec/Encode*.lean`) and the stack guard lemma (`Codec/StackGuard.lean`).
 `Codec/Kind/` holds the statement kinds of the generated proofs (`../gen/README.md` section 4).
 The whole accept kind is in `Codec/Kind/DecodeAcceptAnyFrame.lean` and the encoder fast-path kind in `Codec/Kind/EncodeFastPathAnyFrame.lean`.
 Their field list is in `Codec/Kind/ContainerField.lean`.
 The statement kind of a callee call is in `Codec/CalleeDecodeWindow.lean`.
-`Codec/Segment/` holds segment and loop lemmas for any size or element count.
-A lemma that only one type uses belongs in the directory of that type, not in `Codec`.
+`Codec/Segment/` holds segment and loop lemmas for any frame, size or element count.
+Only the `example` lines of `Codec/Segment/Bytes32VectorSpec.lean` apply them to a single type.
+Many `Codec` comments name the type whose code gave a template.
+Some `Codec` modules have one user type, for example `Codec/Segment/SizeReject.lean` (Deposit).
+A work unit keeps a new lemma in its type directory (`../../AGENTS.md`).
 
 **`Prysm`.** One directory for each Prysm type, `Prysm/<GoTypeName>/`, namespace `Prysm.<GoTypeName>`.
 A type directory holds only the modules of that type.
@@ -70,8 +73,7 @@ The lemmas `<id>_addr_eq` restate an address.
 
 The types of `../gen/generator/gen.sh` and `../gen/flat-types/run_generators.sh` have generated modules `Prysm/<GoTypeName>/Generated*.lean`.
 Section 8 tells which of them a generator writes.
-A type directory with only `Code.lean`, or with `Code.lean` and `Statements.lean`, holds a type that the generator refuses.
-No theorem proves those statements.
+A type directory with only `Code.lean` holds a type that the generator refuses.
 
 ### Dependencies
 
@@ -91,9 +93,15 @@ Codec <-> Prysm (at module level, both directions)
   Some `Codec` modules import a `Prysm` module, and many `Prysm` modules import a `Codec` module.
   Lean forbids a cycle of modules, so the module graph has no cycle.
   Only the libraries have no order.
-- A `Codec` module that imports `Prysm` uses code or data of a type in a general lemma or kind.
-  An example is `Codec/CalleeDecode.lean`, which uses the decoder specifications of `Prysm/Slot/`, `Prysm/Epoch/` and `Prysm/ValidatorIndex/`.
-  `Codec/Segment/SizeRejectInstances.lean` ties a general lemma to the lemmas of types.
+- A `Codec` module that imports `Prysm` uses code, data or specification lemmas of a type in a general lemma or kind.
+  These `Codec` modules import a module of a single type:
+  - `Codec/ByteSliceListDefinitions.lean` (Checkpoint, SyncAggregate);
+  - `Codec/ByteSliceListLemmas.lean` (SyncCommittee);
+  - `Codec/ByteVector32Values.lean` (SyncCommittee, HistoricalBatch);
+  - `Codec/CalleeDecode.lean` (ValidatorIndex, Epoch, Slot): it uses their decoder specifications;
+  - `Codec/Segment/Bytes32VectorSpec.lean` (HistoricalBatch): its `example` lines apply the general lemmas to HistoricalBatch theorems;
+  - `Codec/SerializeFieldsCongruence.lean` (Checkpoint, AttestationData);
+  - `Codec/SerializeInline.lean` (Checkpoint, SyncCommittee).
 - `Prysm/Deposit/` imports modules of the flat type `Prysm/Deposit_Data/`.
 
 A new type gets its own directory `Prysm/<GoTypeName>/`.

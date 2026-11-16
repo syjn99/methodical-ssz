@@ -118,7 +118,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - What does not hold: `address_equation` (`lean/Machine/Step.lean`) does not reduce `Width.W64.bits`.
   A `grind` timeout inside `kstep` cannot be caught.
   `trivial` or `rfl` inside `first` on register goals with symbolic `BitVec` can use more than 6 GiB.
-- Effect: proofs use the macro `checkpoint_addr` (`lean/Prysm/Checkpoint/DecodeAccept.lean`), `load_step` and `store_step`.
+- Effect: proofs use the macro `segment_addr` (`lean/Codec/SegmentAddress.lean`), `load_step` and `store_step`.
   Register goals close with `exact trivial`, `with_reducible rfl` or `toBitVec_inj`.
 - Where: `lean/Machine/Step.lean`.
 
@@ -145,7 +145,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   On the encoder side, the six compiled sites that append a 32-byte field have six instruction texts.
   Only the call step is shared between them.
 - Effect: a refused type needs hand proofs.
-  A refused type of `gen/flat-types/run_generators.sh` has only `Code.lean` and, for some, `Statements.lean`.
+  A refused type of `gen/flat-types/run_generators.sh` has only `Code.lean`.
 - Where: `gen/generator/whole_accept.py`, `gen/generator/fast_path.py`.
   The last line of the standard error of a run gives the reason of a refusal.
   A generator change needs user approval.
@@ -213,6 +213,15 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - Effect: an `inside` result can come from an error that does not test the code.
   Read the first error of each result row.
 - Where: `classify` and `WRONG_TARGET` in `gen/checks/negative.py`.
+
+### No negative case changes a memory word of some accept post-states
+
+- What does not hold: no negative case covers a changed memory word in the post-state of `Decode.accept_spec` of these types.
+  The types are SyncCommitteeMessage, PendingConsolidation, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit and Deposit_Data.
+  Lean does not refute such a statement mutant within the heartbeat limit.
+- Effect: no case shows that a wrong memory word in these post-states fails.
+  The generated accept theorems that these proofs use keep their own mutants.
+- Where: `lean/Prysm/<GoTypeName>/DecodeSpec.lean` of these types, `gen/checks/negative-cases/`.
 
 ### A Lean error does not stop the file
 
