@@ -1,4 +1,4 @@
-import Prysm.Slot.DecodeAccept
+import Prysm.CommitteeIndex.DecodeAccept
 import Machine.WitnessHost
 import Runtime.CopyModel
 import Prysm.CommitteeIndex.Code

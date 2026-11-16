@@ -1,7 +1,6 @@
 import Runtime.Contracts
 import Prysm.Checkpoint.Spec
-import Prysm.SyncAggregate.SpecDescription
-import Prysm.SyncAggregate.SpecDefinitions
+import Prysm.SyncCommittee.SpecDescription
 import Codec.ByteSliceListDefinitions
 
 /-!

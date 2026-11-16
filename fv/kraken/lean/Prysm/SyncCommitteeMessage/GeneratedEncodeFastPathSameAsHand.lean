@@ -1,8 +1,5 @@
-import Prysm.PowBlock.EncodeFastPathStatements
-import Prysm.PowBlock.GeneratedEncodeFastPath
+import Prysm.SyncCommitteeMessage.EncodeFastPathStatements
 import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPath
-import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPath
-import Prysm.Deposit_Data.GeneratedEncodeFastPath
 
 /-!
 # Identity of the generated encoder fast-path theorem of `SyncCommitteeMessage` with the hand statement

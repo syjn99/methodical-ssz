@@ -99,7 +99,7 @@ What you make, in this order:
    `evaluate` exits 0.
    Copy `desc-work/orig/<package>.<T>.desc.json` to `prysm/go1.26.10/evidence/`.
    Copy `desc-work/main.result.json` to `gen/desc/results/main.result.json`.
-   Then write `SpecChecker.lean` (from `fv/kraken`; use `list_desc_to_lean.py` for a type with vectors, lists or bit vectors):
+   Then write `SpecChecker.lean` (from `fv/kraken`):
 
    ```sh
    python3 -I gen/checks/desc_to_lean.py prysm/go1.26.10/evidence/prysm_v1alpha1.HistoricalSummary.desc.json checkerDesc > lean/Prysm/HistoricalSummary/SpecChecker.lean
@@ -282,9 +282,12 @@ A check that did not run is "not run" in the pull request.
    An encoder theorem outside the fast path needs an entry in `ENC_EXTRA`.
    The entry gives a premise text for each theorem and a text of what is not proved.
    Without that entry, a theorem with a name of `ENC_UNCLASSIFIED` shows in the row as not classified.
-   `GENERATOR_REFUSED` gives the reason why the generators refuse a flat type.
+   `GENERATOR_REFUSED` is a hand table of the reason why the generators refuse a flat type.
+   Each reason is a short form of the last line of `<T>.whole-accept.stderr` or `<T>.fast-path.stderr` of step 5.
+   No program compares the table with a generator run.
    Change the entry of the type when the generator result of the type changes.
-   Do not add the type to `CORE_FLAT_TYPES`: it is a fixed list.
+   `CORE_FLAT_TYPES` is the set of types of the `decoder --whole-accept` and `encoder --fast-path` loops of `gen/generator/gen.sh`.
+   The tool reads it from that file.
    Expected: `gen/tools/proof_inventory.py run` exits 0, and `prysm/proof-inventory.md` has a row for the type.
 8. The link check of step 2, when the link set changed (needs the ELF).
 

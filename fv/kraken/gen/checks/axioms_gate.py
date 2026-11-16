@@ -2,7 +2,7 @@
 """Axioms gate over EVERY declaration of EVERY Lean library of fv/kraken/lean.
 
 Usage (one heavy job at a time, Lean env; the cwd does not matter):
-  axioms_gate.py run <out.json> <dump.tsv> [--extra-lean-path DIR --extra-module M]...
+  axioms_gate.py run <out.json> <dump.tsv>
   axioms_gate.py check <dump.tsv> <out.json>       (pure Python, no Lean)
   axioms_gate.py --selftest                       (crafted inputs, no Lean)
 
@@ -18,7 +18,7 @@ run:
     `lake env lean` itself does no trace check.
  2. `lake env lean --run <decl_dump.lean> --root <library>... <modules>` (every library) writes one row per
     declaration (name, kind, type hash, value hash, sorted Lean.collectAxioms set) to <dump.tsv>. decl_dump.lean is
-    the maintaining-methodical-fv skill script (read only). --extra-* adds a scratch .olean (negative control only).
+    the maintaining-methodical-fv skill script (read only).
  3. check: every row's axiom set is a subset of {propext, Classical.choice, Quot.sound}; no sorryAx; every name of
     the hand lists exists in the dump ("must exist"). Names are read from tab-separated columns, so names with `'`
     work.
@@ -156,7 +156,7 @@ def cmd_check(dump, out, extra_info=None):
     return 0 if r["verdict"] == "PASS" else 1
 
 
-def cmd_run(out, dump, extra_paths, extra_mods):
+def cmd_run(out, dump):
     libs = libraries(LAKEFILE.read_text())
     ms = modules(LEAN, libs)
     list_files(LIST_DIR)
@@ -171,10 +171,6 @@ def cmd_run(out, dump, extra_paths, extra_mods):
         return 2
     roots = sum((["--root", r] for r in libs), [])
     argv = ["lake", "env", "lean", "--run", str(DUMP)] + roots + ms
-    if extra_paths:  # negative control only: a scratch .olean outside the tree
-        argv = ["lake", "env", "sh", "-c", 'LEAN_PATH="$0:$LEAN_PATH" exec "$@"', ":".join(extra_paths),
-                "lean", "--run", str(DUMP)] + roots + ms + extra_mods
-        info["extra_modules"] = extra_mods
     d = subprocess.run(argv, cwd=LEAN, capture_output=True, text=True)
     pathlib.Path(dump).write_text(d.stdout)
     print("DUMP rc", d.returncode, "rows", d.stdout.count("\n") - 1, d.stderr[-500:], flush=True)
@@ -267,17 +263,8 @@ def main(a):
             return selftest()
         if a[:1] == ["check"] and len(a) == 3:
             return cmd_check(a[1], a[2])
-        if a[:1] == ["run"] and len(a) >= 3:
-            xp, xm, rest = [], [], a[3:]
-            while rest:
-                if rest[0] == "--extra-lean-path":
-                    xp.append(rest[1])
-                elif rest[0] == "--extra-module":
-                    xm.append(rest[1])
-                else:
-                    return __doc__
-                rest = rest[2:]
-            return cmd_run(a[1], a[2], xp, xm)
+        if a[:1] == ["run"] and len(a) == 3:
+            return cmd_run(a[1], a[2])
     except SetupError as e:
         print("SETUP FAIL", e, file=sys.stderr)
         return 2

@@ -28,8 +28,8 @@ The design principles are in `../../README.md`.
 | --- | --- | --- |
 | `generator/generator.py`, with `generator/whole_accept.py` and `generator/fast_path.py` | A converted `.S` file and the IR entry of one type | `lean/Prysm/<GoTypeName>/Generated*.lean`: step, accept, size reject and encoder fast path theorems |
 | `generator/gen.sh` | | Runs `generator.py` once for each generated file of the types that are not in `flat-types/run_generators.sh` |
-| `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py` | A `Desc` JSON file that the checker accepted | `*SpecChecker.lean`: the checker `Desc` as Lean |
-| `checks/layout.py <GoTypeName>` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/<GoTypeName>/Layout.lean` of Checkpoint and AttestationData |
+| `checks/desc_to_lean.py` | A `Desc` JSON file that the checker accepted | `*SpecChecker.lean`: the checker `Desc` as Lean |
+| `checks/layout.py` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/Checkpoint/Layout.lean` |
 | `desc/producer.py` | The reduced IR | One `Desc` JSON file for each type |
 | `type_inventory.py` | The raw IR of the generator | `prysm/ir/*.json` (`reduce`) and `prysm/inventory.json` (`build`) |
 | `type_list_document.py`, `type_scope.py` | `prysm/inventory.json` | `prysm/TYPES.md`, `prysm/type-scope.json`, `prysm/type-scope.md` |
@@ -245,7 +245,7 @@ These run without Lean, Go or the Prysm ELF:
 
 - `generator/kindcheck.py`, and the `--selftest` mode of `checks/axioms_gate.py`.
 - `tools/duplicate_statements.py`, on a dump of the axioms gate (the dump itself needs Lean).
-- `regen_check.sh` with `generator/generator.py`, `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py` and `checks/layout.py`.
+- `regen_check.sh` with `generator/generator.py`, `checks/desc_to_lean.py` and `checks/layout.py`.
 - `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`.
 - `checks/regenerate_and_compare.py <scratch>/<work dir>`, the regeneration comparison of all Python generators of Lean files.
 - `checks/fast_path_layout.py`, an independent recomputation of the layouts of the generated encoder fast-path theorems (cwd `fv/kraken`).

@@ -1,4 +1,4 @@
-import Prysm.SyncCommittee.SpecDefinitions
+import Codec.ByteSliceListDefinitions
 
 /-!
 # Definitions that the HistoricalBatch statements use

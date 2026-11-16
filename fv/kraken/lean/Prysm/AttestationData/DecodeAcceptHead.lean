@@ -2,6 +2,7 @@ import Codec.SegmentAddress
 import Runtime.Contracts
 import Machine.Frame
 import Prysm.Slot.DecodeAccept
+import Prysm.CommitteeIndex.DecodeAccept
 import Prysm.ElfData.PrysmTarget
 import Prysm.AttestationData.Code
 

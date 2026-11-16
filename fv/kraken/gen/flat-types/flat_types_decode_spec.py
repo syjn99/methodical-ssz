@@ -1,7 +1,7 @@
 """Write <dir>/Prysm/<GoTypeName>/DecodeSpec.lean from the generated accept
 statement text of <dir>/Prysm/<GoTypeName>/GeneratedDecodeAccept.lean (statement copied, input chunks replaced by the encoding of the EthLib-decoded value), for
 n fields of uint64 / byte vectors.
-usage: python3 -I -B flat_types_decode_spec.py <fv/kraken/lean> [GoTypeName ...]"""
+usage: python3 -I -B flat_types_decode_spec.py <fv/kraken/lean>"""
 import os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from flat_types_spec import SPEC_TYPES, with_code_imports  # noqa: E402
@@ -125,6 +125,6 @@ end Prysm.{X}
 
 if __name__ == '__main__':
     d = sys.argv[1]
-    for X in (sys.argv[2:] or DECODE_SPEC_TYPES):
+    for X in DECODE_SPEC_TYPES:
         open(os.path.join(d, 'Prysm', X, 'DecodeSpec.lean'), 'w').write(with_code_imports(emit(d, X), X))
         print(X)

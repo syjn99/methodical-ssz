@@ -4,8 +4,8 @@
 #   main : DESC_LIST=list.txt (originals), DESC_MUTANTS=mutants.txt (controls, known passes,
 #          review mutants) -> <work>/main.result.json, <work>/logs/main.log
 #   batch: DESC_BATCH=batch.txt (list scenarios, one result file each) -> <work>/logs/batch.log
-# The expected key set is the checker's table + the committed inventory (DESC_INVENTORY
-# defaults to ../prysm/inventory.json relative to fv/kraken/lean).
+# The expected key set is the checker's table + the committed inventory (../prysm/inventory.json relative to
+# fv/kraken/lean).
 # Exit status: 0 only if the main run ends with verdict OK (exit 0) and the batch ran (exit 0).
 set -u
 W=$1

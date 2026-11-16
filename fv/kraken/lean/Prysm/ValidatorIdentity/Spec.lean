@@ -1,6 +1,6 @@
 import Prysm.Checkpoint.Spec
 import Prysm.Checkpoint.SpecEquivalence
-import Prysm.DepositRequest.SpecDescription
+import Prysm.ValidatorIdentity.SpecDescription
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.ValidatorIdentity`

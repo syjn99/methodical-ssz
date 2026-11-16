@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Write lean/Prysm/<GoTypeName>/Layout.lean from prysm/ir/ir-mainnet.json (go_fields of
-v1alpha1.<GoTypeName>: go/types gc amd64 sizes and offsets). The ELF has no named type symbol for the
+"""Write lean/Prysm/Checkpoint/Layout.lean from prysm/ir/ir-mainnet.json (go_fields of
+v1alpha1.Checkpoint: go/types gc amd64 sizes and offsets). The ELF has no named type symbol for the
 struct (the abi.Type is not reachable from the included code), so the layout is the IR's; trust note in
-the generated file. Usage: layout.py <GoTypeName> > lean/Prysm/<GoTypeName>/Layout.lean, for a type of the
-package v1alpha1 (the tree has Checkpoint and AttestationData). Python 3 standard library only."""
+the generated file. Usage (cwd fv/kraken): layout.py > lean/Prysm/Checkpoint/Layout.lean.
+Python 3 standard library only."""
 import hashlib, json, pathlib, sys
-if len(sys.argv) != 2 or sys.argv[1].startswith("-"):
+if len(sys.argv) != 1:
     sys.exit(__doc__)
-name = sys.argv[1]
+name = "Checkpoint"
 K = pathlib.Path(__file__).resolve().parents[2]
 raw = (K / "prysm/ir/ir-mainnet.json").read_bytes()
 t = next(t for c in json.loads(raw)["configs"] for t in c.get("types", [])

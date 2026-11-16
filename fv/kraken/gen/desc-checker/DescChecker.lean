@@ -17,9 +17,10 @@ Inputs (environment):
 * `DESC_LIST`       the originals, one path per line
 * `DESC_MUTANTS`    optional negative cases (recorded with role `mutant`; never count for the verdict)
 * `DESC_RESULT`     the result file to write (JSON, written by Lean's JSON encoder)
-* `DESC_INVENTORY`  the committed inventory (default `../prysm/inventory.json`); its sha256 is
-                    printed and written into the result
 * `DESC_BATCH`      test tooling: lines `id<TAB>list<TAB>result`, one closed-world run per line
+
+The committed inventory is `../prysm/inventory.json`, relative to the working directory `fv/kraken/lean`.
+Its sha256 is printed and written into the result.
 
 Closed world. The expected key set is the checker's own table (9 hand types, `Spec` Desc and
 21 Go field names) plus the (package, type) keys of the committed inventory (135). It never
@@ -680,7 +681,7 @@ def readList (p : String) : IO (List String) := do
 
 def main : IO Unit := do
   -- the closed world: table (checker-owned) + committed inventory (bound by sha256)
-  let invPath := (← IO.getEnv "DESC_INVENTORY").getD "../prysm/inventory.json"
+  let invPath := "../prysm/inventory.json"
   let invBytes ← IO.FS.readBinFile invPath
   let invSha := sha256Hex invBytes
   let some invTxt := String.fromUTF8? invBytes | throw (IO.userError "inventory is not UTF-8")

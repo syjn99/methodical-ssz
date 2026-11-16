@@ -4,7 +4,7 @@ import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
-import Prysm.SyncCommittee.SpecDefinitions
+import Codec.ByteSliceListDefinitions
 import Prysm.Deposit_Data.Code
 import Prysm.Deposit.Code
 

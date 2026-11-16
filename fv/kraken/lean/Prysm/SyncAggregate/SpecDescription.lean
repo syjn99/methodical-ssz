@@ -1,5 +1,4 @@
 import Prysm.Checkpoint.Spec
-import Prysm.SyncCommittee.SpecDescription
 
 /-!
 # Independent hand `Desc` of `v1alpha1.SyncAggregate`

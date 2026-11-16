@@ -47,7 +47,7 @@ def emit(X, ty, fs, chk):
     w = L.append
     w('import Prysm.Checkpoint.Spec')
     w('import Prysm.Checkpoint.SpecEquivalence')
-    w('import Prysm.DepositRequest.SpecDescription')
+    w(f'import Prysm.{X}.SpecDescription')
     if chk:
         w(f'import Prysm.{X}.SpecChecker')
     w('')

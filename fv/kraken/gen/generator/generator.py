@@ -1262,17 +1262,20 @@ def whole_accept_module():
 
 def _decoder_whole_accept(args, flags):
     whole_accept_gen = whole_accept_module()
-    # the generated proofs name the code constant of each callee: import its code module
-    callee_mods = []
+    # the generated proofs name the code constant and the spec theorem of each callee: import their modules
+    callee_mods, called = [], set()
     for d in read_S(args.assembly)[0]:
         m = re.fullmatch(r"callq (\S+)", d)
         if m and m.group(1) in whole_accept_gen.WHOLE_ACCEPT_CALLEES:
+            called.add(m.group(1))
             mod = whole_accept_gen.WHOLE_ACCEPT_CALLEES[m.group(1)][0].rsplit(".", 1)[0]
             if mod not in callee_mods:
                 callee_mods.append(mod)
+    spec_mods = [mod for fn, mod in whole_accept_gen.WHOLE_ACCEPT_CALLEE_SPEC_MODULES.items() if fn in called]
+    fixed = whole_accept_gen.WHOLE_ACCEPT_IMPORTS
     mods = args.imports.split(",")
     mods += [m for m in callee_mods if m not in mods]
-    args.imports = ",".join(mods + [m for m in whole_accept_gen.WHOLE_ACCEPT_IMPORTS if m not in mods])
+    args.imports = ",".join(mods + [m for m in fixed[:2] + spec_mods + fixed[2:] if m not in mods])
     # phase 1: the step front end; a complete step chain (every field, head, epilogue) or no accept theorem
     step_text = decoder_step(args)
     if not isinstance(step_text, str) or not step_text.endswith(f"end {GEN_NS}\n"):

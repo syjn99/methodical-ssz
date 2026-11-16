@@ -244,10 +244,10 @@ Change the tool and run it again.
 | Kind | Written by | Command that makes it again | What checks it |
 | --- | --- | --- | --- |
 | `Code.lean` | Hand: one `include_x64_code` constant for each function that a proof reads | None | The build, the link check of its `.S` files, `gen/tools/proof_inventory.py` |
-| `Layout.lean` (Checkpoint, AttestationData) | `gen/checks/layout.py` | `python3 -I gen/checks/layout.py <T> > lean/Prysm/<T>/Layout.lean` | `regenerate_and_compare.py`, the build |
+| `Layout.lean` (Checkpoint) | `gen/checks/layout.py` | `python3 -I gen/checks/layout.py > lean/Prysm/Checkpoint/Layout.lean` | `regenerate_and_compare.py`, the build |
 | `Spec.lean` | Hand. For the types of the table `SPEC_TYPES` of `gen/flat-types/flat_types_spec.py`: that tool | `python3 -I -B gen/flat-types/flat_types_spec.py lean` | The build, the axioms gate, `regenerate_and_compare.py` |
 | `SpecDescription.lean`, `SpecDefinitions.lean` | Hand, from consensus-specs | None | The build, a review against consensus-specs |
-| `SpecChecker.lean` | `gen/checks/desc_to_lean.py` or `gen/checks/list_desc_to_lean.py` (named in its header) | `python3 -I gen/checks/desc_to_lean.py prysm/go1.26.10/evidence/<package>.<T>.desc.json checkerDesc > lean/Prysm/<T>/SpecChecker.lean` | `regenerate_and_compare.py`, the build |
+| `SpecChecker.lean` | `gen/checks/desc_to_lean.py` | `python3 -I gen/checks/desc_to_lean.py prysm/go1.26.10/evidence/<package>.<T>.desc.json checkerDesc > lean/Prysm/<T>/SpecChecker.lean` | `regenerate_and_compare.py`, the build |
 | `SpecEquivalence.lean` | Hand | None | The build, the axioms gate |
 | `GeneratedDecodeAccept.lean` | `gen/generator/generator.py`: mode `uint64` for ValidatorIndex, `decoder --whole-accept` for the other types | `sh gen/generator/gen.sh` for its types. For the types of `gen/flat-types/run_generators.sh`: `sh gen/flat-types/run_generators.sh <out dir>`, then copy `<out dir>/<T>.whole-accept.lean` when `<T>.whole-accept.rc` is 0 | The build, `gen/generator/kindcheck.py`, `regenerate_and_compare.py`, the axioms gate, the negative cases |
 | `GeneratedEncodeFastPath.lean` | `gen/generator/generator.py encoder --fast-path` | As for `GeneratedDecodeAccept.lean`, with `<T>.fast-path.lean` | The build, `kindcheck.py`, `gen/checks/fast_path_layout.py`, `regenerate_and_compare.py`, the negative cases |

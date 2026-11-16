@@ -347,7 +347,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   The ELF `abi.Type` of a receiver type has no named symbol.
 - Effect: the receiver layout is a trust item.
   No amd64 run confirms it.
-- Where: `prysm/ir/ir-mainnet.json`, `lean/Prysm/<GoTypeName>/Layout.lean`.
+- Where: `prysm/ir/ir-mainnet.json`, `lean/Prysm/Checkpoint/Layout.lean`, and the layout comments of the hand proofs.
 
 ### The runtime contracts are not proved on the compiled runtime
 

@@ -19,8 +19,8 @@
   (cwd = fv/kraken)
 
 Three denominators are kept apart: (1) the SSZ methods of the target (`ssz-methods.json`, per method kind);
-(2) the dumped functions (`functions.json`); (3) the core flat types: a fixed list of flat fixed-size types
-(`CORE_FLAT_TYPES`).
+(2) the dumped functions (`functions.json`); (3) the core flat types (`CORE_FLAT_TYPES`): the types of the
+`decoder --whole-accept` and `encoder --fast-path` loops of `gen/generator/gen.sh`, read from that file.
 The flat fixed-size types of the target are computed from the IR by `FLAT_RULE`; those outside `CORE_FLAT_TYPES` are listed.
 
 Mapping. The rows are derived by a rule, not written by hand: for every directory `lean/Prysm/<GoTypeName>/` and
@@ -77,15 +77,27 @@ V1A = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
 PRIM = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
 V1E = "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
 
-# The core flat types: a fixed list of 16 flat fixed-size types. The inventory counts their decoders as one group.
+
+
+def gen_sh_types():
+    """The Go type names of the `encoder --fast-path` loop (`for row in ...`) and then of the `decoder --whole-accept`
+    loop (`for t in ...`) of gen/generator/gen.sh, in file order, each name once."""
+    text = (KR / "gen/generator/gen.sh").read_text().replace("\\\n", " ")
+    enc = re.search(r"^for row in (.*?); do$", text, re.M).group(1)
+    dec = re.search(r"^for t in (.*?); do$", text, re.M).group(1)
+    names = [w.split()[0] for w in re.findall(r'"([^"]*)"', enc)] + re.sub(r'"[^"]*"', " ", enc).split() + dec.split()
+    return list(dict.fromkeys(names))
+
+
+# The core flat types: the types of gen/generator/gen.sh. The inventory counts their decoders as one group.
 # AttestationData has nested fields and is listed apart (`NESTED`).
-CORE_FLAT_TYPES = ["Checkpoint", "BeaconBlockHeader", "Eth1Data", "BlobIdentifier", "DepositMessage", "Deposit_Data",
-          "PendingPartialWithdrawal", "SyncCommitteeMessage", "PendingConsolidation", "PendingDeposit", "PowBlock",
-          "HistoricalSummary", "SigningData", "SyncAggregatorSelectionData", "ValidatorBalance", "VoluntaryExit"]
+CORE_FLAT_TYPES = gen_sh_types()
 NESTED = ["AttestationData"]
 # Why the generators refuse a flat type outside CORE_FLAT_TYPES (wording only, no state rule). The class is the field kind
 # or the callee at the directive of the `.S` file where `decoder --whole-accept` or `encoder --fast-path` stops.
 # The generators do not support that class.
+# This table is hand text: a short form of the last line of the standard error of gen/flat-types/run_generators.sh
+# for the type. No program compares it with a run of the generator.
 GENERATOR_REFUSED = {
     "v1.BuilderExitRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
     "v1.ConsolidationRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
@@ -666,8 +678,8 @@ def run(decls_p, gate_p, md_p, json_p):
         denominators={
             "target_ssz_methods": f"{METHODS_JSON} (from the nm listing of the pinned ELF, sha256 {sm['nm_sha256']})",
             "dumped_functions": "prysm/go1.26.10/functions.json (functions with a `.S` text)",
-            "core_flat_types": "CORE_FLAT_TYPES of gen/tools/proof_inventory.py (a fixed list of 16 flat "
-                               "fixed-size types)"},
+            "core_flat_types": "CORE_FLAT_TYPES of gen/tools/proof_inventory.py (the types of the "
+                               "decoder --whole-accept and encoder --fast-path loops of gen/generator/gen.sh)"},
         target_ssz_methods=len(target), target_types=len(target_types),
         functions_json_total=len(funcs), functions_json_runtime_helpers=runtime,
         by_kind=by_kind,
@@ -721,8 +733,8 @@ def run(decls_p, gate_p, md_p, json_p):
           f"2. Dumped functions (`functions.json`, a `.S` text exists): {len(funcs)}, of which "
           f"{len(funcs) - len(runtime)} are SSZ methods and {len(runtime)} are runtime helpers "
           f"({', '.join(r.rsplit('.', 1)[-1] for r in runtime)}). A theorem needs a dumped function.",
-          f"3. Core flat types: a fixed list of {len(CORE_FLAT_TYPES)} flat fixed-size types "
-          "(`CORE_FLAT_TYPES` of the script). "
+          f"3. Core flat types: the {len(CORE_FLAT_TYPES)} types of the `decoder --whole-accept` and "
+          "`encoder --fast-path` loops of `gen/generator/gen.sh` (`CORE_FLAT_TYPES` of the script). "
           "It is not the set of flat fixed-size types of the target (see the flat types below).", "",
           "## Totals by method kind", "",
           "| method kind | in the target | in `functions.json` | with a mapping row | complete | partial |",

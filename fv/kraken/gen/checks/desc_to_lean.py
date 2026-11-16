@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """Render the `ssz` term of a Desc-checker input file (schema fv.kraken.desc/1) as Lean.
 
-Usage: desc_to_lean.py <desc.json> <lean-name> > lean/Prysm/Checkpoint/SpecChecker.lean (lean-name: checkerDesc)
+Usage: desc_to_lean.py <desc.json> <lean-name> > lean/Prysm/<GoTypeName>/SpecChecker.lean (lean-name: checkerDesc)
 The namespace of the output is Prysm.<GoTypeName> (the `type` of the file).
-The file is the producer's Desc for (v1alpha1, Checkpoint) that the Desc checker accepted
-(gen/desc/results/main.result.json, record orig/prysm_v1alpha1.Checkpoint.desc.json, same sha256).
+The file is the producer's Desc that the Desc checker accepted (gen/desc/results/main.result.json, same sha256).
 The tracked copies of the Desc files are in prysm/go1.26.10/evidence/.
 The header names the input file by its path relative to fv/kraken, and its sha256.
-Only the kinds of that term are rendered (container, uint, byteVector); any other kind is an error.
+The rendered kinds are container, uint, byteVector, bitVector, vector and list; any other kind is an error.
 Python 3 standard library only.
 """
 import hashlib
@@ -29,6 +28,12 @@ def term(t):
         return f".uint {int(t['w'])}"
     if k == "byteVector":
         return f".byteVector {int(t['n'])}"
+    if k == "bitVector":
+        return f".bitVector {int(t['n'])}"
+    if k == "vector":
+        return f".vector ({term(t['elem'])}) {int(t['n'])}"
+    if k == "list":
+        return f".list ({term(t['elem'])}) {int(t['limit'])}"
     if k == "container":
         names = ", ".join(json.dumps(n) for n in t["names"])
         fields = ", ".join(term(f) for f in t["fields"])

@@ -1,5 +1,5 @@
 import Codec.Kind.FieldPatterns
-import Prysm.Slot.DecodeAccept
+import Prysm.CommitteeIndex.DecodeAccept
 import Prysm.CommitteeIndex.Code
 
 /-!

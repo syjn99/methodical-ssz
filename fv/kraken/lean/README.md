@@ -105,7 +105,18 @@ Codec <-> Prysm (at module level, both directions)
   - `Codec/SerializeInline.lean` (Checkpoint, SyncCommittee);
   - `Codec/DecodeRejectSizeAnyFrame.lean`, `Codec/FixedBytesDecode.lean`, `Codec/Kind/DecodeAcceptAnyFrame.lean`, `Codec/Kind/DecodeRejectAnyFrame.lean`,
     `Codec/Segment/Bytes32Loop.lean`, `Codec/Segment/SizeReject.lean` and `Codec/Uint64RejectSize.lean` (ElfData): they use data addresses of the link set.
-- `Prysm/Deposit/` imports modules of the flat type `Prysm/Deposit_Data/`.
+- A module of one type directory imports a module of another type directory for one of these reasons:
+  - A callee decoder: the code calls the decoder of another type.
+    The module imports the `Code` module of the callee and the module of its `Decode.accept_function_spec_holds`.
+    Examples are the generated decoders that call Slot, Epoch or ValidatorIndex, and AttestationData, which calls Checkpoint.
+  - A nested type: the type holds another type as a field.
+    The module imports the modules of the field type, for example Deposit and `Prysm/Deposit_Data/`.
+  - The shared `Spec` of a nested type: the `Spec` module of the outer type uses the `SszValue` lemmas of the field type.
+    An example is `Prysm/IndexedAttestation/Spec.lean`, which uses `Prysm.AttestationData.SszValue`.
+  - The shared imports of `Prysm/Checkpoint/Spec.lean` and `Prysm/Checkpoint/SpecEquivalence.lean`.
+    Many `Spec`, `SpecDescription` and `SpecDefinitions` modules import them for the EthLib and `Spec` modules that they import.
+    These modules name no Checkpoint declaration.
+- A type directory also imports the two directories of `Prysm/` that are not types: `Prysm/ElfData/` and `Prysm/RuntimeModel/`.
 
 A new type gets its own directory `Prysm/<GoTypeName>/`.
 Do not change a reviewed module to add a new type.
@@ -236,7 +247,7 @@ It also has a checker `Desc` when the `Desc` checker accepted a producer file fo
   `grep -lE '^def desc' lean/Prysm/*/*.lean` lists the modules.
   Example: `Prysm.Checkpoint.desc` in `Prysm/Checkpoint/Spec.lean`.
 - The checker `Desc` `Prysm.<GoTypeName>.checkerDesc` is in `SpecChecker.lean`.
-  `../gen/checks/desc_to_lean.py` or `../gen/checks/list_desc_to_lean.py` writes it from a file of `../prysm/go1.26.10/evidence/`.
+  `../gen/checks/desc_to_lean.py` writes it from a file of `../prysm/go1.26.10/evidence/`.
   The checker in `../gen/desc-checker/` accepted that file.
   A type without such a file has no `SpecChecker.lean`.
 - Codec equality theorems show that both give the same `serialize` and `deserialize`.
@@ -311,13 +322,13 @@ Examples are `Deposit_Data`, `ENRForkID` and the label `runtime.makeslice`.
 | Role | Content of the module |
 | --- | --- |
 | `Code` | Program constants read from the converted `.S` files (hand) |
-| `Layout` | Go struct layout from the IR: offsets and sizes (`../gen/checks/layout.py`) |
+| `Layout` | Go struct layout of Checkpoint from the IR: offsets and sizes (`../gen/checks/layout.py`) |
 | `EncodeLayout` | Hand encoder frame layout that `gen.sh` gives the generator with `--hand-layout` |
 | `GoValue`, `GoValueWitness` | Validity of the Go value of the receiver, and its witness |
 | `Spec` | The `SszValue` structure, its bridge lemmas to EthLib and, for some types, the hand `Desc` (section 5) |
 | `SpecDescription` | The hand `Desc` alone |
 | `SpecDefinitions` | The definitions that the statements use, and for some types the hand `Desc` (section 5) |
-| `SpecChecker` | The checker `Desc` (`../gen/checks/desc_to_lean.py`, `list_desc_to_lean.py`) |
+| `SpecChecker` | The checker `Desc` (`../gen/checks/desc_to_lean.py`) |
 | `SpecEquivalence` | Codec equality of the hand `Desc` and the checker `Desc` |
 | `SpecDecodeBridge` | Decoder-side lemmas of the specification bridge |
 | `Statements`, `Statements` + qualifier | Statement definitions `<theorem>_statement : Prop` |

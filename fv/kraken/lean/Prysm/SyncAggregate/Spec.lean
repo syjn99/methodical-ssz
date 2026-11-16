@@ -2,7 +2,7 @@ import Prysm.Checkpoint.Spec
 import Prysm.Checkpoint.SpecEquivalence
 import EthLib.Serialization.Proofs.Ssz.Codec.Canonical
 import EthLib.Serialization.Proofs.Ssz.Codec.RoundTripScalar
-import Prysm.SyncCommittee.SpecDefinitions
+import Prysm.SyncAggregate.SpecDefinitions
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.SyncAggregate`

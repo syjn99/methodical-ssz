@@ -2,7 +2,6 @@ import Machine.Step
 import Machine.Labels
 import Machine.Bytes
 import Prysm.Slot.Code
-import Prysm.CommitteeIndex.DecodeAccept
 
 /-!
 # `(*primitives.Slot).UnmarshalSSZ`, accept path

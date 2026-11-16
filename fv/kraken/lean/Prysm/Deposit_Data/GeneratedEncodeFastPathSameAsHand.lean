@@ -1,7 +1,4 @@
-import Prysm.PowBlock.EncodeFastPathStatements
-import Prysm.PowBlock.GeneratedEncodeFastPath
-import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPath
-import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPath
+import Prysm.Deposit_Data.EncodeFastPathStatements
 import Prysm.Deposit_Data.GeneratedEncodeFastPath
 
 /-!

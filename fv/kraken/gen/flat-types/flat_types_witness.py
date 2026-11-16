@@ -4,7 +4,7 @@ WitnessGeneratedDecodeRejectSize (lean/Prysm/<GoTypeName>/) of the generated dec
 witnesses `Prysm/Deposit_Data/WitnessGeneratedDecodeAccept.lean` (frame 0x20 bytes) and `Prysm/PendingDeposit/WitnessGeneratedDecodeAccept.lean`
 (frame with slices and callees); the memory block of each type is laid out here from the frame facts of its `.S`,
 with the addresses computed below.
-usage: python3 -I -B flat_types_witness.py <fv/kraken> [GoTypeName ...]"""
+usage: python3 -I -B flat_types_witness.py <fv/kraken>"""
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from flat_types_spec import SPEC_TYPES, with_code_imports  # noqa: E402
@@ -470,8 +470,7 @@ end Prysm.{X}.Witness.GeneratedDecodeAccept
 
 if __name__ == '__main__':
     kr = sys.argv[1]
-    which = sys.argv[2:] or WITNESS_TYPES
-    for X in which:
+    for X in WITNESS_TYPES:
         n = slen(kr, X)
         d = os.path.join(kr, 'lean', 'Prysm', X)
         open(os.path.join(d, 'WitnessGeneratedDecodeRejectSize.lean'), 'w').write(with_code_imports(reject(X, n), X))

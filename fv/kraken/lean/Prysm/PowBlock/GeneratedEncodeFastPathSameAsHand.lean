@@ -1,10 +1,5 @@
 import Prysm.PowBlock.EncodeFastPathStatements
 import Prysm.PowBlock.GeneratedEncodeFastPath
-import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPath
-import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPath
-import Prysm.Deposit_Data.GeneratedEncodeFastPath
-import Prysm.Deposit_Data.GeneratedEncodeFastPathSameAsHand
-import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPathSameAsHand
 
 /-!
 # Identity of the generated encoder fast-path theorem of `PowBlock` with the hand statement

@@ -16,7 +16,7 @@ import Prysm.Slot.Code
         a.Target = new(Checkpoint); a.Target.UnmarshalSSZ(buf[88:128])
         return err }
 
-Receiver: the protoc struct (`attestation.pb.go`, gc amd64 layout `Prysm.AttestationData.goFields`): `state` 0,
+Receiver: the protoc struct (`attestation.pb.go`, gc amd64 layout `go_fields` of `v1alpha1.AttestationData` in `prysm/ir/ir-mainnet.json`): `state` 0,
 `Slot` 8, `CommitteeIndex` 16, `BeaconBlockRoot` 24 (ptr, len, cap), `Source` 48, `Target` 56,
 `unknownFields` 64 (24), `sizeCache` 88 (4) + 4 bytes padding. Size 96. `unknownFields` and
 `sizeCache` are not touched on this path (in `R`).

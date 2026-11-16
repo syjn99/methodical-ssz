@@ -1,11 +1,4 @@
 import Prysm.Checkpoint.Spec
-import Prysm.BeaconBlocksByRangeRequest.SpecDescription
-import Prysm.BlobSidecarsByRangeRequest.SpecDescription
-import Prysm.BuilderDepositRequest.SpecDescription
-import Prysm.BuilderPreferences.SpecDescription
-import Prysm.ExecutionPayloadEnvelopesByRangeRequest.SpecDescription
-import Prysm.PartialDataColumnGroupID.SpecDescription
-import Prysm.ValidatorIdentity.SpecDescription
 
 /-!
 # Independent hand `Desc` of `DepositRequest`

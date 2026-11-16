@@ -1,7 +1,5 @@
 import Codec.Kind.EncodeFastPathAnyFrame
 import Prysm.PowBlock.Code
-import Prysm.Deposit_Data.EncodeFastPathStatements
-import Prysm.SyncCommitteeMessage.EncodeFastPathStatements
 
 /-!
 # Independent hand statement of the `PowBlock` encoder fast path
