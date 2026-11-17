@@ -375,7 +375,7 @@ A check that did not run is "not run" in the pull request.
    `CORE_FLAT_TYPES` is the set of types of the accept rows of `gen/generator/types.tsv` in the modes `decoder --whole-accept` and `encoder --fast-path`.
    It does not hold a type with the companion `hand-list`.
    The tool reads it from the table.
-   Expected: `gen/tools/proof_inventory.py run` exits 0, and `prysm/proof-inventory.md` has a row for the type.
+   Expected: `gen/tools/proof_inventory.py run` exits 0, and its output `<scratch>/proof-inventory.md` has a row for the type.
 8. The link check of step 2, when the link set changed (needs the ELF).
 
 ## 8. The pull request

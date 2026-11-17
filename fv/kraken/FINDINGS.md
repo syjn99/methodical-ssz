@@ -32,7 +32,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - Effect: each of these methods needs its own specification and proof.
   A generated decoder that calls one depends on the function specification of that method.
 - Where: `lean/Prysm/Epoch/`, `lean/Prysm/Slot/`, `lean/Prysm/CommitteeIndex/` and `lean/Prysm/ValidatorIndex/`.
-  `prysm/proof-inventory.md` gives the theorems of each method.
+  The proof inventory gives the theorems of each method (`README.md` section 5).
 
 ### An encoder reject does not keep the spare bytes of the caller array
 
@@ -301,7 +301,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - What does not hold: these tracked files cannot be made again from tracked files alone.
   - They need the Prysm ELF: the link set `prysm/go1.26.10/link-set/**` with its `RESULT`, `build-ids.txt`, `functions.json` and `ssz-methods.json` of `prysm/go1.26.10/`.
   - They need the ELF and Lean: `prysm/go1.26.10/parser-result.json` (a log of `gen/kraken-parser/ParserRun.lean`).
-  - They need Lean: `gen/desc/results/main.result.json` and `prysm/proof-inventory.md`, `prysm/proof-inventory.json`.
+  - It needs Lean: `gen/desc/results/main.result.json`.
   - They need a Prysm tree and Go: `prysm/_generated/**`, `prysm/ir/*.json` and `prysm/diff/generated-go-diff.json`.
 - Effect: `gen/checks/regenerate_and_compare.py` and `gen/checks/python_checks.sh` do not cover them.
   A check of these files needs the tools of `README.md` sections 3 and 5.
@@ -424,7 +424,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   - The hash tree root methods of every type.
 - Effect: the frame separation premise of the encoders is not justified for every Go caller.
   The `IndexedAttestation` alignment and overflow rejects are proved only with the premise that the error word is not zero.
-- Where: `prysm/proof-inventory.md` lists the paths not proved for each method.
+- Where: the proof inventory lists the paths not proved for each method (`README.md` section 5).
 
 ## Target and environment
 
