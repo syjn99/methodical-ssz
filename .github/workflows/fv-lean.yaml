@@ -52,6 +52,22 @@ jobs:
       working-directory: .
       run: python3 -B fv/kraken/gen/checks/axioms_gate.py run "$RUNNER_TEMP/gate.json" "$RUNNER_TEMP/gate-dump.tsv"
 
+    # The proof inventory is the table of theorems for each SSZ method. The tree does not hold it.
+    - name: Proof inventory
+      working-directory: fv/kraken
+      run: |
+        mkdir -p "$RUNNER_TEMP/proof-inventory"
+        python3 -I -B gen/tools/proof_inventory.py names "$RUNNER_TEMP/inventory-names.txt"
+        MODULES=$(find lean/Prysm -name '*.lean' | sed 's|^lean/||;s|\.lean$||;s|/|.|g' | sort)
+        (cd lean && lake env lean --run ../gen/tools/inventory_decls.lean "$RUNNER_TEMP/inventory-names.txt" $MODULES > "$RUNNER_TEMP/decls.tsv")
+        python3 -I -B gen/tools/proof_inventory.py run "$RUNNER_TEMP/decls.tsv" "$RUNNER_TEMP/gate.json" "$RUNNER_TEMP/proof-inventory/proof-inventory.md" "$RUNNER_TEMP/proof-inventory/proof-inventory.json"
+        sed -n '/^## Totals by method kind/,/^## Summary/p' "$RUNNER_TEMP/proof-inventory/proof-inventory.md" >> "$GITHUB_STEP_SUMMARY"
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: proof-inventory
+        path: ${{ runner.temp }}/proof-inventory
+
     - name: Peak memory
       if: always()
       run: grep -E 'VmHWM|MemTotal' /proc/meminfo /proc/self/status || true
