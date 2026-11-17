@@ -43,7 +43,10 @@ MarshalSSZ gives bytes that EthLib rejects(, and HashTreeRoot gives a root)?: in
 
 # The decoder rejects a Gloas progressive list or bitlist above its ssz-max tag.
 # The SSZ type has no limit. Soft limit of the generator, added in PR #22.
-# One line for each field where the difference was seen.
-^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.BuilderExits has [0-9]+ elements, ssz-max is 16:
+# From Gloas, the body, payload, state, bid, requests and column containers are
+# progressive, and EthLib gives their lists no limit. Value inputs reach this
+# class in many list fields (13 seen), so the list line takes any field.
+# One line for each bitlist field where the difference was seen.
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.[A-Za-z0-9_]+ has [0-9]+ elements, ssz-max is [0-9]+:
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?AggregationBits: (too many bits|unexpected number of bytes)
 ^glamsterdam/PartialDataColumnSidecar: EthLib accepts, methodical rejects: CellsPresentBitmap: (too many bits|unexpected number of bytes)
