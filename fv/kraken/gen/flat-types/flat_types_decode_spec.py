@@ -62,7 +62,7 @@ import Prysm.{X}.Spec
 /-!
 # Spec alignment of the `{ty}` decoder
 
-Built on the GENERATED theorems of `Prysm/{X}/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`):
+Built on the GENERATED theorems of `Prysm/{X}/GeneratedDecodeAccept.lean` (the `decoder --whole-accept` row of the type in `gen/generator/types.tsv`, run by `gen/generator/gen.sh`):
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : {value_type}` with `g.toValue = v`
   and `bsA = {encode_name} g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
   The statement is the generated accept statement (kind instance) with the input chunks replaced by the
