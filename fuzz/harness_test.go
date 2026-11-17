@@ -148,8 +148,9 @@ func check(t *testing.T, obj codec, fork, name string, data []byte) {
 	if verdict == oracle.Unsupported {
 		t.Fatalf("%s/%s: EthLib gave no verdict: %s", fork, name, out)
 	}
+	signal(verdict)
 	err := obj.UnmarshalSSZ(data)
-	if err == nil && verdict == oracle.Reject {
+	if err == nil && verdict != oracle.Accept {
 		differ(t, "%s/%s: methodical accepts, EthLib rejects: %s", fork, name, out)
 	}
 	if err != nil && verdict == oracle.Accept {

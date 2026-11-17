@@ -12,12 +12,13 @@ import (
 	"unsafe"
 )
 
-// Verdict is what EthLib says about the bytes of one container.
+// Verdict is what EthLib says about the bytes of one container: Accept,
+// Unsupported, or the code of the SSZ error that rejects them. The codes are
+// Err.code in EthLib/Serialization/Ssz/Error.lean, from 1.
 type Verdict int
 
 const (
 	Accept Verdict = C.ETHLIB_ACCEPT
-	Reject Verdict = C.ETHLIB_REJECT
 	// Unsupported is EthLib's code 0: it holds no such container at the fork,
 	// or it could not read the arguments. It says nothing about the bytes.
 	Unsupported Verdict = C.ETHLIB_UNSUPPORTED

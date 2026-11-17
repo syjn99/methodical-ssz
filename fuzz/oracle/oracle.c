@@ -51,8 +51,9 @@ int ethlib_ssz_static(const char *preset, const char *fork, const char *type, co
 		if (len > *out_len) len = *out_len;
 		memcpy(out, lean_string_cstr(msg), len);
 		*out_len = len;
-		// Code 0: no such container, fork or argument. Codes >= 1: the SSZ error.
-		status = lean_unbox_uint32(lean_ctor_get(pair, 0)) == 0 ? ETHLIB_UNSUPPORTED : ETHLIB_REJECT;
+		// Code 0: no such container, fork or argument. Codes >= 1: Err.code of the SSZ error.
+		uint32_t code = lean_unbox_uint32(lean_ctor_get(pair, 0));
+		status = code == 0 ? ETHLIB_UNSUPPORTED : (int)code;
 	} else { // Except.ok (PyValue.tuple #[bytes root, bytes encoding])
 		lean_object *v = lean_ctor_get(res, 0);
 		lean_object *r = NULL, *e = NULL;

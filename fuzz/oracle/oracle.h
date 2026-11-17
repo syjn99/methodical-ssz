@@ -1,11 +1,12 @@
 #include <stddef.h>
 #include <stdint.h>
 
+// ethlib_ssz_static returns one of these, or the EthLib error code (>= 1)
+// that rejects the bytes. Then out holds the message.
 enum {
-	ETHLIB_ACCEPT = 0,      // root and out hold the root and the re-encoding
-	ETHLIB_REJECT = 1,      // EthLib rejects the bytes, out holds the message
-	ETHLIB_UNSUPPORTED = 2, // EthLib code 0: no verdict, out holds the message
-	ETHLIB_BROKEN = 3,      // the export returned a shape the shim does not know
+	ETHLIB_ACCEPT = 0,       // root and out hold the root and the re-encoding
+	ETHLIB_UNSUPPORTED = -1, // EthLib code 0: no verdict, out holds the message
+	ETHLIB_BROKEN = -2,      // the export returned a shape the shim does not know
 };
 
 // Starts the Lean runtime on the calling thread. Returns 1 on success.

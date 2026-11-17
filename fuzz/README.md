@@ -13,6 +13,10 @@ For each input:
 2. If both accept, `MarshalSSZ` must equal the EthLib encoding.
 3. If both accept, `HashTreeRoot` must equal the EthLib root.
 
+The Go fuzzer sees only the coverage of Go code. EthLib is not instrumented.
+So the harness gives accept and each EthLib decode error code its own Go branch (`signal` in `codes_test.go`).
+An input that reaches a new EthLib rejection reason is then new coverage, and the fuzzer keeps it.
+
 A difference fails the target. Go saves the input in `testdata/fuzz/<target>/`.
 The two presets share that directory. A saved input shows its difference only at the preset that found it.
 
