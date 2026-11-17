@@ -18,12 +18,15 @@ go test -c -fuzz=. -tags "$PRESET" -o "$OUT/fuzz.test" . || exit 1
 export CACHE=$(go env GOCACHE)/fuzz/github.com/OffchainLabs/methodical-ssz/fuzz/$PRESET
 
 one() {
-	local status=ok
+	local status=ok saved
+	saved=$(ls "testdata/fuzz/$1" 2>/dev/null | wc -l)
 	"$OUT/fuzz.test" -test.run '^$' -test.fuzz "^$1\$" -test.fuzztime "$FUZZTIME" \
 		-test.fuzzminimizetime "$MINIMIZE" -test.parallel "$WORKERS" -test.fuzzcachedir "$CACHE" >"$OUT/$1.log" 2>&1 || status=FAIL
 	# The Go fuzzer can end with this error when the time runs out during
-	# minimization. That is not a difference.
-	if [[ $status == FAIL ]] && grep -q 'context deadline exceeded' "$OUT/$1.log" && ! grep -q 'Failing input' "$OUT/$1.log"; then
+	# minimization. That is not a difference, unless it found or saved an input.
+	if [[ $status == FAIL ]] && grep -q 'context deadline exceeded' "$OUT/$1.log" &&
+		! grep -qi 'failing input' "$OUT/$1.log" &&
+		[[ $(ls "testdata/fuzz/$1" 2>/dev/null | wc -l) -eq $saved ]]; then
 		status=ok
 	fi
 	echo "$status $1 $(grep '^fuzz: elapsed' "$OUT/$1.log" | tail -1)"

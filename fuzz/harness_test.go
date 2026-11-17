@@ -36,6 +36,9 @@ func run[T any, P interface {
 	*T
 	codec
 }](f *testing.F, name string, forks ...string) {
+	if _, err := os.Stat(".seeds/complete"); err != nil {
+		f.Fatal("no seed vectors: run ./seeds.sh")
+	}
 	for _, fork := range forks {
 		// EthLib answers code 0 when it holds no such container. That is no
 		// verdict on the bytes, so the type cannot be tested.
@@ -55,8 +58,8 @@ func run[T any, P interface {
 			f.Add(data)
 		}
 	}
-	// The zero value is a seed that both sides must accept. It proves that
-	// the type and the container have the same shape, also without vectors.
+	// The zero value is a seed that both sides must accept. It gives the
+	// targets without vectors one valid input.
 	obj := new(T)
 	fill(reflect.ValueOf(obj).Elem())
 	zero, err := P(obj).MarshalSSZ()

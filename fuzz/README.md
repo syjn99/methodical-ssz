@@ -60,15 +60,21 @@ A mainnet `BeaconState` is 2.7 MB, so a random mutation rarely hits a given fiel
 
 `testdata/fuzz/` holds one small input for each class of difference found.
 `known.txt` lists the three classes, so `go test .` passes.
-`STRICT=1 go test .` fails on each input while the generator has the difference.
+`STRICT=1 go test .` and `STRICT=1 go test -tags minimal .` fail on the inputs of their preset while the generator has the difference.
 
 | Class | Input | Status |
 | --- | --- | --- |
-| The decoder accepts a byte list longer than `ssz-max` | `FuzzEngineExecutionPayloadHeaderDeneb/bytelist-over-max` | Bug. Fixed in PR #27 |
-| The decoder accepts set padding bits in a Bitvector | `FuzzAttestationElectra/bitvector-padding-minimal` (minimal preset) | Bug. Fixed in PR #27 |
+| The decoder accepts a byte list longer than `ssz-max` | `FuzzEngineExecutionPayloadHeaderDeneb/bytelist-over-max` | Bug. Fix proposed in PR #27 |
+| The decoder accepts set padding bits in a Bitvector | `FuzzAttestationElectra/bitvector-padding-minimal` (minimal preset) | Bug. Fix proposed in PR #27 |
 | The decoder rejects a Gloas progressive list or bitlist above its `ssz-max` tag | `FuzzEngineExecutionRequestsGloas/progressive-list-over-tag` | Policy of the generator (soft limit). The SSZ type has no limit |
 
 When a fix removes a class, remove its line from `known.txt`.
+
+## Continuous integration
+
+`.github/workflows/ethlib-fuzz.yaml` runs on pull requests that change the generator, the runtime or this module.
+It regenerates the Prysm types with the generator of the pull request and runs `go test` for both presets.
+It does not fuzz.
 
 ## Test a different generator
 

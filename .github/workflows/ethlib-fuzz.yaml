@@ -10,11 +10,17 @@ on:
       - 'ssz/**'
       - 'cmd/**'
       - 'fuzz/**'
+      - 'go.mod'
+      - 'go.sum'
       - '.github/workflows/ethlib-fuzz.yaml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: ethlib-fuzz-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -49,17 +55,19 @@ jobs:
           ~/.cache/ethlib-fuzz/EthLib/libethlib.a
           ~/.cache/ethlib-fuzz/EthLib/libethlib.commit
           ~/.cache/ethlib-fuzz/EthLib/lean-toolchain
-        key: ethlib-${{ runner.os }}-${{ runner.arch }}-${{ steps.pins.outputs.ethlib }}
+        key: ethlib-${{ runner.os }}-${{ runner.arch }}-${{ steps.pins.outputs.ethlib }}-${{ hashFiles('fuzz/ethlib.sh') }}
 
     - name: Cache the seeds
       uses: actions/cache@v4
       with:
         path: fuzz/.seeds
-        key: seeds-${{ steps.pins.outputs.spec }}
+        key: seeds-${{ steps.pins.outputs.spec }}-${{ hashFiles('fuzz/seeds.sh') }}
 
     - name: Install elan
       run: |
-        curl -sSfL https://raw.githubusercontent.com/leanprover/elan/v4.2.4/elan-init.sh | sh -s -- -y --default-toolchain none
+        curl -sSfL "https://github.com/leanprover/elan/releases/download/v4.2.4/elan-$(uname -m)-unknown-linux-gnu.tar.gz" | tar -xz
+        ./elan-init -y --default-toolchain none
+        rm elan-init
         echo "$HOME/.elan/bin" >>"$GITHUB_PATH"
 
     - name: Generate the Prysm types
@@ -69,10 +77,7 @@ jobs:
       run: ./ethlib.sh >/dev/null
 
     - name: Get the seeds
-      run: '[[ -d .seeds ]] || ./seeds.sh'
-
-    - name: Free disk
-      run: df -h / "$HOME"
+      run: '[[ -f .seeds/complete ]] || ./seeds.sh'
 
     - name: Test mainnet
       run: |

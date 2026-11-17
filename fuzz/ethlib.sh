@@ -22,15 +22,16 @@ if [[ $(cat "$DIR/libethlib.commit" 2>/dev/null) != "$COMMIT" ]]; then
 	# that the export needs.
 	rm -f libethlib.a
 	find .lake/build/ir/EthLib -name '*.c.o.export' -print0 | xargs -0 ar rcs libethlib.a
-	nm libethlib.a | grep ' T _*eth_consensus_ssz_static$' >/dev/null
 	echo "$COMMIT" >libethlib.commit
 fi >&2
+# Also a cached archive must hold the export.
+nm "$DIR/libethlib.a" | grep ' T _*eth_consensus_ssz_static$' >/dev/null
 
 lean=$(cd "$DIR" && lean --print-prefix)
 strip=-Wl,--gc-sections
 [[ $(uname) == Darwin ]] && strip=-Wl,-dead_strip
-# Go does not hash C libraries. The define puts the commit in its cache key.
-echo "export CGO_CFLAGS='-I$lean/include -DETHLIB_COMMIT=$COMMIT'"
+# Go does not hash C libraries. The define puts the archive in its cache key.
+echo "export CGO_CFLAGS='-I$lean/include -DETHLIB_ARCHIVE=$(cksum <"$DIR/libethlib.a" | tr -d ' ')'"
 # Stripping drops the compile-time initializers, which refer to proof modules
 # that are not linked.
 echo "export CGO_LDFLAGS='$DIR/libethlib.a -L$lean/lib/lean -lleanshared -Wl,-rpath,$lean/lib/lean $strip'"
