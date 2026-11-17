@@ -89,6 +89,10 @@ func run[T any, P interface {
 		f.Add(append(bytes.Clone(valuePrefix), byte(i)))
 	}
 	f.Fuzz(func(t *testing.T, data []byte) {
+		// Every input is SSZ bytes first, also one that starts with valuePrefix.
+		for _, fork := range forks {
+			check(t, P(new(T)), fork, name, data)
+		}
 		if ops, ok := bytes.CutPrefix(data, valuePrefix); ok {
 			obj := mutated[T, P](bases, ops)
 			enc, err := obj.MarshalSSZ()
@@ -100,10 +104,6 @@ func run[T any, P interface {
 				checkValue(t, obj, enc, fork, name)
 				check(t, P(new(T)), fork, name, enc)
 			}
-			return
-		}
-		for _, fork := range forks {
-			check(t, P(new(T)), fork, name, data)
 		}
 	})
 }

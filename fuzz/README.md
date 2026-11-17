@@ -17,7 +17,8 @@ The Go fuzzer sees only the coverage of Go code. EthLib is not instrumented.
 So the harness gives accept and each EthLib decode error code its own Go branch (`signal` in `codes_test.go`).
 An input that reaches a new EthLib rejection reason is then new coverage, and the fuzzer keeps it.
 
-An input that starts with `value:` holds no SSZ bytes. It tells how to change a value (`values_test.go`):
+An input that starts with `value:` also tells how to change a value (`values_test.go`).
+The harness first checks it as SSZ bytes, like every other input. Then:
 
 1. `UnmarshalSSZ` decodes one of the seeds.
 2. The changes set lists, byte strings and bitfields to lengths at the edges of their type: 0, 1, the limit, the limit plus 1.

@@ -12,9 +12,10 @@ import (
 	eth "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
 )
 
-// A fuzz input that starts with valuePrefix holds no SSZ bytes. It tells how
-// to change a value: decode base number data[0], apply the changes in
-// data[1:], encode the value with MarshalSSZ and give the bytes to EthLib.
+// A fuzz input that starts with valuePrefix also tells how to change a value:
+// decode base number data[0], apply the changes in data[1:], encode the value
+// with MarshalSSZ and give the bytes to EthLib. The harness checks the input as
+// SSZ bytes first, like every other input.
 // This tests MarshalSSZ and HashTreeRoot on values that no decode gives.
 var valuePrefix = []byte("value:")
 
