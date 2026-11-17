@@ -71,6 +71,9 @@ jobs:
     - name: Get the seeds
       run: '[[ -d .seeds ]] || ./seeds.sh'
 
+    - name: Free disk
+      run: df -h / "$HOME"
+
     - name: Test mainnet
       run: |
         env=$(./ethlib.sh)
