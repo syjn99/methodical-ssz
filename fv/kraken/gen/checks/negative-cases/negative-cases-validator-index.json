@@ -130,5 +130,160 @@
   "theorem": "Prysm.ValidatorIndex.Decode.reject_size",
   "old": "(hlen : s.regs.rcx ≠ 8)",
   "new": "(hlen : True)"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S",
+  "id": "validator-index-encode-fast-path-control"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S",
+  "id": "validator-index-encode-fast-path-code-lea-0x8-rcx-to-0x10-rcx",
+  "old": "  lea 0x8(%rcx),%rdx",
+  "new": "  lea 0x10(%rcx),%rdx"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S",
+  "id": "validator-index-encode-fast-path-code-mov-rax-to-0x8-rax",
+  "old": "  mov (%rax),%r8",
+  "new": "  mov 0x8(%rax),%r8"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S",
+  "id": "validator-index-encode-fast-path-code-jae-to-jb",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo_61",
+  "new": "  jb L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo_61"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S",
+  "id": "validator-index-encode-fast-path-code-xor-edi-edi-to-esi-esi",
+  "old": "  xor %edi,%edi",
+  "new": "  xor %esi,%esi"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path",
+  "kind": "statement",
+  "id": "validator-index-encode-fast-path-statement-rdi-0-to-1",
+  "old": "st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0",
+  "new": "st.data.regs.rdi = 1 ∧ st.data.regs.rsi = 0"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeSpec.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path_spec",
+  "kind": "control",
+  "id": "validator-index-encode-fast-path-spec-control"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeSpec.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path_spec",
+  "kind": "statement",
+  "id": "validator-index-encode-fast-path-spec-statement-rbx-none-to-1",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.grow_first_site",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S",
+  "id": "validator-index-encode-grow-first-site-control"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.grow_first_site",
+  "kind": "code",
+  "id": "validator-index-encode-grow-first-site-code-mov-0x8-to-0x9",
+  "old": "  mov $0x8,%edi",
+  "new": "  mov $0x9,%edi",
+  "note": "growslice num 9: old = len - 1 bytes, not len",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.grow_first_site",
+  "kind": "code",
+  "id": "validator-index-encode-grow-first-site-code-mov-0x68-rsp-to-0x70-rsp",
+  "old": "  mov %rcx,0x68(%rsp)",
+  "new": "  mov %rcx,0x70(%rsp)",
+  "note": "len spilled to the wrong slot before the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.grow_first_site",
+  "kind": "code",
+  "id": "validator-index-encode-grow-first-site-code-mov-0x68-rsp-to-0x60-rsp",
+  "old": "  mov 0x68(%rsp),%rcx",
+  "new": "  mov 0x60(%rsp),%rcx",
+  "note": "len reloaded from the rbx spill slot after the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.grow_first_site",
+  "kind": "code",
+  "id": "validator-index-encode-grow-first-site-code-jae-to-jb",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo_61",
+  "new": "  jb L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo_61",
+  "note": "with cap < len + 8 the inverted test skips the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.grow_first_site",
+  "kind": "statement",
+  "id": "validator-index-encode-grow-first-site-statement-rbx-8-to-9",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 8",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 9",
+  "note": "the returned length is len + 8"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.grow_first_site",
+  "kind": "statement",
+  "id": "validator-index-encode-grow-first-site-statement-hgrow-lt-to-le",
+  "old": "(hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)",
+  "new": "(hgrow : s.regs.rdi.toNat ≤ s.regs.rcx.toNat + 8)",
+  "note": "with cap = len + 8 the code takes the fast path, not the growslice call"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeCoverFramed.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.cover_framed",
+  "kind": "control",
+  "id": "validator-index-encode-cover-framed-control"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeCoverFramed.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.cover_framed",
+  "kind": "statement",
+  "id": "validator-index-encode-cover-framed-statement-rcx-rdi-to-rcx",
+  "old": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rcx = s.regs.rdi ∧",
+  "new": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rcx = s.regs.rcx ∧",
+  "note": "(1): the fast path returns cap = the caller's cap"
  }
 ]

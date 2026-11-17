@@ -254,7 +254,7 @@ Change the tool and run it again.
 
 | Kind | Written by | Command that makes it again | What checks it |
 | --- | --- | --- | --- |
-| `Code.lean` | Hand: one `include_x64_code` constant for each `.S` file of the type in the link set. The primitive types Epoch, Slot, CommitteeIndex and ValidatorIndex include only `UnmarshalSSZ`. A constant can have no theorem (`FINDINGS.md`) | None | The build, the link check of its `.S` files, `gen/tools/proof_inventory.py` |
+| `Code.lean` | Hand: one `include_x64_code` constant for each `.S` file of the type in the link set. The primitive types Epoch, Slot and CommitteeIndex include `UnmarshalSSZ`, `MarshalSSZTo`, `MarshalSSZ` and `SizeSSZ`. ValidatorIndex includes `UnmarshalSSZ` and `MarshalSSZTo`. A constant can have no theorem (`FINDINGS.md`) | None | The build, the link check of its `.S` files, `gen/tools/proof_inventory.py` |
 | `Layout.lean` (Checkpoint) | `gen/checks/layout.py` | `python3 -I gen/checks/layout.py > lean/Prysm/Checkpoint/Layout.lean` | `regenerate_and_compare.py`, the build |
 | `Spec.lean` | Hand. For a type with the companion `spec` in `gen/generator/types.tsv`: `gen/flat-types/flat_types_spec.py` | `python3 -I -B gen/flat-types/flat_types_spec.py lean` | The build, the axioms gate, `regenerate_and_compare.py` |
 | `SpecDescription.lean` | Hand, from consensus-specs. For some types, from the Prysm proto definition: `grep -l 'from the Prysm proto' lean/Prysm/*/SpecDescription.lean` lists them (`FINDINGS.md`) | None | The build, a review against the source that the module names |
@@ -268,7 +268,7 @@ Change the tool and run it again.
 | `EncodeLayout.lean` (BeaconBlockHeader, Checkpoint, Eth1Data) | Hand. The row of the type in `gen/generator/types.tsv` gives it to the generator with `--hand-layout` | None | The build, `kindcheck.py` rule 13, `fast_path_layout.py` |
 | `DecodeLayout.lean` (Checkpoint) | Hand: the decoder frame layout of the kind tie `Decode.accept_kind_tie` | None | The build (the tie uses it), the axioms gate and its hand lists |
 | `*KindTie.lean`, `*StatementTie.lean`, `EncodeFastPathStatements.lean` | Hand | None | The build, the axioms gate and its hand lists (each statement tie is `rfl`) |
-| Hand proof modules: `DecodeAccept.lean`, `DecodeAcceptFunctionSpec.lean`, `DecodeReject*.lean`, `Encode*.lean`, `Statements*.lean`, `SpecDefinitions.lean` (DataColumnsByRootIdentifier), the other `Witness*.lean` | Hand | None | The build, the axioms gate and its hand lists, the negative cases |
+| Hand proof modules: `DecodeAccept.lean`, `DecodeAcceptFunctionSpec.lean`, `DecodeReject*.lean`, `Encode*.lean`, `Size.lean`, `Marshal.lean`, `Statements*.lean`, `SpecDefinitions.lean` (DataColumnsByRootIdentifier), the other `Witness*.lean` | Hand | None | The build, the axioms gate and its hand lists, the negative cases |
 | `*.S` in a type directory | Hand: a runtime model for the witnesses of the type | None | The build: a theorem shows that the model satisfies its contract |
 
 ### Other Lean files
