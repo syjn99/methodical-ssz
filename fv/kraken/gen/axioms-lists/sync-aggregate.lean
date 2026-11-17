@@ -3,6 +3,7 @@ import Prysm.SyncAggregate.DecodeAccept
 import Prysm.SyncAggregate.DecodeSpec
 import Prysm.SyncAggregate.SpecEquivalence
 import Prysm.SyncAggregate.WitnessDecodeAccept
+import Prysm.SyncAggregate.WitnessDecodeRejectSize
 
 /-! Hand list of the `SyncAggregate` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -14,3 +15,4 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.SyncAggregate.Decode.reject_complete
 #print axioms Prysm.SyncAggregate.desc_deserialize_checker
 #print axioms Prysm.SyncAggregate.Witness.DecodeAccept.runs
+#print axioms Prysm.SyncAggregate.Witness.DecodeRejectSize.runs
