@@ -97,6 +97,8 @@ A mainnet `BeaconState` is 2.7 MB, so a random mutation rarely hits a given fiel
 | The decoder accepts a byte list longer than `ssz-max` | `FuzzEngineExecutionPayloadHeaderDeneb/bytelist-over-max` | Bug. Fix proposed in PR #27 |
 | The decoder accepts set padding bits in a Bitvector | `FuzzAttestationElectra/bitvector-padding-minimal` (minimal preset) | Bug. Fix proposed in PR #27 |
 | `MarshalSSZ` encodes a Bitlist above its limit (F2) | `FuzzAttestationElectra/value-bitlist-over-max` | Bug. Fix proposed in PR #27 |
+| `MarshalSSZ` encodes a Bitlist with no delimiter bit | `FuzzAttestationElectra/value-bitlist-no-delimiter` | Bug. Fix proposed in PR #27 |
+| `MarshalSSZ` encodes set padding bits in a Bitvector | `FuzzAttestationElectra/value-bitvector-padding-minimal` (minimal preset) | Bug. Fix proposed in PR #27 |
 | The decoder rejects a Gloas progressive list or bitlist above its `ssz-max` tag | `FuzzEngineExecutionRequestsGloas/progressive-list-over-tag` | Policy of the generator (soft limit). The SSZ type has no limit |
 
 When a fix removes a class, remove its line from `known.txt`.

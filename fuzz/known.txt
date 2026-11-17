@@ -17,6 +17,14 @@ methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.
 # minimal) and the PartialDataColumn bitlists (4096).
 ^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects \(HashTreeRoot error: [^)]*\): input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit (131072|8192|4096) [0-9]+$
 
+# Value inputs: MarshalSSZ encodes a Bitlist with no delimiter bit: its last
+# byte is zero, or it is empty. Bug. Fix proposed in PR #27.
+MarshalSSZ gives bytes that EthLib rejects \(HashTreeRoot error: [^)]*\): input rejected: EthLib\.Serialization\.Ssz\.Err\.(noDelimiter|trailingZeros|emptyEncoding)$
+
+# Value inputs: MarshalSSZ encodes set padding bits in a Bitvector.
+# Bug. Fix proposed in PR #27.
+MarshalSSZ gives bytes that EthLib rejects \(HashTreeRoot error: [^)]*\): input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
+
 # The decoder rejects a Gloas progressive list or bitlist above its ssz-max tag.
 # The SSZ type has no limit. Soft limit of the generator, added in PR #22.
 # One line for each field where the difference was seen.
