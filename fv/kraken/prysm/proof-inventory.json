@@ -10,9 +10,9 @@
  "axioms_gate": {
   "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=Spec,Machine,Runtime,Codec,Prysm",
   "verdict": "PASS",
-  "declarations": 20361,
-  "theorems": 16582,
-  "modules": 595
+  "declarations": 20415,
+  "theorems": 16616,
+  "modules": 597
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -48,8 +48,8 @@
     "target": 211,
     "functions_json": 211,
     "mapped": 34,
-    "complete": 20,
-    "partial": 14
+    "complete": 22,
+    "partial": 12
    },
    "MarshalSSZTo": {
     "target": 211,
@@ -18477,10 +18477,8 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "partial",
-   "missing": [
-    "witness_reject"
-   ],
+   "state": "complete",
+   "missing": [],
    "theorems": {
     "accept": "Prysm.SyncAggregate.Decode.accept",
     "reject": "Prysm.SyncAggregate.Decode.reject_size",
@@ -18490,7 +18488,8 @@
     "codec": [
      "Prysm.SyncAggregate.desc_deserialize_checker"
     ],
-    "witness_accept": "Prysm.SyncAggregate.Witness.DecodeAccept.runs"
+    "witness_accept": "Prysm.SyncAggregate.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.SyncAggregate.Witness.DecodeRejectSize.runs"
    },
    "note": ""
   },
@@ -18684,10 +18683,8 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "partial",
-   "missing": [
-    "witness_reject"
-   ],
+   "state": "complete",
+   "missing": [],
    "theorems": {
     "accept": "Prysm.SyncCommittee.Decode.accept",
     "reject": "Prysm.SyncCommittee.Decode.reject_size",
@@ -18697,7 +18694,8 @@
     "codec": [
      "Prysm.SyncCommittee.desc_deserialize_checker"
     ],
-    "witness_accept": "Prysm.SyncCommittee.Witness.DecodeAccept.runs"
+    "witness_accept": "Prysm.SyncCommittee.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.SyncCommittee.Witness.DecodeRejectSize.runs"
    },
    "note": ""
   },

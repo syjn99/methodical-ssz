@@ -242,13 +242,6 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   The generated accept theorems that these proofs use keep their own mutants.
 - Where: `lean/Prysm/<GoTypeName>/DecodeSpec.lean` of these types, `gen/checks/negative-cases/`.
 
-### Some theorems have no witness
-
-- What does not hold: `Prysm.SyncAggregate.Decode.reject_size` and `Prysm.SyncCommittee.Decode.reject_size` have no witness.
-- Effect: no concrete state shows that the premises of these two theorems can hold.
-  The rule of `../AGENTS.md` asks for a witness of each main theorem.
-- Where: `lean/Prysm/SyncAggregate/`, `lean/Prysm/SyncCommittee/`.
-
 ### The Go value check exists only for Checkpoint
 
 - What does not hold: only Checkpoint has a Lean predicate for a valid Go value of the receiver.
