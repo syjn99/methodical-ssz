@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Builds the EthLib SSZ export at the pinned commit and prints the cgo
 # environment that links it:  eval "$(./ethlib.sh)"
-# The checkout and its build live in $ETHLIB_DIR (about 8 GB, 30 minutes cold).
+# The checkout and its build live in $ETHLIB_DIR. About 8 GB, of which 7 GB is
+# the downloaded Mathlib cache. A cold build took 6 minutes on 18 cores.
 set -euo pipefail
 
 COMMIT=f4c856c869228b7223752dbf10a73bd850ee7dae
