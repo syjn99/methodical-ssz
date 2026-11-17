@@ -285,3 +285,30 @@ func TestBudget(t *testing.T) {
 	}
 	t.Fatal("no site BuilderPendingWithdrawals")
 }
+
+// TestKnownIsNarrow checks that known.txt does not skip differences of other
+// classes: the counterexamples of the PR 2 review, and Checkpoint examples.
+func TestKnownIsNarrow(t *testing.T) {
+	if known == nil {
+		t.Skip("STRICT=1 turns known.txt off")
+	}
+	for _, msg := range []string{
+		// A bounded list (EthLib: SszList, NUMBER_OF_COLUMNS) with a wrong decoder limit.
+		"glamsterdam/DataColumnsByRootIdentifier: EthLib accepts, methodical rejects: ssz-max exceeded: c.Columns has 65 elements, ssz-max is 64: list length is higher than max value",
+		// A list, not a bitlist, with the limit of the recorded bitlist.
+		"fusaka/IndexedAttestation: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib.Serialization.Ssz.Err.overLimit 131072 131073; changed: AttestingIndices",
+		// A panic in a type with no bitlist.
+		"*eth.Checkpoint: HashTreeRoot panics in ssz.parseBitlistProgressive: runtime error: slice bounds out of range [:33] with capacity 32; changed: Root",
+		"*eth.Checkpoint: HashTreeRoot panics in no ssz function: runtime error: slice bounds out of range [:33] with capacity 32; changed: Root",
+		// A byte vector of the wrong length.
+		"*eth.Checkpoint: MarshalSSZ refuses the value (Root: unexpected number of bytes, got 31 but found 32: list length is higher than max value), but HashTreeRoot gives a root; changed: Root",
+	} {
+		if known.MatchString(msg) {
+			t.Errorf("known.txt skips %q", msg)
+		}
+	}
+	saved := "glamsterdam/ExecutionRequests: EthLib accepts, methodical rejects: ssz-max exceeded: c.BuilderExits has 17 elements, ssz-max is 16: list length is higher than max value"
+	if !known.MatchString(saved) {
+		t.Errorf("known.txt does not skip the saved input: %q", saved)
+	}
+}
