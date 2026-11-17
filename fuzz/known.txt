@@ -12,8 +12,9 @@
 # Risk: a wrong limit that equals a listed tag on a listed field name stays
 # hidden, in any container.
 #
-# The soft limit lines come from Prysm's YAML and the struct tags (see that
-# section). Each other tuple comes from a saved input or a kept log: testdata/fuzz/,
+# The soft limit lines and the panic lines come from Prysm's YAML and the struct
+# tags (see those sections). Each other tuple comes from a saved input or a kept
+# log: testdata/fuzz/,
 # ~/.cache/ethlib-fuzz/runs-pr2/ (PR 1 logs: ~/.cache/ethlib-fuzz/runs-2026-11-17/).
 # runs-pr2/lines.py builds this file from them. Remove a line when its fix merges.
 # A value input's message ends with "; changed: " and the fields it changed.
@@ -56,10 +57,12 @@
 ^\*eth\.[A-Za-z]+: MarshalSSZ refuses the value \((.*: )?CommitteeBits: bitvector padding bits are not zero\), but HashTreeRoot gives a root; changed: (.+, )?([^,]*\.)?CommitteeBits(, .+)?$
 
 ## Value inputs, main and PR #27: HashTreeRoot panics in parseBitlistProgressive
-## (ssz/htr.go) on a progressive Bitlist with a zero last byte. The types are the
-## Gloas types whose struct closure reaches the progressive AggregationBits.
-## Bug. No fix proposed yet.
+## (ssz/htr.go) on a progressive Bitlist with a zero last byte. Bug. No fix proposed yet.
+## These lines come from the configuration: one for every field that Prysm's YAML
+## makes a ProgressiveBitlist in the struct closure of a Gloas target, with the
+## Gloas types whose struct closure reaches it.
 ^\*eth\.(AggregateAttestationAndProofGloas|AttestationGloas|BeaconBlockBodyGloas|BeaconBlockGloas|SignedAggregateAttestationAndProofGloas|SignedBeaconBlockGloas): HashTreeRoot panics in ssz\.parseBitlistProgressive: runtime error: slice bounds out of range \[:[0-9]+\] with capacity [0-9]+; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
+^\*eth\.(PartialDataColumnSidecarGloas): HashTreeRoot panics in ssz\.parseBitlistProgressive: runtime error: slice bounds out of range \[:[0-9]+\] with capacity [0-9]+; changed: (.+, )?([^,]*\.)?CellsPresentBitmap(, .+)?$
 
 ## The decoder rejects a Gloas progressive list or bitlist above its ssz-max tag.
 ## The SSZ type has no limit. Soft limit of the generator, added in PR #22.
