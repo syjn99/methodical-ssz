@@ -380,8 +380,9 @@ theorem Decode.generated_directive_121 (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
 theorem Decode.generated_directive_121_kind : ∀ (h : Host), type_of% (@Decode.generated_directive_121 h) = @Codec.stepStoreKind h unmarshalSSZ Reg64.rbx Reg64.rdx 24 121 122 := by
   intro h; with_reducible rfl
 
-set_option maxHeartbeats 16000000 in
-set_option maxRecDepth 100000 in
+-- Measured cause: with the default maxRecDepth, the `simp only` of a label fact (`Machine.label_at'`) fails with
+-- "maximum recursion depth has been reached"; 10000 passes. The default maxHeartbeats passes.
+set_option maxRecDepth 10000 in
 /-- `Source` (nested Checkpoint, SSZ offset 48, Go offset 48): new object and callee over the windows 122–128 and 135–144 (`callq` at 142), continuation label at 172. -/
 theorem Decode.generated_Source_nested (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
@@ -440,8 +441,9 @@ theorem Decode.generated_Source_nested (k : Nat) (hk : unmarshalSSZ.IsInfixAt Ho
 theorem Decode.generated_Source_nested_kind : ∀ (h : Host), type_of% (@Decode.generated_Source_nested h) = @Codec.nestedCheckpointDecodeKindWindow h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ" 122 142 172 128 48 136 48 152 := by
   intro h; with_reducible rfl
 
-set_option maxHeartbeats 16000000 in
-set_option maxRecDepth 100000 in
+-- Measured cause: with the default maxRecDepth, the `simp only` of a label fact (`Machine.label_at'`) fails with
+-- "maximum recursion depth has been reached"; 10000 passes. The default maxHeartbeats passes.
+set_option maxRecDepth 10000 in
 /-- `Target` (nested Checkpoint, SSZ offset 88, Go offset 56): new object and callee over the windows 173–178 and 185–194 (`callq` at 192), continuation label at 222. -/
 theorem Decode.generated_Target_nested (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
@@ -1086,8 +1088,6 @@ theorem Decode.generated_field_3_kind : ∀ (h : Host), type_of% (@Decode.genera
       [.fixed 24, .low]⟩ := by
   intro h; rfl
 
-set_option maxHeartbeats 16000000 in
-set_option maxRecDepth 100000 in
 /-- Field 4 `Source` (nested): boundary state 3 (directive 122) → boundary state 4 (directive 173). -/
 theorem Decode.generated_field_4 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)
@@ -1234,8 +1234,6 @@ theorem Decode.generated_field_4_kind : ∀ (h : Host), type_of% (@Decode.genera
       [.fixed 8, .low]⟩ := by
   intro h; rfl
 
-set_option maxHeartbeats 16000000 in
-set_option maxRecDepth 100000 in
 /-- Field 5 `Target` (nested): boundary state 4 (directive 173) → boundary state 5 (directive 223). -/
 theorem Decode.generated_field_5 : ∀ (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (kS : Nat) (hkS : Prysm.Slot.Code.unmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.Slot.Code.unmarshalSSZ kS)

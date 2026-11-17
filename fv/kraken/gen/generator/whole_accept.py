@@ -395,7 +395,9 @@ class T:
         big = f['shape'] in ('bytes', 'inline', 'nested')
         what = (f"Field {i + 1} `{f['name']}` ({f['shape']})" if f['first'] == i else
                 f"Fields {f['first'] + 1}–{i + 1}, one block (the set-up of `{f['name']}` ({f['shape']}) runs before the earlier field events)")
-        s = self.opts(big) + f"/-- {what}: boundary state {b} (directive {d['pc']}) → boundary state {b + 1} (directive {d2['pc']}). -/\n"
+        # a nested field theorem passes with the default maxHeartbeats and maxRecDepth (measured on AttestationData Source
+        # and Target), so it sets no option
+        s = ('' if f['shape'] == 'nested' else self.opts(big)) + f"/-- {what}: boundary state {b} (directive {d['pc']}) → boundary state {b + 1} (directive {d2['pc']}). -/\n"
         s += (f"theorem {name} : {self.binders()}    {self.hguard()}{self.rthyps()} (st0 : MachineState),\n"
               f"    ({self.stp(d, 'st0')}) →\n    Eventually (step1 Host.exe)\n      (fun st => {self.stp(d2)})\n      st0 := by\n")
         hy = ' hguard' + self.rtnames()

@@ -1305,6 +1305,11 @@ def step_inline_text(C, prefix, fname, ssz, u):
     return out + "\n", name
 
 
+# the options of the nested Checkpoint block theorem, measured on AttestationData (Source and Target) with the default
+# maxHeartbeats: the default maxRecDepth fails, 10000 passes; the default maxHeartbeats passes, so it is not set
+STEP_NESTED_OPTIONS = ("-- Measured cause: with the default maxRecDepth, the `simp only` of a label fact (`Machine.label_at'`) fails with\n"
+                       "-- \"maximum recursion depth has been reached\"; 10000 passes. The default maxHeartbeats passes.\n"
+                       "set_option maxRecDepth 10000 in\n")
 # the statement of the nested Checkpoint block (`Codec.nested_checkpoint_decode_window`, kind `nestedCheckpointDecodeKindWindow`)
 STEP_NESTED_STATEMENT = """theorem {name} (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : LabelsFresh {C} k) :
     ∀
@@ -1351,7 +1356,7 @@ STEP_NESTED_STATEMENT = """theorem {name} (k : Nat) (hk : {C}.IsInfixAt Host.pro
 def step_nested_text(C, prefix, fname, ssz, u):
     name = f"{prefix}_{fname}_nested"
     j1, j2, j3, nA, nB, jc = u["j1"], u["j2"], u["j3"], u["nA"], u["nB"], u["jc"]
-    out = STEP_SEGMENT_OPTIONS + (f"/-- `{fname}` (nested Checkpoint, SSZ offset {ssz}, Go offset {u['fP']}): new object and callee "
+    out = STEP_NESTED_OPTIONS + (f"/-- `{fname}` (nested Checkpoint, SSZ offset {ssz}, Go offset {u['fP']}): new object and callee "
                                   f"over the windows {j1}–{j1 + nA - 1} and {j2}–{j2 + nB - 1} (`callq` at {jc}), continuation "
                                   f"label at {j3}. -/\n")
     out += STEP_NESTED_STATEMENT.format(name=name, C=C, fn=u["fn"], dR=_i64(u["dR"]), dB=_i64(u["dB"]), dC=_i64(u["dC"]),
