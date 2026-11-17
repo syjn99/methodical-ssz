@@ -175,6 +175,7 @@ The tree has these ties:
 
 - `Prysm.Checkpoint.Decode.reject_size_kind_tie` (`lean/Prysm/Checkpoint/DecodeRejectSizeKindTie.lean`): an identity with `decodeRejectKindAnyFrame`.
 - `Prysm.Checkpoint.Decode.accept_kind_tie` (`DecodeAcceptKindTie.lean`): an implication from `decodeAcceptKindAnyFrame`.
+  The layout of the kind instance is `decodeLayout` (`DecodeLayout.lean`).
 - `Prysm.Checkpoint.Encode.fast_path_kind_tie` (`EncodeFastPathKindTie.lean`): an implication from `encodeFastPathKindAnyFrame`.
 - `Prysm.Checkpoint.Encode.generated_fast_statement_tie`: an implication through `Encode.fast_path_kind_tie`.
   The generator writes it into `GeneratedEncodeFastPath.lean` with `--same-as` and `--same-as-via`.

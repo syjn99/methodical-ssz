@@ -244,7 +244,8 @@ It also has a checker `Desc` when the `Desc` checker accepted a producer file fo
 - The value side is in `Spec.lean`: `SszValue`, `toValue`, the `enc` function and the bridge lemmas.
   A `Statements` module that uses these definitions imports `Spec.lean`.
   DataColumnsByRootIdentifier is the exception: its `Spec.lean` imports `StatementsEncode.lean`.
-  So its value definitions are in `SpecDefinitions.lean`, which the statements and `Spec.lean` import.
+  So its value definitions are in `SpecDefinitions.lean`.
+  The statements import it, and `Spec.lean` gets it through `StatementsEncode.lean`.
   Deposit is the other exception: its value definitions are in `StatementsSpec.lean`, with its spec statements.
 - The checker `Desc` `Prysm.<GoTypeName>.checkerDesc` is in `SpecChecker.lean`.
   `../gen/checks/desc_to_lean.py` writes it from a file of `../prysm/go1.26.10/evidence/`.
@@ -323,7 +324,8 @@ Examples are `Deposit_Data`, `ENRForkID` and the label `runtime.makeslice`.
 | --- | --- |
 | `Code` | Program constants read from the converted `.S` files (hand) |
 | `Layout` | Go struct layout of Checkpoint from the IR: offsets and sizes (`../gen/checks/layout.py`) |
-| `EncodeLayout` | Hand encoder frame layout that the row of the type in `../gen/generator/types.tsv` gives the generator with `--hand-layout` |
+| `DecodeLayout` | Hand decoder frame layout `decodeLayout` that a kind tie gives to `Codec.decodeAcceptKindAnyFrame`, and the address lemmas of that tie (Checkpoint) |
+| `EncodeLayout` | Hand encoder frame layout `encodeLayout` that `Codec.encodeFastPathKindAnyFrame` reads. The `encoder --fast-path` row of the type in `../gen/generator/types.tsv` gives it to the generator with `--hand-layout` |
 | `GoValue`, `GoValueWitness` | Validity of the Go value of the receiver, and its witness |
 | `Spec` | The `SszValue` structure, its definitions and its bridge lemmas to EthLib (section 5) |
 | `SpecDescription` | The hand `Desc` and the definitions that only the description needs (section 5) |

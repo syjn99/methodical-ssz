@@ -36,6 +36,7 @@ import Prysm.Checkpoint.WitnessEncodeCoverFramed
 import Prysm.Checkpoint.WitnessEncodeRejectLengthCoverFramed
 import Prysm.Checkpoint.GoValueWitness
 import Prysm.Checkpoint.DecodeAcceptKindTie
+import Prysm.Checkpoint.DecodeLayout
 import Prysm.Checkpoint.DecodeRejectSizeKindTie
 import Prysm.Checkpoint.GeneratedEncodeFastPath
 import Prysm.Checkpoint.EncodeFastPathKindTie
