@@ -1,203 +1,97 @@
 # Classes of differences that are recorded. One regular expression per line.
 # A difference whose message matches a line skips the input.
 # Set STRICT=1 to turn this filter off.
-# Each line names the fork, the container, the field and the exact limit of
-# one recorded case. Add a line only for a case that a saved input or a kept
-# log shows: testdata/fuzz/ or ~/.cache/ethlib-fuzz/runs-pr2/ (PR 1 logs:
-# ~/.cache/ethlib-fuzz/runs-2026-11-17/). Remove a line when its fix merges.
+#
+# Rule: one line for each tuple of fork, class, field name and exact limit,
+# with any container and any nesting path. A field name with two limits gets
+# two lines. A soft limit line takes any container only if Prysm's YAML makes
+# that field name with that limit progressive in every Gloas container, and
+# EthLib gives it no limit. Otherwise the line keeps the containers where it
+# was seen. Value lines use the changed field name. Byte input lines keep
+# their container families, because EthLib's message names no field.
+# Risk: a wrong limit that equals a listed tag on a listed field name stays
+# hidden, in any container.
+#
+# Each tuple comes from a saved input or a kept log: testdata/fuzz/,
+# ~/.cache/ethlib-fuzz/runs-pr2/ (PR 1 logs: ~/.cache/ethlib-fuzz/runs-2026-11-17/).
+# runs-pr2/lines.py builds this file from them. Remove a line when its fix merges.
 # A value input's message ends with "; changed: " and the fields it changed.
 
 ## The decoder accepts a byte list longer than ssz-max. Bug. Fix proposed in PR #27.
-## EthLib names no field, so the container and the limit identify it: 32 is
-## ExtraData of the execution payload (header), 4096 is BuilderRequestAuth.Data.
-^fusaka/ExecutionPayloadHeader: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 32 [0-9]+$
-^fusaka/LightClientBootstrap: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 32 [0-9]+$
-^fusaka/LightClientFinalityUpdate: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 32 [0-9]+$
-^fusaka/LightClientHeader: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 32 [0-9]+$
-^fusaka/LightClientOptimisticUpdate: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 32 [0-9]+$
-^fusaka/LightClientUpdate: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 32 [0-9]+$
-^glamsterdam/BuilderPreferencesRequest: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 4096 [0-9]+$
-^glamsterdam/BuilderRequestAuth: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 4096 [0-9]+$
-^glamsterdam/ExecutionPayload: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 32 [0-9]+$
-^glamsterdam/SignedBuilderRequestAuth: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 4096 [0-9]+$
+## EthLib names no field, so the container family and the limit identify it:
+## 32 is ExtraData of the execution payload (header), 4096 is BuilderRequestAuth.Data.
+^fusaka/(ExecutionPayloadHeader|LightClientBootstrap|LightClientFinalityUpdate|LightClientHeader|LightClientOptimisticUpdate|LightClientUpdate): methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 32 [0-9]+$
+^glamsterdam/(ExecutionPayload): methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 32 [0-9]+$
+^glamsterdam/(BuilderPreferencesRequest|BuilderRequestAuth|SignedBuilderRequestAuth): methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 4096 [0-9]+$
 
 ## The decoder accepts set padding bits in a Bitvector4: CommitteeBits (minimal)
-## and JustificationBits. Bug. Fix proposed in PR #27.
-^fusaka/AggregateAndProof: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^fusaka/Attestation: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^fusaka/BeaconBlock: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^fusaka/BeaconBlockBody: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^fusaka/BeaconState: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^fusaka/SignedAggregateAndProof: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^fusaka/SignedBeaconBlock: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^glamsterdam/AggregateAndProof: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^glamsterdam/Attestation: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^glamsterdam/BeaconBlock: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^glamsterdam/BeaconBlockBody: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^glamsterdam/BeaconState: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^glamsterdam/SignedAggregateAndProof: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
-^glamsterdam/SignedBeaconBlock: methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
+## and JustificationBits. Bug. Fix proposed in PR #27. EthLib names no field.
+^fusaka/(AggregateAndProof|Attestation|BeaconBlock|BeaconBlockBody|BeaconState|SignedAggregateAndProof|SignedBeaconBlock): methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
+^glamsterdam/(AggregateAndProof|Attestation|BeaconBlock|BeaconBlockBody|BeaconState|SignedAggregateAndProof|SignedBeaconBlock): methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
 
-## Value inputs on main: MarshalSSZ encodes a Bitlist above its limit (F2), and
-## HashTreeRoot gives a root for it. Bug. Fix proposed in PR #27 for MarshalSSZ.
-## No fix proposed yet for HashTreeRoot.
-^fusaka/AggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 131072 [0-9]+; changed: (.+, )?Aggregate\.AggregationBits(, .+)?$
-^fusaka/AggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 8192 [0-9]+; changed: (.+, )?Aggregate\.AggregationBits(, .+)?$
-^fusaka/Attestation: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 131072 [0-9]+; changed: (.+, )?AggregationBits(, .+)?$
-^fusaka/Attestation: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 8192 [0-9]+; changed: (.+, )?AggregationBits(, .+)?$
-^fusaka/BeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 131072 [0-9]+; changed: (.+, )?Body\.Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/BeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 8192 [0-9]+; changed: (.+, )?Body\.Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/BeaconBlockBody: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 131072 [0-9]+; changed: (.+, )?Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/BeaconBlockBody: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 8192 [0-9]+; changed: (.+, )?Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/BlindedBeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 131072 [0-9]+; changed: (.+, )?Body\.Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/BlindedBeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 8192 [0-9]+; changed: (.+, )?Body\.Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/BlindedBeaconBlockBody: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 131072 [0-9]+; changed: (.+, )?Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/BlindedBeaconBlockBody: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 8192 [0-9]+; changed: (.+, )?Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/PartialDataColumnPartsMetadata: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 4096 [0-9]+; changed: (.+, )?Available(, .+)?$
-^fusaka/PartialDataColumnPartsMetadata: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 4096 [0-9]+; changed: (.+, )?Requests(, .+)?$
-^fusaka/PartialDataColumnSidecar: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 4096 [0-9]+; changed: (.+, )?CellsPresentBitmap(, .+)?$
-^fusaka/SignedAggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 131072 [0-9]+; changed: (.+, )?Message\.Aggregate\.AggregationBits(, .+)?$
-^fusaka/SignedAggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 8192 [0-9]+; changed: (.+, )?Message\.Aggregate\.AggregationBits(, .+)?$
-^fusaka/SignedBeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 131072 [0-9]+; changed: (.+, )?Block\.Body\.Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/SignedBeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 8192 [0-9]+; changed: (.+, )?Block\.Body\.Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/SignedBlindedBeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 131072 [0-9]+; changed: (.+, )?Message\.Body\.Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/SignedBlindedBeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 8192 [0-9]+; changed: (.+, )?Message\.Body\.Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-
-## Value inputs on main: MarshalSSZ encodes a Bitlist with no delimiter bit, and
-## HashTreeRoot gives a root for it. Bug. Fix proposed in PR #27 for MarshalSSZ.
-## No fix proposed yet for HashTreeRoot.
-^fusaka/AggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?Aggregate\.AggregationBits(, .+)?$
-^fusaka/Attestation: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?AggregationBits(, .+)?$
-^fusaka/Attestation: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?AggregationBits(, .+)?$
-^fusaka/BeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?Body\.Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/BlindedBeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?Body\.Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/BlindedBeaconBlockBody: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^fusaka/PartialDataColumnPartsMetadata: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?Available(, .+)?$
-^fusaka/PartialDataColumnPartsMetadata: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?Requests(, .+)?$
-^fusaka/PartialDataColumnPartsMetadata: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?Available(, .+)?$
-^fusaka/PartialDataColumnPartsMetadata: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?Requests(, .+)?$
-^fusaka/PartialDataColumnSidecar: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?CellsPresentBitmap(, .+)?$
-^fusaka/SignedAggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?Message\.Aggregate\.AggregationBits(, .+)?$
-^fusaka/SignedBlindedBeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?Message\.Body\.Attestations\[[0-9]+\]\.AggregationBits(, .+)?$
-^glamsterdam/AggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?Aggregate\.AggregationBits(, .+)?$
-^glamsterdam/AggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?Aggregate\.AggregationBits(, .+)?$
-^glamsterdam/Attestation: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?AggregationBits(, .+)?$
-^glamsterdam/Attestation: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?AggregationBits(, .+)?$
-^glamsterdam/PartialDataColumnSidecar: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?CellsPresentBitmap(, .+)?$
-^glamsterdam/SignedAggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?Message\.Aggregate\.AggregationBits(, .+)?$
-
-## Value inputs on main: MarshalSSZ encodes set padding bits of a Bitvector4, and
-## HashTreeRoot gives a root for it. Bug. Fix proposed in PR #27 for MarshalSSZ.
-## No fix proposed yet for HashTreeRoot.
-^fusaka/AggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Aggregate\.CommitteeBits(, .+)?$
-^fusaka/Attestation: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?CommitteeBits(, .+)?$
-^fusaka/BeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Body\.Attestations\[[0-9]+\]\.CommitteeBits(, .+)?$
-^fusaka/BeaconBlockBody: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Attestations\[[0-9]+\]\.CommitteeBits(, .+)?$
-^fusaka/BeaconState: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?JustificationBits(, .+)?$
-^fusaka/BlindedBeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Body\.Attestations\[[0-9]+\]\.CommitteeBits(, .+)?$
-^fusaka/BlindedBeaconBlockBody: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Attestations\[[0-9]+\]\.CommitteeBits(, .+)?$
-^fusaka/SignedAggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Message\.Aggregate\.CommitteeBits(, .+)?$
-^fusaka/SignedBeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Block\.Body\.Attestations\[[0-9]+\]\.CommitteeBits(, .+)?$
-^fusaka/SignedBlindedBeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Message\.Body\.Attestations\[[0-9]+\]\.CommitteeBits(, .+)?$
-^glamsterdam/AggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Aggregate\.CommitteeBits(, .+)?$
-^glamsterdam/Attestation: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?CommitteeBits(, .+)?$
-^glamsterdam/BeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Body\.Attestations\[[0-9]+\]\.CommitteeBits(, .+)?$
-^glamsterdam/BeaconBlockBody: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Attestations\[[0-9]+\]\.CommitteeBits(, .+)?$
-^glamsterdam/SignedAggregateAndProof: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Message\.Aggregate\.CommitteeBits(, .+)?$
-^glamsterdam/SignedBeaconBlock: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?Block\.Body\.Attestations\[[0-9]+\]\.CommitteeBits(, .+)?$
+## Value inputs on main: MarshalSSZ encodes a bitfield that is not valid (above its
+## limit, no delimiter, set padding bits), and HashTreeRoot gives a root for it.
+## Bug. Fix proposed in PR #27 for MarshalSSZ. No fix proposed yet for HashTreeRoot.
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?Available(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?CellsPresentBitmap(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?Requests(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 131072 [0-9]+; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 4096 [0-9]+; changed: (.+, )?([^,]*\.)?Available(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 4096 [0-9]+; changed: (.+, )?([^,]*\.)?CellsPresentBitmap(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 4096 [0-9]+; changed: (.+, )?([^,]*\.)?Requests(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 8192 [0-9]+; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?([^,]*\.)?CommitteeBits(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?([^,]*\.)?JustificationBits(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?([^,]*\.)?Available(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?([^,]*\.)?Requests(, .+)?$
+^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
+^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?CellsPresentBitmap(, .+)?$
+^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?([^,]*\.)?CommitteeBits(, .+)?$
+^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
 
 ## Value inputs on PR #27: MarshalSSZ refuses the value, but HashTreeRoot gives a
 ## root for it. Bug. No fix proposed yet.
-^\*eth\.AttestationElectra: MarshalSSZ refuses the value \(AggregationBits: too many bits: list length is higher than max value\), but HashTreeRoot gives a root; changed: (.+, )?AggregationBits(, .+)?$
-^\*eth\.AttestationElectra: MarshalSSZ refuses the value \(AggregationBits: trailing byte is zero\), but HashTreeRoot gives a root; changed: (.+, )?AggregationBits(, .+)?$
-^\*eth\.AttestationElectra: MarshalSSZ refuses the value \(CommitteeBits: bitvector padding bits are not zero\), but HashTreeRoot gives a root; changed: (.+, )?CommitteeBits(, .+)?$
+^\*eth\.[A-Za-z]+: MarshalSSZ refuses the value \((.*: )?AggregationBits: too many bits: list length is higher than max value\), but HashTreeRoot gives a root; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
+^\*eth\.[A-Za-z]+: MarshalSSZ refuses the value \((.*: )?AggregationBits: trailing byte is zero\), but HashTreeRoot gives a root; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
+^\*eth\.[A-Za-z]+: MarshalSSZ refuses the value \((.*: )?CommitteeBits: bitvector padding bits are not zero\), but HashTreeRoot gives a root; changed: (.+, )?([^,]*\.)?CommitteeBits(, .+)?$
 
 ## Value inputs, main and PR #27: HashTreeRoot panics in parseBitlistProgressive
 ## (ssz/htr.go) on a progressive Bitlist with a zero last byte, in the Gloas
 ## attestation types. Bug. No fix proposed yet.
-^\*eth\.AttestationGloas: HashTreeRoot panics in ssz\.parseBitlistProgressive: runtime error: slice bounds out of range \[:[0-9]+\] with capacity [0-9]+; changed: (.+, )?AggregationBits(, .+)?$
+^\*eth\.AttestationGloas: HashTreeRoot panics in ssz\.parseBitlistProgressive: runtime error: slice bounds out of range \[:[0-9]+\] with capacity [0-9]+; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
 
-## The decoder rejects a Gloas progressive list or bitlist above its ssz-max tag.
-## The SSZ type has no limit. Soft limit of the generator, added in PR #22.
-## Each field is a ProgressiveList or ProgressiveBitlist in Prysm's YAML
-## (proto/prysm/v1alpha1/gloas.yaml, proto/engine/v1/engine.yaml), and EthLib
-## gives it no limit from Gloas (ForkList .glamsterdam, ForkBitlist or ProgressiveList).
-^glamsterdam/AggregateAndProof: EthLib accepts, methodical rejects: Aggregate: AggregationBits: too many bits$
-^glamsterdam/AggregateAndProof: EthLib accepts, methodical rejects: Aggregate: AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+$
-^glamsterdam/AggregateAndProof: EthLib accepts, methodical rejects: Aggregate: AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+: list length is higher than max value$
-^glamsterdam/Attestation: EthLib accepts, methodical rejects: AggregationBits: too many bits$
-^glamsterdam/Attestation: EthLib accepts, methodical rejects: AggregationBits: too many bits: list length is higher than max value$
-^glamsterdam/Attestation: EthLib accepts, methodical rejects: AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+$
-^glamsterdam/Attestation: EthLib accepts, methodical rejects: AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+: list length is higher than max value$
-^glamsterdam/AttesterSlashing: EthLib accepts, methodical rejects: Attestation_1: ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 131072: list length is higher than max value$
-^glamsterdam/AttesterSlashing: EthLib accepts, methodical rejects: Attestation_1: ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 8192: list length is higher than max value$
-^glamsterdam/AttesterSlashing: EthLib accepts, methodical rejects: Attestation_2: ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 131072: list length is higher than max value$
-^glamsterdam/AttesterSlashing: EthLib accepts, methodical rejects: Attestation_2: ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 8192: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: AttesterSlashings: Attestation_1: ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 131072: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: AttesterSlashings: Attestation_1: ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 8192: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: AttesterSlashings: Attestation_2: ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 8192: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: ParentExecutionRequests: ssz-max exceeded: c\.BuilderDeposits has [0-9]+ elements, ssz-max is 64: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: ParentExecutionRequests: ssz-max exceeded: c\.BuilderExits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: ParentExecutionRequests: ssz-max exceeded: c\.Consolidations has [0-9]+ elements, ssz-max is 2: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: SignedExecutionPayloadBid: Message: ssz-max exceeded: c\.BlobKzgCommitments has [0-9]+ elements, ssz-max is 4096: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: ssz-max exceeded: c\.Attestations has [0-9]+ elements, ssz-max is 8: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: ssz-max exceeded: c\.AttesterSlashings has [0-9]+ elements, ssz-max is 1: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: ssz-max exceeded: c\.BlsToExecutionChanges has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: ssz-max exceeded: c\.Deposits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: ssz-max exceeded: c\.ProposerSlashings has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/BeaconBlock: EthLib accepts, methodical rejects: Body: ssz-max exceeded: c\.VoluntaryExits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/BeaconBlockBody: EthLib accepts, methodical rejects: Attestations: AggregationBits: too many bits$
-^glamsterdam/BeaconBlockBody: EthLib accepts, methodical rejects: Attestations: AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+$
-^glamsterdam/BeaconBlockBody: EthLib accepts, methodical rejects: AttesterSlashings: Attestation_1: ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 8192: list length is higher than max value$
-^glamsterdam/BeaconBlockBody: EthLib accepts, methodical rejects: ParentExecutionRequests: ssz-max exceeded: c\.BuilderDeposits has [0-9]+ elements, ssz-max is 64: list length is higher than max value$
-^glamsterdam/BeaconBlockBody: EthLib accepts, methodical rejects: ParentExecutionRequests: ssz-max exceeded: c\.BuilderExits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/BeaconBlockBody: EthLib accepts, methodical rejects: ParentExecutionRequests: ssz-max exceeded: c\.Consolidations has [0-9]+ elements, ssz-max is 2: list length is higher than max value$
-^glamsterdam/BeaconBlockBody: EthLib accepts, methodical rejects: ParentExecutionRequests: ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/BeaconBlockBody: EthLib accepts, methodical rejects: SignedExecutionPayloadBid: Message: ssz-max exceeded: c\.BlobKzgCommitments has [0-9]+ elements, ssz-max is 4096: list length is higher than max value$
-^glamsterdam/BeaconBlockBody: EthLib accepts, methodical rejects: ssz-max exceeded: c\.Attestations has [0-9]+ elements, ssz-max is 8: list length is higher than max value$
-^glamsterdam/BeaconBlockBody: EthLib accepts, methodical rejects: ssz-max exceeded: c\.Deposits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/BeaconBlockBody: EthLib accepts, methodical rejects: ssz-max exceeded: c\.PayloadAttestations has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
-^glamsterdam/BeaconBlockBody: EthLib accepts, methodical rejects: ssz-max exceeded: c\.VoluntaryExits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/BeaconState: EthLib accepts, methodical rejects: ssz-max exceeded: c\.PayloadExpectedWithdrawals has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
-^glamsterdam/BeaconState: EthLib accepts, methodical rejects: ssz-max exceeded: c\.PendingConsolidations has [0-9]+ elements, ssz-max is 64: list length is higher than max value$
-^glamsterdam/DataColumnSidecar: EthLib accepts, methodical rejects: ssz-max exceeded: c\.KzgProofs has [0-9]+ elements, ssz-max is 4096: list length is higher than max value$
-^glamsterdam/ExecutionPayload: EthLib accepts, methodical rejects: ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/ExecutionPayload: EthLib accepts, methodical rejects: ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
-^glamsterdam/ExecutionPayloadBid: EthLib accepts, methodical rejects: ssz-max exceeded: c\.BlobKzgCommitments has [0-9]+ elements, ssz-max is 4096: list length is higher than max value$
-^glamsterdam/ExecutionPayloadEnvelope: EthLib accepts, methodical rejects: ExecutionRequests: ssz-max exceeded: c\.BuilderDeposits has [0-9]+ elements, ssz-max is 64: list length is higher than max value$
-^glamsterdam/ExecutionPayloadEnvelope: EthLib accepts, methodical rejects: ExecutionRequests: ssz-max exceeded: c\.BuilderExits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/ExecutionPayloadEnvelope: EthLib accepts, methodical rejects: ExecutionRequests: ssz-max exceeded: c\.Consolidations has [0-9]+ elements, ssz-max is 2: list length is higher than max value$
-^glamsterdam/ExecutionPayloadEnvelope: EthLib accepts, methodical rejects: ExecutionRequests: ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/ExecutionPayloadEnvelope: EthLib accepts, methodical rejects: Payload: ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/ExecutionPayloadEnvelope: EthLib accepts, methodical rejects: Payload: ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
-^glamsterdam/ExecutionRequests: EthLib accepts, methodical rejects: ssz-max exceeded: c\.BuilderDeposits has [0-9]+ elements, ssz-max is 64: list length is higher than max value$
-^glamsterdam/ExecutionRequests: EthLib accepts, methodical rejects: ssz-max exceeded: c\.BuilderExits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/ExecutionRequests: EthLib accepts, methodical rejects: ssz-max exceeded: c\.Consolidations has [0-9]+ elements, ssz-max is 2: list length is higher than max value$
-^glamsterdam/ExecutionRequests: EthLib accepts, methodical rejects: ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/IndexedAttestation: EthLib accepts, methodical rejects: ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 131072: list length is higher than max value$
-^glamsterdam/IndexedAttestation: EthLib accepts, methodical rejects: ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 8192: list length is higher than max value$
-^glamsterdam/PartialDataColumnSidecar: EthLib accepts, methodical rejects: CellsPresentBitmap: too many bits$
-^glamsterdam/PartialDataColumnSidecar: EthLib accepts, methodical rejects: CellsPresentBitmap: unexpected number of bytes, got [0-9]+ but found [0-9]+$
-^glamsterdam/PartialDataColumnSidecar: EthLib accepts, methodical rejects: CellsPresentBitmap: unexpected number of bytes, got [0-9]+ but found [0-9]+: list length is higher than max value$
-^glamsterdam/PartialDataColumnSidecar: EthLib accepts, methodical rejects: ssz-max exceeded: c\.KzgProofs has [0-9]+ elements, ssz-max is 4096: list length is higher than max value$
-^glamsterdam/SignedAggregateAndProof: EthLib accepts, methodical rejects: Message: Aggregate: AggregationBits: too many bits$
-^glamsterdam/SignedAggregateAndProof: EthLib accepts, methodical rejects: Message: Aggregate: AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+$
-^glamsterdam/SignedAggregateAndProof: EthLib accepts, methodical rejects: Message: Aggregate: AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+: list length is higher than max value$
-^glamsterdam/SignedBeaconBlock: EthLib accepts, methodical rejects: Block: Body: Attestations: AggregationBits: too many bits$
-^glamsterdam/SignedBeaconBlock: EthLib accepts, methodical rejects: Block: Body: Attestations: AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+$
-^glamsterdam/SignedBeaconBlock: EthLib accepts, methodical rejects: Block: Body: AttesterSlashings: Attestation_2: ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 131072: list length is higher than max value$
-^glamsterdam/SignedBeaconBlock: EthLib accepts, methodical rejects: Block: Body: ParentExecutionRequests: ssz-max exceeded: c\.BuilderDeposits has [0-9]+ elements, ssz-max is 64: list length is higher than max value$
-^glamsterdam/SignedBeaconBlock: EthLib accepts, methodical rejects: Block: Body: ParentExecutionRequests: ssz-max exceeded: c\.BuilderExits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/SignedBeaconBlock: EthLib accepts, methodical rejects: Block: Body: ParentExecutionRequests: ssz-max exceeded: c\.Consolidations has [0-9]+ elements, ssz-max is 2: list length is higher than max value$
-^glamsterdam/SignedBeaconBlock: EthLib accepts, methodical rejects: Block: Body: ParentExecutionRequests: ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/SignedBeaconBlock: EthLib accepts, methodical rejects: Block: Body: ssz-max exceeded: c\.AttesterSlashings has [0-9]+ elements, ssz-max is 1: list length is higher than max value$
-^glamsterdam/SignedBeaconBlock: EthLib accepts, methodical rejects: Block: Body: ssz-max exceeded: c\.Deposits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/SignedBeaconBlock: EthLib accepts, methodical rejects: Block: Body: ssz-max exceeded: c\.PayloadAttestations has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
-^glamsterdam/SignedBeaconBlock: EthLib accepts, methodical rejects: Block: Body: ssz-max exceeded: c\.ProposerSlashings has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/SignedExecutionPayloadBid: EthLib accepts, methodical rejects: Message: ssz-max exceeded: c\.BlobKzgCommitments has [0-9]+ elements, ssz-max is 4096: list length is higher than max value$
-^glamsterdam/SignedExecutionPayloadEnvelope: EthLib accepts, methodical rejects: Message: ExecutionRequests: ssz-max exceeded: c\.BuilderDeposits has [0-9]+ elements, ssz-max is 64: list length is higher than max value$
-^glamsterdam/SignedExecutionPayloadEnvelope: EthLib accepts, methodical rejects: Message: ExecutionRequests: ssz-max exceeded: c\.BuilderExits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/SignedExecutionPayloadEnvelope: EthLib accepts, methodical rejects: Message: ExecutionRequests: ssz-max exceeded: c\.Consolidations has [0-9]+ elements, ssz-max is 2: list length is higher than max value$
-^glamsterdam/SignedExecutionPayloadEnvelope: EthLib accepts, methodical rejects: Message: ExecutionRequests: ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/SignedExecutionPayloadEnvelope: EthLib accepts, methodical rejects: Message: Payload: ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
-^glamsterdam/SignedExecutionPayloadEnvelope: EthLib accepts, methodical rejects: Message: Payload: ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
+## The decoder rejects a Gloas progressive list above its ssz-max tag. The SSZ type
+## has no limit. Soft limit of the generator, added in PR #22. Each field name is a
+## ProgressiveList in Prysm's YAML wherever it has this limit in a Gloas container,
+## and EthLib gives it no limit from Gloas (ForkList .glamsterdam or ProgressiveList).
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Attestations has [0-9]+ elements, ssz-max is 8: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.AttesterSlashings has [0-9]+ elements, ssz-max is 1: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 131072: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 8192: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.BlobKzgCommitments has [0-9]+ elements, ssz-max is 4096: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.BlsToExecutionChanges has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.BuilderDeposits has [0-9]+ elements, ssz-max is 64: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.BuilderExits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Consolidations has [0-9]+ elements, ssz-max is 2: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Deposits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.KzgProofs has [0-9]+ elements, ssz-max is 4096: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PayloadAttestations has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PayloadExpectedWithdrawals has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PendingConsolidations has [0-9]+ elements, ssz-max is 64: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.ProposerSlashings has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.VoluntaryExits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
+
+## The decoder rejects a Gloas progressive bitlist above its ssz-max tag. The field
+## is a ProgressiveBitlist in Prysm's YAML in every Gloas container, and a
+## ForkBitlist .glamsterdam in EthLib.
+^glamsterdam/(AggregateAndProof|Attestation|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: too many bits$
+^glamsterdam/(Attestation): EthLib accepts, methodical rejects: (.*: )?AggregationBits: too many bits: list length is higher than max value$
+^glamsterdam/(AggregateAndProof|Attestation|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+$
+^glamsterdam/(AggregateAndProof|Attestation|SignedAggregateAndProof): EthLib accepts, methodical rejects: (.*: )?AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?CellsPresentBitmap: too many bits$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?CellsPresentBitmap: unexpected number of bytes, got [0-9]+ but found [0-9]+$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?CellsPresentBitmap: unexpected number of bytes, got [0-9]+ but found [0-9]+: list length is higher than max value$

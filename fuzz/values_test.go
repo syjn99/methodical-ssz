@@ -300,6 +300,8 @@ func TestKnownIsNarrow(t *testing.T) {
 		// A panic in a type with no bitlist.
 		"*eth.Checkpoint: HashTreeRoot panics in ssz.parseBitlistProgressive: runtime error: slice bounds out of range [:33] with capacity 32; changed: Root",
 		"*eth.Checkpoint: HashTreeRoot panics in no ssz function: runtime error: slice bounds out of range [:33] with capacity 32; changed: Root",
+		// A listed field name with a limit that no line lists.
+		"glamsterdam/ExecutionPayload: EthLib accepts, methodical rejects: ssz-max exceeded: c.Withdrawals has 18 elements, ssz-max is 17: list length is higher than max value",
 		// A byte vector of the wrong length.
 		"*eth.Checkpoint: MarshalSSZ refuses the value (Root: unexpected number of bytes, got 31 but found 32: list length is higher than max value), but HashTreeRoot gives a root; changed: Root",
 	} {
