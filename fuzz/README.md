@@ -57,6 +57,20 @@ STRICT=1 ./fuzzall.sh
 
 To fuzz one target by hand: `go test -run '^$' -fuzz '^FuzzCheckpoint$' -fuzzminimizetime 5s .`
 
+To see which EthLib verdicts the corpus of each target reaches, give `-codes`.
+Each target then prints one line for each fork and skips itself.
+The corpus is the seeds, `testdata/fuzz/` and the fuzz cache.
+
+```sh
+go test -v -run '^Fuzz' . -args -codes | grep '^Fuzz'
+# FuzzEngineExecutionRequests fusaka inputs=14 both-accept=6 accept=6 SCOPE_TOO_SMALL=1 SCOPE_UNDIVIDED=4 FIRST_OFFSET=1 OFFSET_PAST_SCOPE=2
+```
+
+`both-accept` counts the inputs that EthLib and `UnmarshalSSZ` both accept.
+A verdict that does not show is not tested yet.
+The default cache is the one of `go test -fuzz`. For the cache of `fuzzall.sh`, add `-test.fuzzcachedir` after `-codes`
+with the path that `fuzzall.sh` sets in `CACHE`.
+
 Use the minimal preset for large containers.
 A mainnet `BeaconState` is 2.7 MB, so a random mutation rarely hits a given field.
 

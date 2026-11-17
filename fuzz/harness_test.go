@@ -39,6 +39,7 @@ func run[T any, P interface {
 	if _, err := os.Stat(".seeds/complete"); err != nil {
 		f.Fatal("no seed vectors: run ./seeds.sh")
 	}
+	var corpus [][]byte
 	for _, fork := range forks {
 		// EthLib answers code 0 when it holds no such container. That is no
 		// verdict on the bytes, so the type cannot be tested.
@@ -55,7 +56,7 @@ func run[T any, P interface {
 			if err != nil {
 				f.Fatal(err)
 			}
-			f.Add(data)
+			corpus = append(corpus, data)
 		}
 	}
 	// The zero value is a seed that both sides must accept. It gives the
@@ -71,8 +72,13 @@ func run[T any, P interface {
 			f.Fatalf("%s/%s: EthLib rejects the zero value: %s", fork, name, msg)
 		}
 	}
-	f.Add(zero)
-	f.Add([]byte{})
+	corpus = append(corpus, zero, []byte{})
+	if *codes {
+		table[T, P](f, name, forks, corpus)
+	}
+	for _, data := range corpus {
+		f.Add(data)
+	}
 	f.Fuzz(func(t *testing.T, data []byte) {
 		for _, fork := range forks {
 			check(t, P(new(T)), fork, name, data)

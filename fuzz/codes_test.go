@@ -1,6 +1,25 @@
 package fuzz
 
-import "github.com/OffchainLabs/methodical-ssz/fuzz/oracle"
+import (
+	"flag"
+	"fmt"
+	"maps"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"slices"
+	"strconv"
+	"strings"
+	"testing"
+
+	"github.com/OffchainLabs/methodical-ssz/fuzz/oracle"
+)
+
+// reasons names the verdicts that signal tells apart, for the table.
+var reasons = [...]string{"accept", "WRONG_TYPE", "LIMIT", "SCOPE", "SCOPE_TOO_SMALL", "SCOPE_UNDIVIDED",
+	"SCOPE_WIDTHLESS", "FIRST_OFFSET", "OFFSET_UNORDERED", "OFFSET_PAST_SCOPE", "OFFSET_UNALIGNED",
+	"OFFSET_BELOW_TABLE", "TRUNCATED", "NOT_A_BIT", "COUNT", "PADDING_BITS", "EMPTY_ENCODING", "NO_DELIMITER",
+	"TRAILING_ZEROS", "NO_SELECTOR", "UNKNOWN_SELECTOR"}
 
 // signal gives accept and each SSZ decode error, codes 1 to 20 of EthLib's
 // Err (EthLib/Serialization/Ssz/Error.lean), its own branch. The Go fuzzer sees
@@ -34,4 +53,60 @@ func signal(v oracle.Verdict) {
 	case 20:
 	default:
 	}
+}
+
+var codes = flag.Bool("codes", false, "print the EthLib verdicts that the corpus of each target reaches, then skip the target")
+
+// table prints one line for each fork of a target: the number of inputs, the
+// number that both sides accept, and the number of inputs for each EthLib
+// verdict. The inputs are the seeds, testdata/fuzz and the fuzz cache: the
+// -test.fuzzcachedir flag, or else the default cache of `go test -fuzz`.
+func table[T any, P interface {
+	*T
+	codec
+}](f *testing.F, name string, forks []string, corpus [][]byte) {
+	cache := flag.Lookup("test.fuzzcachedir").Value.String()
+	if cache == "" {
+		out, err := exec.Command("go", "env", "GOCACHE").Output()
+		if err != nil {
+			f.Fatal(err)
+		}
+		cache = filepath.Join(strings.TrimSpace(string(out)), "fuzz", "github.com/OffchainLabs/methodical-ssz/fuzz")
+	}
+	for _, dir := range []string{"testdata/fuzz", cache} {
+		files, _ := filepath.Glob(filepath.Join(dir, f.Name(), "*"))
+		for _, path := range files {
+			raw, err := os.ReadFile(path)
+			if err != nil {
+				f.Fatal(err)
+			}
+			lit, ok := strings.CutPrefix(strings.TrimSpace(string(raw)), "go test fuzz v1\n[]byte(")
+			data, err := strconv.Unquote(strings.TrimSuffix(lit, ")"))
+			if !ok || err != nil {
+				f.Fatalf("%s: not one []byte in the Go corpus format", path)
+			}
+			corpus = append(corpus, []byte(data))
+		}
+	}
+	for _, fork := range forks {
+		count := map[oracle.Verdict]int{}
+		both := 0
+		for _, data := range corpus {
+			v, _, _ := oracle.SszStatic(preset, fork, name, data)
+			count[v]++
+			if v == oracle.Accept && P(new(T)).UnmarshalSSZ(data) == nil {
+				both++
+			}
+		}
+		line := fmt.Sprintf("%s %s inputs=%d both-accept=%d", f.Name(), fork, len(corpus), both)
+		for _, v := range slices.Sorted(maps.Keys(count)) {
+			reason := fmt.Sprintf("code%d", v)
+			if int(v) < len(reasons) {
+				reason = reasons[v]
+			}
+			line += fmt.Sprintf(" %s=%d", reason, count[v])
+		}
+		fmt.Println(line)
+	}
+	f.SkipNow()
 }
