@@ -3,10 +3,11 @@
 # Set STRICT=1 to turn this filter off.
 # Keep each line as narrow as the recorded class. Remove a line when its fix merges.
 
-# The decoder accepts a byte list longer than ssz-max: ExtraData, limit 32.
+# The decoder accepts a byte list longer than ssz-max: ExtraData, limit 32, and
+# the Gloas BuilderRequestAuth.Data, limit 4096 (found by the nightly settings).
 # Bug. Fix proposed in PR #27. EthLib's message has no field name, so the
-# limit 32 identifies the class.
-methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 32 [0-9]+$
+# limits identify the class.
+methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit (32|4096) [0-9]+$
 
 # The decoder accepts set padding bits in a Bitvector. Bug. Fix proposed in PR #27.
 methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
