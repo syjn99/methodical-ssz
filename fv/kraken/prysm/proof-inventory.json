@@ -10,9 +10,9 @@
  "axioms_gate": {
   "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=Spec,Machine,Runtime,Codec,Prysm",
   "verdict": "PASS",
-  "declarations": 18160,
-  "theorems": 14694,
-  "modules": 539
+  "declarations": 18170,
+  "theorems": 14702,
+  "modules": 541
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -9238,13 +9238,13 @@
    "kind": "generated",
    "state": "partial",
    "missing": [
-    "reject_size_spec",
     "reject_complete"
    ],
    "theorems": {
     "accept": "Prysm.DataColumnsByRootIdentifier.Decode.accept",
     "reject": "Prysm.DataColumnsByRootIdentifier.Decode.reject_size",
     "accept_spec": "Prysm.DataColumnsByRootIdentifier.Decode.accept_spec",
+    "reject_size_spec": "Prysm.DataColumnsByRootIdentifier.Decode.reject_size_spec",
     "codec": [
      "Prysm.DataColumnsByRootIdentifier.desc_deserialize_checker"
     ],
