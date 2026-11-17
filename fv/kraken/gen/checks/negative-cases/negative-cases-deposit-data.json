@@ -109,8 +109,8 @@
   "module": "Prysm/Deposit_Data/DecodeSpec.lean",
   "theorem": "Prysm.Deposit_Data.Decode.accept_spec",
   "kind": "statement",
-  "old": "⋆ Eq (g.pubkey.toList.At p1) ⋆ Eq (g.withdrawalCredentials.toList.At p2)",
-  "new": "⋆ Eq (g.withdrawalCredentials.toList.At p1) ⋆ Eq (g.pubkey.toList.At p2)"
+  "old": "⋆ Eq (g.pubkey.toArray.toList.At p1)\n          ⋆ Eq (g.withdrawalCredentials.toArray.toList.At p2)",
+  "new": "⋆ Eq (g.withdrawalCredentials.toArray.toList.At p1)\n          ⋆ Eq (g.pubkey.toArray.toList.At p2)"
  },
  {
   "id": "deposit-data-decode-accept-spec-statement-hav-176-avail-to-true",

@@ -24,14 +24,14 @@ primitives	Epoch	uint64	-	accept	-
 primitives	Slot	uint64	-	accept	-
 primitives	CommitteeIndex	uint64	-	accept	-
 # decoder --whole-accept: the accept path and the size reject of a flat decoder.
-v1alpha1	BeaconBlockHeader	decoder --whole-accept	-	accept	spec,reject-witness
-v1alpha1	Eth1Data	decoder --whole-accept	-	accept	spec,reject-witness
-v1alpha1	BlobIdentifier	decoder --whole-accept	-	accept	spec,reject-witness
-v1alpha1	DepositMessage	decoder --whole-accept	-	accept	spec,reject-witness
-v1alpha1	Deposit_Data	decoder --whole-accept	-	accept	spec,reject-witness,accept-witness
-v1alpha1	SyncCommitteeMessage	decoder --whole-accept	-	accept	spec,reject-witness
+v1alpha1	BeaconBlockHeader	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
+v1alpha1	Eth1Data	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
+v1alpha1	BlobIdentifier	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
+v1alpha1	DepositMessage	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
+v1alpha1	Deposit_Data	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness
+v1alpha1	SyncCommitteeMessage	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
 v1alpha1	PendingConsolidation	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
-v1alpha1	PendingDeposit	decoder --whole-accept	-	accept	spec,reject-witness,accept-witness
+v1alpha1	PendingDeposit	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness
 v1alpha1	PowBlock	decoder --whole-accept	-	accept	-
 v1alpha1	HistoricalSummary	decoder --whole-accept	-	accept	decode-spec,reject-witness
 v1alpha1	SigningData	decoder --whole-accept	-	accept	decode-spec,reject-witness

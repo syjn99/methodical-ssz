@@ -378,11 +378,6 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   The rows are in `gen/generator/types.tsv`.
   For some types with a generated decoder or encoder, a person writes `DecodeSpec.lean`, `Spec.lean` or `WitnessGeneratedDecodeAccept.lean`.
   The rules and the types:
-  - `DecodeSpec.lean` of BeaconBlockHeader, Eth1Data, BlobIdentifier, DepositMessage, Deposit_Data, PendingDeposit and SyncCommitteeMessage.
-    The hand `Decode.accept_spec` writes a byte field as `g.<field>.toList`.
-    `flat_types_decode_spec.py` writes `g.<field>.toArray.toList`, and other binder names.
-    Lean accepts the hand theorem as a proof of the tool statement, so the two statements are equal by definition.
-    They are not equal by `with_reducible rfl`, because `Vector.toList` must unfold.
   - `Spec.lean` of HistoricalSummary and SigningData: these types have no uint64 field.
     The text of `flat_types_spec.py` for a type without a uint64 field does not build.
   - `Spec.lean`, `DecodeSpec.lean` and `WitnessGeneratedDecodeRejectSize.lean` of PowBlock: its field `totalDifficulty` is a `Fin (2 ^ 256)`.
