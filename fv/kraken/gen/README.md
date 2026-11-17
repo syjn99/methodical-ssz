@@ -11,7 +11,7 @@ The design principles are in `../../README.md`.
 - A generator is untrusted.
   Lean checks every proof that a generator writes.
 - A separate check covers the statement of a generated theorem.
-  It is a kind (section 4) or an identity with a hand statement.
+  It is a kind (section 4) or a statement tie with a hand statement (section 4).
 - A generated Lean file must be equal to the output of its generator.
   Do not edit a generated file by hand.
   The header comment of a generated file names its generator.
@@ -58,7 +58,7 @@ The design principles are in `../../README.md`.
 - `decoder --whole-accept`: the step chain of the accept path over windows, with a padding `nop` anywhere.
   After it, the head, field, epilogue, accept and size-reject theorems.
 - `encoder --fast-path`: the encoder fast path theorem.
-  `--same-as` and `--same-as-via` add an identity with a hand statement.
+  `--same-as` and `--same-as-via` add a statement tie with a hand statement (section 4).
 
 `generator/decoder_test.py` tests `decoder --whole-accept`, and `generator/encoder_test.py` tests `encoder --fast-path`.
 They run the generator on real and mutated inputs.
@@ -141,19 +141,29 @@ Only the proof checks them, through its code facts.
 A kind identity is not a witness.
 It does not show that the premises can hold.
 
-### Ties of a kind to a hand theorem
+### Ties
 
-A tie shows that a kind is the statement of a hand theorem.
-A reviewer reads the hand theorem against the specification, so the kind is not new text.
-The tree has these forms of tie:
+A tie is a theorem: a kind or a generated statement is the statement of a hand theorem or statement.
+A reviewer reads the hand text against the specification, so the kind or generated statement is not new text.
+A tie has one of two forms:
 
-- An identity of a kind with the full type of a hand theorem, proved by `with_reducible rfl`.
-  `Prysm.Checkpoint.Decode.reject_size_is_kind_any_frame` ties `decodeRejectKindAnyFrame` (`Checkpoint/DecodeRejectSizeKindInstances.lean`).
-- An implication from a kind instance to the statement of a hand theorem.
-  `Prysm.Checkpoint.Decode.accept_of_kind` does this for `decodeAcceptKindAnyFrame`, and `Prysm.Checkpoint.Encode.fast_path_of_kind` for `encodeFastPathKindAnyFrame`.
-  The generated Checkpoint fast-path file uses `Encode.fast_path_of_kind` through `--same-as-via`.
-- An identity of a generated theorem with an independent hand statement, proved by `rfl`.
-  `Encode.generated_fast_same_as_statement` in `GeneratedEncodeFastPathSameAsHand.lean` of Deposit_Data, PowBlock and SyncCommitteeMessage does this.
+- A kind tie: a kind instance is, or implies, the statement of a hand theorem.
+  The proof is an identity by `with_reducible rfl`, or an implication.
+- A statement tie: a generated theorem has the statement of a hand theorem or a hand statement.
+  The proof is `rfl`, or an implication through a kind tie.
+
+The name rule: the tie module is the module of the hand theorem or statement + `KindTie` or `StatementTie`.
+The tie theorem is the name of the hand theorem + `_kind_tie` or `_statement_tie`.
+A tie that the generator writes has the name of the generated theorem + `_statement_tie`.
+The tree has these ties:
+
+- `Prysm.Checkpoint.Decode.reject_size_kind_tie` (`lean/Prysm/Checkpoint/DecodeRejectSizeKindTie.lean`): an identity with `decodeRejectKindAnyFrame`.
+- `Prysm.Checkpoint.Decode.accept_kind_tie` (`DecodeAcceptKindTie.lean`): an implication from `decodeAcceptKindAnyFrame`.
+- `Prysm.Checkpoint.Encode.fast_path_kind_tie` (`EncodeFastPathKindTie.lean`): an implication from `encodeFastPathKindAnyFrame`.
+- `Prysm.Checkpoint.Encode.generated_fast_statement_tie`: an implication through `Encode.fast_path_kind_tie`.
+  The generator writes it into `GeneratedEncodeFastPath.lean` with `--same-as` and `--same-as-via`.
+- `Encode.fast_path_statement_tie` of Deposit_Data, PowBlock and SyncCommitteeMessage: an identity by `rfl`.
+  It is in `EncodeFastPathStatementTie.lean` of each type.
   The hand statement is in `EncodeFastPathStatements.lean` of the same type.
 
 ## 5. The independent `Desc` checker
@@ -167,6 +177,8 @@ The tracked copy is `desc/results/main.result.json`.
 `desc/test_desc.py prepare` makes its inputs, `desc/run_desc_checker.sh` writes it, and `desc/test_desc.py evaluate` checks it.
 They use a relative work directory under `lean/`, so the result holds no machine path.
 The result names the `Spec` descriptions, for example `Spec.scalarsDesc` and `Spec.listU64Desc`.
+The package `github.com/OffchainLabs/methodical-ssz/fv/kraken/target` (and `.../target/prysm`) is only a label of the hand test types.
+No directory has this path; `desc/producer.py` names the `Desc` file of such a type `<type>.desc.json`.
 `desc/review_mutants.py` writes the review mutants and its list scenarios.
 `desc/test_desc.py prepare` runs it.
 A mutant or scenario id tells in plain words what the case changes or tests.
@@ -291,10 +303,9 @@ These need more than Python:
 - The tools of `flat-types/` cover only the types of their own tables.
   For the other types of `generator/gen.sh`, a person writes `Spec.lean`, `DecodeSpec.lean` and the two decoder witnesses.
   `../README.md` section 7 gives the rule for each kind of file.
-- `lean/Prysm/<GoTypeName>/GeneratedEncodeFastPathSameAsHand.lean` is a hand module, although its name starts with `Generated`.
-  Deposit_Data, PowBlock and SyncCommitteeMessage have one.
-  It holds the identity `Encode.generated_fast_same_as_statement` of the generated theorem with the hand statement of `EncodeFastPathStatements.lean` (section 4).
-  `checks/python_checks.sh` does not give it, or `GeneratedEncodeFastPathSpec.lean`, to `kindcheck.py`.
+- `lean/Prysm/<GoTypeName>/EncodeFastPathStatementTie.lean` is a hand module next to the generated `GeneratedEncodeFastPath.lean`.
+  Deposit_Data, PowBlock and SyncCommitteeMessage have one (section 4).
+- `checks/python_checks.sh` does not give `GeneratedEncodeFastPathSpec.lean` to `kindcheck.py`.
 - The `Desc` files are in `prysm/go1.26.10/evidence/`.
   The header of each `*SpecChecker.lean` names its `Desc` file by the path relative to `fv/kraken` and by its sha256.
   `checks/regenerate_and_compare.py` runs the generator on the file that the header names.

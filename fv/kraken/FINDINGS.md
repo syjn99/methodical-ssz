@@ -361,7 +361,16 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - Effect: the specification side of a theorem rests on a review of the hand `Desc` against consensus-specs.
   For a type with a hand `Desc` from the proto, no theorem compares the code with an independent specification.
   Its codec equality with the checker `Desc`, where one exists, compares two descriptions of one source.
-- Where: `lean/Prysm/<GoTypeName>/Spec.lean`, `SpecDescription.lean` or `SpecDefinitions.lean`.
+- Where: `lean/Prysm/<GoTypeName>/SpecDescription.lean`.
+
+### Only three generated encoders have a hand statement
+
+- What does not hold: the tree gives no reason why only some generated encoder fast paths have a hand statement.
+  Deposit_Data, PowBlock and SyncCommitteeMessage have `EncodeFastPathStatements.lean` and a statement tie.
+  The other generated encoder fast paths have only the kind check, and Checkpoint has a hand theorem.
+- Effect: none on a theorem.
+  For the other types, only the kind and `gen/generator/kindcheck.py` check the generated statement.
+- Where: `lean/Prysm/<GoTypeName>/EncodeFastPathStatements.lean` and `EncodeFastPathStatementTie.lean`.
 
 ### The proof inventory trusts its method list
 

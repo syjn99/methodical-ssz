@@ -103,6 +103,8 @@ What you make, in this order:
    Write it before you read the checker `Desc`.
    Quote the consensus-specs container in the module text.
    Example: `lean/Prysm/HistoricalSummary/SpecDescription.lean`.
+   The module holds only `desc` and the definitions that only the description needs.
+   It imports `EthLib.Serialization.Ssz`, and the `SpecDescription` module of each nested type.
    If you write it from the Prysm proto definition, say so in the module text, as `lean/Prysm/ValidatorBalance/SpecDescription.lean` does.
    Such a `Desc` has the same source as the `Desc` producer, so it is not an independent specification (`FINDINGS.md`).
 2. The checker `Desc`, for an inventory type only (step 1).
@@ -130,6 +132,8 @@ What you make, in this order:
    ```
 
 3. `lean/Prysm/<T>/Spec.lean`: the structure `SszValue`, `SszValue.toValue`, `SszValue.encode` and the bridge lemmas.
+   Its statements import this module for these definitions.
+   Import the modules whose names the module uses, for example `Spec.TestScalars` and `Spec.DeserializeOfSerialize`.
    The tools of `gen/flat-types/` read `desc`, `SszValue.serialize_eq`, `SszValue.spec_rejects` and `SszValue.spec_accepts_iff`.
    For a type with a checker `Desc`, it also holds the codec equality of `desc` and `checkerDesc`, for example `desc_serialize_checker`.
    Example: `lean/Prysm/HistoricalSummary/Spec.lean`.
