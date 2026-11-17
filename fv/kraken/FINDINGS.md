@@ -51,7 +51,20 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   The encoder of that zero `Checkpoint` then fails with `ErrBytesLength`.
 - Effect: an encoder theorem of this type must state this change of the receiver.
   No such theorem exists.
+  `Prysm.AttestationData.Encode.fast_path` covers only a receiver with `Source` and `Target` not nil, so it has no such write.
 - Where: `(*v1alpha1.AttestationData).MarshalSSZTo`.
+
+### The inventory row of the AttestationData encoder does not show every premise
+
+- What does not hold: the row text of an encoder fast path in `prysm/proof-inventory.md` is "len + SizeSSZ <= cap, exact field lengths".
+  `Prysm.AttestationData.Encode.fast_path` needs more premises than that text.
+  It needs `Source` and `Target` not nil, the stack bound `guard + 312 < rsp` and `cap < 2^63`.
+  It also needs disjoint memory blocks for the receiver, `dst`, the root, both Checkpoints and their roots.
+  So `Source = Target` and two roots in one backing array are not covered. Go allows both.
+- Effect: the column of paths not proved does not list the `newobject` branches for a nil `Source` or `Target`.
+  It also does not list the error wraps of the two Checkpoint calls.
+  The doc comment of `lean/Prysm/AttestationData/EncodeFastPath.lean` states these limits.
+- Where: `gen/tools/proof_inventory.py`, the row text of the fast path and the column of paths not proved.
 
 ### The bitlist encoder error text differs from some Prysm tests
 
@@ -245,12 +258,11 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 
 ### Some code constants have no theorem
 
-- What does not hold: `Prysm.AttestationData.Code.marshalSSZTo` has no theorem.
-  The constants of a type directory that holds only `Code.lean` have no theorem.
+- What does not hold: the constants of a type directory that holds only `Code.lean` have no theorem.
   These are the types that the generator refuses (the refuse rows of `gen/generator/types.tsv`).
 - Effect: the functions of these constants are not proved.
   The link check covers their `.S` files.
-- Where: `lean/Prysm/AttestationData/Code.lean`, `lean/Prysm/<GoTypeName>/Code.lean` of the types with only that module.
+- Where: `lean/Prysm/<GoTypeName>/Code.lean` of the types with only that module.
 
 ### Slot and CommitteeIndex have no size-reject theorem
 
