@@ -38,11 +38,24 @@ SPEC_TYPES = {  # Go type name: (fields [(name, 'u'|'b', n)], checker (lean name
  'VoluntaryExit': ([('epoch', 'u', 8), ('validatorIndex', 'u', 8)], ('checkerDesc', None)),
  'PendingPartialWithdrawal': ([('index', 'u', 8), ('amount', 'u', 8), ('withdrawableEpoch', 'u', 8)], ('checkerDesc', None)),
 }
-# The types whose hand `Desc` (SpecDescription.lean) is written from consensus-specs. The `Desc` of the other types is
-# written from the Prysm proto definition.
+# The source of the hand `Desc` (SpecDescription.lean) of each type of SPEC_TYPES: consensus-specs or the Prysm proto
+# definition. `desc_from_consensus_specs` stops with a message for a type in neither set.
 DESC_FROM_CONSENSUS_SPECS = {'BeaconBlockHeader', 'Eth1Data', 'BlobIdentifier', 'DepositMessage', 'Deposit_Data',
                              'SyncCommitteeMessage', 'PendingConsolidation', 'PendingDeposit', 'HistoricalSummary',
                              'SigningData', 'SyncAggregatorSelectionData', 'VoluntaryExit', 'PendingPartialWithdrawal'}
+DESC_FROM_PRYSM_PROTO = {'DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest',
+                         'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest',
+                         'PartialDataColumnGroupID', 'ValidatorIdentity', 'BuilderPreferences', 'ValidatorBalance'}
+
+
+def desc_from_consensus_specs(X):
+    """True if the hand `Desc` of `X` is written from consensus-specs, False if from the Prysm proto definition."""
+    if X in DESC_FROM_CONSENSUS_SPECS and X not in DESC_FROM_PRYSM_PROTO:
+        return True
+    if X in DESC_FROM_PRYSM_PROTO and X not in DESC_FROM_CONSENSUS_SPECS:
+        return False
+    sys.exit(f'flat_types_spec: {X} must be in exactly one of DESC_FROM_CONSENSUS_SPECS and DESC_FROM_PRYSM_PROTO '
+             'of gen/flat-types/flat_types_spec.py (the source of its hand Desc)')
 
 
 def with_code_imports(text, X):
@@ -81,7 +94,7 @@ def emit(X, ty, fs, chk):
     w(f'# Spec bridge for the Prysm `{ty}`')
     w('')
     w('Written by `gen/flat-types/flat_types_spec.py`.')
-    if X in DESC_FROM_CONSENSUS_SPECS:
+    if desc_from_consensus_specs(X):
         w(f'`{D}` (`Prysm/{X}/SpecDescription.lean`) is the independent hand `Desc`, written from consensus-specs.')
     else:
         w(f'`{D}` (`Prysm/{X}/SpecDescription.lean`) is the hand `Desc`, written from the Prysm proto definition.')
