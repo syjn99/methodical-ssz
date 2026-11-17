@@ -226,9 +226,17 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - What does not hold: no negative case covers a changed memory word in the post-state of `Decode.accept_spec` of these types.
   The types are SyncCommitteeMessage, PendingConsolidation, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit and Deposit_Data.
   Lean does not refute such a statement mutant within the heartbeat limit.
+  No negative case changes the word at rsp − 112 in the post-state of `Prysm.AttestationData.Decode.generated_accept`.
+  This word is `rbx + 88`, the stack value `.bufferAddress 88`.
+  Two such mutants (`rbx + 48`, `rax + 88`) did not end within the wall limit of `negative.py`.
+  No negative case changes the return-slot term `F + 8` of `Codec.frame_low_address_extra`.
+  The mutant without this term did not end within the wall limit of `negative.py`.
+  The case of this lemma changes only the extra byte count `n`.
 - Effect: no case shows that a wrong memory word in these post-states fails.
   The generated accept theorems that these proofs use keep their own mutants.
+  The other cases of `generated_accept` and of `frame_low_address_extra` keep their mutants.
 - Where: `lean/Prysm/<GoTypeName>/DecodeSpec.lean` of these types, `gen/checks/negative-cases/`.
+  `lean/Prysm/AttestationData/GeneratedDecodeAccept.lean`, `lean/Codec/FieldFrame.lean`.
 
 ### The Go value check exists only for Checkpoint
 
