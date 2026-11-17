@@ -93,7 +93,8 @@ func run[T any, P interface {
 			obj := mutated[T, P](bases, ops)
 			enc, err := obj.MarshalSSZ()
 			if err != nil {
-				return // the encoder refuses the value
+				checkRefused(t, obj, err)
+				return
 			}
 			for _, fork := range forks {
 				checkValue(t, obj, enc, fork, name)

@@ -22,9 +22,12 @@ An input that starts with `value:` holds no SSZ bytes. It tells how to change a 
 1. `UnmarshalSSZ` decodes one of the seeds.
 2. The changes set lists, byte strings and bitfields to lengths at the edges of their type: 0, 1, the limit, the limit plus 1.
    They also flip bits of bitfields: the padding bits and the bitlist delimiter first.
-3. `MarshalSSZ` encodes the changed value. If it refuses the value, the input passes.
+3. `MarshalSSZ` encodes the changed value. If it refuses the value, `HashTreeRoot` must return an error.
 4. EthLib must accept the bytes, and `HashTreeRoot` of the value must equal the EthLib root.
+   If EthLib rejects the bytes, the message also tells if `HashTreeRoot` gave a root.
    The bytes must then pass the checks 1 to 3 above.
+
+A panic in `HashTreeRoot` is a difference with its own message.
 
 This tests `MarshalSSZ` and `HashTreeRoot` on values that no decode gives.
 The seed corpus holds one value input for each seed that decodes.
@@ -91,6 +94,12 @@ A mainnet `BeaconState` is 2.7 MB, so a random mutation rarely hits a given fiel
 `testdata/fuzz/` holds one small input for each class of difference found.
 `known.txt` lists these classes, so `go test .` passes.
 `STRICT=1 go test .` and `STRICT=1 go test -tags minimal .` fail on the inputs of their preset while the generator has the difference.
+The expected number of failing inputs with `STRICT=1`:
+
+| Generator | mainnet | minimal |
+| --- | --- | --- |
+| main `c3f77ce4` | 5 | 7 |
+| PR #27 `628a50c6` | 4 | 5 |
 
 | Class | Input | Status |
 | --- | --- | --- |
@@ -99,6 +108,8 @@ A mainnet `BeaconState` is 2.7 MB, so a random mutation rarely hits a given fiel
 | `MarshalSSZ` encodes a Bitlist above its limit (F2) | `FuzzAttestationElectra/value-bitlist-over-max` | Bug. Fix proposed in PR #27 |
 | `MarshalSSZ` encodes a Bitlist with no delimiter bit | `FuzzAttestationElectra/value-bitlist-no-delimiter` | Bug. Fix proposed in PR #27 |
 | `MarshalSSZ` encodes set padding bits in a Bitvector | `FuzzAttestationElectra/value-bitvector-padding-minimal` (minimal preset) | Bug. Fix proposed in PR #27 |
+| `HashTreeRoot` gives a root for a value that `MarshalSSZ` refuses: a Bitlist above its limit, a Bitlist with a zero last byte, a Bitvector with set padding bits | The three `value-` inputs above. On main, `MarshalSSZ` encodes these values, and the encoder message adds "and HashTreeRoot gives a root" | Bug. No fix proposed yet |
+| `HashTreeRoot` panics on a progressive Bitlist with a zero last byte (`parseBitlistProgressive` in `ssz/htr.go`) | `FuzzAttestationGloas/value-progressive-bitlist-zero-byte` | Bug. No fix proposed yet |
 | The decoder rejects a Gloas progressive list or bitlist above its `ssz-max` tag | `FuzzEngineExecutionRequestsGloas/progressive-list-over-tag` | Policy of the generator (soft limit). The SSZ type has no limit |
 
 When a fix removes a class, remove its line from `known.txt`.

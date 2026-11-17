@@ -44,16 +44,40 @@ func mutated[T any, P interface {
 
 // checkValue checks the encoding of a changed value, which MarshalSSZ gave.
 // EthLib must accept it, and HashTreeRoot must give the EthLib root.
+// HashTreeRoot must refuse a value whose encoding EthLib rejects.
 func checkValue(t *testing.T, obj codec, enc []byte, fork, name string) {
 	v, want, msg := oracle.SszStatic(preset, fork, name, enc)
 	signal(v)
-	root, err := obj.HashTreeRoot()
+	root, err := hashTreeRoot(t, obj)
 	if v != oracle.Accept {
-		differ(t, "%s/%s: MarshalSSZ gives bytes that EthLib rejects (HashTreeRoot error: %v): %s", fork, name, err, msg)
+		// The value is not valid, so HashTreeRoot must refuse it too.
+		also := ""
+		if err == nil {
+			also = ", and HashTreeRoot gives a root"
+		}
+		differ(t, "%s/%s: MarshalSSZ gives bytes that EthLib rejects%s: %s", fork, name, also, msg)
 	}
 	if err != nil || root != want {
 		differ(t, "%s/%s: root of a changed value differs: methodical %x (error: %v), EthLib %x", fork, name, root, err, want)
 	}
+}
+
+// checkRefused checks a value that MarshalSSZ refuses. It has no valid
+// encoding, so HashTreeRoot must refuse it too.
+func checkRefused(t *testing.T, obj codec, marshalErr error) {
+	if _, err := hashTreeRoot(t, obj); err == nil {
+		differ(t, "%T: MarshalSSZ refuses the value (%v), but HashTreeRoot gives a root", obj, marshalErr)
+	}
+}
+
+// hashTreeRoot calls HashTreeRoot. A panic is a difference of its own.
+func hashTreeRoot(t *testing.T, obj codec) (root [32]byte, err error) {
+	defer func() {
+		if p := recover(); p != nil {
+			differ(t, "%T: HashTreeRoot panics: %v", obj, p)
+		}
+	}()
+	return obj.HashTreeRoot()
 }
 
 // site is a slice in a value: a list, a vector, a byte string or a bitfield.

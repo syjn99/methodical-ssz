@@ -15,15 +15,31 @@ methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.
 # the byte length with the bit limit. Bug. Fix proposed in PR #27. The limits
 # are those of the Fulu bitlists: AggregationBits (131072 mainnet, 8192
 # minimal) and the PartialDataColumn bitlists (4096).
-^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects \(HashTreeRoot error: [^)]*\): input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit (131072|8192|4096) [0-9]+$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects(, and HashTreeRoot gives a root)?: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit (131072|8192|4096) [0-9]+$
 
 # Value inputs: MarshalSSZ encodes a Bitlist with no delimiter bit: its last
 # byte is zero, or it is empty. Bug. Fix proposed in PR #27.
-MarshalSSZ gives bytes that EthLib rejects \(HashTreeRoot error: [^)]*\): input rejected: EthLib\.Serialization\.Ssz\.Err\.(noDelimiter|trailingZeros|emptyEncoding)$
+MarshalSSZ gives bytes that EthLib rejects(, and HashTreeRoot gives a root)?: input rejected: EthLib\.Serialization\.Ssz\.Err\.(noDelimiter|trailingZeros|emptyEncoding)$
 
 # Value inputs: MarshalSSZ encodes set padding bits in a Bitvector.
 # Bug. Fix proposed in PR #27.
-MarshalSSZ gives bytes that EthLib rejects \(HashTreeRoot error: [^)]*\): input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
+MarshalSSZ gives bytes that EthLib rejects(, and HashTreeRoot gives a root)?: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
+
+# Value inputs: HashTreeRoot gives a root for a value that MarshalSSZ refuses.
+# Bug. No fix proposed yet. These lines match with the encoder of PR #27. On
+# main the encoder lines above match the same inputs, with the words
+# "and HashTreeRoot gives a root". One line for each cause.
+# A Bitlist above its limit:
+^\*eth\.[A-Za-z]+: MarshalSSZ refuses the value \((.*: )?[A-Za-z]+: (too many bits|unexpected number of bytes, got [0-9]+ but found [0-9]+): list length is higher than max value\), but HashTreeRoot gives a root$
+# A Bitlist with a zero last byte:
+^\*eth\.[A-Za-z]+: MarshalSSZ refuses the value \((.*: )?[A-Za-z]+: trailing byte is zero\), but HashTreeRoot gives a root$
+# A Bitvector with set padding bits:
+^\*eth\.[A-Za-z]+: MarshalSSZ refuses the value \((.*: )?[A-Za-z]+: bitvector padding bits are not zero\), but HashTreeRoot gives a root$
+
+# Value inputs: HashTreeRoot panics on a progressive Bitlist with a zero last
+# byte. parseBitlistProgressive (ssz/htr.go) reslices past the data.
+# Bug. No fix proposed yet. Main and PR #27.
+^\*eth\.[A-Za-z]+: HashTreeRoot panics: runtime error: slice bounds out of range \[:[0-9]+\] with capacity [0-9]+$
 
 # The decoder rejects a Gloas progressive list or bitlist above its ssz-max tag.
 # The SSZ type has no limit. Soft limit of the generator, added in PR #22.
