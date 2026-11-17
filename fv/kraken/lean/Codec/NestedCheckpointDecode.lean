@@ -200,7 +200,7 @@ theorem nestedCheckpointFreshObject (p : BitVec 64) :
   simp only [Std.ExtHashMap.sep_assoc]
 
 /-- The low address of the `S + 96` bytes below the callee rsp `c`. -/
-theorem nestedCheckpointFrame_low_address (c : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) :
+theorem nestedCheckpointFrame_low_address (c : BitVec 64) (S : Nat) :
     c - BitVec.ofNat 64 (S + 96) = c - 96 - BitVec.ofNat 64 S := by
   have : BitVec.ofNat 64 (S + 96) = BitVec.ofNat 64 S + 96 := by
     apply BitVec.eq_of_toNat_eq; simp
@@ -208,8 +208,6 @@ theorem nestedCheckpointFrame_low_address (c : BitVec 64) (S : Nat) (hS : S < 2 
 
 variable [Host]
 
-set_option maxHeartbeats 16000000 in
-set_option maxRecDepth 100000 in
 /-- **Nested Checkpoint field block over windows.** The first window `qA` at `j1` allocates the object
 (`runtime.newobject`), tests the write barrier and jumps to `lst` (index `jl`).
 The second window `qB` at `j2` stores the new pointer at `rcv + fP` and calls the Checkpoint decoder `fn` on
@@ -339,7 +337,7 @@ theorem nested_checkpoint_decode_window (fn lwb lst lok : String) (dR fP dB src 
   obtain ⟨l0, l1, l2, l3, l4, l5, l6, l7, l8⟩ := nestedCheckpointFrame_lengths stk3 S hstk3
   rw [nestedCheckpointFrame_slices stk3 S] at H5
   try dsimp only at H5
-  rw [nestedCheckpointFrame_low_address _ S hS,
+  rw [nestedCheckpointFrame_low_address _ S,
     nestedCheckpointFrame_sep _ S hS _ _ _ _ _ _ _ _ _ l0 l1 l2 l3 l4 l5 l6 l7 l8,
     nestedCheckpointFrame_argument_words _ _ l2] at H5
   rw [show src.toBitVec + bf = aSrc by rw [← hSrc]; exact BitVec.add_comm _ _]
@@ -382,7 +380,7 @@ theorem nested_checkpoint_decode_window (fn lwb lst lok : String) (dR fP dB src 
       (Int.toBytes 8 rbp3.toBitVec.toInt),
     nestedCheckpointFrame_length _ _ _ _ _ _ _ _ _ S hscr hrs' hmm l3 (Int.toBytes_length 8 _)
       (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) l7 (Int.toBytes_length 8 _), ?_⟩
-  rw [nestedCheckpointFrame_low_address _ S hS,
+  rw [nestedCheckpointFrame_low_address _ S,
     nestedCheckpointFrame_sep _ S hS _ _ _ _ _ _ _ _ _ hscr hrs' hmm l3 (Int.toBytes_length 8 _)
       (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) l7 (Int.toBytes_length 8 _)]
   ecancel
