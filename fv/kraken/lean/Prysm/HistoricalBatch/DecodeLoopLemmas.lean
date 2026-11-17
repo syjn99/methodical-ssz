@@ -5,10 +5,14 @@ import Codec.ByteSliceListLemmas
 /-!
 # List and memory-chunk lemmas for the HistoricalBatch element loops
 
-Imported from the SyncCommittee proof as is (`Prysm.SyncCommittee.DecodeLoopLemmas`): `Codec.elementBlocks_snoc`, `Codec.sliceHeaders_length`, `Codec.sliceHeaders_snoc`, `Codec.flatten_split`,
-`Codec.jge_false_of_lt` (its bound is 2^62, so it covers `cmp $0x2000`), `Codec.zeroBytes`.
-New here: the SyncCommittee lemmas whose statements fix 48-byte blocks and 512 elements, with 32 and 8192.
-Proof text: `Prysm.SyncCommittee.DecodeLoopLemmas` with the two constants changed.
+- `flatten_length`: a flattened list of 32-byte blocks has 32 bytes for each block.
+- `Decode.input_split`: the input chunk as (blocks < i) ⋆ block i ⋆ (blocks > i), for 8192 blocks of 32 bytes.
+- `Decode.array_split`, `Decode.array_join`: the backing array (headers of the first i elements, then zeros) around element i,
+  before (three zero words) and after (the header `(p, 32, 32)`) the three stores of iteration i.
+
+The lemmas that do not depend on the type are in the shared module `Codec/ByteSliceListLemmas.lean`.
+The proofs here use `Codec.flatten_split`, `Codec.sliceHeaders_length`, `Codec.sliceHeaders_snoc` and `Codec.zeroBytes` of it.
+`Prysm/SyncCommittee/DecodeLoopLemmas.lean` holds the same lemmas for 512 blocks of 48 bytes.
 -/
 
 open Machine Runtime

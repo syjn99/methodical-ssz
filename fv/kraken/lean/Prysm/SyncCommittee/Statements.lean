@@ -10,7 +10,6 @@ import Codec.ByteSliceListDefinitions
 /-!
 # Hand STATEMENTS of the target `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (statements only, no proof)
 
-A change to a statement needs a new name and a reason.
 Statement shape: as `Prysm/SyncAggregate/Statements.lean`, with a 512-element
 `[][]byte` field.
 

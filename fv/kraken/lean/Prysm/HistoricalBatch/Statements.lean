@@ -10,7 +10,6 @@ import Codec.ByteSliceListDefinitions
 /-!
 # Hand STATEMENTS of the target `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (statements only, no proof)
 
-A change to a statement needs a new name and a reason.
 Statement shape: `Prysm.SyncCommittee.Statements` with two 8192-element `[][]byte` fields and no tail field.
 
     func (c *HistoricalBatch) UnmarshalSSZ(buf []byte) error {

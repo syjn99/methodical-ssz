@@ -5,7 +5,8 @@ import Codec.Kind.EncodeFastPathAnyFrame
 
 `encodeLayout` is the frame layout that `encodeFastPathKindAnyFrame` reads for `Encode.generated_fast`
 (`Prysm/Checkpoint/GeneratedEncodeFastPath.lean`) and for the tie `Encode.fast_path_kind_tie` (`Prysm/Checkpoint/EncodeFastPathKindTie.lean`).
-The generator reads this definition through its options `--hand-layout` and `--hand-layout-src` (`gen/generator/gen.sh`).
+The `encoder --fast-path` row of the type in `gen/generator/types.tsv` gives this definition to the generator.
+The row names it with the options `--hand-layout` and `--hand-layout-src`, and `gen/generator/gen.sh` runs the row.
 -/
 
 open Codec

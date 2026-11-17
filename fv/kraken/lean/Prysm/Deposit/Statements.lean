@@ -11,7 +11,6 @@ import Prysm.Deposit.Code
 /-!
 # Hand STATEMENTS of `(*v1alpha1.Deposit).UnmarshalSSZ` (statements only, no proof)
 
-A change to a statement needs a new name and a reason.
 Deposit is in the same family as HistoricalBatch (a `Vector[Bytes32, N]` field as `[][]byte`). The other such types
 without a pointer field are HistoricalBatch and SyncCommittee; Deposit has one pointer field, whose decoder has a proof (`Prysm.Deposit_Data.Decode.generated_accept`, Deposit_Data).
 

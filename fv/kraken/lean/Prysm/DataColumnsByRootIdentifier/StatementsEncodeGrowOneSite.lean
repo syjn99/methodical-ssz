@@ -4,7 +4,7 @@ import Prysm.DataColumnsByRootIdentifier.Code
 /-!
 # Statements of the encoder with one growth at any one site
 
-Statements only. A change to a statement needs a new name and a reason.
+Statements only.
 The fast path and the first-site grow path (site 1 only) of
 `Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean` are the special cases with no growth and with one growth at site 1.
 

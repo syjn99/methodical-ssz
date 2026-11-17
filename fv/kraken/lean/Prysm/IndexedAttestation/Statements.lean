@@ -16,7 +16,6 @@ import Prysm.IndexedAttestation.Spec
 # Hand statements of `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`
 
 This module holds the statements of the size reject, the offset reject, the accept path and the reject cases.
-A change to a statement needs a new name and a reason.
 Statement shape: `Prysm/SyncAggregate/Statements.lean` / `Prysm/SyncCommittee/Statements.lean` (exact frame, contracts as hypotheses, input and receiver kept).
 The statements of the two `fmt.errorf` rejects (alignment, overflow) are in `Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean`.
 

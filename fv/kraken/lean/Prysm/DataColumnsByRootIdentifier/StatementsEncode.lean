@@ -10,7 +10,6 @@ import Prysm.DataColumnsByRootIdentifier.SpecDescription
 /-!
 # Hand STATEMENTS of the encoder target `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo` (statements only)
 
-A change to a statement needs a new name and a reason.
 Statement shape: `Prysm/Checkpoint/EncodeFastPath.lean`, `Prysm/Checkpoint/EncodeGrowFirstSite.lean`, `Prysm/Checkpoint/EncodeSpec.lean` (Checkpoint encoder) and
 `Prysm/IndexedAttestation/Statements.lean` (exact caller frame `R`, contracts as hypotheses, receiver and input kept).
 
