@@ -1,0 +1,712 @@
+[
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_ParentRoot_segment",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "beacon-block-header-decode-generated-parent-root-segment-control"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_ParentRoot_segment",
+  "kind": "code",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "old": "  movq $0x20,0x28(%rdx)",
+  "new": "  movq $0x21,0x28(%rdx)",
+  "line": 95,
+  "id": "beacon-block-header-decode-generated-parent-root-segment-code-movq-0x20-to-0x21"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_StateRoot_segment",
+  "kind": "code",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "old": "  add $0x30,%rbx",
+  "new": "  add $0x38,%rbx",
+  "line": 142,
+  "id": "beacon-block-header-decode-generated-state-root-segment-code-add-0x30-to-0x38"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_BodyRoot_segment",
+  "kind": "code",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "old": "  mov %rax,0x48(%rdx)",
+  "new": "  mov %rax,0x40(%rdx)",
+  "line": 175,
+  "id": "beacon-block-header-decode-generated-body-root-segment-code-mov-0x48-rdx-to-0x40-rdx"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_ParentRoot_segment",
+  "kind": "statement",
+  "old": "(hf : LabelsFresh unmarshalSSZ k) :",
+  "new": "(hf : LabelsFresh unmarshalSSZ k) (hextra : (1 : Nat) = 2) :",
+  "id": "beacon-block-header-decode-generated-parent-root-segment-statement-hf-none-to-hextra-1-nat"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_BodyRoot_segment",
+  "kind": "statement",
+  "old": "⋆ Eq ((Int.toBytes 8 32).At aL)",
+  "new": "⋆ Eq ((Int.toBytes 8 33).At aL)",
+  "id": "beacon-block-header-decode-generated-body-root-segment-statement-a-l-32-to-33"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_head",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "beacon-block-header-decode-generated-head-control"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_head",
+  "kind": "code",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "old": "  cmp $0x70,%rcx",
+  "new": "  cmp $0x71,%rcx",
+  "id": "beacon-block-header-decode-generated-head-code-cmp-0x70-to-0x71"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_directive_86",
+  "kind": "code",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "old": "  mov %rbx,0x30(%rsp)",
+  "new": "  mov %rbx,0x38(%rsp)",
+  "line": 87,
+  "id": "beacon-block-header-decode-generated-directive-86-code-mov-0x30-rsp-to-0x38-rsp"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_head",
+  "kind": "statement",
+  "old": "st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 104 }",
+  "new": "st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 96 }",
+  "id": "beacon-block-header-decode-generated-head-statement-rsp-104-to-96"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_head",
+  "kind": "statement",
+  "old": "(hguard : guard.toNat + 112 < s.regs.rsp.toNat)",
+  "new": "(hguard : True)",
+  "id": "beacon-block-header-decode-generated-head-statement-hguard-guard-to-nat-112-to-true"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_accept",
+  "kind": "statement",
+  "old": "⋆ Heap (avail - 96)",
+  "new": "⋆ Heap (avail - 64)",
+  "id": "beacon-block-header-decode-generated-accept-statement-heap-96-to-64"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_accept",
+  "kind": "statement",
+  "old": "Eq (fv2.At p1)\n          ⋆ Eq (fv3.At p2)",
+  "new": "Eq (fv3.At p1)\n          ⋆ Eq (fv2.At p2)",
+  "id": "beacon-block-header-decode-generated-accept-statement-fv2-p1-to-fv3-p1"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_accept",
+  "kind": "statement",
+  "old": "(hav : 96 ≤ avail)",
+  "new": "(hav : True)",
+  "id": "beacon-block-header-decode-generated-accept-statement-hav-96-avail-to-true"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_reject",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "beacon-block-header-decode-generated-reject-control"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_reject",
+  "kind": "code",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "old": "  mov ssz.ErrSize+8(%rip),%rbx",
+  "new": "  mov ssz.ErrSize(%rip),%rbx",
+  "id": "beacon-block-header-decode-generated-reject-code-mov-ssz-err-size-8-rip-to-ssz-err-size-rip"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_reject",
+  "kind": "statement",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0",
+  "id": "beacon-block-header-decode-generated-reject-statement-rbx-e1-to-e0"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/Spec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.SszValue.spec_accepts_iff",
+  "kind": "statement",
+  "old": "bs.size = 112",
+  "new": "bs.size = 113",
+  "id": "beacon-block-header-ssz-value-spec-accepts-iff-statement-size-112-to-113"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/DecodeSpec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.reject_size_spec",
+  "kind": "statement",
+  "old": "(hbs : bs.size ≠ 112)",
+  "new": "(hbs : bs.size ≠ 113)",
+  "id": "beacon-block-header-decode-reject-size-spec-statement-hbs-112-to-113"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/Spec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.desc_deserialize_checker",
+  "kind": "statement",
+  "old": "deserialize checkerDesc bs = .ok v",
+  "new": "deserialize checkerDesc bs = .ok (.seq [])",
+  "id": "beacon-block-header-desc-deserialize-checker-statement-deserialize-v-to-seq"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/Spec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.desc_serialize_checker",
+  "kind": "statement",
+  "old": "= serialize checkerDesc v :=",
+  "new": "= serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 4 (.byteVector 31)) | x => x) v :=",
+  "id": "beacon-block-header-desc-serialize-checker-statement-serialize-none-to-match-with-container"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/DecodeErrorUnreachable.lean",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "beacon-block-header-decode-validator-index-err-unreachable-control",
+  "kind": "control",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.validator_index_err_unreachable"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/DecodeErrorUnreachable.lean",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "beacon-block-header-decode-slot-err-unreachable-code-je-to-jne",
+  "kind": "code",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.slot_err_unreachable",
+  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9",
+  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9",
+  "note": "nil Slot error jumps into the wrap path"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/DecodeErrorUnreachable.lean",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "beacon-block-header-decode-validator-index-err-unreachable-code-je-to-jne",
+  "kind": "code",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.validator_index_err_unreachable",
+  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154",
+  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154",
+  "note": "nil ValidatorIndex error jumps into the wrap path"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/DecodeErrorUnreachable.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.slot_err_unreachable",
+  "kind": "statement",
+  "old": "Host.addrOf (k + 46)",
+  "new": "Host.addrOf (k + 20)",
+  "id": "beacon-block-header-decode-slot-err-unreachable-statement-host-46-to-20",
+  "note": "claims the wrap entry is reached"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/DecodeErrorUnreachable.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.validator_index_err_unreachable",
+  "kind": "statement",
+  "old": "(h0 : s.regs.rax = 0)",
+  "new": "(h0 : s.regs.rax = 1)",
+  "id": "beacon-block-header-decode-validator-index-err-unreachable-statement-h0-0-to-1",
+  "note": "non-nil error: the branch goes to the wrap"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_accept",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "beacon-block-header-decode-generated-accept-control"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_Slot_call",
+  "kind": "statement",
+  "old": "primitives.Slot.UnmarshalSSZ\")",
+  "new": "primitives.Epoch.UnmarshalSSZ\")",
+  "id": "beacon-block-header-decode-generated-slot-call-statement-primitives-slot-to-epoch"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_head",
+  "kind": "statement",
+  "old": "(hlen : s.regs.rcx = 112)",
+  "new": "(hlen : s.regs.rcx = 104)",
+  "id": "beacon-block-header-decode-generated-head-statement-hlen-112-to-104"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_directive_50",
+  "kind": "code",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "old": "  add $-0x8,%rdi",
+  "new": "  add $-0x10,%rdi",
+  "line": 51,
+  "id": "beacon-block-header-decode-generated-directive-50-code-add-0x8-to-0x10"
+ },
+ {
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_field_2",
+  "kind": "statement",
+  "old": "(Host.addrOf (k + 56)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 112))",
+  "new": "(Host.addrOf (k + 57)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 112))",
+  "id": "beacon-block-header-decode-generated-field-2-statement-host-56-to-57"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-slot-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-slot-code-lea-0x20-rsp-to-0x28-rsp",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  lea -0x20(%rsp),%r12",
+  "new": "  lea -0x28(%rsp),%r12"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-slot-code-mov-0x8-rax-to-0x10-rax",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x8(%rax),%r8",
+  "new": "  mov 0x10(%rax),%r8"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-slot-code-sub-0x98-to-0x90",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  sub $0x98,%rsp",
+  "new": "  sub $0x90,%rsp"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-slot-statement-hguard-32-to-none",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
+  "kind": "statement",
+  "old": "(hguard : guard.toNat + 32 < s.regs.rsp.toNat)",
+  "new": "(hguard : guard.toNat < s.regs.rsp.toNat)"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-slot-statement-sl-sl-to-d0",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
+  "kind": "statement",
+  "old": "⋆ Eq (sl.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R) st.data.dmem)",
+  "new": "⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-proposer-index-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-proposer-index-code-mov-0x10-rax-to-0x8-rax",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x10(%rax),%r9",
+  "new": "  mov 0x8(%rax),%r9"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-proposer-index-code-lea-0x8-rdx-to-0x10-rdx",
+  "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  lea 0x8(%rdx),%r8",
+  "new": "  lea 0x10(%rdx),%r8"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-parent-root-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-parent-root-code-cmpq-0x20-to-0x21",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  cmpq $0x20,0x20(%rax)",
+  "new": "  cmpq $0x21,0x20(%rax)"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-parent-root-code-mov-0x18-rax-to-0x30-rax",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x18(%rax),%rdx",
+  "new": "  mov 0x30(%rax),%rdx"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-parent-root-code-lea-0x20-r8-to-0x21-r8",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "line": 67,
+  "old": "  lea 0x20(%r8),%r9",
+  "new": "  lea 0x21(%r8),%r9"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-state-root-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-state-root-code-mov-0x30-rdx-to-0x18-rdx",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x30(%rdx),%rbx",
+  "new": "  mov 0x18(%rdx),%rbx"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-state-root-code-cmpq-0x20-to-0x1f",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  cmpq $0x20,0x38(%rdx)",
+  "new": "  cmpq $0x1f,0x38(%rdx)"
+ },
+ {
+  "id": "beacon-block-header-encode-encode-state-root-code-add-r8-to-r9",
+  "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  add %r8,%rax",
+  "new": "  add %r9,%rax"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-spec-control",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-block-header-witness-generated-encode-fast-path-runs-empty-control",
+  "module": "Prysm/BeaconBlockHeader/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-b4-80-to-88",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "Eq (b4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 88))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-spec-statement-rbx-none-to-8",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-spec-statement-hcap-112-to-104",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 104 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "beacon-block-header-witness-generated-encode-fast-path-runs-empty-statement-rax-0x101a8-to-0x101b0",
+  "module": "Prysm/BeaconBlockHeader/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x101a8",
+  "new": "st.data.regs.rax = 0x101b0"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-spec-statement-parent-p2-to-state-p2",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "⋆ Eq (g.parent.toList.At p2)\n      ⋆ Eq (g.state.toList.At p3)",
+  "new": "⋆ Eq (g.state.toList.At p2)\n      ⋆ Eq (g.parent.toList.At p3)"
+ },
+ {
+  "id": "beacon-block-header-encode-reject-tails-at-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_tails_at",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-reject-tails-at-code-add-0x98-to-0x90",
+  "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_tails_at",
+  "kind": "code",
+  "old": "  add $0x98,%rsp",
+  "new": "  add $0x90,%rsp",
+  "line": 182,
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-reject-parent-root-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_parent_root",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-reject-parent-root-code-cmpq-0x20-rax-to-0x28-rax",
+  "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_parent_root",
+  "kind": "code",
+  "old": "  cmpq $0x20,0x20(%rax)",
+  "new": "  cmpq $0x20,0x28(%rax)",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-reject-length-parent-root-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_length_parent_root",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-reject-length-parent-root-statement-rl-32-to-31",
+  "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_length_parent_root",
+  "kind": "statement",
+  "old": "(rl : UInt64) (hrl : rl ≠ 32)",
+  "new": "(rl : UInt64) (hrl : rl ≠ 31)"
+ },
+ {
+  "id": "beacon-block-header-encode-reject-length-parent-root-statement-sl-sl-to-d0",
+  "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_length_parent_root",
+  "kind": "statement",
+  "old": "⋆ Eq (sl.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))"
+ },
+ {
+  "id": "beacon-block-header-encode-reject-length-body-root-control",
+  "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_length_body_root",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-reject-length-body-root-statement-fun-0-to-s-regs-rbx",
+  "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_length_body_root",
+  "kind": "statement",
+  "old": "(fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "(fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "beacon-block-header-encode-reject-length-body-root-statement-r2-r2-to-d3",
+  "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.reject_length_body_root",
+  "kind": "statement",
+  "old": "⋆ Eq (r2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))",
+  "new": "⋆ Eq (d3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-epilogue-kind-statement-uint64-32-to-48",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_epilogue_kind",
+  "kind": "statement",
+  "old": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32]",
+  "new": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 48]"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-control",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-rbx-112-to-111",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 112",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 111"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-hcap-112-to-111",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 111 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-b3-b3-to-b4",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "⋆ Eq (b3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))",
+  "new": "⋆ Eq (b4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-hguard-32-to-none",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "(hguard : guard.toNat + 32 < s.regs.rsp.toNat)",
+  "new": "(hguard : guard.toNat < s.regs.rsp.toNat)"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-rsp-8-to-16",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "st.data.regs.rsp = s.regs.rsp + 8",
+  "new": "st.data.regs.rsp = s.regs.rsp + 16"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-statement-b4-b4-to-d4",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast",
+  "kind": "statement",
+  "old": "⋆ Eq (b4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80))",
+  "new": "⋆ Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80))"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-kind-control",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast_kind",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-fast-kind-statement-uint64-32-to-48",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_fast_kind",
+  "kind": "statement",
+  "old": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32]",
+  "new": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 48]"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-field-4-control",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_field_4",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-field-4-code-mov-0x48-rdx-to-0x30-rdx",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_field_4",
+  "kind": "code",
+  "old": "  mov 0x48(%rdx),%rbx",
+  "new": "  mov 0x30(%rdx),%rbx",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-field-4-code-mov-0x20-to-0x1f",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_field_4",
+  "kind": "code",
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx",
+  "line": 146,
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-epilogue-control",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_epilogue",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-epilogue-code-mov-0x38-rsp-to-0x40-rsp",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_epilogue",
+  "kind": "code",
+  "old": "  mov 0x38(%rsp),%rbx",
+  "new": "  mov 0x40(%rsp),%rbx",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "beacon-block-header-encode-generated-epilogue-statement-rdi-0-to-1",
+  "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Encode.generated_epilogue",
+  "kind": "statement",
+  "old": "st.data.regs.rdi = 0",
+  "new": "st.data.regs.rdi = 1"
+ },
+ {
+  "id": "beacon-block-header-decode-generated-accept-kind-statement-bytes-32-to-31",
+  "module": "Prysm/BeaconBlockHeader/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlockHeader.Decode.generated_accept_kind",
+  "kind": "statement",
+  "old": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 32] := by",
+  "new": "[.uint64, .uint64, .bytes 32, .bytes 32, .bytes 31] := by"
+ }
+]

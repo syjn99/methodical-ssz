@@ -1,0 +1,215 @@
+import Codec.WindowSteps
+import Codec.DecoderHeadEpilogue
+
+/-!
+# Frame-parametric prologue, return and nil-check step
+
+The prologue of every flat decoder (directives 0–10) is the same up to the frame size `F`, the
+displacement `dB` of the first rbx spill, the SSZ size `sz` and the labels. Other head lemmas: one for
+the frame `0x20` (`Codec.decode_head_segment`) and the hand lemmas of PendingPartialWithdrawal (`Prysm.PendingPartialWithdrawal.Decode.head`,
+`Prysm.PendingPartialWithdrawal.Decode.epilogue`). Here:
+
+* `decode_prologue_segment fn l0 lmore lerr F dB sz` — the prologue over a window (`Codec/NopWindow.lean`; the `nop` at directive
+  8 is a window nop), with `F`, `dB`, `sz` symbolic; every register except rsp / rbp is kept (register clause);
+* `step_nil_check rB` — the step `test %al,(%rB)`;
+* `decode_return_segment` — `pop %rbp; retq` over a window.
+The spills after the prologue (2–3, order differs per type) are `step_store` steps; the epilogue reloads and the
+`add $F,%rsp` are `step_load_*` / `step_add_immediate` steps (`Codec/WindowSteps.lean`). No runtime contract is used.
+-/
+
+open Machine Runtime
+
+namespace Codec
+
+/-- The fixed prologue of a decoder (11 directives without the padding `nop`):
+two labels, stack-guard check, `push %rbp; mov %rsp,%rbp; sub $F,%rsp`, the first spill `mov %rbx,dB(%rsp)`,
+the size check `cmp $sz,%rcx; jne lerr`. Frame size `F`, spill displacement `dB` and SSZ size `sz` are parameters. -/
+def decoderPrologue (fn l0 lmore lerr : String) (F dB sz : Int64) : Program :=
+  [Kraken.Directive.label fn,
+   Kraken.Directive.label l0,
+   Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
+     (Operation.cmp (RegOrMem.reg (Reg.low Reg64.rsp Width.W64))
+       (Operand.regOrMem (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.r14)) none (ConstExpr.int64 16)))))),
+   Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.be lmore)),
+   Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
+     (Operation.push (Operand.regOrMem (RegOrMem.reg (Reg.low Reg64.rbp Width.W64))))),
+   Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
+     (Operation.mov (RegOrMem.reg (Reg.low Reg64.rbp Width.W64))
+       (Operand.regOrMem (RegOrMem.reg (Reg.low Reg64.rsp Width.W64))))),
+   Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
+     (Operation.sub (RegOrMem.reg (Reg.low Reg64.rsp Width.W64)) (Operand.imm (ConstExpr.int64 F)))),
+   Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
+     (Operation.mov (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg Reg64.rsp)) none (ConstExpr.int64 dB)))
+       (Operand.regOrMem (RegOrMem.reg (Reg.low Reg64.rbx Width.W64))))),
+   Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
+     (Operation.cmp (RegOrMem.reg (Reg.low Reg64.rcx Width.W64)) (Operand.imm (ConstExpr.int64 sz)))),
+   Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.nz lerr))]
+
+/-- `pop %rbp; retq`. -/
+def decodeRet : Program :=
+  [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
+     (Operation.pop (RegOrMem.reg (Reg.low Reg64.rbp Width.W64)))),
+   Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 Operation.ret)]
+
+/-- `test %al,(%rB)`: the nil check of the receiver. -/
+def instrNilCheck (rB : Reg64) : Directive :=
+  Kraken.Directive.instr (Instr.regular Width.W64 Width.W8
+    (Operation.test (RegOrMem.mem (AddrExpr.mk (some (RegOrRip.reg rB)) none (ConstExpr.int64 0)))
+      (Operand.regOrMem (RegOrMem.reg (Reg.low Reg64.rax Width.W8)))))
+
+variable [Host]
+
+/-- Closing step for register equations of the frame lemmas. -/
+local macro "register_equation_close" : tactic => `(tactic| first
+  | rfl
+  | (apply UInt64.toBitVec_inj.mp; rfl)
+  | (apply UInt64.toBitVec_inj.mp; bv_omega)
+  | (apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_sub, UInt64.toBitVec_ofNat]; bv_omega))
+
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 100000 in
+/-- **Prologue segment, frame-parametric**: the window `q` at `j` holds `decoderPrologue …` and nops. With `rcx = sz`
+and the stack guard below rsp: rsp = `sp = rsp₀ − 8 − F`, rbp = `rsp₀ − 8`, the caller's rbp is saved at
+`rsp₀ − 8`, rbx is spilled to `aS = sp + dB`; every register except rsp and rbp is kept. -/
+theorem decode_prologue_segment (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Program) (j e : Nat)
+    (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = decoderPrologue fn l0 lmore lerr F dB sz) (hend : j + q.length = e)
+    (s : MachineData) (ra guard : UInt64) (sp aS : BitVec 64)
+    (hsp : s.regs.rsp.toBitVec - 8 - F.toBitVec = sp) (hS : sp + dB.toBitVec = aS)
+    (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
+    (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At aS)
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ R)
+    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = { toBitVec := sz.toBitVec }) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf e ∧ st.data.regs.rsp = { toBitVec := sp }
+        ∧ st.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
+        ∧ (∀ r : Reg64, r ≠ Reg64.rsp → r ≠ Reg64.rbp → st.data.regs.get64 r = s.regs.get64 r) ∧
+        (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At aS)
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf j⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hguard hlen hsp ⊢
+  subst hlen hsp hS
+  have := rsp.toNat_lt_size; have := guard.toNat_lt_size; simp only [UInt64.size] at *
+  window_skip_leading_nops hq
+  window_step_directive hq he decoderPrologue 0
+  window_skip_nops hq he 0
+  window_step_directive hq he decoderPrologue 1
+  window_skip_nops hq he 1
+  window_step_directive hq he decoderPrologue 2
+  apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  unfold_step
+  window_skip_nops hq he 2
+  window_step_directive hq he decoderPrologue 3
+  split
+  · rename_i h; exfalso
+    simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+    rcases h with h | h
+    · apply h; omega
+    · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
+  simp only [Effects.All]
+  window_skip_nops hq he 3
+  window_step_directive hq he decoderPrologue 4
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
+  intro m1' H1
+  simp only [Width.bytes, Width.bits] at H1
+  unfold_step
+  window_skip_nops hq he 4
+  window_step_directive hq he decoderPrologue 5
+  window_skip_nops hq he 5
+  window_step_directive hq he decoderPrologue 6
+  window_skip_nops hq he 6
+  window_step_directive hq he decoderPrologue 7
+  apply store_step_at _ _ (rsp.toBitVec - 8 - F.toBitVec + dB.toBitVec) _ _ _ s2 _ _ (by first | rfl | bv_omega)
+    (by ecancel) (by exact h2)
+  intro m2' H2
+  simp only [Width.bytes, Width.bits] at H2
+  unfold_step
+  window_skip_nops hq he 7
+  window_step_directive hq he decoderPrologue 8
+  window_skip_nops hq he 8
+  window_step_directive hq he decoderPrologue 9
+  split
+  case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  window_skip_to_end hq he 9 hend
+  apply Eventually.done
+  refine ⟨rfl, ?_, ?_, ?_, ?_⟩
+  · register_equation_close
+  · register_equation_close
+  · intro r h1 h2
+    cases r <;> first | rfl | exact absurd rfl h1 | exact absurd rfl h2
+  · ecancel
+
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 100000 in
+/-- **Return segment**: the window `q` at `j` holds `pop %rbp; retq` and nops. With rsp = `sp`, the saved frame
+pointer `fp0` at `sp` and the return address `ra` at `aRa = sp + 8`: the pc is `ra`, rsp = `sp + 16`,
+rbp = `fp0`; every other register and the memory are kept. -/
+theorem decode_return_segment (q : Program) (j : Nat) (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = decodeRet)
+    (sp aRa : BitVec 64) (hRa : sp + 8 = aRa) (fp0 ra : UInt64) (R : DataMem → Prop)
+    (s : MachineData) (hrsp : s.regs.rsp = { toBitVec := sp })
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 fp0.toBitVec.toInt).At sp)
+      ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At aRa) ⋆ R) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rsp = { toBitVec := sp + 16 }
+        ∧ st.data.regs.rbp = fp0
+        ∧ (∀ r : Reg64, r ≠ Reg64.rsp → r ≠ Reg64.rbp → st.data.regs.get64 r = s.regs.get64 r)
+        ∧ st.data.dmem = s.dmem)
+      ⟨s, Host.addrOf j⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at hrsp h_mem ⊢
+  subst rsp hRa
+  window_skip_leading_nops hq
+  window_step_directive hq he decodeRet 0
+  apply load_step_at _ _ sp _ _ (Int.toBytes 8 fp0.toBitVec.toInt) _ _ (by first | rfl | segment_addr) (by ecancel)
+    (by exact Int.toBytes_length 8 _)
+  unfold_step
+  window_skip_nops hq he 0
+  window_step_directive hq he decodeRet 1
+  apply load_step_at _ _ (sp + 8) _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by first | rfl | segment_addr) (by ecancel)
+    (by exact Int.toBytes_length 8 _)
+  unfold_step
+  apply Eventually.done
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · first
+    | exact trivial
+    | with_reducible rfl
+    | rfl
+  · first
+    | rfl
+    | (apply UInt64.toBitVec_inj.mp
+       simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
+       done)
+    | (apply UInt64.toBitVec_inj.mp; segment_addr)
+  · first | rfl | (apply UInt64.toBitVec_inj.mp; rfl)
+  · intro r h1 h2
+    cases r <;> first | rfl | exact absurd rfl h1 | exact absurd rfl h2
+  · rfl
+
+/-- **Step: `test %al,(%rB)`** (nil check): one byte `bs` at `base` (the value of `rB`) is read; the status
+flags after it are not stated (`∀ fl`). -/
+theorem step_nil_check (rB : Reg64) (q : Program) (j e : Nat) (hq : q.IsInfixAt Host.prog j)
+    (he : eraseNop q = [instrNilCheck rB]) (hend : j + q.length = e)
+    (base : BitVec 64) (bs : List UInt8) (hbs : bs.length = 1)
+    (F : DataMem → Prop) (final : MachineState → Prop) (s : MachineData)
+    (hb : s.regs.get64 rB = base) (hm : (Eq (bs.At base) ⋆ F) s.dmem)
+    (hk : ∀ fl : StatusFlags, Eventually (step1 Host.exe) final
+      ⟨{ regs := s.regs, zmms := s.zmms, status := fl, dmem := s.dmem }, Host.addrOf e⟩) :
+    Eventually (step1 Host.exe) final ⟨s, Host.addrOf j⟩ := by
+  subst hb
+  window_skip_leading_nops hq
+  have hd : [instrNilCheck rB].IsInfixAt Host.prog (j + nonNopIndex q 0) := window_directive_at hq he 0
+  unfold instrNilCheck at hd
+  apply Machine.eventually_step_directive hd
+  unfold_step_keep_registers
+  apply load_step_at _ _ (s.regs.get64 rB) _ _ bs _ _ (by first | rfl | simp) hm (by exact hbs)
+  unfold_step_keep_registers
+  intro _
+  window_skip_to_end hq he 0 hend
+  exact hk _
+
+end Codec

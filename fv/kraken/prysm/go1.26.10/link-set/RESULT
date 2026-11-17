@@ -1,0 +1,595 @@
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ: 58 instructions, 254 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo: 47 instructions, 175 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ: 25 instructions, 91 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ: 58 instructions, 254 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZTo: 47 instructions, 175 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZ: 25 instructions, 91 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ: 58 instructions, 254 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo: 47 instructions, 175 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZ: 25 instructions, 91 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ: 58 instructions, 254 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo: 47 instructions, 175 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderDepositRequest.MarshalSSZTo: 144 instructions, 659 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderDepositRequest.UnmarshalSSZ: 130 instructions, 613 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderExitRequest.MarshalSSZTo: 105 instructions, 431 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderExitRequest.UnmarshalSSZ: 94 instructions, 438 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.ConsolidationRequest.MarshalSSZTo: 139 instructions, 575 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.ConsolidationRequest.UnmarshalSSZ: 127 instructions, 598 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.MarshalSSZTo: 160 instructions, 753 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.UnmarshalSSZ: 133 instructions, 629 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.Withdrawal.MarshalSSZTo: 117 instructions, 510 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.Withdrawal.UnmarshalSSZ: 105 instructions, 464 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.WithdrawalRequest.MarshalSSZTo: 107 instructions, 465 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.WithdrawalRequest.UnmarshalSSZ: 98 instructions, 453 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ: 96 instructions, 446 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.MarshalSSZTo: 67 instructions, 264 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.UnmarshalSSZ: 66 instructions, 275 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ: 124 instructions, 568 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.MarshalSSZTo: 142 instructions, 629 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ: 163 instructions, 741 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.MarshalSSZTo: 120 instructions, 500 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.UnmarshalSSZ: 130 instructions, 588 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo: 105 instructions, 431 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.UnmarshalSSZ: 94 instructions, 438 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.MarshalSSZTo: 72 instructions, 307 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ: 65 instructions, 296 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.MarshalSSZTo: 168 instructions, 787 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ: 166 instructions, 773 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.MarshalSSZTo: 74 instructions, 295 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ: 97 instructions, 414 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.MarshalSSZTo: 93 instructions, 382 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ: 99 instructions, 421 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo: 107 instructions, 446 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ: 208 instructions, 933 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.MarshalSSZTo: 190 instructions, 851 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ: 227 instructions, 1029 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.MarshalSSZTo: 187 instructions, 843 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.UnmarshalSSZ: 224 instructions, 1022 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.MarshalSSZTo: 103 instructions, 456 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.UnmarshalSSZ: 130 instructions, 581 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.MarshalSSZTo: 48 instructions, 177 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.UnmarshalSSZ: 57 instructions, 243 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.MarshalSSZTo: 82 instructions, 337 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.UnmarshalSSZ: 96 instructions, 435 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.MarshalSSZTo: 122 instructions, 517 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.UnmarshalSSZ: 123 instructions, 532 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.MarshalSSZTo: 151 instructions, 691 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.UnmarshalSSZ: 170 instructions, 777 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.MarshalSSZTo: 83 instructions, 340 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.UnmarshalSSZ: 68 instructions, 286 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecarsByRangeRequest.MarshalSSZTo: 67 instructions, 264 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecarsByRangeRequest.UnmarshalSSZ: 66 instructions, 275 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest.MarshalSSZTo: 67 instructions, 264 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest.UnmarshalSSZ: 66 instructions, 275 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.MarshalSSZTo: 120 instructions, 549 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.UnmarshalSSZ: 99 instructions, 459 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.MarshalSSZTo: 111 instructions, 478 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ: 128 instructions, 563 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo: 218 instructions, 977 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ: 220 instructions, 1011 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo: 182 instructions, 817 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ: 198 instructions, 907 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo: 85 instructions, 341 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ: 98 instructions, 433 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ: 140 instructions, 632 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.MarshalSSZTo: 144 instructions, 659 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ: 130 instructions, 613 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo: 107 instructions, 464 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ: 99 instructions, 453 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.MarshalSSZTo: 109 instructions, 425 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.UnmarshalSSZ: 116 instructions, 519 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo: 110 instructions, 467 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ: 98 instructions, 453 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.MarshalSSZTo: 109 instructions, 425 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.UnmarshalSSZ: 116 instructions, 519 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ForkData.MarshalSSZTo: 102 instructions, 400 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ForkData.UnmarshalSSZ: 92 instructions, 414 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ: 164 instructions, 741 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ: 253 instructions, 1197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.MarshalSSZTo: 140 instructions, 575 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ: 128 instructions, 598 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.MarshalSSZTo: 106 instructions, 431 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ: 95 instructions, 438 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.MarshalSSZTo: 172 instructions, 760 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.UnmarshalSSZ: 192 instructions, 869 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.MarshalSSZTo: 209 instructions, 977 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.UnmarshalSSZ: 249 instructions, 1159 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo: 67 instructions, 264 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ: 66 instructions, 275 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.MarshalSSZTo: 74 instructions, 295 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ: 97 instructions, 414 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (b) runtime.newobject = 0x4254e0 .text code
+PASS (b) runtime.moveSliceNoCapNoScan = 0x46c200 .text code
+PASS (b) runtime.convT64 = 0x486300 .text code
+PASS (b) runtime.makeslice = 0x48aee0 .text code
+PASS (b) runtime.growslice = 0x48afc0 .text code
+PASS (b) runtime.morestack_noctxt.abi0 = 0x48e4c0 .text code
+PASS (b) runtime.gcWriteBarrier2 = 0x48fe40 .text code
+PASS (b) runtime.panicBounds = 0x4901e0 .text code
+PASS (b) runtime.memmove = 0x490580 .text code
+PASS (b) fmt.errorf = 0x50a840 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.BuilderIndex.UnmarshalSSZ = 0x69dea0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ = 0x69e2e0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ = 0x69ed20 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ = 0x69fa00 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ = 0x69ff80 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Gwei.UnmarshalSSZ = 0x6a03c0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ = 0xa121a0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo = 0xa1e8c0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ = 0xa1ea20 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ = 0xa1fe20 .text code
+PASS (b) type__+337600 = 0xade6c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+387072 = 0xaea800 .rodata group(nearest preceding symbol)
+PASS (b) type__+387456 = 0xaea980 .rodata group(nearest preceding symbol)
+PASS (b) type__+387520 = 0xaea9c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+828672 = 0xb56500 .rodata group(nearest preceding symbol)
+PASS (b) type__+1289312 = 0xbc6c60 .rodata group(nearest preceding symbol)
+PASS (b) type__+1421952 = 0xbe7280 .rodata group(nearest preceding symbol)
+PASS (b) type__+1464512 = 0xbf18c0 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+14980 = 0xc3e36c .rodata group(nearest preceding symbol)
+PASS (b) go_string._+15004 = 0xc3e384 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+18135 = 0xc3efbf .rodata group(nearest preceding symbol)
+PASS (b) go_string._+18153 = 0xc3efd1 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+21290 = 0xc3fc12 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+21310 = 0xc3fc26 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+21320 = 0xc3fc30 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+23984 = 0xc40698 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+26453 = 0xc4103d .rodata group(nearest preceding symbol)
+PASS (b) go_string._+29265 = 0xc41b39 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+29278 = 0xc41b46 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+34155 = 0xc42e53 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+34170 = 0xc42e62 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+37027 = 0xc4398b .rodata group(nearest preceding symbol)
+PASS (b) go_string._+37043 = 0xc4399b .rodata group(nearest preceding symbol)
+PASS (b) go_string._+37059 = 0xc439ab .rodata group(nearest preceding symbol)
+PASS (b) go_string._+40186 = 0xc445e2 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+40305 = 0xc44659 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+43471 = 0xc452b7 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+43525 = 0xc452ed .rodata group(nearest preceding symbol)
+PASS (b) go_string._+43543 = 0xc452ff .rodata group(nearest preceding symbol)
+PASS (b) go_string._+46539 = 0xc45eb3 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+52933 = 0xc477ad .rodata group(nearest preceding symbol)
+PASS (b) go_string._+58630 = 0xc48dee .rodata group(nearest preceding symbol)
+PASS (b) go_string._+64165 = 0xc4a38d .rodata group(nearest preceding symbol)
+PASS (b) go_string._+79937 = 0xc4e129 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+110067 = 0xc556db .rodata group(nearest preceding symbol)
+PASS (b) go_string._+110107 = 0xc55703 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+152012 = 0xc5fab4 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+164102 = 0xc629ee .rodata group(nearest preceding symbol)
+PASS (b) go_string._+164835 = 0xc62ccb .rodata group(nearest preceding symbol)
+PASS (b) go_string._+171660 = 0xc64774 .rodata group(nearest preceding symbol)
+PASS (b) runtime.gcbits._+1432 = 0xd24400 .rodata group(nearest preceding symbol)
+PASS (b) go_itab._errors.errorString_error = 0xd29680 .rodata in-symbol
+PASS (b) ssz.ErrBytesLength = 0x1380c60 .data in-symbol
+PASS (b) ssz.ErrBytesLength+8 = 0x1380c68 .data in-symbol
+PASS (b) ssz.ErrInvalidSerialization = 0x1380c80 .data in-symbol
+PASS (b) ssz.ErrInvalidSerialization+8 = 0x1380c88 .data in-symbol
+PASS (b) ssz.ErrInvalidVariableOffset = 0x1380c90 .data in-symbol
+PASS (b) ssz.ErrInvalidVariableOffset+8 = 0x1380c98 .data in-symbol
+PASS (b) ssz.ErrListTooBig = 0x1380ca0 .data in-symbol
+PASS (b) ssz.ErrListTooBig+8 = 0x1380ca8 .data in-symbol
+PASS (b) ssz.ErrSize = 0x1380cc0 .data in-symbol
+PASS (b) ssz.ErrSize+8 = 0x1380cc8 .data in-symbol
+PASS (b) ssz.ErrIncorrectListSize = 0x13a2b10 .bss in-symbol
+PASS (b) ssz.ErrIncorrectListSize+8 = 0x13a2b18 .bss in-symbol
+PASS (b) runtime.zerobase = 0x13c74e0 .noptrbss in-symbol
+PASS (b) runtime.writeBarrier = 0x13c7e40 .noptrbss in-symbol
+PASS (c) all.S: 1070 labels, each defined once; 68 external references not defined in all.S; 8 calls to target functions at their entry: ['github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ']
+PASS (e) all.S: 12560 directives equal the 105 function files in order
+PASS (f) boxedEight.data: 0xd24400, 8 bytes and 0 words = ELF
+PASS (f) formatActivationEligibilityEpoch.data: 0xc4e129, 30 bytes and 0 words = ELF
+PASS (f) formatActivationEpoch.data: 0xc45eb3, 19 bytes and 0 words = ELF
+PASS (f) formatAmount.data: 0xc3fc12, 10 bytes and 0 words = ELF
+PASS (f) formatAttestingIndicesMisaligned.data: 0xc64774, 83 bytes and 0 words = ELF
+PASS (f) formatAttestingIndicesTooBig.data: 0xc629ee, 73 bytes and 0 words = ELF
+PASS (f) formatBalance.data: 0xc40698, 11 bytes and 0 words = ELF
+PASS (f) formatBufferLength.data: 0xc556db, 40 bytes and 0 words = ELF
+PASS (f) formatBuilderIndex.data: 0xc4398b, 16 bytes and 0 words = ELF
+PASS (f) formatColumnsMisaligned.data: 0xc62ccb, 74 bytes and 0 words = ELF
+PASS (f) formatColumnsTooBig.data: 0xc5fab4, 63 bytes and 0 words = ELF
+PASS (f) formatCommitteeIndex.data: 0xc452ff, 18 bytes and 0 words = ELF
+PASS (f) formatData.data: 0xc3e384, 8 bytes and 0 words = ELF
+PASS (f) formatDepositEpoch.data: 0xc4399b, 16 bytes and 0 words = ELF
+PASS (f) formatEarliestAvailableSlot.data: 0xc4a38d, 25 bytes and 0 words = ELF
+PASS (f) formatEpoch.data: 0xc3efd1, 9 bytes and 0 words = ELF
+PASS (f) formatExitEpoch.data: 0xc41b46, 13 bytes and 0 words = ELF
+PASS (f) formatFinalizedEpoch.data: 0xc452ed, 18 bytes and 0 words = ELF
+PASS (f) formatHeadSlot.data: 0xc4103d, 12 bytes and 0 words = ELF
+PASS (f) formatIndex.data: 0xc3efbf, 9 bytes and 0 words = ELF
+PASS (f) formatMaxExecutionPayment.data: 0xc48dee, 23 bytes and 0 words = ELF
+PASS (f) formatNextForkEpoch.data: 0xc44659, 17 bytes and 0 words = ELF
+PASS (f) formatProposalSlot.data: 0xc439ab, 16 bytes and 0 words = ELF
+PASS (f) formatProposerIndex.data: 0xc445e2, 17 bytes and 0 words = ELF
+PASS (f) formatSlot.data: 0xc3e36c, 8 bytes and 0 words = ELF
+PASS (f) formatSource.data: 0xc3fc26, 10 bytes and 0 words = ELF
+PASS (f) formatSourceIndex.data: 0xc42e53, 15 bytes and 0 words = ELF
+PASS (f) formatStartSlot.data: 0xc41b39, 13 bytes and 0 words = ELF
+PASS (f) formatTarget.data: 0xc3fc30, 10 bytes and 0 words = ELF
+PASS (f) formatTargetIndex.data: 0xc42e62, 15 bytes and 0 words = ELF
+PASS (f) formatValidatorIndex.data: 0xc452b7, 18 bytes and 0 words = ELF
+PASS (f) formatWithdrawableEpoch.data: 0xc477ad, 21 bytes and 0 words = ELF
+PASS (f) itabErrorStringError.data: 0xd29680, 8 bytes and 3 words = ELF
+PASS (f) sszErrBytesLength.data: 0x1380c60, 0 bytes and 0 words = ELF
+PASS (f) sszErrIncorrectListSize.data: 0x13a2b10, 0 bytes and 0 words = ELF
+PASS (f) sszErrInvalidSerialization.data: 0x1380c80, 0 bytes and 0 words = ELF
+PASS (f) sszErrInvalidVariableOffset.data: 0x1380c90, 0 bytes and 0 words = ELF
+PASS (f) sszErrListTooBig.data: 0x1380ca0, 0 bytes and 0 words = ELF
+PASS (f) sszErrSize.data: 0x1380cc0, 0 bytes and 0 words = ELF
+PASS (f) staticuint64s.data: 0xd468e0, 2048 bytes and 0 words = ELF
+PASS (f) typeAttestationData.data: 0xbf18c0, 32 bytes and 2 words = ELF
+PASS (f) typeCheckpoint.data: 0xbc6c60, 32 bytes and 2 words = ELF
+PASS (f) typeDeposit_Data.data: 0xbe7280, 32 bytes and 2 words = ELF
+PASS (f) typeErrorString.data: 0xb56500, 32 bytes and 2 words = ELF
+PASS (f) typeInt.data: 0xaea9c0, 32 bytes and 2 words = ELF
+PASS (f) typeUint64.data: 0xaea980, 32 bytes and 2 words = ELF
+PASS (f) typeUint8.data: 0xaea800, 32 bytes and 2 words = ELF
+PASS (f) typeUint8Slice.data: 0xade6c0, 32 bytes and 2 words = ELF
+DIFF (d) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ 0x69e2f7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ 0x69ed37 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ 0x69fa17 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ 0x69ff97 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderDepositRequest.MarshalSSZTo 0x7c6e7d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderDepositRequest.MarshalSSZTo 0x7c6efc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderDepositRequest.UnmarshalSSZ 0x7c70f7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderDepositRequest.UnmarshalSSZ 0x7c71bc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderExitRequest.MarshalSSZTo 0x7c78fb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderExitRequest.UnmarshalSSZ 0x7c79d7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.ConsolidationRequest.MarshalSSZTo 0x7c7ffb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.ConsolidationRequest.UnmarshalSSZ 0x7c8157 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.ConsolidationRequest.UnmarshalSSZ 0x7c82db padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.MarshalSSZTo 0x7c87bd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.MarshalSSZTo 0x7c88fe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.MarshalSSZTo 0x7c897d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.UnmarshalSSZ 0x7c8a97 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.UnmarshalSSZ 0x7c8b5c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.Withdrawal.MarshalSSZTo 0x7e143b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.Withdrawal.UnmarshalSSZ 0x7e1577 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.Withdrawal.UnmarshalSSZ 0x7e15fd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.WithdrawalRequest.UnmarshalSSZ 0x7e1fd7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_engine_v1.WithdrawalRequest.UnmarshalSSZ 0x7e217e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ 0x90cf57 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ 0x90d01c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.UnmarshalSSZ 0x90d4f7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.UnmarshalSSZ 0x90d55e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ 0x90de97 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ 0x90df19 padding: elf 0f1f8000000000 asm 90 nopl (%rax) -> nop | (7, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ 0x90df7d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ 0x90dfbb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.MarshalSSZTo 0x90efda padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop | (6, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ 0x90f1d7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ 0x90f49e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.MarshalSSZTo 0x95e3dc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.MarshalSSZTo 0x95e45d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.UnmarshalSSZ 0x95e557 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.UnmarshalSSZ 0x95e5be padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.UnmarshalSSZ 0x95e67e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo 0x95f6db padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.UnmarshalSSZ 0x95f7b7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ 0x97f317 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.MarshalSSZTo 0x9aabfd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.MarshalSSZTo 0x9aac9c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ 0x9aaef7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ 0x9aaf9e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ 0x9ab03b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ 0x9ab11e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ 0x9ab15e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ 0x9ab1db padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ 0x9ab897 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ 0x9ab8fd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ 0x9ab95e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ 0x9ab9fb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.MarshalSSZTo 0x9ac03b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ 0x9ac077 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ 0x9ac0dd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo 0x9becbc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ 0x9bed9e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ 0x9bedde padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ 0x9bee7c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ 0x9beffb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ 0x9bf01c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.MarshalSSZTo 0x9c4d5d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.MarshalSSZTo 0x9c4dbe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ 0x9c5097 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ 0x9c51bd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ 0x9c523e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ 0x9c529c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ 0x9c535d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ 0x9c53bc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ 0x9c53fe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ 0x9c547b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.MarshalSSZTo 0x9dab3d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.MarshalSSZTo 0x9dabbc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.MarshalSSZTo 0x9dac5b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.MarshalSSZTo 0x9dad7e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.UnmarshalSSZ 0x9dae77 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.UnmarshalSSZ 0x9daf1e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.UnmarshalSSZ 0x9db19c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.UnmarshalSSZ 0x9db23b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.MarshalSSZTo 0x9dc31d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.MarshalSSZTo 0x9dc3bb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.UnmarshalSSZ 0x9dc4d7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.UnmarshalSSZ 0x9dc57b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.UnmarshalSSZ 0x9dc5fb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.UnmarshalSSZ 0x9e04d7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.UnmarshalSSZ 0x9e6c37 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.UnmarshalSSZ 0x9e6cdb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.UnmarshalSSZ 0x9e6d5b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.MarshalSSZTo 0x9e8d5d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.MarshalSSZTo 0x9e8d9d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.MarshalSSZTo 0x9e8e1c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.UnmarshalSSZ 0x9e8e57 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.UnmarshalSSZ 0x9e8efb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.UnmarshalSSZ 0x9e8f7b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.MarshalSSZTo 0x9ea03d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.MarshalSSZTo 0x9ea15c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.UnmarshalSSZ 0x9ea2d7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.UnmarshalSSZ 0x9ea37e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.UnmarshalSSZ 0x9ea3fe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.UnmarshalSSZ 0x9ea4fb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.UnmarshalSSZ 0xa05d97 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.UnmarshalSSZ 0xa05dfe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.UnmarshalSSZ 0xa05e7c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecarsByRangeRequest.UnmarshalSSZ 0xa065b7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecarsByRangeRequest.UnmarshalSSZ 0xa0661e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest.UnmarshalSSZ 0xa092f7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest.UnmarshalSSZ 0xa0935e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.MarshalSSZTo 0xa0c57d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.UnmarshalSSZ 0xa0c797 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.MarshalSSZTo 0xa0cf1a padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop | (6, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.MarshalSSZTo 0xa0d03e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ 0xa0d077 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ 0xa0d0dd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ 0xa0d21b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo 0xa11ebb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo 0xa11fdd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo 0xa120fd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ 0xa121ba padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop | (6, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ 0xa1223b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ 0xa122db padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ 0xa1243e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ 0xa1251c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo 0xa17d7b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo 0xa17e9b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo 0xa17efd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ 0xa17fd7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ 0xa1809c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ 0xa180de padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ 0xa1819e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ 0xa182dc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ 0xa1ea37 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ 0xa1ea9e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ 0xa1eb5e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ 0xa1f437 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ 0xa1f4de padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ 0xa1f5db padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ 0xa1f61e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.MarshalSSZTo 0xa1fbbd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.MarshalSSZTo 0xa1fc3c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ 0xa1fe37 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ 0xa1fefc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ 0xa20737 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ 0xa2081c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ 0xa208de padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.UnmarshalSSZ 0xa20eb7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.UnmarshalSSZ 0xa20f3e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo 0xa2161e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo 0xa2163e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ 0xa21717 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ 0xa2185e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.UnmarshalSSZ 0xa21e97 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.UnmarshalSSZ 0xa21f1e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ForkData.MarshalSSZTo 0xa2255e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ForkData.UnmarshalSSZ 0xa22697 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ForkData.UnmarshalSSZ 0xa2271c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ForkData.UnmarshalSSZ 0xa2273d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ 0xa22f77 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ 0xa22ff8 padding: elf 0f1f840000000000 asm 90 nopl (%rax,%rax,1) -> nop | (8, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ 0xa2301e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ 0xa230fc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ 0xa2311d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ 0xa2313e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ 0xa2319d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ 0xa231fb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ 0xa2323d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ 0xa23ab3 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ 0xa23abc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ 0xa23b7d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ 0xa23d1a padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop | (6, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ 0xa23dde padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ 0xa23e5e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.MarshalSSZTo 0xa253fb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ 0xa25557 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ 0xa2563c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ 0xa256db padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.MarshalSSZTo 0xa283fb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ 0xa284d7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ 0xa285bc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.MarshalSSZTo 0xa2897d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.MarshalSSZTo 0xa289de padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.MarshalSSZTo 0xa28b5c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.UnmarshalSSZ 0xa28c57 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.UnmarshalSSZ 0xa28cde padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.UnmarshalSSZ 0xa28d7c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.UnmarshalSSZ 0xa28dfb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.UnmarshalSSZ 0xa28e5c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.UnmarshalSSZ 0xa28f9b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.MarshalSSZTo 0xa2967b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.MarshalSSZTo 0xa297dd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.MarshalSSZTo 0xa2983b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.UnmarshalSSZ 0xa298fa padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop | (6, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.UnmarshalSSZ 0xa2997c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.UnmarshalSSZ 0xa299fe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.UnmarshalSSZ 0xa29abe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.UnmarshalSSZ 0xa29afb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.UnmarshalSSZ 0xa29b9b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.UnmarshalSSZ 0xa29c3b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.UnmarshalSSZ 0xa29cdb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ 0xa2a8f7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ 0xa2a95e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ 0xa2b017 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ 0xa2b07d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ 0xa2b0de padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ 0xa2b17b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+PASS (d) 11490 instructions reassembled by clang x86_64-linux-gnu: 11284 byte-identical, 0 encoding, 206 padding
+elf sha256 2f7c1d7b4bece5ec8547595aefb4a450122caf2ef33490f43b5b88a644b327be
+S sha256 62217fd7d7cb4cbc010570c10ddee4f450bc0194aaa025440133de242febbea4 all.S
+S sha256 4a18137fa8425622fa26773a049f67d655839d1320824063ada686158e11a9b0 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S
+S sha256 bcc78481c1a6cbfa050454db14d05543acc257997c3e8fa4c891eaf48296df5b github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S
+S sha256 d137ed535c8d663d43734c9d5ce55f2ffd15cbe7aeebd39da9f28734eff2e47c github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.SizeSSZ.S
+S sha256 848cb064202e4db217e9cd90803d6e5eef4082317f6358df5eb725c04cc1e29f github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S
+S sha256 845514f00d134ac7944b7152b5b8c959dcce84dd64530152d0e25f29fff4d275 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZ.S
+S sha256 085e64fedf8a9a8e30535dcf1cbf14e3354385a4cee0e6b1755c596c3dc75c1c github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.MarshalSSZTo.S
+S sha256 ebabe700fb1ee9f1da429d3c878cde9b67c9a7ab57a83e01c63f043ebd3da64d github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.SizeSSZ.S
+S sha256 2c898376633dcf6240343635b5095c3960a8458732f04223540b1822ca81950f github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S
+S sha256 aff1f3707de50dee5a7ce4e83f1c4224175bb2e06e252827e3b404beac56be12 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZ.S
+S sha256 1908baad20a47cc9521b05cd5624799c7e941db8fe64e5057e9d58a2e4a5fd25 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo.S
+S sha256 0cfd8e07ed73677ad43855459b8894872ee781f01f336f3641510b1c37965705 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.SizeSSZ.S
+S sha256 1edb0364eea197338c95ee08029e7bb5e0dc27e6a76232efba2ebf872f86f438 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S
+S sha256 3354984f6558cad952fd3d47d66d75d7f3860dc0113123f42376cdf492f44442 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S
+S sha256 3eee9f502873b5a5f484f67e7572334c4dc0770a3f5f00fa8025b1e67f06fb54 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S
+S sha256 59519d5d17eaa9367839b3da6cadf5ca9d78c60fad644e2aac6333d8d64fd7f3 github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderDepositRequest.MarshalSSZTo.S
+S sha256 787084f6a5bdd1eb03f3053bcb95b548559365a5408cad42bba604b49876369f github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderDepositRequest.UnmarshalSSZ.S
+S sha256 8aa6c4e61709e8ed5ed2a962c6048444667e1912a183862647faaf57c3c739b0 github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderExitRequest.MarshalSSZTo.S
+S sha256 f6017219a327689f4b07e3f2222cab2d7f292c8b80099a755e9971b58cbd328a github.com_OffchainLabs_prysm_v7_proto_engine_v1.BuilderExitRequest.UnmarshalSSZ.S
+S sha256 a6de42aadf8331b4af5f667f9d62c2bed7b9a1188491858cefc07bd05fefcaba github.com_OffchainLabs_prysm_v7_proto_engine_v1.ConsolidationRequest.MarshalSSZTo.S
+S sha256 d1fe9239fd43a8269b592635d8f26db470d8f3c50774d772589c105bbd1d2e61 github.com_OffchainLabs_prysm_v7_proto_engine_v1.ConsolidationRequest.UnmarshalSSZ.S
+S sha256 8ec8e5eb71c2161abf46bb29a9f0e45b515aabae6cff7a14e58b090b76e27c33 github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.MarshalSSZTo.S
+S sha256 b79b053dc1cbdb8af87622355c682be06263eb830721870ef82bb1de56cfd6c9 github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.UnmarshalSSZ.S
+S sha256 339dcaafed3026a771fcb9ebfc15b9ee6f299fc1f5d5ccc25630167d2adef6ea github.com_OffchainLabs_prysm_v7_proto_engine_v1.Withdrawal.MarshalSSZTo.S
+S sha256 7296859bf4f7659564e56832f3613130c5d13ccf160fad456892e5541177cc2b github.com_OffchainLabs_prysm_v7_proto_engine_v1.Withdrawal.UnmarshalSSZ.S
+S sha256 c77644a82b273477f8b845a84e4b4f2bc4daa3ea1a2fda57c8b577cda7bcafcc github.com_OffchainLabs_prysm_v7_proto_engine_v1.WithdrawalRequest.MarshalSSZTo.S
+S sha256 8ba31afb585b0172296ee42167c9858d1bcf5728a7540d3ef180530c3b42241a github.com_OffchainLabs_prysm_v7_proto_engine_v1.WithdrawalRequest.UnmarshalSSZ.S
+S sha256 c065f7da72dd010c7716cae3f14a143d5f2d663ad75e205c612f9d5fe6178ba2 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S
+S sha256 a944b1ce48bd830bb077e263d8ed7893ce54bbbed7ef3b4cef1140cc9d9f7725 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.SizeSSZ.S
+S sha256 bc4a02a9e3b59207c2ef69595bbfed089a5a3fb763adeb92921f2f024650a777 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S
+S sha256 76e6337926a7a75507a363f2de8f4f6470f2d8249b151e1eff729283e5cd97ae github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.MarshalSSZTo.S
+S sha256 a1a292e2e02065e21d55dede0578820eec894839f3ca253981ec3c911cb60015 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.UnmarshalSSZ.S
+S sha256 c76a57703af0f5d5889921baf6b3844b81d043b466b5e17df02a8b5d218124f3 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S
+S sha256 8026b84d3611d544f2f6353e9b08c552de7fd0b577f068f283be216568d00a13 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S
+S sha256 6599236ed7c2489476a9f2a9fadeff055e7a0edbf4e848d316d20bb3dc6fc9a4 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.MarshalSSZTo.S
+S sha256 44c4e82e152bc9f2408390af8c90b75dbccd5c1dfae15c0549e9b7ad53f0136d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.UnmarshalSSZ.S
+S sha256 5b6cf43a99468b780beb96ad6a2daaf32a9d44339a62db132229845f66922c9d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.MarshalSSZTo.S
+S sha256 5b02b0cc5f24ce7a31f8d3c2c963181dd2f0c7bfff6b43b500dd041a8a6494e0 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S
+S sha256 ae16635f5634b6326b9d74327a59a6b73ab1356a6ead9e13259ecf82b3c8350f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecarsByRangeRequest.MarshalSSZTo.S
+S sha256 93ae9db0b1193535f5e0025b670ea7cd98ce2ffc1ce10ba34e055066211c3ead github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecarsByRangeRequest.UnmarshalSSZ.S
+S sha256 856d5e8ad61bceaf2398db9da9014c3d3189a7a322e7812a833d00345754b997 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.MarshalSSZTo.S
+S sha256 97c04ac61ebd0ddb484615b3ea1b45ae773eb61a67d08a341e6feab1b55bdea8 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.UnmarshalSSZ.S
+S sha256 21b29973838e97486071c5f739fa47da7d84913a761c950e5258837d0b29c8ec github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.MarshalSSZTo.S
+S sha256 e79f5d26368723d418476e0bd66e6d0efe728143a25987191ddafaece0eb9277 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPendingWithdrawal.UnmarshalSSZ.S
+S sha256 e21892cbe54a798fd0e798ad727b5201c979e46c184d63cc012fb826f2375377 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.MarshalSSZTo.S
+S sha256 8c79eb55431375ec0645e9146a8b46f61f92f936ae04bacf9fa70a806558dc5f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderPreferences.UnmarshalSSZ.S
+S sha256 c4345527c651c0a3ff8319af3f35df1e375b8c58a6a45054762da0a0dcef1b1d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S
+S sha256 389e8f65adb01b47b0347e705a58767992d5488785ffe14a5065ff4df5137646 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ.S
+S sha256 dc2ee89f4143d54da41316043a258939cfd8eebf98051b7a67d839c247f17e5e github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S
+S sha256 b008d0eebce1f6d8222cc9ee3470e1961c5823963c0c9a06da20731eb9822687 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S
+S sha256 492ffdcd127eca291d0052c713fae38f651686cb5c0401dfddfa544c542680ce github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S
+S sha256 8fde636ebb91274ceb4852e94db60b3767e0949b2c81a14e0611d615ae7e5e52 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S
+S sha256 e35191e9ca09807491be85e751725c784993c64668f2fee19ca337fe5b1e055c github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo.S
+S sha256 13cdd1a3b22bdd83488fe130d4e5b5ea296f61e0688585bdc7afe73d383cf581 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S
+S sha256 db979ece9c1498621be59879fa3c4ed466d3f9e0ed0a3a70201ef0a6aa21226e github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.MarshalSSZTo.S
+S sha256 f062e0f9be56aef921ad33347d21ac292c6a02f9119e0b70b0dabd22385acae6 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S
+S sha256 a5742e1f40be7f95c23072a9b26f84442bf2d64312f3b3fd4a3c59b03ad6c173 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.MarshalSSZTo.S
+S sha256 0ad7845284eb1e4915eb1bbf87b94f93302850b4190cd55c477239d948fd33cf github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.UnmarshalSSZ.S
+S sha256 911a0ea1fb983c58c9be8ea72f94afdcd9bb25d9555956f7ca02f1777136b6c1 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S
+S sha256 395e0529ba10332430fb7e9353144dae7fbea672396734b95e0e5a1885ba5691 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S
+S sha256 bfed2e86bc9fb7d6f644dffececfe48c495d93789d9d7b86141e11afe19ee9ce github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest.MarshalSSZTo.S
+S sha256 be93dd975b8f53109fa3cbe13e19e4471e17148989ae127ff9401785fb909a82 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest.UnmarshalSSZ.S
+S sha256 4325a595fefaa188215185eacfc3595389256c5157a5d6fcf2421aeab973e942 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.MarshalSSZTo.S
+S sha256 b6e2a015a5b0b24af84e4d62b6aa031e5020e3065c76a94e99f1fc38241762b6 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.UnmarshalSSZ.S
+S sha256 03613fb460d5902baa753803982bf04f6f9fb6bf90fad64fc6011ba334f7077b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ForkData.MarshalSSZTo.S
+S sha256 2bf3550e3e21f1cbb81f4d9f4adc4fbd53119427b96e940b5d1cfa3e96569e15 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ForkData.UnmarshalSSZ.S
+S sha256 fd1e2555085e084f3047606258775c5847882a823bd70378d1a3c2f2423cdedb github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S
+S sha256 f04300448cac1c966740f6004b54b33b630f3d463065f122790078f86b7d8af5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S
+S sha256 cb7e6f1310c41a0647dc45bcc15258750ad331cf55b0745dec96db7736b8cfee github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.UnmarshalSSZ.S
+S sha256 46e8793ed5bb67a82bd33d77379cce45aa6a096d822ef0dfa0be5eacdddbbd5f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S
+S sha256 e1331a1bb0344f6d900049a91a8e4a3fd8acea7de21cd25546dd82bc47509d4f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.MarshalSSZTo.S
+S sha256 fcdd46f1a39341f2e769e6cd0ef3aabc1ae923a5edc5736d4c485ca620d49f4e github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.UnmarshalSSZ.S
+S sha256 5041b386202e88744b91188748aef9dedad834431b290204ce061416a637b0c2 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.MarshalSSZTo.S
+S sha256 a4fb0545944a83e11926358b7e8a06cf555e79f5da02d58f9ce91c8fa94acee4 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PayloadAttestationData.UnmarshalSSZ.S
+S sha256 06564f29c3d2813bf0ee98d06c9ddcf6fd0a78b15d1b7091bc399ef628bcd0cb github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.MarshalSSZTo.S
+S sha256 fc520c302fe4568cc986c7a7d8fb7967cacd9c0e559f6393b61414fdebb3335a github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S
+S sha256 3348a1c858523052c4cc0abc11ae4396b4f9898b66aed42a71a2987152505f28 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.MarshalSSZTo.S
+S sha256 3d6f142fb34e0e56de5fed48cc70bea5d575f96cfa9aa62887b37bf21a6d0592 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S
+S sha256 a07abdd277fcd8bfbc134c52fbb9a82839003da6df2e7a21afefa821f4a2b8fe github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.MarshalSSZTo.S
+S sha256 4dfda1497a466a603e7af0602765453140fb3ebd1b36898c017046e49f0a2005 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S
+S sha256 916684c4fed2239b036a8c706022dcd16c35ce7d6376fded8535e2d3fa344a1b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.MarshalSSZTo.S
+S sha256 c69880d92be48b471e55be9a152f94119ad810e1f3c1bfa9680b42dbd1994cad github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S
+S sha256 4157c38e788ee0af4fd3abb4452709fd096654e44e320334404ffc6721734e2c github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.MarshalSSZTo.S
+S sha256 997850c1eb3347c2aea0140bdd903f9055a6f1b9270f4a9cfbfffc5a188cd5e5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.UnmarshalSSZ.S
+S sha256 65be2f0e02190d370e5762b30610233d9412a259bbd0b6770a6219192955955a github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.MarshalSSZTo.S
+S sha256 1c4f50c64cb684dcfbf5e689680cd002d14fddffbded67e42c2be959660c8b27 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ.S
+S sha256 7dc2617991d9358707041f16fc60e0eccf0b7d583d0bba0f0dc8be9e555c74c6 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.MarshalSSZTo.S
+S sha256 eff5ece9754e89355d4b51f272c230ac4b2c49a99c2b3a09861aa423742f8598 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.UnmarshalSSZ.S
+S sha256 bd82cde7140af6a9cede4e185c0b4fa2fe2088c874421d42059b13aae10995cd github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.MarshalSSZTo.S
+S sha256 3cc4999544214e8aee50d13685f8ba8afed4b4da967c85fab793302a369785d5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.UnmarshalSSZ.S
+S sha256 11284daa02037a3a69adc071415f061de5c1e4c29892b369b7b3aa356ebe107f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S
+S sha256 1dce3a7c8c0cbe2eb0e219e9ba83ce392e9ab137585e19734b991309ba4efaee github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.MarshalSSZTo.S
+S sha256 0543fd6e2cfb5a3c30206e9f63252f76a330e1f0b3b258dc4ea1c07ece5d5dc4 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.UnmarshalSSZ.S
+S sha256 1e61d5de7908d4df8378d4e464dc8ebf899c65f74d0c2e3affda41bd8eb35e4b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S
+S sha256 7f8d9761a2459f5065669cac92bf6a420d6b28539c7e07449f8158882dcf7ea5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.MarshalSSZTo.S
+S sha256 d73fa5f4457f81c197d0b7c78760c9eb5714bc35b759cd5a612024c56a11b320 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S
+S sha256 f4d569bf5650d7a9b7c507560f38790dce8fe267293d8111f70447deead85c1f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.MarshalSSZTo.S
+S sha256 eea52bc6474ef0e3872a90f4e14081809d9f33814ae1946085ad12a8bf6b1b01 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.UnmarshalSSZ.S
+S sha256 6b9b4f919293fcb9cc7dd61f59b3c55f0dbbb44c85e04d9fc5edd469c2927edc github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S
+S sha256 8fde9d088c4f4484037b82b2befa96c6b361b5b034eac8af1327ddb728828530 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S
+S sha256 cdfd21b3d578e12dc28267992dc650230ca9c15b2e3ec1a13b66fccd337e77f7 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.MarshalSSZTo.S
+S sha256 ebcb91e0688ba10f3019fcfea00e905fa28939dc4287bf2a8ffb974a4da8ba7d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.UnmarshalSSZ.S
+S sha256 111850ffd00f7188a34bce524ab2b6c46806d250bb91b13060924f977b4448db github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.MarshalSSZTo.S
+S sha256 f0e2bf0a7e902b2aa2af067b0f5e2747102adbf47c2b00d551a25194be5a5505 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorRegistrationV1.UnmarshalSSZ.S
+S sha256 bd095ba28de869327ec6b2aa03921ae4f3a4bbfcedfaf723460d8b1931ba8b72 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.MarshalSSZTo.S
+S sha256 b2539caff8cdb930d2de55bad849f1aa98a2ce7ef859d9bff78a186949229c8d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S
+data sha256 fb8dd0592e527218f810f25f775b9cb444e17ea93a228e703170c8426deb5b3c boxedEight.data
+data sha256 e5a1bfd059acafdd8c3ef0bf808fea75f373fd5b262378f15434d2c8a293a3f7 formatActivationEligibilityEpoch.data
+data sha256 f85d3cc20daae8e0111826cea7117b10c40655e6c7b721f483548d58404833f1 formatActivationEpoch.data
+data sha256 a723f8fa34f1ad44b3533c8e42f7e9874d7fa7de7b77463bac0b1a6b4a070caa formatAmount.data
+data sha256 295f0faf20d82102c3b37add857c5727ee9f24e5fe474fcafb8f4313e712258f formatAttestingIndicesMisaligned.data
+data sha256 73c349acdfdabdd418a8536e5c631e3e4a4908c258343069dbea77f6019d81a9 formatAttestingIndicesTooBig.data
+data sha256 57d1022febdb1085866540962f888985ee40474fb9ae186b5885492cf78e31f6 formatBalance.data
+data sha256 e60b3698d5d0e45c7f9edd3d92a7fe0826f1c3ce4d55b618bce0128ffbaf0ac5 formatBufferLength.data
+data sha256 980979082d6e58ca03fa34872a9e8791a0b8e506b687ceeb91f93d30b114a829 formatBuilderIndex.data
+data sha256 c2d2ec0db7df49d95fff674a1ae502c3cc095c43409ac24b8ac167c1c5c41303 formatColumnsMisaligned.data
+data sha256 e428151422e4bf084689d23d47525ab875226255ca358ff0b4d83695218488de formatColumnsTooBig.data
+data sha256 e5122b20476a8375eab88ed4b398670004a48005a4e5b5d9029fa8334ac2af49 formatCommitteeIndex.data
+data sha256 1a150efe72471befa64bbdd8293701d02264bade904230b8ba14a1c780c4df26 formatData.data
+data sha256 f0d28d53c37f46c6350c79c8f3e627aea662169e6eebd3f191064795c0e52c7c formatDepositEpoch.data
+data sha256 e9512c4aebd8f155d5a3f974d192533b6370422503e81b99beb41f0e0f29e308 formatEarliestAvailableSlot.data
+data sha256 4a0b0eac8436cd3d3400c49d3ce2d332562f5892c1b2ff7ae73acb92b97b0b48 formatEpoch.data
+data sha256 d2ddf140d7aef5aba9850b6d7632c2029d24e5b72aab281565b7442f0ebcbbd0 formatExitEpoch.data
+data sha256 0e53ecdcb7d0b76f37ee72b366aaff68994276a00172267298e04189987c73df formatFinalizedEpoch.data
+data sha256 baeb18b98d61fa4f6f5bbe221600c52bba044648248a051e156a73cbb796557e formatHeadSlot.data
+data sha256 88ad77c0ba29fea565fa65b9feae3f5a24bb65dff6548bfa23c230a0388bef27 formatIndex.data
+data sha256 4d990029fb2dfda4f0b43b57aa25c4d742006430c821eeeb4f29fbb90ea5ed2d formatMaxExecutionPayment.data
+data sha256 f90f26b708a42850cd0b38c2221168c8433610be94ccbf75a16520b6b006e902 formatNextForkEpoch.data
+data sha256 72a77a9a8458559e7311ef3692bdb36a16b498edabd41a66b850c615138496da formatProposalSlot.data
+data sha256 318bccda88cb54406086ae39879118f674ce1877c420abea6b2ef81a51e1c426 formatProposerIndex.data
+data sha256 2d93b7a9a376f73c97c6aae76774f743275d286b53077e5f2d321a47191b84d8 formatSlot.data
+data sha256 043f56bae08c45b6f4af331d2571b3fd73438f9555c65414ab48f16a2b2d531d formatSource.data
+data sha256 fd373bbab3a0de2e0138ecd0c5400590a1e9199dee3424e7ac4bc5305de7ce1d formatSourceIndex.data
+data sha256 bc82496a6fce7a1fe267956b9fb7c3700bdc3604885dede50b8425d35ddc1300 formatStartSlot.data
+data sha256 ec8d98acd8342e2373edbeb8ea21fc17a7b8f0e70bfde9047dfb56b54ac7258f formatTarget.data
+data sha256 2a836110a9fe3f4ad889d3c57180d185f7e4be075d26c70f0d03c4931461e07f formatTargetIndex.data
+data sha256 826d080c3bf7b0aca2678748740a2431391c0f30248ef70736f67d347ada8d4b formatValidatorIndex.data
+data sha256 444cb792272d8a5e694c37a7fd58e0d07fe5f553237eae7424e4358e0be6a564 formatWithdrawableEpoch.data
+data sha256 5e6fda39402bea8dc7081b20dbe65258ae74944ddfb8e178e91e79d85c5d40a6 itabErrorStringError.data
+data sha256 ef8079d53c320f65579716fab3c39bf8f46729398ad220e6fc5237284fbe77b3 sszErrBytesLength.data
+data sha256 b3f7c223a64168fd3af01afd2ba0a58af012a9ff897073599ffac96e6d5fc1ed sszErrIncorrectListSize.data
+data sha256 0c6e1b1901ef26f40aa88c345911114fb246d40514c515508a18fdec0a63365d sszErrInvalidSerialization.data
+data sha256 8d820e2ca20df0f4d160e94f7b6ccf8057f051e68b5155cd62a64befa472fd06 sszErrInvalidVariableOffset.data
+data sha256 59a1af210a33478efba1357f6c472a5b54ac5dfe4242dbdd1dab82b5f8316193 sszErrListTooBig.data
+data sha256 45b7f0ae722ee28415bb048bf08d23fd91517a3e1015dfa810d56087231a5787 sszErrSize.data
+data sha256 cabfa432ec4ab9e9b814a6c5b417d522c495006cdedee8ac39a3604a491b0a48 staticuint64s.data
+data sha256 4dc49860324d62a740232be111ba895b70d7aebe43f7dd96cd74142d65200506 typeAttestationData.data
+data sha256 ff68965f38291afe5f7da617b8e9ed3038adf8fb78a1c221848d98cbf42c3252 typeCheckpoint.data
+data sha256 7095885f3faece083af7caceb60ab33bd03b87e4bdf856ddbe5fabf1a7384951 typeDeposit_Data.data
+data sha256 33e311d9ec51e25623b3c58c979a0d5839f11e671fdce3059f6d7f2b575dc4f9 typeErrorString.data
+data sha256 1a24fd9d8ca1d368fe4f39786e5d7445c081c39f4c6bced838417264358049bf typeInt.data
+data sha256 938284140e67d2a812e697963a613cede49c0cae09945e7978b8877e6cf63415 typeUint64.data
+data sha256 c0251f20e4a7bbdb63136bd8b4c3f300857549e84c2b2dbddba4f13211b649d7 typeUint8.data
+data sha256 860c981343b5207afbca906047a0773e2a621f2475e7deaaa0faba968953053d typeUint8Slice.data
+PASS all
+BUNDLE sha256 02b0c3f4697d92cf7fc49598b83cac93833d66263801257f98ac8aee5bd04649

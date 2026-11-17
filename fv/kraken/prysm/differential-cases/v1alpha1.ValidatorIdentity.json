@@ -1,0 +1,476 @@
+[
+ {
+  "id": "validator-identity-decoder-accept-values-0",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "UnmarshalSSZ",
+  "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Index",
+     "uint64": 0
+    },
+    {
+     "name": "Pubkey",
+     "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "len": 48,
+     "cap": 48
+    },
+    {
+     "name": "ActivationEpoch",
+     "uint64": 0
+    }
+   ]
+  }
+ },
+ {
+  "id": "validator-identity-decoder-accept-values-1",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "UnmarshalSSZ",
+  "in": "efcdab89674523010b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393af1cdab8967452301",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Index",
+     "uint64": 81985529216486895
+    },
+    {
+     "name": "Pubkey",
+     "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a",
+     "len": 48,
+     "cap": 48
+    },
+    {
+     "name": "ActivationEpoch",
+     "uint64": 81985529216486897
+    }
+   ]
+  }
+ },
+ {
+  "id": "validator-identity-decoder-accept-values-2",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "UnmarshalSSZ",
+  "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Index",
+     "uint64": 18446744073709551615
+    },
+    {
+     "name": "Pubkey",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 48,
+     "cap": 48
+    },
+    {
+     "name": "ActivationEpoch",
+     "uint64": 18446744073709551615
+    }
+   ]
+  }
+ },
+ {
+  "id": "validator-identity-decoder-reject-size-0",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "UnmarshalSSZ",
+  "in": "",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "validator-identity-decoder-reject-size-63",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "UnmarshalSSZ",
+  "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "validator-identity-decoder-reject-size-65",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "UnmarshalSSZ",
+  "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "validator-identity-encoder-fast-path-values-0-prefix-0-spare-0",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 0
+   },
+   {
+    "name": "Pubkey",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ActivationEpoch",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 64
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 64,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-identity-encoder-fast-path-values-0-prefix-0-spare-5",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 0
+   },
+   {
+    "name": "Pubkey",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ActivationEpoch",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 69
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 69,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-identity-encoder-fast-path-values-0-prefix-7-spare-0",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 0
+   },
+   {
+    "name": "Pubkey",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ActivationEpoch",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 71
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 71,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-identity-encoder-fast-path-values-0-prefix-7-spare-5",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 0
+   },
+   {
+    "name": "Pubkey",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ActivationEpoch",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 76
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 76,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-identity-encoder-fast-path-values-1-prefix-0-spare-0",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Pubkey",
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a"
+   },
+   {
+    "name": "ActivationEpoch",
+    "uint64": 81985529216486897
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 64
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab89674523010b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393af1cdab8967452301",
+   "same_array": true,
+   "out_cap": 64,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-identity-encoder-fast-path-values-1-prefix-0-spare-5",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Pubkey",
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a"
+   },
+   {
+    "name": "ActivationEpoch",
+    "uint64": 81985529216486897
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 69
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab89674523010b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393af1cdab8967452301",
+   "same_array": true,
+   "out_cap": 69,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-identity-encoder-fast-path-values-1-prefix-7-spare-0",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Pubkey",
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a"
+   },
+   {
+    "name": "ActivationEpoch",
+    "uint64": 81985529216486897
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 71
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab89674523010b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393af1cdab8967452301",
+   "same_array": true,
+   "out_cap": 71,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-identity-encoder-fast-path-values-1-prefix-7-spare-5",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Pubkey",
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a"
+   },
+   {
+    "name": "ActivationEpoch",
+    "uint64": 81985529216486897
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 76
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab89674523010b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393af1cdab8967452301",
+   "same_array": true,
+   "out_cap": 76,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-identity-encoder-fast-path-values-2-prefix-0-spare-0",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Pubkey",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   {
+    "name": "ActivationEpoch",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 64
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 64,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-identity-encoder-fast-path-values-2-prefix-0-spare-5",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Pubkey",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   {
+    "name": "ActivationEpoch",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 69
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 69,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-identity-encoder-fast-path-values-2-prefix-7-spare-0",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Pubkey",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   {
+    "name": "ActivationEpoch",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 71
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 71,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-identity-encoder-fast-path-values-2-prefix-7-spare-5",
+  "type": "v1alpha1.ValidatorIdentity",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Pubkey",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   {
+    "name": "ActivationEpoch",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 76
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 76,
+   "receiver_unchanged": true
+  }
+ }
+]

@@ -1,0 +1,410 @@
+[
+ {
+  "id": "blob-sidecars-by-range-request-decoder-accept-values-0",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "UnmarshalSSZ",
+  "in": "00000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "StartSlot",
+     "uint64": 0
+    },
+    {
+     "name": "Count",
+     "uint64": 0
+    }
+   ]
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-decoder-accept-values-1",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "UnmarshalSSZ",
+  "in": "efcdab8967452301f0cdab8967452301",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "StartSlot",
+     "uint64": 81985529216486895
+    },
+    {
+     "name": "Count",
+     "uint64": 81985529216486896
+    }
+   ]
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-decoder-accept-values-2",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "UnmarshalSSZ",
+  "in": "ffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "StartSlot",
+     "uint64": 18446744073709551615
+    },
+    {
+     "name": "Count",
+     "uint64": 18446744073709551615
+    }
+   ]
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-decoder-reject-size-0",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "UnmarshalSSZ",
+  "in": "",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-decoder-reject-size-15",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "UnmarshalSSZ",
+  "in": "010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-decoder-reject-size-17",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "UnmarshalSSZ",
+  "in": "0101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encoder-fast-path-values-0-prefix-0-spare-0",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "StartSlot",
+    "uint64": 0
+   },
+   {
+    "name": "Count",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 16
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 16,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encoder-fast-path-values-0-prefix-0-spare-5",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "StartSlot",
+    "uint64": 0
+   },
+   {
+    "name": "Count",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 21
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 21,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encoder-fast-path-values-0-prefix-7-spare-0",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "StartSlot",
+    "uint64": 0
+   },
+   {
+    "name": "Count",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 23
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 23,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encoder-fast-path-values-0-prefix-7-spare-5",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "StartSlot",
+    "uint64": 0
+   },
+   {
+    "name": "Count",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 28
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 28,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encoder-fast-path-values-1-prefix-0-spare-0",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "StartSlot",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Count",
+    "uint64": 81985529216486896
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 16
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301f0cdab8967452301",
+   "same_array": true,
+   "out_cap": 16,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encoder-fast-path-values-1-prefix-0-spare-5",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "StartSlot",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Count",
+    "uint64": 81985529216486896
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 21
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301f0cdab8967452301",
+   "same_array": true,
+   "out_cap": 21,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encoder-fast-path-values-1-prefix-7-spare-0",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "StartSlot",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Count",
+    "uint64": 81985529216486896
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 23
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab8967452301f0cdab8967452301",
+   "same_array": true,
+   "out_cap": 23,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encoder-fast-path-values-1-prefix-7-spare-5",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "StartSlot",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Count",
+    "uint64": 81985529216486896
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 28
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab8967452301f0cdab8967452301",
+   "same_array": true,
+   "out_cap": 28,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encoder-fast-path-values-2-prefix-0-spare-0",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "StartSlot",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Count",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 16
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 16,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encoder-fast-path-values-2-prefix-0-spare-5",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "StartSlot",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Count",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 21
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 21,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encoder-fast-path-values-2-prefix-7-spare-0",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "StartSlot",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Count",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 23
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 23,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-sidecars-by-range-request-encoder-fast-path-values-2-prefix-7-spare-5",
+  "type": "v1alpha1.BlobSidecarsByRangeRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "StartSlot",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Count",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 28
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 28,
+   "receiver_unchanged": true
+  }
+ }
+]

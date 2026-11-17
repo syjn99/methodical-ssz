@@ -1,0 +1,77 @@
+import Machine.Frame
+import Machine.Block
+import Codec.ByteSliceListLemmas
+
+/-!
+# List and memory-chunk lemmas for the HistoricalBatch element loops
+
+- `flatten_length`: a flattened list of 32-byte blocks has 32 bytes for each block.
+- `Decode.input_split`: the input chunk as (blocks < i) ⋆ block i ⋆ (blocks > i), for 8192 blocks of 32 bytes.
+- `Decode.array_split`, `Decode.array_join`: the backing array (headers of the first i elements, then zeros) around element i,
+  before (three zero words) and after (the header `(p, 32, 32)`) the three stores of iteration i.
+
+The lemmas that do not depend on the type are in the shared module `Codec/ByteSliceListLemmas.lean`.
+The proofs here use `Codec.flatten_split`, `Codec.sliceHeaders_length`, `Codec.sliceHeaders_snoc` and `Codec.zeroBytes` of it.
+`Prysm/SyncCommittee/DecodeLoopLemmas.lean` holds the same lemmas for 512 blocks of 48 bytes.
+-/
+
+open Machine Runtime
+
+namespace Prysm.HistoricalBatch
+
+theorem flatten_length (qs : List (List UInt8)) (h : ∀ e ∈ qs, e.length = 32) :
+    qs.flatten.length = 32 * qs.length := by
+  induction qs with
+  | nil => rfl
+  | cons q qs ih =>
+    simp only [List.flatten_cons, List.length_append, List.length_cons]
+    rw [h q (List.mem_cons_self), ih (fun e he => h e (List.mem_cons_of_mem _ he))]; omega
+
+theorem Decode.input_split (bf : BitVec 64) (pks : List (List UInt8)) (hpks : pks.length = 8192)
+    (hpk : ∀ e ∈ pks, e.length = 32) (i : Nat) (hi : i < 8192) :
+    Eq (pks.flatten.At bf) = Eq ((pks.take i).flatten.At bf) ⋆ Eq (pks[i].At (bf + BitVec.ofNat 64 (32 * i)))
+      ⋆ Eq ((pks.drop (i + 1)).flatten.At (bf + BitVec.ofNat 64 (32 * i) + 32)) := by
+  have hlt : i < pks.length := by omega
+  have ht : (pks.take i).flatten.length = 32 * i := by
+    rw [flatten_length _ (fun e he => hpk e (List.mem_of_mem_take he))]; simp; omega
+  have hp : pks[i].length = 32 := hpk _ (List.getElem_mem hlt)
+  have hd : (pks.drop (i + 1)).flatten.length = 32 * (8191 - i) := by
+    rw [flatten_length _ (fun e he => hpk e (List.mem_of_mem_drop he))]; simp; omega
+  rw [Codec.flatten_split pks i hlt,
+    at_app _ _ (b := bf + BitVec.ofNat 64 (32 * i)) (by rw [ht]) (by simp only [List.length_append, ht, hp, hd]; omega),
+    at_app _ _ (b := bf + BitVec.ofNat 64 (32 * i) + 32) (by rw [hp]; rfl) (by rw [hp, hd]; omega)]
+  simp only [Std.ExtHashMap.sep_assoc]
+
+theorem Decode.array_split (A : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 8192) (hps : ps.length = i) :
+    Eq ((Codec.sliceHeaders 32 ps ++ Codec.zeroBytes (24 * (8192 - i))).At A) = Eq ((Codec.sliceHeaders 32 ps).At A)
+      ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
+      ⋆ Eq ((Codec.zeroBytes 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
+      ⋆ Eq ((Codec.zeroBytes (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) := by
+  have hl := Codec.sliceHeaders_length 32 ps
+  rw [show Codec.zeroBytes (24 * (8192 - i)) = Codec.zeroBytes 8 ++ (Codec.zeroBytes 8 ++ (Codec.zeroBytes 8 ++ Codec.zeroBytes (24 * (8192 - (i + 1))))) by
+      simp only [Codec.zeroBytes, List.replicate_append_replicate]; congr 1; omega,
+    at_app _ _ (b := A + BitVec.ofNat 64 (24 * i)) (by rw [hl, hps]) (by simp [hl, hps]; omega),
+    at_app _ _ (b := A + BitVec.ofNat 64 (24 * i) + 8) (by simp) (by simp; omega),
+    at_app _ _ (b := A + BitVec.ofNat 64 (24 * i) + 16) (by simp; bv_omega) (by simp; omega),
+    at_app _ _ (b := A + BitVec.ofNat 64 (24 * i) + 24) (by simp; bv_omega) (by simp; omega)]
+  simp only [Std.ExtHashMap.sep_assoc]
+
+theorem Decode.array_join (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 8192) (hps : ps.length = i) :
+    Eq ((Codec.sliceHeaders 32 (ps ++ [p]) ++ Codec.zeroBytes (24 * (8192 - (i + 1)))).At A) = Eq ((Codec.sliceHeaders 32 ps).At A)
+      ⋆ Eq ((Int.toBytes 8 p.toInt).At (A + BitVec.ofNat 64 (24 * i)))
+      ⋆ Eq ((Int.toBytes 8 32).At (A + BitVec.ofNat 64 (24 * i) + 8))
+      ⋆ Eq ((Int.toBytes 8 32).At (A + BitVec.ofNat 64 (24 * i) + 16))
+      ⋆ Eq ((Codec.zeroBytes (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) := by
+  have hl := Codec.sliceHeaders_length 32 ps
+  rw [Codec.sliceHeaders_snoc, List.append_assoc, List.append_assoc, List.append_assoc,
+    at_app _ _ (b := A + BitVec.ofNat 64 (24 * i)) (by rw [hl, hps])
+      (by simp [hl, hps, Int.toBytes_length]; omega),
+    at_app _ _ (b := A + BitVec.ofNat 64 (24 * i) + 8) (by simp [Int.toBytes_length])
+      (by simp [Int.toBytes_length]; omega),
+    at_app _ _ (b := A + BitVec.ofNat 64 (24 * i) + 16) (by simp [Int.toBytes_length]; bv_omega)
+      (by simp [Int.toBytes_length]; omega),
+    at_app _ _ (b := A + BitVec.ofNat 64 (24 * i) + 24) (by simp [Int.toBytes_length]; bv_omega)
+      (by simp [Int.toBytes_length]; omega)]
+  simp only [Std.ExtHashMap.sep_assoc]
+
+end Prysm.HistoricalBatch

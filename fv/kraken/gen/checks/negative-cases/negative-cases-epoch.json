@@ -1,0 +1,95 @@
+[
+ {
+  "id": "epoch-decode-generated-accept-control",
+  "kind": "control",
+  "module": "Prysm/Epoch/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.Epoch.Decode.generated_accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S"
+ },
+ {
+  "id": "epoch-decode-generated-accept-code-cmp-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/Epoch/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.Epoch.Decode.generated_accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x9,%rcx"
+ },
+ {
+  "id": "epoch-decode-generated-accept-code-mov-rbx-to-0x8-rbx",
+  "kind": "code",
+  "module": "Prysm/Epoch/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.Epoch.Decode.generated_accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  mov (%rbx),%rcx",
+  "new": "  mov 0x8(%rbx),%rcx"
+ },
+ {
+  "id": "epoch-decode-generated-accept-code-mov-rax-to-0x8-rax",
+  "kind": "code",
+  "module": "Prysm/Epoch/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.Epoch.Decode.generated_accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "line": 47,
+  "old": "  mov %rcx,(%rax)",
+  "new": "  mov %rcx,0x8(%rax)"
+ },
+ {
+  "id": "epoch-decode-generated-accept-statement-rax-0-to-1",
+  "kind": "statement",
+  "module": "Prysm/Epoch/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.Epoch.Decode.generated_accept",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "epoch-decode-reject-size-control",
+  "kind": "control",
+  "module": "Prysm/Epoch/DecodeRejectSize.lean",
+  "theorem": "Prysm.Epoch.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S"
+ },
+ {
+  "id": "epoch-decode-reject-size-code-cmp-0x8-to-0x7",
+  "kind": "code",
+  "module": "Prysm/Epoch/DecodeRejectSize.lean",
+  "theorem": "Prysm.Epoch.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x7,%rcx"
+ },
+ {
+  "id": "epoch-decode-reject-size-code-mov-0x28-to-0x27",
+  "kind": "code",
+  "module": "Prysm/Epoch/DecodeRejectSize.lean",
+  "theorem": "Prysm.Epoch.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  mov $0x28,%ebx",
+  "new": "  mov $0x27,%ebx"
+ },
+ {
+  "id": "epoch-decode-reject-size-code-mov-0x2-to-0x1",
+  "kind": "code",
+  "module": "Prysm/Epoch/DecodeRejectSize.lean",
+  "theorem": "Prysm.Epoch.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  mov $0x2,%edi",
+  "new": "  mov $0x1,%edi"
+ },
+ {
+  "id": "epoch-decode-reject-size-statement-rax-none-to-none",
+  "kind": "statement",
+  "module": "Prysm/Epoch/DecodeRejectSize.lean",
+  "theorem": "Prysm.Epoch.Decode.reject_size",
+  "old": "st.data.regs.rax ≠ 0",
+  "new": "st.data.regs.rax = 0"
+ }
+]

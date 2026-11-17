@@ -1,0 +1,488 @@
+[
+ {
+  "id": "pow-block-decoder-accept-values-0",
+  "type": "v1alpha1.PowBlock",
+  "method": "UnmarshalSSZ",
+  "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1fc8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e70000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "BlockHash",
+     "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "ParentHash",
+     "bytes": "c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "TotalDifficulty",
+     "bytes": "0000000000000000000000000000000000000000000000000000000000000000",
+     "len": 32,
+     "cap": 32
+    }
+   ]
+  }
+ },
+ {
+  "id": "pow-block-decoder-accept-values-1",
+  "type": "v1alpha1.PowBlock",
+  "method": "UnmarshalSSZ",
+  "in": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e73930000000000000000000000000000000000000000000000000000000000080",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "BlockHash",
+     "bytes": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "ParentHash",
+     "bytes": "c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "TotalDifficulty",
+     "bytes": "3930000000000000000000000000000000000000000000000000000000000080",
+     "len": 32,
+     "cap": 32
+    }
+   ]
+  }
+ },
+ {
+  "id": "pow-block-decoder-accept-values-2",
+  "type": "v1alpha1.PowBlock",
+  "method": "UnmarshalSSZ",
+  "in": "02030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "BlockHash",
+     "bytes": "02030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "ParentHash",
+     "bytes": "c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "TotalDifficulty",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 32,
+     "cap": 32
+    }
+   ]
+  }
+ },
+ {
+  "id": "pow-block-decoder-reject-size-0",
+  "type": "v1alpha1.PowBlock",
+  "method": "UnmarshalSSZ",
+  "in": "",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "pow-block-decoder-reject-size-95",
+  "type": "v1alpha1.PowBlock",
+  "method": "UnmarshalSSZ",
+  "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "pow-block-decoder-reject-size-97",
+  "type": "v1alpha1.PowBlock",
+  "method": "UnmarshalSSZ",
+  "in": "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "pow-block-encoder-fast-path-values-0-prefix-0-spare-0",
+  "type": "v1alpha1.PowBlock",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockHash",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ParentHash",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "TotalDifficulty",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 96
+  },
+  "exp": {
+   "error": null,
+   "out": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 96,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pow-block-encoder-fast-path-values-0-prefix-0-spare-5",
+  "type": "v1alpha1.PowBlock",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockHash",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ParentHash",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "TotalDifficulty",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 101
+  },
+  "exp": {
+   "error": null,
+   "out": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 101,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pow-block-encoder-fast-path-values-0-prefix-7-spare-0",
+  "type": "v1alpha1.PowBlock",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockHash",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ParentHash",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "TotalDifficulty",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 103
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 103,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pow-block-encoder-fast-path-values-0-prefix-7-spare-5",
+  "type": "v1alpha1.PowBlock",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockHash",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ParentHash",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "TotalDifficulty",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 108
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 108,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pow-block-encoder-fast-path-values-1-prefix-0-spare-0",
+  "type": "v1alpha1.PowBlock",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockHash",
+    "bytes": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "ParentHash",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "TotalDifficulty",
+    "bytes": "000000000000000000000000f0debc9a78563412000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 96
+  },
+  "exp": {
+   "error": null,
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db000000000000000000000000f0debc9a78563412000000000000000000000000",
+   "same_array": true,
+   "out_cap": 96,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pow-block-encoder-fast-path-values-1-prefix-0-spare-5",
+  "type": "v1alpha1.PowBlock",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockHash",
+    "bytes": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "ParentHash",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "TotalDifficulty",
+    "bytes": "000000000000000000000000f0debc9a78563412000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 101
+  },
+  "exp": {
+   "error": null,
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db000000000000000000000000f0debc9a78563412000000000000000000000000",
+   "same_array": true,
+   "out_cap": 101,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pow-block-encoder-fast-path-values-1-prefix-7-spare-0",
+  "type": "v1alpha1.PowBlock",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockHash",
+    "bytes": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "ParentHash",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "TotalDifficulty",
+    "bytes": "000000000000000000000000f0debc9a78563412000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 103
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db000000000000000000000000f0debc9a78563412000000000000000000000000",
+   "same_array": true,
+   "out_cap": 103,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pow-block-encoder-fast-path-values-1-prefix-7-spare-5",
+  "type": "v1alpha1.PowBlock",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockHash",
+    "bytes": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "ParentHash",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "TotalDifficulty",
+    "bytes": "000000000000000000000000f0debc9a78563412000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 108
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db000000000000000000000000f0debc9a78563412000000000000000000000000",
+   "same_array": true,
+   "out_cap": 108,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pow-block-encoder-fast-path-values-2-prefix-0-spare-0",
+  "type": "v1alpha1.PowBlock",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockHash",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ParentHash",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "TotalDifficulty",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 96
+  },
+  "exp": {
+   "error": null,
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 96,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pow-block-encoder-fast-path-values-2-prefix-0-spare-5",
+  "type": "v1alpha1.PowBlock",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockHash",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ParentHash",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "TotalDifficulty",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 101
+  },
+  "exp": {
+   "error": null,
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 101,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pow-block-encoder-fast-path-values-2-prefix-7-spare-0",
+  "type": "v1alpha1.PowBlock",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockHash",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ParentHash",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "TotalDifficulty",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 103
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 103,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "pow-block-encoder-fast-path-values-2-prefix-7-spare-5",
+  "type": "v1alpha1.PowBlock",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockHash",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ParentHash",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "TotalDifficulty",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 108
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 108,
+   "receiver_unchanged": true
+  }
+ }
+]

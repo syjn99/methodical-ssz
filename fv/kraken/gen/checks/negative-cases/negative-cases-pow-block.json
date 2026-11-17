@@ -1,0 +1,209 @@
+[
+ {
+  "id": "pow-block-encode-generated-fast-spec-control",
+  "module": "Prysm/PowBlock/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PowBlock.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "pow-block-witness-generated-encode-fast-path-runs-empty-control",
+  "module": "Prysm/PowBlock/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PowBlock.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "pow-block-encode-generated-fast-statement-b2-64-to-72",
+  "module": "Prysm/PowBlock/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PowBlock.Encode.generated_fast",
+  "kind": "statement",
+  "old": "Eq (b2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 64))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 72))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "pow-block-encode-generated-fast-spec-statement-rbx-none-to-8",
+  "module": "Prysm/PowBlock/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PowBlock.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "pow-block-encode-generated-fast-spec-statement-hcap-96-to-88",
+  "module": "Prysm/PowBlock/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PowBlock.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 96 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 88 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "pow-block-witness-generated-encode-fast-path-runs-empty-statement-rax-0x10128-to-0x10130",
+  "module": "Prysm/PowBlock/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PowBlock.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x10128",
+  "new": "st.data.regs.rax = 0x10130"
+ },
+ {
+  "id": "pow-block-decode-generated-total-difficulty-segment-control",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_TotalDifficulty_segment",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pow-block-decode-generated-total-difficulty-segment-code-mov-0x20-to-0x18",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_TotalDifficulty_segment",
+  "kind": "code",
+  "line": 103,
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x18,%ecx",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pow-block-decode-generated-total-difficulty-segment-statement-h-src-64-to-56",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_TotalDifficulty_segment",
+  "kind": "statement",
+  "old": "(hSrc : bf + (64 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (56 : Int64).toBitVec = aSrc)"
+ },
+ {
+  "id": "pow-block-decode-generated-directive-118-code-mov-0x30-rdx-to-0x28-rdx",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_directive_118",
+  "kind": "code",
+  "old": "  mov %rsi,0x30(%rdx)",
+  "new": "  mov %rsi,0x28(%rdx)",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pow-block-decode-generated-field-2-control",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_field_2",
+  "kind": "control"
+ },
+ {
+  "id": "pow-block-decode-generated-parent-hash-segment-statement-h-src-32-to-24",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_ParentHash_segment",
+  "kind": "statement",
+  "old": "(hSrc : bf + (32 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (24 : Int64).toBitVec = aSrc)"
+ },
+ {
+  "id": "pow-block-decode-generated-field-3-statement-pc-119-to-118",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_field_3",
+  "kind": "statement",
+  "old": "st.pc = Host.addrOf (k + 119)",
+  "new": "st.pc = Host.addrOf (k + 118)"
+ },
+ {
+  "id": "pow-block-decode-generated-reject-control",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_reject",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pow-block-decode-generated-reject-statement-rbx-e1-to-e0",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_reject",
+  "kind": "statement",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "pow-block-decode-generated-head-code-cmp-0x60-to-0x68",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_head",
+  "kind": "code",
+  "old": "  cmp $0x60,%rcx",
+  "new": "  cmp $0x68,%rcx",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pow-block-ssz-value-spec-accepts-iff-control",
+  "module": "Prysm/PowBlock/Spec.lean",
+  "theorem": "Prysm.PowBlock.SszValue.spec_accepts_iff",
+  "kind": "control"
+ },
+ {
+  "id": "pow-block-ssz-value-spec-accepts-iff-statement-size-96-to-88",
+  "module": "Prysm/PowBlock/Spec.lean",
+  "theorem": "Prysm.PowBlock.SszValue.spec_accepts_iff",
+  "kind": "statement",
+  "old": "bs.size = 96",
+  "new": "bs.size = 88"
+ },
+ {
+  "id": "pow-block-decode-codec-checker-statement-deserialize-to-value-checker-to-to-value",
+  "module": "Prysm/PowBlock/Spec.lean",
+  "theorem": "Prysm.PowBlock.Decode.codec_checker",
+  "kind": "statement",
+  "old": "deserialize checkerDesc bs = .ok g.toValueChecker",
+  "new": "deserialize checkerDesc bs = .ok g.toValue"
+ },
+ {
+  "id": "pow-block-decode-reject-complete-statement-size-96-to-95",
+  "module": "Prysm/PowBlock/DecodeSpec.lean",
+  "theorem": "Prysm.PowBlock.Decode.reject_complete",
+  "kind": "statement",
+  "old": "bs.size ≠ 96 :=",
+  "new": "bs.size ≠ 95 :="
+ },
+ {
+  "id": "pow-block-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/PowBlock/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Witness.GeneratedDecodeAccept.runs",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "pow-block-witness-generated-decode-reject-size-runs-statement-hlen-96-to-97",
+  "module": "Prysm/PowBlock/WitnessGeneratedDecodeRejectSize.lean",
+  "theorem": "Prysm.PowBlock.Witness.GeneratedDecodeRejectSize.runs",
+  "kind": "statement",
+  "old": "(hlen : len ≠ 96)",
+  "new": "(hlen : len ≠ 97)"
+ },
+ {
+  "id": "pow-block-decode-generated-accept-kind-statement-bytes-32-to-48",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_accept_kind",
+  "kind": "statement",
+  "old": "[.bytes 32, .bytes 32, .bytes 32]",
+  "new": "[.bytes 48, .bytes 32, .bytes 32]"
+ },
+ {
+  "id": "pow-block-decode-generated-reject-statement-decode-reject-kind-any-frame-96-to-64",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_reject",
+  "kind": "statement",
+  "old": "decodeRejectKindAnyFrame h unmarshalSSZ 96 ",
+  "new": "decodeRejectKindAnyFrame h unmarshalSSZ 64 "
+ },
+ {
+  "id": "pow-block-decode-generated-field-1-statement-rax-32-to-48",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_field_1",
+  "kind": "statement",
+  "old": "Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 8))",
+  "new": "Eq ((Int.toBytes 8 48).At (s.regs.rax.toBitVec + 8))"
+ },
+ {
+  "id": "pow-block-decode-generated-accept-kind-statement-state-word-false-to-true",
+  "module": "Prysm/PowBlock/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PowBlock.Decode.generated_accept_kind",
+  "kind": "statement",
+  "old": "0 false [.fixed 24, .low]",
+  "new": "0 true [.fixed 24, .low]"
+ }
+]

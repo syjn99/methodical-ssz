@@ -1,0 +1,74 @@
+[
+ {
+  "id": "validator-index-decoder-accept-values-0",
+  "type": "primitives.ValidatorIndex",
+  "method": "UnmarshalSSZ",
+  "in": "0000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "value",
+     "uint64": 0
+    }
+   ]
+  }
+ },
+ {
+  "id": "validator-index-decoder-accept-values-1",
+  "type": "primitives.ValidatorIndex",
+  "method": "UnmarshalSSZ",
+  "in": "efcdab8967452301",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "value",
+     "uint64": 81985529216486895
+    }
+   ]
+  }
+ },
+ {
+  "id": "validator-index-decoder-accept-values-2",
+  "type": "primitives.ValidatorIndex",
+  "method": "UnmarshalSSZ",
+  "in": "ffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "value",
+     "uint64": 18446744073709551615
+    }
+   ]
+  }
+ },
+ {
+  "id": "validator-index-decoder-reject-size-0",
+  "type": "primitives.ValidatorIndex",
+  "method": "UnmarshalSSZ",
+  "in": "",
+  "exp": {
+   "error": {}
+  }
+ },
+ {
+  "id": "validator-index-decoder-reject-size-7",
+  "type": "primitives.ValidatorIndex",
+  "method": "UnmarshalSSZ",
+  "in": "01010101010101",
+  "exp": {
+   "error": {}
+  }
+ },
+ {
+  "id": "validator-index-decoder-reject-size-9",
+  "type": "primitives.ValidatorIndex",
+  "method": "UnmarshalSSZ",
+  "in": "010101010101010101",
+  "exp": {
+   "error": {}
+  }
+ }
+]

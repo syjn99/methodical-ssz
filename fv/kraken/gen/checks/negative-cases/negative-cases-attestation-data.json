@@ -1,0 +1,253 @@
+[
+ {
+  "id": "attestation-data-ssz-value-spec-accepts-iff-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/Spec.lean",
+  "theorem": "Prysm.AttestationData.SszValue.spec_accepts_iff"
+ },
+ {
+  "id": "attestation-data-ssz-value-spec-accepts-iff-statement-size-128-to-127",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/Spec.lean",
+  "theorem": "Prysm.AttestationData.SszValue.spec_accepts_iff",
+  "old": "↔ bs.size = 128",
+  "new": "↔ bs.size = 127"
+ },
+ {
+  "id": "attestation-data-desc-serialize-checker-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/SpecEquivalence.lean",
+  "theorem": "Prysm.AttestationData.desc_serialize_checker"
+ },
+ {
+  "id": "attestation-data-desc-serialize-checker-statement-checker-desc-field-0-to-uint-4",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/SpecEquivalence.lean",
+  "theorem": "Prysm.AttestationData.desc_serialize_checker",
+  "old": "serialize checkerDesc v",
+  "new": "serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 0 (.uint 4)) | x => x) v"
+ },
+ {
+  "id": "attestation-data-desc-deserialize-checker-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/SpecEquivalence.lean",
+  "theorem": "Prysm.AttestationData.desc_deserialize_checker"
+ },
+ {
+  "id": "attestation-data-desc-deserialize-checker-statement-deserialize-checker-desc-to-prysm-checkpoint-desc",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/SpecEquivalence.lean",
+  "theorem": "Prysm.AttestationData.desc_deserialize_checker",
+  "old": "deserialize checkerDesc bs = .ok v",
+  "new": "deserialize Prysm.Checkpoint.desc bs = .ok v"
+ },
+ {
+  "id": "attestation-data-decode-head-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/DecodeAcceptHead.lean",
+  "theorem": "Prysm.AttestationData.Decode.head",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "attestation-data-decode-head-code-cmp-0x80-to-0x81",
+  "kind": "code",
+  "module": "Prysm/AttestationData/DecodeAcceptHead.lean",
+  "theorem": "Prysm.AttestationData.Decode.head",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  cmp $0x80,%rcx",
+  "new": "  cmp $0x81,%rcx",
+  "note": "length check against 129: the accept branch is not taken"
+ },
+ {
+  "id": "attestation-data-decode-head-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/AttestationData/DecodeAcceptHead.lean",
+  "theorem": "Prysm.AttestationData.Decode.head",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  mov $0x8,%ecx",
+  "new": "  mov $0x9,%ecx",
+  "line": 17,
+  "note": "Slot called with len 9: Prysm.Slot.Decode.accept_function_spec premise rcx = 8 fails"
+ },
+ {
+  "id": "attestation-data-decode-head-code-add-0x10-to-0x18",
+  "kind": "code",
+  "module": "Prysm/AttestationData/DecodeAcceptHead.lean",
+  "theorem": "Prysm.AttestationData.Decode.head",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  add $0x10,%rax",
+  "new": "  add $0x18,%rax",
+  "note": "CommitteeIndex decoded into the Root.ptr word"
+ },
+ {
+  "id": "attestation-data-decode-block-root-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/DecodeAcceptBlockRoot.lean",
+  "theorem": "Prysm.AttestationData.Decode.block_root",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "attestation-data-decode-block-root-code-add-0x10-to-0x18",
+  "kind": "code",
+  "module": "Prysm/AttestationData/DecodeAcceptBlockRoot.lean",
+  "theorem": "Prysm.AttestationData.Decode.block_root",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  add $0x10,%rbx",
+  "new": "  add $0x18,%rbx",
+  "note": "Root copied from buf[24:56]"
+ },
+ {
+  "id": "attestation-data-decode-block-root-code-movq-0x20-to-0x21",
+  "kind": "code",
+  "module": "Prysm/AttestationData/DecodeAcceptBlockRoot.lean",
+  "theorem": "Prysm.AttestationData.Decode.block_root",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  movq $0x20,0x28(%rdx)",
+  "new": "  movq $0x21,0x28(%rdx)",
+  "line": 110,
+  "note": "Root.cap = 33 after the copy"
+ },
+ {
+  "id": "attestation-data-decode-source-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/DecodeAcceptSource.lean",
+  "theorem": "Prysm.AttestationData.Decode.source",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "attestation-data-decode-source-code-mov-0x30-rdx-to-0x40-rdx",
+  "kind": "code",
+  "module": "Prysm/AttestationData/DecodeAcceptSource.lean",
+  "theorem": "Prysm.AttestationData.Decode.source",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  mov %rax,0x30(%rdx)",
+  "new": "  mov %rax,0x40(%rdx)",
+  "note": "Source pointer stored into unknownFields"
+ },
+ {
+  "id": "attestation-data-decode-source-code-add-0x30-to-0x38",
+  "kind": "code",
+  "module": "Prysm/AttestationData/DecodeAcceptSource.lean",
+  "theorem": "Prysm.AttestationData.Decode.source",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  add $0x30,%rbx",
+  "new": "  add $0x38,%rbx",
+  "note": "Source decoded from buf[56:96]"
+ },
+ {
+  "id": "attestation-data-decode-target-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/DecodeAcceptTarget.lean",
+  "theorem": "Prysm.AttestationData.Decode.target",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "attestation-data-decode-target-code-mov-0x38-rdx-to-0x30-rdx",
+  "kind": "code",
+  "module": "Prysm/AttestationData/DecodeAcceptTarget.lean",
+  "theorem": "Prysm.AttestationData.Decode.target",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  mov %rax,0x38(%rdx)",
+  "new": "  mov %rax,0x30(%rdx)",
+  "note": "Target pointer stored into the Source field"
+ },
+ {
+  "id": "attestation-data-decode-target-code-je-to-jne",
+  "kind": "code",
+  "module": "Prysm/AttestationData/DecodeAcceptTarget.lean",
+  "theorem": "Prysm.AttestationData.Decode.target",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_3a7",
+  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_3a7",
+  "note": "nil error from the Target callee goes to the wrap path"
+ },
+ {
+  "id": "attestation-data-decode-reject-size-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/DecodeRejectSize.lean",
+  "theorem": "Prysm.AttestationData.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "attestation-data-decode-reject-size-code-mov-ssz-err-size-8-rip-to-ssz-err-size-rip",
+  "kind": "code",
+  "module": "Prysm/AttestationData/DecodeRejectSize.lean",
+  "theorem": "Prysm.AttestationData.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  mov ssz.ErrSize+8(%rip),%rbx",
+  "new": "  mov ssz.ErrSize(%rip),%rbx",
+  "note": "second error word read from the first"
+ },
+ {
+  "id": "attestation-data-decode-accept-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/DecodeAccept.lean",
+  "theorem": "Prysm.AttestationData.Decode.accept"
+ },
+ {
+  "id": "attestation-data-decode-accept-statement-heap-240-to-232",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/DecodeAccept.lean",
+  "theorem": "Prysm.AttestationData.Decode.accept",
+  "old": "⋆ Heap (avail - 240)",
+  "new": "⋆ Heap (avail - 232)",
+  "note": "the decoder takes 240 heap bytes (32 + 2 × (72 + 32))"
+ },
+ {
+  "id": "attestation-data-decode-accept-statement-in0-in0-to-in1",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/DecodeAccept.lean",
+  "theorem": "Prysm.AttestationData.Decode.accept",
+  "old": "⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))",
+  "new": "⋆ Eq (in1.At (s.regs.rax.toBitVec + 8))",
+  "note": "Slot field = buf[0:8], not buf[8:16]"
+ },
+ {
+  "id": "attestation-data-decode-accept-statement-se-se-to-te",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/DecodeAccept.lean",
+  "theorem": "Prysm.AttestationData.Decode.accept",
+  "old": "⋆ Eq (se.At (ps + 8))",
+  "new": "⋆ Eq (te.At (ps + 8))",
+  "note": "Source.Epoch = buf[48:56], not the Target epoch"
+ },
+ {
+  "id": "attestation-data-decode-accept-statement-hms-makeslice-contract-heap-elf-data-to-true",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/DecodeAccept.lean",
+  "theorem": "Prysm.AttestationData.Decode.accept",
+  "old": "(hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S)",
+  "new": "(hms : True) (hmm : MemmoveContract S)",
+  "note": "the Checkpoint callee's makeslice hypothesis keeps its name with type True; without it Prysm.Checkpoint.Decode.accept_function_spec cannot be discharged"
+ },
+ {
+  "id": "attestation-data-decode-accept-spec-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/DecodeSpec.lean",
+  "theorem": "Prysm.AttestationData.Decode.accept_spec"
+ },
+ {
+  "id": "attestation-data-decode-accept-spec-statement-hlen-none-to-1",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/DecodeSpec.lean",
+  "theorem": "Prysm.AttestationData.Decode.accept_spec",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)",
+  "note": "rcx must be the input length 128"
+ }
+]

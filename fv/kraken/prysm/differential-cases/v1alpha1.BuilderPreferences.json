@@ -1,0 +1,266 @@
+[
+ {
+  "id": "builder-preferences-encoder-fast-path-values-0-prefix-0-spare-0",
+  "type": "v1alpha1.BuilderPreferences",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "MaxExecutionPayment",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 8
+  },
+  "exp": {
+   "error": null,
+   "out": "0000000000000000",
+   "same_array": true,
+   "out_cap": 8,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-preferences-encoder-fast-path-values-0-prefix-0-spare-5",
+  "type": "v1alpha1.BuilderPreferences",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "MaxExecutionPayment",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 13
+  },
+  "exp": {
+   "error": null,
+   "out": "0000000000000000",
+   "same_array": true,
+   "out_cap": 13,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-preferences-encoder-fast-path-values-0-prefix-7-spare-0",
+  "type": "v1alpha1.BuilderPreferences",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "MaxExecutionPayment",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 15
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a60000000000000000",
+   "same_array": true,
+   "out_cap": 15,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-preferences-encoder-fast-path-values-0-prefix-7-spare-5",
+  "type": "v1alpha1.BuilderPreferences",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "MaxExecutionPayment",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 20
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a60000000000000000",
+   "same_array": true,
+   "out_cap": 20,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-preferences-encoder-fast-path-values-1-prefix-0-spare-0",
+  "type": "v1alpha1.BuilderPreferences",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "MaxExecutionPayment",
+    "uint64": 81985529216486895
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 8
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301",
+   "same_array": true,
+   "out_cap": 8,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-preferences-encoder-fast-path-values-1-prefix-0-spare-5",
+  "type": "v1alpha1.BuilderPreferences",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "MaxExecutionPayment",
+    "uint64": 81985529216486895
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 13
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301",
+   "same_array": true,
+   "out_cap": 13,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-preferences-encoder-fast-path-values-1-prefix-7-spare-0",
+  "type": "v1alpha1.BuilderPreferences",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "MaxExecutionPayment",
+    "uint64": 81985529216486895
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 15
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab8967452301",
+   "same_array": true,
+   "out_cap": 15,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-preferences-encoder-fast-path-values-1-prefix-7-spare-5",
+  "type": "v1alpha1.BuilderPreferences",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "MaxExecutionPayment",
+    "uint64": 81985529216486895
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 20
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab8967452301",
+   "same_array": true,
+   "out_cap": 20,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-preferences-encoder-fast-path-values-2-prefix-0-spare-0",
+  "type": "v1alpha1.BuilderPreferences",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "MaxExecutionPayment",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 8
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 8,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-preferences-encoder-fast-path-values-2-prefix-0-spare-5",
+  "type": "v1alpha1.BuilderPreferences",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "MaxExecutionPayment",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 13
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 13,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-preferences-encoder-fast-path-values-2-prefix-7-spare-0",
+  "type": "v1alpha1.BuilderPreferences",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "MaxExecutionPayment",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 15
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 15,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-preferences-encoder-fast-path-values-2-prefix-7-spare-5",
+  "type": "v1alpha1.BuilderPreferences",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "MaxExecutionPayment",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 20
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 20,
+   "receiver_unchanged": true
+  }
+ }
+]

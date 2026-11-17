@@ -1,0 +1,70 @@
+import Prysm.DataColumnsByRootIdentifier.DecodeThenEncodeSpec
+import Prysm.DataColumnsByRootIdentifier.SpecDecodeBridge
+import Prysm.DataColumnsByRootIdentifier.SpecEquivalence
+import Prysm.DataColumnsByRootIdentifier.EncodeLoopGrowAnySite
+import Prysm.DataColumnsByRootIdentifier.EncodeTailGrow
+import Prysm.DataColumnsByRootIdentifier.EncodeGrowOneSite
+import Prysm.DataColumnsByRootIdentifier.EncodeSpecGrowOneSite
+import Prysm.DataColumnsByRootIdentifier.DecodeRejectSize
+import Prysm.DataColumnsByRootIdentifier.DecodeLoop
+import Prysm.DataColumnsByRootIdentifier.DecodeAccept
+import Prysm.DataColumnsByRootIdentifier.DecodeSpecAccept
+import Prysm.DataColumnsByRootIdentifier.DecodeThenEncode
+import Prysm.DataColumnsByRootIdentifier.WitnessDecodeAccept
+import Prysm.DataColumnsByRootIdentifier.WitnessDecodeRejectSize
+import Prysm.DataColumnsByRootIdentifier.EncodeFastPath
+import Prysm.DataColumnsByRootIdentifier.EncodeGrowFirstSite
+import Prysm.DataColumnsByRootIdentifier.EncodeRejectLength
+import Prysm.DataColumnsByRootIdentifier.EncodeSpec
+import Prysm.DataColumnsByRootIdentifier.EncodeSpecGrowFirstSite
+import Prysm.DataColumnsByRootIdentifier.Spec
+import Prysm.DataColumnsByRootIdentifier.EncodeLoop
+import Prysm.DataColumnsByRootIdentifier.EncodeTail
+import Prysm.DataColumnsByRootIdentifier.WitnessEncodeFastPath
+import Prysm.DataColumnsByRootIdentifier.WitnessEncodeGrowFirstSite
+import Prysm.DataColumnsByRootIdentifier.WitnessEncodeRejectLength
+
+/-! Hand list of the `DataColumnsByRootIdentifier` declarations for `gen/checks/axioms_gate.py`.
+Each name must be in the declaration dump and use only the standard axioms. -/
+
+#print axioms Prysm.DataColumnsByRootIdentifier.DecodeThenEncode.round_trip_spec
+#print axioms Prysm.DataColumnsByRootIdentifier.DecodeThenEncode.round_trip_spec'
+#print axioms Prysm.DataColumnsByRootIdentifier.encode_roundtrip
+#print axioms Prysm.DataColumnsByRootIdentifier.spec_accepts_iff
+#print axioms Prysm.DataColumnsByRootIdentifier.desc_deserialize_checker
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.grow_iter
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.grow_loop
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.grow_tail
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.grow_one_site
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.grow_one_site_spec
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_size
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_offset
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.iter
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.loop
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.accept
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.accept_spec
+#print axioms Prysm.DataColumnsByRootIdentifier.DecodeThenEncode.round_trip_scratch_bounded
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.DecodeAccept.runs
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.DecodeRejectSize.RejectSize.runs
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.DecodeRejectSize.RejectOffset.runs
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.fast_path
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.grow_first_site
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.reject_length
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.reject_too_big
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.fast_path_spec
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.grow_first_site_spec
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.reject_length_spec
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.reject_too_big_spec
+#print axioms Prysm.DataColumnsByRootIdentifier.toValue_serialize
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.iter
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.exit
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.loop
+#print axioms Prysm.DataColumnsByRootIdentifier.Encode.tail_fit
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.EncodeFastPath.runs_empty
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.EncodeFastPath.runs_one_element
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.EncodeFastPath.runs_maximum
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.EncodeGrowFirstSite.runs_empty
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.EncodeGrowFirstSite.runs_one_element
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.EncodeGrowFirstSite.runs_maximum
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.EncodeRejectLength.RejectLength.runs
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.EncodeRejectLength.RejectTooBig.runs

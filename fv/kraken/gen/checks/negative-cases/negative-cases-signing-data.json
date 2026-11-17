@@ -1,0 +1,109 @@
+[
+ {
+  "id": "signing-data-encode-generated-fast-spec-control",
+  "module": "Prysm/SigningData/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.SigningData.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "signing-data-witness-generated-encode-fast-path-runs-empty-control",
+  "module": "Prysm/SigningData/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.SigningData.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "signing-data-encode-generated-fast-statement-b1-32-to-40",
+  "module": "Prysm/SigningData/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.SigningData.Encode.generated_fast",
+  "kind": "statement",
+  "old": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 32))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "signing-data-encode-generated-fast-spec-statement-rbx-none-to-8",
+  "module": "Prysm/SigningData/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.SigningData.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "signing-data-encode-generated-fast-spec-statement-hcap-64-to-56",
+  "module": "Prysm/SigningData/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.SigningData.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 64 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 56 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "signing-data-witness-generated-encode-fast-path-runs-empty-statement-rax-0x100f0-to-0x100f8",
+  "module": "Prysm/SigningData/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.SigningData.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x100f0",
+  "new": "st.data.regs.rax = 0x100f8"
+ },
+ {
+  "id": "signing-data-decode-generated-accept-control",
+  "module": "Prysm/SigningData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SigningData.Decode.generated_accept",
+  "kind": "control"
+ },
+ {
+  "id": "signing-data-decode-accept-spec-control",
+  "module": "Prysm/SigningData/DecodeSpec.lean",
+  "theorem": "Prysm.SigningData.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "signing-data-decode-generated-accept-statement-fv0-fv0-to-fv1",
+  "module": "Prysm/SigningData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SigningData.Decode.generated_accept",
+  "kind": "statement",
+  "old": "⋆ Eq (fv0.At p1)",
+  "new": "⋆ Eq (fv1.At p1)"
+ },
+ {
+  "id": "signing-data-decode-accept-spec-statement-g-object-root-to-domain",
+  "module": "Prysm/SigningData/DecodeSpec.lean",
+  "theorem": "Prysm.SigningData.Decode.accept_spec",
+  "kind": "statement",
+  "old": "⋆ Eq (g.objectRoot.toArray.toList.At p1)",
+  "new": "⋆ Eq (g.domain.toArray.toList.At p1)"
+ },
+ {
+  "id": "signing-data-decode-generated-reject-statement-hlen-64-to-63",
+  "module": "Prysm/SigningData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SigningData.Decode.generated_reject",
+  "kind": "statement",
+  "old": "(hlen : s.regs.rcx ≠ 64)",
+  "new": "(hlen : s.regs.rcx ≠ 63)"
+ },
+ {
+  "id": "signing-data-decode-generated-reject-code-add-0x20-to-0x18",
+  "module": "Prysm/SigningData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SigningData.Decode.generated_reject",
+  "kind": "code",
+  "line": 92,
+  "old": "  add $0x20,%rsp",
+  "new": "  add $0x18,%rsp",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "signing-data-decode-reject-complete-statement-size-64-to-65",
+  "module": "Prysm/SigningData/DecodeSpec.lean",
+  "theorem": "Prysm.SigningData.Decode.reject_complete",
+  "kind": "statement",
+  "old": "bs.size ≠ 64 := fun",
+  "new": "bs.size ≠ 65 := fun"
+ },
+ {
+  "id": "signing-data-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/SigningData/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.SigningData.Witness.GeneratedDecodeAccept.runs",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0)"
+ }
+]

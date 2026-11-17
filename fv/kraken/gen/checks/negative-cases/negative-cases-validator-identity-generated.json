@@ -1,0 +1,70 @@
+[
+ {
+  "id": "validator-identity-decode-accept-spec-control",
+  "module": "Prysm/ValidatorIdentity/DecodeSpec.lean",
+  "theorem": "Prysm.ValidatorIdentity.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "validator-identity-decode-generated-accept-statement-rax-0-to-1",
+  "module": "Prysm/ValidatorIdentity/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.ValidatorIdentity.Decode.generated_accept",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "validator-identity-decode-generated-reject-statement-rax-e0-to-e1",
+  "module": "Prysm/ValidatorIdentity/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.ValidatorIdentity.Decode.generated_reject",
+  "kind": "statement",
+  "old": "st.data.regs.rax = e0",
+  "new": "st.data.regs.rax = e1"
+ },
+ {
+  "id": "validator-identity-decode-accept-spec-statement-hlen-none-to-1",
+  "module": "Prysm/ValidatorIdentity/DecodeSpec.lean",
+  "theorem": "Prysm.ValidatorIdentity.Decode.accept_spec",
+  "kind": "statement",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
+ },
+ {
+  "id": "validator-identity-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/ValidatorIdentity/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.ValidatorIdentity.Witness.GeneratedDecodeAccept.runs",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "validator-identity-encode-generated-fast-spec-control",
+  "module": "Prysm/ValidatorIdentity/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.ValidatorIdentity.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "validator-identity-encode-generated-fast-statement-rax-rbx-to-rcx",
+  "module": "Prysm/ValidatorIdentity/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIdentity.Encode.generated_fast",
+  "kind": "statement",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "validator-identity-encode-generated-fast-spec-statement-hcap-64-to-56",
+  "module": "Prysm/ValidatorIdentity/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.ValidatorIdentity.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 64 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 56 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "validator-identity-witness-generated-encode-fast-path-runs-empty-statement-rax-0x10140-to-0x8",
+  "module": "Prysm/ValidatorIdentity/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIdentity.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x10140",
+  "new": "st.data.regs.rax = 0x8"
+ }
+]

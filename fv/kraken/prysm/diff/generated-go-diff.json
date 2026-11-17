@@ -1,0 +1,362 @@
+{
+ "schema": "fv.kraken.gendiff/1",
+ "rules": [
+  {
+   "commit": "babb30c",
+   "title": "drop unreachable first-offset bound check"
+  },
+  {
+   "commit": "babb30c",
+   "title": "drop unreachable first-offset bound check (diff aligned one line earlier)"
+  },
+  {
+   "commit": "97e7449",
+   "title": "ValidateBitvector on marshal"
+  },
+  {
+   "commit": "97e7449",
+   "title": "ValidateBitvector on unmarshal"
+  },
+  {
+   "commit": "7fac9c5",
+   "title": "Bitlist marshal length in bits (ValidateBitlist)"
+  },
+  {
+   "commit": "97e7449",
+   "title": "ValidateBitvector on marshal replaces the byte length check"
+  },
+  {
+   "commit": "7fac9c5",
+   "title": "ValidateProgressiveBitlist on marshal"
+  },
+  {
+   "commit": "28a2bd3",
+   "title": "byte list ssz-max check on unmarshal"
+  }
+ ],
+ "files": [
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/altair.ssz.go",
+   "identical": false,
+   "blocks": 8,
+   "classified": 8,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 4,
+    "97e7449": 2,
+    "28a2bd3": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/bellatrix.ssz.go",
+   "identical": false,
+   "blocks": 11,
+   "classified": 11,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 7,
+    "97e7449": 2,
+    "28a2bd3": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/capella.ssz.go",
+   "identical": false,
+   "blocks": 18,
+   "classified": 18,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 14,
+    "97e7449": 2,
+    "28a2bd3": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/deneb.ssz.go",
+   "identical": false,
+   "blocks": 21,
+   "classified": 21,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 17,
+    "97e7449": 2,
+    "28a2bd3": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/electra.ssz.go",
+   "identical": false,
+   "blocks": 24,
+   "classified": 24,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 19,
+    "7fac9c5": 1,
+    "97e7449": 2,
+    "28a2bd3": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/engine/v1/engine.ssz.go",
+   "identical": false,
+   "blocks": 24,
+   "classified": 24,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 13,
+    "28a2bd3": 11
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/fulu.ssz.go",
+   "identical": false,
+   "blocks": 18,
+   "classified": 18,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 11,
+    "97e7449": 2,
+    "28a2bd3": 2,
+    "7fac9c5": 3
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/gloas.ssz.go",
+   "identical": false,
+   "blocks": 34,
+   "classified": 34,
+   "unclassified": 0,
+   "per_commit": {
+    "7fac9c5": 2,
+    "babb30c": 25,
+    "97e7449": 2,
+    "28a2bd3": 5
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/heze.ssz.go",
+   "identical": false,
+   "blocks": 13,
+   "classified": 13,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 9,
+    "97e7449": 2,
+    "28a2bd3": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/non-core.ssz.go",
+   "identical": false,
+   "blocks": 8,
+   "classified": 8,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 4,
+    "97e7449": 4
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/phase0.ssz.go",
+   "identical": false,
+   "blocks": 14,
+   "classified": 14,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 10,
+    "7fac9c5": 2,
+    "97e7449": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/altair.minimal.ssz.go",
+   "identical": false,
+   "blocks": 8,
+   "classified": 8,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 4,
+    "97e7449": 2,
+    "28a2bd3": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/bellatrix.minimal.ssz.go",
+   "identical": false,
+   "blocks": 11,
+   "classified": 11,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 7,
+    "97e7449": 2,
+    "28a2bd3": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/capella.minimal.ssz.go",
+   "identical": false,
+   "blocks": 18,
+   "classified": 18,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 14,
+    "97e7449": 2,
+    "28a2bd3": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/deneb.minimal.ssz.go",
+   "identical": false,
+   "blocks": 21,
+   "classified": 21,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 17,
+    "97e7449": 2,
+    "28a2bd3": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/electra.minimal.ssz.go",
+   "identical": false,
+   "blocks": 26,
+   "classified": 26,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 19,
+    "97e7449": 4,
+    "7fac9c5": 1,
+    "28a2bd3": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/engine/v1/engine.minimal.ssz.go",
+   "identical": false,
+   "blocks": 24,
+   "classified": 24,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 13,
+    "28a2bd3": 11
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/fulu.minimal.ssz.go",
+   "identical": false,
+   "blocks": 18,
+   "classified": 18,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 11,
+    "97e7449": 2,
+    "28a2bd3": 2,
+    "7fac9c5": 3
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/gloas.minimal.ssz.go",
+   "identical": false,
+   "blocks": 36,
+   "classified": 36,
+   "unclassified": 0,
+   "per_commit": {
+    "97e7449": 4,
+    "7fac9c5": 2,
+    "babb30c": 25,
+    "28a2bd3": 5
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/heze.minimal.ssz.go",
+   "identical": false,
+   "blocks": 13,
+   "classified": 13,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 9,
+    "97e7449": 2,
+    "28a2bd3": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/non-core.minimal.ssz.go",
+   "identical": false,
+   "blocks": 8,
+   "classified": 8,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 4,
+    "97e7449": 4
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/phase0.minimal.ssz.go",
+   "identical": false,
+   "blocks": 14,
+   "classified": 14,
+   "unclassified": 0,
+   "per_commit": {
+    "babb30c": 10,
+    "7fac9c5": 2,
+    "97e7449": 2
+   },
+   "unclassified_blocks": []
+  }
+ ],
+ "totals": {
+  "files": 22,
+  "identical_files": 0,
+  "blocks": 390,
+  "classified": 390,
+  "unclassified": 0,
+  "per_commit": {
+   "28a2bd3": 60,
+   "7fac9c5": 16,
+   "97e7449": 48,
+   "babb30c": 266
+  }
+ }
+}
