@@ -142,6 +142,8 @@ What you make, in this order:
    Give the companion `spec` in a row of the type in `gen/generator/types.tsv` (step 5).
    Add the fields to the tables `SPEC_TYPES` and `descnames` of the tool.
    Add the type to `DESC_FROM_CONSENSUS_SPECS` when its `SpecDescription.lean` is written from consensus-specs.
+   Add it to `DESC_FROM_PRYSM_PROTO` when it is written from the Prysm proto definition.
+   The tool stops with a message for a type in neither set.
    Then run `python3 -I -B gen/flat-types/flat_types_spec.py lean` from `fv/kraken`.
 
 What checks it: the build of these modules, and the axioms gate (step 7).
@@ -214,7 +216,11 @@ The files of ValidatorIndex are the model:
 Slot and CommitteeIndex have no `DecodeRejectSize.lean` and no `WitnessDecodeRejectSize.lean` (`FINDINGS.md`).
 
 What checks it: `gen/generator/kindcheck.py` (step 7).
-It recomputes the kind parameters from the `.S` file and the IR.
+For a `decoder --whole-accept` or `encoder --fast-path` file, it recomputes the kind parameters from the `.S` file and the IR.
+For a `uint64` file, it does not recompute parameters.
+The kind `Codec.uint64DecodeAcceptKind` has only the code constant as parameter.
+`kindcheck.py` checks that `Decode.generated_accept_kind` names this kind, the code constant of the theorem and the fixed proof line.
+The proof checks the code itself, through its code facts (`gen/README.md` section 4).
 
 ## 6. The proofs that the generator does not write
 
@@ -230,13 +236,14 @@ What you make:
 
 A tool writes a file of this list for a type when a row of the type names the companion of the file.
 A person writes the file for a type without the companion.
+`FINDINGS.md`, entry "Some companion files of generated types are written by a person", gives these types and the reasons.
 `flat_types_encode_spec.py` writes the encoder files of every row with `encode-spec`, also for the types with hand decoder files.
 To use a tool, add the companion to the `companions` column of the row, and add the data of the type to the tool.
 A tool stops with a message that names the type when the type has no entry in its data.
 
 | Companion | Tool | Row | The data of the type in the tool |
 | --- | --- | --- | --- |
-| `spec` | `gen/flat-types/flat_types_spec.py` (`Spec.lean`, step 4) | One row of the type | `SPEC_TYPES` and `descnames`: the fields and their `Desc` names. `DESC_FROM_CONSENSUS_SPECS`: the source of the `Desc`. The decoder and witness tools read `SPEC_TYPES` too |
+| `spec` | `gen/flat-types/flat_types_spec.py` (`Spec.lean`, step 4) | One row of the type | `SPEC_TYPES` and `descnames`: the fields and their `Desc` names. `DESC_FROM_CONSENSUS_SPECS` and `DESC_FROM_PRYSM_PROTO`: the source of the `Desc`. The decoder and witness tools read `SPEC_TYPES` too |
 | `decode-spec` | `gen/flat-types/flat_types_decode_spec.py` | The `decoder --whole-accept` row | None |
 | `reject-witness` | `gen/flat-types/flat_types_witness.py` (`WitnessGeneratedDecodeRejectSize.lean`) | The `decoder --whole-accept` row | None |
 | `accept-witness` | `gen/flat-types/flat_types_witness.py` (`WitnessGeneratedDecodeAccept.lean`) | The `decoder --whole-accept` row | `FRAME_FORM`, and the tables `gsize`, `callees`, `Fr` and `lsave` of `accbytes` for its forms |

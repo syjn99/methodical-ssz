@@ -372,6 +372,32 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   For the other types, only the kind and `gen/generator/kindcheck.py` check the generated statement.
 - Where: `lean/Prysm/<GoTypeName>/EncodeFastPathStatements.lean` and `EncodeFastPathStatementTie.lean`.
 
+### Some companion files of generated types are written by a person
+
+- What does not hold: a tool of `gen/flat-types/` writes a file only for a row with the companion of the file.
+  The rows are in `gen/generator/types.tsv`.
+  For some types with a generated decoder or encoder, a person writes `DecodeSpec.lean`, `Spec.lean` or `WitnessGeneratedDecodeAccept.lean`.
+  The rules and the types:
+  - `DecodeSpec.lean` of BeaconBlockHeader, Eth1Data, BlobIdentifier, DepositMessage, Deposit_Data, PendingDeposit and SyncCommitteeMessage.
+    The hand `Decode.accept_spec` writes a byte field as `g.<field>.toList`.
+    `flat_types_decode_spec.py` writes `g.<field>.toArray.toList`, and other binder names.
+    Lean accepts the hand theorem as a proof of the tool statement, so the two statements are equal by definition.
+    They are not equal by `with_reducible rfl`, because `Vector.toList` must unfold.
+  - `Spec.lean` of HistoricalSummary and SigningData: these types have no uint64 field.
+    The text of `flat_types_spec.py` for a type without a uint64 field does not build.
+  - `Spec.lean`, `DecodeSpec.lean` and `WitnessGeneratedDecodeRejectSize.lean` of PowBlock: its field `totalDifficulty` is a `Fin (2 ^ 256)`.
+    The table `SPEC_TYPES` of `flat_types_spec.py` has no field kind for it, and the three tools read that table.
+  - `Spec.lean` of Checkpoint: other modules use declarations that the tool does not write.
+    An example is `Prysm.Checkpoint.SszValue.toValue_surjective` in `lean/Prysm/AttestationData/Spec.lean`.
+  - `WitnessGeneratedDecodeAccept.lean` of the `decoder --whole-accept` rows without the companion `accept-witness`.
+    These types are BeaconBlockHeader, Eth1Data, BlobIdentifier, DepositMessage, SyncCommitteeMessage, PendingConsolidation, PowBlock, HistoricalSummary, SigningData, ValidatorBalance and VoluntaryExit.
+    The memory block or the program of the hand witness differs from the forms of `flat_types_witness.py`.
+    For example, the witness of ValidatorBalance calls ValidatorIndex, and the form `frame_0x38` calls Slot.
+  - `WitnessGeneratedDecodeAccept.lean` of the `uint64` rows (ValidatorIndex, Epoch, Slot and CommitteeIndex): `flat_types_witness.py` has no form for the `uint64` decoder.
+- Effect: `gen/checks/regenerate_and_compare.py` does not compare these files with a tool output.
+  The build and the axioms gate check them, and a reviewer reads them.
+- Where: `lean/Prysm/<GoTypeName>/` of these types, the tools of `gen/flat-types/`, the column `companions` of `gen/generator/types.tsv`.
+
 ### The proof inventory trusts its method list
 
 - What does not hold: `gen/tools/proof_inventory.py run` does not bind `prysm/go1.26.10/ssz-methods.json` to the ELF.
