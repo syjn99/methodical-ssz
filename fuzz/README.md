@@ -120,6 +120,11 @@ When a fix removes a class, remove its line from `known.txt`.
 It regenerates the Prysm types with the generator of the pull request and runs `go test` for both presets.
 It does not fuzz.
 
+`.github/workflows/ethlib-fuzz-nightly.yaml` fuzzes once a day, and on demand.
+It uses the setup steps and the cache keys of `ethlib-fuzz.yaml`, so the two workflows share their caches.
+It runs `fuzzall.sh` on the minimal preset: 4 targets at a time, 1 worker each, 45 seconds for each target.
+A difference that `known.txt` does not list fails the job. The job then uploads the logs and `testdata/fuzz/`.
+
 ## Test a different generator
 
 `gen.sh` uses the generator and the runtime of the repository in `$GEN`.

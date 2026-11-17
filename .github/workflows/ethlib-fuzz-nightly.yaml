@@ -1,0 +1,87 @@
+name: ethlib-fuzz-nightly
+
+# Fuzzes every differential target in fuzz/ for a short time, minimal preset.
+# known.txt filters the recorded differences. Any other difference fails the job.
+# The setup steps and the cache keys are those of ethlib-fuzz.yaml, so the two
+# workflows share the caches.
+
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ethlib-fuzz-nightly
+  cancel-in-progress: true
+
+jobs:
+  fuzz:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: fuzz
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: 'fuzz/go.mod'
+        cache-dependency-path: 'fuzz/go.sum'
+
+    - name: Read the pins
+      id: pins
+      run: |
+        echo "ethlib=$(sed -n 's/^COMMIT=//p' ethlib.sh)" >>"$GITHUB_OUTPUT"
+        echo "spec=$(sed -n 's/^VERSION=\([^ ]*\).*/\1/p' seeds.sh)" >>"$GITHUB_OUTPUT"
+
+    # The link needs only the archive and the toolchain, not the 8 GB checkout.
+    - name: Cache the EthLib archive
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/ethlib-fuzz/EthLib/libethlib.a
+          ~/.cache/ethlib-fuzz/EthLib/libethlib.commit
+          ~/.cache/ethlib-fuzz/EthLib/lean-toolchain
+        key: ethlib-${{ runner.os }}-${{ runner.arch }}-${{ steps.pins.outputs.ethlib }}-${{ hashFiles('fuzz/ethlib.sh') }}
+
+    - name: Cache the seeds
+      uses: actions/cache@v4
+      with:
+        path: fuzz/.seeds
+        key: seeds-${{ steps.pins.outputs.spec }}-${{ hashFiles('fuzz/seeds.sh') }}
+
+    - name: Install elan
+      run: |
+        curl -sSfL "https://github.com/leanprover/elan/releases/download/v4.2.4/elan-$(uname -m)-unknown-linux-gnu.tar.gz" | tar -xz
+        ./elan-init -y --default-toolchain none
+        rm elan-init
+        echo "$HOME/.elan/bin" >>"$GITHUB_PATH"
+
+    - name: Generate the Prysm types
+      run: ./gen.sh
+
+    - name: Build EthLib
+      run: ./ethlib.sh >/dev/null
+
+    - name: Get the seeds
+      run: '[[ -f .seeds/complete ]] || ./seeds.sh'
+
+    # 4 cores: 4 targets at a time, 1 worker each. 105 targets take 27 rounds
+    # of FUZZTIME plus about 2 s, so 45 s gives about 21 minutes.
+    - name: Fuzz
+      run: PRESET=minimal FUZZTIME=45s JOBS=4 WORKERS=1 ./fuzzall.sh
+
+    - name: Upload the logs and the failing inputs
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ethlib-fuzz-nightly-${{ github.run_id }}
+        path: |
+          fuzz/logs/
+          !fuzz/logs/**/fuzz.test
+          fuzz/testdata/fuzz/
