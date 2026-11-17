@@ -13,10 +13,9 @@
 # hidden, in any container.
 #
 # The soft limit lines and the panic lines come from Prysm's YAML and the struct
-# tags (see those sections). Each other tuple comes from a saved input or a kept
-# log: testdata/fuzz/,
-# ~/.cache/ethlib-fuzz/runs-pr2/ (PR 1 logs: ~/.cache/ethlib-fuzz/runs-2026-11-17/).
-# runs-pr2/lines.py builds this file from them. Remove a line when its fix merges.
+# tags (see those sections). When the Prysm pin changes, check them against the
+# new YAML. Each other tuple comes from an input in testdata/fuzz/ or from a
+# difference that a fuzz run found. Remove a line when its fix merges.
 # A value input's message ends with "; changed: " and the fields it changed.
 
 ## The decoder accepts a byte list longer than ssz-max. Bug. Fix proposed in PR #27.
