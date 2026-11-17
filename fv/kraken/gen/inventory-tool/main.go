@@ -1,11 +1,13 @@
-// inventory-tool dumps the sszgen 698c202 intermediate representation (IR) of every
-// type in one or more generator configs as JSON. It is read-only over its
+// inventory-tool dumps the intermediate representation (IR) of the pinned sszgen
+// commit (fv/kraken/README.md section 2) for every type in one or more
+// generator configs as JSON. It is read-only over its
 // inputs and calls the generator's own front end (config parser, TypeDefs,
 // ParseTypeDef, delegation interface set), so the IR is the one the renderer
 // sees.
 //
 // It must be built inside the module that owns the configured packages (the
-// temporary Prysm tree, which replaces methodical-ssz with the 698c202 tree).
+// temporary Prysm tree, which replaces methodical-ssz with the tree of the
+// pinned commit).
 // It has its own go.mod here only so that the methodical-ssz root module does
 // not compile it. Usage:
 //

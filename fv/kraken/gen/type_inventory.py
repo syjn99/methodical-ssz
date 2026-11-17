@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prysm Fulu type inventory from the sszgen 698c202 IR.
+"""Prysm Fulu type inventory from the IR of the pinned sszgen commit (fv/kraken/README.md section 2).
 
   type_inventory.py reduce <raw-ir.json> <out-ir.json>
       Cut the raw inventory-tool dump: a field whose type delegates (the generated
