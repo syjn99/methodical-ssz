@@ -93,7 +93,8 @@ func table[T any, P interface {
 	refused := 0
 	for i := 0; i < len(corpus); i++ {
 		if ops, ok := bytes.CutPrefix(corpus[i], valuePrefix); ok {
-			enc, err := mutated[T, P](bases, ops).MarshalSSZ()
+			obj, _ := mutated[T, P](bases, ops)
+			enc, err := obj.MarshalSSZ()
 			if err != nil {
 				refused++
 				corpus = slices.Delete(corpus, i, i+1)

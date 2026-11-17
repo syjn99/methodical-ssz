@@ -94,14 +94,14 @@ func run[T any, P interface {
 			check(t, P(new(T)), fork, name, data)
 		}
 		if ops, ok := bytes.CutPrefix(data, valuePrefix); ok {
-			obj := mutated[T, P](bases, ops)
+			obj, changed := mutated[T, P](bases, ops)
 			enc, err := obj.MarshalSSZ()
 			if err != nil {
-				checkRefused(t, obj, err)
+				checkRefused(t, obj, changed, err)
 				return
 			}
 			for _, fork := range forks {
-				checkValue(t, obj, enc, fork, name)
+				checkValue(t, obj, changed, enc, fork, name)
 				check(t, P(new(T)), fork, name, enc)
 			}
 		}
