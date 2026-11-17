@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
+	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/OffchainLabs/methodical-ssz/fuzz/oracle"
@@ -52,12 +55,58 @@ func run[T any, P interface {
 			f.Add(data)
 		}
 	}
+	// The zero value is a seed that both sides must accept. It proves that
+	// the type and the container have the same shape, also without vectors.
+	obj := new(T)
+	fill(reflect.ValueOf(obj).Elem())
+	zero, err := P(obj).MarshalSSZ()
+	if err != nil {
+		f.Fatalf("MarshalSSZ of the zero value: %v", err)
+	}
+	for _, fork := range forks {
+		if v, _, msg := oracle.SszStatic(preset, fork, name, zero); v != oracle.Accept {
+			f.Fatalf("%s/%s: EthLib rejects the zero value: %s", fork, name, msg)
+		}
+	}
+	f.Add(zero)
 	f.Add([]byte{})
 	f.Fuzz(func(t *testing.T, data []byte) {
 		for _, fork := range forks {
 			check(t, P(new(T)), fork, name, data)
 		}
 	})
+}
+
+// fill gives the fields of a zero struct the lengths that their `ssz-size`
+// tags fix, so that the struct encodes. Lists stay empty.
+func fill(v reflect.Value) {
+	for i := 0; i < v.NumField(); i++ {
+		f := v.Field(i)
+		if !f.CanSet() {
+			continue
+		}
+		var dims []int
+		for _, d := range strings.Split(v.Type().Field(i).Tag.Get("ssz-size"), ",") {
+			n, _ := strconv.Atoi(d) // "?" and "" give 0: a list
+			dims = append(dims, n)
+		}
+		fillField(f, dims)
+	}
+}
+
+func fillField(f reflect.Value, dims []int) {
+	switch {
+	case f.Kind() == reflect.Pointer && f.Type().Elem().Kind() == reflect.Struct:
+		f.Set(reflect.New(f.Type().Elem()))
+		fill(f.Elem())
+	case f.Kind() == reflect.Slice && strings.Contains(f.Type().Name(), "Bitlist"):
+		f.SetBytes([]byte{1}) // the empty bitlist is its delimiter bit
+	case f.Kind() == reflect.Slice && len(dims) > 0:
+		f.Set(reflect.MakeSlice(f.Type(), dims[0], dims[0]))
+		for i := 0; i < dims[0]; i++ {
+			fillField(f.Index(i), dims[1:])
+		}
+	}
 }
 
 // KNOWN is a regular expression. A difference whose message matches it skips

@@ -9,6 +9,9 @@ import (
 
 // One target for each Prysm type that stands for an EthLib container at Fulu
 // or Gloas. The name of a target is the name of the Go type.
+//
+// BuilderEntry and BuilderConfig have no target. EthLib reads BuilderEntry.url
+// as UTF-8 text, but its SSZ type is a byte list, so EthLib rejects more.
 
 // Types that Fulu and Gloas share.
 func FuzzAttestationData(f *testing.F) { run[eth.AttestationData](f, "AttestationData", fulu, gloas) }
@@ -142,6 +145,12 @@ func FuzzPartialDataColumnPartsMetadata(f *testing.F) {
 func FuzzPartialDataColumnSidecar(f *testing.F) {
 	run[eth.PartialDataColumnSidecar](f, "PartialDataColumnSidecar", fulu)
 }
+func FuzzBlindedBeaconBlockElectra(f *testing.F) {
+	run[eth.BlindedBeaconBlockElectra](f, "BlindedBeaconBlock", fulu)
+}
+func FuzzSignedBlindedBeaconBlockElectra(f *testing.F) {
+	run[eth.SignedBlindedBeaconBlockElectra](f, "SignedBlindedBeaconBlock", fulu)
+}
 func FuzzBlindedBeaconBlockFulu(f *testing.F) {
 	run[eth.BlindedBeaconBlockFulu](f, "BlindedBeaconBlock", fulu)
 }
@@ -258,8 +267,6 @@ func FuzzProposerPreferences(f *testing.F) {
 func FuzzSignedProposerPreferences(f *testing.F) {
 	run[eth.SignedProposerPreferences](f, "SignedProposerPreferences", gloas)
 }
-func FuzzBuilderConfig(f *testing.F) { run[eth.BuilderConfig](f, "BuilderConfig", gloas) }
-func FuzzBuilderEntry(f *testing.F)  { run[eth.BuilderEntry](f, "BuilderEntry", gloas) }
 func FuzzBuilderPreferences(f *testing.F) {
 	run[eth.BuilderPreferences](f, "BuilderPreferences", gloas)
 }
