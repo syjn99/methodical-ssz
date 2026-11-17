@@ -10,9 +10,9 @@
  "axioms_gate": {
   "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=Spec,Machine,Runtime,Codec,Prysm",
   "verdict": "PASS",
-  "declarations": 20415,
-  "theorems": 16616,
-  "modules": 597
+  "declarations": 21004,
+  "theorems": 17115,
+  "modules": 606
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -542,16 +542,16 @@
    "kind": "hand-written",
    "state": "partial",
    "missing": [
-    "reject",
-    "accept_spec",
-    "reject_size_spec",
-    "reject_complete",
-    "codec",
-    "witness_reject"
+    "codec"
    ],
    "theorems": {
     "accept": "Prysm.CommitteeIndex.Decode.generated_accept",
-    "witness_accept": "Prysm.CommitteeIndex.Witness.GeneratedDecodeAccept.runs"
+    "reject": "Prysm.CommitteeIndex.Decode.reject_size",
+    "accept_spec": "Prysm.CommitteeIndex.Decode.accept_spec",
+    "reject_size_spec": "Prysm.CommitteeIndex.Decode.reject_size_spec",
+    "reject_complete": "Prysm.CommitteeIndex.Decode.reject_complete",
+    "witness_accept": "Prysm.CommitteeIndex.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.CommitteeIndex.Witness.DecodeRejectSize.runs"
    },
    "note": "generated accept theorem (statement = kind instance)"
   },
@@ -671,14 +671,14 @@
    "kind": "hand-written",
    "state": "partial",
    "missing": [
-    "accept_spec",
-    "reject_size_spec",
-    "reject_complete",
     "codec"
    ],
    "theorems": {
     "accept": "Prysm.Epoch.Decode.generated_accept",
     "reject": "Prysm.Epoch.Decode.reject_size",
+    "accept_spec": "Prysm.Epoch.Decode.accept_spec",
+    "reject_size_spec": "Prysm.Epoch.Decode.reject_size_spec",
+    "reject_complete": "Prysm.Epoch.Decode.reject_complete",
     "witness_accept": "Prysm.Epoch.Witness.GeneratedDecodeAccept.runs",
     "witness_reject": "Prysm.Epoch.Witness.DecodeRejectSize.runs"
    },
@@ -886,16 +886,16 @@
    "kind": "hand-written",
    "state": "partial",
    "missing": [
-    "reject",
-    "accept_spec",
-    "reject_size_spec",
-    "reject_complete",
-    "codec",
-    "witness_reject"
+    "codec"
    ],
    "theorems": {
     "accept": "Prysm.Slot.Decode.generated_accept",
-    "witness_accept": "Prysm.Slot.Witness.GeneratedDecodeAccept.runs"
+    "reject": "Prysm.Slot.Decode.reject_size",
+    "accept_spec": "Prysm.Slot.Decode.accept_spec",
+    "reject_size_spec": "Prysm.Slot.Decode.reject_size_spec",
+    "reject_complete": "Prysm.Slot.Decode.reject_complete",
+    "witness_accept": "Prysm.Slot.Witness.GeneratedDecodeAccept.runs",
+    "witness_reject": "Prysm.Slot.Witness.DecodeRejectSize.runs"
    },
    "note": "generated accept theorem (statement = kind instance)"
   },
@@ -998,14 +998,14 @@
    "kind": "hand-written",
    "state": "partial",
    "missing": [
-    "accept_spec",
-    "reject_size_spec",
-    "reject_complete",
     "codec"
    ],
    "theorems": {
     "accept": "Prysm.ValidatorIndex.Decode.generated_accept",
     "reject": "Prysm.ValidatorIndex.Decode.reject_size",
+    "accept_spec": "Prysm.ValidatorIndex.Decode.accept_spec",
+    "reject_size_spec": "Prysm.ValidatorIndex.Decode.reject_size_spec",
+    "reject_complete": "Prysm.ValidatorIndex.Decode.reject_complete",
     "witness_accept": "Prysm.ValidatorIndex.Witness.GeneratedDecodeAccept.runs",
     "witness_reject": "Prysm.ValidatorIndex.Witness.DecodeRejectSize.runs"
    },

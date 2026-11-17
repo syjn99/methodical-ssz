@@ -289,5 +289,63 @@
   "old": "(hbud : 2 * nextSliceCap 8 0 + 8192 ≤ avail)",
   "new": "(hbud : 2 * nextSliceCap 8 0 + 8191 ≤ avail)",
   "note": "the growslice contract needs the budget 2 * nextSliceCap 8 0 + 8192"
+ },
+ {
+  "id": "committee-index-decode-reject-size-control",
+  "kind": "control",
+  "module": "Prysm/CommitteeIndex/DecodeRejectSize.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-decode-reject-size-code-cmp-0x8-to-0x7",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/DecodeRejectSize.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x7,%rcx"
+ },
+ {
+  "id": "committee-index-decode-reject-size-code-mov-0x28-to-0x27",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/DecodeRejectSize.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  mov $0x28,%ebx",
+  "new": "  mov $0x27,%ebx"
+ },
+ {
+  "id": "committee-index-decode-reject-size-code-mov-0x2-to-0x1",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/DecodeRejectSize.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  mov $0x2,%edi",
+  "new": "  mov $0x1,%edi"
+ },
+ {
+  "id": "committee-index-decode-reject-size-code-format-110107-to-110067",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/DecodeRejectSize.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "line": 24,
+  "old": "  lea go_string._+110107(%rip),%rax",
+  "new": "  lea go_string._+110067(%rip),%rax",
+  "note": "the format string of Epoch in place of the format string of CommitteeIndex"
+ },
+ {
+  "id": "committee-index-decode-reject-size-statement-rax-none-to-none",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/DecodeRejectSize.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.reject_size",
+  "old": "st.data.regs.rax ≠ 0",
+  "new": "st.data.regs.rax = 0"
  }
 ]

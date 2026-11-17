@@ -211,9 +211,12 @@ The files of ValidatorIndex are the model:
 
 - `Code.lean`, and `GeneratedDecodeAccept.lean` with `Decode.generated_accept` (the `uint64` mode writes it);
 - `DecodeAcceptFunctionSpec.lean`: the hand function specification `Decode.accept_function_spec` and its proof `Decode.accept_function_spec_holds`;
-- `DecodeRejectSize.lean`, `WitnessGeneratedDecodeAccept.lean` and `WitnessDecodeRejectSize.lean`.
+- `DecodeRejectSize.lean`, `WitnessGeneratedDecodeAccept.lean` and `WitnessDecodeRejectSize.lean`;
+- `SpecDescription.lean` with `desc := .uint 8`, and `DecodeSpec.lean` with `Decode.accept_spec`, `Decode.reject_size_spec` and `Decode.reject_complete`.
+  The lemmas about `.uint 8` are in `Prysm/Epoch/Spec.lean`.
 
-Slot and CommitteeIndex have no `DecodeRejectSize.lean` and no `WitnessDecodeRejectSize.lean` (`FINDINGS.md`).
+The CommitteeIndex decoder has another format string: the Prysm source spells it "receiced".
+Its reject theorems use the data item `formatBufferLengthReceiced`.
 
 What checks it: `gen/generator/kindcheck.py` (step 7).
 For a `decoder --whole-accept` or `encoder --fast-path` file, it recomputes the kind parameters from the `.S` file and the IR.

@@ -9,6 +9,7 @@ import Prysm.ValidatorIndex.EncodeGrowFirstSite
 import Prysm.ValidatorIndex.WitnessEncodeGrowFirstSite
 import Prysm.ValidatorIndex.EncodeCoverFramed
 import Prysm.ValidatorIndex.WitnessEncodeCoverFramed
+import Prysm.ValidatorIndex.DecodeSpec
 
 /-! Hand list of the `ValidatorIndex` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -32,3 +33,6 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.ValidatorIndex.Witness.EncodeGrowFirstSite.runs_empty
 #print axioms Prysm.ValidatorIndex.Encode.cover_framed
 #print axioms Prysm.ValidatorIndex.Witness.EncodeCoverFramed.runs
+#print axioms Prysm.ValidatorIndex.Decode.accept_spec
+#print axioms Prysm.ValidatorIndex.Decode.reject_size_spec
+#print axioms Prysm.ValidatorIndex.Decode.reject_complete

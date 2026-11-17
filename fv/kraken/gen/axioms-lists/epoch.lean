@@ -13,6 +13,8 @@ import Prysm.Epoch.EncodeCoverFramed
 import Prysm.Epoch.WitnessEncodeCoverFramed
 import Prysm.Epoch.Marshal
 import Prysm.Epoch.WitnessMarshal
+import Prysm.Epoch.Spec
+import Prysm.Epoch.DecodeSpec
 
 /-! Hand list of the `Epoch` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -43,3 +45,10 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.Epoch.Marshal.result
 #print axioms Prysm.Epoch.Marshal.result_spec
 #print axioms Prysm.Epoch.Witness.Marshal.runs
+#print axioms Prysm.Epoch.uint64_deserialize_ok
+#print axioms Prysm.Epoch.uint64_spec_accepts_iff
+#print axioms Prysm.Epoch.uint64_spec_rejects
+#print axioms Prysm.Epoch.uint64_accepted_is_encoding
+#print axioms Prysm.Epoch.Decode.accept_spec
+#print axioms Prysm.Epoch.Decode.reject_size_spec
+#print axioms Prysm.Epoch.Decode.reject_complete
