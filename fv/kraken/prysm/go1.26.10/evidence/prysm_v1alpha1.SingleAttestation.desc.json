@@ -1,0 +1,125 @@
+{
+ "schema": "fv.kraken.desc/1",
+ "type": "SingleAttestation",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "CommitteeId",
+   "AttesterIndex",
+   "Data",
+   "Signature"
+  ],
+  "fields": [
+   {
+    "k": "uint",
+    "w": 8
+   },
+   {
+    "k": "uint",
+    "w": 8
+   },
+   {
+    "k": "container",
+    "names": [
+     "Slot",
+     "CommitteeIndex",
+     "BeaconBlockRoot",
+     "Source",
+     "Target"
+    ],
+    "fields": [
+     {
+      "k": "uint",
+      "w": 8
+     },
+     {
+      "k": "uint",
+      "w": 8
+     },
+     {
+      "k": "byteVector",
+      "n": 32
+     },
+     {
+      "k": "container",
+      "names": [
+       "Epoch",
+       "Root"
+      ],
+      "fields": [
+       {
+        "k": "uint",
+        "w": 8
+       },
+       {
+        "k": "byteVector",
+        "n": 32
+       }
+      ]
+     },
+     {
+      "k": "container",
+      "names": [
+       "Epoch",
+       "Root"
+      ],
+      "fields": [
+       {
+        "k": "uint",
+        "w": 8
+       },
+       {
+        "k": "byteVector",
+        "n": 32
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "k": "byteVector",
+    "n": 96
+   }
+  ]
+ },
+ "fixed_size": 240,
+ "fixed_part_size": 240,
+ "fields": [
+  {
+   "name": "CommitteeId",
+   "index": 0,
+   "offset": 0,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  },
+  {
+   "name": "AttesterIndex",
+   "index": 1,
+   "offset": 8,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  },
+  {
+   "name": "Data",
+   "index": 2,
+   "offset": 16,
+   "width": 128,
+   "variable": false,
+   "kind": "container"
+  },
+  {
+   "name": "Signature",
+   "index": 3,
+   "offset": 144,
+   "width": 96,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 96
+  }
+ ],
+ "variable_order": [],
+ "reference": null
+}

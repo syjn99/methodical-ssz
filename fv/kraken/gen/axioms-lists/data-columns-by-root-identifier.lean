@@ -23,6 +23,7 @@ import Prysm.DataColumnsByRootIdentifier.EncodeTail
 import Prysm.DataColumnsByRootIdentifier.WitnessEncodeFastPath
 import Prysm.DataColumnsByRootIdentifier.WitnessEncodeGrowFirstSite
 import Prysm.DataColumnsByRootIdentifier.WitnessEncodeRejectLength
+import Prysm.DataColumnsByRootIdentifier.DecodeSpecReject
 
 /-! Hand list of the `DataColumnsByRootIdentifier` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -68,3 +69,5 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.DataColumnsByRootIdentifier.Witness.EncodeGrowFirstSite.runs_maximum
 #print axioms Prysm.DataColumnsByRootIdentifier.Witness.EncodeRejectLength.RejectLength.runs
 #print axioms Prysm.DataColumnsByRootIdentifier.Witness.EncodeRejectLength.RejectTooBig.runs
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_size_spec
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_offset_spec
