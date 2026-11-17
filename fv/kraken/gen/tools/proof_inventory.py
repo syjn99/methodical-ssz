@@ -97,9 +97,9 @@ def core_flat_types():
 
 # The core flat types: the types with a generated decoder or encoder and a hand list of the axioms gate.
 # The inventory counts their decoders as one group.
-# AttestationData has nested fields and is listed apart (`NESTED`).
+# AttestationData and SingleAttestation have nested fields and are listed apart (`NESTED`).
 CORE_FLAT_TYPES = core_flat_types()
-NESTED = ["AttestationData"]
+NESTED = ["AttestationData", "SingleAttestation"]
 # Why the generators refuse a flat type outside CORE_FLAT_TYPES (wording only, no state rule). The class is the field kind
 # or the callee at the directive of the `.S` file where `decoder --whole-accept` or `encoder --fast-path` stops.
 # The generators do not support that class.
