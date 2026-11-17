@@ -4,7 +4,8 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
 import Prysm.HistoricalBatch.Code
-import Prysm.HistoricalBatch.SpecDefinitions
+import Prysm.HistoricalBatch.Spec
+import Codec.ByteSliceListDefinitions
 
 /-!
 # Hand STATEMENTS of the target `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (statements only, no proof)

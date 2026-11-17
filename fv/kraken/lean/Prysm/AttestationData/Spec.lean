@@ -1,20 +1,12 @@
 import Prysm.Checkpoint.Spec
 import Prysm.Checkpoint.SpecEquivalence
 import Prysm.AttestationData.SpecChecker
+import Prysm.AttestationData.SpecDescription
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.AttestationData`
 
-Independent hand `Desc`, written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`):
-
-    class AttestationData(Container):
-        slot: Slot                # uint64
-        index: CommitteeIndex     # uint64
-        beacon_block_root: Root   # Bytes32
-        source: Checkpoint
-        target: Checkpoint
-
-with `Checkpoint` = `Prysm.Checkpoint.desc` (consensus-specs `Checkpoint(epoch: Epoch, root: Root)`).
+`desc` (`Prysm/AttestationData/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs phase0.
 The Prysm Go fields (`attestation.pb.go` of the pinned Prysm commit, `README.md` section 2) are `Slot` (offset 8), `CommitteeIndex` (16),
 `BeaconBlockRoot` (24, slice header), `Source` (48) and `Target` (56), both `*Checkpoint`; `state` (0), `unknownFields` (64)
 and `sizeCache` (88) have no SSZ value (size 96; offsets from `prysm/ir/ir-mainnet.json`).
@@ -32,10 +24,6 @@ read EthLib and `Prysm.Checkpoint.Spec` only.
 namespace Prysm.AttestationData
 open EthLib.Serialization.Ssz
 open Spec hiding readUint_lt
-
-/-- consensus-specs phase0 `AttestationData`. -/
-def desc : Desc := .container ["slot", "index", "beacon_block_root", "source", "target"]
-  [.uint 8, .uint 8, .byteVector 32, Prysm.Checkpoint.desc, Prysm.Checkpoint.desc]
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl
 theorem desc_fixedSize : desc.fixedSize = some 128 := by rfl

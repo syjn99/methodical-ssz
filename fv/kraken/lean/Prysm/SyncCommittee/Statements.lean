@@ -4,7 +4,8 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
 import Prysm.SyncCommittee.Code
-import Prysm.SyncCommittee.SpecDefinitions
+import Prysm.SyncCommittee.Spec
+import Codec.ByteSliceListDefinitions
 
 /-!
 # Hand STATEMENTS of the target `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (statements only, no proof)

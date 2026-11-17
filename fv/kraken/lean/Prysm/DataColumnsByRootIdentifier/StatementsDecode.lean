@@ -4,6 +4,7 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
 import Prysm.DataColumnsByRootIdentifier.SpecDefinitions
+import Prysm.DataColumnsByRootIdentifier.SpecDescription
 import Prysm.DataColumnsByRootIdentifier.Code
 
 /-!

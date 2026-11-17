@@ -239,17 +239,16 @@ It also has a checker `Desc` when the `Desc` checker accepted a producer file fo
   For some types it is written from the Prysm proto definition: `grep -l 'from the Prysm proto' Prysm/*/SpecDescription.lean` lists them.
   Such a `Desc` has the same source as the `Desc` producer, so it is not an independent specification (`../FINDINGS.md`).
   The hand `Desc` does not use the checker `Desc`.
-  This rule gives its module:
-  1. `SpecDescription.lean`, when the type directory has this module.
-     These are BeaconBlocksByRangeRequest, BlobIdentifier, BlobSidecarsByRangeRequest, BuilderDepositRequest, BuilderPreferences,
-     DepositMessage, DepositRequest, Deposit_Data, Eth1Data, ExecutionPayloadEnvelopesByRangeRequest, HistoricalSummary,
-     PartialDataColumnGroupID, PendingConsolidation, PendingDeposit, PendingPartialWithdrawal, PowBlock, SigningData,
-     SyncAggregate, SyncAggregatorSelectionData, SyncCommittee, SyncCommitteeMessage, ValidatorBalance, ValidatorIdentity and VoluntaryExit.
-  2. Else `SpecDefinitions.lean`, when the type directory has this module: DataColumnsByRootIdentifier, HistoricalBatch, IndexedAttestation.
-  3. Else `Spec.lean`: AttestationData, BeaconBlockHeader, Checkpoint.
-  4. Deposit is the exception: its hand `Desc` is in `Deposit/StatementsSpec.lean`.
+  For every type, the hand `Desc` is in `Prysm/<GoTypeName>/SpecDescription.lean`.
+  That module holds only `desc` and the definitions that only the description needs.
+  It imports EthLib, and the `SpecDescription` module of a nested type.
   `grep -lE '^def desc' lean/Prysm/*/*.lean` lists the modules.
-  Example: `Prysm.Checkpoint.desc` in `Prysm/Checkpoint/Spec.lean`.
+  Example: `Prysm.Checkpoint.desc` in `Prysm/Checkpoint/SpecDescription.lean`.
+- The value side is in `Spec.lean`: `SszValue`, `toValue`, the `enc` function and the bridge lemmas.
+  A `Statements` module that uses these definitions imports `Spec.lean`.
+  DataColumnsByRootIdentifier is the exception: its `Spec.lean` imports `StatementsEncode.lean`.
+  So its value definitions are in `SpecDefinitions.lean`, which the statements and `Spec.lean` import.
+  Deposit is the other exception: its value definitions are in `StatementsSpec.lean`, with its spec statements.
 - The checker `Desc` `Prysm.<GoTypeName>.checkerDesc` is in `SpecChecker.lean`.
   `../gen/checks/desc_to_lean.py` writes it from a file of `../prysm/go1.26.10/evidence/`.
   The checker in `../gen/desc-checker/` accepted that file.
@@ -296,8 +295,8 @@ It holds the bump allocator model that the witnesses of its type use, with a `.S
 ## 7. Proof conventions
 
 - Do not use `sorry`, `admit`, a new `axiom`, `native_decide` or `bv_decide`.
-- Do not change a committed statement.
-  Add a new statement with a new name and a reason.
+- A changed statement replaces the earlier statement in the same commit (`../../README.md` section 5).
+  The commit message and the PR give the reason for the change.
 - Keep `maxHeartbeats` and `maxRecDepth` at the default.
   If a proof needs more, profile the declaration first.
   Then write the measured cause in words in a comment above the `set_option` line.
@@ -329,14 +328,14 @@ Examples are `Deposit_Data`, `ENRForkID` and the label `runtime.makeslice`.
 | `Layout` | Go struct layout of Checkpoint from the IR: offsets and sizes (`../gen/checks/layout.py`) |
 | `EncodeLayout` | Hand encoder frame layout that `gen.sh` gives the generator with `--hand-layout` |
 | `GoValue`, `GoValueWitness` | Validity of the Go value of the receiver, and its witness |
-| `Spec` | The `SszValue` structure, its bridge lemmas to EthLib and, for some types, the hand `Desc` (section 5) |
-| `SpecDescription` | The hand `Desc` alone |
-| `SpecDefinitions` | The definitions that the statements use, and for some types the hand `Desc` (section 5) |
+| `Spec` | The `SszValue` structure, its definitions and its bridge lemmas to EthLib (section 5) |
+| `SpecDescription` | The hand `Desc` and the definitions that only the description needs (section 5) |
+| `SpecDefinitions` | The value definitions of DataColumnsByRootIdentifier that its statements use (section 5) |
 | `SpecChecker` | The checker `Desc` (`../gen/checks/desc_to_lean.py`) |
 | `SpecEquivalence` | Codec equality of the hand `Desc` and the checker `Desc` |
 | `SpecDecodeBridge` | Decoder-side lemmas of the specification bridge |
 | `Statements`, `Statements` + qualifier | Statement definitions `<theorem>_statement : Prop` |
-| `EncodeFastPathStatements` | Hand statements of the encoder fast path, for an identity with the generated theorem |
+| `EncodeFastPathStatements` | Hand statement of the encoder fast path, for a statement tie with the generated theorem |
 | `DecodeAccept` | Decoder accept path |
 | `DecodeAccept` + part | A part of a long accept proof (`DecodeAcceptHead`, `DecodeAcceptSource`) |
 | `DecodeAcceptFunctionSpec` | The function specification of a callee decoder and its proof |
@@ -353,11 +352,11 @@ Examples are `Deposit_Data`, `ENRForkID` and the label `runtime.makeslice`.
 | `Encode` + part | Encoder, a part of a long proof (`EncodeHead`, `EncodeTail`, `EncodeCover`, `EncodeLoop`) |
 | `DecodeThenEncode`, `DecodeThenEncode` + qualifier | Decode then encode: round trip and composition |
 | `FunctionSpecsAsNestedField` | Function specifications for a caller that holds the type as a nested field |
-| `<Role>Instances`, `<Role>KindInstances` | Instances of a general lemma or kind for the type |
+| `<Role>KindTie` | A tie of a kind to the hand theorem of module `<Role>` (`../gen/README.md` section 4) |
+| `<Role>StatementTie` | A tie of a generated theorem to the hand statement of the path `<Role>` (`EncodeFastPathStatementTie`) |
 | `GeneratedDecodeAccept` | Generator output: the decoder step chain, accept and size reject theorems |
 | `GeneratedEncodeFastPath` | Generator output: the encoder fast-path theorem |
 | `GeneratedEncodeFastPathSpec` | The generated fast path against the hand `Desc` (`../gen/flat-types/flat_types_encode_spec.py`) |
-| `GeneratedEncodeFastPathSameAsHand` | Hand identity of the generated fast-path theorem with a hand statement |
 | `Witness` + module | A witness of a theorem of that module (section 6) |
 | `WitnessBumpAllocator` | A bump allocator model for the witnesses of the type, with its `.S` file in the type directory |
 
@@ -379,6 +378,8 @@ The main theorems inside `Prysm.<GoTypeName>` have these names:
 - program constants: `Code.unmarshalSSZ`, `Code.marshalSSZTo`, `Code.sizeSSZ`, declared as `def Code.<method>` inside `namespace Prysm.<GoTypeName>`;
   label abbreviations: `Code.unmarshalSSZLabel`, `Code.marshalSSZToLabel`;
   descriptions: `desc`, `checkerDesc`;
+- a tie: the name of the hand theorem + `_kind_tie` (a kind) or `_statement_tie` (a generated theorem),
+  for example `Decode.accept_kind_tie` and `Encode.fast_path_statement_tie`;
 - a function specification of a method: `Decode.accept_function_spec` or `Encode.fast_path_function_spec`.
   The lemma that it holds has the suffix `_holds`;
 - a witness module has the namespace `Prysm.<GoTypeName>.Witness.<Module>`, for example `Witness.GeneratedDecodeAccept`.
@@ -388,3 +389,4 @@ The generators write the names `Decode.generated_*` and `Encode.generated_*` (`.
 Examples are `Decode.generated_accept`, `Decode.generated_reject` and `Encode.generated_fast`.
 Each generated theorem `t` has a theorem `t_kind`.
 `../gen/flat-types/flat_types_encode_spec.py` writes `Encode.generated_fast_spec`.
+The generator writes the tie `Encode.generated_fast_statement_tie` of Checkpoint (`../gen/README.md` section 4).

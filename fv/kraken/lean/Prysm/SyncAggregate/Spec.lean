@@ -2,7 +2,7 @@ import Prysm.Checkpoint.Spec
 import Prysm.Checkpoint.SpecEquivalence
 import EthLib.Serialization.Proofs.Ssz.Codec.Canonical
 import EthLib.Serialization.Proofs.Ssz.Codec.RoundTripScalar
-import Prysm.SyncAggregate.SpecDefinitions
+import Prysm.SyncAggregate.SpecDescription
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.SyncAggregate`
@@ -10,9 +10,30 @@ import Prysm.SyncAggregate.SpecDefinitions
 The Bitvector[512] field uses two EthLib
 theorems: `unpackBits_packBits` (bits → bytes → bits) and `packBits_unpackBits` (bytes → bits → bytes; the
 padding premise is empty because 512 = 8 · 64).
+
+`desc` (`Prysm/SyncAggregate/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs altair.
+The statements of `Prysm/SyncAggregate/Statements.lean` use these definitions:
+
+- `SszValue`: the SSZ content of a Go `v1alpha1.SyncAggregate` whose byte fields have the lengths of the spec (64, 96).
+- `SszValue.toValue` is the EthLib `Value`.
+- `SszValue.encode` gives the 160 bytes of the SSZ encoding (fixed-size container: the fields in order).
 -/
 
 namespace Prysm.SyncAggregate
+open EthLib.Serialization.Ssz
+
+/-- SSZ content of a Go `v1alpha1.SyncAggregate` (SyncCommitteeBits 64 bytes, SyncCommitteeSignature 96). -/
+structure SszValue where
+  bits : Vector UInt8 64
+  signature : Vector UInt8 96
+
+/-- Bitvector[512] is the 512 bits of the 64 bytes, lowest bit of byte 0 first (EthLib `unpackBits`). -/
+def SszValue.toValue (g : Prysm.SyncAggregate.SszValue) : Value :=
+  .seq [.bits (unpackBits g.bits.toArray 512), .bytes g.signature.toArray]
+
+/-- `bits ‖ signature`. -/
+def SszValue.encode (g : Prysm.SyncAggregate.SszValue) : Array UInt8 := g.bits.toArray ++ g.signature.toArray
+
 open EthLib.Serialization.Ssz Spec
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl

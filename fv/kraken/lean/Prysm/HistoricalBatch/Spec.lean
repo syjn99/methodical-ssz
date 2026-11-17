@@ -1,5 +1,6 @@
 import Prysm.SyncCommittee.Spec
-import Prysm.HistoricalBatch.SpecDefinitions
+import Prysm.HistoricalBatch.SpecDescription
+import Prysm.HistoricalBatch.SpecDescription
 import Codec.ByteVector32Values
 
 /-!
@@ -12,9 +13,35 @@ The order of `Prysm.SyncCommittee.Spec`. Imported as is: `Codec.assemble_inline_
 used for both fields (`roots_vector_serialize`, `roots_vector_of_bytes`), and the container lemmas for two vector fields.
 The 32-byte helpers are `Codec.toByteVector32`, `Codec.allFit_byteVector32` and `Codec.allFit_map_byteVector32`
 (`Codec/ByteVector32Values.lean`).
+
+`desc` (`Prysm/HistoricalBatch/SpecDescription.lean`) is the hand `Desc` from consensus-specs phase0.
+The statements of `Prysm/HistoricalBatch/Statements.lean` use these definitions:
+
+- `SszValue`: the SSZ content of a Go `v1alpha1.HistoricalBatch` whose byte fields have the spec lengths
+  (8192 × 32 each). `toValue` is the EthLib `Value`, `SszValue.encode` the 524288 bytes of the SSZ encoding.
+- The statements also use `Codec.sliceHeaders` and `Codec.elementBlocks` (`Codec/ByteSliceListDefinitions.lean`).
 -/
 
 namespace Prysm.HistoricalBatch
+open EthLib.Serialization.Ssz
+
+/-- SSZ content of a Go `v1alpha1.HistoricalBatch` (8192 BlockRoots and 8192 StateRoots of 32 bytes). -/
+structure SszValue where
+  blockRoots : Vector (Vector UInt8 32) 8192
+  stateRoots : Vector (Vector UInt8 32) 8192
+
+/-- The 8192 block roots as byte lists, in order. -/
+def SszValue.blockRootBytes (g : SszValue) : List (List UInt8) := g.blockRoots.toList.map (·.toList)
+/-- The 8192 state roots as byte lists, in order. -/
+def SszValue.stateRootBytes (g : SszValue) : List (List UInt8) := g.stateRoots.toList.map (·.toList)
+
+def SszValue.toValue (g : SszValue) : Value :=
+  .seq [.seq (g.blockRoots.toList.map fun p => .bytes p.toArray),
+        .seq (g.stateRoots.toList.map fun p => .bytes p.toArray)]
+
+/-- `blockRoots[0] ‖ … ‖ blockRoots[8191] ‖ stateRoots[0] ‖ … ‖ stateRoots[8191]`. -/
+def SszValue.encode (g : SszValue) : Array UInt8 := g.blockRootBytes.flatten.toArray ++ g.stateRootBytes.flatten.toArray
+
 open EthLib.Serialization.Ssz Spec
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl

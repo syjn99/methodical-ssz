@@ -1,7 +1,5 @@
 import Runtime.Contracts
-import Prysm.Checkpoint.Spec
-import Prysm.SyncAggregate.SpecDescription
-import Prysm.SyncAggregate.SpecDefinitions
+import EthLib.Serialization.Ssz
 
 /-!
 # Memory objects of a `[][]byte` decoder loop

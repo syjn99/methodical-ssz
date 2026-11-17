@@ -1,4 +1,5 @@
 import Prysm.Deposit.Statements
+import Prysm.Deposit.SpecDescription
 import Prysm.Deposit_Data.Spec
 import Prysm.Deposit.Code
 import Prysm.Deposit_Data.Code
@@ -6,17 +7,8 @@ import Prysm.Deposit_Data.Code
 /-!
 # Hand STATEMENTS of the Deposit spec companions (statements only, no proof)
 
-A change to a statement needs a new name and a reason.
-The hand `Desc` below is written from consensus-specs phase0.
-It does not use the Desc of `(v1alpha1, Deposit)` that the producer writes:
-
-    DEPOSIT_CONTRACT_TREE_DEPTH = 32
-    class Deposit(Container):
-        proof: Vector[Bytes32, DEPOSIT_CONTRACT_TREE_DEPTH + 1]   # 33
-        data: DepositData
-
-`DepositData` is the hand `Desc` `Prysm.Deposit_Data.desc` (imported). `SszValue` is the SSZ content of a Go
-`v1alpha1.Deposit` whose byte fields have the spec lengths; `SszValue.encode` is its 1240-byte SSZ encoding.
+`desc` (`Prysm/Deposit/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs phase0.
+`SszValue` is the SSZ content of a Go `v1alpha1.Deposit` whose byte fields have the spec lengths; `SszValue.encode` is its 1240-byte SSZ encoding.
 Shapes: `Prysm.HistoricalBatch.Decode.accept_spec_statement`, `Prysm.HistoricalBatch.Decode.reject_size_spec_statement`, `Prysm.HistoricalBatch.Decode.reject_complete_statement`.
 -/
 
@@ -24,9 +16,6 @@ open Machine Runtime EthLib.Serialization.Ssz Prysm.Deposit.Code
 variable [Host]
 
 namespace Prysm.Deposit
-
-/-- consensus-specs phase0 `Deposit`. -/
-def desc : Desc := .container ["proof", "data"] [.vector (.byteVector 32) 33, Prysm.Deposit_Data.desc]
 
 /-- SSZ content of a Go `v1alpha1.Deposit` (33 proof roots of 32 bytes, Deposit_Data). -/
 structure SszValue where

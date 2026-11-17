@@ -4,7 +4,7 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
 import Prysm.SyncAggregate.Code
-import Prysm.SyncAggregate.SpecDefinitions
+import Prysm.SyncAggregate.Spec
 import Codec.ByteSliceListDefinitions
 
 /-!

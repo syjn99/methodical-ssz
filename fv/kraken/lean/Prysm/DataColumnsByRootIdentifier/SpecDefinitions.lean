@@ -1,15 +1,11 @@
 import Spec.TestListU64
 
 /-!
-# Definitions that the encoder statements use (DataColumnsByRootIdentifier)
+# Definitions that the statements of DataColumnsByRootIdentifier use
 
-These definitions are part of the encoder statements (`Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean`). A later change needs a new name and a reason.
-
-- `desc`: hand `Desc` from consensus-specs fulu (`ethereum/consensus-specs` release `v1.7.0-beta.4`, `specs/fulu/p2p-interface.md`):
-
-      class DataColumnsByRootIdentifier(Container):
-          block_root: Root                                    # Bytes32
-          columns: List[ColumnIndex, NUMBER_OF_COLUMNS]       # uint64, 128
+These definitions are part of the decoder and encoder statements (`Prysm/DataColumnsByRootIdentifier/StatementsDecode.lean`, `StatementsEncode.lean`).
+The module is apart from `Prysm/DataColumnsByRootIdentifier/Spec.lean` because `Spec.lean` imports `StatementsEncode.lean`.
+The hand `Desc` is in `Prysm/DataColumnsByRootIdentifier/SpecDescription.lean`.
 
 - `SszValue`: the SSZ content of a Go `v1alpha1.DataColumnsByRootIdentifier` whose BlockRoot has 32 bytes and whose
   Columns has at most 128 elements (the field `hcols` keeps the length condition explicit).
@@ -22,9 +18,6 @@ The backing array of `[]uint64` is one contiguous block; its bytes are `Spec.uin
 open EthLib.Serialization.Ssz
 
 namespace Prysm.DataColumnsByRootIdentifier
-
-/-- consensus-specs fulu `DataColumnsByRootIdentifier` (mainnet, NUMBER_OF_COLUMNS = 128). -/
-def desc : Desc := .container ["block_root", "columns"] [.byteVector 32, .list (.uint 8) 128]
 
 /-- SSZ content of a Go `v1alpha1.DataColumnsByRootIdentifier` (32-byte BlockRoot, at most 128 Columns). -/
 structure SszValue where

@@ -5,7 +5,7 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.PrysmTarget
 import Prysm.IndexedAttestation.Code
-import Prysm.IndexedAttestation.SpecDefinitions
+import Prysm.IndexedAttestation.Spec
 
 /-!
 # IndexedAttestation statements of the alignment reject and the overflow reject

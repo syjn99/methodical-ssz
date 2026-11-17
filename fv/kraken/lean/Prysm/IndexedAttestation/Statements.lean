@@ -10,7 +10,7 @@ import Prysm.AttestationData.Code
 import Prysm.CommitteeIndex.Code
 import Prysm.Slot.Code
 import Prysm.IndexedAttestation.Code
-import Prysm.IndexedAttestation.SpecDefinitions
+import Prysm.IndexedAttestation.Spec
 
 /-!
 # Hand statements of `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`

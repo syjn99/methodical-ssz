@@ -2,7 +2,7 @@ import Prysm.Checkpoint.Spec
 import Prysm.Checkpoint.SpecEquivalence
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
-import Prysm.SyncCommittee.SpecDefinitions
+import Prysm.SyncCommittee.SpecDescription
 import Codec.SerializeInline
 
 /-!
@@ -11,9 +11,34 @@ import Codec.SerializeInline
 The order of `Prysm/Deposit_Data/Spec.lean`. The Vector[Bytes48, 512] field is not unfolded element by element: the
 lemmas below are stated for any list of 48-byte vectors (`serializeEach_byteVector48`, `concatParts_byteVector48`,
 and `Codec.assemble_inline_ok` in `Codec/SerializeInline.lean`) and use EthLib's `headOf_inline`, `bodiesOf_inline` and `concat_fixed_slices`.
+
+`desc` (`Prysm/SyncCommittee/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs altair.
+The statements of `Prysm/SyncCommittee/Statements.lean` use these definitions:
+
+- `SszValue`: the SSZ content of a Go `v1alpha1.SyncCommittee` whose byte fields have the lengths of the spec (512 × 48, 48).
+- `SszValue.toValue` is the EthLib `Value`.
+- `SszValue.encode` gives the 24624 bytes of the SSZ encoding (fixed-size container: the fields in order).
+- The statements also use `Codec.elementBlocks` and `Codec.sliceHeaders` (`Codec/ByteSliceListDefinitions.lean`):
+  the element blocks of a slice of byte slices, and the backing array of its slice headers.
 -/
 
 namespace Prysm.SyncCommittee
+open EthLib.Serialization.Ssz
+
+/-- SSZ content of a Go `v1alpha1.SyncCommittee` (512 Pubkeys of 48 bytes, AggregatePubkey 48). -/
+structure SszValue where
+  pubkeys : Vector (Vector UInt8 48) 512
+  aggregatePubkey : Vector UInt8 48
+
+/-- The 512 pubkeys as byte lists, in order. -/
+def SszValue.pubkeyBytes (g : SszValue) : List (List UInt8) := g.pubkeys.toList.map (·.toList)
+
+def SszValue.toValue (g : SszValue) : Value :=
+  .seq [.seq (g.pubkeys.toList.map fun p => .bytes p.toArray), .bytes g.aggregatePubkey.toArray]
+
+/-- `pubkeys[0] ‖ … ‖ pubkeys[511] ‖ aggregatePubkey`. -/
+def SszValue.encode (g : SszValue) : Array UInt8 := g.pubkeyBytes.flatten.toArray ++ g.aggregatePubkey.toArray
+
 open EthLib.Serialization.Ssz Spec
 
 theorem desc_wellFormed : desc.wellFormed = .ok () := by rfl

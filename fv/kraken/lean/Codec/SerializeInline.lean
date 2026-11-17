@@ -1,8 +1,6 @@
-import Prysm.Checkpoint.Spec
-import Prysm.Checkpoint.SpecEquivalence
+import Spec.DeserializeOfSerialize
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
-import Prysm.SyncCommittee.SpecDefinitions
 
 /-!
 # EthLib `assemble` of a list of fixed-size parts

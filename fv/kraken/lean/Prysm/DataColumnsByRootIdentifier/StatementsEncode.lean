@@ -5,6 +5,7 @@ import Machine.Labels
 import Prysm.ElfData.PrysmTarget
 import Prysm.DataColumnsByRootIdentifier.Code
 import Prysm.DataColumnsByRootIdentifier.SpecDefinitions
+import Prysm.DataColumnsByRootIdentifier.SpecDescription
 
 /-!
 # Hand STATEMENTS of the encoder target `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo` (statements only)

@@ -2,18 +2,13 @@ import Spec.TestCheckpointAndAttestationData
 import Spec.DeserializeOfSerialize
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import Prysm.Checkpoint.SpecChecker
+import Prysm.Checkpoint.SpecDescription
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.Checkpoint`
 
-Independent hand `Desc`, written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`):
-
-    class Checkpoint(Container):
-        epoch: Epoch      # Epoch = uint64
-        root: Root        # Root = Bytes32
-
-Field order epoch, root; SSZ kinds `uint64` (8-byte little endian) and `Bytes32`
-(EthLib `byteVector 32`). The Prysm Go fields (`attestation.pb.go` of the pinned Prysm commit, `README.md` section 2) are
+`desc` (`Prysm/Checkpoint/SpecDescription.lean`) is the independent hand `Desc` from consensus-specs phase0.
+The Prysm Go fields (`attestation.pb.go` of the pinned Prysm commit, `README.md` section 2) are
 `Epoch` at offset 8 and `Root` (`[]byte`, `ssz-size:"32"`) at offset 16, in this order; `state`, `unknownFields`
 and `sizeCache` have no SSZ value (Go size 72; gc amd64 layout from `prysm/ir/ir-mainnet.json`). `checkerDesc` (generated) is the Desc
 checker's Desc of `(v1alpha1, Checkpoint)`; `desc_checker` shows that the
@@ -30,9 +25,6 @@ namespace); they read EthLib only.
 namespace Prysm.Checkpoint
 open EthLib.Serialization.Ssz
 open Spec hiding readUint_lt
-
-/-- consensus-specs phase0 `Checkpoint`. -/
-def desc : Desc := .container ["epoch", "root"] [.uint 8, .byteVector 32]
 
 /-- The checker's Desc and the hand Desc have the same field list; only the names differ. -/
 theorem desc_checker :

@@ -1,5 +1,4 @@
-import Prysm.SyncCommittee.Spec
-import Prysm.HistoricalBatch.SpecDefinitions
+import Spec.DeserializeOfSerialize
 
 /-!
 # Values of `byteVector 32`

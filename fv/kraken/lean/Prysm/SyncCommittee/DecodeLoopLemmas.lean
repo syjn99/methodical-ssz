@@ -1,6 +1,6 @@
 import Machine.Frame
 import Machine.Block
-import Prysm.SyncCommittee.SpecDefinitions
+import Prysm.SyncCommittee.Spec
 import Codec.ByteSliceListLemmas
 
 /-!

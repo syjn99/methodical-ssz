@@ -1,6 +1,6 @@
 import Machine.Frame
 import Machine.Block
-import Prysm.SyncCommittee.SpecDefinitions
+import Codec.ByteSliceListDefinitions
 
 /-!
 # List and memory-chunk lemmas of a `[][]byte` decoder loop
