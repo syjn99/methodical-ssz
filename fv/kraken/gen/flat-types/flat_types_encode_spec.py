@@ -52,6 +52,8 @@ ENCODE_SPEC_TYPES = {
             ['u:index', 'b:pubkey', 'u:activationEpoch']),
     'Status': ('Prysm.Status.Spec', 'Prysm.Status.SszValue', 'Prysm.Status.SszValue.encode', 'Prysm.Status.SszValue.serialize_eq', 'Prysm.Status.desc',
             ['b:forkDigest', 'b:finalizedRoot', 'u:finalizedEpoch', 'b:headRoot', 'u:headSlot']),
+    'StatusV2': ('Prysm.StatusV2.Spec', 'Prysm.StatusV2.SszValue', 'Prysm.StatusV2.SszValue.encode', 'Prysm.StatusV2.SszValue.serialize_eq', 'Prysm.StatusV2.desc',
+            ['b:forkDigest', 'b:finalizedRoot', 'u:finalizedEpoch', 'b:headRoot', 'u:headSlot', 'u:earliestAvailableSlot']),
 }
 RTCOPY_LEN = 26
 
