@@ -141,7 +141,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 ### The proof generator covers only some code forms
 
 - What does not hold: `gen/generator/generator.py` does not cover every field form.
-  It covers 8-byte `uint64` fields and byte vectors of 32, 48 and 96 bytes.
+  It covers 8-byte `uint64` fields and byte vectors of 4, 20, 32, 48 and 96 bytes.
   It covers the callees `Slot`, `CommitteeIndex`, `ValidatorIndex` and `Epoch`.
   It refuses byte vectors of other sizes, `bool` fields, the `Gwei` callee, interleaved fields and nested containers.
   On the encoder side, the compiled sites that append a 32-byte field have different instruction texts.

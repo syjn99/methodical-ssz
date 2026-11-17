@@ -16,7 +16,8 @@ Cases (ids `whole-accept-*`; mutated `.S` / IR copies in <work-dir> only):
    (spill to a non-home slot, a register spilled twice, an extra `rcx` spill, `dB != F + 24`, an `xor` epilogue in a
    frame other than 0x20, an epilogue load of a non-zero slot, a `nop` inside the accept epilogue, a malformed
    size-error block, a stack store of an input value, a load from a stack slot outside the layout, interleaved
-   fields); statement-level IR mutants (a wrong Go offset, a wrong size, the field order swapped, a Go offset that
+   fields); the 4-byte inline copy (copy removed or 64-bit, source offset, write-barrier branch, length, buffer
+   register or slot, pointer store) and the 20-byte memmove size; statement-level IR mutants (a wrong Go offset, a wrong size, the field order swapped, a Go offset that
    the code matches but that is not the kind's running sum). Valid variants (an extra harmless move, another valid
    set-up order): exit 0 and kindcheck PASS.
  - whole-accept-fail-closed-*: fail-closed. A harness imports the working-tree `generator.py`, takes its `whole-accept` module (`whole_accept_module()`),
@@ -61,6 +62,16 @@ def ir_size(field, size):
             if f["key"] == field:
                 f["v"]["size"] = size
                 f["v"]["fixed_size"] = size
+    return fn
+
+
+def ir_sizes(sizes):
+    """The sizes of several fields changed; the sum (the container's fixed size) stays the same."""
+    def fn(t):
+        for f in t["ir"]["fields"]:
+            if f["key"] in sizes:
+                f["v"]["size"] = sizes[f["key"]]
+                f["v"]["fixed_size"] = sizes[f["key"]]
     return fn
 
 
@@ -180,7 +191,36 @@ WHOLE_ACCEPT_MUT = [
     ("whole-accept-ir-goff-code", "IR and code: ValidatorBalance Balance at Go offset 24 (code store 0x18; not the running sum 16)", "ValidatorBalance",
      rv([(52, "mov %rcx,0x10(%rdx)", "mov %rcx,0x18(%rdx)")]), ir_goff("Balance", 24), 2),
     ("whole-accept-ir-goff-first", "IR: VoluntaryExit Epoch Go offset 0 (code 8, state word)", "VoluntaryExit", None, ir_goff("Epoch", 0), 2),
+    # 4-byte fields (inline-copy segment, Fork) and 20-byte fields (WithdrawalRequest)
+    ("whole-accept-inline-copy-missing", "Fork PreviousVersion: the 32-bit store `mov %edi,(%rax)` removed", "Fork",
+     rv([(32, "mov %edi,(%rax)", None)]), None, 2),
+    ("whole-accept-inline-copy-64", "Fork PreviousVersion: a 64-bit copy `mov (%rsi),%rdi; mov %rdi,(%rax)`", "Fork",
+     rv([(31, "mov (%rsi),%edi", "mov (%rsi),%rdi"), (32, "mov %edi,(%rax)", "mov %rdi,(%rax)")]), None, 2),
+    ("whole-accept-inline-source-offset", "Fork CurrentVersion: `mov 0x8(%rbx),%esi` (IR SSZ offset 4)", "Fork",
+     rv([(60, "mov 0x4(%rbx),%esi", "mov 0x8(%rbx),%esi")]), None, 2),
+    ("whole-accept-inline-je-to-jne", "Fork PreviousVersion: the write-barrier test `jne` (the copy tail runs on the barrier path)", "Fork",
+     rv([(37, "UnmarshalSSZ_b2", "jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.UnmarshalSSZ_b2")]), None, 2),
+    ("whole-accept-inline-len-imm", "Fork PreviousVersion: `movq $0x5,0x10(%rdx)` after the copy (size 4)", "Fork",
+     rv([(33, "movq $0x4,0x10(%rdx)", "movq $0x5,0x10(%rdx)")]), None, 2),
+    ("whole-accept-inline-buffer-register", "Fork PreviousVersion: buffer in rcx (`mov 0x50(%rsp),%rcx; mov (%rcx),%edi`, no lemma case)", "Fork",
+     rv([(30, "mov 0x50(%rsp),%rsi", "mov 0x50(%rsp),%rcx"), (31, "mov (%rsi),%edi", "mov (%rcx),%edi")]), None, 2),
+    ("whole-accept-inline-pointer-store", "Fork PreviousVersion: pointer store after the barrier at Go offset 16 (IR 8)", "Fork",
+     rv([(43, "mov %rax,0x8(%rdx)", "mov %rax,0x10(%rdx)")]), None, 2),
+    ("whole-accept-inline-buffer-not-home", "Fork PreviousVersion: buffer reload from 0x48(%rsp) (the receiver slot)", "Fork",
+     rv([(30, "mov 0x50(%rsp),%rsi", "mov 0x48(%rsp),%rsi")]), None, 2),
+    ("whole-accept-epilogue-four-nops", "Fork: four `nop`s between `pop %rbp` and `retq` of the accept epilogue (at most three)", "Fork",
+     rv([(109, "nop", ["nop", "nop", "nop", "nop"])]), None, 2),
+    ("whole-accept-ir-size-4", "IR: ForkData CurrentVersion of 32 bytes and GenesisValidatorsRoot of 4 bytes (code 4 and 32)", "ForkData",
+     None, ir_sizes({"CurrentVersion": 32, "GenesisValidatorsRoot": 4}), 2),
+    ("whole-accept-memmove-size-20", "WithdrawalRequest SourceAddress: `mov $0x13,%ecx` before memmove (size 20)", "WithdrawalRequest",
+     rv([(31, "mov $0x14,%ecx", "mov $0x13,%ecx")]), None, 2),
+    ("whole-accept-ir-size-20", "IR: WithdrawalRequest SourceAddress of 48 bytes and ValidatorPubkey of 20 bytes (code 20 and 48)",
+     "WithdrawalRequest", None, ir_sizes({"SourceAddress": 48, "ValidatorPubkey": 20}), 2),
     # valid variants: generated, kindcheck PASS
+    ("whole-accept-inline-valid-nop", "Fork PreviousVersion: a `nop` between the 32-bit load and the 32-bit store", "Fork",
+     rv([(32, "mov %edi,(%rax)", ("before", ["nop"]))]), None, 0),
+    ("whole-accept-epilogue-valid-no-nop", "Fork: the `nop` between `pop %rbp` and `retq` removed", "Fork",
+     rv([(109, "nop", None)]), None, 0),
     ("whole-accept-valid-extra-move", "SyncCommitteeMessage: an extra `mov %rdi,%rsi` in the ValidatorIndex set-up", "SyncCommitteeMessage",
      sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:4] + ["  mov %rdi,%rsi"] + VALIDATOR_INDEX_SETUP[4:]), None, 0),
     ("whole-accept-valid-order", "SyncCommitteeMessage: ValidatorIndex set-up with `mov $0x8,%ecx` first", "SyncCommitteeMessage",
@@ -339,7 +379,7 @@ for kind in KINDS:
             return ostep(*a)
         rec("derive", kind, f"whole_accept_step call {n}", patched(whole_accept_gen, "whole_accept_step", inj))
 # phase render: every theorem renderer (each call), the kind recorder
-for meth in ("head", "field", "f_u64", "f_bytes", "f_call", "epilogue", "accept", "reject", "layout", "binders", "mem"):
+for meth in ("head", "field", "f_u64", "f_bytes", "f_inline", "f_call", "epilogue", "accept", "reject", "layout", "binders", "mem"):
     om, seqm = getattr(whole_accept_gen.T, meth), []
     setattr(whole_accept_gen.T, meth, lambda self, *a, om=om, seqm=seqm: (seqm.append(1), om(self, *a))[1])
     call()
@@ -368,7 +408,7 @@ pathlib.Path(ARGV[3]).write_text(json.dumps(res) + "\n")
 """
 
 
-WHOLE_ACCEPT_FAIL_CLOSED_KEYS = ("PendingDeposit", "SyncCommitteeMessage", "VoluntaryExit", "PowBlock", "ValidatorBalance")
+WHOLE_ACCEPT_FAIL_CLOSED_KEYS = ("PendingDeposit", "SyncCommitteeMessage", "VoluntaryExit", "PowBlock", "ValidatorBalance", "Fork")
 
 
 def whole_accept_fc_cases(work, new, keys=None):

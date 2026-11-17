@@ -186,7 +186,7 @@ For a row with another result than its `expect` value, a message names the row a
 
 Exit 2 is a refusal.
 The generator writes nothing to standard output.
-The last line of `<T>.whole-accept.stderr` or `<T>.fast-path.stderr` gives the reason, for example `byte vector of 20 bytes`.
+The last line of `<T>.whole-accept.stderr` or `<T>.fast-path.stderr` gives the reason, for example `byte vector of 1 bytes`.
 `FINDINGS.md`, entry "The proof generator covers only some code forms", lists the covered forms.
 Keep the row of a refused method with `refuse`: then `gen.sh` checks that the generator still refuses it.
 A refused method needs hand proofs with the roles `DecodeAccept`, `DecodeRejectSize`, `EncodeFastPath` and their witnesses.

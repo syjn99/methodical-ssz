@@ -107,19 +107,6 @@ NESTED = ["AttestationData"]
 # `sh gen/generator/gen.sh <out dir>` for the row. The `run` mode checks that the keys are the refuse rows of
 # gen/generator/types.tsv outside CORE_FLAT_TYPES and NESTED. No program compares the text with a generator run.
 GENERATOR_REFUSED = {
-    "v1.BuilderExitRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1.ConsolidationRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1.Withdrawal": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1.WithdrawalRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1alpha1.BLSToExecutionChange": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1alpha1.BuilderPendingWithdrawal": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1alpha1.ProposerPreferences": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1alpha1.ValidatorRegistrationV1": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1alpha1.ENRForkID": dict(decoder="byte vector 4", encoder="byte vector 4"),
-    "v1alpha1.Fork": dict(decoder="byte vector 4", encoder="byte vector 4"),
-    "v1alpha1.ForkData": dict(decoder="byte vector 4", encoder="byte vector 4"),
-    "v1alpha1.Status": dict(decoder="byte vector 4", encoder="byte vector 4"),
-    "v1alpha1.StatusV2": dict(decoder="byte vector 4", encoder="byte vector 4"),
     "v1alpha1.Builder": dict(decoder="byte vector 1", encoder="byte vector 1"),
     "v1alpha1.PayloadAttestationData": dict(decoder="bool", encoder="bool"),
     "v1alpha1.Validator": dict(decoder="bool", encoder="bool"),

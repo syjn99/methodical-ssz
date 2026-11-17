@@ -9,6 +9,7 @@ Cases (mutated `.S` / IR copies are written to <work-dir>, nothing in the reposi
    An accept row: exit 0, two runs byte-identical, every theorem with its kind line; equal to the committed
    `lean/Prysm/<T>/GeneratedEncodeFastPath.lean` when it exists. A refuse row: exit 2 twice, 0 bytes on stdout.
  - fast-path-refused-*: adversarial `.S` / IR mutants (capacity test altered so that the growslice site is on the walked path,
+   a 4-byte inline copy with a wrong offset, width, source or length test, a 20-byte memmove of the wrong size, IR sizes 4 / 20 changed,
    length test with a wrong immediate / wrong word, a store to the wrong offset vs the IR, fields out of order, a
    clobbered dst / len register, memmove with swapped source / destination, epilogue frame-test variants, a
    truncated file, an extra store beyond len + size, unknown directives and callees, stack stores outside the frame,
@@ -210,7 +211,34 @@ def adversarial(work):
     C.append(("fast-path-refused-hand-layout-missing", argv(beacon_block_header, extra=["--hand-layout=Prysm.BeaconBlockHeader.encodeLayoutMissing",
                                                              "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeLayout.lean"]),
               "refuse", "hand layout not in the file"))
+    # 4-byte fields (inline 32-bit copy, Fork) and 20-byte fields (memmove, WithdrawalRequest / BLSToExecutionChange)
+    fork = "Fork"
+    adversarial_case("inline-store-offset", fork, [("mov %edx,(%rbx,%rcx,1)", ["mov %edx,0x1(%rbx,%rcx,1)"], 0)],
+        "4-byte field stored at SSZ offset 1 (IR: 0)")
+    adversarial_case("inline-load-disp", fork, [("mov (%rdx),%edx", ["mov 0x4(%rdx),%edx"], 0)],
+        "4-byte field loaded at its pointer + 4")
+    adversarial_case("inline-store-64", fork, [("mov %edx,(%rbx,%rcx,1)", ["mov %rdx,(%rbx,%rcx,1)"], 0)],
+        "4-byte field stored with a 64-bit store")
+    adversarial_case("inline-load-missing", fork, [("mov (%rdx),%edx", None, 0)],
+        "the field pointer itself stored (no load of the 4 bytes)")
+    adversarial_case("inline-store-other-field", fork, [("mov (%rdx),%edx", ["mov 0x20(%rax),%rdx", "mov (%rdx),%edx"], 0)],
+        "the first 4-byte field copied from the pointer of the second field")
+    adversarial_case("inline-len-imm", fork, [("cmpq $0x4,0x10(%rax)", ["cmpq $0x8,0x10(%rax)"], 0)],
+        "length test of a 4-byte field with 8")
+    C.append(("fast-path-refused-inline-ir-size", argv(fork, ir=ir_mut(fork, lambda ty: (
+        ty["go_fields"][1].__setitem__("tag", ty["go_fields"][1]["tag"].replace('ssz-size:"4"', 'ssz-size:"20"')),
+        ty["ir"]["fields"][0]["v"].update(size=20, fixed_size=20), ty["ir"].update(fixed_size=ty["ir"]["fixed_size"] + 16)),
+        work, "fork-size")), "refuse", "IR size 4 -> 20 (code tests and copies 4)"))
+    adversarial_case("memmove-size-20", "WithdrawalRequest", [("mov $0x14,%ecx", ["mov $0x13,%ecx"], 0)],
+        "memmove of 19 bytes for a 20-byte field")
+    C.append(("fast-path-refused-ir-size-20", argv("BLSToExecutionChange", ir=ir_mut("BLSToExecutionChange", lambda ty: (
+        ty["go_fields"][3].__setitem__("tag", ty["go_fields"][3]["tag"].replace('ssz-size:"20"', 'ssz-size:"32"')),
+        ty["ir"]["fields"][2]["v"].update(size=32, fixed_size=32), ty["ir"].update(fixed_size=ty["ir"]["fixed_size"] + 12)),
+        work, "bls-to-execution-change-size")), "refuse", "IR size 20 -> 32 (code tests and copies 20)"))
     # valid variants: must stay covered
+    adversarial_case("inline-nops", fork, [("mov %edx,(%rbx,%rcx,1)", ["nop", "mov %edx,(%rbx,%rcx,1)"], 0),
+                                           ("mov (%rdx),%edx", ["nop", "mov (%rdx),%edx"], 1)],
+        "nops before the 32-bit store of field 0 and the 32-bit load of field 1", "covered")
     adversarial_case("nops", validator_balance, [("lea 0x8(%rcx),%rdx", ["nop", "lea 0x8(%rcx),%rdx", "nop"], 0), ("cmp %rdx,%rdi", ["cmp %rdx,%rdi", "nop"], 0),
                      ("mov 0x48(%rsp),%r8", ["nop", "nop", "mov 0x48(%rsp),%r8"], 0), ("pop %rbp", ["nop", "pop %rbp"], 0)],
         "nops at start, middle (inside a cmp / jae window), doubled, before pop", "covered")
@@ -393,7 +421,7 @@ def main():
     h = work / "fast_path_fail_closed_harness.py"
     h.write_text(FAIL_CLOSED_HARNESS)
     reached = set()
-    for t in ("ValidatorBalance", "DepositMessage", "HistoricalSummary", "Checkpoint"):
+    for t in ("ValidatorBalance", "DepositMessage", "HistoricalSummary", "Checkpoint", "Fork"):
         cfg = work / f"fast_path_fail_closed-{t}.cfg.json"
         ro = work / f"fast_path_fail_closed-{t}.result.json"
         cfg.write_text(json.dumps(dict(argv=argv(t)[4:], nfields=nfields(t))))
