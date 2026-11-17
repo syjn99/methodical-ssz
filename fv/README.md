@@ -12,7 +12,7 @@ This file gives the design principles. It does not repeat those rules.
 
 A proof is about the compiled x86-64 machine code of one Go method of one type.
 The methods are the decoder `UnmarshalSSZ`, the encoder `MarshalSSZTo` and `SizeSSZ`.
-The hash tree root methods are not in the scope yet.
+The proofs do not cover the hash tree root methods.
 
 - The object is the machine code in one ELF file. The Go source is not the object.
 - The Go compiler is not trusted and is not evidence. Its output is the thing that we examine.
@@ -54,7 +54,7 @@ The proofs assume these items. They do not prove them.
 - The runtime callee contracts. A contract is a Lean hypothesis that describes a Go runtime function.
   Examples are memory allocation, slice growth, memory copy and error formatting.
   The contracts come from a reading of the Go runtime source. No proof shows that the compiled runtime satisfies them.
-- The hash function, when hash tree root proofs start. It stays a contract until a separate project proves it.
+- The hash function of a hash tree root proof. It is a contract until a separate project proves it.
 - The Go memory layout of the receiver types. It comes from the `go/types` size rules, not from the ELF.
 
 Behavior of other clients and the output of the Go compiler are never evidence.
@@ -74,15 +74,21 @@ One function of one type is done only when all of these items exist.
 5. **Negative tests.** A mutation of one instruction or of the statement must make the designated theorem fail.
    An unchanged control must pass. This shows that the theorem depends on the code that it names.
 6. **Link check.** The included code and data are the bytes of the pinned ELF.
-7. **Go value check.** The witness receiver is a valid Go value of that type.
+7. **Go value check.** A Lean predicate shows that the witness receiver is a valid Go value of that type.
+   A type without this check has an entry in `kraken/FINDINGS.md`.
 8. **Axioms and drift checks.** See section 6.
 9. **List of paths not proved.** For example, the stack growth path and the garbage collector write barrier path.
+   The generated table `kraken/prysm/proof-inventory.md` gives this list for each method.
 
 Never write "complete" for a function that has an item in its list of paths not proved.
 
 ## 5. Statement rules
 
-- Write the statement before the proof, and commit it. A later change gets a new name and a written reason.
+- A statement is a `def ... : Prop` or the declared type of the theorem.
+  A reviewer reads the statement before the proof.
+- A changed statement replaces the earlier statement in the same commit.
+  The commit message and the PR give the reason for the change.
+  Git keeps the earlier statement. The tree does not.
 - Never weaken a statement to make a proof close. Weakening stops the work, and the work is reported.
 - Give every size an explicit range. Do not quantify over all sizes.
 - Give every memory region as a separate fragment with its owner. The regions are the input, the receiver, the stack slots, the heap and the frame.
@@ -112,7 +118,10 @@ The commands are in `kraken/README.md`.
 
 A proof that cannot close is a candidate finding.
 A candidate is confirmed only by a concrete input, a theorem or a Go test that shows the behavior.
-Record each finding in `kraken/FINDINGS.md`, with its place, its effect and its state.
+Record each confirmed finding that is open in `kraken/FINDINGS.md`.
+That file lists only the limits that are open.
+Each entry says what does not hold, what it means for a theorem or a check, and where it is.
+A change that removes a limit also removes its entry.
 
 A fix to the generator or to the runtime library needs explicit user approval.
 A fixed generator gives a new ELF, and a new ELF needs new proofs.
@@ -123,4 +132,4 @@ Change the Go regression test and the Lean reject theorem in the same change.
 - `../AGENTS.md`: roles, prohibitions and approval boundaries.
 - `AGENTS.md`: the rules for all work under this directory.
 - `kraken/README.md`: the project, its pins and its commands.
-- `kraken/FINDINGS.md`: the findings of the project.
+- `kraken/FINDINGS.md`: the open limits of the project.

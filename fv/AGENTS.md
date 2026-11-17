@@ -13,18 +13,31 @@ This file records only the differences and the additions. If the two documents c
 
 One theorem has three sources. If one source changes, check the theorem again.
 
+Paths in this table are relative to the project directory `fv/<project>/`.
+
 | Source | What to record | Where |
 | --- | --- | --- |
-| Specification | EthLib commit, module, definition name | Theorem file header and `lean/README.md` |
-| Target | Go source path, generator commit, Go version, build flags, ELF sha256 | The `build-ids.txt` files and the project `README.md` |
-| Semantics | Kraken commit. For a PR branch, the PR number and "not in main" | `lake-manifest.json` and the project `README.md` |
+| Specification | EthLib commit | `lean/lakefile.toml` (`rev`) and `lean/lake-manifest.json` |
+| Specification | EthLib module and definition of each type | The imports and the `Desc` module of the type (`lean/README.md` section 5) |
+| Target | Go source commit and generator commit | The project `README.md` section 2 |
+| Target | Go version, build flags, ELF sha256 | The `build-ids.txt` file of the target |
+| Semantics | Kraken commit | `lean/lakefile.toml` (`rev`) and `lean/lake-manifest.json` |
+| Semantics | Lean toolchain | `lean/lean-toolchain` |
+| Semantics | For a Kraken PR branch, the PR number and "not in main" | The project `README.md` section 2 |
 
 The behavior of other clients and the output of the Go compiler are not evidence.
 
 ## Layout
 
-Put `target/` (target Go), `link/` (build, conversion, link check), `lean/` (theorems) and `gen/` (generators and checkers) in `fv/<project>/`.
-The documents are `README.md` in the project directory, a `README.md` in each directory that needs its own principles, and one `FINDINGS.md`.
+A project directory `fv/<project>/` holds `lean/` (theorems), `link/` (conversion, data files, link check) and `gen/` (generators and checkers).
+It also holds one directory for each target binary, with the inputs and records of that target.
+In the project `kraken`, the target directory is `prysm/`.
+The documents in the project directory are `README.md`, `NEW-TYPE.md`, `FINDINGS.md` and `THIRD-PARTY-NOTICES.md`.
+`README.md` gives the project, its pins and its commands.
+`NEW-TYPE.md` gives the steps to prove a new type.
+`FINDINGS.md` lists the limits that are open.
+`THIRD-PARTY-NOTICES.md` names the sources of the files that come from other projects.
+A directory that needs its own principles has its own `README.md`.
 A commit of one project does not touch files outside that directory.
 Put external clones (`upstream/`, `vcgen-src/`) and generated files in `.gitignore`.
 
@@ -44,7 +57,9 @@ CI records the build and the axioms gate. For a check that did not run, record i
 ## Known answers
 
 Take expected values from consensus-specs test vectors or from EthLib. Do not make expected values with the code under check.
-One ELF hash binds the conversion result, `Code.lean`, the data files and the link check result. Print the hash after the last PASS line.
+One bundle hash binds the ELF, the converted `.S` files, the data files and the link check result.
+The link check writes this hash after the last PASS line of its result file.
+It does not hash a Lean file.
 
 ## Tool boundaries
 
@@ -62,6 +77,9 @@ One ELF hash binds the conversion result, `Code.lean`, the data files and the li
 - Do not invent code names. A code name is a short letter or number label for a work unit, a step, a program path, a type, a review or a finding.
   This rule applies to file names, directory names, module names, declaration names, options, JSON keys, comments and documents.
   Use the full type name and plain words. A reader with no history must understand the name.
+- A label that a tool prints is not a code name if one document list defines each value.
+  Examples are the check letters of `link/check.py` (`link/README.md` section 2).
+  Other examples are the rule numbers of `gen/generator/kindcheck.py` (`gen/README.md` section 4).
 - A comment gives its reason in words. It does not point to a record outside the tree.
 - The reviewer of a change checks its new names and comments against this rule.
 - Git history keeps deleted content. Do not keep a file for the reason "historical material".
@@ -69,7 +87,8 @@ One ELF hash binds the conversion result, `Code.lean`, the data files and the li
 ## Commits and PRs
 
 - The title is an English Conventional Commits title `<type>(<scope>): <summary>`. The type is from the EthLib list + `proof`. The scope is `kraken`, `gohashtree`, `link`, `spec`, `contracts` or `negative`.
-- At the end of the body, state the authoring model: `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+- At the end of the body, a trailer line states the authoring model.
+  Its form is `Co-Authored-By: MODEL-NAME <E-MAIL-ADDRESS>`, with the name and the e-mail address of that model.
 - The PR body has two sections, `Problem` and `Solution`. Each section has three bullets at most. One bullet is one sentence.
 - Add a `Not run` line only when a check did not run. CI shows the results of the build and the axioms gate.
 - If the author is an AI agent, the last line of the body states the model.
@@ -89,11 +108,10 @@ One ELF hash binds the conversion result, `Code.lean`, the data files and the li
 
 ## Session operation
 
-- Keep heavy Lean builds within the memory of the machine. If memory is short, run one build at a time.
+- Keep heavy Lean builds within the memory of the machine. Run one heavy build at a time.
 - To see other builds, use `pgrep -lx lean` and `pgrep -lx lake`. Do not wait for `lean --server` or `lake serve`: they are editor processes.
 - Do not print the environment or the full command line of other processes. Do not use `pgrep -f` or `ps e`.
 - Do not use absolute home directory paths in commands. Use `~` or `$HOME`.
-- Delete directories with `trash`, not `rm`.
-- Make a commit for each work unit. Update the progress with `orca worktree set --worktree active --comment "..."`.
-- When the work is complete, run `orca worktree set --worktree active --workspace-status in-review --unread`.
+- Delete a directory with the trash tool of the workstation, if it has one. Do not use `rm -r`.
+- Make a commit for each work unit.
 - If an item is blocked, mark it as not run and go to the next item. Stop only when all of the work is blocked.
