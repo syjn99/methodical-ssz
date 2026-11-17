@@ -112,6 +112,7 @@ data	string	formatAttestingIndicesMisaligned	format string "misaligned bytes: c.
 data	string	formatAttestingIndicesTooBig	format string "ssz-max exceeded: c.AttestingIndices has %d elements, ssz-max is 2048: %w"	go_string._	164102	73	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.IndexedAttestation.UnmarshalSSZ
 data	string	formatBalance	format string "Balance: %w"	go_string._	23984	11	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Builder.UnmarshalSSZ
 data	string	formatBufferLength	format string "expected buffer of length %d received %d"	go_string._	110067	40	github.com/OffchainLabs/prysm/v7/consensus-types/primitives.Epoch.UnmarshalSSZ
+data	string	formatBufferLengthReceiced	format string "expected buffer of length %d receiced %d"	go_string._	110107	40	github.com/OffchainLabs/prysm/v7/consensus-types/primitives.CommitteeIndex.UnmarshalSSZ
 data	string	formatBuilderIndex	format string "BuilderIndex: %w"	go_string._	37027	16	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.BuilderPendingWithdrawal.UnmarshalSSZ
 data	string	formatColumnsMisaligned	format string "misaligned bytes: c.Columns length is %d, which is not a multiple of 8: %w"	go_string._	164835	74	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ
 data	string	formatColumnsTooBig	format string "ssz-max exceeded: c.Columns has %d elements, ssz-max is 128: %w"	go_string._	152012	63	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ

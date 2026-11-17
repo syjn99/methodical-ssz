@@ -211,9 +211,12 @@ The files of ValidatorIndex are the model:
 
 - `Code.lean`, and `GeneratedDecodeAccept.lean` with `Decode.generated_accept` (the `uint64` mode writes it);
 - `DecodeAcceptFunctionSpec.lean`: the hand function specification `Decode.accept_function_spec` and its proof `Decode.accept_function_spec_holds`;
-- `DecodeRejectSize.lean`, `WitnessGeneratedDecodeAccept.lean` and `WitnessDecodeRejectSize.lean`.
+- `DecodeRejectSize.lean`, `WitnessGeneratedDecodeAccept.lean` and `WitnessDecodeRejectSize.lean`;
+- `SpecDescription.lean` with `desc := .uint 8`, and `DecodeSpec.lean` with `Decode.accept_spec`, `Decode.reject_size_spec` and `Decode.reject_complete`.
+  The lemmas about `.uint 8` are in `Prysm/Epoch/Spec.lean`.
 
-Slot and CommitteeIndex have no `DecodeRejectSize.lean` and no `WitnessDecodeRejectSize.lean` (`FINDINGS.md`).
+The CommitteeIndex decoder has another format string: the Prysm source spells it "receiced".
+Its reject theorems use the data item `formatBufferLengthReceiced`.
 
 What checks it: `gen/generator/kindcheck.py` (step 7).
 For a `decoder --whole-accept` or `encoder --fast-path` file, it recomputes the kind parameters from the `.S` file and the IR.
@@ -372,7 +375,7 @@ A check that did not run is "not run" in the pull request.
    `CORE_FLAT_TYPES` is the set of types of the accept rows of `gen/generator/types.tsv` in the modes `decoder --whole-accept` and `encoder --fast-path`.
    It does not hold a type with the companion `hand-list`.
    The tool reads it from the table.
-   Expected: `gen/tools/proof_inventory.py run` exits 0, and `prysm/proof-inventory.md` has a row for the type.
+   Expected: `gen/tools/proof_inventory.py run` exits 0, and its output `<scratch>/proof-inventory.md` has a row for the type.
 8. The link check of step 2, when the link set changed (needs the ELF).
 
 ## 8. The pull request
