@@ -15,11 +15,14 @@ if [[ $(cat "$DIR/libethlib.commit" 2>/dev/null) != "$COMMIT" ]]; then
 	cd "$DIR"
 	[[ $(git rev-parse HEAD) == "$COMMIT" ]] || { git fetch -q origin "$COMMIT" && git checkout -q "$COMMIT"; }
 	lake exe cache get
-	lake build EthLib.Consensus.Exports.Ssz
+	# The :c.o facet adds the object of the export module itself. Lake builds
+	# only the objects of its imports by default.
+	lake build EthLib.Consensus.Exports.Ssz EthLib.Consensus.Exports.Ssz:c.o
 	# Every module object goes in the archive. The linker takes the ones
 	# that the export needs.
 	rm -f libethlib.a
 	find .lake/build/ir/EthLib -name '*.c.o.export' -print0 | xargs -0 ar rcs libethlib.a
+	nm libethlib.a | grep ' T _*eth_consensus_ssz_static$' >/dev/null
 	echo "$COMMIT" >libethlib.commit
 fi >&2
 
