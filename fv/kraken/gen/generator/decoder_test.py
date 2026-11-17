@@ -9,14 +9,14 @@ Cases (ids `whole-accept-*`; mutated `.S` / IR copies in <work-dir> only):
  - whole-accept-new-*: `--whole-accept` on the type of every `decoder --whole-accept` row of `gen/generator/types.tsv`.
    An accept row: exit 0 twice, identical, every whole-accept theorem with its kind line, `kindcheck.py` PASS (rule 12:
    kind parameters recomputed from the IR and the `.S`). A refuse row: exit 2 twice, 0 bytes. Examples of refuse rows:
-   PendingPartialWithdrawal (interleaved fields) and AttestationData (nested fields).
+   AttestationData (nested fields).
  - adversarial inputs, each expected exit 2 with 0 bytes on stdout and `accept_generated: false` in the summary (no
    accept theorem): every class of the step rules (stack-store overlap / misaligned store, head variants, size
    immediate, epilogue jump to a missing label, truncated file, callee of another overlay type) and the whole-accept rules
    (spill to a non-home slot, a register spilled twice, an extra `rcx` spill, `dB != F + 24`, an `xor` epilogue in a
    frame other than 0x20, an epilogue load of a non-zero slot, a `nop` inside the accept epilogue, a malformed
    size-error block, a stack store of an input value, a load from a stack slot outside the layout, interleaved
-   fields); the 4-byte inline copy (copy removed or 64-bit, source offset, write-barrier branch, length, buffer
+   fields: the Withdrawal set-up changed, the first field store moved or removed); the 4-byte inline copy (copy removed or 64-bit, source offset, write-barrier branch, length, buffer
    register or slot, pointer store) and the 20-byte memmove size; statement-level IR mutants (a wrong Go offset, a wrong size, the field order swapped, a Go offset that
    the code matches but that is not the kind's running sum). Valid variants (an extra harmless move, another valid
    set-up order): exit 0 and kindcheck PASS.
@@ -182,7 +182,6 @@ WHOLE_ACCEPT_MUT = [
      rv([(88, "mov %rsi,0x38(%rdx)", ("before", ["mov %rsi,0x30(%rsp)"]))]), None, 2),
     ("whole-accept-load-outside-layout", "ValidatorBalance Balance: `mov 0x30(%rsp),%rsi` (no stack chunk at 0x30)", "ValidatorBalance",
      rv([(52, "mov %rcx,0x10(%rdx)", ("before", ["mov 0x30(%rsp),%rsi"]))]), None, 2),
-    ("whole-accept-interleaved", "real PendingPartialWithdrawal: the Epoch set-up runs inside the Amount field", "PendingPartialWithdrawal", None, None, 2),
     ("whole-accept-nested", "real AttestationData: Source / Target are nested containers (step exit 3)", "AttestationData", None, None, 2),
     # statement-level IR mutants
     ("whole-accept-ir-goff", "IR: PowBlock ParentHash Go offset 32 (code 24)", "PowBlock", None, ir_goff("ParentHash", 32), 2),
@@ -216,7 +215,29 @@ WHOLE_ACCEPT_MUT = [
      rv([(31, "mov $0x14,%ecx", "mov $0x13,%ecx")]), None, 2),
     ("whole-accept-ir-size-20", "IR: WithdrawalRequest SourceAddress of 48 bytes and ValidatorPubkey of 20 bytes (code 20 and 48)",
      "WithdrawalRequest", None, ir_sizes({"SourceAddress": 48, "ValidatorPubkey": 20}), 2),
+    # interleaved fields (Withdrawal: the ValidatorIndex set-up `lea 0x8(%rbx),%rdx; add $-0x8,%rdi; lea 0x10(%rax),%rsi` runs
+    # before the Index load and store, lines 14-18; one field block for Index and ValidatorIndex)
+    ("whole-accept-interleaved-store-removed", "Withdrawal: the Index receiver store `mov %r8,0x8(%rax)` removed", "Withdrawal",
+     rv([(18, "mov %r8,0x8(%rax)", None)]), None, 2),
+    ("whole-accept-interleaved-store-after-call", "Withdrawal: the Index load and store moved to the continuation of the ValidatorIndex call",
+     "Withdrawal", rv([(17, "mov (%rbx),%r8", None), (18, "mov %r8,0x8(%rax)", None),
+                       (53, "mov %rbx,0x30(%rsp)", ("before", ["mov (%rbx),%r8", "mov %r8,0x8(%rax)"]))]), None, 2),
+    ("whole-accept-interleaved-store-offset", "Withdrawal: the Index store at receiver offset 0x10 (the ValidatorIndex word)", "Withdrawal",
+     rv([(18, "mov %r8,0x8(%rax)", "mov %r8,0x10(%rax)")]), None, 2),
+    ("whole-accept-interleaved-setup-offset", "Withdrawal: `lea 0x10(%rbx),%rdx` (the ValidatorIndex source at SSZ offset 16, IR 8)", "Withdrawal",
+     rv([(14, "lea 0x8(%rbx),%rdx", "lea 0x10(%rbx),%rdx")]), None, 2),
+    ("whole-accept-interleaved-setup-receiver", "Withdrawal: `lea 0x18(%rax),%rsi` (the ValidatorIndex target at Go offset 24, IR 16)", "Withdrawal",
+     rv([(16, "lea 0x10(%rax),%rsi", "lea 0x18(%rax),%rsi")]), None, 2),
+    ("whole-accept-interleaved-setup-clobbered", "Withdrawal: `mov %rdi,%rsi` after the Index store (the receiver address clobbered)", "Withdrawal",
+     rv([(19, "mov %rsi,%rax", ("before", ["mov %rdi,%rsi"]))]), None, 2),
+    ("whole-accept-interleaved-load-offset", "Withdrawal: the Index load `mov 0x8(%rbx),%r8` (SSZ offset 8, IR 0)", "Withdrawal",
+     rv([(17, "mov (%rbx),%r8", "mov 0x8(%rbx),%r8")]), None, 2),
     # valid variants: generated, kindcheck PASS
+    ("whole-accept-interleaved-valid-setup-after-store", "Withdrawal: the ValidatorIndex set-up after the Index store (no interleaving)",
+     "Withdrawal", rv([(14, "lea 0x8(%rbx),%rdx", None), (15, "add $-0x8,%rdi", None), (16, "lea 0x10(%rax),%rsi", None),
+                       (19, "mov %rsi,%rax", ("before", ["lea 0x8(%rbx),%rdx", "add $-0x8,%rdi", "lea 0x10(%rax),%rsi"]))]), None, 0),
+    ("whole-accept-interleaved-valid-nop", "Withdrawal: a `nop` between the Index store and the ValidatorIndex set-up moves", "Withdrawal",
+     rv([(19, "mov %rsi,%rax", ("before", ["nop"]))]), None, 0),
     ("whole-accept-inline-valid-nop", "Fork PreviousVersion: a `nop` between the 32-bit load and the 32-bit store", "Fork",
      rv([(32, "mov %edi,(%rax)", ("before", ["nop"]))]), None, 0),
     ("whole-accept-epilogue-valid-no-nop", "Fork: the `nop` between `pop %rbp` and `retq` removed", "Fork",
@@ -252,8 +273,9 @@ def whole_accept_cases(work, new):
             kc = subprocess.run(KC + [str(f)], capture_output=True, text=True).returncode
         t = r1[1].decode()
         pre = c["args"][3]
-        thm = all(f"\ntheorem {pre}_{x} : " in t and f"\ntheorem {pre}_{x}_kind : " in t
-                  for x in ("head", "field_1", "epilogue", "accept", "reject")) if want == 0 else True
+        thm = (all(f"\ntheorem {pre}_{x} : " in t and f"\ntheorem {pre}_{x}_kind : " in t
+                   for x in ("head", "epilogue", "accept", "reject"))
+               and (f"\ntheorem {pre}_field_1 : " in t or f"\ntheorem {pre}_fields_1_" in t)) if want == 0 else True
         ok = (r1[0] == want and r1[:2] == r2[:2] and (r1[1] == b"") == (want != 0) and thm and kc == (0 if want == 0 else None)
               and r1[3].get("exit") == want and r1[3].get("accept_generated") == (want == 0))
         res.append(dict(id=f"whole-accept-new-{key}", expect=f"exit {want} twice, identical" + (", every whole-accept theorem kinded, kindcheck "
@@ -396,7 +418,7 @@ for meth in ("head", "field", "f_u64", "f_bytes", "f_inline", "f_call", "epilogu
             rec("render", kind, f"T.{meth} call {n}", patched(whole_accept_gen.T, meth, inj))
 ok_ = whole_accept_gen.T.kind
 rec("flags", "a kind line not recorded", "T.kind", patched(whole_accept_gen.T, "kind", lambda self, name, kind, extra: (
-    ok_(self, name, kind, extra), self.kinds_emitted.pop() if name.endswith("_field_1") else None)[0]))
+    ok_(self, name, kind, extra), self.kinds_emitted.pop() if name.endswith("_field_1") or "_fields_1_" in name else None)[0]))
 rec("flags", "a kind line dropped from the text", "T.body", patched(whole_accept_gen.T, "body", (lambda ob: lambda self: ob(self).replace(
     "_epilogue_kind :", "_epilogue_kinx :", 1))(whole_accept_gen.T.body)))
 oi = sg._decoder_whole_accept
@@ -408,7 +430,7 @@ pathlib.Path(ARGV[3]).write_text(json.dumps(res) + "\n")
 """
 
 
-WHOLE_ACCEPT_FAIL_CLOSED_KEYS = ("PendingDeposit", "SyncCommitteeMessage", "VoluntaryExit", "PowBlock", "ValidatorBalance", "Fork")
+WHOLE_ACCEPT_FAIL_CLOSED_KEYS = ("PendingDeposit", "SyncCommitteeMessage", "VoluntaryExit", "PowBlock", "ValidatorBalance", "Fork", "Withdrawal")
 
 
 def whole_accept_fc_cases(work, new, keys=None):

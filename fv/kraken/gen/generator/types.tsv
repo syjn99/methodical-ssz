@@ -46,7 +46,7 @@ v1	BuilderDepositRequest	decoder --whole-accept	-	accept	spec,decode-spec,reject
 v1	BuilderExitRequest	decoder --whole-accept	-	accept	hand-list
 v1	ConsolidationRequest	decoder --whole-accept	-	accept	hand-list
 v1	DepositRequest	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness,negative-cases,hand-list
-v1	Withdrawal	decoder --whole-accept	-	refuse	-
+v1	Withdrawal	decoder --whole-accept	-	accept	-
 v1	WithdrawalRequest	decoder --whole-accept	-	accept	hand-list
 v1alpha1	BLSToExecutionChange	decoder --whole-accept	-	accept	hand-list
 v1alpha1	BeaconBlocksByRangeRequest	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness,negative-cases,hand-list

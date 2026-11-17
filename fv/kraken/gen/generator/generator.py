@@ -1450,7 +1450,11 @@ def _decoder_whole_accept(args, flags):
     body = t.body()
     flags["rendered"] = True
     n = len(fields)
-    want = ([(f"{args.prefix}_head", "decodeHeadKindAnyFrame")] + [(f"{args.prefix}_field_{i + 1}", "decodeFieldKindAnyFrame") for i in range(n)]
+    # one field theorem per block: a field, or the fields up to the end of an interleaved set-up (`whole_accept_derive`)
+    blocks = t.field_theorems()
+    if [x for f in t.fspec for x in range(f['first'], f['field'] + 1)] != list(range(n)) or len(t.states) != len(blocks) + 1:
+        raise whole_accept_gen.WholeAcceptRefuse(f"field theorems {blocks} do not cover the {n} fields in order")
+    want = ([(f"{args.prefix}_head", "decodeHeadKindAnyFrame")] + [(b, "decodeFieldKindAnyFrame") for b in blocks]
             + [(f"{args.prefix}_epilogue", "decodeEpilogueKindAnyFrame"), (f"{args.prefix}_accept", "decodeAcceptKindAnyFrame"),
                (f"{args.prefix}_reject", "decodeRejectKindAnyFrame")])
     if t.kinds_emitted != want:
@@ -1466,7 +1470,7 @@ def _decoder_whole_accept(args, flags):
     gj = dict(accept=f"{args.prefix}_accept", kinds=[dict(theorem=a, kind=b) for a, b in want],
               fields=t.fieldslean(), frame=t.frame, statement_check="kind instance only")
     blk = (f"/-! Whole accept (`decoder --whole-accept`): the whole accept theorem `{args.prefix}_accept` of `{args.type}` from\n"
-           f"the step chain above: head, one theorem per field, epilogue (boundary states in entry terms), accept, size\n"
+           f"the step chain above: head, one theorem per {'field' if len(blocks) == n else 'field or block of interleaved fields'}, epilogue (boundary states in entry terms), accept, size\n"
            f"reject. Every statement has a `_kind` line against the whole-accept kinds.\n"
            f"WHOLE-ACCEPT-JSON: {json.dumps(gj)}\n-/\n\n"
            f"open {whole_accept_gen.WHOLE_ACCEPT_OPENS}\n\nnamespace {GEN_NS}\n\n")
