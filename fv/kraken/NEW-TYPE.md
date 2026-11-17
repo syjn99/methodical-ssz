@@ -183,15 +183,15 @@ Its premise `Uint64CalleeAccept fn` is the form of `Decode.accept_function_spec`
 The proof gives it with `Decode.accept_function_spec_holds` of the callee type.
 `lean/Prysm/PendingPartialWithdrawal/DecodeAccept.lean` does this for the callees ValidatorIndex and Epoch.
 
-A new uint64 primitive decoder uses the `uint64` mode of `gen/generator/gen.sh`, as the ValidatorIndex row does.
+A uint64 primitive decoder uses the `uint64` mode of `gen/generator/gen.sh`.
+The `uint64` loop of `gen.sh` names ValidatorIndex, Epoch, Slot and CommitteeIndex.
 The files of ValidatorIndex are the model:
 
 - `Code.lean`, and `GeneratedDecodeAccept.lean` with `Decode.generated_accept` (the `uint64` mode writes it);
 - `DecodeAcceptFunctionSpec.lean`: the hand function specification `Decode.accept_function_spec` and its proof `Decode.accept_function_spec_holds`;
 - `DecodeRejectSize.lean`, `WitnessGeneratedDecodeAccept.lean` and `WitnessDecodeRejectSize.lean`.
 
-Epoch, Slot and CommitteeIndex have hand accept proofs `DecodeAccept.lean` of the same code form.
-They do not use the `uint64` mode (`FINDINGS.md`).
+Slot and CommitteeIndex have no `DecodeRejectSize.lean` and no `WitnessDecodeRejectSize.lean` (`FINDINGS.md`).
 
 What checks it: `gen/generator/kindcheck.py` (step 7).
 It recomputes the kind parameters from the `.S` file and the IR.

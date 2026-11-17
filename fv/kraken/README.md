@@ -154,7 +154,7 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
   A shared library has its library name, for example `negative-cases-codec.json`.
   A file whose name ends with `-generated.json` is tool-written, and all other files are hand files.
   A case id is the Go type, the theorem without its type namespace, and the kind (`control`, `statement` or `code`).
-  For a mutant, the id ends with the changed words or operands, for example `epoch-decode-accept-code-cmp-0x8-to-0x9`.
+  For a mutant, the id ends with the changed words or operands, for example `epoch-decode-generated-accept-code-cmp-0x8-to-0x9`.
   The usage text of `gen/checks/negative.py` gives the case fields.
   A case may name `mutant_imports`: `negative.py` imports these modules into the mutated copy only.
   So a mutant can use a declaration of another module.
@@ -254,14 +254,14 @@ Change the tool and run it again.
 | `SpecDescription.lean`, `SpecDefinitions.lean` | Hand, from consensus-specs. For some types, from the Prysm proto definition: `grep -l 'from the Prysm proto' lean/Prysm/*/SpecDescription.lean` lists them (`FINDINGS.md`) | None | The build, a review against the source that the module names |
 | `SpecChecker.lean` | `gen/checks/desc_to_lean.py` | `python3 -I gen/checks/desc_to_lean.py prysm/go1.26.10/evidence/<package>.<T>.desc.json checkerDesc > lean/Prysm/<T>/SpecChecker.lean` | `regenerate_and_compare.py`, the build |
 | `SpecEquivalence.lean` | Hand | None | The build, the axioms gate |
-| `GeneratedDecodeAccept.lean` | `gen/generator/generator.py`: mode `uint64` for ValidatorIndex, `decoder --whole-accept` for the other types | `sh gen/generator/gen.sh` for its types. For the types of `gen/flat-types/run_generators.sh`: `sh gen/flat-types/run_generators.sh <out dir>`, then copy `<out dir>/<T>.whole-accept.lean` when `<T>.whole-accept.rc` is 0 | The build, `gen/generator/kindcheck.py`, `regenerate_and_compare.py`, the axioms gate, the negative cases |
+| `GeneratedDecodeAccept.lean` | `gen/generator/generator.py`: mode `uint64` for ValidatorIndex, Epoch, Slot and CommitteeIndex, `decoder --whole-accept` for the other types | `sh gen/generator/gen.sh` for its types. For the types of `gen/flat-types/run_generators.sh`: `sh gen/flat-types/run_generators.sh <out dir>`, then copy `<out dir>/<T>.whole-accept.lean` when `<T>.whole-accept.rc` is 0 | The build, `gen/generator/kindcheck.py`, `regenerate_and_compare.py`, the axioms gate, the negative cases |
 | `GeneratedEncodeFastPath.lean` | `gen/generator/generator.py encoder --fast-path` | As for `GeneratedDecodeAccept.lean`, with `<T>.fast-path.lean` | The build, `kindcheck.py`, `gen/checks/fast_path_layout.py`, `regenerate_and_compare.py`, the negative cases |
 | `DecodeSpec.lean` | Hand. For the types of the list `DECODE_SPEC_TYPES` of `gen/flat-types/flat_types_decode_spec.py`: that tool | `python3 -I -B gen/flat-types/flat_types_decode_spec.py lean` | The build, the axioms gate, `regenerate_and_compare.py` |
 | `WitnessGeneratedDecodeAccept.lean`, `WitnessGeneratedDecodeRejectSize.lean` | Hand. For the types of `WITNESS_TYPES` of `gen/flat-types/flat_types_witness.py`: that tool | `python3 -I -B gen/flat-types/flat_types_witness.py .` | The build, the axioms gate, `regenerate_and_compare.py`, `proof_inventory.py` |
 | `GeneratedEncodeFastPathSpec.lean`, `WitnessGeneratedEncodeFastPath.lean` | `gen/flat-types/flat_types_encode_spec.py`, for every type of its table `ENCODE_SPEC_TYPES` | `python3 -I -B gen/flat-types/flat_types_encode_spec.py lean lean` | The build, the axioms gate, `regenerate_and_compare.py` |
 | `EncodeLayout.lean` (BeaconBlockHeader, Eth1Data), `encodeLayout` in `Checkpoint/EncodeFastPathKindInstances.lean` | Hand. `gen/generator/gen.sh` gives it to the generator with `--hand-layout` | None | The build, `kindcheck.py` rule 13, `fast_path_layout.py` |
-| `GeneratedEncodeFastPathSameAsHand.lean`, `Uint64DecoderKindSameAsHand.lean`, `EncodeFastPathStatements.lean` | Hand | None | The build (each identity is `rfl`) |
-| Hand proof modules: `DecodeAccept.lean`, `DecodeReject*.lean`, `Encode*.lean`, `Statements*.lean`, the other `Witness*.lean` | Hand | None | The build, the axioms gate and its hand lists, the negative cases |
+| `GeneratedEncodeFastPathSameAsHand.lean`, `EncodeFastPathStatements.lean` | Hand | None | The build (each identity is `rfl`) |
+| Hand proof modules: `DecodeAccept.lean`, `DecodeAcceptFunctionSpec.lean`, `DecodeReject*.lean`, `Encode*.lean`, `Statements*.lean`, the other `Witness*.lean` | Hand | None | The build, the axioms gate and its hand lists, the negative cases |
 | `*.S` in a type directory | Hand: a runtime model for the witnesses of the type | None | The build: a theorem shows that the model satisfies its contract |
 
 ### Other Lean files

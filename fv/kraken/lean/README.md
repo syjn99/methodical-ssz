@@ -358,7 +358,6 @@ Examples are `Deposit_Data`, `ENRForkID` and the label `runtime.makeslice`.
 | `GeneratedEncodeFastPath` | Generator output: the encoder fast-path theorem |
 | `GeneratedEncodeFastPathSpec` | The generated fast path against the hand `Desc` (`../gen/flat-types/flat_types_encode_spec.py`) |
 | `GeneratedEncodeFastPathSameAsHand` | Hand identity of the generated fast-path theorem with a hand statement |
-| `Uint64DecoderKindSameAsHand` | Hand identity of the `uint64` decoder kind with a hand theorem |
 | `Witness` + module | A witness of a theorem of that module (section 6) |
 | `WitnessBumpAllocator` | A bump allocator model for the witnesses of the type, with its `.S` file in the type directory |
 

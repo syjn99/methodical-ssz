@@ -136,7 +136,7 @@ That line must name at least one expected case of the variant.
 A crash, a passing selftest or a failure only in other cases is `BAD`.
 Run Lean and `kindcheck.py` together on every generated file.
 Each one alone lets a defect through.
-For the `uint64` file, `kindcheck.py` does not check the kind parameters.
+For the `uint64` files, `kindcheck.py` does not check the kind parameters.
 Only the proof checks them, through its code facts.
 A kind identity is not a witness.
 It does not show that the premises can hold.
@@ -148,7 +148,6 @@ A reviewer reads the hand theorem against the specification, so the kind is not 
 The tree has these forms of tie:
 
 - An identity of a kind with the full type of a hand theorem, proved by `with_reducible rfl`.
-  `Decode.accept_kind_anchor` of Slot and CommitteeIndex ties `uint64DecodeAcceptKind` (`Uint64DecoderKindSameAsHand.lean`).
   `Prysm.Checkpoint.Decode.reject_size_is_kind_any_frame` ties `decodeRejectKindAnyFrame` (`Checkpoint/DecodeRejectSizeKindInstances.lean`).
 - An implication from a kind instance to the statement of a hand theorem.
   `Prysm.Checkpoint.Decode.accept_of_kind` does this for `decodeAcceptKindAnyFrame`, and `Prysm.Checkpoint.Encode.fast_path_of_kind` for `encodeFastPathKindAnyFrame`.

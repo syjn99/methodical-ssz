@@ -252,15 +252,13 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   The link check covers their `.S` files.
 - Where: `lean/Prysm/AttestationData/Code.lean`, `lean/Prysm/<GoTypeName>/Code.lean` of the types with only that module, `prysm/go1.26.10/link-set/norm/`.
 
-### The uint64 primitive decoders do not use one proof path
+### Slot and CommitteeIndex have no size-reject theorem
 
-- What does not hold: the uint64 primitive decoders do not use one proof path.
-  ValidatorIndex has the generated accept theorem of the `uint64` mode of `gen/generator/gen.sh`.
-  Epoch, Slot and CommitteeIndex have hand accept proofs `DecodeAccept.lean` of the same code form.
-  `Uint64DecoderKindSameAsHand.lean` of Slot and CommitteeIndex ties the hand theorem to the kind, and Epoch has no such tie.
-- Effect: three proofs repeat the work of the `uint64` mode.
-  A change of the code form needs a change in each of them.
-- Where: `lean/Prysm/Epoch/`, `lean/Prysm/Slot/`, `lean/Prysm/CommitteeIndex/`, `lean/Prysm/ValidatorIndex/`, `gen/generator/gen.sh`.
+- What does not hold: `Prysm.Slot.Decode.reject_size` and `Prysm.CommitteeIndex.Decode.reject_size` do not exist.
+  The two decoders have no `DecodeRejectSize.lean` and no witness of the reject path.
+  ValidatorIndex and Epoch have these modules.
+- Effect: the reject path `len(buf) ≠ 8` of the two decoders is not proved.
+- Where: `lean/Prysm/Slot/`, `lean/Prysm/CommitteeIndex/`.
 
 ### Two bump allocator models differ only in a label
 
