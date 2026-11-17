@@ -14,7 +14,8 @@ For each input:
 3. If both accept, `HashTreeRoot` must equal the EthLib root.
 
 The Go fuzzer sees only the coverage of Go code. EthLib is not instrumented.
-So the harness gives accept and each EthLib decode error code its own Go branch (`signal` in `codes_test.go`).
+So the harness gives accept and the EthLib decode error codes 1 to 20 their own Go branch (`signal` in `codes_test.go`).
+Higher codes share one branch. A byte decode gives one of them (`offsetOverflow`, 60) only for 2^32 bytes or more.
 An input that reaches a new EthLib rejection reason is then new coverage, and the fuzzer keeps it.
 
 An input that starts with `value:` also tells how to change a value (`values_test.go`).
@@ -23,12 +24,15 @@ The harness first checks it as SSZ bytes, like every other input. Then:
 1. `UnmarshalSSZ` decodes one of the seeds.
 2. The changes set lists, byte strings and bitfields to lengths at the edges of their type: 0, 1, the limit, the limit plus 1.
    They also flip bits of bitfields: the padding bits and the bitlist delimiter first.
+   One change adds at most 2^18 elements and 4 MiB of storage (the mutation budget), so huge limits never reach the limit plus 1.
 3. `MarshalSSZ` encodes the changed value. If it refuses the value, `HashTreeRoot` must return an error.
 4. EthLib must accept the bytes, and `HashTreeRoot` of the value must equal the EthLib root.
    If EthLib rejects the bytes, the message also tells if `HashTreeRoot` gave a root.
    The bytes must then pass the checks 1 to 3 above.
 
-A panic in `HashTreeRoot` is a difference with its own message.
+A panic in `HashTreeRoot` is a difference with its own message, which names the first `ssz` runtime function on the stack.
+A difference of a value input ends with `; changed: ` and the paths of the fields that the input changed.
+The value inputs do not make an empty bitlist encoding: a bitlist of 0 bits keeps its delimiter byte.
 
 This tests `MarshalSSZ` and `HashTreeRoot` on values that no decode gives.
 The seed corpus holds one value input for each seed that decodes.
@@ -128,7 +132,16 @@ It does not fuzz.
 `.github/workflows/ethlib-fuzz-nightly.yaml` fuzzes once a day, and on demand.
 It uses the setup steps and the cache keys of `ethlib-fuzz.yaml`, so the two workflows share their caches.
 It runs `fuzzall.sh` on the minimal preset: 4 targets at a time, 1 worker each, 45 seconds for each target.
-A difference that `known.txt` does not list fails the job. The job then uploads the logs and `testdata/fuzz/`.
+A difference that `known.txt` does not list makes `fuzzall.sh` exit nonzero (`xargs` gives 123), and the job fails.
+The job then uploads the logs and `testdata/fuzz/`, unless the runner stops first.
+The schedule runs only on the default branch.
+
+To reproduce a nightly failure from its artifact:
+
+1. Check out the commit of the run, and do the setup above.
+2. Copy the saved input into `testdata/fuzz/<target>/` under its name in the artifact.
+3. Run `go test -tags minimal -run '^<target>/<input>$' .`
+   If `known.txt` skips the class of the difference, add `STRICT=1` to see it.
 
 ## Test a different generator
 

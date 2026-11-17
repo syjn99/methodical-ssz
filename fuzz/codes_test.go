@@ -27,8 +27,9 @@ var reasons = [...]string{"accept", "WRONG_TYPE", "LIMIT", "SCOPE", "SCOPE_TOO_S
 // only the coverage of Go code, so this makes an input that reaches a new
 // EthLib rejection reason new coverage. The compiler gives each case body its
 // own coverage counter, also an empty body (walk/order.go, orderBlock).
-// Higher codes name errors of declarations, proofs and JSON. They share the
-// default branch.
+// Higher codes share the default branch. Most name errors of declarations,
+// proofs and JSON. A byte decode gives one of them, offsetOverflow (60), only
+// for a byte list or vector of 2^32 bytes or more, far above fuzz input sizes.
 func signal(v oracle.Verdict) {
 	switch v {
 	case 0:
