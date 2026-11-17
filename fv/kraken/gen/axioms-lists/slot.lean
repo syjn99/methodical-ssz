@@ -9,6 +9,8 @@ import Prysm.Slot.EncodeGrowFirstSite
 import Prysm.Slot.WitnessEncodeGrowFirstSite
 import Prysm.Slot.EncodeCoverFramed
 import Prysm.Slot.WitnessEncodeCoverFramed
+import Prysm.Slot.Marshal
+import Prysm.Slot.WitnessMarshal
 
 /-! Hand list of the `Slot` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -31,3 +33,6 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.Slot.Witness.EncodeGrowFirstSite.runs_empty
 #print axioms Prysm.Slot.Encode.cover_framed
 #print axioms Prysm.Slot.Witness.EncodeCoverFramed.runs
+#print axioms Prysm.Slot.Marshal.result
+#print axioms Prysm.Slot.Marshal.result_spec
+#print axioms Prysm.Slot.Witness.Marshal.runs

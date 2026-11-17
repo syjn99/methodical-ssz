@@ -248,12 +248,9 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - What does not hold: `Prysm.AttestationData.Code.marshalSSZTo` has no theorem.
   The constants of a type directory that holds only `Code.lean` have no theorem.
   These are the types that the generator refuses (the refuse rows of `gen/generator/types.tsv`).
-  Some `.S` files of the link set have no constant: no `include_x64_code` line of `lean/` names them.
-  The rule to find them: a file of `prysm/go1.26.10/link-set/norm/`, other than `all.S`, whose name no `include_x64_code` line names.
-  They are the `MarshalSSZ` functions of the primitive types Epoch, Slot and CommitteeIndex.
-- Effect: the functions of these constants and files are not proved.
+- Effect: the functions of these constants are not proved.
   The link check covers their `.S` files.
-- Where: `lean/Prysm/AttestationData/Code.lean`, `lean/Prysm/<GoTypeName>/Code.lean` of the types with only that module, `prysm/go1.26.10/link-set/norm/`.
+- Where: `lean/Prysm/AttestationData/Code.lean`, `lean/Prysm/<GoTypeName>/Code.lean` of the types with only that module.
 
 ### Slot and CommitteeIndex have no size-reject theorem
 

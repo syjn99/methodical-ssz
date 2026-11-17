@@ -9,6 +9,8 @@ import Prysm.CommitteeIndex.EncodeGrowFirstSite
 import Prysm.CommitteeIndex.WitnessEncodeGrowFirstSite
 import Prysm.CommitteeIndex.EncodeCoverFramed
 import Prysm.CommitteeIndex.WitnessEncodeCoverFramed
+import Prysm.CommitteeIndex.Marshal
+import Prysm.CommitteeIndex.WitnessMarshal
 
 /-! Hand list of the `CommitteeIndex` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -31,3 +33,6 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.CommitteeIndex.Witness.EncodeGrowFirstSite.runs_empty
 #print axioms Prysm.CommitteeIndex.Encode.cover_framed
 #print axioms Prysm.CommitteeIndex.Witness.EncodeCoverFramed.runs
+#print axioms Prysm.CommitteeIndex.Marshal.result
+#print axioms Prysm.CommitteeIndex.Marshal.result_spec
+#print axioms Prysm.CommitteeIndex.Witness.Marshal.runs

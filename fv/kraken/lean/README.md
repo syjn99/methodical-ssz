@@ -348,6 +348,7 @@ Examples are `Deposit_Data`, `ENRForkID` and the label `runtime.makeslice`.
 | `EncodeRejectLength` | Encoder, the length rejects |
 | `EncodeSpec`, `EncodeSpec` + path | Encoder, connection to EthLib |
 | `Size` | `SizeSSZ`: the machine theorem and its connection to EthLib |
+| `Marshal` | `MarshalSSZ`: the machine theorem and its connection to EthLib |
 | `Encode` + part | Encoder, a part of a long proof (`EncodeHead`, `EncodeTail`, `EncodeCover`, `EncodeLoop`) |
 | `DecodeThenEncode`, `DecodeThenEncode` + qualifier | Decode then encode: round trip and composition |
 | `FunctionSpecsAsNestedField` | Function specifications for a caller that holds the type as a nested field |
@@ -372,7 +373,8 @@ The main theorems inside `Prysm.<GoTypeName>` have these names:
 - encoder: `Encode.fast_path`, `Encode.grow_first_site`, `Encode.grow_second_site`, `Encode.grow_one_site`,
   `Encode.grow_any_site`, `Encode.reject_length`, `Encode.reject_too_big`, `Encode.fast_path_spec`,
   `Encode.grow_first_site_spec`, `Encode.grow_one_site_spec`;
-- `SizeSSZ`: `Size.result`, `Size.result_spec`; decode then encode: `DecodeThenEncode.round_trip`;
+- `SizeSSZ`: `Size.result`, `Size.result_spec`; `MarshalSSZ`: `Marshal.result`, `Marshal.result_spec`;
+- decode then encode: `DecodeThenEncode.round_trip`;
 - the statement of a theorem is the `def` or `abbrev` with the name of the theorem + `_statement`;
 - program constants: `Code.unmarshalSSZ`, `Code.marshalSSZTo`, `Code.sizeSSZ`, declared as `def Code.<method>` inside `namespace Prysm.<GoTypeName>`;
   label abbreviations: `Code.unmarshalSSZLabel`, `Code.marshalSSZToLabel`;

@@ -360,7 +360,7 @@ A check that did not run is "not run" in the pull request.
 7. The proof inventory: run the commands of `README.md` section 5 (needs a built tree and the gate JSON).
    `gen/tools/proof_inventory.py` derives the row of a type from its directory `lean/Prysm/<T>/` and the theorem names.
    The directory name must be a Go type of `prysm/go1.26.10/ssz-methods.json`, else the tool prints a `FAIL` line.
-   The theorems must have the names of `lean/README.md` section 8, the candidates of `DEC_CANDIDATES`, `ENC_FORMS` and `SIZE_FORM`.
+   The theorems must have the names of `lean/README.md` section 8, the candidates of `DEC_CANDIDATES`, `ENC_FORMS`, `SIZE_FORM` and `MARSHAL_FORM`.
    An encoder theorem outside the fast path needs an entry in `ENC_EXTRA`.
    The entry gives a premise text for each theorem and a text of what is not proved.
    Without that entry, a theorem with a name of `ENC_UNCLASSIFIED` shows in the row as not classified.

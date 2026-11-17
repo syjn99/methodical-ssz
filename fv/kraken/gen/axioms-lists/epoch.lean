@@ -11,6 +11,8 @@ import Prysm.Epoch.EncodeGrowFirstSite
 import Prysm.Epoch.WitnessEncodeGrowFirstSite
 import Prysm.Epoch.EncodeCoverFramed
 import Prysm.Epoch.WitnessEncodeCoverFramed
+import Prysm.Epoch.Marshal
+import Prysm.Epoch.WitnessMarshal
 
 /-! Hand list of the `Epoch` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -38,3 +40,6 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.Epoch.Witness.EncodeGrowFirstSite.runs_empty
 #print axioms Prysm.Epoch.Encode.cover_framed
 #print axioms Prysm.Epoch.Witness.EncodeCoverFramed.runs
+#print axioms Prysm.Epoch.Marshal.result
+#print axioms Prysm.Epoch.Marshal.result_spec
+#print axioms Prysm.Epoch.Witness.Marshal.runs
