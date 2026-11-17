@@ -11,14 +11,12 @@ import Prysm.BlobIdentifier.WitnessGeneratedEncodeFastPath
 /-! Hand list of the `BlobIdentifier` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
 
-#print axioms Prysm.BlobIdentifier.desc_checker
 #print axioms Prysm.BlobIdentifier.desc_wellFormed
 #print axioms Prysm.BlobIdentifier.desc_fixedSize
 #print axioms Prysm.BlobIdentifier.desc_serialize_checker
 #print axioms Prysm.BlobIdentifier.SszValue.encode_size
 #print axioms Prysm.BlobIdentifier.SszValue.toValue_fits
 #print axioms Prysm.BlobIdentifier.SszValue.toValue_injective
-#print axioms Prysm.BlobIdentifier.SszValue.toValue_surjective
 #print axioms Prysm.BlobIdentifier.SszValue.toValue_surjective'
 #print axioms Prysm.BlobIdentifier.SszValue.serialize_eq
 #print axioms Prysm.BlobIdentifier.SszValue.roundtrip

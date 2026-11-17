@@ -10,7 +10,8 @@
 # expect: accept (exit 0, gen.sh writes the output) or refuse (exit 2, nothing on standard output, no file).
 # companions: the files that the tools of gen/flat-types/ write for the type, separated by commas:
 #   spec (flat_types_spec.py: Spec.lean), decode-spec (flat_types_decode_spec.py: DecodeSpec.lean),
-#   decode-witness (flat_types_witness.py: the two decoder witnesses),
+#   reject-witness (flat_types_witness.py: WitnessGeneratedDecodeRejectSize.lean),
+#   accept-witness (flat_types_witness.py: WitnessGeneratedDecodeAccept.lean),
 #   encode-spec (flat_types_encode_spec.py: GeneratedEncodeFastPathSpec.lean and WitnessGeneratedEncodeFastPath.lean),
 #   negative-cases (flat_types_negative_cases.py: the cases of the method of the row),
 #   hand-list (flat_types_hand_list.py: the names in gen/axioms-lists/<type>.lean).
@@ -23,47 +24,47 @@ primitives	Epoch	uint64	-	accept	-
 primitives	Slot	uint64	-	accept	-
 primitives	CommitteeIndex	uint64	-	accept	-
 # decoder --whole-accept: the accept path and the size reject of a flat decoder.
-v1alpha1	BeaconBlockHeader	decoder --whole-accept	-	accept	-
-v1alpha1	Eth1Data	decoder --whole-accept	-	accept	-
-v1alpha1	BlobIdentifier	decoder --whole-accept	-	accept	-
-v1alpha1	DepositMessage	decoder --whole-accept	-	accept	-
-v1alpha1	Deposit_Data	decoder --whole-accept	-	accept	-
-v1alpha1	SyncCommitteeMessage	decoder --whole-accept	-	accept	-
-v1alpha1	PendingConsolidation	decoder --whole-accept	-	accept	-
-v1alpha1	PendingDeposit	decoder --whole-accept	-	accept	-
+v1alpha1	BeaconBlockHeader	decoder --whole-accept	-	accept	spec,reject-witness
+v1alpha1	Eth1Data	decoder --whole-accept	-	accept	spec,reject-witness
+v1alpha1	BlobIdentifier	decoder --whole-accept	-	accept	spec,reject-witness
+v1alpha1	DepositMessage	decoder --whole-accept	-	accept	spec,reject-witness
+v1alpha1	Deposit_Data	decoder --whole-accept	-	accept	spec,reject-witness,accept-witness
+v1alpha1	SyncCommitteeMessage	decoder --whole-accept	-	accept	spec,reject-witness
+v1alpha1	PendingConsolidation	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
+v1alpha1	PendingDeposit	decoder --whole-accept	-	accept	spec,reject-witness,accept-witness
 v1alpha1	PowBlock	decoder --whole-accept	-	accept	-
-v1alpha1	HistoricalSummary	decoder --whole-accept	-	accept	-
-v1alpha1	SigningData	decoder --whole-accept	-	accept	-
-v1alpha1	SyncAggregatorSelectionData	decoder --whole-accept	-	accept	-
-v1alpha1	ValidatorBalance	decoder --whole-accept	-	accept	-
-v1alpha1	VoluntaryExit	decoder --whole-accept	-	accept	-
+v1alpha1	HistoricalSummary	decoder --whole-accept	-	accept	decode-spec,reject-witness
+v1alpha1	SigningData	decoder --whole-accept	-	accept	decode-spec,reject-witness
+v1alpha1	SyncAggregatorSelectionData	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness
+v1alpha1	ValidatorBalance	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
+v1alpha1	VoluntaryExit	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
 # PendingPartialWithdrawal has interleaved fields, and AttestationData has nested containers.
 v1alpha1	PendingPartialWithdrawal	decoder --whole-accept	-	refuse	-
 v1alpha1	AttestationData	decoder --whole-accept	-	refuse	-
 # Flat types with tool-written companions, and flat types that the generator refuses.
-v1	BuilderDepositRequest	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1	BuilderDepositRequest	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness,negative-cases,hand-list
 v1	BuilderExitRequest	decoder --whole-accept	-	refuse	-
 v1	ConsolidationRequest	decoder --whole-accept	-	refuse	-
-v1	DepositRequest	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1	DepositRequest	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness,negative-cases,hand-list
 v1	Withdrawal	decoder --whole-accept	-	refuse	-
 v1	WithdrawalRequest	decoder --whole-accept	-	refuse	-
 v1alpha1	BLSToExecutionChange	decoder --whole-accept	-	refuse	-
-v1alpha1	BeaconBlocksByRangeRequest	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
-v1alpha1	BlobSidecarsByRangeRequest	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1alpha1	BeaconBlocksByRangeRequest	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness,negative-cases,hand-list
+v1alpha1	BlobSidecarsByRangeRequest	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness,negative-cases,hand-list
 v1alpha1	Builder	decoder --whole-accept	-	refuse	-
 v1alpha1	BuilderPendingWithdrawal	decoder --whole-accept	-	refuse	-
 v1alpha1	BuilderPreferences	decoder --whole-accept	-	refuse	-
 v1alpha1	ENRForkID	decoder --whole-accept	-	refuse	-
-v1alpha1	ExecutionPayloadEnvelopesByRangeRequest	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1alpha1	ExecutionPayloadEnvelopesByRangeRequest	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness,negative-cases,hand-list
 v1alpha1	Fork	decoder --whole-accept	-	refuse	-
 v1alpha1	ForkData	decoder --whole-accept	-	refuse	-
-v1alpha1	PartialDataColumnGroupID	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1alpha1	PartialDataColumnGroupID	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness,negative-cases,hand-list
 v1alpha1	PayloadAttestationData	decoder --whole-accept	-	refuse	-
 v1alpha1	ProposerPreferences	decoder --whole-accept	-	refuse	-
 v1alpha1	Status	decoder --whole-accept	-	refuse	-
 v1alpha1	StatusV2	decoder --whole-accept	-	refuse	-
 v1alpha1	Validator	decoder --whole-accept	-	refuse	-
-v1alpha1	ValidatorIdentity	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1alpha1	ValidatorIdentity	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness,negative-cases,hand-list
 v1alpha1	ValidatorRegistrationV1	decoder --whole-accept	-	refuse	-
 # encoder --fast-path: the encoder fast path. The hand layouts and the statement tie need options.
 v1alpha1	Checkpoint	encoder --fast-path	--imports=Prysm.Checkpoint.EncodeLayout,Prysm.Checkpoint.EncodeFastPathKindTie --hand-layout=Prysm.Checkpoint.encodeLayout --hand-layout-src=lean/Prysm/Checkpoint/EncodeLayout.lean --same-as=Prysm.Checkpoint.Encode.fast_path --same-as-via=Prysm.Checkpoint.Encode.fast_path_kind_tie	accept	encode-spec
@@ -72,7 +73,7 @@ v1alpha1	Eth1Data	encoder --fast-path	--imports=Prysm.Eth1Data.EncodeLayout --ha
 v1alpha1	BlobIdentifier	encoder --fast-path	-	accept	encode-spec
 v1alpha1	DepositMessage	encoder --fast-path	-	accept	encode-spec
 v1alpha1	Deposit_Data	encoder --fast-path	-	accept	encode-spec
-v1alpha1	PendingPartialWithdrawal	encoder --fast-path	-	accept	encode-spec
+v1alpha1	PendingPartialWithdrawal	encoder --fast-path	-	accept	spec,encode-spec
 v1alpha1	SyncCommitteeMessage	encoder --fast-path	-	accept	encode-spec
 v1alpha1	PendingConsolidation	encoder --fast-path	-	accept	encode-spec
 v1alpha1	PendingDeposit	encoder --fast-path	-	accept	encode-spec

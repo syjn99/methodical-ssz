@@ -20,7 +20,6 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.BeaconBlockHeader.Decode.slot_err_unreachable
 #print axioms Prysm.BeaconBlockHeader.Decode.validator_index_err_unreachable
 #print axioms Prysm.BeaconBlockHeader.Witness.DecodeErrorUnreachable.runs
-#print axioms Prysm.BeaconBlockHeader.desc_checker
 #print axioms Prysm.BeaconBlockHeader.desc_serialize_checker
 #print axioms Prysm.BeaconBlockHeader.desc_deserialize_checker
 #print axioms Prysm.BeaconBlockHeader.SszValue.roundtrip

@@ -22,7 +22,8 @@ MODES = {"uint64": ("UnmarshalSSZ", "GeneratedDecodeAccept.lean", "uint64"),
 # companion: the modes of the rows that can name it
 COMPANIONS = {"spec": ("decoder --whole-accept", "encoder --fast-path"),
               "decode-spec": ("decoder --whole-accept",),
-              "decode-witness": ("decoder --whole-accept",),
+              "reject-witness": ("decoder --whole-accept",),
+              "accept-witness": ("decoder --whole-accept",),
               "encode-spec": ("encoder --fast-path",),
               "negative-cases": ("decoder --whole-accept", "encoder --fast-path"),
               "hand-list": ("decoder --whole-accept", "encoder --fast-path")}

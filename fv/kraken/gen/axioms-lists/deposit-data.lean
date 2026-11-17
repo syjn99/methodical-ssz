@@ -13,14 +13,12 @@ import Prysm.Deposit_Data.WitnessGeneratedEncodeFastPath
 /-! Hand list of the `Deposit_Data` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
 
-#print axioms Prysm.Deposit_Data.desc_checker
 #print axioms Prysm.Deposit_Data.desc_wellFormed
 #print axioms Prysm.Deposit_Data.desc_fixedSize
 #print axioms Prysm.Deposit_Data.desc_serialize_checker
 #print axioms Prysm.Deposit_Data.SszValue.encode_size
 #print axioms Prysm.Deposit_Data.SszValue.toValue_fits
 #print axioms Prysm.Deposit_Data.SszValue.toValue_injective
-#print axioms Prysm.Deposit_Data.SszValue.toValue_surjective
 #print axioms Prysm.Deposit_Data.SszValue.serialize_eq
 #print axioms Prysm.Deposit_Data.SszValue.roundtrip
 #print axioms Prysm.Deposit_Data.SszValue.accepted_is_encoding

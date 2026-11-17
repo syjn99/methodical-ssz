@@ -19,7 +19,30 @@ SPEC_TYPES = {  # Go type name: (fields [(name, 'u'|'b', n)], checker (lean name
  'PartialDataColumnGroupID': ([('beaconBlockRoot', 'b', 32), ('slot', 'u', 8)], None),
  'ValidatorIdentity': ([('index', 'u', 8), ('pubkey', 'b', 48), ('activationEpoch', 'u', 8)], None),
  'BuilderPreferences': ([('maxExecutionPayment', 'u', 8)], None),
+ 'BeaconBlockHeader': ([('slot', 'u', 8), ('proposer', 'u', 8), ('parent', 'b', 32), ('state', 'b', 32), ('body', 'b', 32)],
+                       ('checkerDesc', None)),
+ 'Eth1Data': ([('depositRoot', 'b', 32), ('depositCount', 'u', 8), ('blockHash', 'b', 32)], ('checkerDesc', None)),
+ 'BlobIdentifier': ([('blockRoot', 'b', 32), ('index', 'u', 8)], ('checkerDesc', None)),
+ 'DepositMessage': ([('pubkey', 'b', 48), ('withdrawalCredentials', 'b', 32), ('amount', 'u', 8)], ('checkerDesc', None)),
+ 'Deposit_Data': ([('pubkey', 'b', 48), ('withdrawalCredentials', 'b', 32), ('amount', 'u', 8), ('signature', 'b', 96)],
+                  ('checkerDesc', None)),
+ 'SyncCommitteeMessage': ([('slot', 'u', 8), ('blockRoot', 'b', 32), ('validatorIndex', 'u', 8), ('signature', 'b', 96)],
+                          ('checkerDesc', None)),
+ 'PendingConsolidation': ([('sourceIndex', 'u', 8), ('targetIndex', 'u', 8)], ('checkerDesc', None)),
+ 'PendingDeposit': ([('pubkey', 'b', 48), ('withdrawalCredentials', 'b', 32), ('amount', 'u', 8), ('signature', 'b', 96),
+                     ('slot', 'u', 8)], ('checkerDesc', None)),
+ 'HistoricalSummary': ([('blockSummaryRoot', 'b', 32), ('stateSummaryRoot', 'b', 32)], ('checkerDesc', None)),
+ 'SigningData': ([('objectRoot', 'b', 32), ('domain', 'b', 32)], ('checkerDesc', None)),
+ 'SyncAggregatorSelectionData': ([('slot', 'u', 8), ('subcommitteeIndex', 'u', 8)], ('checkerDesc', None)),
+ 'ValidatorBalance': ([('index', 'u', 8), ('balance', 'u', 8)], ('checkerDesc', None)),
+ 'VoluntaryExit': ([('epoch', 'u', 8), ('validatorIndex', 'u', 8)], ('checkerDesc', None)),
+ 'PendingPartialWithdrawal': ([('index', 'u', 8), ('amount', 'u', 8), ('withdrawableEpoch', 'u', 8)], ('checkerDesc', None)),
 }
+# The types whose hand `Desc` (SpecDescription.lean) is written from consensus-specs. The `Desc` of the other types is
+# written from the Prysm proto definition.
+DESC_FROM_CONSENSUS_SPECS = {'BeaconBlockHeader', 'Eth1Data', 'BlobIdentifier', 'DepositMessage', 'Deposit_Data',
+                             'SyncCommitteeMessage', 'PendingConsolidation', 'PendingDeposit', 'HistoricalSummary',
+                             'SigningData', 'SyncAggregatorSelectionData', 'VoluntaryExit', 'PendingPartialWithdrawal'}
 
 
 def with_code_imports(text, X):
@@ -58,8 +81,11 @@ def emit(X, ty, fs, chk):
     w(f'# Spec bridge for the Prysm `{ty}`')
     w('')
     w('Written by `gen/flat-types/flat_types_spec.py`.')
-    w(f'`{D}` (`Prysm/{X}/SpecDescription.lean`) is the hand `Desc`, written from the Prysm proto definition.')
-    w('It has the same source as the Desc producer, so it is not an independent specification.')
+    if X in DESC_FROM_CONSENSUS_SPECS:
+        w(f'`{D}` (`Prysm/{X}/SpecDescription.lean`) is the independent hand `Desc`, written from consensus-specs.')
+    else:
+        w(f'`{D}` (`Prysm/{X}/SpecDescription.lean`) is the hand `Desc`, written from the Prysm proto definition.')
+        w('It has the same source as the Desc producer, so it is not an independent specification.')
     if chk:
         w(f'`{chk[0]}` (`Prysm/{X}/SpecChecker.lean`, rendered by `gen/checks/desc_to_lean.py`) is the Desc checker\'s Desc of the type')
         w('(the producer output recorded in `gen/desc/results/main.result.json`, same sha256; copy in `prysm/go1.26.10/evidence/`).')
@@ -237,6 +263,16 @@ descnames = {
  'BeaconBlocksByRangeRequest': ['start_slot', 'count', 'step'], 'BlobSidecarsByRangeRequest': ['start_slot', 'count'], 'ExecutionPayloadEnvelopesByRangeRequest': ['start_slot', 'count'],
  'PartialDataColumnGroupID': ['beacon_block_root', 'slot'], 'ValidatorIdentity': ['index', 'pubkey', 'activation_epoch'],
  'BuilderPreferences': ['max_execution_payment'],
+ 'BeaconBlockHeader': ['slot', 'proposer_index', 'parent_root', 'state_root', 'body_root'],
+ 'Eth1Data': ['deposit_root', 'deposit_count', 'block_hash'], 'BlobIdentifier': ['block_root', 'index'],
+ 'DepositMessage': ['pubkey', 'withdrawal_credentials', 'amount'],
+ 'Deposit_Data': ['pubkey', 'withdrawal_credentials', 'amount', 'signature'],
+ 'SyncCommitteeMessage': ['slot', 'beacon_block_root', 'validator_index', 'signature'],
+ 'PendingConsolidation': ['source_index', 'target_index'],
+ 'PendingDeposit': ['pubkey', 'withdrawal_credentials', 'amount', 'signature', 'slot'],
+ 'HistoricalSummary': ['block_summary_root', 'state_summary_root'], 'SigningData': ['object_root', 'domain'],
+ 'SyncAggregatorSelectionData': ['slot', 'subcommittee_index'], 'ValidatorBalance': ['index', 'balance'],
+ 'VoluntaryExit': ['epoch', 'validator_index'], 'PendingPartialWithdrawal': ['validator_index', 'amount', 'withdrawable_epoch'],
 }
 
 

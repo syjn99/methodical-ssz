@@ -37,7 +37,6 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_50_kind
 #print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_51
 #print axioms Prysm.SyncAggregatorSelectionData.Decode.generated_directive_51_kind
-#print axioms Prysm.SyncAggregatorSelectionData.desc_checker
 #print axioms Prysm.SyncAggregatorSelectionData.desc_deserialize_checker
 #print axioms Prysm.SyncAggregatorSelectionData.desc_fixedSize
 #print axioms Prysm.SyncAggregatorSelectionData.desc_serialize_checker
@@ -52,7 +51,6 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.SyncAggregatorSelectionData.SszValue.toValue_fits
 #print axioms Prysm.SyncAggregatorSelectionData.SszValue.toValue_fits_checker
 #print axioms Prysm.SyncAggregatorSelectionData.SszValue.toValue_injective
-#print axioms Prysm.SyncAggregatorSelectionData.SszValue.toValue_surjective
 #print axioms Prysm.SyncAggregatorSelectionData.SszValue.toValue_surjective'
 #print axioms Prysm.SyncAggregatorSelectionData.checker_wellFormed
 #print axioms Prysm.SyncAggregatorSelectionData.Decode.accept_spec

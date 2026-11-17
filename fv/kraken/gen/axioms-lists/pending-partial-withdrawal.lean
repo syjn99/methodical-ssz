@@ -14,14 +14,12 @@ import Prysm.PendingPartialWithdrawal.WitnessGeneratedEncodeFastPath
 Each name must be in the declaration dump and use only the standard axioms. -/
 
 #print axioms Prysm.PendingPartialWithdrawal.Decode.reject_size
-#print axioms Prysm.PendingPartialWithdrawal.desc_checker
 #print axioms Prysm.PendingPartialWithdrawal.desc_wellFormed
 #print axioms Prysm.PendingPartialWithdrawal.desc_fixedSize
 #print axioms Prysm.PendingPartialWithdrawal.desc_serialize_checker
 #print axioms Prysm.PendingPartialWithdrawal.SszValue.encode_size
 #print axioms Prysm.PendingPartialWithdrawal.SszValue.toValue_fits
 #print axioms Prysm.PendingPartialWithdrawal.SszValue.toValue_injective
-#print axioms Prysm.PendingPartialWithdrawal.SszValue.toValue_surjective
 #print axioms Prysm.PendingPartialWithdrawal.SszValue.serialize_eq
 #print axioms Prysm.PendingPartialWithdrawal.SszValue.roundtrip
 #print axioms Prysm.PendingPartialWithdrawal.SszValue.accepted_is_encoding

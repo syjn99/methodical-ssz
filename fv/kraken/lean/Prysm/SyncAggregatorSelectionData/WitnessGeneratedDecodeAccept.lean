@@ -5,17 +5,18 @@ import Prysm.SyncAggregatorSelectionData.Code
 import Prysm.Slot.Code
 
 /-!
-# Witness of the generated `Decode.generated_accept` (SyncAggregatorSelectionData decoder accept path)
+# Witness of the generated `Decode.generated_accept` (`v1alpha1.SyncAggregatorSelectionData` decoder accept path)
 
-It shows that the
-premises of the generated accept theorem (statement = kind instance) are satisfiable. Host: one label, the
-Go 1.26.10 `(*v1alpha1.SyncAggregatorSelectionData).UnmarshalSSZ` (index 1) and `primitives.Slot` (74).
-One memory block at `0x10000`: guard · input (2 × 8) · 8 unused · receiver (state, field 1, field 2, tail 32) · 8 unused · callee
-frame-pointer slot (rsp − 80) · callee return slot (rsp − 72) · 8 untouched · callee rbx spill (rsp − 56) ·
-40 untouched · saved rbp · return slot (rsp = 0x100b0) · spill rax · spill rbx (no rdi spill in this frame). The receiver is at rax = 0x10020 (protoc struct,
-`prysm/ir/ir-mainnet.json` gc amd64 layout, size 56: `state` 0, fields 8 and 16, `unknownFields` 24 and `sizeCache`
-48 zero). The frame `R` is the receiver tail with the unused bytes and the untouched frame ranges. For every 16-byte
-input every premise holds and the decoder returns nil. The receiver is a Go value of `v1alpha1.SyncAggregatorSelectionData` (all zero).
+Written by `gen/flat-types/flat_types_witness.py`, for the frame `0x38` with one Slot callee and 2 input words.
+It shows that the premises of
+the generated accept theorem (statement = kind instance) are satisfiable. Host: one label, the Go 1.26.10
+`(*v1alpha1.SyncAggregatorSelectionData).UnmarshalSSZ` (index 1) and `primitives.Slot` UnmarshalSSZ (74).
+One memory block at `0x10000`: guard · input (2 × 8) · 8 unused · receiver (state, 2 fields,
+then the untouched tail) · callee frame-pointer slot (rsp − 80) · callee return slot (rsp − 72) · 8 untouched · callee
+rbx spill (rsp − 56) · 40 untouched · saved rbp · return slot (rsp = 0x100b0) · spill rax · spill rbx. The receiver is
+at rax = 0x10020 (protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout: `state` 0, fields at 8 …). The frame
+`R` is the untouched receiver tail and frame ranges. For every 16-byte input every premise holds and the decoder
+returns nil. The receiver is a Go value of `v1alpha1.SyncAggregatorSelectionData` (all zero).
 -/
 
 open Machine Runtime Machine.Witness Codec Prysm.SyncAggregatorSelectionData.Code
@@ -43,11 +44,8 @@ theorem labels_fresh_at_74 : LabelsFresh Prysm.Slot.Code.unmarshalSSZ 74 := labe
 abbrev zeros (k : Nat) : List UInt8 := List.replicate k 0
 abbrev zero_word_bytes : List UInt8 := Int.toBytes 8 (0 : UInt64).toBitVec.toInt
 
-/-- guard · input (2 × 8) · 8 unused · receiver (state, field 1, field 2, tail 32) · 8 unused · callee
-frame-pointer slot (rsp − 80) · callee return slot (rsp − 72) · 8 untouched · callee rbx spill (rsp − 56) ·
-40 untouched · saved rbp · return slot (rsp = 0x100b0) · spill rax · spill rbx (no rdi spill in this frame). -/
 def block (in0 in1 : List UInt8) : List UInt8 :=
-  zero_word_bytes ++ (in0 ++ (in1 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 40 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 40 ++ (zeros 8 ++ (zero_word_bytes ++ (zeros 8 ++ zeros 8)))))))))))))))
+  zero_word_bytes ++ (in0 ++ (in1 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 40 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 8 ++ (zeros 40 ++ (zeros 8 ++ (zero_word_bytes ++ (zeros 8 ++ (zeros 8))))))))))))))))
 
 def mem (in0 in1 : List UInt8) : DataMem := (block in0 in1).At (0x10000 : BitVec 64)
 

@@ -11,7 +11,6 @@ import Prysm.Eth1Data.WitnessGeneratedEncodeFastPath
 /-! Hand list of the `Eth1Data` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
 
-#print axioms Prysm.Eth1Data.desc_checker
 #print axioms Prysm.Eth1Data.desc_serialize_checker
 #print axioms Prysm.Eth1Data.desc_deserialize_checker
 #print axioms Prysm.Eth1Data.SszValue.roundtrip

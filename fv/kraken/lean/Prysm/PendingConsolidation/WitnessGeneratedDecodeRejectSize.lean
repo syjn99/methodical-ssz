@@ -4,18 +4,20 @@ import Machine.WitnessHost
 import Prysm.PendingConsolidation.Code
 
 /-!
-# Witness of `Decode.generated_reject`
+# Witness of the generated `Decode.generated_reject`
 
-Host: the label `ssz.ErrSize` (index 0), then the Go 1.26.10 `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`
-(index 1). Hand-written.
-Memory at `0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a
-data word `0x2a`, stand-ins: the Go runtime sets the values at start, and the ELF does not hold them),
-the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill
-slot. For every length `≠ 16` (instances 15, 17, 0) the decoder returns the two words.
+Host: the label `ssz.ErrSize` (index 0), then the Go 1.26.10 `(*v1alpha1.PendingConsolidation).UnmarshalSSZ` (index 1).
+Written by `gen/flat-types/flat_types_witness.py`.
+It applies the generated size-reject theorem of `Prysm/PendingConsolidation/GeneratedDecodeAccept.lean`. Memory at
+`0x10000`: the two words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a data word `0x2a`,
+stand-ins: the Go runtime sets the values at start, and the ELF does not hold them), the guard word, saved-rbp
+slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill slot. For every length `≠ 16`
+(instances 15, 17, 0) the decoder returns the two words.
 -/
 
 open Machine Runtime Machine.Witness Prysm.PendingConsolidation.Code
 
+open Codec
 namespace Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize
 
 set_option maxRecDepth 100000
@@ -47,13 +49,13 @@ def initial_state (len : UInt64) (zmms : RegZmms) (flags : StatusFlags) : Machin
 def frame_rest : DataMem → Prop := Eq ((zeros 8).At (0x10028 : BitVec 64))
 
 set_option maxHeartbeats 4000000 in
-/-- **Non-vacuity of `Decode.generated_reject`.** -/
+/-- **Non-vacuity of the generated `Decode.generated_reject`.** -/
 theorem runs (len : UInt64) (hlen : len ≠ 16) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10e8
         ∧ st.data.regs.rbx = 0x2a)
       ⟨initial_state len zmms flags, Host.addrOf 1⟩ :=
-  eventually_mono (Decode.generated_reject 1 placed_at_1 labels_fresh_at_1 (initial_state len zmms flags) 0 0 0x10e8 0x2a (zeros 8) (zeros 8) rfl rfl frame_rest
+  eventually_mono (Prysm.PendingConsolidation.Decode.generated_reject 1 placed_at_1 labels_fresh_at_1 (initial_state len zmms flags) 0 0 0x10e8 0x2a (zeros 8) (zeros 8) rfl rfl frame_rest
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       witness_split []

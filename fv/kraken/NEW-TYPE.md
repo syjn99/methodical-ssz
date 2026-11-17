@@ -12,7 +12,8 @@ Finished types show the paths:
 - The generated path: `lean/Prysm/HistoricalSummary/`.
   A generator writes `GeneratedDecodeAccept.lean` and `GeneratedEncodeFastPath.lean`.
   `gen/flat-types/flat_types_encode_spec.py` writes `GeneratedEncodeFastPathSpec.lean` and `WitnessGeneratedEncodeFastPath.lean`.
-  A person writes `Code.lean`, `SpecDescription.lean`, `Spec.lean`, `DecodeSpec.lean` and the two decoder witnesses.
+  A person writes `Code.lean`, `SpecDescription.lean`, `Spec.lean` and `WitnessGeneratedDecodeAccept.lean`.
+  `gen/flat-types/flat_types_decode_spec.py` writes `DecodeSpec.lean`, and `gen/flat-types/flat_types_witness.py` writes `WitnessGeneratedDecodeRejectSize.lean`.
   `gen/checks/desc_to_lean.py` writes `SpecChecker.lean`.
 - The hand path of a decoder: `lean/Prysm/HistoricalBatch/`.
   A person writes `Statements.lean` (the statements), `DecodeAccept.lean`, `DecodeRejectSize.lean` and `DecodeSpec.lean`.
@@ -137,9 +138,10 @@ What you make, in this order:
    The tools of `gen/flat-types/` read `desc`, `SszValue.serialize_eq`, `SszValue.spec_rejects` and `SszValue.spec_accepts_iff`.
    For a type with a checker `Desc`, it also holds the codec equality of `desc` and `checkerDesc`, for example `desc_serialize_checker`.
    Example: `lean/Prysm/HistoricalSummary/Spec.lean`.
-   For a flat type of uint64 and byte vector fields, `gen/flat-types/flat_types_spec.py` can write it.
+   For a flat type of uint64 and byte vector fields, with at least one uint64 field, `gen/flat-types/flat_types_spec.py` can write it.
    Give the companion `spec` in a row of the type in `gen/generator/types.tsv` (step 5).
    Add the fields to the tables `SPEC_TYPES` and `descnames` of the tool.
+   Add the type to `DESC_FROM_CONSENSUS_SPECS` when its `SpecDescription.lean` is written from consensus-specs.
    Then run `python3 -I -B gen/flat-types/flat_types_spec.py lean` from `fv/kraken`.
 
 What checks it: the build of these modules, and the axioms gate (step 7).
@@ -234,9 +236,10 @@ A tool stops with a message that names the type when the type has no entry in it
 
 | Companion | Tool | Row | The data of the type in the tool |
 | --- | --- | --- | --- |
-| `spec` | `gen/flat-types/flat_types_spec.py` (`Spec.lean`, step 4) | One row of the type | `SPEC_TYPES` and `descnames`: the fields and their `Desc` names. The decoder and witness tools read `SPEC_TYPES` too |
+| `spec` | `gen/flat-types/flat_types_spec.py` (`Spec.lean`, step 4) | One row of the type | `SPEC_TYPES` and `descnames`: the fields and their `Desc` names. `DESC_FROM_CONSENSUS_SPECS`: the source of the `Desc`. The decoder and witness tools read `SPEC_TYPES` too |
 | `decode-spec` | `gen/flat-types/flat_types_decode_spec.py` | The `decoder --whole-accept` row | None |
-| `decode-witness` | `gen/flat-types/flat_types_witness.py` | The `decoder --whole-accept` row | `FRAME_FORM`, and the tables `gsize`, `callees`, `Fr` and `lsave` of `accbytes` for its forms |
+| `reject-witness` | `gen/flat-types/flat_types_witness.py` (`WitnessGeneratedDecodeRejectSize.lean`) | The `decoder --whole-accept` row | None |
+| `accept-witness` | `gen/flat-types/flat_types_witness.py` (`WitnessGeneratedDecodeAccept.lean`) | The `decoder --whole-accept` row | `FRAME_FORM`, and the tables `gsize`, `callees`, `Fr` and `lsave` of `accbytes` for its forms |
 | `encode-spec` | `gen/flat-types/flat_types_encode_spec.py` | The `encoder --fast-path` row | `ENCODE_SPEC_TYPES`: the names of the specification and the field accessors |
 | `negative-cases` | `gen/flat-types/flat_types_negative_cases.py` | The decoder row for the decoder cases, the encoder row for the encoder cases | None |
 | `hand-list` | `gen/flat-types/flat_types_hand_list.py` | One row of the type | None |
@@ -360,7 +363,7 @@ A check that did not run is "not run" in the pull request.
    No program compares the text of a reason with a generator run.
    Change the entry of the type when the generator result of the type changes.
    `CORE_FLAT_TYPES` is the set of types of the accept rows of `gen/generator/types.tsv` in the modes `decoder --whole-accept` and `encoder --fast-path`.
-   It does not hold a type with the companion `spec`.
+   It does not hold a type with the companion `hand-list`.
    The tool reads it from the table.
    Expected: `gen/tools/proof_inventory.py run` exits 0, and `prysm/proof-inventory.md` has a row for the type.
 8. The link check of step 2, when the link set changed (needs the ELF).

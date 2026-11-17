@@ -20,8 +20,8 @@
 
 Three denominators are kept apart: (1) the SSZ methods of the target (`ssz-methods.json`, per method kind);
 (2) the dumped functions (`functions.json`); (3) the core flat types (`CORE_FLAT_TYPES`): the types of the
-`decoder --whole-accept` and `encoder --fast-path` accept rows of `gen/generator/types.tsv` without the companion `spec`
-(a hand `Spec.lean`), read from that table.
+`decoder --whole-accept` and `encoder --fast-path` accept rows of `gen/generator/types.tsv` without the companion
+`hand-list` (a hand list of the axioms gate that a person writes), read from that table.
 The flat fixed-size types of the target are computed from the IR by `FLAT_RULE`; those outside `CORE_FLAT_TYPES` are listed.
 
 Mapping. The rows are derived by a rule, not written by hand: for every directory `lean/Prysm/<GoTypeName>/` and
@@ -87,15 +87,15 @@ import types_table  # noqa: E402
 def core_flat_types():
     """The Go type names of the accept rows of the mode `encoder --fast-path` and then of the mode
     `decoder --whole-accept` of gen/generator/types.tsv, in table order, each name once, without the types of a row with
-    the companion `spec`."""
+    the companion `hand-list`."""
     rows = types_table.rows()
-    spec = {r["type"] for r in rows if "spec" in r["companions"]}
+    listed = {r["type"] for r in rows if "hand-list" in r["companions"]}
     names = [r["type"] for m in ("encoder --fast-path", "decoder --whole-accept") for r in rows
-             if r["mode"] == m and r["expect"] == "accept" and r["type"] not in spec]
+             if r["mode"] == m and r["expect"] == "accept" and r["type"] not in listed]
     return list(dict.fromkeys(names))
 
 
-# The core flat types: the types with a generated decoder or encoder and a hand Spec.lean.
+# The core flat types: the types with a generated decoder or encoder and a hand list of the axioms gate.
 # The inventory counts their decoders as one group.
 # AttestationData has nested fields and is listed apart (`NESTED`).
 CORE_FLAT_TYPES = core_flat_types()
@@ -695,7 +695,7 @@ def run(decls_p, gate_p, md_p, json_p):
             "dumped_functions": "prysm/go1.26.10/functions.json (functions with a `.S` text)",
             "core_flat_types": "CORE_FLAT_TYPES of gen/tools/proof_inventory.py (the types of the "
                                "decoder --whole-accept and encoder --fast-path accept rows of gen/generator/types.tsv "
-                               "without the companion spec)"},
+                               "without the companion hand-list)"},
         target_ssz_methods=len(target), target_types=len(target_types),
         functions_json_total=len(funcs), functions_json_runtime_helpers=runtime,
         by_kind=by_kind,
@@ -750,7 +750,7 @@ def run(decls_p, gate_p, md_p, json_p):
           f"{len(funcs) - len(runtime)} are SSZ methods and {len(runtime)} are runtime helpers "
           f"({', '.join(r.rsplit('.', 1)[-1] for r in runtime)}). A theorem needs a dumped function.",
           f"3. Core flat types: the {len(CORE_FLAT_TYPES)} types of the `decoder --whole-accept` and "
-          "`encoder --fast-path` accept rows of `gen/generator/types.tsv` without the companion `spec` "
+          "`encoder --fast-path` accept rows of `gen/generator/types.tsv` without the companion `hand-list` "
           "(`CORE_FLAT_TYPES` of the script). "
           "It is not the set of flat fixed-size types of the target (see the flat types below).", "",
           "## Totals by method kind", "",

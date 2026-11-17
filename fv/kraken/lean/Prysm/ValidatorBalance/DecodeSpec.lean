@@ -4,14 +4,14 @@ import Prysm.ValidatorBalance.Code
 import Prysm.ValidatorIndex.Code
 
 /-!
-# Spec alignment of the ValidatorBalance decoder
+# Spec alignment of the `v1alpha1.ValidatorBalance` decoder
 
-Built on the GENERATED theorems of `Prysm/ValidatorBalance/GeneratedDecodeAccept.lean` (`decoder --whole-accept`):
+Built on the GENERATED theorems of `Prysm/ValidatorBalance/GeneratedDecodeAccept.lean` (`decoder --whole-accept`, one run per type by `run_generators.sh`):
 - `Decode.accept_spec`: if EthLib accepts `bsA` (`desc`) as `v`, there is `g : SszValue` with `g.toValue = v`
   and `bsA = SszValue.encode g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
   The statement is the generated accept statement (kind instance) with the input chunks replaced by the
-  encoding of `g`.
-  The proof applies `Prysm.ValidatorBalance.Decode.generated_accept`, so Lean checks the text against it.
+  encoding of `g` (text written by `gen/flat-types/flat_types_decode_spec.py` from the generated statement; then checked
+  by Lean against `Prysm.ValidatorBalance.Decode.generated_accept`).
 - `Decode.reject_size_spec`: `bs.size ≠ 16` → EthLib rejects, and the machine code returns `ssz.ErrSize`
   (generated `Decode.generated_reject`).
 - `Decode.reject_complete`: every input that EthLib rejects has `size ≠ 16` (the path condition of the size reject).

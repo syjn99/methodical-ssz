@@ -37,7 +37,6 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.ValidatorBalance.Decode.generated_directive_50_kind
 #print axioms Prysm.ValidatorBalance.Decode.generated_directive_51
 #print axioms Prysm.ValidatorBalance.Decode.generated_directive_51_kind
-#print axioms Prysm.ValidatorBalance.desc_checker
 #print axioms Prysm.ValidatorBalance.desc_deserialize_checker
 #print axioms Prysm.ValidatorBalance.desc_fixedSize
 #print axioms Prysm.ValidatorBalance.desc_serialize_checker
@@ -52,7 +51,6 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.ValidatorBalance.SszValue.toValue_fits
 #print axioms Prysm.ValidatorBalance.SszValue.toValue_fits_checker
 #print axioms Prysm.ValidatorBalance.SszValue.toValue_injective
-#print axioms Prysm.ValidatorBalance.SszValue.toValue_surjective
 #print axioms Prysm.ValidatorBalance.SszValue.toValue_surjective'
 #print axioms Prysm.ValidatorBalance.checker_wellFormed
 #print axioms Prysm.ValidatorBalance.Decode.accept_spec

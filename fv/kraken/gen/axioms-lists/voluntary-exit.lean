@@ -45,7 +45,6 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.VoluntaryExit.Decode.generated_directive_53_kind
 #print axioms Prysm.VoluntaryExit.Decode.generated_directive_54
 #print axioms Prysm.VoluntaryExit.Decode.generated_directive_54_kind
-#print axioms Prysm.VoluntaryExit.desc_checker
 #print axioms Prysm.VoluntaryExit.desc_deserialize_checker
 #print axioms Prysm.VoluntaryExit.desc_fixedSize
 #print axioms Prysm.VoluntaryExit.desc_serialize_checker
@@ -60,7 +59,6 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.VoluntaryExit.SszValue.toValue_fits
 #print axioms Prysm.VoluntaryExit.SszValue.toValue_fits_checker
 #print axioms Prysm.VoluntaryExit.SszValue.toValue_injective
-#print axioms Prysm.VoluntaryExit.SszValue.toValue_surjective
 #print axioms Prysm.VoluntaryExit.SszValue.toValue_surjective'
 #print axioms Prysm.VoluntaryExit.checker_wellFormed
 #print axioms Prysm.VoluntaryExit.Decode.accept_spec
