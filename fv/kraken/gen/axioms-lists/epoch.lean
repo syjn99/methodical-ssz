@@ -7,6 +7,10 @@ import Prysm.Epoch.Size
 import Prysm.Epoch.WitnessSize
 import Prysm.Epoch.EncodeSpec
 import Prysm.Epoch.WitnessEncodeFastPath
+import Prysm.Epoch.EncodeGrowFirstSite
+import Prysm.Epoch.WitnessEncodeGrowFirstSite
+import Prysm.Epoch.EncodeCoverFramed
+import Prysm.Epoch.WitnessEncodeCoverFramed
 
 /-! Hand list of the `Epoch` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -29,3 +33,8 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.Epoch.Encode.fast_path_spec
 #print axioms Prysm.Epoch.Witness.EncodeFastPath.runs_empty
 #print axioms Prysm.Epoch.Witness.EncodeFastPath.runs_prefix
+#print axioms Prysm.Epoch.Encode.grow_first_site
+#print axioms Prysm.Epoch.Witness.EncodeGrowFirstSite.runs
+#print axioms Prysm.Epoch.Witness.EncodeGrowFirstSite.runs_empty
+#print axioms Prysm.Epoch.Encode.cover_framed
+#print axioms Prysm.Epoch.Witness.EncodeCoverFramed.runs

@@ -100,7 +100,9 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   A second growth call needs a lower bound as its budget premise.
 - Effect: in `Prysm.Checkpoint.Encode.grow_any_site_three_cases`, one case ends at the entry of the second growth call.
   The run after that state is not proved.
-  The growth branches of the other encoders are not proved.
+  The growth branches of most other encoders are not proved.
+  The `MarshalSSZTo` of Epoch, Slot, CommitteeIndex and ValidatorIndex has one growth call.
+  `Encode.grow_first_site` of each of these types proves it.
 - Where: `lean/Runtime/Contracts.lean`.
   A new contract form needs a user decision.
 

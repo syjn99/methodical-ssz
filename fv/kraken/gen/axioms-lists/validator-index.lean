@@ -5,6 +5,10 @@ import Prysm.ValidatorIndex.DecodeRejectSize
 import Prysm.ValidatorIndex.WitnessDecodeRejectSize
 import Prysm.ValidatorIndex.EncodeSpec
 import Prysm.ValidatorIndex.WitnessEncodeFastPath
+import Prysm.ValidatorIndex.EncodeGrowFirstSite
+import Prysm.ValidatorIndex.WitnessEncodeGrowFirstSite
+import Prysm.ValidatorIndex.EncodeCoverFramed
+import Prysm.ValidatorIndex.WitnessEncodeCoverFramed
 
 /-! Hand list of the `ValidatorIndex` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -23,3 +27,8 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.ValidatorIndex.Encode.fast_path_spec
 #print axioms Prysm.ValidatorIndex.Witness.EncodeFastPath.runs_empty
 #print axioms Prysm.ValidatorIndex.Witness.EncodeFastPath.runs_prefix
+#print axioms Prysm.ValidatorIndex.Encode.grow_first_site
+#print axioms Prysm.ValidatorIndex.Witness.EncodeGrowFirstSite.runs
+#print axioms Prysm.ValidatorIndex.Witness.EncodeGrowFirstSite.runs_empty
+#print axioms Prysm.ValidatorIndex.Encode.cover_framed
+#print axioms Prysm.ValidatorIndex.Witness.EncodeCoverFramed.runs
