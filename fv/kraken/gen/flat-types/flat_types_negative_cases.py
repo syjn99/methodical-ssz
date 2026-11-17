@@ -1,4 +1,5 @@
 """Write the negative cases of the flat types for gen/checks/negative.py.
+The types are the rows of gen/generator/types.tsv with the companion `negative-cases`.
 
 usage (cwd fv/kraken):
   python3 -I -B gen/flat-types/flat_types_negative_cases.py lean gen/checks/negative-cases
@@ -10,20 +11,17 @@ Per decoder type: accept_spec control; mutants of the generated accept theorem (
 theorem (post rax), accept_spec (hlen + 1), the accept witness (post rax). Per encoder type: spec control; mutants of the
 generated fast-path theorem (post rax), the spec corollary (hcap weakened by 8), the witness (post rax)."""
 import json, os, re, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'generator'))
+import types_table  # noqa: E402
+from types_table import kebab  # noqa: E402
 LEAN_DIR = sys.argv[1]   # fv/kraken/lean
-DECODER_CASE_TYPES = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest',
-       'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
-ENCODER_CASE_TYPES = ['BeaconBlocksByRangeRequest', 'BuilderDepositRequest', 'BuilderPreferences', 'BlobSidecarsByRangeRequest',
-       'DepositRequest', 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
+# the rows of gen/generator/types.tsv with the companion negative-cases
+DECODER_CASE_TYPES = types_table.types_with('negative-cases', 'decoder --whole-accept')
+ENCODER_CASE_TYPES = types_table.types_with('negative-cases', 'encoder --fast-path')
 # the negative case id: <Go type in kebab case>-<theorem without its type namespace>-<kind>[-<mutated text>]
 # (the rule of all negative case files)
 STOP = {'st', 'data', 'regs', 's', 'Eq', 'toBitVec', 'At', 'toList', 'bs', 'h', 'toNat', 'Int', 'toBytes', 'toInt',
         'BitVec', 'ofNat', 'UInt64', 'List', 'UInt8', 'the', 'rip'}
-
-
-def kebab(s):
-    s = re.sub(r'(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', '-', s)
-    return re.sub(r'[^a-z0-9]+', '-', s.replace('_', '-').lower()).strip('-')
 
 
 def case_id(mod, thm, kind, old=None, new=None):

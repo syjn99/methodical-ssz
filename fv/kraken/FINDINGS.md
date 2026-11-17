@@ -146,7 +146,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   On the encoder side, the compiled sites that append a 32-byte field have different instruction texts.
   Only the call step is shared between them.
 - Effect: a refused type needs hand proofs.
-  A refused type of `gen/flat-types/run_generators.sh` has only `Code.lean`.
+  A type whose rows in `gen/generator/types.tsv` are all refuse rows has only `Code.lean`.
 - Where: `gen/generator/whole_accept.py`, `gen/generator/fast_path.py`.
   The last line of the standard error of a run gives the reason of a refusal.
   A generator change needs user approval.
@@ -244,7 +244,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 
 - What does not hold: `Prysm.AttestationData.Code.marshalSSZTo` and `Prysm.AttestationData.Code.sizeSSZ` have no theorem.
   The constants of a type directory that holds only `Code.lean` have no theorem.
-  These are the types that the generator refuses (`gen/flat-types/run_generators.sh`).
+  These are the types that the generator refuses (the refuse rows of `gen/generator/types.tsv`).
   Some `.S` files of the link set have no constant: no `include_x64_code` line of `lean/` names them.
   The rule to find them: a file of `prysm/go1.26.10/link-set/norm/`, other than `all.S`, whose name no `include_x64_code` line names.
   They are the encoder and size functions of the primitive types of `consensus-types/primitives`.

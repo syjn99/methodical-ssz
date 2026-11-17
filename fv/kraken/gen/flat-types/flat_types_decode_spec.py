@@ -1,16 +1,17 @@
 """Write <dir>/Prysm/<GoTypeName>/DecodeSpec.lean from the generated accept
 statement text of <dir>/Prysm/<GoTypeName>/GeneratedDecodeAccept.lean (statement copied, input chunks replaced by the encoding of the EthLib-decoded value), for
 n fields of uint64 / byte vectors.
+The types are the rows of gen/generator/types.tsv with the companion `decode-spec`.
 usage: python3 -I -B flat_types_decode_spec.py <fv/kraken/lean>"""
 import os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from flat_types_spec import SPEC_TYPES, with_code_imports  # noqa: E402
-
-DECODE_SPEC_TYPES = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'generator'))
+from flat_types_spec import spec_entry, with_code_imports  # noqa: E402
+import types_table  # noqa: E402
 
 
 def emit(d, X):
-    ty, fs, chk = SPEC_TYPES[X]
+    ty, fs, chk = spec_entry(X, 'flat_types_decode_spec')
     value_type, encode_name = 'SszValue', 'SszValue.encode'
     N = sum(f[2] for f in fs)
     n = len(fs)
@@ -125,6 +126,6 @@ end Prysm.{X}
 
 if __name__ == '__main__':
     d = sys.argv[1]
-    for X in DECODE_SPEC_TYPES:
+    for X in types_table.types_with('decode-spec'):
         open(os.path.join(d, 'Prysm', X, 'DecodeSpec.lean'), 'w').write(with_code_imports(emit(d, X), X))
         print(X)

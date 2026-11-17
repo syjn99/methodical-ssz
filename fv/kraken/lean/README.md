@@ -75,7 +75,7 @@ Examples: `sszErrSize` is the address of the global `ssz.ErrSize`, `typeUint8` t
 The item table `../prysm/go1.26.10/link-set.tsv` gives each id.
 The lemmas `<id>_addr_eq` restate an address.
 
-The types of `../gen/generator/gen.sh` and `../gen/flat-types/run_generators.sh` have generated modules `Prysm/<GoTypeName>/Generated*.lean`.
+The types of the accept rows of `../gen/generator/types.tsv` have generated modules `Prysm/<GoTypeName>/Generated*.lean`.
 Section 8 tells which of them a generator writes.
 A type directory with only `Code.lean` holds a type that the generator refuses.
 
@@ -323,7 +323,7 @@ Examples are `Deposit_Data`, `ENRForkID` and the label `runtime.makeslice`.
 | --- | --- |
 | `Code` | Program constants read from the converted `.S` files (hand) |
 | `Layout` | Go struct layout of Checkpoint from the IR: offsets and sizes (`../gen/checks/layout.py`) |
-| `EncodeLayout` | Hand encoder frame layout that `gen.sh` gives the generator with `--hand-layout` |
+| `EncodeLayout` | Hand encoder frame layout that the row of the type in `../gen/generator/types.tsv` gives the generator with `--hand-layout` |
 | `GoValue`, `GoValueWitness` | Validity of the Go value of the receiver, and its witness |
 | `Spec` | The `SszValue` structure, its definitions and its bridge lemmas to EthLib (section 5) |
 | `SpecDescription` | The hand `Desc` and the definitions that only the description needs (section 5) |

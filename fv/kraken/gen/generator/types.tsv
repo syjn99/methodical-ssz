@@ -1,0 +1,108 @@
+# The type table: one row for each type and method that gen/generator/generator.py runs on.
+# gen/generator/gen.sh runs the rows. gen/generator/types_table.py reads the table for the Python tools.
+# Columns are separated by one tab. A "-" is an empty column. A line that starts with "#" is a comment.
+# package: the Go package of the type: v1alpha1 (proto/prysm/v1alpha1), v1 (proto/engine/v1) or primitives
+#   (consensus-types/primitives). It gives the name of the .S file and the --type option.
+# type: the Go type name. The directory of the outputs is lean/Prysm/<type>/.
+# mode: the generator mode. uint64 and decoder --whole-accept read UnmarshalSSZ and write GeneratedDecodeAccept.lean.
+#   encoder --fast-path reads MarshalSSZTo and writes GeneratedEncodeFastPath.lean.
+# options: more generator options, separated by spaces. They come after the options that gen.sh makes from the row.
+# expect: accept (exit 0, gen.sh writes the output) or refuse (exit 2, nothing on standard output, no file).
+# companions: the files that the tools of gen/flat-types/ write for the type, separated by commas:
+#   spec (flat_types_spec.py: Spec.lean), decode-spec (flat_types_decode_spec.py: DecodeSpec.lean),
+#   decode-witness (flat_types_witness.py: the two decoder witnesses),
+#   encode-spec (flat_types_encode_spec.py: GeneratedEncodeFastPathSpec.lean and WitnessGeneratedEncodeFastPath.lean),
+#   negative-cases (flat_types_negative_cases.py: the cases of the method of the row),
+#   hand-list (flat_types_hand_list.py: the names in gen/axioms-lists/<type>.lean).
+#   spec and hand-list are for the type: give them in one row of the type.
+#   A person writes these files for a type without the companion.
+package	type	mode	options	expect	companions
+# uint64: the accept path of the uint64 primitive decoders.
+primitives	ValidatorIndex	uint64	-	accept	-
+primitives	Epoch	uint64	-	accept	-
+primitives	Slot	uint64	-	accept	-
+primitives	CommitteeIndex	uint64	-	accept	-
+# decoder --whole-accept: the accept path and the size reject of a flat decoder.
+v1alpha1	BeaconBlockHeader	decoder --whole-accept	-	accept	-
+v1alpha1	Eth1Data	decoder --whole-accept	-	accept	-
+v1alpha1	BlobIdentifier	decoder --whole-accept	-	accept	-
+v1alpha1	DepositMessage	decoder --whole-accept	-	accept	-
+v1alpha1	Deposit_Data	decoder --whole-accept	-	accept	-
+v1alpha1	SyncCommitteeMessage	decoder --whole-accept	-	accept	-
+v1alpha1	PendingConsolidation	decoder --whole-accept	-	accept	-
+v1alpha1	PendingDeposit	decoder --whole-accept	-	accept	-
+v1alpha1	PowBlock	decoder --whole-accept	-	accept	-
+v1alpha1	HistoricalSummary	decoder --whole-accept	-	accept	-
+v1alpha1	SigningData	decoder --whole-accept	-	accept	-
+v1alpha1	SyncAggregatorSelectionData	decoder --whole-accept	-	accept	-
+v1alpha1	ValidatorBalance	decoder --whole-accept	-	accept	-
+v1alpha1	VoluntaryExit	decoder --whole-accept	-	accept	-
+# PendingPartialWithdrawal has interleaved fields, and AttestationData has nested containers.
+v1alpha1	PendingPartialWithdrawal	decoder --whole-accept	-	refuse	-
+v1alpha1	AttestationData	decoder --whole-accept	-	refuse	-
+# Flat types with tool-written companions, and flat types that the generator refuses.
+v1	BuilderDepositRequest	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1	BuilderExitRequest	decoder --whole-accept	-	refuse	-
+v1	ConsolidationRequest	decoder --whole-accept	-	refuse	-
+v1	DepositRequest	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1	Withdrawal	decoder --whole-accept	-	refuse	-
+v1	WithdrawalRequest	decoder --whole-accept	-	refuse	-
+v1alpha1	BLSToExecutionChange	decoder --whole-accept	-	refuse	-
+v1alpha1	BeaconBlocksByRangeRequest	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1alpha1	BlobSidecarsByRangeRequest	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1alpha1	Builder	decoder --whole-accept	-	refuse	-
+v1alpha1	BuilderPendingWithdrawal	decoder --whole-accept	-	refuse	-
+v1alpha1	BuilderPreferences	decoder --whole-accept	-	refuse	-
+v1alpha1	ENRForkID	decoder --whole-accept	-	refuse	-
+v1alpha1	ExecutionPayloadEnvelopesByRangeRequest	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1alpha1	Fork	decoder --whole-accept	-	refuse	-
+v1alpha1	ForkData	decoder --whole-accept	-	refuse	-
+v1alpha1	PartialDataColumnGroupID	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1alpha1	PayloadAttestationData	decoder --whole-accept	-	refuse	-
+v1alpha1	ProposerPreferences	decoder --whole-accept	-	refuse	-
+v1alpha1	Status	decoder --whole-accept	-	refuse	-
+v1alpha1	StatusV2	decoder --whole-accept	-	refuse	-
+v1alpha1	Validator	decoder --whole-accept	-	refuse	-
+v1alpha1	ValidatorIdentity	decoder --whole-accept	-	accept	spec,decode-spec,decode-witness,negative-cases,hand-list
+v1alpha1	ValidatorRegistrationV1	decoder --whole-accept	-	refuse	-
+# encoder --fast-path: the encoder fast path. The hand layouts and the statement tie need options.
+v1alpha1	Checkpoint	encoder --fast-path	--imports=Prysm.Checkpoint.EncodeLayout,Prysm.Checkpoint.EncodeFastPathKindTie --hand-layout=Prysm.Checkpoint.encodeLayout --hand-layout-src=lean/Prysm/Checkpoint/EncodeLayout.lean --same-as=Prysm.Checkpoint.Encode.fast_path --same-as-via=Prysm.Checkpoint.Encode.fast_path_kind_tie	accept	encode-spec
+v1alpha1	BeaconBlockHeader	encoder --fast-path	--imports=Prysm.BeaconBlockHeader.EncodeLayout --hand-layout=Prysm.BeaconBlockHeader.encodeLayout --hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeLayout.lean	accept	encode-spec
+v1alpha1	Eth1Data	encoder --fast-path	--imports=Prysm.Eth1Data.EncodeLayout --hand-layout=Prysm.Eth1Data.encodeLayout --hand-layout-src=lean/Prysm/Eth1Data/EncodeLayout.lean	accept	encode-spec
+v1alpha1	BlobIdentifier	encoder --fast-path	-	accept	encode-spec
+v1alpha1	DepositMessage	encoder --fast-path	-	accept	encode-spec
+v1alpha1	Deposit_Data	encoder --fast-path	-	accept	encode-spec
+v1alpha1	PendingPartialWithdrawal	encoder --fast-path	-	accept	encode-spec
+v1alpha1	SyncCommitteeMessage	encoder --fast-path	-	accept	encode-spec
+v1alpha1	PendingConsolidation	encoder --fast-path	-	accept	encode-spec
+v1alpha1	PendingDeposit	encoder --fast-path	-	accept	encode-spec
+v1alpha1	PowBlock	encoder --fast-path	-	accept	encode-spec
+v1alpha1	HistoricalSummary	encoder --fast-path	-	accept	encode-spec
+v1alpha1	SigningData	encoder --fast-path	-	accept	encode-spec
+v1alpha1	SyncAggregatorSelectionData	encoder --fast-path	-	accept	encode-spec
+v1alpha1	ValidatorBalance	encoder --fast-path	-	accept	encode-spec
+v1alpha1	VoluntaryExit	encoder --fast-path	-	accept	encode-spec
+v1	BuilderDepositRequest	encoder --fast-path	-	accept	encode-spec,negative-cases
+v1	BuilderExitRequest	encoder --fast-path	-	refuse	-
+v1	ConsolidationRequest	encoder --fast-path	-	refuse	-
+v1	DepositRequest	encoder --fast-path	-	accept	encode-spec,negative-cases
+v1	Withdrawal	encoder --fast-path	-	refuse	-
+v1	WithdrawalRequest	encoder --fast-path	-	refuse	-
+v1alpha1	BLSToExecutionChange	encoder --fast-path	-	refuse	-
+v1alpha1	BeaconBlocksByRangeRequest	encoder --fast-path	-	accept	encode-spec,negative-cases
+v1alpha1	BlobSidecarsByRangeRequest	encoder --fast-path	-	accept	encode-spec,negative-cases
+v1alpha1	Builder	encoder --fast-path	-	refuse	-
+v1alpha1	BuilderPendingWithdrawal	encoder --fast-path	-	refuse	-
+v1alpha1	BuilderPreferences	encoder --fast-path	-	accept	spec,encode-spec,negative-cases,hand-list
+v1alpha1	ENRForkID	encoder --fast-path	-	refuse	-
+v1alpha1	ExecutionPayloadEnvelopesByRangeRequest	encoder --fast-path	-	accept	encode-spec,negative-cases
+v1alpha1	Fork	encoder --fast-path	-	refuse	-
+v1alpha1	ForkData	encoder --fast-path	-	refuse	-
+v1alpha1	PartialDataColumnGroupID	encoder --fast-path	-	accept	encode-spec,negative-cases
+v1alpha1	PayloadAttestationData	encoder --fast-path	-	refuse	-
+v1alpha1	ProposerPreferences	encoder --fast-path	-	refuse	-
+v1alpha1	Status	encoder --fast-path	-	refuse	-
+v1alpha1	StatusV2	encoder --fast-path	-	refuse	-
+v1alpha1	Validator	encoder --fast-path	-	refuse	-
+v1alpha1	ValidatorIdentity	encoder --fast-path	-	accept	encode-spec,negative-cases
+v1alpha1	ValidatorRegistrationV1	encoder --fast-path	-	refuse	-

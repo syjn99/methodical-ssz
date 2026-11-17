@@ -20,7 +20,8 @@
 
 Three denominators are kept apart: (1) the SSZ methods of the target (`ssz-methods.json`, per method kind);
 (2) the dumped functions (`functions.json`); (3) the core flat types (`CORE_FLAT_TYPES`): the types of the
-`decoder --whole-accept` and `encoder --fast-path` loops of `gen/generator/gen.sh`, read from that file.
+`decoder --whole-accept` and `encoder --fast-path` accept rows of `gen/generator/types.tsv` without the companion `spec`
+(a hand `Spec.lean`), read from that table.
 The flat fixed-size types of the target are computed from the IR by `FLAT_RULE`; those outside `CORE_FLAT_TYPES` are listed.
 
 Mapping. The rows are derived by a rule, not written by hand: for every directory `lean/Prysm/<GoTypeName>/` and
@@ -79,25 +80,32 @@ V1E = "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
 
 
 
-def gen_sh_types():
-    """The Go type names of the `encoder --fast-path` loop (`for row in ...`) and then of the `decoder --whole-accept`
-    loop (`for t in ...`) of gen/generator/gen.sh, in file order, each name once."""
-    text = (KR / "gen/generator/gen.sh").read_text().replace("\\\n", " ")
-    enc = re.search(r"^for row in (.*?); do$", text, re.M).group(1)
-    dec = re.search(r"^for t in (.*?); do$", text, re.M).group(1)
-    names = [w.split()[0] for w in re.findall(r'"([^"]*)"', enc)] + re.sub(r'"[^"]*"', " ", enc).split() + dec.split()
+sys.path.insert(0, str(KR / "gen" / "generator"))
+import types_table  # noqa: E402
+
+
+def core_flat_types():
+    """The Go type names of the accept rows of the mode `encoder --fast-path` and then of the mode
+    `decoder --whole-accept` of gen/generator/types.tsv, in table order, each name once, without the types of a row with
+    the companion `spec`."""
+    rows = types_table.rows()
+    spec = {r["type"] for r in rows if "spec" in r["companions"]}
+    names = [r["type"] for m in ("encoder --fast-path", "decoder --whole-accept") for r in rows
+             if r["mode"] == m and r["expect"] == "accept" and r["type"] not in spec]
     return list(dict.fromkeys(names))
 
 
-# The core flat types: the types of gen/generator/gen.sh. The inventory counts their decoders as one group.
+# The core flat types: the types with a generated decoder or encoder and a hand Spec.lean.
+# The inventory counts their decoders as one group.
 # AttestationData has nested fields and is listed apart (`NESTED`).
-CORE_FLAT_TYPES = gen_sh_types()
+CORE_FLAT_TYPES = core_flat_types()
 NESTED = ["AttestationData"]
 # Why the generators refuse a flat type outside CORE_FLAT_TYPES (wording only, no state rule). The class is the field kind
 # or the callee at the directive of the `.S` file where `decoder --whole-accept` or `encoder --fast-path` stops.
 # The generators do not support that class.
-# This table is hand text: a short form of the last line of the standard error of gen/flat-types/run_generators.sh
-# for the type. No program compares it with a run of the generator.
+# This table is hand text: a short form of the last line of `<out dir>/<type>.<part>.stderr` of
+# `sh gen/generator/gen.sh <out dir>` for the row. The `run` mode checks that the keys are the refuse rows of
+# gen/generator/types.tsv outside CORE_FLAT_TYPES and NESTED. No program compares the text with a generator run.
 GENERATOR_REFUSED = {
     "v1.BuilderExitRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
     "v1.ConsolidationRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
@@ -635,6 +643,13 @@ def run(decls_p, gate_p, md_p, json_p):
     for t in NESTED:
         if (V1A, t) in flat_target:
             fails.append(f"NESTED type {t}: flat by FLAT_RULE")
+    refused = {}
+    for r in types_table.rows():
+        if r["expect"] == "refuse" and r["type"] not in CORE_FLAT_TYPES + NESTED:
+            refused.setdefault(f"{r['package']}.{r['type']}", set()).add(r["mode"].split()[0])
+    if refused != {k: set(v) for k, v in GENERATOR_REFUSED.items()}:
+        fails.append("GENERATOR_REFUSED: its keys are not the refuse rows of gen/generator/types.tsv outside "
+                     "CORE_FLAT_TYPES and NESTED")
     if gate.get("verdict") != "PASS":
         fails.append(f"axioms gate {gate_p}: verdict {gate.get('verdict')}")
     if fails:
@@ -679,7 +694,8 @@ def run(decls_p, gate_p, md_p, json_p):
             "target_ssz_methods": f"{METHODS_JSON} (from the nm listing of the pinned ELF, sha256 {sm['nm_sha256']})",
             "dumped_functions": "prysm/go1.26.10/functions.json (functions with a `.S` text)",
             "core_flat_types": "CORE_FLAT_TYPES of gen/tools/proof_inventory.py (the types of the "
-                               "decoder --whole-accept and encoder --fast-path loops of gen/generator/gen.sh)"},
+                               "decoder --whole-accept and encoder --fast-path accept rows of gen/generator/types.tsv "
+                               "without the companion spec)"},
         target_ssz_methods=len(target), target_types=len(target_types),
         functions_json_total=len(funcs), functions_json_runtime_helpers=runtime,
         by_kind=by_kind,
@@ -734,7 +750,8 @@ def run(decls_p, gate_p, md_p, json_p):
           f"{len(funcs) - len(runtime)} are SSZ methods and {len(runtime)} are runtime helpers "
           f"({', '.join(r.rsplit('.', 1)[-1] for r in runtime)}). A theorem needs a dumped function.",
           f"3. Core flat types: the {len(CORE_FLAT_TYPES)} types of the `decoder --whole-accept` and "
-          "`encoder --fast-path` loops of `gen/generator/gen.sh` (`CORE_FLAT_TYPES` of the script). "
+          "`encoder --fast-path` accept rows of `gen/generator/types.tsv` without the companion `spec` "
+          "(`CORE_FLAT_TYPES` of the script). "
           "It is not the set of flat fixed-size types of the target (see the flat types below).", "",
           "## Totals by method kind", "",
           "| method kind | in the target | in `functions.json` | with a mapping row | complete | partial |",

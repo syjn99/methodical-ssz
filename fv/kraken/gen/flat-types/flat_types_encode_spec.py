@@ -4,10 +4,14 @@
 <out dir>/Prysm/<T>/WitnessGeneratedEncodeFastPath.lean and <out dir>/Prysm/<T>/GeneratedEncodeFastPathSpec.lean.
 
 Reads the committed Prysm/<T>/GeneratedEncodeFastPath.lean (statement text, FAST-PATH-JSON header) and the IR (Go struct size).
-usage: flat_types_encode_spec.py <lean dir> <out dir> [<T> ...]      (<T>: a Go type name of ENCODE_SPEC_TYPES)
+The types are the rows of gen/generator/types.tsv with the companion `encode-spec`.
+usage: flat_types_encode_spec.py <lean dir> <out dir> [<T> ...]      (<T>: a Go type name of these rows)
 """
 import json, re, sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'generator'))
+import types_table  # noqa: E402
 
+# The names of each type of the table. A table type without an entry stops the tool with a message.
 ENCODE_SPEC_TYPES = {
     # Go type name: (spec module, SSZ value structure, encoding, serialize lemma, Desc, [(field accessor kind, expr)])
     'Checkpoint': ('Prysm.Checkpoint.Spec', 'Prysm.Checkpoint.SszValue', 'Prysm.Checkpoint.SszValue.encode', 'Prysm.Checkpoint.SszValue.serialize_eq', 'Prysm.Checkpoint.desc', ['u:epoch', 'b:root']),
@@ -660,7 +664,13 @@ def emit_spec(X, info, cl):
 
 def main():
     lean_dir, out_dir = sys.argv[1], sys.argv[2]
-    which = sys.argv[3:] or list(ENCODE_SPEC_TYPES)
+    table = types_table.types_with('encode-spec')
+    which = sys.argv[3:] or table
+    for X in which:
+        if X not in table:
+            die('%s is not a type of a row of gen/generator/types.tsv with the companion encode-spec' % X)
+        if X not in ENCODE_SPEC_TYPES:
+            die('%s is a type of gen/generator/types.tsv without an entry in ENCODE_SPEC_TYPES' % X)
     ir = json.load(open(os.path.join(lean_dir, '..', 'prysm', 'ir', 'ir-mainnet.json')))
     summary = {}
     for X in which:

@@ -5,9 +5,9 @@ usage: encoder_test.py <work-dir> <result.json>     (cwd = fv/kraken; one heavy 
 exit 0 = every case has its expected outcome; 1 = a case differs; 2 = usage
 
 Cases (mutated `.S` / IR copies are written to <work-dir>, nothing in the repository changes):
- - fast-path-real-*: the types of the fast-path rows of `gen/generator/gen.sh`: exit 0, two runs
-   byte-identical, every theorem with its kind line; equal to the committed `lean/Prysm/<T>/GeneratedEncodeFastPath.lean` when it
-   exists.
+ - fast-path-real-*: the type of every `encoder --fast-path` row of `gen/generator/types.tsv`, with the options of the row.
+   An accept row: exit 0, two runs byte-identical, every theorem with its kind line; equal to the committed
+   `lean/Prysm/<T>/GeneratedEncodeFastPath.lean` when it exists. A refuse row: exit 2 twice, 0 bytes on stdout.
  - fast-path-refused-*: adversarial `.S` / IR mutants (capacity test altered so that the growslice site is on the walked path,
    length test with a wrong immediate / wrong word, a store to the wrong offset vs the IR, fields out of order, a
    clobbered dst / len register, memmove with swapped source / destination, epilogue frame-test variants, a
@@ -23,35 +23,37 @@ Cases (mutated `.S` / IR copies are written to <work-dir>, nothing in the reposi
 """
 import json, os, pathlib, re, subprocess, sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import types_table  # noqa: E402
+
 P = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
 E = "prysm/go1.26.10"
 IR = "prysm/ir/ir-mainnet.json"
-ROWS = [  # type, link dir, const, modules to import (code module first), prefix, extra args, output file
-    ("Checkpoint", "link-set", "marshalSSZTo", "Prysm.Checkpoint.Code,Prysm.Checkpoint.EncodeLayout,Prysm.Checkpoint.EncodeFastPathKindTie", "checkpoint", ["--hand-layout=Prysm.Checkpoint.encodeLayout",
-     "--hand-layout-src=lean/Prysm/Checkpoint/EncodeLayout.lean", "--same-as=Prysm.Checkpoint.Encode.fast_path",
-     "--same-as-via=Prysm.Checkpoint.Encode.fast_path_kind_tie"], "GeneratedEncodeFastPath"),
-    ("BeaconBlockHeader", "link-set", "marshalSSZTo", "Prysm.BeaconBlockHeader.Code,Prysm.BeaconBlockHeader.EncodeLayout", "beacon-block-header", ["--hand-layout=Prysm.BeaconBlockHeader.encodeLayout",
-     "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeLayout.lean"], "GeneratedEncodeFastPath"),
-    ("Eth1Data", "link-set", "marshalSSZTo", "Prysm.Eth1Data.Code,Prysm.Eth1Data.EncodeLayout", "eth1-data", ["--hand-layout=Prysm.Eth1Data.encodeLayout",
-     "--hand-layout-src=lean/Prysm/Eth1Data/EncodeLayout.lean"], "GeneratedEncodeFastPath"),
-] + [(t, "link-set", c, f"Prysm.{t}.Code", p, [], "GeneratedEncodeFastPath") for t, c, p in [
-    ("BlobIdentifier", "marshalSSZTo", "blob-identifier"), ("DepositMessage", "marshalSSZTo", "deposit-message"), ("Deposit_Data", "marshalSSZTo", "deposit-data"),
-    ("PendingPartialWithdrawal", "marshalSSZTo", "pending-partial-withdrawal"), ("SyncCommitteeMessage", "marshalSSZTo", "sync-committee-message"),
-    ("PendingConsolidation", "marshalSSZTo", "pending-consolidation"), ("PendingDeposit", "marshalSSZTo", "pending-deposit"), ("PowBlock", "marshalSSZTo", "pow-block"),
-    ("HistoricalSummary", "marshalSSZTo", "historical-summary"), ("SigningData", "marshalSSZTo", "signing-data"),
-    ("SyncAggregatorSelectionData", "marshalSSZTo", "sync-aggregator-selection-data"), ("ValidatorBalance", "marshalSSZTo", "validator-balance"),
-    ("VoluntaryExit", "marshalSSZTo", "voluntary-exit")]]
+
+
+def table_row(r):
+    """(type, link dir, const, modules to import (code module first), id part, extra args, output file, package,
+    expected exit) of an `encoder --fast-path` row of the type table. The `--imports=` options of the row go into the
+    modules to import."""
+    t = r["type"]
+    imports = [o.split("=", 1)[1] for o in r["options"] if o.startswith("--imports=")]
+    extra = [o for o in r["options"] if not o.startswith("--imports=")]
+    return (t, "link-set", "marshalSSZTo", ",".join([f"Prysm.{t}.Code"] + imports), types_table.kebab(t), extra,
+            "GeneratedEncodeFastPath", r["package"], 0 if r["expect"] == "accept" else 2)
+
+
+ROWS = [table_row(r) for r in types_table.rows() if r["mode"] == "encoder --fast-path"]
 ROW = {r[0]: r for r in ROWS}
 
 
 def spath(t):
-    return f"{E}/{ROW[t][1]}/norm/{P}.{t}.MarshalSSZTo.S"
+    return f"{E}/{ROW[t][1]}/norm/{types_table.PACKAGES[ROW[t][7]]}.{t}.MarshalSSZTo.S"
 
 
 def argv(t, S=None, ir=IR, extra=None, summary=None):
-    _, d, c, mod, p, x, _ = ROW[t]
+    _, d, c, mod, p, x, _, pkg, _ = ROW[t]
     a = ["python3", "-I", "-B", "gen/generator/generator.py", "encoder", "--fast-path", "--assembly", S or spath(t), "--const", c,
-         "--ir", ir, "--type", f"v1alpha1.{t}", "--prefix", "Encode.generated", "--imports", mod, "--open", f"Prysm.{t}.Code"]
+         "--ir", ir, "--type", f"{pkg}.{t}", "--prefix", "Encode.generated", "--imports", mod, "--open", f"Prysm.{t}.Code"]
     a += x if extra is None else extra
     if summary:
         a += ["--summary", summary]
@@ -235,7 +237,7 @@ def nfields(t):
     d = json.loads(pathlib.Path(IR).read_text())
     for c in d["configs"]:
         for ty in c.get("types", []):
-            if ty.get("name") == t and c["package"].endswith("/v1alpha1"):
+            if ty.get("name") == t and c["package"].endswith("/" + ROW[t][7]):
                 return sum(f["exported"] for f in ty["go_fields"])
 
 
@@ -359,8 +361,13 @@ def main():
     work.mkdir(parents=True, exist_ok=True)
     res = []
     # real types
-    for t, d, c, mod, p, x, f in ROWS:
+    for t, d, c, mod, p, x, f, pkg, want in ROWS:
         r1, r2 = run(argv(t)), run(argv(t))
+        if want != 0:
+            ok = r1[0] == want and r2[0] == want and r1[1] == b"" and r2[1] == b""
+            res.append(dict(id=f"fast-path-real-{p}", expect=f"exit {want} twice, 0 bytes", exit=r1[0], stdout=len(r1[1]),
+                            ok=ok, stderr=r1[2][-200:]))
+            continue
         nf = nfields(t)
         com = pathlib.Path(f"lean/Prysm/{t}/GeneratedEncodeFastPath.lean")
         same = (r1[1] == com.read_bytes()) if com.exists() else None

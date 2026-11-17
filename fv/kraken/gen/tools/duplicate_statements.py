@@ -320,7 +320,7 @@ def checked_names(root):
             elif rel.startswith('gen' + os.sep + 'axioms-lists' + os.sep) and f.endswith('.lean'):
                 for m in re.finditer(r'#print\s+axioms\s+(\S+)', open(p, encoding='utf-8').read()):
                     names.setdefault(('list', m.group(1), ''), rel)
-            elif f.endswith(('.sh', '.lean')):
+            elif f.endswith(('.sh', '.tsv', '.lean')):
                 text = open(p, encoding='utf-8', errors='replace').read()
                 if '--same-as' in text:
                     for m in re.finditer(r'--same-as[ =]+([A-Za-z_][\w.\']*)', text):
@@ -480,7 +480,7 @@ FIXTURE = {
     'lean/T/Plain.lean': 'namespace T\ntheorem lemma_one : 4 = 4 := rfl\nend T\n',
     'lean/T/PlainTwin.lean': 'import T.Plain\nnamespace T\ntheorem lemma_two : 4 = 4 := rfl\nend T\n'
                              'theorem use_two : 4 = 4 := T.lemma_two\n',
-    'gen/generator/gen.sh': 'python3 generator.py uint64 --same-as T.accept\n',
+    'gen/generator/types.tsv': 'v1alpha1\tT\tencoder --fast-path\t--same-as=T.accept\taccept\t-\n',
     'gen/axioms-lists/hand.lean': '#print axioms T.seg\n',
 }
 DUMP = [('Base.f.eq_1', 'h1'), ('Base.f_eq', 'h1'),              # lean-derived

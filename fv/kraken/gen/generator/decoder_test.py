@@ -6,9 +6,10 @@ exit 0 = every case has its expected exit code and output; 1 = a case differs; 2
 
 Every case runs `gen/generator/generator.py` of the working tree. Mutants are written to <work-dir>, nothing in the repository.
 Cases (ids `whole-accept-*`; mutated `.S` / IR copies in <work-dir> only):
- - whole-accept-new-*: `--whole-accept` on PendingDeposit, SyncCommitteeMessage, VoluntaryExit, PowBlock, ValidatorBalance: exit 0 twice,
-   identical, every whole-accept theorem with its kind line, `kindcheck.py` PASS (rule 12: kind parameters recomputed from the
-   IR and the `.S`); PendingPartialWithdrawal (interleaved fields) and AttestationData (nested fields): exit 2, 0 bytes.
+ - whole-accept-new-*: `--whole-accept` on the type of every `decoder --whole-accept` row of `gen/generator/types.tsv`.
+   An accept row: exit 0 twice, identical, every whole-accept theorem with its kind line, `kindcheck.py` PASS (rule 12:
+   kind parameters recomputed from the IR and the `.S`). A refuse row: exit 2 twice, 0 bytes. Examples of refuse rows:
+   PendingPartialWithdrawal (interleaved fields) and AttestationData (nested fields).
  - adversarial inputs, each expected exit 2 with 0 bytes on stdout and `accept_generated: false` in the summary (no
    accept theorem): every class of the step rules (stack-store overlap / misaligned store, head variants, size
    immediate, epilogue jump to a missing label, truncated file, callee of another overlay type) and the whole-accept rules
@@ -31,6 +32,8 @@ import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
+sys.path.insert(0, str(HERE))
+import types_table  # noqa: E402
 
 
 def run(argv, cwd):
@@ -67,9 +70,6 @@ def ir_swap(a, b):
         i, j = [k for k, f in enumerate(fs) if f["key"] in (a, b)]
         fs[i], fs[j] = fs[j], fs[i]
     return fn
-
-
-PN = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
 
 
 def sync_committee_message_validator_index_setup(new):
@@ -109,13 +109,15 @@ def rv(eds):
 
 # ---------------------------------------------------------------------------------------------- whole-accept
 
-def whole_accept_case(tname):
-    return dict(S=f"prysm/go1.26.10/link-set/norm/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
-                args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated", "--imports", f"Prysm.{tname}.Code", "--open", f"Prysm.{tname}.Code"])
+def whole_accept_case(row):
+    t = row["type"]
+    return dict(S=types_table.assembly(row), type=f"{row['package']}.{t}",
+                args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated", "--imports", f"Prysm.{t}.Code", "--open",
+                      f"Prysm.{t}.Code"] + row["options"], want=0 if row["expect"] == "accept" else 2)
 
 
-WHOLE_ACCEPT_CASES = {t: whole_accept_case(t) for t in ["PendingDeposit", "SyncCommitteeMessage", "VoluntaryExit", "PowBlock",
-                                                         "ValidatorBalance", "PendingPartialWithdrawal", "AttestationData"]}
+# the `decoder --whole-accept` rows of gen/generator/types.tsv, in table order
+WHOLE_ACCEPT_CASES = {r["type"]: whole_accept_case(r) for r in types_table.rows() if r["mode"] == "decoder --whole-accept"}
 
 
 def ir_goff(field, off):
@@ -200,10 +202,9 @@ def whole_accept_cases(work, new):
     res, bad = [], 0
     KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
     irt = (KR / IR).read_text()
-    for key in ("PendingDeposit", "SyncCommitteeMessage", "VoluntaryExit", "PowBlock", "ValidatorBalance", "PendingPartialWithdrawal", "AttestationData"):
-        c = WHOLE_ACCEPT_CASES[key]
+    for key, c in WHOLE_ACCEPT_CASES.items():
         r1, r2 = whole_accept_run(work, new, f"whole-accept-new-{key}-1", c), whole_accept_run(work, new, f"whole-accept-new-{key}-2", c)
-        want = 2 if key in ("PendingPartialWithdrawal", "AttestationData") else 0
+        want = c["want"]
         kc = None
         if r1[0] == 0:
             f = work / f"whole-accept-new-{key}.lean"

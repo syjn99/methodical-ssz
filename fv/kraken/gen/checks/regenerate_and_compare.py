@@ -10,14 +10,15 @@ The tree is not changed: every generator runs in a copy of fv/ under <work dir>/
 Each output line is `<EQ|DIF|MIS>` TAB generator TAB tracked file TAB detail.
 EQ: the output equals the tracked file. DIF: it differs (the detail shows the first changed lines).
 MIS: the tracked file does not exist.
+NO-: a tracked GeneratedDecodeAccept.lean or GeneratedEncodeFastPath.lean that no accept row of the type table writes.
 
 To check a change, run it before and after the change and compare the two results with `diff`.
 A difference needs a reason.
 
 The script knows these generators and their output names: gen/generator/gen.sh,
 the generators of gen/flat-types/, desc_to_lean and layout.
-Section 1 compares every Lean file that gen/generator/gen.sh writes. Sections 2 and 3 name the outputs by their paths in
-lean/Prysm/<GoTypeName>/. Section 4 finds its outputs by their headers.
+Section 1 compares the output of every accept row of the type table gen/generator/types.tsv.
+Section 2 names the outputs by their paths in lean/Prysm/<GoTypeName>/. Section 3 finds its outputs by their headers.
 """
 import difflib
 import os
@@ -25,6 +26,9 @@ import re
 import shutil
 import subprocess
 import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'generator'))
+import types_table  # noqa: E402
 
 args = sys.argv[1:]
 if not args or args[0].startswith('-'):
@@ -62,11 +66,6 @@ def run(cmd, cwd, **kw):
     return subprocess.run(cmd, cwd=cwd, capture_output=True, **kw)
 
 
-# 1. gen/generator/gen.sh, in place in the copy. Every Lean file that the run writes (a new size or modification time) is
-#    compared with the tracked file of the same path.
-gen_sh = os.path.join(COPY_KRAKEN, 'gen/generator/gen.sh')
-
-
 def lean_stats(d):
     out = {}
     for dp, dn, fs in os.walk(d):
@@ -77,36 +76,25 @@ def lean_stats(d):
     return out
 
 
-stats_before = lean_stats(os.path.join(COPY_KRAKEN, 'lean'))
-r = run(['sh', gen_sh], COPY_KRAKEN)
-stats_after = lean_stats(os.path.join(COPY_KRAKEN, 'lean'))
-for produced in sorted(p for p in stats_after if stats_before.get(p) != stats_after[p]):
-    rel = os.path.relpath(produced, COPY_KRAKEN)
-    cmp('gen.sh rc=%d' % r.returncode, os.path.join(KRAKEN, rel), open(produced, 'rb').read())
+# 1. gen/generator/gen.sh of the copy, with an output directory. The output of each accept row of the type table is
+#    compared with the tracked file of the row.
+gen_out = os.path.join(work, 'gen-sh')
+r = run(['sh', os.path.join(COPY_KRAKEN, 'gen/generator/gen.sh'), gen_out], COPY_KRAKEN)
+written = set()
+for row in sorted((x for x in types_table.rows() if x['expect'] == 'accept'), key=types_table.output):
+    produced = os.path.join(gen_out, f"{row['type']}.{types_table.MODES[row['mode']][2]}.lean")
+    written.add(types_table.output(row))
+    cmp('gen.sh rc=%d' % r.returncode, os.path.join(KRAKEN, types_table.output(row)),
+        open(produced, 'rb').read() if os.path.exists(produced) else None)
+for t in sorted(os.listdir(os.path.join(KRAKEN, 'lean/Prysm'))):
+    for f in ('GeneratedDecodeAccept.lean', 'GeneratedEncodeFastPath.lean'):
+        rel = f'lean/Prysm/{t}/{f}'
+        if os.path.exists(os.path.join(KRAKEN, rel)) and rel not in written:
+            results.append(('gen.sh', rel, 'NO-ROW: no accept row of gen/generator/types.tsv writes this file'))
 if r.returncode:
     results.append(('gen.sh', 'stderr', r.stderr.decode()[-400:]))
 
-# 2. The generator run of the flat types (the committed outputs only).
-run_generators = open(os.path.join(COPY_KRAKEN, 'gen/flat-types/run_generators.sh')).read()
-rows = [l.split() for l in run_generators.split("<<'TYPES'\n")[1].split('TYPES')[0].strip().split('\n')]
-NORM = 'prysm/go1.26.10/link-set/norm'
-for kind, go_type in rows:
-    PK = ('github.com_OffchainLabs_prysm_v7_proto_engine_v1' if kind == 'v1'
-          else 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1')
-    for g, meth, suf, tag in (('decoder', 'UnmarshalSSZ', 'Dec', '--whole-accept'), ('encoder', 'MarshalSSZTo', 'Enc', '--fast-path')):
-        tr = os.path.join(KRAKEN, 'lean/Prysm', go_type,
-                          'GeneratedDecodeAccept.lean' if g == 'decoder' else 'GeneratedEncodeFastPath.lean')
-        if not os.path.exists(tr):
-            continue
-        cmd = ['python3', '-I', '-B', 'gen/generator/generator.py', g, tag, '--assembly', f'{NORM}/{PK}.{go_type}.{meth}.S', '--const',
-               'unmarshalSSZ' if g == 'decoder' else 'marshalSSZTo', '--ir', 'prysm/ir/ir-mainnet.json', '--type',
-               f'{kind}.{go_type}', '--prefix', 'Decode.generated' if g == 'decoder' else 'Encode.generated', '--imports',
-               f'Prysm.{go_type}.Code', '--open', f'Prysm.{go_type}.Code',
-               '--summary', os.path.join(work, f'{go_type}.{tag[2:]}.summary.json')]
-        r = run(cmd, COPY_KRAKEN)
-        cmp('flat-type run rc=%d' % r.returncode, tr, r.stdout)
-
-# 3. The specification, witness and negative case generators of the flat types (gen/flat-types/).
+# 2. The specification, witness and negative case generators of the flat types (gen/flat-types/).
 TOOLS = 'gen/flat-types'
 for name, cmdf, glob in (
         ('flat_types_spec', lambda o: ['python3', '-I', '-B', f'{TOOLS}/flat_types_spec.py', o], r'Spec\.lean$'),
@@ -149,7 +137,7 @@ for f in sorted(set(os.listdir(neg_out)) | {f for f in os.listdir(NEG_DIR) if f.
     cmp(f'flat_types_negative_cases rc={r.returncode}', os.path.join(NEG_DIR, f),
         open(produced, 'rb').read() if os.path.exists(produced) else None)
 
-# 4. desc_to_lean and layout: found by the "Generated by" header of every SpecChecker.lean and
+# 3. desc_to_lean and layout: found by the "Generated by" header of every SpecChecker.lean and
 #    Layout.lean file of the tree, so this section follows a move without a change.
 for dp, dn, fs in os.walk(os.path.join(KRAKEN, 'lean')):
     if '.lake' in dp:

@@ -1,21 +1,24 @@
 """Write <out>/Prysm/<GoTypeName>/Spec.lean, the spec bridge of each type
 (for a field list: SszValue structure, encoding, serialize, roundtrip,
 accepts-iff-size, spec reject; codec equality with the checker Desc where a Desc-checker record exists).
+The types are the rows of gen/generator/types.tsv with the companion `spec`.
 usage: python3 -I -B flat_types_spec.py <out dir>"""
 import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'generator'))
+import types_table  # noqa: E402
 
-SPEC_TYPES = {  # Go type name: (Go type with package, fields [(name, 'u'|'b', n)], checker (lean name, names) or None)
- 'DepositRequest': ('v1.DepositRequest', [('pubkey', 'b', 48), ('withdrawalCredentials', 'b', 32), ('amount', 'u', 8),
-                               ('signature', 'b', 96), ('index', 'u', 8)],
-         ('checkerDesc', None)),
- 'BuilderDepositRequest': ('v1.BuilderDepositRequest', [('pubkey', 'b', 48), ('withdrawalCredentials', 'b', 32), ('amount', 'u', 8),
-                                      ('signature', 'b', 96)], None),
- 'BeaconBlocksByRangeRequest': ('v1alpha1.BeaconBlocksByRangeRequest', [('startSlot', 'u', 8), ('count', 'u', 8), ('step', 'u', 8)], None),
- 'BlobSidecarsByRangeRequest': ('v1alpha1.BlobSidecarsByRangeRequest', [('startSlot', 'u', 8), ('count', 'u', 8)], None),
- 'ExecutionPayloadEnvelopesByRangeRequest': ('v1alpha1.ExecutionPayloadEnvelopesByRangeRequest', [('startSlot', 'u', 8), ('count', 'u', 8)], None),
- 'PartialDataColumnGroupID': ('v1alpha1.PartialDataColumnGroupID', [('beaconBlockRoot', 'b', 32), ('slot', 'u', 8)], None),
- 'ValidatorIdentity': ('v1alpha1.ValidatorIdentity', [('index', 'u', 8), ('pubkey', 'b', 48), ('activationEpoch', 'u', 8)], None),
- 'BuilderPreferences': ('v1alpha1.BuilderPreferences', [('maxExecutionPayment', 'u', 8)], None),
+# The fields of the types of the table. `spec_entry` stops with a message for a table type without an entry.
+SPEC_TYPES = {  # Go type name: (fields [(name, 'u'|'b', n)], checker (lean name, names) or None)
+ 'DepositRequest': ([('pubkey', 'b', 48), ('withdrawalCredentials', 'b', 32), ('amount', 'u', 8),
+                     ('signature', 'b', 96), ('index', 'u', 8)], ('checkerDesc', None)),
+ 'BuilderDepositRequest': ([('pubkey', 'b', 48), ('withdrawalCredentials', 'b', 32), ('amount', 'u', 8),
+                            ('signature', 'b', 96)], None),
+ 'BeaconBlocksByRangeRequest': ([('startSlot', 'u', 8), ('count', 'u', 8), ('step', 'u', 8)], None),
+ 'BlobSidecarsByRangeRequest': ([('startSlot', 'u', 8), ('count', 'u', 8)], None),
+ 'ExecutionPayloadEnvelopesByRangeRequest': ([('startSlot', 'u', 8), ('count', 'u', 8)], None),
+ 'PartialDataColumnGroupID': ([('beaconBlockRoot', 'b', 32), ('slot', 'u', 8)], None),
+ 'ValidatorIdentity': ([('index', 'u', 8), ('pubkey', 'b', 48), ('activationEpoch', 'u', 8)], None),
+ 'BuilderPreferences': ([('maxExecutionPayment', 'u', 8)], None),
 }
 
 
@@ -236,9 +239,20 @@ descnames = {
  'BuilderPreferences': ['max_execution_payment'],
 }
 
+
+def spec_entry(X, tool):
+    """(Go type with package, fields, checker) of the table type `X`. `tool` names the program in the message."""
+    if X not in SPEC_TYPES or X not in descnames:
+        sys.exit(f'{tool}: {X} is a type of gen/generator/types.tsv without an entry in SPEC_TYPES and descnames '
+                 'of gen/flat-types/flat_types_spec.py')
+    fs, chk = SPEC_TYPES[X]
+    return f'{types_table.package_of(X)}.{X}', fs, chk
+
+
 if __name__ == '__main__':
     out = sys.argv[1]
-    for X, (ty, fs, chk) in SPEC_TYPES.items():
+    for X in types_table.types_with('spec'):
+        ty, fs, chk = spec_entry(X, 'flat_types_spec')
         os.makedirs(os.path.join(out, 'Prysm', X), exist_ok=True)
         open(os.path.join(out, 'Prysm', X, 'Spec.lean'), 'w').write(emit(X, ty, fs, chk))
         print(X)

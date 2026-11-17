@@ -27,7 +27,7 @@ The design principles are in `../../README.md`.
 | Program | Reads | Writes |
 | --- | --- | --- |
 | `generator/generator.py`, with `generator/whole_accept.py` and `generator/fast_path.py` | A converted `.S` file and the IR entry of one type | `lean/Prysm/<GoTypeName>/Generated*.lean`: step, accept, size reject and encoder fast path theorems |
-| `generator/gen.sh` | | Runs `generator.py` once for each generated file of the types that are not in `flat-types/run_generators.sh` |
+| `generator/gen.sh` | The type table `generator/types.tsv` | Runs `generator.py` once for each row of the table: the generated files in the tree, or all outputs in a scratch directory |
 | `checks/desc_to_lean.py` | A `Desc` JSON file that the checker accepted | `*SpecChecker.lean`: the checker `Desc` as Lean |
 | `checks/layout.py` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/Checkpoint/Layout.lean` |
 | `desc/producer.py` | The reduced IR | One `Desc` JSON file for each type |
@@ -37,13 +37,12 @@ The design principles are in `../../README.md`.
 | `tools/proof_inventory.py` | The symbol listing of the ELF (`methods`); a declaration list from `tools/inventory_decls.lean` and the JSON of an axioms gate run, both on the built tree (`run`) | `prysm/go1.26.10/ssz-methods.json`, `prysm/proof-inventory.md`, `prysm/proof-inventory.json` |
 | `checks/link_set.py` | The Prysm ELF, its disassembly and symbol listing, and the item table `prysm/go1.26.10/link-set.tsv` | The link set `prysm/go1.26.10/link-set`: the filtered disassembly, the `.S` files and the data files (`../link/README.md` section 7) |
 | `checks/differential.py` | Nothing (`cases`), or the output of `checks/differential-main.go.txt` (`check`) | The Go differential cases `prysm/differential-cases/<package>.<Type>.json`, and their comparison with the Go output |
-| `flat-types/flat_types_spec.py` | Its table `SPEC_TYPES` of types and fields | `lean/Prysm/<GoTypeName>/Spec.lean` of the types of `SPEC_TYPES` |
-| `flat-types/flat_types_decode_spec.py` | `GeneratedDecodeAccept.lean` of the types of its list `DECODE_SPEC_TYPES` | `DecodeSpec.lean` of these types |
-| `flat-types/flat_types_witness.py` | The `.S` files and the IR of the types of its list `WITNESS_TYPES` | `WitnessGeneratedDecodeAccept.lean` and `WitnessGeneratedDecodeRejectSize.lean` of these types |
-| `flat-types/flat_types_encode_spec.py` | `GeneratedEncodeFastPath.lean` and the IR of the types of its table `ENCODE_SPEC_TYPES` | `GeneratedEncodeFastPathSpec.lean` and `WitnessGeneratedEncodeFastPath.lean` of these types |
-| `flat-types/flat_types_negative_cases.py` | The Lean files of the types of its lists `DECODER_CASE_TYPES` and `ENCODER_CASE_TYPES` | `checks/negative-cases/negative-cases-<type>-generated.json`, one file for each type |
-| `flat-types/flat_types_hand_list.py` | A declaration dump and its list `HAND_LIST_TYPES` | New names in the hand list `axioms-lists/<type>.lean` of each of these types |
-| `flat-types/run_generators.sh` | The `.S` files of the flat types | The generator outputs of the flat types, in a scratch directory |
+| `flat-types/flat_types_spec.py` | The rows of `generator/types.tsv` with the companion `spec`, and its table `SPEC_TYPES` of fields | `lean/Prysm/<GoTypeName>/Spec.lean` of these types |
+| `flat-types/flat_types_decode_spec.py` | `GeneratedDecodeAccept.lean` of the types of the rows with the companion `decode-spec` | `DecodeSpec.lean` of these types |
+| `flat-types/flat_types_witness.py` | The `.S` files of the types of the rows with the companion `decode-witness`, and its table `FRAME_FORM` | `WitnessGeneratedDecodeAccept.lean` and `WitnessGeneratedDecodeRejectSize.lean` of these types |
+| `flat-types/flat_types_encode_spec.py` | `GeneratedEncodeFastPath.lean` and the IR of the types of the rows with the companion `encode-spec`, and its table `ENCODE_SPEC_TYPES` | `GeneratedEncodeFastPathSpec.lean` and `WitnessGeneratedEncodeFastPath.lean` of these types |
+| `flat-types/flat_types_negative_cases.py` | The Lean files of the types of the rows with the companion `negative-cases` | `checks/negative-cases/negative-cases-<type>-generated.json`, one file for each type |
+| `flat-types/flat_types_hand_list.py` | A declaration dump and the rows with the companion `hand-list` | New names in the hand list `axioms-lists/<type>.lean` of each of these types |
 | `prysm-rebuild-and-check.sh` | A Prysm tree and the generator tree | The Prysm ELF, the link set and the differential results, in a scratch directory (needs Docker) |
 | `kraken-parser/summarize_parser_log.py` | A log of `kraken-parser/ParserRun.lean` | `prysm/go1.26.10/parser-result.json`: which functions the Kraken parser reads |
 | `prysm-gen.sh`, `prysm-elf.sh` | A Prysm tree and the generator binary | Generated Go, the IR and the Prysm ELF (needs Go) |
@@ -60,8 +59,25 @@ The design principles are in `../../README.md`.
 - `encoder --fast-path`: the encoder fast path theorem.
   `--same-as` and `--same-as-via` add a statement tie with a hand statement (section 4).
 
+`generator/types.tsv` is the one type table of the generator runs.
+It has one row for each type and mode, with the options of the row and the expected result: `accept` or `refuse`.
+Its column `companions` names the files that the tools of `flat-types/` write for the type.
+Its header comment gives the columns.
+`generator/types_table.py` reads the table for the Python tools.
+The tools of `flat-types/` take their types from the table.
+They keep only the data of each type, for example the fields, and stop with a message for a type without data.
+
+`generator/gen.sh` runs every row of the table.
+An accept row must exit 0, and a refuse row must exit 2 with nothing on standard output.
+For a row with another result, the script names the row and exits 1.
+With an output directory, it writes the outputs, the `.rc`, `.stderr` and `.summary.json` files there, and nothing into the tree:
+
+```sh
+sh fv/kraken/gen/generator/gen.sh <scratch>/gen-out
+```
+
 `generator/decoder_test.py` tests `decoder --whole-accept`, and `generator/encoder_test.py` tests `encoder --fast-path`.
-They run the generator on real and mutated inputs.
+They run the generator on the rows of the table and on mutated inputs.
 
 ## 3. Check that a generated file is the generator output
 
@@ -74,7 +90,7 @@ Run it from `fv/kraken`:
 sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/generator/generator.py uint64 --assembly prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --imports Codec.Uint64Decoder,Prysm.ValidatorIndex.Code --open Prysm.ValidatorIndex.Code > "$REGEN_OUT"'
 ```
 
-For the other files, take the command from `generator/gen.sh` or `flat-types/run_generators.sh`.
+For the other files, make the command from the row of the file in `generator/types.tsv`, as `generator/gen.sh` does.
 Replace the output redirect with `> "$REGEN_OUT"`.
 `checks/regenerate_and_compare.py` (section 6) compares all generated files in one run.
 The check compares bytes only.
@@ -262,6 +278,7 @@ These run without Lean, Go or the Prysm ELF:
 - `regen_check.sh` with `generator/generator.py`, `checks/desc_to_lean.py` and `checks/layout.py`.
 - `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`.
 - `checks/regenerate_and_compare.py <scratch>/<work dir>`, the regeneration comparison of all Python generators of Lean files.
+- `generator/gen.sh`, with or without an output directory.
 - `checks/fast_path_layout.py`, an independent recomputation of the layouts of the generated encoder fast-path theorems (cwd `fv/kraken`).
 - `checks/differential.py cases <dir>`.
   Its output must be equal to `prysm/differential-cases/`.
@@ -300,8 +317,8 @@ These need more than Python:
 
 ## 8. Hand files next to generated files
 
-- The tools of `flat-types/` cover only the types of their own tables.
-  For the other types of `generator/gen.sh`, a person writes `Spec.lean`, `DecodeSpec.lean` and the two decoder witnesses.
+- A tool of `flat-types/` writes a file for a type only when a row of `generator/types.tsv` names the companion of the file.
+  For the other types of the table, a person writes `Spec.lean`, `DecodeSpec.lean` and the two decoder witnesses.
   `../README.md` section 7 gives the rule for each kind of file.
 - `lean/Prysm/<GoTypeName>/EncodeFastPathStatementTie.lean` is a hand module next to the generated `GeneratedEncodeFastPath.lean`.
   Deposit_Data, PowBlock and SyncCommitteeMessage have one (section 4).

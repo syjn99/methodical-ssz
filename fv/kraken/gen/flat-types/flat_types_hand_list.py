@@ -1,4 +1,5 @@
-"""Add the names of the types of `HAND_LIST_TYPES` below to their hand lists in gen/axioms-lists/.
+"""Add the names of the types of the rows of gen/generator/types.tsv with the companion `hand-list` to their hand
+lists in gen/axioms-lists/.
 
 usage (cwd fv/kraken):
   python3 -I gen/flat-types/flat_types_hand_list.py <dump.tsv> gen/axioms-lists <module list>
@@ -10,22 +11,18 @@ hold yet. They go to the end of the file as `#print axioms` lines.
 Imports: every module of <module list> (names separated by white space) under `Prysm.<GoTypeName>.` that the file does
 not import yet. They go after the last import line."""
 import os, re, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'generator'))
+import types_table  # noqa: E402
+from types_table import kebab  # noqa: E402
 dump, out_dir, module_list = sys.argv[1:4]
-HAND_LIST_TYPES = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest',
-         'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity', 'BuilderPreferences']
 # the declarations that the tools of gen/flat-types/ and the generator runs of a type write
 PATTERN = (r'^Prysm\.%s\.(Decode\.(generated_|accept_spec$|reject_size_spec$|reject_complete$)|Encode\.generated_|'
            r'Witness\.Generated|SszValue\b|desc\b|desc_|checker|Code\.)')
 
 
-def kebab(s):
-    s = re.sub(r'(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', '-', s)
-    return re.sub(r'[^a-z0-9]+', '-', s.replace('_', '-').lower()).strip('-')
-
-
 dump_names = [l.split('\t')[0] for l in open(dump) if not l.startswith('#')]
 modules = sorted(m for m in open(module_list).read().split() if m)
-for t in HAND_LIST_TYPES:
+for t in types_table.types_with('hand-list'):
     path = os.path.join(out_dir, f'{kebab(t)}.lean')
     s = open(path).read() if os.path.exists(path) else (
         f'/-! Hand list of the `{t}` declarations for `gen/checks/axioms_gate.py`.\n'

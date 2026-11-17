@@ -1,5 +1,6 @@
 """Write the decoder witness modules WitnessGeneratedDecodeAccept and
-WitnessGeneratedDecodeRejectSize (lean/Prysm/<GoTypeName>/) of the generated decoders of `WITNESS_TYPES`
+WitnessGeneratedDecodeRejectSize (lean/Prysm/<GoTypeName>/) of the generated decoders of the rows of
+gen/generator/types.tsv with the companion `decode-witness`
 (non-vacuity of the generated accept / size-reject theorems). The texts have the form of the hand
 witnesses `Prysm/Deposit_Data/WitnessGeneratedDecodeAccept.lean` (frame 0x20 bytes) and `Prysm/PendingDeposit/WitnessGeneratedDecodeAccept.lean`
 (frame with slices and callees); the memory block of each type is laid out here from the frame facts of its `.S`,
@@ -7,22 +8,31 @@ with the addresses computed below.
 usage: python3 -I -B flat_types_witness.py <fv/kraken>"""
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from flat_types_spec import SPEC_TYPES, with_code_imports  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'generator'))
+from flat_types_spec import spec_entry, with_code_imports  # noqa: E402
+import types_table  # noqa: E402
 
-NORM = 'prysm/go1.26.10/link-set/norm'
-ASSEMBLY_NAMES = {'DepositRequest': 'engine_v1.DepositRequest', 'BuilderDepositRequest': 'engine_v1.BuilderDepositRequest',
-         'BeaconBlocksByRangeRequest': 'prysm_v1alpha1.BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest': 'prysm_v1alpha1.BlobSidecarsByRangeRequest',
-         'ExecutionPayloadEnvelopesByRangeRequest': 'prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest',
-         'PartialDataColumnGroupID': 'prysm_v1alpha1.PartialDataColumnGroupID', 'ValidatorIdentity': 'prysm_v1alpha1.ValidatorIdentity'}
 CALLEE = {'Slot': ('Prysm.Slot.Code.unmarshalSSZ', 'primitives.Slot'), 'ValidatorIndex': ('Prysm.ValidatorIndex.Code.unmarshalSSZ', 'primitives.ValidatorIndex'),
           'Epoch': ('Prysm.Epoch.Code.unmarshalSSZ', 'primitives.Epoch')}
-WITNESS_TYPES = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest',
-                 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
+
+
+def entry(table, X, name):
+    """`table[X]`, or a stop with a message for a table type without an entry in the table `name` of the form."""
+    if X not in table:
+        sys.exit(f'flat_types_witness: {X} is a type of gen/generator/types.tsv without an entry in the table {name} of accbytes')
+    return table[X]
+
+
+# The form of the accept witness of each type of the table: the frame of its decoder code (NEW-TYPE.md section 6).
+FRAME_FORM = {'BeaconBlocksByRangeRequest': 'frame_0x38', 'BlobSidecarsByRangeRequest': 'frame_0x38',
+              'ExecutionPayloadEnvelopesByRangeRequest': 'frame_0x38',
+              'DepositRequest': 'no_callee_frame_0x20', 'BuilderDepositRequest': 'no_callee_frame_0x20',
+              'PartialDataColumnGroupID': 'slices_and_callees', 'ValidatorIdentity': 'slices_and_callees'}
 CLEN, BUMPLEN, RTLEN = 63, 6, 26
 
 
-def slen(kr, X):
-    f = os.path.join(kr, NORM, 'github.com_OffchainLabs_prysm_v7_proto_' + ASSEMBLY_NAMES[X] + '.UnmarshalSSZ.S')
+def slen(kr, row):
+    f = os.path.join(kr, types_table.assembly(row))
     return sum(1 for l in open(f) if l.strip())
 
 
@@ -37,9 +47,9 @@ def hexs(a):
     return '0x%x' % a
 
 
-# ---------------------------------------------------------------- reject witnesses (every type of WITNESS_TYPES; frame-independent)
+# ---------------------------------------------------------------- reject witnesses (every type; frame-independent)
 def reject(X, n):
-    ty, fs, _ = SPEC_TYPES[X]
+    ty, fs, _ = spec_entry(X, 'flat_types_witness')
     N = sum(f[2] for f in fs)
     L = 1 + n
     return f'''import Prysm.{X}.GeneratedDecodeAccept
@@ -121,7 +131,7 @@ end Prysm.{X}.Witness.GeneratedDecodeRejectSize
 # ---------------------------------------------------------------- accept witness, callee frame 0x38 (u64 fields only)
 def accept_witness_frame_0x38(X, n):
     """SyncAggregatorSelectionData frame (sub $0x38; Slot call first, then in-line u64). nf input words."""
-    ty, fs, _ = SPEC_TYPES[X]
+    ty, fs, _ = spec_entry(X, 'flat_types_witness')
     nf = len(fs)
     N = 8 * nf
     plen = 1 + n + CLEN
@@ -244,12 +254,12 @@ end Prysm.{X}.Witness.GeneratedDecodeAccept
 def accbytes(X, n, frame):
     """frame 'no_callee_frame_0x20': the Deposit_Data frame (sub $0x20, no call; S = 16);
     frame 'slices_and_callees': slices and callees (S = 8), the frame F of the type."""
-    ty, fs, _ = SPEC_TYPES[X]
+    ty, fs, _ = spec_entry(X, 'flat_types_witness')
     N = sum(f[2] for f in fs)
     heap = sum(f[2] for f in fs if f[1] == 'b')
     nb = sum(1 for f in fs if f[1] == 'b')
-    gsize = {'DepositRequest': 128, 'BuilderDepositRequest': 120, 'PartialDataColumnGroupID': 72, 'ValidatorIdentity': 80}[X]
-    callees = {'DepositRequest': [], 'BuilderDepositRequest': [], 'PartialDataColumnGroupID': ['Slot'], 'ValidatorIdentity': ['ValidatorIndex', 'Epoch']}[X]
+    gsize = entry({'DepositRequest': 128, 'BuilderDepositRequest': 120, 'PartialDataColumnGroupID': 72, 'ValidatorIdentity': 80}, X, 'gsize')
+    callees = entry({'DepositRequest': [], 'BuilderDepositRequest': [], 'PartialDataColumnGroupID': ['Slot'], 'ValidatorIdentity': ['ValidatorIndex', 'Epoch']}, X, 'callees')
     ins = [f'f{i}' for i in range(len(fs))]
     ops = [f'oP{j + 1}' for j in range(nb)]
     params = ins + ops
@@ -285,11 +295,11 @@ def accbytes(X, n, frame):
         callargs = ''
     else:
         S = 8
-        Fr = {'PartialDataColumnGroupID': 0x40, 'ValidatorIdentity': 0x50}[X]
+        Fr = entry({'PartialDataColumnGroupID': 0x40, 'ValidatorIdentity': 0x50}, X, 'Fr')
         rslot_off = Fr + 16              # return slot at rsp - (F + 16)
         F_lo = endr
         rsp = F_lo + rslot_off + 8 + S   # lo (S + 8) at rsp - rslot_off - 8 - S
-        lsave = {'PartialDataColumnGroupID': 32, 'ValidatorIdentity': 48}[X]
+        lsave = entry({'PartialDataColumnGroupID': 32, 'ValidatorIdentity': 48}, X, 'lsave')
         # rsp - rslot_off - 8 - S: lo (16) · rslot · sp0 sp1 sp2 · gap1 · l28 · gap2 · fp · ret · s1 · s2 · unused · s4
         sp0 = rsp - rslot_off + 8        # = rsp - (F + 8)
         gap1 = sp0 + 24
@@ -471,15 +481,18 @@ end Prysm.{X}.Witness.GeneratedDecodeAccept
 
 if __name__ == '__main__':
     kr = sys.argv[1]
-    for X in WITNESS_TYPES:
-        n = slen(kr, X)
+    for row in types_table.rows():
+        if 'decode-witness' not in row['companions']:
+            continue
+        X = row['type']
+        if X not in FRAME_FORM:
+            sys.exit(f'flat_types_witness: {X} is a type of gen/generator/types.tsv without an entry in FRAME_FORM')
+        n = slen(kr, row)
         d = os.path.join(kr, 'lean', 'Prysm', X)
         open(os.path.join(d, 'WitnessGeneratedDecodeRejectSize.lean'), 'w').write(with_code_imports(reject(X, n), X))
-        if X in ('BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest'):
+        if FRAME_FORM[X] == 'frame_0x38':
             a = accept_witness_frame_0x38(X, n)
-        elif X in ('DepositRequest', 'BuilderDepositRequest'):
-            a = accbytes(X, n, 'no_callee_frame_0x20')
         else:
-            a = accbytes(X, n, 'slices_and_callees')
+            a = accbytes(X, n, FRAME_FORM[X])
         open(os.path.join(d, 'WitnessGeneratedDecodeAccept.lean'), 'w').write(with_code_imports(a, X))
         print(X, n)
