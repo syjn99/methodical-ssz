@@ -26,8 +26,8 @@ The tool gives each group exactly one class. It applies the rules in this order:
                         identity names (`--same-as`), or a second derivation (rule 4). The generated theorem stays (rule 2).
   4. checked-derivation each hand member is a second derivation that a check compares: a kind identity (`_kind`), an
                         identity (`_same`, `_type`, a statement written as `type_of% @A`, or a name in an identity `@A = @B := rfl` or `type_of% @A` of a
-                        module that sees it), an instance of a general lemma (`_inst`, or a theorem in a module
-                        whose name ends with `Instances`: Lean checks that the general lemma covers it), an example or a theorem
+                        module that sees it), a tie (`_tie`, or a theorem in a module whose name ends with `KindTie` or
+                        `StatementTie`), an instance of a general lemma (`_inst`: Lean checks that the general lemma covers it), an example or a theorem
                         in a file that kindcheck.py reads (`Generated*.lean`), or a name that a
                         negative case or a generator identity (`--same-as`) names, or an end result: no module uses
                         it and a hand list of `gen/axioms-lists/` prints its axioms (the same statement proved by
@@ -62,7 +62,7 @@ import sys
 import tempfile
 
 DERIVED = re.compile(r'^(eq_\d+|eq_def|inj|injEq|sizeOf_spec|ext|ext_iff|eta|mk\.injEq|noConfusion|recOn|casesOn|elim)$')
-SECOND = re.compile(r'(_kind|_same|_type|_inst)$')
+SECOND = re.compile(r'(_kind|_same|_type|_inst|_tie)$')
 KINDCHECK_FILE = re.compile(r'(^|/)Generated[^/]*\.lean$')
 DECL = re.compile(r'^(?:@\[[^\]]*\]\s*)*(?:(?:private|protected|noncomputable|partial|unsafe|nonrec|scoped|public|meta)\s+)*'
                   r'(theorem|lemma|def|abbrev|instance|structure|inductive|class|opaque|axiom)\s+([^\s:({\[⦃]+)')
@@ -367,8 +367,8 @@ def classify(tree, groups, checked):
                     return 'second derivation (' + SECOND.search(last).group(1) + ')'
                 if last.startswith('example'):
                     return 'example'
-                if mod.endswith('Instances'):
-                    return 'instance of a general lemma (module ' + mod + ')'
+                if mod.endswith(('KindTie', 'StatementTie')):
+                    return 'in a tie module (' + mod + ')'
                 if KINDCHECK_FILE.search(tree.files[mod]):
                     return 'in a file that kindcheck.py reads'
                 if 'type_of%' in tree.header(n):

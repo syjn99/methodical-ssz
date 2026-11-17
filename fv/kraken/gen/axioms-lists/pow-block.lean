@@ -3,7 +3,7 @@ import Prysm.PowBlock.Code
 import Prysm.PowBlock.GeneratedEncodeFastPath
 import Prysm.PowBlock.GeneratedEncodeFastPathSpec
 import Prysm.PowBlock.EncodeFastPathStatements
-import Prysm.PowBlock.GeneratedEncodeFastPathSameAsHand
+import Prysm.PowBlock.EncodeFastPathStatementTie
 import Prysm.PowBlock.WitnessGeneratedEncodeFastPath
 
 /-! Hand list of the `PowBlock` declarations for `gen/checks/axioms_gate.py`.
@@ -71,7 +71,7 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.PowBlock.Encode.generated_fast_spec
 #print axioms Prysm.PowBlock.Encode.generated_fast_split
 #print axioms Prysm.PowBlock.Encode.fast_path_statement
-#print axioms Prysm.PowBlock.Encode.generated_fast_same_as_statement
+#print axioms Prysm.PowBlock.Encode.fast_path_statement_tie
 #print axioms Prysm.PowBlock.Witness.GeneratedEncodeFastPath.program
 #print axioms Prysm.PowBlock.Witness.GeneratedEncodeFastPath.program_length
 #print axioms Prysm.PowBlock.Witness.GeneratedEncodeFastPath.block

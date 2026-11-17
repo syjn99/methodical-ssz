@@ -7,7 +7,7 @@ import Prysm.Deposit_Data.Code
 import Prysm.Deposit_Data.GeneratedEncodeFastPath
 import Prysm.Deposit_Data.GeneratedEncodeFastPathSpec
 import Prysm.Deposit_Data.EncodeFastPathStatements
-import Prysm.Deposit_Data.GeneratedEncodeFastPathSameAsHand
+import Prysm.Deposit_Data.EncodeFastPathStatementTie
 import Prysm.Deposit_Data.WitnessGeneratedEncodeFastPath
 
 /-! Hand list of the `Deposit_Data` declarations for `gen/checks/axioms_gate.py`.
@@ -104,7 +104,7 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.Deposit_Data.Encode.generated_fast_spec
 #print axioms Prysm.Deposit_Data.Encode.generated_fast_split
 #print axioms Prysm.Deposit_Data.Encode.fast_path_statement
-#print axioms Prysm.Deposit_Data.Encode.generated_fast_same_as_statement
+#print axioms Prysm.Deposit_Data.Encode.fast_path_statement_tie
 #print axioms Prysm.Deposit_Data.Witness.GeneratedEncodeFastPath.program
 #print axioms Prysm.Deposit_Data.Witness.GeneratedEncodeFastPath.program_length
 #print axioms Prysm.Deposit_Data.Witness.GeneratedEncodeFastPath.block

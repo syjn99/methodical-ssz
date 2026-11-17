@@ -27,9 +27,9 @@ P = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
 E = "prysm/go1.26.10"
 IR = "prysm/ir/ir-mainnet.json"
 ROWS = [  # type, link dir, const, modules to import (code module first), prefix, extra args, output file
-    ("Checkpoint", "link-set", "marshalSSZTo", "Prysm.Checkpoint.Code,Prysm.Checkpoint.EncodeFastPathKindInstances", "checkpoint", ["--hand-layout=Prysm.Checkpoint.encodeLayout",
-     "--hand-layout-src=lean/Prysm/Checkpoint/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Checkpoint.Encode.fast_path",
-     "--same-as-via=Prysm.Checkpoint.Encode.fast_path_of_kind"], "GeneratedEncodeFastPath"),
+    ("Checkpoint", "link-set", "marshalSSZTo", "Prysm.Checkpoint.Code,Prysm.Checkpoint.EncodeLayout,Prysm.Checkpoint.EncodeFastPathKindTie", "checkpoint", ["--hand-layout=Prysm.Checkpoint.encodeLayout",
+     "--hand-layout-src=lean/Prysm/Checkpoint/EncodeLayout.lean", "--same-as=Prysm.Checkpoint.Encode.fast_path",
+     "--same-as-via=Prysm.Checkpoint.Encode.fast_path_kind_tie"], "GeneratedEncodeFastPath"),
     ("BeaconBlockHeader", "link-set", "marshalSSZTo", "Prysm.BeaconBlockHeader.Code,Prysm.BeaconBlockHeader.EncodeLayout", "beacon-block-header", ["--hand-layout=Prysm.BeaconBlockHeader.encodeLayout",
      "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeLayout.lean"], "GeneratedEncodeFastPath"),
     ("Eth1Data", "link-set", "marshalSSZTo", "Prysm.Eth1Data.Code,Prysm.Eth1Data.EncodeLayout", "eth1-data", ["--hand-layout=Prysm.Eth1Data.encodeLayout",

@@ -19,7 +19,9 @@ No growslice branch, no length reject, no morestack path. Not a complete encoder
 | Deposit_Data | bytes 48 + 32 + uint64 + bytes 96 | `0x88` | `0x10` | yes |
 
 The statement is an `abbrev … : Prop`.
-`Prysm/Deposit_Data/GeneratedEncodeFastPathSameAsHand.lean` proves `type_of% generated = this` by `rfl`.
+The tie `Encode.fast_path_statement_tie` (`Prysm/Deposit_Data/EncodeFastPathStatementTie.lean`) proves `type_of% generated = this` by `rfl`.
+Only that tie uses this statement.
+The tree gives no reason why this type has a hand statement and most other generated encoders have none (`FINDINGS.md`).
 -/
 
 open Machine Runtime Codec

@@ -28,7 +28,7 @@ generated-style proof, stated over the WHOLE memory in entry-state terms (the fo
 - `encodeFieldKindAnyFrame C L fields d d'`: boundary state `d` → boundary state `d'` (one field);
 - `encodeEpilogueKindAnyFrame C L fields d`: boundary state `d` → the post-state.
 A boundary state `EncodeBoundaryState` gives the directive index, the number of encoded fields, register facts and the
-stack slots; `encodeBoundaryStatePredicate` renders it. Ties to the hand statements: `Prysm/<Type>/EncodeFastPathKindInstances.lean` of BeaconBlockHeader, Eth1Data and Checkpoint.
+stack slots; `encodeBoundaryStatePredicate` renders it. The tie to a hand statement is in `Prysm/Checkpoint/EncodeFastPathKindTie.lean`.
 -/
 
 open Machine Runtime

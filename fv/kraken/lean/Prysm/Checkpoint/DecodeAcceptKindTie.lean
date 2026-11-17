@@ -43,7 +43,7 @@ has the premise `8 ≤ S` with a low stack of `S` bytes (the kind: `S + 8` bytes
 after `R S`, orders three stack chunks and the two existential chunks differently, writes the zero slots as
 `Int.toBytes 8 0`, and names a 32-byte receiver tail chunk `ctl` (in the kind it is part of `R`). The kind
 instance is the stronger statement; the converse does not hold (`R` need not contain a tail chunk). -/
-theorem Decode.accept_of_kind
+theorem Decode.accept_kind_tie
     (H : decodeAcceptKindAnyFrame Prysm.Checkpoint.Code.unmarshalSSZ Prysm.Checkpoint.decodeLayout [.uint64, .bytes 32]) :
     type_of% (@Prysm.Checkpoint.Decode.accept ‹Host›) := by
   intro k hk hf kE hkE hfE e8 root he8 hroot s ra guard fp s1 s2 l20 l28 l30 m0 m1 m2 rslot cst c0 cP cL cC ctl

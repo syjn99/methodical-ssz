@@ -19,7 +19,9 @@ No growslice branch, no length reject, no morestack path. Not a complete encoder
 | SyncCommitteeMessage | overlay uint64 (Slot, ValidatorIndex) via stack temps, bytes 32 + 96 | `0xa8` | `0x30` | yes |
 
 The statement is an `abbrev … : Prop`.
-`Prysm/SyncCommitteeMessage/GeneratedEncodeFastPathSameAsHand.lean` proves `type_of% generated = this` by `rfl`.
+The tie `Encode.fast_path_statement_tie` (`Prysm/SyncCommitteeMessage/EncodeFastPathStatementTie.lean`) proves `type_of% generated = this` by `rfl`.
+Only that tie uses this statement.
+The tree gives no reason why this type has a hand statement and most other generated encoders have none (`FINDINGS.md`).
 -/
 
 open Machine Runtime Codec

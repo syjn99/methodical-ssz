@@ -27,7 +27,7 @@ BROKEN = {
     "13b-banned-ignored": ('    if BANNED.search(body):\n        errs.append("rule 13b: banned token")',
                            '    if False:\n        errs.append("rule 13b: banned token")',
                            {"fast_path_sorry"}),
-    "13b-theorem-list-ignored": ('        return errs + [f"rule 13b: theorems {thms}, expected {want} [+ {P}_statement]"], info',
+    "13b-theorem-list-ignored": ('        return errs + [f"rule 13b: theorems {thms}, expected {want} [+ {P}_fast_statement_tie]"], info',
                                  '        return errs, info',
                                  {"fast_path_kind_line_missing", "fast_path_extra_theorem"}),
     "13b-set-option-ignored": ('            if l.startswith("set_option ") and l not in', '            if False and l not in',

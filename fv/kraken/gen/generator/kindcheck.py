@@ -56,7 +56,7 @@ Checks, per file (text only):
     constant); 13c every kind line equals, as whole text, the line rendered from an OWN recomputation (this file's
     interpreter, not the generator) of the fields, the layout and every boundary state from the `.S` and the IR named in
     FAST-PATH-JSON (sha256 checked), and C is bound to that `.S` by `include_x64_code` in an imported code module; 13d the
-    fast-path proof chains every theorem once; 13e the identity `_statement` names no generated theorem (implication lemma
+    fast-path proof chains every theorem once; 13e the statement tie `_fast_statement_tie` names no generated theorem (implication lemma
     only from FAST_PATH_VIA). See the section `rule 13`.
 
 Limits (not checked here): step label strings in `stepLabelKind`, `stepJumpKind` and `callDecodeSegmentKindWindow` (`lok`) are
@@ -996,7 +996,7 @@ def whole_accept_selftest():
 #  13b. Structure: top-level lines as rule 2 plus exactly one `def <P>_layout : EncoderFrameLayout where` (none when a hand
 #       layout of FAST_PATH_HAND is named); no banned token (rule 3, comments and strings removed); the theorems are exactly
 #       P_head, P_field_0 … P_field_(n-1), P_epilogue, P_fast, each followed by its `_kind` (encHeadKindAnyFrame / encFieldKindAnyFrame /
-#       encEpilogueKindAnyFrame / encFastPathKindAnyFrame), and optionally P_statement; every theorem's `hk` binder names the same code constant C;
+#       encEpilogueKindAnyFrame / encFastPathKindAnyFrame), and optionally P_fast_statement_tie; every theorem's `hk` binder names the same code constant C;
 #       `set_option` only `maxHeartbeats 4000000` / `maxRecDepth 100000`; every kind proof is `  intro h; rfl`.
 #  13c. RECOMPUTATION (an own interpreter, it does not import the generator): from the `.S` and the IR named in
 #       FAST-PATH-JSON (sha256 checked) this program recomputes the fields list, the layout (st, frame, gd, rt, nstk, lens,
@@ -1006,7 +1006,7 @@ def whole_accept_selftest():
 #       chunk order. C is bound to the `.S`: an imported code module of the file must define
 #       `def C : Program := include_x64_code "../<S of FAST-PATH-JSON>"`.
 #  13d. P_fast's proof uses P_head, every P_field_i and P_epilogue exactly once.
-#  13e. P_statement, if present, is `theorem P_statement : type_of% (@X ‹Host›) :=` + `  [V ]P_fast` with X not generated and V
+#  13e. P_fast_statement_tie, if present, is `theorem P_fast_statement_tie : type_of% (@X ‹Host›) :=` + `  [V ]P_fast` with X not generated and V
 #       empty or in FAST_PATH_VIA.
 # Limits: the kind fixes the statement only up to what the kind reads (`hcap63` is a fixed premise; an extra
 # chunk in L.pre would be a stronger premise, and the recomputation would reject it); that the code walk is the
@@ -1016,7 +1016,7 @@ import json as _fast_path_json
 
 FAST_PATH_KINDS = ("encodeHeadKindAnyFrame", "encodeFieldKindAnyFrame", "encodeEpilogueKindAnyFrame", "encodeFastPathKindAnyFrame")
 FAST_PATH_HAND = ("Prysm.BeaconBlockHeader.encodeLayout", "Prysm.Eth1Data.encodeLayout", "Prysm.Checkpoint.encodeLayout")
-FAST_PATH_VIA = ("Prysm.Checkpoint.Encode.fast_path_of_kind",)
+FAST_PATH_VIA = ("Prysm.Checkpoint.Encode.fast_path_kind_tie",)
 FAST_PATH_R64 = "rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15".split()
 FAST_PATH_R32 = dict(eax="rax", ebx="rbx", ecx="rcx", edx="rdx", esi="rsi", edi="rdi")
 FAST_PATH_LAYF = ("stateWord", "frame", "guardAddend", "callsMemmove", "stackChunkCount", "stackChunkLengths", "pre", "existentials", "post")
@@ -1510,8 +1510,8 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
         return errs + [f"rule 13c: recomputation refused: {type(e).__name__}: {e}"], info
     want = [f"{P}_head", f"{P}_head_kind"] + [x for i in range(n) for x in (f"{P}_field_{i}", f"{P}_field_{i}_kind")] + \
         [f"{P}_epilogue", f"{P}_epilogue_kind", f"{P}_fast", f"{P}_fast_kind"]
-    if thms not in (want, want + [f"{P}_statement"]):
-        return errs + [f"rule 13b: theorems {thms}, expected {want} [+ {P}_statement]"], info
+    if thms not in (want, want + [f"{P}_fast_statement_tie"]):
+        return errs + [f"rule 13b: theorems {thms}, expected {want} [+ {P}_fast_statement_tie]"], info
     # 13c: layout
     fileL = handdef if hand else fast_path_layout_def(body, f"{P}_layout")
     if fileL is None:
@@ -1565,20 +1565,20 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
         if fp.count(t) != 1:
             errs.append(f"rule 13d: the fast-path proof does not use `{t.strip('( ')}` exactly once")
     # 13e: identity
-    if f"{P}_statement" in chunk:
-        c = chunk[f"{P}_statement"].rstrip()
+    if f"{P}_fast_statement_tie" in chunk:
+        c = chunk[f"{P}_fast_statement_tie"].rstrip()
         if c.endswith(f"\nend Prysm.{J['type']}"):
             c = c[: -len(f"\nend Prysm.{J['type']}")].rstrip()
-        m = re.fullmatch(rf"theorem {P}_statement : type_of% \(@(\S+) ‹Host›\) :=\n  (?:(\S+) )?{P}_fast", c)
+        m = re.fullmatch(rf"theorem {P}_fast_statement_tie : type_of% \(@(\S+) ‹Host›\) :=\n  (?:(\S+) )?{P}_fast", c)
         if not m:
-            errs.append(f"rule 13e: {P}_statement: not the identity form")
+            errs.append(f"rule 13e: {P}_fast_statement_tie: not the identity form")
         else:
             x, via = m.group(1), m.group(2)
             if GENNS.match(x) or x.split(".")[-1] in gnames:
                 errs.append(f"rule 13e: {x} is a generated name")
             if via and via not in FAST_PATH_VIA:
                 errs.append(f"rule 13e: implication lemma {via} not in FAST_PATH_VIA")
-        info += f", identity {P}_statement"
+        info += f", identity {P}_fast_statement_tie"
     return errs, info
 
 
@@ -1635,7 +1635,7 @@ def fast_path_cases(T):
         ("fast_path_const_unbound", V.replace("marshalSSZTo", "otherMarshalSSZTo"), False),
         ("fast_path_statement_generated", r(checkpoint_text, "type_of% (@Prysm.Checkpoint.Encode.fast_path ‹Host›)",
                                 "type_of% (@Prysm.Checkpoint.Encode.generated_fast ‹Host›)"), False),
-        ("fast_path_statement_via_unknown", r(checkpoint_text, "  Prysm.Checkpoint.Encode.fast_path_of_kind Encode.generated_fast", "  Prysm.Checkpoint.foo Encode.generated_fast"), False),
+        ("fast_path_statement_via_unknown", r(checkpoint_text, "  Prysm.Checkpoint.Encode.fast_path_kind_tie Encode.generated_fast", "  Prysm.Checkpoint.foo Encode.generated_fast"), False),
         ("fast_path_hand_with_def", r(B, "namespace Prysm.BeaconBlockHeader\n", "namespace Prysm.BeaconBlockHeader\n\ndef Encode.generated_layout : EncoderFrameLayout where\n  stateWord := true\n"),
          False),
         ("fast_path_historical_summary_frame_state", r(H, "  frame := 80\n", "  frame := 88\n"), False),

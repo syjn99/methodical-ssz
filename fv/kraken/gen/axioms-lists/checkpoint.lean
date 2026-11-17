@@ -35,10 +35,10 @@ import Prysm.Checkpoint.EncodeCoverFramed
 import Prysm.Checkpoint.WitnessEncodeCoverFramed
 import Prysm.Checkpoint.WitnessEncodeRejectLengthCoverFramed
 import Prysm.Checkpoint.GoValueWitness
-import Prysm.Checkpoint.DecodeAcceptAnyFrameInstances
-import Prysm.Checkpoint.DecodeRejectSizeKindInstances
+import Prysm.Checkpoint.DecodeAcceptKindTie
+import Prysm.Checkpoint.DecodeRejectSizeKindTie
 import Prysm.Checkpoint.GeneratedEncodeFastPath
-import Prysm.Checkpoint.EncodeFastPathKindInstances
+import Prysm.Checkpoint.EncodeFastPathKindTie
 import Prysm.Checkpoint.GeneratedEncodeFastPathSpec
 import Prysm.Checkpoint.WitnessGeneratedEncodeFastPath
 
@@ -118,9 +118,9 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.Checkpoint.witness_encode_cover_receiver
 #print axioms Prysm.Checkpoint.witness_encode_reject_length_cover_receiver
 #print axioms Prysm.Checkpoint.witness_encode_reject_length_cover_receiver_bad
-#print axioms Prysm.Checkpoint.Decode.accept_of_kind
+#print axioms Prysm.Checkpoint.Decode.accept_kind_tie
 #print axioms Prysm.Checkpoint.Decode.low_address
-#print axioms Prysm.Checkpoint.Decode.reject_size_is_kind_any_frame
+#print axioms Prysm.Checkpoint.Decode.reject_size_kind_tie
 #print axioms Prysm.Checkpoint.decodeLayout
 #print axioms Prysm.Checkpoint.Encode.generated_epilogue
 #print axioms Prysm.Checkpoint.Encode.generated_epilogue_kind
@@ -132,8 +132,8 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.Checkpoint.Encode.generated_fast_kind
 #print axioms Prysm.Checkpoint.Encode.generated_head
 #print axioms Prysm.Checkpoint.Encode.generated_head_kind
-#print axioms Prysm.Checkpoint.Encode.generated_statement
-#print axioms Prysm.Checkpoint.Encode.fast_path_of_kind
+#print axioms Prysm.Checkpoint.Encode.generated_fast_statement_tie
+#print axioms Prysm.Checkpoint.Encode.fast_path_kind_tie
 #print axioms Prysm.Checkpoint.encodeLayout
 #print axioms Prysm.Checkpoint.SszValue.encode_toList_generated
 #print axioms Prysm.Checkpoint.Encode.generated_fast_spec

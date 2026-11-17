@@ -39,7 +39,7 @@ run kindcheck_selftest python3 -I -B gen/generator/kindcheck.py --selftest
 run kindcheck_broken_copies_test python3 -I -B gen/generator/kindcheck_broken_copies_test.py
 run fast_path_layout python3 -I -B gen/checks/fast_path_layout.py
 
-KINDCHECK_INPUTS=$(ls lean/Prysm/*/Generated*.lean | grep -v -e SameAsHand -e GeneratedEncodeFastPathSpec)
+KINDCHECK_INPUTS=$(ls lean/Prysm/*/Generated*.lean | grep -v -e GeneratedEncodeFastPathSpec)
 # shellcheck disable=SC2086
 run kindcheck_generated python3 -I -B gen/generator/kindcheck.py $KINDCHECK_INPUTS
 run negative_selftest python3 -I -B gen/checks/negative.py --selftest

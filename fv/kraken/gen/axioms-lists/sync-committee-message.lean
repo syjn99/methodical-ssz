@@ -6,7 +6,7 @@ import Prysm.SyncCommitteeMessage.Code
 import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPath
 import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPathSpec
 import Prysm.SyncCommitteeMessage.EncodeFastPathStatements
-import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPathSameAsHand
+import Prysm.SyncCommitteeMessage.EncodeFastPathStatementTie
 import Prysm.SyncCommitteeMessage.WitnessGeneratedEncodeFastPath
 
 /-! Hand list of the `SyncCommitteeMessage` declarations for `gen/checks/axioms_gate.py`.
@@ -116,7 +116,7 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.SyncCommitteeMessage.Encode.generated_fast_spec
 #print axioms Prysm.SyncCommitteeMessage.Encode.generated_fast_split
 #print axioms Prysm.SyncCommitteeMessage.Encode.fast_path_statement
-#print axioms Prysm.SyncCommitteeMessage.Encode.generated_fast_same_as_statement
+#print axioms Prysm.SyncCommitteeMessage.Encode.fast_path_statement_tie
 #print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.program
 #print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.program_length
 #print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.block

@@ -907,23 +907,23 @@
   "new": "st.data.regs.rax = 0x10108"
  },
  {
-  "id": "checkpoint-encode-fast-path-of-kind-control",
-  "module": "Prysm/Checkpoint/EncodeFastPathKindInstances.lean",
-  "theorem": "Prysm.Checkpoint.Encode.fast_path_of_kind",
+  "id": "checkpoint-encode-fast-path-kind-tie-control",
+  "module": "Prysm/Checkpoint/EncodeFastPathKindTie.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path_kind_tie",
   "kind": "control"
  },
  {
-  "id": "checkpoint-encode-fast-path-of-kind-statement-encode-layout-32-to-48",
-  "module": "Prysm/Checkpoint/EncodeFastPathKindInstances.lean",
-  "theorem": "Prysm.Checkpoint.Encode.fast_path_of_kind",
+  "id": "checkpoint-encode-fast-path-kind-tie-statement-encode-layout-32-to-48",
+  "module": "Prysm/Checkpoint/EncodeFastPathKindTie.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path_kind_tie",
   "kind": "statement",
   "old": "encodeLayout [.uint64, .bytes 32]",
   "new": "encodeLayout [.uint64, .bytes 48]"
  },
  {
-  "id": "checkpoint-encode-generated-statement-control",
+  "id": "checkpoint-encode-generated-fast-statement-tie-control",
   "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
-  "theorem": "Prysm.Checkpoint.Encode.generated_statement",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_statement_tie",
   "kind": "control"
  },
  {
@@ -938,15 +938,15 @@
   ]
  },
  {
-  "id": "checkpoint-decode-accept-of-kind-control",
-  "module": "Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean",
-  "theorem": "Prysm.Checkpoint.Decode.accept_of_kind",
+  "id": "checkpoint-decode-accept-kind-tie-control",
+  "module": "Prysm/Checkpoint/DecodeAcceptKindTie.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept_kind_tie",
   "kind": "control"
  },
  {
-  "id": "checkpoint-decode-accept-of-kind-statement-decode-layout-32-to-48",
-  "module": "Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean",
-  "theorem": "Prysm.Checkpoint.Decode.accept_of_kind",
+  "id": "checkpoint-decode-accept-kind-tie-statement-decode-layout-32-to-48",
+  "module": "Prysm/Checkpoint/DecodeAcceptKindTie.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept_kind_tie",
   "kind": "statement",
   "old": "decodeLayout [.uint64, .bytes 32]",
   "new": "decodeLayout [.uint64, .bytes 48]"

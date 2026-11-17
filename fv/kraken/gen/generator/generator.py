@@ -1326,7 +1326,7 @@ FAST_PATH_FLAGS = ("walked", "rendered", "kinds_complete", "statement_check", "v
 
 def encoder_fast_path(args):
     """`encoder --fast-path`: the encoder fast-path theorem of a flat `MarshalSSZTo` (interface of the encoder lemmas): head, one theorem per
-    IR field, epilogue, fast-path theorem, each with its `_kind` line, and the identity `_statement` on request.
+    IR field, epilogue, fast-path theorem, each with its `_kind` line, and the statement tie `_fast_statement_tie` on request.
     FAIL-CLOSED: the `else` branch below is the ONLY place that returns a text (exit 0). It is reached only when
     `_encoder_fast_path` completed normally AND set every flag of FAST_PATH_FLAGS AND returned a string. ANY exception of any phase
     (a `FastPathRefuse`, an unexpected error, SystemExit; not KeyboardInterrupt) is exit 2: nothing on stdout, no
@@ -1393,9 +1393,9 @@ def _encoder_fast_path(args, flags):
                if args.same_as_via else f"\nThe statement is the declared type of the committed hand theorem `{args.same_as}`.")
         tail = (f"/-- Statement check: the generated theorem proves the hand statement"
                 f"{' (implication tie)' if via else ''}. -/\n"
-                f"theorem {px}_statement : type_of% (@{args.same_as} ‹Host›) :=\n  {via}{px}_fast\n\n")
-    if args.same_as and tail.count(f"\ntheorem {px}_statement : ") != 1:
-        raise fast_path_gen.FastPathRefuse("statement identity `_statement` missing")
+                f"theorem {px}_fast_statement_tie : type_of% (@{args.same_as} ‹Host›) :=\n  {via}{px}_fast\n\n")
+    if args.same_as and tail.count(f"\ntheorem {px}_fast_statement_tie : ") != 1:
+        raise fast_path_gen.FastPathRefuse("statement tie `_fast_statement_tie` missing")
     flags["statement_check"] = True
     meta = dict(g.meta(), statement_check=(f"same {args.same_as}" + (f" via {args.same_as_via}" if args.same_as_via else "")
                                            if args.same_as else "kind instance only"),
@@ -1429,7 +1429,7 @@ def main():
     ap.add_argument("--const", required=True)
     ap.add_argument("--name", help="uint64: the name of the theorem")
     ap.add_argument("--same-as", help="encoder --fast-path: NAME must be an independently written hand statement (a theorem "
-                    "written by hand, not generated); emits `P_statement : type_of% (@NAME ‹Host›)`. A generated NAME is no "
+                    "written by hand, not generated); emits `P_fast_statement_tie : type_of% (@NAME ‹Host›)`. A generated NAME is no "
                     "statement check (kindcheck rejects it)")
     ap.add_argument("--ir")
     ap.add_argument("--type")

@@ -2,7 +2,7 @@ import Prysm.PowBlock.EncodeFastPathStatements
 import Prysm.PowBlock.GeneratedEncodeFastPath
 
 /-!
-# Identity of the generated encoder fast-path theorem of `PowBlock` with the hand statement
+# Tie of the generated encoder fast-path theorem of `PowBlock` to the hand statement
 
 This theorem shows that the generated theorem `Prysm.PowBlock.Encode.generated_fast` has the hand statement `Prysm.PowBlock.Encode.fast_path_statement`.
 The hand statement of `Prysm/PowBlock/EncodeFastPathStatements.lean` does not refer to the generated theorem.
@@ -14,7 +14,7 @@ open Machine Runtime Codec
 namespace Prysm.PowBlock
 
 set_option maxHeartbeats 4000000 in
-theorem Encode.generated_fast_same_as_statement : ∀ (h : Host), type_of% (@Prysm.PowBlock.Encode.generated_fast h) = @Encode.fast_path_statement h := by
+theorem Encode.fast_path_statement_tie : ∀ (h : Host), type_of% (@Prysm.PowBlock.Encode.generated_fast h) = @Encode.fast_path_statement h := by
   intro h; rfl
 
 end Prysm.PowBlock

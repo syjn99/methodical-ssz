@@ -7,7 +7,7 @@ import Prysm.ElfData.PrysmTarget
 # Size-reject statement kind of a container decoder
 
 `decodeRejectKindAnyFrame C sz` is the statement of the theorems `Prysm.<Type>.Decode.reject_size` with the code
-constant and the size as parameters (tie: `Prysm/Checkpoint/DecodeRejectSizeKindInstances.lean`).
+constant and the size as parameters (tie: `Prysm/Checkpoint/DecodeRejectSizeKindTie.lean`).
 `decode_reject_segment` (`Codec/DecodeRejectSizeAnyFrame.lean`) is the lemma of the generated proofs.
 -/
 

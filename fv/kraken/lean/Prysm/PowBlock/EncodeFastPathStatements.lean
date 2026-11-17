@@ -19,7 +19,9 @@ No growslice branch, no length reject, no morestack path. Not a complete encoder
 | PowBlock | frame test (`moveSliceNoCapNoScan` test not taken), no `state` word, 3 × bytes 32 | `0x50` | small | yes |
 
 The statement is an `abbrev … : Prop`.
-`Prysm/PowBlock/GeneratedEncodeFastPathSameAsHand.lean` proves `type_of% generated = this` by `rfl`.
+The tie `Encode.fast_path_statement_tie` (`Prysm/PowBlock/EncodeFastPathStatementTie.lean`) proves `type_of% generated = this` by `rfl`.
+Only that tie uses this statement.
+The tree gives no reason why this type has a hand statement and most other generated encoders have none (`FINDINGS.md`).
 -/
 
 open Machine Runtime Codec Prysm.PowBlock.Code

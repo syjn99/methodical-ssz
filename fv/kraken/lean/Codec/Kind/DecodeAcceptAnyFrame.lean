@@ -28,7 +28,7 @@ accept proof. These are stated over the WHOLE accept memory in entry-state terms
 A boundary state `DecodeBoundaryState` gives the directive index, the number of decoded fields, register facts and the
 stack slots; `decodeBoundaryStatePredicate` renders it. The accept proof chains the theorems with `eventually_trans` only.
 
-The tie to a hand statement is in `Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean`.
+The tie to a hand statement is in `Prysm/Checkpoint/DecodeAcceptKindTie.lean`.
 -/
 
 open Machine Runtime
