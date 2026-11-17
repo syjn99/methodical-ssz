@@ -11,8 +11,11 @@ cd "$(dirname "$0")/../.."
 G="python3 -I gen/generator/generator.py"
 N=prysm/go1.26.10/link-set/norm
 P=github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1
-# uint64: the accept path of the ValidatorIndex decoder
-$G uint64 --assembly $N/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --imports Codec.Uint64Decoder,Prysm.ValidatorIndex.Code --open Prysm.ValidatorIndex.Code > lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean
+# uint64: the accept path of the uint64 primitive decoders, one run per Go type name.
+# The code constants are in Prysm.<GoTypeName>.Code. The statement check is the kind.
+for t in ValidatorIndex Epoch Slot CommitteeIndex; do
+  $G uint64 --assembly $N/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.$t.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --imports Codec.Uint64Decoder,Prysm.$t.Code --open Prysm.$t.Code > lean/Prysm/$t/GeneratedDecodeAccept.lean
+done
 # decoder --whole-accept: one run per Go type name. The code constants are in Prysm.<GoTypeName>.Code.
 # The statement check is the kind; kindcheck.py rule 12 recomputes its parameters.
 # The generator refuses PendingPartialWithdrawal (interleaved fields) and AttestationData (nested containers): exit 2, no file.
