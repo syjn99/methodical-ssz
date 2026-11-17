@@ -42,6 +42,7 @@ PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidat
 PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ: 97 instructions, 414 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
 PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.MarshalSSZTo: 93 instructions, 382 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
 PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ: 99 instructions, 421 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SingleAttestation.UnmarshalSSZ: 180 instructions, 830 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
 PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo: 107 instructions, 446 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
 PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ: 208 instructions, 933 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
 PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.MarshalSSZTo: 190 instructions, 851 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
@@ -144,10 +145,12 @@ PASS (b) go_string._+29265 = 0xc41b39 .rodata group(nearest preceding symbol)
 PASS (b) go_string._+29278 = 0xc41b46 .rodata group(nearest preceding symbol)
 PASS (b) go_string._+34155 = 0xc42e53 .rodata group(nearest preceding symbol)
 PASS (b) go_string._+34170 = 0xc42e62 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+34185 = 0xc42e71 .rodata group(nearest preceding symbol)
 PASS (b) go_string._+37027 = 0xc4398b .rodata group(nearest preceding symbol)
 PASS (b) go_string._+37043 = 0xc4399b .rodata group(nearest preceding symbol)
 PASS (b) go_string._+37059 = 0xc439ab .rodata group(nearest preceding symbol)
 PASS (b) go_string._+40186 = 0xc445e2 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+40288 = 0xc44648 .rodata group(nearest preceding symbol)
 PASS (b) go_string._+40305 = 0xc44659 .rodata group(nearest preceding symbol)
 PASS (b) go_string._+43471 = 0xc452b7 .rodata group(nearest preceding symbol)
 PASS (b) go_string._+43525 = 0xc452ed .rodata group(nearest preceding symbol)
@@ -179,12 +182,13 @@ PASS (b) ssz.ErrIncorrectListSize = 0x13a2b10 .bss in-symbol
 PASS (b) ssz.ErrIncorrectListSize+8 = 0x13a2b18 .bss in-symbol
 PASS (b) runtime.zerobase = 0x13c74e0 .noptrbss in-symbol
 PASS (b) runtime.writeBarrier = 0x13c7e40 .noptrbss in-symbol
-PASS (c) all.S: 1070 labels, each defined once; 68 external references not defined in all.S; 8 calls to target functions at their entry: ['github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ']
-PASS (e) all.S: 12560 directives equal the 105 function files in order
+PASS (c) all.S: 1088 labels, each defined once; 70 external references not defined in all.S; 8 calls to target functions at their entry: ['github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ']
+PASS (e) all.S: 12758 directives equal the 106 function files in order
 PASS (f) boxedEight.data: 0xd24400, 8 bytes and 0 words = ELF
 PASS (f) formatActivationEligibilityEpoch.data: 0xc4e129, 30 bytes and 0 words = ELF
 PASS (f) formatActivationEpoch.data: 0xc45eb3, 19 bytes and 0 words = ELF
 PASS (f) formatAmount.data: 0xc3fc12, 10 bytes and 0 words = ELF
+PASS (f) formatAttesterIndex.data: 0xc44648, 17 bytes and 0 words = ELF
 PASS (f) formatAttestingIndicesMisaligned.data: 0xc64774, 83 bytes and 0 words = ELF
 PASS (f) formatAttestingIndicesTooBig.data: 0xc629ee, 73 bytes and 0 words = ELF
 PASS (f) formatBalance.data: 0xc40698, 11 bytes and 0 words = ELF
@@ -193,6 +197,7 @@ PASS (f) formatBufferLengthReceiced.data: 0xc55703, 40 bytes and 0 words = ELF
 PASS (f) formatBuilderIndex.data: 0xc4398b, 16 bytes and 0 words = ELF
 PASS (f) formatColumnsMisaligned.data: 0xc62ccb, 74 bytes and 0 words = ELF
 PASS (f) formatColumnsTooBig.data: 0xc5fab4, 63 bytes and 0 words = ELF
+PASS (f) formatCommitteeId.data: 0xc42e71, 15 bytes and 0 words = ELF
 PASS (f) formatCommitteeIndex.data: 0xc452ff, 18 bytes and 0 words = ELF
 PASS (f) formatData.data: 0xc3e384, 8 bytes and 0 words = ELF
 PASS (f) formatDepositEpoch.data: 0xc4399b, 16 bytes and 0 words = ELF
@@ -287,6 +292,11 @@ DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidat
 DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.MarshalSSZTo 0x9ac03b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
 DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ 0x9ac077 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
 DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ 0x9ac0dd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SingleAttestation.UnmarshalSSZ 0x9b009a padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop | (6, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SingleAttestation.UnmarshalSSZ 0x9b011b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SingleAttestation.UnmarshalSSZ 0x9b01bb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SingleAttestation.UnmarshalSSZ 0x9b027e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SingleAttestation.UnmarshalSSZ 0x9b039e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
 DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo 0x9becbc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
 DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ 0x9bed9e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
 DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ 0x9bedde padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
@@ -436,9 +446,9 @@ DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.Unm
 DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ 0xa2b07d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
 DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ 0xa2b0de padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
 DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ 0xa2b17b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
-PASS (d) 11490 instructions reassembled by clang x86_64-linux-gnu: 11284 byte-identical, 0 encoding, 206 padding
+PASS (d) 11670 instructions reassembled by clang x86_64-linux-gnu: 11459 byte-identical, 0 encoding, 211 padding
 elf sha256 2f7c1d7b4bece5ec8547595aefb4a450122caf2ef33490f43b5b88a644b327be
-S sha256 62217fd7d7cb4cbc010570c10ddee4f450bc0194aaa025440133de242febbea4 all.S
+S sha256 e0c289f810a0f165c8d5795bc1a46fe27c4ec3aab167462fb7d8d4e6547fdd94 all.S
 S sha256 4a18137fa8425622fa26773a049f67d655839d1320824063ada686158e11a9b0 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S
 S sha256 bcc78481c1a6cbfa050454db14d05543acc257997c3e8fa4c891eaf48296df5b github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S
 S sha256 d137ed535c8d663d43734c9d5ce55f2ffd15cbe7aeebd39da9f28734eff2e47c github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.SizeSSZ.S
@@ -524,6 +534,7 @@ S sha256 4157c38e788ee0af4fd3abb4452709fd096654e44e320334404ffc6721734e2c github
 S sha256 997850c1eb3347c2aea0140bdd903f9055a6f1b9270f4a9cfbfffc5a188cd5e5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerPreferences.UnmarshalSSZ.S
 S sha256 65be2f0e02190d370e5762b30610233d9412a259bbd0b6770a6219192955955a github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.MarshalSSZTo.S
 S sha256 1c4f50c64cb684dcfbf5e689680cd002d14fddffbded67e42c2be959660c8b27 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ.S
+S sha256 3905fde96ca1a8fcb93fcb8766d550d111dbdbca8023df2a4d81f3125933f580 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SingleAttestation.UnmarshalSSZ.S
 S sha256 7dc2617991d9358707041f16fc60e0eccf0b7d583d0bba0f0dc8be9e555c74c6 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.MarshalSSZTo.S
 S sha256 eff5ece9754e89355d4b51f272c230ac4b2c49a99c2b3a09861aa423742f8598 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.UnmarshalSSZ.S
 S sha256 bd82cde7140af6a9cede4e185c0b4fa2fe2088c874421d42059b13aae10995cd github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.MarshalSSZTo.S
@@ -548,6 +559,7 @@ data sha256 fb8dd0592e527218f810f25f775b9cb444e17ea93a228e703170c8426deb5b3c box
 data sha256 e5a1bfd059acafdd8c3ef0bf808fea75f373fd5b262378f15434d2c8a293a3f7 formatActivationEligibilityEpoch.data
 data sha256 f85d3cc20daae8e0111826cea7117b10c40655e6c7b721f483548d58404833f1 formatActivationEpoch.data
 data sha256 a723f8fa34f1ad44b3533c8e42f7e9874d7fa7de7b77463bac0b1a6b4a070caa formatAmount.data
+data sha256 b8bbf7b85fe75921b90594fd6aa950f8d294077a985a7539d88c550c983d33b1 formatAttesterIndex.data
 data sha256 295f0faf20d82102c3b37add857c5727ee9f24e5fe474fcafb8f4313e712258f formatAttestingIndicesMisaligned.data
 data sha256 73c349acdfdabdd418a8536e5c631e3e4a4908c258343069dbea77f6019d81a9 formatAttestingIndicesTooBig.data
 data sha256 57d1022febdb1085866540962f888985ee40474fb9ae186b5885492cf78e31f6 formatBalance.data
@@ -556,6 +568,7 @@ data sha256 beadaf3b14fe0e6ae08d17378b89ad7c3ca195ae32186221150f99f11c17c507 for
 data sha256 980979082d6e58ca03fa34872a9e8791a0b8e506b687ceeb91f93d30b114a829 formatBuilderIndex.data
 data sha256 c2d2ec0db7df49d95fff674a1ae502c3cc095c43409ac24b8ac167c1c5c41303 formatColumnsMisaligned.data
 data sha256 e428151422e4bf084689d23d47525ab875226255ca358ff0b4d83695218488de formatColumnsTooBig.data
+data sha256 7ebb9cc45c53f99864b6df77acf696fb1030b72209e6074099737fbaaa4cbce8 formatCommitteeId.data
 data sha256 e5122b20476a8375eab88ed4b398670004a48005a4e5b5d9029fa8334ac2af49 formatCommitteeIndex.data
 data sha256 1a150efe72471befa64bbdd8293701d02264bade904230b8ba14a1c780c4df26 formatData.data
 data sha256 f0d28d53c37f46c6350c79c8f3e627aea662169e6eebd3f191064795c0e52c7c formatDepositEpoch.data
@@ -594,4 +607,4 @@ data sha256 938284140e67d2a812e697963a613cede49c0cae09945e7978b8877e6cf63415 typ
 data sha256 c0251f20e4a7bbdb63136bd8b4c3f300857549e84c2b2dbddba4f13211b649d7 typeUint8.data
 data sha256 860c981343b5207afbca906047a0773e2a621f2475e7deaaa0faba968953053d typeUint8Slice.data
 PASS all
-BUNDLE sha256 1d7e4563d81595e23a78532b321c824db95ad070ee25b346129e04bac287f531
+BUNDLE sha256 4d6ef64727dae5b7a65e70db680aebb500f95b86e961cc4e4feacad4313a2e8e

@@ -51,7 +51,20 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   The encoder of that zero `Checkpoint` then fails with `ErrBytesLength`.
 - Effect: an encoder theorem of this type must state this change of the receiver.
   No such theorem exists.
+  `Prysm.AttestationData.Encode.fast_path` covers only a receiver with `Source` and `Target` not nil, so it has no such write.
 - Where: `(*v1alpha1.AttestationData).MarshalSSZTo`.
+
+### The inventory row of the AttestationData encoder does not show every premise
+
+- What does not hold: the row text of an encoder fast path in `prysm/proof-inventory.md` is "len + SizeSSZ <= cap, exact field lengths".
+  `Prysm.AttestationData.Encode.fast_path` needs more premises than that text.
+  It needs `Source` and `Target` not nil, the stack bound `guard + 312 < rsp` and `cap < 2^63`.
+  It also needs disjoint memory blocks for the receiver, `dst`, the root, both Checkpoints and their roots.
+  So `Source = Target` and two roots in one backing array are not covered. Go allows both.
+- Effect: the column of paths not proved does not list the `newobject` branches for a nil `Source` or `Target`.
+  It also does not list the error wraps of the two Checkpoint calls.
+  The doc comment of `lean/Prysm/AttestationData/EncodeFastPath.lean` states these limits.
+- Where: `gen/tools/proof_inventory.py`, the row text of the fast path and the column of paths not proved.
 
 ### The bitlist encoder error text differs from some Prysm tests
 
@@ -100,7 +113,9 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   A second growth call needs a lower bound as its budget premise.
 - Effect: in `Prysm.Checkpoint.Encode.grow_any_site_three_cases`, one case ends at the entry of the second growth call.
   The run after that state is not proved.
-  The growth branches of the other encoders are not proved.
+  The growth branches of most other encoders are not proved.
+  The `MarshalSSZTo` of Epoch, Slot, CommitteeIndex and ValidatorIndex has one growth call.
+  `Encode.grow_first_site` of each of these types proves it.
 - Where: `lean/Runtime/Contracts.lean`.
   A new contract form needs a user decision.
 
@@ -237,15 +252,11 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 
 ### Some code constants have no theorem
 
-- What does not hold: `Prysm.AttestationData.Code.marshalSSZTo` and `Prysm.AttestationData.Code.sizeSSZ` have no theorem.
-  The constants of a type directory that holds only `Code.lean` have no theorem.
+- What does not hold: the constants of a type directory that holds only `Code.lean` have no theorem.
   These are the types that the generator refuses (the refuse rows of `gen/generator/types.tsv`).
-  Some `.S` files of the link set have no constant: no `include_x64_code` line of `lean/` names them.
-  The rule to find them: a file of `prysm/go1.26.10/link-set/norm/`, other than `all.S`, whose name no `include_x64_code` line names.
-  They are the encoder and size functions of the primitive types of `consensus-types/primitives`.
-- Effect: the functions of these constants and files are not proved.
+- Effect: the functions of these constants are not proved.
   The link check covers their `.S` files.
-- Where: `lean/Prysm/AttestationData/Code.lean`, `lean/Prysm/<GoTypeName>/Code.lean` of the types with only that module, `prysm/go1.26.10/link-set/norm/`.
+- Where: `lean/Prysm/<GoTypeName>/Code.lean` of the types with only that module.
 
 ### Some lemmas and tactics exist two times
 
@@ -361,7 +372,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   They state a conditional skip: if the callee returns `rax = 0`, the code skips the wrap.
 - Effect: unreachability for every input holds only with the callee specifications.
   Examples are `Prysm.Slot.Decode.accept_function_spec` and `Prysm.ValidatorIndex.Decode.accept_function_spec`.
-- Where: `lean/Prysm/BeaconBlockHeader/DecodeErrorUnreachable.lean`.
+- Where: `lean/Prysm/BeaconBlockHeader/DecodeErrorUnreachable.lean`, `lean/Prysm/SingleAttestation/DecodeErrorUnreachable.lean`.
 
 ### No check shows that a hand `Desc` is independent of the checker `Desc`
 

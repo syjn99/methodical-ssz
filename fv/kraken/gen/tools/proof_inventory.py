@@ -25,15 +25,15 @@ Three denominators are kept apart: (1) the SSZ methods of the target (`ssz-metho
 The flat fixed-size types of the target are computed from the IR by `FLAT_RULE`; those outside `CORE_FLAT_TYPES` are listed.
 
 Mapping. The rows are derived by a rule, not written by hand: for every directory `lean/Prysm/<GoTypeName>/` and
-every part, the first candidate name of `DEC_CANDIDATES` / `ENC_FORMS` / `SIZE_FORM` (the name forms of
+every part, the first candidate name of `DEC_CANDIDATES` / `ENC_FORMS` / `SIZE_FORM` / `MARSHAL_FORM` (the name forms of
 lean/README.md section 8 and the names the generators write) that exists in <decls.tsv> is the part's theorem.
 The encoder theorems outside the fast path need hand-written premise texts (`ENC_EXTRA`, keyed by full names).
 
 Rule. A function's state comes ONLY from the mapping and the declarations in <decls.tsv>:
   * every chosen theorem must exist (kind `theorem`) and have only the standard axioms
     (`propext`, `Classical.choice`, `Quot.sound`); otherwise the script FAILS (exit 1);
-  * the accept / reject / accept_spec / reject_size_spec theorems of a decoder row, and the theorems of an encoder or
-    SizeSSZ row, must have, in their TYPE, the code constant whose included `.S` is that function of the target, and
+  * the accept / reject / accept_spec / reject_size_spec theorems of a decoder row, and the theorems of an encoder,
+    MarshalSSZ or SizeSSZ row, must have, in their TYPE, the code constant whose included `.S` is that function of the target, and
     that function must be the SUBJECT: the only one of the theorem's target code constants that no other of them calls
     (call graph = `call_targets` of `functions.json`); a constant counts only if its `.S` is
     `../prysm/go1.26.10/<dir>/norm/<function>.S` and `<dir>/RESULT` names the pinned ELF sha256, ends in
@@ -97,9 +97,9 @@ def core_flat_types():
 
 # The core flat types: the types with a generated decoder or encoder and a hand list of the axioms gate.
 # The inventory counts their decoders as one group.
-# AttestationData has nested fields and is listed apart (`NESTED`).
+# AttestationData and SingleAttestation have nested fields and are listed apart (`NESTED`).
 CORE_FLAT_TYPES = core_flat_types()
-NESTED = ["AttestationData"]
+NESTED = ["AttestationData", "SingleAttestation"]
 # Why the generators refuse a flat type outside CORE_FLAT_TYPES (wording only, no state rule). The class is the field kind
 # or the callee at the directive of the `.S` file where `decoder --whole-accept` or `encoder --fast-path` stops.
 # The generators do not support that class.
@@ -154,6 +154,9 @@ ENC_FORMS = [
 ENC_HAND = ["Encode.fast_path", "Encode.fast_path_spec"]
 ENC_HAND_WITNESS = ["Witness.EncodeFastPath.runs_empty"]
 SIZE_FORM = dict(main=["Size.result"], witness=["Witness.Size.runs"])
+# MarshalSSZ: main and spec keyed by the code constant; spec and witness must use main.
+MARSHAL_FORM = dict(main=["Marshal.result"], spec=["Marshal.result_spec"], witness=["Witness.Marshal.runs"])
+MARSHAL_STATE = "proved (GrowsliceContract contract + heap budget; morestack path not proved)"
 
 # Encoder theorems outside the fast path need a premise text (what the theorem assumes beyond the fast-path frame
 # premises) and a text of what stays NOT proved in their path class: these texts are hand-written (review of the
@@ -209,6 +212,7 @@ def candidates(t):
         out += [f["fast"], f["spec"]] + f["witness"]
     out += ENC_UNCLASSIFIED
     out += ENC_HAND + ENC_HAND_WITNESS + SIZE_FORM["main"] + SIZE_FORM["witness"]
+    out += MARSHAL_FORM["main"] + MARSHAL_FORM["spec"] + MARSHAL_FORM["witness"]
     out = [f"{LEAN_PREFIX}{t}.{n}" for n in out]
     x = ENC_EXTRA.get(t, {})
     out += [n for n, _ in x.get("rejects", [])] + [n for n, _ in x.get("grow", [])] + x.get("other_witness", [])
@@ -225,7 +229,7 @@ def names():
 def derive(D, target_key):
     """The rows of the mapping, chosen from the declarations D that exist. target_key: Go type name -> (package, type)."""
     have = lambda n: n in D and D[n]["kind"] != "MISSING"   # noqa: E731
-    decoders, encoders, sizers, unknown = {}, {}, {}, []
+    decoders, encoders, sizers, marshalers, unknown = {}, {}, {}, {}, []
     for t in type_dirs():
         if t not in target_key:
             unknown.append(t)
@@ -277,7 +281,9 @@ def derive(D, target_key):
         if have(P + SIZE_FORM["main"][0]):
             sizers[key] = dict(main=[P + n for n in SIZE_FORM["main"]],
                                witness=[P + n for n in SIZE_FORM["witness"] if have(P + n)])
-    return decoders, encoders, sizers, unknown
+        if have(P + MARSHAL_FORM["main"][0]):
+            marshalers[key] = {p: [P + n for n in v if have(P + n)] for p, v in MARSHAL_FORM.items()}
+    return decoders, encoders, sizers, marshalers, unknown
 
 WHAT_COMPLETE_EXCLUDES = [
     "morestack paths (the `jbe` to `runtime.morestack_noctxt` at entry)",
@@ -466,7 +472,7 @@ def run(decls_p, gate_p, md_p, json_p):
     target_key = {r["type"]: (r["package"], r["type"]) for r in sm0["methods"]}
     if len(target_key) != len({(r["package"], r["type"]) for r in sm0["methods"]}):
         fails.append(f"{METHODS_JSON}: a Go type name occurs in two packages (the directory name does not decide)")
-    DECODERS, ENCODERS, SIZERS, unknown = derive(D, target_key)
+    DECODERS, ENCODERS, SIZERS, MARSHALERS, unknown = derive(D, target_key)
     for u in unknown:
         fails.append(f"lean/Prysm/{u}: not a type of {METHODS_JSON}" if "/" not in u and " " not in u else u)
     chosen = []
@@ -477,7 +483,7 @@ def run(decls_p, gate_p, md_p, json_p):
     for r in ENCODERS.values():
         for k in ENC_PARTS:
             chosen += r[k]
-    for r in SIZERS.values():
+    for r in list(SIZERS.values()) + list(MARSHALERS.values()):
         for v in r.values():
             chosen += v
     for n in dict.fromkeys(chosen):
@@ -600,6 +606,15 @@ def run(decls_p, gate_p, md_p, json_p):
             if n in D:
                 code_ok(n, pkg, typ, "SizeSSZ")
         rows[(pkg, typ, "SizeSSZ")] = dict(state="proved", missing=[], theorems=r, note="")
+    for (pkg, typ), r in MARSHALERS.items():
+        for n in r["main"] + r["spec"]:
+            code_ok(n, pkg, typ, "MarshalSSZ")
+        for n in r["spec"] + r["witness"]:
+            if not any(m in refs(n) for m in r["main"]):
+                fails.append(f"{n}: does not use {r['main']} (refs: {refs(n)})")
+        missing = [p for p in MARSHAL_FORM if not r[p]]
+        rows[(pkg, typ, "MarshalSSZ")] = dict(state=MARSHAL_STATE if not missing else "partial", missing=missing,
+                                              theorems=r, note="")
     # ---------------------------------------------------------------- denominators
     bid = build_ids()
     sm = json.load(open(KR / METHODS_JSON))
@@ -759,8 +774,9 @@ def run(decls_p, gate_p, md_p, json_p):
            f"{bk['MarshalSSZTo']['fast_path_partial']}. Not proved per type (column NOT proved below, per-type "
            "rule): the growslice branches, the length rejects, the morestack path and, for the frame-test types, "
            "the `moveSliceNoCapNoScan` branch; Checkpoint and BeaconBlockHeader: the reject / growslice theorems "
-           "of their rows with the premise of each and what stays not proved. `MarshalSSZ`: none of "
-           f"{bk['MarshalSSZ']['target']} ({bk['MarshalSSZ']['functions_json']} dumped).",
+           "of their rows with the premise of each and what stays not proved.",
+           f"- `MarshalSSZ`: a theorem for {bk['MarshalSSZ']['partial']} of {bk['MarshalSSZ']['target']} "
+           f"({bk['MarshalSSZ']['functions_json']} dumped), {MARSHAL_STATE}.",
            f"- `SizeSSZ`: a theorem for {bk['SizeSSZ']['partial']} of {bk['SizeSSZ']['target']}."]
     htr = [k for k in bk if "HashTreeRoot" in k]
     md.append("- Hash tree root: no theorem. " + "; ".join(

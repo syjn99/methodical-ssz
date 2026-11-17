@@ -249,5 +249,181 @@
   "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
   "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)",
   "note": "rcx must be the input length 128"
+ },
+ {
+  "id": "attestation-data-size-result-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/Size.lean",
+  "theorem": "Prysm.AttestationData.Size.result",
+  "code_definition": "sizeSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.SizeSSZ.S"
+ },
+ {
+  "id": "attestation-data-size-result-code-mov-0x80-to-0x81",
+  "kind": "code",
+  "module": "Prysm/AttestationData/Size.lean",
+  "theorem": "Prysm.AttestationData.Size.result",
+  "code_definition": "sizeSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.SizeSSZ.S",
+  "old": "  mov $0x80,%eax",
+  "new": "  mov $0x81,%eax"
+ },
+ {
+  "id": "attestation-data-encode-head-slot-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/EncodeHeadSlot.lean",
+  "theorem": "Prysm.AttestationData.Encode.head_slot",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S"
+ },
+ {
+  "id": "attestation-data-encode-head-slot-code-mov-0x8-rax-to-0x10-rax",
+  "kind": "code",
+  "module": "Prysm/AttestationData/EncodeHeadSlot.lean",
+  "theorem": "Prysm.AttestationData.Encode.head_slot",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S",
+  "old": "  mov 0x8(%rax),%r8",
+  "new": "  mov 0x10(%rax),%r8",
+  "note": "Slot loaded from the CommitteeIndex field"
+ },
+ {
+  "id": "attestation-data-encode-head-slot-code-lea-0x8-rcx-to-0x10-rcx",
+  "kind": "code",
+  "module": "Prysm/AttestationData/EncodeHeadSlot.lean",
+  "theorem": "Prysm.AttestationData.Encode.head_slot",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S",
+  "old": "  lea 0x8(%rcx),%rdx",
+  "new": "  lea 0x10(%rcx),%rdx",
+  "note": "length after the Slot bytes is len + 16, not len + 8"
+ },
+ {
+  "id": "attestation-data-encode-head-index-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/EncodeHeadIndex.lean",
+  "theorem": "Prysm.AttestationData.Encode.head_index",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S"
+ },
+ {
+  "id": "attestation-data-encode-head-index-code-mov-0x10-rax-to-0x18-rax",
+  "kind": "code",
+  "module": "Prysm/AttestationData/EncodeHeadIndex.lean",
+  "theorem": "Prysm.AttestationData.Encode.head_index",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S",
+  "old": "  mov 0x10(%rax),%r9",
+  "new": "  mov 0x18(%rax),%r9",
+  "note": "CommitteeIndex loaded from the root pointer word"
+ },
+ {
+  "id": "attestation-data-encode-head-root-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/EncodeHeadRoot.lean",
+  "theorem": "Prysm.AttestationData.Encode.head_root",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S"
+ },
+ {
+  "id": "attestation-data-encode-head-root-code-cmpq-0x20-to-0x21",
+  "kind": "code",
+  "module": "Prysm/AttestationData/EncodeHeadRoot.lean",
+  "theorem": "Prysm.AttestationData.Encode.head_root",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S",
+  "old": "  cmpq $0x20,0x20(%rax)",
+  "new": "  cmpq $0x21,0x20(%rax)",
+  "note": "root length tested against 33: the length reject is taken"
+ },
+ {
+  "id": "attestation-data-encode-head-root-code-mov-0x20-to-0x1f",
+  "kind": "code",
+  "module": "Prysm/AttestationData/EncodeHeadRoot.lean",
+  "theorem": "Prysm.AttestationData.Encode.head_root",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S",
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx",
+  "note": "memmove copies 31 root bytes, not 32"
+ },
+ {
+  "id": "attestation-data-encode-source-call-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/EncodeSourceCall.lean",
+  "theorem": "Prysm.AttestationData.Encode.source_call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S"
+ },
+ {
+  "id": "attestation-data-encode-source-call-code-mov-0x30-rdx-to-0x38-rdx",
+  "kind": "code",
+  "module": "Prysm/AttestationData/EncodeSourceCall.lean",
+  "theorem": "Prysm.AttestationData.Encode.source_call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S",
+  "old": "  mov 0x30(%rdx),%rax",
+  "new": "  mov 0x38(%rdx),%rax",
+  "note": "the first Checkpoint call encodes Target, not Source"
+ },
+ {
+  "id": "attestation-data-encode-source-call-code-jne-to-je",
+  "kind": "code",
+  "module": "Prysm/AttestationData/EncodeSourceCall.lean",
+  "theorem": "Prysm.AttestationData.Encode.source_call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S",
+  "old": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo_1b9",
+  "new": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo_1b9",
+  "note": "a non-nil Source takes the newobject branch"
+ },
+ {
+  "id": "attestation-data-encode-target-call-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/EncodeTargetCall.lean",
+  "theorem": "Prysm.AttestationData.Encode.target_call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S"
+ },
+ {
+  "id": "attestation-data-encode-target-call-code-mov-0x38-rdx-to-0x30-rdx",
+  "kind": "code",
+  "module": "Prysm/AttestationData/EncodeTargetCall.lean",
+  "theorem": "Prysm.AttestationData.Encode.target_call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S",
+  "old": "  mov 0x38(%rdx),%rdx",
+  "new": "  mov 0x30(%rdx),%rdx",
+  "note": "the second Checkpoint call encodes Source, not Target"
+ },
+ {
+  "id": "attestation-data-encode-fast-path-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/EncodeFastPath.lean",
+  "theorem": "Prysm.AttestationData.Encode.fast_path"
+ },
+ {
+  "id": "attestation-data-encode-fast-path-statement-rbx-128-to-120",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/EncodeFastPath.lean",
+  "theorem": "Prysm.AttestationData.Encode.fast_path",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 128",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 120",
+  "note": "the encoder appends 128 bytes"
+ },
+ {
+  "id": "attestation-data-encode-fast-path-spec-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/EncodeSpec.lean",
+  "theorem": "Prysm.AttestationData.Encode.fast_path_spec"
+ },
+ {
+  "id": "attestation-data-encode-fast-path-spec-statement-source-epoch-to-target-epoch",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/EncodeSpec.lean",
+  "theorem": "Prysm.AttestationData.Encode.fast_path_spec",
+  "old": "(he1 : e1 = (uintBytes 8 g.source.epoch.toNat).toList)",
+  "new": "(he1 : e1 = (uintBytes 8 g.target.epoch.toNat).toList)",
+  "note": "the Source call writes the Source epoch, which the serialization puts at offset 48"
  }
 ]

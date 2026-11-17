@@ -11,7 +11,7 @@ This file gives the design principles.
 ## 1. What a proof says
 
 A proof is about the compiled x86-64 machine code of one Go method of one type.
-The methods are the decoder `UnmarshalSSZ`, the encoder `MarshalSSZTo` and `SizeSSZ`.
+The methods are the decoder `UnmarshalSSZ`, the encoders `MarshalSSZTo` and `MarshalSSZ`, and `SizeSSZ`.
 The proofs do not cover the hash tree root methods.
 
 - The object is the machine code in one ELF file. The Go source is not the object.
