@@ -10,9 +10,9 @@
  "axioms_gate": {
   "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=Spec,Machine,Runtime,Codec,Prysm",
   "verdict": "PASS",
-  "declarations": 18753,
-  "theorems": 15193,
-  "modules": 552
+  "declarations": 19346,
+  "theorems": 15692,
+  "modules": 568
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -47,8 +47,8 @@
    "UnmarshalSSZ": {
     "target": 211,
     "functions_json": 211,
-    "mapped": 34,
-    "complete": 20,
+    "mapped": 35,
+    "complete": 21,
     "partial": 14
    },
    "MarshalSSZTo": {
@@ -110,7 +110,7 @@
     "partial": 0
    }
   },
-  "types_without_mapping_row": 176,
+  "types_without_mapping_row": 175,
   "core_flat_types": [
    "Checkpoint",
    "BeaconBlockHeader",
@@ -336,7 +336,8 @@
    "v1.ProgressiveTransactionList"
   ],
   "nested": {
-   "AttestationData": "complete"
+   "AttestationData": "complete",
+   "SingleAttestation": "complete"
   }
  },
  "functions": [
@@ -17989,7 +17990,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18003,7 +18004,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18017,7 +18018,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18031,7 +18032,7 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18045,7 +18046,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18059,9 +18060,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "complete",
    "missing": [],
-   "theorems": {},
+   "theorems": {
+    "accept": "Prysm.SingleAttestation.Decode.accept",
+    "reject": "Prysm.SingleAttestation.Decode.reject_size",
+    "accept_spec": "Prysm.SingleAttestation.Decode.accept_spec",
+    "reject_size_spec": "Prysm.SingleAttestation.Decode.reject_size_spec",
+    "reject_complete": "Prysm.SingleAttestation.Decode.reject_complete",
+    "codec": [
+     "Prysm.SingleAttestation.desc_deserialize_checker"
+    ],
+    "witness_accept": "Prysm.SingleAttestation.Witness.DecodeAccept.runs",
+    "witness_reject": "Prysm.SingleAttestation.Witness.DecodeRejectSize.runs"
+   },
    "note": ""
   },
   {

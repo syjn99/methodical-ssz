@@ -364,7 +364,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   They state a conditional skip: if the callee returns `rax = 0`, the code skips the wrap.
 - Effect: unreachability for every input holds only with the callee specifications.
   Examples are `Prysm.Slot.Decode.accept_function_spec` and `Prysm.ValidatorIndex.Decode.accept_function_spec`.
-- Where: `lean/Prysm/BeaconBlockHeader/DecodeErrorUnreachable.lean`.
+- Where: `lean/Prysm/BeaconBlockHeader/DecodeErrorUnreachable.lean`, `lean/Prysm/SingleAttestation/DecodeErrorUnreachable.lean`.
 
 ### No check shows that a hand `Desc` is independent of the checker `Desc`
 
