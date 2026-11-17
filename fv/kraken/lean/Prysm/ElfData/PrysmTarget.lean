@@ -30,6 +30,8 @@ data_include sszErrBytesLength
 data_include formatBufferLength
 data_include typeInt
 data_include boxedEight
+-- CommitteeIndex decoder reject: its format string has the spelling "receiced" of the Prysm source
+data_include formatBufferLengthReceiced
 
 -- AttestationData
 -- the Checkpoint abi.Type word passed to runtime.newobject (decoder Source/Target, encoder nil fields)

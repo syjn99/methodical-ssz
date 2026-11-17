@@ -1,6 +1,9 @@
 import Prysm.Slot.GeneratedDecodeAccept
 import Prysm.Slot.DecodeAcceptFunctionSpec
 import Prysm.Slot.WitnessGeneratedDecodeAccept
+import Prysm.Slot.DecodeRejectSize
+import Prysm.Slot.WitnessDecodeRejectSize
+import Prysm.Slot.DecodeSpec
 
 /-! Hand list of the `Slot` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -11,3 +14,10 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.Slot.Witness.GeneratedDecodeAccept.witness_mem
 #print axioms Prysm.Slot.Witness.GeneratedDecodeAccept.runs
 #print axioms Prysm.Slot.Witness.GeneratedDecodeAccept.runs_function_spec
+#print axioms Prysm.Slot.Decode.reject_size
+#print axioms Prysm.Slot.Witness.DecodeRejectSize.runs
+#print axioms Prysm.Slot.Witness.DecodeRejectSize.InputLength9.runs
+#print axioms Prysm.Slot.Witness.DecodeRejectSize.InputLength300.runs
+#print axioms Prysm.Slot.Decode.accept_spec
+#print axioms Prysm.Slot.Decode.reject_size_spec
+#print axioms Prysm.Slot.Decode.reject_complete
