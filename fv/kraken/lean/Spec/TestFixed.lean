@@ -3,8 +3,8 @@ import EthLib.Serialization.Ssz
 /-!
 # Hand-written statements for `target.Fixed`
 
-External schema (Go source of the type `Fixed`; this file is kept in fv/kraken
-because `Spec.TestScalars` uses its byte lemmas, e.g. `uintBytes_size`):
+External schema (Go source of the type `Fixed`; `Spec.TestScalars` uses the byte lemmas
+of this file, e.g. `uintBytes_size`):
 
     type Fixed struct {
         A uint64

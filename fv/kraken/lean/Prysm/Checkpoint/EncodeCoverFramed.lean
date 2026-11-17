@@ -5,8 +5,8 @@ import Prysm.Checkpoint.Code
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo`: case covers with the exact frame
 
-The covers `Encode.cover` and `Encode.reject_length_cover` (`Prysm/Checkpoint/EncodeCover.lean`) stay as they
-are. These two theorems have the same premises (the epoch bytes are named `e8` with
+The two theorems of this module have the premises of the covers `Encode.cover` and
+`Encode.reject_length_cover` (`Prysm/Checkpoint/EncodeCover.lean`) (the epoch bytes are named `e8` with
 `e8 = uintBytes 8 g.epoch`) and a conclusion without `⋆ True`: each disjunct is the exact postcondition
 of the member theorem for that capacity range, with every caller-visible byte named (stack slots, the
 caller's argument words, the 72-byte receiver, the root, the caller's array `pre ++ spare`, every new

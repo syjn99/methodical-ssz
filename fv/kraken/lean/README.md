@@ -306,8 +306,7 @@ It holds the bump allocator model that the witnesses of its type use, with a `.S
 - Split a long straight-line proof into segments over the fragments that each segment touches, then compose them.
 - A scratch result is closed only when `#print axioms` of every theorem that it uses has no `sorryAx`.
   The list must also not hold the theorem itself.
-- Build one heavy job at a time.
-  After a failed build, run `lake build --no-build` before you trust any `.olean`.
+- After a failed build, run `lake build --no-build` before you trust any `.olean`.
 
 ## 8. Names
 

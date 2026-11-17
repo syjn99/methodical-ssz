@@ -3,13 +3,12 @@ import Machine.WitnessHost
 /-!
 # `witness_split_n`: variant for the Prysm witnesses of `Machine.Witness.witness_split`
 
-Same macro as `Machine.Witness.witness_split` (`Machine/WitnessHost.lean`, unchanged). The only change: the simp set of the
-side goal of `Mem.At_append_sep` (`l1`) also has `← Nat.add_assoc` and `Nat.reduceAdd`. Then the
+The macro of `Machine.Witness.witness_split` (`Machine/WitnessHost.lean`) with a larger simp set for the
+side goal of `Mem.At_append_sep` (`l1`): it also has `← Nat.add_assoc` and `Nat.reduceAdd`. Then the
 chunk-length sum is normalised to `K + n` before `omega`. Without them, `omega` spends most of the
-build time of the cover witnesses on a failing definitional check of the unnormalised sum (audit
-profile: 92–94 % of the `Prysm/Checkpoint/WitnessEncodeCover.lean` / `Prysm/Checkpoint/WitnessEncodeRejectLengthCover.lean` build time is this one side goal).
+build time of the cover witnesses on a failing definitional check of the unnormalised sum (measured:
+92–94 % of the build time of `Prysm/Checkpoint/WitnessEncodeCover.lean` and `Prysm/Checkpoint/WitnessEncodeRejectLengthCover.lean`).
 
-Only proof scripts change. Statements, definitions and witness states stay the same.
 Used by `Prysm.Checkpoint.WitnessEncodeCover`, `Prysm.Checkpoint.WitnessEncodeCoverFramed`, `Prysm.Checkpoint.WitnessEncodeRejectLengthCover`, `Prysm.Checkpoint.WitnessEncodeRejectLengthCoverFramed`.
 -/
 

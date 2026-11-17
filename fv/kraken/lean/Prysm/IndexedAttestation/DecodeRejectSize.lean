@@ -7,7 +7,7 @@ import Codec.SegmentAddress
 import Prysm.IndexedAttestation.Code
 
 /-!
-# `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: size reject and offset reject
+# `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: size reject
 
 - `Decode.reject_size : Decode.reject_size_statement`: directives 2–4 (large-frame guard `lea -0x30(%rsp),%r12`, closed
   with `Codec.lea_cmp_be_false`, N = 48), 5–8 prologue (`sub $0xa8`, rbx spill to rsp + 16), 9–10

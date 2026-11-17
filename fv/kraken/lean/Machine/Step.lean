@@ -6,7 +6,7 @@ import Kraken.X64.Parser
 import Machine.Include
 import Std.Tactic.BVDecide
 
-/-! Our glue on top of Kraken main (6064eec): one-directive steps inside a `Host`. -/
+/-! Glue on top of Kraken: one-directive steps inside a `Host`. -/
 
 
 namespace Machine

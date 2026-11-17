@@ -6,7 +6,7 @@ import Prysm.IndexedAttestation.DecodeAccept
 import Prysm.IndexedAttestation.Code
 
 /-!
-# `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: alignment reject and overflow reject
+# `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: alignment reject
 
 Statements: `Decode.reject_alignment_error_word_nonzero_statement` and `Decode.reject_overflow_error_word_nonzero_statement` (`Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean`, with the
 premise `e0 ≠ 0`). The proof uses the IndexedAttestation

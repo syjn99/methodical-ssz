@@ -10,7 +10,7 @@ import Prysm.Epoch.Code
 import Prysm.ValidatorIndex.Code
 
 /-!
-# Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`, accept path, Go 1.26.10 (first instance of the call-site lemmas)
+# Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`, accept path, Go 1.26.10
 
 Hand-written. The statement is
 the independent hand statement `Prysm.PendingPartialWithdrawal.Decode.accept_statement` (`Prysm/PendingPartialWithdrawal/Statements.lean`).
