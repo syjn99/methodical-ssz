@@ -1,5 +1,6 @@
 import Codec.Segment.Bytes32Loop
 import Codec.SegmentAddress
+import Prysm.ElfData.PrysmTarget
 
 /-!
 # Element loop with 32-byte elements: one iteration, the exit and the whole loop, for any count `n < 2^31`

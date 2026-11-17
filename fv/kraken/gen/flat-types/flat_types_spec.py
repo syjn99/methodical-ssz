@@ -45,8 +45,8 @@ def emit(X, ty, fs, chk):
         o += f[2]
     L = []
     w = L.append
-    w('import Prysm.Checkpoint.Spec')
-    w('import Prysm.Checkpoint.SpecEquivalence')
+    w('import Spec.TestScalars')
+    w('import Spec.DeserializeOfSerialize')
     w(f'import Prysm.{X}.SpecDescription')
     if chk:
         w(f'import Prysm.{X}.SpecChecker')

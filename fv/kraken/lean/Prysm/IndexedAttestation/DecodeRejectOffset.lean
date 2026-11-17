@@ -1,7 +1,6 @@
 import Machine.Step
 import Machine.Labels
 import Machine.Bytes
-import Prysm.ElfData.PrysmTarget
 import Codec.StackGuard
 import Prysm.IndexedAttestation.Statements
 import Codec.SegmentAddress

@@ -1,5 +1,4 @@
-import Prysm.Checkpoint.Spec
-import Prysm.Checkpoint.SpecEquivalence
+import Spec.TestScalars
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import Prysm.SyncCommittee.SpecDescription

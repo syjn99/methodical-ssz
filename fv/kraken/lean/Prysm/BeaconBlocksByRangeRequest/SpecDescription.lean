@@ -1,4 +1,4 @@
-import Prysm.Checkpoint.Spec
+import EthLib.Serialization.Ssz
 
 /-!
 # Independent hand `Desc` of `BeaconBlocksByRangeRequest`

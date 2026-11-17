@@ -1,4 +1,3 @@
-import Prysm.Checkpoint.Spec
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import Prysm.DataColumnsByRootIdentifier.StatementsEncode
 

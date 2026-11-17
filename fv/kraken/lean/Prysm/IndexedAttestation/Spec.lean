@@ -1,5 +1,3 @@
-import Prysm.Checkpoint.Spec
-import Prysm.Checkpoint.SpecEquivalence
 import Prysm.AttestationData.Spec
 import Codec.ReadUint64List
 import EthLib.Serialization.Proofs.Ssz.Codec.Table

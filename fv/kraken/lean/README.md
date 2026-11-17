@@ -21,7 +21,8 @@ A hand test type is a small type with a hand `Desc`, its Go value and its encodi
 It has no ELF.
 `Spec/TestCheckpointAndAttestationData.lean` holds reduced forms of the Prysm `Checkpoint` and `AttestationData`, without the protobuf fields.
 The `Desc` checker `../gen/desc-checker/DescChecker.lean` imports the test types for its tests.
-Some proofs import them for their lemmas: `Codec/ReadUint64List.lean`, `Prysm/Checkpoint/Spec.lean`, and `SpecDefinitions.lean` of DataColumnsByRootIdentifier and IndexedAttestation.
+The `Spec.lean` modules of the Prysm types import them for their lemmas.
+`Codec/ReadUint64List.lean` and `Prysm/DataColumnsByRootIdentifier/SpecDefinitions.lean` also import them.
 `Spec` imports only EthLib and `Spec`.
 It holds no machine code.
 The reduced `Checkpoint` and `AttestationData` of `Spec/TestCheckpointAndAttestationData.lean` are its only forms of Prysm types.
@@ -98,15 +99,11 @@ Codec <-> Prysm (at module level, both directions)
   Only the libraries have no order.
 - A `Codec` module that imports `Prysm` uses code, data or specification lemmas of a type in a general lemma or kind.
   `grep -rlE '^import Prysm' lean/Codec` gives these modules, with the `Prysm` directories that they import:
-  - `Codec/ByteSliceListDefinitions.lean` (Checkpoint, SyncAggregate);
-  - `Codec/ByteSliceListLemmas.lean` (SyncCommittee);
-  - `Codec/ByteVector32Values.lean` (SyncCommittee, HistoricalBatch);
   - `Codec/CalleeDecode.lean` (ValidatorIndex, Epoch, Slot): it uses their decoder specifications;
   - `Codec/Segment/Bytes32VectorSpec.lean` (HistoricalBatch): it uses the element lemmas of `Prysm/HistoricalBatch/Spec.lean`;
-  - `Codec/SerializeFieldsCongruence.lean` (Checkpoint, AttestationData);
-  - `Codec/SerializeInline.lean` (Checkpoint, SyncCommittee);
+  - `Codec/SerializeFieldsCongruence.lean` (AttestationData);
   - `Codec/DecodeRejectSizeAnyFrame.lean`, `Codec/FixedBytesDecode.lean`, `Codec/Kind/DecodeAcceptAnyFrame.lean`, `Codec/Kind/DecodeRejectAnyFrame.lean`,
-    `Codec/Segment/Bytes32Loop.lean`, `Codec/Segment/SizeReject.lean` and `Codec/Uint64RejectSize.lean` (ElfData): they use data addresses of the link set.
+    `Codec/Segment/Bytes32LoopProof.lean`, `Codec/Segment/SizeReject.lean` and `Codec/Uint64RejectSize.lean` (ElfData): they use data addresses of the link set.
 - A module of one type directory imports a module of another type directory for one of these reasons:
   - A callee decoder: the code calls the decoder of another type.
     The module imports the `Code` module of the callee and the module of its `Decode.accept_function_spec_holds`.
@@ -115,9 +112,9 @@ Codec <-> Prysm (at module level, both directions)
     The module imports the modules of the field type, for example Deposit and `Prysm/Deposit_Data/`.
   - The shared `Spec` of a nested type: the outer `Spec` module uses the `SszValue` lemmas of the field type.
     An example is `Prysm/IndexedAttestation/Spec.lean`, which uses `Prysm.AttestationData.SszValue`.
-  - The shared imports of `Prysm/Checkpoint/Spec.lean` and `Prysm/Checkpoint/SpecEquivalence.lean`.
-    Many `Spec`, `SpecDescription` and `SpecDefinitions` modules import them for the EthLib and `Spec` modules that they import.
-    These modules name no Checkpoint declaration.
+  - A module imports only the modules whose names it uses.
+    It does not import a module of another type for the imports of that module.
+    A lemma that two types share and that names no single type is in `Codec/` or `Spec/`.
 - A type directory also imports the two directories of `Prysm/` that are not types: `Prysm/ElfData/` and `Prysm/RuntimeModel/`.
 
 A new type gets its own directory `Prysm/<GoTypeName>/`.

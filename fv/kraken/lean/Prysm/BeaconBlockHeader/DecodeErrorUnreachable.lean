@@ -2,7 +2,6 @@ import Machine.Step
 import Machine.Labels
 import Machine.Bytes
 import Prysm.BeaconBlockHeader.Code
-import Prysm.ElfData.PrysmTarget
 
 /-!
 # Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`: the error wraps after the callees

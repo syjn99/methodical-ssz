@@ -1,7 +1,6 @@
 import Runtime.Contracts
 import Machine.Step
 import Machine.Labels
-import Prysm.ElfData.PrysmTarget
 import Codec.Segment.ByteSliceList
 
 /-!

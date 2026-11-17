@@ -1,5 +1,5 @@
-import Prysm.Checkpoint.Spec
-import Prysm.Checkpoint.SpecEquivalence
+import Spec.TestScalars
+import Spec.DeserializeOfSerialize
 import Prysm.PendingPartialWithdrawal.SpecDescription
 import Prysm.PendingPartialWithdrawal.SpecChecker
 

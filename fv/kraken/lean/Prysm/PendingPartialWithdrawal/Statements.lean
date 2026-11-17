@@ -2,7 +2,6 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import Prysm.ElfData.PrysmTarget
 import Prysm.Epoch.Code
 import Prysm.ValidatorIndex.Code
 import Prysm.PendingPartialWithdrawal.Code

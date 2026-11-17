@@ -1,9 +1,6 @@
-import Prysm.Checkpoint.Spec
-import Prysm.Checkpoint.SpecEquivalence
 import Codec.ReadUint64List
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
-import Prysm.IndexedAttestation.Spec
 import Prysm.DataColumnsByRootIdentifier.Spec
 
 /-!

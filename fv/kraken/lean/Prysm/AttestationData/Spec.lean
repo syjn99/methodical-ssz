@@ -1,5 +1,4 @@
 import Prysm.Checkpoint.Spec
-import Prysm.Checkpoint.SpecEquivalence
 import Prysm.AttestationData.SpecChecker
 import Prysm.AttestationData.SpecDescription
 

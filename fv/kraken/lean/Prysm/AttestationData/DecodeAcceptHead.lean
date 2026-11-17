@@ -3,7 +3,6 @@ import Runtime.Contracts
 import Machine.Frame
 import Prysm.Slot.DecodeAcceptFunctionSpec
 import Prysm.CommitteeIndex.DecodeAcceptFunctionSpec
-import Prysm.ElfData.PrysmTarget
 import Prysm.AttestationData.Code
 
 /-!

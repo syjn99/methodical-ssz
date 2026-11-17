@@ -1,5 +1,5 @@
-import Prysm.SyncCommittee.Spec
-import Prysm.HistoricalBatch.SpecDescription
+import Spec.TestScalars
+import Codec.SerializeInline
 import Prysm.HistoricalBatch.SpecDescription
 import Codec.ByteVector32Values
 
