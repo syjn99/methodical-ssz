@@ -10,6 +10,8 @@ import Prysm.AttestationData.DecodeSpec
 import Prysm.AttestationData.WitnessBumpAllocator
 import Prysm.AttestationData.WitnessDecodeAccept
 import Prysm.AttestationData.WitnessDecodeRejectSize
+import Prysm.AttestationData.Size
+import Prysm.AttestationData.WitnessSize
 
 /-! Hand list of the `AttestationData` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -33,3 +35,6 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.AttestationData.bump_newobject72
 #print axioms Prysm.AttestationData.Witness.DecodeAccept.runs
 #print axioms Prysm.AttestationData.Witness.DecodeRejectSize.runs
+#print axioms Prysm.AttestationData.Size.result
+#print axioms Prysm.AttestationData.Size.result_spec
+#print axioms Prysm.AttestationData.Witness.Size.runs

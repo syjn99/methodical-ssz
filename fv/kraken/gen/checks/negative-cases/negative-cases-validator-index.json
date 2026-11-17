@@ -130,5 +130,75 @@
   "theorem": "Prysm.ValidatorIndex.Decode.reject_size",
   "old": "(hlen : s.regs.rcx ≠ 8)",
   "new": "(hlen : True)"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path",
+  "kind": "control",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S",
+  "id": "validator-index-encode-fast-path-control"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S",
+  "id": "validator-index-encode-fast-path-code-lea-0x8-rcx-to-0x10-rcx",
+  "old": "  lea 0x8(%rcx),%rdx",
+  "new": "  lea 0x10(%rcx),%rdx"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S",
+  "id": "validator-index-encode-fast-path-code-mov-rax-to-0x8-rax",
+  "old": "  mov (%rax),%r8",
+  "new": "  mov 0x8(%rax),%r8"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S",
+  "id": "validator-index-encode-fast-path-code-jae-to-jb",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo_61",
+  "new": "  jb L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo_61"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path",
+  "kind": "code",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S",
+  "id": "validator-index-encode-fast-path-code-xor-edi-edi-to-esi-esi",
+  "old": "  xor %edi,%edi",
+  "new": "  xor %esi,%esi"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path",
+  "kind": "statement",
+  "id": "validator-index-encode-fast-path-statement-rdi-0-to-1",
+  "old": "st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0",
+  "new": "st.data.regs.rdi = 1 ∧ st.data.regs.rsi = 0"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeSpec.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path_spec",
+  "kind": "control",
+  "id": "validator-index-encode-fast-path-spec-control"
+ },
+ {
+  "module": "Prysm/ValidatorIndex/EncodeSpec.lean",
+  "theorem": "Prysm.ValidatorIndex.Encode.fast_path_spec",
+  "kind": "statement",
+  "id": "validator-index-encode-fast-path-spec-statement-rbx-none-to-1",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))"
  }
 ]

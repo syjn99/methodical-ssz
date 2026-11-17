@@ -249,5 +249,23 @@
   "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
   "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)",
   "note": "rcx must be the input length 128"
+ },
+ {
+  "id": "attestation-data-size-result-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/Size.lean",
+  "theorem": "Prysm.AttestationData.Size.result",
+  "code_definition": "sizeSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.SizeSSZ.S"
+ },
+ {
+  "id": "attestation-data-size-result-code-mov-0x80-to-0x81",
+  "kind": "code",
+  "module": "Prysm/AttestationData/Size.lean",
+  "theorem": "Prysm.AttestationData.Size.result",
+  "code_definition": "sizeSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.SizeSSZ.S",
+  "old": "  mov $0x80,%eax",
+  "new": "  mov $0x81,%eax"
  }
 ]

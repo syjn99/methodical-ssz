@@ -45,5 +45,93 @@
   "theorem": "Prysm.Slot.Decode.generated_accept",
   "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
   "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "slot-size-result-control",
+  "kind": "control",
+  "module": "Prysm/Slot/Size.lean",
+  "theorem": "Prysm.Slot.Size.result",
+  "code_definition": "sizeSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.SizeSSZ.S"
+ },
+ {
+  "id": "slot-size-result-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/Slot/Size.lean",
+  "theorem": "Prysm.Slot.Size.result",
+  "code_definition": "sizeSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.SizeSSZ.S",
+  "old": "  mov $0x8,%eax",
+  "new": "  mov $0x9,%eax"
+ },
+ {
+  "id": "slot-encode-fast-path-control",
+  "kind": "control",
+  "module": "Prysm/Slot/EncodeFastPath.lean",
+  "theorem": "Prysm.Slot.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo.S"
+ },
+ {
+  "id": "slot-encode-fast-path-code-lea-0x8-rcx-to-0x10-rcx",
+  "kind": "code",
+  "module": "Prysm/Slot/EncodeFastPath.lean",
+  "theorem": "Prysm.Slot.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo.S",
+  "old": "  lea 0x8(%rcx),%rdx",
+  "new": "  lea 0x10(%rcx),%rdx"
+ },
+ {
+  "id": "slot-encode-fast-path-code-mov-rax-to-0x8-rax",
+  "kind": "code",
+  "module": "Prysm/Slot/EncodeFastPath.lean",
+  "theorem": "Prysm.Slot.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo.S",
+  "old": "  mov (%rax),%r8",
+  "new": "  mov 0x8(%rax),%r8"
+ },
+ {
+  "id": "slot-encode-fast-path-code-jae-to-jb",
+  "kind": "code",
+  "module": "Prysm/Slot/EncodeFastPath.lean",
+  "theorem": "Prysm.Slot.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo.S",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo_61",
+  "new": "  jb L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo_61"
+ },
+ {
+  "id": "slot-encode-fast-path-code-xor-edi-edi-to-esi-esi",
+  "kind": "code",
+  "module": "Prysm/Slot/EncodeFastPath.lean",
+  "theorem": "Prysm.Slot.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.MarshalSSZTo.S",
+  "old": "  xor %edi,%edi",
+  "new": "  xor %esi,%esi"
+ },
+ {
+  "id": "slot-encode-fast-path-statement-rdi-0-to-1",
+  "kind": "statement",
+  "module": "Prysm/Slot/EncodeFastPath.lean",
+  "theorem": "Prysm.Slot.Encode.fast_path",
+  "old": "st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0",
+  "new": "st.data.regs.rdi = 1 ∧ st.data.regs.rsi = 0"
+ },
+ {
+  "id": "slot-encode-fast-path-spec-control",
+  "kind": "control",
+  "module": "Prysm/Slot/EncodeSpec.lean",
+  "theorem": "Prysm.Slot.Encode.fast_path_spec"
+ },
+ {
+  "id": "slot-encode-fast-path-spec-statement-rbx-none-to-1",
+  "kind": "statement",
+  "module": "Prysm/Slot/EncodeSpec.lean",
+  "theorem": "Prysm.Slot.Encode.fast_path_spec",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))"
  }
 ]

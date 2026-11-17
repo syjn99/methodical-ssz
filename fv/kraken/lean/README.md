@@ -347,6 +347,7 @@ Examples are `Deposit_Data`, `ENRForkID` and the label `runtime.makeslice`.
 | `EncodeGrowOneSite`, `EncodeGrowAnySite` | Encoder, growth at any one site, or at any site |
 | `EncodeRejectLength` | Encoder, the length rejects |
 | `EncodeSpec`, `EncodeSpec` + path | Encoder, connection to EthLib |
+| `Size` | `SizeSSZ`: the machine theorem and its connection to EthLib |
 | `Encode` + part | Encoder, a part of a long proof (`EncodeHead`, `EncodeTail`, `EncodeCover`, `EncodeLoop`) |
 | `DecodeThenEncode`, `DecodeThenEncode` + qualifier | Decode then encode: round trip and composition |
 | `FunctionSpecsAsNestedField` | Function specifications for a caller that holds the type as a nested field |

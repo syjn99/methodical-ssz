@@ -3,6 +3,8 @@ import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec
 import Prysm.ValidatorIndex.WitnessGeneratedDecodeAccept
 import Prysm.ValidatorIndex.DecodeRejectSize
 import Prysm.ValidatorIndex.WitnessDecodeRejectSize
+import Prysm.ValidatorIndex.EncodeSpec
+import Prysm.ValidatorIndex.WitnessEncodeFastPath
 
 /-! Hand list of the `ValidatorIndex` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -17,3 +19,7 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.runs
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength9.runs_length_9
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength300.runs_length_300
+#print axioms Prysm.ValidatorIndex.Encode.fast_path
+#print axioms Prysm.ValidatorIndex.Encode.fast_path_spec
+#print axioms Prysm.ValidatorIndex.Witness.EncodeFastPath.runs_empty
+#print axioms Prysm.ValidatorIndex.Witness.EncodeFastPath.runs_prefix
