@@ -10,9 +10,9 @@
  "axioms_gate": {
   "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=Spec,Machine,Runtime,Codec,Prysm",
   "verdict": "PASS",
-  "declarations": 18160,
-  "theorems": 14694,
-  "modules": 539
+  "declarations": 19743,
+  "theorems": 16257,
+  "modules": 565
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -47,18 +47,18 @@
    "UnmarshalSSZ": {
     "target": 211,
     "functions_json": 211,
-    "mapped": 34,
+    "mapped": 45,
     "complete": 20,
-    "partial": 14
+    "partial": 25
    },
    "MarshalSSZTo": {
     "target": 211,
     "functions_json": 211,
-    "mapped": 25,
+    "mapped": 37,
     "complete": 0,
-    "partial": 25,
+    "partial": 37,
     "fast_path_complete": 25,
-    "fast_path_partial": 0
+    "fast_path_partial": 12
    },
    "MarshalSSZ": {
     "target": 211,
@@ -110,7 +110,7 @@
     "partial": 0
    }
   },
-  "types_without_mapping_row": 176,
+  "types_without_mapping_row": 163,
   "core_flat_types": [
    "Checkpoint",
    "BeaconBlockHeader",
@@ -135,29 +135,29 @@
   "flat_fixed_types_in_target": 40,
   "flat_outside_core_flat_types": {
    "v1.BuilderDepositRequest": "mapping row",
-   "v1.BuilderExitRequest": "no mapping row",
-   "v1.ConsolidationRequest": "no mapping row",
+   "v1.BuilderExitRequest": "mapping row",
+   "v1.ConsolidationRequest": "mapping row",
    "v1.DepositRequest": "mapping row",
-   "v1.Withdrawal": "no mapping row",
-   "v1.WithdrawalRequest": "no mapping row",
-   "v1alpha1.BLSToExecutionChange": "no mapping row",
+   "v1.Withdrawal": "mapping row",
+   "v1.WithdrawalRequest": "mapping row",
+   "v1alpha1.BLSToExecutionChange": "mapping row",
    "v1alpha1.BeaconBlocksByRangeRequest": "mapping row",
    "v1alpha1.BlobSidecarsByRangeRequest": "mapping row",
    "v1alpha1.Builder": "no mapping row",
-   "v1alpha1.BuilderPendingWithdrawal": "no mapping row",
+   "v1alpha1.BuilderPendingWithdrawal": "mapping row",
    "v1alpha1.BuilderPreferences": "mapping row",
-   "v1alpha1.ENRForkID": "no mapping row",
+   "v1alpha1.ENRForkID": "mapping row",
    "v1alpha1.ExecutionPayloadEnvelopesByRangeRequest": "mapping row",
-   "v1alpha1.Fork": "no mapping row",
-   "v1alpha1.ForkData": "no mapping row",
+   "v1alpha1.Fork": "mapping row",
+   "v1alpha1.ForkData": "mapping row",
    "v1alpha1.PartialDataColumnGroupID": "mapping row",
    "v1alpha1.PayloadAttestationData": "no mapping row",
-   "v1alpha1.ProposerPreferences": "no mapping row",
-   "v1alpha1.Status": "no mapping row",
-   "v1alpha1.StatusV2": "no mapping row",
+   "v1alpha1.ProposerPreferences": "mapping row",
+   "v1alpha1.Status": "mapping row",
+   "v1alpha1.StatusV2": "mapping row",
    "v1alpha1.Validator": "no mapping row",
    "v1alpha1.ValidatorIdentity": "mapping row",
-   "v1alpha1.ValidatorRegistrationV1": "no mapping row"
+   "v1alpha1.ValidatorRegistrationV1": "mapping row"
   },
   "flat_outside_core_flat_types_states": {
    "v1.BuilderDepositRequest": {
@@ -168,18 +168,28 @@
     "encoder": "fast path complete"
    },
    "v1.BuilderExitRequest": {
-    "decoder": "no mapping row",
-    "decoder_missing": [],
-    "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 20",
-    "encoder_refused_by_generator": "byte vector 20"
+    "decoder": "partial",
+    "decoder_missing": [
+     "accept_spec",
+     "reject_size_spec",
+     "reject_complete",
+     "codec",
+     "witness_accept",
+     "witness_reject"
+    ],
+    "encoder": "fast path partial"
    },
    "v1.ConsolidationRequest": {
-    "decoder": "no mapping row",
-    "decoder_missing": [],
-    "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 20",
-    "encoder_refused_by_generator": "byte vector 20"
+    "decoder": "partial",
+    "decoder_missing": [
+     "accept_spec",
+     "reject_size_spec",
+     "reject_complete",
+     "codec",
+     "witness_accept",
+     "witness_reject"
+    ],
+    "encoder": "fast path partial"
    },
    "v1.DepositRequest": {
     "decoder": "complete",
@@ -189,23 +199,32 @@
    "v1.Withdrawal": {
     "decoder": "no mapping row",
     "decoder_missing": [],
-    "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 20",
-    "encoder_refused_by_generator": "byte vector 20"
+    "encoder": "fast path partial",
+    "decoder_refused_by_generator": "boundary register rdi"
    },
    "v1.WithdrawalRequest": {
-    "decoder": "no mapping row",
-    "decoder_missing": [],
-    "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 20",
-    "encoder_refused_by_generator": "byte vector 20"
+    "decoder": "partial",
+    "decoder_missing": [
+     "accept_spec",
+     "reject_size_spec",
+     "reject_complete",
+     "codec",
+     "witness_accept",
+     "witness_reject"
+    ],
+    "encoder": "fast path partial"
    },
    "v1alpha1.BLSToExecutionChange": {
-    "decoder": "no mapping row",
-    "decoder_missing": [],
-    "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 20",
-    "encoder_refused_by_generator": "byte vector 20"
+    "decoder": "partial",
+    "decoder_missing": [
+     "accept_spec",
+     "reject_size_spec",
+     "reject_complete",
+     "codec",
+     "witness_accept",
+     "witness_reject"
+    ],
+    "encoder": "fast path partial"
    },
    "v1alpha1.BeaconBlocksByRangeRequest": {
     "decoder": "partial",
@@ -231,9 +250,8 @@
    "v1alpha1.BuilderPendingWithdrawal": {
     "decoder": "no mapping row",
     "decoder_missing": [],
-    "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 20",
-    "encoder_refused_by_generator": "byte vector 20"
+    "encoder": "fast path partial",
+    "decoder_refused_by_generator": "callee primitives.Gwei.UnmarshalSSZ"
    },
    "v1alpha1.BuilderPreferences": {
     "decoder": "no mapping row",
@@ -242,11 +260,16 @@
     "decoder_refused_by_generator": "callee primitives.Gwei.UnmarshalSSZ"
    },
    "v1alpha1.ENRForkID": {
-    "decoder": "no mapping row",
-    "decoder_missing": [],
-    "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 4",
-    "encoder_refused_by_generator": "byte vector 4"
+    "decoder": "partial",
+    "decoder_missing": [
+     "accept_spec",
+     "reject_size_spec",
+     "reject_complete",
+     "codec",
+     "witness_accept",
+     "witness_reject"
+    ],
+    "encoder": "fast path partial"
    },
    "v1alpha1.ExecutionPayloadEnvelopesByRangeRequest": {
     "decoder": "partial",
@@ -256,18 +279,29 @@
     "encoder": "fast path complete"
    },
    "v1alpha1.Fork": {
-    "decoder": "no mapping row",
-    "decoder_missing": [],
-    "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 4",
-    "encoder_refused_by_generator": "byte vector 4"
+    "decoder": "partial",
+    "decoder_missing": [
+     "accept_spec",
+     "reject_size_spec",
+     "reject_complete",
+     "codec",
+     "witness_accept",
+     "witness_reject"
+    ],
+    "encoder": "fast path partial"
    },
    "v1alpha1.ForkData": {
-    "decoder": "no mapping row",
-    "decoder_missing": [],
+    "decoder": "partial",
+    "decoder_missing": [
+     "accept_spec",
+     "reject_size_spec",
+     "reject_complete",
+     "codec",
+     "witness_accept",
+     "witness_reject"
+    ],
     "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 4",
-    "encoder_refused_by_generator": "byte vector 4"
+    "encoder_refused_by_generator": "frame test"
    },
    "v1alpha1.PartialDataColumnGroupID": {
     "decoder": "partial",
@@ -284,25 +318,40 @@
     "encoder_refused_by_generator": "bool"
    },
    "v1alpha1.ProposerPreferences": {
-    "decoder": "no mapping row",
-    "decoder_missing": [],
-    "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 20",
-    "encoder_refused_by_generator": "byte vector 20"
+    "decoder": "partial",
+    "decoder_missing": [
+     "accept_spec",
+     "reject_size_spec",
+     "reject_complete",
+     "codec",
+     "witness_accept",
+     "witness_reject"
+    ],
+    "encoder": "fast path partial"
    },
    "v1alpha1.Status": {
-    "decoder": "no mapping row",
-    "decoder_missing": [],
-    "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 4",
-    "encoder_refused_by_generator": "byte vector 4"
+    "decoder": "partial",
+    "decoder_missing": [
+     "accept_spec",
+     "reject_size_spec",
+     "reject_complete",
+     "codec",
+     "witness_accept",
+     "witness_reject"
+    ],
+    "encoder": "fast path partial"
    },
    "v1alpha1.StatusV2": {
-    "decoder": "no mapping row",
-    "decoder_missing": [],
-    "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 4",
-    "encoder_refused_by_generator": "byte vector 4"
+    "decoder": "partial",
+    "decoder_missing": [
+     "accept_spec",
+     "reject_size_spec",
+     "reject_complete",
+     "codec",
+     "witness_accept",
+     "witness_reject"
+    ],
+    "encoder": "fast path partial"
    },
    "v1alpha1.Validator": {
     "decoder": "no mapping row",
@@ -319,11 +368,16 @@
     "encoder": "fast path complete"
    },
    "v1alpha1.ValidatorRegistrationV1": {
-    "decoder": "no mapping row",
-    "decoder_missing": [],
-    "encoder": "no mapping row",
-    "decoder_refused_by_generator": "byte vector 20",
-    "encoder_refused_by_generator": "byte vector 20"
+    "decoder": "partial",
+    "decoder_missing": [
+     "accept_spec",
+     "reject_size_spec",
+     "reject_complete",
+     "codec",
+     "witness_accept",
+     "witness_reject"
+    ],
+    "encoder": "fast path partial"
    }
   },
   "target_types_without_ir": [
@@ -1184,7 +1238,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -1198,7 +1252,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -1212,7 +1266,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -1226,10 +1280,24 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "fast path partial",
+   "missing": [
+    "spec",
+    "witness"
+   ],
+   "theorems": {
+    "fast": [
+     "Prysm.BuilderExitRequest.Encode.generated_fast"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": false,
+   "not_proved": [
+    "growslice branches (2 capacity tests)",
+    "length rejects (2 byte fields)",
+    "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -1240,7 +1308,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -1254,10 +1322,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "accept_spec",
+    "reject_size_spec",
+    "reject_complete",
+    "codec",
+    "witness_accept",
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.BuilderExitRequest.Decode.generated_accept",
+    "reject": "Prysm.BuilderExitRequest.Decode.generated_reject"
+   },
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -1268,7 +1346,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -1282,7 +1360,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -1296,7 +1374,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -1310,10 +1388,24 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "fast path partial",
+   "missing": [
+    "spec",
+    "witness"
+   ],
+   "theorems": {
+    "fast": [
+     "Prysm.ConsolidationRequest.Encode.generated_fast"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": false,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "length rejects (3 byte fields)",
+    "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -1324,7 +1416,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -1338,10 +1430,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "accept_spec",
+    "reject_size_spec",
+    "reject_complete",
+    "codec",
+    "witness_accept",
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.ConsolidationRequest.Decode.generated_accept",
+    "reject": "Prysm.ConsolidationRequest.Decode.generated_reject"
+   },
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -2528,7 +2630,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -2542,7 +2644,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -2556,7 +2658,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -2570,10 +2672,23 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "fast path partial",
+   "missing": [
+    "spec",
+    "witness"
+   ],
+   "theorems": {
+    "fast": [
+     "Prysm.Withdrawal.Encode.generated_fast"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": false,
+   "not_proved": [
+    "growslice branches (4 capacity tests)",
+    "length rejects (1 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -2584,7 +2699,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -2598,7 +2713,7 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -2612,7 +2727,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -2626,7 +2741,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -2640,7 +2755,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -2654,10 +2769,23 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "fast path partial",
+   "missing": [
+    "spec",
+    "witness"
+   ],
+   "theorems": {
+    "fast": [
+     "Prysm.WithdrawalRequest.Encode.generated_fast"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": false,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "length rejects (2 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -2668,7 +2796,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -2682,10 +2810,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "accept_spec",
+    "reject_size_spec",
+    "reject_complete",
+    "codec",
+    "witness_accept",
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.WithdrawalRequest.Decode.generated_accept",
+    "reject": "Prysm.WithdrawalRequest.Decode.generated_reject"
+   },
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -3575,7 +3713,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -3589,7 +3727,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -3603,7 +3741,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -3617,10 +3755,23 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "fast path partial",
+   "missing": [
+    "spec",
+    "witness"
+   ],
+   "theorems": {
+    "fast": [
+     "Prysm.BLSToExecutionChange.Encode.generated_fast"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": false,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "length rejects (2 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -3631,7 +3782,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -3645,10 +3796,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "accept_spec",
+    "reject_size_spec",
+    "reject_complete",
+    "codec",
+    "witness_accept",
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.BLSToExecutionChange.Decode.generated_accept",
+    "reject": "Prysm.BLSToExecutionChange.Decode.generated_reject"
+   },
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -8224,7 +8385,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -8238,7 +8399,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -8252,7 +8413,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -8266,10 +8427,23 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "fast path partial",
+   "missing": [
+    "spec",
+    "witness"
+   ],
+   "theorems": {
+    "fast": [
+     "Prysm.BuilderPendingWithdrawal.Encode.generated_fast"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": false,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "length rejects (1 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -8280,7 +8454,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -8294,7 +8468,7 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9665,7 +9839,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9679,7 +9853,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9693,7 +9867,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9707,10 +9881,23 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "fast path partial",
+   "missing": [
+    "spec",
+    "witness"
+   ],
+   "theorems": {
+    "fast": [
+     "Prysm.ENRForkID.Encode.generated_fast"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": false,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "length rejects (2 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -9721,7 +9908,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9735,10 +9922,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "accept_spec",
+    "reject_size_spec",
+    "reject_complete",
+    "codec",
+    "witness_accept",
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.ENRForkID.Decode.generated_accept",
+    "reject": "Prysm.ENRForkID.Decode.generated_reject"
+   },
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -10321,7 +10518,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10335,7 +10532,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10349,7 +10546,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10363,10 +10560,23 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "fast path partial",
+   "missing": [
+    "spec",
+    "witness"
+   ],
+   "theorems": {
+    "fast": [
+     "Prysm.Fork.Encode.generated_fast"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": false,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "length rejects (2 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -10377,7 +10587,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10391,10 +10601,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "accept_spec",
+    "reject_size_spec",
+    "reject_complete",
+    "codec",
+    "witness_accept",
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.Fork.Decode.generated_accept",
+    "reject": "Prysm.Fork.Decode.generated_reject"
+   },
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -10405,7 +10625,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10419,7 +10639,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10433,7 +10653,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10447,7 +10667,7 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10461,7 +10681,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -10475,10 +10695,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "accept_spec",
+    "reject_size_spec",
+    "reject_complete",
+    "codec",
+    "witness_accept",
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.ForkData.Decode.generated_accept",
+    "reject": "Prysm.ForkData.Decode.generated_reject"
+   },
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -14600,7 +14830,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -14614,7 +14844,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -14628,7 +14858,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -14642,10 +14872,23 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "fast path partial",
+   "missing": [
+    "spec",
+    "witness"
+   ],
+   "theorems": {
+    "fast": [
+     "Prysm.ProposerPreferences.Encode.generated_fast"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": false,
+   "not_proved": [
+    "growslice branches (5 capacity tests)",
+    "length rejects (2 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -14656,7 +14899,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -14670,10 +14913,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "accept_spec",
+    "reject_size_spec",
+    "reject_complete",
+    "codec",
+    "witness_accept",
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.ProposerPreferences.Decode.generated_accept",
+    "reject": "Prysm.ProposerPreferences.Decode.generated_reject"
+   },
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -18073,7 +18326,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18087,7 +18340,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18101,7 +18354,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18115,10 +18368,23 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "fast path partial",
+   "missing": [
+    "spec",
+    "witness"
+   ],
+   "theorems": {
+    "fast": [
+     "Prysm.Status.Encode.generated_fast"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": false,
+   "not_proved": [
+    "growslice branches (5 capacity tests)",
+    "length rejects (3 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -18129,7 +18395,7 @@
    "method": "MaxSizeSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18143,7 +18409,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18157,10 +18423,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "accept_spec",
+    "reject_size_spec",
+    "reject_complete",
+    "codec",
+    "witness_accept",
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.Status.Decode.generated_accept",
+    "reject": "Prysm.Status.Decode.generated_reject"
+   },
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -18171,7 +18447,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18185,7 +18461,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18199,7 +18475,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18213,10 +18489,23 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "fast path partial",
+   "missing": [
+    "spec",
+    "witness"
+   ],
+   "theorems": {
+    "fast": [
+     "Prysm.StatusV2.Encode.generated_fast"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": false,
+   "not_proved": [
+    "growslice branches (6 capacity tests)",
+    "length rejects (3 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -18227,7 +18516,7 @@
    "method": "MaxSizeSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18241,7 +18530,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18255,10 +18544,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "accept_spec",
+    "reject_size_spec",
+    "reject_complete",
+    "codec",
+    "witness_accept",
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.StatusV2.Decode.generated_accept",
+    "reject": "Prysm.StatusV2.Decode.generated_reject"
+   },
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [
@@ -19074,7 +19373,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -19088,7 +19387,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -19102,7 +19401,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -19116,10 +19415,23 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "fast path partial",
+   "missing": [
+    "spec",
+    "witness"
+   ],
+   "theorems": {
+    "fast": [
+     "Prysm.ValidatorRegistrationV1.Encode.generated_fast"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": false,
+   "not_proved": [
+    "growslice branches (4 capacity tests)",
+    "length rejects (2 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -19130,7 +19442,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -19144,10 +19456,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "no mapping row",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "accept_spec",
+    "reject_size_spec",
+    "reject_complete",
+    "codec",
+    "witness_accept",
+    "witness_reject"
+   ],
+   "theorems": {
+    "accept": "Prysm.ValidatorRegistrationV1.Decode.generated_accept",
+    "reject": "Prysm.ValidatorRegistrationV1.Decode.generated_reject"
+   },
+   "note": "generated accept theorem (statement = kind instance)"
   },
   {
    "symbols": [

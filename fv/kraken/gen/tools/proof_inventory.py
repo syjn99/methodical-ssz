@@ -107,6 +107,9 @@ NESTED = ["AttestationData"]
 # `sh gen/generator/gen.sh <out dir>` for the row. The `run` mode checks that the keys are the refuse rows of
 # gen/generator/types.tsv outside CORE_FLAT_TYPES and NESTED. No program compares the text with a generator run.
 GENERATOR_REFUSED = {
+    "v1.Withdrawal": dict(decoder="boundary register rdi"),
+    "v1alpha1.BuilderPendingWithdrawal": dict(decoder="callee primitives.Gwei.UnmarshalSSZ"),
+    "v1alpha1.ForkData": dict(encoder="frame test"),
     "v1alpha1.Builder": dict(decoder="byte vector 1", encoder="byte vector 1"),
     "v1alpha1.PayloadAttestationData": dict(decoder="bool", encoder="bool"),
     "v1alpha1.Validator": dict(decoder="bool", encoder="bool"),
