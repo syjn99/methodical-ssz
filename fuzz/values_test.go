@@ -180,7 +180,7 @@ func change(s site, a byte) bool {
 			length = 8*(n-1) + bits.Len8(uint8(v.Index(n-1).Uint())) - 1
 		}
 		k := []int{0, 1, length - 1, length + 1, s.max - 1, s.max, s.max + 1, s.max + 7, s.max + 8}[int(a)%9]
-		if k < 0 {
+		if k < 0 || !inBudget(k/8+1, 1) {
 			return false
 		}
 		b := make([]byte, k/8+1)
@@ -199,14 +199,7 @@ func change(s site, a byte) bool {
 		return false
 	}
 	k := lengths[int(a)%len(lengths)]
-	elem := int(v.Type().Elem().Size())
-	for _, d := range s.inner {
-		elem *= max(d, 1)
-	}
-	// ponytail: skip lengths above 16 MB, so huge limits (validators,
-	// transactions, blobs) never reach max+1. The size of a struct element
-	// counts as one pointer.
-	if k < 0 || k*elem > 1<<24 {
+	if k < 0 || !inBudget(k-n, storage(v.Type().Elem(), s.inner)) {
 		return false
 	}
 	w := reflect.MakeSlice(v.Type(), k, k)
@@ -216,6 +209,41 @@ func change(s site, a byte) bool {
 	}
 	v.Set(w)
 	return true
+}
+
+// The mutation budget of one change: the new elements that it adds, and the
+// storage that it allocates for them. Huge limits (validators, transactions,
+// blobs) then never reach max+1. It bounds one change, not a whole value.
+const (
+	budgetElements = 1 << 18
+	budgetBytes    = 1 << 22
+)
+
+// inBudget reports whether n new elements of the given storage each fit the
+// mutation budget. Division keeps the product from overflowing.
+func inBudget(n, each int) bool {
+	return n <= budgetElements && n <= budgetBytes/max(each, 1)
+}
+
+// storage is the number of bytes that fillField allocates for one element of
+// type t, whose dimensions below have the ssz-size values in sizes.
+func storage(t reflect.Type, sizes []int) int {
+	switch {
+	case t.Kind() == reflect.Pointer && t.Elem().Kind() == reflect.Struct:
+		n := int(t.Size() + t.Elem().Size())
+		for i := 0; i < t.Elem().NumField(); i++ {
+			if f := t.Elem().Field(i); f.IsExported() {
+				// The struct holds the field. storage counts what the field adds.
+				n += storage(f.Type, dims(f.Tag.Get("ssz-size"))) - int(f.Type.Size())
+			}
+		}
+		return n
+	case t.Kind() == reflect.Slice && len(sizes) > 0 && sizes[0] > 0:
+		return int(t.Size()) + sizes[0]*storage(t.Elem(), sizes[1:])
+	case t.Kind() == reflect.Slice && strings.Contains(t.Name(), "Bitlist"):
+		return int(t.Size()) + 1
+	}
+	return int(t.Size())
 }
 
 func TestChange(t *testing.T) {
@@ -237,4 +265,23 @@ func TestChange(t *testing.T) {
 	if len(i.AttestingIndices) != list.max+1 {
 		t.Fatalf("want %d elements, got %d", list.max+1, len(i.AttestingIndices))
 	}
+}
+
+// TestBudget checks the mutation budget on the case that it exists for: a
+// list of 2^20 builder withdrawals must not grow to its limit plus one.
+func TestBudget(t *testing.T) {
+	st := new(eth.BeaconStateGloas)
+	fill(reflect.ValueOf(st).Elem())
+	for _, s := range sites(reflect.ValueOf(st), "", nil) {
+		if s.path == "BuilderPendingWithdrawals" {
+			if change(s, 5<<1) { // max+1 elements
+				t.Fatalf("grew to %d elements", len(st.BuilderPendingWithdrawals))
+			}
+			if each := storage(s.v.Type().Elem(), s.inner); each < 8+36 {
+				t.Fatalf("storage %d bytes for a 36-byte element", each)
+			}
+			return
+		}
+	}
+	t.Fatal("no site BuilderPendingWithdrawals")
 }
