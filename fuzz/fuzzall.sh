@@ -5,6 +5,7 @@
 # Minimization calls the oracle without counting executions, so MINIMIZE caps it.
 # PRESET=minimal fuzzes the minimal preset, where a BeaconState is 300 times smaller.
 # Arguments select targets by regular expression, e.g. ./fuzzall.sh BeaconState
+# The harness skips differences that known.txt lists. STRICT=1 fails on all of them.
 set -uo pipefail
 cd "$(dirname "$0")"
 env=$(./ethlib.sh) || exit 1

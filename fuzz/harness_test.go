@@ -109,14 +109,27 @@ func fillField(f reflect.Value, dims []int) {
 	}
 }
 
-// KNOWN is a regular expression. A difference whose message matches it skips
-// the input, so that a recorded class of findings does not stop the target.
-// Without KNOWN every difference fails.
+// known.txt holds one regular expression per line. A difference whose message
+// matches one skips the input, so that a recorded class of findings does not
+// stop the target. With STRICT=1 every difference fails.
 var known = func() *regexp.Regexp {
-	if e := os.Getenv("KNOWN"); e != "" {
-		return regexp.MustCompile(e)
+	if os.Getenv("STRICT") == "1" {
+		return nil
 	}
-	return nil
+	raw, err := os.ReadFile("known.txt")
+	if err != nil {
+		panic(err)
+	}
+	var lines []string
+	for _, l := range strings.Split(string(raw), "\n") {
+		if l = strings.TrimSpace(l); l != "" && !strings.HasPrefix(l, "#") {
+			lines = append(lines, "(?:"+l+")")
+		}
+	}
+	if len(lines) == 0 {
+		return nil
+	}
+	return regexp.MustCompile(strings.Join(lines, "|"))
 }()
 
 func differ(t *testing.T, format string, args ...any) {

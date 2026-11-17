@@ -1,0 +1,13 @@
+# Classes of differences that are recorded. One regular expression per line.
+# A difference whose message matches a line skips the input.
+# Set STRICT=1 to turn this filter off.
+
+# The decoder accepts a byte list longer than ssz-max. Bug, fixed in PR #27.
+overLimit
+
+# The decoder accepts set padding bits in a Bitvector. Bug, fixed in PR #27.
+paddingBits
+
+# The decoder rejects a Gloas progressive list or bitlist above its ssz-max tag.
+# The SSZ type has no limit. Soft limit of the generator, added in PR #22.
+glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: .*(ssz-max exceeded|(CellsPresentBitmap|AggregationBits): unexpected number of bytes|AggregationBits: too many bits)

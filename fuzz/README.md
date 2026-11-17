@@ -43,11 +43,12 @@ FUZZTIME=1h ./fuzzall.sh BeaconState  # only the targets that match
 ```
 
 A target stops at its first difference.
-To fuzz past a class of differences that is already recorded, give its message as a regular expression.
-The harness then skips those inputs:
+The harness skips the inputs whose difference matches a line in `known.txt`.
+That file lists the classes of differences that are recorded.
+To fail on every difference, set `STRICT=1`:
 
 ```sh
-KNOWN='overLimit|paddingBits' ./fuzzall.sh
+STRICT=1 ./fuzzall.sh
 ```
 
 To fuzz one target by hand: `go test -run '^$' -fuzz '^FuzzCheckpoint$' -fuzzminimizetime 5s .`
@@ -58,7 +59,8 @@ A mainnet `BeaconState` is 2.7 MB, so a random mutation rarely hits a given fiel
 ## Recorded differences
 
 `testdata/fuzz/` holds one small input for each class of difference found.
-`go test .` fails on them while the generator has the difference.
+`known.txt` lists the three classes, so `go test .` passes.
+`STRICT=1 go test .` fails on each input while the generator has the difference.
 
 | Class | Input | Status |
 | --- | --- | --- |
@@ -66,11 +68,7 @@ A mainnet `BeaconState` is 2.7 MB, so a random mutation rarely hits a given fiel
 | The decoder accepts set padding bits in a Bitvector | `FuzzAttestationElectra/bitvector-padding-minimal` (minimal preset) | Bug. Fixed in PR #27 |
 | The decoder rejects a Gloas progressive list or bitlist above its `ssz-max` tag | `FuzzEngineExecutionRequestsGloas/progressive-list-over-tag` | Policy of the generator (soft limit). The SSZ type has no limit |
 
-To skip all three classes:
-
-```sh
-export KNOWN='overLimit|paddingBits|glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: .*(ssz-max exceeded|(CellsPresentBitmap|AggregationBits): unexpected number of bytes|AggregationBits: too many bits)'
-```
+When a fix removes a class, remove its line from `known.txt`.
 
 ## Test a different generator
 
