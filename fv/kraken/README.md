@@ -27,7 +27,10 @@ A proof about one ELF does not transfer to another ELF.
 - The compiler is Go 1.26.10.
   It cross-compiles to `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0`, with `-tags purego -trimpath`.
 - The ELF identity is its sha256.
-  The file `prysm/go1.26.10/build-ids.txt` records it, with the Go build ID and the sha256 of the symbol listing and the disassembly.
+  The file `prysm/go1.26.10/build-ids.txt` records it.
+  The file also records the Go version, the build command, the host, the ELF size and the Go build ID.
+  It records the sha256 and the Go build ID of a second build.
+  It records the sha256 of the disassembly, of the symbol listing and of the `main.go` of the target.
 - The ELF is about 23 MB.
   It is not in the repository.
   Section 3 tells how to build it again.

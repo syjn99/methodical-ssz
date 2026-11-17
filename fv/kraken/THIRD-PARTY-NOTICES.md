@@ -52,7 +52,7 @@ Other files can quote short fragments of generated code or upstream identifiers.
 ## Prysm type records and other text derived from Prysm files
 
 - `prysm/ir/ir-mainnet.json`, `prysm/ir/ir-minimal.json`: the generator IR of the Prysm types, with Go field names, types, tags and gc amd64 offsets.
-  Produced by `gen/inventory-tool` (front end of generator `698c202`) in the Prysm tree, via `gen/prysm-gen.sh`, then `gen/type_inventory.py reduce`.
+  Produced by `gen/inventory-tool` (front end of the generator at the generator commit of `README.md` section 2) in the Prysm tree, via `gen/prysm-gen.sh`, then `gen/type_inventory.py reduce`.
 - `prysm/inventory.json`, `prysm/TYPES.md` and `prysm/go1.26.10/evidence/*.desc.json`: type sets, counts and SSZ descriptors made from the IR
   by `gen/type_inventory.py build`, `gen/type_list_document.py` and `gen/desc/producer.py`.
 - `prysm/go1.26.10/prysm-go.mod.diff`: a diff of Prysm `go.mod`; its context lines are Prysm text.
