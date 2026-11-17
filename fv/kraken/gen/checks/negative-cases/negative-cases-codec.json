@@ -589,5 +589,41 @@
   "kind": "statement",
   "old": "(hbs : bs.length = 4)",
   "new": "(hbs : bs.length = 8)"
+ },
+ {
+  "id": "codec-nested-checkpoint-decode-nested-checkpoint-decode-window-control",
+  "module": "Codec/NestedCheckpointDecode.lean",
+  "theorem": "Codec.nested_checkpoint_decode_window",
+  "kind": "control"
+ },
+ {
+  "id": "codec-nested-checkpoint-decode-nested-checkpoint-decode-window-statement-hav-104-to-72",
+  "module": "Codec/NestedCheckpointDecode.lean",
+  "theorem": "Codec.nested_checkpoint_decode_window",
+  "kind": "statement",
+  "old": "(hav : 104 ≤ avail)",
+  "new": "(hav : 72 ≤ avail)"
+ },
+ {
+  "id": "codec-nested-checkpoint-decode-nested-checkpoint-decode-window-statement-spill-src-to-bf",
+  "module": "Codec/NestedCheckpointDecode.lean",
+  "theorem": "Codec.nested_checkpoint_decode_window",
+  "kind": "statement",
+  "old": "Eq ((Int.toBytes 8 aSrc.toInt).At aW1)",
+  "new": "Eq ((Int.toBytes 8 bf.toInt).At aW1)"
+ },
+ {
+  "id": "codec-field-frame-frame-low-address-extra-control",
+  "module": "Codec/FieldFrame.lean",
+  "theorem": "Codec.frame_low_address_extra",
+  "kind": "control"
+ },
+ {
+  "id": "codec-field-frame-frame-low-address-extra-statement-extra-bytes-dropped",
+  "module": "Codec/FieldFrame.lean",
+  "theorem": "Codec.frame_low_address_extra",
+  "kind": "statement",
+  "old": "x - F - 8 - BitVec.ofNat 64 (S + n) = x - B - BitVec.ofNat 64 S",
+  "new": "x - F - 8 - BitVec.ofNat 64 S = x - B - BitVec.ofNat 64 S"
  }
 ]
