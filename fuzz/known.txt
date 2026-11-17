@@ -49,6 +49,7 @@
 ^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
 ^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?CellsPresentBitmap(, .+)?$
 ^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?([^,]*\.)?CommitteeBits(, .+)?$
+^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?([^,]*\.)?JustificationBits(, .+)?$
 ^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
 
 ## Value inputs on PR #27: MarshalSSZ refuses the value, but HashTreeRoot gives a
@@ -58,9 +59,10 @@
 ^\*eth\.[A-Za-z]+: MarshalSSZ refuses the value \((.*: )?CommitteeBits: bitvector padding bits are not zero\), but HashTreeRoot gives a root; changed: (.+, )?([^,]*\.)?CommitteeBits(, .+)?$
 
 ## Value inputs, main and PR #27: HashTreeRoot panics in parseBitlistProgressive
-## (ssz/htr.go) on a progressive Bitlist with a zero last byte, in the Gloas
-## attestation types. Bug. No fix proposed yet.
-^\*eth\.AttestationGloas: HashTreeRoot panics in ssz\.parseBitlistProgressive: runtime error: slice bounds out of range \[:[0-9]+\] with capacity [0-9]+; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
+## (ssz/htr.go) on a progressive Bitlist with a zero last byte. The types are the
+## Gloas types whose struct closure reaches the progressive AggregationBits.
+## Bug. No fix proposed yet.
+^\*eth\.(AggregateAttestationAndProofGloas|AttestationGloas|BeaconBlockBodyGloas|BeaconBlockGloas|SignedAggregateAttestationAndProofGloas|SignedBeaconBlockGloas): HashTreeRoot panics in ssz\.parseBitlistProgressive: runtime error: slice bounds out of range \[:[0-9]+\] with capacity [0-9]+; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
 
 ## The decoder rejects a Gloas progressive list above its ssz-max tag. The SSZ type
 ## has no limit. Soft limit of the generator, added in PR #22. Each field name is a
@@ -86,12 +88,13 @@
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
 
 ## The decoder rejects a Gloas progressive bitlist above its ssz-max tag. The field
-## is a ProgressiveBitlist in Prysm's YAML in every Gloas container, and a
-## ForkBitlist .glamsterdam in EthLib.
-^glamsterdam/(AggregateAndProof|Attestation|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: too many bits$
-^glamsterdam/(Attestation): EthLib accepts, methodical rejects: (.*: )?AggregationBits: too many bits: list length is higher than max value$
-^glamsterdam/(AggregateAndProof|Attestation|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+$
-^glamsterdam/(AggregateAndProof|Attestation|SignedAggregateAndProof): EthLib accepts, methodical rejects: (.*: )?AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+: list length is higher than max value$
+## is a ProgressiveBitlist in Prysm's YAML and a ForkBitlist .glamsterdam in EthLib.
+## AggregationBits is also a fixed bitvector in other Gloas containers, so its
+## lines list the containers whose struct closure reaches the progressive one.
+^glamsterdam/(AggregateAndProof|Attestation|BeaconBlock|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: too many bits$
+^glamsterdam/(AggregateAndProof|Attestation|BeaconBlock|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: too many bits: list length is higher than max value$
+^glamsterdam/(AggregateAndProof|Attestation|BeaconBlock|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+$
+^glamsterdam/(AggregateAndProof|Attestation|BeaconBlock|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?CellsPresentBitmap: too many bits$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?CellsPresentBitmap: unexpected number of bytes, got [0-9]+ but found [0-9]+$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?CellsPresentBitmap: unexpected number of bytes, got [0-9]+ but found [0-9]+: list length is higher than max value$
