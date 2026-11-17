@@ -32,10 +32,10 @@
 ## Value inputs on main: MarshalSSZ encodes a bitfield that is not valid (above its
 ## limit, no delimiter, set padding bits), and HashTreeRoot gives a root for it.
 ## Bug. Fix proposed in PR #27 for MarshalSSZ. No fix proposed yet for HashTreeRoot.
-^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
-^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?Available(, .+)?$
-^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?CellsPresentBitmap(, .+)?$
-^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?Requests(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.(noDelimiter|trailingZeros|emptyEncoding); changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.(noDelimiter|trailingZeros|emptyEncoding); changed: (.+, )?([^,]*\.)?Available(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.(noDelimiter|trailingZeros|emptyEncoding); changed: (.+, )?([^,]*\.)?CellsPresentBitmap(, .+)?$
+^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.(noDelimiter|trailingZeros|emptyEncoding); changed: (.+, )?([^,]*\.)?Requests(, .+)?$
 ^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 131072 [0-9]+; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
 ^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 4096 [0-9]+; changed: (.+, )?([^,]*\.)?Available(, .+)?$
 ^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 4096 [0-9]+; changed: (.+, )?([^,]*\.)?CellsPresentBitmap(, .+)?$
@@ -43,14 +43,10 @@
 ^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 8192 [0-9]+; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
 ^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?([^,]*\.)?CommitteeBits(, .+)?$
 ^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?([^,]*\.)?JustificationBits(, .+)?$
-^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
-^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?([^,]*\.)?Available(, .+)?$
-^fusaka/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?([^,]*\.)?Requests(, .+)?$
-^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
-^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.noDelimiter; changed: (.+, )?([^,]*\.)?CellsPresentBitmap(, .+)?$
+^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.(noDelimiter|trailingZeros|emptyEncoding); changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
+^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.(noDelimiter|trailingZeros|emptyEncoding); changed: (.+, )?([^,]*\.)?CellsPresentBitmap(, .+)?$
 ^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?([^,]*\.)?CommitteeBits(, .+)?$
 ^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits; changed: (.+, )?([^,]*\.)?JustificationBits(, .+)?$
-^glamsterdam/[A-Za-z]+: MarshalSSZ gives bytes that EthLib rejects, and HashTreeRoot gives a root: input rejected: EthLib\.Serialization\.Ssz\.Err\.trailingZeros; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
 
 ## Value inputs on PR #27: MarshalSSZ refuses the value, but HashTreeRoot gives a
 ## root for it. Bug. No fix proposed yet.
