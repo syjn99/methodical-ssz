@@ -263,6 +263,9 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   - `lean/Codec/Segment/SizeReject.lean` and `lean/Codec/DecodeRejectSizeAnyFrame.lean` both give a size reject for any frame.
   - `lean/Machine/WitnessSplit.lean` is the macro of `lean/Machine/WitnessHost.lean` with a larger simp set.
   - Checkpoint has two forms of its encoder covers: `EncodeCover.lean` and `EncodeCoverFramed.lean`.
+  - PendingPartialWithdrawal has two decoder accept theorems for the same accept path.
+    `Decode.accept` in `DecodeAccept.lean` is a hand proof, and the specification corollaries use it.
+    `Decode.generated_accept` in `GeneratedDecodeAccept.lean` is a generated proof.
 - Effect: none on a theorem.
   A new proof must use the general form in `Codec` and `Machine/WitnessHost.lean`.
 - Where: the files above.

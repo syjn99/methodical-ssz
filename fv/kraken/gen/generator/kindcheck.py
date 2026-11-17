@@ -1140,6 +1140,15 @@ def whole_accept_selftest():
     E = whole_accept_expect(dirs, fields, sz)
     if E["blocks"] != [(0, 1), (1, 2), (2, 3), (3, 4)]:
         bad.append(("whole_accept_blocks_Withdrawal_setup_after_store", E["blocks"]))
+    # the committed generated file of PendingPartialWithdrawal (an interleaved block for fields 2-3) passes; mutants fail
+    ppw = (KR / "lean/Prysm/PendingPartialWithdrawal/GeneratedDecodeAccept.lean").read_text()
+    for cid, text, ok in (("whole_accept_ppw_committed", ppw, True),
+                          ("whole_accept_ppw_block_renamed", ppw.replace("Decode.generated_fields_2_3", "Decode.generated_field_3"), False),
+                          ("whole_accept_ppw_block_done", re.sub(r"⟨(\d+), 3, ", r"⟨\1, 2, ", ppw, count=1), False)):
+        n += 1
+        errs, _ = check_whole_accept(text)
+        if (not errs) != ok:
+            bad.append((cid, errs[:2]))
     # an IR mutant: VoluntaryExit ValidatorIndex Go offset 24 (code 16) -> the recomputation refuses
     sp, sraw, iraw = whole_accept_inputs("VoluntaryExit", "link-set")
     d = json.loads(iraw)

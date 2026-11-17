@@ -867,10 +867,6 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
                 refuse(f"whole-accept: unit kind {k}")
         return [r for r in REGS16 if r in live and r != 'rsp']
 
-    def derived(v):
-        """A receiver or buffer address plus a nonzero offset: a value that a boundary state cannot express."""
-        return v[0] in ('RCV', 'BF') and len(v) == 2 and v[1] != 0
-
     def facts(need, where):
         out = []
         for r in need:
@@ -924,8 +920,6 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
                 break
             steps.append(whole_accept_step(u, regs, stk, frame, pfx, fl, i, fields))
         cls = fields[i][3]
-        if i > first and cls not in ('u64', 'call'):
-            refuse(f"whole-accept field {fname}: {cls} field after an interleaved boundary (recipe: a uint64 or call field)")
         if cls == 'bytes' and blk is not None and blk['kind'] == 'inline':
             # the 4-byte inline-copy segment: the field event is the end of the segment (no pointer tail, no pointer slot)
             if any(u['kind'] != 'st' or u['rB'] != 'rsp' for u in us[:us.index(blk)]):
@@ -1010,9 +1004,7 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
             refuse(f"whole-accept field {fname}: ends at {pc}, the next unit starts at {nxt}")
         # an interleaved boundary: a register that the next field reads holds a derived value (receiver or buffer plus
         # an offset, the set-up of the next field run before this field's event); no boundary state, the block goes on
-        if i + 1 < n and any(derived(regs.get(r, ('UNK',))) for r in needs[i + 1]):
-            if cls != 'u64':
-                refuse(f"whole-accept field {fname}: interleaved boundary after a {cls} field (recipe: after a uint64 field)")
+        if i + 1 < n and whole_accept_interleaved(fname, cls, fields[i + 1][3], [regs.get(r, ('UNK',)) for r in needs[i + 1]]):
             held = held + steps
             continue
         if cls == 'u64':
@@ -1039,6 +1031,25 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
              exs=exs, post=post, states=states, headspec=head, fspec=fspec, epilogue_spec=epilogue, rejspec=rej)
     t.L = t.layout()
     return t
+
+
+def whole_accept_derived(v):
+    """A receiver or buffer address plus a nonzero offset: a value that a boundary state cannot express."""
+    return v[0] in ('RCV', 'BF') and len(v) == 2 and v[1] != 0
+
+
+def whole_accept_interleaved(fname, cls, next_cls, live):
+    """Whether the boundary after field `fname` (class `cls`) is interleaved: a live register value `live` is derived.
+    The recipe of an interleaved block: the field before the boundary is a uint64 field, the field after it a uint64
+    or call field. Any other interleaved boundary: refuse. The derivation does not reach the first refusal: after a call
+    or byte block, every register is a boundary value or unknown."""
+    if not any(whole_accept_derived(v) for v in live):
+        return False
+    if cls != 'u64':
+        refuse(f"whole-accept field {fname}: interleaved boundary after a {cls} field (recipe: after a uint64 field)")
+    if next_cls not in ('u64', 'call'):
+        refuse(f"whole-accept field {fname}: interleaved boundary before a {next_cls} field (recipe: a uint64 or call field)")
+    return True
 
 
 def fl_done_ok(us, cls):

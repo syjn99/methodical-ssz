@@ -10,13 +10,17 @@ Cases (ids `whole-accept-*`; mutated `.S` / IR copies in <work-dir> only):
    An accept row: exit 0 twice, identical, every whole-accept theorem with its kind line, `kindcheck.py` PASS (rule 12:
    kind parameters recomputed from the IR and the `.S`). A refuse row: exit 2 twice, 0 bytes. Examples of refuse rows:
    AttestationData (nested fields).
+ - whole-accept-interleaved-unit-*: the interleaving rule `whole_accept_interleaved` of `whole_accept.py`, called directly.
+   It also covers the refusal after a call or byte field: no `.S` input reaches it, because a call block or a byte segment
+   leaves only boundary values and unknown values in the registers.
  - adversarial inputs, each expected exit 2 with 0 bytes on stdout and `accept_generated: false` in the summary (no
    accept theorem): every class of the step rules (stack-store overlap / misaligned store, head variants, size
    immediate, epilogue jump to a missing label, truncated file, callee of another overlay type) and the whole-accept rules
    (spill to a non-home slot, a register spilled twice, an extra `rcx` spill, `dB != F + 24`, an `xor` epilogue in a
    frame other than 0x20, an epilogue load of a non-zero slot, a `nop` inside the accept epilogue, a malformed
    size-error block, a stack store of an input value, a load from a stack slot outside the layout, interleaved
-   fields: the Withdrawal set-up changed, the first field store moved or removed); the 4-byte inline copy (copy removed or 64-bit, source offset, write-barrier branch, length, buffer
+   fields: the Withdrawal set-up changed, the first field store moved or removed, a derived address stored to a frame slot
+   in a block, an interleaved boundary before a byte field); the 4-byte inline copy (copy removed or 64-bit, source offset, write-barrier branch, length, buffer
    register or slot, pointer store) and the 20-byte memmove size; statement-level IR mutants (a wrong Go offset, a wrong size, the field order swapped, a Go offset that
    the code matches but that is not the kind's running sum). Valid variants (an extra harmless move, another valid
    set-up order): exit 0 and kindcheck PASS.
@@ -232,6 +236,13 @@ WHOLE_ACCEPT_MUT = [
      rv([(19, "mov %rsi,%rax", ("before", ["mov %rdi,%rsi"]))]), None, 2),
     ("whole-accept-interleaved-load-offset", "Withdrawal: the Index load `mov 0x8(%rbx),%r8` (SSZ offset 8, IR 0)", "Withdrawal",
      rv([(17, "mov (%rbx),%r8", "mov 0x8(%rbx),%r8")]), None, 2),
+    ("whole-accept-interleaved-stack-store", "PendingPartialWithdrawal: the derived receiver address `mov %rsi,0x20(%rsp)` stored to a frame slot "
+     "inside the interleaved block (whole-accept: no slot form for it)", "PendingPartialWithdrawal",
+     rv([(57, "mov %rsi,%rax", ("before", ["mov %rsi,0x20(%rsp)"]))]), None, 2),
+    ("whole-accept-interleaved-before-byte-field", "PendingDeposit: `lea 0x8(%rdx),%rdi` in Amount, stored by the Signature set-up "
+     "(whole-accept: interleaved boundary before a byte field)", "PendingDeposit",
+     rv([(88, "mov %rsi,0x38(%rdx)", ("before", ["lea 0x8(%rdx),%rdi"])), (89, "lea type__+387072(%rip),%rax", ("before", ["mov %rdi,0x30(%rsp)"]))]),
+     None, 2),
     # valid variants: generated, kindcheck PASS
     ("whole-accept-interleaved-valid-setup-after-store", "Withdrawal: the ValidatorIndex set-up after the Index store (no interleaving)",
      "Withdrawal", rv([(14, "lea 0x8(%rbx),%rdx", None), (15, "add $-0x8,%rdi", None), (16, "lea 0x10(%rax),%rsi", None),
@@ -466,10 +477,38 @@ def whole_accept_fc_cases(work, new, keys=None):
     return res, bad
 
 
+def whole_accept_unit_cases():
+    """`whole_accept_interleaved` called directly: (id, field class, next class, live values, expected result or `refuse`)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("whole_accept_unit", HERE / "whole_accept.py")
+    wa = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(wa)
+    cases = [("u64-call-derived", "u64", "call", [("RCV", 0), ("RCV", 16), ("BF", 8)], True),
+             ("u64-u64-derived", "u64", "u64", [("BF", 8)], True),
+             ("u64-call-boundary-values", "u64", "call", [("RCV", 0), ("BF", 0), ("ZERO",)], False),
+             ("u64-call-unknown", "u64", "call", [("UNK",), ("IMM", 8)], False),
+             ("call-u64-derived", "call", "u64", [("RCV", 16)], "refuse"),
+             ("bytes-u64-derived", "bytes", "u64", [("BF", 8)], "refuse"),
+             ("u64-bytes-derived", "u64", "bytes", [("RCV", 8)], "refuse")]
+    res, bad = [], 0
+    for cid, cls, nxt, live, want in cases:
+        try:
+            got = wa.whole_accept_interleaved("F", cls, nxt, live)
+        except wa.WholeAcceptRefuse:
+            got = "refuse"
+        ok = got == want
+        res.append(dict(id=f"whole-accept-interleaved-unit-{cid}", expect=str(want), exit=str(got), stdout_bytes=0, ok=ok))
+        bad |= not ok
+    return res, bad
+
+
 def main(work, out):
     work.mkdir(parents=True, exist_ok=True)
     res, bad = [], 0
     new = KR / "gen" / "generator" / "generator.py"
+    r5, b5 = whole_accept_unit_cases()
+    res += r5
+    bad |= b5
 
     r6, b6 = whole_accept_cases(work, new)
     res += r6

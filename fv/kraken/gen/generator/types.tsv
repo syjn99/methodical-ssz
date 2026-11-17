@@ -38,8 +38,8 @@ v1alpha1	SigningData	decoder --whole-accept	-	accept	decode-spec,reject-witness
 v1alpha1	SyncAggregatorSelectionData	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness
 v1alpha1	ValidatorBalance	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
 v1alpha1	VoluntaryExit	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
-# PendingPartialWithdrawal has interleaved fields, and AttestationData has nested containers.
-v1alpha1	PendingPartialWithdrawal	decoder --whole-accept	-	refuse	-
+# AttestationData has nested containers.
+v1alpha1	PendingPartialWithdrawal	decoder --whole-accept	-	accept	-
 v1alpha1	AttestationData	decoder --whole-accept	-	refuse	-
 # Flat types with tool-written companions, and flat types that the generator refuses.
 v1	BuilderDepositRequest	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness,negative-cases,hand-list
