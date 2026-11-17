@@ -17,6 +17,18 @@ The Go fuzzer sees only the coverage of Go code. EthLib is not instrumented.
 So the harness gives accept and each EthLib decode error code its own Go branch (`signal` in `codes_test.go`).
 An input that reaches a new EthLib rejection reason is then new coverage, and the fuzzer keeps it.
 
+An input that starts with `value:` holds no SSZ bytes. It tells how to change a value (`values_test.go`):
+
+1. `UnmarshalSSZ` decodes one of the seeds.
+2. The changes set lists, byte strings and bitfields to lengths at the edges of their type: 0, 1, the limit, the limit plus 1.
+   They also flip bits of bitfields: the padding bits and the bitlist delimiter first.
+3. `MarshalSSZ` encodes the changed value. If it refuses the value, the input passes.
+4. EthLib must accept the bytes, and `HashTreeRoot` of the value must equal the EthLib root.
+   The bytes must then pass the checks 1 to 3 above.
+
+This tests `MarshalSSZ` and `HashTreeRoot` on values that no decode gives.
+The seed corpus holds one value input for each seed that decodes.
+
 A difference fails the target. Go saves the input in `testdata/fuzz/<target>/`.
 The two presets share that directory. A saved input shows its difference only at the preset that found it.
 
@@ -77,13 +89,14 @@ A mainnet `BeaconState` is 2.7 MB, so a random mutation rarely hits a given fiel
 ## Recorded differences
 
 `testdata/fuzz/` holds one small input for each class of difference found.
-`known.txt` lists the three classes, so `go test .` passes.
+`known.txt` lists these classes, so `go test .` passes.
 `STRICT=1 go test .` and `STRICT=1 go test -tags minimal .` fail on the inputs of their preset while the generator has the difference.
 
 | Class | Input | Status |
 | --- | --- | --- |
 | The decoder accepts a byte list longer than `ssz-max` | `FuzzEngineExecutionPayloadHeaderDeneb/bytelist-over-max` | Bug. Fix proposed in PR #27 |
 | The decoder accepts set padding bits in a Bitvector | `FuzzAttestationElectra/bitvector-padding-minimal` (minimal preset) | Bug. Fix proposed in PR #27 |
+| `MarshalSSZ` encodes a Bitlist above its limit (F2) | `FuzzAttestationElectra/value-bitlist-over-max` | Bug. Fix proposed in PR #27 |
 | The decoder rejects a Gloas progressive list or bitlist above its `ssz-max` tag | `FuzzEngineExecutionRequestsGloas/progressive-list-over-tag` | Policy of the generator (soft limit). The SSZ type has no limit |
 
 When a fix removes a class, remove its line from `known.txt`.

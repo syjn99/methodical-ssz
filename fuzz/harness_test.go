@@ -73,13 +73,34 @@ func run[T any, P interface {
 		}
 	}
 	corpus = append(corpus, zero, []byte{})
+	var bases [][]byte // the inputs that a value input can start from
+	for _, data := range corpus {
+		if P(new(T)).UnmarshalSSZ(data) == nil {
+			bases = append(bases, data)
+		}
+	}
 	if *codes {
-		table[T, P](f, name, forks, corpus)
+		table[T, P](f, name, forks, corpus, bases)
 	}
 	for _, data := range corpus {
 		f.Add(data)
 	}
+	for i := range min(len(bases), 256) {
+		f.Add(append(bytes.Clone(valuePrefix), byte(i)))
+	}
 	f.Fuzz(func(t *testing.T, data []byte) {
+		if ops, ok := bytes.CutPrefix(data, valuePrefix); ok {
+			obj := mutated[T, P](bases, ops)
+			enc, err := obj.MarshalSSZ()
+			if err != nil {
+				return // the encoder refuses the value
+			}
+			for _, fork := range forks {
+				checkValue(t, obj, enc, fork, name)
+				check(t, P(new(T)), fork, name, enc)
+			}
+			return
+		}
 		for _, fork := range forks {
 			check(t, P(new(T)), fork, name, data)
 		}

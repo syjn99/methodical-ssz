@@ -1,6 +1,7 @@
 package fuzz
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"maps"
@@ -64,7 +65,7 @@ var codes = flag.Bool("codes", false, "print the EthLib verdicts that the corpus
 func table[T any, P interface {
 	*T
 	codec
-}](f *testing.F, name string, forks []string, corpus [][]byte) {
+}](f *testing.F, name string, forks []string, corpus, bases [][]byte) {
 	cache := flag.Lookup("test.fuzzcachedir").Value.String()
 	if cache == "" {
 		out, err := exec.Command("go", "env", "GOCACHE").Output()
@@ -88,6 +89,20 @@ func table[T any, P interface {
 			corpus = append(corpus, []byte(data))
 		}
 	}
+	// A value input counts with the bytes that MarshalSSZ gives for it.
+	refused := 0
+	for i := 0; i < len(corpus); i++ {
+		if ops, ok := bytes.CutPrefix(corpus[i], valuePrefix); ok {
+			enc, err := mutated[T, P](bases, ops).MarshalSSZ()
+			if err != nil {
+				refused++
+				corpus = slices.Delete(corpus, i, i+1)
+				i--
+				continue
+			}
+			corpus[i] = enc
+		}
+	}
 	for _, fork := range forks {
 		count := map[oracle.Verdict]int{}
 		both := 0
@@ -98,7 +113,7 @@ func table[T any, P interface {
 				both++
 			}
 		}
-		line := fmt.Sprintf("%s %s inputs=%d both-accept=%d", f.Name(), fork, len(corpus), both)
+		line := fmt.Sprintf("%s %s inputs=%d both-accept=%d marshal-refused=%d", f.Name(), fork, len(corpus)+refused, both, refused)
 		for _, v := range slices.Sorted(maps.Keys(count)) {
 			reason := fmt.Sprintf("code%d", v)
 			if int(v) < len(reasons) {
