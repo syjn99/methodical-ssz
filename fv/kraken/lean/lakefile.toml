@@ -14,24 +14,26 @@ name = "EthLib"
 git = "https://github.com/ethereum/EthLib.git"
 rev = "862185680cf23ccf54d44eb25b63b26c5020597b"
 
-# The shared layer. A library has the modules of one directory (glob `<Name>.+`).
-# Spec: EthLib specifications that several types share, and the ones that the description checker imports
-# (gen/desc-checker/DescChecker.lean). They import only EthLib and each other.
+# Each library holds the modules of one directory (glob `<Name>.+`).
+# Spec, Machine, Runtime and Codec are the shared layer. Prysm holds the proofs of the Prysm types.
+# Spec: the general lemma Spec/DeserializeOfSerialize.lean and the specifications of the hand test types (Spec/Test*.lean).
+# The Desc checker ../gen/desc-checker/DescChecker.lean imports the test types. Spec imports only EthLib and Spec.
 [[lean_lib]]
 name = "Spec"
 globs = ["Spec.+"]
 
-# Machine: helpers on the Kraken machine model (steps, frames, bytes, labels, flags), the commands that read
-# code and data files (`include_x64_code`, `data_include`) and the witness host tactics. No module of this library
-# reads a code or data file itself.
+# Machine: helpers on the Kraken machine model (steps, frames, bytes, labels, flags).
+# It also holds the commands that read code and data files (`include_x64_code`, `data_include`) and the witness host tactics.
+# No module of this library reads a code or data file, so the library has no `needs` entry.
 [[lean_lib]]
 name = "Machine"
 globs = ["Machine.+"]
 
-# Runtime: the contracts of the Go runtime callees and their models. The models are the .S files of
-# Runtime/; `include_x64_code` reads them, so they are inputs of the library. A `needs` entry puts the file
-# contents into the input hash of every module of the library, so Lake rebuilds the proofs when a .S file changes.
-# `Runtime/StaticUint64s.lean` reads the data file staticuint64s.data of the Prysm link set (the input_dir prysm_target_data below).
+# Runtime: the contracts of the Go runtime callees and their models.
+# The models are the .S files of Runtime/. `include_x64_code` reads them, so they are inputs of the library.
+# A `needs` entry puts the file contents into the input hash of every module of the library.
+# So Lake builds the proofs again when a .S file changes.
+# Runtime/StaticUint64s.lean reads the data file staticuint64s.data of the Prysm link set (input_dir prysm_target_data).
 [[input_dir]]
 name = "runtime_lean_S"
 path = "Runtime"
@@ -43,52 +45,53 @@ name = "Runtime"
 globs = ["Runtime.+"]
 needs = ["runtime_lean_S", "prysm_target_data"]
 
-# The data files of the one link set of the Prysm target, prysm/go1.26.10/link-set/data. `data_include` reads them.
+# The data files of the link set of the Prysm target, ../prysm/go1.26.10/link-set/data. `data_include` reads them.
 # They are inputs of the libraries Runtime and Prysm.
 [[input_dir]]
 name = "prysm_target_data"
 path = "../prysm/go1.26.10/link-set/data"
 text = true
 
-# Codec: lemmas that do not depend on one Prysm type: the uint64 decoder pattern, the fixed-bytes field
-# patterns, segment and loop lemmas (Codec/Segment/), the statement kinds of the generated proofs (Codec/Kind/)
-# and the encoder step lemmas. No module of this library reads a code or data file itself. Codec and Prysm import
-# each other at module level: 19 of the 51 Codec modules import a Prysm module (11 of 33 in Codec/, 2 of 11 in
-# Codec/Kind/, 6 of 7 in Codec/Segment/), and 160 of the 588 Prysm modules import a Codec module.
+# Codec: lemmas and statement kinds with the size, the count, the registers or the frame as parameters.
+# Examples are the uint64 decoder pattern, the fixed-bytes field patterns and the encoder step lemmas.
+# Codec/Segment/ holds segment and loop lemmas. Codec/Kind/ holds the statement kinds of the generated proofs.
+# No module of this library reads a code or data file, so the library has no `needs` entry.
+# Codec and Prysm import each other at module level (README.md section 1, "Dependencies").
 [[lean_lib]]
 name = "Codec"
 globs = ["Codec.+"]
 
-# The one link set of the Prysm target, prysm/go1.26.10/link-set (the code and data of the Go 1.26.10 ELF that the
-# theorems read): its .S files and its data files (prysm_target_data above) are inputs of every module of the Prysm library.
+# The .S files of the link set of the Prysm target, ../prysm/go1.26.10/link-set/norm.
+# They are the code of the ELF that the theorems read. `include_x64_code` reads them.
+# They and the data files (input_dir prysm_target_data) are inputs of the library Prysm.
 [[input_dir]]
 name = "prysm_target_norm_S"
 path = "../prysm/go1.26.10/link-set/norm"
 text = true
 filter = {extension = ["S"]}
 
-# witness-only runtime model: the 72-byte bump newobject Prysm/AttestationData/BumpNewobject72.S
+# The runtime model of the AttestationData witnesses: the 72-byte bump newobject Prysm/AttestationData/BumpNewobject72.S.
 [[input_dir]]
 name = "attestation_data_runtime_model_S"
 path = "Prysm/AttestationData"
 text = true
 filter = {extension = ["S"]}
 
-# Prysm: one directory for each Prysm type (Prysm/<GoTypeName>/) and the ELF data of the link set
-# (Prysm/ElfData/). Not a default target.
+# Prysm: one directory for each Prysm type (Prysm/<GoTypeName>/), the ELF data of the link set (Prysm/ElfData/)
+# and the runtime models that read ELF data (Prysm/RuntimeModel/). Prysm is not a default target.
 [[lean_lib]]
 name = "Prysm"
 globs = ["Prysm.+"]
 needs = ["prysm_target_norm_S", "prysm_target_data", "attestation_data_runtime_model_S", "runtime_model_S", "deposit_lean_S"]
 
-# witness-only runtime models of the Prysm library: the type-dispatching bump allocators Prysm/RuntimeModel/*.S
+# The runtime models of the witnesses that read ELF data: the bump allocators Prysm/RuntimeModel/*.S, which dispatch on a type word.
 [[input_dir]]
 name = "runtime_model_S"
 path = "Prysm/RuntimeModel"
 text = true
 filter = {extension = ["S"]}
 
-# witness-only runtime model of the Deposit witness: the 120-byte bump newobject Prysm/Deposit/BumpNewobject120.S
+# The runtime model of the Deposit witnesses: the 120-byte bump newobject Prysm/Deposit/BumpNewobject120.S.
 [[input_dir]]
 name = "deposit_lean_S"
 path = "Prysm/Deposit"
