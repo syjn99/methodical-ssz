@@ -84,6 +84,7 @@ function	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.ProposerPreferenc
 function	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.ProposerPreferences	MarshalSSZTo	encoder into a caller buffer	-	-	-	-
 function	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.SigningData	UnmarshalSSZ	decoder	-	-	-	-
 function	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.SigningData	MarshalSSZTo	encoder into a caller buffer	-	-	-	-
+function	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.SingleAttestation	UnmarshalSSZ	decoder	-	-	-	-
 function	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Status	UnmarshalSSZ	decoder	-	-	-	-
 function	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Status	MarshalSSZTo	encoder into a caller buffer	-	-	-	-
 function	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.StatusV2	UnmarshalSSZ	decoder	-	-	-	-
@@ -108,6 +109,7 @@ data	int	boxedEight	the int value 8 that a decoder passes to fmt.errorf as the e
 data	string	formatActivationEligibilityEpoch	format string "ActivationEligibilityEpoch: %w"	go_string._	79937	30	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Validator.UnmarshalSSZ
 data	string	formatActivationEpoch	format string "ActivationEpoch: %w"	go_string._	46539	19	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Validator.UnmarshalSSZ
 data	string	formatAmount	format string "Amount: %w"	go_string._	21290	10	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.BuilderPendingWithdrawal.UnmarshalSSZ
+data	string	formatAttesterIndex	format string "AttesterIndex: %w"	go_string._	40288	17	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.SingleAttestation.UnmarshalSSZ
 data	string	formatAttestingIndicesMisaligned	format string "misaligned bytes: c.AttestingIndices length is %d, which is not a multiple of 8: %w"	go_string._	171660	83	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.IndexedAttestation.UnmarshalSSZ
 data	string	formatAttestingIndicesTooBig	format string "ssz-max exceeded: c.AttestingIndices has %d elements, ssz-max is 2048: %w"	go_string._	164102	73	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.IndexedAttestation.UnmarshalSSZ
 data	string	formatBalance	format string "Balance: %w"	go_string._	23984	11	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Builder.UnmarshalSSZ
@@ -116,6 +118,7 @@ data	string	formatBufferLengthReceiced	format string "expected buffer of length 
 data	string	formatBuilderIndex	format string "BuilderIndex: %w"	go_string._	37027	16	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.BuilderPendingWithdrawal.UnmarshalSSZ
 data	string	formatColumnsMisaligned	format string "misaligned bytes: c.Columns length is %d, which is not a multiple of 8: %w"	go_string._	164835	74	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ
 data	string	formatColumnsTooBig	format string "ssz-max exceeded: c.Columns has %d elements, ssz-max is 128: %w"	go_string._	152012	63	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ
+data	string	formatCommitteeId	format string "CommitteeId: %w"	go_string._	34185	15	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.SingleAttestation.UnmarshalSSZ
 data	string	formatCommitteeIndex	format string "CommitteeIndex: %w"	go_string._	43543	18	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.AttestationData.UnmarshalSSZ
 data	string	formatData	format string "Data: %w"	go_string._	15004	8	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Deposit.UnmarshalSSZ
 data	string	formatDepositEpoch	format string "DepositEpoch: %w"	go_string._	37043	16	github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Builder.UnmarshalSSZ
