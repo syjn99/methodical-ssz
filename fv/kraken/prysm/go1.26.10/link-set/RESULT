@@ -189,6 +189,7 @@ PASS (f) formatAttestingIndicesMisaligned.data: 0xc64774, 83 bytes and 0 words =
 PASS (f) formatAttestingIndicesTooBig.data: 0xc629ee, 73 bytes and 0 words = ELF
 PASS (f) formatBalance.data: 0xc40698, 11 bytes and 0 words = ELF
 PASS (f) formatBufferLength.data: 0xc556db, 40 bytes and 0 words = ELF
+PASS (f) formatBufferLengthReceiced.data: 0xc55703, 40 bytes and 0 words = ELF
 PASS (f) formatBuilderIndex.data: 0xc4398b, 16 bytes and 0 words = ELF
 PASS (f) formatColumnsMisaligned.data: 0xc62ccb, 74 bytes and 0 words = ELF
 PASS (f) formatColumnsTooBig.data: 0xc5fab4, 63 bytes and 0 words = ELF
@@ -551,6 +552,7 @@ data sha256 295f0faf20d82102c3b37add857c5727ee9f24e5fe474fcafb8f4313e712258f for
 data sha256 73c349acdfdabdd418a8536e5c631e3e4a4908c258343069dbea77f6019d81a9 formatAttestingIndicesTooBig.data
 data sha256 57d1022febdb1085866540962f888985ee40474fb9ae186b5885492cf78e31f6 formatBalance.data
 data sha256 e60b3698d5d0e45c7f9edd3d92a7fe0826f1c3ce4d55b618bce0128ffbaf0ac5 formatBufferLength.data
+data sha256 beadaf3b14fe0e6ae08d17378b89ad7c3ca195ae32186221150f99f11c17c507 formatBufferLengthReceiced.data
 data sha256 980979082d6e58ca03fa34872a9e8791a0b8e506b687ceeb91f93d30b114a829 formatBuilderIndex.data
 data sha256 c2d2ec0db7df49d95fff674a1ae502c3cc095c43409ac24b8ac167c1c5c41303 formatColumnsMisaligned.data
 data sha256 e428151422e4bf084689d23d47525ab875226255ca358ff0b4d83695218488de formatColumnsTooBig.data
@@ -592,4 +594,4 @@ data sha256 938284140e67d2a812e697963a613cede49c0cae09945e7978b8877e6cf63415 typ
 data sha256 c0251f20e4a7bbdb63136bd8b4c3f300857549e84c2b2dbddba4f13211b649d7 typeUint8.data
 data sha256 860c981343b5207afbca906047a0773e2a621f2475e7deaaa0faba968953053d typeUint8Slice.data
 PASS all
-BUNDLE sha256 02b0c3f4697d92cf7fc49598b83cac93833d66263801257f98ac8aee5bd04649
+BUNDLE sha256 1d7e4563d81595e23a78532b321c824db95ad070ee25b346129e04bac287f531

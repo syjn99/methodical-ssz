@@ -246,14 +246,6 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   The link check covers their `.S` files.
 - Where: `lean/Prysm/AttestationData/Code.lean`, `lean/Prysm/<GoTypeName>/Code.lean` of the types with only that module, `prysm/go1.26.10/link-set/norm/`.
 
-### Slot and CommitteeIndex have no size-reject theorem
-
-- What does not hold: `Prysm.Slot.Decode.reject_size` and `Prysm.CommitteeIndex.Decode.reject_size` do not exist.
-  The two decoders have no `DecodeRejectSize.lean` and no witness of the reject path.
-  ValidatorIndex and Epoch have these modules.
-- Effect: the reject path `len(buf) ≠ 8` of the two decoders is not proved.
-- Where: `lean/Prysm/Slot/`, `lean/Prysm/CommitteeIndex/`.
-
 ### Some lemmas and tactics exist two times
 
 - What does not hold: the tree does not have one copy of each of these items.
