@@ -23,8 +23,8 @@ WHOLE_ACCEPT_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('Prysm.Slot.Code.unmarshalS
               PRIM + 'Epoch.UnmarshalSSZ': ('Prysm.Epoch.Code.unmarshalSSZ', 'E', 'Prysm.Epoch.Decode.accept_function_spec_holds')}
 # callee symbol -> the module that proves its spec theorem; the generated file imports it only when the code calls the callee
 WHOLE_ACCEPT_CALLEE_SPEC_MODULES = {PRIM + 'ValidatorIndex.UnmarshalSSZ': 'Prysm.ValidatorIndex.DecodeAcceptFunctionSpec',
-              PRIM + 'Epoch.UnmarshalSSZ': 'Prysm.Epoch.DecodeAccept', PRIM + 'Slot.UnmarshalSSZ': 'Prysm.Slot.DecodeAccept',
-              PRIM + 'CommitteeIndex.UnmarshalSSZ': 'Prysm.CommitteeIndex.DecodeAccept'}
+              PRIM + 'Epoch.UnmarshalSSZ': 'Prysm.Epoch.DecodeAcceptFunctionSpec', PRIM + 'Slot.UnmarshalSSZ': 'Prysm.Slot.DecodeAcceptFunctionSpec',
+              PRIM + 'CommitteeIndex.UnmarshalSSZ': 'Prysm.CommitteeIndex.DecodeAcceptFunctionSpec'}
 # the imports of every generated file; the spec modules of the called callees go after the first two
 WHOLE_ACCEPT_IMPORTS = ['Codec.Kind.DecodeAcceptAnyFrame', 'Codec.FieldFrame', 'Codec.DecoderHeadEpilogue', 'Codec.DecodeRejectSizeAnyFrame']
 WHOLE_ACCEPT_OPENS = 'Codec'

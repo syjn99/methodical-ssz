@@ -4,7 +4,7 @@ import Prysm.Epoch.Code
 import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.FieldFrame
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec
-import Prysm.Epoch.DecodeAccept
+import Prysm.Epoch.DecodeAcceptFunctionSpec
 import Codec.DecoderHeadEpilogue
 import Codec.DecodeRejectSizeAnyFrame
 import Codec.Kind.FieldPatterns

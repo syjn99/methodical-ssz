@@ -1,52 +1,48 @@
 [
  {
-  "id": "committee-index-decode-accept-control",
+  "id": "committee-index-decode-generated-accept-control",
   "kind": "control",
-  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
-  "theorem": "Prysm.CommitteeIndex.Decode.accept",
-  "code_definition": "Code.unmarshalSSZ",
-  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
-  "code_namespace": "Prysm.CommitteeIndex"
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
  },
  {
-  "id": "committee-index-decode-accept-code-cmp-0x8-to-0x9",
+  "id": "committee-index-decode-generated-accept-code-cmp-0x8-to-0x9",
   "kind": "code",
-  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
-  "theorem": "Prysm.CommitteeIndex.Decode.accept",
-  "code_definition": "Code.unmarshalSSZ",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
+  "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
   "old": "  cmp $0x8,%rcx",
-  "new": "  cmp $0x9,%rcx",
-  "code_namespace": "Prysm.CommitteeIndex"
+  "new": "  cmp $0x9,%rcx"
  },
  {
-  "id": "committee-index-decode-accept-code-mov-rbx-to-0x8-rbx",
+  "id": "committee-index-decode-generated-accept-code-mov-rbx-to-0x8-rbx",
   "kind": "code",
-  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
-  "theorem": "Prysm.CommitteeIndex.Decode.accept",
-  "code_definition": "Code.unmarshalSSZ",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
+  "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
   "old": "  mov (%rbx),%rcx",
-  "new": "  mov 0x8(%rbx),%rcx",
-  "code_namespace": "Prysm.CommitteeIndex"
+  "new": "  mov 0x8(%rbx),%rcx"
  },
  {
-  "id": "committee-index-decode-accept-code-mov-rax-to-0x8-rax",
+  "id": "committee-index-decode-generated-accept-code-mov-rax-to-0x8-rax",
   "kind": "code",
-  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
-  "theorem": "Prysm.CommitteeIndex.Decode.accept",
-  "code_definition": "Code.unmarshalSSZ",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
+  "code_definition": "unmarshalSSZ",
   "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
   "line": 47,
   "old": "  mov %rcx,(%rax)",
-  "new": "  mov %rcx,0x8(%rax)",
-  "code_namespace": "Prysm.CommitteeIndex"
+  "new": "  mov %rcx,0x8(%rax)"
  },
  {
-  "id": "committee-index-decode-accept-statement-rax-0-to-1",
+  "id": "committee-index-decode-generated-accept-statement-rax-0-to-1",
   "kind": "statement",
-  "module": "Prysm/CommitteeIndex/DecodeAccept.lean",
-  "theorem": "Prysm.CommitteeIndex.Decode.accept",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
   "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
   "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
  }

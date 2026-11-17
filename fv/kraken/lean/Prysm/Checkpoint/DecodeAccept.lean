@@ -1,7 +1,7 @@
 import Codec.SegmentAddress
 import Runtime.Contracts
 import Machine.Frame
-import Prysm.Epoch.DecodeAccept
+import Prysm.Epoch.DecodeAcceptFunctionSpec
 import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.Code
 import Prysm.Epoch.Code

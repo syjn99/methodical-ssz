@@ -1,6 +1,6 @@
 import Runtime.Contracts
 import Machine.Frame
-import Prysm.Epoch.DecodeAccept
+import Prysm.Epoch.DecodeAcceptFunctionSpec
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec
 import Prysm.PendingPartialWithdrawal.Statements
 import Codec.CalleeDecode

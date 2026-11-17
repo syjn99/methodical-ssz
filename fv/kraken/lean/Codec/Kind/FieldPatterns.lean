@@ -15,8 +15,6 @@ The kinds are hand text and do not depend on a hand theorem of the instance type
 body is kernel-checked against the lemma conclusion. The kinds are `abbrev`s: `with_reducible rfl` unfolds
 them, but not `Int.toBytes` or other semireducible definitions. A wrong literal fails fast and does not run
 into a long unfolding.
-The anchors in `Prysm/Slot/Uint64DecoderKindSameAsHand.lean` show that the uint64 decoder kind is the statement of the reviewed hand
-theorems `Prysm.Slot.Decode.accept` and `Prysm.CommitteeIndex.Decode.accept`.
 -/
 
 open Machine Runtime
@@ -27,8 +25,7 @@ variable [Host]
 
 set_option linter.unusedVariables false in
 /-- Statement kind of the uint64 decoder pattern: the accept path of a uint64 primitive `UnmarshalSSZ` whose code constant is `C`.
-The text is the statement of `Prysm.Slot.Decode.accept` with `Prysm.Slot.Code.unmarshalSSZ` replaced by `C` and
-every binder after the colon. -/
+It holds every binder of the accept theorem after the colon, because `type_of%` includes the binders before the colon. -/
 abbrev uint64DecodeAcceptKind (C : Program) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)
     (e8 : List UInt8) (he8 : e8.length = 8)

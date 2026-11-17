@@ -2,8 +2,8 @@ import Codec.SegmentTemplate
 import Runtime.Contracts
 import Codec.SegmentAddress
 import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec
-import Prysm.Epoch.DecodeAccept
-import Prysm.Slot.DecodeAccept
+import Prysm.Epoch.DecodeAcceptFunctionSpec
+import Prysm.Slot.DecodeAcceptFunctionSpec
 
 /-!
 # A field decoded by a call to another type's `UnmarshalSSZ` (uint64 overlay callee)

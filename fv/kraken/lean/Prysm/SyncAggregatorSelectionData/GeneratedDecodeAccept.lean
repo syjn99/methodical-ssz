@@ -2,7 +2,7 @@ import Prysm.SyncAggregatorSelectionData.Code
 import Prysm.Slot.Code
 import Codec.Kind.DecodeAcceptAnyFrame
 import Codec.FieldFrame
-import Prysm.Slot.DecodeAccept
+import Prysm.Slot.DecodeAcceptFunctionSpec
 import Codec.DecoderHeadEpilogue
 import Codec.DecodeRejectSizeAnyFrame
 import Codec.Kind.FieldPatterns

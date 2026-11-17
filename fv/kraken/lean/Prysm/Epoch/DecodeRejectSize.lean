@@ -2,7 +2,7 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.StoreLemmas
 import Runtime.StaticBoxLemmas
-import Prysm.Epoch.DecodeAccept
+import Machine.Labels
 import Codec.SegmentAddress
 import Codec.Uint64RejectSize
 import Prysm.ElfData.PrysmTarget

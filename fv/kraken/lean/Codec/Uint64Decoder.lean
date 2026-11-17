@@ -4,7 +4,7 @@ import Codec.SegmentTemplate
 # uint64 decoder pattern: the uint64 primitive decoder body, accept path (parameterized)
 
 The Go 1.26.10 code of a hand-written Prysm `uint64` primitive `UnmarshalSSZ`
-(`primitives.Epoch`, `Slot`, `CommitteeIndex`: `if len(buf) != 8 { return fmt.Errorf(...) };
+(`primitives.Epoch`, `Slot`, `CommitteeIndex`, `ValidatorIndex`: `if len(buf) != 8 { return fmt.Errorf(...) };
 *e = Epoch(binary.LittleEndian.Uint64(buf)); return nil`) has, on the accept path, two code
 blocks:
 
@@ -19,10 +19,8 @@ type and is not read on this path. Parameters: the four labels, the frame size `
 spill displacement `dsp` (`dsp = fs + 24`: the caller's rbx slot at entry rsp + 16), the
 place `j` of the head block, the place `jb` of the tail block and the address of `lbb`.
 
-`uint64_decode_accept` is proved once from these templates. Its statement is the statement of
-`Prysm.Epoch.Decode.accept` / `Prysm.Slot.Decode.accept` /
-`Prysm.CommitteeIndex.Decode.accept` with the code hypotheses replaced by the template
-hypotheses.
+`uint64_decode_accept` is proved once from these templates.
+`gen/generator/generator.py uint64` writes `Decode.generated_accept` of each uint64 primitive decoder from it.
 -/
 
 open Machine

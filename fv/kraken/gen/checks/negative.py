@@ -3,7 +3,7 @@
 
 Usage (one heavy job at a time, Lean in the environment, cwd anywhere):
   negative.py <cases.json> <work-dir> <result.json> [<case-id>...]
-cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoch/DecodeAccept.lean"), "theorem",
+cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoch/DecodeRejectSize.lean"), "theorem",
   "kind": "code" | "statement" | "control",
   code:  "code_definition" (Lean name of the included program, e.g. "Prysm.Epoch.Code.unmarshalSSZ"), "assembly" (file under
          prysm/go1.26.10/link-set/norm), "old", "new" (one exact instruction line, unique in the file,

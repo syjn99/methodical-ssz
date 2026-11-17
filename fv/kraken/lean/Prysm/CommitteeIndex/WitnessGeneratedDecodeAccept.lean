@@ -1,10 +1,10 @@
-import Prysm.CommitteeIndex.DecodeAccept
+import Prysm.CommitteeIndex.DecodeAcceptFunctionSpec
 import Machine.WitnessHost
 import Runtime.CopyModel
 import Prysm.CommitteeIndex.Code
 
 /-!
-# Witness of `Decode.accept` and `Decode.accept_function_spec_holds`
+# Witness of `Decode.generated_accept` and `Decode.accept_function_spec_holds`
 
 Host: the Go 1.26.10 `(*primitives.CommitteeIndex).UnmarshalSSZ` alone, at index 0
 (directive `i` at `0x10000 + i`). Memory: one 56-byte block at `0x10000`:
@@ -15,11 +15,12 @@ return slot (rsp = 0x10020, return address 0), the unused spill slot rsp + 8
 8-byte input this state meets every premise (`witness_mem`), and the function
 returns nil with the receiver = the input (`runs`); three values
 below (0, a representative value, 2^64 − 1).
+Hand-written (not generator output). The machine theorem used is the generated `Decode.generated_accept`.
 -/
 
 open Machine Runtime Machine.Witness
 
-namespace Prysm.CommitteeIndex.Witness.DecodeAccept
+namespace Prysm.CommitteeIndex.Witness.GeneratedDecodeAccept
 
 set_option maxRecDepth 100000
 
@@ -64,7 +65,7 @@ theorem witness_mem (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.leng
   simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
   exact H
 
-/-- **Non-vacuity of `Decode.accept`**: on the concrete host and
+/-- **Non-vacuity of `Decode.generated_accept`**: on the concrete host and
 state, for every 8-byte input, the CommitteeIndex decoder returns nil and the receiver
 holds the input bytes. -/
 theorem runs (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.length = 8)
@@ -73,7 +74,7 @@ theorem runs (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.length = 8)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ (Eq (e8.At (0x10010 : BitVec 64)) ⋆ fun _ => True) st.data.dmem)
       ⟨initial_state e8 old zmms flags, Host.addrOf 0⟩ :=
-  eventually_mono (Decode.accept 0 placed_at_0 labels_fresh_at_0 e8 he8 (initial_state e8 old zmms flags) 0 0 (zeros 8) (zeros 8) old
+  eventually_mono (Decode.generated_accept 0 placed_at_0 labels_fresh_at_0 e8 he8 (initial_state e8 old zmms flags) 0 0 (zeros 8) (zeros 8) old
     rfl rfl hold frame_rest (witness_mem e8 old he8 hold zmms flags) (by simp [initial_state]) rfl)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1, by
       have hm := h.2.2.2.2.2.2
@@ -89,4 +90,4 @@ example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 0) (zeros 8) (by
 example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 0x0123456789abcdef) (zeros 8) (by decide) rfl z' f
 example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 (2 ^ 64 - 1)) (zeros 8) (by decide) rfl z' f
 
-end Prysm.CommitteeIndex.Witness.DecodeAccept
+end Prysm.CommitteeIndex.Witness.GeneratedDecodeAccept
