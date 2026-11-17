@@ -29,7 +29,8 @@ fi >&2
 lean=$(cd "$DIR" && lean --print-prefix)
 strip=-Wl,--gc-sections
 [[ $(uname) == Darwin ]] && strip=-Wl,-dead_strip
-echo "export CGO_CFLAGS='-I$lean/include'"
+# Go does not hash C libraries. The define puts the commit in its cache key.
+echo "export CGO_CFLAGS='-I$lean/include -DETHLIB_COMMIT=$COMMIT'"
 # Stripping drops the compile-time initializers, which refer to proof modules
 # that are not linked.
 echo "export CGO_LDFLAGS='$DIR/libethlib.a -L$lean/lib/lean -lleanshared -Wl,-rpath,$lean/lib/lean $strip'"
