@@ -3987,6 +3987,188 @@ TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingPartialWithd
   electra.ssz.go:4272	0x9ac1fb		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi								
   electra.ssz.go:4272	0x9ac200		e95bfeffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingPartialWithdrawal).UnmarshalSSZ(SB) // jmpq 0x9ac060	
 
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SingleAttestation).UnmarshalSSZ(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/electra.ssz.go
+  electra.ssz.go:4914	0x9b0080		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp								
+  electra.ssz.go:4914	0x9b0084		0f8600030000		JBE 0x9b038a                         // jbe 0x9b038a									
+  electra.ssz.go:4914	0x9b008a		55			PUSHQ BP                             // push %rbp									
+  electra.ssz.go:4914	0x9b008b		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp									
+  electra.ssz.go:4914	0x9b008e		4883ec70		SUBQ $0x70, SP                       // sub $0x70,%rsp									
+  electra.ssz.go:4914	0x9b0092		48899c2488000000	MOVQ BX, 0x88(SP)                    // mov %rbx,0x88(%rsp)								
+  electra.ssz.go:4914	0x9b009a		660f1f440000		NOPW 0(AX)(AX*1)                     // nopw (%rax,%rax,1)								
+  electra.ssz.go:4917	0x9b00a0		4881f9f0000000		CMPQ CX, $0xf0                       // cmp $0xf0,%rcx									
+  electra.ssz.go:4917	0x9b00a7		0f85c9020000		JNE 0x9b0376                         // jne 0x9b0376									
+  electra.ssz.go:4917	0x9b00ad		4889842480000000	MOVQ AX, 0x80(SP)                    // mov %rax,0x80(%rsp)								
+  electra.ssz.go:4917	0x9b00b5		4889bc2498000000	MOVQ DI, 0x98(SP)                    // mov %rdi,0x98(%rsp)								
+  electra.ssz.go:4917	0x9b00bd		48899c2488000000	MOVQ BX, 0x88(SP)                    // mov %rbx,0x88(%rsp)								
+  electra.ssz.go:4927	0x9b00c5		8400			TESTB AL, 0(AX)                      // test %al,(%rax)									
+  electra.ssz.go:4927	0x9b00c7		4883c008		ADDQ $0x8, AX                        // add $0x8,%rax									
+  electra.ssz.go:4927	0x9b00cb		b908000000		MOVL $0x8, CX                        // mov $0x8,%ecx									
+  electra.ssz.go:4927	0x9b00d0		e80be2ceff		CALL github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).UnmarshalSSZ(SB) // callq 0x69e2e0	
+  electra.ssz.go:4927	0x9b00d5		4885c0			TESTQ AX, AX                         // test %rax,%rax									
+  electra.ssz.go:4927	0x9b00d8		746d			JE 0x9b0147                          // je 0x9b0147									
+  electra.ssz.go:4928	0x9b00da		440f117c2460		MOVUPS X15, 0x60(SP)                 // movups %xmm15,0x60(%rsp)							
+  electra.ssz.go:4928	0x9b00e0		7404			JE 0x9b00e6                          // je 0x9b00e6									
+  electra.ssz.go:4928	0x9b00e2		488b4008		MOVQ 0x8(AX), AX                     // mov 0x8(%rax),%rax								
+  electra.ssz.go:4928	0x9b00e6		4889442460		MOVQ AX, 0x60(SP)                    // mov %rax,0x60(%rsp)								
+  electra.ssz.go:4928	0x9b00eb		48895c2468		MOVQ BX, 0x68(SP)                    // mov %rbx,0x68(%rsp)								
+  errors.go:26		0x9b00f0		488d057a2d2900		LEAQ 0x292d7a(IP), AX                // lea 0x292d7a(%rip),%rax								
+  errors.go:26		0x9b00f7		bb0f000000		MOVL $0xf, BX                        // mov $0xf,%ebx									
+  errors.go:26		0x9b00fc		488d4c2460		LEAQ 0x60(SP), CX                    // lea 0x60(%rsp),%rcx								
+  errors.go:26		0x9b0101		bf01000000		MOVL $0x1, DI                        // mov $0x1,%edi									
+  errors.go:26		0x9b0106		4889fe			MOVQ DI, SI                          // mov %rdi,%rsi									
+  errors.go:26		0x9b0109		e832a7b5ff		CALL fmt.errorf(SB)                  // callq 0x50a840									
+  errors.go:26		0x9b010e		4885c0			TESTQ AX, AX                         // test %rax,%rax									
+  errors.go:26		0x9b0111		752e			JNE 0x9b0141                         // jne 0x9b0141									
+  errors.go:31		0x9b0113		90			NOPL                                 // nop										
+  errors.go:65		0x9b0114		488d05e5631a00		LEAQ 0x1a63e5(IP), AX                // lea 0x1a63e5(%rip),%rax								
+  errors.go:65		0x9b011b		0f1f440000		NOPL 0(AX)(AX*1)                     // nopl (%rax,%rax,1)								
+  errors.go:65		0x9b0120		e8bb53a7ff		CALL runtime.newobject(SB)           // callq 0x4254e0									
+  errors.go:65		0x9b0125		48c740080f000000	MOVQ $0xf, 0x8(AX)                   // movq $0xf,0x8(%rax)								
+  errors.go:65		0x9b012d		488d0d3d2d2900		LEAQ 0x292d3d(IP), CX                // lea 0x292d3d(%rip),%rcx								
+  errors.go:65		0x9b0134		488908			MOVQ CX, 0(AX)                       // mov %rcx,(%rax)									
+  electra.ssz.go:4928	0x9b0137		4889c3			MOVQ AX, BX                          // mov %rax,%rbx									
+  electra.ssz.go:4928	0x9b013a		488d053f953700		LEAQ go:itab.*errors.errorString,error(SB), AX // lea 0x37953f(%rip),%rax						
+  electra.ssz.go:4928	0x9b0141		4883c470		ADDQ $0x70, SP                       // add $0x70,%rsp									
+  electra.ssz.go:4928	0x9b0145		5d			POPQ BP                              // pop %rbp									
+  electra.ssz.go:4928	0x9b0146		c3			RET                                  // retq										
+  electra.ssz.go:4922	0x9b0147		488b9c2488000000	MOVQ 0x88(SP), BX                    // mov 0x88(%rsp),%rbx								
+  electra.ssz.go:4922	0x9b014f		4883c308		ADDQ $0x8, BX                        // add $0x8,%rbx									
+  electra.ssz.go:4922	0x9b0153		488bbc2498000000	MOVQ 0x98(SP), DI                    // mov 0x98(%rsp),%rdi								
+  electra.ssz.go:4922	0x9b015b		4883c7f8		ADDQ $-0x8, DI                       // add $-0x8,%rdi									
+  electra.ssz.go:4932	0x9b015f		488b842480000000	MOVQ 0x80(SP), AX                    // mov 0x80(%rsp),%rax								
+  electra.ssz.go:4932	0x9b0167		4883c010		ADDQ $0x10, AX                       // add $0x10,%rax									
+  electra.ssz.go:4932	0x9b016b		b908000000		MOVL $0x8, CX                        // mov $0x8,%ecx									
+  electra.ssz.go:4932	0x9b0170		e80bfeceff		CALL github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ(SB) // callq 0x69ff80	
+  electra.ssz.go:4932	0x9b0175		4885c0			TESTQ AX, AX                         // test %rax,%rax									
+  electra.ssz.go:4932	0x9b0178		746d			JE 0x9b01e7                          // je 0x9b01e7									
+  electra.ssz.go:4933	0x9b017a		440f117c2450		MOVUPS X15, 0x50(SP)                 // movups %xmm15,0x50(%rsp)							
+  electra.ssz.go:4933	0x9b0180		7404			JE 0x9b0186                          // je 0x9b0186									
+  electra.ssz.go:4933	0x9b0182		488b4008		MOVQ 0x8(AX), AX                     // mov 0x8(%rax),%rax								
+  electra.ssz.go:4933	0x9b0186		4889442450		MOVQ AX, 0x50(SP)                    // mov %rax,0x50(%rsp)								
+  electra.ssz.go:4933	0x9b018b		48895c2458		MOVQ BX, 0x58(SP)                    // mov %rbx,0x58(%rsp)								
+  errors.go:26		0x9b0190		488d05b1442900		LEAQ 0x2944b1(IP), AX                // lea 0x2944b1(%rip),%rax								
+  errors.go:26		0x9b0197		bb11000000		MOVL $0x11, BX                       // mov $0x11,%ebx									
+  errors.go:26		0x9b019c		488d4c2450		LEAQ 0x50(SP), CX                    // lea 0x50(%rsp),%rcx								
+  errors.go:26		0x9b01a1		bf01000000		MOVL $0x1, DI                        // mov $0x1,%edi									
+  errors.go:26		0x9b01a6		4889fe			MOVQ DI, SI                          // mov %rdi,%rsi									
+  errors.go:26		0x9b01a9		e892a6b5ff		CALL fmt.errorf(SB)                  // callq 0x50a840									
+  errors.go:26		0x9b01ae		4885c0			TESTQ AX, AX                         // test %rax,%rax									
+  errors.go:26		0x9b01b1		752e			JNE 0x9b01e1                         // jne 0x9b01e1									
+  errors.go:31		0x9b01b3		90			NOPL                                 // nop										
+  errors.go:65		0x9b01b4		488d0545631a00		LEAQ 0x1a6345(IP), AX                // lea 0x1a6345(%rip),%rax								
+  errors.go:65		0x9b01bb		0f1f440000		NOPL 0(AX)(AX*1)                     // nopl (%rax,%rax,1)								
+  errors.go:65		0x9b01c0		e81b53a7ff		CALL runtime.newobject(SB)           // callq 0x4254e0									
+  errors.go:65		0x9b01c5		48c7400811000000	MOVQ $0x11, 0x8(AX)                  // movq $0x11,0x8(%rax)								
+  errors.go:65		0x9b01cd		488d0d74442900		LEAQ 0x294474(IP), CX                // lea 0x294474(%rip),%rcx								
+  errors.go:65		0x9b01d4		488908			MOVQ CX, 0(AX)                       // mov %rcx,(%rax)									
+  electra.ssz.go:4933	0x9b01d7		4889c3			MOVQ AX, BX                          // mov %rax,%rbx									
+  electra.ssz.go:4933	0x9b01da		488d059f943700		LEAQ go:itab.*errors.errorString,error(SB), AX // lea 0x37949f(%rip),%rax						
+  electra.ssz.go:4933	0x9b01e1		4883c470		ADDQ $0x70, SP                       // add $0x70,%rsp									
+  electra.ssz.go:4933	0x9b01e5		5d			POPQ BP                              // pop %rbp									
+  electra.ssz.go:4933	0x9b01e6		c3			RET                                  // retq										
+  electra.ssz.go:4937	0x9b01e7		488d05d2162400		LEAQ 0x2416d2(IP), AX                // lea 0x2416d2(%rip),%rax								
+  electra.ssz.go:4937	0x9b01ee		e8ed52a7ff		CALL runtime.newobject(SB)           // callq 0x4254e0									
+  electra.ssz.go:4937	0x9b01f3		833d467ca10000		CMPL runtime.writeBarrier(SB), $0x0  // cmpl $0x0,0xa17c46(%rip)							
+  electra.ssz.go:4937	0x9b01fa		750a			JNE 0x9b0206                         // jne 0x9b0206									
+  electra.ssz.go:4937	0x9b01fc		488b942480000000	MOVQ 0x80(SP), DX                    // mov 0x80(%rsp),%rdx								
+  electra.ssz.go:4937	0x9b0204		eb18			JMP 0x9b021e                         // jmp 0x9b021e									
+  electra.ssz.go:4937	0x9b0206		488b942480000000	MOVQ 0x80(SP), DX                    // mov 0x80(%rsp),%rdx								
+  electra.ssz.go:4937	0x9b020e		488b7218		MOVQ 0x18(DX), SI                    // mov 0x18(%rdx),%rsi								
+  electra.ssz.go:4937	0x9b0212		e829fcadff		CALL runtime.gcWriteBarrier2(SB)     // callq 0x48fe40									
+  electra.ssz.go:4937	0x9b0217		498903			MOVQ AX, 0(R11)                      // mov %rax,(%r11)									
+  electra.ssz.go:4937	0x9b021a		49897308		MOVQ SI, 0x8(R11)                    // mov %rsi,0x8(%r11)								
+  electra.ssz.go:4937	0x9b021e		48894218		MOVQ AX, 0x18(DX)                    // mov %rax,0x18(%rdx)								
+  electra.ssz.go:4923	0x9b0222		488b9c2488000000	MOVQ 0x88(SP), BX                    // mov 0x88(%rsp),%rbx								
+  electra.ssz.go:4923	0x9b022a		4883c310		ADDQ $0x10, BX                       // add $0x10,%rbx									
+  electra.ssz.go:4923	0x9b022e		488bbc2498000000	MOVQ 0x98(SP), DI                    // mov 0x98(%rsp),%rdi								
+  electra.ssz.go:4923	0x9b0236		4883c7f0		ADDQ $-0x10, DI                      // add $-0x10,%rdi									
+  electra.ssz.go:4938	0x9b023a		b980000000		MOVL $0x80, CX                       // mov $0x80,%ecx									
+  electra.ssz.go:4938	0x9b023f		90			NOPL                                 // nop										
+  electra.ssz.go:4938	0x9b0240		e85b1f0600		CALL github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationData).UnmarshalSSZ(SB) // callq 0xa121a0	
+  electra.ssz.go:4938	0x9b0245		4885c0			TESTQ AX, AX                         // test %rax,%rax									
+  electra.ssz.go:4938	0x9b0248		746a			JE 0x9b02b4                          // je 0x9b02b4									
+  electra.ssz.go:4939	0x9b024a		440f117c2440		MOVUPS X15, 0x40(SP)                 // movups %xmm15,0x40(%rsp)							
+  electra.ssz.go:4939	0x9b0250		7404			JE 0x9b0256                          // je 0x9b0256									
+  electra.ssz.go:4939	0x9b0252		488b4008		MOVQ 0x8(AX), AX                     // mov 0x8(%rax),%rax								
+  electra.ssz.go:4939	0x9b0256		4889442440		MOVQ AX, 0x40(SP)                    // mov %rax,0x40(%rsp)								
+  electra.ssz.go:4939	0x9b025b		48895c2448		MOVQ BX, 0x48(SP)                    // mov %rbx,0x48(%rsp)								
+  errors.go:26		0x9b0260		488d051de12800		LEAQ 0x28e11d(IP), AX                // lea 0x28e11d(%rip),%rax								
+  errors.go:26		0x9b0267		bb08000000		MOVL $0x8, BX                        // mov $0x8,%ebx									
+  errors.go:26		0x9b026c		488d4c2440		LEAQ 0x40(SP), CX                    // lea 0x40(%rsp),%rcx								
+  errors.go:26		0x9b0271		bf01000000		MOVL $0x1, DI                        // mov $0x1,%edi									
+  errors.go:26		0x9b0276		4889fe			MOVQ DI, SI                          // mov %rdi,%rsi									
+  errors.go:26		0x9b0279		e8c2a5b5ff		CALL fmt.errorf(SB)                  // callq 0x50a840									
+  errors.go:26		0x9b027e		6690			NOPW                                 // data16 nop									
+  errors.go:26		0x9b0280		4885c0			TESTQ AX, AX                         // test %rax,%rax									
+  errors.go:26		0x9b0283		7529			JNE 0x9b02ae                         // jne 0x9b02ae									
+  errors.go:31		0x9b0285		90			NOPL                                 // nop										
+  errors.go:65		0x9b0286		488d0573621a00		LEAQ 0x1a6273(IP), AX                // lea 0x1a6273(%rip),%rax								
+  errors.go:65		0x9b028d		e84e52a7ff		CALL runtime.newobject(SB)           // callq 0x4254e0									
+  errors.go:65		0x9b0292		48c7400808000000	MOVQ $0x8, 0x8(AX)                   // movq $0x8,0x8(%rax)								
+  errors.go:65		0x9b029a		488d0de3e02800		LEAQ 0x28e0e3(IP), CX                // lea 0x28e0e3(%rip),%rcx								
+  errors.go:65		0x9b02a1		488908			MOVQ CX, 0(AX)                       // mov %rcx,(%rax)									
+  electra.ssz.go:4939	0x9b02a4		4889c3			MOVQ AX, BX                          // mov %rax,%rbx									
+  electra.ssz.go:4939	0x9b02a7		488d05d2933700		LEAQ go:itab.*errors.errorString,error(SB), AX // lea 0x3793d2(%rip),%rax						
+  electra.ssz.go:4939	0x9b02ae		4883c470		ADDQ $0x70, SP                       // add $0x70,%rsp									
+  electra.ssz.go:4939	0x9b02b2		5d			POPQ BP                              // pop %rbp									
+  electra.ssz.go:4939	0x9b02b3		c3			RET                                  // retq										
+  electra.ssz.go:4938	0x9b02b4		4889442428		MOVQ AX, 0x28(SP)                    // mov %rax,0x28(%rsp)								
+  electra.ssz.go:4938	0x9b02b9		48895c2430		MOVQ BX, 0x30(SP)                    // mov %rbx,0x30(%rsp)								
+  electra.ssz.go:4943	0x9b02be		488d053ba51300		LEAQ 0x13a53b(IP), AX                // lea 0x13a53b(%rip),%rax								
+  electra.ssz.go:4943	0x9b02c5		31db			XORL BX, BX                          // xor %ebx,%ebx									
+  electra.ssz.go:4943	0x9b02c7		b960000000		MOVL $0x60, CX                       // mov $0x60,%ecx									
+  electra.ssz.go:4943	0x9b02cc		e80facadff		CALL runtime.makeslice(SB)           // callq 0x48aee0									
+  electra.ssz.go:4943	0x9b02d1		488b942480000000	MOVQ 0x80(SP), DX                    // mov 0x80(%rsp),%rdx								
+  electra.ssz.go:4943	0x9b02d9		48c7422800000000	MOVQ $0x0, 0x28(DX)                  // movq $0x0,0x28(%rdx)								
+  electra.ssz.go:4943	0x9b02e1		48c7423060000000	MOVQ $0x60, 0x30(DX)                 // movq $0x60,0x30(%rdx)								
+  electra.ssz.go:4943	0x9b02e9		833d507ba10000		CMPL runtime.writeBarrier(SB), $0x0  // cmpl $0x0,0xa17b50(%rip)							
+  electra.ssz.go:4943	0x9b02f0		7410			JE 0x9b0302                          // je 0x9b0302									
+  electra.ssz.go:4943	0x9b02f2		488b7220		MOVQ 0x20(DX), SI                    // mov 0x20(%rdx),%rsi								
+  electra.ssz.go:4943	0x9b02f6		e845fbadff		CALL runtime.gcWriteBarrier2(SB)     // callq 0x48fe40									
+  electra.ssz.go:4943	0x9b02fb		498903			MOVQ AX, 0(R11)                      // mov %rax,(%r11)									
+  electra.ssz.go:4943	0x9b02fe		49897308		MOVQ SI, 0x8(R11)                    // mov %rsi,0x8(%r11)								
+  electra.ssz.go:4943	0x9b0302		4889442438		MOVQ AX, 0x38(SP)                    // mov %rax,0x38(%rsp)								
+  electra.ssz.go:4943	0x9b0307		48894220		MOVQ AX, 0x20(DX)                    // mov %rax,0x20(%rdx)								
+  electra.ssz.go:4924	0x9b030b		488b9c2488000000	MOVQ 0x88(SP), BX                    // mov 0x88(%rsp),%rbx								
+  electra.ssz.go:4924	0x9b0313		4881c390000000		ADDQ $0x90, BX                       // add $0x90,%rbx									
+  electra.ssz.go:4944	0x9b031a		b960000000		MOVL $0x60, CX                       // mov $0x60,%ecx									
+  electra.ssz.go:4944	0x9b031f		90			NOPL                                 // nop										
+  electra.ssz.go:4944	0x9b0320		e85b02aeff		CALL runtime.memmove(SB)             // callq 0x490580									
+  electra.ssz.go:4944	0x9b0325		488b942480000000	MOVQ 0x80(SP), DX                    // mov 0x80(%rsp),%rdx								
+  electra.ssz.go:4944	0x9b032d		48c7422860000000	MOVQ $0x60, 0x28(DX)                 // movq $0x60,0x28(%rdx)								
+  electra.ssz.go:4944	0x9b0335		48c7423060000000	MOVQ $0x60, 0x30(DX)                 // movq $0x60,0x30(%rdx)								
+  electra.ssz.go:4944	0x9b033d		833dfc7aa10000		CMPL runtime.writeBarrier(SB), $0x0  // cmpl $0x0,0xa17afc(%rip)							
+  electra.ssz.go:4944	0x9b0344		7507			JNE 0x9b034d                         // jne 0x9b034d									
+  electra.ssz.go:4944	0x9b0346		488b742438		MOVQ 0x38(SP), SI                    // mov 0x38(%rsp),%rsi								
+  electra.ssz.go:4944	0x9b034b		eb15			JMP 0x9b0362                         // jmp 0x9b0362									
+  electra.ssz.go:4944	0x9b034d		488b4a20		MOVQ 0x20(DX), CX                    // mov 0x20(%rdx),%rcx								
+  electra.ssz.go:4944	0x9b0351		e8eafaadff		CALL runtime.gcWriteBarrier2(SB)     // callq 0x48fe40									
+  electra.ssz.go:4944	0x9b0356		488b742438		MOVQ 0x38(SP), SI                    // mov 0x38(%rsp),%rsi								
+  electra.ssz.go:4944	0x9b035b		498933			MOVQ SI, 0(R11)                      // mov %rsi,(%r11)									
+  electra.ssz.go:4944	0x9b035e		49894b08		MOVQ CX, 0x8(R11)                    // mov %rcx,0x8(%r11)								
+  electra.ssz.go:4944	0x9b0362		48897220		MOVQ SI, 0x20(DX)                    // mov %rsi,0x20(%rdx)								
+  electra.ssz.go:4945	0x9b0366		488b442428		MOVQ 0x28(SP), AX                    // mov 0x28(%rsp),%rax								
+  electra.ssz.go:4945	0x9b036b		488b5c2430		MOVQ 0x30(SP), BX                    // mov 0x30(%rsp),%rbx								
+  electra.ssz.go:4945	0x9b0370		4883c470		ADDQ $0x70, SP                       // add $0x70,%rsp									
+  electra.ssz.go:4945	0x9b0374		5d			POPQ BP                              // pop %rbp									
+  electra.ssz.go:4945	0x9b0375		c3			RET                                  // retq										
+  electra.ssz.go:4918	0x9b0376		488b0543099d00		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrSize(SB), AX // mov 0x9d0943(%rip),%rax				
+  electra.ssz.go:4918	0x9b037d		488b1d44099d00		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrSize+8(SB), BX // mov 0x9d0944(%rip),%rbx				
+  electra.ssz.go:4918	0x9b0384		4883c470		ADDQ $0x70, SP                       // add $0x70,%rsp									
+  electra.ssz.go:4918	0x9b0388		5d			POPQ BP                              // pop %rbp									
+  electra.ssz.go:4918	0x9b0389		c3			RET                                  // retq										
+  electra.ssz.go:4914	0x9b038a		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)								
+  electra.ssz.go:4914	0x9b038f		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)								
+  electra.ssz.go:4914	0x9b0394		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)								
+  electra.ssz.go:4914	0x9b0399		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)								
+  electra.ssz.go:4914	0x9b039e		6690			NOPW                                 // data16 nop									
+  electra.ssz.go:4914	0x9b03a0		e81be1adff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0								
+  electra.ssz.go:4914	0x9b03a5		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax								
+  electra.ssz.go:4914	0x9b03aa		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx								
+  electra.ssz.go:4914	0x9b03af		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx								
+  electra.ssz.go:4914	0x9b03b4		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi								
+  electra.ssz.go:4914	0x9b03b9		e9c2fcffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SingleAttestation).UnmarshalSSZ(SB) // jmpq 0x9b0080	
+
 TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnsByRootIdentifier).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/fulu.ssz.go
   fulu.ssz.go:1757	0x9beb20		4c8d6424f8		LEAQ -0x8(SP), R12                   // lea -0x8(%rsp),%r12									
   fulu.ssz.go:1757	0x9beb25		4d3b6610		CMPQ R12, 0x10(R14)                  // cmp 0x10(%r14),%r12									

@@ -39,8 +39,10 @@ v1alpha1	SyncAggregatorSelectionData	decoder --whole-accept	-	accept	spec,decode
 v1alpha1	ValidatorBalance	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
 v1alpha1	VoluntaryExit	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness
 # AttestationData has nested Checkpoint fields: the nested kinds of lean/Codec/Kind/DecodeAcceptNestedAnyFrame.lean.
+# SingleAttestation has a nested AttestationData field: the generator refuses it.
 v1alpha1	PendingPartialWithdrawal	decoder --whole-accept	-	accept	-
 v1alpha1	AttestationData	decoder --whole-accept	-	accept	-
+v1alpha1	SingleAttestation	decoder --whole-accept	-	refuse	-
 # Flat types with tool-written companions, and flat types that the generator refuses.
 v1	BuilderDepositRequest	decoder --whole-accept	-	accept	spec,decode-spec,reject-witness,accept-witness,negative-cases,hand-list
 v1	BuilderExitRequest	decoder --whole-accept	-	accept	hand-list

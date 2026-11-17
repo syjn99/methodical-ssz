@@ -11,6 +11,10 @@ import Prysm.AttestationData.WitnessBumpAllocator
 import Prysm.AttestationData.WitnessDecodeAccept
 import Prysm.AttestationData.WitnessDecodeRejectSize
 import Prysm.AttestationData.GeneratedDecodeAccept
+import Prysm.AttestationData.Size
+import Prysm.AttestationData.WitnessSize
+import Prysm.AttestationData.EncodeSpec
+import Prysm.AttestationData.WitnessEncodeFastPath
 
 /-! Hand list of the `AttestationData` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -88,3 +92,19 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.AttestationData.Decode.generated_accept_kind
 #print axioms Prysm.AttestationData.Decode.generated_reject
 #print axioms Prysm.AttestationData.Decode.generated_reject_kind
+#print axioms Prysm.AttestationData.Size.result
+#print axioms Prysm.AttestationData.Size.result_spec
+#print axioms Prysm.AttestationData.Witness.Size.runs
+#print axioms Prysm.AttestationData.Encode.head_slot
+#print axioms Prysm.AttestationData.Encode.head_index
+#print axioms Prysm.AttestationData.Encode.head_root
+#print axioms Prysm.AttestationData.Encode.source_call
+#print axioms Prysm.AttestationData.Encode.target_call
+#print axioms Prysm.AttestationData.Encode.head
+#print axioms Prysm.AttestationData.Encode.calls
+#print axioms Prysm.AttestationData.Encode.fast_path
+#print axioms Prysm.AttestationData.Encode.fast_path_spec
+#print axioms Prysm.AttestationData.Witness.EncodeFastPath.mem_premise
+#print axioms Prysm.AttestationData.Witness.EncodeFastPath.runs_empty
+#print axioms Prysm.AttestationData.Witness.EncodeFastPath.Prefix.mem_premise
+#print axioms Prysm.AttestationData.Witness.EncodeFastPath.runs_prefix
