@@ -12,7 +12,8 @@
 # Risk: a wrong limit that equals a listed tag on a listed field name stays
 # hidden, in any container.
 #
-# Each tuple comes from a saved input or a kept log: testdata/fuzz/,
+# The soft limit lines come from Prysm's YAML and the struct tags (see that
+# section). Each other tuple comes from a saved input or a kept log: testdata/fuzz/,
 # ~/.cache/ethlib-fuzz/runs-pr2/ (PR 1 logs: ~/.cache/ethlib-fuzz/runs-2026-11-17/).
 # runs-pr2/lines.py builds this file from them. Remove a line when its fix merges.
 # A value input's message ends with "; changed: " and the fields it changed.
@@ -60,37 +61,49 @@
 ## Bug. No fix proposed yet.
 ^\*eth\.(AggregateAttestationAndProofGloas|AttestationGloas|BeaconBlockBodyGloas|BeaconBlockGloas|SignedAggregateAttestationAndProofGloas|SignedBeaconBlockGloas): HashTreeRoot panics in ssz\.parseBitlistProgressive: runtime error: slice bounds out of range \[:[0-9]+\] with capacity [0-9]+; changed: (.+, )?([^,]*\.)?AggregationBits(, .+)?$
 
-## The decoder rejects a Gloas progressive list above its ssz-max tag. The SSZ type
-## has no limit. Soft limit of the generator, added in PR #22. Each field name is a
-## ProgressiveList in Prysm's YAML wherever it has this limit in a Gloas container,
-## and EthLib gives it no limit from Gloas (ForkList .glamsterdam or ProgressiveList).
+## The decoder rejects a Gloas progressive list or bitlist above its ssz-max tag.
+## The SSZ type has no limit. Soft limit of the generator, added in PR #22.
+## These lines come from the configuration, not from logs: one for every field that
+## Prysm's YAML makes a ProgressiveList or ProgressiveBitlist in the struct closure
+## of a Gloas target and that has an ssz-max tag, with its tag limit for each
+## preset. EthLib gives these fields no limit from Gloas. A line keeps the containers
+## that reach the field when the same field name and limit is an ordinary bounded
+## list, or a fixed bitvector, elsewhere in the Gloas closure.
+^glamsterdam/(AggregateAndProof|Attestation|BeaconBlock|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: too many bits(: list length is higher than max value)?$
+^glamsterdam/(AggregateAndProof|Attestation|BeaconBlock|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+(: list length is higher than max value)?$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?CellsPresentBitmap: too many bits(: list length is higher than max value)?$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?CellsPresentBitmap: unexpected number of bytes, got [0-9]+ but found [0-9]+(: list length is higher than max value)?$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Attestations has [0-9]+ elements, ssz-max is 8: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.AttesterSlashings has [0-9]+ elements, ssz-max is 1: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 131072: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.AttestingIndices has [0-9]+ elements, ssz-max is 8192: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Balances has [0-9]+ elements, ssz-max is 1099511627776: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.BlobKzgCommitments has [0-9]+ elements, ssz-max is 4096: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.BlockAccessList has [0-9]+ elements, ssz-max is 1073741824: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.BlsToExecutionChanges has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.BuilderDeposits has [0-9]+ elements, ssz-max is 64: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.BuilderExits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.BuilderPendingWithdrawals has [0-9]+ elements, ssz-max is 1048576: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Builders has [0-9]+ elements, ssz-max is 1099511627776: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Column has [0-9]+ elements, ssz-max is 4096: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Consolidations has [0-9]+ elements, ssz-max is 2: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.CurrentEpochParticipation has [0-9]+ elements, ssz-max is 1099511627776: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Deposits has [0-9]+ elements, ssz-max is 0: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Deposits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.InactivityScores has [0-9]+ elements, ssz-max is 1099511627776: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.KzgProofs has [0-9]+ elements, ssz-max is 4096: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PartialColumn has [0-9]+ elements, ssz-max is 4096: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PayloadAttestations has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PayloadExpectedWithdrawals has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PayloadExpectedWithdrawals has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PendingConsolidations has [0-9]+ elements, ssz-max is 262144: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PendingConsolidations has [0-9]+ elements, ssz-max is 64: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PendingDeposits has [0-9]+ elements, ssz-max is 134217728: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PendingPartialWithdrawals has [0-9]+ elements, ssz-max is 134217728: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PendingPartialWithdrawals has [0-9]+ elements, ssz-max is 64: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.PreviousEpochParticipation has [0-9]+ elements, ssz-max is 1099511627776: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.ProposerSlashings has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Validators has [0-9]+ elements, ssz-max is 1099511627776: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.VoluntaryExits has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 16: list length is higher than max value$
 ^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.Withdrawals has [0-9]+ elements, ssz-max is 4: list length is higher than max value$
-
-## The decoder rejects a Gloas progressive bitlist above its ssz-max tag. The field
-## is a ProgressiveBitlist in Prysm's YAML and a ForkBitlist .glamsterdam in EthLib.
-## AggregationBits is also a fixed bitvector in other Gloas containers, so its
-## lines list the containers whose struct closure reaches the progressive one.
-^glamsterdam/(AggregateAndProof|Attestation|BeaconBlock|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: too many bits$
-^glamsterdam/(AggregateAndProof|Attestation|BeaconBlock|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: too many bits: list length is higher than max value$
-^glamsterdam/(AggregateAndProof|Attestation|BeaconBlock|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+$
-^glamsterdam/(AggregateAndProof|Attestation|BeaconBlock|BeaconBlockBody|SignedAggregateAndProof|SignedBeaconBlock): EthLib accepts, methodical rejects: (.*: )?AggregationBits: unexpected number of bytes, got [0-9]+ but found [0-9]+: list length is higher than max value$
-^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?CellsPresentBitmap: too many bits$
-^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?CellsPresentBitmap: unexpected number of bytes, got [0-9]+ but found [0-9]+$
-^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?CellsPresentBitmap: unexpected number of bytes, got [0-9]+ but found [0-9]+: list length is higher than max value$
