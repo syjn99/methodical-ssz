@@ -9,7 +9,7 @@ Cases (ids `whole-accept-*`; mutated `.S` / IR copies in <work-dir> only):
  - whole-accept-new-*: `--whole-accept` on the type of every `decoder --whole-accept` row of `gen/generator/types.tsv`.
    An accept row: exit 0 twice, identical, every whole-accept theorem with its kind line, `kindcheck.py` PASS (rule 12:
    kind parameters recomputed from the IR and the `.S`). A refuse row: exit 2 twice, 0 bytes. Examples of refuse rows:
-   AttestationData (nested fields).
+   PayloadAttestationData (a `bool` field).
  - whole-accept-interleaved-unit-*: the interleaving rule `whole_accept_interleaved` of `whole_accept.py`, called directly.
    It also covers the refusal after a call or byte field: no `.S` input reaches it, because a call block or a byte segment
    leaves only boundary values and unknown values in the registers.
@@ -21,9 +21,11 @@ Cases (ids `whole-accept-*`; mutated `.S` / IR copies in <work-dir> only):
    size-error block, a stack store of an input value, a load from a stack slot outside the layout, interleaved
    fields: the Withdrawal set-up changed, the first field store moved or removed, a derived address stored to a frame slot
    in a block, an interleaved boundary before a byte field); the 4-byte inline copy (copy removed or 64-bit, source offset, write-barrier branch, length, buffer
-   register or slot, pointer store) and the 20-byte memmove size; statement-level IR mutants (a wrong Go offset, a wrong size, the field order swapped, a Go offset that
+   register or slot, pointer store) and the 20-byte memmove size; the nested Checkpoint block of AttestationData (type word,
+   pointer store offset, callee, size immediate, buffer and length offsets, write-barrier branch, receiver slot, a nil
+   test, the IR Go offset and container); statement-level IR mutants (a wrong Go offset, a wrong size, the field order swapped, a Go offset that
    the code matches but that is not the kind's running sum). Valid variants (an extra harmless move, another valid
-   set-up order): exit 0 and kindcheck PASS.
+   set-up order, a `nop` after `callq runtime.newobject`): exit 0 and kindcheck PASS.
  - whole-accept-fail-closed-*: fail-closed. A harness imports the working-tree `generator.py`, takes its `whole-accept` module (`whole_accept_module()`),
    monkeypatches it and calls `main()`: an unexpected exception, SystemExit(0) and a WholeAcceptRefuse injected in the step
    front end, the recomputed walk / epilogue, the head / epilogue / reject specification, every step rendering, every
@@ -143,6 +145,14 @@ def ir_goff(field, off):
     return fn
 
 
+def ir_delegated(field, name):
+    def fn(t):
+        for f in t["ir"]["fields"]:
+            if f["key"] == field:
+                f["v"]["delegated_to"]["name"] = name
+    return fn
+
+
 # (id, what, type key, .S edit function or None, IR edit or None, expected exit)
 WHOLE_ACCEPT_MUT = [
     # classes of the step rules (the step front end refuses; whole-accept emits nothing)
@@ -186,7 +196,30 @@ WHOLE_ACCEPT_MUT = [
      rv([(88, "mov %rsi,0x38(%rdx)", ("before", ["mov %rsi,0x30(%rsp)"]))]), None, 2),
     ("whole-accept-load-outside-layout", "ValidatorBalance Balance: `mov 0x30(%rsp),%rsi` (no stack chunk at 0x30)", "ValidatorBalance",
      rv([(52, "mov %rcx,0x10(%rdx)", ("before", ["mov 0x30(%rsp),%rsi"]))]), None, 2),
-    ("whole-accept-nested", "real AttestationData: Source / Target are nested containers (step exit 3)", "AttestationData", None, None, 2),
+    # nested Checkpoint fields (AttestationData Source, lines 123-145; Target, lines 174-195)
+    ("whole-accept-nested-type-word", "AttestationData Source: `lea type__+1289320(%rip),%rax` (not the Checkpoint type word)",
+     "AttestationData", rv([(123, "lea type__+1289312(%rip),%rax", "lea type__+1289320(%rip),%rax")]), None, 2),
+    ("whole-accept-nested-pointer-store", "AttestationData Source: pointer store `mov %rax,0x38(%rdx)` (IR Go offset 48)",
+     "AttestationData", rv([(137, "mov %rax,0x30(%rdx)", "mov %rax,0x38(%rdx)")]), None, 2),
+    ("whole-accept-nested-callee", "AttestationData Source: `callq …Fork.UnmarshalSSZ` in place of the Checkpoint decoder",
+     "AttestationData", rv([(143, "Checkpoint.UnmarshalSSZ", "callq github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.UnmarshalSSZ")]),
+     None, 2),
+    ("whole-accept-nested-size-imm", "AttestationData Source: `mov $0x29,%ecx` before the callee (Checkpoint size 40)",
+     "AttestationData", rv([(142, "mov $0x28,%ecx", "mov $0x29,%ecx")]), None, 2),
+    ("whole-accept-nested-buffer-offset", "AttestationData Target: `add $0x50,%rbx` (IR SSZ offset 88)",
+     "AttestationData", rv([(189, "add $0x58,%rbx", "add $0x50,%rbx")]), None, 2),
+    ("whole-accept-nested-length-offset", "AttestationData Source: `add $-0x28,%rdi` (the length of buf[48:])",
+     "AttestationData", rv([(141, "add $-0x30,%rdi", "add $-0x28,%rdi")]), None, 2),
+    ("whole-accept-nested-barrier-branch", "AttestationData Source: `je` in place of `jne` after the write-barrier test",
+     "AttestationData", rv([(127, "UnmarshalSSZ_22c", "je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_22c")]),
+     None, 2),
+    ("whole-accept-nested-receiver-slot", "AttestationData Source: receiver reload `mov 0x88(%rsp),%rdx` (the buffer slot)",
+     "AttestationData", rv([(128, "mov 0x80(%rsp),%rdx", "mov 0x88(%rsp),%rdx")]), None, 2),
+    ("whole-accept-nested-nil-test", "AttestationData Source: a nil test `cmpq $0x0,0x30(%rdx)` before the allocation",
+     "AttestationData", rv([(123, "lea type__+1289312(%rip),%rax", ("before", ["cmpq $0x0,0x30(%rdx)"]))]), None, 2),
+    ("whole-accept-nested-ir-goff", "IR: AttestationData Target Go offset 64 (code 56)", "AttestationData", None, ir_goff("Target", 64), 2),
+    ("whole-accept-nested-ir-container", "IR: AttestationData Source delegated to the container Fork", "AttestationData", None,
+     ir_delegated("Source", "Fork"), 2),
     # statement-level IR mutants
     ("whole-accept-ir-goff", "IR: PowBlock ParentHash Go offset 32 (code 24)", "PowBlock", None, ir_goff("ParentHash", 32), 2),
     ("whole-accept-ir-size", "IR: PowBlock TotalDifficulty of 48 bytes (code 32)", "PowBlock", None, ir_size("TotalDifficulty", 48), 2),
@@ -253,6 +286,8 @@ WHOLE_ACCEPT_MUT = [
      rv([(32, "mov %edi,(%rax)", ("before", ["nop"]))]), None, 0),
     ("whole-accept-epilogue-valid-no-nop", "Fork: the `nop` between `pop %rbp` and `retq` removed", "Fork",
      rv([(109, "nop", None)]), None, 0),
+    ("whole-accept-nested-valid-nop", "AttestationData Source: a `nop` between `callq runtime.newobject` and the write-barrier test",
+     "AttestationData", rv([(125, "cmpl $0x0,runtime.writeBarrier(%rip)", ("before", ["nop"]))]), None, 0),
     ("whole-accept-valid-extra-move", "SyncCommitteeMessage: an extra `mov %rdi,%rsi` in the ValidatorIndex set-up", "SyncCommitteeMessage",
      sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:4] + ["  mov %rdi,%rsi"] + VALIDATOR_INDEX_SETUP[4:]), None, 0),
     ("whole-accept-valid-order", "SyncCommitteeMessage: ValidatorIndex set-up with `mov $0x8,%ecx` first", "SyncCommitteeMessage",
@@ -412,7 +447,7 @@ for kind in KINDS:
             return ostep(*a)
         rec("derive", kind, f"whole_accept_step call {n}", patched(whole_accept_gen, "whole_accept_step", inj))
 # phase render: every theorem renderer (each call), the kind recorder
-for meth in ("head", "field", "f_u64", "f_bytes", "f_inline", "f_call", "epilogue", "accept", "reject", "layout", "binders", "mem"):
+for meth in ("head", "field", "f_u64", "f_bytes", "f_inline", "f_call", "f_nested", "epilogue", "accept", "reject", "layout", "binders", "mem"):
     om, seqm = getattr(whole_accept_gen.T, meth), []
     setattr(whole_accept_gen.T, meth, lambda self, *a, om=om, seqm=seqm: (seqm.append(1), om(self, *a))[1])
     call()
@@ -441,7 +476,8 @@ pathlib.Path(ARGV[3]).write_text(json.dumps(res) + "\n")
 """
 
 
-WHOLE_ACCEPT_FAIL_CLOSED_KEYS = ("PendingDeposit", "SyncCommitteeMessage", "VoluntaryExit", "PowBlock", "ValidatorBalance", "Fork", "Withdrawal")
+WHOLE_ACCEPT_FAIL_CLOSED_KEYS = ("PendingDeposit", "SyncCommitteeMessage", "VoluntaryExit", "PowBlock", "ValidatorBalance", "Fork", "Withdrawal",
+                                 "AttestationData")
 
 
 def whole_accept_fc_cases(work, new, keys=None):

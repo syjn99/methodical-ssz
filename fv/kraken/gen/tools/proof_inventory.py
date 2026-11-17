@@ -87,19 +87,19 @@ import types_table  # noqa: E402
 def core_flat_types():
     """The Go type names of the accept rows of the mode `encoder --fast-path` and then of the mode
     `decoder --whole-accept` of gen/generator/types.tsv, in table order, each name once, without the types of a row with
-    the companion `hand-list`."""
+    the companion `hand-list` and without the types of `NESTED`."""
     rows = types_table.rows()
-    listed = {r["type"] for r in rows if "hand-list" in r["companions"]}
+    listed = {r["type"] for r in rows if "hand-list" in r["companions"]} | set(NESTED)
     names = [r["type"] for m in ("encoder --fast-path", "decoder --whole-accept") for r in rows
              if r["mode"] == m and r["expect"] == "accept" and r["type"] not in listed]
     return list(dict.fromkeys(names))
 
 
+# AttestationData has nested fields and is listed apart (`NESTED`), also with its generated decoder.
+NESTED = ["AttestationData"]
 # The core flat types: the types with a generated decoder or encoder and a hand list of the axioms gate.
 # The inventory counts their decoders as one group.
-# AttestationData has nested fields and is listed apart (`NESTED`).
 CORE_FLAT_TYPES = core_flat_types()
-NESTED = ["AttestationData"]
 # Why the generators refuse a flat type outside CORE_FLAT_TYPES (wording only, no state rule). The class is the field kind
 # or the callee at the directive of the `.S` file where `decoder --whole-accept` or `encoder --fast-path` stops.
 # The generators do not support that class.

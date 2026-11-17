@@ -35,21 +35,24 @@ Checks, per file (text only):
         @Codec.bytesDecodeSegmentKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC src
         @Codec.bytesDecodeSegmentOffsetZeroKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC
         @Codec.bytesDecodeInlineSegmentKindWindow h C Reg64.rX Reg64.rB j1 jc e dR dB fP fL fC src
+        @Codec.nestedCheckpointDecodeKindWindow h C "fn" j1 jc j3 dR fP dB src dC   fn the Checkpoint decoder (NESTED_CALLEES)
     (n = 32 | 48 | 96 | 20; rY one of rax, rcx, rdx, rsi, rdi; rX = rdx and rB one of rsi, rbx (the 4-byte inline copy);
     registers `Reg64.<one of the 16>`; Int64 literals n or (-n)).
     10b. The proof of `t` (comments and string literals removed) uses the lemma of its kind
          (`step_move_register`, `step_load_value`, …, `call_decode_segment_window`, `bytes_decode_segment_window`,
-         `bytes_decode_segment_offset_zero_window`, `bytes_decode_inline_segment_window`) and no other step lemma: a theorem whose proof and kind name
+         `bytes_decode_segment_offset_zero_window`, `bytes_decode_inline_segment_window`, `nested_checkpoint_decode_window`) and no other step lemma: a theorem whose proof and kind name
          different lemmas fails.
     10c. A step file carries exactly one line `FIELDS-JSON: [{"field": F, "theorems": [...]}, …]`: every theorem with
          a step kind is listed in exactly one field, every listed theorem is in the file, a field has at most one block
-         theorem (`<p>_F_call` with `callDecodeSegmentKindWindow`, or `<p>_F_seg` with a byte kind).
+         theorem (`<p>_F_call` with `callDecodeSegmentKindWindow`, `<p>_F_segment` with a byte kind, or `<p>_F_nested` with
+         `nestedCheckpointDecodeKindWindow`).
 11. A file with a step kind carries exactly one coverage header `step coverage: n of m fields`
     with n = m = the number of fields of FIELDS-JSON (a dropped header or field hides dropped fields).
 12. whole-accept (`generator.py decoder --whole-accept`): a whole-accept file is checked in two parts. The text before the
     whole-accept block (`/-! Whole accept (`decoder --whole-accept`…`) by rules 2-11 as a step file; the whole-accept part by
     rule 12 (12b the exact theorem list, one field theorem per field block, with the kinds decodeHeadKindAnyFrame / decodeFieldKindAnyFrame /
-    decodeEpilogueKindAnyFrame / decodeAcceptKindAnyFrame / decodeRejectKindAnyFrame; 12c the kind parameters `L`, `fields`,
+    decodeEpilogueKindAnyFrame / decodeAcceptKindAnyFrame / decodeRejectKindAnyFrame, or their `Nested` forms of
+    `lean/Codec/Kind/DecodeAcceptNestedAnyFrame.lean` for a type with a nested Checkpoint field; 12c the kind parameters `L`, `fields`,
     boundary `pc` / `done` and the reject size RECOMPUTED from the `.S` and the IR named in the header (sha256 checked);
     12d the accept proof chains every theorem). See the section `Rule 12`.
     A file with a whole-accept kind and no whole-accept block fails (rule 12: 0 whole-accept blocks).
@@ -84,6 +87,8 @@ DECL = re.compile(r"^(?:private |protected |noncomputable )*(?:theorem|lemma|def
 
 CALLEES = tuple(f'"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"'
                 for n in ("Slot", "CommitteeIndex", "ValidatorIndex", "Epoch"))
+# the nested container callees with a proved function specification (`Codec.NestedCheckpointCalleeAccept`)
+NESTED_CALLEES = ('"github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ"',)
 INT = r"(?:0|[1-9][0-9]*|\(-[1-9][0-9]*\))"  # an Int64 literal as the generator writes it
 STEP_REGISTERS = r"Reg64\.(?:rax|rbx|rcx|rdx|rsi|rdi|rsp|rbp|r8|r9|r10|r11|r12|r13|r14|r15)"
 STEP_RECEIVER_REGISTERS = r"Reg64\.(?:rax|rcx|rdx|rsi|rdi)"
@@ -110,10 +115,11 @@ STEP_KINDS = {
     "bytesDecodeSegmentKindWindow": ("SIZE {C} STEP_RECEIVER_REGISTERS NAT NAT NAT INT INT INT INT INT INT INT", "Codec", "bytes_decode_segment_window"),
     "bytesDecodeSegmentOffsetZeroKindWindow": ("SIZE {C} STEP_RECEIVER_REGISTERS NAT NAT NAT INT INT INT INT INT INT", "Codec", "bytes_decode_segment_offset_zero_window"),
     "bytesDecodeInlineSegmentKindWindow": ("{C} STEP_INLINE_RECEIVER STEP_INLINE_BUFFER NAT NAT NAT INT INT INT INT INT INT", "Codec", "bytes_decode_inline_segment_window"),
+    "nestedCheckpointDecodeKindWindow": ("{C} LBL NAT NAT NAT INT INT INT INT INT", "Codec", "nested_checkpoint_decode_window"),
 }
 STEP_LEMMAS = {v[2]: v[1] for v in STEP_KINDS.values()}   # lemma -> namespace
 STEP_BLOCK = {"callDecodeSegmentKindWindow": "call", "bytesDecodeSegmentKindWindow": "segment", "bytesDecodeSegmentOffsetZeroKindWindow": "segment",
-              "bytesDecodeInlineSegmentKindWindow": "segment"}
+              "bytesDecodeInlineSegmentKindWindow": "segment", "nestedCheckpointDecodeKindWindow": "nested"}
 LBL = r'"[^"\\\s]+"'
 COVER = re.compile(r"step coverage: (\d+) of (\d+) fields")
 SIZE = r"(?:32|48|96|20)"  # the sizes of the hypothesis `hn` of the byte segment lemmas
@@ -214,6 +220,9 @@ def check_text(text):
             elif kn == "callDecodeSegmentKindWindow" and step_match.group(3).split(" ")[1] not in CALLEES:
                 errs.append(f"{t}_kind: callee {step_match.group(3).split(' ')[1]} has no proved accept spec (allowed: Slot, "
                             f"CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives)")
+            elif kn == "nestedCheckpointDecodeKindWindow" and step_match.group(3).split(" ")[1] not in NESTED_CALLEES:
+                errs.append(f"{t}_kind: nested callee {step_match.group(3).split(' ')[1]} has no proved function specification "
+                            f"(allowed: Checkpoint of proto/prysm/v1alpha1)")
             # rule 10b: the proof uses the lemma of the kind and no other step lemma
             proof = strip_strings(strip_comments("\n".join(lines[i:j]).split(":= by", 1)[-1]))
             used = {x for x, xns in STEP_LEMMAS.items() if re.search(rf"\b{xns}\.{x}\b", proof)}
@@ -288,7 +297,8 @@ def main(files):
     for f in files:
         text = pathlib.Path(f).read_text().replace("\ntheorem _root_.", "\ntheorem ")
         whole_accept_part = WHOLE_ACCEPT_MARK in text or "WHOLE-ACCEPT-JSON" in text or any(f"@Codec.{k} " in text for k in (
-            "decodeHeadKindAnyFrame", "decodeFieldKindAnyFrame", "decodeEpilogueKindAnyFrame", "decodeAcceptKindAnyFrame", "decodeRejectKindAnyFrame"))
+            "decodeHeadKindAnyFrame", "decodeFieldKindAnyFrame", "decodeEpilogueKindAnyFrame", "decodeAcceptKindAnyFrame", "decodeRejectKindAnyFrame",
+            *WHOLE_ACCEPT_NESTED_KINDS.values()))
         fast_path_file = "FAST-PATH-JSON" in text or any(f"@Codec.{k} " in text for k in FAST_PATH_KINDS)
         if fast_path_file:
             # rule 13: a fast-path file is checked by rule 13 only; a whole-accept kind in it fails
@@ -423,6 +433,13 @@ STEP_INLINE_KIND = ("@Codec.bytesDecodeInlineSegmentKindWindow h Prysm.PendingPa
 STEP_INLINE_KINDS = dict(STEP_TEST_KINDS, pending_partial_withdrawal_step_Ver_segment=STEP_INLINE_KIND)
 STEP_INLINE_FIELDS = STEP_TEST_FIELDS + [("Ver", ["pending_partial_withdrawal_step_Ver_segment"])]
 GOOD_INLINE_STEPS = step_text(fields=STEP_INLINE_FIELDS, kinds=STEP_INLINE_KINDS)
+# a step file with a fifth field decoded by the nested Checkpoint block (`nestedCheckpointDecodeKindWindow`)
+STEP_NESTED_KIND = ('@Codec.nestedCheckpointDecodeKindWindow h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ '
+                    '"github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ" 158 178 208 128 48 136 48 152',
+                    "nested_checkpoint_decode_window _ _ _ _ _ _ _ _ _ _ _ _ (k + 158) (k + 171) (k + 208) (k + 171) (k + 178) hqA heA hqB heB hjl hls hjc hB hl")
+STEP_NESTED_KINDS = dict(STEP_TEST_KINDS, pending_partial_withdrawal_step_Src_nested=STEP_NESTED_KIND)
+STEP_NESTED_FIELDS = STEP_TEST_FIELDS + [("Src", ["pending_partial_withdrawal_step_Src_nested"])]
+GOOD_NESTED_STEPS = step_text(fields=STEP_NESTED_FIELDS, kinds=STEP_NESTED_KINDS)
 
 
 def step_cases():
@@ -437,6 +454,12 @@ def step_cases():
         old = f"  with_reducible exact {STEP_LEMMAS[STEP_TEST_KINDS[t][1].split()[0]]}.{STEP_TEST_KINDS[t][1]}\n"
         assert GOOD_STEPS.count(old) == 1, t
         return GOOD_STEPS.replace(old, new)
+    def nchg(old, new, where=0):
+        """GOOD_NESTED_STEPS with the nested kind line (where 0) or its proof line (where 1) changed."""
+        t = STEP_NESTED_KIND[where]
+        assert t.count(old) == 1, old
+        return GOOD_NESTED_STEPS.replace(t, t.replace(old, new))
+
     def ichg(old, new, where=0):
         """GOOD_INLINE_STEPS with the inline kind line (where 0) or its proof line (where 1) changed."""
         t = STEP_INLINE_KIND[where]
@@ -472,6 +495,12 @@ def step_cases():
         ("step_inline_lemma_mismatch", ichg("bytes_decode_inline_segment_window Reg64.rdx Reg64.rbx Reg64.rsi rfl (Or.inr ⟨rfl, rfl⟩)",
                                             "bytes_decode_segment_window 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl)", 1), False),
         ("step_inline_name_not_segment", GOOD_INLINE_STEPS.replace("pending_partial_withdrawal_step_Ver_segment", "pending_partial_withdrawal_step_Ver_inline"), False),
+        ("step_nested_good", GOOD_NESTED_STEPS, True),
+        ("step_nested_callee_primitive", nchg("proto_prysm_v1alpha1.Checkpoint", "consensus_types_primitives.Epoch"), False),
+        ("step_nested_missing_offset", nchg(" 48 152", " 48"), False),
+        ("step_nested_lemma_mismatch", nchg("nested_checkpoint_decode_window _ _ _ _ _ _ _ _ _ _ _ _",
+                                            "call_decode_segment_window _ _ _", 1), False),
+        ("step_nested_name_not_nested", GOOD_NESTED_STEPS.replace("pending_partial_withdrawal_step_Src_nested", "pending_partial_withdrawal_step_Src_call"), False),
         ("step_segz_with_src", kchg("pending_partial_withdrawal_step_Sig_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Sig_segment"][0] + " 0"), False),
         ("step_lemma_kind_mismatch", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  with_reducible exact Codec.step_load_value Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"), False),
         ("step_lemma_only_in_string", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", '  have x := "Codec.step_load_bytes "\n  with_reducible exact foo\n'), False),
@@ -537,6 +566,16 @@ WHOLE_ACCEPT_HDR = re.compile(r"Generated by `gen/generator/generator\.py decode
                     r"\(sha256 `([0-9a-f]{64})`, type `([^`]+)`\)")
 
 
+# the nested Checkpoint decoder: its callee label, the `abi.Type` word of `runtime.newobject`, and its own callee
+WHOLE_ACCEPT_NESTED_FN = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ"
+WHOLE_ACCEPT_NESTED_TYPE = "lea type__+1289312(%rip),%rax"
+WHOLE_ACCEPT_NESTED_CONST = ["Prysm.Checkpoint.Code.unmarshalSSZ", "Prysm.Epoch.Code.unmarshalSSZ"]
+# the kinds of a decoder with a nested Checkpoint field
+WHOLE_ACCEPT_NESTED_KINDS = {"decodeHeadKindAnyFrame": "decodeHeadNestedKindAnyFrame", "decodeFieldKindAnyFrame": "decodeFieldNestedKindAnyFrame",
+                             "decodeEpilogueKindAnyFrame": "decodeEpilogueNestedKindAnyFrame", "decodeAcceptKindAnyFrame": "decodeAcceptNestedKindAnyFrame",
+                             "decodeRejectKindAnyFrame": "decodeRejectKindAnyFrame"}
+
+
 class WholeAcceptMismatch(Exception):
     pass
 
@@ -563,6 +602,11 @@ def whole_accept_ir(ir_text, tname):
                 and v.get("name") in WHOLE_ACCEPT_CONST and v.get("pkg", "").endswith("/consensus-types/primitives") \
                 and (v.get("underlying") or {}).get("k") == "uint" and (v.get("underlying") or {}).get("bits") == 64:
             kd, cal = ".uint64", v["name"]
+        elif v.get("k") == "pointer" and (v.get("deleg") or {}).get("unmarshaler") and v.get("fixed_size") == 40 \
+                and (v.get("delegated_to") or {}).get("k") == "container" and (v.get("delegated_to") or {}).get("name") == "Checkpoint" \
+                and (v.get("delegated_to") or {}).get("pkg", "").endswith("/proto/prysm/v1alpha1") and v.get("go_type") == "*Checkpoint" \
+                and not v.get("variable"):
+            kd, cal = ".checkpoint", WHOLE_ACCEPT_NESTED_FN
         else:
             raise WholeAcceptMismatch(f"field {f['key']}: IR kind {v.get('k')} ({v.get('go_type')}) is not a whole-accept field kind")
         out.append((f["key"], kd, cal, so, goff.get(f["key"])))
@@ -584,10 +628,11 @@ def whole_accept_expect(dirs, fields, sz):
     frame = F + 8
     st = fields[0][4] == 8
     so, go = 0, 8 if st else 0
+    nested = any(kd == ".checkpoint" for (_, kd, _, _, _) in fields)
     for (n_, kd, cal, s_, g_) in fields:
         if s_ != so or g_ != go:
             raise WholeAcceptMismatch(f"field {n_}: IR SSZ / Go offsets {s_} / {g_}, kind running sums {so} / {go}")
-        so += int(kd.split()[1]) if kd.startswith(".bytes") else 8
+        so += int(kd.split()[1]) if kd.startswith(".bytes") else (40 if kd == ".checkpoint" else 8)
         go += 24 if kd.startswith(".bytes") else 8
     home = {"rax": 8, "rbx": 16, "rdi": 32}
     spills = {16: "rbx"}
@@ -605,6 +650,7 @@ def whole_accept_expect(dirs, fields, sz):
     written, callees, events = {}, [], {}
     n_ms = n_cp = 0   # makeslice calls; byte copies (a memmove call, or the 32-bit store `mov %eT,(%rax)` of a 4-byte field)
     last_call = None
+    last_nested = None
     has_rt = has_call = False
     prev = None
     seen = set()
@@ -652,6 +698,22 @@ def whole_accept_expect(dirs, fields, sz):
                 n_ms += 1
             elif fn == "runtime.memmove":
                 n_cp += 1
+            elif fn == "runtime.newobject":
+                # only the type word of the nested Checkpoint (the `lea` before the call)
+                if not nested or path[-2:-1] != [WHOLE_ACCEPT_NESTED_TYPE]:
+                    raise WholeAcceptMismatch(f"accept path: `callq runtime.newobject` after `{path[-2:-1]}`")
+                has_rt = True
+            elif fn == WHOLE_ACCEPT_NESTED_FN:
+                has_call = True
+                for c in WHOLE_ACCEPT_NESTED_CONST:
+                    if c not in callees:
+                        callees.append(c)
+                R["rax"] = R["rbx"] = ("zero",)
+                todo = [k for k, f in enumerate(fields) if f[1] == ".checkpoint" and k not in events]
+                if not todo:
+                    raise WholeAcceptMismatch(f"accept path: call {fn} without an open nested field")
+                pend_call = todo[0]
+                last_nested = (todo[0], i)
             elif fn.startswith(WHOLE_ACCEPT_PRIM) and fn.endswith(".UnmarshalSSZ") and fn[len(WHOLE_ACCEPT_PRIM):-13] in WHOLE_ACCEPT_CONST:
                 has_call = True
                 c = WHOLE_ACCEPT_CONST[fn[len(WHOLE_ACCEPT_PRIM):-13]]
@@ -715,6 +777,9 @@ def whole_accept_expect(dirs, fields, sz):
     cuts = [0] + [k + 1 for k in range(len(fields) - 1)
                   if not (whole_accept_live(path[epos[k]:]) & edrv[k])] + [len(fields)]
     blocks = list(zip(cuts, cuts[1:]))
+    if nested:
+        return whole_accept_expect_nested(fields, sz, frame, st, spills, written, callees, has_call, last_call, last_nested,
+                                          pcs, blocks)
     # the layout by the rules of the whole-accept lemmas
     stack = [("at", -8)] + [("at", o) for o in sorted(spills)]
     area = [0] if has_rt and not has_call else ([0, 8, 16] if has_rt else [8])
@@ -736,6 +801,50 @@ def whole_accept_expect(dirs, fields, sz):
     L = (f"(Codec.DecoderFrameLayout.mk [{', '.join(callees)}] {len(stack)} [{', '.join(lens)}] [{', '.join(pre)}] ({rt}) "
          f"{frame + 8 if has_call else 0} {'true' if st else 'false'} {exs} [{', '.join(post)}] {frame})")
     return dict(L=L, fields="[" + ", ".join(f[1] for f in fields) + "]", pcs=pcs, sz=sz, blocks=blocks)
+
+
+def whole_accept_expect_nested(fields, sz, frame, st, spills, written, callees, has_call, last_call, last_nested, pcs, blocks):
+    """The layout of a decoder with nested Checkpoint fields (`decodeAcceptNestedKindAnyFrame`): the low stack holds the nested
+    callee frame (`S + 96` bytes), the guard addend is frame + 8 + 96. The last callee call must be a nested one; then the
+    final words at sp, sp + 8 and sp + 16 are its object pointer, the input address of its epoch and an 8-byte existential."""
+    if not has_call or last_nested is None or last_nested[1] != last_call:
+        raise WholeAcceptMismatch("nested layout: the last call on the accept path is not a nested Checkpoint call")
+    sl = lambda c, v: (".low " + v) if c[0] == "lo" else f".at ({'.above' if c[1] > 0 else '.below'} {abs(c[1])}) {v}"
+    stack = [("at", -8)] + [("at", o) for o in sorted(spills)] + [("at", -frame + a) for a in (0, 8, 16)]
+    stack += [("at", -frame + o) for o in sorted(written)] + [("at", -(frame + 8)), ("lo",)]
+    pre = [sl(c, f"(.original {k})") for k, c in enumerate(stack)]
+    lens = [f"({k}, 8)" for k, c in enumerate(stack) if c != ("lo",)]
+    rt = f"some ⟨true, 96, {len(stack) - 1}, {frame + 8 + 96}⟩"
+    # pointer existentials in field order: one per byte field, two per nested field (object, root)
+    ptr, k_last = 0, last_nested[0]
+    for k, f in enumerate(fields[:k_last]):
+        ptr += 1 if f[1].startswith(".bytes") else (2 if f[1] == ".checkpoint" else 0)
+    post = [sl(("at", -8), "(.reg .rbp)")] + [sl(("at", o), f"(.reg .{spills[o]})") for o in sorted(spills)]
+    post += [sl(("at", -frame), f"(.ptr {ptr})"), sl(("at", -frame + 8), f"(.bufferAddress {fields[k_last][3]})"),
+             sl(("at", -frame + 16), "(.existential 0)")]
+    for o in sorted(written):
+        v = written[o]
+        post.append(sl(("at", -frame + o), ".zero" if v == ("zero",) else f"(.ptr {whole_accept_ptr_index(fields, v[1])})"))
+    post += [sl(("at", -(frame + 8)), f"(.ret {last_call + 1})"), sl(("lo",), "(.existential 1)")]
+    L = (f"(Codec.DecoderFrameLayout.mk [{', '.join(callees)}] {len(stack)} [{', '.join(lens)}] [{', '.join(pre)}] ({rt}) "
+         f"{frame + 8 + 96} {'true' if st else 'false'} [.fixed 8, .low] [{', '.join(post)}] {frame})")
+    flat = {".uint64": ".flat .uint64", ".checkpoint": ".checkpoint"}
+    F = "[" + ", ".join(flat.get(f[1], f".flat ({f[1]})") for f in fields) + "]"
+    return dict(L=L, fields=F, pcs=pcs, sz=sz, blocks=blocks, nested=True)
+
+
+def whole_accept_ptr_index(fields, n_ms):
+    """The pointer existential of the `n_ms`-th makeslice (byte field) in a nested layout: byte fields count one, nested fields two."""
+    ptr, seen = 0, 0
+    for f in fields:
+        if f[1].startswith(".bytes"):
+            if seen == n_ms:
+                return ptr
+            seen += 1
+            ptr += 1
+        elif f[1] == ".checkpoint":
+            ptr += 2
+    raise WholeAcceptMismatch(f"nested layout: no byte field for slice pointer {n_ms}")
 
 
 WHOLE_ACCEPT_R32 = {"eax": "rax", "ebx": "rbx", "ecx": "rcx", "edx": "rdx", "esi": "rsi", "edi": "rdi", "r8d": "r8", "r9d": "r9",
@@ -910,6 +1019,8 @@ def check_whole_accept(text, kr=None, expect=None):
     fname = {(f"{P}_field_{b}" if b == a + 1 else f"{P}_fields_{a + 1}_{b}"): (a, b) for a, b in blocks}
     kinds = [(f"{P}_head", "decodeHeadKindAnyFrame", 1), *[(t, "decodeFieldKindAnyFrame", 2) for t in fname],
              (f"{P}_epilogue", "decodeEpilogueKindAnyFrame", 1), (f"{P}_accept", "decodeAcceptKindAnyFrame", 0), (f"{P}_reject", "decodeRejectKindAnyFrame", None)]
+    if expect.get("nested"):
+        kinds = [(t, WHOLE_ACCEPT_NESTED_KINDS[kn], nd) for t, kn, nd in kinds]
     want = [x for t, _, _ in kinds for x in (t, t + "_kind")]
     if names != want:
         return errs + [f"rule 12b: whole-accept theorems {names}, expected {want}"], info
@@ -954,7 +1065,7 @@ def check_whole_accept(text, kr=None, expect=None):
         if rest:
             errs.append(f"rule 12b: {t}_kind: extra parameters `{rest[:60]}`")
         exp = {"decodeHeadKindAnyFrame": [0], "decodeFieldKindAnyFrame": list(fname.get(t, ())), "decodeEpilogueKindAnyFrame": [n],
-               "decodeAcceptKindAnyFrame": []}[kn]
+               "decodeAcceptKindAnyFrame": []}[{v: k for k, v in WHOLE_ACCEPT_NESTED_KINDS.items()}.get(kn, kn)]
         for dd, b in zip(ds, exp):
             if dd != (expect["pcs"][b], b):
                 errs.append(f"rule 12c: {t}_kind: boundary state (pc, done) = {dd}, recomputed {(expect['pcs'][b], b)}")
@@ -1149,6 +1260,53 @@ def whole_accept_selftest():
         errs, _ = check_whole_accept(text)
         if (not errs) != ok:
             bad.append((cid, errs[:2]))
+    # the committed generated file of AttestationData (nested Checkpoint fields) passes; mutants fail
+    ad = (KR / "lean/Prysm/AttestationData/GeneratedDecodeAccept.lean").read_text()
+    ad_l = "(some ⟨true, 96, 9, 224⟩) 224 true [.fixed 8, .low]"
+    assert ad.count(ad_l) == 8, "AttestationData layout text"
+    for cid, text, ok in (("whole_accept_nested_committed", ad, True),
+                          ("whole_accept_nested_flat_kind", ad.replace("@Codec.decodeAcceptNestedKindAnyFrame h", "@Codec.decodeAcceptKindAnyFrame h"), False),
+                          ("whole_accept_nested_low_extra", ad.replace(ad_l, "(some ⟨true, 8, 9, 136⟩) 128 true [.fixed 8, .low]"), False),
+                          ("whole_accept_nested_guard", ad.replace(ad_l, "(some ⟨true, 96, 9, 224⟩) 128 true [.fixed 8, .low]"), False),
+                          ("whole_accept_nested_post_buffer", ad.replace("(.bufferAddress 88)", "(.bufferAddress 48)"), False),
+                          ("whole_accept_nested_post_ptr", ad.replace(".at (.below 120) (.ptr 3), .at (.below 112) (.bufferAddress 88)",
+                                                                      ".at (.below 120) (.ptr 1), .at (.below 112) (.bufferAddress 88)"), False),
+                          ("whole_accept_nested_post_existential", ad.replace(".at (.below 120) (.ptr 3), .at (.below 112) (.bufferAddress 88)",
+                                                                              ".at (.below 120) (.ptr 3), .at (.below 112) (.existential 0)"), False),
+                          ("whole_accept_nested_field_flat", ad.replace(".checkpoint, .checkpoint]", ".checkpoint, .flat .uint64]"), False),
+                          ("whole_accept_nested_callee_dropped", ad.replace(", Prysm.Checkpoint.Code.unmarshalSSZ, Prysm.Epoch.Code.unmarshalSSZ]",
+                                                                            ", Prysm.Checkpoint.Code.unmarshalSSZ]"), False),
+                          ("whole_accept_nested_pc", ad.replace("⟨173, 4, ", "⟨172, 4, "), False)):
+        n += 1
+        errs, _ = check_whole_accept(text)
+        if (not errs) != ok:
+            bad.append((cid, errs[:2]))
+    # the AttestationData layout, transcribed by hand from the frame of `Prysm.AttestationData.Decode.accept`
+    # (lean/Prysm/AttestationData/DecodeAccept.lean): spills, three argument words, the root pointer save at rsp - 16, the
+    # return slot, `S + 96` low bytes; after the Target block: its object pointer, `rbx + 88`, one unknown word
+    n += 1
+    sp, sraw, iraw = whole_accept_inputs("AttestationData", "link-set")
+    fields, sz = whole_accept_ir(iraw.decode(), "v1alpha1.AttestationData")
+    E = whole_accept_expect([l.strip() for l in sraw.decode("ascii").split("\n") if l.strip()], fields, sz)
+    hand = ("(Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ, Prysm.CommitteeIndex.Code.unmarshalSSZ, Prysm.Checkpoint.Code.unmarshalSSZ, "
+            "Prysm.Epoch.Code.unmarshalSSZ] 10 [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)] [.at (.below 8) (.original 0), "
+            ".at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), .at (.below 120) (.original 4), "
+            ".at (.below 112) (.original 5), .at (.below 104) (.original 6), .at (.below 16) (.original 7), .at (.below 128) (.original 8), "
+            ".low (.original 9)] (some ⟨true, 96, 9, 224⟩) 224 true [.fixed 8, .low] [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), "
+            ".at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 120) (.ptr 3), .at (.below 112) (.bufferAddress 88), "
+            ".at (.below 104) (.existential 0), .at (.below 16) (.ptr 0), .at (.below 128) (.ret 193), .low (.existential 1)] 120)")
+    if " ".join(E["L"].split()) != hand or E["fields"] != "[.flat .uint64, .flat .uint64, .flat (.bytes 32), .checkpoint, .checkpoint]":
+        bad.append(("whole_accept_recompute_AttestationData", E["L"], E["fields"]))
+    # the code mutated: the Target callee replaced by the Epoch decoder -> the recomputation refuses
+    n += 1
+    try:
+        dirs = [l.strip() for l in sraw.decode("ascii").split("\n") if l.strip()]
+        k = [x for x, d in enumerate(dirs) if d.endswith("Checkpoint.UnmarshalSSZ")][-1]
+        dirs[k] = "callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ"
+        whole_accept_expect(dirs, fields, sz)
+        bad.append(("whole_accept_code_nested_callee_mutant", "not refused"))
+    except WholeAcceptMismatch:
+        pass
     # an IR mutant: VoluntaryExit ValidatorIndex Go offset 24 (code 16) -> the recomputation refuses
     sp, sraw, iraw = whole_accept_inputs("VoluntaryExit", "link-set")
     d = json.loads(iraw)

@@ -230,6 +230,8 @@ def ir_fields(ir_path, tname):
                 cls, info = "none", f"byte vector of size {v.get('size')} (lemma sizes 4, 20, 32, 48, 96 only)"
         elif k == "uint" and v.get("bits") == 64 and v.get("go_type") == "uint64" and v.get("fixed_size") == 8:
             cls, info = "u64", 8
+        elif k == "pointer" and v.get("deleg"):
+            cls, info = ir_nested_class(v)
         elif k == "overlay" or v.get("deleg"):
             cls, info = ir_callee_class(v)
         else:
@@ -259,6 +261,30 @@ def ir_ssz_size(ir_path, tname):
 PRIM_PKG = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
 CALLEES = {n: f"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"
            for n in ("Slot", "CommitteeIndex", "ValidatorIndex", "Epoch")}
+
+
+# nested container callees with a proved function specification (`Codec.NestedCheckpointCalleeAccept` of
+# `lean/Codec/NestedCheckpointDecode.lean`, proved by `Prysm.Checkpoint.Decode.accept_function_spec_holds`): the Go
+# type name -> the callee label. The SSZ size of the nested container is the `mov $0x28,%ecx` of the block.
+V1ALPHA1_PKG = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+NESTED_CALLEES = {"Checkpoint": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ"}
+NESTED_SIZE = {"Checkpoint": 40}
+# the `lea` of the `abi.Type` word that the block passes to `runtime.newobject` (the type `typeCheckpoint` of the contract)
+NESTED_TYPE_LEA = {"Checkpoint": "lea type__+1289312(%rip),%rax"}
+
+
+def ir_nested_class(v):
+    """IR class of a pointer field: ("nested", callee label) or ("none", reason)."""
+    dt = v.get("delegated_to") or {}
+    if not (v.get("deleg") or {}).get("unmarshaler") or dt.get("k") != "container" or v.get("variable") \
+            or dt.get("variable") or v.get("go_type") != f"*{dt.get('name')}":
+        return "none", (f"field kind {v.get('k')} ({v.get('go_type')}, delegated to {dt.get('k')} {dt.get('name')}): "
+                        f"pointer field that is not a fixed-size nested container with an unmarshaler")
+    if dt.get("pkg") != V1ALPHA1_PKG or dt.get("name") not in NESTED_CALLEES \
+            or v.get("fixed_size") != NESTED_SIZE[dt["name"]] or dt.get("fixed_size") != NESTED_SIZE[dt["name"]]:
+        return "none", (f"field kind {v.get('k')} ({v.get('go_type')}, delegated to {dt.get('k')} {dt.get('name')}): "
+                        f"nested container without a proved function specification (only {', '.join(NESTED_CALLEES)})")
+    return "nested", NESTED_CALLEES[dt["name"]]
 
 
 def ir_callee_class(v):
@@ -409,6 +435,8 @@ def step_parse(d):
         return ("call", m.group(1))
     if d == "lea type__+387072(%rip),%rax":
         return ("lea_mk",)
+    if d in NESTED_TYPE_LEA.values():
+        return ("lea_new", d)
     return ("other", d)
 
 
@@ -609,6 +637,64 @@ def step_inline(dirs, st, f, F, i, a, endA, mA, iA, jl, unit):
             st.slot[x] = ("UNK",)
 
 
+def step_nested(dirs, st, f, cls, info, F, i, a, lea, unit):
+    """The nested Checkpoint block (`nested_checkpoint_decode_window`) at `a` (`lea` at `i`): the window
+    `lea type(%rip),%rax; callq runtime.newobject; cmpl $0x0,runtime.writeBarrier(%rip); jne lwb; mov dR(%rsp),%rdx; jmp lst`,
+    the window `lst: mov %rax,fP(%rdx); mov dB(%rsp),%rbx; add $src,%rbx; mov dC(%rsp),%rdi; add $rest,%rdi;
+    mov $0x28,%ecx; callq fn; test %rax,%rax; je lok` and the label `lok`. The write-barrier path at `lwb` is not walked.
+    Fills `unit` and the dataflow state; any mismatch raises StepStop."""
+    name, src, fo = f[0], f[1], f[2]
+    if cls != "nested":
+        raise StepStop(i, f"directive {i} `{lea}`: nested object, the next IR field is {name} ({cls})",
+                       "set-up order" if cls != "none" else "new field kind")
+    tname = [n for n, fn in NESTED_CALLEES.items() if fn == info][0]
+    if lea != NESTED_TYPE_LEA[tname]:
+        raise StepStop(i, f"nested block at {i} ({name}): `{lea}` is not the type word of {tname}", "other")
+    endA, mA, iA = step_window(dirs, a, [re.escape(lea), r"callq runtime\.newobject",
+                                         r"cmpl \$0x0,runtime\.writeBarrier\(%rip\)", r"jne (\S+)",
+                                         rf"mov ({SHX})\(%rsp\),%rdx", r"jmp (\S+)"], i, f"nested block head at {i}")
+    lwb, dR, lst = mA[3].group(1), _hexs(mA[4].group(1)), mA[5].group(1)
+    jw = step_label_index(dirs, lwb, i)
+    jl = step_label_index(dirs, lst, i)
+    if jl < endA or jw < endA:
+        raise StepStop(i, f"nested block at {i}: label {lst} or {lwb} not after the head window", "other")
+    pat = [re.escape(f"{lst}:"), rf"mov %rax,({SHX})?\(%rdx\)", rf"mov ({SHX})\(%rsp\),%rbx", rf"add \$({SHX}),%rbx",
+           rf"mov ({SHX})\(%rsp\),%rdi", rf"add \$({SHX}),%rdi", rf"mov \$({SHX}),%ecx", r"callq (\S+)",
+           r"test %rax,%rax", r"je (\S+)"]
+    endB, mB, iB = step_window(dirs, jl, pat, jl, f"nested block call at {jl}")
+    fP, dB, src_ = _step_disp(mB[1].group(1)), _hexs(mB[2].group(1)), _hexs(mB[3].group(1))
+    dC, rest, sz, fn, lok = _hexs(mB[4].group(1)), _hexs(mB[5].group(1)), _hexs(mB[6].group(1)), mB[7].group(1), mB[9].group(1)
+    j3 = step_label_index(dirs, lok, jl)
+    checks = [
+        (fn == info, f"callee {fn}, IR callee {info}", "other"),
+        (sz == NESTED_SIZE[tname], f"size immediate {sz:#x}, SSZ size of {tname} {NESTED_SIZE[tname]:#x}", "other"),
+        (fP == fo, f"pointer store at Go offset {fP}, IR Go offset {fo}", "other"),
+        (src_ == src, f"source offset {src_}, IR SSZ offset {src}", "other"),
+        (rest == -src, f"length adjustment {rest}, expected {-src}", "other"),
+        (j3 >= endB, f"continuation label {lok} at {j3} not after the call window", "other"),
+        (st.slot.get(dR) == ("RCV", 0), f"slot {dR:#x} (receiver reload) holds {_vstr(st.slot.get(dR, ('UNK',)))}, "
+         f"not the receiver", "register"),
+        (st.slot.get(dB) == ("BF", 0), f"slot {dB:#x} (buffer reload) holds {_vstr(st.slot.get(dB, ('UNK',)))}, "
+         f"not the buffer", "register"),
+        (st.slot.get(dC) == ("CAP",), f"slot {dC:#x} (capacity reload) holds {_vstr(st.slot.get(dC, ('UNK',)))}, "
+         f"not the buffer capacity", "register"),
+        (min(dR, dB, dC) >= 0x18, f"a slot below rsp + 0x18 (the spill area of the callees): {dR:#x}, {dB:#x}, {dC:#x}",
+         "other"),
+    ]
+    for ok, why, c in checks:
+        if not ok:
+            raise StepStop(i, f"nested block at {i} ({name}): {why}", c)
+    unit.update(kind="nested", fn=fn, lwb=lwb, lst=lst, lok=lok, dR=dR, fP=fP, dB=dB, src=src_, dC=dC, rest=rest,
+                j1=a, nA=endA - a, j2=jl, nB=endB - jl, jc=iB[7], j3=j3, e=j3 + 1)
+    st.clobber()
+    st.r["rax"], st.r["rbx"] = ("IMM", 0), ("IMM", 0)
+    # the block writes sp (the object pointer) and sp + 8 (the callee's spill of rbx) of the frame
+    for x in list(st.slot):
+        if x < 0x10:
+            st.slot[x] = ("UNK",)
+    st.slot[8] = ("BF", src)
+
+
 def step_walk(dirs, fields, head_end, slots0, F):
     """The dataflow walk. Returns (done, stop, end): done = list of (field index, [emitted units]) for the complete
     fields in IR order; stop = None or the StepStop that ended the walk; end = the directive after the last field
@@ -677,7 +763,7 @@ def _step_walk(dirs, fields, head_end, slots0, F, done):
         if k == "nop":
             i += 1
             continue
-        if seg_open is not None and k in ("call", "lea_mk"):
+        if seg_open is not None and k in ("call", "lea_mk", "lea_new"):
             raise StepStop(i, f"block at {i} before the pointer store of byte field {fields[seg_open][0]}", "set-up order")
         unit = dict(kind=k, j=a, e=i + 1, jd=i, text=d)
         if k == "label":
@@ -817,6 +903,12 @@ def _step_walk(dirs, fields, head_end, slots0, F, done):
             st.slot[8] = ("BF", src)
             complete(unit)
             i, a = j2 + 1, j2 + 1
+            continue
+        elif k == "lea_new":
+            step_nested(dirs, st, fld(), cls, info, F, i, a, op[1], unit)
+            pend.append(unit)
+            complete()
+            i, a = unit["e"], unit["e"]
             continue
         elif k == "lea_mk":
             if cls != "bytes":
@@ -1213,6 +1305,78 @@ def step_inline_text(C, prefix, fname, ssz, u):
     return out + "\n", name
 
 
+# the statement of the nested Checkpoint block (`Codec.nested_checkpoint_decode_window`, kind `nestedCheckpointDecodeKindWindow`)
+STEP_NESTED_STATEMENT = """theorem {name} (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : LabelsFresh {C} k) :
+    ∀
+    (S : Nat) (hS8 : 8 ≤ S) (hS : S < 2 ^ 60) (Heap : Nat → DataMem → Prop)
+    (hC : NestedCheckpointCalleeAccept "{fn}" Heap S)
+    (hno : NewobjectContract Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 (S + 96))
+    (sp rcv bf aR aB aC aW1 aRet aLo aP aSrc aRoot : BitVec 64)
+    (hR : sp + {dR}.toBitVec = aR) (hB' : sp + {dB}.toBitVec = aB) (hC' : sp + {dC}.toBitVec = aC)
+    (hW1 : sp + 8 = aW1) (hRet : sp - 8 = aRet) (hLo : sp - 8 - BitVec.ofNat 64 (S + 96) = aLo)
+    (hP : rcv + {fP}.toBitVec = aP) (hSrc : bf + {src}.toBitVec = aSrc) (hRoot : aSrc + 8 = aRoot)
+    (rbp0 r140 guard : UInt64) (hguard : guard.toNat + 96 < aRet.toNat)
+    (e8 root : List UInt8) (he8 : e8.length = 8) (hroot : root.length = 32)
+    (w0 w1 rslot lo cap vP : List UInt8) (hw0 : w0.length = 8) (hw1 : w1.length = 8) (hrs : rslot.length = 8)
+    (hlo : lo.length = S + 96) (hcap : cap.length = 8) (hvP : vP.length = 8)
+    (avail : Nat) (hav : 104 ≤ avail) (R : DataMem → Prop)
+    (s : MachineData) (hrsp : s.regs.rsp = {{ toBitVec := sp }}) (hrbp : s.regs.rbp = rbp0)
+    (hr14 : s.regs.r14 = r140)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ Eq ((Int.toBytes 8 bf.toInt).At aB)
+      ⋆ Eq (cap.At aC) ⋆ Eq (w0.At sp) ⋆ Eq (w1.At aW1) ⋆ Eq (rslot.At aRet) ⋆ Eq (lo.At aLo)
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
+      ⋆ Heap avail
+      ⋆ Eq (vP.At aP) ⋆ Eq (e8.At aSrc) ⋆ Eq (root.At aRoot)
+      ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {j3} + 1) ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
+        ∧ st.data.regs.rsp = {{ toBitVec := sp }} ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
+        ∃ (po pr : BitVec 64) (lo' : List UInt8), lo'.length = S + 96 ∧
+        (Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ Eq ((Int.toBytes 8 bf.toInt).At aB)
+          ⋆ Eq (cap.At aC) ⋆ Eq ((Int.toBytes 8 po.toInt).At sp) ⋆ Eq ((Int.toBytes 8 aSrc.toInt).At aW1)
+          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + {jc} + 1)).toBitVec.toInt).At aRet) ⋆ Eq (lo'.At aLo)
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
+          ⋆ Heap (avail - 104)
+          ⋆ Eq ((Int.toBytes 8 po.toInt).At aP)
+          ⋆ Eq ((List.replicate 8 0).At po) ⋆ Eq (e8.At (po + 8))
+          ⋆ Eq ((Int.toBytes 8 pr.toInt).At (po + 16)) ⋆ Eq ((Int.toBytes 8 32).At (po + 24))
+          ⋆ Eq ((Int.toBytes 8 32).At (po + 32)) ⋆ Eq ((List.replicate 32 0).At (po + 40))
+          ⋆ Eq (root.At pr)
+          ⋆ Eq (e8.At aSrc) ⋆ Eq (root.At aRoot)
+          ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf (k + {j1})⟩ := by
+"""
+
+
+def step_nested_text(C, prefix, fname, ssz, u):
+    name = f"{prefix}_{fname}_nested"
+    j1, j2, j3, nA, nB, jc = u["j1"], u["j2"], u["j3"], u["nA"], u["nB"], u["jc"]
+    out = STEP_SEGMENT_OPTIONS + (f"/-- `{fname}` (nested Checkpoint, SSZ offset {ssz}, Go offset {u['fP']}): new object and callee "
+                                  f"over the windows {j1}–{j1 + nA - 1} and {j2}–{j2 + nB - 1} (`callq` at {jc}), continuation "
+                                  f"label at {j3}. -/\n")
+    out += STEP_NESTED_STATEMENT.format(name=name, C=C, fn=u["fn"], dR=_i64(u["dR"]), dB=_i64(u["dB"]), dC=_i64(u["dC"]),
+                                        fP=_i64(u["fP"]), src=_i64(u["src"]), j1=j1, jc=jc, j3=j3)
+    lwb, lst, lok = lean_str(u["lwb"]), lean_str(u["lst"]), lean_str(u["lok"])
+    out += f"  have hqA := Codec.window_infix_at hk {j1} {nA}\n"
+    out += (f"  have heA : Codec.eraseNop (({C}.drop {j1}).take {nA}) = Codec.nestedCheckpointAllocate {lwb} {lst} "
+            f"{_lit(u['dR'])} := by rfl\n")
+    out += f"  have hqB := Codec.window_infix_at hk {j2} {nB}\n"
+    out += (f"  have heB : Codec.eraseNop (({C}.drop {j2}).take {nB}) = Codec.nestedCheckpointCall {lst} {lean_str(u['fn'])} {lok} "
+            f"{_lit(u['fP'])} {_lit(u['dB'])} {_lit(u['src'])} {_lit(u['dC'])} {_lit(u['rest'])} := by rfl\n")
+    out += f"  have hjl : k + {j2} + Codec.nonNopIndex (({C}.drop {j2}).take {nB}) 0 = k + {j2} := by rfl\n"
+    out += step_label_have("hls", j2, C)
+    out += f"  have hjc : k + {j2} + Codec.nonNopIndex (({C}.drop {j2}).take {nB}) 7 = k + {jc} := by rfl\n"
+    out += (f"  have hB := Codec.infix_sub (q := Codec.callDecodeContinuationLabel {lok}) {j3} hk\n"
+            f"    (by simp only [{C}, Codec.callDecodeContinuationLabel, {SIMP_INFIX}])\n")
+    out += step_label_have("hl", j3, C)
+    out += (f"  with_reducible exact Codec.nested_checkpoint_decode_window _ _ _ _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
+            f"(k + {j3}) (k + {j2}) (k + {jc}) hqA heA hqB heB hjl hls hjc hB hl\n")
+    kpar = (f"{C} {lean_str(u['fn'])} {j1} {jc} {j3} {_lit(u['dR'])} {_lit(u['fP'])} {_lit(u['dB'])} {_lit(u['src'])} "
+            f"{_lit(u['dC'])}")
+    out += kind_thm(name, f"Codec.nestedCheckpointDecodeKindWindow h {kpar}")
+    return out + "\n", name
+
+
 STEP_FLAGS = ("head_ok", "fields_complete", "epilogue_ok")
 
 
@@ -1315,6 +1479,9 @@ def _decoder_step(args, flags):
                 elif u["kind"] == "inline":
                     t, nm = step_inline_text(C, pre, fname, src, u)
                     used.add("inline")
+                elif u["kind"] == "nested":
+                    t, nm = step_nested_text(C, pre, fname, src, u)
+                    used.add("nested")
                 else:
                     t, nm = step_step_text(C, pre, u)
                 body += t
@@ -1324,6 +1491,8 @@ def _decoder_step(args, flags):
                 shape = f"call field ({info.split('.')[-2]}): {len(units) - 1} set-up steps + call block"
             elif cls == "bytes":
                 shape = f"byte field ({info} bytes): {sum(u['kind'] not in ('seg', 'inline') for u in units)} steps + segment"
+            elif cls == "nested":
+                shape = f"nested field ({info.split('.')[-2]}): {len(units) - 1} set-up steps + nested block"
             else:
                 shape = f"uint64 field: {len(units)} steps"
             rec.update(status="covered", reached=True, shape=shape, directives=[lo, hi], theorems=names)
@@ -1346,7 +1515,8 @@ def _decoder_step(args, flags):
         raise NoMatch("; ".join(report))
     kinds = (["Codec.Kind.WindowSteps", "Codec.Kind.FixedBytesDecodeWindow", "Codec.Kind.CalleeDecodeWindow"]
              + (["Codec.Kind.FixedBytesDecodeWindowOffsetZero"] if "segz" in used else [])
-             + (["Codec.Kind.FixedBytesDecodeInline"] if "inline" in used else []))
+             + (["Codec.Kind.FixedBytesDecodeInline"] if "inline" in used else [])
+             + (["Codec.Kind.NestedCheckpointDecode"] if "nested" in used else []))
     # the coverage header text is fixed: `kindcheck.py` rule 11 reads it
     extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); step coverage: "
              f"{ncov} of {len(fields)} fields; step chain from directive {head_end} (end of the head)")
@@ -1418,15 +1588,21 @@ def _decoder_whole_accept(args, flags):
     whole_accept_gen = whole_accept_module()
     # the generated proofs name the code constant and the spec theorem of each callee: import their modules
     callee_mods, called = [], set()
+    nested = whole_accept_gen.WHOLE_ACCEPT_NESTED_CALLEES
     for d in read_S(args.assembly)[0]:
         m = re.fullmatch(r"callq (\S+)", d)
-        if m and m.group(1) in whole_accept_gen.WHOLE_ACCEPT_CALLEES:
-            called.add(m.group(1))
-            mod = whole_accept_gen.WHOLE_ACCEPT_CALLEES[m.group(1)][0].rsplit(".", 1)[0]
+        fns = [] if not m else ([m.group(1)] if m.group(1) in whole_accept_gen.WHOLE_ACCEPT_CALLEES else
+                                [m.group(1)] + nested[m.group(1)][3] if m.group(1) in nested else [])
+        for x, fn in enumerate(fns):
+            if x == 0:
+                called.add(fn)
+            mod = (nested[fn] if fn in nested else whole_accept_gen.WHOLE_ACCEPT_CALLEES[fn])[0].rsplit(".", 1)[0]
             if mod not in callee_mods:
                 callee_mods.append(mod)
     spec_mods = [mod for fn, mod in whole_accept_gen.WHOLE_ACCEPT_CALLEE_SPEC_MODULES.items() if fn in called]
     fixed = whole_accept_gen.WHOLE_ACCEPT_IMPORTS
+    if any(fn in nested for fn in called):
+        fixed = fixed[:1] + [whole_accept_gen.WHOLE_ACCEPT_NESTED_IMPORT] + fixed[1:]
     mods = args.imports.split(",")
     mods += [m for m in callee_mods if m not in mods]
     args.imports = ",".join(mods + [m for m in fixed[:2] + spec_mods + fixed[2:] if m not in mods])
@@ -1454,8 +1630,9 @@ def _decoder_whole_accept(args, flags):
     blocks = t.field_theorems()
     if [x for f in t.fspec for x in range(f['first'], f['field'] + 1)] != list(range(n)) or len(t.states) != len(blocks) + 1:
         raise whole_accept_gen.WholeAcceptRefuse(f"field theorems {blocks} do not cover the {n} fields in order")
-    want = ([(f"{args.prefix}_head", "decodeHeadKindAnyFrame")] + [(b, "decodeFieldKindAnyFrame") for b in blocks]
-            + [(f"{args.prefix}_epilogue", "decodeEpilogueKindAnyFrame"), (f"{args.prefix}_accept", "decodeAcceptKindAnyFrame"),
+    want = ([(f"{args.prefix}_head", t.kindname("decodeHeadKindAnyFrame"))] + [(b, t.kindname("decodeFieldKindAnyFrame")) for b in blocks]
+            + [(f"{args.prefix}_epilogue", t.kindname("decodeEpilogueKindAnyFrame")),
+               (f"{args.prefix}_accept", t.kindname("decodeAcceptKindAnyFrame")),
                (f"{args.prefix}_reject", "decodeRejectKindAnyFrame")])
     if t.kinds_emitted != want:
         raise whole_accept_gen.WholeAcceptRefuse(f"kind lines emitted {t.kinds_emitted}, required {want}")
