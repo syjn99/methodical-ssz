@@ -14,6 +14,7 @@ For each input:
 3. If both accept, `HashTreeRoot` must equal the EthLib root.
 
 A difference fails the target. Go saves the input in `testdata/fuzz/<target>/`.
+The two presets share that directory. A saved input shows its difference only at the preset that found it.
 
 `targets_test.go` lists the targets: the Prysm types of Fulu and Gloas that have an EthLib container.
 A target skips itself if EthLib answers with code 0 (no such container at the fork).
@@ -38,6 +39,14 @@ The first EthLib build takes about 30 minutes. Later runs use the build in `$ETH
 ./fuzzall.sh                          # each target for 5 minutes, mainnet preset
 PRESET=minimal ./fuzzall.sh           # minimal preset
 FUZZTIME=1h ./fuzzall.sh BeaconState  # only the targets that match
+```
+
+A target stops at its first difference.
+To fuzz past a class of differences that is already recorded, give its message as a regular expression.
+The harness then skips those inputs:
+
+```sh
+KNOWN='paddingBits|ssz-max exceeded' ./fuzzall.sh
 ```
 
 To fuzz one target by hand: `go test -run '^$' -fuzz '^FuzzCheckpoint$' -fuzzminimizetime 5s .`

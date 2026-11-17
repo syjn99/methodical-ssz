@@ -2,8 +2,10 @@ package fuzz
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"testing"
 
 	"github.com/OffchainLabs/methodical-ssz/fuzz/oracle"
@@ -58,31 +60,51 @@ func run[T any, P interface {
 	})
 }
 
+// KNOWN is a regular expression. A difference whose message matches it skips
+// the input, so that a recorded class of findings does not stop the target.
+// Without KNOWN every difference fails.
+var known = func() *regexp.Regexp {
+	if e := os.Getenv("KNOWN"); e != "" {
+		return regexp.MustCompile(e)
+	}
+	return nil
+}()
+
+func differ(t *testing.T, format string, args ...any) {
+	msg := fmt.Sprintf(format, args...)
+	if known != nil && known.MatchString(msg) {
+		t.Skip(msg)
+	}
+	t.Fatal(msg)
+}
+
 func check(t *testing.T, obj codec, fork, name string, data []byte) {
 	verdict, wantRoot, out := oracle.SszStatic(preset, fork, name, data)
 	if verdict == oracle.Unsupported {
 		t.Fatalf("%s/%s: EthLib gave no verdict: %s", fork, name, out)
 	}
 	err := obj.UnmarshalSSZ(data)
-	if (err == nil) != (verdict == oracle.Accept) {
-		t.Fatalf("%s/%s: accept/reject differs: UnmarshalSSZ error = %v, EthLib: %s",
-			fork, name, err, map[bool]any{true: "accepted", false: string(out)}[verdict == oracle.Accept])
+	if err == nil && verdict == oracle.Reject {
+		differ(t, "%s/%s: methodical accepts, EthLib rejects: %s", fork, name, out)
+	}
+	if err != nil && verdict == oracle.Accept {
+		differ(t, "%s/%s: EthLib accepts, methodical rejects: %v", fork, name, err)
 	}
 	if err != nil {
 		return
 	}
 	enc, err := obj.MarshalSSZ()
 	if err != nil {
-		t.Fatalf("%s/%s: MarshalSSZ fails on a decoded value: %v", fork, name, err)
+		differ(t, "%s/%s: MarshalSSZ fails on a decoded value: %v", fork, name, err)
 	}
 	if !bytes.Equal(enc, out) {
-		t.Fatalf("%s/%s: encoding differs:\nmethodical %x\nEthLib     %x", fork, name, enc, out)
+		differ(t, "%s/%s: encoding differs:\nmethodical %x\nEthLib     %x", fork, name, enc, out)
 	}
 	root, err := obj.HashTreeRoot()
 	if err != nil {
-		t.Fatalf("%s/%s: HashTreeRoot fails on a decoded value: %v", fork, name, err)
+		differ(t, "%s/%s: HashTreeRoot fails on a decoded value: %v", fork, name, err)
 	}
 	if root != wantRoot {
-		t.Fatalf("%s/%s: root differs: methodical %x, EthLib %x", fork, name, root, wantRoot)
+		differ(t, "%s/%s: root differs: methodical %x, EthLib %x", fork, name, root, wantRoot)
 	}
 }
