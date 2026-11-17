@@ -8,7 +8,9 @@ The design principles are in `../README.md`.
 The rules are in `../AGENTS.md`.
 The steps to prove a type are in `NEW-TYPE.md`.
 
-The per-method state of the proofs is the generated table `prysm/proof-inventory.md`.
+The per-method state of the proofs is the proof inventory, a table that `gen/tools/proof_inventory.py` writes.
+The tree does not hold it, because each proof changes it.
+CI makes it on each run and keeps it as the artifact `proof-inventory` (section 5).
 Do not copy its numbers into other documents.
 Run the inventory again instead (section 5).
 
@@ -167,13 +169,14 @@ python3 -I -B fv/kraken/gen/checks/decl_drift.py <base.tsv> <head.tsv>
   On macOS, run it in a Linux container that has the toolchain of `lean/lean-toolchain`.
 - The drift check compares a dump with the dump of a reviewed tree.
 
-The proof inventory `prysm/proof-inventory.md` needs a built tree and the JSON of an axioms gate run on it (cwd `fv/kraken`):
+The proof inventory needs a built tree and the JSON of an axioms gate run on it (cwd `fv/kraken`).
+The CI workflow runs these commands and keeps the two output files as the artifact `proof-inventory`:
 
 ```sh
 python3 -I -B gen/tools/proof_inventory.py names <scratch>/inventory-names.txt
 cd lean && lake env lean --run ../gen/tools/inventory_decls.lean <scratch>/inventory-names.txt \
   $(cd .. && find lean/Prysm -name '*.lean' | sed 's|^lean/||;s|\.lean$||;s|/|.|g' | sort) > <scratch>/decls.tsv && cd ..
-python3 -I -B gen/tools/proof_inventory.py run <scratch>/decls.tsv <scratch>/gate.json prysm/proof-inventory.md prysm/proof-inventory.json
+python3 -I -B gen/tools/proof_inventory.py run <scratch>/decls.tsv <scratch>/gate.json <scratch>/proof-inventory.md <scratch>/proof-inventory.json
 ```
 
 **Python only.** These use only tracked files.
@@ -296,7 +299,6 @@ Change the tool and run it again.
 | `prysm/ir/ir-mainnet.json`, `prysm/ir/ir-minimal.json` | `gen/type_inventory.py reduce` | Section 3 | The sha256 in the header of each generated module. `kindcheck.py` compares it |
 | `prysm/inventory.json` | `gen/type_inventory.py build` | `python3 -I gen/type_inventory.py build prysm` | None |
 | `prysm/TYPES.md` | `gen/type_list_document.py` | `python3 -I gen/type_list_document.py prysm` | None |
-| `prysm/proof-inventory.md`, `prysm/proof-inventory.json` | `gen/tools/proof_inventory.py run` | Section 5 (needs Lean) | The tool fails when a mapped theorem is missing or has another axiom |
 | `prysm/_generated/**` | `gen/prysm-gen.sh` (its `<out>/gen/`). No tool writes `SHA256SUMS` | `sh gen/prysm-gen.sh <prysm-tree> <generator-binary> <out> gen`, then copy | `cd prysm/_generated && sha256sum -c SHA256SUMS` |
 | `prysm/diff/generated-go-diff.json` | `gen/generated_go_diff.py` | `python3 -I gen/generated_go_diff.py <prysm-tree> <out>/gen <out dir>` | None |
 | `prysm/differential-cases/*.json` | `gen/checks/differential.py cases` | `python3 -I -B gen/checks/differential.py cases <dir>`, then compare with `diff -r` | `gen/prysm-rebuild-and-check.sh` step 4, and the Go program (section 5) |

@@ -15,7 +15,6 @@ How to build the target ELF again is in `../README.md` section 3.
 | `ir/ir-mainnet.json`, `ir/ir-minimal.json` | The reduced generator IR (intermediate representation) of each type, with the Go field layout `go_fields` | `gen/type_inventory.py reduce` |
 | `inventory.json` | The type inventory: every generated type, its fields and its delegations | `gen/type_inventory.py build` |
 | `TYPES.md` | The type list of the inventory | `gen/type_list_document.py` |
-| `proof-inventory.md`, `proof-inventory.json` | The per-method table of theorems, witnesses and paths not proved | `gen/tools/proof_inventory.py run` (with the outputs of `inventory_decls.lean` and of an axioms gate run on the built tree) |
 | `_generated/` | The Go files that the pinned generator wrote for Prysm, and their `SHA256SUMS` | `gen/prysm-gen.sh` (no tool writes `SHA256SUMS`) |
 | `diff/` | A classification of the differences between these files and the Prysm files | `gen/generated_go_diff.py` |
 | `differential-cases/` | The Go differential cases, one file `<package>.<Type>.json` per Go type | `gen/checks/differential.py cases` |

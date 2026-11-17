@@ -78,7 +78,7 @@ One function of one type is done only when all of these items exist.
    A type without this check has an entry in `kraken/FINDINGS.md`.
 8. **Axioms and drift checks.** See section 6.
 9. **List of paths not proved.** For example, the stack growth path and the garbage collector write barrier path.
-   The generated table `kraken/prysm/proof-inventory.md` gives this list for each method.
+   The proof inventory gives this list for each method (`kraken/README.md` section 5).
 
 Never write "complete" for a function that has an item in its list of paths not proved.
 
