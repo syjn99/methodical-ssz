@@ -198,7 +198,7 @@ class Partial(Exception):
 
 
 FIELD_SEGMENT_SIZES = (32, 48, 96)
-SIZE_CASE_PROOF = {32: "Or.inl rfl", 48: "Or.inr (Or.inl rfl)", 96: "Or.inr (Or.inr rfl)"}
+SIZE_CASE_PROOF = {32: "Or.inl rfl", 48: "Or.inr (Or.inl rfl)", 96: "Or.inr (Or.inr (Or.inl rfl))"}
 
 
 def ir_fields(ir_path, tname):

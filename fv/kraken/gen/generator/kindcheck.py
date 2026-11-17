@@ -379,7 +379,7 @@ STEP_TEST_KINDS = {
     "pending_partial_withdrawal_step_directive_130": ("@Codec.stepLabelKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pending_partial_withdrawal_200\" 130 131", 'step_label "L_pending_partial_withdrawal_200" _ (k + 130) (k + 131) hq he hend'),
     "pending_partial_withdrawal_step_directive_131": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rax 24 131 132", "step_store Reg64.rsi Reg64.rax 24 _ (k + 131) (k + 132) hq he hend"),
     "pending_partial_withdrawal_step_Sig_segment": ("@Codec.bytesDecodeSegmentOffsetZeroKindWindow h 96 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdx 132 150 156 112 120 56 48 56 64",
-                         "bytes_decode_segment_offset_zero_window 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 132) (k + 145) (k + 145) (k + 150) (k + 156) hqA heA hqB heB hjl hl hjm hend"),
+                         "bytes_decode_segment_offset_zero_window 96 (Or.inr (Or.inr (Or.inl rfl))) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 132) (k + 145) (k + 145) (k + 150) (k + 156) hqA heA hqB heB hjl hl hjm hend"),
     "pending_partial_withdrawal_step_directive_156": ("@Codec.stepLoadValueKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rsp 56 156 157", "step_load_value Reg64.rsi Reg64.rsp 56 _ (k + 156) (k + 157) hq he hend"),
     "pending_partial_withdrawal_step_directive_157": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rdx 48 157 158", "step_store Reg64.rsi Reg64.rdx 48 _ (k + 157) (k + 158) hq he hend"),
 }

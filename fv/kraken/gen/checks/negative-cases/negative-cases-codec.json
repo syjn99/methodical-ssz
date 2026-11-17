@@ -504,5 +504,89 @@
   "kind": "statement",
   "old": "st.data.regs.rax = e0 ∧ st.data.regs.rbx = e1",
   "new": "st.data.regs.rax = e1 ∧ st.data.regs.rbx = e0"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-window-bytes-decode-window-20-rdx-rax-control",
+  "module": "Codec/FixedBytesDecodeWindow.lean",
+  "theorem": "bytes_decode_window_20_rdx_rax",
+  "kind": "control"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-window-bytes-decode-window-20-rdx-rax-statement-bytes-decode-window-20-to-32",
+  "module": "Codec/FixedBytesDecodeWindow.lean",
+  "theorem": "bytes_decode_window_20_rdx_rax",
+  "kind": "statement",
+  "old": "BytesDecodeWindow 20 Reg64.rdx Reg64.rax",
+  "new": "BytesDecodeWindow 32 Reg64.rdx Reg64.rax"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-window-offset-zero-bytes-decode-window-offset-zero-20-rdx-rdx-control",
+  "module": "Codec/FixedBytesDecodeWindowOffsetZero.lean",
+  "theorem": "bytes_decode_window_offset_zero_20_rdx_rdx",
+  "kind": "control"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-window-offset-zero-bytes-decode-window-offset-zero-20-rdx-rdx-statement-bytes-decode-offset-zero-window-20-to-48",
+  "module": "Codec/FixedBytesDecodeWindowOffsetZero.lean",
+  "theorem": "bytes_decode_window_offset_zero_20_rdx_rdx",
+  "kind": "statement",
+  "old": "BytesDecodeOffsetZeroWindow 20 Reg64.rdx Reg64.rdx",
+  "new": "BytesDecodeOffsetZeroWindow 48 Reg64.rdx Reg64.rdx"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-inline-bytes-decode-inline-window-rdx-rsi-rdi-control",
+  "module": "Codec/FixedBytesDecodeInline.lean",
+  "theorem": "bytes_decode_inline_window_rdx_rsi_rdi",
+  "kind": "control"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-inline-bytes-decode-inline-window-rdx-rsi-rdi-statement-bytes-decode-inline-window-rsi-to-rbx",
+  "module": "Codec/FixedBytesDecodeInline.lean",
+  "theorem": "bytes_decode_inline_window_rdx_rsi_rdi",
+  "kind": "statement",
+  "old": "BytesDecodeInlineWindow Reg64.rdx Reg64.rsi Reg64.rdi",
+  "new": "BytesDecodeInlineWindow Reg64.rdx Reg64.rbx Reg64.rdi"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-inline-bytes-decode-inline-segment-window-control",
+  "module": "Codec/FixedBytesDecodeInline.lean",
+  "theorem": "bytes_decode_inline_segment_window",
+  "kind": "control"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-inline-bytes-decode-inline-segment-window-statement-h-b-t-rdi-to-rsi",
+  "module": "Codec/FixedBytesDecodeInline.lean",
+  "theorem": "bytes_decode_inline_segment_window",
+  "kind": "statement",
+  "old": "(rB = Reg64.rsi ∧ rT = Reg64.rdi)",
+  "new": "(rB = Reg64.rsi ∧ rT = Reg64.rsi)"
+ },
+ {
+  "id": "codec-encode-inline-copy-step-load-bytes32-control",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "step_load_bytes32",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-inline-copy-step-load-bytes32-statement-hbs-4-to-8",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "step_load_bytes32",
+  "kind": "statement",
+  "old": "(hbs : bs.length = 4)",
+  "new": "(hbs : bs.length = 8)"
+ },
+ {
+  "id": "codec-encode-inline-copy-step-store-indexed32-control",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "step_store_indexed32",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-inline-copy-step-store-indexed32-statement-to-bytes-4-to-8",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "step_store_indexed32",
+  "kind": "statement",
+  "old": "(Int.toBytes 4 (BitVec.extractLsb' 0 32 (s.regs.get64 rS)).toInt)",
+  "new": "(Int.toBytes 8 (BitVec.extractLsb' 0 32 (s.regs.get64 rS)).toInt)"
  }
 ]
