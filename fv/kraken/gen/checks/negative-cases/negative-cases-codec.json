@@ -540,12 +540,13 @@
   "kind": "control"
  },
  {
-  "id": "codec-fixed-bytes-decode-inline-bytes-decode-inline-window-rdx-rsi-rdi-statement-bytes-decode-inline-window-rsi-to-rbx",
+  "id": "codec-fixed-bytes-decode-inline-bytes-decode-inline-window-rdx-rsi-rdi-statement-bytes-decode-inline-window-rdi-to-rsi",
   "module": "Codec/FixedBytesDecodeInline.lean",
   "theorem": "bytes_decode_inline_window_rdx_rsi_rdi",
   "kind": "statement",
   "old": "BytesDecodeInlineWindow Reg64.rdx Reg64.rsi Reg64.rdi",
-  "new": "BytesDecodeInlineWindow Reg64.rdx Reg64.rbx Reg64.rdi"
+  "new": "BytesDecodeInlineWindow Reg64.rdx Reg64.rsi Reg64.rsi",
+  "note": "The temporary register equal to the buffer register: the copy overwrites the buffer pointer, so the fact get64 rB = bf fails."
  },
  {
   "id": "codec-fixed-bytes-decode-inline-bytes-decode-inline-segment-window-control",
@@ -582,11 +583,11 @@
   "kind": "control"
  },
  {
-  "id": "codec-encode-inline-copy-step-store-indexed32-statement-to-bytes-4-to-8",
+  "id": "codec-encode-inline-copy-step-store-indexed32-statement-hbs-4-to-8",
   "module": "Codec/EncodeInlineCopy.lean",
   "theorem": "step_store_indexed32",
   "kind": "statement",
-  "old": "(Int.toBytes 4 (BitVec.extractLsb' 0 32 (s.regs.get64 rS)).toInt)",
-  "new": "(Int.toBytes 8 (BitVec.extractLsb' 0 32 (s.regs.get64 rS)).toInt)"
+  "old": "(hbs : bs.length = 4)",
+  "new": "(hbs : bs.length = 8)"
  }
 ]
