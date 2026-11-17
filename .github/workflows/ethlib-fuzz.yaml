@@ -1,0 +1,92 @@
+name: ethlib-fuzz
+
+# Runs the differential targets in fuzz/ on their seeds and saved inputs.
+# It does not fuzz. known.txt filters the recorded differences.
+
+on:
+  pull_request:
+    paths:
+      - 'sszgen/**'
+      - 'ssz/**'
+      - 'cmd/**'
+      - 'fuzz/**'
+      - 'go.mod'
+      - 'go.sum'
+      - '.github/workflows/ethlib-fuzz.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ethlib-fuzz-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04-arm, ubuntu-latest]
+    runs-on: ${{ matrix.runner }}
+    defaults:
+      run:
+        working-directory: fuzz
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: 'fuzz/go.mod'
+        cache-dependency-path: 'fuzz/go.sum'
+
+    - name: Read the pins
+      id: pins
+      run: |
+        echo "ethlib=$(sed -n 's/^COMMIT=//p' ethlib.sh)" >>"$GITHUB_OUTPUT"
+        echo "spec=$(sed -n 's/^VERSION=\([^ ]*\).*/\1/p' seeds.sh)" >>"$GITHUB_OUTPUT"
+
+    # The link needs only the archive and the toolchain, not the 8 GB checkout.
+    - name: Cache the EthLib archive
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/ethlib-fuzz/EthLib/libethlib.a
+          ~/.cache/ethlib-fuzz/EthLib/libethlib.commit
+          ~/.cache/ethlib-fuzz/EthLib/lean-toolchain
+        key: ethlib-${{ runner.os }}-${{ runner.arch }}-${{ steps.pins.outputs.ethlib }}-${{ hashFiles('fuzz/ethlib.sh') }}
+
+    - name: Cache the seeds
+      uses: actions/cache@v4
+      with:
+        path: fuzz/.seeds
+        key: seeds-${{ steps.pins.outputs.spec }}-${{ hashFiles('fuzz/seeds.sh') }}
+
+    - name: Install elan
+      run: |
+        curl -sSfL "https://github.com/leanprover/elan/releases/download/v4.2.4/elan-$(uname -m)-unknown-linux-gnu.tar.gz" | tar -xz
+        ./elan-init -y --default-toolchain none
+        rm elan-init
+        echo "$HOME/.elan/bin" >>"$GITHUB_PATH"
+
+    - name: Generate the Prysm types
+      run: ./gen.sh
+
+    - name: Build EthLib
+      run: ./ethlib.sh >/dev/null
+
+    - name: Get the seeds
+      run: '[[ -f .seeds/complete ]] || ./seeds.sh'
+
+    - name: Test mainnet
+      run: |
+        env=$(./ethlib.sh)
+        eval "$env"
+        go test .
+
+    - name: Test minimal
+      run: |
+        env=$(./ethlib.sh)
+        eval "$env"
+        go test -tags minimal .

@@ -1,0 +1,19 @@
+# Classes of differences that are recorded. One regular expression per line.
+# A difference whose message matches a line skips the input.
+# Set STRICT=1 to turn this filter off.
+# Keep each line as narrow as the recorded class. Remove a line when its fix merges.
+
+# The decoder accepts a byte list longer than ssz-max: ExtraData, limit 32.
+# Bug. Fix proposed in PR #27. EthLib's message has no field name, so the
+# limit 32 identifies the class.
+methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.overLimit 32 [0-9]+$
+
+# The decoder accepts set padding bits in a Bitvector. Bug. Fix proposed in PR #27.
+methodical accepts, EthLib rejects: input rejected: EthLib\.Serialization\.Ssz\.Err\.paddingBits$
+
+# The decoder rejects a Gloas progressive list or bitlist above its ssz-max tag.
+# The SSZ type has no limit. Soft limit of the generator, added in PR #22.
+# One line for each field where the difference was seen.
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?ssz-max exceeded: c\.BuilderExits has [0-9]+ elements, ssz-max is 16:
+^glamsterdam/[A-Za-z]+: EthLib accepts, methodical rejects: (.*: )?AggregationBits: (too many bits|unexpected number of bytes)
+^glamsterdam/PartialDataColumnSidecar: EthLib accepts, methodical rejects: CellsPresentBitmap: unexpected number of bytes
