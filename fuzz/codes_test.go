@@ -58,10 +58,13 @@ func signal(v oracle.Verdict) {
 
 var codes = flag.Bool("codes", false, "print the EthLib verdicts that the corpus of each target reaches, then skip the target")
 
-// table prints one line for each fork of a target: the number of inputs, the
-// number that both sides accept, and the number of inputs for each EthLib
-// verdict. The inputs are the seeds, testdata/fuzz and the fuzz cache: the
-// -test.fuzzcachedir flag, or else the default cache of `go test -fuzz`.
+// table prints one line for each fork of a target. entries counts the corpus
+// entries: the seed corpus of run, testdata/fuzz and the fuzz cache (the
+// -test.fuzzcachedir flag, or else the default cache of `go test -fuzz`).
+// Identical entries from two sources count twice. The verdicts count EthLib
+// calls, as the fuzz function makes them: one for the bytes of each entry, and
+// one more for the encoding of each value entry that MarshalSSZ encodes.
+// both-accept counts the calls where UnmarshalSSZ accepts too.
 func table[T any, P interface {
 	*T
 	codec
@@ -89,32 +92,30 @@ func table[T any, P interface {
 			corpus = append(corpus, []byte(data))
 		}
 	}
-	// A value input counts with the bytes that MarshalSSZ gives for it.
-	refused := 0
-	for i := 0; i < len(corpus); i++ {
-		if ops, ok := bytes.CutPrefix(corpus[i], valuePrefix); ok {
+	calls, values, refused := corpus, 0, 0
+	for _, data := range corpus {
+		if ops, ok := bytes.CutPrefix(data, valuePrefix); ok {
+			values++
 			obj, _ := mutated[T, P](bases, ops)
-			enc, err := obj.MarshalSSZ()
-			if err != nil {
+			if enc, err := obj.MarshalSSZ(); err != nil {
 				refused++
-				corpus = slices.Delete(corpus, i, i+1)
-				i--
-				continue
+			} else {
+				calls = append(calls, enc)
 			}
-			corpus[i] = enc
 		}
 	}
 	for _, fork := range forks {
 		count := map[oracle.Verdict]int{}
 		both := 0
-		for _, data := range corpus {
+		for _, data := range calls {
 			v, _, _ := oracle.SszStatic(preset, fork, name, data)
 			count[v]++
 			if v == oracle.Accept && P(new(T)).UnmarshalSSZ(data) == nil {
 				both++
 			}
 		}
-		line := fmt.Sprintf("%s %s inputs=%d both-accept=%d marshal-refused=%d", f.Name(), fork, len(corpus)+refused, both, refused)
+		line := fmt.Sprintf("%s %s entries=%d value-entries=%d marshal-refused=%d calls=%d both-accept=%d",
+			f.Name(), fork, len(corpus), values, refused, len(calls), both)
 		for _, v := range slices.Sorted(maps.Keys(count)) {
 			reason := fmt.Sprintf("code%d", v)
 			if int(v) < len(reasons) {

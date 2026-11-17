@@ -75,15 +75,19 @@ To fuzz one target by hand: `go test -run '^$' -fuzz '^FuzzCheckpoint$' -fuzzmin
 
 To see which EthLib verdicts the corpus of each target reaches, give `-codes`.
 Each target then prints one line for each fork and skips itself.
-The corpus is the seeds, `testdata/fuzz/` and the fuzz cache.
 
 ```sh
 go test -v -run '^Fuzz' . -args -codes | grep '^Fuzz'
-# FuzzEngineExecutionRequests fusaka inputs=14 both-accept=6 accept=6 SCOPE_TOO_SMALL=1 SCOPE_UNDIVIDED=4 FIRST_OFFSET=1 OFFSET_PAST_SCOPE=2
+# FuzzCheckpoint fusaka entries=23 value-entries=11 marshal-refused=0 calls=34 both-accept=22 accept=22 SCOPE=12
 ```
 
-`both-accept` counts the inputs that EthLib and `UnmarshalSSZ` both accept.
-A verdict that does not show is not tested yet.
+- `entries` counts corpus entries: the seed corpus (with the value seeds), `testdata/fuzz/` and the fuzz cache.
+  Identical entries from two sources count twice.
+- The verdict counts count EthLib calls, as the fuzz function makes them.
+  Each entry gives one call for its bytes. A value entry gives one more call for its encoding, unless `MarshalSSZ` refuses it (`marshal-refused`).
+- `both-accept` counts the calls where `UnmarshalSSZ` accepts too.
+- A verdict that does not show is not tested yet.
+
 The default cache is the one of `go test -fuzz`. For the cache of `fuzzall.sh`, add `-test.fuzzcachedir` after `-codes`
 with the path that `fuzzall.sh` sets in `CACHE`.
 

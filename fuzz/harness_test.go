@@ -79,14 +79,14 @@ func run[T any, P interface {
 			bases = append(bases, data)
 		}
 	}
+	for i := range min(len(bases), 256) {
+		corpus = append(corpus, append(bytes.Clone(valuePrefix), byte(i)))
+	}
 	if *codes {
 		table[T, P](f, name, forks, corpus, bases)
 	}
 	for _, data := range corpus {
 		f.Add(data)
-	}
-	for i := range min(len(bases), 256) {
-		f.Add(append(bytes.Clone(valuePrefix), byte(i)))
 	}
 	f.Fuzz(func(t *testing.T, data []byte) {
 		// Every input is SSZ bytes first, also one that starts with valuePrefix.
