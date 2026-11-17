@@ -62,6 +62,29 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - Where: the Prysm `consensus-types/blocks` tests `TestMarshalPartsMetadata/available_too_large` and `/requests_too_large`.
   Also `TestPartialDataColumn_PartsMetadata/marshal_error_due_max_bitlist_size`.
 
+### The decoder of a byte list does not check the maximum length
+
+- What does not hold: the generated decoder of a byte list with a maximum does not reject a longer input.
+  The encoder and the hash tree root method of the same type reject such a value.
+  EthLib rejects such an input.
+- Effect: for a type with such a field, the decoder accepts inputs that the specification rejects.
+  An accept theorem against the specification is false for these types until the generator has the check.
+  An example is the field `ExtraData` (maximum 32 bytes) of `ExecutionPayloadDeneb`.
+- Where: the byte list branch of the list decoder in `sszgen/render/unmarshal.go`.
+  `prysm/_generated/` holds the generated decoders.
+
+### One generated file of the target is from an earlier generator
+
+- What does not hold: `gen/prysm-gen.sh` does not run the generator on `non-core.yaml`.
+  So the file `non-core.ssz.go` of the Prysm tree is not the output of the pinned generator.
+- Effect: the ELF holds the code of an earlier generator for the types of that file.
+  The decoder of `MetaDataV2` does not check the padding bits of its `Bitvector4` field.
+  The proved types BeaconBlocksByRangeRequest, BlobSidecarsByRangeRequest, ExecutionPayloadEnvelopesByRangeRequest and ValidatorIdentity are from that file.
+  Their theorems are about the code in the ELF, so they hold.
+  They do not show that the pinned generator emits correct code for these types.
+- Where: the list of configuration files in `gen/prysm-gen.sh`.
+  A change needs a new ELF, and a new ELF needs user approval.
+
 ### The in-place hash call needs an aliasing premise
 
 - What does not hold: `merkleizeChunks` calls `gohashtree.Hash(elements, elements)` with one slice as input and output.
@@ -259,6 +282,29 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   ValidatorIndex and Epoch have these modules.
 - Effect: the reject path `len(buf) ≠ 8` of the two decoders is not proved.
 - Where: `lean/Prysm/Slot/`, `lean/Prysm/CommitteeIndex/`.
+
+### Some lemmas and tactics exist two times
+
+- What does not hold: the tree does not have one copy of each of these items.
+  - `lean/Codec/Segment/ByteSliceList.lean` and `lean/Codec/Segment/Bytes32LoopProof.lean` hold the loop lemmas for any count.
+    `lean/Prysm/HistoricalBatch/DecodeLoopLemmas.lean` and `lean/Prysm/SyncCommittee/DecodeLoopLemmas.lean` hold the same lemmas for one count.
+  - `lean/Codec/Segment/SizeReject.lean` and `lean/Codec/DecodeRejectSizeAnyFrame.lean` both give a size reject for any frame.
+  - `lean/Machine/WitnessSplit.lean` is the macro of `lean/Machine/WitnessHost.lean` with a larger simp set.
+  - Checkpoint has two forms of its encoder covers: `EncodeCover.lean` and `EncodeCoverFramed.lean`.
+- Effect: none on a theorem.
+  A new proof must use the general form in `Codec` and `Machine/WitnessHost.lean`.
+- Where: the files above.
+  Before a proof moves to the general form, show that its statement stays the same.
+
+### Some witness modules do not follow the name rule
+
+- What does not hold: the rule of `lean/README.md` section 8 is "`Witness` + the module of the theorem", with the same namespace.
+  `lean/Prysm/Checkpoint/WitnessDecodeAcceptSpec.lean` and `WitnessDecodeRejectSizeSpec.lean` use the namespace of another witness module.
+  `lean/Prysm/DataColumnsByRootIdentifier/WitnessDecodeRejectSize.lean` has one more namespace level, `RejectSize`.
+  `gen/tools/proof_inventory.py` has one extra name for that module (`WIT_REJECT_DEFAULT`).
+- Effect: none on a theorem.
+  A reader cannot find these witnesses by the rule.
+- Where: the files above.
 
 ### Two bump allocator models differ only in a label
 
