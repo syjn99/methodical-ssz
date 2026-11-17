@@ -134,7 +134,7 @@ GENERATOR_REFUSED = {
 # candidate that exists (a declaration of <decls.tsv>, kind not MISSING) is the row's theorem; a part with no existing
 # candidate is missing. The order of the candidates is part of the rule (the hand main theorem before the generated one).
 # The checks of the Rule above apply to every chosen theorem exactly as to a hand-written row.
-V1A_PREFIX = "Prysm."
+LEAN_PREFIX = "Prysm."
 DEC_CANDIDATES = {
     "accept": ["Decode.accept", "Decode.generated_accept"],
     "reject": ["Decode.reject_size", "Decode.generated_reject"],
@@ -220,7 +220,7 @@ def candidates(t):
         out += [f["fast"], f["spec"]] + f["witness"]
     out += ENC_UNCLASSIFIED
     out += ENC_HAND + ENC_HAND_WITNESS + SIZE_FORM["main"] + SIZE_FORM["witness"]
-    out = [f"{V1A_PREFIX}{t}.{n}" for n in out]
+    out = [f"{LEAN_PREFIX}{t}.{n}" for n in out]
     x = ENC_EXTRA.get(t, {})
     out += [n for n, _ in x.get("rejects", [])] + [n for n, _ in x.get("grow", [])] + x.get("other_witness", [])
     return list(dict.fromkeys(out))
@@ -241,7 +241,7 @@ def derive(D, target_key):
         if t not in target_key:
             unknown.append(t)
             continue
-        key, P = target_key[t], f"{V1A_PREFIX}{t}."
+        key, P = target_key[t], f"{LEAN_PREFIX}{t}."
         r = {}
         for part in ("accept", "reject", "accept_spec", "reject_size_spec", "reject_complete"):
             r[part] = next((P + c for c in DEC_CANDIDATES[part] if have(P + c)), None)

@@ -1,6 +1,4 @@
-/upstream/
 **/.lake/
-/vcgen-src/
 *.log
 __pycache__/
 *.pyc

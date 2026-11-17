@@ -5,8 +5,8 @@ The generator is `sszgen/` with its runtime library `ssz/`.
 SSZ (Simple Serialize) is the serialization format of the Ethereum consensus layer.
 Each project is one subdirectory. The only project is `kraken/` (see `kraken/README.md`).
 
-The agent and process rules are in `../AGENTS.md` and `AGENTS.md`.
-This file gives the design principles. It does not repeat those rules.
+The rules for work under this directory are in `AGENTS.md`.
+This file gives the design principles.
 
 ## 1. What a proof says
 
@@ -129,7 +129,6 @@ Change the Go regression test and the Lean reject theorem in the same change.
 
 ## 8. Pointers
 
-- `../AGENTS.md`: roles, prohibitions and approval boundaries.
 - `AGENTS.md`: the rules for all work under this directory.
 - `kraken/README.md`: the project, its pins and its commands.
 - `kraken/FINDINGS.md`: the open limits of the project.

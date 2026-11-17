@@ -3,7 +3,7 @@ import Lean
 /-!
 # decl_dump: one stable record per declaration (core `Lean` only)
 
-Usage (`lean` is a heavy command: run it through the heavy-job gate):
+Usage:
 
     LEAN_PATH=<dir with the .olean files> lean --run decl_dump.lean [--root R]... Module...
 

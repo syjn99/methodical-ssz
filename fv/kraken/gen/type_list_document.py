@@ -50,7 +50,6 @@ def main():
     w("- \"In scope\" means that the scope rules did not remove the type. It does not mean that a proof is possible. It also does not mean that the type fits the hand proof patterns.")
     w(f"  The in-scope rule accepts these field shapes. The inventory types together have {fsh.get('vector[bytesN]', 0)} `vector[bytesN]` fields, {fsh.get('list[bytesN]', 0)} `list[bytesN]` fields "
       f"and {fsh.get('vector[uint64]', 0)} `vector[uint64]` fields. The depth is the inline depth (it does not follow delegation).")
-    w("  The classification by what the proofs need is in `type-scope.md`.")
     w(f"- Hand-written delegate targets (`consensus-types/primitives`): {c['hand_written_delegate_types']}. Types that call them: {c['types_calling_hand_written']}.")
     w(f"- Generated functions: {fc['generated_functions_inventory']} (types × 3), instructions: {fc['generated_instructions']}, maximum for each function: {fc['max_instructions']}.")
     w(f"- Mnemonic level: {fc['generated_functions_all_supported']}/{fc['generated_functions_inventory']} generated functions use only names that the Kraken runtime parser accepts.")

@@ -1,97 +1,70 @@
 # AGENTS.md
 
 These rules apply to all agents and persons that change files under `fv/`.
-The design principles are in `fv/README.md`. Each project has its own `fv/<project>/README.md`.
-Git history and pull requests hold the history. The tree holds no reports, review records or session logs.
+Read these documents before you start:
 
-## Base rules
+- `README.md`: what a proof says, the trust base, and when one function is done.
+- `kraken/README.md`: the pins and the check commands.
+- `kraken/NEW-TYPE.md`: the steps to prove a type.
+- `kraken/FINDINGS.md`: the limits that are open.
 
-This file adopts [the AGENTS.md of EthLib](https://github.com/ethereum/EthLib/blob/8621856/AGENTS.md) as the base rules.
-This file records only the differences and the additions. If the two documents conflict, this file has priority.
-
-## Three sources
-
-One theorem has three sources. If one source changes, check the theorem again.
-
-Paths in this table are relative to the project directory `fv/<project>/`.
-
-| Source | What to record | Where |
-| --- | --- | --- |
-| Specification | EthLib commit | `lean/lakefile.toml` (`rev`) and `lean/lake-manifest.json` |
-| Specification | EthLib module and definition of each type | The imports and the `Desc` module of the type (`lean/README.md` section 5) |
-| Target | Go source commit and generator commit | The project `README.md` section 2 |
-| Target | Go version, build flags, ELF sha256 | The `build-ids.txt` file of the target |
-| Semantics | Kraken commit | `lean/lakefile.toml` (`rev`) and `lean/lake-manifest.json` |
-| Semantics | Lean toolchain | `lean/lean-toolchain` |
-| Semantics | For a Kraken PR branch, the PR number and "not in main" | The project `README.md` section 2 |
-
-The behavior of other clients and the output of the Go compiler are not evidence.
-
-## Layout
-
-A project directory `fv/<project>/` holds `lean/` (theorems), `link/` (conversion, data files, link check) and `gen/` (generators and checkers).
-It also holds one directory for each target binary, with the inputs and records of that target.
-In the project `kraken`, the target directory is `prysm/`.
-The documents in the project directory are `README.md`, `NEW-TYPE.md`, `FINDINGS.md` and `THIRD-PARTY-NOTICES.md`.
-`README.md` gives the project, its pins and its commands.
-`NEW-TYPE.md` gives the steps to prove a new type.
-`FINDINGS.md` lists the limits that are open.
-`THIRD-PARTY-NOTICES.md` names the sources of the files that come from other projects.
-A directory that needs its own principles has its own `README.md`.
-A commit of one project does not touch files outside that directory.
-Put external clones (`upstream/`, `vcgen-src/`) and generated files in `.gitignore`.
+Git history and pull requests hold the history.
+The tree holds no reports, review records or session logs.
 
 ## Proofs
 
 - Do not use `sorry`, `admit`, a new `axiom`, `native_decide` or `bv_decide`. The only axioms are `propext`, `Classical.choice` and `Quot.sound`.
+- Do not weaken a statement to make a proof close. If a proof needs a weaker statement, stop and report.
 - A contract hypothesis states the size range, the runtime-owned memory, the frame and the stack window. Do not quantify over "all sizes, all frames".
-- For each main theorem, supply a witness: a concrete state that satisfies all premises. For variable length, use the empty value, 1 element and the maximum. Without a witness, the theorem is not complete.
+- A contract stays a hypothesis until a proof discharges it. Do not present it as proved.
+- For each main theorem, supply a witness: a concrete state that satisfies all premises. For variable length, use the empty value, 1 element and the maximum.
 - A postcondition keeps the input, the prefix, the frame, rsp after return and the preserved registers. Do not end it with `⋆ True`.
-- Label freshness and global addresses are premises of the theorem. The `link/` check confirms that they hold in the real ELF.
+- Label freshness and global addresses are premises of the theorem. The link check confirms that they hold in the real ELF.
+- Do not add or raise `maxHeartbeats` or `maxRecDepth` without a measured cause. Write the cause in a comment above the option.
+- Do not change a generated file by hand. Change its row or its tool, and run the tool again.
+- Take expected values from consensus-specs test vectors or from EthLib. Do not make expected values with the code under check.
+- The behavior of other clients and the output of the Go compiler are not evidence.
+
+## User approval
+
+Get the approval of the user, each time, before one of these actions:
+
+- A change to `sszgen/`, `ssz/`, Kraken, EthLib, the Lean toolchain, the Go version, the build flags or the target ELF.
+- A new runtime contract form, a change to a contract hypothesis, or a new item of the trust base.
+- A push to `fv` or `main`, a merge, a branch deletion, a release, or a write to another repository.
+
+On `syjn99/methodical-ssz`, an agent may push `u/*` branches and may open, update and comment on issues and PRs.
+Record a missing instruction or a generator bug in `kraken/FINDINGS.md`. The user makes upstream PRs.
 
 ## Checks
 
-Before a PR, run the check commands of the project `README.md`.
-CI records the build and the axioms gate. For a check that did not run, record in the PR body that it did not run.
+- Before a PR, run the check commands of `kraken/README.md` section 5.
+- CI runs the build and the axioms gate. For a check that did not run, write "not run" in the PR body.
+- A timeout or an out-of-memory kill is a result. It is not a pass.
+- The author of a change does not review it.
 
-## Known answers
-
-Take expected values from consensus-specs test vectors or from EthLib. Do not make expected values with the code under check.
-One bundle hash binds the ELF, the converted `.S` files, the data files and the link check result.
-The link check writes this hash after the last PASS line of its result file.
-It does not hash a Lean file.
-
-## Tool boundaries
-
-- Do not change Kraken, gohashtree, `sszgen/`, `ssz/` or `fv/<project>/upstream/`.
-- Record a missing instruction and a generator bug in the project `FINDINGS.md`.
-- The user makes upstream PRs. Use an open PR branch only for tests, and record its source.
-- A hash function is a contract until the `gohashtree` project proves it.
-
-## Documents
+## Documents and names
 
 - Documents are in English, in ASD-STE100 style. One sentence has 20 words at most, one sentence per line. Do not write a guess as a fact.
-- A `README.md` gives design principles and commands that work. It does not record who did what, or when.
+- A document gives design principles and commands that work. It does not record who did what, or when.
 - Do not add reports, review records, attempt logs or result dumps to the tree. Put them in the PR.
 - A status is a result that a check computes. Do not write a status by hand.
 - Do not invent code names. A code name is a short letter or number label for a work unit, a step, a program path, a type, a review or a finding.
   This rule applies to file names, directory names, module names, declaration names, options, JSON keys, comments and documents.
   Use the full type name and plain words. A reader with no history must understand the name.
 - A label that a tool prints is not a code name if one document list defines each value.
-  Examples are the check letters of `link/check.py` (`link/README.md` section 2).
-  Other examples are the rule numbers of `gen/generator/kindcheck.py` (`gen/README.md` section 4).
-- A comment gives its reason in words. It does not point to a record outside the tree.
-- The reviewer of a change checks its new names and comments against this rule.
-- Git history keeps deleted content. Do not keep a file for the reason "historical material".
+  Examples are the check letters of `kraken/link/check.py` and the rule numbers of `kraken/gen/generator/kindcheck.py`.
+- A comment gives its reason in words. It does not tell the history of the file.
+- Git history keeps deleted content. Do not keep a file, an alias or an option for an earlier state of the tree.
 
 ## Commits and PRs
 
-- The title is an English Conventional Commits title `<type>(<scope>): <summary>`. The type is from the EthLib list + `proof`. The scope is `kraken`, `gohashtree`, `link`, `spec`, `contracts` or `negative`.
-- At the end of the body, a trailer line states the authoring model.
-  Its form is `Co-Authored-By: MODEL-NAME <E-MAIL-ADDRESS>`, with the name and the e-mail address of that model.
+- The title is an English Conventional Commits title `<type>(<scope>): <summary>`.
+  The type is `feat`, `fix`, `proof`, `refactor`, `docs`, `test`, `build`, `ci`, `style` or `chore`.
+  The scope is `kraken`, `gohashtree`, `link`, `spec`, `contracts` or `negative`.
+- If the author is an AI agent, the last line of the commit body is `Co-Authored-By: MODEL-NAME <E-MAIL-ADDRESS>` for that model.
+- Do not amend, rebase, reset or force push. Add new commits.
 - The PR body has two sections, `Problem` and `Solution`. Each section has three bullets at most. One bullet is one sentence.
-- Add a `Not run` line only when a check did not run. CI shows the results of the build and the axioms gate.
-- If the author is an AI agent, the last line of the body states the model.
 
 ## Work units
 
@@ -100,18 +73,17 @@ It does not hash a Lean file.
 - If an issue names an earlier issue, wait until the PR of the earlier issue is merged.
 - To take an issue, write a comment that gives your branch name. Do not take an issue that has such a comment or an open PR.
 - The branch name is `u/<issue number>-<type name>`. Start it from `fv`.
-- Change only `lean/Prysm/<Type>/`, the negative cases of that type and the generator rows of that type.
+- Change only `kraken/lean/Prysm/<Type>/`, the negative cases of that type and the generator rows of that type.
 - Do not change `Machine`, `Runtime`, `Codec` or `Spec` in a unit. If a general lemma is necessary, keep it in the type directory and name it in the PR.
-- Open the PR against `fv` with `Closes #<issue number>`. The CI workflow `fv-lean.yaml` runs the build and the axioms gate.
+- Open the PR against `fv` with `Closes #<issue number>`.
 - A session that did not write the change reviews the PR. It reads each new theorem statement against the EthLib definition.
 - If the unit is blocked, write the cause in the issue and delete your branch-name comment.
 
 ## Session operation
 
-- Keep heavy Lean builds within the memory of the machine. Run one heavy build at a time.
-- To see other builds, use `pgrep -lx lean` and `pgrep -lx lake`. Do not wait for `lean --server` or `lake serve`: they are editor processes.
+- Do not wait for `lean --server` or `lake serve`: they are editor processes. To see builds, use `pgrep -lx lean` and `pgrep -lx lake`.
 - Do not print the environment or the full command line of other processes. Do not use `pgrep -f` or `ps e`.
-- Do not use absolute home directory paths in commands. Use `~` or `$HOME`.
-- Delete a directory with the trash tool of the workstation, if it has one. Do not use `rm -r`.
-- Make a commit for each work unit.
+- Do not use absolute paths of one machine in commands or in tracked files. Use `~`, `$HOME` or a path relative to the repository.
+- Do not start a long command and wait for a notification. Run it in the foreground, or read its log.
+- Read the result line of a check, for example `Build completed successfully`. Do not trust the exit code of a pipe.
 - If an item is blocked, mark it as not run and go to the next item. Stop only when all of the work is blocked.

@@ -32,7 +32,7 @@ The design principles are in `../../README.md`.
 | `checks/layout.py` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/Checkpoint/Layout.lean` |
 | `desc/producer.py` | The reduced IR | One `Desc` JSON file for each type |
 | `type_inventory.py` | The raw IR of the generator | `prysm/ir/*.json` (`reduce`) and `prysm/inventory.json` (`build`) |
-| `type_list_document.py`, `type_scope.py` | `prysm/inventory.json` | `prysm/TYPES.md`, `prysm/type-scope.json`, `prysm/type-scope.md` |
+| `type_list_document.py` | `prysm/inventory.json` | `prysm/TYPES.md` |
 | `keepalive.py` | `prysm/inventory.json` | The `main.go` of the Prysm target |
 | `tools/proof_inventory.py` | The symbol listing of the ELF (`methods`); a declaration list from `tools/inventory_decls.lean` and the JSON of an axioms gate run, both on the built tree (`run`) | `prysm/go1.26.10/ssz-methods.json`, `prysm/proof-inventory.md`, `prysm/proof-inventory.json` |
 | `checks/link_set.py` | The Prysm ELF, its disassembly and symbol listing, and the item table `prysm/go1.26.10/link-set.tsv` | The link set `prysm/go1.26.10/link-set`: the filtered disassembly, the `.S` files and the data files (`../link/README.md` section 7) |
@@ -81,18 +81,8 @@ They run the generator on the rows of the table and on mutated inputs.
 
 ## 3. Check that a generated file is the generator output
 
-Use `regen_check.sh` of the project skill.
-It runs the generator two times into scratch files and compares them with the tracked file.
-Exit 0 means the same bytes.
-Run it from `fv/kraken`:
-
-```sh
-sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/Prysm/ValidatorIndex/GeneratedDecodeAccept.lean -- sh -c 'python3 -I gen/generator/generator.py uint64 --assembly prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S --const unmarshalSSZ --name Decode.generated_accept --imports Codec.Uint64Decoder,Prysm.ValidatorIndex.Code --open Prysm.ValidatorIndex.Code > "$REGEN_OUT"'
-```
-
-For the other files, make the command from the row of the file in `generator/types.tsv`, as `generator/gen.sh` does.
-Replace the output redirect with `> "$REGEN_OUT"`.
-`checks/regenerate_and_compare.py` (section 6) compares all generated files in one run.
+`checks/regenerate_and_compare.py` (section 6) runs every generator again on a copy of the tree.
+It compares each output with the tracked file.
 The check compares bytes only.
 It does not show that the output is correct.
 
@@ -235,7 +225,8 @@ python3 -I -B fv/kraken/gen/checks/axioms_gate.py --selftest
   Its modules are the `*.lean` files under `lean/<name>/`.
   Another glob form stops the gate.
 - The hand lists are the `*.lean` files in `axioms-lists/`.
-  There is one list for each type directory `lean/Prysm/<GoTypeName>/` and one for each shared library, for example `codec.lean`.
+  There is one list for each type directory `lean/Prysm/<GoTypeName>/` with a theorem.
+  `codec.lean` is the list of `Codec`, and `runtime-model.lean` is the list of `Prysm/RuntimeModel`.
   Each file has `#print axioms` lines and the imports that the names need.
   The gate checks that each name of a hand list is in the declaration dump.
 - A new library or a new hand list needs no change to the gate.
@@ -277,7 +268,7 @@ These run without Lean, Go or the Prysm ELF:
 - `generator/kindcheck.py`, and the `--selftest` mode of `checks/axioms_gate.py`.
 - `tools/duplicate_statements.py`, on a dump of the axioms gate (the dump itself needs Lean).
 - `regen_check.sh` with `generator/generator.py`, `checks/desc_to_lean.py` and `checks/layout.py`.
-- `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`.
+- `type_inventory.py reduce` and `build`, `type_list_document.py`, `keepalive.py`.
 - `checks/regenerate_and_compare.py <scratch>/<work dir>`, the regeneration comparison of all Python generators of Lean files.
 - `generator/gen.sh`, with or without an output directory.
 - `checks/fast_path_layout.py`, an independent recomputation of the layouts of the generated encoder fast-path theorems (cwd `fv/kraken`).

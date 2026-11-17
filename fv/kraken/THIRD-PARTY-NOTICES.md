@@ -79,7 +79,9 @@ Other files can quote short fragments of generated code or upstream identifiers.
   They are not committed (`**/.lake/` is ignored).
 - Lean files such as `lean/Prysm/Checkpoint/Code.lean` include `.S` files of the Prysm machine code by path.
   They do not copy them.
-- Text adapted from third-party agent-skill material is attributed in `.claude/skills/maintaining-methodical-fv/references/ATTRIBUTION.md`.
+- `gen/checks/decl_dump.lean` and `gen/checks/decl_drift.py` use an idea of the `maintaining-lean-projects` skill of ethpandaops/panda (MIT, pull request 396).
+  The idea is a comparison of each declaration with a reviewed base.
+  No text is copied.
 
 ## Per-directory licence files in the Prysm tree
 

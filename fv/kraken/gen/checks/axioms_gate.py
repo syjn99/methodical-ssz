@@ -18,7 +18,7 @@ run:
     `lake env lean` itself does no trace check.
  2. `lake env lean --run <decl_dump.lean> --root <library>... <modules>` (every library) writes one row per
     declaration (name, kind, type hash, value hash, sorted Lean.collectAxioms set) to <dump.tsv>. decl_dump.lean is
-    the maintaining-methodical-fv skill script (read only).
+    in this directory.
  3. check: every row's axiom set is a subset of {propext, Classical.choice, Quot.sound}; no sorryAx; every name of
     the hand lists exists in the dump ("must exist"). Names are read from tab-separated columns, so names with `'`
     work.
@@ -38,7 +38,7 @@ LEAN = KR / "lean"
 LAKEFILE = LEAN / "lakefile.toml"
 LIST_DIR = KR / "gen" / "axioms-lists"
 REPO = KR.parent.parent
-DUMP = REPO / ".claude" / "skills" / "maintaining-methodical-fv" / "scripts" / "decl_dump.lean"
+DUMP = pathlib.Path(__file__).resolve().parent / "decl_dump.lean"
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
 
 

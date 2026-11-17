@@ -10,7 +10,6 @@ The program counts all numbers. The scope classification is a rule-based classif
 - For the generated Fulu-reachable types only: in scope 44, out of scope 1.
 - "In scope" means that the scope rules did not remove the type. It does not mean that a proof is possible. It also does not mean that the type fits the hand proof patterns.
   The in-scope rule accepts these field shapes. The inventory types together have 46 `vector[bytesN]` fields, 31 `list[bytesN]` fields and 7 `vector[uint64]` fields. The depth is the inline depth (it does not follow delegation).
-  The classification by what the proofs need is in `type-scope.md`.
 - Hand-written delegate targets (`consensus-types/primitives`): 5. Types that call them: 52.
 - Generated functions: 405 (types × 3), instructions: 116889, maximum for each function: 2890.
 - Mnemonic level: 405/405 generated functions use only names that the Kraken runtime parser accepts.

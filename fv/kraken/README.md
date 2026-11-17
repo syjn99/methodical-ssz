@@ -6,6 +6,7 @@ Prysm is an Ethereum consensus client.
 Kraken is a Lean 4 model of x86-64 instructions.
 The design principles are in `../README.md`.
 The rules are in `../AGENTS.md`.
+The steps to prove a type are in `NEW-TYPE.md`.
 
 The per-method state of the proofs is the generated table `prysm/proof-inventory.md`.
 Do not copy its numbers into other documents.
@@ -57,7 +58,6 @@ The one exception is `prysm/go1.26.10/prysm-go.mod.diff`: its module version hol
 
 You need Go 1.26.10 and a clean Prysm tree at the pinned commit.
 You also need a generator binary built from the pinned generator commit.
-Run heavy jobs one at a time, under a memory limit.
 
 1. Apply `prysm/go1.26.10/prysm-go.mod.diff` to the Prysm `go.mod` with `git apply`.
    Do not change the diff.
@@ -91,7 +91,6 @@ ls <norm-out>/*.S | grep -v '/all\.S$' > <scratch>/parser-list.txt
 cd fv/kraken/lean && PARSER_RUN_LIST=<scratch>/parser-list.txt lake env lean ../gen/kraken-parser/ParserRun.lean > <scratch>/parser-log.txt
 python3 -I fv/kraken/gen/kraken-parser/summarize_parser_log.py <scratch>/parser-log.txt fv/kraken/prysm/go1.26.10/functions.json fv/kraken/prysm/go1.26.10/parser-result.json
 python3 -I fv/kraken/gen/type_list_document.py fv/kraken/prysm
-python3 -I fv/kraken/gen/type_scope.py fv/kraken
 ```
 
 The converter does not make its output directory.
@@ -135,7 +134,7 @@ After a build, `lake build --no-build <libraries>` must exit 0.
 ```sh
 python3 -I -B fv/kraken/gen/checks/axioms_gate.py run <scratch>/gate.json <scratch>/dump.tsv
 python3 -I -B fv/kraken/gen/checks/negative.py <cases.json> <work-dir> <scratch>/result.json <case-id>
-python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <base.tsv> <head.tsv>
+python3 -I -B fv/kraken/gen/checks/decl_drift.py <base.tsv> <head.tsv>
 ```
 
 - The axioms gate covers every library of `lean/lakefile.toml`.
@@ -296,7 +295,6 @@ Change the tool and run it again.
 | `prysm/ir/ir-mainnet.json`, `prysm/ir/ir-minimal.json` | `gen/type_inventory.py reduce` | Section 3 | The sha256 in the header of each generated module. `kindcheck.py` compares it |
 | `prysm/inventory.json` | `gen/type_inventory.py build` | `python3 -I gen/type_inventory.py build prysm` | None |
 | `prysm/TYPES.md` | `gen/type_list_document.py` | `python3 -I gen/type_list_document.py prysm` | None |
-| `prysm/type-scope.json`, `prysm/type-scope.md` | `gen/type_scope.py` | `python3 -I gen/type_scope.py .` | None |
 | `prysm/proof-inventory.md`, `prysm/proof-inventory.json` | `gen/tools/proof_inventory.py run` | Section 5 (needs Lean) | The tool fails when a mapped theorem is missing or has another axiom |
 | `prysm/_generated/**` | `gen/prysm-gen.sh` (its `<out>/gen/`). No tool writes `SHA256SUMS` | `sh gen/prysm-gen.sh <prysm-tree> <generator-binary> <out> gen`, then copy | `cd prysm/_generated && sha256sum -c SHA256SUMS` |
 | `prysm/diff/generated-go-diff.json` | `gen/generated_go_diff.py` | `python3 -I gen/generated_go_diff.py <prysm-tree> <out>/gen <out dir>` | None |
@@ -306,7 +304,7 @@ Change the tool and run it again.
 
 | Kind | Written by | Command that makes it again | What checks it |
 | --- | --- | --- | --- |
-| `gen/axioms-lists/<type>.lean`, one for each type directory and one for each shared library | Hand. `gen/flat-types/flat_types_hand_list.py` adds the names of the types with the companion `hand-list` | `python3 -I gen/flat-types/flat_types_hand_list.py <dump.tsv> gen/axioms-lists <module list>` | `gen/checks/axioms_gate.py run`: each name is in the dump and has only the standard axioms |
+| `gen/axioms-lists/<type>.lean`, one for each type directory with a theorem, `codec.lean` for `Codec` and `runtime-model.lean` for `Prysm/RuntimeModel` | Hand. `gen/flat-types/flat_types_hand_list.py` adds the names of the types with the companion `hand-list` | `python3 -I gen/flat-types/flat_types_hand_list.py <dump.tsv> gen/axioms-lists <module list>` | `gen/checks/axioms_gate.py run`: each name is in the dump and has only the standard axioms |
 | `gen/checks/negative-cases/negative-cases-<type>.json` | Hand | None | `negative.py --check-cases` and `negative_case_ranges.py` (in `python_checks.sh`), the run of `negative.py` with Lean |
 | `gen/checks/negative-cases/negative-cases-<type>-generated.json` | `gen/flat-types/flat_types_negative_cases.py`, for the types with the companion `negative-cases` | `python3 -I -B gen/flat-types/flat_types_negative_cases.py lean gen/checks/negative-cases` | `negative.py --check-cases` and `negative_case_ranges.py` (in `python_checks.sh`), `regenerate_and_compare.py`, the run of `negative.py` with Lean |
 | `gen/desc/results/main.result.json` | `gen/desc/run_desc_checker.sh` (its `<work-dir>/main.result.json`) | `gen/desc/test_desc.py prepare`, then `run_desc_checker.sh` (needs Lean), then copy | `gen/desc/test_desc.py evaluate` on the work directory |
