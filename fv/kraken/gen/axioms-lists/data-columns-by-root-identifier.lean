@@ -24,6 +24,11 @@ import Prysm.DataColumnsByRootIdentifier.WitnessEncodeFastPath
 import Prysm.DataColumnsByRootIdentifier.WitnessEncodeGrowFirstSite
 import Prysm.DataColumnsByRootIdentifier.WitnessEncodeRejectLength
 import Prysm.DataColumnsByRootIdentifier.DecodeSpecReject
+import Prysm.DataColumnsByRootIdentifier.DecodeRejectAlignment
+import Prysm.DataColumnsByRootIdentifier.DecodeRejectOverflow
+import Prysm.DataColumnsByRootIdentifier.DecodeSpecRejectErrorWordNonzero
+import Prysm.DataColumnsByRootIdentifier.DecodeSpecRejectComplete
+import Prysm.DataColumnsByRootIdentifier.WitnessDecodeRejectAlignment
 
 /-! Hand list of the `DataColumnsByRootIdentifier` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -71,3 +76,11 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.DataColumnsByRootIdentifier.Witness.EncodeRejectLength.RejectTooBig.runs
 #print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_size_spec
 #print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_offset_spec
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_alignment_error_word_nonzero
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_overflow_error_word_nonzero
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_alignment_spec_error_word_nonzero
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_overflow_spec_error_word_nonzero
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.reject_complete
+#print axioms Prysm.DataColumnsByRootIdentifier.Decode.jg128_true
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.DecodeRejectAlignment.runs_alignment
+#print axioms Prysm.DataColumnsByRootIdentifier.Witness.DecodeRejectAlignment.runs_overflow
