@@ -11,6 +11,7 @@ import Prysm.AttestationData.WitnessBumpAllocator
 import Prysm.AttestationData.WitnessDecodeAccept
 import Prysm.AttestationData.WitnessDecodeRejectSize
 import Prysm.AttestationData.GeneratedDecodeAccept
+import Prysm.AttestationData.GeneratedEncodeFastPath
 import Prysm.AttestationData.Size
 import Prysm.AttestationData.WitnessSize
 import Prysm.AttestationData.EncodeSpec
@@ -108,3 +109,20 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.AttestationData.Witness.EncodeFastPath.runs_empty
 #print axioms Prysm.AttestationData.Witness.EncodeFastPath.Prefix.mem_premise
 #print axioms Prysm.AttestationData.Witness.EncodeFastPath.runs_prefix
+#print axioms Prysm.AttestationData.Encode.generated_epilogue
+#print axioms Prysm.AttestationData.Encode.generated_epilogue_kind
+#print axioms Prysm.AttestationData.Encode.generated_fast
+#print axioms Prysm.AttestationData.Encode.generated_fast_kind
+#print axioms Prysm.AttestationData.Encode.generated_field_0
+#print axioms Prysm.AttestationData.Encode.generated_field_0_kind
+#print axioms Prysm.AttestationData.Encode.generated_field_1
+#print axioms Prysm.AttestationData.Encode.generated_field_1_kind
+#print axioms Prysm.AttestationData.Encode.generated_field_2
+#print axioms Prysm.AttestationData.Encode.generated_field_2_kind
+#print axioms Prysm.AttestationData.Encode.generated_field_3
+#print axioms Prysm.AttestationData.Encode.generated_field_3_kind
+#print axioms Prysm.AttestationData.Encode.generated_field_4
+#print axioms Prysm.AttestationData.Encode.generated_field_4_kind
+#print axioms Prysm.AttestationData.Encode.generated_head
+#print axioms Prysm.AttestationData.Encode.generated_head_kind
+#print axioms Prysm.AttestationData.Encode.generated_layout

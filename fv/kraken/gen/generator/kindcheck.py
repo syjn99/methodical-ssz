@@ -1355,7 +1355,10 @@ def whole_accept_selftest():
 #       layout of FAST_PATH_HAND is named); no banned token (rule 3, comments and strings removed); the theorems are exactly
 #       P_head, P_field_0 … P_field_(n-1), P_epilogue, P_fast, each followed by its `_kind` (encHeadKindAnyFrame / encFieldKindAnyFrame /
 #       encEpilogueKindAnyFrame / encFastPathKindAnyFrame), and optionally P_fast_statement_tie; every theorem's `hk` binder names the same code constant C;
-#       `set_option` only `maxHeartbeats 4000000` / `maxRecDepth 100000`; every kind proof is `  intro h; rfl`.
+#       `set_option` only `maxHeartbeats 4000000` / `maxRecDepth 100000` (a file with nested fields: only
+#       FAST_PATH_NESTED_OPTION); every kind proof is `  intro h; rfl`.
+#       Nested fields (FAST-PATH-JSON field kind `n`): one `def <P>_layout : EncoderNestedFrameLayout where` and the four nested
+#       kinds of `Codec/Kind/EncodeFastPathNestedAnyFrame.lean`; the recomputation must find the same nested fields in the IR.
 #  13c. RECOMPUTATION (an own interpreter, it does not import the generator): from the `.S` and the IR named in
 #       FAST-PATH-JSON (sha256 checked) this program recomputes the fields list, the layout (st, frame, gd, rt, nstk, lens,
 #       pre, exs, post) and every boundary state (pc, done, live registers, stack slots, existential sizes); every
@@ -1378,6 +1381,16 @@ FAST_PATH_VIA = ("Prysm.Checkpoint.Encode.fast_path_kind_tie",)
 FAST_PATH_R64 = "rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15".split()
 FAST_PATH_R32 = dict(eax="rax", ebx="rbx", ecx="rcx", edx="rdx", esi="rsi", edi="rdi")
 FAST_PATH_LAYF = ("stateWord", "frame", "guardAddend", "callsMemmove", "stackChunkCount", "stackChunkLengths", "pre", "existentials", "post")
+# Nested container fields (rule 13 with the kinds of `Codec/Kind/EncodeFastPathNestedAnyFrame.lean`): an own callee table.
+# Go type name of the nested container -> (callee symbol, code constant, SSZ size, callee frame below its return slot).
+FAST_PATH_NESTED_CALLEES = {"Checkpoint": ("github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo",
+                                           "Prysm.Checkpoint.Code.marshalSSZTo", 40, 120)}
+FAST_PATH_NESTED_KINDS = ("encodeHeadNestedKindAnyFrame", "encodeFieldNestedKindAnyFrame", "encodeEpilogueNestedKindAnyFrame",
+                          "encodeFastPathNestedKindAnyFrame")
+FAST_PATH_NESTED_LAYF = ("callees", "goStart", "frame", "guardAddend", "lowExtra", "stackChunkCount", "stackChunkLengths", "pre",
+                         "existentials", "post")
+# the one option line of a file with nested fields (above each field theorem, with its measured cause in a comment)
+FAST_PATH_NESTED_OPTION = "set_option maxRecDepth 1000 in"
 
 
 class FastPathMismatch(Exception):
@@ -1399,7 +1412,12 @@ def fast_path_ir(ir_text, tname):
         if not f["exported"]:
             continue
         m = re.search(r'ssz-size:"(\d+)"', f["tag"])
-        if m and f["type"] == "[]byte":
+        nt = re.fullmatch(r"\*github\.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1\.(\w+)", f["type"])
+        if nt and f["size_gc_amd64"] == 8:
+            if nt.group(1) not in FAST_PATH_NESTED_CALLEES:
+                raise FastPathMismatch(f"field {f['name']}: pointer to {nt.group(1)}, not in FAST_PATH_NESTED_CALLEES")
+            fs.append(("n", FAST_PATH_NESTED_CALLEES[nt.group(1)][2], nt.group(1)))
+        elif m and f["type"] == "[]byte":
             fs.append(("b", int(m.group(1))))
         elif not m and f["size_gc_amd64"] == 8:
             fs.append(("u", 8))
@@ -1407,11 +1425,13 @@ def fast_path_ir(ir_text, tname):
             raise FastPathMismatch(f"field {f['name']}: not a byte vector or an 8-byte scalar")
         goffs.append(f["offset_gc_amd64"])
     want = 8 if goffs and goffs[0] == 8 else 0
-    for (k, n), g in zip(fs, goffs):
+    for (k, n, *_), g in zip(fs, goffs):
         if g != want:
             raise FastPathMismatch(f"Go offset {g}, running sum {want}")
         want += 24 if k == "b" else 8
-    return fs, goffs, sum(n for _, n in fs)
+    if len({f[2] for f in fs if f[0] == "n"}) > 1:
+        raise FastPathMismatch("nested fields of more than one callee type")
+    return fs, goffs, sum(f[1] for f in fs)
 
 
 def fast_path_regs_of(text):
@@ -1451,7 +1471,7 @@ def fast_path_usedef(d):
         return sr, dr, False
     if op in ("add", "sub") and dst_is_reg:
         return sr + dr, dr, False
-    if op in ("mov", "cmp", "cmpq", "movups"):
+    if op in ("mov", "cmp", "cmpq", "movups", "test"):
         return sr + dr, [], False
     raise FastPathMismatch(f"no use / def rule for `{d}`")
 
@@ -1460,7 +1480,11 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
     """Own interpreter of the fast path. Returns dict(L={field: text}, fields=text, states=[EncodeBoundaryState text], pcs=[...])."""
     lab = {d[:-1]: i for i, d in enumerate(dirs) if d.endswith(":")}
     st = bool(goffs) and goffs[0] == 8
-    soffs = [sum(n for _, n in fs[:i]) for i in range(len(fs))]
+    soffs = [sum(f[1] for f in fs[:i]) for i in range(len(fs))]
+    nested = any(f[0] == "n" for f in fs)
+    leaf = [sum(2 if f[0] == "n" else 1 for f in fs[:i]) for i in range(len(fs))]
+    CAL = FAST_PATH_NESTED_CALLEES[[f for f in fs if f[0] == "n"][0][2]] if nested else None
+    nil_ok, called = [None], [None]
     if dirs[2] == "cmp 0x10(%r14),%rsp":
         gd, j = 0, 3
     else:
@@ -1513,9 +1537,12 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
 
     def live(p):
         need, wr = [], set()
+        prev = [""]
         for _ in range(3000):
             d = dirs[p]
             u, df, end = fast_path_usedef(d)
+            if nested and d == f"callq {CAL[0]}":
+                u = u + ["rdi"]
             for r in u:
                 if r not in wr and r not in need and r not in ("rsp", "rbp", "r14"):
                     need.append(r)
@@ -1524,8 +1551,12 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
             wr.update(df)
             if d.startswith("jae ") or d.startswith("jmp "):
                 p = lab[d.split()[1]]
+            elif nested and (d.startswith("je ") or (d.startswith("jne ") and prev[0].startswith("cmpq $0x0,"))):
+                p = lab[d.split()[1]]
             else:
                 p += 1
+            if d != "nop":
+                prev[0] = d
         raise FastPathMismatch("liveness")
 
     def snap(p):
@@ -1536,6 +1567,8 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
                 regs.append((r, "." + {"rcv": "receiver"}.get(v, v)))
             elif isinstance(v, tuple) and v[0] == "len":
                 regs.append((r, f".len {v[1]}"))
+            elif nested and v == ("imm", 0):
+                regs.append((r, ".zero"))
             else:
                 raise FastPathMismatch(f"live {r}={v}")
         return p, done[0], regs, {o: list(v) for o, v in M.items()}, scratch[0]
@@ -1599,7 +1632,7 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
                 else:
                     sv = M[ad[1]][1]
                     R[dst] = {"rax": "rcv", "rbx": "ptr", "rdi": "cap", "rcx": ("len", 0)}[sv[1]] if sv[0] == "e" else \
-                        ("len", sv[1]) if sv[0] == "len" else ("fv", sv[1]) if sv[0] == "fld" else None
+                        ("len", sv[1]) if sv[0] == "len" else ("fv", sv[2]) if sv[0] == "fld" else None
                     if R[dst] is None:
                         raise FastPathMismatch("stack load")
             pc += 1
@@ -1619,7 +1652,7 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
                     M[off] = [8, ("z", z[1], "lo")]
                     M[off + 8] = [8, ("z", z[1], "hi")]
             M[off][1] = ("e", {"rcv": "rax", "ptr": "rbx", "cap": "rdi"}[v]) if v in ("rcv", "ptr", "cap") else \
-                ("e", "rcx") if v == ("len", 0) else ("len", v[1]) if v[0] == "len" else ("fld", v[1]) if v[0] == "fv" else None
+                ("e", "rcx") if v == ("len", 0) else ("len", v[1]) if v[0] == "len" else ("fld", leaf[v[1]], v[1]) if v[0] == "fv" else None
             if M[off][1] is None:
                 raise FastPathMismatch("stored value")
             pc += 1
@@ -1680,6 +1713,17 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
             pc += 1
             states.append(snap(pc))
             continue
+        m = re.fullmatch(r"cmpq \$0x0,(-?0x[0-9a-f]+)?\(%(\w+)\)", d)
+        if m and nested and done[0] < len(fs) and fs[done[0]][0] == "n":
+            i = done[0]
+            q = pc + 1
+            while dirs[q] == "nop":
+                q += 1
+            if not (dirs[q].startswith("jne ") and addr(m.group(2), disp(m.group(1))) == ("rcv", goffs[i])):
+                raise FastPathMismatch("nil test")
+            nil_ok[0] = i
+            pc = lab[dirs[q].split()[1]]
+            continue
         m = re.fullmatch(r"cmpq \$0x[0-9a-f]+,(-?0x[0-9a-f]+)?\(%\w+\)", d)
         if m:
             q = pc + 1
@@ -1706,6 +1750,48 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
         if m:
             pc = lab[m.group(1)]
             continue
+        if nested and d == f"callq {CAL[0]}":
+            i = done[0]
+            if not (fs[i][0] == "n" and nil_ok[0] == i and R.get("rax") == ("fp", i) and R.get("rbx") == "ptr"
+                    and R.get("rcx") == ("len", soffs[i]) and R.get("rdi") == "cap"):
+                raise FastPathMismatch("nested call arguments")
+            region(RS, 8)
+            M[RS][1] = ("ret", pc + 1)
+            region(-F, 8)
+            M[-F][1] = ("e", "rbx")
+            first_call = isinstance(scratch[0], tuple) and scratch[0][0] == "blk" or scratch[0] == "scr"
+            for o, v in ((24, "fpv"), (32, ("e", "rbx")), (40, ("e", "rdi")), (48, ("len", soffs[i] + 40))):
+                M[-(F + o)] = [8, v]
+            seq[0] += 1
+            M[-(F + 64)] = [16, ("z", seq[0], "callee")]
+            M.pop(-(F + 80), None)
+            M[-(F + 80)] = [8, ("fld", leaf[i], i)]
+            seq[0] += 1
+            M[-(F + 72)] = [8, ("z", seq[0], "callee")]
+            if first_call:
+                seq[0] += 1
+                M[-(F + 128)] = [48, ("z", seq[0], "callee")]
+            seq[0] += 1
+            M[-(F + 136)] = [8, ("z", seq[0], "callee")]
+            seq[0] += 1
+            scratch[0] = ("z", seq[0], "lo")
+            R.clear()
+            R.update({"rsp": ("stk", SP), "rax": "ptr", "rbx": ("len", soffs[i] + 40), "rcx": "cap", "rdi": ("imm", 0),
+                      "rsi": ("imm", 0)})
+            called[0] = i
+            pc += 1
+            continue
+        if nested and d == "test %rdi,%rdi":
+            i = done[0]
+            q = pc + 1
+            while dirs[q] == "nop":
+                q += 1
+            if not (dirs[q].startswith("je ") and called[0] == i and R.get("rdi") == ("imm", 0)):
+                raise FastPathMismatch("error test")
+            done[0] += 1
+            pc = lab[dirs[q].split()[1]]
+            states.append(snap(pc))
+            continue
         if d == "callq runtime.memmove":
             i = done[0]
             if not (R.get("rax") == ("dst", soffs[i]) and R.get("rbx") == ("fp", i) and R.get("rcx") == ("imm", fs[i][1])):
@@ -1714,7 +1800,9 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
             M[RS][1] = ("ret", pc + 1)
             if scratch[0] == "scr":
                 seq[0] += 1
-                scratch[0] = ("z", seq[0], "lo")
+                scratch[0] = ("blk", seq[0]) if nested else ("z", seq[0], "lo")
+            elif nested:
+                raise FastPathMismatch("memmove after a nested call")
             R.clear()
             R["rsp"] = ("stk", SP)
             done[0] += 1
@@ -1741,9 +1829,9 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
         keys = []
         for o, (n, v) in Ms.items():
             if isinstance(v, tuple) and v[0] == "z":
-                keys.append((v[1], o, 16 if v[2] == "full" else 8))
+                keys.append((v[1], o, n))
         if isinstance(scr, tuple):
-            keys.append((scr[1], 10 ** 9, "S"))
+            keys.append((scr[1], 10 ** 9, "SE" if scr[0] == "blk" else "S"))
         keys.sort()
         return {(k[0], k[1]): i for i, k in enumerate(keys)}, [k[2] for k in keys]
 
@@ -1752,6 +1840,8 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
             return f".original {bindex[o]}"
         if v == "rbp":
             return ".reg .rbp"
+        if v == "fpv":
+            return ".framePointer"
         if v[0] == "e":
             return f".reg .{v[1]}"
         if v[0] in ("len", "fld", "ret"):
@@ -1770,33 +1860,49 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
             parts = [o] if Ms[o][0] == firstsz[o] else [o, o + 8]
             for p in parts:
                 out.append(f".at (.{'above' if p > 0 else 'below'} {abs(p)}) ({vk(p, Ms[p][1], num)})")
-        if rt:
+        if nested:
+            # the callee frame slots below the return slot, in the order that a nested call leaves them
+            for c in (24, 32, 40, 48, 64, 80, 72, 128, 136):
+                if -(F + c) in Ms:
+                    out.append(f".at (.below {F + c}) ({vk(-(F + c), Ms[-(F + c)][1], num)})")
+        if rt or nested:
             out.append(".low .scratch" if scr == "scr" else f".low (.existential {num[(scr[1], 10 ** 9)]})")
-        return "[" + ", ".join(out) + "]", "[" + ", ".join(".low" if e == "S" else f".fixed {e}" for e in ex) + "]"
+        return "[" + ", ".join(out) + "]", "[" + ", ".join(".low" if e == "S" else ".lowBlock" if e == "SE" else f".fixed {e}"
+                                                          for e in ex) + "]"
 
     def norm_pre():
         out = [f".at (.{'above' if o > 0 else 'below'} {abs(o)}) (.original {bindex[o]})" for o in mem]
-        return "[" + ", ".join(out + ([".low .scratch"] if rt else [])) + "]"
+        return "[" + ", ".join(out + ([".low .scratch"] if rt or nested else [])) + "]"
     post, exs = slots(M, scratch[0])
-    L = dict(stateWord=str(st).lower(), frame=str(F), guardAddend=str(gd), callsMemmove=str(rt).lower(), stackChunkCount=str(len(mem)),
-             stackChunkLengths="[" + ", ".join(f"({i}, {firstsz[o]})" for i, o in sorted((bindex[o], o) for o in mem)) + "]",
-             pre=norm_pre(), existentials=exs, post=post)
+    lens = "[" + ", ".join(f"({i}, {firstsz[o]})" for i, o in sorted((bindex[o], o) for o in mem)) + "]"
+    if nested:
+        if any(o < -(F + 16) for o in first):
+            raise FastPathMismatch("a stack region of the function below its frame")
+        L = dict(callees=f"[{CAL[1]}]", goStart=str(goffs[0]), frame=str(F), guardAddend=str(F + 16 + CAL[3]), lowExtra=str(CAL[3]),
+                 stackChunkCount=str(len(mem)), stackChunkLengths=lens, pre=norm_pre(), existentials=exs, post=post)
+    else:
+        L = dict(stateWord=str(st).lower(), frame=str(F), guardAddend=str(gd), callsMemmove=str(rt).lower(), stackChunkCount=str(len(mem)),
+                 stackChunkLengths=lens, pre=norm_pre(), existentials=exs, post=post)
     sts = []
     for p, dn, regs, Ms, scr in states:
         sl, ex = slots(Ms, scr)
         rg = "[" + ", ".join(f"(.{r}, {k})" for r, k in regs) + "]"
         sts.append(f"⟨{p}, {dn}, {rg}, {sl}, {ex}⟩")
-    fields = "[" + ", ".join(".uint64" if k == "u" else f".bytes {n}" for k, n in fs) + "]"
-    return dict(L=L, fields=fields, states=sts, pcs=[x[0] for x in states], size=size)
+    if nested:
+        fields = "[" + ", ".join(".flat .uint64" if f[0] == "u" else f".flat (.bytes {f[1]})" if f[0] == "b" else ".checkpoint"
+                                 for f in fs) + "]"
+    else:
+        fields = "[" + ", ".join(".uint64" if f[0] == "u" else f".bytes {f[1]}" for f in fs) + "]"
+    return dict(L=L, fields=fields, states=sts, pcs=[x[0] for x in states], size=size, nested=nested)
 
 
-def fast_path_layout_def(text, short, full=None):
+def fast_path_layout_def(text, short, full=None, typ="EncoderFrameLayout"):
     """{field: normalised value} of `def <short> : EncoderFrameLayout where` in a Lean text, or None. With `full`, a declaring line
     `def _root_.<full>` (a layout of another type than the namespace block of the module) comes first, then the
     name relative to the type namespace `Prysm.<T>`."""
     m = None
     for d in ([f"_root_.{full}", full.split(".", 2)[2]] if full and full.count(".") >= 2 else []) + [short]:
-        m = m or re.search(rf"(?m)^def {re.escape(d)} : EncoderFrameLayout where\n((?:  .*\n?)+)", text)
+        m = m or re.search(rf"(?m)^def {re.escape(d)} : {typ} where\n((?:  .*\n?)+)", text)
     if not m:
         return None
     flds, cur = {}, None
@@ -1830,6 +1936,10 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
     except Exception as e:
         return errs + [f"rule 13: no single valid FAST-PATH-JSON line ({e})"], info
     info = f"{P}_fast"
+    # nested fields: from FAST-PATH-JSON for the structure check; the recomputation from the IR must agree
+    nested = any(isinstance(f, list) and len(f) > 1 and f[1] == "n" for f in J.get("fields", []))
+    LT, LF = ("EncoderNestedFrameLayout", FAST_PATH_NESTED_LAYF) if nested else ("EncoderFrameLayout", FAST_PATH_LAYF)
+    OPTS = (FAST_PATH_NESTED_OPTION,) if nested else ("set_option maxHeartbeats 4000000 in", "set_option maxRecDepth 100000 in")
     # 13b structure
     body = strip_strings(strip_comments(text))
     if BANNED.search(body):
@@ -1843,19 +1953,18 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
         if re.match(r"^def ", l):
             ndef += 1
             in_def = True
-            if l != f"def {P}_layout : EncoderFrameLayout where" or hand:
+            if l != f"def {P}_layout : {LT} where" or hand:
                 errs.append(f"rule 13b: top-level `{l[:60]}`")
             continue
         if in_def and l.startswith("  "):
-            if not re.match(r"  (stateWord|frame|guardAddend|callsMemmove|stackChunkCount|stackChunkLengths|pre|existentials|post) := |    \S", l):
+            if not re.match(rf"  ({'|'.join(LF)}) := |    \S", l):
                 errs.append(f"rule 13b: layout line `{l[:60]}`")
             continue
         in_def = False
         if l and not l[0].isspace():
             if not TOP_OK.match(l):
                 errs.append(f"rule 13b: top-level `{l[:60]}`")
-            if l.startswith("set_option ") and l not in ("set_option maxHeartbeats 4000000 in",
-                                                       "set_option maxRecDepth 100000 in"):
+            if l.startswith("set_option ") and l not in OPTS:
                 errs.append(f"rule 13b: `{l}`")
             if l.startswith("namespace ") and l != f"namespace Prysm.{J['type']}":
                 errs.append(f"rule 13b: `{l}`")
@@ -1885,6 +1994,8 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
                         re.findall(r"\.at \(\.(above|below) (\d+)\) \(\.original (\d+)\)", handdef["pre"])]
         dirs = [l.strip() for l in (kr / S).read_text().split("\n") if l.strip()]
         X = fast_path_expect(dirs, fs, goffs, size, hand_pre)
+        if X["nested"] != nested or (nested and hand):
+            raise FastPathMismatch("the nested fields of FAST-PATH-JSON differ from the IR (or a hand layout with nested fields)")
     except Exception as e:
         return errs + [f"rule 13c: recomputation refused: {type(e).__name__}: {e}"], info
     want = [f"{P}_head", f"{P}_head_kind"] + [x for i in range(n) for x in (f"{P}_field_{i}", f"{P}_field_{i}_kind")] + \
@@ -1892,14 +2003,14 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
     if thms not in (want, want + [f"{P}_fast_statement_tie"]):
         return errs + [f"rule 13b: theorems {thms}, expected {want} [+ {P}_fast_statement_tie]"], info
     # 13c: layout
-    fileL = handdef if hand else fast_path_layout_def(body, f"{P}_layout")
+    fileL = handdef if hand else fast_path_layout_def(body, f"{P}_layout", typ=LT)
     if fileL is None:
         errs.append("rule 13c: no layout def")
     else:
-        for k in FAST_PATH_LAYF:
+        for k in LF:
             if fileL.get(k) != X["L"][k]:
                 errs.append(f"rule 13c: layout {k} = {fileL.get(k)!r}, recomputed {X['L'][k]!r}")
-        if set(fileL) != set(FAST_PATH_LAYF):
+        if set(fileL) != set(LF):
             errs.append(f"rule 13c: layout fields {sorted(fileL)}")
     # 13b / 13c: kind lines, as whole normalised text
     starts = {m.group(1): m.start() for m in re.finditer(r"(?m)^theorem (\S+)", body)}
@@ -1911,11 +2022,12 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
     if len(S0) != n + 1:
         errs.append(f"rule 13c: {len(S0)} boundary states for {n} fields")
         return errs, info
-    exp = {f"{P}_head": ("encodeHeadKindAnyFrame", " " + S0[0])}
+    KH, KF, KE, KP = FAST_PATH_NESTED_KINDS if nested else FAST_PATH_KINDS
+    exp = {f"{P}_head": (KH, " " + S0[0])}
     for i in range(n):
-        exp[f"{P}_field_{i}"] = ("encodeFieldKindAnyFrame", " " + S0[i] + " " + S0[i + 1])
-    exp[f"{P}_epilogue"] = ("encodeEpilogueKindAnyFrame", " " + S0[n])
-    exp[f"{P}_fast"] = ("encodeFastPathKindAnyFrame", "")
+        exp[f"{P}_field_{i}"] = (KF, " " + S0[i] + " " + S0[i + 1])
+    exp[f"{P}_epilogue"] = (KE, " " + S0[n])
+    exp[f"{P}_fast"] = (KP, "")
     for t, (kind, sts) in exp.items():
         k = chunk[f"{t}_kind"]
         hdr, sep, rest = k.partition(":= by\n")
@@ -1964,7 +2076,8 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
 # ---- rule 13 selftest controls: mutants of the committed raw fast-path outputs (a missing file is a FAIL)
 FAST_PATH_SELFTEST = {"validator-balance": "lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "checkpoint": "lean/Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
                "historical-summary": "lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "beacon-block-header": "lean/Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
-               "fork": "lean/Prysm/Fork/GeneratedEncodeFastPath.lean"}
+               "fork": "lean/Prysm/Fork/GeneratedEncodeFastPath.lean",
+               "attestation-data": "lean/Prysm/AttestationData/GeneratedEncodeFastPath.lean"}
 # the layout defs of three committed fast-path files: the recomputation must give each of them
 FAST_PATH_LAYOUTS = {"ValidatorBalance": ("lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "Prysm.ValidatorBalance.Encode.generated_layout"),
                      "DepositMessage": ("lean/Prysm/DepositMessage/GeneratedEncodeFastPath.lean", "Prysm.DepositMessage.Encode.generated_layout"),
@@ -1976,6 +2089,7 @@ def fast_path_cases(T):
     """(name, text, ok) on the committed files T = {key: text}."""
     V, checkpoint_text, H, B = T["validator-balance"], T["checkpoint"], T["historical-summary"], T["beacon-block-header"]
     K = T["fork"]
+    A = T["attestation-data"]
 
     def r(t, a, b, n=1):
         if t.count(a) < n:
@@ -2028,6 +2142,20 @@ def fast_path_cases(T):
                                           "Encode.generated_field_1 h)\n    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.Fork.Encode.generated_layout [.bytes 4, .bytes 4, .uint64]\n    ⟨32, 2,"), False),
         ("fast_path_beacon_block_header_state_slot", r(B, "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3)",
                                "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx)"), False),
+        # nested Checkpoint fields (AttestationData)
+        ("fast_path_good_attestation_data_nested", A, True),
+        ("fast_path_nested_layout_callees", r(A, "  callees := [Prysm.Checkpoint.Code.marshalSSZTo]\n",
+                                              "  callees := [Prysm.Checkpoint.Code.unmarshalSSZ]\n"), False),
+        ("fast_path_nested_layout_guard", r(A, "  guardAddend := 312\n", "  guardAddend := 56\n"), False),
+        ("fast_path_nested_layout_low_extra", r(A, "  lowExtra := 120\n", "  lowExtra := 96\n"), False),
+        ("fast_path_nested_layout_post_frame_pointer", r(A, ".at (.below 200) (.framePointer)", ".at (.below 200) (.reg .rbp)"), False),
+        ("fast_path_nested_layout_post_epoch_leaf", r(A, ".at (.below 256) (.field 5)", ".at (.below 256) (.field 3)"), False),
+        ("fast_path_nested_boundary_zero_dropped", r(A, "(.rcx, .cap), (.rsi, .zero), (.rdi, .zero)]", "(.rcx, .cap), (.rsi, .zero)]"), False),
+        ("fast_path_nested_fields_flat", r(A, ".flat (.bytes 32), .checkpoint, .checkpoint]\n    ⟨147,", ".flat (.bytes 32), .checkpoint, .flat .uint64]\n    ⟨147,"),
+         False),
+        ("fast_path_nested_kind_flat", r(A, "= @Codec.encodeFastPathNestedKindAnyFrame h", "= @Codec.encodeFastPathKindAnyFrame h"), False),
+        ("fast_path_nested_option", r(A, "set_option maxRecDepth 1000 in", "set_option maxRecDepth 100000 in"), False),
+        ("fast_path_nested_json_fields_flat", r(A, '["Source", "n", 40], ["Target", "n", 40]', '["Source", "u", 8], ["Target", "u", 8]'), False),
     ]
 
 

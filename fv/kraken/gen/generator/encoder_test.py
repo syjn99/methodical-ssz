@@ -13,7 +13,9 @@ Cases (mutated `.S` / IR copies are written to <work-dir>, nothing in the reposi
    length test with a wrong immediate / wrong word, a store to the wrong offset vs the IR, fields out of order, a
    clobbered dst / len register, memmove with swapped source / destination, epilogue frame-test variants, a
    truncated file, an extra store beyond len + size, unknown directives and callees, stack stores outside the frame,
-   head variants, IR mutants, ...). Expected: exit 2, 0 bytes on stdout, the `--summary` says generated = false.
+   head variants, IR mutants, the nested Checkpoint calls of AttestationData with another callee, pointer word, nil test,
+   argument, error test or IR, and SingleAttestation, whose nested field is not a callee of the table, ...).
+   Expected: exit 2, 0 bytes on stdout, the `--summary` says generated = false.
  - fast-path-covered-*: valid variants that must stay COVERED (exit 0, every kind line): nops at many places, an extra harmless
    move, a consistent register rename.
  - fast-path-fail-closed-*: fail-closed fault injection. A harness imports the working-tree `generator.py`, takes its `fast_path` module
@@ -235,6 +237,37 @@ def adversarial(work):
         ty["go_fields"][3].__setitem__("tag", ty["go_fields"][3]["tag"].replace('ssz-size:"20"', 'ssz-size:"32"')),
         ty["ir"]["fields"][2]["v"].update(size=32, fixed_size=32), ty["ir"].update(fixed_size=ty["ir"]["fixed_size"] + 12)),
         work, "bls-to-execution-change-size")), "refuse", "IR size 20 -> 32 (code tests and copies 20)"))
+    # nested Checkpoint fields (AttestationData): the callee, the pointer word, the nil test, the arguments, the error test, the IR
+    ad = "AttestationData"
+    cal = f"callq {P}.Checkpoint.MarshalSSZTo"
+    adversarial_case("nested-callee-replaced", ad, [(cal, [f"callq {P}.Checkpoint.MarshalSSZ"], 0)],
+        "the Source call goes to Checkpoint.MarshalSSZ (no function specification)")
+    adversarial_case("nested-pointer-other-offset", ad, [("mov 0x30(%rdx),%rax", ["mov 0x38(%rdx),%rax"], 0)],
+        "the Source call gets the pointer at Go offset 56 (Target)")
+    adversarial_case("nested-nil-test-offset", ad, [("cmpq $0x0,0x30(%rdx)", ["cmpq $0x0,0x38(%rdx)"], 0)],
+        "the nil test of Source reads the Target word")
+    adversarial_case("nested-nil-test-je", ad, [(f"jne {lbl(ad, '1b9')}", [f"je {lbl(ad, '1b9')}"], 0)],
+        "the nil test of Source with je: the newobject branch is on the path")
+    adversarial_case("nested-capacity-argument", ad, [("mov 0x38(%rsp),%rdi", ["mov 0x40(%rsp),%rdi"], 0)],
+        "the Source call gets len + 48 as its capacity")
+    adversarial_case("nested-length-argument", ad, [("mov 0x40(%rsp),%rcx", ["mov 0x88(%rsp),%rcx"], 0)],
+        "the Source call gets the dst pointer as its length")
+    adversarial_case("nested-error-test-register", ad, [("test %rdi,%rdi", ["test %rsi,%rsi"], 0)],
+        "the error test of the Source call tests rsi")
+    adversarial_case("nested-error-test-jne", ad, [(f"je {lbl(ad, '264')}", [f"jne {lbl(ad, '264')}"], 0)],
+        "the error test of the Source call with jne: the error wrap is on the path")
+    adversarial_case("nested-target-gets-source", ad, [("mov 0x38(%rdx),%rdx", ["mov 0x30(%rdx),%rdx"], 0)],
+        "the Target call gets the Source object")
+    adversarial_case("nested-target-rax-rbx-swapped", ad, [("mov %rdx,%rax", ["mov %rdx,%rbx"], 0), ("mov %rax,%rbx", ["mov %rax,%rax"], 4)],
+        "the Target call with the object in rbx")
+    C.append(("fast-path-refused-nested-ir-other-container", argv(ad, ir=ir_mut(ad, lambda ty: ty["ir"]["fields"][3]["v"]["delegated_to"].update(
+        name="Fork"), work, "attestation-data-other-container")), "refuse", "IR: Source is a pointer to another container"))
+    C.append(("fast-path-refused-nested-ir-target-offset", argv(ad, ir=ir_mut(ad, lambda ty: ty["go_fields"][5].__setitem__(
+        "offset_gc_amd64", 64), work, "attestation-data-target-offset")), "refuse", "IR: Target at Go offset 64"))
+    C.append(("fast-path-refused-single-attestation", [x.replace("v1alpha1.AttestationData", "v1alpha1.SingleAttestation") for x in argv(ad)],
+              "refuse", "SingleAttestation: its nested field Data is an AttestationData (not a callee of the table)"))
+    adversarial_case("nested-nops", ad, [(cal, ["nop", cal], 0), (f"je {lbl(ad, '264')}", ["nop", f"je {lbl(ad, '264')}"], 0)],
+        "a nop before the Source call and a nop between the error test and its je", "covered")
     # valid variants: must stay covered
     adversarial_case("inline-nops", fork, [("mov %edx,(%rbx,%rcx,1)", ["nop", "mov %edx,(%rbx,%rcx,1)"], 0),
                                            ("mov (%rdx),%edx", ["nop", "mov (%rdx),%edx"], 1)],
@@ -306,7 +339,9 @@ PH_FUNCS = [("read_ir", fast_path_gen, "read_ir"), ("read_S", fast_path_gen, "re
             ("walk", fast_path_gen.FastPathGenerator, "walk"), ("run", fast_path_gen.FastPathGenerator, "run"), ("touch", fast_path_gen.FastPathGenerator, "touch"),
             ("boundary", fast_path_gen.FastPathGenerator, "boundary"), ("live_after", fast_path_gen.FastPathGenerator, "live_after"), ("frametest", fast_path_gen.FastPathGenerator, "frametest"),
             ("epilogue", fast_path_gen.FastPathGenerator, "epilogue"), ("text", fast_path_gen.FastPathGenerator, "text"), ("meta", fast_path_gen.FastPathGenerator, "meta"), ("ins", fast_path_gen.FastPathGenerator, "ins"),
-            ("layout_fields", fast_path_gen.FastPathGenerator, "layout_fields")]
+            ("layout_fields", fast_path_gen.FastPathGenerator, "layout_fields"), ("nil_test", fast_path_gen.FastPathGenerator, "nil_test"),
+            ("nested_call", fast_path_gen.FastPathGenerator, "nested_call"), ("test_branch", fast_path_gen.FastPathGenerator, "test_branch"),
+            ("merge_prefix", fast_path_gen.FastPathGenerator, "merge_prefix"), ("text_n", fast_path_gen.FastPathGenerator, "text_n")]
 code, n = main_once()
 R.append(dict(phase="control", kind="none", exit=code, stdout=n, ok=(code == 0 and n > 0)))
 for ph, obj, name in PH_FUNCS:
@@ -421,7 +456,7 @@ def main():
     h = work / "fast_path_fail_closed_harness.py"
     h.write_text(FAIL_CLOSED_HARNESS)
     reached = set()
-    for t in ("ValidatorBalance", "DepositMessage", "HistoricalSummary", "Checkpoint", "Fork"):
+    for t in ("ValidatorBalance", "DepositMessage", "HistoricalSummary", "Checkpoint", "Fork", "AttestationData"):
         cfg = work / f"fast_path_fail_closed-{t}.cfg.json"
         ro = work / f"fast_path_fail_closed-{t}.result.json"
         cfg.write_text(json.dumps(dict(argv=argv(t)[4:], nfields=nfields(t))))
@@ -438,7 +473,8 @@ def main():
                         exit=r.returncode, stdout=0, ok=r.returncode == 0 and len(R) >= 55,
                         stderr=r.stderr.decode(errors="replace")[-300:]))
     phases = {"read_ir", "read_S", "parse_layout", "walk", "run", "touch", "boundary", "live_after", "frametest", "epilogue",
-              "text", "meta", "ins", "layout_fields", "field0", "field1", "field2", "text-result", "flags"}
+              "text", "meta", "ins", "layout_fields", "field0", "field1", "field2", "text-result", "flags", "nil_test", "nested_call",
+              "test_branch", "merge_prefix", "text_n", "field3", "field4"}
     res.append(dict(id="fast-path-fail-closed-every-phase-reached", expect="every injected phase reached in some type",
                     exit=0, stdout=0, ok=phases <= reached, missing=sorted(phases - reached)))
     n_ok = sum(r["ok"] for r in res)

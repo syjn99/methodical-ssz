@@ -8,7 +8,7 @@ Emits Lean text that applies the parameterized lemmas of `lean/Codec` to the cod
   uint64                    the accept path of a uint64 primitive `UnmarshalSSZ` (`Codec.uint64_decode_accept`).
   decoder --whole-accept    the step chain of the accept path (see the block comment before `STEP_R64`), then the
                             head, field, epilogue, accept and size-reject theorems (`whole_accept.py`).
-  encoder --fast-path       the encoder fast-path theorem of a flat `MarshalSSZTo` (`fast_path.py`).
+  encoder --fast-path       the encoder fast-path theorem of a flat `MarshalSSZTo`, or of one with nested Checkpoint fields (`fast_path.py`).
 
 Statement check: every emitted theorem `t` is followed by
 `t_kind : ∀ (h : Host), type_of% (@t h) = <kind> h <parameters>` proved by `with_reducible rfl`. The kind
@@ -1717,8 +1717,9 @@ def _encoder_fast_path(args, flags):
     body, kinds = g.text()
     flags["rendered"] = True
     px, n = args.prefix, len(g.fields)
-    want = ([(f"{px}_head", "encodeHeadKindAnyFrame")] + [(f"{px}_field_{i}", "encodeFieldKindAnyFrame") for i in range(n)]
-            + [(f"{px}_epilogue", "encodeEpilogueKindAnyFrame"), (f"{px}_fast", "encodeFastPathKindAnyFrame")])
+    KH, KF, KE, KP = g.kind_names()
+    want = ([(f"{px}_head", KH)] + [(f"{px}_field_{i}", KF) for i in range(n)]
+            + [(f"{px}_epilogue", KE), (f"{px}_fast", KP)])
     if kinds != want:
         raise fast_path_gen.FastPathRefuse(f"kind lines emitted {kinds}, required {want}")
     for name, kind in want:
@@ -1747,17 +1748,25 @@ def _encoder_fast_path(args, flags):
             f"/-!\n# Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.{g.t}).MarshalSSZTo`\n\n"
             "Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a\n"
             "step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem\n"
-            "has a `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encodeEpilogueKindAnyFrame`, `encodeFastPathKindAnyFrame`).\n"
+            f"has a `_kind` line (`{KH}`, `{KF}`, `{KE}`, `{KP}`).\n"
             f"**Fast path only**: `len(dst) + {g.size} ≤ cap(dst)` and every byte-vector field of its exact length. No\n"
             "`runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the\n"
             f"growslice branches, the length rejects, the morestack path. Not a complete encoder result.{tie}\n"
+            + (f"Each nested pointer is not nil, and each nested call uses the function specification of its callee\n"
+               f"(`{g.callee['holds']}`). Not covered: the `newobject` branch of a nil pointer and the\n"
+               "error wrap of a nested call.\n" if g.nested else "") +
             f"FAST-PATH-JSON: {json.dumps(meta)}\n-/\n\n"
             f"open {opens}\nvariable [Host]\n\nnamespace {GEN_NS}\n\n")
     text = head + body + "\n" + tail + f"end {GEN_NS}\n"
     for bad in ("sorry", "admit", "native_decide", "bv_decide", "axiom ", "maxHeartbeats 4000001"):
         if bad in text:
             raise fast_path_gen.FastPathRefuse(f"forbidden text {bad!r} in the output")
-    if text.count("set_option maxHeartbeats ") != n + 3 or text.count("set_option maxHeartbeats 4000000 in\n") != n + 3:
+    if g.nested:
+        want_opts = sum(o.count("set_option ") for o in [fast_path_gen.NESTED_THEOREM_OPTIONS[r] for r in ("head", "epilogue", "fast")]
+                        + [fast_path_gen.NESTED_THEOREM_OPTIONS["nested" if f[1] == "n" else "field"] for f in g.fields])
+        if text.count("set_option ") != want_opts:
+            raise fast_path_gen.FastPathRefuse("options differ from NESTED_THEOREM_OPTIONS")
+    elif text.count("set_option maxHeartbeats ") != n + 3 or text.count("set_option maxHeartbeats 4000000 in\n") != n + 3:
         raise fast_path_gen.FastPathRefuse("heartbeat options differ from the interface's (4000000, one per theorem)")
     flags["verified"] = True
     return text

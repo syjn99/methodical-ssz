@@ -57,7 +57,8 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 ### The inventory row of the AttestationData encoder does not show every premise
 
 - What does not hold: the row text of an encoder fast path in `prysm/proof-inventory.md` is "len + SizeSSZ <= cap, exact field lengths".
-  `Prysm.AttestationData.Encode.fast_path` needs more premises than that text.
+  The row of AttestationData names `Prysm.AttestationData.Encode.generated_fast`.
+  This theorem and the hand theorem `Prysm.AttestationData.Encode.fast_path` need more premises than that text.
   It needs `Source` and `Target` not nil, the stack bound `guard + 312 < rsp` and `cap < 2^63`.
   It also needs disjoint memory blocks for the receiver, `dst`, the root, both Checkpoints and their roots.
   So `Source = Target` and two roots in one backing array are not covered. Go allows both.
@@ -161,6 +162,8 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   It covers uint64 fields after the set-up of the next callee call, with one field theorem for these fields.
   It covers a pointer field to a nested `Checkpoint` on the decoder side, with the kinds of `lean/Codec/Kind/DecodeAcceptNestedAnyFrame.lean`.
   The nested form covers only the code path without a write barrier, and only the callee `Checkpoint`.
+  On the encoder side, it covers a pointer field to a nested `Checkpoint` with the kinds of `lean/Codec/Kind/EncodeFastPathNestedAnyFrame.lean`.
+  This form covers only a pointer that is not nil, and no `runtime.memmove` call after a nested call.
   It refuses byte vectors of other sizes, `bool` fields, the `Gwei` callee, other interleaved fields and other nested containers.
   On the encoder side, the compiled sites that append a 32-byte field have different instruction texts.
   Only the call step is shared between them.
@@ -282,6 +285,9 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   - AttestationData has two decoder accept theorems for the same accept path.
     `Decode.accept` in `DecodeAccept.lean` is a hand proof, and the specification corollaries use it.
     `Decode.generated_accept` in `GeneratedDecodeAccept.lean` is a generated proof.
+  - AttestationData has two encoder fast-path theorems for the same path.
+    `Encode.fast_path` in `EncodeFastPath.lean` is a hand proof, and the specification corollary uses it.
+    `Encode.generated_fast` in `GeneratedEncodeFastPath.lean` is a generated proof.
 - Effect: none on a theorem.
   A new proof must use the general form in `Codec` and `Machine/WitnessHost.lean`.
 - Where: the files above.
@@ -313,6 +319,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   These checks of rule 13 have no broken copy:
   - 13b: the layout name, the layout field line, the top-level line, the namespace, the count of layout defs, the `hk` binder and the first binder line;
   - 13c: the proof line, the tail and the `sep` of a kind line, the count of boundary states, the layout field set and the missing layout def;
+  - 13c: the agreement of the nested fields of `FAST-PATH-JSON` with the IR;
   - 13e: the identity form of the `_statement`;
   - the one valid `FAST-PATH-JSON` line.
   Rules 2 to 12 have no broken copy.
@@ -405,6 +412,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - What does not hold: the tree gives no reason why only some generated encoder fast paths have a hand statement.
   Deposit_Data, PowBlock and SyncCommitteeMessage have `EncodeFastPathStatements.lean` and a statement tie.
   The other generated encoder fast paths have only the kind check, and Checkpoint has a hand theorem.
+  AttestationData also has a hand theorem, but no statement tie.
 - Effect: none on a theorem.
   For the other types, only the kind and `gen/generator/kindcheck.py` check the generated statement.
 - Where: `lean/Prysm/<GoTypeName>/EncodeFastPathStatements.lean` and `EncodeFastPathStatementTie.lean`.

@@ -455,5 +455,47 @@
   "old": "(he1 : e1 = (uintBytes 8 g.source.epoch.toNat).toList)",
   "new": "(he1 : e1 = (uintBytes 8 g.target.epoch.toNat).toList)",
   "note": "the Source call writes the Source epoch, which the serialization puts at offset 48"
+ },
+ {
+  "id": "attestation-data-encode-generated-fast-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.AttestationData.Encode.generated_fast"
+ },
+ {
+  "id": "attestation-data-encode-generated-fast-statement-output-target-epoch-to-source-epoch",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.AttestationData.Encode.generated_fast",
+  "old": "⋆ Eq (ep4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 88))",
+  "new": "⋆ Eq (ep3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 88))",
+  "note": "the Target epoch is the output at len + 88"
+ },
+ {
+  "id": "attestation-data-encode-generated-fast-statement-callee-temp-target-epoch-to-source-epoch",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.AttestationData.Encode.generated_fast",
+  "old": "⋆ Eq (ep4.At (s.regs.rsp.toBitVec - 256))",
+  "new": "⋆ Eq (ep3.At (s.regs.rsp.toBitVec - 256))",
+  "note": "the last callee call (Target) leaves its epoch in its temp at rsp - 256"
+ },
+ {
+  "id": "attestation-data-encode-generated-fast-statement-guard-312-to-192",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.AttestationData.Encode.generated_fast",
+  "old": "(hguard : guard.toNat + 312 < s.regs.rsp.toNat)",
+  "new": "(hguard : guard.toNat + 192 < s.regs.rsp.toNat)",
+  "note": "the callee frame needs 120 bytes below the return slot at rsp - 192"
+ },
+ {
+  "id": "attestation-data-encode-generated-fast-statement-length-128-to-88",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.AttestationData.Encode.generated_fast",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 128",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 88",
+  "note": "the function returns len + 128"
  }
 ]

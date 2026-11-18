@@ -1,4 +1,6 @@
-"""fast-path: `generator.py encoder --fast-path`, generated fast-path theorems for flat encoders (`MarshalSSZTo`).
+"""fast-path: `generator.py encoder --fast-path`, generated fast-path theorems for flat encoders (`MarshalSSZTo`), and for
+encoders with pointer fields to a nested container of NESTED_CALLEES (the nested kinds of
+`lean/Codec/Kind/EncodeFastPathNestedAnyFrame.lean`; each nested call through the function specification of its callee).
 
 Interface: the encoder step lemmas of `lean/Codec/Encode*.lean` and the statement kinds of `lean/Codec/Kind/`. A symbolic
 dataflow walk over the fast path of the `.S` file (head; per IR field its length test not taken, its capacity test
@@ -23,6 +25,25 @@ BYTE_SIZES = (4, 20, 32, 48, 96)
 INLINE_SIZE = 4
 INLINE_IMPORTS = ["Codec.EncodeInlineCopy"]
 THEOREM_OPTIONS = "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
+# A pointer field to a nested container whose callee encoder has a fast-path function specification: the callee table.
+# `label`: the callee symbol; `code`: its code constant; `holds`: the theorem that proves the specification from the code
+# (premises: the placement of the code and `MemmoveContract S`); `size`: the SSZ size; `frame`: the bytes of the callee
+# frame below its return slot (the specification names them).
+NESTED_CALLEES = {
+    "Checkpoint": dict(pkg="github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+                       label="github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo",
+                       code="Prysm.Checkpoint.Code.marshalSSZTo", holds="Prysm.Checkpoint.Encode.fast_path_function_spec_holds",
+                       imports=["Prysm.Checkpoint.Code", "Prysm.Checkpoint.FunctionSpecsAsNestedField"], size=40, frame=120),
+}
+NESTED_IMPORTS = ["Codec.Kind.EncodeFastPathNestedAnyFrame", "Codec.EncodeNestedCheckpoint"]
+NESTED_LAYOUT_FIELDS = ("callees", "goStart", "frame", "guardAddend", "lowExtra", "stackChunkCount", "stackChunkLengths", "pre",
+                        "existentials", "post")
+# The options of the theorems of a file with nested fields, by role ("" = the defaults). Measured on AttestationData: with
+# the defaults, every field theorem fails in the `simp only` of a label fact; head, epilogue and fast-path theorem pass.
+NESTED_FIELD_OPTIONS = ("-- Measured cause: with the default maxRecDepth (512), the `simp only` of a label fact (`Machine.label_at'`)\n"
+                        "-- fails with \"maximum recursion depth has been reached\"; 1000 passes. The default maxHeartbeats passes.\n"
+                        "set_option maxRecDepth 1000 in\n")
+NESTED_THEOREM_OPTIONS = dict(head="", field=NESTED_FIELD_OPTIONS, nested=NESTED_FIELD_OPTIONS, epilogue="", fast="")
 
 
 class FastPathRefuse(Exception):
@@ -56,6 +77,17 @@ def read_ir(ir_path, tname):
         v = f["v"]
         if v.get("variable"):
             raise FastPathRefuse(f"field {g['name']}: variable size (not a flat field)")
+        if v.get("k") == "pointer":
+            dt = v.get("delegated_to") or {}
+            cal = NESTED_CALLEES.get(dt.get("name"))
+            if not (dt.get("k") == "container" and cal and dt.get("pkg") == cal["pkg"]):
+                raise FastPathRefuse(f"field {g['name']}: pointer to the nested container {dt.get('name')} "
+                                     "(covered: a nested container of NESTED_CALLEES)")
+            if not (g["type"] == f"*{cal['pkg']}.{dt['name']}" and g["size_gc_amd64"] == 8 and v.get("go_type") == f"*{dt['name']}"
+                    and v.get("fixed_size") == cal["size"] and dt.get("fixed_size") == cal["size"] and not dt.get("variable")):
+                raise FastPathRefuse(f"field {g['name']}: pointer field whose IR does not match the callee {dt['name']}")
+            out.append((g["name"], "n", cal["size"], g["offset_gc_amd64"], dt["name"]))
+            continue
         m = re.search(r'ssz-size:"(\d+)"', g["tag"])
         if m:
             n = int(m[1])
@@ -154,6 +186,10 @@ def v_pf(v, zs=False):
         return {"full": b, "lo8": f"({b}.take 8)", "hi8": f"({b}.drop 8)"}[v[2]]
     if k == "scrn":
         return v[1]
+    if k == "fpv":
+        return f"(Int.toBytes 8 ({rg('rsp')}.toBitVec - 8).toInt)"
+    if k == "blk":
+        return v[1]
     raise FastPathRefuse(f"internal: slot value {v}")
 
 
@@ -161,8 +197,10 @@ def v_len(v):
     k = v[0]
     if k in ("orig", "fld", "ex", "scrn"):
         return "h" + v[1]
-    if k in ("reg", "len", "ret"):
+    if k in ("reg", "len", "ret", "fpv"):
         return "(Int.toBytes_length 8 _)"
+    if k == "blk":
+        return v[2]
     if k == "scr":
         return "hsc"
     if k == "x15":
@@ -185,6 +223,8 @@ def v_kind(v):
         return f".{k} {v[1]}"
     if k == "scr":
         return ".scratch"
+    if k == "fpv":
+        return ".framePointer"
     raise FastPathRefuse(f"slot value {v} has no kind form")
 
 
@@ -225,6 +265,8 @@ def s_statement(v):
         return "s.regs.rdi.toBitVec"
     if k == "len":
         return "s.regs.rcx.toBitVec" if v[1] == 0 else f"s.regs.rcx.toBitVec + {v[1]}"
+    if v == ("imm", 0):
+        return "0"
     raise FastPathRefuse(f"live register value not in the boundary language: {v}")
 
 
@@ -233,6 +275,8 @@ def s_kind(v):
         return "." + {"rcv": "receiver"}.get(v[0], v[0])
     if v[0] == "len":
         return f".len {v[1]}"
+    if v == ("imm", 0):
+        return ".zero"
     raise FastPathRefuse(f"live register value {v} has no kind form")
 
 
@@ -253,7 +297,8 @@ PATS = [
     (r"sub %(r\w+),%(r\w+)", lambda m: ("subrr", m[2], m[1])),
     (r"cmp %(r\w+),%(r\w+)", lambda m: ("cmprr", m[2], m[1])),
     (r"cmpq \$(0x[0-9a-f]+),(-?0x[0-9a-f]+)?\(%(r\w+)\)", lambda m: ("cmpmi", m[3], num(m[2]), num(m[1]))),
-    (r"(jae|jb|jne|jbe) (\S+)", lambda m: ("jcc", m[1], m[2])),
+    (r"(jae|jb|jne|jbe|je) (\S+)", lambda m: ("jcc", m[1], m[2])),
+    (r"test %(r\w+),%(r\w+)", lambda m: ("test", m[1]) if m[1] == m[2] else ("other",)),
     (r"jmp (\S+)", lambda m: ("jmp", m[1])),
     (r"movups %xmm15,(-?0x[0-9a-f]+)?\(%(r\w+)\)", lambda m: ("movups", m[2], num(m[1]))),
     (r"xor %(e\w+),%(e\w+)", lambda m: ("xor", R32[m[1]]) if m[1] == m[2] else ("other",)),
@@ -286,13 +331,28 @@ class FastPathGenerator:
         if go0 not in (0, 8):
             raise FastPathRefuse(f"first Go offset {go0} (covered: 0, 8)")
         self.st = go0 == 8
-        self.vn = [f"v{i}" if f[1] == "u" else f"b{i}" for i, f in enumerate(self.fields)]
+        self.nested = any(f[1] == "n" for f in self.fields)
+        self.vn = [f"v{i}" if f[1] == "u" else f"b{i}" if f[1] == "b" else f"ep{i}" for i, f in enumerate(self.fields)]
         self.bidx = [i for i, f in enumerate(self.fields) if f[1] == "b"]
         self.uidx = [i for i, f in enumerate(self.fields) if f[1] == "u"]
-        self.pn = {i: f"p{i}" for i in self.bidx}
+        self.nidx = [i for i, f in enumerate(self.fields) if f[1] == "n"]
+        self.pn = {i: f"p{i}" for i in self.bidx + self.nidx}
+        # the SSZ leaves: a nested field is its epoch (8 bytes) and its root (32 bytes); leaf[i] = index of the first leaf of field i
+        self.leaf, nl = [], 0
+        for f in self.fields:
+            self.leaf.append(nl)
+            nl += 2 if f[1] == "n" else 1
+        if self.nested:
+            cs = {f[4] for f in self.fields if f[1] == "n"}
+            if len(cs) != 1:
+                raise FastPathRefuse(f"nested fields of more than one callee type {sorted(cs)}")
+            self.callee = NESTED_CALLEES[cs.pop()]
+            self.cfr = self.callee["frame"]
+            if hand_layout:
+                raise FastPathRefuse("a hand layout is not covered with nested fields")
         g, o = (8 if self.st else 0), 0
         self.goff, self.soff = [], []
-        for (n, k, sz, go) in self.fields:
+        for (n, k, sz, go, *_) in self.fields:
             if go != g:
                 raise FastPathRefuse(f"Go offsets are not the running sum (field {n}: {go}, expected {g})")
             self.goff.append(g)
@@ -303,6 +363,10 @@ class FastPathGenerator:
         if hand_layout:
             self.hand = (hand_layout,) + parse_layout(hand_layout_src, hand_layout)
         self.walk()
+
+    def losz(self):
+        """the size key of the low block in the entry state: `S` (memmove scratch) or `SE` (`S` + the callee frame)"""
+        return "SE" if self.nested else "S"
 
     def lab_of(self, name):
         if name not in self.lab:
@@ -397,6 +461,9 @@ class FastPathGenerator:
             raise FastPathRefuse(f"frame size {self.F}")
         if self.gd and self.gd > self.F:
             raise FastPathRefuse(f"large-frame guard {self.gd} larger than the frame {self.F}")
+        if self.nested:
+            # the guard premise covers the frame, the callee return slot and the callee frame below it
+            self.ga = self.F + 16 + self.cfr
         self.npro = npro
         calls = [l[6:] for l in L if l.startswith("callq ")]
         self.rt = "runtime.memmove" in calls
@@ -418,7 +485,7 @@ class FastPathGenerator:
             self.layname = hname
         else:
             ups = sorted(o for o in offs if o > 0)
-            mem = [-8] + ups + [o for o in offs if o < 0 and o not in (-8, rs)] + ([rs] if self.rt else [])
+            mem = [-8] + ups + [o for o in offs if o < 0 and o not in (-8, rs)] + ([rs] if rs in offs else [])
             if sorted(mem) != sorted(offs):
                 raise FastPathRefuse("internal: chunk order is not a permutation of the touched regions")
             bind = mem
@@ -429,7 +496,7 @@ class FastPathGenerator:
                 return "fp"
             if o > 0:
                 return f"s{o // 8}"
-            if o == rs and self.rt:
+            if o == rs:
                 return "rslot"
             return f"{'t' if sz[o] == 16 else 'l'}{-o}"
         self.bind = [(o, sz[o], nm(o)) for o in bind]
@@ -460,11 +527,14 @@ class FastPathGenerator:
         self.frametested = False
         self.lenok = set()
         self.capok = None
+        self.nilok = None
+        self.callfi = None
+        self.hcth = False
         F = self.F
         self.reg = {"rax": ("rcv",), "rbx": ("ptr",), "rcx": ("len", 0), "rdi": ("cap",)}
         self.slots = list(self.pre) if self.pre else []
-        if (self.pre and self.rt) or not emit:
-            self.slots.append(("lo", "S", ("scr",)))
+        if (self.pre and (self.rt or self.nested)) or not emit:
+            self.slots.append(("lo", self.losz(), ("scr",)))
         self.done = 0
         self.outv = [("d", i) for i in range(len(self.fields))]
         if not emit:
@@ -475,7 +545,7 @@ class FastPathGenerator:
         pro = "encoder_prologue_small_frame _ _ _" if self.gd == 0 else f"encoder_prologue_large_frame _ _ _ ({-self.gd}) {self.gd}"
         extra = "" if self.gd == 0 else " (by rfl)"
         self.E(f"apply {pro} _ k (k + {n}) (window_infix_at hk 0 {n}) (by rfl) (by rfl){extra} guard fp hfp _ _ _ "
-               "(by dsimp only; ecancel) hguard")
+               "(by dsimp only; ecancel) " + ("(by dsimp only; omega)" if self.nested else "hguard"))
         m, H = self.newH()
         self.E(f"intro {m} {H} fl{self.hn}; normalize_registers; dsimp only at {H}")
         self.setslot(-8, 8, ("reg", "rbp"))
@@ -687,7 +757,7 @@ class FastPathGenerator:
             if v[0] == "len":
                 sv = ("reg", "rcx") if v[1] == 0 else ("len", v[1])
             if v[0] == "fval":
-                sv = ("fld", v[1], v[2])
+                sv = ("fld", v[1], self.leaf[v[2]], v[2]) if self.nested else ("fld", v[1], v[2])
             if sv is None:
                 raise FastPathRefuse(f"stored value not in the slot language: {v}")
             if self.slot_at(off, 8) is None:
@@ -740,7 +810,7 @@ class FastPathGenerator:
                     E(f"apply step_load_value Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
                     E(f"  {s_pf(self.reg[rb])} {stk(off)} {s_pf(val)} (by encoder_address_equation) _ _ _ (by rfl) (by ecancel)")
                 elif sv[0] == "fld":
-                    val = ("fval", sv[1], sv[2])
+                    val = ("fval", sv[1], sv[3] if len(sv) > 3 else sv[2])
                     E(f"apply step_load_bytes Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
                     E(f"  {s_pf(self.reg[rb])} {stk(off)} (by encoder_address_equation) {sv[1]} h{sv[1]} _ _ _ (by rfl) (by ecancel)")
                 else:
@@ -749,7 +819,7 @@ class FastPathGenerator:
                 self.reg[rd] = val
                 return i + 1
             go = ad[1]
-            for fi, (nm, fk, sz, g) in enumerate(self.fields):
+            for fi, (nm, fk, sz, g, *_) in enumerate(self.fields):
                 if g == go:
                     break
             else:
@@ -778,6 +848,8 @@ class FastPathGenerator:
             self.lab_of(b[2])
             ad = self.addr_of(rb, d)
             fi = self.done
+            if im == 0 and fi < len(self.fields) and self.fields[fi][1] == "n":
+                return self.nil_test(i, j, b, rb, d, ad, fi)
             if fi >= len(self.fields) or self.fields[fi][1] != "b" or ad != ("rcvw", self.goff[fi] + 8) \
                     or im != self.fields[fi][2]:
                 raise FastPathRefuse("length test is not the current field's length word against its IR size")
@@ -904,6 +976,10 @@ class FastPathGenerator:
             self.outv[fi] = ("v", fi)
             self.done += 1
             return i + 1
+        if k == "call" and self.nested and a[1] == self.callee["label"]:
+            return self.nested_call(i)
+        if k == "test":
+            return self.test_branch(i, a)
         if k == "call":
             if a[1] != "runtime.memmove":
                 raise FastPathRefuse(f"call of {a[1]} on the walked path (callee encoder without a proved theorem)")
@@ -925,9 +1001,19 @@ class FastPathGenerator:
             if self.pend:
                 E(f"apply step_nops _ (k + {i - self.pend}) (k + {i}) (window_infix_at hk {i - self.pend} {self.pend}) (by rfl) (by rfl)")
                 self.pend = 0
-            old, lo = self.getslot(rs, 8), self.getslot("lo", "S")
+            old, lo = self.getslot(rs, 8), self.getslot("lo", self.losz())
             self.ncall += 1
             c = self.ncall
+            blk = lo
+            if self.nested:
+                # the scratch of memmove is the top `S` bytes of the low block (`S` + the callee frame)
+                if self.slot_at("lo", "SE") is None:
+                    raise FastPathRefuse("memmove after a nested call (the low block is split)")
+                E(f"obtain ⟨lm{c}, sm{c}, hlm{c}, hsm{c}, Hm{c}⟩ := low_block_memmove_split {stk(-(F + 16 + self.cfr))} {stk(rs)} S {self.cfr}")
+                E(f"  hS (by decide) (by bv_omega) {v_pf(lo)} {v_len(lo)} _ _ (by first | ecancel | (dsimp only; ecancel))")
+                E(f"clear {self.H}")
+                self.H = f"Hm{c}"
+                lo = ("scrn", f"sm{c}", None, None)
             E(f"refine eventually_trans _ _ _ _ (encode_memmove_call (k + {i}) (window_infix_at hk {i} 1) {stk(-(F + 8))} "
               f"{s_pf(('dst', self.soff[fi]))} {self.pn[fi]}")
             E(f"  {stk(rs)} ({stk(rs)[1:-1]} - BitVec.ofNat 64 S) S (by bv_omega) "
@@ -946,11 +1032,18 @@ class FastPathGenerator:
             self.mem_ = f"memc{c}"
             self.zm = f"zmmsc{c}"
             self.setslot(rs, 8, ("ret", i + 1))
-            seq = lo[3] if lo[0] in ("ex", "scrn") else None
+            seq = blk[3] if blk[0] in ("ex", "scrn", "blk") else None
             if seq is None:
                 self.exseq += 1
                 seq = self.exseq
-            self.setslot("lo", "S", ("scrn", f"scr{c}", None, seq))
+            if self.nested:
+                E(f"obtain ⟨hj{c}, Hj{c}⟩ := low_block_join {stk(-(F + 16 + self.cfr))} {stk(rs)} S {self.cfr} hS (by decide) (by bv_omega)")
+                E(f"  lm{c} scr{c} hlm{c} hscr{c} _ _ (by first | ecancel | (dsimp only; ecancel))")
+                E(f"clear Hc{c}")
+                self.H = f"Hj{c}"
+                self.setslot("lo", "SE", ("blk", f"(lm{c} ++ scr{c})", f"hj{c}", seq))
+            else:
+                self.setslot("lo", "S", ("scrn", f"scr{c}", None, seq))
             self.reg = {"rsp": ("stk", -(F + 8))}
             self.outv[fi] = ("v", fi)
             self.done += 1
@@ -1004,11 +1097,205 @@ class FastPathGenerator:
         self.frametested = True
         return j + 1
 
+    # ---------- nested fields ----------
+    def nil_test(self, i, j, b, rb, d, ad, fi):
+        """`cmpq $0x0,g(%rB); jne l` of the current nested field: taken, from the premise that its pointer is not nil.
+        The `newobject` branch between the `jne` and `l` is not on the path."""
+        if b[:2] != ("jcc", "jne") or ad != ("rcvw", self.goff[fi]):
+            raise FastPathRefuse("nil test is not `cmpq $0x0` of the current nested field word with a `jne`")
+        jl = self.lab_of(b[2])
+        if jl <= j:
+            raise FastPathRefuse("nil test jumps backwards")
+        if not any(self.L[x] == "callq runtime.newobject" for x in range(j + 1, jl)):
+            raise FastPathRefuse("nil test skips no `newobject` call")
+        hl = self.label_hyp(jl)
+        a0 = i - self.pend
+        self.pend = 0
+        g = self.goff[fi]
+        self.E(f"apply step_nil_check_taken Reg64.{rb} {lit(d)} _ _ (k + {a0}) (k + {jl}) (window_infix_at hk {a0} {j + 1 - a0}) (by rfl) {hl}")
+        self.E(f"  rax.toBitVec (rax.toBitVec + {g}) {self.pn[fi]} (by encoder_address_equation) hp{fi} _ _ _ (by rfl) (by ecancel)")
+        self.E("intro fl; normalize_registers")
+        self.nilok = fi
+        return jl
+
+    def merge_prefix(self, c, fi):
+        """`hP{c}`: the prefix and the outputs of the fields before `fi` as one chunk (the prefix of the callee), and its length."""
+        names, offs = [], []
+        for x in range(fi):
+            if self.fields[x][1] == "n":
+                names += [self.vn[x], f"rt{x}"]
+                offs += [self.soff[x], self.soff[x] + 8]
+            else:
+                names.append(self.vn[x])
+                offs.append(self.soff[x])
+        ad = lambda o: "(rbx.toBitVec + rcx.toBitVec)" if o == 0 else f"(rbx.toBitVec + rcx.toBitVec + {o})"
+        nn = len(names)
+        if nn == 0:
+            raise FastPathRefuse("nested field at SSZ offset 0 (no prefix form)")
+        cat = "pre ++ " + "".join(f"({n} ++ " for n in names[:-1]) + names[-1] + ")" * (nn - 1)
+        rhs = "Eq (pre.At rbx.toBitVec) ⋆ " + "".join(f"(Eq ({names[x]}.At {ad(offs[x])}) ⋆ " for x in range(nn - 1)) \
+            + f"Eq ({names[-1]}.At {ad(offs[-1])})" + ")" * (nn - 1)
+        lens = ", ".join("h" + n for n in names)
+        tails = [("(" + "".join(f"{n} ++ (" for n in names[x:-1]) + names[-1] + ")" * (nn - 1 - x) + ")") if x < nn - 1 else names[-1]
+                 for x in range(nn)]
+        rw = [f"at_app pre {tails[0]} (b := rbx.toBitVec + rcx.toBitVec)\n      (by rw [hpre]; show _ = _ + BitVec.ofNat 64 rcx.toBitVec.toNat; rw [BitVec.ofNat_toNat, BitVec.setWidth_eq])\n"
+              f"      (by simp only [List.length_append, {lens}]; omega)"]
+        for x in range(nn - 1):
+            rw.append(f"at_app {names[x]} {tails[x + 1]} (b := {ad(offs[x + 1])[1:-1]})\n      (by rw [h{names[x]}] <;> bv_omega) "
+                      f"(by simp only [List.length_append, {lens}] <;> omega)")
+        self.E("have hrdi := rdi.toBitVec.isLt")
+        self.E(f"have hP{c} : Eq (({cat}).At rbx.toBitVec) = {rhs} := by")
+        self.E("  rw [" + ",\n    ".join(rw) + "]")
+        self.E(f"have hPl{c} : ({cat}).length = (rcx.toBitVec + {self.soff[fi]}).toNat :=")
+        self.E(f"  nested_prefix_length rcx rdi {self.soff[fi]} _ (by simp only [List.length_append, hpre, {lens}] <;> omega) (by omega)")
+        return f"({cat})"
+
+    def nested_call(self, i):
+        """`callq` of the callee of the current nested field (`encode_nested_checkpoint_call`), through the callee function
+        specification. The callee frame is the top of the low block: split at the first nested call; the 16-byte
+        temp of the callee is joined again from its two words at a later call."""
+        F, Ex = self.F, self.cfr
+        fi = self.done
+        E = self.E
+        if fi >= len(self.fields) or self.fields[fi][1] != "n":
+            raise FastPathRefuse("call of the nested callee for a field that is not nested")
+        if self.nilok != fi:
+            raise FastPathRefuse(f"nested call of field {fi} without its nil test")
+        if Ex != 120:
+            raise FastPathRefuse(f"callee frame {Ex} (covered: 120)")
+        vr = (self.reg.get("rax"), self.reg.get("rbx"), self.reg.get("rcx"), self.reg.get("rdi"))
+        if vr != (("fptr", self.pn[fi], fi), ("ptr",), ("len", self.soff[fi]), ("cap",)):
+            raise FastPathRefuse(f"nested call arguments {vr}")
+        rs = -(F + 16)
+        if not self.emit:
+            self.touch(rs, 8, call=True)
+            self.touch(-F, 8)
+        if self.pend:
+            E(f"apply step_nops _ (k + {i - self.pend}) (k + {i}) (window_infix_at hk {i - self.pend} {self.pend}) (by rfl) (by rfl)")
+            self.pend = 0
+        self.ncall += 1
+        c = self.ncall
+        o = lambda n: stk(-(F + n))
+        if not self.hcth:
+            E(f"have hC : NestedCheckpointCalleeEncode \"{self.callee['label']}\" S := {self.callee['holds']} kC hkC hfC S hmm")
+            self.hcth = True
+        first = self.slot_at("lo", "SE") is not None
+        if first:
+            lo = self.getslot("lo", "SE")
+            E(f"obtain ⟨sc{c}, rs{c}, gp{c}, ta{c}, tb{c}, la{c}, lb{c}, lc{c}, fq{c}, hsc{c}, hrs{c}, hgp{c}, hta{c}, htb{c}, hla{c}, hlb{c}, "
+              f"hlc{c}, hfq{c}, Hs{c}⟩ :=")
+            E(f"  low_block_callee_frame_split {o(136)} {o(128)} {o(80)} {o(64)} {o(48)} {o(40)} {o(32)} {o(24)} S hS")
+            E("  (by bv_omega) (by bv_omega) (by bv_omega) (by bv_omega) (by bv_omega) (by bv_omega) (by bv_omega)")
+            E(f"  {v_pf(lo)} {v_len(lo)} _ _ (by first | ecancel | (dsimp only; ecancel))")
+            E(f"clear {self.H}")
+            self.H = f"Hs{c}"
+            ins = dict(fp=(f"fq{c}", f"hfq{c}"), l16=(f"lc{c}", f"hlc{c}"), l24=(f"lb{c}", f"hlb{c}"), l32=(f"la{c}", f"hla{c}"),
+                       t30=(f"tb{c}", f"htb{c}"), t40=(f"ta{c}", f"hta{c}"), rs=(f"rs{c}", f"hrs{c}"), sc=(f"sc{c}", f"hsc{c}"))
+            join = ""
+        else:
+            g = lambda off, n: self.getslot(-(F + off), n)
+            if self.slot_at("lo", "S") is None or self.slot_at(-(F + 128), 48) is None:
+                raise FastPathRefuse("internal: callee frame slots of a later nested call")
+            ve, vt = g(80, 8), g(72, 8)
+            ins = dict(fp=(v_pf(g(24, 8)), v_len(g(24, 8))), l16=(v_pf(g(32, 8)), v_len(g(32, 8))), l24=(v_pf(g(40, 8)), v_len(g(40, 8))),
+                       l32=(v_pf(g(48, 8)), v_len(g(48, 8))), t30=(v_pf(g(64, 16)), v_len(g(64, 16))),
+                       t40=(f"({v_pf(ve)} ++ {v_pf(vt)})", f"(by rw [List.length_append, {v_len(ve)}, {v_len(vt)}])"),
+                       rs=(v_pf(g(136, 8)), v_len(g(136, 8))),
+                       sc=(v_pf(self.getslot("lo", "S")), v_len(self.getslot("lo", "S"))))
+            join = (f"rw [at_app {v_pf(ve)} {v_pf(vt)} (b := {o(72)[1:-1]}) (by rw [{v_len(ve)}]; bv_omega) "
+                    f"(by rw [{v_len(ve)}, {v_len(vt)}]; omega)]; ")
+        ret, s2 = self.getslot(rs, 8), self.getslot(-F, 8)
+        cat = self.merge_prefix(c, fi)
+        so = self.soff[fi]
+        ep, rt, p, q = self.vn[fi], f"rt{fi}", self.pn[fi], f"pr{fi}"
+        E(f"refine eventually_trans _ _ _ _ (encode_nested_checkpoint_call \"{self.callee['label']}\" S hC (k + {i}) (window_infix_at hk {i} 1)")
+        E(f"  {o(8)} {p} {q} rbx.toBitVec (rcx.toBitVec + {so}) rdi.toBitVec (rcx.toBitVec + {so + 40}) (by bv_omega)")
+        E(f"  {o(16)} {o(24)} {stk(-F)} {o(32)} {o(40)} {o(48)} {o(64)} {o(80)} {o(72)} {o(136)} ({o(136)[1:-1]} - BitVec.ofNat 64 S)")
+        E(f"  {s_pf(('dst', so))} {s_pf(('dst', so + 8))}")
+        E("  (by bv_omega) (by bv_omega) (by bv_omega) (by bv_omega) (by bv_omega) (by bv_omega) (by bv_omega) (by bv_omega) (by bv_omega)")
+        E("  (by bv_omega) (by bv_omega) (by bv_omega) (by bv_omega)")
+        E(f"  guard (nested_call_stack rsp guard.toNat {F + 8} {self.ga} hguard (by decide)).1 (nested_call_stack rsp guard.toNat {F + 8} {self.ga} hguard (by decide)).2")
+        E(f"  (nested_call_capacity rcx rdi {so} (by omega) hcap63) hcap63")
+        E(f"  ob{fi} {ep} oc{fi} ot{fi} {rt} {cat} d{fi} dr{fi} {v_pf(ret)} {ins['fp'][0]} {v_pf(s2)} {ins['l16'][0]} {ins['l24'][0]} "
+          f"{ins['l32'][0]} {ins['t30'][0]} {ins['t40'][0]} {ins['rs'][0]} {ins['sc'][0]}")
+        E(f"  hob{fi} h{ep} hoc{fi} hot{fi} h{rt} hPl{c} hd{fi} hdr{fi} {v_len(ret)} {ins['fp'][1]} {v_len(s2)} {ins['l16'][1]} {ins['l24'][1]} "
+          f"{ins['l32'][1]} {ins['t30'][1]} {ins['t40'][1]} {ins['rs'][1]} {ins['sc'][1]}")
+        E(f"  _ _ (by rfl) (by rfl) (by rfl) (by rfl) (by rfl) (by {join}rw [hP{c}]; first | ecancel | (dsimp only; ecancel))) ?_")
+        E(f"clear {self.H}")
+        E(f"rintro ⟨e{c}, pc{c}⟩ ⟨hpc{c}, hxa{c}, hxb{c}, hxc{c}, hxd{c}, hxs{c}, hrsp{c}, hrbp{c}, hr14{c}, tt{c}, uu{c}, ss{c}, rr{c}, "
+          f"htt{c}, huu{c}, hss{c}, hrr{c}, Hc{c}⟩")
+        E(f"dsimp only at hpc{c} hxa{c} hxb{c} hxc{c} hxd{c} hxs{c} hrsp{c} hrbp{c} hr14{c} Hc{c}")
+        E(f"subst hpc{c}")
+        rn = ", ".join(f"{r}c{c}" for r in R64)
+        E(f"obtain ⟨⟨{rn}⟩, zmmsc{c}, flagsc{c}, memc{c}⟩ := e{c}")
+        E(f"simp only at hxa{c} hxb{c} hxc{c} hxd{c} hxs{c} hrsp{c} hrbp{c} hr14{c} Hc{c}")
+        E(f"subst rspc{c} rbpc{c} r14c{c} rdic{c} rsic{c}")
+        E(f"obtain rfl : rbx = raxc{c} := (UInt64.toBitVec_inj.mp hxa{c}).symm")
+        E(f"obtain rfl : rdi = rcxc{c} := (UInt64.toBitVec_inj.mp hxc{c}).symm")
+        E(f"rw [show k + {i} + 1 = k + {i + 1} from rfl, hP{c}] at Hc{c}")
+        E(f"apply register_value_rewrite Reg64.rbx (rcx.toBitVec + {so + 40}) _ _ _ (by exact hxb{c})")
+        E("normalize_registers")
+        self.H = f"Hc{c}"
+        self.mem_ = f"memc{c}"
+        self.zm = f"zmmsc{c}"
+        # the slots after the call
+        newex = lambda: (self.__setattr__("exseq", self.exseq + 1), self.exseq)[1]
+        setv = lambda off, n, v: self.setslot(off, n, v) if self.slot_at(off, n) is not None else \
+            self.slots.insert(self.slot_at("lo", "SE" if first else "S"), (off, n, v))
+        setv(rs, 8, ("ret", i + 1))
+        setv(-F, 8, ("reg", "rbx"))
+        setv(-(F + 24), 8, ("fpv",))
+        setv(-(F + 32), 8, ("reg", "rbx"))
+        setv(-(F + 40), 8, ("reg", "rdi"))
+        setv(-(F + 48), 8, ("len", so + 40))
+        setv(-(F + 64), 16, ("scrn", f"uu{c}", None, newex()))
+        if not first:
+            j80 = self.slot_at(-(F + 80), 8)
+            self.slots[j80:j80 + 2] = [(-(F + 80), 16, None)]
+        e16 = self.slot_at(-(F + 80), 16)
+        if e16 is None:
+            setv(-(F + 80), 16, None)
+            e16 = self.slot_at(-(F + 80), 16)
+        self.slots[e16:e16 + 1] = [(-(F + 80), 8, ("fld", ep, self.leaf[fi], fi)), (-(F + 72), 8, ("scrn", f"tt{c}", None, newex()))]
+        if first:
+            setv(-(F + 128), 48, ("scrn", f"gp{c}", None, newex()))
+        setv(-(F + 136), 8, ("scrn", f"rr{c}", None, newex()))
+        jl = self.slot_at("lo", "SE" if first else "S")
+        self.slots[jl] = ("lo", "S", ("scrn", f"ss{c}", None, newex()))
+        self.reg = {"rsp": ("stk", -(F + 8)), "rax": ("ptr",), "rbx": ("len", so + 40), "rcx": ("cap",),
+                    "rdi": ("imm", 0), "rsi": ("imm", 0)}
+        self.callfi = fi
+        return i + 1
+
+    def test_branch(self, i, a):
+        """`test %rdi,%rdi; je l` after the nested call of the current field: taken (the callee returns a nil error).
+        This commits the field; the error wrap between the `je` and `l` is not on the path."""
+        j = i + 1
+        while self.ins(j)[0] == "nop":
+            j += 1
+        b = self.ins(j)
+        fi = self.done
+        if not (self.nested and b[:2] == ("jcc", "je") and a[1] == "rdi" and self.reg.get("rdi") == ("imm", 0)
+                and self.callfi == fi):
+            raise FastPathRefuse("test form unknown (only `test %rdi,%rdi; je` after a nested call)")
+        jl = self.lab_of(b[2])
+        if jl <= j:
+            raise FastPathRefuse("error test jumps backwards")
+        hl = self.label_hyp(jl)
+        a0 = i - self.pend
+        self.pend = 0
+        self.E(f"apply step_test_je_taken Reg64.rdi _ _ (k + {a0}) (k + {jl}) (window_infix_at hk {a0} {j + 1 - a0}) (by rfl) {hl} _ _ (by rfl)")
+        self.E("intro fl; normalize_registers")
+        self.outv[fi] = ("v", fi)
+        self.done += 1
+        return jl
+
     # ---------- boundaries ----------
     def live_after(self, i):
         """registers read before written on the path from directive i (a call or the return ends the scan)"""
         need, written = [], set()
         j, n = i, 0
+        prev = None
         while True:
             n += 1
             if n > 2000:
@@ -1041,10 +1328,15 @@ class FastPathGenerator:
             elif k == "jcc":
                 if a[1] == "jae":
                     nxt = self.lab_of(a[2])
+                elif self.nested and (a[1] == "je" or (a[1] == "jne" and prev and prev[0] == "cmpmi" and prev[3] == 0)):
+                    # the fast path of a nested field: the nil test and the error test are taken
+                    nxt = self.lab_of(a[2])
+            elif k == "test":
+                use = [a[1]]
             elif k == "jmp":
                 nxt = self.lab_of(a[1])
             elif k == "call":
-                use = ["rax", "rbx", "rcx"]
+                use = ["rax", "rbx", "rcx"] + (["rdi"] if self.nested and a[1] == self.callee["label"] else [])
             elif k == "pop":
                 use = ["rax", "rbx", "rcx", "rdi", "rsi"]
             elif k in ("label", "nop"):
@@ -1057,15 +1349,17 @@ class FastPathGenerator:
             if k in ("call", "pop"):
                 break
             written.update(df)
+            if k != "nop":
+                prev = a
             j = nxt
         return [r for r in R64 if r in need]
 
     def boundary(self, pc):
-        exs = sorted({(v[3], o) for o, sz, v in self.slots if v[0] in ("ex", "x15", "scrn")})
+        exs = sorted({(v[3], o) for o, sz, v in self.slots if v[0] in ("ex", "x15", "scrn", "blk")})
         wit, newslots = [], []
         idx = {key: n for n, key in enumerate(exs)}
         for o, sz, v in self.slots:
-            if v[0] in ("ex", "x15", "scrn"):
+            if v[0] in ("ex", "x15", "scrn", "blk"):
                 n = idx[(v[3], o)]
                 wit.append((n, v_pf(v), v_len(v), sz))
                 newslots.append((o, sz, ("ex", f"x{n}", n, v[3])))
@@ -1074,7 +1368,7 @@ class FastPathGenerator:
         wit.sort()
         regs = [(r, self.reg.get(r)) for r in self.live_after(pc)]
         for r, v in regs:
-            if v is None or v[0] not in ("rcv", "ptr", "cap", "len"):
+            if v is None or not (v[0] in ("rcv", "ptr", "cap", "len") or (self.nested and v == ("imm", 0))):
                 raise FastPathRefuse(f"live register {r} = {v} at a boundary")
         b = dict(pc=pc, done=self.done, regs=regs, slots=newslots, outv=list(self.outv), exs=[w[3] for w in wit])
         E = self.E
@@ -1085,6 +1379,7 @@ class FastPathGenerator:
         self.thms.append(self.out)
         self.out = []
         self.hl = set()
+        self.hcth = False
         self.slots = list(newslots)
         self.zm = "zmms1"
         self.H = "Hm"
@@ -1100,11 +1395,14 @@ class FastPathGenerator:
             raise FastPathRefuse(f"result registers at the return: {self.reg}")
         if self.reg.get("rsp") != ("stk", -8):
             raise FastPathRefuse("rsp at the return")
-        if self.ins(i + 1) != ("ret",):
+        jr = i + 1
+        while self.nested and self.ins(jr) == ("nop",) and jr < i + 4:
+            jr += 1
+        if self.ins(jr) != ("ret",):
             raise FastPathRefuse("return form (pop %rbp; retq)")
         a0 = i - self.pend
         self.pend = 0
-        E(f"refine eventually_trans _ _ _ _ (decode_return_segment _ (k + {a0}) (window_infix_at hk {a0} {i + 2 - a0}) (by rfl) "
+        E(f"refine eventually_trans _ _ _ _ (decode_return_segment _ (k + {a0}) (window_infix_at hk {a0} {jr + 1 - a0}) (by rfl) "
           "(rsp.toBitVec - 8) rsp.toBitVec (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_")
         E("rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hreg', hmem'⟩")
         E("dsimp only at hpc' hrsp' hrbp' hreg' hmem'")
@@ -1152,6 +1450,8 @@ class FastPathGenerator:
         return b, names
 
     def mem(self, slots, outv, ind):
+        if self.nested:
+            return self.mem_n(slots, outv, ind)
         F = self.F
         c = ["Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)"]
         for o, sz, v in slots:
@@ -1190,7 +1490,7 @@ class FastPathGenerator:
         if not exs:
             return ""
         return "∃ (" + " ".join(f"x{i}" for i in range(len(exs))) + " : List UInt8), " + \
-            " ∧ ".join(f"x{i}.length = {e}" for i, e in enumerate(exs)) + " ∧\n        "
+            " ∧ ".join(f"x{i}.length = {f'S + {self.cfr}' if e == 'SE' else e}" for i, e in enumerate(exs)) + " ∧\n        "
 
     def finalp(self, ind):
         r = ["st.pc = Int64.ofBitVec ra.toBitVec", "st.data.regs.rax = s.regs.rbx",
@@ -1216,7 +1516,7 @@ class FastPathGenerator:
         return "[" + ", ".join(o) + "]"
 
     def exk(self, exs):
-        return "[" + ", ".join(".low" if e == "S" else f".fixed {e}" for e in exs) + "]"
+        return "[" + ", ".join(".low" if e == "S" else ".lowBlock" if e == "SE" else f".fixed {e}" for e in exs) + "]"
 
     def layout(self):
         return self.layname or f"Prysm.{self.t}.{self.px}_layout"
@@ -1242,6 +1542,8 @@ class FastPathGenerator:
 
     def text(self):
         """(body text, list of (theorem, kind) emitted)"""
+        if self.nested:
+            return self.text_n()
         px, C = self.px, self.C
         kinds = []
         bl, names = self.binders()
@@ -1322,7 +1624,9 @@ class FastPathGenerator:
              "  simp only [Reg64s.get64] at hrsp hrbp hr14 " + " ".join(rf) + " Hm",
              "  subst rsp1 rbp1 r141"]
         for r, v in b["regs"]:
-            if v[0] in ("rcv", "ptr", "cap") or v == ("len", 0):
+            if v == ("imm", 0):
+                o.append(f"  obtain rfl : {r}1 = 0 := UInt64.toBitVec_inj.mp hr{r}")
+            elif v[0] in ("rcv", "ptr", "cap") or v == ("len", 0):
                 e = {"rcv": "rax", "ptr": "rbx", "cap": "rdi", "len": "rcx"}[v[0]]
                 o.append(f"  obtain rfl : {e} = {r}1 := (UInt64.toBitVec_inj.mp hr{r}).symm")
             else:
@@ -1331,8 +1635,171 @@ class FastPathGenerator:
         return o
 
     def imports(self):
-        """The modules of the step lemmas beyond FAST_PATH_IMPORTS: the inline-copy steps for a 4-byte field."""
-        return list(INLINE_IMPORTS) if any(f[1] == "b" and f[2] == INLINE_SIZE for f in self.fields) else []
+        """The modules of the step lemmas beyond FAST_PATH_IMPORTS: the inline-copy steps for a 4-byte field; the nested kinds,
+        the nested call block and the callee specification for a nested field."""
+        out = list(INLINE_IMPORTS) if any(f[1] == "b" and f[2] == INLINE_SIZE for f in self.fields) else []
+        return out + (NESTED_IMPORTS + self.callee["imports"] if self.nested else [])
+
+    def kind_names(self):
+        """(head, field, epilogue, fast-path) statement kinds of the form"""
+        if self.nested:
+            return ("encodeHeadNestedKindAnyFrame", "encodeFieldNestedKindAnyFrame", "encodeEpilogueNestedKindAnyFrame",
+                    "encodeFastPathNestedKindAnyFrame")
+        return ("encodeHeadKindAnyFrame", "encodeFieldKindAnyFrame", "encodeEpilogueKindAnyFrame", "encodeFastPathKindAnyFrame")
+
+    # ---------- statement text, nested fields (the kinds of `Codec/Kind/EncodeFastPathNestedAnyFrame.lean`) ----------
+    def xs_n(self):
+        lv, ob, ou = [], [], []
+        for i, f in enumerate(self.fields):
+            if f[1] == "n":
+                lv += [(self.vn[i], 8), (f"rt{i}", 32)]
+                ob += [(f"ob{i}", 8), (f"oc{i}", 8), (f"ot{i}", 32)]
+                ou += [(f"d{i}", 8), (f"dr{i}", 32)]
+            else:
+                lv.append((self.vn[i], f[2]))
+                ou.append((f"d{i}", f[2]))
+        n = [x for x, _ in lv + ob] + ["pre"] + [x for x, _ in ou]
+        return n, lv + ob + ou
+
+    def binders_n(self):
+        n, ln = self.xs_n()
+        code = self.callee["code"]
+        ps = [x for i in self.bidx + self.nidx for x in ([self.pn[i]] if self.fields[i][1] == "b" else [self.pn[i], f"pr{i}"])]
+        ps = [x for i in range(len(self.fields)) for x in
+              ([self.pn[i]] if self.fields[i][1] == "b" else [self.pn[i], f"pr{i}"] if self.fields[i][1] == "n" else [])]
+        nn = [f"(hp{i} : {self.pn[i]} ≠ 0)" for i in self.nidx]
+        b = [f"(k : Nat) (hk : {self.C}.IsInfixAt Host.prog k) (hf : LabelsFresh {self.C} k)",
+             f"(kC : Nat) (hkC : {code}.IsInfixAt Host.prog kC) (hfC : LabelsFresh {code} kC)",
+             f"({' '.join(n)} : List UInt8) " + " ".join(f"(h{x} : {x}.length = {l})" for x, l in ln),
+             f"({' '.join(ps)} : BitVec 64) " + " ".join(nn) + " (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)",
+             f"({' '.join(x[2] for x in self.bind)} : List UInt8) " + " ".join(f"(h{x[2]} : {x[2]}.length = {x[1]})" for x in self.bind),
+             f"(R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (scratch : List UInt8) (hsc : scratch.length = S + {self.cfr})"]
+        names = ["k", "hk", "hf", "kC", "hkC", "hfC"] + n + ["h" + x for x, _ in ln] + ps + [f"hp{i}" for i in self.nidx] \
+            + ["s", "ra", "guard", "hpre"] + [x[2] for x in self.bind] + ["h" + x[2] for x in self.bind] + ["R", "S", "hS", "scratch", "hsc"]
+        return b, names
+
+    def mem_n(self, slots, outv, ind):
+        F = self.F
+        c = ["Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)"]
+        for o, sz, v in slots:
+            ad = f"(s.regs.rsp.toBitVec - {F + 16 + self.cfr} - BitVec.ofNat 64 S)" if o == "lo" else stk(o, "s.regs.rsp.toBitVec")
+            c.append(f"Eq ({v_pf(v, True)}.At {ad})")
+        c.append("Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))")
+        rc = lambda g: "s.regs.rax.toBitVec" if g == 0 else f"(s.regs.rax.toBitVec + {g})"
+        for i, f in enumerate(self.fields):
+            g = self.goff[i]
+            if f[1] == "u":
+                c.append(f"Eq ({self.vn[i]}.At {rc(g)})")
+            elif f[1] == "b":
+                c += [f"Eq ((Int.toBytes 8 {self.pn[i]}.toInt).At {rc(g)})", f"Eq ((Int.toBytes 8 {f[2]}).At {rc(g + 8)})"]
+            else:
+                c.append(f"Eq ((Int.toBytes 8 {self.pn[i]}.toInt).At {rc(g)})")
+        for i, f in enumerate(self.fields):
+            p = self.pn.get(i)
+            if f[1] == "b":
+                c.append(f"Eq ({self.vn[i]}.At {p})")
+            elif f[1] == "n":
+                c += [f"Eq (ob{i}.At {p})", f"Eq ({self.vn[i]}.At ({p} + 8))", f"Eq ((Int.toBytes 8 pr{i}.toInt).At ({p} + 16))",
+                      f"Eq ((Int.toBytes 8 32).At ({p} + 24))", f"Eq (oc{i}.At ({p} + 32))", f"Eq (ot{i}.At ({p} + 40))",
+                      f"Eq (rt{i}.At pr{i})"]
+        c.append("Eq (pre.At s.regs.rbx.toBitVec)")
+        ad = lambda o: "(s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)" if o == 0 else f"(s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + {o})"
+        for i, ov in enumerate(outv):
+            o = self.soff[i]
+            if self.fields[i][1] == "n":
+                a, b = (self.vn[i], f"rt{i}") if ov[0] == "v" else (f"d{i}", f"dr{i}")
+                c += [f"Eq ({a}.At {ad(o)})", f"Eq ({b}.At {ad(o + 8)})"]
+            else:
+                c.append(f"Eq ({(self.vn[i] if ov[0] == 'v' else 'd' + str(i))}.At {ad(o)})")
+        c.append("R")
+        return ("\n" + ind + "⋆ ").join(c)
+
+    def layout_fields_n(self):
+        pre = self.pre + [("lo", "SE", ("scr",))]
+        return dict(callees=f"[{self.callee['code']}]", goStart=str(self.goff[0]), frame=str(self.F), guardAddend=str(self.ga),
+                    lowExtra=str(self.cfr), stackChunkCount=str(len(self.bind)),
+                    stackChunkLengths="[" + ", ".join(f"({i}, {x[1]})" for i, x in enumerate(self.bind)) + "]",
+                    pre=self.slotk(pre), existentials=self.exk(self.final["exs"]), post=self.slotk(self.final["slots"]))
+
+    def text_n(self):
+        """(body text, list of (theorem, kind) emitted) of a file with nested fields"""
+        px, C = self.px, self.C
+        kinds = []
+        bl, names = self.binders_n()
+        B = "\n    ".join(bl)
+        hg = f"(hguard : guard.toNat + {self.ga} < s.regs.rsp.toNat)"
+        hrest = f"(hcap : s.regs.rcx.toNat + {self.size} ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)"
+        nm = " ".join(names)
+        ob = "  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s"
+        lay = self.layout()
+        fk = "[" + ", ".join(".flat .uint64" if f[1] == "u" else f".flat (.bytes {f[2]})" if f[1] == "b" else ".checkpoint"
+                             for f in self.fields) + "]"
+        KH, KF, KE, KP = self.kind_names()
+        nf = len(self.fields)
+        if len(self.thms) != nf + 2 or len(self.bstate) != nf + 1:
+            raise FastPathRefuse(f"internal: {len(self.thms)} proof blocks / {len(self.bstate)} boundaries for {nf} fields")
+        f = self.layout_fields_n()
+        o = [(f"/-- The frame facts of `{self.C}` (read from the `.S` file by the walk): frame `{self.F:#x}`, stack chunks\n`"
+              + " ".join(x[2] for x in self.bind) + f"`, the callee `{self.callee['code']}`. -/\n"
+              f"def {px}_layout : EncoderNestedFrameLayout where\n"
+              + "".join(f"  {k} := {f[k]}\n" for k in NESTED_LAYOUT_FIELDS) + "\n")]
+        hmem = "(h_mem : s.dmem =⋆ " + self.mem(self.pre + [("lo", "SE", ("scr",))], [("d", i) for i in range(nf)], "      ") + ")"
+        b0 = self.bstate[0]
+
+        def kline(name, kind, extra):
+            kinds.append((name, kind))
+            return (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @Codec.{kind} h {C} {lay} {fk}"
+                    + extra + " := by\n  intro h; rfl\n")
+        what = lambda f: "uint64" if f[1] == "u" else f"{f[2]} bytes" if f[1] == "b" else f"nested {f[4]}"
+        o.append(f"{NESTED_THEOREM_OPTIONS['head']}/-- Head: directives 0–{b0['pc'] - 1} (stack guard, frame, spills); entry → boundary state 0. -/")
+        o.append(f"theorem {px}_head : ∀ {B}\n    {hmem}\n    {hg} {hrest} (hmm : MemmoveContract S),\n    Eventually (step1 Host.exe)\n      (fun st => "
+                 + self.stp(b0, "st", "        ") + f")\n      ⟨s, Host.addrOf k⟩ := by")
+        o.append(f"  intro {nm} h_mem hguard hcap hcap63 hmm")
+        o.append(ob)
+        o.append("  simp only at h_mem hguard hcap hcap63 hpre ⊢")
+        o.append(f"  have hcap' : rcx.toBitVec.toNat + {self.size} ≤ rdi.toBitVec.toNat := hcap")
+        o += self.thms[0]
+        o.append(kline(f"{px}_head", KH, f"\n    {self.stk_(b0)}"))
+        for i in range(nf):
+            b, b2 = self.bstate[i], self.bstate[i + 1]
+            fl = self.fields[i]
+            opt = NESTED_THEOREM_OPTIONS["nested" if fl[1] == "n" else "field"]
+            o.append(f"{opt}/-- Field {i} `{fl[0]}` ({what(fl)}): directives {b['pc']}–{b2['pc'] - 1}; boundary state {i} → {i + 1}. -/")
+            o.append(f"theorem {px}_field_{i} : ∀ {B}\n    {hg} {hrest} (hmm : MemmoveContract S) (st0 : MachineState),\n    ("
+                     + self.stp(b, "st0", "        ") + ") →\n    Eventually (step1 Host.exe)\n      (fun st => "
+                     + self.stp(b2, "st", "        ") + ")\n      st0 := by")
+            o.append(f"  intro {nm} hguard hcap hcap63 hmm")
+            o.append(ob)
+            o.append("  simp only at hguard hcap hcap63 hpre ⊢")
+            o += self.entry(b)
+            o += self.thms[i + 1]
+            o.append(kline(f"{px}_field_{i}", KF, f"\n    {self.stk_(b)}\n    {self.stk_(b2)}"))
+        b = self.bstate[nf]
+        o.append(f"{NESTED_THEOREM_OPTIONS['epilogue']}/-- Epilogue: directives {b['pc']}–return; boundary state {nf} → the fast-path post-state. -/")
+        o.append(f"theorem {px}_epilogue : ∀ {B}\n    {hg} {hrest} (st0 : MachineState),\n    ("
+                 + self.stp(b, "st0", "        ") + ") →\n    Eventually (step1 Host.exe)\n      (fun st => "
+                 + self.finalp("        ") + ")\n      st0 := by")
+        o.append(f"  intro {nm} hguard hcap hcap63")
+        o.append(ob)
+        o.append("  simp only at hguard hcap hcap63 hpre ⊢")
+        o += self.entry(b)
+        o += self.thms[nf + 1]
+        o.append(kline(f"{px}_epilogue", KE, f"\n    {self.stk_(b)}"))
+        o.append(f"{NESTED_THEOREM_OPTIONS['fast']}/-- **Encoder fast path of `(*v1alpha1.{self.t}).MarshalSSZTo` (Go 1.26.10), generated** (`encoder --fast-path`):\n"
+                 f"head, one theorem per field, epilogue, chained by `eventually_trans`. Premises: `len + {self.size} ≤ cap`,\n"
+                 "every byte-vector field of its exact length, every nested pointer not nil, the callee placed.\n"
+                 "Statement = the kind instance (`_kind`). Fast path only. -/")
+        o.append(f"theorem {px}_fast : ∀ {B}\n    {hmem}\n    {hg} {hrest} (hmm : MemmoveContract S),\n    Eventually (step1 Host.exe)\n      (fun st => "
+                 + self.finalp("        ") + ")\n      ⟨s, Host.addrOf k⟩ := by")
+        o.append(f"  intro {nm} h_mem hguard hcap hcap63 hmm")
+        o.append(f"  refine eventually_trans _ _ _ _ ({px}_head {nm} h_mem hguard hcap hcap63 hmm) ?_")
+        o.append("  intro st0 h0")
+        for i in range(nf):
+            o.append(f"  refine eventually_trans _ _ _ _ ({px}_field_{i} {nm} hguard hcap hcap63 hmm st{i} h{i}) ?_")
+            o.append(f"  intro st{i + 1} h{i + 1}")
+        o.append(f"  exact {px}_epilogue {nm} hguard hcap hcap63 st{nf} h{nf}")
+        o.append(kline(f"{px}_fast", KP, ""))
+        return "\n".join(o), kinds
 
     def meta(self):
         """facts for the FAST-PATH-JSON header (kindcheck recomputes them independently; they are not trusted)"""
