@@ -394,6 +394,9 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Codec.step_store_indexed
 #print axioms Codec.step_load_bytes32
 #print axioms Codec.step_store_indexed32
+#print axioms Codec.extractLsb'_zeroExtend_byte
+#print axioms Codec.step_load_byte8
+#print axioms Codec.step_store_indexed8
 #print axioms Codec.step_sub_immediate
 #print axioms Codec.step_sub_registers
 #print axioms Codec.step_xor32

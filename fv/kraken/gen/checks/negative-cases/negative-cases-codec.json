@@ -748,5 +748,86 @@
   "old": "(hn : n + 8 + 120 ≤ a)",
   "new": "(hn : n + 8 + 112 ≤ a)",
   "note": "the guard addend must cover the 120 bytes of the callee frame"
+ },
+ {
+  "id": "codec-encode-inline-copy-extract-lsb-zero-extend-byte-control",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "extractLsb'_zeroExtend_byte",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-inline-copy-extract-lsb-zero-extend-byte-statement-extract-lsb-0-to-8",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "extractLsb'_zeroExtend_byte",
+  "kind": "statement",
+  "old": "BitVec.extractLsb' 0 8 (BitVec.zeroExtend 64 x) = x",
+  "new": "BitVec.extractLsb' 8 8 (BitVec.zeroExtend 64 x) = x",
+  "note": "bits 8 to 15 of a zero-extended byte are zero, not the byte"
+ },
+ {
+  "id": "codec-encode-inline-copy-step-load-byte8-control",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "step_load_byte8",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-inline-copy-step-load-byte8-statement-hbs-1-to-2",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "step_load_byte8",
+  "kind": "statement",
+  "old": "(hbs : bs.length = 1)",
+  "new": "(hbs : bs.length = 2)",
+  "note": "the 8-bit load reads 1 byte, not 2"
+ },
+ {
+  "id": "codec-encode-inline-copy-step-load-byte8-statement-address-plus-1",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "step_load_byte8",
+  "kind": "statement",
+  "old": "(ha : base + disp.toBitVec = a)",
+  "new": "(ha : base + disp.toBitVec + 1 = a)",
+  "note": "the load reads at base + disp, not at base + disp + 1"
+ },
+ {
+  "id": "codec-encode-inline-copy-step-load-byte8-statement-value-sign-extend",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "step_load_byte8",
+  "kind": "statement",
+  "old": "(BitVec.zeroExtend 64 (BitVec.ofInt 8 (Int.ofBytes bs)))",
+  "new": "(BitVec.signExtend 64 (BitVec.ofInt 8 (Int.ofBytes bs)))",
+  "note": "movzbl zero-extends the byte; a sign extension differs for a byte of 0x80 or more"
+ },
+ {
+  "id": "codec-encode-inline-copy-step-store-indexed8-control",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "step_store_indexed8",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-inline-copy-step-store-indexed8-statement-hbs-1-to-2",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "step_store_indexed8",
+  "kind": "statement",
+  "old": "(hbs : bs.length = 1)",
+  "new": "(hbs : bs.length = 2)",
+  "note": "the 8-bit store writes 1 byte, not 2"
+ },
+ {
+  "id": "codec-encode-inline-copy-step-store-indexed8-statement-address-plus-1",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "step_store_indexed8",
+  "kind": "statement",
+  "old": "(ha : base + idx + disp.toBitVec = a)",
+  "new": "(ha : base + idx + disp.toBitVec + 1 = a)",
+  "note": "the store writes at base + idx + disp, not at base + idx + disp + 1"
+ },
+ {
+  "id": "codec-encode-inline-copy-step-store-indexed8-statement-value-bits-8-to-15",
+  "module": "Codec/EncodeInlineCopy.lean",
+  "theorem": "step_store_indexed8",
+  "kind": "statement",
+  "old": "(BitVec.extractLsb' 0 8 (s.regs.get64 rS))",
+  "new": "(BitVec.extractLsb' 8 8 (s.regs.get64 rS))",
+  "note": "the store writes the low byte of rS, not bits 8 to 15"
  }
 ]
