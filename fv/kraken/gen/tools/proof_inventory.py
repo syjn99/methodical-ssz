@@ -114,7 +114,7 @@ CORE_FLAT_TYPES = core_flat_types()
 GENERATOR_REFUSED = {
     "v1alpha1.BuilderPendingWithdrawal": dict(decoder="callee primitives.Gwei.UnmarshalSSZ"),
     "v1alpha1.ForkData": dict(encoder="frame test"),
-    "v1alpha1.Builder": dict(decoder="byte vector 1", encoder="byte vector 1"),
+    "v1alpha1.Builder": dict(decoder="byte vector 1"),
     "v1alpha1.PayloadAttestationData": dict(decoder="bool", encoder="bool"),
     "v1alpha1.Validator": dict(decoder="bool", encoder="bool"),
     "v1alpha1.BuilderPreferences": dict(decoder="callee primitives.Gwei.UnmarshalSSZ"),
