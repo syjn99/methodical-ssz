@@ -60,6 +60,8 @@ A type outside the inventory has its code in the ELF, but it lacks these items:
   The type has no `SpecChecker.lean` and no codec equality with a checker `Desc`, as `lean/Prysm/ValidatorIdentity/` shows.
 - A hand-written type of `consensus-types/primitives` (Epoch, Slot, CommitteeIndex, ValidatorIndex) also has no entry in the IR.
   So the generator modes that read the IR do not apply to it (step 5).
+  The `Desc` producer reads only the IR, so the type has no checker `Desc`.
+  Thus the proof inventory does not ask for a codec equality for its decoder (step 7).
 
 ## 2. The link set holds the functions and the data items
 
