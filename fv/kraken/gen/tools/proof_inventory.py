@@ -43,6 +43,10 @@ Rule. A function's state comes ONLY from the mapping and the declarations in <de
   * a decoder is "complete" (in this sense only) when accept, size reject, spec alignment (accept_spec, reject_size_spec,
     reject_complete), codec equality / correspondence of the Desc, accept witness and reject witness are all present
     under these checks; "partial" when some are; "none" when the type has no row or no theorem.
+    The codec item does not apply to a decoder whose function has the kind `hand-written` in `functions.json` and
+    whose type has no record in the IR (`CODEC_NOT_APPLICABLE`): the Desc producer reads only the IR, so no checker
+    Desc exists. Such a row needs the other parts only, and it says that the codec item does not apply. A codec
+    theorem or a checker Desc file of `prysm/go1.26.10/evidence/` for such a type FAILS.
   * an encoder `MarshalSSZTo` counts "fast path complete" when its row names a fast-path theorem, a spec
     corollary and a witness, all present under these checks: fast and spec keyed to the function by the code
     constant (subject rule), the spec corollary and every witness use the row's fast-path theorem; "fast path
@@ -203,6 +207,12 @@ ENC_PARTS = ["fast", "spec", "witness", "hand", "rejects", "grow", "other_witnes
 ENC_PREMISE = "premise: len + SizeSSZ <= cap, exact field lengths"
 DEC_PARTS = ["accept", "reject", "accept_spec", "reject_size_spec", "reject_complete", "codec", "witness_accept",
              "witness_reject"]
+# The codec item compares the hand Desc with the checker Desc. The Desc producer `gen/desc/producer.py` makes a checker
+# Desc only from an IR record. A hand-written Go method (kind `hand-written` of `functions.json`, the Prysm code of
+# `consensus-types/primitives`) whose type has no IR record has no checker Desc, so the item does not apply to it.
+# A generated type outside the type inventory has an IR record, so the item applies to it and stays missing.
+CODEC_NOT_APPLICABLE = "codec: does not apply (hand-written Go method, no IR record, so no checker Desc)"
+EVIDENCE_DIR = "prysm/go1.26.10/evidence"
 SKIP_DIRS = {"ElfData", "RuntimeModel"}
 
 
@@ -306,6 +316,8 @@ WHAT_COMPLETE_EXCLUDES = [
     "growslice (encoder capacity growth beyond the listed theorems; FINDINGS.md: \"Growslice contract gives no lower "
     "bound on the remaining heap\")",
     "x86-64 hardware execution (semantics = Kraken's model of the amd64 instructions; no hardware run)",
+    "for a decoder where the codec item does not apply: a comparison of its hand Desc (`SpecDescription.lean`) with "
+    "a checker Desc (none exists; the hand Desc is checked by review only)",
 ]
 CANNOT_DETECT = [
     "a row whose `codec` or `reject_complete` names ANOTHER type's theorem: these two parts are checked for existence, "
@@ -319,6 +331,8 @@ CANNOT_DETECT = [
     "(hand-written per row; checked by review against the theorem statements, not by this script)",
     "methods outside `github.com/OffchainLabs/prysm/v7/` (e.g. `github.com/holiman/uint256`) and SSZ methods with "
     "names outside the listed kinds",
+    "that the Desc checker (`gen/desc-checker/DescChecker.lean`) has no table entry for a type where the codec item "
+    "does not apply: the script reads `functions.json`, the IR and the Desc files of `prysm/go1.26.10/evidence/` only",
 ]
 
 
@@ -536,10 +550,25 @@ def run(decls_p, gate_p, md_p, json_p):
             return False
         return True
 
+    ir_rec, _ = ir_types()
+    checker_desc = set()
+    for p in sorted((KR / EVIDENCE_DIR).glob("*.desc.json")):
+        d = json.load(open(p))
+        checker_desc.add((d.get("package"), d.get("type")))
     rows = {}
     for (pkg, typ), r in DECODERS.items():
+        fn = fn_by_key.get(symkey(pkg, typ, "UnmarshalSSZ")) or {}
+        codec_applies = not (fn.get("kind") == "hand-written" and (pkg, typ) not in ir_rec)
+        if not codec_applies:
+            if r["codec"]:
+                fails.append(f"decoder row {typ}: codec theorem {r['codec']} exists, but the type has no IR record "
+                             "and a hand-written decoder (the rule says that no checker Desc exists)")
+            if (pkg, typ) in checker_desc:
+                fails.append(f"decoder row {typ}: a checker Desc file of {EVIDENCE_DIR} exists, but the type has no "
+                             "IR record and a hand-written decoder")
+        parts = [p for p in DEC_PARTS if codec_applies or p != "codec"]
         st = {}
-        for part in DEC_PARTS:
+        for part in parts:
             v = r[part]
             st[part] = bool(v)
         for part in ("accept", "reject", "accept_spec", "reject_size_spec"):
@@ -549,11 +578,13 @@ def run(decls_p, gate_p, md_p, json_p):
                              ("reject_size_spec", "reject")):
             if r[part] and r[target] and r[part] in D and r[target] not in refs(r[part]):
                 fails.append(f"{r[part]}: does not use {r[target]} (refs: {refs(r[part])})")
-        missing = [p for p in DEC_PARTS if not st[p]]
-        state = "complete" if not missing else ("partial" if len(missing) < len(DEC_PARTS) else "none")
-        rows[(pkg, typ, "UnmarshalSSZ")] = dict(state=state, missing=missing,
-                                                theorems={p: r[p] for p in DEC_PARTS if r[p]}, note=r["note"])
-    ir_rec, _ = ir_types()
+        missing = [p for p in parts if not st[p]]
+        state = "complete" if not missing else ("partial" if len(missing) < len(parts) else "none")
+        row = dict(state=state, missing=missing, theorems={p: r[p] for p in DEC_PARTS if r[p]},
+                   note="; ".join(n for n in (r["note"], "" if codec_applies else CODEC_NOT_APPLICABLE) if n))
+        if not codec_applies:
+            row["not_applicable"] = {"codec": CODEC_NOT_APPLICABLE[len("codec: "):]}
+        rows[(pkg, typ, "UnmarshalSSZ")] = row
     for (pkg, typ), r in ENCODERS.items():
         for n in r["fast"] + r["spec"] + r["hand"] + r["rejects"] + r["grow"]:
             if n in D:
@@ -741,7 +772,10 @@ def run(decls_p, gate_p, md_p, json_p):
                "kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems "
                "keyed to the function by the code constant in their type (the function is the subject: no other "
                "target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / "
-               "reject theorem",
+               "reject theorem. The codec item does not apply to a decoder whose function has the kind "
+               "`hand-written` in `functions.json` and whose type has no IR record (the hand-written uint64 types of "
+               "`consensus-types/primitives`): the Desc producer reads only the IR, so no checker Desc exists; "
+               "the row says so in its state text",
                complete_does_not_include=WHAT_COMPLETE_EXCLUDES, cannot_detect=CANNOT_DETECT, totals=tot,
                functions=table)
     json.dump(out, open(json_p, "w"), indent=1)
