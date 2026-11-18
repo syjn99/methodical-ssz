@@ -288,6 +288,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   - AttestationData has two encoder fast-path theorems for the same path.
     `Encode.fast_path` in `EncodeFastPath.lean` is a hand proof, and the specification corollary uses it.
     `Encode.generated_fast` in `GeneratedEncodeFastPath.lean` is a generated proof.
+    `Encode.generated_fast_spec` and the witness `WitnessGeneratedEncodeFastPath.lean` use the generated proof.
 - Effect: none on a theorem.
   A new proof must use the general form in `Codec` and `Machine/WitnessHost.lean`.
 - Where: the files above.
@@ -412,7 +413,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - What does not hold: the tree gives no reason why only some generated encoder fast paths have a hand statement.
   Deposit_Data, PowBlock and SyncCommitteeMessage have `EncodeFastPathStatements.lean` and a statement tie.
   The other generated encoder fast paths have only the kind check, and Checkpoint has a hand theorem.
-  AttestationData also has a hand theorem, but no statement tie.
+  AttestationData also has a hand theorem, and `EncodeFastPathStatementTie.lean` ties it to the generated theorem in both directions.
 - Effect: none on a theorem.
   For the other types, only the kind and `gen/generator/kindcheck.py` check the generated statement.
 - Where: `lean/Prysm/<GoTypeName>/EncodeFastPathStatements.lean` and `EncodeFastPathStatementTie.lean`.
@@ -434,6 +435,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
     The memory block or the program of the hand witness differs from the forms of `flat_types_witness.py`.
     For example, the witness of ValidatorBalance calls ValidatorIndex, and the form `frame_0x38` calls Slot.
   - `WitnessGeneratedDecodeAccept.lean` of the `uint64` rows (ValidatorIndex, Epoch, Slot and CommitteeIndex): `flat_types_witness.py` has no form for the `uint64` decoder.
+  - `GeneratedEncodeFastPathSpec.lean` and `WitnessGeneratedEncodeFastPath.lean` of AttestationData: `flat_types_encode_spec.py` has no form for a nested field.
 - Effect: `gen/checks/regenerate_and_compare.py` does not compare these files with a tool output.
   The build and the axioms gate check them, and a reviewer reads them.
 - Where: `lean/Prysm/<GoTypeName>/` of these types, the tools of `gen/flat-types/`, the column `companions` of `gen/generator/types.tsv`.

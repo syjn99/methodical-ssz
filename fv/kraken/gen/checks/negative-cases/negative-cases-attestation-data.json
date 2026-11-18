@@ -497,5 +497,80 @@
   "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 128",
   "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 88",
   "note": "the function returns len + 128"
+ },
+ {
+  "id": "attestation-data-encode-fast-path-statement-tie-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/EncodeFastPathStatementTie.lean",
+  "theorem": "Prysm.AttestationData.Encode.fast_path_statement_tie"
+ },
+ {
+  "id": "attestation-data-encode-fast-path-statement-tie-statement-to-calls",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/EncodeFastPathStatementTie.lean",
+  "theorem": "Prysm.AttestationData.Encode.fast_path_statement_tie",
+  "old": "type_of% (@Prysm.AttestationData.Encode.fast_path ‹Host›)",
+  "new": "type_of% (@Prysm.AttestationData.Encode.calls ‹Host›)",
+  "note": "the generated theorem is not the statement of the segment lemma of the two Checkpoint calls"
+ },
+ {
+  "id": "attestation-data-encode-fast-path-implies-generated-fast-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/EncodeFastPathStatementTie.lean",
+  "theorem": "Prysm.AttestationData.Encode.fast_path_implies_generated_fast"
+ },
+ {
+  "id": "attestation-data-encode-fast-path-implies-generated-fast-statement-to-field-4",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/EncodeFastPathStatementTie.lean",
+  "theorem": "Prysm.AttestationData.Encode.fast_path_implies_generated_fast",
+  "old": "type_of% (@Prysm.AttestationData.Encode.generated_fast ‹Host›)",
+  "new": "type_of% (@Prysm.AttestationData.Encode.generated_field_4 ‹Host›)",
+  "note": "the hand theorem is not the statement of the Target field theorem"
+ },
+ {
+  "id": "attestation-data-encode-generated-fast-spec-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.AttestationData.Encode.generated_fast_spec"
+ },
+ {
+  "id": "attestation-data-encode-generated-fast-spec-statement-target-root-to-source-root",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.AttestationData.Encode.generated_fast_spec",
+  "old": "(hroot2 : root2 = g.target.root.toList)",
+  "new": "(hroot2 : root2 = g.source.root.toList)",
+  "note": "the last 32 bytes are the Target root of g"
+ },
+ {
+  "id": "attestation-data-witness-generated-encode-fast-path-runs-empty-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.AttestationData.Witness.GeneratedEncodeFastPath.runs_empty"
+ },
+ {
+  "id": "attestation-data-witness-generated-encode-fast-path-runs-empty-statement-rax",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.AttestationData.Witness.GeneratedEncodeFastPath.runs_empty",
+  "old": "st.data.regs.rax = 0x10288",
+  "new": "st.data.regs.rax = 0x10289",
+  "note": "the encoder returns dst.ptr 0x10288"
+ },
+ {
+  "id": "attestation-data-witness-generated-encode-fast-path-runs-prefix-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.AttestationData.Witness.GeneratedEncodeFastPath.runs_prefix"
+ },
+ {
+  "id": "attestation-data-witness-generated-encode-fast-path-runs-prefix-statement-rax",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.AttestationData.Witness.GeneratedEncodeFastPath.runs_prefix",
+  "old": "st.data.regs.rax = 0x10288",
+  "new": "st.data.regs.rax = 0x10289",
+  "note": "the encoder returns dst.ptr 0x10288"
  }
 ]

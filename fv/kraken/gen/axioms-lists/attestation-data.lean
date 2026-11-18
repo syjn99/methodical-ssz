@@ -12,6 +12,9 @@ import Prysm.AttestationData.WitnessDecodeAccept
 import Prysm.AttestationData.WitnessDecodeRejectSize
 import Prysm.AttestationData.GeneratedDecodeAccept
 import Prysm.AttestationData.GeneratedEncodeFastPath
+import Prysm.AttestationData.EncodeFastPathStatementTie
+import Prysm.AttestationData.GeneratedEncodeFastPathSpec
+import Prysm.AttestationData.WitnessGeneratedEncodeFastPath
 import Prysm.AttestationData.Size
 import Prysm.AttestationData.WitnessSize
 import Prysm.AttestationData.EncodeSpec
@@ -126,3 +129,8 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.AttestationData.Encode.generated_head
 #print axioms Prysm.AttestationData.Encode.generated_head_kind
 #print axioms Prysm.AttestationData.Encode.generated_layout
+#print axioms Prysm.AttestationData.Encode.fast_path_statement_tie
+#print axioms Prysm.AttestationData.Encode.fast_path_implies_generated_fast
+#print axioms Prysm.AttestationData.Encode.generated_fast_spec
+#print axioms Prysm.AttestationData.Witness.GeneratedEncodeFastPath.runs_empty
+#print axioms Prysm.AttestationData.Witness.GeneratedEncodeFastPath.runs_prefix
