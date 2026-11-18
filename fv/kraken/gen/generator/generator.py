@@ -8,7 +8,7 @@ Emits Lean text that applies the parameterized lemmas of `lean/Codec` to the cod
   uint64                    the accept path of a uint64 primitive `UnmarshalSSZ` (`Codec.uint64_decode_accept`).
   decoder --whole-accept    the step chain of the accept path (see the block comment before `STEP_R64`), then the
                             head, field, epilogue, accept and size-reject theorems (`whole_accept.py`).
-  encoder --fast-path       the encoder fast-path theorem of a flat `MarshalSSZTo` (`fast_path.py`).
+  encoder --fast-path       the encoder fast-path theorem of a flat `MarshalSSZTo`, or of one with nested Checkpoint fields (`fast_path.py`).
 
 Statement check: every emitted theorem `t` is followed by
 `t_kind : ∀ (h : Host), type_of% (@t h) = <kind> h <parameters>` proved by `with_reducible rfl`. The kind
@@ -197,13 +197,15 @@ class Partial(Exception):
         self.report = report
 
 
-FIELD_SEGMENT_SIZES = (32, 48, 96)
-SIZE_CASE_PROOF = {32: "Or.inl rfl", 48: "Or.inr (Or.inl rfl)", 96: "Or.inr (Or.inr rfl)"}
+FIELD_SEGMENT_SIZES = (32, 48, 96, 20)
+SIZE_CASE_PROOF = {32: "Or.inl rfl", 48: "Or.inr (Or.inl rfl)", 96: "Or.inr (Or.inr (Or.inl rfl))", 20: "Or.inr (Or.inr (Or.inr rfl))"}
+# the byte vector size of the inline-copy segment (`bytes_decode_inline_segment_window`: no memmove, a 32-bit copy)
+FIELD_INLINE_SIZE = 4
 
 
 def ir_fields(ir_path, tname):
     """Every own field of the container, in IR order: (name, SSZ offset, Go offset, class, size, callee label or reason).
-    class: "bytes" (fixed `[]byte` vector, size 32 / 48 / 96), "u64" (`uint64`), "call" (a uint64 overlay that a callee
+    class: "bytes" (fixed `[]byte` vector, size 4 / 20 / 32 / 48 / 96), "u64" (`uint64`), "call" (a uint64 overlay that a callee
     with a proved spec decodes), "none" (not covered)."""
     raw = pathlib.Path(ir_path).read_bytes()
     pkg, name = tname.rsplit(".", 1)
@@ -222,12 +224,14 @@ def ir_fields(ir_path, tname):
         if fo is None:
             cls, info = "none", "no Go field offset in the IR"
         elif k == "vector" and v.get("elem", {}).get("k") == "byte" and v.get("go_type") == "[]byte":
-            if v.get("size") in FIELD_SEGMENT_SIZES and v.get("fixed_size") == v.get("size"):
+            if v.get("size") in FIELD_SEGMENT_SIZES + (FIELD_INLINE_SIZE,) and v.get("fixed_size") == v.get("size"):
                 cls, info = "bytes", v["size"]
             else:
-                cls, info = "none", f"byte vector of size {v.get('size')} (lemma sizes 32, 48, 96 only)"
+                cls, info = "none", f"byte vector of size {v.get('size')} (lemma sizes 4, 20, 32, 48, 96 only)"
         elif k == "uint" and v.get("bits") == 64 and v.get("go_type") == "uint64" and v.get("fixed_size") == 8:
             cls, info = "u64", 8
+        elif k == "pointer" and v.get("deleg"):
+            cls, info = ir_nested_class(v)
         elif k == "overlay" or v.get("deleg"):
             cls, info = ir_callee_class(v)
         else:
@@ -257,6 +261,30 @@ def ir_ssz_size(ir_path, tname):
 PRIM_PKG = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
 CALLEES = {n: f"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"
            for n in ("Slot", "CommitteeIndex", "ValidatorIndex", "Epoch")}
+
+
+# nested container callees with a proved function specification (`Codec.NestedCheckpointCalleeAccept` of
+# `lean/Codec/NestedCheckpointDecode.lean`, proved by `Prysm.Checkpoint.Decode.accept_function_spec_holds`): the Go
+# type name -> the callee label. The SSZ size of the nested container is the `mov $0x28,%ecx` of the block.
+V1ALPHA1_PKG = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+NESTED_CALLEES = {"Checkpoint": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ"}
+NESTED_SIZE = {"Checkpoint": 40}
+# the `lea` of the `abi.Type` word that the block passes to `runtime.newobject` (the type `typeCheckpoint` of the contract)
+NESTED_TYPE_LEA = {"Checkpoint": "lea type__+1289312(%rip),%rax"}
+
+
+def ir_nested_class(v):
+    """IR class of a pointer field: ("nested", callee label) or ("none", reason)."""
+    dt = v.get("delegated_to") or {}
+    if not (v.get("deleg") or {}).get("unmarshaler") or dt.get("k") != "container" or v.get("variable") \
+            or dt.get("variable") or v.get("go_type") != f"*{dt.get('name')}":
+        return "none", (f"field kind {v.get('k')} ({v.get('go_type')}, delegated to {dt.get('k')} {dt.get('name')}): "
+                        f"pointer field that is not a fixed-size nested container with an unmarshaler")
+    if dt.get("pkg") != V1ALPHA1_PKG or dt.get("name") not in NESTED_CALLEES \
+            or v.get("fixed_size") != NESTED_SIZE[dt["name"]] or dt.get("fixed_size") != NESTED_SIZE[dt["name"]]:
+        return "none", (f"field kind {v.get('k')} ({v.get('go_type')}, delegated to {dt.get('k')} {dt.get('name')}): "
+                        f"nested container without a proved function specification (only {', '.join(NESTED_CALLEES)})")
+    return "nested", NESTED_CALLEES[dt["name"]]
 
 
 def ir_callee_class(v):
@@ -330,7 +358,10 @@ CALL_DECODE_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host
 #     offset), rcx = 8 and the IR field is the next one;
 #   * `lea type__+387072(%rip),%rax`: the byte segment over two windows (`bytes_decode_segment_window` / `bytes_decode_segment_offset_zero_window`,
 #     kinds `bytesDecodeSegmentKindWindow` / `bytesDecodeSegmentOffsetZeroKindWindow`), emitted ONLY when the receiver / buffer reload slots hold
-#     the receiver / buffer, the registers are in the lemma's sets, n in {32, 48, 96}, the displacements equal the IR;
+#     the receiver / buffer, the registers are in the lemma's sets, n in {20, 32, 48, 96}, the displacements equal the IR;
+#     for n = 4 the inline-copy segment over three windows (`bytes_decode_inline_segment_window`, kind
+#     `bytesDecodeInlineSegmentKindWindow`): no memmove, `mov src(%rB),%eT; mov %eT,(%rax)`, `je` over the write
+#     barrier, the pointer store after it; the field is complete at the end of the segment;
 #   * anything else (another mnemonic or width, an index / rip operand, an immediate store, a callee without a proved
 #     spec, a conditional branch): the walk stops; every field not yet complete is "not covered: <reason>".
 # A field is complete at its own event: the call block (callee field), the store of the bytes `bf + src` into
@@ -350,6 +381,9 @@ STEP_RY = ("rax", "rcx", "rdx", "rsi", "rdi")          # ... and after it
 STEP_HX = {"rdx": "Or.inl rfl", "rsi": "Or.inr rfl"}
 STEP_HY = {"rax": "Or.inl rfl", "rcx": "Or.inr (Or.inl rfl)", "rdx": "Or.inr (Or.inr (Or.inl rfl))",
          "rsi": "Or.inr (Or.inr (Or.inr (Or.inl rfl)))", "rdi": "Or.inr (Or.inr (Or.inr (Or.inr rfl)))"}
+# bytes_decode_inline_segment_window: the receiver register, and the (buffer, temporary) register pairs
+STEP_INLINE_RX = ("rdx",)
+STEP_INLINE_BT = {("rsi", "rdi"): "Or.inl ⟨rfl, rfl⟩", ("rbx", "rsi"): "Or.inr ⟨rfl, rfl⟩"}
 STEP_OPTS = "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
 STEP_SEGMENT_OPTIONS = "set_option maxHeartbeats 16000000 in\nset_option maxRecDepth 100000 in\n"
 
@@ -401,6 +435,8 @@ def step_parse(d):
         return ("call", m.group(1))
     if d == "lea type__+387072(%rip),%rax":
         return ("lea_mk",)
+    if d in NESTED_TYPE_LEA.values():
+        return ("lea_new", d)
     return ("other", d)
 
 
@@ -539,6 +575,126 @@ class StepState:
                 self.r[r] = ("UNK",)
 
 
+def step_inline(dirs, st, f, F, i, a, endA, mA, iA, jl, unit):
+    """The 4-byte inline-copy segment (`bytes_decode_inline_segment_window`) after its head window `mA` (from `a` to
+    `endA`, `je lff` with `lff` at `jl`): the middle window `lff: mov %rax,fP(%rX); mov dB(%rsp),%rB; mov src(%rB),%eT;
+    mov %eT,(%rax); movq $4,fL(%rX); movq $4,fC(%rX); cmpl $0x0,runtime.writeBarrier(%rip); je lwb` and the tail window
+    `lwb: mov %rax,fP(%rX)`. Fills `unit` and the dataflow state; any mismatch raises StepStop."""
+    name, src, fo = f[0], f[1], f[2]
+    r32 = "|".join(k for k in STEP_R32 if not k.startswith("r"))
+    pat = [re.escape(f"{dirs[jl]}"), rf"mov %rax,({SHX})?\(%(\w+)\)", rf"mov ({SHX})\(%rsp\),%(\w+)",
+           rf"mov ({SHX})?\(%(\w+)\),%({r32})", rf"mov %({r32}),\(%rax\)",
+           rf"movq \$({SHX}),({SHX})?\(%(\w+)\)", rf"movq \$({SHX}),({SHX})?\(%(\w+)\)",
+           r"cmpl \$0x0,runtime\.writeBarrier\(%rip\)", r"je (\S+)"]
+    if label_of(dirs[jl]) is None:
+        raise StepStop(i, f"inline byte segment at {i}: directive {jl} is not the label of the head jump", "other")
+    endB, mB, iB = step_window(dirs, jl, pat, jl, f"inline byte segment middle at {jl}")
+    lwb = mB[8].group(1)
+    jw = step_label_index(dirs, lwb, i)
+    endC, mC, iC = step_window(dirs, jw, [re.escape(f"{lwb}:"), rf"mov %rax,({SHX})?\(%(\w+)\)"], jw,
+                               f"inline byte segment tail at {jw}")
+    sz, dR, rX = _hexs(mA[2].group(1)), _hexs(mA[4].group(1)), mA[4].group(2)
+    fL, fC = _step_disp(mA[5].group(1)), _step_disp(mA[6].group(2))
+    fP, rX2, dB, rB = _step_disp(mB[1].group(1)), mB[1].group(2), _hexs(mB[2].group(1)), mB[2].group(2)
+    src_, rB2, rT = _step_disp(mB[3].group(1)), mB[3].group(2), STEP_R32[mB[3].group(3)]
+    rT2 = STEP_R32[mB[4].group(1)]
+    l1, fL2, rX3 = _hexs(mB[5].group(1)), _step_disp(mB[5].group(2)), mB[5].group(3)
+    c1, fC2, rX4 = _hexs(mB[6].group(1)), _step_disp(mB[6].group(2)), mB[6].group(3)
+    fP2, rX5 = _step_disp(mC[1].group(1)), mC[1].group(2)
+    checks = [
+        (sz == FIELD_INLINE_SIZE and _hexs(mA[6].group(1)) == FIELD_INLINE_SIZE and l1 == FIELD_INLINE_SIZE
+         and c1 == FIELD_INLINE_SIZE, f"size immediates {sz:#x} / {l1:#x} / {c1:#x}, inline size {FIELD_INLINE_SIZE}",
+         "other"),
+        (len({rX, mA[5].group(2), mA[6].group(3), rX2, rX3, rX4, rX5}) == 1,
+         f"receiver register not the same in its seven uses ({rX}, {mA[5].group(2)}, {mA[6].group(3)}, {rX2}, {rX3}, "
+         f"{rX4}, {rX5})", "register"),
+        (rX in STEP_INLINE_RX, f"receiver register {rX} (lemma: {', '.join(STEP_INLINE_RX)})", "register"),
+        (rB2 == rB and rT2 == rT, f"copy registers: buffer {rB} / {rB2}, temporary {rT} / {rT2}", "register"),
+        ((rB, rT) in STEP_INLINE_BT, f"buffer / temporary registers {rB} / {rT} (lemma: "
+         f"{', '.join('/'.join(x) for x in STEP_INLINE_BT)})", "register"),
+        (jw >= endB, f"write-barrier label {lwb} at {jw} not after the middle window", "other"),
+        (fP == fo and fP2 == fo, f"pointer stores at Go offsets {fP} / {fP2}, IR Go offset {fo}", "other"),
+        (fL == fP + 8 and fL2 == fL and fC == fP + 16 and fC2 == fC,
+         f"len / cap stores at {fL} / {fC} (and {fL2} / {fC2}), pointer at {fP}", "other"),
+        (src_ == src, f"source offset {src_}, IR SSZ offset {src}", "other"),
+        (st.slot.get(dR) == ("RCV", 0), f"slot {dR:#x} (receiver reload) holds {_vstr(st.slot.get(dR, ('UNK',)))}, "
+         f"not the receiver", "register"),
+        (st.slot.get(dB) == ("BF", 0), f"slot {dB:#x} (buffer reload) holds {_vstr(st.slot.get(dB, ('UNK',)))}, "
+         f"not the buffer", "register"),
+        (min(dR, dB) >= 0x18, f"a slot below rsp + 0x18 (the makeslice argument area): {dR:#x}, {dB:#x}", "other"),
+    ]
+    for ok, why, c in checks:
+        if not ok:
+            raise StepStop(i, f"inline byte segment at {i} ({name}): {why}", c)
+    unit.update(kind="inline", n=FIELD_INLINE_SIZE, rX=rX, rB=rB, rT=rT, j1=a, nA=endA - a, j2=jl, nB=endB - jl,
+                j3=jw, nC=endC - jw, jc=iA[3], e=endC, lff=label_of(dirs[jl]), lwb=lwb, dR=dR, dB=dB, fP=fP, fL=fL,
+                fC=fC, src=src_)
+    st.clobber(keep=())
+    st.r[rX] = ("RCV", 0)
+    st.r[rB] = ("BF", 0)
+    for x in list(st.slot):
+        if x < 0x18:
+            st.slot[x] = ("UNK",)
+
+
+def step_nested(dirs, st, f, cls, info, F, i, a, lea, unit):
+    """The nested Checkpoint block (`nested_checkpoint_decode_window`) at `a` (`lea` at `i`): the window
+    `lea type(%rip),%rax; callq runtime.newobject; cmpl $0x0,runtime.writeBarrier(%rip); jne lwb; mov dR(%rsp),%rdx; jmp lst`,
+    the window `lst: mov %rax,fP(%rdx); mov dB(%rsp),%rbx; add $src,%rbx; mov dC(%rsp),%rdi; add $rest,%rdi;
+    mov $0x28,%ecx; callq fn; test %rax,%rax; je lok` and the label `lok`. The write-barrier path at `lwb` is not walked.
+    Fills `unit` and the dataflow state; any mismatch raises StepStop."""
+    name, src, fo = f[0], f[1], f[2]
+    if cls != "nested":
+        raise StepStop(i, f"directive {i} `{lea}`: nested object, the next IR field is {name} ({cls})",
+                       "set-up order" if cls != "none" else "new field kind")
+    tname = [n for n, fn in NESTED_CALLEES.items() if fn == info][0]
+    if lea != NESTED_TYPE_LEA[tname]:
+        raise StepStop(i, f"nested block at {i} ({name}): `{lea}` is not the type word of {tname}", "other")
+    endA, mA, iA = step_window(dirs, a, [re.escape(lea), r"callq runtime\.newobject",
+                                         r"cmpl \$0x0,runtime\.writeBarrier\(%rip\)", r"jne (\S+)",
+                                         rf"mov ({SHX})\(%rsp\),%rdx", r"jmp (\S+)"], i, f"nested block head at {i}")
+    lwb, dR, lst = mA[3].group(1), _hexs(mA[4].group(1)), mA[5].group(1)
+    jw = step_label_index(dirs, lwb, i)
+    jl = step_label_index(dirs, lst, i)
+    if jl < endA or jw < endA:
+        raise StepStop(i, f"nested block at {i}: label {lst} or {lwb} not after the head window", "other")
+    pat = [re.escape(f"{lst}:"), rf"mov %rax,({SHX})?\(%rdx\)", rf"mov ({SHX})\(%rsp\),%rbx", rf"add \$({SHX}),%rbx",
+           rf"mov ({SHX})\(%rsp\),%rdi", rf"add \$({SHX}),%rdi", rf"mov \$({SHX}),%ecx", r"callq (\S+)",
+           r"test %rax,%rax", r"je (\S+)"]
+    endB, mB, iB = step_window(dirs, jl, pat, jl, f"nested block call at {jl}")
+    fP, dB, src_ = _step_disp(mB[1].group(1)), _hexs(mB[2].group(1)), _hexs(mB[3].group(1))
+    dC, rest, sz, fn, lok = _hexs(mB[4].group(1)), _hexs(mB[5].group(1)), _hexs(mB[6].group(1)), mB[7].group(1), mB[9].group(1)
+    j3 = step_label_index(dirs, lok, jl)
+    checks = [
+        (fn == info, f"callee {fn}, IR callee {info}", "other"),
+        (sz == NESTED_SIZE[tname], f"size immediate {sz:#x}, SSZ size of {tname} {NESTED_SIZE[tname]:#x}", "other"),
+        (fP == fo, f"pointer store at Go offset {fP}, IR Go offset {fo}", "other"),
+        (src_ == src, f"source offset {src_}, IR SSZ offset {src}", "other"),
+        (rest == -src, f"length adjustment {rest}, expected {-src}", "other"),
+        (j3 >= endB, f"continuation label {lok} at {j3} not after the call window", "other"),
+        (st.slot.get(dR) == ("RCV", 0), f"slot {dR:#x} (receiver reload) holds {_vstr(st.slot.get(dR, ('UNK',)))}, "
+         f"not the receiver", "register"),
+        (st.slot.get(dB) == ("BF", 0), f"slot {dB:#x} (buffer reload) holds {_vstr(st.slot.get(dB, ('UNK',)))}, "
+         f"not the buffer", "register"),
+        (st.slot.get(dC) == ("CAP",), f"slot {dC:#x} (capacity reload) holds {_vstr(st.slot.get(dC, ('UNK',)))}, "
+         f"not the buffer capacity", "register"),
+        (min(dR, dB, dC) >= 0x18, f"a slot below rsp + 0x18 (the spill area of the callees): {dR:#x}, {dB:#x}, {dC:#x}",
+         "other"),
+    ]
+    for ok, why, c in checks:
+        if not ok:
+            raise StepStop(i, f"nested block at {i} ({name}): {why}", c)
+    unit.update(kind="nested", fn=fn, lwb=lwb, lst=lst, lok=lok, dR=dR, fP=fP, dB=dB, src=src_, dC=dC, rest=rest,
+                j1=a, nA=endA - a, j2=jl, nB=endB - jl, jc=iB[7], j3=j3, e=j3 + 1)
+    st.clobber()
+    st.r["rax"], st.r["rbx"] = ("IMM", 0), ("IMM", 0)
+    # the block writes sp (the object pointer) and sp + 8 (the callee's spill of rbx) of the frame
+    for x in list(st.slot):
+        if x < 0x10:
+            st.slot[x] = ("UNK",)
+    st.slot[8] = ("BF", src)
+
+
 def step_walk(dirs, fields, head_end, slots0, F):
     """The dataflow walk. Returns (done, stop, end): done = list of (field index, [emitted units]) for the complete
     fields in IR order; stop = None or the StepStop that ended the walk; end = the directive after the last field
@@ -607,7 +763,7 @@ def _step_walk(dirs, fields, head_end, slots0, F, done):
         if k == "nop":
             i += 1
             continue
-        if seg_open is not None and k in ("call", "lea_mk"):
+        if seg_open is not None and k in ("call", "lea_mk", "lea_new"):
             raise StepStop(i, f"block at {i} before the pointer store of byte field {fields[seg_open][0]}", "set-up order")
         unit = dict(kind=k, j=a, e=i + 1, jd=i, text=d)
         if k == "label":
@@ -748,6 +904,12 @@ def _step_walk(dirs, fields, head_end, slots0, F, done):
             complete(unit)
             i, a = j2 + 1, j2 + 1
             continue
+        elif k == "lea_new":
+            step_nested(dirs, st, fld(), cls, info, F, i, a, op[1], unit)
+            pend.append(unit)
+            complete()
+            i, a = unit["e"], unit["e"]
+            continue
         elif k == "lea_mk":
             if cls != "bytes":
                 raise StepStop(i, f"directive {i}: byte segment, the next IR field is {name} ({cls})",
@@ -765,6 +927,12 @@ def _step_walk(dirs, fields, head_end, slots0, F, done):
             jl = step_label_index(dirs, lff, i)
             if jl < endA:
                 raise StepStop(i, f"byte segment at {i}: label {lff} not after the head window", "other")
+            if n == FIELD_INLINE_SIZE:
+                step_inline(dirs, st, fld(), F, i, a, endA, mA, iA, jl, unit)
+                pend.append(unit)
+                complete()
+                i, a = unit["e"], unit["e"]
+                continue
             rest = [rf"mov %rax,({SHX})\(%rsp\)", rf"mov %rax,({SHX})?\(%(\w+)\)", rf"mov ({SHX})\(%rsp\),%rbx"]
             i3 = jl + 1
             # the form is chosen by the directive after the buffer reload: `add $X,%rbx` or not
@@ -789,7 +957,7 @@ def _step_walk(dirs, fields, head_end, slots0, F, done):
             checks = [
                 (sz == n and sz2 == n and _hexs(mA[6].group(1)) == n and l1 == n and c1 == n,
                  f"size immediates {sz:#x} / {sz2:#x} / {l1:#x} / {c1:#x}, IR size {N}", "other"),
-                (n in FIELD_SEGMENT_SIZES, f"size {n} (lemma sizes 32, 48, 96)", "new field kind"),
+                (n in FIELD_SEGMENT_SIZES, f"size {n} (lemma sizes 20, 32, 48, 96)", "new field kind"),
                 (mA[5].group(2) == rX and mA[6].group(3) == rX and rX2 == rX,
                  f"receiver register after makeslice not the same in its three uses ({rX}, {mA[5].group(2)}, "
                  f"{mA[6].group(3)}, {rX2})", "register"),
@@ -1064,6 +1232,156 @@ def step_seg_text(C, prefix, fname, ssz, u):
     return out + "\n", name
 
 
+STEP_INLINE_STATEMENT = """theorem {name} (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : LabelsFresh {C} k) :
+    ∀
+    (sp rcv bf aR aB aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
+    (hR : sp + {dR}.toBitVec = aR) (hB' : sp + {dB}.toBitVec = aB)
+    (hRet : sp - 8 = aRet) (hLo : sp - 8 - BitVec.ofNat 64 St = aLo)
+    (hP : rcv + {fP}.toBitVec = aP) (hL : rcv + {fL}.toBitVec = aL) (hC : rcv + {fC}.toBitVec = aC)
+    (hSrc : bf + {src}.toBitVec = aSrc)
+    (rbp0 r140 : UInt64) (root : List UInt8) (hroot : root.length = 4)
+    (spl rslot lo vP vL vC : List UInt8)
+    (hspl : spl.length = 24) (hrs : rslot.length = 8) (hlo : lo.length = St)
+    (hvP : vP.length = 8) (hvL : vL.length = 8) (hvC : vC.length = 8)
+    (R : DataMem → Prop) (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 4 ≤ avail)
+    (s : MachineData) (hrsp : s.regs.rsp = {{ toBitVec := sp }}) (hrbp : s.regs.rbp = rbp0)
+    (hr14 : s.regs.r14 = r140)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ Eq ((Int.toBytes 8 bf.toInt).At aB)
+      ⋆ Eq (spl.At sp) ⋆ Eq (rslot.At aRet) ⋆ Eq (lo.At aLo)
+      ⋆ Heap avail
+      ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
+      ⋆ Eq (root.At aSrc)
+      ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
+    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 St),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {e}) ∧ st.data.regs.rsp = {{ toBitVec := sp }}
+        ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
+        ∃ (p : BitVec 64) (spl' lo' : List UInt8), spl'.length = 24 ∧ lo'.length = St
+          ∧ st.data.regs.get64 Reg64.{rX} = rcv ∧ st.data.regs.get64 Reg64.{rB} = bf ∧
+        (Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ Eq ((Int.toBytes 8 bf.toInt).At aB)
+          ⋆ Eq (spl'.At sp)
+          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + {jc} + 1)).toBitVec.toInt).At aRet)
+          ⋆ Eq (lo'.At aLo)
+          ⋆ Heap (avail - 4)
+          ⋆ Eq ((Int.toBytes 8 p.toInt).At aP) ⋆ Eq ((Int.toBytes 8 4).At aL)
+          ⋆ Eq ((Int.toBytes 8 4).At aC) ⋆ Eq (root.At p)
+          ⋆ Eq (root.At aSrc)
+          ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf (k + {j1})⟩ := by
+"""
+
+
+def step_inline_text(C, prefix, fname, ssz, u):
+    name = f"{prefix}_{fname}_segment"
+    j1, j2, j3, nA, nB, nC, jc, e = u["j1"], u["j2"], u["j3"], u["nA"], u["nB"], u["nC"], u["jc"], u["e"]
+    out = STEP_SEGMENT_OPTIONS + (f"/-- `{fname}` (4-byte vector, SSZ offset {ssz}, Go offset {u['fP']}): inline-copy decode segment "
+                                  f"over the windows {j1}–{j1 + nA - 1}, {j2}–{j2 + nB - 1} and {j3}–{e - 1}; receiver in "
+                                  f"{u['rX']}, buffer in {u['rB']}, copy through {u['rT']} (`callq runtime.makeslice` at {jc}). -/\n")
+    out += STEP_INLINE_STATEMENT.format(name=name, C=C, dR=_i64(u["dR"]), dB=_i64(u["dB"]), fP=_i64(u["fP"]),
+                                        fL=_i64(u["fL"]), fC=_i64(u["fC"]), src=_i64(u["src"]), e=e, rX=u["rX"],
+                                        rB=u["rB"], jc=jc, j1=j1)
+    lff, lwb = lean_str(u["lff"]), lean_str(u["lwb"])
+    out += f"  have hqA := Codec.window_infix_at hk {j1} {nA}\n"
+    out += (f"  have heA : Codec.eraseNop (({C}.drop {j1}).take {nA}) = Codec.bytesDecodeHeadRegister Reg64.{u['rX']} 4 {lff} "
+            f"{u['dR']} {u['fL']} {u['fC']} := by rfl\n")
+    out += f"  have hqB := Codec.window_infix_at hk {j2} {nB}\n"
+    out += (f"  have heB : Codec.eraseNop (({C}.drop {j2}).take {nB}) = Codec.bytesDecodeInlineMiddle Reg64.{u['rX']} "
+            f"Reg64.{u['rB']} Reg64.{u['rT']} {lff} {lwb} {u['dB']} {u['fP']} {u['fL']} {u['fC']} {u['src']} := by rfl\n")
+    out += f"  have hqC := Codec.window_infix_at hk {j3} {nC}\n"
+    out += (f"  have heC : Codec.eraseNop (({C}.drop {j3}).take {nC}) = Codec.bytesDecodeInlineTail Reg64.{u['rX']} {lwb} "
+            f"{u['fP']} := by rfl\n")
+    out += f"  have hjl : k + {j2} + Codec.nonNopIndex (({C}.drop {j2}).take {nB}) 0 = k + {j2} := by rfl\n"
+    out += step_label_have("hl", j2, C)
+    out += f"  have hjw : k + {j3} + Codec.nonNopIndex (({C}.drop {j3}).take {nC}) 0 = k + {j3} := by rfl\n"
+    out += step_label_have("hw", j3, C)
+    out += f"  have hjc : k + {j1} + Codec.nonNopIndex (({C}.drop {j1}).take {nA}) 3 = k + {jc} := by rfl\n"
+    out += f"  have hend : k + {j3} + (({C}.drop {j3}).take {nC}).length = k + {e} := by rfl\n"
+    out += (f"  with_reducible exact Codec.bytes_decode_inline_segment_window Reg64.{u['rX']} Reg64.{u['rB']} Reg64.{u['rT']} "
+            f"rfl ({STEP_INLINE_BT[(u['rB'], u['rT'])]}) _ _ _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) (k + {j3}) (k + {j2}) "
+            f"(k + {j3}) (k + {jc}) (k + {e}) hqA heA hqB heB hqC heC hjl hl hjw hw hjc hend\n")
+    kpar = (f"{C} Reg64.{u['rX']} Reg64.{u['rB']} {j1} {jc} {e} {u['dR']} {u['dB']} {u['fP']} {u['fL']} {u['fC']} "
+            f"{u['src']}")
+    out += kind_thm(name, f"Codec.bytesDecodeInlineSegmentKindWindow h {kpar}")
+    return out + "\n", name
+
+
+# the options of the nested Checkpoint block theorem, measured on AttestationData (Source and Target) with the default
+# maxHeartbeats: the default maxRecDepth fails, 10000 passes; the default maxHeartbeats passes, so it is not set
+STEP_NESTED_OPTIONS = ("-- Measured cause: with the default maxRecDepth, the `simp only` of a label fact (`Machine.label_at'`) fails with\n"
+                       "-- \"maximum recursion depth has been reached\"; 10000 passes. The default maxHeartbeats passes.\n"
+                       "set_option maxRecDepth 10000 in\n")
+# the statement of the nested Checkpoint block (`Codec.nested_checkpoint_decode_window`, kind `nestedCheckpointDecodeKindWindow`)
+STEP_NESTED_STATEMENT = """theorem {name} (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : LabelsFresh {C} k) :
+    ∀
+    (S : Nat) (hS8 : 8 ≤ S) (hS : S < 2 ^ 60) (Heap : Nat → DataMem → Prop)
+    (hC : NestedCheckpointCalleeAccept "{fn}" Heap S)
+    (hno : NewobjectContract Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 (S + 96))
+    (sp rcv bf aR aB aC aW1 aRet aLo aP aSrc aRoot : BitVec 64)
+    (hR : sp + {dR}.toBitVec = aR) (hB' : sp + {dB}.toBitVec = aB) (hC' : sp + {dC}.toBitVec = aC)
+    (hW1 : sp + 8 = aW1) (hRet : sp - 8 = aRet) (hLo : sp - 8 - BitVec.ofNat 64 (S + 96) = aLo)
+    (hP : rcv + {fP}.toBitVec = aP) (hSrc : bf + {src}.toBitVec = aSrc) (hRoot : aSrc + 8 = aRoot)
+    (rbp0 r140 guard : UInt64) (hguard : guard.toNat + 96 < aRet.toNat)
+    (e8 root : List UInt8) (he8 : e8.length = 8) (hroot : root.length = 32)
+    (w0 w1 rslot lo cap vP : List UInt8) (hw0 : w0.length = 8) (hw1 : w1.length = 8) (hrs : rslot.length = 8)
+    (hlo : lo.length = S + 96) (hcap : cap.length = 8) (hvP : vP.length = 8)
+    (avail : Nat) (hav : 104 ≤ avail) (R : DataMem → Prop)
+    (s : MachineData) (hrsp : s.regs.rsp = {{ toBitVec := sp }}) (hrbp : s.regs.rbp = rbp0)
+    (hr14 : s.regs.r14 = r140)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ Eq ((Int.toBytes 8 bf.toInt).At aB)
+      ⋆ Eq (cap.At aC) ⋆ Eq (w0.At sp) ⋆ Eq (w1.At aW1) ⋆ Eq (rslot.At aRet) ⋆ Eq (lo.At aLo)
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
+      ⋆ Heap avail
+      ⋆ Eq (vP.At aP) ⋆ Eq (e8.At aSrc) ⋆ Eq (root.At aRoot)
+      ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {j3} + 1) ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
+        ∧ st.data.regs.rsp = {{ toBitVec := sp }} ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
+        ∃ (po pr : BitVec 64) (lo' : List UInt8), lo'.length = S + 96 ∧
+        (Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ Eq ((Int.toBytes 8 bf.toInt).At aB)
+          ⋆ Eq (cap.At aC) ⋆ Eq ((Int.toBytes 8 po.toInt).At sp) ⋆ Eq ((Int.toBytes 8 aSrc.toInt).At aW1)
+          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + {jc} + 1)).toBitVec.toInt).At aRet) ⋆ Eq (lo'.At aLo)
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
+          ⋆ Heap (avail - 104)
+          ⋆ Eq ((Int.toBytes 8 po.toInt).At aP)
+          ⋆ Eq ((List.replicate 8 0).At po) ⋆ Eq (e8.At (po + 8))
+          ⋆ Eq ((Int.toBytes 8 pr.toInt).At (po + 16)) ⋆ Eq ((Int.toBytes 8 32).At (po + 24))
+          ⋆ Eq ((Int.toBytes 8 32).At (po + 32)) ⋆ Eq ((List.replicate 32 0).At (po + 40))
+          ⋆ Eq (root.At pr)
+          ⋆ Eq (e8.At aSrc) ⋆ Eq (root.At aRoot)
+          ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf (k + {j1})⟩ := by
+"""
+
+
+def step_nested_text(C, prefix, fname, ssz, u):
+    name = f"{prefix}_{fname}_nested"
+    j1, j2, j3, nA, nB, jc = u["j1"], u["j2"], u["j3"], u["nA"], u["nB"], u["jc"]
+    out = STEP_NESTED_OPTIONS + (f"/-- `{fname}` (nested Checkpoint, SSZ offset {ssz}, Go offset {u['fP']}): new object and callee "
+                                  f"over the windows {j1}–{j1 + nA - 1} and {j2}–{j2 + nB - 1} (`callq` at {jc}), continuation "
+                                  f"label at {j3}. -/\n")
+    out += STEP_NESTED_STATEMENT.format(name=name, C=C, fn=u["fn"], dR=_i64(u["dR"]), dB=_i64(u["dB"]), dC=_i64(u["dC"]),
+                                        fP=_i64(u["fP"]), src=_i64(u["src"]), j1=j1, jc=jc, j3=j3)
+    lwb, lst, lok = lean_str(u["lwb"]), lean_str(u["lst"]), lean_str(u["lok"])
+    out += f"  have hqA := Codec.window_infix_at hk {j1} {nA}\n"
+    out += (f"  have heA : Codec.eraseNop (({C}.drop {j1}).take {nA}) = Codec.nestedCheckpointAllocate {lwb} {lst} "
+            f"{_lit(u['dR'])} := by rfl\n")
+    out += f"  have hqB := Codec.window_infix_at hk {j2} {nB}\n"
+    out += (f"  have heB : Codec.eraseNop (({C}.drop {j2}).take {nB}) = Codec.nestedCheckpointCall {lst} {lean_str(u['fn'])} {lok} "
+            f"{_lit(u['fP'])} {_lit(u['dB'])} {_lit(u['src'])} {_lit(u['dC'])} {_lit(u['rest'])} := by rfl\n")
+    out += f"  have hjl : k + {j2} + Codec.nonNopIndex (({C}.drop {j2}).take {nB}) 0 = k + {j2} := by rfl\n"
+    out += step_label_have("hls", j2, C)
+    out += f"  have hjc : k + {j2} + Codec.nonNopIndex (({C}.drop {j2}).take {nB}) 7 = k + {jc} := by rfl\n"
+    out += (f"  have hB := Codec.infix_sub (q := Codec.callDecodeContinuationLabel {lok}) {j3} hk\n"
+            f"    (by simp only [{C}, Codec.callDecodeContinuationLabel, {SIMP_INFIX}])\n")
+    out += step_label_have("hl", j3, C)
+    out += (f"  with_reducible exact Codec.nested_checkpoint_decode_window _ _ _ _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
+            f"(k + {j3}) (k + {j2}) (k + {jc}) hqA heA hqB heB hjl hls hjc hB hl\n")
+    kpar = (f"{C} {lean_str(u['fn'])} {j1} {jc} {j3} {_lit(u['dR'])} {_lit(u['fP'])} {_lit(u['dB'])} {_lit(u['src'])} "
+            f"{_lit(u['dC'])}")
+    out += kind_thm(name, f"Codec.nestedCheckpointDecodeKindWindow h {kpar}")
+    return out + "\n", name
+
+
 STEP_FLAGS = ("head_ok", "fields_complete", "epilogue_ok")
 
 
@@ -1163,6 +1481,12 @@ def _decoder_step(args, flags):
                 elif u["kind"] == "seg":
                     t, nm = step_seg_text(C, pre, fname, src, u)
                     used.add("segz" if u["zform"] else "seg")
+                elif u["kind"] == "inline":
+                    t, nm = step_inline_text(C, pre, fname, src, u)
+                    used.add("inline")
+                elif u["kind"] == "nested":
+                    t, nm = step_nested_text(C, pre, fname, src, u)
+                    used.add("nested")
                 else:
                     t, nm = step_step_text(C, pre, u)
                 body += t
@@ -1171,7 +1495,9 @@ def _decoder_step(args, flags):
             if cls == "call":
                 shape = f"call field ({info.split('.')[-2]}): {len(units) - 1} set-up steps + call block"
             elif cls == "bytes":
-                shape = f"byte field ({info} bytes): {sum(u['kind'] != 'seg' for u in units)} steps + segment"
+                shape = f"byte field ({info} bytes): {sum(u['kind'] not in ('seg', 'inline') for u in units)} steps + segment"
+            elif cls == "nested":
+                shape = f"nested field ({info.split('.')[-2]}): {len(units) - 1} set-up steps + nested block"
             else:
                 shape = f"uint64 field: {len(units)} steps"
             rec.update(status="covered", reached=True, shape=shape, directives=[lo, hi], theorems=names)
@@ -1192,7 +1518,10 @@ def _decoder_step(args, flags):
         summ["fields"].append(rec)
     if not ncov:
         raise NoMatch("; ".join(report))
-    kinds = ["Codec.Kind.WindowSteps", "Codec.Kind.FixedBytesDecodeWindow", "Codec.Kind.CalleeDecodeWindow"] + (["Codec.Kind.FixedBytesDecodeWindowOffsetZero"] if "segz" in used else [])
+    kinds = (["Codec.Kind.WindowSteps", "Codec.Kind.FixedBytesDecodeWindow", "Codec.Kind.CalleeDecodeWindow"]
+             + (["Codec.Kind.FixedBytesDecodeWindowOffsetZero"] if "segz" in used else [])
+             + (["Codec.Kind.FixedBytesDecodeInline"] if "inline" in used else [])
+             + (["Codec.Kind.NestedCheckpointDecode"] if "nested" in used else []))
     # the coverage header text is fixed: `kindcheck.py` rule 11 reads it
     extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); step coverage: "
              f"{ncov} of {len(fields)} fields; step chain from directive {head_end} (end of the head)")
@@ -1264,15 +1593,21 @@ def _decoder_whole_accept(args, flags):
     whole_accept_gen = whole_accept_module()
     # the generated proofs name the code constant and the spec theorem of each callee: import their modules
     callee_mods, called = [], set()
+    nested = whole_accept_gen.WHOLE_ACCEPT_NESTED_CALLEES
     for d in read_S(args.assembly)[0]:
         m = re.fullmatch(r"callq (\S+)", d)
-        if m and m.group(1) in whole_accept_gen.WHOLE_ACCEPT_CALLEES:
-            called.add(m.group(1))
-            mod = whole_accept_gen.WHOLE_ACCEPT_CALLEES[m.group(1)][0].rsplit(".", 1)[0]
+        fns = [] if not m else ([m.group(1)] if m.group(1) in whole_accept_gen.WHOLE_ACCEPT_CALLEES else
+                                [m.group(1)] + nested[m.group(1)][3] if m.group(1) in nested else [])
+        for x, fn in enumerate(fns):
+            if x == 0:
+                called.add(fn)
+            mod = (nested[fn] if fn in nested else whole_accept_gen.WHOLE_ACCEPT_CALLEES[fn])[0].rsplit(".", 1)[0]
             if mod not in callee_mods:
                 callee_mods.append(mod)
     spec_mods = [mod for fn, mod in whole_accept_gen.WHOLE_ACCEPT_CALLEE_SPEC_MODULES.items() if fn in called]
     fixed = whole_accept_gen.WHOLE_ACCEPT_IMPORTS
+    if any(fn in nested for fn in called):
+        fixed = fixed[:1] + [whole_accept_gen.WHOLE_ACCEPT_NESTED_IMPORT] + fixed[1:]
     mods = args.imports.split(",")
     mods += [m for m in callee_mods if m not in mods]
     args.imports = ",".join(mods + [m for m in fixed[:2] + spec_mods + fixed[2:] if m not in mods])
@@ -1296,8 +1631,13 @@ def _decoder_whole_accept(args, flags):
     body = t.body()
     flags["rendered"] = True
     n = len(fields)
-    want = ([(f"{args.prefix}_head", "decodeHeadKindAnyFrame")] + [(f"{args.prefix}_field_{i + 1}", "decodeFieldKindAnyFrame") for i in range(n)]
-            + [(f"{args.prefix}_epilogue", "decodeEpilogueKindAnyFrame"), (f"{args.prefix}_accept", "decodeAcceptKindAnyFrame"),
+    # one field theorem per block: a field, or the fields up to the end of an interleaved set-up (`whole_accept_derive`)
+    blocks = t.field_theorems()
+    if [x for f in t.fspec for x in range(f['first'], f['field'] + 1)] != list(range(n)) or len(t.states) != len(blocks) + 1:
+        raise whole_accept_gen.WholeAcceptRefuse(f"field theorems {blocks} do not cover the {n} fields in order")
+    want = ([(f"{args.prefix}_head", t.kindname("decodeHeadKindAnyFrame"))] + [(b, t.kindname("decodeFieldKindAnyFrame")) for b in blocks]
+            + [(f"{args.prefix}_epilogue", t.kindname("decodeEpilogueKindAnyFrame")),
+               (f"{args.prefix}_accept", t.kindname("decodeAcceptKindAnyFrame")),
                (f"{args.prefix}_reject", "decodeRejectKindAnyFrame")])
     if t.kinds_emitted != want:
         raise whole_accept_gen.WholeAcceptRefuse(f"kind lines emitted {t.kinds_emitted}, required {want}")
@@ -1312,7 +1652,7 @@ def _decoder_whole_accept(args, flags):
     gj = dict(accept=f"{args.prefix}_accept", kinds=[dict(theorem=a, kind=b) for a, b in want],
               fields=t.fieldslean(), frame=t.frame, statement_check="kind instance only")
     blk = (f"/-! Whole accept (`decoder --whole-accept`): the whole accept theorem `{args.prefix}_accept` of `{args.type}` from\n"
-           f"the step chain above: head, one theorem per field, epilogue (boundary states in entry terms), accept, size\n"
+           f"the step chain above: head, one theorem per {'field' if len(blocks) == n else 'field or block of interleaved fields'}, epilogue (boundary states in entry terms), accept, size\n"
            f"reject. Every statement has a `_kind` line against the whole-accept kinds.\n"
            f"WHOLE-ACCEPT-JSON: {json.dumps(gj)}\n-/\n\n"
            f"open {whole_accept_gen.WHOLE_ACCEPT_OPENS}\n\nnamespace {GEN_NS}\n\n")
@@ -1377,8 +1717,9 @@ def _encoder_fast_path(args, flags):
     body, kinds = g.text()
     flags["rendered"] = True
     px, n = args.prefix, len(g.fields)
-    want = ([(f"{px}_head", "encodeHeadKindAnyFrame")] + [(f"{px}_field_{i}", "encodeFieldKindAnyFrame") for i in range(n)]
-            + [(f"{px}_epilogue", "encodeEpilogueKindAnyFrame"), (f"{px}_fast", "encodeFastPathKindAnyFrame")])
+    KH, KF, KE, KP = g.kind_names()
+    want = ([(f"{px}_head", KH)] + [(f"{px}_field_{i}", KF) for i in range(n)]
+            + [(f"{px}_epilogue", KE), (f"{px}_fast", KP)])
     if kinds != want:
         raise fast_path_gen.FastPathRefuse(f"kind lines emitted {kinds}, required {want}")
     for name, kind in want:
@@ -1400,23 +1741,32 @@ def _encoder_fast_path(args, flags):
     meta = dict(g.meta(), statement_check=(f"same {args.same_as}" + (f" via {args.same_as_via}" if args.same_as_via else "")
                                            if args.same_as else "kind instance only"),
                 assembly=args.assembly, ir=args.ir, ir_type=args.type, kinds=[dict(theorem=a, kind=b) for a, b in want])
-    imports = [m for m in fast_path_gen.FAST_PATH_IMPORTS] + [m for m in args.imports.split(",") if m and m not in fast_path_gen.FAST_PATH_IMPORTS]
+    fixed = fast_path_gen.FAST_PATH_IMPORTS + g.imports()
+    imports = list(fixed) + [m for m in args.imports.split(",") if m and m not in fixed]
     opens = " ".join(["Machine", "Runtime", "Codec"] + [o for o in args.open.split(",") if o])
     head = ("".join(f"import {m}\n" for m in imports) + "\n"
             f"/-!\n# Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.{g.t}).MarshalSSZTo`\n\n"
             "Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a\n"
             "step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem\n"
-            "has a `_kind` line (`encodeHeadKindAnyFrame`, `encodeFieldKindAnyFrame`, `encodeEpilogueKindAnyFrame`, `encodeFastPathKindAnyFrame`).\n"
+            f"has a `_kind` line (`{KH}`, `{KF}`, `{KE}`, `{KP}`).\n"
             f"**Fast path only**: `len(dst) + {g.size} ≤ cap(dst)` and every byte-vector field of its exact length. No\n"
             "`runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the\n"
             f"growslice branches, the length rejects, the morestack path. Not a complete encoder result.{tie}\n"
+            + (f"Each nested pointer is not nil, and each nested call uses the function specification of its callee\n"
+               f"(`{g.callee['holds']}`). Not covered: the `newobject` branch of a nil pointer and the\n"
+               "error wrap of a nested call.\n" if g.nested else "") +
             f"FAST-PATH-JSON: {json.dumps(meta)}\n-/\n\n"
             f"open {opens}\nvariable [Host]\n\nnamespace {GEN_NS}\n\n")
     text = head + body + "\n" + tail + f"end {GEN_NS}\n"
     for bad in ("sorry", "admit", "native_decide", "bv_decide", "axiom ", "maxHeartbeats 4000001"):
         if bad in text:
             raise fast_path_gen.FastPathRefuse(f"forbidden text {bad!r} in the output")
-    if text.count("set_option maxHeartbeats ") != n + 3 or text.count("set_option maxHeartbeats 4000000 in\n") != n + 3:
+    if g.nested:
+        want_opts = sum(o.count("set_option ") for o in [fast_path_gen.NESTED_THEOREM_OPTIONS[r] for r in ("head", "epilogue", "fast")]
+                        + [fast_path_gen.NESTED_THEOREM_OPTIONS["nested" if f[1] == "n" else "field"] for f in g.fields])
+        if text.count("set_option ") != want_opts:
+            raise fast_path_gen.FastPathRefuse("options differ from NESTED_THEOREM_OPTIONS")
+    elif text.count("set_option maxHeartbeats ") != n + 3 or text.count("set_option maxHeartbeats 4000000 in\n") != n + 3:
         raise fast_path_gen.FastPathRefuse("heartbeat options differ from the interface's (4000000, one per theorem)")
     flags["verified"] = True
     return text

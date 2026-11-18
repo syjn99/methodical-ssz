@@ -47,8 +47,8 @@ def StackOffset.addr (b : BitVec 64) : StackOffset → BitVec 64
   | .below n => b - BitVec.ofNat 64 n
 
 /-- The content of a stack slot: an original chunk (`cs` index), the bytes of an entry register, an
-existential chunk, the pointer of a byte field (index among the byte fields), zero, or a return address
-(directive index). -/
+existential chunk, the pointer of a byte field (index among the byte fields), zero, a return address
+(directive index), or the input address `rbx + n` (a nested decoder spills its buffer argument). -/
 inductive StackValue where
   | original (i : Nat)
   | reg (r : Reg64)
@@ -56,6 +56,7 @@ inductive StackValue where
   | ptr (i : Nat)
   | zero
   | ret (n : Nat)
+  | bufferAddress (n : Nat)
 
 /-- A stack slot: a value at an offset, or a value at the low-stack address `rsp - loB - S`. -/
 inductive StackSlot where
@@ -146,6 +147,7 @@ def StackValue.bytes (k : Nat) (s : MachineData) (cs xs : List (List UInt8)) (ps
   | .ptr i => Int.toBytes 8 (ps.getD i 0).toInt
   | .zero => Int.toBytes 8 (0 : UInt64).toBitVec.toInt
   | .ret n => Int.toBytes 8 (Host.addrOf (k + n)).toBitVec.toInt
+  | .bufferAddress n => Int.toBytes 8 (addOffset s.regs.rbx.toBitVec n).toInt
 
 /-- The memory chunk of a stack slot. -/
 def StackSlot.chunk (k : Nat) (s : MachineData) (cs xs : List (List UInt8)) (ps : List (BitVec 64)) (S loB : Nat) :

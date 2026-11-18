@@ -9,6 +9,7 @@ import Prysm.PendingPartialWithdrawal.Code
 import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPath
 import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPathSpec
 import Prysm.PendingPartialWithdrawal.WitnessGeneratedEncodeFastPath
+import Prysm.PendingPartialWithdrawal.GeneratedDecodeAccept
 
 /-! Hand list of the `PendingPartialWithdrawal` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
@@ -73,3 +74,45 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.runs_prefix
 #print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.word_bytes
 #print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.zeros
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_Index_call
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_Index_call_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_WithdrawableEpoch_call
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_WithdrawableEpoch_call_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_accept
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_accept_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_epilogue
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_epilogue_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_field_1
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_field_1_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_fields_2_3
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_fields_2_3_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_head
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_head_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_reject
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_reject_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_15
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_15_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_16
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_16_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_48
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_48_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_49
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_49_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_50
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_50_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_51
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_51_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_52
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_52_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_53
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_53_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_54
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_54_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_55
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_55_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_56
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_56_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_57
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_57_kind
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_58
+#print axioms Prysm.PendingPartialWithdrawal.Decode.generated_directive_58_kind
