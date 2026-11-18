@@ -1,0 +1,542 @@
+[
+ {
+  "id": "sync-committee-message-decoder-accept-values-0",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "UnmarshalSSZ",
+  "in": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Slot",
+     "uint64": 0
+    },
+    {
+     "name": "BlockRoot",
+     "bytes": "0000000000000000000000000000000000000000000000000000000000000000",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "ValidatorIndex",
+     "uint64": 0
+    },
+    {
+     "name": "Signature",
+     "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "len": 96,
+     "cap": 96
+    }
+   ]
+  }
+ },
+ {
+  "id": "sync-committee-message-decoder-accept-values-1",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "UnmarshalSSZ",
+  "in": "efcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f07000000000000006465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Slot",
+     "uint64": 81985529216486895
+    },
+    {
+     "name": "BlockRoot",
+     "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "ValidatorIndex",
+     "uint64": 7
+    },
+    {
+     "name": "Signature",
+     "bytes": "6465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3",
+     "len": 96,
+     "cap": 96
+    }
+   ]
+  }
+ },
+ {
+  "id": "sync-committee-message-decoder-accept-values-2",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "UnmarshalSSZ",
+  "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Slot",
+     "uint64": 18446744073709551615
+    },
+    {
+     "name": "BlockRoot",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "ValidatorIndex",
+     "uint64": 18446744073709551615
+    },
+    {
+     "name": "Signature",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 96,
+     "cap": 96
+    }
+   ]
+  }
+ },
+ {
+  "id": "sync-committee-message-decoder-reject-size-0",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "UnmarshalSSZ",
+  "in": "",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "sync-committee-message-decoder-reject-size-143",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "UnmarshalSSZ",
+  "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "sync-committee-message-decoder-reject-size-145",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "UnmarshalSSZ",
+  "in": "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "sync-committee-message-encoder-fast-path-values-0-prefix-0-spare-0",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Slot",
+    "uint64": 0
+   },
+   {
+    "name": "BlockRoot",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ValidatorIndex",
+    "uint64": 0
+   },
+   {
+    "name": "Signature",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 144
+  },
+  "exp": {
+   "error": null,
+   "out": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 144,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "sync-committee-message-encoder-fast-path-values-0-prefix-0-spare-5",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Slot",
+    "uint64": 0
+   },
+   {
+    "name": "BlockRoot",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ValidatorIndex",
+    "uint64": 0
+   },
+   {
+    "name": "Signature",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 149
+  },
+  "exp": {
+   "error": null,
+   "out": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 149,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "sync-committee-message-encoder-fast-path-values-0-prefix-7-spare-0",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Slot",
+    "uint64": 0
+   },
+   {
+    "name": "BlockRoot",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ValidatorIndex",
+    "uint64": 0
+   },
+   {
+    "name": "Signature",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 151
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 151,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "sync-committee-message-encoder-fast-path-values-0-prefix-7-spare-5",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Slot",
+    "uint64": 0
+   },
+   {
+    "name": "BlockRoot",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ValidatorIndex",
+    "uint64": 0
+   },
+   {
+    "name": "Signature",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 156
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 156,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "sync-committee-message-encoder-fast-path-values-1-prefix-0-spare-0",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Slot",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "BlockRoot",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ValidatorIndex",
+    "uint64": 7
+   },
+   {
+    "name": "Signature",
+    "bytes": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 144
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d",
+   "same_array": true,
+   "out_cap": 144,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "sync-committee-message-encoder-fast-path-values-1-prefix-0-spare-5",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Slot",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "BlockRoot",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ValidatorIndex",
+    "uint64": 7
+   },
+   {
+    "name": "Signature",
+    "bytes": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 149
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d",
+   "same_array": true,
+   "out_cap": 149,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "sync-committee-message-encoder-fast-path-values-1-prefix-7-spare-0",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Slot",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "BlockRoot",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ValidatorIndex",
+    "uint64": 7
+   },
+   {
+    "name": "Signature",
+    "bytes": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 151
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d",
+   "same_array": true,
+   "out_cap": 151,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "sync-committee-message-encoder-fast-path-values-1-prefix-7-spare-5",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Slot",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "BlockRoot",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ValidatorIndex",
+    "uint64": 7
+   },
+   {
+    "name": "Signature",
+    "bytes": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 156
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d",
+   "same_array": true,
+   "out_cap": 156,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "sync-committee-message-encoder-fast-path-values-2-prefix-0-spare-0",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Slot",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "BlockRoot",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "ValidatorIndex",
+    "uint64": 0
+   },
+   {
+    "name": "Signature",
+    "bytes": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 144
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e",
+   "same_array": true,
+   "out_cap": 144,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "sync-committee-message-encoder-fast-path-values-2-prefix-0-spare-5",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Slot",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "BlockRoot",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "ValidatorIndex",
+    "uint64": 0
+   },
+   {
+    "name": "Signature",
+    "bytes": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 149
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e",
+   "same_array": true,
+   "out_cap": 149,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "sync-committee-message-encoder-fast-path-values-2-prefix-7-spare-0",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Slot",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "BlockRoot",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "ValidatorIndex",
+    "uint64": 0
+   },
+   {
+    "name": "Signature",
+    "bytes": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 151
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e",
+   "same_array": true,
+   "out_cap": 151,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "sync-committee-message-encoder-fast-path-values-2-prefix-7-spare-5",
+  "type": "v1alpha1.SyncCommitteeMessage",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Slot",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "BlockRoot",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "ValidatorIndex",
+    "uint64": 0
+   },
+   {
+    "name": "Signature",
+    "bytes": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 156
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e",
+   "same_array": true,
+   "out_cap": 156,
+   "receiver_unchanged": true
+  }
+ }
+]

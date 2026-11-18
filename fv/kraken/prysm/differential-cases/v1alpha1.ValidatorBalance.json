@@ -1,0 +1,410 @@
+[
+ {
+  "id": "validator-balance-decoder-accept-values-0",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "UnmarshalSSZ",
+  "in": "00000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Index",
+     "uint64": 0
+    },
+    {
+     "name": "Balance",
+     "uint64": 0
+    }
+   ]
+  }
+ },
+ {
+  "id": "validator-balance-decoder-accept-values-1",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "UnmarshalSSZ",
+  "in": "efcdab89674523010700000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Index",
+     "uint64": 81985529216486895
+    },
+    {
+     "name": "Balance",
+     "uint64": 7
+    }
+   ]
+  }
+ },
+ {
+  "id": "validator-balance-decoder-accept-values-2",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "UnmarshalSSZ",
+  "in": "ffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Index",
+     "uint64": 18446744073709551615
+    },
+    {
+     "name": "Balance",
+     "uint64": 18446744073709551615
+    }
+   ]
+  }
+ },
+ {
+  "id": "validator-balance-decoder-reject-size-0",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "UnmarshalSSZ",
+  "in": "",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "validator-balance-decoder-reject-size-15",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "UnmarshalSSZ",
+  "in": "010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "validator-balance-decoder-reject-size-17",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "UnmarshalSSZ",
+  "in": "0101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "validator-balance-encoder-fast-path-values-0-prefix-0-spare-0",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 0
+   },
+   {
+    "name": "Balance",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 16
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 16,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-balance-encoder-fast-path-values-0-prefix-0-spare-5",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 0
+   },
+   {
+    "name": "Balance",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 21
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 21,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-balance-encoder-fast-path-values-0-prefix-7-spare-0",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 0
+   },
+   {
+    "name": "Balance",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 23
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 23,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-balance-encoder-fast-path-values-0-prefix-7-spare-5",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 0
+   },
+   {
+    "name": "Balance",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 28
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 28,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-balance-encoder-fast-path-values-1-prefix-0-spare-0",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Balance",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 16
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 16,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-balance-encoder-fast-path-values-1-prefix-0-spare-5",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Balance",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 21
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 21,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-balance-encoder-fast-path-values-1-prefix-7-spare-0",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Balance",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 23
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 23,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-balance-encoder-fast-path-values-1-prefix-7-spare-5",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Balance",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 28
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 28,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-balance-encoder-fast-path-values-2-prefix-0-spare-0",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Balance",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 16
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 16,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-balance-encoder-fast-path-values-2-prefix-0-spare-5",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Balance",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 21
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 21,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-balance-encoder-fast-path-values-2-prefix-7-spare-0",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Balance",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 23
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 23,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "validator-balance-encoder-fast-path-values-2-prefix-7-spare-5",
+  "type": "v1alpha1.ValidatorBalance",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Balance",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 28
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 28,
+   "receiver_unchanged": true
+  }
+ }
+]

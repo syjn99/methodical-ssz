@@ -1,0 +1,548 @@
+[
+ {
+  "id": "builder-deposit-request-decoder-accept-values-0",
+  "type": "v1.BuilderDepositRequest",
+  "method": "UnmarshalSSZ",
+  "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Pubkey",
+     "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "len": 48,
+     "cap": 48
+    },
+    {
+     "name": "WithdrawalCredentials",
+     "bytes": "0000000000000000000000000000000000000000000000000000000000000000",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "Amount",
+     "uint64": 0
+    },
+    {
+     "name": "Signature",
+     "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "len": 96,
+     "cap": 96
+    }
+   ]
+  }
+ },
+ {
+  "id": "builder-deposit-request-decoder-accept-values-1",
+  "type": "v1.BuilderDepositRequest",
+  "method": "UnmarshalSSZ",
+  "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292af1cdab89674523012122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Pubkey",
+     "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+     "len": 48,
+     "cap": 48
+    },
+    {
+     "name": "WithdrawalCredentials",
+     "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "Amount",
+     "uint64": 81985529216486897
+    },
+    {
+     "name": "Signature",
+     "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80",
+     "len": 96,
+     "cap": 96
+    }
+   ]
+  }
+ },
+ {
+  "id": "builder-deposit-request-decoder-accept-values-2",
+  "type": "v1.BuilderDepositRequest",
+  "method": "UnmarshalSSZ",
+  "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Pubkey",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 48,
+     "cap": 48
+    },
+    {
+     "name": "WithdrawalCredentials",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "Amount",
+     "uint64": 18446744073709551615
+    },
+    {
+     "name": "Signature",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 96,
+     "cap": 96
+    }
+   ]
+  }
+ },
+ {
+  "id": "builder-deposit-request-decoder-reject-size-0",
+  "type": "v1.BuilderDepositRequest",
+  "method": "UnmarshalSSZ",
+  "in": "",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "builder-deposit-request-decoder-reject-size-183",
+  "type": "v1.BuilderDepositRequest",
+  "method": "UnmarshalSSZ",
+  "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "builder-deposit-request-decoder-reject-size-185",
+  "type": "v1.BuilderDepositRequest",
+  "method": "UnmarshalSSZ",
+  "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "builder-deposit-request-encoder-fast-path-values-0-prefix-0-spare-0",
+  "type": "v1.BuilderDepositRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Pubkey",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   },
+   {
+    "name": "Signature",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 184
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 184,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-deposit-request-encoder-fast-path-values-0-prefix-0-spare-5",
+  "type": "v1.BuilderDepositRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Pubkey",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   },
+   {
+    "name": "Signature",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 189
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 189,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-deposit-request-encoder-fast-path-values-0-prefix-7-spare-0",
+  "type": "v1.BuilderDepositRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Pubkey",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   },
+   {
+    "name": "Signature",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 191
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 191,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-deposit-request-encoder-fast-path-values-0-prefix-7-spare-5",
+  "type": "v1.BuilderDepositRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Pubkey",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "uint64": 0
+   },
+   {
+    "name": "Signature",
+    "bytes": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 196
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 196,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-deposit-request-encoder-fast-path-values-1-prefix-0-spare-0",
+  "type": "v1.BuilderDepositRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Pubkey",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
+   },
+   {
+    "name": "Amount",
+    "uint64": 81985529216486897
+   },
+   {
+    "name": "Signature",
+    "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 184
+  },
+  "exp": {
+   "error": null,
+   "out": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292af1cdab89674523012122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80",
+   "same_array": true,
+   "out_cap": 184,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-deposit-request-encoder-fast-path-values-1-prefix-0-spare-5",
+  "type": "v1.BuilderDepositRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Pubkey",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
+   },
+   {
+    "name": "Amount",
+    "uint64": 81985529216486897
+   },
+   {
+    "name": "Signature",
+    "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 189
+  },
+  "exp": {
+   "error": null,
+   "out": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292af1cdab89674523012122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80",
+   "same_array": true,
+   "out_cap": 189,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-deposit-request-encoder-fast-path-values-1-prefix-7-spare-0",
+  "type": "v1.BuilderDepositRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Pubkey",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
+   },
+   {
+    "name": "Amount",
+    "uint64": 81985529216486897
+   },
+   {
+    "name": "Signature",
+    "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 191
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292af1cdab89674523012122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80",
+   "same_array": true,
+   "out_cap": 191,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-deposit-request-encoder-fast-path-values-1-prefix-7-spare-5",
+  "type": "v1.BuilderDepositRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Pubkey",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a"
+   },
+   {
+    "name": "Amount",
+    "uint64": 81985529216486897
+   },
+   {
+    "name": "Signature",
+    "bytes": "2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 196
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292af1cdab89674523012122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80",
+   "same_array": true,
+   "out_cap": 196,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-deposit-request-encoder-fast-path-values-2-prefix-0-spare-0",
+  "type": "v1.BuilderDepositRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Pubkey",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   {
+    "name": "Amount",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Signature",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 184
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 184,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-deposit-request-encoder-fast-path-values-2-prefix-0-spare-5",
+  "type": "v1.BuilderDepositRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Pubkey",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   {
+    "name": "Amount",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Signature",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 189
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 189,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-deposit-request-encoder-fast-path-values-2-prefix-7-spare-0",
+  "type": "v1.BuilderDepositRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Pubkey",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   {
+    "name": "Amount",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Signature",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 191
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 191,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "builder-deposit-request-encoder-fast-path-values-2-prefix-7-spare-5",
+  "type": "v1.BuilderDepositRequest",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Pubkey",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   {
+    "name": "Amount",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Signature",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 196
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 196,
+   "receiver_unchanged": true
+  }
+ }
+]

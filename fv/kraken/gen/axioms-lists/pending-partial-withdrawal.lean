@@ -1,0 +1,75 @@
+import Prysm.PendingPartialWithdrawal.DecodeRejectSize
+import Prysm.PendingPartialWithdrawal.Spec
+import Prysm.PendingPartialWithdrawal.DecodeSpec
+import Prysm.PendingPartialWithdrawal.WitnessDecodeRejectSize
+import Prysm.PendingPartialWithdrawal.DecodeAccept
+import Prysm.PendingPartialWithdrawal.WitnessDecodeAccept
+import Prysm.PendingPartialWithdrawal.DecodeSpecAccept
+import Prysm.PendingPartialWithdrawal.Code
+import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPath
+import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPathSpec
+import Prysm.PendingPartialWithdrawal.WitnessGeneratedEncodeFastPath
+
+/-! Hand list of the `PendingPartialWithdrawal` declarations for `gen/checks/axioms_gate.py`.
+Each name must be in the declaration dump and use only the standard axioms. -/
+
+#print axioms Prysm.PendingPartialWithdrawal.Decode.reject_size
+#print axioms Prysm.PendingPartialWithdrawal.desc_wellFormed
+#print axioms Prysm.PendingPartialWithdrawal.desc_fixedSize
+#print axioms Prysm.PendingPartialWithdrawal.desc_serialize_checker
+#print axioms Prysm.PendingPartialWithdrawal.SszValue.encode_size
+#print axioms Prysm.PendingPartialWithdrawal.SszValue.toValue_fits
+#print axioms Prysm.PendingPartialWithdrawal.SszValue.toValue_injective
+#print axioms Prysm.PendingPartialWithdrawal.SszValue.serialize_eq
+#print axioms Prysm.PendingPartialWithdrawal.SszValue.roundtrip
+#print axioms Prysm.PendingPartialWithdrawal.SszValue.accepted_is_encoding
+#print axioms Prysm.PendingPartialWithdrawal.SszValue.spec_accepts_iff
+#print axioms Prysm.PendingPartialWithdrawal.SszValue.spec_rejects
+#print axioms Prysm.PendingPartialWithdrawal.desc_deserialize_checker
+#print axioms Prysm.PendingPartialWithdrawal.Decode.reject_size_spec
+#print axioms Prysm.PendingPartialWithdrawal.Decode.reject_complete
+#print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeRejectSize.runs
+#print axioms Prysm.PendingPartialWithdrawal.Decode.accept
+#print axioms Prysm.PendingPartialWithdrawal.Decode.epilogue
+#print axioms Prysm.PendingPartialWithdrawal.Decode.head
+#print axioms Prysm.PendingPartialWithdrawal.Decode.accept_guard
+#print axioms Prysm.PendingPartialWithdrawal.Decode.head_stack_pointer
+#print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.program_length
+#print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.labels_fresh_at_1
+#print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.labels_fresh_at_110
+#print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.labels_fresh_at_173
+#print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.placed_at_1
+#print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.placed_at_110
+#print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.placed_at_173
+#print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.host_program_eq
+#print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs
+#print axioms Prysm.PendingPartialWithdrawal.Decode.accept_spec
+#print axioms Prysm.PendingPartialWithdrawal.Code.marshalSSZTo
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_epilogue
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_epilogue_kind
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_field_0
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_field_0_kind
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_field_1
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_field_1_kind
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_field_2
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_field_2_kind
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_fast
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_fast_kind
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_head
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_head_kind
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_layout
+#print axioms Prysm.PendingPartialWithdrawal.SszValue.encode_toList_generated
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_fast_spec
+#print axioms Prysm.PendingPartialWithdrawal.Encode.generated_fast_split
+#print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.program
+#print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.program_length
+#print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.block
+#print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.initial_state
+#print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.labels_fresh_at_0
+#print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.placed_at_0
+#print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.host
+#print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.mem
+#print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.runs_empty
+#print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.runs_prefix
+#print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.word_bytes
+#print axioms Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.zeros

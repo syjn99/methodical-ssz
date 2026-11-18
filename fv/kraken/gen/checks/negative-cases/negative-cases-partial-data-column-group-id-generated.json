@@ -1,0 +1,70 @@
+[
+ {
+  "id": "partial-data-column-group-id-decode-accept-spec-control",
+  "module": "Prysm/PartialDataColumnGroupID/DecodeSpec.lean",
+  "theorem": "Prysm.PartialDataColumnGroupID.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "partial-data-column-group-id-decode-generated-accept-statement-rax-0-to-1",
+  "module": "Prysm/PartialDataColumnGroupID/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PartialDataColumnGroupID.Decode.generated_accept",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "partial-data-column-group-id-decode-generated-reject-statement-rax-e0-to-e1",
+  "module": "Prysm/PartialDataColumnGroupID/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PartialDataColumnGroupID.Decode.generated_reject",
+  "kind": "statement",
+  "old": "st.data.regs.rax = e0",
+  "new": "st.data.regs.rax = e1"
+ },
+ {
+  "id": "partial-data-column-group-id-decode-accept-spec-statement-hlen-none-to-1",
+  "module": "Prysm/PartialDataColumnGroupID/DecodeSpec.lean",
+  "theorem": "Prysm.PartialDataColumnGroupID.Decode.accept_spec",
+  "kind": "statement",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
+ },
+ {
+  "id": "partial-data-column-group-id-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/PartialDataColumnGroupID/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PartialDataColumnGroupID.Witness.GeneratedDecodeAccept.runs",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "partial-data-column-group-id-encode-generated-fast-spec-control",
+  "module": "Prysm/PartialDataColumnGroupID/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PartialDataColumnGroupID.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "partial-data-column-group-id-encode-generated-fast-statement-rax-rbx-to-rcx",
+  "module": "Prysm/PartialDataColumnGroupID/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PartialDataColumnGroupID.Encode.generated_fast",
+  "kind": "statement",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "partial-data-column-group-id-encode-generated-fast-spec-statement-hcap-40-to-32",
+  "module": "Prysm/PartialDataColumnGroupID/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PartialDataColumnGroupID.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 40 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 32 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "partial-data-column-group-id-witness-generated-encode-fast-path-runs-empty-statement-rax-0x10100-to-0x8",
+  "module": "Prysm/PartialDataColumnGroupID/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PartialDataColumnGroupID.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x10100",
+  "new": "st.data.regs.rax = 0x8"
+ }
+]

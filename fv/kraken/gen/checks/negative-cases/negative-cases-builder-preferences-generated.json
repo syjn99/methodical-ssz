@@ -1,0 +1,32 @@
+[
+ {
+  "id": "builder-preferences-encode-generated-fast-spec-control",
+  "module": "Prysm/BuilderPreferences/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BuilderPreferences.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "builder-preferences-encode-generated-fast-statement-rax-rbx-to-rcx",
+  "module": "Prysm/BuilderPreferences/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BuilderPreferences.Encode.generated_fast",
+  "kind": "statement",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "builder-preferences-encode-generated-fast-spec-statement-hcap-8-to-0",
+  "module": "Prysm/BuilderPreferences/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BuilderPreferences.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 0 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "builder-preferences-witness-generated-encode-fast-path-runs-empty-statement-rax-0x100a8-to-0x8",
+  "module": "Prysm/BuilderPreferences/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x100a8",
+  "new": "st.data.regs.rax = 0x8"
+ }
+]

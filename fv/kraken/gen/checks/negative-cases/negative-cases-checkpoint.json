@@ -1,0 +1,954 @@
+[
+ {
+  "id": "checkpoint-decode-accept-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/DecodeAccept.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "checkpoint-decode-accept-code-cmp-0x28-to-0x29",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/DecodeAccept.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  cmp $0x28,%rcx",
+  "new": "  cmp $0x29,%rcx"
+ },
+ {
+  "id": "checkpoint-decode-accept-code-add-0x8-to-0x10",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/DecodeAccept.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  add $0x8,%rax",
+  "new": "  add $0x10,%rax"
+ },
+ {
+  "id": "checkpoint-decode-accept-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/DecodeAccept.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  mov $0x8,%ecx",
+  "new": "  mov $0x9,%ecx"
+ },
+ {
+  "id": "checkpoint-decode-accept-statement-rax-0-to-1",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/DecodeAccept.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 1"
+ },
+ {
+  "id": "checkpoint-decode-accept-tail-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/DecodeAccept.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept_tail",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "checkpoint-decode-accept-tail-code-movq-0x20-to-0x21",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/DecodeAccept.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept_tail",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "line": 73,
+  "old": "  movq $0x20,0x20(%rdx)",
+  "new": "  movq $0x21,0x20(%rdx)"
+ },
+ {
+  "id": "checkpoint-decode-accept-tail-code-mov-0x20-to-0x1f",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/DecodeAccept.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept_tail",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "line": 69,
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx"
+ },
+ {
+  "id": "checkpoint-decode-accept-tail-code-mov-0x10-rdx-to-0x18-rdx",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/DecodeAccept.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept_tail",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  mov %rsi,0x10(%rdx)",
+  "new": "  mov %rsi,0x18(%rdx)"
+ },
+ {
+  "id": "checkpoint-decode-reject-size-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/DecodeRejectSize.lean",
+  "theorem": "Prysm.Checkpoint.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "checkpoint-decode-reject-size-code-cmp-0x28-to-0x29",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/DecodeRejectSize.lean",
+  "theorem": "Prysm.Checkpoint.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  cmp $0x28,%rcx",
+  "new": "  cmp $0x29,%rcx"
+ },
+ {
+  "id": "checkpoint-decode-reject-size-code-mov-ssz-err-size-rip-to-ssz-err-size-8-rip",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/DecodeRejectSize.lean",
+  "theorem": "Prysm.Checkpoint.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  mov ssz.ErrSize(%rip),%rax",
+  "new": "  mov ssz.ErrSize+8(%rip),%rax"
+ },
+ {
+  "id": "checkpoint-decode-reject-size-statement-rax-e0-to-e1",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/DecodeRejectSize.lean",
+  "theorem": "Prysm.Checkpoint.Decode.reject_size",
+  "old": "st.data.regs.rax = e0 ∧",
+  "new": "st.data.regs.rax = e1 ∧"
+ },
+ {
+  "id": "checkpoint-decode-epoch-err-unreachable-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/DecodeRejectSize.lean",
+  "theorem": "Prysm.Checkpoint.Decode.epoch_err_unreachable",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "checkpoint-decode-epoch-err-unreachable-code-je-to-jne",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/DecodeRejectSize.lean",
+  "theorem": "Prysm.Checkpoint.Decode.epoch_err_unreachable",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4",
+  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-code-cmpq-0x20-to-0x21",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  cmpq $0x20,0x18(%rax)",
+  "new": "  cmpq $0x21,0x18(%rax)"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-code-lea-0x8-rcx-to-0x10-rcx",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  lea 0x8(%rcx),%rdx",
+  "new": "  lea 0x10(%rcx),%rdx"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-code-mov-0x8-rax-to-0x10-rax",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov 0x8(%rax),%r8",
+  "new": "  mov 0x10(%rax),%r8"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-code-mov-0x20-to-0x1f",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-code-jne-to-je",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108",
+  "new": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-statement-rdi-0-to-1",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path",
+  "old": "st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0",
+  "new": "st.data.regs.rdi = 1 ∧ st.data.regs.rsi = 0"
+ },
+ {
+  "id": "checkpoint-decode-then-encode-encode-decoded-receiver-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/DecodeThenEncodeReceiver.lean",
+  "theorem": "Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver"
+ },
+ {
+  "id": "checkpoint-decode-then-encode-encode-decoded-receiver-statement-e8-none-to-none",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/DecodeThenEncodeReceiver.lean",
+  "theorem": "Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver",
+  "old": "Eq ((e8 ++ root).At s.regs.rbx.toBitVec)",
+  "new": "Eq ((root ++ e8).At s.regs.rbx.toBitVec)"
+ },
+ {
+  "id": "checkpoint-decode-then-encode-encode-decoded-receiver-statement-rbx-40-to-41",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/DecodeThenEncodeReceiver.lean",
+  "theorem": "Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver",
+  "old": "st.data.regs.rbx.toNat = 40 ∧",
+  "new": "st.data.regs.rbx.toNat = 41 ∧"
+ },
+ {
+  "id": "checkpoint-encode-reject-length-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeRejectLength.lean",
+  "theorem": "Prysm.Checkpoint.Encode.reject_length",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "checkpoint-encode-reject-length-code-mov-ssz-err-bytes-length-rip-to-ssz-err-bytes-length-8-rip",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeRejectLength.lean",
+  "theorem": "Prysm.Checkpoint.Encode.reject_length",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov ssz.ErrBytesLength(%rip),%rdi",
+  "new": "  mov ssz.ErrBytesLength+8(%rip),%rdi"
+ },
+ {
+  "id": "checkpoint-encode-reject-length-code-mov-rbx-to-rdi",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeRejectLength.lean",
+  "theorem": "Prysm.Checkpoint.Encode.reject_length",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov %rbx,%rcx",
+  "new": "  mov %rdi,%rcx"
+ },
+ {
+  "id": "checkpoint-encode-reject-length-statement-d0-d0-at-s-to-none",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeRejectLength.lean",
+  "theorem": "Prysm.Checkpoint.Encode.reject_length",
+  "old": " ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n      ⋆ Eq ((Int.toBytes 8 e0",
+  "new": "\n      ⋆ Eq ((Int.toBytes 8 e0",
+  "note": "without ownership of dst[len..len+8] the epoch store before the length test cannot be stepped"
+ },
+ {
+  "id": "checkpoint-size-result-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeSpec.lean",
+  "theorem": "Prysm.Checkpoint.Size.result",
+  "code_definition": "sizeSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ.S"
+ },
+ {
+  "id": "checkpoint-size-result-code-mov-0x28-to-0x29",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeSpec.lean",
+  "theorem": "Prysm.Checkpoint.Size.result",
+  "code_definition": "sizeSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ.S",
+  "old": "  mov $0x28,%eax",
+  "new": "  mov $0x29,%eax"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-spec-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeSpec.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path_spec"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-spec-statement-rbx-none-to-1",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeSpec.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path_spec",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))"
+ },
+ {
+  "id": "checkpoint-layout-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/GoValue.lean",
+  "theorem": "Prysm.Checkpoint.layout"
+ },
+ {
+  "id": "checkpoint-layout-statement-field-offset-8-to-16",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/GoValue.lean",
+  "theorem": "Prysm.Checkpoint.layout",
+  "old": "fieldOffset \"Epoch\" = 8",
+  "new": "fieldOffset \"Epoch\" = 16"
+ },
+ {
+  "id": "checkpoint-after-decode-go-value-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/GoValue.lean",
+  "theorem": "Prysm.Checkpoint.after_decode_goValue"
+ },
+ {
+  "id": "checkpoint-after-decode-go-value-statement-go-value-p-to-0",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/GoValue.lean",
+  "theorem": "Prysm.Checkpoint.after_decode_goValue",
+  "old": "goValue (afterDecode b e8 p) = true",
+  "new": "goValue (afterDecode b e8 0) = true",
+  "note": "Root = (nil, 32, 32) is not a Go value"
+ },
+ {
+  "id": "checkpoint-decode-then-encode-round-trip-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+  "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip"
+ },
+ {
+  "id": "checkpoint-decode-then-encode-round-trip-statement-rax-0-to-1",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+  "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "checkpoint-decode-then-encode-round-trip-statement-hlen-40-to-41",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+  "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
+  "old": "(hlen : s.regs.rcx = 40)",
+  "new": "(hlen : s.regs.rcx = 41)"
+ },
+ {
+  "id": "checkpoint-decode-then-encode-round-trip-statement-e8-none-to-none",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+  "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
+  "old": "Eq ((e8 ++ root).At (dptr.toBitVec + dlen.toBitVec))",
+  "new": "Eq ((root ++ e8).At (dptr.toBitVec + dlen.toBitVec))"
+ },
+ {
+  "id": "checkpoint-decode-then-encode-round-trip-statement-rbx-40-to-41",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+  "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
+  "old": "st'.data.regs.rbx.toNat = dlen.toNat + 40",
+  "new": "st'.data.regs.rbx.toNat = dlen.toNat + 41"
+ },
+ {
+  "id": "checkpoint-decode-then-encode-round-trip-statement-hcap2-40-to-39",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+  "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
+  "old": "(hcap2 : dlen.toNat + 40 ≤ cap.toNat)",
+  "new": "(hcap2 : dlen.toNat + 39 ≤ cap.toNat)"
+ },
+ {
+  "id": "checkpoint-decode-then-encode-round-trip-statement-ra2-none-to-8",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+  "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
+  "old": "(Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ F) mem2",
+  "new": "(Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8)) ⋆ F) mem2"
+ },
+ {
+  "id": "checkpoint-encode-grow-first-site-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "checkpoint-encode-grow-first-site-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov $0x8,%edi",
+  "new": "  mov $0x9,%edi"
+ },
+ {
+  "id": "checkpoint-encode-grow-first-site-code-mov-0x88-rsp-to-0x90-rsp",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov %rcx,0x88(%rsp)",
+  "new": "  mov %rcx,0x90(%rsp)"
+ },
+ {
+  "id": "checkpoint-encode-grow-first-site-code-mov-0x88-rsp-to-0x80-rsp",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov 0x88(%rsp),%rcx",
+  "new": "  mov 0x80(%rsp),%rcx"
+ },
+ {
+  "id": "checkpoint-encode-grow-first-site-code-jae-to-jb",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b",
+  "new": "  jb L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b"
+ },
+ {
+  "id": "checkpoint-encode-grow-first-site-statement-rbx-40-to-41",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 41"
+ },
+ {
+  "id": "checkpoint-encode-grow-first-site-statement-hgrow-none-to-none",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
+  "old": "(hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)",
+  "new": "(hgrow : s.regs.rdi.toNat ≤ s.regs.rcx.toNat + 8)",
+  "note": "with cap = len+8 the first site does not grow"
+ },
+ {
+  "id": "checkpoint-encode-grow-first-site-code-mov-rdi-to-rdx",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "line": 24,
+  "old": "  mov %rdi,%rcx",
+  "new": "  mov %rdx,%rcx",
+  "note": "growslice oldCap argument := newLen at the first site"
+ },
+ {
+  "id": "checkpoint-encode-grow-first-site-statement-hfit-40-to-39",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
+  "old": "(hfit : s.regs.rcx.toNat + 40 ≤",
+  "new": "(hfit : s.regs.rcx.toNat + 39 ≤"
+ },
+ {
+  "id": "checkpoint-desc-serialize-checker-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/SpecEquivalence.lean",
+  "theorem": "Prysm.Checkpoint.desc_serialize_checker"
+ },
+ {
+  "id": "checkpoint-desc-serialize-checker-statement-checker-desc-field-0-to-uint-4",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/SpecEquivalence.lean",
+  "theorem": "Prysm.Checkpoint.desc_serialize_checker",
+  "old": "serialize desc v = serialize checkerDesc v",
+  "new": "serialize desc v = serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 0 (.uint 4)) | x => x) v"
+ },
+ {
+  "id": "checkpoint-desc-deserialize-checker-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/SpecEquivalence.lean",
+  "theorem": "Prysm.Checkpoint.desc_deserialize_checker"
+ },
+ {
+  "id": "checkpoint-desc-deserialize-checker-statement-checker-desc-field-1-to-byte-vector-31",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/SpecEquivalence.lean",
+  "theorem": "Prysm.Checkpoint.desc_deserialize_checker",
+  "old": "deserialize desc bs = deserialize checkerDesc bs",
+  "new": "deserialize desc bs = deserialize (match checkerDesc with | .container ns ds => .container ns (ds.set 1 (.byteVector 31)) | x => x) bs"
+ },
+ {
+  "id": "checkpoint-witness-decode-reject-size-runs-spec-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/WitnessDecodeRejectSizeSpec.lean",
+  "theorem": "Prysm.Checkpoint.Witness.DecodeRejectSize.runs_spec"
+ },
+ {
+  "id": "checkpoint-witness-decode-reject-size-runs-spec-statement-rax-0x10e8-to-0x10e9",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/WitnessDecodeRejectSizeSpec.lean",
+  "theorem": "Prysm.Checkpoint.Witness.DecodeRejectSize.runs_spec",
+  "old": "st.data.regs.rax = 0x10e8",
+  "new": "st.data.regs.rax = 0x10e9"
+ },
+ {
+  "id": "checkpoint-witness-decode-accept-runs-spec-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/WitnessDecodeAcceptSpec.lean",
+  "theorem": "Prysm.Checkpoint.Witness.DecodeAccept.runs_spec"
+ },
+ {
+  "id": "checkpoint-witness-decode-accept-runs-spec-statement-rax-0-to-1",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/WitnessDecodeAcceptSpec.lean",
+  "theorem": "Prysm.Checkpoint.Witness.DecodeAccept.runs_spec",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 1"
+ },
+ {
+  "id": "checkpoint-decode-accept-function-spec-holds-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/FunctionSpecsAsNestedField.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept_function_spec_holds"
+ },
+ {
+  "id": "checkpoint-decode-accept-function-spec-holds-statement-hms-makeslice-contract-elf-data-prysm-target-to-true",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/FunctionSpecsAsNestedField.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept_function_spec_holds",
+  "old": "(hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S) (hmm : MemmoveContract S) : Decode.accept_function_spec Heap S",
+  "new": "(hms : True) (hmm : MemmoveContract S) : Decode.accept_function_spec Heap S",
+  "note": "the makeslice hypothesis keeps its name with type True; without the makeslice contract the decoder spec cannot be derived"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-function-spec-holds-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/FunctionSpecsAsNestedField.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path_function_spec_holds"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-function-spec-holds-statement-s-memmove-contract-s-to-true",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/FunctionSpecsAsNestedField.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path_function_spec_holds",
+  "old": "(S : Nat) (hmm : MemmoveContract S) : Encode.fast_path_function_spec S",
+  "new": "(S : Nat) (hmm : True) : Encode.fast_path_function_spec S",
+  "note": "the memmove hypothesis keeps its name with type True; without the memmove contract the encoder spec cannot be derived"
+ },
+ {
+  "id": "checkpoint-encode-tail-fit-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeTail.lean",
+  "theorem": "Prysm.Checkpoint.Encode.tail_fit",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "checkpoint-encode-tail-fit-code-jae-to-jbe",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeTail.lean",
+  "theorem": "Prysm.Checkpoint.Encode.tail_fit",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf",
+  "new": "  jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf",
+  "note": "second capacity test inverted"
+ },
+ {
+  "id": "checkpoint-encode-tail-reject-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeTail.lean",
+  "theorem": "Prysm.Checkpoint.Encode.tail_reject",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "checkpoint-encode-tail-reject-code-mov-ssz-err-bytes-length-8-rip-to-ssz-err-bytes-length-rip",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeTail.lean",
+  "theorem": "Prysm.Checkpoint.Encode.tail_reject",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov ssz.ErrBytesLength+8(%rip),%rsi",
+  "new": "  mov ssz.ErrBytesLength(%rip),%rsi",
+  "note": "second error word read from the first (reject path only)"
+ },
+ {
+  "id": "checkpoint-encode-tail-grow-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeTailGrow.lean",
+  "theorem": "Prysm.Checkpoint.Encode.tail_grow",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "checkpoint-encode-tail-grow-code-mov-0x20-to-0x28",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeTailGrow.lean",
+  "theorem": "Prysm.Checkpoint.Encode.tail_grow",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov $0x20,%edi",
+  "new": "  mov $0x28,%edi",
+  "note": "growslice num 40: old = len bytes, not len + 8"
+ },
+ {
+  "id": "checkpoint-encode-tail-grow-code-mov-0x28-rsp-to-0x30-rsp",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeTailGrow.lean",
+  "theorem": "Prysm.Checkpoint.Encode.tail_grow",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov 0x28(%rsp),%rdx",
+  "new": "  mov 0x30(%rsp),%rdx",
+  "note": "restored len + 8 read from the wrong slot"
+ },
+ {
+  "id": "checkpoint-encode-tail-grow-call-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeTailGrow.lean",
+  "theorem": "Prysm.Checkpoint.Encode.tail_grow_call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "checkpoint-encode-tail-grow-call-statement-rdi-32-to-8",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeTailGrow.lean",
+  "theorem": "Prysm.Checkpoint.Encode.tail_grow_call",
+  "note": "the second growslice is called with num = 32",
+  "old": "∧ st.data.regs.rdi.toNat = 32 ∧",
+  "new": "∧ st.data.regs.rdi.toNat = 8 ∧"
+ },
+ {
+  "id": "checkpoint-encode-head-fit-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeHead.lean",
+  "theorem": "Prysm.Checkpoint.Encode.head_fit",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "checkpoint-encode-head-fit-code-jae-to-jbe",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeHead.lean",
+  "theorem": "Prysm.Checkpoint.Encode.head_fit",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b",
+  "new": "  jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b",
+  "note": "first capacity test inverted"
+ },
+ {
+  "id": "checkpoint-encode-head-grow-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeHead.lean",
+  "theorem": "Prysm.Checkpoint.Encode.head_grow",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "checkpoint-encode-head-grow-code-mov-0x78-rsp-to-0x70-rsp",
+  "kind": "code",
+  "module": "Prysm/Checkpoint/EncodeHead.lean",
+  "theorem": "Prysm.Checkpoint.Encode.head_grow",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov %rax,0x78(%rsp)",
+  "new": "  mov %rax,0x70(%rsp)",
+  "note": "receiver spilled to the wrong slot on the growslice path (later reload reads rsp + 8)"
+ },
+ {
+  "id": "checkpoint-encode-grow-second-site-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeGrowSecondSite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_second_site"
+ },
+ {
+  "id": "checkpoint-encode-grow-second-site-statement-hhi-40-to-41",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeGrowSecondSite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_second_site",
+  "old": "(hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 40)",
+  "new": "(hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 41)",
+  "note": "cap = len + 40 takes the fast path, not the growslice"
+ },
+ {
+  "id": "checkpoint-encode-grow-any-site-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeGrowAnySite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_any_site"
+ },
+ {
+  "id": "checkpoint-encode-grow-any-site-statement-rdi-32-to-40",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeGrowAnySite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_any_site",
+  "old": "st.data.regs.rdi.toNat = 32",
+  "new": "st.data.regs.rdi.toNat = 40",
+  "note": "the second growslice is called with num = 32 (the root length)"
+ },
+ {
+  "id": "checkpoint-encode-reject-length-grow-first-site-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeGrowAnySite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.reject_length_grow_first_site"
+ },
+ {
+  "id": "checkpoint-encode-reject-length-grow-first-site-statement-pre-none-to-e8-s-regs",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeGrowAnySite.lean",
+  "theorem": "Prysm.Checkpoint.Encode.reject_length_grow_first_site",
+  "old": "          ⋆ Eq (pre.At s.regs.rbx.toBitVec)\n          ⋆ Eq (pre.At nb)",
+  "new": "          ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n          ⋆ Eq (pre.At nb)",
+  "note": "after growth: the epoch bytes are in the new block, not in the caller's spare capacity"
+ },
+ {
+  "id": "checkpoint-encode-cover-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeCover.lean",
+  "theorem": "Prysm.Checkpoint.Encode.cover"
+ },
+ {
+  "id": "checkpoint-encode-cover-statement-pre-none-to-none",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeCover.lean",
+  "theorem": "Prysm.Checkpoint.Encode.cover",
+  "old": "(Eq ((pre ++ bs.toList).At st.data.regs.rax.toBitVec)",
+  "new": "(Eq ((bs.toList ++ pre).At st.data.regs.rax.toBitVec)",
+  "note": "output is dst ++ serialize, not serialize ++ dst"
+ },
+ {
+  "id": "checkpoint-encode-reject-length-cover-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeCover.lean",
+  "theorem": "Prysm.Checkpoint.Encode.reject_length_cover"
+ },
+ {
+  "id": "checkpoint-encode-reject-length-cover-statement-rax-0-to-s-rbx-regs",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeCover.lean",
+  "theorem": "Prysm.Checkpoint.Encode.reject_length_cover",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0\n        ∧ st.data.regs.rcx = 0",
+  "new": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rbx = 0\n        ∧ st.data.regs.rcx = 0",
+  "note": "the reject returns a nil slice"
+ },
+ {
+  "id": "checkpoint-encode-grow-any-site-three-cases-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeGrowAnySiteThreeCases.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_any_site_three_cases"
+ },
+ {
+  "id": "checkpoint-encode-grow-any-site-three-cases-statement-av-8192-to-8191",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeGrowAnySiteThreeCases.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_any_site_three_cases",
+  "old": "∧ av' < 2 * nextSliceCap (s.regs.rcx.toNat + 40) st.data.regs.rcx.toNat + 8192 ∧",
+  "new": "∧ av' < 2 * nextSliceCap (s.regs.rcx.toNat + 40) st.data.regs.rcx.toNat + 8191 ∧",
+  "note": "the second call entry is reached only with the remaining heap strictly below the budget of the second call; a tighter bound is not derivable"
+ },
+ {
+  "id": "checkpoint-encode-grow-any-site-three-cases-statement-pre-none-to-8",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeGrowAnySiteThreeCases.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_any_site_three_cases",
+  "old": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec)) ⋆ Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))",
+  "new": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec + 8)) ⋆ Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))",
+  "note": "second growth: the first new block holds the epoch at nb + len, not after it"
+ },
+ {
+  "id": "checkpoint-encode-grow-any-site-three-cases-statement-next-slice-cap-40-to-41",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeGrowAnySiteThreeCases.lean",
+  "theorem": "Prysm.Checkpoint.Encode.grow_any_site_three_cases",
+  "old": "∧ nextSliceCap (s.regs.rcx.toNat + 40) C1 ≤ st.data.regs.rcx.toNat",
+  "new": "∧ nextSliceCap (s.regs.rcx.toNat + 41) C1 ≤ st.data.regs.rcx.toNat",
+  "note": "second growth: the second growslice is called with newLen = len + 40"
+ },
+ {
+  "id": "checkpoint-encode-cover-framed-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+  "theorem": "Prysm.Checkpoint.Encode.cover_framed"
+ },
+ {
+  "id": "checkpoint-encode-cover-framed-statement-spare-40-to-39",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+  "theorem": "Prysm.Checkpoint.Encode.cover_framed",
+  "old": "⋆ Eq ((spare.drop 40).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))",
+  "new": "⋆ Eq ((spare.drop 39).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))",
+  "note": "in place: the spare bytes after the 40 written bytes are unchanged"
+ },
+ {
+  "id": "checkpoint-encode-cover-framed-statement-pre-none-to-8",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+  "theorem": "Prysm.Checkpoint.Encode.cover_framed",
+  "old": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))",
+  "note": "growth at the second site: the epoch is written into the caller's spare at dst + len"
+ },
+ {
+  "id": "checkpoint-encode-cover-framed-statement-pc-label-runtime-growslice-to-int64-of-bit-vec-ra",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+  "theorem": "Prysm.Checkpoint.Encode.cover_framed",
+  "old": "∨ (st.pc = label \"runtime.growslice\" ∧ s.regs.rdi.toNat < s.regs.rcx.toNat + 8",
+  "new": "∨ (st.pc = Int64.ofBitVec ra.toBitVec ∧ s.regs.rdi.toNat < s.regs.rcx.toNat + 8",
+  "note": "the second call entry is the entry of the second growslice call, not a return"
+ },
+ {
+  "id": "checkpoint-encode-reject-length-cover-framed-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+  "theorem": "Prysm.Checkpoint.Encode.reject_length_cover_framed"
+ },
+ {
+  "id": "checkpoint-encode-reject-length-cover-framed-statement-e8-at-rbx-rcx-to-rbx-rcx-1",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+  "theorem": "Prysm.Checkpoint.Encode.reject_length_cover_framed",
+  "old": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))",
+  "note": "len + 8 <= cap: blk = dst, the epoch is at dst + len"
+ },
+ {
+  "id": "checkpoint-encode-reject-length-cover-framed-statement-e8-at-nb-rcx-to-nb-rcx-1",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+  "theorem": "Prysm.Checkpoint.Encode.reject_length_cover_framed",
+  "old": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec))",
+  "new": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec + 1))",
+  "note": "cap < len + 8: the epoch is in the new block at nb + len only"
+ },
+ {
+  "id": "checkpoint-witness-encode-reject-length-cover-receiver-control",
+  "kind": "control",
+  "module": "Prysm/Checkpoint/GoValueWitness.lean",
+  "theorem": "Prysm.Checkpoint.witness_encode_reject_length_cover_receiver"
+ },
+ {
+  "id": "checkpoint-witness-encode-reject-length-cover-receiver-statement-go-value-48-to-49",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/GoValueWitness.lean",
+  "theorem": "Prysm.Checkpoint.witness_encode_reject_length_cover_receiver",
+  "old": "goValue (receiverAt (Witness.EncodeRejectLengthCover.block (Int.toBytes 8 7) 48 []) 9032) = true",
+  "new": "goValue (receiverAt (Witness.EncodeRejectLengthCover.block (Int.toBytes 8 7) 49 []) 9032) = true",
+  "note": "len(Root) 49 > cap 48 is not a Go value"
+ },
+ {
+  "id": "checkpoint-witness-encode-cover-receiver-statement-0x12380-32-to-33",
+  "kind": "statement",
+  "module": "Prysm/Checkpoint/GoValueWitness.lean",
+  "theorem": "Prysm.Checkpoint.witness_encode_cover_receiver",
+  "old": "++ Int.toBytes 8 0x12380 ++ Int.toBytes 8 32 ++ Int.toBytes 8 32",
+  "new": "++ Int.toBytes 8 0x12380 ++ Int.toBytes 8 33 ++ Int.toBytes 8 32",
+  "note": "the cover witness receiver has len(Root) = 32"
+ },
+ {
+  "id": "checkpoint-encode-generated-fast-spec-control",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "checkpoint-witness-generated-encode-fast-path-runs-empty-control",
+  "module": "Prysm/Checkpoint/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "checkpoint-encode-generated-fast-statement-b1-8-to-16",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast",
+  "kind": "statement",
+  "old": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "checkpoint-encode-generated-fast-spec-statement-rbx-none-to-8",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "checkpoint-encode-generated-fast-spec-statement-hcap-40-to-32",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 40 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 32 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "checkpoint-witness-generated-encode-fast-path-runs-empty-statement-rax-0x10100-to-0x10108",
+  "module": "Prysm/Checkpoint/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x10100",
+  "new": "st.data.regs.rax = 0x10108"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-kind-tie-control",
+  "module": "Prysm/Checkpoint/EncodeFastPathKindTie.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path_kind_tie",
+  "kind": "control"
+ },
+ {
+  "id": "checkpoint-encode-fast-path-kind-tie-statement-encode-layout-32-to-48",
+  "module": "Prysm/Checkpoint/EncodeFastPathKindTie.lean",
+  "theorem": "Prysm.Checkpoint.Encode.fast_path_kind_tie",
+  "kind": "statement",
+  "old": "encodeLayout [.uint64, .bytes 32]",
+  "new": "encodeLayout [.uint64, .bytes 48]"
+ },
+ {
+  "id": "checkpoint-encode-generated-fast-statement-tie-control",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_statement_tie",
+  "kind": "control"
+ },
+ {
+  "id": "checkpoint-encode-generated-fast-kind-statement-prysm-checkpoint-to-eth1-data",
+  "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.Checkpoint.Encode.generated_fast_kind",
+  "kind": "statement",
+  "old": "Prysm.Checkpoint.encodeLayout",
+  "new": "Prysm.Eth1Data.encodeLayout",
+  "mutant_imports": [
+   "Prysm.Eth1Data.EncodeLayout"
+  ]
+ },
+ {
+  "id": "checkpoint-decode-accept-kind-tie-control",
+  "module": "Prysm/Checkpoint/DecodeAcceptKindTie.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept_kind_tie",
+  "kind": "control"
+ },
+ {
+  "id": "checkpoint-decode-accept-kind-tie-statement-decode-layout-32-to-48",
+  "module": "Prysm/Checkpoint/DecodeAcceptKindTie.lean",
+  "theorem": "Prysm.Checkpoint.Decode.accept_kind_tie",
+  "kind": "statement",
+  "old": "decodeLayout [.uint64, .bytes 32]",
+  "new": "decodeLayout [.uint64, .bytes 48]"
+ }
+]

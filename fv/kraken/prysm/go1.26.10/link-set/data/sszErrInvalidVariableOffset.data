@@ -1,0 +1,2 @@
+# sszErrInvalidVariableOffset: link/data.py, target-amd64 bytes [0x1380c90, 0x1380c90)
+at ssz.ErrInvalidVariableOffset 0

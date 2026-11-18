@@ -1,0 +1,416 @@
+[
+ {
+  "id": "blob-identifier-decoder-accept-values-0",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "UnmarshalSSZ",
+  "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "BlockRoot",
+     "bytes": "0000000000000000000000000000000000000000000000000000000000000000",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "Index",
+     "uint64": 0
+    }
+   ]
+  }
+ },
+ {
+  "id": "blob-identifier-decoder-accept-values-1",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "UnmarshalSSZ",
+  "in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1fefcdab8967452301",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "BlockRoot",
+     "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "Index",
+     "uint64": 81985529216486895
+    }
+   ]
+  }
+ },
+ {
+  "id": "blob-identifier-decoder-accept-values-2",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "UnmarshalSSZ",
+  "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "BlockRoot",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 32,
+     "cap": 32
+    },
+    {
+     "name": "Index",
+     "uint64": 18446744073709551615
+    }
+   ]
+  }
+ },
+ {
+  "id": "blob-identifier-decoder-reject-size-0",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "UnmarshalSSZ",
+  "in": "",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "blob-identifier-decoder-reject-size-39",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "UnmarshalSSZ",
+  "in": "010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "blob-identifier-decoder-reject-size-41",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "UnmarshalSSZ",
+  "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ]
+   }
+  }
+ },
+ {
+  "id": "blob-identifier-encoder-fast-path-values-0-prefix-0-spare-0",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockRoot",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Index",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 40,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-identifier-encoder-fast-path-values-0-prefix-0-spare-5",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockRoot",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Index",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 45
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 45,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-identifier-encoder-fast-path-values-0-prefix-7-spare-0",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockRoot",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Index",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 47
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 47,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-identifier-encoder-fast-path-values-0-prefix-7-spare-5",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockRoot",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Index",
+    "uint64": 0
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 52
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 52,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-identifier-encoder-fast-path-values-1-prefix-0-spare-0",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockRoot",
+    "bytes": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "exp": {
+   "error": null,
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3daffffffffffffffff",
+   "same_array": true,
+   "out_cap": 40,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-identifier-encoder-fast-path-values-1-prefix-0-spare-5",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockRoot",
+    "bytes": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 45
+  },
+  "exp": {
+   "error": null,
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3daffffffffffffffff",
+   "same_array": true,
+   "out_cap": 45,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-identifier-encoder-fast-path-values-1-prefix-7-spare-0",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockRoot",
+    "bytes": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 47
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3daffffffffffffffff",
+   "same_array": true,
+   "out_cap": 47,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-identifier-encoder-fast-path-values-1-prefix-7-spare-5",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockRoot",
+    "bytes": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "Index",
+    "uint64": 18446744073709551615
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 52
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3daffffffffffffffff",
+   "same_array": true,
+   "out_cap": 52,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-identifier-encoder-fast-path-values-2-prefix-0-spare-0",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockRoot",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Index",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "exp": {
+   "error": null,
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 40,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-identifier-encoder-fast-path-values-2-prefix-0-spare-5",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockRoot",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Index",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 45
+  },
+  "exp": {
+   "error": null,
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 45,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-identifier-encoder-fast-path-values-2-prefix-7-spare-0",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockRoot",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Index",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 47
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 47,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "blob-identifier-encoder-fast-path-values-2-prefix-7-spare-5",
+  "type": "v1alpha1.BlobIdentifier",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "BlockRoot",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Index",
+    "uint64": 7
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 52
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 52,
+   "receiver_unchanged": true
+  }
+ }
+]

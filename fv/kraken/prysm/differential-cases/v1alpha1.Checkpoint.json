@@ -1,0 +1,1566 @@
+[
+ {
+  "id": "checkpoint-decoder-accept-epoch-0-root-zero",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Epoch",
+     "uint64": 0
+    },
+    {
+     "name": "Root",
+     "bytes": "0000000000000000000000000000000000000000000000000000000000000000",
+     "len": 32,
+     "cap": 32
+    }
+   ]
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-0-root-zero-prefix-0-cap-40",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 0
+   },
+   {
+    "name": "Root",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "note": "fast (cap = len + 40)",
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-0-root-zero-prefix-3-cap-48",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 0
+   },
+   {
+    "name": "Root",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "aabbcc",
+   "cap": 48
+  },
+  "note": "fast (cap > len + 40)",
+  "exp": {
+   "error": null,
+   "out": "aabbcc00000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-round-trip-epoch-0-root-zero",
+  "type": "v1alpha1.Checkpoint",
+  "method": "roundtrip",
+  "in": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-accept-epoch-0-root-pattern",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "in": "0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Epoch",
+     "uint64": 0
+    },
+    {
+     "name": "Root",
+     "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+     "len": 32,
+     "cap": 32
+    }
+   ]
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-0-root-pattern-prefix-0-cap-40",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 0
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "note": "fast (cap = len + 40)",
+  "exp": {
+   "error": null,
+   "out": "0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-0-root-pattern-prefix-3-cap-48",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 0
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "aabbcc",
+   "cap": 48
+  },
+  "note": "fast (cap > len + 40)",
+  "exp": {
+   "error": null,
+   "out": "aabbcc0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-round-trip-epoch-0-root-pattern",
+  "type": "v1alpha1.Checkpoint",
+  "method": "roundtrip",
+  "in": "0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "exp": {
+   "error": null,
+   "out": "0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-accept-epoch-0-root-ff",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "in": "0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Epoch",
+     "uint64": 0
+    },
+    {
+     "name": "Root",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 32,
+     "cap": 32
+    }
+   ]
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-0-root-ff-prefix-0-cap-40",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 0
+   },
+   {
+    "name": "Root",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "note": "fast (cap = len + 40)",
+  "exp": {
+   "error": null,
+   "out": "0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-0-root-ff-prefix-3-cap-48",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 0
+   },
+   {
+    "name": "Root",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "aabbcc",
+   "cap": 48
+  },
+  "note": "fast (cap > len + 40)",
+  "exp": {
+   "error": null,
+   "out": "aabbcc0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-round-trip-epoch-0-root-ff",
+  "type": "v1alpha1.Checkpoint",
+  "method": "roundtrip",
+  "in": "0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "out": "0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-accept-epoch-123456789abcdef-root-zero",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "in": "efcdab89674523010000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Epoch",
+     "uint64": 81985529216486895
+    },
+    {
+     "name": "Root",
+     "bytes": "0000000000000000000000000000000000000000000000000000000000000000",
+     "len": 32,
+     "cap": 32
+    }
+   ]
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-123456789abcdef-root-zero-prefix-0-cap-40",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Root",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "note": "fast (cap = len + 40)",
+  "exp": {
+   "error": null,
+   "out": "efcdab89674523010000000000000000000000000000000000000000000000000000000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-123456789abcdef-root-zero-prefix-3-cap-48",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Root",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "aabbcc",
+   "cap": 48
+  },
+  "note": "fast (cap > len + 40)",
+  "exp": {
+   "error": null,
+   "out": "aabbccefcdab89674523010000000000000000000000000000000000000000000000000000000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-round-trip-epoch-123456789abcdef-root-zero",
+  "type": "v1alpha1.Checkpoint",
+  "method": "roundtrip",
+  "in": "efcdab89674523010000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "out": "efcdab89674523010000000000000000000000000000000000000000000000000000000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-accept-epoch-123456789abcdef-root-pattern",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "in": "efcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Epoch",
+     "uint64": 81985529216486895
+    },
+    {
+     "name": "Root",
+     "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+     "len": 32,
+     "cap": 32
+    }
+   ]
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-123456789abcdef-root-pattern-prefix-0-cap-40",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "note": "fast (cap = len + 40)",
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-123456789abcdef-root-pattern-prefix-3-cap-48",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "aabbcc",
+   "cap": 48
+  },
+  "note": "fast (cap > len + 40)",
+  "exp": {
+   "error": null,
+   "out": "aabbccefcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-round-trip-epoch-123456789abcdef-root-pattern",
+  "type": "v1alpha1.Checkpoint",
+  "method": "roundtrip",
+  "in": "efcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-accept-epoch-123456789abcdef-root-ff",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "in": "efcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Epoch",
+     "uint64": 81985529216486895
+    },
+    {
+     "name": "Root",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 32,
+     "cap": 32
+    }
+   ]
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-123456789abcdef-root-ff-prefix-0-cap-40",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Root",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "note": "fast (cap = len + 40)",
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-123456789abcdef-root-ff-prefix-3-cap-48",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Root",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "aabbcc",
+   "cap": 48
+  },
+  "note": "fast (cap > len + 40)",
+  "exp": {
+   "error": null,
+   "out": "aabbccefcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-round-trip-epoch-123456789abcdef-root-ff",
+  "type": "v1alpha1.Checkpoint",
+  "method": "roundtrip",
+  "in": "efcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-accept-epoch-ffffffffffffffff-root-zero",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "in": "ffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Epoch",
+     "uint64": 18446744073709551615
+    },
+    {
+     "name": "Root",
+     "bytes": "0000000000000000000000000000000000000000000000000000000000000000",
+     "len": 32,
+     "cap": 32
+    }
+   ]
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-ffffffffffffffff-root-zero-prefix-0-cap-40",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Root",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "note": "fast (cap = len + 40)",
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-ffffffffffffffff-root-zero-prefix-3-cap-48",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Root",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "aabbcc",
+   "cap": 48
+  },
+  "note": "fast (cap > len + 40)",
+  "exp": {
+   "error": null,
+   "out": "aabbccffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-round-trip-epoch-ffffffffffffffff-root-zero",
+  "type": "v1alpha1.Checkpoint",
+  "method": "roundtrip",
+  "in": "ffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-accept-epoch-ffffffffffffffff-root-pattern",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "in": "ffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Epoch",
+     "uint64": 18446744073709551615
+    },
+    {
+     "name": "Root",
+     "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+     "len": 32,
+     "cap": 32
+    }
+   ]
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-ffffffffffffffff-root-pattern-prefix-0-cap-40",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "note": "fast (cap = len + 40)",
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-ffffffffffffffff-root-pattern-prefix-3-cap-48",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "aabbcc",
+   "cap": 48
+  },
+  "note": "fast (cap > len + 40)",
+  "exp": {
+   "error": null,
+   "out": "aabbccffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-round-trip-epoch-ffffffffffffffff-root-pattern",
+  "type": "v1alpha1.Checkpoint",
+  "method": "roundtrip",
+  "in": "ffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-accept-epoch-ffffffffffffffff-root-ff",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "fields": [
+    {
+     "name": "Epoch",
+     "uint64": 18446744073709551615
+    },
+    {
+     "name": "Root",
+     "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     "len": 32,
+     "cap": 32
+    }
+   ]
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-ffffffffffffffff-root-ff-prefix-0-cap-40",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Root",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "note": "fast (cap = len + 40)",
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-epoch-ffffffffffffffff-root-ff-prefix-3-cap-48",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Root",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "aabbcc",
+   "cap": 48
+  },
+  "note": "fast (cap > len + 40)",
+  "exp": {
+   "error": null,
+   "out": "aabbccffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-round-trip-epoch-ffffffffffffffff-root-ff",
+  "type": "v1alpha1.Checkpoint",
+  "method": "roundtrip",
+  "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  }
+ },
+ {
+  "id": "checkpoint-decoder-reject-size-0",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 12297829382473034410
+   },
+   {
+    "name": "Root",
+    "bytes": "3333333333333333333333333333333333333333333333333333333333333333"
+   }
+  ],
+  "in": "",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ],
+    "is_not": [
+     "ErrBytesLength"
+    ]
+   },
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-decoder-reject-size-39",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 12297829382473034410
+   },
+   {
+    "name": "Root",
+    "bytes": "3333333333333333333333333333333333333333333333333333333333333333"
+   }
+  ],
+  "in": "111111111111111111111111111111111111111111111111111111111111111111111111111111",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ],
+    "is_not": [
+     "ErrBytesLength"
+    ]
+   },
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-decoder-reject-size-41",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 12297829382473034410
+   },
+   {
+    "name": "Root",
+    "bytes": "3333333333333333333333333333333333333333333333333333333333333333"
+   }
+  ],
+  "in": "1111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ],
+    "is_not": [
+     "ErrBytesLength"
+    ]
+   },
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-decoder-reject-size-80",
+  "type": "v1alpha1.Checkpoint",
+  "method": "UnmarshalSSZ",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 12297829382473034410
+   },
+   {
+    "name": "Root",
+    "bytes": "3333333333333333333333333333333333333333333333333333333333333333"
+   }
+  ],
+  "in": "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+  "exp": {
+   "error": {
+    "is": [
+     "ErrSize"
+    ],
+    "is_not": [
+     "ErrBytesLength"
+    ]
+   },
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-encoder-reject-root-length-0",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 7
+   },
+   {
+    "name": "Root",
+    "bytes": ""
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 48
+  },
+  "exp": {
+   "error": {
+    "is": [
+     "ErrBytesLength"
+    ],
+    "is_not": [
+     "ErrSize"
+    ]
+   },
+   "out_nil": true,
+   "backing": "070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-reject-root-length-31",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 7
+   },
+   {
+    "name": "Root",
+    "bytes": "22222222222222222222222222222222222222222222222222222222222222"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 48
+  },
+  "exp": {
+   "error": {
+    "is": [
+     "ErrBytesLength"
+    ],
+    "is_not": [
+     "ErrSize"
+    ]
+   },
+   "out_nil": true,
+   "backing": "070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-reject-root-length-33",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 7
+   },
+   {
+    "name": "Root",
+    "bytes": "222222222222222222222222222222222222222222222222222222222222222222"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 48
+  },
+  "exp": {
+   "error": {
+    "is": [
+     "ErrBytesLength"
+    ],
+    "is_not": [
+     "ErrSize"
+    ]
+   },
+   "out_nil": true,
+   "backing": "070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-grow-prefix-0-cap-0",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 5
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 0
+  },
+  "note": "growslice",
+  "exp": {
+   "error": null,
+   "out": "0500000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-grow-prefix-30-cap-36",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Root",
+    "bytes": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "dst": {
+   "prefix": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d",
+   "cap": 36
+  },
+  "note": "growslice",
+  "exp": {
+   "error": null,
+   "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5defcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-capacity-prefix-30-cap-30",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 9
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d",
+   "cap": 30
+  },
+  "note": "cap = len: growslice, then (real Go: 64 < 70) a second growslice",
+  "exp": {
+   "error": null,
+   "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-capacity-prefix-30-cap-33",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 9
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d",
+   "cap": 33
+  },
+  "note": "cap < len + 8: growslice, then a second growslice",
+  "exp": {
+   "error": null,
+   "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-capacity-prefix-30-cap-38",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 9
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d",
+   "cap": 38
+  },
+  "note": "cap = len + 8: first fits, second grows",
+  "exp": {
+   "error": null,
+   "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-capacity-prefix-30-cap-50",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 9
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d",
+   "cap": 50
+  },
+  "note": "first fits, second grows",
+  "exp": {
+   "error": null,
+   "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-capacity-prefix-30-cap-69",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 9
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d",
+   "cap": 69
+  },
+  "note": "cap = len + 39: first fits, second grows",
+  "exp": {
+   "error": null,
+   "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-capacity-prefix-30-cap-70",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 9
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d",
+   "cap": 70
+  },
+  "note": "fast (cap = len + 40)",
+  "exp": {
+   "error": null,
+   "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-capacity-prefix-10-cap-10",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 9
+   },
+   {
+    "name": "Root",
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   }
+  ],
+  "dst": {
+   "prefix": "60616263646566676869",
+   "cap": 10
+  },
+  "note": "cap = len: growslice x2",
+  "exp": {
+   "error": null,
+   "out": "606162636465666768690900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-reject-root-length-31-prefix-30-cap-30",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 7
+   },
+   {
+    "name": "Root",
+    "bytes": "22222222222222222222222222222222222222222222222222222222222222"
+   }
+  ],
+  "dst": {
+   "prefix": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d",
+   "cap": 30
+  },
+  "exp": {
+   "error": {
+    "is": [
+     "ErrBytesLength"
+    ],
+    "is_not": [
+     "ErrSize"
+    ]
+   },
+   "out_nil": true,
+   "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-reject-root-length-33-prefix-30-cap-33",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 7
+   },
+   {
+    "name": "Root",
+    "bytes": "222222222222222222222222222222222222222222222222222222222222222222"
+   }
+  ],
+  "dst": {
+   "prefix": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d",
+   "cap": 33
+  },
+  "exp": {
+   "error": {
+    "is": [
+     "ErrBytesLength"
+    ],
+    "is_not": [
+     "ErrSize"
+    ]
+   },
+   "out_nil": true,
+   "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d000000"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-reject-root-length-0-prefix-30-cap-30",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 7
+   },
+   {
+    "name": "Root",
+    "bytes": ""
+   }
+  ],
+  "dst": {
+   "prefix": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d",
+   "cap": 30
+  },
+  "exp": {
+   "error": {
+    "is": [
+     "ErrBytesLength"
+    ],
+    "is_not": [
+     "ErrSize"
+    ]
+   },
+   "out_nil": true,
+   "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-reject-root-length-33-prefix-30-cap-38",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 7
+   },
+   {
+    "name": "Root",
+    "bytes": "222222222222222222222222222222222222222222222222222222222222222222"
+   }
+  ],
+  "dst": {
+   "prefix": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d",
+   "cap": 38
+  },
+  "exp": {
+   "error": {
+    "is": [
+     "ErrBytesLength"
+    ],
+    "is_not": [
+     "ErrSize"
+    ]
+   },
+   "out_nil": true,
+   "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0700000000000000"
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-values-0-prefix-0-spare-0",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 0
+   },
+   {
+    "name": "Root",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 40,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-values-0-prefix-0-spare-5",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 0
+   },
+   {
+    "name": "Root",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 45
+  },
+  "exp": {
+   "error": null,
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 45,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-values-0-prefix-7-spare-0",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 0
+   },
+   {
+    "name": "Root",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 47
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 47,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-values-0-prefix-7-spare-5",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 0
+   },
+   {
+    "name": "Root",
+    "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 52
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 52,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-values-1-prefix-0-spare-0",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Root",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 40,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-values-1-prefix-0-spare-5",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Root",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 45
+  },
+  "exp": {
+   "error": null,
+   "out": "efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 45,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-values-1-prefix-7-spare-0",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Root",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 47
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 47,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-values-1-prefix-7-spare-5",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 81985529216486895
+   },
+   {
+    "name": "Root",
+    "bytes": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 52
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 52,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-values-2-prefix-0-spare-0",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Root",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 40
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 40,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-values-2-prefix-0-spare-5",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Root",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "dst": {
+   "prefix": "",
+   "cap": 45
+  },
+  "exp": {
+   "error": null,
+   "out": "ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 45,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-values-2-prefix-7-spare-0",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Root",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 47
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 47,
+   "receiver_unchanged": true
+  }
+ },
+ {
+  "id": "checkpoint-encoder-fast-path-values-2-prefix-7-spare-5",
+  "type": "v1alpha1.Checkpoint",
+  "method": "MarshalSSZTo",
+  "receiver": [
+   {
+    "name": "Epoch",
+    "uint64": 18446744073709551615
+   },
+   {
+    "name": "Root",
+    "bytes": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "dst": {
+   "prefix": "a0a1a2a3a4a5a6",
+   "cap": 52
+  },
+  "exp": {
+   "error": null,
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 52,
+   "receiver_unchanged": true
+  }
+ }
+]

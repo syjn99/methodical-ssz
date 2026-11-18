@@ -1,0 +1,223 @@
+[
+ {
+  "id": "pending-consolidation-encode-generated-fast-spec-control",
+  "module": "Prysm/PendingConsolidation/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingConsolidation.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "pending-consolidation-witness-generated-encode-fast-path-runs-empty-control",
+  "module": "Prysm/PendingConsolidation/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "pending-consolidation-encode-generated-fast-statement-v1-8-to-16",
+  "module": "Prysm/PendingConsolidation/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingConsolidation.Encode.generated_fast",
+  "kind": "statement",
+  "old": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "pending-consolidation-encode-generated-fast-spec-statement-rbx-none-to-8",
+  "module": "Prysm/PendingConsolidation/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingConsolidation.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "pending-consolidation-encode-generated-fast-spec-statement-hcap-16-to-8",
+  "module": "Prysm/PendingConsolidation/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingConsolidation.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "pending-consolidation-witness-generated-encode-fast-path-runs-empty-statement-rax-0x100d8-to-0x100e0",
+  "module": "Prysm/PendingConsolidation/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x100d8",
+  "new": "st.data.regs.rax = 0x100e0"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-directive-15-control",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_directive_15",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-directive-15-code-add-0x8-to-0x10",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_directive_15",
+  "kind": "code",
+  "old": "  add $0x8,%rax",
+  "new": "  add $0x10,%rax",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-directive-15-statement-rax-8-to-16",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_directive_15",
+  "kind": "statement",
+  "old": "Reg64.rax (s.regs.get64 Reg64.rax + (8 : Int64).toBitVec)",
+  "new": "Reg64.rax (s.regs.get64 Reg64.rax + (16 : Int64).toBitVec)"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-target-index-call-control",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_TargetIndex_call",
+  "kind": "control"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-target-index-call-statement-h-s2-8-to-16",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_TargetIndex_call",
+  "kind": "statement",
+  "old": "(hS2 : sp + 8 = aS2)",
+  "new": "(hS2 : sp + 16 = aS2)"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-head-control",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_head",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-head-code-mov-0x70-rsp-to-0x68-rsp",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_head",
+  "kind": "code",
+  "old": "  mov %rdi,0x70(%rsp)",
+  "new": "  mov %rdi,0x68(%rsp)",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-reject-control",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_reject",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-reject-statement-rbx-e1-to-e0",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_reject",
+  "kind": "statement",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-head-code-cmp-0x10-to-0x18",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_head",
+  "kind": "code",
+  "old": "  cmp $0x10,%rcx",
+  "new": "  cmp $0x18,%rcx",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-consolidation-ssz-value-spec-accepts-iff-control",
+  "module": "Prysm/PendingConsolidation/Spec.lean",
+  "theorem": "Prysm.PendingConsolidation.SszValue.spec_accepts_iff",
+  "kind": "control"
+ },
+ {
+  "id": "pending-consolidation-ssz-value-spec-accepts-iff-statement-size-16-to-24",
+  "module": "Prysm/PendingConsolidation/Spec.lean",
+  "theorem": "Prysm.PendingConsolidation.SszValue.spec_accepts_iff",
+  "kind": "statement",
+  "old": "bs.size = 16",
+  "new": "bs.size = 24"
+ },
+ {
+  "id": "pending-consolidation-desc-deserialize-checker-statement-deserialize-v-to-seq",
+  "module": "Prysm/PendingConsolidation/Spec.lean",
+  "theorem": "Prysm.PendingConsolidation.desc_deserialize_checker",
+  "kind": "statement",
+  "old": "deserialize checkerDesc bs = .ok v",
+  "new": "deserialize checkerDesc bs = .ok (.seq [])"
+ },
+ {
+  "id": "pending-consolidation-decode-accept-spec-control",
+  "module": "Prysm/PendingConsolidation/DecodeSpec.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "pending-consolidation-decode-reject-complete-statement-size-16-to-15",
+  "module": "Prysm/PendingConsolidation/DecodeSpec.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.reject_complete",
+  "kind": "statement",
+  "old": "bs.size ≠ 16 :=",
+  "new": "bs.size ≠ 15 :="
+ },
+ {
+  "id": "pending-consolidation-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/PendingConsolidation/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.runs",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "pending-consolidation-witness-generated-decode-reject-size-runs-statement-hlen-16-to-17",
+  "module": "Prysm/PendingConsolidation/WitnessGeneratedDecodeRejectSize.lean",
+  "theorem": "Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize.runs",
+  "kind": "statement",
+  "old": "(hlen : len ≠ 16)",
+  "new": "(hlen : len ≠ 17)"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-target-index-call-statement-host-55-to-56",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_TargetIndex_call",
+  "kind": "statement",
+  "old": "(Host.addrOf (k + 55 + 1))",
+  "new": "(Host.addrOf (k + 56 + 1))"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-target-index-call-statement-e8-dst-to-c0",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_TargetIndex_call",
+  "kind": "statement",
+  "old": "⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem",
+  "new": "⋆ Eq (e8.At src) ⋆ Eq (c0.At dst) ⋆ F) st.data.dmem"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-target-index-call-code-nop-mov-none-to-rax-rax",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_TargetIndex_call",
+  "kind": "code",
+  "line": 57,
+  "old": "  nop",
+  "new": "  mov %rax,%rax",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-accept-control",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_accept",
+  "kind": "control"
+ },
+ {
+  "id": "pending-consolidation-decode-generated-accept-kind-statement-fields-two-to-three-uint64",
+  "module": "Prysm/PendingConsolidation/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.PendingConsolidation.Decode.generated_accept_kind",
+  "kind": "statement",
+  "old": "80) [.uint64, .uint64] :=",
+  "new": "80) [.uint64, .uint64, .uint64] :="
+ }
+]
