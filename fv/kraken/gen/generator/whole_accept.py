@@ -325,15 +325,26 @@ class T:
         return s + self.kind(name, 'decodeHeadKindAnyFrame', f"\n    {self.dlean(d0)}")
 
     # ---- field theorems
-    def field(self, i):
-        d, d2, f = self.states[i], self.states[i + 1], self.fspec[i]
-        name = f'{self.ns}_field_{i + 1}'
-        big = f['shape'] == 'bytes'
-        s = self.opts(big) + f"/-- Field {i + 1} `{f['name']}` ({f['shape']}): boundary state {i} (directive {d['pc']}) → boundary state {i + 1} (directive {d2['pc']}). -/\n"
+    def block_name(self, f):
+        """`P_field_<i>` for a block of one field, `P_fields_<a>_<b>` for the fields a … b of an interleaved block."""
+        a, b = f['first'] + 1, f['field'] + 1
+        return f'{self.ns}_field_{b}' if a == b else f'{self.ns}_fields_{a}_{b}'
+
+    def field_theorems(self):
+        return [self.block_name(f) for f in self.fspec]
+
+    def field(self, b):
+        d, d2, f = self.states[b], self.states[b + 1], self.fspec[b]
+        i = f['field']
+        name = self.block_name(f)
+        big = f['shape'] in ('bytes', 'inline')
+        what = (f"Field {i + 1} `{f['name']}` ({f['shape']})" if f['first'] == i else
+                f"Fields {f['first'] + 1}–{i + 1}, one block (the set-up of `{f['name']}` ({f['shape']}) runs before the earlier field events)")
+        s = self.opts(big) + f"/-- {what}: boundary state {b} (directive {d['pc']}) → boundary state {b + 1} (directive {d2['pc']}). -/\n"
         s += (f"theorem {name} : {self.binders()}    {self.hguard()}{self.rthyps()} (st0 : MachineState),\n"
               f"    ({self.stp(d, 'st0')}) →\n    Eventually (step1 Host.exe)\n      (fun st => {self.stp(d2)})\n      st0 := by\n")
         hy = ' hguard' + self.rtnames()
-        s += {'u64': self.f_u64, 'bytes': self.f_bytes, 'call': self.f_call}[f['shape']](i, d, d2, f, hy)
+        s += {'u64': self.f_u64, 'bytes': self.f_bytes, 'inline': self.f_inline, 'call': self.f_call}[f['shape']](i, d, d2, f, hy)
         return s + self.kind(name, 'decodeFieldKindAnyFrame', f"\n    {self.dlean(d)}\n    {self.dlean(d2)}")
 
     def f_u64(self, i, d, d2, f, hy):
@@ -400,6 +411,64 @@ class T:
               + "spl', lo', hspl', hlo', ?_⟩\n  dsimp only\n")
         s += f"  rw [show k + {f['jm']} + 1 = k + {f['jm'] + 1} from rfl] at H\n"
         if h0: s += f"  rw [show avail - {h0} - {n} = avail - {h0 + n} by omega] at H\n"
+        return s + "  ecancel\n"
+
+    def f_inline(self, i, d, d2, f, hy):
+        """A 4-byte field: the inline-copy segment theorem; its end state is boundary state i + 1."""
+        fr = self.frame
+        pre = f.get('pre', [])
+        s = self.prefix(d, hy, destructure=bool(pre))
+        s += ''.join(P(l) + '\n' for l in pre)
+        xs = self.xnames(d)
+        v = self.fields[i][0]
+        g = self.gooff(i)
+        so = self.sszoff(i)
+        aret = -(fr + 8)
+        one = not any(sl[0] == 'at' and sl[1] == -fr + 8 for sl in d['stk'])
+        if one: spl, hspl = self.vterm(self.slot_at(d, -fr), xs)
+        memp = '(by ecancel)'
+        if not one:
+            tr = [self.vterm(self.slot_at(d, -fr + 8 * j), xs) for j in range(3)]
+            spl = f'({tr[0][0]} ++ ({tr[1][0]} ++ {tr[2][0]}))'
+            hspl = '(by simp only [List.length_append, Int.toBytes_length, ' + ', '.join(h for _, h in tr if h != LEN) + '])'
+            memp = (f"(by rw [frame_join_three_words {soff(-fr)} {soff(-fr + 8)} {soff(-fr + 16)} _ _ _ {tr[0][1]} {tr[1][1]} {tr[2][1]} (by bv_omega) (by bv_omega)]; ecancel)")
+        rs, hrs = self.vterm(self.slot_at(d, aret), xs)
+        lo, hlo = self.vterm(self.lo_val(d), xs)
+        x = self.rt['x']
+        hLo = f"(frame_low_address_with_calls _ {fr} {self.rt['loB']} S (by decide))" if x == 8 else f"(frame_low_address_without_calls _ {fr} {self.rt['loB']} S (by decide))"
+        St = '(S + 8)' if x == 8 else 'S'
+        h0 = self.heap(i)
+        av = 'avail' if h0 == 0 else f'(avail - {h0})'
+        rc, bf = 's.regs.rax.toBitVec', 's.regs.rbx.toBitVec'
+        state = "_ (by rfl) (by rfl) (by rfl)" if pre else "d hrsp hrbp hr14"
+        call = (f"  refine eventually_trans _ _ _ _ ({f['seg']} k hk hf (s.regs.rsp.toBitVec - {fr}) {rc} {bf}\n"
+                f"    {soff(f['dR'] - fr)} {soff(f['dB'] - fr)} {soff(aret)}\n"
+                f"    {self.lo_addr()} {off(rc, g)} {off(rc, g + 8)} {off(rc, g + 16)} {off(bf, so)} {St}\n"
+                f"    {ADDR} {ADDR} (by bv_omega) {hLo}\n"
+                f"    {ADDR0 if g == 0 else ADDR} {ADDR} {ADDR} {ADDR0 if so == 0 else ADDR}\n"
+                f"    {{ toBitVec := s.regs.rsp.toBitVec - 8#64 }} s.regs.r14 {v} h{v}\n"
+                f"    {spl} {rs} {lo} aP{i} aL{i} aC{i}\n"
+                f"    {hspl} {hrs} {hlo} haP{i} haL{i} haC{i}\n"
+                f"    _ Heap {av} (by omega) {state}\n      {memp} hms) ?_\n")
+        s += P(call)
+        pn = f'p{self.nb(i) + 1}'
+        s += (f"  rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hr14', {pn}, spl', lo', hspl', hlo', hrX, hrB, Hm'⟩\n"
+              "  dsimp only at hpc' hrsp' hrbp' hr14' hrX hrB Hm'\n  apply Eventually.done\n")
+        if d2['exs'] != [24, 'lo']:
+            refuse(f'whole-accept field {i + 1}: post state existentials {d2["exs"]} (inline recipe: [24, lo])')
+        rp = []
+        for r, vv in d2['regs']:
+            if r == f['rX'] and vv == 'rcv':
+                rp.append('hrX')
+            elif r == f['rB'] and vv == 'bf':
+                rp.append('hrB')
+            else:
+                refuse(f'whole-accept field {i + 1}: register fact {r} = {vv} after an inline-copy segment '
+                       f'(recipe: {f["rX"]} = receiver, {f["rB"]} = buffer)')
+        s += ("  refine ⟨hpc', hrsp', hrbp', hr14', " + ''.join(h + ', ' for h in rp) + ''.join(p + ', ' for p in self.pnames(d2))
+              + "spl', lo', hspl', hlo', ?_⟩\n  dsimp only\n")
+        s += f"  rw [show k + {f['jc']} + 1 = k + {f['jc'] + 1} from rfl] at Hm'\n"
+        if h0: s += f"  rw [show avail - {h0} - 4 = avail - {h0 + 4} by omega] at Hm'\n"
         return s + "  ecancel\n"
 
     def f_call(self, i, d, d2, f, hy):
@@ -503,7 +572,7 @@ class T:
             s += self.prefix(d, '')
             s += ''.join(P(l) + '\n' for l in e.get('pre', []))
             s += P(f"  refine eventually_trans _ _ _ _ (decode_epilogue_any_frame {e['F']} _ (k + {a}) (k + {a + 1}) (window_infix_at hk {a} 1) (by rfl) (by rfl)\n"
-                   f"    _ (window_infix_at hk {a + 1} 2) (by rfl) (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
+                   f"    _ (window_infix_at hk {a + 1} {e['nret']}) (by rfl) (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
                    f"    {ADDR} (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_\n")
             s += tail + "  · dsimp only; rw [hmem']; ecancel\n"
         return s + self.kind(name, 'decodeEpilogueKindAnyFrame', f"\n    {self.dlean(d)}")
@@ -512,15 +581,16 @@ class T:
     def accept(self):
         name = f'{self.ns}_accept'
         a = self.names()
+        per = "field" if len(self.fspec) == len(self.fields) else "field or block of interleaved fields"
         s = self.opts(True) + (f"/-- **Accept path of `{self.go}`, generated proof** (`decoder --whole-accept`): head, one theorem per\n"
-                               "field, epilogue, chained by `eventually_trans`. Statement = the kind instance (`_kind`). -/\n")
+                               f"{per}, epilogue, chained by `eventually_trans`. Statement = the kind instance (`_kind`). -/\n")
         s += (f"theorem {name} : {self.binders()}{self.entry_prem()},\n    Eventually (step1 Host.exe)\n"
               f"      (fun st => {self.final()})\n      ⟨s, Host.addrOf k⟩ := by\n")
         s += f"  intro {a} h_mem hguard hlen{self.rtnames()}\n"
         s += f"  refine eventually_trans _ _ _ _ ({self.ns}_head {a} h_mem hguard hlen{self.rtnames()}) ?_\n  intro st0 h0\n"
-        n = len(self.fields)
-        for i in range(n):
-            s += f"  refine eventually_trans _ _ _ _ ({self.ns}_field_{i + 1} {a} hguard{self.rtnames()} st{i} h{i}) ?_\n  intro st{i + 1} h{i + 1}\n"
+        n = len(self.fspec)
+        for b, t in enumerate(self.field_theorems()):
+            s += f"  refine eventually_trans _ _ _ _ ({t} {a} hguard{self.rtnames()} st{b} h{b}) ?_\n  intro st{b + 1} h{b + 1}\n"
         s += f"  exact {self.ns}_epilogue {a} st{n} h{n}\n"
         s += self.kind(name, 'decodeAcceptKindAnyFrame', '')
         return s
@@ -568,8 +638,8 @@ class T:
         """All whole-accept theorems, in dependency order (head, fields, epilogue, accept, reject)."""
         self.kinds_emitted = []
         s = self.head()
-        for i in range(len(self.fields)):
-            s += self.field(i)
+        for b in range(len(self.fspec)):
+            s += self.field(b)
         s += self.epilogue() + self.accept()
         if self.rejspec is not None:
             s += self.reject()
@@ -661,7 +731,7 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
     go = 8 if st else 0
     for i, (fname, src, fo, cls, info) in enumerate(fields):
         if cls == 'bytes':
-            if info not in (32, 48, 96):
+            if info not in (4, 20, 32, 48, 96):
                 refuse(f"whole-accept: field {fname}: byte size {info}")
             fl.append((f'fv{i}', 'bytes', info))
             sz, gz = info, 24
@@ -679,7 +749,7 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
     frame = F + 8
     head = whole_accept_head_spec(dirs, head_end, F, st)
     units = [us for _, us in done]
-    has_rt = any(u['kind'] == 'seg' for us in units for u in us)
+    has_rt = any(u['kind'] in ('seg', 'inline') for us in units for u in us)
     has_call = any(u['kind'] == 'callblk' for us in units for u in us)
     if not has_rt and not has_call:
         refuse("whole-accept: no runtime call and no callee call (no recipe)")
@@ -705,11 +775,12 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
                 if not (0x18 <= d < F) or d % 8:
                     refuse(f"whole-accept: directive {u['jd']} `{u['text']}`: stack store at {d:#x} outside the frame slots [0x18, {F:#x})")
                 written.add(d)
+            if u['kind'] in ('seg', 'inline'):
+                if u['dR'] != frame + 8 or u['dB'] != frame + 16:
+                    refuse(f"whole-accept: segment reloads from {u['dR']:#x} / {u['dB']:#x}, not the receiver / buffer home slots")
             if u['kind'] == 'seg':
                 if not (0x18 <= u['dS'] < F):
                     refuse(f"whole-accept: pointer slot {u['dS']:#x} outside the frame slots")
-                if u['dR'] != frame + 8 or u['dB'] != frame + 16:
-                    refuse(f"whole-accept: segment reloads from {u['dR']:#x} / {u['dB']:#x}, not the receiver / buffer home slots")
                 written.add(u['dS'])
     # ---- the stack chunks (name, length | None for the rt low stack, entry offset)
     stack = [('fp', 8, -8)]
@@ -767,44 +838,34 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
     regs = {r: ('UNK',) for r in REGS16}
     regs.update(rax=('RCV', 0), rbx=('BF', 0))   # what the head establishes (decpro_seg preserves rax / rbx)
 
-    def reads(us):
-        return _rw(us)[0]
-
-    def writes(us):
-        return _rw(us)[1]
-
-    def _rw(us):
-        """Registers a unit list reads before it writes them (in STEP_R64 order), and the registers it writes."""
-        rd, wr = [], set()
-
-        def r_(r):
-            if r not in wr and r not in rd and r != 'rsp':
-                rd.append(r)
-        for u in us:
+    def live_in(us, out):
+        """The registers live before the unit list `us` when the registers `out` are live after it (backward liveness).
+        A register move, `lea` or `add` whose destination is dead reads nothing: its step lemma holds for any value."""
+        live = set(out)
+        for u in reversed(us):
             k = u['kind']
             if k == 'ld':
-                r_(u['rB']); wr.add(u['rD'])
+                live.discard(u['rD'])
+                live.add(u['rB'])
             elif k == 'st':
-                r_(u['rS']); r_(u['rB'])
-            elif k in ('lea',):
-                r_(u['rB']); wr.add(u['rD'])
-            elif k == 'movrr':
-                r_(u['rS']); wr.add(u['rD'])
+                live.update((u['rS'], u['rB']))
+            elif k in ('lea', 'movrr'):
+                if u['rD'] in live:
+                    live.discard(u['rD'])
+                    live.add(u['rB'] if k == 'lea' else u['rS'])
             elif k == 'add':
-                r_(u['rD']); wr.add(u['rD'])
+                pass   # reads and writes rD: live before exactly when live after
             elif k == 'movi':
-                wr.add(u['rD'])
+                live.discard(u['rD'])
             elif k == 'callblk':
-                for r in ('rax', 'rbx', 'rcx'):
-                    r_(r)
-                wr.update(REGS16)
-            elif k == 'seg':
-                wr.update(REGS16)
+                live = {'rax', 'rbx', 'rcx'}
+            elif k in ('seg', 'inline'):
+                live = set()
             elif k in ('jmp', 'label'):
                 pass
             else:
                 refuse(f"whole-accept: unit kind {k}")
-        return [r for r in REGS16 if r in rd], wr
+        return [r for r in REGS16 if r in live and r != 'rsp']
 
     def facts(need, where):
         out = []
@@ -819,30 +880,34 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
 
     # epilogue form and its register needs
     epilogue = whole_accept_epilogue_spec(dirs, end, F, has_rt, has_call)
-    # facts needed at boundary i: what field i + 1 reads before writing, plus what is needed at boundary i + 1 and
-    # field i + 1 does not write (a fact is carried through a field that does not touch the register)
+    # facts needed at boundary i: the registers live before field i + 1 (what it reads before writing, plus what is
+    # needed at boundary i + 1 and field i + 1 does not write; a dead move, `lea` or `add` reads nothing)
     needs = [None] * n + [list(epilogue['reads'])]
     for i in range(n - 1, -1, -1):
-        rd, wr = reads(units[i]), writes(units[i])
-        needs[i] = [r for r in REGS16 if r in rd or (r in needs[i + 1] and r not in wr)]
+        needs[i] = live_in(units[i], needs[i + 1])
     states = []
     fspec = []
     regs0 = regs
     states.append(dict(pc=head_end, done=0, regs=facts(needs[0], 'field 1'), stk=freeze(stk), exs=list(exs)))
     bi = 0
     pfx = args.prefix
+    # a block is the run of fields between two boundary states: one field, or uint64 fields whose last boundary holds a
+    # derived register value (an interleaved set-up) and the field after them
+    first = 0          # first field of the open block
+    held = []          # step texts of the earlier fields of the open block
     for i, us in enumerate(units):
         fname = fields[i][0]
-        # registers at the boundary: only the facts of the state
-        regs = {r: ('UNK',) for r in REGS16}
-        for r, rv in states[-1]['regs']:
-            regs[r] = {'rcv': ('RCV', 0), 'bf': ('BF', 0), 'zero': ('ZERO',)}[rv]
+        if i == first:
+            # registers at the boundary: only the facts of the state
+            regs = {r: ('UNK',) for r in REGS16}
+            for r, rv in states[-1]['regs']:
+                regs[r] = {'rcv': ('RCV', 0), 'bf': ('BF', 0), 'zero': ('ZERO',)}[rv]
         steps = []
         blk = None
         tail = []
         for j, u in enumerate(us):
             k = u['kind']
-            if k == 'seg':
+            if k in ('seg', 'inline'):
                 if blk is not None:
                     refuse(f"whole-accept field {fname}: two blocks")
                 blk = u
@@ -855,7 +920,25 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
                 break
             steps.append(whole_accept_step(u, regs, stk, frame, pfx, fl, i, fields))
         cls = fields[i][3]
-        if cls == 'bytes':
+        if cls == 'bytes' and blk is not None and blk['kind'] == 'inline':
+            # the 4-byte inline-copy segment: the field event is the end of the segment (no pointer tail, no pointer slot)
+            if any(u['kind'] != 'st' or u['rB'] != 'rsp' for u in us[:us.index(blk)]):
+                refuse(f"whole-accept field {fname}: set-up before the segment other than stack stores")
+            if tail:
+                refuse(f"whole-accept field {fname}: units after the inline-copy segment")
+            for a in area[1:]:
+                stk[:] = [sl for sl in stk if not (sl[0] == 'at' and sl[1] == -frame + a)]
+            setslot(stk, -frame, ('ex', 0))
+            setlo(stk, ('ex', 1))
+            setslot(stk, -(frame + 8), ('ret', blk['jc'] + 1))
+            exs = [24, 'lo']
+            regs = {r: ('UNK',) for r in REGS16}
+            regs[blk['rX']] = ('RCV', 0)
+            regs[blk['rB']] = ('BF', 0)
+            fspec.append(dict(name=fname, shape='inline', seg=f"{pfx}_{fname}_segment", dR=blk['dR'], dB=blk['dB'],
+                              jc=blk['jc'], rX=blk['rX'], rB=blk['rB'], pre=steps, first=i, field=i))
+            bi += 1
+        elif cls == 'bytes':
             if blk is None or blk['kind'] != 'seg':
                 refuse(f"whole-accept field {fname}: byte field without a segment")
             # pre steps of a byte field: only stack stores (they write frame slots)
@@ -877,7 +960,7 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
             regs = {r: ('UNK',) for r in REGS16}
             regs[blk['rY']] = ('RCV', 0)
             fspec.append(dict(name=fname, shape='bytes', seg=f"{pfx}_{fname}_segment", dR=blk['dR'], dB=blk['dB'],
-                              dS=blk['dS'], jm=blk['jm'], tail=[t['jd'] for t in tail], pre=steps))
+                              dS=blk['dS'], jm=blk['jm'], tail=[t['jd'] for t in tail], pre=steps, first=i, field=i))
             bi += 1
         elif cls == 'call':
             if blk is None or blk['kind'] != 'callblk':
@@ -903,14 +986,14 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
             regs.update(rax=('ZERO',), rbx=('ZERO',))
             c = WHOLE_ACCEPT_CALLEES[blk['fn']]
             fspec.append(dict(name=fname, shape='call', callee=c[1], call=f"{pfx}_{fname}_call", jc=blk['jc'],
-                              steps=steps))
+                              steps=held + steps, first=first, field=i))
         elif cls == 'u64':
             if blk is not None:
                 refuse(f"whole-accept field {fname}: inline uint64 field with a block")
             last = us[-1]
             if not (last['kind'] == 'st' and last['rB'] != 'rsp'):
                 refuse(f"whole-accept field {fname}: inline uint64 field does not end with its receiver store")
-            fspec.append(dict(name=fname, shape='u64', steps=steps))
+            u64_spec = dict(name=fname, shape='u64', steps=held + steps, first=first, field=i)
         else:
             refuse(f"whole-accept field {fname}: class {cls}")
         if not fl_done_ok(us, cls):
@@ -919,8 +1002,16 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
         nxt = units[i + 1][0]['j'] if i + 1 < n else end
         if pc != nxt:
             refuse(f"whole-accept field {fname}: ends at {pc}, the next unit starts at {nxt}")
+        # an interleaved boundary: a register that the next field reads holds a derived value (receiver or buffer plus
+        # an offset, the set-up of the next field run before this field's event); no boundary state, the block goes on
+        if i + 1 < n and whole_accept_interleaved(fname, cls, fields[i + 1][3], [regs.get(r, ('UNK',)) for r in needs[i + 1]]):
+            held = held + steps
+            continue
+        if cls == 'u64':
+            fspec.append(u64_spec)
         states.append(dict(pc=pc, done=i + 1, regs=facts(needs[i + 1], f'field {i + 2}' if i + 1 < n else 'epilogue'),
                            stk=freeze(stk), exs=list(exs)))
+        first, held = i + 1, []
     if states[-1]['pc'] != epilogue['start']:
         refuse("whole-accept: epilogue does not start at the last boundary")
     # epilogue pre steps (loads of the two zero slots) and their slots
@@ -942,26 +1033,56 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
     return t
 
 
+def whole_accept_derived(v):
+    """A receiver or buffer address plus a nonzero offset: a value that a boundary state cannot express."""
+    return v[0] in ('RCV', 'BF') and len(v) == 2 and v[1] != 0
+
+
+def whole_accept_interleaved(fname, cls, next_cls, live):
+    """Whether the boundary after field `fname` (class `cls`) is interleaved: a live register value `live` is derived.
+    The recipe of an interleaved block: the field before the boundary is a uint64 field, the field after it a uint64
+    or call field. Any other interleaved boundary: refuse. The derivation does not reach the first refusal: after a call
+    or byte block, every register is a boundary value or unknown."""
+    if not any(whole_accept_derived(v) for v in live):
+        return False
+    if cls != 'u64':
+        refuse(f"whole-accept field {fname}: interleaved boundary after a {cls} field (recipe: after a uint64 field)")
+    if next_cls not in ('u64', 'call'):
+        refuse(f"whole-accept field {fname}: interleaved boundary before a {next_cls} field (recipe: a uint64 or call field)")
+    return True
+
+
 def fl_done_ok(us, cls):
     last = us[-1]
     if cls == 'call':
         return last['kind'] == 'callblk'
+    if cls == 'bytes' and last['kind'] == 'inline':
+        return True
     return last['kind'] == 'st'
 
 
 def whole_accept_epilogue_spec(dirs, i, F, has_rt, has_call):
-    """The three epilogue forms of the hand-written lemmas (contiguous, no nop): `add $F,%rsp; pop %rbp; retq` (rax = rbx = 0
-    from the boundary facts), `mov d1(%rsp),%rax; mov d2(%rsp),%rbx` + that (two zero slots), and frame 0x20
-    `xor %eax,%eax; xor %ebx,%ebx` + that (`decode_epilogue_segment`). Anything else: refuse."""
-    ret = [f"add ${F:#x},%rsp", "pop %rbp", "retq"]
-    if dirs[i:i + 3] == ret:
-        return dict(form='n', F=F, add=i, start=i, reads=['rax', 'rbx'])
+    """The three epilogue forms of the hand-written lemmas (contiguous; `nop`s only between `pop %rbp` and `retq`, which the
+    `decodeRet` window erases): `add $F,%rsp; pop %rbp; retq` (rax = rbx = 0 from the boundary facts),
+    `mov d1(%rsp),%rax; mov d2(%rsp),%rbx` + that (two zero slots), and frame 0x20 `xor %eax,%eax; xor %ebx,%ebx` + that
+    (`decode_epilogue_segment`, no `nop`). Anything else: refuse."""
+    def ret_at(j):
+        """The length of the return window `pop %rbp; nop*; retq` at j (at most 3 nops), or None."""
+        if j >= len(dirs) or dirs[j] != "pop %rbp":
+            return None
+        m = 1
+        while j + m < len(dirs) and dirs[j + m] == "nop" and m < 4:
+            m += 1
+        return m + 1 if j + m < len(dirs) and dirs[j + m] == "retq" else None
+    add = f"add ${F:#x},%rsp"
+    if i < len(dirs) and dirs[i] == add and ret_at(i + 1):
+        return dict(form='n', F=F, add=i, start=i, nret=ret_at(i + 1), reads=['rax', 'rbx'])
     m1 = re.fullmatch(r"mov (0x[0-9a-f]+)\(%rsp\),%rax", dirs[i]) if i < len(dirs) else None
     m2 = re.fullmatch(r"mov (0x[0-9a-f]+)\(%rsp\),%rbx", dirs[i + 1]) if i + 1 < len(dirs) else None
-    if m1 and m2 and dirs[i + 2:i + 5] == ret:
-        return dict(form='ld', F=F, add=i + 2, start=i, reads=[],
+    if m1 and m2 and i + 2 < len(dirs) and dirs[i + 2] == add and ret_at(i + 3):
+        return dict(form='ld', F=F, add=i + 2, start=i, nret=ret_at(i + 3), reads=[],
                     loads=[('rax', _hx(m1.group(1))), ('rbx', _hx(m2.group(1)))])
-    if dirs[i:i + 2] == ["xor %eax,%eax", "xor %ebx,%ebx"] and dirs[i + 2:i + 5] == ret:
+    if dirs[i:i + 2] == ["xor %eax,%eax", "xor %ebx,%ebx"] and dirs[i + 2:i + 5] == [add, "pop %rbp", "retq"]:
         if F != 0x20:
             refuse(f"whole-accept epilogue: `xor` epilogue in frame {F:#x} (lemma decode_epilogue_segment: frame 0x20 only)")
         return dict(form='e20', F=F, add=i, start=i, reads=[])

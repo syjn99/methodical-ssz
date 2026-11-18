@@ -37,12 +37,17 @@ SPEC_TYPES = {  # Go type name: (fields [(name, 'u'|'b', n)], checker (lean name
  'ValidatorBalance': ([('index', 'u', 8), ('balance', 'u', 8)], ('checkerDesc', None)),
  'VoluntaryExit': ([('epoch', 'u', 8), ('validatorIndex', 'u', 8)], ('checkerDesc', None)),
  'PendingPartialWithdrawal': ([('index', 'u', 8), ('amount', 'u', 8), ('withdrawableEpoch', 'u', 8)], ('checkerDesc', None)),
+ 'Status': ([('forkDigest', 'b', 4), ('finalizedRoot', 'b', 32), ('finalizedEpoch', 'u', 8), ('headRoot', 'b', 32),
+            ('headSlot', 'u', 8)], ('checkerDesc', None)),
+ 'StatusV2': ([('forkDigest', 'b', 4), ('finalizedRoot', 'b', 32), ('finalizedEpoch', 'u', 8), ('headRoot', 'b', 32),
+              ('headSlot', 'u', 8), ('earliestAvailableSlot', 'u', 8)], ('checkerDesc', None)),
 }
 # The source of the hand `Desc` (SpecDescription.lean) of each type of SPEC_TYPES: consensus-specs or the Prysm proto
 # definition. `desc_from_consensus_specs` stops with a message for a type in neither set.
 DESC_FROM_CONSENSUS_SPECS = {'BeaconBlockHeader', 'Eth1Data', 'BlobIdentifier', 'DepositMessage', 'Deposit_Data',
                              'SyncCommitteeMessage', 'PendingConsolidation', 'PendingDeposit', 'HistoricalSummary',
-                             'SigningData', 'SyncAggregatorSelectionData', 'VoluntaryExit', 'PendingPartialWithdrawal'}
+                             'SigningData', 'SyncAggregatorSelectionData', 'VoluntaryExit', 'PendingPartialWithdrawal',
+                             'Status', 'StatusV2'}
 DESC_FROM_PRYSM_PROTO = {'DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest',
                          'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest',
                          'PartialDataColumnGroupID', 'ValidatorIdentity', 'BuilderPreferences', 'ValidatorBalance'}
@@ -286,6 +291,8 @@ descnames = {
  'HistoricalSummary': ['block_summary_root', 'state_summary_root'], 'SigningData': ['object_root', 'domain'],
  'SyncAggregatorSelectionData': ['slot', 'subcommittee_index'], 'ValidatorBalance': ['index', 'balance'],
  'VoluntaryExit': ['epoch', 'validator_index'], 'PendingPartialWithdrawal': ['validator_index', 'amount', 'withdrawable_epoch'],
+ 'Status': ['fork_digest', 'finalized_root', 'finalized_epoch', 'head_root', 'head_slot'],
+ 'StatusV2': ['fork_digest', 'finalized_root', 'finalized_epoch', 'head_root', 'head_slot', 'earliest_available_slot'],
 }
 
 

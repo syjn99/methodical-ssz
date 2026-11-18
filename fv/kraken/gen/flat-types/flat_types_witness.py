@@ -28,7 +28,8 @@ FRAME_FORM = {'BeaconBlocksByRangeRequest': 'frame_0x38', 'BlobSidecarsByRangeRe
               'DepositRequest': 'no_callee_frame_0x20', 'BuilderDepositRequest': 'no_callee_frame_0x20',
               'PartialDataColumnGroupID': 'slices_and_callees', 'ValidatorIdentity': 'slices_and_callees',
               'SyncAggregatorSelectionData': 'frame_0x38', 'Deposit_Data': 'no_callee_frame_0x20',
-              'PendingDeposit': 'slices_and_callees'}
+              'PendingDeposit': 'slices_and_callees', 'Status': 'slices_and_callees',
+              'StatusV2': 'slices_and_callees'}
 CLEN, BUMPLEN, RTLEN = 63, 6, 26
 
 
@@ -260,9 +261,10 @@ def accbytes(X, n, frame):
     heap = sum(f[2] for f in fs if f[1] == 'b')
     nb = sum(1 for f in fs if f[1] == 'b')
     gsize = entry({'DepositRequest': 128, 'BuilderDepositRequest': 120, 'PartialDataColumnGroupID': 72, 'ValidatorIdentity': 80,
-                   'Deposit_Data': 120, 'PendingDeposit': 128}, X, 'gsize')
+                   'Deposit_Data': 120, 'PendingDeposit': 128, 'Status': 128, 'StatusV2': 136}, X, 'gsize')
     callees = entry({'DepositRequest': [], 'BuilderDepositRequest': [], 'PartialDataColumnGroupID': ['Slot'], 'ValidatorIdentity': ['ValidatorIndex', 'Epoch'],
-                     'Deposit_Data': [], 'PendingDeposit': ['Slot']}, X, 'callees')
+                     'Deposit_Data': [], 'PendingDeposit': ['Slot'], 'Status': ['Epoch', 'Slot'],
+                     'StatusV2': ['Epoch', 'Slot']}, X, 'callees')
     ins = [f'f{i}' for i in range(len(fs))]
     ops = [f'oP{j + 1}' for j in range(nb)]
     params = ins + ops
@@ -298,11 +300,11 @@ def accbytes(X, n, frame):
         callargs = ''
     else:
         S = 8
-        Fr = entry({'PartialDataColumnGroupID': 0x40, 'ValidatorIdentity': 0x50, 'PendingDeposit': 0x40}, X, 'Fr')
+        Fr = entry({'PartialDataColumnGroupID': 0x40, 'ValidatorIdentity': 0x50, 'PendingDeposit': 0x40, 'Status': 0x50, 'StatusV2': 0x60}, X, 'Fr')
         rslot_off = Fr + 16              # return slot at rsp - (F + 16)
         F_lo = endr
         rsp = F_lo + rslot_off + 8 + S   # lo (S + 8) at rsp - rslot_off - 8 - S
-        lsave = entry({'PartialDataColumnGroupID': 32, 'ValidatorIdentity': 48, 'PendingDeposit': 32}, X, 'lsave')
+        lsave = entry({'PartialDataColumnGroupID': 32, 'ValidatorIdentity': 48, 'PendingDeposit': 32, 'Status': 48, 'StatusV2': 16}, X, 'lsave')
         # rsp - rslot_off - 8 - S: lo (16) · rslot · sp0 sp1 sp2 · gap1 · l28 · gap2 · fp · ret · s1 · s2 · unused · s4
         sp0 = rsp - rslot_off + 8        # = rsp - (F + 8)
         gap1 = sp0 + 24
