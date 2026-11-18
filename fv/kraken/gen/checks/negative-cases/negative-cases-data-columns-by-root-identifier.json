@@ -225,5 +225,120 @@
   "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
   "theorem": "Prysm.DataColumnsByRootIdentifier.Encode.reject_length",
   "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsEncode.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "code_definition": "unmarshalSSZ",
+  "id": "data-columns-by-root-identifier-decode-reject-alignment-error-word-nonzero-control",
+  "kind": "control",
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeRejectAlignment.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_alignment_error_word_nonzero",
+  "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecodeErrorWordNonzero.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "code_definition": "unmarshalSSZ",
+  "id": "data-columns-by-root-identifier-decode-reject-alignment-error-word-nonzero-code-mov-0x4a-to-0x4b",
+  "kind": "code",
+  "old": "  mov $0x4a,%ebx",
+  "new": "  mov $0x4b,%ebx",
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeRejectAlignment.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_alignment_error_word_nonzero",
+  "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecodeErrorWordNonzero.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "code_definition": "unmarshalSSZ",
+  "id": "data-columns-by-root-identifier-decode-reject-alignment-error-word-nonzero-statement-he0nz-he0nz-e0-0-to-none",
+  "kind": "statement",
+  "statement_def": "Prysm.DataColumnsByRootIdentifier.Decode.reject_alignment_error_word_nonzero_statement",
+  "old": "(he0nz : e0 ≠ 0) ",
+  "new": "",
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeRejectAlignment.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_alignment_error_word_nonzero",
+  "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecodeErrorWordNonzero.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "code_definition": "unmarshalSSZ",
+  "id": "data-columns-by-root-identifier-decode-reject-overflow-error-word-nonzero-control",
+  "kind": "control",
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeRejectOverflow.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_overflow_error_word_nonzero",
+  "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecodeErrorWordNonzero.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "code_definition": "unmarshalSSZ",
+  "id": "data-columns-by-root-identifier-decode-reject-overflow-error-word-nonzero-code-cmp-0x80-to-0x81",
+  "kind": "code",
+  "old": "  cmp $0x80,%rcx",
+  "new": "  cmp $0x81,%rcx",
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeRejectOverflow.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_overflow_error_word_nonzero",
+  "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecodeErrorWordNonzero.lean"
+ },
+ {
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "code_definition": "unmarshalSSZ",
+  "id": "data-columns-by-root-identifier-decode-reject-overflow-error-word-nonzero-statement-hbig-128-to-127",
+  "kind": "statement",
+  "statement_def": "Prysm.DataColumnsByRootIdentifier.Decode.reject_overflow_error_word_nonzero_statement",
+  "old": "(hbig : 128 < (s.regs.rcx.toNat - 36) / 8)",
+  "new": "(hbig : 127 < (s.regs.rcx.toNat - 36) / 8)",
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeRejectOverflow.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_overflow_error_word_nonzero",
+  "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecodeErrorWordNonzero.lean"
+ },
+ {
+  "id": "data-columns-by-root-identifier-decode-reject-alignment-spec-error-word-nonzero-control",
+  "kind": "control",
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeSpecRejectErrorWordNonzero.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_alignment_spec_error_word_nonzero",
+  "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecodeSpecRejectErrorWordNonzero.lean"
+ },
+ {
+  "id": "data-columns-by-root-identifier-decode-reject-alignment-spec-error-word-nonzero-statement-hmis-8-to-4",
+  "kind": "statement",
+  "statement_def": "Prysm.DataColumnsByRootIdentifier.Decode.reject_alignment_spec_error_word_nonzero_statement",
+  "old": "(hmis : (bs.size - 36) % 8 ≠ 0)",
+  "new": "(hmis : (bs.size - 36) % 4 ≠ 0)",
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeSpecRejectErrorWordNonzero.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_alignment_spec_error_word_nonzero",
+  "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecodeSpecRejectErrorWordNonzero.lean"
+ },
+ {
+  "id": "data-columns-by-root-identifier-decode-reject-overflow-spec-error-word-nonzero-control",
+  "kind": "control",
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeSpecRejectErrorWordNonzero.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_overflow_spec_error_word_nonzero",
+  "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecodeSpecRejectErrorWordNonzero.lean"
+ },
+ {
+  "id": "data-columns-by-root-identifier-decode-reject-overflow-spec-error-word-nonzero-statement-hbig-128-to-127",
+  "kind": "statement",
+  "statement_def": "Prysm.DataColumnsByRootIdentifier.Decode.reject_overflow_spec_error_word_nonzero_statement",
+  "old": "(hbig : 128 < (bs.size - 36) / 8)",
+  "new": "(hbig : 127 < (bs.size - 36) / 8)",
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeSpecRejectErrorWordNonzero.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_overflow_spec_error_word_nonzero",
+  "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecodeSpecRejectErrorWordNonzero.lean"
+ },
+ {
+  "id": "data-columns-by-root-identifier-decode-reject-complete-control",
+  "kind": "control",
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeSpecRejectComplete.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_complete",
+  "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecodeRejectComplete.lean"
+ },
+ {
+  "id": "data-columns-by-root-identifier-decode-reject-complete-statement-128-to-129",
+  "kind": "statement",
+  "statement_def": "Prysm.DataColumnsByRootIdentifier.Decode.reject_complete_statement",
+  "old": "128 < (bs.size - 36) / 8",
+  "new": "129 < (bs.size - 36) / 8",
+  "module": "Prysm/DataColumnsByRootIdentifier/DecodeSpecRejectComplete.lean",
+  "theorem": "Prysm.DataColumnsByRootIdentifier.Decode.reject_complete",
+  "statement_module": "Prysm/DataColumnsByRootIdentifier/StatementsDecodeRejectComplete.lean"
  }
 ]
