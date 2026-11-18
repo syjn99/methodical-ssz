@@ -158,6 +158,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 
 - What does not hold: `gen/generator/generator.py` does not cover every field form.
   It covers 8-byte `uint64` fields and byte vectors of 4, 20, 32, 48 and 96 bytes.
+  On the encoder side, it also covers byte vectors of 1 byte.
   It covers the callees `Slot`, `CommitteeIndex`, `ValidatorIndex` and `Epoch`.
   It covers uint64 fields after the set-up of the next callee call, with one field theorem for these fields.
   It covers a pointer field to a nested `Checkpoint` on the decoder side, with the kinds of `lean/Codec/Kind/DecodeAcceptNestedAnyFrame.lean`.

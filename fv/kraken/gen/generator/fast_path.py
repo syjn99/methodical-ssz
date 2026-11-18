@@ -20,9 +20,14 @@ import hashlib, json, pathlib, re
 FAST_PATH_IMPORTS = ["Codec.Kind.EncodeFastPathAnyFrame", "Codec.EncodeFrameTest"]
 R64 = "rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15".split()
 R32 = {"eax": "rax", "ebx": "rbx", "ecx": "rcx", "edx": "rdx", "esi": "rsi", "edi": "rdi"}
-BYTE_SIZES = (4, 20, 32, 48, 96)
+# the 32-bit destination names of `movzbl` (with r8d … r15d) and the 8-bit source names of a byte store
+R32ZX = dict(R32, **{f"r{n}d": f"r{n}" for n in range(8, 16)})
+R8 = dict({"al": "rax", "bl": "rbx", "cl": "rcx", "dl": "rdx", "sil": "rsi", "dil": "rdi"}, **{f"r{n}b": f"r{n}" for n in range(8, 16)})
+BYTE_SIZES = (1, 4, 20, 32, 48, 96)
 # the byte vector size whose append is an inline 32-bit copy (`Codec/EncodeInlineCopy.lean`), not a `runtime.memmove` call
 INLINE_SIZE = 4
+# the byte vector size whose append is an inline 8-bit copy (`movzbl` load, byte store; `Codec/EncodeInlineCopy.lean`)
+INLINE_BYTE_SIZE = 1
 INLINE_IMPORTS = ["Codec.EncodeInlineCopy"]
 THEOREM_OPTIONS = "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
 # A pointer field to a nested container whose callee encoder has a fast-path function specification: the callee table.
@@ -96,7 +101,7 @@ def read_ir(ir_path, tname):
                     and g["size_gc_amd64"] == 24):
                 raise FastPathRefuse(f"field {g['name']}: ssz-size tag but not a []byte vector of that size")
             if n not in BYTE_SIZES:
-                raise FastPathRefuse(f"field {g['name']}: byte vector of {n} bytes (covered: 4, 20, 32, 48, 96)")
+                raise FastPathRefuse(f"field {g['name']}: byte vector of {n} bytes (covered: 1, 4, 20, 32, 48, 96)")
             out.append((g["name"], "b", n, g["offset_gc_amd64"]))
         else:
             u = v.get("underlying") if v.get("k") == "overlay" else v
@@ -244,6 +249,8 @@ def s_pf(v):
         return f"(BitVec.ofInt 64 (Int.ofBytes {v[1]}))"
     if k == "fval32":
         return f"(BitVec.zeroExtend 64 (BitVec.ofInt 32 (Int.ofBytes {v[1]})))"
+    if k == "fval8":
+        return f"(BitVec.zeroExtend 64 (BitVec.ofInt 8 (Int.ofBytes {v[1]})))"
     if k == "stk":
         return stk(v[1])
     if k == "dst":
@@ -284,7 +291,9 @@ PATS = [
     (r"mov %(r\w+),%(r\w+)", lambda m: ("movrr", m[2], m[1])),
     (r"mov (-?0x[0-9a-f]+)?\(%(r\w+)\),%(r\w+)", lambda m: ("ld", m[3], m[2], num(m[1]))),
     (r"mov %(r\w+),(-?0x[0-9a-f]+)?\(%(r\w+)\)", lambda m: ("st", m[1], m[3], num(m[2]))),
+    (r"mov %(" + "|".join(R8) + r"),(-?0x[0-9a-f]+)?\(%(r\w+),%(r\w+),1\)", lambda m: ("stidx8", R8[m[1]], m[3], m[4], num(m[2]))),
     (r"mov %(r\w+),(-?0x[0-9a-f]+)?\(%(r\w+),%(r\w+),1\)", lambda m: ("stidx", m[1], m[3], m[4], num(m[2]))),
+    (r"movzbl (-?0x[0-9a-f]+)?\(%(r\w+)\),%(\w+)", lambda m: ("ld8", R32ZX[m[3]], m[2], num(m[1])) if m[3] in R32ZX else ("other",)),
     (r"mov (-?0x[0-9a-f]+)?\(%(r\w+)\),%(e[a-z]{2})", lambda m: ("ld32", R32[m[3]], m[2], num(m[1])) if m[3] in R32 else ("other",)),
     (r"mov %(e[a-z]{2}),(-?0x[0-9a-f]+)?\(%(r\w+),%(r\w+),1\)",
      lambda m: ("stidx32", R32[m[1]], m[3], m[4], num(m[2])) if m[1] in R32 else ("other",)),
@@ -951,6 +960,46 @@ class FastPathGenerator:
             E("normalize_registers")
             self.reg[rd] = ("fval32", self.vn[fi], fi)
             return i + 1
+        if k == "ld8":
+            _, rd, rb, d = a
+            fi = self.done
+            v = self.reg.get(rb)
+            if rd in ("rsp", "rbp") or fi >= len(self.fields) or self.fields[fi][1] != "b" or self.fields[fi][2] != INLINE_BYTE_SIZE \
+                    or v != ("fptr", self.pn[fi], fi) or d != 0:
+                raise FastPathRefuse(f"8-bit load `{self.L[i]}` is not the load of the current 1-byte field through its pointer ({v})")
+            if fi not in self.lenok:
+                raise FastPathRefuse(f"8-bit load of field {fi} without its length test")
+            _, w = self.win(i)
+            E(f"apply step_load_byte8 Reg64.{rd} Reg64.{rb} {lit(d)} _ {w}")
+            E(f"  {self.pn[fi]} {self.pn[fi]} (by encoder_address_equation) {self.vn[fi]} h{self.vn[fi]} _ _ _ (by rfl) (by ecancel)")
+            E("normalize_registers")
+            self.reg[rd] = ("fval8", self.vn[fi], fi)
+            return i + 1
+        if k == "stidx8":
+            _, rs, rb, ri, d = a
+            vb, vi, v = self.reg.get(rb), self.reg.get(ri), self.reg.get(rs)
+            if {vb and vb[0], vi and vi[0]} != {"ptr", "len"}:
+                raise FastPathRefuse(f"indexed store base / index {vb} {vi}")
+            fi = self.done
+            if fi >= len(self.fields):
+                raise FastPathRefuse("output store after the last field")
+            o = (vb if vb[0] == "len" else vi)[1] + d
+            if self.fields[fi][1] != "b" or self.fields[fi][2] != INLINE_BYTE_SIZE or o != self.soff[fi] \
+                    or v != ("fval8", self.vn[fi], fi):
+                raise FastPathRefuse(f"8-bit indexed store is not the current 1-byte field at its SSZ offset ({o}, {v})")
+            if fi not in self.lenok:
+                raise FastPathRefuse(f"output store of field {fi} without its length test")
+            if self.capok != fi:
+                raise FastPathRefuse(f"output store of field {fi} without its capacity test")
+            _, w = self.win(i)
+            E(f"apply step_store_indexed8 Reg64.{rs} Reg64.{rb} Reg64.{ri} {lit(d)} _ {w}")
+            E(f"  {s_pf(vb)} {s_pf(vi)} {s_pf(('dst', o))} (by encoder_address_equation) d{fi} hd{fi} _ _ _ (by rfl) (by rfl) (by ecancel)")
+            m, H = self.newH()
+            E(f"intro {m} {H}; normalize_registers; simp only [Reg64s.get64] at {H}")
+            E(f"simp only [extractLsb'_zeroExtend_byte, toBytes_ofInt_ofBytes 8 1 rfl {self.vn[fi]} h{self.vn[fi]}] at {H}")
+            self.outv[fi] = ("v", fi)
+            self.done += 1
+            return i + 1
         if k == "stidx32":
             _, rs, rb, ri, d = a
             vb, vi, v = self.reg.get(rb), self.reg.get(ri), self.reg.get(rs)
@@ -1309,9 +1358,9 @@ class FastPathGenerator:
                 use, df = [a[2]], [a[1]]
             elif k == "st":
                 use = [a[1], a[2]]
-            elif k in ("stidx", "stidx32"):
+            elif k in ("stidx", "stidx32", "stidx8"):
                 use = [a[1], a[2], a[3]]
-            elif k == "ld32":
+            elif k in ("ld32", "ld8"):
                 use, df = [a[2]], [a[1]]
             elif k in ("movi", "xor"):
                 df = [a[1]]
@@ -1635,9 +1684,9 @@ class FastPathGenerator:
         return o
 
     def imports(self):
-        """The modules of the step lemmas beyond FAST_PATH_IMPORTS: the inline-copy steps for a 4-byte field; the nested kinds,
-        the nested call block and the callee specification for a nested field."""
-        out = list(INLINE_IMPORTS) if any(f[1] == "b" and f[2] == INLINE_SIZE for f in self.fields) else []
+        """The modules of the step lemmas beyond FAST_PATH_IMPORTS: the inline-copy steps for a 4-byte or 1-byte field; the nested
+        kinds, the nested call block and the callee specification for a nested field."""
+        out = list(INLINE_IMPORTS) if any(f[1] == "b" and f[2] in (INLINE_SIZE, INLINE_BYTE_SIZE) for f in self.fields) else []
         return out + (NESTED_IMPORTS + self.callee["imports"] if self.nested else [])
 
     def kind_names(self):

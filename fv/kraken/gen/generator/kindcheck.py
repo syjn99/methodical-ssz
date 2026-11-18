@@ -1380,6 +1380,9 @@ FAST_PATH_HAND = ("Prysm.BeaconBlockHeader.encodeLayout", "Prysm.Eth1Data.encode
 FAST_PATH_VIA = ("Prysm.Checkpoint.Encode.fast_path_kind_tie",)
 FAST_PATH_R64 = "rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15".split()
 FAST_PATH_R32 = dict(eax="rax", ebx="rbx", ecx="rcx", edx="rdx", esi="rsi", edi="rdi")
+# the 32-bit destination names of `movzbl` and the 8-bit source names of a byte store (the inline copy of a 1-byte field)
+FAST_PATH_R32ZX = dict(FAST_PATH_R32, **{f"r{n}d": f"r{n}" for n in range(8, 16)})
+FAST_PATH_R8 = dict(dict(al="rax", bl="rbx", cl="rcx", dl="rdx", sil="rsi", dil="rdi"), **{f"r{n}b": f"r{n}" for n in range(8, 16)})
 FAST_PATH_LAYF = ("stateWord", "frame", "guardAddend", "callsMemmove", "stackChunkCount", "stackChunkLengths", "pre", "existentials", "post")
 # Nested container fields (rule 13 with the kinds of `Codec/Kind/EncodeFastPathNestedAnyFrame.lean`): an own callee table.
 # Go type name of the nested container -> (callee symbol, code constant, SSZ size, callee frame below its return slot).
@@ -1435,10 +1438,10 @@ def fast_path_ir(ir_text, tname):
 
 
 def fast_path_regs_of(text):
-    """64-bit register names in an operand text (32-bit names mapped)."""
+    """64-bit register names in an operand text (32-bit and 8-bit names mapped)."""
     out = []
     for r in re.findall(r"%([a-z0-9]+)", text):
-        r = FAST_PATH_R32.get(r, r)
+        r = FAST_PATH_R32ZX.get(r, FAST_PATH_R8.get(r, r))
         if r in FAST_PATH_R64:
             out.append(r)
     return out
@@ -1467,7 +1470,7 @@ def fast_path_usedef(d):
     dst_is_reg = dst.startswith("%")
     if op == "xor" and src == dst:
         return [], dr, False
-    if op in ("mov", "lea") and dst_is_reg:
+    if op in ("mov", "lea", "movzbl") and dst_is_reg:
         return sr, dr, False
     if op in ("add", "sub") and dst_is_reg:
         return sr + dr, dr, False
@@ -1485,6 +1488,8 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
     leaf = [sum(2 if f[0] == "n" else 1 for f in fs[:i]) for i in range(len(fs))]
     CAL = FAST_PATH_NESTED_CALLEES[[f for f in fs if f[0] == "n"][0][2]] if nested else None
     nil_ok, called = [None], [None]
+    # the last length test (field index, immediate, address) and capacity test (field index, compared values, branch)
+    len_test, cap_test = [None], [None]
     if dirs[2] == "cmp 0x10(%r14),%rsp":
         gd, j = 0, 3
     else:
@@ -1594,6 +1599,31 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
             continue
         if d == "pop %rbp":
             break
+        # the inline copy of a 1-byte field: `movzbl` through the field pointer after its length test, byte store into the
+        # output after its capacity test
+        m = re.fullmatch(r"movzbl \(%(\w+)\),%(\w+)", d)
+        if m and m.group(2) in FAST_PATH_R32ZX:
+            i = done[0]
+            if not (i < len(fs) and fs[i] == ("b", 1) and R.get(m.group(1)) == ("fp", i)
+                    and len_test[0] == (i, 1, ("rcv", goffs[i] + 8))):
+                raise FastPathMismatch("8-bit load")
+            R[FAST_PATH_R32ZX[m.group(2)]] = ("fv8", i)
+            pc += 1
+            continue
+        m = re.fullmatch(r"mov %(\w+),(-?0x[0-9a-f]+)?\(%(\w+),%(\w+),1\)", d)
+        if m and m.group(1) in FAST_PATH_R8:
+            i = done[0]
+            vs = [R.get(m.group(3)), R.get(m.group(4))]
+            ln = [v for v in vs if isinstance(v, tuple) and v[0] == "len"]
+            ct = cap_test[0]
+            if not ("ptr" in vs and ln and ln[0][1] + disp(m.group(2)) == soffs[i]
+                    and R.get(FAST_PATH_R8[m.group(1)]) == ("fv8", i) and len_test[0] == (i, 1, ("rcv", goffs[i] + 8))
+                    and ct and ct[0] == i and sorted(map(str, ct[1])) == sorted(map(str, ["cap", ("len", soffs[i] + 1)]))):
+                raise FastPathMismatch("8-bit output store")
+            done[0] += 1
+            pc += 1
+            states.append(snap(pc))
+            continue
         # the inline copy of a 4-byte field: 32-bit load through the field pointer, 32-bit store into the output
         m = re.fullmatch(r"mov \(%(\w+)\),%(e[a-z]{2})", d)
         if m and m.group(2) in FAST_PATH_R32:
@@ -1705,9 +1735,9 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
         m = re.fullmatch(r"mov %(\w+),(-?0x[0-9a-f]+)?\(%(\w+),%(\w+),1\)", d)
         if m:
             i = done[0]
-            vs = [R[m.group(3)], R[m.group(4)]]
+            vs = [R.get(m.group(3)), R.get(m.group(4))]
             ln = [v for v in vs if isinstance(v, tuple) and v[0] == "len"]
-            if not ("ptr" in vs and ln and ln[0][1] + disp(m.group(2)) == soffs[i] and R[m.group(1)] == ("fv", i)):
+            if not ("ptr" in vs and ln and ln[0][1] + disp(m.group(2)) == soffs[i] and R.get(m.group(1)) == ("fv", i)):
                 raise FastPathMismatch("output store")
             done[0] += 1
             pc += 1
@@ -1724,13 +1754,17 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
             nil_ok[0] = i
             pc = lab[dirs[q].split()[1]]
             continue
-        m = re.fullmatch(r"cmpq \$0x[0-9a-f]+,(-?0x[0-9a-f]+)?\(%\w+\)", d)
+        m = re.fullmatch(r"cmpq \$0x([0-9a-f]+),(-?0x[0-9a-f]+)?\(%(\w+)\)", d)
         if m:
             q = pc + 1
             while dirs[q] == "nop":
                 q += 1
             if not dirs[q].startswith("jne "):
                 raise FastPathMismatch("length test")
+            try:
+                len_test[0] = (done[0], int(m.group(1), 16), addr(m.group(3), disp(m.group(2))))
+            except FastPathMismatch:
+                len_test[0] = None
             pc = q + 1
             continue
         m = re.fullmatch(r"cmp %(\w+),%(\w+)", d)
@@ -1739,6 +1773,7 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
             while dirs[q] == "nop":
                 q += 1
             jop, tgt = dirs[q].split()
+            cap_test[0] = (done[0], [R.get(m.group(1)), R.get(m.group(2))], jop)
             if jop == "jae":
                 pc = lab[tgt]
             elif jop == "jb":
@@ -2076,19 +2111,33 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
 # ---- rule 13 selftest controls: mutants of the committed raw fast-path outputs (a missing file is a FAIL)
 FAST_PATH_SELFTEST = {"validator-balance": "lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "checkpoint": "lean/Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
                "historical-summary": "lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "beacon-block-header": "lean/Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
-               "fork": "lean/Prysm/Fork/GeneratedEncodeFastPath.lean",
+               "fork": "lean/Prysm/Fork/GeneratedEncodeFastPath.lean", "builder": "lean/Prysm/Builder/GeneratedEncodeFastPath.lean",
                "attestation-data": "lean/Prysm/AttestationData/GeneratedEncodeFastPath.lean"}
-# the layout defs of three committed fast-path files: the recomputation must give each of them
+# the layout defs of these committed fast-path files: the recomputation must give each of them
 FAST_PATH_LAYOUTS = {"ValidatorBalance": ("lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "Prysm.ValidatorBalance.Encode.generated_layout"),
                      "DepositMessage": ("lean/Prysm/DepositMessage/GeneratedEncodeFastPath.lean", "Prysm.DepositMessage.Encode.generated_layout"),
                      "HistoricalSummary": ("lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "Prysm.HistoricalSummary.Encode.generated_layout"),
-                     "Fork": ("lean/Prysm/Fork/GeneratedEncodeFastPath.lean", "Prysm.Fork.Encode.generated_layout")}
+                     "Fork": ("lean/Prysm/Fork/GeneratedEncodeFastPath.lean", "Prysm.Fork.Encode.generated_layout"),
+                     "Builder": ("lean/Prysm/Builder/GeneratedEncodeFastPath.lean", "Prysm.Builder.Encode.generated_layout")}
+# code mutants of the 1-byte inline copy of Builder (the Version field): the recomputation must refuse each of them.
+# (name, directive text, replacement directives; an empty list removes the directive and its branch)
+FAST_PATH_BYTE_COPY_MUTANTS = [
+    ("store_offset", "mov %r9b,(%rax,%rbx,1)", ["mov %r9b,0x1(%rax,%rbx,1)"]),
+    ("store_32_bit", "mov %r9b,(%rax,%rbx,1)", ["mov %r9d,(%rax,%rbx,1)"]),
+    ("load_offset", "movzbl (%rsi),%r9d", ["movzbl 0x1(%rsi),%r9d"]),
+    ("load_16_bit", "movzbl (%rsi),%r9d", ["movzwl (%rsi),%r9d"]),
+    ("load_other_field", "movzbl (%rsi),%r9d", ["mov 0x38(%rdx),%rsi", "movzbl (%rsi),%r9d"]),
+    ("length_test_2", "cmpq $0x1,0x28(%rdx)", ["cmpq $0x2,0x28(%rdx)"]),
+    ("length_test_missing", "cmpq $0x1,0x28(%rdx)", []),
+    ("capacity_test_missing", "cmp %r8,%rcx", []),
+]
 
 
 def fast_path_cases(T):
     """(name, text, ok) on the committed files T = {key: text}."""
     V, checkpoint_text, H, B = T["validator-balance"], T["checkpoint"], T["historical-summary"], T["beacon-block-header"]
     K = T["fork"]
+    BU = T["builder"]
     A = T["attestation-data"]
 
     def r(t, a, b, n=1):
@@ -2142,6 +2191,8 @@ def fast_path_cases(T):
                                           "Encode.generated_field_1 h)\n    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.Fork.Encode.generated_layout [.bytes 4, .bytes 4, .uint64]\n    ⟨32, 2,"), False),
         ("fast_path_beacon_block_header_state_slot", r(B, "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3)",
                                "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx)"), False),
+        ("fast_path_good_builder_inline_byte", BU, True),
+        ("fast_path_builder_fields_bytes_4", r(BU, "[.bytes 48, .bytes 1, .bytes 20,", "[.bytes 48, .bytes 4, .bytes 20,", 9), False),
         # nested Checkpoint fields (AttestationData)
         ("fast_path_good_attestation_data_nested", A, True),
         ("fast_path_nested_layout_callees", r(A, "  callees := [Prysm.Checkpoint.Code.marshalSSZTo]\n",
@@ -2184,6 +2235,28 @@ def fast_path_selftest():
                 bad.append((f"fast_path_recompute_{tname}", Lx, X["L"]))
         except Exception as e:
             bad.append((f"fast_path_recompute_{tname}", f"{type(e).__name__}: {e}"))
+    # code mutants of the 1-byte inline copy of Builder -> the recomputation refuses each of them
+    sp = "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Builder.MarshalSSZTo.S"
+    for mname, old, new in FAST_PATH_BYTE_COPY_MUTANTS:
+        n += 1
+        try:
+            fs, goffs, size = fast_path_ir((KR / "prysm/ir/ir-mainnet.json").read_text(), "v1alpha1.Builder")
+            dirs = [l.strip() for l in (KR / sp).read_text().split("\n") if l.strip()]
+            if dirs.count(old) != 1:
+                raise ValueError(f"selftest setup: `{old}` not found once")
+            k = dirs.index(old)
+            if not new:
+                b = k + 1
+                while dirs[b] == "nop":
+                    b += 1
+                del dirs[b]
+            dirs[k:k + 1] = new
+            fast_path_expect(dirs, fs, goffs, size)
+            bad.append((f"fast_path_builder_byte_copy_{mname}", "not refused"))
+        except FastPathMismatch:
+            pass
+        except Exception as e:
+            bad.append((f"fast_path_builder_byte_copy_{mname}", f"{type(e).__name__}: {e}"))
     # an IR mutant: ValidatorBalance Balance at Go offset 24 -> the recomputation refuses
     n += 1
     try:

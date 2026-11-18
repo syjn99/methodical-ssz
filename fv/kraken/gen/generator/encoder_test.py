@@ -10,6 +10,7 @@ Cases (mutated `.S` / IR copies are written to <work-dir>, nothing in the reposi
    `lean/Prysm/<T>/GeneratedEncodeFastPath.lean` when it exists. A refuse row: exit 2 twice, 0 bytes on stdout.
  - fast-path-refused-*: adversarial `.S` / IR mutants (capacity test altered so that the growslice site is on the walked path,
    a 4-byte inline copy with a wrong offset, width, source or length test, a 20-byte memmove of the wrong size, IR sizes 4 / 20 changed,
+   a 1-byte inline copy (Builder) with a wrong offset, width, source, length test or capacity test, IR size 1 changed,
    length test with a wrong immediate / wrong word, a store to the wrong offset vs the IR, fields out of order, a
    clobbered dst / len register, memmove with swapped source / destination, epilogue frame-test variants, a
    truncated file, an extra store beyond len + size, unknown directives and callees, stack stores outside the frame,
@@ -237,6 +238,28 @@ def adversarial(work):
         ty["go_fields"][3].__setitem__("tag", ty["go_fields"][3]["tag"].replace('ssz-size:"20"', 'ssz-size:"32"')),
         ty["ir"]["fields"][2]["v"].update(size=32, fixed_size=32), ty["ir"].update(fixed_size=ty["ir"]["fixed_size"] + 12)),
         work, "bls-to-execution-change-size")), "refuse", "IR size 20 -> 32 (code tests and copies 20)"))
+    # 1-byte field (inline 8-bit copy, the Version field of Builder)
+    builder = "Builder"
+    adversarial_case("inline-byte-store-offset", builder, [("mov %r9b,(%rax,%rbx,1)", ["mov %r9b,0x1(%rax,%rbx,1)"], 0)],
+        "1-byte field stored at SSZ offset 49 (IR: 48)")
+    adversarial_case("inline-byte-load-disp", builder, [("movzbl (%rsi),%r9d", ["movzbl 0x1(%rsi),%r9d"], 0)],
+        "1-byte field loaded at its pointer + 1")
+    adversarial_case("inline-byte-store-32", builder, [("mov %r9b,(%rax,%rbx,1)", ["mov %r9d,(%rax,%rbx,1)"], 0)],
+        "1-byte field stored with a 32-bit store")
+    adversarial_case("inline-byte-load-16", builder, [("movzbl (%rsi),%r9d", ["movzwl (%rsi),%r9d"], 0)],
+        "1-byte field loaded with a 16-bit load")
+    adversarial_case("inline-byte-other-field", builder, [("movzbl (%rsi),%r9d", ["mov 0x38(%rdx),%rsi", "movzbl (%rsi),%r9d"], 0)],
+        "the 1-byte field copied from the pointer of the next field")
+    adversarial_case("inline-byte-len-imm", builder, [("cmpq $0x1,0x28(%rdx)", ["cmpq $0x2,0x28(%rdx)"], 0)],
+        "length test of a 1-byte field with 2")
+    adversarial_case("inline-byte-len-missing", builder, [("cmpq $0x1,0x28(%rdx)", None, 0), (f"jne {lbl(builder, '2dd')}", None, 0)],
+        "1-byte field without its length test")
+    adversarial_case("inline-byte-cap-missing", builder, [("cmp %r8,%rcx", None, 0), (f"jb {lbl(builder, 'e3')}", None, 0)],
+        "1-byte field without its capacity test")
+    C.append(("fast-path-refused-inline-byte-ir-size", argv(builder, ir=ir_mut(builder, lambda ty: (
+        ty["go_fields"][2].__setitem__("tag", ty["go_fields"][2]["tag"].replace('ssz-size:"1"', 'ssz-size:"4"')),
+        ty["ir"]["fields"][1]["v"].update(size=4, fixed_size=4), ty["ir"].update(fixed_size=ty["ir"]["fixed_size"] + 3)),
+        work, "builder-size")), "refuse", "IR size 1 -> 4 (code tests and copies 1)"))
     # nested Checkpoint fields (AttestationData): the callee, the pointer word, the nil test, the arguments, the error test, the IR
     ad = "AttestationData"
     cal = f"callq {P}.Checkpoint.MarshalSSZTo"
@@ -272,6 +295,9 @@ def adversarial(work):
     adversarial_case("inline-nops", fork, [("mov %edx,(%rbx,%rcx,1)", ["nop", "mov %edx,(%rbx,%rcx,1)"], 0),
                                            ("mov (%rdx),%edx", ["nop", "mov (%rdx),%edx"], 1)],
         "nops before the 32-bit store of field 0 and the 32-bit load of field 1", "covered")
+    adversarial_case("inline-byte-nops", builder, [("movzbl (%rsi),%r9d", ["nop", "movzbl (%rsi),%r9d"], 0),
+                                                   ("mov %r9b,(%rax,%rbx,1)", ["nop", "mov %r9b,(%rax,%rbx,1)", "nop"], 0)],
+        "nops before the 8-bit load and around the 8-bit store of the 1-byte field", "covered")
     adversarial_case("nops", validator_balance, [("lea 0x8(%rcx),%rdx", ["nop", "lea 0x8(%rcx),%rdx", "nop"], 0), ("cmp %rdx,%rdi", ["cmp %rdx,%rdi", "nop"], 0),
                      ("mov 0x48(%rsp),%r8", ["nop", "nop", "mov 0x48(%rsp),%r8"], 0), ("pop %rbp", ["nop", "pop %rbp"], 0)],
         "nops at start, middle (inside a cmp / jae window), doubled, before pop", "covered")
@@ -456,7 +482,7 @@ def main():
     h = work / "fast_path_fail_closed_harness.py"
     h.write_text(FAIL_CLOSED_HARNESS)
     reached = set()
-    for t in ("ValidatorBalance", "DepositMessage", "HistoricalSummary", "Checkpoint", "Fork", "AttestationData"):
+    for t in ("ValidatorBalance", "DepositMessage", "HistoricalSummary", "Checkpoint", "Fork", "AttestationData", "Builder"):
         cfg = work / f"fast_path_fail_closed-{t}.cfg.json"
         ro = work / f"fast_path_fail_closed-{t}.result.json"
         cfg.write_text(json.dumps(dict(argv=argv(t)[4:], nfields=nfields(t))))
