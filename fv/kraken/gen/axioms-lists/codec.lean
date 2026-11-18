@@ -13,6 +13,9 @@ import Codec.Kind.FixedBytesDecodeWindow
 import Codec.Kind.FixedBytesDecodeWindowOffsetZero
 import Codec.FixedBytesDecodeWindow
 import Codec.FixedBytesDecodeWindowOffsetZero
+import Codec.FixedBytesDecodeInline
+import Codec.Kind.FixedBytesDecodeInline
+import Codec.EncodeInlineCopy
 import Codec.Kind.CalleeDecodeWindow
 import Codec.CalleeDecodeWindow
 import Codec.DecoderPrologue
@@ -20,6 +23,9 @@ import Codec.NopWindow
 import Codec.WindowSteps
 import Codec.Kind.WindowSteps
 import Codec.Kind.DecodeAcceptAnyFrame
+import Codec.Kind.DecodeAcceptNestedAnyFrame
+import Codec.NestedCheckpointDecode
+import Codec.Kind.NestedCheckpointDecode
 import Codec.DecodeRejectSizeAnyFrame
 import Codec.Kind.DecodeRejectAnyFrame
 import Codec.FieldFrame
@@ -94,6 +100,16 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Codec.bytes_decode_window_96_rsi_rdi
 #print axioms Codec.bytes_decode_window_96_rsi_rdx
 #print axioms Codec.bytes_decode_window_96_rsi_rsi
+#print axioms Codec.bytes_decode_window_20_rdx_rax
+#print axioms Codec.bytes_decode_window_20_rdx_rcx
+#print axioms Codec.bytes_decode_window_20_rdx_rdi
+#print axioms Codec.bytes_decode_window_20_rdx_rdx
+#print axioms Codec.bytes_decode_window_20_rdx_rsi
+#print axioms Codec.bytes_decode_window_20_rsi_rax
+#print axioms Codec.bytes_decode_window_20_rsi_rcx
+#print axioms Codec.bytes_decode_window_20_rsi_rdi
+#print axioms Codec.bytes_decode_window_20_rsi_rdx
+#print axioms Codec.bytes_decode_window_20_rsi_rsi
 #print axioms Codec.bytes_decode_window_offset_zero_32_rdx_rax
 #print axioms Codec.bytes_decode_window_offset_zero_32_rdx_rcx
 #print axioms Codec.bytes_decode_window_offset_zero_32_rdx_rdi
@@ -124,8 +140,22 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Codec.bytes_decode_window_offset_zero_96_rsi_rdi
 #print axioms Codec.bytes_decode_window_offset_zero_96_rsi_rdx
 #print axioms Codec.bytes_decode_window_offset_zero_96_rsi_rsi
+#print axioms Codec.bytes_decode_window_offset_zero_20_rdx_rax
+#print axioms Codec.bytes_decode_window_offset_zero_20_rdx_rcx
+#print axioms Codec.bytes_decode_window_offset_zero_20_rdx_rdi
+#print axioms Codec.bytes_decode_window_offset_zero_20_rdx_rdx
+#print axioms Codec.bytes_decode_window_offset_zero_20_rdx_rsi
+#print axioms Codec.bytes_decode_window_offset_zero_20_rsi_rax
+#print axioms Codec.bytes_decode_window_offset_zero_20_rsi_rcx
+#print axioms Codec.bytes_decode_window_offset_zero_20_rsi_rdi
+#print axioms Codec.bytes_decode_window_offset_zero_20_rsi_rdx
+#print axioms Codec.bytes_decode_window_offset_zero_20_rsi_rsi
 #print axioms Codec.bytes_decode_segment_window
 #print axioms Codec.bytes_decode_segment_offset_zero_window
+#print axioms Codec.bytes_decode_inline_window_rdx_rsi_rdi
+#print axioms Codec.bytes_decode_inline_window_rdx_rbx_rsi
+#print axioms Codec.bytes_decode_inline_segment_window
+#print axioms Codec.bytesDecodeInlineSegmentKindWindow_of
 #print axioms Codec.callDecodeSegmentKindWindow_of
 #print axioms Codec.call_decode_segment_window
 #print axioms Codec.decode_prologue_segment
@@ -231,6 +261,8 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Codec.StackValue.ret.elim
 #print axioms Codec.StackValue.zero
 #print axioms Codec.StackValue.zero.elim
+#print axioms Codec.StackValue.bufferAddress
+#print axioms Codec.StackValue.bufferAddress.elim
 #print axioms Codec.DecodeBoundaryState
 #print axioms Codec.DecodeBoundaryState.done
 #print axioms Codec.DecodeBoundaryState.existentials
@@ -257,6 +289,8 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Codec.frame_low_address_without_calls
 #print axioms Codec.decode_stack_low_eq
 #print axioms Codec.frame_low_stack_split
+#print axioms Codec.frame_low_stack_split_extra
+#print axioms Codec.frame_low_address_extra
 #print axioms Codec.decodeRegisterFacts
 #print axioms Codec.runtimeBinders
 #print axioms Codec.scratchBoundFacts
@@ -356,6 +390,8 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Codec.step_length_check
 #print axioms Codec.step_store_xmm15
 #print axioms Codec.step_store_indexed
+#print axioms Codec.step_load_bytes32
+#print axioms Codec.step_store_indexed32
 #print axioms Codec.step_sub_immediate
 #print axioms Codec.step_sub_registers
 #print axioms Codec.step_xor32
@@ -381,3 +417,42 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Codec.Segment.reject_size_any_frame
 #print axioms Codec.Segment.bytes32_vector_serialize
 #print axioms Codec.Segment.bytes32_vector_of_bytes
+#print axioms Codec.NestedCheckpointCalleeAccept
+#print axioms Codec.nestedCheckpointAllocate
+#print axioms Codec.nestedCheckpointCall
+#print axioms Codec.nestedCheckpointFrame
+#print axioms Codec.nestedCheckpointFrame_length
+#print axioms Codec.nestedCheckpointFrame_sep
+#print axioms Codec.nestedCheckpointFrame_slices
+#print axioms Codec.nestedCheckpointFrame_lengths
+#print axioms Codec.nestedCheckpointFrame_argument_words
+#print axioms Codec.nestedCheckpointFreshObject
+#print axioms Codec.nestedCheckpointFrame_low_address
+#print axioms Codec.nested_checkpoint_decode_window
+#print axioms Codec.nestedCheckpointDecodeKindWindow
+#print axioms Codec.nestedCheckpointDecodeKindWindow_of
+#print axioms Codec.NestedField
+#print axioms Codec.NestedField.flat
+#print axioms Codec.NestedField.flat.elim
+#print axioms Codec.NestedField.checkpoint
+#print axioms Codec.NestedField.checkpoint.elim
+#print axioms Codec.NestedField.inputFields
+#print axioms Codec.NestedField.words
+#print axioms Codec.NestedField.heap
+#print axioms Codec.NestedField.pointers
+#print axioms Codec.nestedInputFields
+#print axioms Codec.nestedHeapSize
+#print axioms Codec.nestedReceiverWords
+#print axioms Codec.nestedPointerCount
+#print axioms Codec.checkpointObjectChunks
+#print axioms Codec.nestedReceiverPost
+#print axioms Codec.nestedHeapPost
+#print axioms Codec.nestedRuntimeBinders
+#print axioms Codec.nestedDecodeBinders
+#print axioms Codec.nestedDecodeMem
+#print axioms Codec.nestedDecodeFinalStatePredicate
+#print axioms Codec.decodeAcceptNestedKindAnyFrame
+#print axioms Codec.nestedDecodeBoundaryStatePredicate
+#print axioms Codec.decodeHeadNestedKindAnyFrame
+#print axioms Codec.decodeFieldNestedKindAnyFrame
+#print axioms Codec.decodeEpilogueNestedKindAnyFrame

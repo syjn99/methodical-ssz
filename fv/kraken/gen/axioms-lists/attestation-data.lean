@@ -10,6 +10,7 @@ import Prysm.AttestationData.DecodeSpec
 import Prysm.AttestationData.WitnessBumpAllocator
 import Prysm.AttestationData.WitnessDecodeAccept
 import Prysm.AttestationData.WitnessDecodeRejectSize
+import Prysm.AttestationData.GeneratedDecodeAccept
 import Prysm.AttestationData.Size
 import Prysm.AttestationData.WitnessSize
 import Prysm.AttestationData.EncodeSpec
@@ -37,6 +38,60 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Prysm.AttestationData.bump_newobject72
 #print axioms Prysm.AttestationData.Witness.DecodeAccept.runs
 #print axioms Prysm.AttestationData.Witness.DecodeRejectSize.runs
+#print axioms Prysm.AttestationData.Decode.generated_directive_15
+#print axioms Prysm.AttestationData.Decode.generated_directive_15_kind
+#print axioms Prysm.AttestationData.Decode.generated_directive_16
+#print axioms Prysm.AttestationData.Decode.generated_directive_16_kind
+#print axioms Prysm.AttestationData.Decode.generated_Slot_call
+#print axioms Prysm.AttestationData.Decode.generated_Slot_call_kind
+#print axioms Prysm.AttestationData.Decode.generated_directive_48
+#print axioms Prysm.AttestationData.Decode.generated_directive_48_kind
+#print axioms Prysm.AttestationData.Decode.generated_directive_49
+#print axioms Prysm.AttestationData.Decode.generated_directive_49_kind
+#print axioms Prysm.AttestationData.Decode.generated_directive_50
+#print axioms Prysm.AttestationData.Decode.generated_directive_50_kind
+#print axioms Prysm.AttestationData.Decode.generated_directive_51
+#print axioms Prysm.AttestationData.Decode.generated_directive_51_kind
+#print axioms Prysm.AttestationData.Decode.generated_directive_52
+#print axioms Prysm.AttestationData.Decode.generated_directive_52_kind
+#print axioms Prysm.AttestationData.Decode.generated_directive_53
+#print axioms Prysm.AttestationData.Decode.generated_directive_53_kind
+#print axioms Prysm.AttestationData.Decode.generated_directive_54
+#print axioms Prysm.AttestationData.Decode.generated_directive_54_kind
+#print axioms Prysm.AttestationData.Decode.generated_CommitteeIndex_call
+#print axioms Prysm.AttestationData.Decode.generated_CommitteeIndex_call_kind
+#print axioms Prysm.AttestationData.Decode.generated_BeaconBlockRoot_segment
+#print axioms Prysm.AttestationData.Decode.generated_BeaconBlockRoot_segment_kind
+#print axioms Prysm.AttestationData.Decode.generated_directive_112
+#print axioms Prysm.AttestationData.Decode.generated_directive_112_kind
+#print axioms Prysm.AttestationData.Decode.generated_directive_113
+#print axioms Prysm.AttestationData.Decode.generated_directive_113_kind
+#print axioms Prysm.AttestationData.Decode.generated_directive_120
+#print axioms Prysm.AttestationData.Decode.generated_directive_120_kind
+#print axioms Prysm.AttestationData.Decode.generated_directive_121
+#print axioms Prysm.AttestationData.Decode.generated_directive_121_kind
+#print axioms Prysm.AttestationData.Decode.generated_Source_nested
+#print axioms Prysm.AttestationData.Decode.generated_Source_nested_kind
+#print axioms Prysm.AttestationData.Decode.generated_Target_nested
+#print axioms Prysm.AttestationData.Decode.generated_Target_nested_kind
+#print axioms Prysm.AttestationData.Decode.generated_head
+#print axioms Prysm.AttestationData.Decode.generated_head_kind
+#print axioms Prysm.AttestationData.Decode.generated_field_1
+#print axioms Prysm.AttestationData.Decode.generated_field_1_kind
+#print axioms Prysm.AttestationData.Decode.generated_field_2
+#print axioms Prysm.AttestationData.Decode.generated_field_2_kind
+#print axioms Prysm.AttestationData.Decode.generated_field_3
+#print axioms Prysm.AttestationData.Decode.generated_field_3_kind
+#print axioms Prysm.AttestationData.Decode.generated_field_4
+#print axioms Prysm.AttestationData.Decode.generated_field_4_kind
+#print axioms Prysm.AttestationData.Decode.generated_field_5
+#print axioms Prysm.AttestationData.Decode.generated_field_5_kind
+#print axioms Prysm.AttestationData.Decode.generated_epilogue
+#print axioms Prysm.AttestationData.Decode.generated_epilogue_kind
+#print axioms Prysm.AttestationData.Decode.generated_accept
+#print axioms Prysm.AttestationData.Decode.generated_accept_kind
+#print axioms Prysm.AttestationData.Decode.generated_reject
+#print axioms Prysm.AttestationData.Decode.generated_reject_kind
 #print axioms Prysm.AttestationData.Size.result
 #print axioms Prysm.AttestationData.Size.result_spec
 #print axioms Prysm.AttestationData.Witness.Size.runs

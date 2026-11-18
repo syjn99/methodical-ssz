@@ -251,6 +251,36 @@
   "note": "rcx must be the input length 128"
  },
  {
+  "id": "attestation-data-decode-generated-accept-control",
+  "kind": "control",
+  "module": "Prysm/AttestationData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.AttestationData.Decode.generated_accept"
+ },
+ {
+  "id": "attestation-data-decode-generated-accept-statement-rax-0-to-1",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.AttestationData.Decode.generated_accept",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "attestation-data-decode-generated-accept-statement-heap-240-to-239",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.AttestationData.Decode.generated_accept",
+  "old": "⋆ Heap (avail - 240)",
+  "new": "⋆ Heap (avail - 239)"
+ },
+ {
+  "id": "attestation-data-decode-generated-accept-statement-source-root-at-target-object",
+  "kind": "statement",
+  "module": "Prysm/AttestationData/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.AttestationData.Decode.generated_accept",
+  "old": "⋆ Eq (fv3root.At p3)",
+  "new": "⋆ Eq (fv3root.At p5)"
+ },
+ {
   "id": "attestation-data-size-result-control",
   "kind": "control",
   "module": "Prysm/AttestationData/Size.lean",

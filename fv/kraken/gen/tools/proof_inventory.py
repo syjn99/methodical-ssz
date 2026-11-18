@@ -87,19 +87,20 @@ import types_table  # noqa: E402
 def core_flat_types():
     """The Go type names of the accept rows of the mode `encoder --fast-path` and then of the mode
     `decoder --whole-accept` of gen/generator/types.tsv, in table order, each name once, without the types of a row with
-    the companion `hand-list`."""
+    the companion `hand-list` and without the types of `NESTED`."""
     rows = types_table.rows()
-    listed = {r["type"] for r in rows if "hand-list" in r["companions"]}
+    listed = {r["type"] for r in rows if "hand-list" in r["companions"]} | set(NESTED)
     names = [r["type"] for m in ("encoder --fast-path", "decoder --whole-accept") for r in rows
              if r["mode"] == m and r["expect"] == "accept" and r["type"] not in listed]
     return list(dict.fromkeys(names))
 
 
+# AttestationData and SingleAttestation have nested fields and are listed apart (`NESTED`).
+# The decoder of AttestationData is also generated; NESTED types are not core flat types.
+NESTED = ["AttestationData", "SingleAttestation"]
 # The core flat types: the types with a generated decoder or encoder and a hand list of the axioms gate.
 # The inventory counts their decoders as one group.
-# AttestationData and SingleAttestation have nested fields and are listed apart (`NESTED`).
 CORE_FLAT_TYPES = core_flat_types()
-NESTED = ["AttestationData", "SingleAttestation"]
 # Why the generators refuse a flat type outside CORE_FLAT_TYPES (wording only, no state rule). The class is the field kind
 # or the callee at the directive of the `.S` file where `decoder --whole-accept` or `encoder --fast-path` stops.
 # The generators do not support that class.
@@ -107,19 +108,8 @@ NESTED = ["AttestationData", "SingleAttestation"]
 # `sh gen/generator/gen.sh <out dir>` for the row. The `run` mode checks that the keys are the refuse rows of
 # gen/generator/types.tsv outside CORE_FLAT_TYPES and NESTED. No program compares the text with a generator run.
 GENERATOR_REFUSED = {
-    "v1.BuilderExitRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1.ConsolidationRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1.Withdrawal": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1.WithdrawalRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1alpha1.BLSToExecutionChange": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1alpha1.BuilderPendingWithdrawal": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1alpha1.ProposerPreferences": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1alpha1.ValidatorRegistrationV1": dict(decoder="byte vector 20", encoder="byte vector 20"),
-    "v1alpha1.ENRForkID": dict(decoder="byte vector 4", encoder="byte vector 4"),
-    "v1alpha1.Fork": dict(decoder="byte vector 4", encoder="byte vector 4"),
-    "v1alpha1.ForkData": dict(decoder="byte vector 4", encoder="byte vector 4"),
-    "v1alpha1.Status": dict(decoder="byte vector 4", encoder="byte vector 4"),
-    "v1alpha1.StatusV2": dict(decoder="byte vector 4", encoder="byte vector 4"),
+    "v1alpha1.BuilderPendingWithdrawal": dict(decoder="callee primitives.Gwei.UnmarshalSSZ"),
+    "v1alpha1.ForkData": dict(encoder="frame test"),
     "v1alpha1.Builder": dict(decoder="byte vector 1", encoder="byte vector 1"),
     "v1alpha1.PayloadAttestationData": dict(decoder="bool", encoder="bool"),
     "v1alpha1.Validator": dict(decoder="bool", encoder="bool"),

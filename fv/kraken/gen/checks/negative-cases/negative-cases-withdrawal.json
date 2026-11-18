@@ -1,0 +1,32 @@
+[
+ {
+  "id": "withdrawal-decode-generated-accept-control",
+  "module": "Prysm/Withdrawal/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.Withdrawal.Decode.generated_accept",
+  "kind": "control"
+ },
+ {
+  "id": "withdrawal-decode-generated-accept-statement-fv0-fv0-to-fv1",
+  "module": "Prysm/Withdrawal/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.Withdrawal.Decode.generated_accept",
+  "kind": "statement",
+  "old": "⋆ Eq (fv0.At (s.regs.rax.toBitVec + 8))",
+  "new": "⋆ Eq (fv1.At (s.regs.rax.toBitVec + 8))"
+ },
+ {
+  "id": "withdrawal-decode-generated-accept-statement-fv1-fv1-to-fv0",
+  "module": "Prysm/Withdrawal/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.Withdrawal.Decode.generated_accept",
+  "kind": "statement",
+  "old": "⋆ Eq (fv1.At (s.regs.rax.toBitVec + 16))",
+  "new": "⋆ Eq (fv0.At (s.regs.rax.toBitVec + 16))"
+ },
+ {
+  "id": "withdrawal-decode-generated-accept-statement-hguard-96-to-88",
+  "module": "Prysm/Withdrawal/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.Withdrawal.Decode.generated_accept",
+  "kind": "statement",
+  "old": "(hguard : guard.toNat + 96 < s.regs.rsp.toNat)",
+  "new": "(hguard : guard.toNat + 88 < s.regs.rsp.toNat)"
+ }
+]
