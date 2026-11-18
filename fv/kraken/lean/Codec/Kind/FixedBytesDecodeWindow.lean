@@ -58,7 +58,7 @@ abbrev bytesDecodeSegmentKindWindow (n : Nat) (C : Program) (rY : Reg64) (j1 jm 
       ⟨s, Host.addrOf (k + j1)⟩
 
 /-- `bytesDecodeSegmentKindWindow` follows from `bytes_decode_segment_window` and the window facts of an instance. -/
-theorem bytesDecodeSegmentKindWindow_of (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (C : Program) (rX rY : Reg64)
+theorem bytesDecodeSegmentKindWindow_of (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96 ∨ n = 20) (C : Program) (rX rY : Reg64)
     (hX : rX = Reg64.rdx ∨ rX = Reg64.rsi)
     (hY : rY = Reg64.rax ∨ rY = Reg64.rcx ∨ rY = Reg64.rdx ∨ rY = Reg64.rsi ∨ rY = Reg64.rdi)
     (j1 j2 jl jm e : Nat) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (qA qB : Program)

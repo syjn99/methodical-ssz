@@ -23,7 +23,8 @@ Checks, per file (text only):
     and the next line is exactly `  intro h; with_reducible rfl`.
  5. Every `_kind` theorem belongs to a theorem of the file.
 10. step chain (the first part of a `generator.py decoder --whole-accept` file): the step kinds of `lean/Codec/Kind/WindowSteps.lean`,
-    `lean/Codec/Kind/FixedBytesDecodeWindow.lean`, `lean/Codec/Kind/FixedBytesDecodeWindowOffsetZero.lean` and `lean/Codec/Kind/CalleeDecodeWindow.lean`:
+    `lean/Codec/Kind/FixedBytesDecodeWindow.lean`, `lean/Codec/Kind/FixedBytesDecodeWindowOffsetZero.lean`,
+    `lean/Codec/Kind/FixedBytesDecodeInline.lean` and `lean/Codec/Kind/CalleeDecodeWindow.lean`:
         @Codec.stepMoveRegisterKind h C Reg64.rD Reg64.rS j e          @Codec.stepAddKind h C Reg64.rD imm j e
         @Codec.stepLoadValueKind / stepLoadBytesKind / stepStoreKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
         @Codec.stepMoveImmediateKind h C Reg64.rD imm j e                @Codec.stepJumpKind h C "l" j jl
@@ -33,10 +34,12 @@ Checks, per file (text only):
                                                                           ValidatorIndex, Epoch of consensus-types/primitives)
         @Codec.bytesDecodeSegmentKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC src
         @Codec.bytesDecodeSegmentOffsetZeroKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC
-    (n = 32 | 48 | 96; rY one of rax, rcx, rdx, rsi, rdi; registers `Reg64.<one of the 16>`; Int64 literals n or (-n)).
+        @Codec.bytesDecodeInlineSegmentKindWindow h C Reg64.rX Reg64.rB j1 jc e dR dB fP fL fC src
+    (n = 32 | 48 | 96 | 20; rY one of rax, rcx, rdx, rsi, rdi; rX = rdx and rB one of rsi, rbx (the 4-byte inline copy);
+    registers `Reg64.<one of the 16>`; Int64 literals n or (-n)).
     10b. The proof of `t` (comments and string literals removed) uses the lemma of its kind
          (`step_move_register`, `step_load_value`, …, `call_decode_segment_window`, `bytes_decode_segment_window`,
-         `bytes_decode_segment_offset_zero_window`) and no other step lemma: a theorem whose proof and kind name
+         `bytes_decode_segment_offset_zero_window`, `bytes_decode_inline_segment_window`) and no other step lemma: a theorem whose proof and kind name
          different lemmas fails.
     10c. A step file carries exactly one line `FIELDS-JSON: [{"field": F, "theorems": [...]}, …]`: every theorem with
          a step kind is listed in exactly one field, every listed theorem is in the file, a field has at most one block
@@ -84,11 +87,14 @@ CALLEES = tuple(f'"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{
 INT = r"(?:0|[1-9][0-9]*|\(-[1-9][0-9]*\))"  # an Int64 literal as the generator writes it
 STEP_REGISTERS = r"Reg64\.(?:rax|rbx|rcx|rdx|rsi|rdi|rsp|rbp|r8|r9|r10|r11|r12|r13|r14|r15)"
 STEP_RECEIVER_REGISTERS = r"Reg64\.(?:rax|rcx|rdx|rsi|rdi)"
+STEP_INLINE_RECEIVER = r"Reg64\.rdx"           # bytes_decode_inline_segment_window: hX
+STEP_INLINE_BUFFER = r"Reg64\.(?:rsi|rbx)"     # bytes_decode_inline_segment_window: the buffer register of hBT
 
 # kind -> (parameter regex after `h `, with {C} for the code constant; namespace of the kind and of its lemma; lemma
 # of the proof). The step kinds, the fixed-bytes window kinds and the call-block kind are in `lean/Codec/Kind/`
-# (`WindowSteps.lean`, `FixedBytesDecodeWindow*.lean`, `CalleeDecodeWindow.lean`); their lemmas are in
-# `lean/Codec/WindowSteps.lean`, `lean/Codec/FixedBytesDecodeWindow*.lean` and `lean/Codec/CalleeDecodeWindow.lean`.
+# (`WindowSteps.lean`, `FixedBytesDecodeWindow*.lean`, `FixedBytesDecodeInline.lean`, `CalleeDecodeWindow.lean`); their
+# lemmas are in `lean/Codec/WindowSteps.lean`, `lean/Codec/FixedBytesDecodeWindow*.lean`, `lean/Codec/FixedBytesDecodeInline.lean`
+# and `lean/Codec/CalleeDecodeWindow.lean`.
 STEP_KINDS = {
     "stepMoveRegisterKind": ("{C} STEP_REGISTERS STEP_REGISTERS NAT NAT", "Codec", "step_move_register"),
     "stepLoadValueKind": ("{C} STEP_REGISTERS STEP_REGISTERS INT NAT NAT", "Codec", "step_load_value"),
@@ -103,12 +109,14 @@ STEP_KINDS = {
     "callDecodeSegmentKindWindow": ("{C} LBL LBL NAT NAT NAT", "Codec", "call_decode_segment_window"),
     "bytesDecodeSegmentKindWindow": ("SIZE {C} STEP_RECEIVER_REGISTERS NAT NAT NAT INT INT INT INT INT INT INT", "Codec", "bytes_decode_segment_window"),
     "bytesDecodeSegmentOffsetZeroKindWindow": ("SIZE {C} STEP_RECEIVER_REGISTERS NAT NAT NAT INT INT INT INT INT INT", "Codec", "bytes_decode_segment_offset_zero_window"),
+    "bytesDecodeInlineSegmentKindWindow": ("{C} STEP_INLINE_RECEIVER STEP_INLINE_BUFFER NAT NAT NAT INT INT INT INT INT INT", "Codec", "bytes_decode_inline_segment_window"),
 }
 STEP_LEMMAS = {v[2]: v[1] for v in STEP_KINDS.values()}   # lemma -> namespace
-STEP_BLOCK = {"callDecodeSegmentKindWindow": "call", "bytesDecodeSegmentKindWindow": "segment", "bytesDecodeSegmentOffsetZeroKindWindow": "segment"}
+STEP_BLOCK = {"callDecodeSegmentKindWindow": "call", "bytesDecodeSegmentKindWindow": "segment", "bytesDecodeSegmentOffsetZeroKindWindow": "segment",
+              "bytesDecodeInlineSegmentKindWindow": "segment"}
 LBL = r'"[^"\\\s]+"'
 COVER = re.compile(r"step coverage: (\d+) of (\d+) fields")
-SIZE = r"(?:32|48|96)"  # the sizes of the hypothesis `hn` of the byte segment lemmas
+SIZE = r"(?:32|48|96|20)"  # the sizes of the hypothesis `hn` of the byte segment lemmas
 
 TOP_OK = re.compile(r"^(import |open |variable |namespace |end\b|set_option \S+ \S+ in$|theorem |/-|--|$|\s)")
 BANNED = re.compile(r"\b(sorry|admit|native_decide|bv_decide|axiom)\b")
@@ -152,7 +160,8 @@ def strip_strings(s):
 
 
 def step_param_rx(spec, C):
-    rx = spec.replace("STEP_REGISTERS", STEP_REGISTERS).replace("STEP_RECEIVER_REGISTERS", STEP_RECEIVER_REGISTERS).replace("INT", INT).replace("NAT", NAT)
+    rx = spec.replace("STEP_INLINE_RECEIVER", STEP_INLINE_RECEIVER).replace("STEP_INLINE_BUFFER", STEP_INLINE_BUFFER)
+    rx = rx.replace("STEP_REGISTERS", STEP_REGISTERS).replace("STEP_RECEIVER_REGISTERS", STEP_RECEIVER_REGISTERS).replace("INT", INT).replace("NAT", NAT)
     return rx.replace("LBL", LBL).replace("SIZE", SIZE).replace("{C}", C)
 
 
@@ -379,7 +388,7 @@ STEP_TEST_KINDS = {
     "pending_partial_withdrawal_step_directive_130": ("@Codec.stepLabelKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pending_partial_withdrawal_200\" 130 131", 'step_label "L_pending_partial_withdrawal_200" _ (k + 130) (k + 131) hq he hend'),
     "pending_partial_withdrawal_step_directive_131": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rax 24 131 132", "step_store Reg64.rsi Reg64.rax 24 _ (k + 131) (k + 132) hq he hend"),
     "pending_partial_withdrawal_step_Sig_segment": ("@Codec.bytesDecodeSegmentOffsetZeroKindWindow h 96 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdx 132 150 156 112 120 56 48 56 64",
-                         "bytes_decode_segment_offset_zero_window 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 132) (k + 145) (k + 145) (k + 150) (k + 156) hqA heA hqB heB hjl hl hjm hend"),
+                         "bytes_decode_segment_offset_zero_window 96 (Or.inr (Or.inr (Or.inl rfl))) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 132) (k + 145) (k + 145) (k + 150) (k + 156) hqA heA hqB heB hjl hl hjm hend"),
     "pending_partial_withdrawal_step_directive_156": ("@Codec.stepLoadValueKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rsp 56 156 157", "step_load_value Reg64.rsi Reg64.rsp 56 _ (k + 156) (k + 157) hq he hend"),
     "pending_partial_withdrawal_step_directive_157": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rdx 48 157 158", "step_store Reg64.rsi Reg64.rdx 48 _ (k + 157) (k + 158) hq he hend"),
 }
@@ -408,6 +417,12 @@ def step_text(fields=STEP_TEST_FIELDS, kinds=STEP_TEST_KINDS, n=None, m=None, fj
 
 
 GOOD_STEPS = step_text()
+# a step file with a fifth field decoded by the 4-byte inline-copy segment (`bytesDecodeInlineSegmentKindWindow`)
+STEP_INLINE_KIND = ("@Codec.bytesDecodeInlineSegmentKindWindow h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdx Reg64.rbx 158 162 182 112 120 72 80 88 112",
+                    "bytes_decode_inline_segment_window Reg64.rdx Reg64.rbx Reg64.rsi rfl (Or.inr ⟨rfl, rfl⟩) _ _ _ _ _ _ _ _ _ _ _ (k + 158) (k + 167) (k + 180) (k + 167) (k + 180) (k + 162) (k + 182) hqA heA hqB heB hqC heC hjl hl hjw hw hjc hend")
+STEP_INLINE_KINDS = dict(STEP_TEST_KINDS, pending_partial_withdrawal_step_Ver_segment=STEP_INLINE_KIND)
+STEP_INLINE_FIELDS = STEP_TEST_FIELDS + [("Ver", ["pending_partial_withdrawal_step_Ver_segment"])]
+GOOD_INLINE_STEPS = step_text(fields=STEP_INLINE_FIELDS, kinds=STEP_INLINE_KINDS)
 
 
 def step_cases():
@@ -422,6 +437,11 @@ def step_cases():
         old = f"  with_reducible exact {STEP_LEMMAS[STEP_TEST_KINDS[t][1].split()[0]]}.{STEP_TEST_KINDS[t][1]}\n"
         assert GOOD_STEPS.count(old) == 1, t
         return GOOD_STEPS.replace(old, new)
+    def ichg(old, new, where=0):
+        """GOOD_INLINE_STEPS with the inline kind line (where 0) or its proof line (where 1) changed."""
+        t = STEP_INLINE_KIND[where]
+        assert t.count(old) == 1, old
+        return GOOD_INLINE_STEPS.replace(t, t.replace(old, new))
     st = STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51"][0]
     k2 = dict(STEP_TEST_KINDS, pending_partial_withdrawal_step_Index_segment=STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"])
     two_blocks = [STEP_TEST_FIELDS[0], ("Index", STEP_TEST_FIELDS[1][1] + ["pending_partial_withdrawal_step_Index_segment"]), STEP_TEST_FIELDS[2], STEP_TEST_FIELDS[3]]
@@ -442,6 +462,16 @@ def step_cases():
         ("step_seg_ry_rbx", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace("Reg64.rax", "Reg64.rbx")), False),
         ("step_seg_size_64", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace(" h 32 ", " h 64 ")), False),
         ("step_seg_missing_src", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace(" 40 16", " 40")), False),
+        ("step_seg_size_20", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace(" h 32 ", " h 20 ")), True),
+        ("step_seg_size_4", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace(" h 32 ", " h 4 ")), False),
+        ("step_inline_good", GOOD_INLINE_STEPS, True),
+        ("step_inline_receiver_rax", ichg("Reg64.rdx Reg64.rbx", "Reg64.rax Reg64.rbx"), False),
+        ("step_inline_buffer_rdi", ichg("Reg64.rdx Reg64.rbx", "Reg64.rdx Reg64.rdi"), False),
+        ("step_inline_missing_src", ichg(" 88 112", " 88"), False),
+        ("step_inline_size_param", ichg(" h Prysm.", " h 4 Prysm."), False),
+        ("step_inline_lemma_mismatch", ichg("bytes_decode_inline_segment_window Reg64.rdx Reg64.rbx Reg64.rsi rfl (Or.inr ⟨rfl, rfl⟩)",
+                                            "bytes_decode_segment_window 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl)", 1), False),
+        ("step_inline_name_not_segment", GOOD_INLINE_STEPS.replace("pending_partial_withdrawal_step_Ver_segment", "pending_partial_withdrawal_step_Ver_inline"), False),
         ("step_segz_with_src", kchg("pending_partial_withdrawal_step_Sig_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Sig_segment"][0] + " 0"), False),
         ("step_lemma_kind_mismatch", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  with_reducible exact Codec.step_load_value Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"), False),
         ("step_lemma_only_in_string", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", '  have x := "Codec.step_load_bytes "\n  with_reducible exact foo\n'), False),
@@ -522,7 +552,7 @@ def whole_accept_ir(ir_text, tname):
     for f in t["ir"]["fields"]:
         v = f["v"]
         if v.get("k") == "vector" and v.get("elem", {}).get("k") == "byte" and v.get("go_type") == "[]byte" \
-                and v.get("size") in (32, 48, 96) and v.get("fixed_size") == v.get("size") and not v.get("variable"):
+                and v.get("size") in (4, 20, 32, 48, 96) and v.get("fixed_size") == v.get("size") and not v.get("variable"):
             kd, cal = f".bytes {v['size']}", None
         elif v.get("k") == "uint" and v.get("bits") == 64 and v.get("go_type") == "uint64" and v.get("fixed_size") == 8:
             kd, cal = ".uint64", None
@@ -570,7 +600,7 @@ def whole_accept_expect(dirs, fields, sz):
     # the accept path
     R = {}
     written, callees, events = {}, [], {}
-    n_ms = n_mm = 0
+    n_ms = n_cp = 0   # makeslice calls; byte copies (a memmove call, or the 32-bit store `mov %eT,(%rax)` of a 4-byte field)
     last_call = None
     has_rt = has_call = False
     prev = None
@@ -612,7 +642,7 @@ def whole_accept_expect(dirs, fields, sz):
                 R["rax"] = ("ptr", n_ms)
                 n_ms += 1
             elif fn == "runtime.memmove":
-                n_mm += 1
+                n_cp += 1
             elif fn.startswith(WHOLE_ACCEPT_PRIM) and fn.endswith(".UnmarshalSSZ") and fn[len(WHOLE_ACCEPT_PRIM):-13] in WHOLE_ACCEPT_CONST:
                 has_call = True
                 c = WHOLE_ACCEPT_CONST[fn[len(WHOLE_ACCEPT_PRIM):-13]]
@@ -625,6 +655,12 @@ def whole_accept_expect(dirs, fields, sz):
                 pend_call = todo[0]
             else:
                 raise WholeAcceptMismatch(f"accept path: call of {fn}")
+            prev = d
+            i += 1
+            continue
+        if re.fullmatch(r"mov %e[a-z]{2},\(%rax\)", d) and R.get("rax") == ("ptr", n_ms - 1):
+            # the inline copy of a 4-byte field into the new slice: a copy, not a receiver store
+            n_cp += 1
             prev = d
             i += 1
             continue
@@ -642,7 +678,7 @@ def whole_accept_expect(dirs, fields, sz):
             bi = 0
             for k, (n_, kd, cal, s_, g_) in enumerate(fields):
                 if kd.startswith(".bytes"):
-                    if g_ == o and k not in events and n_mm >= bi + 1:
+                    if g_ == o and k not in events and n_cp >= bi + 1:
                         events[k] = i + 1
                     bi += 1
                 elif cal is None and g_ == o and k not in events:
@@ -844,6 +880,12 @@ WHOLE_ACCEPT_HAND = {
                  "(.original 5), .low (.original 6)] (some ⟨false, 0, 6, 48⟩) 0 false [.fixed 24, .low] [.at (.below 8) (.reg .rbp), .at (.above 8) "
                  "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.existential 0), .at (.below 16) (.ptr 2), .at (.below 48) (.ret 104), "
                  ".low (.existential 1)] 40)"),
+    "Fork": ("link-set", "(Codec.DecoderFrameLayout.mk [Prysm.Epoch.Code.unmarshalSSZ] 9 [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), "
+             "(7, 8)] [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), "
+             ".at (.below 64) (.original 4), .at (.below 56) (.original 5), .at (.below 48) (.original 6), .at (.below 72) (.original 7), .low "
+             "(.original 8)] (some ⟨true, 8, 8, 80⟩) 72 true [.fixed 24, .low] [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), "
+             ".at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 64) (.existential 0), .at (.below 72) (.ret 77), "
+             ".low (.existential 1)] 64)"),
     "SyncCommitteeMessage": ("link-set", "(Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 12 [(0, 8), (1, 8), "
                              "(2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8), (9, 8), (10, 8)] [.at (.below 8) (.original 0), .at "
                              "(.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), .at (.below 104) (.original 4), .at (.below "
@@ -976,6 +1018,17 @@ def whole_accept_selftest():
         bad.append(("whole_accept_ir_goff_mutant", "not refused"))
     except WholeAcceptMismatch:
         pass
+    # the code mutated: the 32-bit copy of the first 4-byte field of Fork removed -> the recomputation refuses (no field event)
+    n += 1
+    try:
+        sp, sraw, iraw = whole_accept_inputs("Fork", "link-set")
+        dirs = [l.strip() for l in sraw.decode("ascii").split("\n") if l.strip() and l.strip() != "mov %edi,(%rax)"]
+        fields, sz = whole_accept_ir(iraw.decode(), "v1alpha1.Fork")
+        E = whole_accept_expect(dirs, fields, sz)
+        bad.append(("whole_accept_code_inline_copy_mutant", f"not refused: {E['pcs']}"))
+    except WholeAcceptMismatch:
+        pass
+    sp, sraw, iraw = whole_accept_inputs("VoluntaryExit", "link-set")
     # the code mutated: the Epoch call replaced by a ValidatorIndex call -> the recomputation refuses (no open field)
     n += 1
     try:
@@ -1203,6 +1256,27 @@ def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
             continue
         if d == "pop %rbp":
             break
+        # the inline copy of a 4-byte field: 32-bit load through the field pointer, 32-bit store into the output
+        m = re.fullmatch(r"mov \(%(\w+)\),%(e[a-z]{2})", d)
+        if m and m.group(2) in FAST_PATH_R32:
+            i = done[0]
+            if not (i < len(fs) and fs[i] == ("b", 4) and R.get(m.group(1)) == ("fp", i)):
+                raise FastPathMismatch("32-bit load")
+            R[FAST_PATH_R32[m.group(2)]] = ("fv32", i)
+            pc += 1
+            continue
+        m = re.fullmatch(r"mov %(e[a-z]{2}),(-?0x[0-9a-f]+)?\(%(\w+),%(\w+),1\)", d)
+        if m and m.group(1) in FAST_PATH_R32:
+            i = done[0]
+            vs = [R.get(m.group(3)), R.get(m.group(4))]
+            ln = [v for v in vs if isinstance(v, tuple) and v[0] == "len"]
+            if not ("ptr" in vs and ln and ln[0][1] + disp(m.group(2)) == soffs[i]
+                    and R.get(FAST_PATH_R32[m.group(1)]) == ("fv32", i)):
+                raise FastPathMismatch("32-bit output store")
+            done[0] += 1
+            pc += 1
+            states.append(snap(pc))
+            continue
         m = re.fullmatch(r"(mov|lea) (-?0x[0-9a-f]+)?\(%(\w+)\),%(\w+)", d)
         if m:
             op, dsp, b, dst = m.group(1), disp(m.group(2)), m.group(3), m.group(4)
@@ -1584,16 +1658,19 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
 
 # ---- rule 13 selftest controls: mutants of the committed raw fast-path outputs (a missing file is a FAIL)
 FAST_PATH_SELFTEST = {"validator-balance": "lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "checkpoint": "lean/Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
-               "historical-summary": "lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "beacon-block-header": "lean/Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean"}
+               "historical-summary": "lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "beacon-block-header": "lean/Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
+               "fork": "lean/Prysm/Fork/GeneratedEncodeFastPath.lean"}
 # the layout defs of three committed fast-path files: the recomputation must give each of them
 FAST_PATH_LAYOUTS = {"ValidatorBalance": ("lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "Prysm.ValidatorBalance.Encode.generated_layout"),
                      "DepositMessage": ("lean/Prysm/DepositMessage/GeneratedEncodeFastPath.lean", "Prysm.DepositMessage.Encode.generated_layout"),
-                     "HistoricalSummary": ("lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "Prysm.HistoricalSummary.Encode.generated_layout")}
+                     "HistoricalSummary": ("lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "Prysm.HistoricalSummary.Encode.generated_layout"),
+                     "Fork": ("lean/Prysm/Fork/GeneratedEncodeFastPath.lean", "Prysm.Fork.Encode.generated_layout")}
 
 
 def fast_path_cases(T):
     """(name, text, ok) on the committed files T = {key: text}."""
     V, checkpoint_text, H, B = T["validator-balance"], T["checkpoint"], T["historical-summary"], T["beacon-block-header"]
+    K = T["fork"]
 
     def r(t, a, b, n=1):
         if t.count(a) < n:
@@ -1639,6 +1716,11 @@ def fast_path_cases(T):
         ("fast_path_hand_with_def", r(B, "namespace Prysm.BeaconBlockHeader\n", "namespace Prysm.BeaconBlockHeader\n\ndef Encode.generated_layout : EncoderFrameLayout where\n  stateWord := true\n"),
          False),
         ("fast_path_historical_summary_frame_state", r(H, "  frame := 80\n", "  frame := 88\n"), False),
+        ("fast_path_good_fork_inline", K, True),
+        ("fast_path_fork_fields_bytes_8", r(K, "[.bytes 4, .bytes 4, .uint64]", "[.bytes 8, .bytes 4, .uint64]", 5), False),
+        ("fast_path_fork_boundary_pc", r(K, "[.bytes 4, .bytes 4, .uint64]\n    ⟨8, 0,", "[.bytes 4, .bytes 4, .uint64]\n    ⟨9, 0,"), False),
+        ("fast_path_fork_boundary_done", r(K, "Encode.generated_field_1 h)\n    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.Fork.Encode.generated_layout [.bytes 4, .bytes 4, .uint64]\n    ⟨32, 1,",
+                                          "Encode.generated_field_1 h)\n    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.Fork.Encode.generated_layout [.bytes 4, .bytes 4, .uint64]\n    ⟨32, 2,"), False),
         ("fast_path_beacon_block_header_state_slot", r(B, "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3)",
                                "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx)"), False),
     ]

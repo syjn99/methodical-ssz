@@ -13,6 +13,9 @@ import Codec.Kind.FixedBytesDecodeWindow
 import Codec.Kind.FixedBytesDecodeWindowOffsetZero
 import Codec.FixedBytesDecodeWindow
 import Codec.FixedBytesDecodeWindowOffsetZero
+import Codec.FixedBytesDecodeInline
+import Codec.Kind.FixedBytesDecodeInline
+import Codec.EncodeInlineCopy
 import Codec.Kind.CalleeDecodeWindow
 import Codec.CalleeDecodeWindow
 import Codec.DecoderPrologue
@@ -94,6 +97,16 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Codec.bytes_decode_window_96_rsi_rdi
 #print axioms Codec.bytes_decode_window_96_rsi_rdx
 #print axioms Codec.bytes_decode_window_96_rsi_rsi
+#print axioms Codec.bytes_decode_window_20_rdx_rax
+#print axioms Codec.bytes_decode_window_20_rdx_rcx
+#print axioms Codec.bytes_decode_window_20_rdx_rdi
+#print axioms Codec.bytes_decode_window_20_rdx_rdx
+#print axioms Codec.bytes_decode_window_20_rdx_rsi
+#print axioms Codec.bytes_decode_window_20_rsi_rax
+#print axioms Codec.bytes_decode_window_20_rsi_rcx
+#print axioms Codec.bytes_decode_window_20_rsi_rdi
+#print axioms Codec.bytes_decode_window_20_rsi_rdx
+#print axioms Codec.bytes_decode_window_20_rsi_rsi
 #print axioms Codec.bytes_decode_window_offset_zero_32_rdx_rax
 #print axioms Codec.bytes_decode_window_offset_zero_32_rdx_rcx
 #print axioms Codec.bytes_decode_window_offset_zero_32_rdx_rdi
@@ -124,8 +137,22 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Codec.bytes_decode_window_offset_zero_96_rsi_rdi
 #print axioms Codec.bytes_decode_window_offset_zero_96_rsi_rdx
 #print axioms Codec.bytes_decode_window_offset_zero_96_rsi_rsi
+#print axioms Codec.bytes_decode_window_offset_zero_20_rdx_rax
+#print axioms Codec.bytes_decode_window_offset_zero_20_rdx_rcx
+#print axioms Codec.bytes_decode_window_offset_zero_20_rdx_rdi
+#print axioms Codec.bytes_decode_window_offset_zero_20_rdx_rdx
+#print axioms Codec.bytes_decode_window_offset_zero_20_rdx_rsi
+#print axioms Codec.bytes_decode_window_offset_zero_20_rsi_rax
+#print axioms Codec.bytes_decode_window_offset_zero_20_rsi_rcx
+#print axioms Codec.bytes_decode_window_offset_zero_20_rsi_rdi
+#print axioms Codec.bytes_decode_window_offset_zero_20_rsi_rdx
+#print axioms Codec.bytes_decode_window_offset_zero_20_rsi_rsi
 #print axioms Codec.bytes_decode_segment_window
 #print axioms Codec.bytes_decode_segment_offset_zero_window
+#print axioms Codec.bytes_decode_inline_window_rdx_rsi_rdi
+#print axioms Codec.bytes_decode_inline_window_rdx_rbx_rsi
+#print axioms Codec.bytes_decode_inline_segment_window
+#print axioms Codec.bytesDecodeInlineSegmentKindWindow_of
 #print axioms Codec.callDecodeSegmentKindWindow_of
 #print axioms Codec.call_decode_segment_window
 #print axioms Codec.decode_prologue_segment
@@ -356,6 +383,8 @@ Each name must be in the declaration dump and use only the standard axioms. -/
 #print axioms Codec.step_length_check
 #print axioms Codec.step_store_xmm15
 #print axioms Codec.step_store_indexed
+#print axioms Codec.step_load_bytes32
+#print axioms Codec.step_store_indexed32
 #print axioms Codec.step_sub_immediate
 #print axioms Codec.step_sub_registers
 #print axioms Codec.step_xor32
