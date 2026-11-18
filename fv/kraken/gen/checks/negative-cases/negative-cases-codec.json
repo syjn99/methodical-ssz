@@ -625,5 +625,128 @@
   "kind": "statement",
   "old": "x - F - 8 - BitVec.ofNat 64 (S + n) = x - B - BitVec.ofNat 64 S",
   "new": "x - F - 8 - BitVec.ofNat 64 S = x - B - BitVec.ofNat 64 S"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-encode-nested-checkpoint-call-control",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.encode_nested_checkpoint_call",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-encode-nested-checkpoint-call-statement-length-result-m40-to-m",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.encode_nested_checkpoint_call",
+  "kind": "statement",
+  "old": "st.data.regs.rbx.toBitVec = m40",
+  "new": "st.data.regs.rbx.toBitVec = m",
+  "note": "the callee returns len + 40, not len"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-encode-nested-checkpoint-call-statement-output-epoch-and-root-swapped",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.encode_nested_checkpoint_call",
+  "kind": "statement",
+  "old": "⋆ Eq (pre.At d) ⋆ Eq (e8.At aD0) ⋆ Eq (root.At aD1) ⋆ R) st.data.dmem)",
+  "new": "⋆ Eq (pre.At d) ⋆ Eq (root.At aD0) ⋆ Eq (e8.At aD1) ⋆ R) st.data.dmem)",
+  "note": "the epoch is written first, the root after it"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-encode-nested-checkpoint-call-statement-callee-frame-premise-120-to-112",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.encode_nested_checkpoint_call",
+  "kind": "statement",
+  "old": "(hsp : 120 ≤ (sp - 8).toNat)",
+  "new": "(hsp : 112 ≤ (sp - 8).toNat)",
+  "note": "the callee specification needs 120 bytes below its return slot"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-step-nil-check-taken-control",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.step_nil_check_taken",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-step-nil-check-taken-statement-pointer-not-nil-dropped",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.step_nil_check_taken",
+  "kind": "statement",
+  "old": "(hp : p ≠ 0)",
+  "new": "(hp : p = p)",
+  "note": "a nil pointer falls through to the newobject branch"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-step-test-je-taken-control",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.step_test_je_taken",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-step-test-je-taken-statement-register-0-to-1",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.step_test_je_taken",
+  "kind": "statement",
+  "old": "(hr : s.regs.get64 r = 0)",
+  "new": "(hr : s.regs.get64 r = 1)",
+  "note": "a non-nil error falls through to the error wrap"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-low-block-callee-frame-split-control",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.low_block_callee_frame_split",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-low-block-callee-frame-split-statement-temp-at-48",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.low_block_callee_frame_split",
+  "kind": "statement",
+  "old": "(hT40 : aRs + 56 = aT40)",
+  "new": "(hT40 : aRs + 48 = aT40)",
+  "note": "the 16-byte temp t40 starts 56 bytes above the return slot of the callee memmove call"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-low-block-memmove-split-control",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.low_block_memmove_split",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-low-block-memmove-split-statement-top-at-S",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.low_block_memmove_split",
+  "kind": "statement",
+  "old": "(hab : a + BitVec.ofNat 64 E = b)",
+  "new": "(hab : a + BitVec.ofNat 64 S = b)",
+  "note": "the memmove scratch starts E bytes above the bottom of the block"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-low-block-join-control",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.low_block_join",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-low-block-join-statement-length-S",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.low_block_join",
+  "kind": "statement",
+  "old": "(lo1 ++ sc).length = S + E ∧",
+  "new": "(lo1 ++ sc).length = S ∧",
+  "note": "the joined block has S + E bytes"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-nested-call-stack-control",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.nested_call_stack",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-nested-checkpoint-nested-call-stack-statement-frame-bound-120-to-112",
+  "module": "Codec/EncodeNestedCheckpoint.lean",
+  "theorem": "Codec.nested_call_stack",
+  "kind": "statement",
+  "old": "(hn : n + 8 + 120 ≤ a)",
+  "new": "(hn : n + 8 + 112 ≤ a)",
+  "note": "the guard addend must cover the 120 bytes of the callee frame"
  }
 ]
