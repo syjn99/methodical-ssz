@@ -1,8 +1,12 @@
-import Prysm.DataColumnsByRootIdentifier.DecodeAccept
-import Prysm.RuntimeModel.BumpAllocatorUint64DispatchForDataColumnsByRootIdentifier
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.DataColumnsByRootIdentifier.Code
+module
+
+public import Prysm.DataColumnsByRootIdentifier.DecodeAccept
+public import Prysm.RuntimeModel.BumpAllocatorUint64DispatchForDataColumnsByRootIdentifier
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.DataColumnsByRootIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.accept` (decoder accept path)

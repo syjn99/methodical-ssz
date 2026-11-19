@@ -1,7 +1,11 @@
-import Prysm.PartialDataColumnGroupID.GeneratedEncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.PartialDataColumnGroupID.Code
+module
+
+public import Prysm.PartialDataColumnGroupID.GeneratedEncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.PartialDataColumnGroupID.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.generated_fast` (PartialDataColumnGroupID encoder fast path, generated theorem)

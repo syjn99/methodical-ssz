@@ -1,7 +1,11 @@
-import Prysm.BlobIdentifier.GeneratedEncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.BlobIdentifier.Code
+module
+
+public import Prysm.BlobIdentifier.GeneratedEncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.BlobIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.generated_fast` (BlobIdentifier encoder fast path, generated theorem)

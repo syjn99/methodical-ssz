@@ -1,6 +1,10 @@
-import Prysm.IndexedAttestation.DecodeRejectSize
-import Prysm.IndexedAttestation.Spec
-import Prysm.IndexedAttestation.DecodeRejectOffset
+module
+
+public import Prysm.IndexedAttestation.DecodeRejectSize
+public import Prysm.IndexedAttestation.Spec
+public import Prysm.IndexedAttestation.DecodeRejectOffset
+
+@[expose] public section
 
 /-!
 # Spec alignment of the IndexedAttestation decoder's size and offset rejects, and the reject cases

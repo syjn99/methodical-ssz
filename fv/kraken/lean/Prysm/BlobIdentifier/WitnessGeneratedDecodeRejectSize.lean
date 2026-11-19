@@ -1,7 +1,11 @@
-import Prysm.BlobIdentifier.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.BlobIdentifier.Code
+module
+
+public import Prysm.BlobIdentifier.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.BlobIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_reject`

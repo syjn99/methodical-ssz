@@ -1,7 +1,11 @@
-import Prysm.DepositMessage.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.DepositMessage.Code
+module
+
+public import Prysm.DepositMessage.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.DepositMessage.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_reject`

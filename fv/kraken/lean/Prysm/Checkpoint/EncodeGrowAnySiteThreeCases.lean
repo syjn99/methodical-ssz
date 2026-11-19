@@ -1,5 +1,9 @@
-import Prysm.Checkpoint.EncodeGrowAnySite
-import Prysm.Checkpoint.Code
+module
+
+public import Prysm.Checkpoint.EncodeGrowAnySite
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo`: first growth, then the sharp case split of the second call

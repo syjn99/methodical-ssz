@@ -1,5 +1,9 @@
-import Codec.Kind.EncodeFastPathAnyFrame
-import Prysm.PowBlock.Code
+module
+
+public import Codec.Kind.EncodeFastPathAnyFrame
+public import Prysm.PowBlock.Code
+
+@[expose] public section
 
 /-!
 # Independent hand statement of the `PowBlock` encoder fast path

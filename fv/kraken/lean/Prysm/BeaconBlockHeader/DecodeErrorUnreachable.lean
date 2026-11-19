@@ -1,7 +1,11 @@
-import Machine.Step
-import Machine.Labels
-import Machine.Bytes
-import Prysm.BeaconBlockHeader.Code
+module
+
+public import Machine.Step
+public import Machine.Labels
+public import Machine.Bytes
+public import Prysm.BeaconBlockHeader.Code
+
+@[expose] public section
 
 /-!
 # Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`: the error wraps after the callees

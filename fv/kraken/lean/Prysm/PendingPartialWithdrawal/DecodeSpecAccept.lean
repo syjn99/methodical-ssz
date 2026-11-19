@@ -1,8 +1,12 @@
-import Prysm.PendingPartialWithdrawal.DecodeAccept
-import Prysm.PendingPartialWithdrawal.Spec
-import Prysm.PendingPartialWithdrawal.Code
-import Prysm.Epoch.Code
-import Prysm.ValidatorIndex.Code
+module
+
+public import Prysm.PendingPartialWithdrawal.DecodeAccept
+public import Prysm.PendingPartialWithdrawal.Spec
+public import Prysm.PendingPartialWithdrawal.Code
+public import Prysm.Epoch.Code
+public import Prysm.ValidatorIndex.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the PendingPartialWithdrawal decoder, accept side

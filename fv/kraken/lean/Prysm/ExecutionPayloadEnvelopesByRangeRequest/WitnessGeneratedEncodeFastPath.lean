@@ -1,7 +1,11 @@
-import Prysm.ExecutionPayloadEnvelopesByRangeRequest.GeneratedEncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code
+module
+
+public import Prysm.ExecutionPayloadEnvelopesByRangeRequest.GeneratedEncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.generated_fast` (ExecutionPayloadEnvelopesByRangeRequest encoder fast path, generated theorem)

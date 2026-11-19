@@ -1,8 +1,12 @@
-import Prysm.IndexedAttestation.DecodeRejectSize
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.IndexedAttestation.DecodeRejectOffset
-import Prysm.IndexedAttestation.Code
+module
+
+public import Prysm.IndexedAttestation.DecodeRejectSize
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.IndexedAttestation.DecodeRejectOffset
+public import Prysm.IndexedAttestation.Code
+
+@[expose] public section
 
 /-!
 # Witnesses of `Decode.reject_size` (size reject) and `Decode.reject_offset` (offset reject)

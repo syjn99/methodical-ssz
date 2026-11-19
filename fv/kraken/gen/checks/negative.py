@@ -310,6 +310,16 @@ def run_capped(argv, cwd, timeout):
         return (out or "") + (err or ""), None, True, reaped
 
 
+def lean_source(path):
+    """A library file (path under fv/kraken/lean) as a plain Lean file, without the module header.
+    A plain mutant can import modules and sees all of their declarations."""
+    lines = (LEAN / path).read_text().split("\n")
+    if lines[:2] == ["module", ""]:
+        lines = lines[2:]
+    out = [re.sub(r"^(public )?import (all )?", "import ", l) for l in lines if l != "@[expose] public section"]
+    return "\n".join(out)
+
+
 def split_imports(text):
     tl = text.split("\n")
     k = max(i for i, l in enumerate(tl) if l.startswith("import ")) + 1
@@ -352,7 +362,7 @@ def mutant_with_statement_def(c, d):
     in the inlined statement modules. The mutant inlines the bodies of those modules (dependency order) above the
     case module text, so that the code rename also reaches the statement. A statement case mutates the text of the
     `def` (old -> new, unique inside the def). The case range is the theorem's command up to the next top-level line."""
-    src = (LEAN / c["module"]).read_text()
+    src = lean_source(c["module"])
     lines, _, _ = cut(src, c["theorem"])
     imps, body = split_imports("\n".join(lines))
     inl = inlined_modules(c)
@@ -360,7 +370,7 @@ def mutant_with_statement_def(c, d):
         names = {m.removesuffix(".lean").replace("/", ".") for m in inl}
         pre_imps, pre_body = [], []
         for m in inl:
-            mi, mb = split_imports((LEAN / m).read_text())
+            mi, mb = split_imports(lean_source(m))
             pre_imps += [l for l in mi if l not in pre_imps]
             pre_body += mb + [""]
         imps = list(dict.fromkeys(l for l in pre_imps + imps if l.split()[1] not in names))
@@ -396,7 +406,7 @@ def run_case(c, work):
         assert not c.get("mutant_imports"), (c["id"], "mutant_imports and inlined statement modules together")
         text, lo, hi, diff = mutant_with_statement_def(c, d)
         return run_mutant(c, work, d, text, lo, hi, diff)
-    src = (LEAN / c["module"]).read_text()
+    src = lean_source(c["module"])
     lines, lo, hi = cut(src, c["theorem"])
     # lines of the theorem's command above its `theorem` line (set_option … in, doc comment); the inserted import
     # and code lines below go above the command, so this count stays and the case range is [lo - head, hi]
@@ -488,7 +498,7 @@ def imports_of(modules):
     """Module names imported by the given files (paths under fv/kraken/lean)."""
     mods = set()
     for m in modules:
-        for l in (LEAN / m).read_text().split("\n"):
+        for l in lean_source(m).split("\n"):
             if l.startswith("import "):
                 mods.update(l.split()[1:])
     return sorted(mods)
@@ -705,11 +715,11 @@ def check_cases(*paths):
         for c in cs:
             n += 1
             try:
-                src = (LEAN / c["module"]).read_text()
+                src = lean_source(c["module"])
                 lines, lo, hi = cut(src, c["theorem"])
                 if c.get("statement_def"):
                     mods = c.get("inline", [c["statement_module"]] if c.get("statement_module") else [])
-                    text = "\n".join((LEAN / m).read_text() for m in mods) if mods else "\n".join(lines)
+                    text = "\n".join(lean_source(m) for m in mods) if mods else "\n".join(lines)
                     find_decl(text.split("\n"), c["statement_def"], ("def",))
                 elif c["kind"] == "statement" and "\n".join(lines[lo - 1:hi]).count(c["old"]) != 1:
                     raise ValueError("statement text not unique in the theorem")
@@ -732,7 +742,7 @@ def check_cases(*paths):
                 name = c["code_definition"]
                 body = "\n".join(tl[k:])
                 for m in c.get("inline", [c["statement_module"]] if c.get("statement_module") else []):
-                    body += "\n" + (LEAN / m).read_text()
+                    body += "\n" + lean_source(m)
                 if not re.search(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", body):
                     bad.append(f"{p}: {c['id']}: code_definition {name} is not used in {c['module']}")
     for b in bad:

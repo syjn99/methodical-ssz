@@ -1,9 +1,13 @@
-import Machine.Step
-import Machine.Labels
-import Machine.Bytes
-import Prysm.ElfData.PrysmTarget
-import Prysm.SyncCommittee.Statements
-import Prysm.SyncCommittee.Code
+module
+
+public import Machine.Step
+public import Machine.Labels
+public import Machine.Bytes
+public import Prysm.ElfData.PrysmTarget
+public import Prysm.SyncCommittee.Statements
+public import Prysm.SyncCommittee.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.SyncCommittee).UnmarshalSSZ`: size reject

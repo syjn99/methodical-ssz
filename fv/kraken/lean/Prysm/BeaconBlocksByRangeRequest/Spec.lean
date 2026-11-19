@@ -1,6 +1,10 @@
-import Spec.TestScalars
-import Spec.DeserializeOfSerialize
-import Prysm.BeaconBlocksByRangeRequest.SpecDescription
+module
+
+public import Spec.TestScalars
+public import Spec.DeserializeOfSerialize
+public import Prysm.BeaconBlocksByRangeRequest.SpecDescription
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.BeaconBlocksByRangeRequest`

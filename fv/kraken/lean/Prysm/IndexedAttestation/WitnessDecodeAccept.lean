@@ -1,13 +1,17 @@
-import Prysm.IndexedAttestation.DecodeAccept
-import Prysm.RuntimeModel.BumpAllocatorUint64AndStructDispatch
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.IndexedAttestation.Code
-import Prysm.AttestationData.Code
-import Prysm.Checkpoint.Code
-import Prysm.CommitteeIndex.Code
-import Prysm.Epoch.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.IndexedAttestation.DecodeAccept
+public import Prysm.RuntimeModel.BumpAllocatorUint64AndStructDispatch
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.IndexedAttestation.Code
+public import Prysm.AttestationData.Code
+public import Prysm.Checkpoint.Code
+public import Prysm.CommitteeIndex.Code
+public import Prysm.Epoch.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.accept` (IndexedAttestation decoder accept path)

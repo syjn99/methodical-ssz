@@ -1,6 +1,10 @@
-import Codec.Segment.Bytes32Loop
-import Codec.SegmentAddress
-import Prysm.ElfData.PrysmTarget
+module
+
+public import Codec.Segment.Bytes32Loop
+public import Codec.SegmentAddress
+public import Prysm.ElfData.PrysmTarget
+
+@[expose] public section
 
 /-!
 # Element loop with 32-byte elements: one iteration, the exit and the whole loop, for any count `n < 2^31`

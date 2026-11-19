@@ -1,8 +1,12 @@
-import Prysm.BeaconBlocksByRangeRequest.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.BeaconBlocksByRangeRequest.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.BeaconBlocksByRangeRequest.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.BeaconBlocksByRangeRequest.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`v1alpha1.BeaconBlocksByRangeRequest` decoder accept path)

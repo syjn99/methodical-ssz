@@ -1,10 +1,14 @@
-import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Runtime.BumpAllocatorVariants
-import Machine.WitnessHost
-import Prysm.SyncCommitteeMessage.Code
-import Prysm.Slot.Code
-import Prysm.ValidatorIndex.Code
+module
+
+public import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Runtime.BumpAllocatorVariants
+public import Machine.WitnessHost
+public import Prysm.SyncCommitteeMessage.Code
+public import Prysm.Slot.Code
+public import Prysm.ValidatorIndex.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.generated_accept` (SyncCommitteeMessage decoder accept path)

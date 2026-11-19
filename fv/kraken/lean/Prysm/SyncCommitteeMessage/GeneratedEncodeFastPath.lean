@@ -1,6 +1,10 @@
-import Codec.Kind.EncodeFastPathAnyFrame
-import Codec.EncodeFrameTest
-import Prysm.SyncCommitteeMessage.Code
+module
+
+public import Codec.Kind.EncodeFastPathAnyFrame
+public import Codec.EncodeFrameTest
+public import Prysm.SyncCommitteeMessage.Code
+
+@[expose] public section
 
 /-!
 # Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.SyncCommitteeMessage).MarshalSSZTo`

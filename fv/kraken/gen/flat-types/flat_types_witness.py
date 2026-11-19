@@ -53,9 +53,13 @@ def reject(X, n):
     ty, fs, _ = spec_entry(X, 'flat_types_witness')
     N = sum(f[2] for f in fs)
     L = 1 + n
-    return f'''import Prysm.{X}.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
+    return f'''module
+
+public import Prysm.{X}.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_reject`
@@ -159,9 +163,13 @@ def accept_witness_frame_0x38(X, n):
     reps = ' '.join(f'(Int.toBytes 8 {v})' for v in ['0x0123456789abcdef', '7', '0x40'][:nf])
     decs = ' '.join(['(by decide)'] * nf)
     ffs = ' '.join(['(List.replicate 8 0xff)'] * nf)
-    return f'''import Prysm.{X}.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
+    return f'''module
+
+public import Prysm.{X}.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path)
@@ -358,10 +366,14 @@ def accbytes(X, n, frame):
                    + ['rfl'] * (len(fs) + nb))
     opens = f'Machine Runtime Machine.Witness Codec Prysm.{X}.Code'
     cdoc = ', '.join(f'`{CALLEE[c][1]}` UnmarshalSSZ' for c in callees)
-    return f'''import Prysm.{X}.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Runtime.BumpAllocatorVariants
-import Machine.WitnessHost
+    return f'''module
+
+public import Prysm.{X}.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Runtime.BumpAllocatorVariants
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path)

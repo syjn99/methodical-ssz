@@ -1,8 +1,12 @@
-import Prysm.Eth1Data.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Runtime.BumpAllocatorVariants
-import Machine.WitnessHost
-import Prysm.Eth1Data.Code
+module
+
+public import Prysm.Eth1Data.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Runtime.BumpAllocatorVariants
+public import Machine.WitnessHost
+public import Prysm.Eth1Data.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.generated_accept` (Eth1Data decoder accept path)

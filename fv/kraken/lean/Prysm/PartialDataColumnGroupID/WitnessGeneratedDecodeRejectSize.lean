@@ -1,7 +1,11 @@
-import Prysm.PartialDataColumnGroupID.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.PartialDataColumnGroupID.Code
+module
+
+public import Prysm.PartialDataColumnGroupID.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.PartialDataColumnGroupID.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_reject`

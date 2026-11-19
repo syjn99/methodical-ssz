@@ -1,8 +1,12 @@
-import Codec.SegmentAddress
-import Runtime.NewobjectContract
-import Prysm.AttestationData.DecodeAccept
-import Prysm.SingleAttestation.DecodeAcceptHead
-import Prysm.SingleAttestation.Code
+module
+
+public import Codec.SegmentAddress
+public import Runtime.NewobjectContract
+public import Prysm.AttestationData.DecodeAccept
+public import Prysm.SingleAttestation.DecodeAcceptHead
+public import Prysm.SingleAttestation.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.SingleAttestation).UnmarshalSSZ`, accept path, Data segment

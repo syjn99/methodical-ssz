@@ -1,7 +1,11 @@
-import Codec.ReadUint64List
-import EthLib.Serialization.Proofs.Ssz.Codec.Table
-import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
-import Prysm.DataColumnsByRootIdentifier.Spec
+module
+
+public import Codec.ReadUint64List
+public import EthLib.Serialization.Proofs.Ssz.Codec.Table
+public import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
+public import Prysm.DataColumnsByRootIdentifier.Spec
+
+@[expose] public section
 
 /-!
 # Decoder-side spec bridge for `DataColumnsByRootIdentifier` (round trip)

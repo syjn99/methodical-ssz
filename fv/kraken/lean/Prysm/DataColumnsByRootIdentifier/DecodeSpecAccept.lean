@@ -1,5 +1,9 @@
-import Prysm.DataColumnsByRootIdentifier.DecodeAccept
-import Prysm.DataColumnsByRootIdentifier.SpecDecodeBridge
+module
+
+public import Prysm.DataColumnsByRootIdentifier.DecodeAccept
+public import Prysm.DataColumnsByRootIdentifier.SpecDecodeBridge
+
+@[expose] public section
 
 /-!
 # Decoder accept path against EthLib (`Decode.accept_spec_statement`)

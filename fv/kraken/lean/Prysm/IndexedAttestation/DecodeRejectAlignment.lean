@@ -1,9 +1,13 @@
-import Codec.SegmentAddress
-import Machine.StoreLemmas
-import Runtime.StaticBoxLemmas
-import Prysm.IndexedAttestation.StatementsErrorWordNonzero
-import Prysm.IndexedAttestation.DecodeAccept
-import Prysm.IndexedAttestation.Code
+module
+
+public import Codec.SegmentAddress
+public import Machine.StoreLemmas
+public import Runtime.StaticBoxLemmas
+public import Prysm.IndexedAttestation.StatementsErrorWordNonzero
+public import Prysm.IndexedAttestation.DecodeAccept
+public import Prysm.IndexedAttestation.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: alignment reject

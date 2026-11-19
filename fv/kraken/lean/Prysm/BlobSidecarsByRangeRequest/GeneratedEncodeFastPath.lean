@@ -1,6 +1,10 @@
-import Codec.Kind.EncodeFastPathAnyFrame
-import Codec.EncodeFrameTest
-import Prysm.BlobSidecarsByRangeRequest.Code
+module
+
+public import Codec.Kind.EncodeFastPathAnyFrame
+public import Codec.EncodeFrameTest
+public import Prysm.BlobSidecarsByRangeRequest.Code
+
+@[expose] public section
 
 /-!
 # Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.BlobSidecarsByRangeRequest).MarshalSSZTo`

@@ -1,7 +1,11 @@
-import Codec.SegmentAddress
-import Prysm.Checkpoint.EncodeGrowFirstSite
-import Prysm.Checkpoint.EncodeRejectLength
-import Prysm.Checkpoint.Code
+module
+
+public import Codec.SegmentAddress
+public import Prysm.Checkpoint.EncodeGrowFirstSite
+public import Prysm.Checkpoint.EncodeRejectLength
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo` from `L_7b` (directive 33): the three tails

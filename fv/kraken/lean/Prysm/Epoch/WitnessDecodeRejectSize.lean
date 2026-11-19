@@ -1,7 +1,11 @@
-import Prysm.Epoch.DecodeRejectSize
-import Runtime.ErrorModel
-import Machine.WitnessHost
-import Prysm.Epoch.Code
+module
+
+public import Prysm.Epoch.DecodeRejectSize
+public import Runtime.ErrorModel
+public import Machine.WitnessHost
+public import Prysm.Epoch.Code
+
+@[expose] public section
 
 /-!
 # Witnesses of `Decode.reject_size` (len 7, 9 and 300)

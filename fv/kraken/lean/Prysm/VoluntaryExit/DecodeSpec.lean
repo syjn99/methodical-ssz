@@ -1,8 +1,12 @@
-import Prysm.VoluntaryExit.GeneratedDecodeAccept
-import Prysm.VoluntaryExit.Spec
-import Prysm.VoluntaryExit.Code
-import Prysm.Epoch.Code
-import Prysm.ValidatorIndex.Code
+module
+
+public import Prysm.VoluntaryExit.GeneratedDecodeAccept
+public import Prysm.VoluntaryExit.Spec
+public import Prysm.VoluntaryExit.Code
+public import Prysm.Epoch.Code
+public import Prysm.ValidatorIndex.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.VoluntaryExit` decoder

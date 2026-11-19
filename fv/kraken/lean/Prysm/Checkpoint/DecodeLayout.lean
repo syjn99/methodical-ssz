@@ -1,6 +1,10 @@
-import Codec.Kind.DecodeAcceptAnyFrame
-import Prysm.Checkpoint.DecodeAccept
-import Prysm.Epoch.Code
+module
+
+public import Codec.Kind.DecodeAcceptAnyFrame
+public import Prysm.Checkpoint.DecodeAccept
+public import Prysm.Epoch.Code
+
+@[expose] public section
 
 /-!
 # Frame layout of the Checkpoint decoder for the accept kind

@@ -1,12 +1,16 @@
-import Runtime.Contracts
-import Runtime.NewobjectContract
-import Machine.Frame
-import Machine.Bytes
-import Machine.Labels
-import Prysm.ElfData.PrysmTarget
-import Codec.ByteSliceListDefinitions
-import Prysm.Deposit_Data.Code
-import Prysm.Deposit.Code
+module
+
+public import Runtime.Contracts
+public import Runtime.NewobjectContract
+public import Machine.Frame
+public import Machine.Bytes
+public import Machine.Labels
+public import Prysm.ElfData.PrysmTarget
+public import Codec.ByteSliceListDefinitions
+public import Prysm.Deposit_Data.Code
+public import Prysm.Deposit.Code
+
+@[expose] public section
 
 /-!
 # Hand STATEMENTS of `(*v1alpha1.Deposit).UnmarshalSSZ` (statements only, no proof)

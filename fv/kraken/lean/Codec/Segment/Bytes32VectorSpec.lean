@@ -1,4 +1,8 @@
-import Prysm.HistoricalBatch.Spec
+module
+
+public import Prysm.HistoricalBatch.Spec
+
+@[expose] public section
 
 /-!
 # Spec lemmas of a `Vector[Bytes32, n]` field, for ANY count `n`

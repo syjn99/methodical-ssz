@@ -1,7 +1,11 @@
-import Prysm.Checkpoint.EncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.Checkpoint.Code
+module
+
+public import Prysm.Checkpoint.EncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.fast_path` (encoder fast path)

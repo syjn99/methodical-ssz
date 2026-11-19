@@ -1,7 +1,11 @@
-import Prysm.Checkpoint.GeneratedEncodeFastPath
-import Prysm.Checkpoint.Spec
-import Runtime.CopyModel
-import Prysm.Checkpoint.Code
+module
+
+public import Prysm.Checkpoint.GeneratedEncodeFastPath
+public import Prysm.Checkpoint.Spec
+public import Runtime.CopyModel
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # Checkpoint encoder fast path (generated theorem) against the independent Desc

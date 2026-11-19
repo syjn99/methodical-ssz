@@ -1,7 +1,11 @@
-import Prysm.BuilderPreferences.GeneratedEncodeFastPath
-import Prysm.BuilderPreferences.Spec
-import Runtime.CopyModel
-import Prysm.BuilderPreferences.Code
+module
+
+public import Prysm.BuilderPreferences.GeneratedEncodeFastPath
+public import Prysm.BuilderPreferences.Spec
+public import Runtime.CopyModel
+public import Prysm.BuilderPreferences.Code
+
+@[expose] public section
 
 /-!
 # BuilderPreferences encoder fast path (generated theorem) against the independent Desc

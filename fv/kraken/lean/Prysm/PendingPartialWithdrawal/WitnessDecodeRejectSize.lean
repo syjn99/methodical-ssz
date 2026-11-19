@@ -1,7 +1,11 @@
-import Prysm.PendingPartialWithdrawal.DecodeRejectSize
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.PendingPartialWithdrawal.Code
+module
+
+public import Prysm.PendingPartialWithdrawal.DecodeRejectSize
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.PendingPartialWithdrawal.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.reject_size`

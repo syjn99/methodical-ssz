@@ -1,5 +1,9 @@
-import Prysm.Slot.GeneratedDecodeAccept
-import Prysm.Slot.Code
+module
+
+public import Prysm.Slot.GeneratedDecodeAccept
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # `Decode.accept_function_spec`: function specification of `(*primitives.Slot).UnmarshalSSZ`, accept path

@@ -1,11 +1,15 @@
-import Runtime.Contracts
-import Machine.Step
-import Machine.Labels
-import Prysm.ElfData.PrysmTarget
-import Codec.SegmentAddress
-import Codec.ByteSliceListLemmas
-import Prysm.HistoricalBatch.Code
-import Prysm.HistoricalBatch.DecodeLoopBlockRoots
+module
+
+public import Runtime.Contracts
+public import Machine.Step
+public import Machine.Labels
+public import Prysm.ElfData.PrysmTarget
+public import Codec.SegmentAddress
+public import Codec.ByteSliceListLemmas
+public import Prysm.HistoricalBatch.Code
+public import Prysm.HistoricalBatch.DecodeLoopBlockRoots
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`: the StateRoots loop (8192 iterations)

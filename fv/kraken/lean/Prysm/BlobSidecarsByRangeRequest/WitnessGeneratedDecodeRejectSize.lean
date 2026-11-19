@@ -1,7 +1,11 @@
-import Prysm.BlobSidecarsByRangeRequest.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.BlobSidecarsByRangeRequest.Code
+module
+
+public import Prysm.BlobSidecarsByRangeRequest.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.BlobSidecarsByRangeRequest.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_reject`

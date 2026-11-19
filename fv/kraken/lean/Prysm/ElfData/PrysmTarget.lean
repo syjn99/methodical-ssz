@@ -1,6 +1,10 @@
-import Kraken.X64.WP
-import Runtime.StaticUint64s
-import Machine.Include
+module
+
+public import Kraken.X64.WP
+public import Runtime.StaticUint64s
+public import Machine.Include
+
+@[expose] public section
 
 /-!
 # ELF data of the Prysm target that the theorems read

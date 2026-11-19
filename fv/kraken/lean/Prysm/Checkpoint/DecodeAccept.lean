@@ -1,10 +1,14 @@
-import Codec.SegmentAddress
-import Runtime.Contracts
-import Machine.Frame
-import Prysm.Epoch.DecodeAcceptFunctionSpec
-import Prysm.ElfData.PrysmTarget
-import Prysm.Checkpoint.Code
-import Prysm.Epoch.Code
+module
+
+public import Codec.SegmentAddress
+public import Runtime.Contracts
+public import Machine.Frame
+public import Prysm.Epoch.DecodeAcceptFunctionSpec
+public import Prysm.ElfData.PrysmTarget
+public import Prysm.Checkpoint.Code
+public import Prysm.Epoch.Code
+
+@[expose] public section
 
 /-!
 # Prysm `(*v1alpha1.Checkpoint).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

@@ -1,7 +1,11 @@
-import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.SyncCommitteeMessage.Code
+module
+
+public import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.SyncCommitteeMessage.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_reject`

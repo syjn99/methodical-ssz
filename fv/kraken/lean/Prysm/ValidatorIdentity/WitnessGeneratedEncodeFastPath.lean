@@ -1,7 +1,11 @@
-import Prysm.ValidatorIdentity.GeneratedEncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.ValidatorIdentity.Code
+module
+
+public import Prysm.ValidatorIdentity.GeneratedEncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.ValidatorIdentity.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.generated_fast` (ValidatorIdentity encoder fast path, generated theorem)

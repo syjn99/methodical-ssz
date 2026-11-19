@@ -1,7 +1,11 @@
-import Prysm.SigningData.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.SigningData.Code
+module
+
+public import Prysm.SigningData.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.SigningData.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_reject`

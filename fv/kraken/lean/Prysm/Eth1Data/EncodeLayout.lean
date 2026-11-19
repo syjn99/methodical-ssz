@@ -1,4 +1,8 @@
-import Codec.Kind.EncodeFastPathAnyFrame
+module
+
+public import Codec.Kind.EncodeFastPathAnyFrame
+
+@[expose] public section
 
 /-!
 # Frame layout of the Eth1Data encoder fast-path statement

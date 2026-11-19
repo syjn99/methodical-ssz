@@ -1,7 +1,11 @@
-import Codec.DecoderHeadEpilogue
-import Prysm.SyncAggregate.DecodeFieldSegments
-import Prysm.SyncAggregate.Statements
-import Prysm.SyncAggregate.Code
+module
+
+public import Codec.DecoderHeadEpilogue
+public import Prysm.SyncAggregate.DecodeFieldSegments
+public import Prysm.SyncAggregate.Statements
+public import Prysm.SyncAggregate.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.SyncAggregate).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

@@ -1,6 +1,10 @@
-import Codec.SegmentTemplate
-import Runtime.Contracts
-import Codec.SegmentAddress
+module
+
+public import Codec.SegmentTemplate
+public import Runtime.Contracts
+public import Codec.SegmentAddress
+
+@[expose] public section
 
 /-!
 # Reusable encode block: the `return nil, ssz.ErrBytesLength` tail of a generated `MarshalSSZTo`

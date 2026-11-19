@@ -1,7 +1,11 @@
-import Prysm.BuilderPreferences.GeneratedEncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.BuilderPreferences.Code
+module
+
+public import Prysm.BuilderPreferences.GeneratedEncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.BuilderPreferences.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.generated_fast` (BuilderPreferences encoder fast path, generated theorem)

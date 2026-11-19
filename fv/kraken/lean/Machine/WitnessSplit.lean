@@ -1,4 +1,8 @@
-import Machine.WitnessHost
+module
+
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # `witness_split_n`: variant for the Prysm witnesses of `Machine.Witness.witness_split`

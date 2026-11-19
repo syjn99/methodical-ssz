@@ -1,7 +1,11 @@
-import Prysm.CommitteeIndex.DecodeAcceptFunctionSpec
-import Machine.WitnessHost
-import Runtime.CopyModel
-import Prysm.CommitteeIndex.Code
+module
+
+public import Prysm.CommitteeIndex.DecodeAcceptFunctionSpec
+public import Machine.WitnessHost
+public import Runtime.CopyModel
+public import Prysm.CommitteeIndex.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.generated_accept` and `Decode.accept_function_spec_holds`

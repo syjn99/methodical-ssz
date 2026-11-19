@@ -1,5 +1,9 @@
-import Prysm.Checkpoint.WitnessDecodeAccept
-import Prysm.Checkpoint.DecodeSpec
+module
+
+public import Prysm.Checkpoint.WitnessDecodeAccept
+public import Prysm.Checkpoint.DecodeSpec
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.accept_spec` on a concrete input array

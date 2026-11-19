@@ -1,4 +1,8 @@
-import Prysm.AttestationData.SpecDescription
+module
+
+public import Prysm.AttestationData.SpecDescription
+
+@[expose] public section
 
 /-!
 # Independent hand `Desc` of `v1alpha1.SingleAttestation`

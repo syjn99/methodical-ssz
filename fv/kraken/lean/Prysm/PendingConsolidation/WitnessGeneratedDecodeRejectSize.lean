@@ -1,7 +1,11 @@
-import Prysm.PendingConsolidation.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.PendingConsolidation.Code
+module
+
+public import Prysm.PendingConsolidation.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.PendingConsolidation.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_reject`

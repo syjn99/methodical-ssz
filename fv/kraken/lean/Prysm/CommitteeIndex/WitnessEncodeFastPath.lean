@@ -1,6 +1,10 @@
-import Prysm.CommitteeIndex.EncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
+module
+
+public import Prysm.CommitteeIndex.EncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.fast_path` (encoder fast path)

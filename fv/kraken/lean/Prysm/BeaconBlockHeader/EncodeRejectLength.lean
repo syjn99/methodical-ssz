@@ -1,8 +1,12 @@
-import Prysm.BeaconBlockHeader.EncodeHead
-import Prysm.BeaconBlockHeader.EncodeRootFields
-import Codec.EncodeRejectTail
-import Runtime.CopyModel
-import Prysm.BeaconBlockHeader.Code
+module
+
+public import Prysm.BeaconBlockHeader.EncodeHead
+public import Prysm.BeaconBlockHeader.EncodeRootFields
+public import Codec.EncodeRejectTail
+public import Runtime.CopyModel
+public import Prysm.BeaconBlockHeader.Code
+
+@[expose] public section
 
 /-!
 # Length rejects of `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` through `Codec.encode_reject_tail`

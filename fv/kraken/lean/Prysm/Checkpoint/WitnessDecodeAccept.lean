@@ -1,9 +1,13 @@
-import Prysm.Checkpoint.DecodeAccept
-import Runtime.CopyModel
-import Runtime.BumpAllocatorVariants
-import Machine.WitnessHost
-import Prysm.Checkpoint.Code
-import Prysm.Epoch.Code
+module
+
+public import Prysm.Checkpoint.DecodeAccept
+public import Runtime.CopyModel
+public import Runtime.BumpAllocatorVariants
+public import Machine.WitnessHost
+public import Prysm.Checkpoint.Code
+public import Prysm.Epoch.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.accept` (decoder accept path)

@@ -1,6 +1,10 @@
-import Prysm.PowBlock.GeneratedDecodeAccept
-import Prysm.PowBlock.Spec
-import Prysm.PowBlock.Code
+module
+
+public import Prysm.PowBlock.GeneratedDecodeAccept
+public import Prysm.PowBlock.Spec
+public import Prysm.PowBlock.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the PowBlock decoder

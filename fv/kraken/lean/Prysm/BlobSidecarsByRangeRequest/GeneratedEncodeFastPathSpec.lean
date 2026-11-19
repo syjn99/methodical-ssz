@@ -1,7 +1,11 @@
-import Prysm.BlobSidecarsByRangeRequest.GeneratedEncodeFastPath
-import Prysm.BlobSidecarsByRangeRequest.Spec
-import Runtime.CopyModel
-import Prysm.BlobSidecarsByRangeRequest.Code
+module
+
+public import Prysm.BlobSidecarsByRangeRequest.GeneratedEncodeFastPath
+public import Prysm.BlobSidecarsByRangeRequest.Spec
+public import Runtime.CopyModel
+public import Prysm.BlobSidecarsByRangeRequest.Code
+
+@[expose] public section
 
 /-!
 # BlobSidecarsByRangeRequest encoder fast path (generated theorem) against the independent Desc

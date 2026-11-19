@@ -1,4 +1,8 @@
-import Machine.Step
+module
+
+public import Machine.Step
+
+@[expose] public section
 
 /-!
 # Address equations of the segment and loop lemmas

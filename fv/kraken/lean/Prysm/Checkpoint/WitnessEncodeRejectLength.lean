@@ -1,7 +1,11 @@
-import Prysm.Checkpoint.EncodeRejectLength
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.Checkpoint.Code
+module
+
+public import Prysm.Checkpoint.EncodeRejectLength
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.reject_length`

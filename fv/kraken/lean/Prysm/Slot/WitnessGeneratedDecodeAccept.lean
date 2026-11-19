@@ -1,7 +1,11 @@
-import Prysm.Slot.DecodeAcceptFunctionSpec
-import Machine.WitnessHost
-import Runtime.CopyModel
-import Prysm.Slot.Code
+module
+
+public import Prysm.Slot.DecodeAcceptFunctionSpec
+public import Machine.WitnessHost
+public import Runtime.CopyModel
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.generated_accept` and `Decode.accept_function_spec_holds`

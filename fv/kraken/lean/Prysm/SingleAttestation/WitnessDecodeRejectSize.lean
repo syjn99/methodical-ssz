@@ -1,7 +1,11 @@
-import Prysm.SingleAttestation.DecodeRejectSize
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.SingleAttestation.Code
+module
+
+public import Prysm.SingleAttestation.DecodeRejectSize
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.SingleAttestation.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.reject_size`

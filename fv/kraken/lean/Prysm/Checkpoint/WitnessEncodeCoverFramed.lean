@@ -1,6 +1,10 @@
-import Prysm.Checkpoint.EncodeCoverFramed
-import Prysm.Checkpoint.WitnessEncodeCover
-import Machine.WitnessSplit
+module
+
+public import Prysm.Checkpoint.EncodeCoverFramed
+public import Prysm.Checkpoint.WitnessEncodeCover
+public import Machine.WitnessSplit
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.cover_framed`: every capacity range on the `Prysm/Checkpoint/WitnessEncodeCover.lean` host

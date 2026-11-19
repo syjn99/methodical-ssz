@@ -1,8 +1,12 @@
-import Codec.Kind.DecodeRejectAnyFrame
-import Codec.FieldFrame
-import Machine.Labels
-import Machine.Bytes
-import Prysm.ElfData.PrysmTarget
+module
+
+public import Codec.Kind.DecodeRejectAnyFrame
+public import Codec.FieldFrame
+public import Machine.Labels
+public import Machine.Bytes
+public import Prysm.ElfData.PrysmTarget
+
+@[expose] public section
 
 /-!
 # Frame-parametric size reject of a container decoder

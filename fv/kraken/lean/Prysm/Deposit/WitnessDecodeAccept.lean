@@ -1,10 +1,14 @@
-import Prysm.Deposit.DecodeAccept
-import Prysm.RuntimeModel.BumpAllocatorByteSliceDispatch
-import Prysm.Deposit.WitnessBumpAllocator
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.Deposit.Code
-import Prysm.Deposit_Data.Code
+module
+
+public import Prysm.Deposit.DecodeAccept
+public import Prysm.RuntimeModel.BumpAllocatorByteSliceDispatch
+public import Prysm.Deposit.WitnessBumpAllocator
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.Deposit.Code
+public import Prysm.Deposit_Data.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.accept` (Deposit decoder accept path)

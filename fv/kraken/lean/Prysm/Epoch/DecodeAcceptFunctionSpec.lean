@@ -1,5 +1,9 @@
-import Prysm.Epoch.GeneratedDecodeAccept
-import Prysm.Epoch.Code
+module
+
+public import Prysm.Epoch.GeneratedDecodeAccept
+public import Prysm.Epoch.Code
+
+@[expose] public section
 
 /-!
 # `Decode.accept_function_spec`: function specification of `(*primitives.Epoch).UnmarshalSSZ`, accept path

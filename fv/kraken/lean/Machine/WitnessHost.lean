@@ -1,5 +1,11 @@
-import Machine.Labels
-import Machine.Bytes
+module
+
+public import Machine.Labels
+public import Machine.Bytes
+import all Kraken.Mem
+import all Kraken.Separation
+
+@[expose] public section
 
 /-!
 # Witness hosts

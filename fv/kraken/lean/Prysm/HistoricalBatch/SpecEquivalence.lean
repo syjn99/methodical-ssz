@@ -1,5 +1,9 @@
-import Prysm.HistoricalBatch.Spec
-import Prysm.HistoricalBatch.SpecChecker
+module
+
+public import Prysm.HistoricalBatch.Spec
+public import Prysm.HistoricalBatch.SpecChecker
+
+@[expose] public section
 
 /-!
 # The hand `Desc` of HistoricalBatch and the Desc checker's `Desc`

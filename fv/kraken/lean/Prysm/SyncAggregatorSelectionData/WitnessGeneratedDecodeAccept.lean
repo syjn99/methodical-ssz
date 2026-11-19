@@ -1,8 +1,12 @@
-import Prysm.SyncAggregatorSelectionData.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.SyncAggregatorSelectionData.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.SyncAggregatorSelectionData.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.SyncAggregatorSelectionData.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`v1alpha1.SyncAggregatorSelectionData` decoder accept path)

@@ -1,6 +1,10 @@
-import Prysm.HistoricalSummary.GeneratedDecodeAccept
-import Prysm.HistoricalSummary.Spec
-import Prysm.HistoricalSummary.Code
+module
+
+public import Prysm.HistoricalSummary.GeneratedDecodeAccept
+public import Prysm.HistoricalSummary.Spec
+public import Prysm.HistoricalSummary.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.HistoricalSummary` decoder

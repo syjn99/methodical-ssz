@@ -1,7 +1,11 @@
-import Prysm.DataColumnsByRootIdentifier.EncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.DataColumnsByRootIdentifier.Code
+module
+
+public import Prysm.DataColumnsByRootIdentifier.EncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.DataColumnsByRootIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Witnesses of `Encode.fast_path` (encoder fast path): n = 0, 1, 128

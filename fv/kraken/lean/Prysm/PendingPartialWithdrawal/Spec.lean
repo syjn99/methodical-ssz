@@ -1,7 +1,11 @@
-import Spec.TestScalars
-import Spec.DeserializeOfSerialize
-import Prysm.PendingPartialWithdrawal.SpecDescription
-import Prysm.PendingPartialWithdrawal.SpecChecker
+module
+
+public import Spec.TestScalars
+public import Spec.DeserializeOfSerialize
+public import Prysm.PendingPartialWithdrawal.SpecDescription
+public import Prysm.PendingPartialWithdrawal.SpecChecker
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.PendingPartialWithdrawal`

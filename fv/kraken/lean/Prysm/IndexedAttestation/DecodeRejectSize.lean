@@ -1,10 +1,14 @@
-import Machine.Step
-import Machine.Labels
-import Machine.Bytes
-import Codec.StackGuard
-import Prysm.IndexedAttestation.Statements
-import Codec.SegmentAddress
-import Prysm.IndexedAttestation.Code
+module
+
+public import Machine.Step
+public import Machine.Labels
+public import Machine.Bytes
+public import Codec.StackGuard
+public import Prysm.IndexedAttestation.Statements
+public import Codec.SegmentAddress
+public import Prysm.IndexedAttestation.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: size reject

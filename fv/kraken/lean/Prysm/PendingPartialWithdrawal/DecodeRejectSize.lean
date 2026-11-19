@@ -1,8 +1,12 @@
-import Machine.Step
-import Machine.Labels
-import Machine.Bytes
-import Prysm.PendingPartialWithdrawal.Code
-import Prysm.ElfData.PrysmTarget
+module
+
+public import Machine.Step
+public import Machine.Labels
+public import Machine.Bytes
+public import Prysm.PendingPartialWithdrawal.Code
+public import Prysm.ElfData.PrysmTarget
+
+@[expose] public section
 
 /-!
 # Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`: size reject

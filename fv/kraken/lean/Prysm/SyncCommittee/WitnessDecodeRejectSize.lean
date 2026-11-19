@@ -1,7 +1,11 @@
-import Prysm.SyncCommittee.DecodeRejectSize
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.SyncCommittee.Code
+module
+
+public import Prysm.SyncCommittee.DecodeRejectSize
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.SyncCommittee.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.reject_size` (SyncCommittee size reject)

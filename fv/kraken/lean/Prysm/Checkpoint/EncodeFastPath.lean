@@ -1,11 +1,15 @@
-import Codec.SegmentAddress
-import Runtime.Contracts
-import Machine.Frame
-import Prysm.Checkpoint.Code
-import Prysm.Checkpoint.DecodeAccept
-import Machine.StoreLemmas
-import Runtime.StaticBoxLemmas
-import Codec.EncodeBitVecLemmas
+module
+
+public import Codec.SegmentAddress
+public import Runtime.Contracts
+public import Machine.Frame
+public import Prysm.Checkpoint.Code
+public import Prysm.Checkpoint.DecodeAccept
+public import Machine.StoreLemmas
+public import Runtime.StaticBoxLemmas
+public import Codec.EncodeBitVecLemmas
+
+@[expose] public section
 
 /-!
 # Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, fast path, Go 1.26.10 machine code

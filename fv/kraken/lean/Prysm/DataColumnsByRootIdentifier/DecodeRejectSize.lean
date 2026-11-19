@@ -1,10 +1,14 @@
-import Codec.SegmentAddress
-import Machine.Step
-import Machine.Labels
-import Machine.Bytes
-import Codec.StackGuard
-import Prysm.DataColumnsByRootIdentifier.StatementsDecode
-import Prysm.DataColumnsByRootIdentifier.Code
+module
+
+public import Codec.SegmentAddress
+public import Machine.Step
+public import Machine.Labels
+public import Machine.Bytes
+public import Codec.StackGuard
+public import Prysm.DataColumnsByRootIdentifier.StatementsDecode
+public import Prysm.DataColumnsByRootIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`: size reject and offset reject

@@ -1,8 +1,12 @@
-import Prysm.BlobSidecarsByRangeRequest.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.BlobSidecarsByRangeRequest.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.BlobSidecarsByRangeRequest.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.BlobSidecarsByRangeRequest.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`v1alpha1.BlobSidecarsByRangeRequest` decoder accept path)

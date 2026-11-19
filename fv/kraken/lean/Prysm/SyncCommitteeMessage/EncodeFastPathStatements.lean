@@ -1,5 +1,9 @@
-import Codec.Kind.EncodeFastPathAnyFrame
-import Prysm.SyncCommitteeMessage.Code
+module
+
+public import Codec.Kind.EncodeFastPathAnyFrame
+public import Prysm.SyncCommitteeMessage.Code
+
+@[expose] public section
 
 /-!
 # Independent hand statement of the `SyncCommitteeMessage` encoder fast path

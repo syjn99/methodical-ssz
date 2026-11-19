@@ -1,5 +1,9 @@
-import Kraken.X64.Parser
-import Machine.Include
+module
+
+public import Kraken.X64.Parser
+public import Machine.Include
+
+@[expose] public section
 
 /-!
 # Code of `v1alpha1.VoluntaryExit`

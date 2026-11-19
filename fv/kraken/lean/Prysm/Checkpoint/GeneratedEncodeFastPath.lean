@@ -1,8 +1,12 @@
-import Codec.Kind.EncodeFastPathAnyFrame
-import Codec.EncodeFrameTest
-import Prysm.Checkpoint.Code
-import Prysm.Checkpoint.EncodeLayout
-import Prysm.Checkpoint.EncodeFastPathKindTie
+module
+
+public import Codec.Kind.EncodeFastPathAnyFrame
+public import Codec.EncodeFrameTest
+public import Prysm.Checkpoint.Code
+public import Prysm.Checkpoint.EncodeLayout
+public import Prysm.Checkpoint.EncodeFastPathKindTie
+
+@[expose] public section
 
 /-!
 # Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.Checkpoint).MarshalSSZTo`

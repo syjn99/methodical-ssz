@@ -1,8 +1,12 @@
-import Spec.TestScalars
-import Spec.DeserializeOfSerialize
-import EthLib.Serialization.Proofs.Ssz.Codec.Canonical
-import EthLib.Serialization.Proofs.Ssz.Codec.RoundTripScalar
-import Prysm.SyncAggregate.SpecDescription
+module
+
+public import Spec.TestScalars
+public import Spec.DeserializeOfSerialize
+public import EthLib.Serialization.Proofs.Ssz.Codec.Canonical
+public import EthLib.Serialization.Proofs.Ssz.Codec.RoundTripScalar
+public import Prysm.SyncAggregate.SpecDescription
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.SyncAggregate`

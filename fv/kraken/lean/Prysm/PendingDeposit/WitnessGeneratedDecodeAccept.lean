@@ -1,9 +1,13 @@
-import Prysm.PendingDeposit.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Runtime.BumpAllocatorVariants
-import Machine.WitnessHost
-import Prysm.PendingDeposit.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.PendingDeposit.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Runtime.BumpAllocatorVariants
+public import Machine.WitnessHost
+public import Prysm.PendingDeposit.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`v1alpha1.PendingDeposit` decoder accept path)

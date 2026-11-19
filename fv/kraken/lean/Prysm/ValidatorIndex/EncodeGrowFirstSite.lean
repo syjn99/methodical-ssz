@@ -1,6 +1,10 @@
-import Codec.SegmentAddress
-import Prysm.ValidatorIndex.EncodeFastPath
-import Prysm.ElfData.PrysmTarget
+module
+
+public import Codec.SegmentAddress
+public import Prysm.ValidatorIndex.EncodeFastPath
+public import Prysm.ElfData.PrysmTarget
+
+@[expose] public section
 
 /-!
 # Prysm `(*primitives.ValidatorIndex).MarshalSSZTo`, growslice path, Go 1.26.10 machine code

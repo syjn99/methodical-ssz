@@ -1,6 +1,10 @@
-import Prysm.IndexedAttestation.Spec
-import Prysm.IndexedAttestation.SpecChecker
-import Prysm.AttestationData.SpecEquivalence
+module
+
+public import Prysm.IndexedAttestation.Spec
+public import Prysm.IndexedAttestation.SpecChecker
+public import Prysm.AttestationData.SpecEquivalence
+
+@[expose] public section
 
 /-!
 # The hand `Desc` of IndexedAttestation and the Desc checker's `Desc`

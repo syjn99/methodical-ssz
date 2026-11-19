@@ -1,6 +1,10 @@
-import Prysm.Checkpoint.EncodeCoverFramed
-import Prysm.Checkpoint.WitnessEncodeRejectLengthCover
-import Machine.WitnessSplit
+module
+
+public import Prysm.Checkpoint.EncodeCoverFramed
+public import Prysm.Checkpoint.WitnessEncodeRejectLengthCover
+public import Machine.WitnessSplit
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.reject_length_cover_framed`: `len(Root) ≠ 32`, every capacity range

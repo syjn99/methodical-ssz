@@ -1,7 +1,11 @@
-import Prysm.Checkpoint.Layout
-import Prysm.Checkpoint.WitnessDecodeAccept
-import Prysm.Checkpoint.WitnessEncodeFastPath
-import Prysm.Checkpoint.WitnessEncodeRejectLength
+module
+
+public import Prysm.Checkpoint.Layout
+public import Prysm.Checkpoint.WitnessDecodeAccept
+public import Prysm.Checkpoint.WitnessEncodeFastPath
+public import Prysm.Checkpoint.WitnessEncodeRejectLength
+
+@[expose] public section
 
 /-!
 # Go-value element

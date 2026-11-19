@@ -1,4 +1,8 @@
-import Spec.DeserializeOfSerialize
+module
+
+public import Spec.DeserializeOfSerialize
+
+@[expose] public section
 
 /-!
 # Values of `byteVector 32`

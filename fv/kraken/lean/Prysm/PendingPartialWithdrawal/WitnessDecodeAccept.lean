@@ -1,9 +1,13 @@
-import Prysm.PendingPartialWithdrawal.DecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.PendingPartialWithdrawal.Code
-import Prysm.Epoch.Code
-import Prysm.ValidatorIndex.Code
+module
+
+public import Prysm.PendingPartialWithdrawal.DecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.PendingPartialWithdrawal.Code
+public import Prysm.Epoch.Code
+public import Prysm.ValidatorIndex.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.accept` (PendingPartialWithdrawal decoder accept path)

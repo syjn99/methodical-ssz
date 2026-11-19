@@ -1,9 +1,13 @@
-import Codec.SegmentAddress
-import Prysm.Checkpoint.DecodeAccept
-import Prysm.Checkpoint.EncodeFastPath
-import Prysm.Checkpoint.DecodeThenEncodeReceiver
-import Prysm.Checkpoint.Code
-import Prysm.Epoch.Code
+module
+
+public import Codec.SegmentAddress
+public import Prysm.Checkpoint.DecodeAccept
+public import Prysm.Checkpoint.EncodeFastPath
+public import Prysm.Checkpoint.DecodeThenEncodeReceiver
+public import Prysm.Checkpoint.Code
+public import Prysm.Epoch.Code
+
+@[expose] public section
 
 /-!
 # Machine-level composition decoder → encoder (Go 1.26.10 code)

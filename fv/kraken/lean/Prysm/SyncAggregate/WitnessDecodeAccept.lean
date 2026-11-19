@@ -1,8 +1,12 @@
-import Prysm.SyncAggregate.DecodeAccept
-import Runtime.CopyModel
-import Runtime.BumpAllocatorVariants
-import Machine.WitnessHost
-import Prysm.SyncAggregate.Code
+module
+
+public import Prysm.SyncAggregate.DecodeAccept
+public import Runtime.CopyModel
+public import Runtime.BumpAllocatorVariants
+public import Machine.WitnessHost
+public import Prysm.SyncAggregate.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.accept` (SyncAggregate decoder accept path)

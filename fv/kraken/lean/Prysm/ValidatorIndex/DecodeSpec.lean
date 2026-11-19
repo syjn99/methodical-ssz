@@ -1,7 +1,11 @@
-import Prysm.ValidatorIndex.GeneratedDecodeAccept
-import Prysm.ValidatorIndex.DecodeRejectSize
-import Prysm.ValidatorIndex.SpecDescription
-import Prysm.Epoch.Spec
+module
+
+public import Prysm.ValidatorIndex.GeneratedDecodeAccept
+public import Prysm.ValidatorIndex.DecodeRejectSize
+public import Prysm.ValidatorIndex.SpecDescription
+public import Prysm.Epoch.Spec
+
+@[expose] public section
 
 /-!
 # Spec alignment of the real ValidatorIndex decoder

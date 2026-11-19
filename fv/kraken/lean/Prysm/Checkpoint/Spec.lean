@@ -1,8 +1,12 @@
-import Spec.TestCheckpointAndAttestationData
-import Spec.DeserializeOfSerialize
-import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
-import Prysm.Checkpoint.SpecChecker
-import Prysm.Checkpoint.SpecDescription
+module
+
+public import Spec.TestCheckpointAndAttestationData
+public import Spec.DeserializeOfSerialize
+public import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
+public import Prysm.Checkpoint.SpecChecker
+public import Prysm.Checkpoint.SpecDescription
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.Checkpoint`

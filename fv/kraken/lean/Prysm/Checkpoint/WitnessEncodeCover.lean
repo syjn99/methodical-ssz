@@ -1,8 +1,12 @@
-import Prysm.Checkpoint.EncodeCover
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Machine.WitnessSplit
-import Prysm.Checkpoint.Code
+module
+
+public import Prysm.Checkpoint.EncodeCover
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Machine.WitnessSplit
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.cover`: every capacity range on one host

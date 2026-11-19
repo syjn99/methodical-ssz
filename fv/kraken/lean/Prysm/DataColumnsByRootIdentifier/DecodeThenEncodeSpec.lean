@@ -1,4 +1,8 @@
-import Prysm.DataColumnsByRootIdentifier.SpecDecodeBridge
+module
+
+public import Prysm.DataColumnsByRootIdentifier.SpecDecodeBridge
+
+@[expose] public section
 
 /-!
 # Spec-level round trip (the shape of `Prysm.Checkpoint.DecodeThenEncode.round_trip_spec`)

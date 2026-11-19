@@ -1,6 +1,10 @@
-import Prysm.PendingPartialWithdrawal.DecodeRejectSize
-import Prysm.PendingPartialWithdrawal.Spec
-import Prysm.PendingPartialWithdrawal.Code
+module
+
+public import Prysm.PendingPartialWithdrawal.DecodeRejectSize
+public import Prysm.PendingPartialWithdrawal.Spec
+public import Prysm.PendingPartialWithdrawal.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the PendingPartialWithdrawal decoder, reject side

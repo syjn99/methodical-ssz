@@ -1,4 +1,8 @@
-import Spec.TestListU64
+module
+
+public import Spec.TestListU64
+
+@[expose] public section
 
 /-!
 # Spec: `target.Nested`

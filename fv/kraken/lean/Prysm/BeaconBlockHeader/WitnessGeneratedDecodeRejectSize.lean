@@ -1,7 +1,11 @@
-import Prysm.BeaconBlockHeader.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.BeaconBlockHeader.Code
+module
+
+public import Prysm.BeaconBlockHeader.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.BeaconBlockHeader.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_reject`

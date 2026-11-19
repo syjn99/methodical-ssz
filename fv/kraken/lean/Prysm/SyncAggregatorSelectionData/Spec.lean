@@ -1,7 +1,11 @@
-import Spec.TestScalars
-import Spec.DeserializeOfSerialize
-import Prysm.SyncAggregatorSelectionData.SpecDescription
-import Prysm.SyncAggregatorSelectionData.SpecChecker
+module
+
+public import Spec.TestScalars
+public import Spec.DeserializeOfSerialize
+public import Prysm.SyncAggregatorSelectionData.SpecDescription
+public import Prysm.SyncAggregatorSelectionData.SpecChecker
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.SyncAggregatorSelectionData`

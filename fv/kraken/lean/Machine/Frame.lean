@@ -1,4 +1,8 @@
-import Machine.Bytes
+module
+
+public import Machine.Bytes
+
+@[expose] public section
 
 /-!
 # Stack frames as one block (for function specifications)

@@ -1,7 +1,11 @@
-import Prysm.Deposit.DecodeRejectSize
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.Deposit.Code
+module
+
+public import Prysm.Deposit.DecodeRejectSize
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.Deposit.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.reject_size` (Deposit size reject)

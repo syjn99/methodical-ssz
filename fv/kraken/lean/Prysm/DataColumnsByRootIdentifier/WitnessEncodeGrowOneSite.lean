@@ -1,7 +1,11 @@
-import Prysm.DataColumnsByRootIdentifier.EncodeGrowOneSite
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.DataColumnsByRootIdentifier.Code
+module
+
+public import Prysm.DataColumnsByRootIdentifier.EncodeGrowOneSite
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.DataColumnsByRootIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Witnesses of `Encode.grow_one_site` (one-growth path: growth at any one site)

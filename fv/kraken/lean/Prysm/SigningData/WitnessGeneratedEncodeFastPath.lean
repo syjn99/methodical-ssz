@@ -1,7 +1,11 @@
-import Prysm.SigningData.GeneratedEncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.SigningData.Code
+module
+
+public import Prysm.SigningData.GeneratedEncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.SigningData.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.generated_fast` (SigningData encoder fast path, generated theorem)

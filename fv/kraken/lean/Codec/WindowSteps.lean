@@ -1,4 +1,8 @@
-import Codec.NopWindow
+module
+
+public import Codec.NopWindow
+
+@[expose] public section
 
 /-!
 # Per-instruction step lemmas (registers and straight-line set-up as parameters)

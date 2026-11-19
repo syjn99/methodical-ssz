@@ -1,7 +1,11 @@
-import Prysm.ValidatorIndex.DecodeRejectSize
-import Runtime.ErrorModel
-import Machine.WitnessHost
-import Prysm.ValidatorIndex.Code
+module
+
+public import Prysm.ValidatorIndex.DecodeRejectSize
+public import Runtime.ErrorModel
+public import Machine.WitnessHost
+public import Prysm.ValidatorIndex.Code
+
+@[expose] public section
 
 /-!
 # Witnesses of `Prysm.ValidatorIndex.Decode.reject_size` (len 7, 9 and 300)

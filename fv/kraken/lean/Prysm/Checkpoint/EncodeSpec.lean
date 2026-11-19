@@ -1,7 +1,11 @@
-import Prysm.Checkpoint.EncodeFastPath
-import Prysm.Checkpoint.Spec
-import Runtime.CopyModel
-import Prysm.Checkpoint.Code
+module
+
+public import Prysm.Checkpoint.EncodeFastPath
+public import Prysm.Checkpoint.Spec
+public import Runtime.CopyModel
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # Encoder against EthLib, and SizeSSZ

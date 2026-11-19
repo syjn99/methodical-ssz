@@ -1,7 +1,11 @@
-import Prysm.ExecutionPayloadEnvelopesByRangeRequest.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code
+module
+
+public import Prysm.ExecutionPayloadEnvelopesByRangeRequest.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_reject`

@@ -1,8 +1,12 @@
-import Codec.DecoderHeadEpilogue
-import Codec.FixedBytesDecode
-import Prysm.SyncCommittee.DecodeLoop
-import Prysm.SyncCommittee.Statements
-import Prysm.SyncCommittee.Code
+module
+
+public import Codec.DecoderHeadEpilogue
+public import Codec.FixedBytesDecode
+public import Prysm.SyncCommittee.DecodeLoop
+public import Prysm.SyncCommittee.Statements
+public import Prysm.SyncCommittee.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.SyncCommittee).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

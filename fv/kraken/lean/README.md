@@ -90,7 +90,7 @@ Codec <-> Prysm (at module level, both directions)
 
 - `Spec` imports only EthLib and `Spec`.
   `Machine` imports only Kraken, Std, Lean and `Machine`.
-  (`Machine/Include.lean` has `public meta import Lean` for its elaborators.)
+  (`Machine/Include.lean` and `Machine/SepPerm.lean` have `public meta import Lean` for their elaborators.)
   `Runtime` imports only Kraken, `Machine` and `Runtime`.
   So these three libraries import only libraries to their left, and Lean itself.
 - `Codec` and `Prysm` import each other at module level.
@@ -98,7 +98,7 @@ Codec <-> Prysm (at module level, both directions)
   Lean forbids a cycle of modules, so the module graph has no cycle.
   Only the libraries have no order.
 - A `Codec` module that imports `Prysm` uses code, data or specification lemmas of a type in a general lemma or kind.
-  `grep -rlE '^import Prysm' lean/Codec` gives these modules, with the `Prysm` directories that they import:
+  `grep -rlE '^public import Prysm' lean/Codec` gives these modules, with the `Prysm` directories that they import:
   - `Codec/CalleeDecode.lean` (ValidatorIndex, Epoch, Slot): it uses their decoder specifications;
   - `Codec/Segment/Bytes32VectorSpec.lean` (HistoricalBatch): it uses the element lemmas of `Prysm/HistoricalBatch/Spec.lean`;
   - `Codec/SerializeFieldsCongruence.lean` (AttestationData);
@@ -116,6 +116,28 @@ Codec <-> Prysm (at module level, both directions)
     It does not import a module of another type for the imports of that module.
     A lemma that two types share and that names no single type is in `Codec/` or `Spec/`.
 - A type directory also imports the two directories of `Prysm/` that are not types: `Prysm/ElfData/` and `Prysm/RuntimeModel/`.
+
+### Module system
+
+Each file of the libraries is a Lean module, with this header:
+
+```lean
+module
+
+public import Machine.Step
+
+@[expose] public section
+```
+
+- `@[expose]` makes the definition bodies visible to importing files.
+  The witnesses unfold `Code` definitions.
+- A proof body is not public data.
+  Thus a change of a proof body does not rebuild the importing modules.
+- Kraken does not expose all definition bodies.
+  A file that unfolds `sep` or `List.At` adds `import all Kraken.Separation` and `import all Kraken.Mem`.
+- `Spec/TestBitVec.lean` and `Spec/TestBitList.lean` are not modules.
+  Their `decide +kernel` proofs need core `UInt8` bodies.
+- Each generator writes this header.
 
 A new type gets its own directory `Prysm/<GoTypeName>/`.
 Do not change a reviewed module to add a new type.

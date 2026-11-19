@@ -1,7 +1,11 @@
-import Prysm.DepositRequest.GeneratedEncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.DepositRequest.Code
+module
+
+public import Prysm.DepositRequest.GeneratedEncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.DepositRequest.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.generated_fast` (DepositRequest encoder fast path, generated theorem)

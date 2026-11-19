@@ -1,8 +1,12 @@
-import Prysm.BeaconBlockHeader.GeneratedDecodeAccept
-import Prysm.BeaconBlockHeader.Spec
-import Prysm.BeaconBlockHeader.Code
-import Prysm.Slot.Code
-import Prysm.ValidatorIndex.Code
+module
+
+public import Prysm.BeaconBlockHeader.GeneratedDecodeAccept
+public import Prysm.BeaconBlockHeader.Spec
+public import Prysm.BeaconBlockHeader.Code
+public import Prysm.Slot.Code
+public import Prysm.ValidatorIndex.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.BeaconBlockHeader` decoder

@@ -1,7 +1,11 @@
-import Machine.Frame
-import Machine.Block
-import Prysm.SyncCommittee.Spec
-import Codec.ByteSliceListLemmas
+module
+
+public import Machine.Frame
+public import Machine.Block
+public import Prysm.SyncCommittee.Spec
+public import Codec.ByteSliceListLemmas
+
+@[expose] public section
 
 /-!
 # List and memory-chunk lemmas for the SyncCommittee element loop

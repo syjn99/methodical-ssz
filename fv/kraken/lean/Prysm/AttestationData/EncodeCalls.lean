@@ -1,4 +1,8 @@
-import Prysm.AttestationData.EncodeTargetCall
+module
+
+public import Prysm.AttestationData.EncodeTargetCall
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.AttestationData).MarshalSSZTo`, fast path, segments 4 and 5 together

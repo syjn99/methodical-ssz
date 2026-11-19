@@ -1,7 +1,11 @@
-import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.PendingPartialWithdrawal.Code
+module
+
+public import Prysm.PendingPartialWithdrawal.GeneratedEncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.PendingPartialWithdrawal.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.generated_fast` (PendingPartialWithdrawal encoder fast path, generated theorem)

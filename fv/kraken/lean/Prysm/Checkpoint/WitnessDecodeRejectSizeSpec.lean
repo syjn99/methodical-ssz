@@ -1,5 +1,9 @@
-import Prysm.Checkpoint.WitnessDecodeRejectSize
-import Prysm.Checkpoint.DecodeSpec
+module
+
+public import Prysm.Checkpoint.WitnessDecodeRejectSize
+public import Prysm.Checkpoint.DecodeSpec
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.reject_size_spec` on concrete input arrays

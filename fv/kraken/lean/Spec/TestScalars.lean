@@ -1,5 +1,9 @@
-import EthLib.Serialization.Ssz
-import Spec.TestFixed
+module
+
+public import EthLib.Serialization.Ssz
+public import Spec.TestFixed
+
+@[expose] public section
 
 /-!
 # Spec: `target.Scalars`

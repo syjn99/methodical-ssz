@@ -1,7 +1,11 @@
-import Prysm.BeaconBlocksByRangeRequest.GeneratedDecodeAccept
-import Prysm.BeaconBlocksByRangeRequest.Spec
-import Prysm.BeaconBlocksByRangeRequest.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.BeaconBlocksByRangeRequest.GeneratedDecodeAccept
+public import Prysm.BeaconBlocksByRangeRequest.Spec
+public import Prysm.BeaconBlocksByRangeRequest.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.BeaconBlocksByRangeRequest` decoder

@@ -1,6 +1,10 @@
-import Prysm.HistoricalBatch.DecodeAccept
-import Prysm.HistoricalBatch.DecodeRejectSize
-import Prysm.HistoricalBatch.Spec
+module
+
+public import Prysm.HistoricalBatch.DecodeAccept
+public import Prysm.HistoricalBatch.DecodeRejectSize
+public import Prysm.HistoricalBatch.Spec
+
+@[expose] public section
 
 /-!
 # Spec alignment of the HistoricalBatch decoder
