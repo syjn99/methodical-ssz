@@ -115,9 +115,7 @@ theorem runs (len : UInt64) (hlen : len ≠ {N}) (zmms : RegZmms) (flags : Statu
       witness_split []
       simp only [initial_state, frame_rest, word_bytes, ElfData.PrysmTarget.sszErrSize_addr, label_err_size, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) hlen)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
@@ -234,9 +232,7 @@ theorem runs ({insp} : List UInt8) {hins}
       witness_split [{', '.join(f'hin{i}' for i in range(nf))}]
       simp only [initial_state, frame_rest, zero_word_bytes, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) rfl)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
@@ -464,9 +460,7 @@ theorem runs ({pp} : List UInt8) {hparams}
       have H2 := lift_heap H
       simp only [initial_state, frame_rest, zero_word_bytes, label_write_barrier, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) rfl (Nat.le_refl _) (bump_makeslice1 {bi} placed_at_{bi} labels_fresh_at_{bi} _) (model_memmove {ri} placed_at_{ri} labels_fresh_at_{ri} _))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 

@@ -4,6 +4,7 @@ import Kraken.Tactics
 import Kraken.SeparationTactics
 import Kraken.X64.Parser
 import Machine.Include
+import Machine.SepPerm
 import Std.Tactic.BVDecide
 
 /-! Glue on top of Kraken: one-directive steps inside a `Host`. -/

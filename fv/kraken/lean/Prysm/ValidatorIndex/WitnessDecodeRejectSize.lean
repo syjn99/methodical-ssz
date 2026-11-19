@@ -95,9 +95,7 @@ theorem runs (zmms : RegZmms) (flags : StatusFlags) :
         label_gcbits, label_staticuint64s, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         BitVec.reduceMul] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) (by simp [initial_state]) (by omega) (model_convT64 67 placed_at_67 labels_fresh_at_67 0)
     (model_errorf_decimal_decimal 67 placed_at_67 labels_fresh_at_67 bumpHeap ElfData.PrysmTarget.formatBufferLength ElfData.PrysmTarget.typeInt_addr 0))
     (fun _ h => ⟨h.1, h.2.1⟩)
@@ -149,9 +147,7 @@ theorem runs_length_9 (zmms : RegZmms) (flags : StatusFlags) :
         label_gcbits, label_staticuint64s, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         BitVec.reduceMul] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) (by simp [initial_state]) (by omega) (model_convT64 67 placed_at_67 labels_fresh_at_67 0)
     (model_errorf_decimal_decimal 67 placed_at_67 labels_fresh_at_67 bumpHeap ElfData.PrysmTarget.formatBufferLength ElfData.PrysmTarget.typeInt_addr 0))
     (fun _ h => ⟨h.1, h.2.1⟩)
@@ -195,9 +191,7 @@ theorem runs_length_300 (zmms : RegZmms) (flags : StatusFlags) :
         label_gcbits, label_staticuint64s, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         BitVec.reduceMul] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) (by simp [initial_state]) (by omega) (model_convT64 67 placed_at_67 labels_fresh_at_67 0)
     (model_errorf_decimal_decimal 67 placed_at_67 labels_fresh_at_67 bumpHeap ElfData.PrysmTarget.formatBufferLength ElfData.PrysmTarget.typeInt_addr 0))
     (fun _ h => ⟨h.1, h.2.1⟩)

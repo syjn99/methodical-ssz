@@ -153,11 +153,6 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
--- Measured cause: the memory premise is closed by `simp` AC-normalization of the separating
--- conjunction (38 chunks, as in `Prysm.SyncCommittee.Witness.DecodeAccept.runs`). The `ecancel` alternative fails on this goal (56 internal
--- PANIC messages of the tactic). Thresholds: 3000000 and 4000000 fail at `whnf`, 5000000
--- passes, also 6000000, 8000000, 12000000, 16000000. Value: twice the passing value.
-set_option maxHeartbeats 10000000 in
 /-- **Non-vacuity of `Decode.accept` (the premises of the statement `Decode.accept_statement` are satisfiable)**,
 for every `n ≤ 2048`, every input and every old pointer word. -/
 theorem runs (n : Nat) (hn : n ≤ 2048) (in0 in1 root se sroot te troot sig ib oP1 oD oP2 : List UInt8)
@@ -197,9 +192,7 @@ theorem runs (n : Nat) (hn : n ≤ 2048) (in0 in1 root se sroot te troot sig ib 
       have H2 := lift_heap H
       simp only [initial_state, frame_rest, zero_word_bytes, label_write_barrier, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Nat.reduceAdd,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by show (0 : UInt64).toNat + 408 < (0x143c4 : UInt64).toNat; decide)
     (UInt64.toNat_ofNat_of_lt' (by unfold UInt64.size; omega))
     (Nat.le_refl _)

@@ -103,9 +103,7 @@ theorem runs (r1 cnt r2 oP1 oP2 : List UInt8) (hr1 : r1.length = 32) (hcnt : cnt
       have H2 := lift_heap H
       simp only [initial_state, frame_rest, zero_word_bytes, label_write_barrier, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) rfl (Nat.le_refl _) (bump_makeslice1 117 placed_at_117 labels_fresh_at_117 _) (model_memmove 123 placed_at_123 labels_fresh_at_123 _))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 

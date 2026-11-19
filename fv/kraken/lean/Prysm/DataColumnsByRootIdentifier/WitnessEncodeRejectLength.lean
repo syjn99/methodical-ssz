@@ -62,9 +62,7 @@ theorem runs (bl : BitVec 64) (hbl : bl ≠ 32) (zmms : RegZmms) (flags : Status
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, show (UInt64.ofNat 0).toBitVec = 0#64 from rfl,
         show (p : UInt64) → p.toBitVec = p.toBitVec from fun _ => rfl] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 
@@ -129,9 +127,7 @@ theorem runs (root : List UInt8) (hroot : root.length = 32) (zmms : RegZmms) (fl
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, show (UInt64.ofNat 0).toBitVec = 0#64 from rfl,
         show (p : UInt64) → p.toBitVec = p.toBitVec from fun _ => rfl] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) (by simp [initial_state]) (model_memmove 119 placed_at_119 labels_fresh_at_119 0))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 

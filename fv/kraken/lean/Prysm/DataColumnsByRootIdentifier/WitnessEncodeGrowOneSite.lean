@@ -97,9 +97,7 @@ theorem runs (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length 
       rw [Mem.At_append_sep (zeros 100) (zeros 20) _ (by simp)]
       simp only [initial_state, bitvec_word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, UInt64.toBitVec_ofNat, List.length_replicate,
         Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by dsimp only [initial_state]; decide) (by dsimp only [initial_state]; decide) (by unfold maxAlloc; omega)
     (by
       intro m hm hc
@@ -152,9 +150,7 @@ theorem runs (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length 
       rw [Mem.At_append_sep (zeros 100) (zeros 34) _ (by simp)]
       simp only [initial_state, bitvec_word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, UInt64.toBitVec_ofNat, List.length_replicate,
         Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by dsimp only [initial_state]; decide) (by dsimp only [initial_state]; decide) (by unfold maxAlloc; omega)
     (by
       intro m hm hc
@@ -207,9 +203,7 @@ theorem runs (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length 
       rw [Mem.At_append_sep (zeros 100) (zeros 100) _ (by simp)]
       simp only [initial_state, bitvec_word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, UInt64.toBitVec_ofNat, List.length_replicate,
         Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by dsimp only [initial_state]; decide) (by dsimp only [initial_state]; decide) (by unfold maxAlloc; omega)
     (by
       intro m hm hc
@@ -262,9 +256,7 @@ theorem runs (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length 
       rw [Mem.At_append_sep (zeros 2000) (zeros 548) _ (by simp)]
       simp only [initial_state, bitvec_word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, UInt64.toBitVec_ofNat, List.length_replicate,
         Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by dsimp only [initial_state]; decide) (by dsimp only [initial_state]; decide) (by unfold maxAlloc; omega)
     (by
       intro m hm hc

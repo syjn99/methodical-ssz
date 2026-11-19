@@ -28,9 +28,7 @@ theorem runs_spec (n : Nat) (hn : n ≠ 40) (hn64 : n < 2 ^ 64) (zmms : RegZmms)
       witness_split []
       simp only [initial_state, frame_rest, word_bytes, ElfData.PrysmTarget.sszErrSize_addr, label_err_size, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) (by simp [initial_state]; try omega)
   ⟨h.1, eventually_mono h.2 (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)⟩
 

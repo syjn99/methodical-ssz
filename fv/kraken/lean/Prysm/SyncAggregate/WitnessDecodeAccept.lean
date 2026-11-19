@@ -83,12 +83,6 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
--- Profiled cause (scratch copy, `profiler true`): the memory premise is closed by `simp` AC-normalization of
--- the 22-chunk separating conjunction (`sep_comm`, `sep_comm_l`: 7.03 s; the address `simp`: 2.08 s; simp total
--- 9.16 s of the declaration). The default 200000 heartbeats stop at `whnf`.
--- Thresholds measured in separate runs: 200000 and 400000 fail at `whnf`, 1000000 passes.
--- Value 2000000 (twice the lowest passing value): passes.
-set_option maxHeartbeats 2000000 in
 /-- **Non-vacuity of `Decode.accept` (the premises of the statement `Decode.accept_statement` are satisfiable).** -/
 theorem runs (bits sig oP1 oP2 : List UInt8) (hbits : bits.length = 64) (hsig : sig.length = 96)
     (h1 : oP1.length = 8) (h2 : oP2.length = 8) (zmms : RegZmms) (flags : StatusFlags) :
@@ -106,9 +100,7 @@ theorem runs (bits sig oP1 oP2 : List UInt8) (hbits : bits.length = 64) (hsig : 
       have H2 := lift_heap H
       simp only [initial_state, frame_rest, zero_word_bytes, label_write_barrier, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) rfl (Nat.le_refl _) (bump_makeslice1 115 placed_at_115 labels_fresh_at_115 _) (model_memmove 121 placed_at_121 labels_fresh_at_121 _))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 

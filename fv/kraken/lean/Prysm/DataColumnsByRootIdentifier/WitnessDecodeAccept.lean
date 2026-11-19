@@ -90,9 +90,6 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
--- Measured: 200000 and 1000000 fail at `whnf`, 4000000 passes. The time is the `simp` AC-normalization
--- of the memory premise (the cause of `Prysm/DataColumnsByRootIdentifier/WitnessEncodeFastPath.lean`).
-set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `Decode.accept`** for every `n ≤ 128`, every input and every old receiver word. -/
 theorem runs (n : Nat) (hn : n ≤ 128) (root ib aP1 aL1 aC1 aP2 aL2 aC2 : List UInt8)
     (hroot : root.length = 32) (hib : ib.length = 8 * n) (h1 : aP1.length = 8) (h2 : aL1.length = 8)
@@ -124,9 +121,7 @@ theorem runs (n : Nat) (hn : n ≤ 128) (root ib aP1 aL1 aC1 aP2 aL2 aC2 : List 
       have H2 := lift_heap H
       simp only [initial_state, frame_rest, zero_word_bytes, label_write_barrier, nil_At_emp, Std.ExtHashMap.sep_emp, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Nat.reduceAdd, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by show (0 : UInt64).toNat + 16 < (0x10504 : UInt64).toNat; decide)
     (UInt64.toNat_ofNat_of_lt' (by unfold UInt64.size; omega))
     (Nat.le_refl _)

@@ -193,9 +193,7 @@ theorem Encode.grow_any_site_three_cases (k : Nat) (hk : marshalSSZTo.IsInfixAt 
     rw [e4]
     have e2' : st.data.regs.rax = d1.regs.rbx := UInt64.toBitVec_inj.mp e2
     rw [e2']
-    simp only [Std.ExtHashMap.sep_assoc, Std.ExtHashMap.sep_emp] at Hm ⊢
-    simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at Hm ⊢
-    exact Hm
+    sep_perm Hm
   · have hlt : d1.regs.rdi.toNat < rcx.toNat + 40 := by omega
     have htl : 8 ≤ tail.length := by omega
     have ht8 : (tail.take 8).length = 8 := by simp only [List.length_take]; omega
@@ -210,9 +208,7 @@ theorem Encode.grow_any_site_three_cases (k : Nat) (hk : marshalSSZTo.IsInfixAt 
       refine Or.inr (Or.inl ⟨e1, e2, e4, e5, e6, e7, e8', t, u, scr, spl', tail.drop 8, rest, d1.regs.rbx.toBitVec,
         d1.regs.rdi.toNat, av1, av', ht, hu, hscr, hspl', hnc1, hlt, by simp only [List.length_drop]; omega, hav1, hb2,
         e3, hrest, hav', ?_⟩)
-      simp only [Std.ExtHashMap.sep_assoc, Std.ExtHashMap.sep_emp] at Hm ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at Hm ⊢
-      exact Hm
+      sep_perm Hm
     · -- second call entry: no lower bound on av1 from the contract; the run is at the second call, av1 below its budget
       refine eventually_mono (Encode.tail_grow_call k hk hf rsp r14 rbp ra rcx d1.regs.rdi rax.toBitVec d1.regs.rbx.toBitVec p
         e8 root pre (tail.take 8) l16 l24 l32 l72 spl1 (Int.toBytes 8 (Host.addrOf (k + 28)).toBitVec.toInt) scr1
@@ -224,8 +220,6 @@ theorem Encode.grow_any_site_three_cases (k : Nat) (hk : marshalSSZTo.IsInfixAt 
         by rw [e7]; exact hav1, by rw [e7]; omega, ?_⟩)
       have e5' : st.data.regs.rax.toBitVec = d1.regs.rbx.toBitVec := e5
       rw [e5']
-      simp only [Std.ExtHashMap.sep_assoc, Std.ExtHashMap.sep_emp] at Hm ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at Hm ⊢
-      exact Hm
+      sep_perm Hm
 
 end Prysm.Checkpoint

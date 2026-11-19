@@ -61,9 +61,7 @@ theorem witness_mem (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.leng
   have H : Eq ((block e8 old).At (0x10000 : BitVec 64)) (mem e8 old) := rfl
   witness_split [he8, hold]
   simp only [s, initial_state, frame_rest, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
-  simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-  simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-  exact H
+  sep_perm H
 
 /-- **Non-vacuity of `Decode.generated_accept`**: on the concrete host and
 state, for every 8-byte input, the ValidatorIndex decoder returns nil and the receiver

@@ -57,9 +57,7 @@ theorem runs (g : SszValue) (n : Nat) (hn : n ≤ 64) (zmms : RegZmms) (flags : 
         Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil] at H2 ⊢
       generalize (uintBytes 8 g.epoch.toNat).toList = e8 at H2 ⊢
       generalize g.root.toList = root at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) (by simp [initial_state]) (by simp only [initial_state, hc]; omega) (by simp [initial_state])
     (by unfold maxAlloc; omega) (model_growslice 99 placed_at_99 labels_fresh_at_99 _ 0) (model_memmove 99 placed_at_99 labels_fresh_at_99 0)
   refine ⟨bs, hs, hbs, eventually_mono he ?_⟩
@@ -104,9 +102,7 @@ theorem runs_nil (g : SszValue) (zmms : RegZmms) (flags : StatusFlags) :
         List.length_nil] at H2 ⊢
       generalize (uintBytes 8 g.epoch.toNat).toList = e8 at H2 ⊢
       generalize g.root.toList = root at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state])
     (by unfold maxAlloc; omega) (model_growslice 99 placed_at_99 labels_fresh_at_99 _ 0) (model_memmove 99 placed_at_99 labels_fresh_at_99 0)
   refine ⟨bs, hs, hbs, eventually_mono he ?_⟩

@@ -87,11 +87,6 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
--- Threshold measured on this module (one run each): 200000 (default) and 400000 fail at `whnf`;
--- 1000000 and 2000000 pass. Value 2000000 = twice the lowest passing value (the margin of `Prysm/SyncCommittee/WitnessDecodeAccept.lean`).
--- Cause (profiler): `simp` 11.8 s of the declaration (two calls, 9.5 s and 2.23 s): the memory premise is
--- closed by `simp` AC-normalization of the separating conjunction (24 chunks), as in `Prysm.SyncCommittee.Witness.DecodeAccept.runs`.
-set_option maxHeartbeats 2000000 in
 /-- **Non-vacuity of `Decode.accept` (the premises of the statement `Decode.accept_statement` are satisfiable).** -/
 theorem runs (brs srs : List (List UInt8)) (oP1 oP2 : List UInt8) (hbrs : brs.length = 8192)
     (hbr : ∀ e ∈ brs, e.length = 32) (hsrs : srs.length = 8192) (hsr : ∀ e ∈ srs, e.length = 32)
@@ -114,9 +109,7 @@ theorem runs (brs srs : List (List UInt8)) (oP1 oP2 : List UInt8) (hbrs : brs.le
       have H2 := lift_heap H
       simp only [initial_state, frame_rest, zero_word_bytes, label_write_barrier, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) rfl (by omega)
     (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1 191 placed_at_191 no_label_before_191 _ Prysm.RuntimeModel.uint8_ne_slice) (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24 191 placed_at_191 no_label_before_191 labels_fresh_at_191)
     (model_memmove 207 placed_at_207 labels_fresh_at_207 _))

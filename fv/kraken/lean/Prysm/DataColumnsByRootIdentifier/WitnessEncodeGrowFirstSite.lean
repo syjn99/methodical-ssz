@@ -66,9 +66,6 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
 
 theorem next_slice_cap_eq : nextSliceCap 3353 3352 = 4382 := by decide
 
--- Measured (three builds of `Prysm.DataColumnsByRootIdentifier.WitnessEncodeGrowFirstSite`): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (the 4000000 build): `simp` 10.2 s of
--- the declaration, the `sep_comm` sort of the memory premise (the cause of `Prysm/DataColumnsByRootIdentifier/WitnessEncodeFastPath.lean`).
-set_option maxHeartbeats 4000000 in
 -- maxRecDepth (builds at the default, 2000 and 20000, and a later run): 512 and 2000 fail; WitnessEncodeFastPath n = 128 passes at 4000, WitnessEncodeGrowFirstSite fails at 4000 and passes
 -- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [initial_state]` by `dsimp only [initial_state]; decide`
 -- did not remove it (one more run); the cause is not located. all three witnesses.
@@ -92,9 +89,7 @@ theorem runs_empty (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.l
       have H2 := lift_heap H
       simp only [initial_state, bitvec_word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state])
     (by simp only [initial_state]; decide) (by simp only [initial_state]; decide)
     (by unfold maxAlloc; omega) (model_growslice 126 placed_at_126 labels_fresh_at_126 _ 0) (model_memmove 126 placed_at_126 labels_fresh_at_126 0))
@@ -104,9 +99,6 @@ theorem runs_empty (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.l
       have := h.2.2.1; omega,
       h.2.2.2.1, h.2.2.2.2.1⟩)
 
--- Measured (three builds of `Prysm.DataColumnsByRootIdentifier.WitnessEncodeGrowFirstSite`): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (the 4000000 build): `simp` 10.2 s of
--- the declaration, the `sep_comm` sort of the memory premise (the cause of `Prysm/DataColumnsByRootIdentifier/WitnessEncodeFastPath.lean`).
-set_option maxHeartbeats 4000000 in
 -- maxRecDepth (builds at the default, 2000 and 20000, and a later run): 512 and 2000 fail; WitnessEncodeFastPath n = 128 passes at 4000, WitnessEncodeGrowFirstSite fails at 4000 and passes
 -- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [initial_state]` by `dsimp only [initial_state]; decide`
 -- did not remove it (one more run); the cause is not located. all three witnesses.
@@ -130,9 +122,7 @@ theorem runs_one_element (root cb : List UInt8) (hroot : root.length = 32) (hcb 
       have H2 := lift_heap H
       simp only [initial_state, bitvec_word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state])
     (by simp only [initial_state]; decide) (by simp only [initial_state]; decide)
     (by unfold maxAlloc; omega) (model_growslice 126 placed_at_126 labels_fresh_at_126 _ 0) (model_memmove 126 placed_at_126 labels_fresh_at_126 0))
@@ -142,9 +132,6 @@ theorem runs_one_element (root cb : List UInt8) (hroot : root.length = 32) (hcb 
       have := h.2.2.1; omega,
       h.2.2.2.1, h.2.2.2.2.1⟩)
 
--- Measured (three builds of `Prysm.DataColumnsByRootIdentifier.WitnessEncodeGrowFirstSite`): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (the 4000000 build): `simp` 10.2 s of
--- the declaration, the `sep_comm` sort of the memory premise (the cause of `Prysm/DataColumnsByRootIdentifier/WitnessEncodeFastPath.lean`).
-set_option maxHeartbeats 4000000 in
 -- maxRecDepth (builds at the default, 2000 and 20000, and a later run): 512 and 2000 fail; WitnessEncodeFastPath n = 128 passes at 4000, WitnessEncodeGrowFirstSite fails at 4000 and passes
 -- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [initial_state]` by `dsimp only [initial_state]; decide`
 -- did not remove it (one more run); the cause is not located. all three witnesses.
@@ -168,9 +155,7 @@ theorem runs_maximum (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb
       have H2 := lift_heap H
       simp only [initial_state, bitvec_word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state])
     (by simp only [initial_state]; decide) (by simp only [initial_state]; decide)
     (by unfold maxAlloc; omega) (model_growslice 126 placed_at_126 labels_fresh_at_126 _ 0) (model_memmove 126 placed_at_126 labels_fresh_at_126 0))

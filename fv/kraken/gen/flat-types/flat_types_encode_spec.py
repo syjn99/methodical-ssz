@@ -478,9 +478,7 @@ def emit_wit(X, info, cl, gsize):
               '      simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,',
               '        BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil, List.length_cons,',
               '        List.length_replicate, show (UInt64.ofNat %d).toBitVec = %d#64 from rfl] at H ⊢' % (npre, npre),
-              '      simp only [Std.ExtHashMap.sep_assoc] at H ⊢',
-              '      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢',
-              '      exact H)']
+              '      sep_perm H)']
         sig = ' '.join('(%s : List UInt8)' % q for q in params)
         hs = ' '.join('(h_%s : %s.length = %d)' % (q, q, plen[q]) for q in params)
         w('set_option maxHeartbeats 16000000 in')

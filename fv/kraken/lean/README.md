@@ -31,7 +31,7 @@ The hand `Desc` of each type of the Prysm target is in `Prysm/<GoTypeName>/` (se
 **`Machine`.** Helpers on the Kraken machine model.
 They are the one-instruction step lemmas and tactics (`Machine/Step.lean`), and the stack frame, byte, label and flag lemmas.
 It also has the commands that read code and data files (`Machine/Include.lean`).
-It has the witness host builder and tactics (`Machine/WitnessHost.lean`, `Machine/WitnessSplit.lean`).
+It has the witness host builder and tactics (`Machine/WitnessHost.lean`, `Machine/WitnessSplit.lean`, `Machine/SepPerm.lean`).
 It holds no runtime contract and no Prysm type.
 
 **`Runtime`.** The contracts of the Go runtime callees (`Runtime/Contracts.lean`, `Runtime/NewobjectContract.lean`) and their models.
@@ -277,6 +277,8 @@ The program is the data labels, the real converted function and the runtime mode
 A theorem `runs` (or `runs_<case>`) applies the main theorem to a concrete memory block and discharges every premise.
 The runtime models discharge the contract hypotheses.
 Example: `Prysm.SyncAggregate.Witness.DecodeAccept.runs`.
+To close the memory premise from the split block `H`, use `sep_perm H` (`Machine/SepPerm.lean`).
+Do not sort the chunks with `simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l]`, because it is very slow.
 For a variable length, the witnesses cover the empty value, one element and the maximum.
 The receiver in a witness must be a Go value of the type.
 `Prysm/Checkpoint/GoValue.lean` gives a Lean predicate for this check.
