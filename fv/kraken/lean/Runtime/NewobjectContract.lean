@@ -1,5 +1,9 @@
-import Runtime.Contracts
-import Machine.Frame
+module
+
+public import Runtime.Contracts
+public import Machine.Frame
+
+@[expose] public section
 
 /-!
 # The contract form of `runtime.newobject`

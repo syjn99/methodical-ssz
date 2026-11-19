@@ -1,8 +1,12 @@
-import Codec.SegmentAddress
-import Prysm.AttestationData.DecodeAcceptBlockRoot
-import Prysm.Checkpoint.FunctionSpecsAsNestedField
-import Runtime.NewobjectContract
-import Prysm.AttestationData.Code
+module
+
+public import Codec.SegmentAddress
+public import Prysm.AttestationData.DecodeAcceptBlockRoot
+public import Prysm.Checkpoint.FunctionSpecsAsNestedField
+public import Runtime.NewobjectContract
+public import Prysm.AttestationData.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, Source segment

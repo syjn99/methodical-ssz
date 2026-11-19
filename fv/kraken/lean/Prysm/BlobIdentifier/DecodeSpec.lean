@@ -1,6 +1,10 @@
-import Prysm.BlobIdentifier.GeneratedDecodeAccept
-import Prysm.BlobIdentifier.Spec
-import Prysm.BlobIdentifier.Code
+module
+
+public import Prysm.BlobIdentifier.GeneratedDecodeAccept
+public import Prysm.BlobIdentifier.Spec
+public import Prysm.BlobIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.BlobIdentifier` decoder

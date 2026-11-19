@@ -1,7 +1,11 @@
-import Spec.TestScalars
-import Codec.SerializeInline
-import Prysm.HistoricalBatch.SpecDescription
-import Codec.ByteVector32Values
+module
+
+public import Spec.TestScalars
+public import Codec.SerializeInline
+public import Prysm.HistoricalBatch.SpecDescription
+public import Codec.ByteVector32Values
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.HistoricalBatch`

@@ -1,6 +1,10 @@
-import Prysm.Epoch.EncodeFastPath
-import Prysm.Epoch.Size
-import Runtime.CopyModel
+module
+
+public import Prysm.Epoch.EncodeFastPath
+public import Prysm.Epoch.Size
+public import Runtime.CopyModel
+
+@[expose] public section
 
 /-!
 # Encoder of `primitives.Epoch` against EthLib

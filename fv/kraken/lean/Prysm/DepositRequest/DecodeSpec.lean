@@ -1,6 +1,10 @@
-import Prysm.DepositRequest.GeneratedDecodeAccept
-import Prysm.DepositRequest.Spec
-import Prysm.DepositRequest.Code
+module
+
+public import Prysm.DepositRequest.GeneratedDecodeAccept
+public import Prysm.DepositRequest.Spec
+public import Prysm.DepositRequest.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1.DepositRequest` decoder

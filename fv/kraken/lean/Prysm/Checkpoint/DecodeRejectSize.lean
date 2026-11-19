@@ -1,8 +1,12 @@
-import Machine.Step
-import Machine.Labels
-import Machine.Bytes
-import Prysm.Checkpoint.Code
-import Prysm.ElfData.PrysmTarget
+module
+
+public import Machine.Step
+public import Machine.Labels
+public import Machine.Bytes
+public import Prysm.Checkpoint.Code
+public import Prysm.ElfData.PrysmTarget
+
+@[expose] public section
 
 /-!
 # Prysm `(*v1alpha1.Checkpoint).UnmarshalSSZ`: size reject and the unreachable Epoch-error path

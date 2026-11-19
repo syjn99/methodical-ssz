@@ -1,5 +1,9 @@
-import Prysm.BeaconBlockHeader.WitnessGeneratedDecodeRejectSize
-import Prysm.BeaconBlockHeader.DecodeErrorUnreachable
+module
+
+public import Prysm.BeaconBlockHeader.WitnessGeneratedDecodeRejectSize
+public import Prysm.BeaconBlockHeader.DecodeErrorUnreachable
+
+@[expose] public section
 
 /-!
 # Witness of the two unreachable-path theorems of the BeaconBlockHeader decoder

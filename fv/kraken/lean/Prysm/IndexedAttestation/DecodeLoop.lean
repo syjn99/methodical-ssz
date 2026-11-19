@@ -1,7 +1,11 @@
-import Machine.Block
-import Machine.Labels
-import Prysm.IndexedAttestation.Code
-import Codec.ByteSliceListLemmas
+module
+
+public import Machine.Block
+public import Machine.Labels
+public import Prysm.IndexedAttestation.Code
+public import Codec.ByteSliceListLemmas
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: the element loop

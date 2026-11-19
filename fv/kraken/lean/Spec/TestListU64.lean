@@ -1,4 +1,8 @@
-import Spec.TestScalars
+module
+
+public import Spec.TestScalars
+
+@[expose] public section
 
 /-!
 # Spec: `target.ListU64`

@@ -1,5 +1,9 @@
-import Prysm.AttestationData.SpecChecker
-import Prysm.AttestationData.Spec
+module
+
+public import Prysm.AttestationData.SpecChecker
+public import Prysm.AttestationData.Spec
+
+@[expose] public section
 
 /-!
 # Field lists with the same encoders

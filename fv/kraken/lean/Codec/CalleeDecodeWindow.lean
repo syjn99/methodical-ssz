@@ -1,6 +1,10 @@
-import Codec.CalleeDecode
-import Codec.InlineUint64RegisterBase
-import Codec.NopWindow
+module
+
+public import Codec.CalleeDecode
+public import Codec.InlineUint64RegisterBase
+public import Codec.NopWindow
+
+@[expose] public section
 
 /-!
 # The callee-decoder call block over a window (padding anywhere)

@@ -1,5 +1,9 @@
-import Prysm.SyncCommittee.Spec
-import Prysm.SyncCommittee.SpecChecker
+module
+
+public import Prysm.SyncCommittee.Spec
+public import Prysm.SyncCommittee.SpecChecker
+
+@[expose] public section
 
 /-!
 # The hand `Desc` of SyncCommittee and the Desc checker's `Desc`

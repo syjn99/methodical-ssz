@@ -1,13 +1,17 @@
-import Prysm.AttestationData.DecodeAccept
-import Prysm.AttestationData.WitnessBumpAllocator
-import Runtime.CopyModel
-import Runtime.BumpAllocatorVariants
-import Machine.WitnessHost
-import Prysm.AttestationData.Code
-import Prysm.Checkpoint.Code
-import Prysm.CommitteeIndex.Code
-import Prysm.Epoch.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.AttestationData.DecodeAccept
+public import Prysm.AttestationData.WitnessBumpAllocator
+public import Runtime.CopyModel
+public import Runtime.BumpAllocatorVariants
+public import Machine.WitnessHost
+public import Prysm.AttestationData.Code
+public import Prysm.Checkpoint.Code
+public import Prysm.CommitteeIndex.Code
+public import Prysm.Epoch.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.accept` (AttestationData decoder accept path)
@@ -140,9 +144,7 @@ theorem runs (in0 in1 root se sroot te troot aS aT : List UInt8) (hin0 : in0.len
       have H2 := lift_heap H
       simp only [initial_state, frame_rest, zero_word_bytes, label_write_barrier, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) rfl (Nat.le_refl _) (bump_makeslice1 549 placed_at_549 labels_fresh_at_549 _) (model_memmove 555 placed_at_555 labels_fresh_at_555 8)
     (bump_makeslice1 549 placed_at_549 labels_fresh_at_549 _) (model_memmove 555 placed_at_555 labels_fresh_at_555 _) (bump_newobject72 581 placed_at_581 labels_fresh_at_581 _))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)

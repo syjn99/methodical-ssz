@@ -1,9 +1,13 @@
-import Machine.Step
-import Machine.Labels
-import Machine.Bytes
-import Prysm.ElfData.PrysmTarget
-import Prysm.SyncAggregate.Statements
-import Prysm.SyncAggregate.Code
+module
+
+public import Machine.Step
+public import Machine.Labels
+public import Machine.Bytes
+public import Prysm.ElfData.PrysmTarget
+public import Prysm.SyncAggregate.Statements
+public import Prysm.SyncAggregate.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.SyncAggregate).UnmarshalSSZ`: size reject

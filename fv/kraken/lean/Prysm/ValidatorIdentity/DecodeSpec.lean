@@ -1,8 +1,12 @@
-import Prysm.ValidatorIdentity.GeneratedDecodeAccept
-import Prysm.ValidatorIdentity.Spec
-import Prysm.ValidatorIdentity.Code
-import Prysm.Epoch.Code
-import Prysm.ValidatorIndex.Code
+module
+
+public import Prysm.ValidatorIdentity.GeneratedDecodeAccept
+public import Prysm.ValidatorIdentity.Spec
+public import Prysm.ValidatorIdentity.Code
+public import Prysm.Epoch.Code
+public import Prysm.ValidatorIndex.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.ValidatorIdentity` decoder

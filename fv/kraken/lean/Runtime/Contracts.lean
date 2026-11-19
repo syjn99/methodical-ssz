@@ -1,5 +1,11 @@
-import Machine.Step
-import Runtime.StaticUint64s
+module
+
+public import Machine.Step
+public import Runtime.StaticUint64s
+import all Kraken.Mem
+import all Kraken.Separation
+
+@[expose] public section
 
 /-!
 # Contracts of Go runtime functions (Kraken hypotheses)

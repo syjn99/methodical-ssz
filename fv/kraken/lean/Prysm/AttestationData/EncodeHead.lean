@@ -1,4 +1,8 @@
-import Prysm.AttestationData.EncodeHeadRoot
+module
+
+public import Prysm.AttestationData.EncodeHeadRoot
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.AttestationData).MarshalSSZTo`, fast path, segments 1 to 3 together

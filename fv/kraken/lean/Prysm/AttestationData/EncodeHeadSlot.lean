@@ -1,8 +1,12 @@
-import Codec.SegmentAddress
-import Prysm.Checkpoint.FunctionSpecsAsNestedField
-import Codec.StackGuard
-import Prysm.AttestationData.Code
-import Machine.Labels
+module
+
+public import Codec.SegmentAddress
+public import Prysm.Checkpoint.FunctionSpecsAsNestedField
+public import Codec.StackGuard
+public import Prysm.AttestationData.Code
+public import Machine.Labels
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.AttestationData).MarshalSSZTo`, fast path, segment 1: entry to `L_88`

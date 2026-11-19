@@ -1,5 +1,9 @@
-import Machine.Frame
-import Codec.DecoderPrologue
+module
+
+public import Machine.Frame
+public import Codec.DecoderPrologue
+
+@[expose] public section
 
 /-!
 # Lemmas for the field theorems of a generated accept proof

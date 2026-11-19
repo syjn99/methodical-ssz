@@ -1,6 +1,10 @@
-import Prysm.DataColumnsByRootIdentifier.EncodeGrowFirstSite
-import Prysm.DataColumnsByRootIdentifier.Spec
-import Runtime.CopyModel
+module
+
+public import Prysm.DataColumnsByRootIdentifier.EncodeGrowFirstSite
+public import Prysm.DataColumnsByRootIdentifier.Spec
+public import Runtime.CopyModel
+
+@[expose] public section
 
 /-!
 # Grow path at site 1 against EthLib (`Encode.grow_first_site_spec_statement`)

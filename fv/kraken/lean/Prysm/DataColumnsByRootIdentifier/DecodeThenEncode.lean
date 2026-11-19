@@ -1,6 +1,10 @@
-import Prysm.DataColumnsByRootIdentifier.DecodeSpecAccept
-import Prysm.DataColumnsByRootIdentifier.StatementsDecodeThenEncodeScratchBounded
-import Prysm.DataColumnsByRootIdentifier.EncodeFastPath
+module
+
+public import Prysm.DataColumnsByRootIdentifier.DecodeSpecAccept
+public import Prysm.DataColumnsByRootIdentifier.StatementsDecodeThenEncodeScratchBounded
+public import Prysm.DataColumnsByRootIdentifier.EncodeFastPath
+
+@[expose] public section
 
 /-!
 # Round trip (machine): decoder entry → `Decode.accept` → (caller: `hupd`) → `Encode.fast_path`

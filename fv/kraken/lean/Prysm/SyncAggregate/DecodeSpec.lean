@@ -1,6 +1,10 @@
-import Prysm.SyncAggregate.DecodeAccept
-import Prysm.SyncAggregate.DecodeRejectSize
-import Prysm.SyncAggregate.Spec
+module
+
+public import Prysm.SyncAggregate.DecodeAccept
+public import Prysm.SyncAggregate.DecodeRejectSize
+public import Prysm.SyncAggregate.Spec
+
+@[expose] public section
 
 /-!
 # Spec alignment of the SyncAggregate decoder

@@ -1,6 +1,10 @@
-import Prysm.Eth1Data.GeneratedDecodeAccept
-import Prysm.Eth1Data.Spec
-import Prysm.Eth1Data.Code
+module
+
+public import Prysm.Eth1Data.GeneratedDecodeAccept
+public import Prysm.Eth1Data.Spec
+public import Prysm.Eth1Data.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.Eth1Data` decoder

@@ -1,8 +1,12 @@
-import Machine.Step
-import Prysm.CommitteeIndex.Code
-import Prysm.CommitteeIndex.SpecDescription
-import Prysm.Epoch.Size
-import Spec.TestFixed
+module
+
+public import Machine.Step
+public import Prysm.CommitteeIndex.Code
+public import Prysm.CommitteeIndex.SpecDescription
+public import Prysm.Epoch.Size
+public import Spec.TestFixed
+
+@[expose] public section
 
 /-!
 # SizeSSZ of the hand-written Prysm `primitives.CommitteeIndex`

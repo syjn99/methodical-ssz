@@ -1,4 +1,8 @@
-import Runtime.Contracts
+module
+
+public import Runtime.Contracts
+
+@[expose] public section
 
 /-!
 # `sar $0x3f` of a negated positive value

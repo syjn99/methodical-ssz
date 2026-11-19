@@ -1,8 +1,12 @@
-import Codec.SegmentAddress
-import Prysm.Checkpoint.EncodeFastPath
-import Prysm.ElfData.PrysmTarget
-import Codec.EncodeBitVecLemmas
-import Prysm.Checkpoint.Code
+module
+
+public import Codec.SegmentAddress
+public import Prysm.Checkpoint.EncodeFastPath
+public import Prysm.ElfData.PrysmTarget
+public import Codec.EncodeBitVecLemmas
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, reject `len(c.Root) != 32` (Go 1.26.10)

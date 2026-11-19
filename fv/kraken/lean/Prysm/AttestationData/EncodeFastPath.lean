@@ -1,5 +1,9 @@
-import Prysm.AttestationData.EncodeHead
-import Prysm.AttestationData.EncodeCalls
+module
+
+public import Prysm.AttestationData.EncodeHead
+public import Prysm.AttestationData.EncodeCalls
+
+@[expose] public section
 
 /-!
 # Prysm `(*v1alpha1.AttestationData).MarshalSSZTo`, fast path, Go 1.26.10 machine code

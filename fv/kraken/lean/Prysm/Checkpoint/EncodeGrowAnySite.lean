@@ -1,5 +1,9 @@
-import Prysm.Checkpoint.EncodeGrowSecondSite
-import Prysm.Checkpoint.Code
+module
+
+public import Prysm.Checkpoint.EncodeGrowSecondSite
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo`: first growth in every case, and the reject after the first growth
@@ -156,9 +160,7 @@ theorem Encode.grow_any_site (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
     rw [e4]
     have e2' : st.data.regs.rax = d1.regs.rbx := UInt64.toBitVec_inj.mp e2
     rw [e2']
-    simp only [Std.ExtHashMap.sep_assoc, Std.ExtHashMap.sep_emp] at Hm ⊢
-    simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at Hm ⊢
-    exact Hm
+    sep_perm Hm
   · -- the block is too small for the root: second growslice (right disjunct)
     have hlt : d1.regs.rdi.toNat < rcx.toNat + 40 := by omega
     have htl : 8 ≤ tail.length := by omega
@@ -174,9 +176,7 @@ theorem Encode.grow_any_site (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k)
       by rw [e7]; exact hav1, ?_⟩
     have e5' : st.data.regs.rax.toBitVec = d1.regs.rbx.toBitVec := e5
     rw [e5']
-    simp only [Std.ExtHashMap.sep_assoc, Std.ExtHashMap.sep_emp] at Hm ⊢
-    simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at Hm ⊢
-    exact Hm
+    sep_perm Hm
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -261,8 +261,6 @@ theorem Encode.reject_length_grow_first_site (k : Nat) (hk : marshalSSZTo.IsInfi
   rintro st ⟨e1', e2', e3', e4', e5', e6', e7', e8', e9', Hm⟩
   refine ⟨e1', e2', e3', e4', e5', e6', e7', e8', e9', t, u, scr1, spl1, tail.drop 8, d1.regs.rbx.toBitVec,
     d1.regs.rdi.toNat, av1, ht, hu, hscr1, hspl1, hnc1, by simp only [List.length_drop]; omega, hav1, ?_⟩
-  simp only [Std.ExtHashMap.sep_assoc, Std.ExtHashMap.sep_emp] at Hm ⊢
-  simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at Hm ⊢
-  exact Hm
+  sep_perm Hm
 
 end Prysm.Checkpoint

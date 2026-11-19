@@ -1,7 +1,11 @@
-import Prysm.VoluntaryExit.GeneratedEncodeFastPath
-import Prysm.VoluntaryExit.Spec
-import Runtime.CopyModel
-import Prysm.VoluntaryExit.Code
+module
+
+public import Prysm.VoluntaryExit.GeneratedEncodeFastPath
+public import Prysm.VoluntaryExit.Spec
+public import Runtime.CopyModel
+public import Prysm.VoluntaryExit.Code
+
+@[expose] public section
 
 /-!
 # VoluntaryExit encoder fast path (generated theorem) against the independent Desc

@@ -1,7 +1,11 @@
-import Prysm.PendingDeposit.GeneratedDecodeAccept
-import Prysm.PendingDeposit.Spec
-import Prysm.PendingDeposit.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.PendingDeposit.GeneratedDecodeAccept
+public import Prysm.PendingDeposit.Spec
+public import Prysm.PendingDeposit.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.PendingDeposit` decoder

@@ -1,7 +1,11 @@
-import Codec.Kind.EncodeFastPathAnyFrame
-import Codec.EncodeFrameTest
-import Prysm.Eth1Data.Code
-import Prysm.Eth1Data.EncodeLayout
+module
+
+public import Codec.Kind.EncodeFastPathAnyFrame
+public import Codec.EncodeFrameTest
+public import Prysm.Eth1Data.Code
+public import Prysm.Eth1Data.EncodeLayout
+
+@[expose] public section
 
 /-!
 # Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.Eth1Data).MarshalSSZTo`

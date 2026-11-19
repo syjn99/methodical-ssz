@@ -1,7 +1,11 @@
-import Prysm.CommitteeIndex.DecodeRejectSize
-import Runtime.ErrorModel
-import Machine.WitnessHost
-import Prysm.CommitteeIndex.Code
+module
+
+public import Prysm.CommitteeIndex.DecodeRejectSize
+public import Runtime.ErrorModel
+public import Machine.WitnessHost
+public import Prysm.CommitteeIndex.Code
+
+@[expose] public section
 
 /-!
 # Witnesses of `Prysm.CommitteeIndex.Decode.reject_size` (len 7, 9 and 300)

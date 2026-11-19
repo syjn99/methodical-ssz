@@ -1,11 +1,15 @@
-import Runtime.Contracts
-import Machine.Frame
-import Machine.Bytes
-import Machine.Labels
-import Prysm.ElfData.PrysmTarget
-import Prysm.DataColumnsByRootIdentifier.SpecDefinitions
-import Prysm.DataColumnsByRootIdentifier.SpecDescription
-import Prysm.DataColumnsByRootIdentifier.Code
+module
+
+public import Runtime.Contracts
+public import Machine.Frame
+public import Machine.Bytes
+public import Machine.Labels
+public import Prysm.ElfData.PrysmTarget
+public import Prysm.DataColumnsByRootIdentifier.SpecDefinitions
+public import Prysm.DataColumnsByRootIdentifier.SpecDescription
+public import Prysm.DataColumnsByRootIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Hand STATEMENTS of the round-trip decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`

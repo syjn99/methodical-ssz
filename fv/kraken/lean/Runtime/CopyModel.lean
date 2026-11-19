@@ -1,6 +1,10 @@
-import Runtime.BumpAllocator
-import Machine.Labels
-import Machine.Bytes
+module
+
+public import Runtime.BumpAllocator
+public import Machine.Labels
+public import Machine.Bytes
+
+@[expose] public section
 
 /-!
 # `runtime.memmove` and `runtime.growslice` models that satisfy their contracts

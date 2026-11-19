@@ -1,5 +1,9 @@
-import Prysm.Checkpoint.FunctionSpecsAsNestedField
-import Prysm.Checkpoint.WitnessEncodeFastPath
+module
+
+public import Prysm.Checkpoint.FunctionSpecsAsNestedField
+public import Prysm.Checkpoint.WitnessEncodeFastPath
+
+@[expose] public section
 
 /-!
 # `Encode.fast_path_function_spec` holds on a concrete host

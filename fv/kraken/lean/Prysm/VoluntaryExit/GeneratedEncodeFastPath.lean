@@ -1,6 +1,10 @@
-import Codec.Kind.EncodeFastPathAnyFrame
-import Codec.EncodeFrameTest
-import Prysm.VoluntaryExit.Code
+module
+
+public import Codec.Kind.EncodeFastPathAnyFrame
+public import Codec.EncodeFrameTest
+public import Prysm.VoluntaryExit.Code
+
+@[expose] public section
 
 /-!
 # Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.VoluntaryExit).MarshalSSZTo`

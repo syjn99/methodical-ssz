@@ -1,12 +1,16 @@
-import Runtime.Contracts
-import Machine.Frame
-import Machine.Labels
-import Machine.StoreLemmas
-import Runtime.StaticBoxLemmas
-import Prysm.ElfData.PrysmTarget
-import Codec.SegmentAddress
-import Codec.Uint64RejectSize
-import Prysm.Slot.Code
+module
+
+public import Runtime.Contracts
+public import Machine.Frame
+public import Machine.Labels
+public import Machine.StoreLemmas
+public import Runtime.StaticBoxLemmas
+public import Prysm.ElfData.PrysmTarget
+public import Codec.SegmentAddress
+public import Codec.Uint64RejectSize
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # `(*primitives.Slot).UnmarshalSSZ`, reject `len(buf) ≠ 8` (Go 1.26.10 machine code)

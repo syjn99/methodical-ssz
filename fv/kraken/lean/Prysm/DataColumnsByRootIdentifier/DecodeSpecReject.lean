@@ -1,6 +1,10 @@
-import Prysm.DataColumnsByRootIdentifier.DecodeRejectSize
-import Prysm.DataColumnsByRootIdentifier.SpecDecodeBridge
-import Prysm.DataColumnsByRootIdentifier.StatementsDecodeSpecReject
+module
+
+public import Prysm.DataColumnsByRootIdentifier.DecodeRejectSize
+public import Prysm.DataColumnsByRootIdentifier.SpecDecodeBridge
+public import Prysm.DataColumnsByRootIdentifier.StatementsDecodeSpecReject
+
+@[expose] public section
 
 /-!
 # Spec alignment of the DataColumnsByRootIdentifier decoder's size and offset rejects

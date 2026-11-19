@@ -1,4 +1,8 @@
-import Prysm.Deposit_Data.SpecDescription
+module
+
+public import Prysm.Deposit_Data.SpecDescription
+
+@[expose] public section
 
 /-!
 # Independent hand `Desc` of `v1alpha1.Deposit`

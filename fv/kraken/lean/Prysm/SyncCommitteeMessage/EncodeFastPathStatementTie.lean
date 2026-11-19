@@ -1,5 +1,9 @@
-import Prysm.SyncCommitteeMessage.EncodeFastPathStatements
-import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPath
+module
+
+public import Prysm.SyncCommitteeMessage.EncodeFastPathStatements
+public import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPath
+
+@[expose] public section
 
 /-!
 # Tie of the generated encoder fast-path theorem of `SyncCommitteeMessage` to the hand statement

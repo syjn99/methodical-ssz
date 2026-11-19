@@ -1,7 +1,11 @@
-import Machine.Step
-import Prysm.Epoch.Code
-import Prysm.Epoch.SpecDescription
-import Spec.TestFixed
+module
+
+public import Machine.Step
+public import Prysm.Epoch.Code
+public import Prysm.Epoch.SpecDescription
+public import Spec.TestFixed
+
+@[expose] public section
 
 /-!
 # SizeSSZ of the hand-written Prysm `primitives.Epoch`

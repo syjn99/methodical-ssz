@@ -1,7 +1,11 @@
-import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPath
-import Prysm.SyncCommitteeMessage.Spec
-import Runtime.CopyModel
-import Prysm.SyncCommitteeMessage.Code
+module
+
+public import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPath
+public import Prysm.SyncCommitteeMessage.Spec
+public import Runtime.CopyModel
+public import Prysm.SyncCommitteeMessage.Code
+
+@[expose] public section
 
 /-!
 # SyncCommitteeMessage encoder fast path (generated theorem) against the independent Desc

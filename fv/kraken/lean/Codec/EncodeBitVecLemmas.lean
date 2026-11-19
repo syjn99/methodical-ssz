@@ -1,7 +1,11 @@
-import Runtime.Contracts
-import Machine.Frame
-import Machine.StoreLemmas
-import Runtime.StaticBoxLemmas
+module
+
+public import Runtime.Contracts
+public import Machine.Frame
+public import Machine.StoreLemmas
+public import Runtime.StaticBoxLemmas
+
+@[expose] public section
 
 /-!
 # BitVec equalities that the encoder proofs of several types use

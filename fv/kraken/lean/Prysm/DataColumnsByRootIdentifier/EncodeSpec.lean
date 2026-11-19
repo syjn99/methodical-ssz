@@ -1,6 +1,10 @@
-import Prysm.DataColumnsByRootIdentifier.EncodeFastPath
-import Prysm.DataColumnsByRootIdentifier.Spec
-import Runtime.CopyModel
+module
+
+public import Prysm.DataColumnsByRootIdentifier.EncodeFastPath
+public import Prysm.DataColumnsByRootIdentifier.Spec
+public import Runtime.CopyModel
+
+@[expose] public section
 
 /-!
 # Encoder fast path against EthLib (`Encode.fast_path_spec_statement`)

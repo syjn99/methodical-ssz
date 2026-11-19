@@ -1,7 +1,11 @@
-import Prysm.PartialDataColumnGroupID.GeneratedEncodeFastPath
-import Prysm.PartialDataColumnGroupID.Spec
-import Runtime.CopyModel
-import Prysm.PartialDataColumnGroupID.Code
+module
+
+public import Prysm.PartialDataColumnGroupID.GeneratedEncodeFastPath
+public import Prysm.PartialDataColumnGroupID.Spec
+public import Runtime.CopyModel
+public import Prysm.PartialDataColumnGroupID.Code
+
+@[expose] public section
 
 /-!
 # PartialDataColumnGroupID encoder fast path (generated theorem) against the independent Desc

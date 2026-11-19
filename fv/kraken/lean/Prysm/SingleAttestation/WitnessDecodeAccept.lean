@@ -1,14 +1,18 @@
-import Prysm.SingleAttestation.DecodeAccept
-import Prysm.RuntimeModel.BumpAllocatorUint64AndStructDispatch
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.SingleAttestation.Code
-import Prysm.AttestationData.Code
-import Prysm.Checkpoint.Code
-import Prysm.CommitteeIndex.Code
-import Prysm.ValidatorIndex.Code
-import Prysm.Epoch.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.SingleAttestation.DecodeAccept
+public import Prysm.RuntimeModel.BumpAllocatorUint64AndStructDispatch
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.SingleAttestation.Code
+public import Prysm.AttestationData.Code
+public import Prysm.Checkpoint.Code
+public import Prysm.CommitteeIndex.Code
+public import Prysm.ValidatorIndex.Code
+public import Prysm.Epoch.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.accept` (SingleAttestation decoder accept path)
@@ -148,10 +152,6 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
--- Measured cause: the memory premise is closed by `simp` AC-normalization of the separating conjunction (35 chunks, as in
--- `Prysm.IndexedAttestation.Witness.DecodeAccept.runs`). Thresholds: 2000000 and 2750000 fail at `whnf`, 3500000 and 5000000
--- pass. Value: twice the passing value 3500000.
-set_option maxHeartbeats 7000000 in
 /-- **Non-vacuity of `Decode.accept` (the premises of the statement `Decode.accept_statement` are satisfiable)**,
 for every input and every old receiver word. -/
 theorem runs (ci ai ds di root se sroot te troot sig oCI oAI oD oP : List UInt8)
@@ -185,9 +185,7 @@ theorem runs (ci ai ds di root se sroot te troot sig oCI oAI oD oP : List UInt8)
       have H2 := lift_heap H
       simp only [initial_state, frame_rest, zero_word_bytes, label_write_barrier, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Nat.reduceAdd,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by show (0 : UInt64).toNat + 352 < (0x10384 : UInt64).toNat; decide)
     rfl (Nat.le_refl _)
     (Prysm.RuntimeModel.bump_newobject_struct_dispatch_size96 851 placed_at_851 no_label_before_851 labels_fresh_at_851)

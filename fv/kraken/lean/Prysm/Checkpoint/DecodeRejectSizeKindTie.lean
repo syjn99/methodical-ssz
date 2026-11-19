@@ -1,6 +1,10 @@
-import Prysm.Checkpoint.DecodeRejectSize
-import Codec.DecodeRejectSizeAnyFrame
-import Prysm.Checkpoint.Code
+module
+
+public import Prysm.Checkpoint.DecodeRejectSize
+public import Codec.DecodeRejectSizeAnyFrame
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # Tie of `decodeRejectKindAnyFrame` to the size-reject theorem of `Checkpoint`

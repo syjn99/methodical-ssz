@@ -10,7 +10,7 @@ usage: kindcheck.py <generated.lean>...      exit 0 = every file passes, 1 = a f
 
 The rule numbers are labels. The error messages and the tests use them.
 Checks, per file (text only):
- 2. Top-level lines are only: import, open, variable, namespace, end, set_option … in, theorem, doc or
+ 2. Top-level lines are only: module, @[expose] public section, import, open, variable, namespace, end, set_option … in, theorem, doc or
     plain comments, blank lines and indented continuation lines. No def / abbrev / notation / macro /
     axiom / instance / attribute etc. (a local definition could shadow the kind name).
  3. No `sorry`, `admit`, `native_decide`, `bv_decide`, `axiom` token anywhere.
@@ -110,7 +110,7 @@ LBL = r'"[^"\\\s]+"'
 COVER = re.compile(r"step coverage: (\d+) of (\d+) fields")
 SIZE = r"(?:32|48|96)"  # the sizes of the hypothesis `hn` of the byte segment lemmas
 
-TOP_OK = re.compile(r"^(import |open |variable |namespace |end\b|set_option \S+ \S+ in$|theorem |/-|--|$|\s)")
+TOP_OK = re.compile(r"^(module$|@\[expose\] public section$|(public )?import |open |variable |namespace |end\b|set_option \S+ \S+ in$|theorem |/-|--|$|\s)")
 BANNED = re.compile(r"\b(sorry|admit|native_decide|bv_decide|axiom)\b")
 THM = re.compile(r"^theorem (\S+)")
 HK = re.compile(r"\(hk : (\S+)\.IsInfixAt Host\.prog k\)")
@@ -1494,7 +1494,7 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
         if hand:
             T = LAY.split(".")[1]
             found = []
-            for m in re.findall(rf"(?m)^import (Prysm\.{T}\.\w+)$", text):
+            for m in re.findall(rf"(?m)^(?:public )?import (Prysm\.{T}\.\w+)$", text):
                 hsrc = "lean/" + m.replace(".", "/") + ".lean"
                 d = fast_path_layout_def((kr / hsrc).read_text(), LAY.split(".")[-1], LAY) if (kr / hsrc).exists() else None
                 if d is not None:
@@ -1553,7 +1553,7 @@ def check_fast_path(text, gnames=frozenset(), kr=None):
             errs.append(f"rule 13b: {t}: first binder line")
     # 13c: C is the code of the .S
     bound = False
-    for imp in re.findall(r"(?m)^import (\S+)$", text):
+    for imp in re.findall(r"(?m)^(?:public )?import (\S+)$", text):
         f = kr / "lean" / (imp.replace(".", "/") + ".lean")
         if f.exists() and any(f'def {d} : Program := include_x64_code "../{S}"' in f.read_text() for d in (C, f"Code.{C}")):
             bound = True

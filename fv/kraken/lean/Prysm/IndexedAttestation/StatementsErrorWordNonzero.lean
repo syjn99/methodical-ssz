@@ -1,11 +1,15 @@
-import Runtime.Contracts
-import Runtime.NewobjectContract
-import Machine.Frame
-import Machine.Bytes
-import Machine.Labels
-import Prysm.ElfData.PrysmTarget
-import Prysm.IndexedAttestation.Code
-import Prysm.IndexedAttestation.Spec
+module
+
+public import Runtime.Contracts
+public import Runtime.NewobjectContract
+public import Machine.Frame
+public import Machine.Bytes
+public import Machine.Labels
+public import Prysm.ElfData.PrysmTarget
+public import Prysm.IndexedAttestation.Code
+public import Prysm.IndexedAttestation.Spec
+
+@[expose] public section
 
 /-!
 # IndexedAttestation statements of the alignment reject and the overflow reject

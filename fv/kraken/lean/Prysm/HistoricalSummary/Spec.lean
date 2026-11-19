@@ -1,7 +1,11 @@
-import Spec.TestScalars
-import Spec.DeserializeOfSerialize
-import Prysm.HistoricalSummary.SpecDescription
-import Prysm.HistoricalSummary.SpecChecker
+module
+
+public import Spec.TestScalars
+public import Spec.DeserializeOfSerialize
+public import Prysm.HistoricalSummary.SpecDescription
+public import Prysm.HistoricalSummary.SpecChecker
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.HistoricalSummary`

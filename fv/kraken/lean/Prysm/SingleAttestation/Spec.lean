@@ -1,5 +1,9 @@
-import Prysm.AttestationData.Spec
-import Prysm.SingleAttestation.SpecDescription
+module
+
+public import Prysm.AttestationData.Spec
+public import Prysm.SingleAttestation.SpecDescription
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.SingleAttestation`

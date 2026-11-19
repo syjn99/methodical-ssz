@@ -1,7 +1,11 @@
-import Prysm.SyncAggregatorSelectionData.GeneratedEncodeFastPath
-import Prysm.SyncAggregatorSelectionData.Spec
-import Runtime.CopyModel
-import Prysm.SyncAggregatorSelectionData.Code
+module
+
+public import Prysm.SyncAggregatorSelectionData.GeneratedEncodeFastPath
+public import Prysm.SyncAggregatorSelectionData.Spec
+public import Runtime.CopyModel
+public import Prysm.SyncAggregatorSelectionData.Code
+
+@[expose] public section
 
 /-!
 # SyncAggregatorSelectionData encoder fast path (generated theorem) against the independent Desc

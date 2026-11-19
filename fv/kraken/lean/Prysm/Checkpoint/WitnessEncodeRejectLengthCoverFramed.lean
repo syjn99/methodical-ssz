@@ -1,6 +1,10 @@
-import Prysm.Checkpoint.EncodeCoverFramed
-import Prysm.Checkpoint.WitnessEncodeRejectLengthCover
-import Machine.WitnessSplit
+module
+
+public import Prysm.Checkpoint.EncodeCoverFramed
+public import Prysm.Checkpoint.WitnessEncodeRejectLengthCover
+public import Machine.WitnessSplit
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.reject_length_cover_framed`: `len(Root) ≠ 32`, every capacity range
@@ -44,9 +48,7 @@ theorem runs (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl : rl ≠
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         List.length_nil] at H2 ⊢
       generalize e8 = e8' at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]; try omega) (by unfold maxAlloc; omega)
     (model_growslice 100 placed_at_100 labels_fresh_at_100 _ 0)) ?_
   rintro st ⟨f1, f2, f3, f4, f5, f6, -⟩
@@ -76,9 +78,7 @@ theorem runs_nil (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl : rl
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         List.length_nil] at H2 ⊢
       generalize e8 = e8' at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (by unfold maxAlloc; omega)
     (model_growslice 100 placed_at_100 labels_fresh_at_100 _ 0)) ?_
   rintro st ⟨f1, f2, f3, f4, f5, f6, -⟩

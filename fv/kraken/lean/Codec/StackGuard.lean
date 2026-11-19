@@ -1,4 +1,8 @@
-import Machine.Flags
+module
+
+public import Machine.Flags
+
+@[expose] public section
 
 /-!
 # Large-frame stack guard: `lea -N(%rsp),%r12; cmp 0x10(%r14),%r12; jbe`

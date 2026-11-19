@@ -1,7 +1,11 @@
-import Prysm.BlobSidecarsByRangeRequest.GeneratedDecodeAccept
-import Prysm.BlobSidecarsByRangeRequest.Spec
-import Prysm.BlobSidecarsByRangeRequest.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.BlobSidecarsByRangeRequest.GeneratedDecodeAccept
+public import Prysm.BlobSidecarsByRangeRequest.Spec
+public import Prysm.BlobSidecarsByRangeRequest.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.BlobSidecarsByRangeRequest` decoder

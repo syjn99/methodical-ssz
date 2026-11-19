@@ -1,10 +1,14 @@
-import Machine.StoreLemmas
-import Runtime.StaticBoxLemmas
-import Codec.EncodeBitVecLemmas
-import Codec.SegmentAddress
-import Machine.Labels
-import Prysm.BeaconBlockHeader.Code
-import Codec.StackGuard
+module
+
+public import Machine.StoreLemmas
+public import Runtime.StaticBoxLemmas
+public import Codec.EncodeBitVecLemmas
+public import Codec.SegmentAddress
+public import Machine.Labels
+public import Prysm.BeaconBlockHeader.Code
+public import Codec.StackGuard
+
+@[expose] public section
 
 /-!
 # Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, head segments

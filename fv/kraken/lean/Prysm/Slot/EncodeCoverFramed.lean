@@ -1,5 +1,9 @@
-import Prysm.Slot.EncodeGrowFirstSite
-import Prysm.Slot.EncodeSpec
+module
+
+public import Prysm.Slot.EncodeGrowFirstSite
+public import Prysm.Slot.EncodeSpec
+
+@[expose] public section
 
 /-!
 # `(*primitives.Slot).MarshalSSZTo`: case cover over every capacity, with the exact frame

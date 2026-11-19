@@ -1,6 +1,10 @@
-import EthLib.Serialization.Ssz
-import EthLib.Serialization.Proofs.Ssz.Codec.DecodeFits
-import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
+module
+
+public import EthLib.Serialization.Ssz
+public import EthLib.Serialization.Proofs.Ssz.Codec.DecodeFits
+public import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
+
+@[expose] public section
 
 /-!
 # Specification lemmas of the hand-written Prysm `primitives.Epoch`

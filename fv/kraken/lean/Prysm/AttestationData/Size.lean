@@ -1,6 +1,10 @@
-import Machine.Step
-import Prysm.AttestationData.Code
-import Prysm.AttestationData.Spec
+module
+
+public import Machine.Step
+public import Prysm.AttestationData.Code
+public import Prysm.AttestationData.Spec
+
+@[expose] public section
 
 /-!
 # SizeSSZ of `v1alpha1.AttestationData`

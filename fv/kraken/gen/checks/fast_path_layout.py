@@ -14,7 +14,7 @@ bad = 0
 
 def hand_layout_src(T, gen_text):
     """The text of the module of `lean/Prysm/<T>/` that the generated file imports and that defines `encodeLayout`."""
-    for m in re.findall(rf"(?m)^import Prysm\.{T}\.(\w+)$", gen_text):
+    for m in re.findall(rf"(?m)^(?:public )?import Prysm\.{T}\.(\w+)$", gen_text):
         s = pathlib.Path(f"lean/Prysm/{T}/{m}.lean").read_text()
         if "\ndef encodeLayout : EncoderFrameLayout where\n" in s:
             return s

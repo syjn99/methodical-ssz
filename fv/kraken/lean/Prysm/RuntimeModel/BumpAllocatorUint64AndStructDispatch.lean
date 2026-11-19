@@ -1,7 +1,11 @@
-import Runtime.BumpAllocator
-import Runtime.BumpAllocatorVariants
-import Runtime.NewobjectContract
-import Prysm.ElfData.PrysmTarget
+module
+
+public import Runtime.BumpAllocator
+public import Runtime.BumpAllocatorVariants
+public import Runtime.NewobjectContract
+public import Prysm.ElfData.PrysmTarget
+
+@[expose] public section
 
 /-!
 # Type-dispatching bump models of `runtime.makeslice` and `runtime.newobject` for the IndexedAttestation witness host

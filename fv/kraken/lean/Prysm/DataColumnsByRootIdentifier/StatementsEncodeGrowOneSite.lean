@@ -1,5 +1,9 @@
-import Prysm.DataColumnsByRootIdentifier.StatementsEncode
-import Prysm.DataColumnsByRootIdentifier.Code
+module
+
+public import Prysm.DataColumnsByRootIdentifier.StatementsEncode
+public import Prysm.DataColumnsByRootIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Statements of the encoder with one growth at any one site

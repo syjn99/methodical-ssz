@@ -1,5 +1,9 @@
-import Prysm.Deposit_Data.EncodeFastPathStatements
-import Prysm.Deposit_Data.GeneratedEncodeFastPath
+module
+
+public import Prysm.Deposit_Data.EncodeFastPathStatements
+public import Prysm.Deposit_Data.GeneratedEncodeFastPath
+
+@[expose] public section
 
 /-!
 # Tie of the generated encoder fast-path theorem of `Deposit_Data` to the hand statement

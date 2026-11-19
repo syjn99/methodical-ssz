@@ -1,7 +1,11 @@
-import Spec.TestScalars
-import Spec.DeserializeOfSerialize
-import Prysm.BlobIdentifier.SpecDescription
-import Prysm.BlobIdentifier.SpecChecker
+module
+
+public import Spec.TestScalars
+public import Spec.DeserializeOfSerialize
+public import Prysm.BlobIdentifier.SpecDescription
+public import Prysm.BlobIdentifier.SpecChecker
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.BlobIdentifier`

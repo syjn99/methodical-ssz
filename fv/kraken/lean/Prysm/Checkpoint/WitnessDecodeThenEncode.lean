@@ -1,10 +1,14 @@
-import Prysm.Checkpoint.DecodeThenEncode
-import Runtime.CopyModel
-import Runtime.BumpAllocatorVariants
-import Machine.WitnessHost
-import Prysm.Checkpoint.GoValue
-import Prysm.Checkpoint.Code
-import Prysm.Epoch.Code
+module
+
+public import Prysm.Checkpoint.DecodeThenEncode
+public import Runtime.CopyModel
+public import Runtime.BumpAllocatorVariants
+public import Machine.WitnessHost
+public import Prysm.Checkpoint.GoValue
+public import Prysm.Checkpoint.Code
+public import Prysm.Epoch.Code
+
+@[expose] public section
 
 /-!
 # Witness of `DecodeThenEncode.round_trip` (machine-level composition, one Host for decoder and encoder)
@@ -132,9 +136,7 @@ theorem runs (e8 root : List UInt8) (he8 : e8.length = 8) (hroot : root.length =
       have H2 := lift_heap H
       simp only [initial_state, zero_word_bytes, label_write_barrier, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) (by simp [initial_state]) rfl (by omega) (bump_makeslice1 180 placed_at_180 labels_fresh_at_180 _) (model_memmove 186 placed_at_186 labels_fresh_at_186 24)
     (model_memmove 186 placed_at_186 labels_fresh_at_186 _))
     (fun st h => ⟨h.1, h.2.1, h.2.2.1, h.2.2.2

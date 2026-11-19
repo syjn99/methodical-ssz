@@ -1,5 +1,9 @@
-import Spec.TestListU64
-import EthLib.Serialization.Proofs.Ssz.Codec.Table
+module
+
+public import Spec.TestListU64
+public import EthLib.Serialization.Proofs.Ssz.Codec.Table
+
+@[expose] public section
 
 /-!
 # Spec: `target.ListC`

@@ -1,7 +1,11 @@
-import Prysm.DepositMessage.GeneratedEncodeFastPath
-import Prysm.DepositMessage.Spec
-import Runtime.CopyModel
-import Prysm.DepositMessage.Code
+module
+
+public import Prysm.DepositMessage.GeneratedEncodeFastPath
+public import Prysm.DepositMessage.Spec
+public import Runtime.CopyModel
+public import Prysm.DepositMessage.Code
+
+@[expose] public section
 
 /-!
 # DepositMessage encoder fast path (generated theorem) against the independent Desc

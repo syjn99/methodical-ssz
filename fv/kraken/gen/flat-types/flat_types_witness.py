@@ -53,9 +53,13 @@ def reject(X, n):
     ty, fs, _ = spec_entry(X, 'flat_types_witness')
     N = sum(f[2] for f in fs)
     L = 1 + n
-    return f'''import Prysm.{X}.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
+    return f'''module
+
+public import Prysm.{X}.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_reject`
@@ -115,9 +119,7 @@ theorem runs (len : UInt64) (hlen : len ≠ {N}) (zmms : RegZmms) (flags : Statu
       witness_split []
       simp only [initial_state, frame_rest, word_bytes, ElfData.PrysmTarget.sszErrSize_addr, label_err_size, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) hlen)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
@@ -161,9 +163,13 @@ def accept_witness_frame_0x38(X, n):
     reps = ' '.join(f'(Int.toBytes 8 {v})' for v in ['0x0123456789abcdef', '7', '0x40'][:nf])
     decs = ' '.join(['(by decide)'] * nf)
     ffs = ' '.join(['(List.replicate 8 0xff)'] * nf)
-    return f'''import Prysm.{X}.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
+    return f'''module
+
+public import Prysm.{X}.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path)
@@ -234,9 +240,7 @@ theorem runs ({insp} : List UInt8) {hins}
       witness_split [{', '.join(f'hin{i}' for i in range(nf))}]
       simp only [initial_state, frame_rest, zero_word_bytes, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) rfl)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
@@ -362,10 +366,14 @@ def accbytes(X, n, frame):
                    + ['rfl'] * (len(fs) + nb))
     opens = f'Machine Runtime Machine.Witness Codec Prysm.{X}.Code'
     cdoc = ', '.join(f'`{CALLEE[c][1]}` UnmarshalSSZ' for c in callees)
-    return f'''import Prysm.{X}.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Runtime.BumpAllocatorVariants
-import Machine.WitnessHost
+    return f'''module
+
+public import Prysm.{X}.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Runtime.BumpAllocatorVariants
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`{ty}` decoder accept path)
@@ -464,9 +472,7 @@ theorem runs ({pp} : List UInt8) {hparams}
       have H2 := lift_heap H
       simp only [initial_state, frame_rest, zero_word_bytes, label_write_barrier, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) rfl (Nat.le_refl _) (bump_makeslice1 {bi} placed_at_{bi} labels_fresh_at_{bi} _) (model_memmove {ri} placed_at_{ri} labels_fresh_at_{ri} _))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 

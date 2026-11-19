@@ -1,4 +1,8 @@
-import Runtime.Contracts
+module
+
+public import Runtime.Contracts
+
+@[expose] public section
 
 /-! # Congruence of the contract form `StaticBox` -/
 

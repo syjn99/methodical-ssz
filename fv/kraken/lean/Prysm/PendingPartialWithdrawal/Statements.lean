@@ -1,10 +1,14 @@
-import Runtime.Contracts
-import Machine.Frame
-import Machine.Bytes
-import Machine.Labels
-import Prysm.Epoch.Code
-import Prysm.ValidatorIndex.Code
-import Prysm.PendingPartialWithdrawal.Code
+module
+
+public import Runtime.Contracts
+public import Machine.Frame
+public import Machine.Bytes
+public import Machine.Labels
+public import Prysm.Epoch.Code
+public import Prysm.ValidatorIndex.Code
+public import Prysm.PendingPartialWithdrawal.Code
+
+@[expose] public section
 
 /-!
 # Independent hand STATEMENTS of the PendingPartialWithdrawal accept theorem (statements only, no proof)

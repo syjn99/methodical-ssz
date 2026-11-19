@@ -1,7 +1,11 @@
-import Prysm.PartialDataColumnGroupID.GeneratedDecodeAccept
-import Prysm.PartialDataColumnGroupID.Spec
-import Prysm.PartialDataColumnGroupID.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.PartialDataColumnGroupID.GeneratedDecodeAccept
+public import Prysm.PartialDataColumnGroupID.Spec
+public import Prysm.PartialDataColumnGroupID.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.PartialDataColumnGroupID` decoder

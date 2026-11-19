@@ -1,8 +1,12 @@
-import Codec.Segment.Bytes32LoopProof
-import Codec.SegmentTemplate
-import Prysm.Deposit_Data.GeneratedDecodeAccept
-import Prysm.Deposit.Statements
-import Prysm.Deposit.Code
+module
+
+public import Codec.Segment.Bytes32LoopProof
+public import Codec.SegmentTemplate
+public import Prysm.Deposit_Data.GeneratedDecodeAccept
+public import Prysm.Deposit.Statements
+public import Prysm.Deposit.Code
+
+@[expose] public section
 
 /-!
 # Deposit accept path (Go 1.26.10 machine code), proved with the general lemmas of `Codec/Segment/`

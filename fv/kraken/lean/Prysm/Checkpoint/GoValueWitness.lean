@@ -1,6 +1,10 @@
-import Prysm.Checkpoint.GoValue
-import Prysm.Checkpoint.WitnessEncodeCover
-import Prysm.Checkpoint.WitnessEncodeRejectLengthCover
+module
+
+public import Prysm.Checkpoint.GoValue
+public import Prysm.Checkpoint.WitnessEncodeCover
+public import Prysm.Checkpoint.WitnessEncodeRejectLengthCover
+
+@[expose] public section
 
 /-!
 # Go-value element for the encoder cover witnesses

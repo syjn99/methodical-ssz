@@ -1,4 +1,10 @@
-import Codec.EncodeFieldHelpers
+module
+
+public import Codec.EncodeFieldHelpers
+import all Kraken.Mem
+import all Kraken.Separation
+
+@[expose] public section
 
 /-!
 # The frame test in the epilogue of three encoders (`runtime.moveSliceNoCapNoScan` is not reached)

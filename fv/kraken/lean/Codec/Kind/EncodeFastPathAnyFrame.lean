@@ -1,4 +1,8 @@
-import Codec.Kind.DecodeAcceptAnyFrame
+module
+
+public import Codec.Kind.DecodeAcceptAnyFrame
+
+@[expose] public section
 
 /-!
 # Statement kinds for encoder fast-path theorems of flat containers, any frame

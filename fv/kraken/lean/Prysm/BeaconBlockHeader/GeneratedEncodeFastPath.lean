@@ -1,7 +1,11 @@
-import Codec.Kind.EncodeFastPathAnyFrame
-import Codec.EncodeFrameTest
-import Prysm.BeaconBlockHeader.Code
-import Prysm.BeaconBlockHeader.EncodeLayout
+module
+
+public import Codec.Kind.EncodeFastPathAnyFrame
+public import Codec.EncodeFrameTest
+public import Prysm.BeaconBlockHeader.Code
+public import Prysm.BeaconBlockHeader.EncodeLayout
+
+@[expose] public section
 
 /-!
 # Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`
