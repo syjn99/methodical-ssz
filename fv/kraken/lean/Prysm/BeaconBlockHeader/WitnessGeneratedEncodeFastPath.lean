@@ -1,7 +1,11 @@
-import Prysm.BeaconBlockHeader.GeneratedEncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.BeaconBlockHeader.Code
+module
+
+public import Prysm.BeaconBlockHeader.GeneratedEncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.BeaconBlockHeader.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.generated_fast` (BeaconBlockHeader encoder fast path, generated theorem)
@@ -62,9 +66,7 @@ theorem runs_empty (v0 : List UInt8) (v1 : List UInt8) (b2 : List UInt8) (b3 : L
       simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil, List.length_cons,
         List.length_replicate, show (UInt64.ofNat 0).toBitVec = 0#64 from rfl] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (model_memmove 195 placed_copy_model labels_fresh_copy_model 0))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 
@@ -85,9 +87,7 @@ theorem runs_prefix (v0 : List UInt8) (v1 : List UInt8) (b2 : List UInt8) (b3 : 
       simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil, List.length_cons,
         List.length_replicate, show (UInt64.ofNat 3).toBitVec = 3#64 from rfl] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (model_memmove 195 placed_copy_model labels_fresh_copy_model 0))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 

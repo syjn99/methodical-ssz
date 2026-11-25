@@ -1,5 +1,9 @@
-import Prysm.IndexedAttestation.DecodeAccept
-import Prysm.IndexedAttestation.Spec
+module
+
+public import Prysm.IndexedAttestation.DecodeAccept
+public import Prysm.IndexedAttestation.Spec
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: accept path against EthLib

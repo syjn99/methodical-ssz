@@ -1,5 +1,9 @@
-import Runtime.BumpAllocator
-import Prysm.ElfData.PrysmTarget
+module
+
+public import Runtime.BumpAllocator
+public import Prysm.ElfData.PrysmTarget
+
+@[expose] public section
 
 /-!
 # A `runtime.makeslice` that satisfies both `MakesliceContract` instances of the SyncCommittee decoder in one Host (witness model)

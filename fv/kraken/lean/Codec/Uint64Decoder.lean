@@ -1,4 +1,8 @@
-import Codec.SegmentTemplate
+module
+
+public import Codec.SegmentTemplate
+
+@[expose] public section
 
 /-!
 # uint64 decoder pattern: the uint64 primitive decoder body, accept path (parameterized)

@@ -1,8 +1,12 @@
-import Machine.Step
-import Prysm.Slot.Code
-import Prysm.Slot.SpecDescription
-import Prysm.Epoch.Size
-import Spec.TestFixed
+module
+
+public import Machine.Step
+public import Prysm.Slot.Code
+public import Prysm.Slot.SpecDescription
+public import Prysm.Epoch.Size
+public import Spec.TestFixed
+
+@[expose] public section
 
 /-!
 # SizeSSZ of the hand-written Prysm `primitives.Slot`

@@ -1,7 +1,11 @@
-import Codec.Kind.ContainerField
-import Machine.Labels
-import Runtime.Contracts
-import Prysm.ElfData.PrysmTarget
+module
+
+public import Codec.Kind.ContainerField
+public import Machine.Labels
+public import Runtime.Contracts
+public import Prysm.ElfData.PrysmTarget
+
+@[expose] public section
 
 /-!
 # Statement kinds for whole accept theorems of flat decoders, any frame

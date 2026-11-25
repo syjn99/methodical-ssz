@@ -1,6 +1,10 @@
-import Prysm.Epoch.EncodeCoverFramed
-import Runtime.CopyModel
-import Machine.WitnessHost
+module
+
+public import Prysm.Epoch.EncodeCoverFramed
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.cover_framed`: both capacity ranges on one host

@@ -1,7 +1,11 @@
-import Prysm.Epoch.GeneratedDecodeAccept
-import Prysm.Epoch.DecodeRejectSize
-import Prysm.Epoch.SpecDescription
-import Prysm.Epoch.Spec
+module
+
+public import Prysm.Epoch.GeneratedDecodeAccept
+public import Prysm.Epoch.DecodeRejectSize
+public import Prysm.Epoch.SpecDescription
+public import Prysm.Epoch.Spec
+
+@[expose] public section
 
 /-!
 # Spec alignment of the real Epoch decoder

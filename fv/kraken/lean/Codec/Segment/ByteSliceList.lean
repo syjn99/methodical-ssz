@@ -1,6 +1,10 @@
-import Machine.Frame
-import Machine.Block
-import Codec.ByteSliceListLemmas
+module
+
+public import Machine.Frame
+public import Machine.Block
+public import Codec.ByteSliceListLemmas
+
+@[expose] public section
 
 /-!
 # List and memory-chunk lemmas of the `[][]byte` element loops, for any element width `w` and count `n`

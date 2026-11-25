@@ -1,4 +1,8 @@
-import Prysm.Checkpoint.SpecDescription
+module
+
+public import Prysm.Checkpoint.SpecDescription
+
+@[expose] public section
 
 /-!
 # Independent hand `Desc` of `v1alpha1.AttestationData`

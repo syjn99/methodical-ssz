@@ -1,5 +1,9 @@
-import Codec.FixedBytesDecodeWindow
-import Machine.Labels
+module
+
+public import Codec.FixedBytesDecodeWindow
+public import Machine.Labels
+
+@[expose] public section
 
 /-!
 # The fixed-bytes decode segment, offset-0 form, over windows with the receiver registers as parameters

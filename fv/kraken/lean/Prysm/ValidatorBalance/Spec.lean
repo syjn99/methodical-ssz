@@ -1,7 +1,11 @@
-import Spec.TestScalars
-import Spec.DeserializeOfSerialize
-import Prysm.ValidatorBalance.SpecDescription
-import Prysm.ValidatorBalance.SpecChecker
+module
+
+public import Spec.TestScalars
+public import Spec.DeserializeOfSerialize
+public import Prysm.ValidatorBalance.SpecDescription
+public import Prysm.ValidatorBalance.SpecChecker
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.ValidatorBalance`

@@ -1,10 +1,14 @@
-import Runtime.Contracts
-import Machine.Step
-import Machine.Labels
-import Prysm.ElfData.PrysmTarget
-import Prysm.SyncCommittee.Code
-import Prysm.SyncCommittee.DecodeLoopLemmas
-import Codec.SegmentAddress
+module
+
+public import Runtime.Contracts
+public import Machine.Step
+public import Machine.Labels
+public import Prysm.ElfData.PrysmTarget
+public import Prysm.SyncCommittee.Code
+public import Prysm.SyncCommittee.DecodeLoopLemmas
+public import Codec.SegmentAddress
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.SyncCommittee).UnmarshalSSZ`: the 512-iteration element loop

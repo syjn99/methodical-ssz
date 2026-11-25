@@ -1,6 +1,10 @@
-import Codec.SegmentAddress
-import Prysm.Checkpoint.EncodeTailGrow
-import Prysm.Checkpoint.Code
+module
+
+public import Codec.SegmentAddress
+public import Prysm.Checkpoint.EncodeTailGrow
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo`: the two prefixes up to `L_7b` (directive 33)

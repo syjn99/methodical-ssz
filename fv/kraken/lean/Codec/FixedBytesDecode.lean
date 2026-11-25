@@ -1,7 +1,11 @@
-import Codec.SegmentTemplate
-import Runtime.Contracts
-import Prysm.ElfData.PrysmTarget
-import Codec.SegmentAddress
+module
+
+public import Codec.SegmentTemplate
+public import Runtime.Contracts
+public import Prysm.ElfData.PrysmTarget
+public import Codec.SegmentAddress
+
+@[expose] public section
 
 /-!
 # Size-parametric fixed-bytes decode segments (`[]byte` vector field of 32, 48 or 96 bytes)

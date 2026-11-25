@@ -1,9 +1,13 @@
-import Codec.SegmentAddress
-import Prysm.CommitteeIndex.Code
-import Prysm.CommitteeIndex.EncodeGrowFirstSite
-import Prysm.CommitteeIndex.SpecDescription
-import Prysm.Epoch.Size
-import Machine.WitnessHost
+module
+
+public import Codec.SegmentAddress
+public import Prysm.CommitteeIndex.Code
+public import Prysm.CommitteeIndex.EncodeGrowFirstSite
+public import Prysm.CommitteeIndex.SpecDescription
+public import Prysm.Epoch.Size
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # Prysm `(*primitives.CommitteeIndex).MarshalSSZ`, Go 1.26.10 machine code

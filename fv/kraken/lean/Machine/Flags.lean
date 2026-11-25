@@ -1,4 +1,8 @@
-import Machine.Step
+module
+
+public import Machine.Step
+
+@[expose] public section
 
 /-! Branch-condition lemmas stated once, so the kernel does not re-check
 arithmetic on 64-bit literals at every use (`simp` + `omega` proof terms with

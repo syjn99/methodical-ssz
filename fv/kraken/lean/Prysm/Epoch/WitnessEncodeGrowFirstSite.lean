@@ -1,6 +1,10 @@
-import Prysm.Epoch.EncodeGrowFirstSite
-import Runtime.CopyModel
-import Machine.WitnessHost
+module
+
+public import Prysm.Epoch.EncodeGrowFirstSite
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.grow_first_site` (encoder growslice path)
@@ -146,9 +150,7 @@ theorem runs_empty (e8 : List UInt8) (he8 : e8.length = 8) (zmms : RegZmms) (fla
       have H2 := lift_heap H
       simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, UInt64.toBitVec_ofNat,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) (by simp only [initial_state]; decide) (by simp only [initial_state]; decide)
     (by simp only [initial_state]; decide)
     (by unfold maxAlloc; omega) (model_growslice 59 placed_at_59 labels_fresh_at_59 _ 0))

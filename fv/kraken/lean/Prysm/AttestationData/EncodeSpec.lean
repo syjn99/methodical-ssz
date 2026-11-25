@@ -1,5 +1,9 @@
-import Prysm.AttestationData.EncodeFastPath
-import Prysm.AttestationData.Spec
+module
+
+public import Prysm.AttestationData.EncodeFastPath
+public import Prysm.AttestationData.Spec
+
+@[expose] public section
 
 /-!
 # Encoder fast path against EthLib

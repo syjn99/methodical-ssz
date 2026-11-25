@@ -1,7 +1,11 @@
-import Prysm.CommitteeIndex.GeneratedDecodeAccept
-import Prysm.CommitteeIndex.DecodeRejectSize
-import Prysm.CommitteeIndex.SpecDescription
-import Prysm.Epoch.Spec
+module
+
+public import Prysm.CommitteeIndex.GeneratedDecodeAccept
+public import Prysm.CommitteeIndex.DecodeRejectSize
+public import Prysm.CommitteeIndex.SpecDescription
+public import Prysm.Epoch.Spec
+
+@[expose] public section
 
 /-!
 # Spec alignment of the real CommitteeIndex decoder

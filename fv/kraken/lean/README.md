@@ -31,7 +31,7 @@ The hand `Desc` of each type of the Prysm target is in `Prysm/<GoTypeName>/` (se
 **`Machine`.** Helpers on the Kraken machine model.
 They are the one-instruction step lemmas and tactics (`Machine/Step.lean`), and the stack frame, byte, label and flag lemmas.
 It also has the commands that read code and data files (`Machine/Include.lean`).
-It has the witness host builder and tactics (`Machine/WitnessHost.lean`, `Machine/WitnessSplit.lean`).
+It has the witness host builder and tactics (`Machine/WitnessHost.lean`, `Machine/WitnessSplit.lean`, `Machine/SepPerm.lean`).
 It holds no runtime contract and no Prysm type.
 
 **`Runtime`.** The contracts of the Go runtime callees (`Runtime/Contracts.lean`, `Runtime/NewobjectContract.lean`) and their models.
@@ -90,7 +90,7 @@ Codec <-> Prysm (at module level, both directions)
 
 - `Spec` imports only EthLib and `Spec`.
   `Machine` imports only Kraken, Std, Lean and `Machine`.
-  (`Machine/Include.lean` has `public meta import Lean` for its elaborators.)
+  (`Machine/Include.lean` and `Machine/SepPerm.lean` have `public meta import Lean` for their elaborators.)
   `Runtime` imports only Kraken, `Machine` and `Runtime`.
   So these three libraries import only libraries to their left, and Lean itself.
 - `Codec` and `Prysm` import each other at module level.
@@ -98,7 +98,7 @@ Codec <-> Prysm (at module level, both directions)
   Lean forbids a cycle of modules, so the module graph has no cycle.
   Only the libraries have no order.
 - A `Codec` module that imports `Prysm` uses code, data or specification lemmas of a type in a general lemma or kind.
-  `grep -rlE '^import Prysm' lean/Codec` gives these modules, with the `Prysm` directories that they import:
+  `grep -rlE '^public import Prysm' lean/Codec` gives these modules, with the `Prysm` directories that they import:
   - `Codec/CalleeDecode.lean` (ValidatorIndex, Epoch, Slot): it uses their decoder specifications;
   - `Codec/Segment/Bytes32VectorSpec.lean` (HistoricalBatch): it uses the element lemmas of `Prysm/HistoricalBatch/Spec.lean`;
   - `Codec/SerializeFieldsCongruence.lean` (AttestationData);
@@ -116,6 +116,28 @@ Codec <-> Prysm (at module level, both directions)
     It does not import a module of another type for the imports of that module.
     A lemma that two types share and that names no single type is in `Codec/` or `Spec/`.
 - A type directory also imports the two directories of `Prysm/` that are not types: `Prysm/ElfData/` and `Prysm/RuntimeModel/`.
+
+### Module system
+
+Each file of the libraries is a Lean module, with this header:
+
+```lean
+module
+
+public import Machine.Step
+
+@[expose] public section
+```
+
+- `@[expose]` makes the definition bodies visible to importing files.
+  The witnesses unfold `Code` definitions.
+- A proof body is not public data.
+  Thus a change of a proof body does not rebuild the importing modules.
+- Kraken does not expose all definition bodies.
+  A file that unfolds `sep` or `List.At` adds `import all Kraken.Separation` and `import all Kraken.Mem`.
+- `Spec/TestBitVec.lean` and `Spec/TestBitList.lean` are not modules.
+  Their `decide +kernel` proofs need core `UInt8` bodies.
+- Each generator writes this header.
 
 A new type gets its own directory `Prysm/<GoTypeName>/`.
 Do not change a reviewed module to add a new type.
@@ -277,6 +299,8 @@ The program is the data labels, the real converted function and the runtime mode
 A theorem `runs` (or `runs_<case>`) applies the main theorem to a concrete memory block and discharges every premise.
 The runtime models discharge the contract hypotheses.
 Example: `Prysm.SyncAggregate.Witness.DecodeAccept.runs`.
+To close the memory premise from the split block `H`, use `sep_perm H` (`Machine/SepPerm.lean`).
+Do not sort the chunks with `simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l]`, because it is very slow.
 For a variable length, the witnesses cover the empty value, one element and the maximum.
 The receiver in a witness must be a Go value of the type.
 `Prysm/Checkpoint/GoValue.lean` gives a Lean predicate for this check.

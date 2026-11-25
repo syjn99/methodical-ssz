@@ -1,5 +1,9 @@
-import Codec.SegmentAddress
-import Prysm.AttestationData.EncodeHeadSlot
+module
+
+public import Codec.SegmentAddress
+public import Prysm.AttestationData.EncodeHeadSlot
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.AttestationData).MarshalSSZTo`, fast path, segment 2: `L_88` to `L_e9`

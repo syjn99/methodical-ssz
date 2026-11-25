@@ -1,7 +1,11 @@
-import Prysm.BlobIdentifier.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.BlobIdentifier.Code
+module
+
+public import Prysm.BlobIdentifier.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.BlobIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_reject`
@@ -61,9 +65,7 @@ theorem runs (len : UInt64) (hlen : len ≠ 40) (zmms : RegZmms) (flags : Status
       witness_split []
       simp only [initial_state, frame_rest, word_bytes, ElfData.PrysmTarget.sszErrSize_addr, label_err_size, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) hlen)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 

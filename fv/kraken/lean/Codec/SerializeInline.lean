@@ -1,6 +1,10 @@
-import Spec.DeserializeOfSerialize
-import EthLib.Serialization.Proofs.Ssz.Codec.Table
-import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
+module
+
+public import Spec.DeserializeOfSerialize
+public import EthLib.Serialization.Proofs.Ssz.Codec.Table
+public import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
+
+@[expose] public section
 
 /-!
 # EthLib `assemble` of a list of fixed-size parts

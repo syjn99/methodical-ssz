@@ -1,5 +1,9 @@
-import Codec.WindowSteps
-import Machine.Labels
+module
+
+public import Codec.WindowSteps
+public import Machine.Labels
+
+@[expose] public section
 
 /-!
 # Statement kinds of the per-instruction step lemmas

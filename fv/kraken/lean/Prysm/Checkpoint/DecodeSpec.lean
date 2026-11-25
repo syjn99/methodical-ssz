@@ -1,8 +1,12 @@
-import Prysm.Checkpoint.DecodeAccept
-import Prysm.Checkpoint.DecodeRejectSize
-import Prysm.Checkpoint.Spec
-import Prysm.Checkpoint.Code
-import Prysm.Epoch.Code
+module
+
+public import Prysm.Checkpoint.DecodeAccept
+public import Prysm.Checkpoint.DecodeRejectSize
+public import Prysm.Checkpoint.Spec
+public import Prysm.Checkpoint.Code
+public import Prysm.Epoch.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the Checkpoint decoder

@@ -1,5 +1,9 @@
-import Prysm.CommitteeIndex.GeneratedDecodeAccept
-import Prysm.CommitteeIndex.Code
+module
+
+public import Prysm.CommitteeIndex.GeneratedDecodeAccept
+public import Prysm.CommitteeIndex.Code
+
+@[expose] public section
 
 /-!
 # `Decode.accept_function_spec`: function specification of `(*primitives.CommitteeIndex).UnmarshalSSZ`, accept path

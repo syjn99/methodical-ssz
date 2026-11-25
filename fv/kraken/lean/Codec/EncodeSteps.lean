@@ -1,8 +1,12 @@
-import Codec.DecoderPrologue
-import Codec.StackGuard
-import Codec.EncodeMemmove
-import Machine.StoreLemmas
-import Runtime.StaticBoxLemmas
+module
+
+public import Codec.DecoderPrologue
+public import Codec.StackGuard
+public import Codec.EncodeMemmove
+public import Machine.StoreLemmas
+public import Runtime.StaticBoxLemmas
+
+@[expose] public section
 
 /-!
 # Step lemmas for the encoder fast path (window form, registers as parameters)

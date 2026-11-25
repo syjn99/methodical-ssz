@@ -1,7 +1,11 @@
-import Spec.TestScalars
-import Spec.DeserializeOfSerialize
-import Prysm.Deposit_Data.SpecDescription
-import Prysm.Deposit_Data.SpecChecker
+module
+
+public import Spec.TestScalars
+public import Spec.DeserializeOfSerialize
+public import Prysm.Deposit_Data.SpecDescription
+public import Prysm.Deposit_Data.SpecChecker
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.Deposit_Data`

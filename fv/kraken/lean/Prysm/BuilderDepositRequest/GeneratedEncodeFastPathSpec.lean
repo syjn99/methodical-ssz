@@ -1,7 +1,11 @@
-import Prysm.BuilderDepositRequest.GeneratedEncodeFastPath
-import Prysm.BuilderDepositRequest.Spec
-import Runtime.CopyModel
-import Prysm.BuilderDepositRequest.Code
+module
+
+public import Prysm.BuilderDepositRequest.GeneratedEncodeFastPath
+public import Prysm.BuilderDepositRequest.Spec
+public import Runtime.CopyModel
+public import Prysm.BuilderDepositRequest.Code
+
+@[expose] public section
 
 /-!
 # BuilderDepositRequest encoder fast path (generated theorem) against the independent Desc

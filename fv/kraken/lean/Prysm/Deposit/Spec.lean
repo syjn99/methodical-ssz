@@ -1,5 +1,9 @@
-import Codec.Segment.Bytes32VectorSpec
-import Prysm.Deposit.StatementsSpec
+module
+
+public import Codec.Segment.Bytes32VectorSpec
+public import Prysm.Deposit.StatementsSpec
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.Deposit`

@@ -1,8 +1,12 @@
-import Codec.SegmentAddress
-import Prysm.Epoch.Code
-import Prysm.Epoch.EncodeGrowFirstSite
-import Prysm.Epoch.Size
-import Machine.WitnessHost
+module
+
+public import Codec.SegmentAddress
+public import Prysm.Epoch.Code
+public import Prysm.Epoch.EncodeGrowFirstSite
+public import Prysm.Epoch.Size
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # Prysm `(*primitives.Epoch).MarshalSSZ`, Go 1.26.10 machine code

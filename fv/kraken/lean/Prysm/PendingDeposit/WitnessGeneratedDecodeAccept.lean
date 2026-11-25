@@ -1,9 +1,13 @@
-import Prysm.PendingDeposit.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Runtime.BumpAllocatorVariants
-import Machine.WitnessHost
-import Prysm.PendingDeposit.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.PendingDeposit.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Runtime.BumpAllocatorVariants
+public import Machine.WitnessHost
+public import Prysm.PendingDeposit.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_accept` (`v1alpha1.PendingDeposit` decoder accept path)
@@ -106,9 +110,7 @@ theorem runs (f0 f1 f2 f3 f4 oP1 oP2 oP3 : List UInt8) (hf0 : f0.length = 48) (h
       have H2 := lift_heap H
       simp only [initial_state, frame_rest, zero_word_bytes, label_write_barrier, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) rfl (Nat.le_refl _) (bump_makeslice1 254 placed_at_254 labels_fresh_at_254 _) (model_memmove 260 placed_at_260 labels_fresh_at_260 _))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 

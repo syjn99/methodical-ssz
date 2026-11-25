@@ -1,7 +1,11 @@
-import Prysm.ValidatorIndex.EncodeFastPath
-import Prysm.ValidatorIndex.SpecDescription
-import Prysm.Epoch.Size
-import Runtime.CopyModel
+module
+
+public import Prysm.ValidatorIndex.EncodeFastPath
+public import Prysm.ValidatorIndex.SpecDescription
+public import Prysm.Epoch.Size
+public import Runtime.CopyModel
+
+@[expose] public section
 
 /-!
 # Encoder of `primitives.ValidatorIndex` against EthLib

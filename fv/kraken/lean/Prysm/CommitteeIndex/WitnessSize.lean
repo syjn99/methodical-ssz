@@ -1,6 +1,10 @@
-import Prysm.CommitteeIndex.Size
-import Machine.WitnessHost
-import Runtime.CopyModel
+module
+
+public import Prysm.CommitteeIndex.Size
+public import Machine.WitnessHost
+public import Runtime.CopyModel
+
+@[expose] public section
 
 /-! # Witness of `Size.result`: the SizeSSZ code alone; memory = the return slot. -/
 

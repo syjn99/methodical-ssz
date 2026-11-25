@@ -1,7 +1,11 @@
-import Prysm.SyncAggregatorSelectionData.GeneratedDecodeAccept
-import Prysm.SyncAggregatorSelectionData.Spec
-import Prysm.SyncAggregatorSelectionData.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.SyncAggregatorSelectionData.GeneratedDecodeAccept
+public import Prysm.SyncAggregatorSelectionData.Spec
+public import Prysm.SyncAggregatorSelectionData.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.SyncAggregatorSelectionData` decoder

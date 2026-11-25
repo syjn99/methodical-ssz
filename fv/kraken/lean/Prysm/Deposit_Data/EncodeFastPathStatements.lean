@@ -1,5 +1,9 @@
-import Codec.Kind.EncodeFastPathAnyFrame
-import Prysm.Deposit_Data.Code
+module
+
+public import Codec.Kind.EncodeFastPathAnyFrame
+public import Prysm.Deposit_Data.Code
+
+@[expose] public section
 
 /-!
 # Independent hand statement of the `Deposit_Data` encoder fast path

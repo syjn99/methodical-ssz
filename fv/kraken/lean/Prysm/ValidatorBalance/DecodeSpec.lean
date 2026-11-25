@@ -1,7 +1,11 @@
-import Prysm.ValidatorBalance.GeneratedDecodeAccept
-import Prysm.ValidatorBalance.Spec
-import Prysm.ValidatorBalance.Code
-import Prysm.ValidatorIndex.Code
+module
+
+public import Prysm.ValidatorBalance.GeneratedDecodeAccept
+public import Prysm.ValidatorBalance.Spec
+public import Prysm.ValidatorBalance.Code
+public import Prysm.ValidatorIndex.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.ValidatorBalance` decoder

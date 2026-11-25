@@ -1,6 +1,10 @@
-import Machine.Frame
-import Machine.Block
-import Codec.ByteSliceListDefinitions
+module
+
+public import Machine.Frame
+public import Machine.Block
+public import Codec.ByteSliceListDefinitions
+
+@[expose] public section
 
 /-!
 # List and memory-chunk lemmas of a `[][]byte` decoder loop

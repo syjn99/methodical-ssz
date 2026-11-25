@@ -1,7 +1,11 @@
-import Prysm.Checkpoint.EncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.Checkpoint.Code
+module
+
+public import Prysm.Checkpoint.EncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Encode.fast_path` (encoder fast path)
@@ -67,9 +71,7 @@ theorem runs_empty (e8 root : List UInt8) (he8 : e8.length = 8) (hroot : root.le
       simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil,
         show (UInt64.ofNat 0).toBitVec = 0#64 from rfl] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (model_memmove 91 placed_at_91 labels_fresh_at_91 0))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 
@@ -92,9 +94,7 @@ theorem runs_prefix (e8 root : List UInt8) (he8 : e8.length = 8) (hroot : root.l
       simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil, List.length_cons, List.length_replicate,
         show (UInt64.ofNat 3).toBitVec = 3#64 from rfl] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (by simp [initial_state]) (model_memmove 91 placed_at_91 labels_fresh_at_91 0))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 

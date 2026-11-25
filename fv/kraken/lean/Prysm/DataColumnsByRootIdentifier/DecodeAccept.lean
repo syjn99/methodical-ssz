@@ -1,10 +1,16 @@
-import Codec.SegmentAddress
-import Codec.StackGuard
-import Codec.BitVecShiftLemmas
-import Prysm.DataColumnsByRootIdentifier.EncodeTail
-import Prysm.DataColumnsByRootIdentifier.DecodeRejectSize
-import Prysm.DataColumnsByRootIdentifier.DecodeLoop
-import Prysm.DataColumnsByRootIdentifier.Code
+module
+
+public import Codec.SegmentAddress
+public import Codec.StackGuard
+public import Codec.BitVecShiftLemmas
+public import Prysm.DataColumnsByRootIdentifier.EncodeTail
+public import Prysm.DataColumnsByRootIdentifier.DecodeRejectSize
+public import Prysm.DataColumnsByRootIdentifier.DecodeLoop
+public import Prysm.DataColumnsByRootIdentifier.Code
+import all Kraken.Mem
+import all Kraken.Separation
+
+@[expose] public section
 
 /-!
 # Decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`, accept path (Go 1.26.10 machine code)

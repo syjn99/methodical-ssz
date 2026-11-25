@@ -1,7 +1,11 @@
-import Prysm.CommitteeIndex.EncodeFastPath
-import Prysm.CommitteeIndex.SpecDescription
-import Prysm.Epoch.Size
-import Runtime.CopyModel
+module
+
+public import Prysm.CommitteeIndex.EncodeFastPath
+public import Prysm.CommitteeIndex.SpecDescription
+public import Prysm.Epoch.Size
+public import Runtime.CopyModel
+
+@[expose] public section
 
 /-!
 # Encoder of `primitives.CommitteeIndex` against EthLib

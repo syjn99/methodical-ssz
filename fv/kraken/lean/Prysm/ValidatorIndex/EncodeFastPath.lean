@@ -1,9 +1,13 @@
-import Codec.SegmentAddress
-import Machine.Frame
-import Machine.StoreLemmas
-import Machine.Labels
-import Prysm.ValidatorIndex.Code
-import Codec.EncodeBitVecLemmas
+module
+
+public import Codec.SegmentAddress
+public import Machine.Frame
+public import Machine.StoreLemmas
+public import Machine.Labels
+public import Prysm.ValidatorIndex.Code
+public import Codec.EncodeBitVecLemmas
+
+@[expose] public section
 
 /-!
 # Prysm `(*primitives.ValidatorIndex).MarshalSSZTo`, fast path, Go 1.26.10 machine code

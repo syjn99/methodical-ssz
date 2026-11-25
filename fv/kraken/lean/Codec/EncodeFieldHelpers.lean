@@ -1,5 +1,9 @@
-import Codec.EncodeSteps
-import Codec.FieldFrame
+module
+
+public import Codec.EncodeSteps
+public import Codec.FieldFrame
+
+@[expose] public section
 
 /-!
 # Helpers of the generated-style field proofs of encoders

@@ -1,5 +1,9 @@
-import Prysm.Epoch.EncodeGrowFirstSite
-import Prysm.Epoch.EncodeSpec
+module
+
+public import Prysm.Epoch.EncodeGrowFirstSite
+public import Prysm.Epoch.EncodeSpec
+
+@[expose] public section
 
 /-!
 # `(*primitives.Epoch).MarshalSSZTo`: case cover over every capacity, with the exact frame

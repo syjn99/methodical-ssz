@@ -1,7 +1,11 @@
-import Spec.TestListU64
-import Spec.DeserializeOfSerialize
-import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
-import EthLib.Serialization.Proofs.Ssz.Codec.Table
+module
+
+public import Spec.TestListU64
+public import Spec.DeserializeOfSerialize
+public import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
+public import EthLib.Serialization.Proofs.Ssz.Codec.Table
+
+@[expose] public section
 
 /-!
 # A list of uint64 values read back from bytes

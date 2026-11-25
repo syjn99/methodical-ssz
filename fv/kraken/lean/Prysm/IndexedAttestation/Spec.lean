@@ -1,9 +1,13 @@
-import Prysm.AttestationData.Spec
-import Codec.ReadUint64List
-import EthLib.Serialization.Proofs.Ssz.Codec.Table
-import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
-import Spec.TestListU64
-import Prysm.IndexedAttestation.SpecDescription
+module
+
+public import Prysm.AttestationData.Spec
+public import Codec.ReadUint64List
+public import EthLib.Serialization.Proofs.Ssz.Codec.Table
+public import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
+public import Spec.TestListU64
+public import Prysm.IndexedAttestation.SpecDescription
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.IndexedAttestation`

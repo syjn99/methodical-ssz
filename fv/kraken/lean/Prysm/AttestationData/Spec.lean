@@ -1,6 +1,10 @@
-import Prysm.Checkpoint.Spec
-import Prysm.AttestationData.SpecChecker
-import Prysm.AttestationData.SpecDescription
+module
+
+public import Prysm.Checkpoint.Spec
+public import Prysm.AttestationData.SpecChecker
+public import Prysm.AttestationData.SpecDescription
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.AttestationData`

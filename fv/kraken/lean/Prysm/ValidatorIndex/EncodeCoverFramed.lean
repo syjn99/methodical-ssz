@@ -1,5 +1,9 @@
-import Prysm.ValidatorIndex.EncodeGrowFirstSite
-import Prysm.ValidatorIndex.EncodeSpec
+module
+
+public import Prysm.ValidatorIndex.EncodeGrowFirstSite
+public import Prysm.ValidatorIndex.EncodeSpec
+
+@[expose] public section
 
 /-!
 # `(*primitives.ValidatorIndex).MarshalSSZTo`: case cover over every capacity, with the exact frame

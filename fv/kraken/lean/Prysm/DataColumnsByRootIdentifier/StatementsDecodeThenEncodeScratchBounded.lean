@@ -1,5 +1,9 @@
-import Prysm.DataColumnsByRootIdentifier.StatementsDecode
-import Prysm.DataColumnsByRootIdentifier.Code
+module
+
+public import Prysm.DataColumnsByRootIdentifier.StatementsDecode
+public import Prysm.DataColumnsByRootIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Statement of the round trip with a bound on the scratch size: decoder entry → accept → encoder fast path

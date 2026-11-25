@@ -1,9 +1,13 @@
-import Prysm.IndexedAttestation.DecodeRejectAlignment
-import Runtime.ErrorModel
-import Runtime.BumpAllocatorVariants
-import Machine.WitnessHost
-import Prysm.IndexedAttestation.DecodeRejectOverflow
-import Prysm.IndexedAttestation.Code
+module
+
+public import Prysm.IndexedAttestation.DecodeRejectAlignment
+public import Runtime.ErrorModel
+public import Runtime.BumpAllocatorVariants
+public import Machine.WitnessHost
+public import Prysm.IndexedAttestation.DecodeRejectOverflow
+public import Prysm.IndexedAttestation.Code
+
+@[expose] public section
 
 /-!
 # Witnesses of `Decode.reject_alignment_error_word_nonzero` (alignment reject) and `Decode.reject_overflow_error_word_nonzero` (overflow reject)

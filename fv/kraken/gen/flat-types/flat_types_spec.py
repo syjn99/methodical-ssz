@@ -64,8 +64,8 @@ def with_code_imports(text, X):
     import re
     ts = [X] + sorted(set(re.findall(r'\bPrysm\.(\w+)\.Code\.\w', text)) - {X})
     lines = text.split('\n')
-    last = max(i for i, l in enumerate(lines) if l.startswith('import '))
-    new = [f'import Prysm.{t}.Code' for t in ts if f'import Prysm.{t}.Code' not in lines]
+    last = max(i for i, l in enumerate(lines) if l.startswith('public import '))
+    new = [f'public import Prysm.{t}.Code' for t in ts if f'public import Prysm.{t}.Code' not in lines]
     return '\n'.join(lines[:last + 1] + new + lines[last + 1:])
 
 
@@ -84,11 +84,15 @@ def emit(X, ty, fs, chk):
         o += f[2]
     L = []
     w = L.append
-    w('import Spec.TestScalars')
-    w('import Spec.DeserializeOfSerialize')
-    w(f'import Prysm.{X}.SpecDescription')
+    w('module')
+    w('')
+    w('public import Spec.TestScalars')
+    w('public import Spec.DeserializeOfSerialize')
+    w(f'public import Prysm.{X}.SpecDescription')
     if chk:
-        w(f'import Prysm.{X}.SpecChecker')
+        w(f'public import Prysm.{X}.SpecChecker')
+    w('')
+    w('@[expose] public section')
     w('')
     w('/-!')
     w(f'# Spec bridge for the Prysm `{ty}`')

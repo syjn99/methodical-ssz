@@ -1,9 +1,13 @@
-import Machine.Step
-import Machine.Labels
-import Machine.Bytes
-import Prysm.ElfData.PrysmTarget
-import Prysm.HistoricalBatch.Statements
-import Prysm.HistoricalBatch.Code
+module
+
+public import Machine.Step
+public import Machine.Labels
+public import Machine.Bytes
+public import Prysm.ElfData.PrysmTarget
+public import Prysm.HistoricalBatch.Statements
+public import Prysm.HistoricalBatch.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`: size reject

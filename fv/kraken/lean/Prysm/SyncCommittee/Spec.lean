@@ -1,8 +1,12 @@
-import Spec.TestScalars
-import EthLib.Serialization.Proofs.Ssz.Codec.Table
-import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
-import Prysm.SyncCommittee.SpecDescription
-import Codec.SerializeInline
+module
+
+public import Spec.TestScalars
+public import EthLib.Serialization.Proofs.Ssz.Codec.Table
+public import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
+public import Prysm.SyncCommittee.SpecDescription
+public import Codec.SerializeInline
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.SyncCommittee`

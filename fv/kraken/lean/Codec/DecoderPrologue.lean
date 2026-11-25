@@ -1,5 +1,9 @@
-import Codec.WindowSteps
-import Codec.DecoderHeadEpilogue
+module
+
+public import Codec.WindowSteps
+public import Codec.DecoderHeadEpilogue
+
+@[expose] public section
 
 /-!
 # Frame-parametric prologue, return and nil-check step

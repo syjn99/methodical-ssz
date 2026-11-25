@@ -1,9 +1,13 @@
-import Prysm.VoluntaryExit.GeneratedDecodeAccept
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.VoluntaryExit.Code
-import Prysm.Epoch.Code
-import Prysm.ValidatorIndex.Code
+module
+
+public import Prysm.VoluntaryExit.GeneratedDecodeAccept
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.VoluntaryExit.Code
+public import Prysm.Epoch.Code
+public import Prysm.ValidatorIndex.Code
+
+@[expose] public section
 
 /-!
 # Witness of the generated `Decode.generated_accept` (VoluntaryExit decoder accept path)
@@ -81,9 +85,7 @@ theorem runs (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length =
       witness_split [hin0, hin1]
       simp only [initial_state, frame_rest, zero_word_bytes, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) rfl)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 

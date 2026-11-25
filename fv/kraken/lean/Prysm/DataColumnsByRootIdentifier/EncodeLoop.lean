@@ -1,10 +1,14 @@
-import Machine.Block
-import Machine.Labels
-import Machine.Frame
-import Prysm.DataColumnsByRootIdentifier.Code
-import Codec.ByteSliceListLemmas
-import Runtime.CopyModel
-import Machine.StoreLemmas
+module
+
+public import Machine.Block
+public import Machine.Labels
+public import Machine.Frame
+public import Prysm.DataColumnsByRootIdentifier.Code
+public import Codec.ByteSliceListLemmas
+public import Runtime.CopyModel
+public import Machine.StoreLemmas
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: the Columns loop (capacity sufficient)

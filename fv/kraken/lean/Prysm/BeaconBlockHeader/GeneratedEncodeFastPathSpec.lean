@@ -1,7 +1,11 @@
-import Prysm.BeaconBlockHeader.GeneratedEncodeFastPath
-import Prysm.BeaconBlockHeader.Spec
-import Runtime.CopyModel
-import Prysm.BeaconBlockHeader.Code
+module
+
+public import Prysm.BeaconBlockHeader.GeneratedEncodeFastPath
+public import Prysm.BeaconBlockHeader.Spec
+public import Runtime.CopyModel
+public import Prysm.BeaconBlockHeader.Code
+
+@[expose] public section
 
 /-!
 # BeaconBlockHeader encoder fast path (generated theorem) against the independent Desc

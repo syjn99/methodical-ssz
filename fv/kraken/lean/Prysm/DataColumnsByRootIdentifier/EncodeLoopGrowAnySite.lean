@@ -1,8 +1,12 @@
-import Runtime.Contracts
-import Prysm.DataColumnsByRootIdentifier.EncodeLoop
-import Prysm.DataColumnsByRootIdentifier.EncodeTail
-import Prysm.ElfData.PrysmTarget
-import Prysm.DataColumnsByRootIdentifier.Code
+module
+
+public import Runtime.Contracts
+public import Prysm.DataColumnsByRootIdentifier.EncodeLoop
+public import Prysm.DataColumnsByRootIdentifier.EncodeTail
+public import Prysm.ElfData.PrysmTarget
+public import Prysm.DataColumnsByRootIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Any-site grow path: the Columns loop when any iteration may grow the block

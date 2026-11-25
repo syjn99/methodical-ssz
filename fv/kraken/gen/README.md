@@ -42,7 +42,7 @@ The design principles are in `../../README.md`.
 | `flat-types/flat_types_witness.py` | The `.S` files of the types of the rows with the companions `reject-witness` and `accept-witness`, and its table `FRAME_FORM` | `WitnessGeneratedDecodeRejectSize.lean` and `WitnessGeneratedDecodeAccept.lean` of these types |
 | `flat-types/flat_types_encode_spec.py` | `GeneratedEncodeFastPath.lean` and the IR of the types of the rows with the companion `encode-spec`, and its table `ENCODE_SPEC_TYPES` | `GeneratedEncodeFastPathSpec.lean` and `WitnessGeneratedEncodeFastPath.lean` of these types |
 | `flat-types/flat_types_negative_cases.py` | The Lean files of the types of the rows with the companion `negative-cases` | `checks/negative-cases/negative-cases-<type>-generated.json`, one file for each type |
-| `flat-types/flat_types_hand_list.py` | A declaration dump and the rows with the companion `hand-list` | New names in the hand list `axioms-lists/<type>.lean` of each of these types |
+| `flat-types/flat_types_hand_list.py` | A declaration dump and the rows with the companion `hand-list` | New names in the hand list `axioms-lists/<type>.lean` of each of these types, without the names that the dump does not hold |
 | `prysm-rebuild-and-check.sh` | A Prysm tree and the generator tree | The Prysm ELF, the link set and the differential results, in a scratch directory (needs Docker) |
 | `kraken-parser/summarize_parser_log.py` | A log of `kraken-parser/ParserRun.lean` | `prysm/go1.26.10/parser-result.json`: which functions the Kraken parser reads |
 | `prysm-gen.sh`, `prysm-elf.sh` | A Prysm tree and the generator binary | Generated Go, the IR and the Prysm ELF (needs Go) |
@@ -108,7 +108,7 @@ The usage text of `kindcheck.py` gives the details.
 
 | Rule | What it checks |
 | --- | --- |
-| 2 | The top-level lines are only imports, `open`, `variable`, `namespace`, `end`, `set_option … in`, theorems, comments and blank lines. |
+| 2 | The top-level lines are only the module header, imports, `open`, `variable`, `namespace`, `end`, `set_option … in`, theorems, comments and blank lines. |
 | 3 | No `sorry`, `admit`, `native_decide`, `bv_decide` or `axiom` token occurs. |
 | 4 | Each theorem `t` has one theorem `t_kind` with a kind of its code constant and the fixed proof line. |
 | 5 | Each `_kind` theorem belongs to a theorem of the file. |

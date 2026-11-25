@@ -1,5 +1,9 @@
-import Prysm.Deposit.Spec
-import Prysm.Deposit.SpecChecker
+module
+
+public import Prysm.Deposit.Spec
+public import Prysm.Deposit.SpecChecker
+
+@[expose] public section
 
 /-!
 # The hand `Desc` of Deposit and the Desc checker's `Desc`

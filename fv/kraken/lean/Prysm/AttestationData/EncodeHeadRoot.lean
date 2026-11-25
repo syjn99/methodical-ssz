@@ -1,5 +1,9 @@
-import Codec.SegmentAddress
-import Prysm.AttestationData.EncodeHeadIndex
+module
+
+public import Codec.SegmentAddress
+public import Prysm.AttestationData.EncodeHeadIndex
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.AttestationData).MarshalSSZTo`, fast path, segment 3: `L_e9` to the return of `runtime.memmove`

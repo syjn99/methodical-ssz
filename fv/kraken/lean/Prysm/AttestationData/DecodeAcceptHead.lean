@@ -1,9 +1,13 @@
-import Codec.SegmentAddress
-import Runtime.Contracts
-import Machine.Frame
-import Prysm.Slot.DecodeAcceptFunctionSpec
-import Prysm.CommitteeIndex.DecodeAcceptFunctionSpec
-import Prysm.AttestationData.Code
+module
+
+public import Codec.SegmentAddress
+public import Runtime.Contracts
+public import Machine.Frame
+public import Prysm.Slot.DecodeAcceptFunctionSpec
+public import Prysm.CommitteeIndex.DecodeAcceptFunctionSpec
+public import Prysm.AttestationData.Code
+
+@[expose] public section
 
 /-!
 # Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, head segment

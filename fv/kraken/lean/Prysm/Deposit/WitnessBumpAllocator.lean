@@ -1,6 +1,10 @@
-import Runtime.BumpAllocator
-import Runtime.BumpAllocatorVariants
-import Runtime.NewobjectContract
+module
+
+public import Runtime.BumpAllocator
+public import Runtime.BumpAllocatorVariants
+public import Runtime.NewobjectContract
+
+@[expose] public section
 
 /-!
 # Bump-allocator model of `runtime.newobject` for one 120-byte object (witness only)
