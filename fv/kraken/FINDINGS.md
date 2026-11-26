@@ -156,9 +156,10 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 ### The proof generator covers only some code forms
 
 - What does not hold: `gen/generator/generator.py` does not cover every field form.
-  It covers 8-byte `uint64` fields and byte vectors of 32, 48 and 96 bytes.
+  It covers 8-byte `uint64` fields and byte vectors of 4, 20, 32, 48 and 96 bytes.
   It covers the callees `Slot`, `CommitteeIndex`, `ValidatorIndex` and `Epoch`.
-  It refuses byte vectors of other sizes, `bool` fields, the `Gwei` callee, interleaved fields and nested containers.
+  It covers uint64 fields after the set-up of the next callee call, with one field theorem for these fields.
+  It refuses byte vectors of other sizes, `bool` fields, the `Gwei` callee, other interleaved fields and nested containers.
   On the encoder side, the compiled sites that append a 32-byte field have different instruction texts.
   Only the call step is shared between them.
 - Effect: a refused type needs hand proofs.
@@ -265,6 +266,9 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   - `lean/Codec/Segment/SizeReject.lean` and `lean/Codec/DecodeRejectSizeAnyFrame.lean` both give a size reject for any frame.
   - `lean/Machine/WitnessSplit.lean` is the macro of `lean/Machine/WitnessHost.lean` with a larger simp set.
   - Checkpoint has two forms of its encoder covers: `EncodeCover.lean` and `EncodeCoverFramed.lean`.
+  - PendingPartialWithdrawal has two decoder accept theorems for the same accept path.
+    `Decode.accept` in `DecodeAccept.lean` is a hand proof, and the specification corollaries use it.
+    `Decode.generated_accept` in `GeneratedDecodeAccept.lean` is a generated proof.
 - Effect: none on a theorem.
   A new proof must use the general form in `Codec` and `Machine/WitnessHost.lean`.
 - Where: the files above.

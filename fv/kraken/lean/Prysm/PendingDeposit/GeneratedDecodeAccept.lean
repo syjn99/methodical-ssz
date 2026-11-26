@@ -379,7 +379,7 @@ theorem Decode.generated_Signature_segment (k : Nat) (hk : unmarshalSSZ.IsInfixA
     (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hjm : k + 101 + Codec.nonNopIndex ((unmarshalSSZ.drop 101).take 12) 6 = k + 107 := by rfl
   have hend : k + 101 + ((unmarshalSSZ.drop 101).take 12).length = k + 113 := by rfl
-  with_reducible exact Codec.bytes_decode_segment_window 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 88) (k + 101) (k + 101) (k + 107) (k + 113) hqA heA hqB heB hjl hl hjm hend
+  with_reducible exact Codec.bytes_decode_segment_window 96 (Or.inr (Or.inr (Or.inl rfl))) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 88) (k + 101) (k + 101) (k + 107) (k + 113) hqA heA hqB heB hjl hl hjm hend
 theorem Decode.generated_Signature_segment_kind : ∀ (h : Host), type_of% (@Decode.generated_Signature_segment h) = @Codec.bytesDecodeSegmentKindWindow h 96 unmarshalSSZ Reg64.rax 88 107 113 80 88 40 64 72 80 88 := by
   intro h; with_reducible rfl
 
