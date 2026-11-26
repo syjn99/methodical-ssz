@@ -1,6 +1,10 @@
-import Prysm.Deposit.DecodeAccept
-import Prysm.Deposit.DecodeRejectSize
-import Prysm.Deposit.Spec
+module
+
+public import Prysm.Deposit.DecodeAccept
+public import Prysm.Deposit.DecodeRejectSize
+public import Prysm.Deposit.Spec
+
+@[expose] public section
 
 /-!
 # Spec alignment of the Deposit decoder

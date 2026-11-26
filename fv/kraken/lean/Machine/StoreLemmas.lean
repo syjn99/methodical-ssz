@@ -1,5 +1,9 @@
-import Machine.Step
-import Machine.Frame
+module
+
+public import Machine.Step
+public import Machine.Frame
+
+@[expose] public section
 
 /-!
 # Store and address lemmas that the encoder proofs use

@@ -1,6 +1,10 @@
-import Codec.Uint64Decoder
-import Codec.SegmentTemplate
-import Runtime.Contracts
+module
+
+public import Codec.Uint64Decoder
+public import Codec.SegmentTemplate
+public import Runtime.Contracts
+
+@[expose] public section
 
 /-!
 # Statement kinds of the generated theorems

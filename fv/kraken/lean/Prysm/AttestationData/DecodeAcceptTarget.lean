@@ -1,6 +1,10 @@
-import Codec.SegmentAddress
-import Prysm.AttestationData.DecodeAcceptSource
-import Prysm.AttestationData.Code
+module
+
+public import Codec.SegmentAddress
+public import Prysm.AttestationData.DecodeAcceptSource
+public import Prysm.AttestationData.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, Target segment

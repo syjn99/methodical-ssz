@@ -1,10 +1,14 @@
-import Runtime.Contracts
-import Machine.Step
-import Machine.Labels
-import Codec.StackGuard
-import Prysm.DataColumnsByRootIdentifier.StatementsEncode
-import Prysm.DataColumnsByRootIdentifier.EncodeTail
-import Prysm.DataColumnsByRootIdentifier.Code
+module
+
+public import Runtime.Contracts
+public import Machine.Step
+public import Machine.Labels
+public import Codec.StackGuard
+public import Prysm.DataColumnsByRootIdentifier.StatementsEncode
+public import Prysm.DataColumnsByRootIdentifier.EncodeTail
+public import Prysm.DataColumnsByRootIdentifier.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: first-site grow path (one grow at site 1 only)

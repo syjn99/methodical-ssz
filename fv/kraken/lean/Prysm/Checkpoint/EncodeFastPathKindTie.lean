@@ -1,7 +1,11 @@
-import Codec.Kind.EncodeFastPathAnyFrame
-import Prysm.Checkpoint.EncodeFastPath
-import Prysm.Checkpoint.Code
-import Prysm.Checkpoint.EncodeLayout
+module
+
+public import Codec.Kind.EncodeFastPathAnyFrame
+public import Prysm.Checkpoint.EncodeFastPath
+public import Prysm.Checkpoint.Code
+public import Prysm.Checkpoint.EncodeLayout
+
+@[expose] public section
 
 /-!
 # Tie of `encodeFastPathKindAnyFrame` to the hand encoder fast-path statement of `Checkpoint`

@@ -1,5 +1,9 @@
-import Prysm.DataColumnsByRootIdentifier.EncodeLoopGrowAnySite
-import Prysm.DataColumnsByRootIdentifier.Code
+module
+
+public import Prysm.DataColumnsByRootIdentifier.EncodeLoopGrowAnySite
+public import Prysm.DataColumnsByRootIdentifier.Code
+
+@[expose] public section
 
 /-!
 # One-growth path: from `L_7c` (directive 29) to the return when site 2 or the loop may grow

@@ -1,6 +1,10 @@
-import Codec.SegmentAddress
-import Prysm.Checkpoint.EncodeTail
-import Prysm.Checkpoint.Code
+module
+
+public import Codec.SegmentAddress
+public import Prysm.Checkpoint.EncodeTail
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo` from `L_7b`: the second growslice site

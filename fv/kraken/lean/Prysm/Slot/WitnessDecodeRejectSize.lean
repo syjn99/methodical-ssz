@@ -1,7 +1,11 @@
-import Prysm.Slot.DecodeRejectSize
-import Runtime.ErrorModel
-import Machine.WitnessHost
-import Prysm.Slot.Code
+module
+
+public import Prysm.Slot.DecodeRejectSize
+public import Runtime.ErrorModel
+public import Machine.WitnessHost
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Witnesses of `Prysm.Slot.Decode.reject_size` (len 7, 9 and 300)

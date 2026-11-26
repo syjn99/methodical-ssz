@@ -1,8 +1,12 @@
-import Prysm.Checkpoint.DecodeAccept
-import Prysm.Checkpoint.EncodeFastPath
-import Prysm.Checkpoint.Code
-import Prysm.Epoch.Code
-import Runtime.CopyModel
+module
+
+public import Prysm.Checkpoint.DecodeAccept
+public import Prysm.Checkpoint.EncodeFastPath
+public import Prysm.Checkpoint.Code
+public import Prysm.Epoch.Code
+public import Runtime.CopyModel
+
+@[expose] public section
 
 /-!
 # Function specifications of the Checkpoint decoder and encoder

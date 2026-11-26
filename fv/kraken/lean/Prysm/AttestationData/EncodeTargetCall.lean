@@ -1,5 +1,9 @@
-import Codec.SegmentAddress
-import Prysm.AttestationData.EncodeSourceCall
+module
+
+public import Codec.SegmentAddress
+public import Prysm.AttestationData.EncodeSourceCall
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.AttestationData).MarshalSSZTo`, fast path, segment 5: the Target encoder and the return

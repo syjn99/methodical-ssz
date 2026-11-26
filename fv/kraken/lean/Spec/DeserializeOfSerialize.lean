@@ -1,7 +1,11 @@
-import EthLib.Serialization.Proofs.Ssz.Codec.Canonicality
-import EthLib.Serialization.Proofs.Ssz.Codec.DecodeFits
-import EthLib.Serialization.Proofs.Ssz.Codec.RoundTrip
-import EthLib.Serialization.Proofs.Ssz.Type.FitsLaws
+module
+
+public import EthLib.Serialization.Proofs.Ssz.Codec.Canonicality
+public import EthLib.Serialization.Proofs.Ssz.Codec.DecodeFits
+public import EthLib.Serialization.Proofs.Ssz.Codec.RoundTrip
+public import EthLib.Serialization.Proofs.Ssz.Type.FitsLaws
+
+@[expose] public section
 
 /-!
 # From a `serialize` characterization to `deserialize` (EthLib theorems)

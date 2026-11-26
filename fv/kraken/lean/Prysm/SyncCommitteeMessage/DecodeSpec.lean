@@ -1,8 +1,12 @@
-import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
-import Prysm.SyncCommitteeMessage.Spec
-import Prysm.SyncCommitteeMessage.Code
-import Prysm.Slot.Code
-import Prysm.ValidatorIndex.Code
+module
+
+public import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
+public import Prysm.SyncCommitteeMessage.Spec
+public import Prysm.SyncCommitteeMessage.Code
+public import Prysm.Slot.Code
+public import Prysm.ValidatorIndex.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.SyncCommitteeMessage` decoder

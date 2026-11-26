@@ -1,7 +1,11 @@
-import Codec.SegmentAddress
-import Prysm.AttestationData.DecodeAcceptHead
-import Prysm.ElfData.PrysmTarget
-import Prysm.AttestationData.Code
+module
+
+public import Codec.SegmentAddress
+public import Prysm.AttestationData.DecodeAcceptHead
+public import Prysm.ElfData.PrysmTarget
+public import Prysm.AttestationData.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, BeaconBlockRoot segment

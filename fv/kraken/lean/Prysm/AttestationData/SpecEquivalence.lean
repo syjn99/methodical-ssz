@@ -1,8 +1,12 @@
-import Prysm.Checkpoint.Spec
-import Prysm.Checkpoint.SpecEquivalence
-import Prysm.AttestationData.SpecChecker
-import Prysm.AttestationData.Spec
-import Codec.SerializeFieldsCongruence
+module
+
+public import Prysm.Checkpoint.Spec
+public import Prysm.Checkpoint.SpecEquivalence
+public import Prysm.AttestationData.SpecChecker
+public import Prysm.AttestationData.Spec
+public import Codec.SerializeFieldsCongruence
+
+@[expose] public section
 
 /-!
 # The hand `Desc` of `v1alpha1.AttestationData` and the Desc checker's `Desc`

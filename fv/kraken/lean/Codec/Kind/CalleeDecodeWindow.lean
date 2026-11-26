@@ -1,4 +1,8 @@
-import Codec.CalleeDecodeWindow
+module
+
+public import Codec.CalleeDecodeWindow
+
+@[expose] public section
 
 /-!
 # Statement kind of the callee-decoder call block over a window

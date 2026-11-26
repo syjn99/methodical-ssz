@@ -1,5 +1,9 @@
-import EthLib.Serialization.Proofs.Ssz.Codec.Table
-import Prysm.DataColumnsByRootIdentifier.StatementsEncode
+module
+
+public import EthLib.Serialization.Proofs.Ssz.Codec.Table
+public import Prysm.DataColumnsByRootIdentifier.StatementsEncode
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.DataColumnsByRootIdentifier`

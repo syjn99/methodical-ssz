@@ -1,7 +1,11 @@
-import Prysm.PendingConsolidation.GeneratedDecodeAccept
-import Prysm.PendingConsolidation.Spec
-import Prysm.PendingConsolidation.Code
-import Prysm.ValidatorIndex.Code
+module
+
+public import Prysm.PendingConsolidation.GeneratedDecodeAccept
+public import Prysm.PendingConsolidation.Spec
+public import Prysm.PendingConsolidation.Code
+public import Prysm.ValidatorIndex.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.PendingConsolidation` decoder

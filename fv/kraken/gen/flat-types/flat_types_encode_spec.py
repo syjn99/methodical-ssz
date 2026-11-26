@@ -350,10 +350,14 @@ def emit_wit(X, info, cl, gsize):
     Pl = len(open(info['Spath']).read().rstrip('\n').split('\n'))
     L = []
     w = L.append
-    w('import %s' % info['module'])
-    w('import Runtime.CopyModel')
-    w('import Machine.WitnessHost')
-    w('import Prysm.%s.Code' % X)
+    w('module')
+    w('')
+    w('public import %s' % info['module'])
+    w('public import Runtime.CopyModel')
+    w('public import Machine.WitnessHost')
+    w('public import Prysm.%s.Code' % X)
+    w('')
+    w('@[expose] public section')
     w('')
     w('/-!')
     w('# Witness of `%s_fast` (%s encoder fast path, generated theorem)' % (p, hdr['type']))
@@ -478,9 +482,7 @@ def emit_wit(X, info, cl, gsize):
               '      simp only [initial_state, word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,',
               '        BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil, List.length_cons,',
               '        List.length_replicate, show (UInt64.ofNat %d).toBitVec = %d#64 from rfl] at H ⊢' % (npre, npre),
-              '      simp only [Std.ExtHashMap.sep_assoc] at H ⊢',
-              '      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢',
-              '      exact H)']
+              '      sep_perm H)']
         sig = ' '.join('(%s : List UInt8)' % q for q in params)
         hs = ' '.join('(h_%s : %s.length = %d)' % (q, q, plen[q]) for q in params)
         w('set_option maxHeartbeats 16000000 in')
@@ -593,10 +595,14 @@ def emit_spec(X, info, cl):
     pat = 'hpc, hrax, hrbx, hrcx, hrdi, hrsi, _, _, _, ' + ', '.join(['_'] * (2 * nex)) + (', ' if nex else '') + 'hm'
     L = []
     w = L.append
-    w('import %s' % info['module'])
-    w('import %s' % smod)
-    w('import Runtime.CopyModel')
-    w('import Prysm.%s.Code' % X)
+    w('module')
+    w('')
+    w('public import %s' % info['module'])
+    w('public import %s' % smod)
+    w('public import Runtime.CopyModel')
+    w('public import Prysm.%s.Code' % X)
+    w('')
+    w('@[expose] public section')
     w('')
     w('/-!')
     w('# %s encoder fast path (generated theorem) against the independent Desc' % hdr['type'])

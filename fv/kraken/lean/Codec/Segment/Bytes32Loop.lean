@@ -1,7 +1,11 @@
-import Runtime.Contracts
-import Machine.Step
-import Machine.Labels
-import Codec.Segment.ByteSliceList
+module
+
+public import Runtime.Contracts
+public import Machine.Step
+public import Machine.Labels
+public import Codec.Segment.ByteSliceList
+
+@[expose] public section
 
 /-!
 # The `[][]byte` element loop with 32-byte elements, for ANY count `n < 2^31` and any frame

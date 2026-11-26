@@ -1,10 +1,14 @@
-import Prysm.Deposit.DecodeAccept
-import Prysm.RuntimeModel.BumpAllocatorByteSliceDispatch
-import Prysm.Deposit.WitnessBumpAllocator
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.Deposit.Code
-import Prysm.Deposit_Data.Code
+module
+
+public import Prysm.Deposit.DecodeAccept
+public import Prysm.RuntimeModel.BumpAllocatorByteSliceDispatch
+public import Prysm.Deposit.WitnessBumpAllocator
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.Deposit.Code
+public import Prysm.Deposit_Data.Code
+
+@[expose] public section
 
 /-!
 # Witness of `Decode.accept` (Deposit decoder accept path)
@@ -109,10 +113,6 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
--- Threshold (builds of `Prysm.Deposit.WitnessDecodeAccept`, one run each): 200000 and 1000000 fail at `whnf`; 2000000 and 4000000 pass. Value 4000000 =
--- twice the lowest passing value. Cause (profiler): `simp` 20.1 s (15.1 s and 4.89 s), the AC-normalization
--- of the separating conjunction (33 chunks), as in `Prysm/HistoricalBatch/WitnessDecodeAccept.lean` / `Prysm/SyncCommittee/WitnessDecodeAccept.lean`.
-set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `Decode.accept` (the premises of the statement `Decode.accept_statement` are
 satisfiable).** -/
 theorem runs (proofs : List (List UInt8)) (pk wc amt sig oP oD : List UInt8) (hps : proofs.length = 33)
@@ -135,9 +135,7 @@ theorem runs (proofs : List (List UInt8)) (pk wc amt sig oP oD : List UInt8) (hp
       have H2 := lift_heap H
       simp only [initial_state, frame_rest, zero_word_bytes, label_write_barrier, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat,
         BitVec.reduceAdd, BitVec.reduceSub] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
-      exact H2)
+      sep_perm H2)
     (by simp [initial_state]) rfl (Nat.le_refl _)
     (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24 308 placed_at_308 no_label_before_308 labels_fresh_at_308) (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1 308 placed_at_308 no_label_before_308 _ Prysm.RuntimeModel.uint8_ne_slice)
     (model_memmove 330 placed_at_330 labels_fresh_at_330 _) (bump_newobject120 324 placed_at_324 no_label_before_324 _)

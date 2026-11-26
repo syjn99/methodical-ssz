@@ -1,11 +1,15 @@
-import Runtime.Contracts
-import Machine.Frame
-import Machine.Bytes
-import Machine.Labels
-import Prysm.ElfData.PrysmTarget
-import Prysm.HistoricalBatch.Code
-import Prysm.HistoricalBatch.Spec
-import Codec.ByteSliceListDefinitions
+module
+
+public import Runtime.Contracts
+public import Machine.Frame
+public import Machine.Bytes
+public import Machine.Labels
+public import Prysm.ElfData.PrysmTarget
+public import Prysm.HistoricalBatch.Code
+public import Prysm.HistoricalBatch.Spec
+public import Codec.ByteSliceListDefinitions
+
+@[expose] public section
 
 /-!
 # Hand STATEMENTS of the target `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (statements only, no proof)

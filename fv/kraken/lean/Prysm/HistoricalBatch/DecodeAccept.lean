@@ -1,6 +1,10 @@
-import Prysm.HistoricalBatch.DecodeLoopStateRoots
-import Prysm.HistoricalBatch.Statements
-import Prysm.HistoricalBatch.Code
+module
+
+public import Prysm.HistoricalBatch.DecodeLoopStateRoots
+public import Prysm.HistoricalBatch.Statements
+public import Prysm.HistoricalBatch.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

@@ -1,6 +1,12 @@
-import Runtime.Contracts
-import Machine.Labels
-import Machine.Include
+module
+
+public import Runtime.Contracts
+public import Machine.Labels
+public import Machine.Include
+import all Kraken.Mem
+import all Kraken.Separation
+
+@[expose] public section
 
 /-!
 # A `runtime.makeslice` that satisfies `MakesliceContract` (non-vacuity of the contract)

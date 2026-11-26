@@ -1,4 +1,8 @@
-import Codec.FixedBytesDecode
+module
+
+public import Codec.FixedBytesDecode
+
+@[expose] public section
 
 /-!
 # Segment lemmas for the SyncAggregate field widths

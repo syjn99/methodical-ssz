@@ -1,6 +1,10 @@
-import Codec.SegmentAddress
-import Prysm.Checkpoint.EncodeFastPath
-import Prysm.Checkpoint.Code
+module
+
+public import Codec.SegmentAddress
+public import Prysm.Checkpoint.EncodeFastPath
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, growslice path, Go 1.26.10 machine code

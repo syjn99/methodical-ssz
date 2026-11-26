@@ -1,5 +1,9 @@
-import Runtime.CopyModel
-import Runtime.BumpAllocator
+module
+
+public import Runtime.CopyModel
+public import Runtime.BumpAllocator
+
+@[expose] public section
 
 /-!
 # Models of the `fmt.errorf` and `runtime.convT64` contracts

@@ -1,4 +1,8 @@
-import Machine.Bytes
+module
+
+public import Machine.Bytes
+
+@[expose] public section
 
 /-!
 # Fields of a flat container and the list functions of the statement kinds

@@ -1,6 +1,10 @@
-import Prysm.IndexedAttestation.DecodeRejectAlignment
-import Prysm.IndexedAttestation.Spec
-import Prysm.IndexedAttestation.DecodeRejectOverflow
+module
+
+public import Prysm.IndexedAttestation.DecodeRejectAlignment
+public import Prysm.IndexedAttestation.Spec
+public import Prysm.IndexedAttestation.DecodeRejectOverflow
+
+@[expose] public section
 
 /-!
 # Spec alignment of the IndexedAttestation alignment reject and overflow reject

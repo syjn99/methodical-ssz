@@ -1,5 +1,9 @@
-import Prysm.CommitteeIndex.EncodeGrowFirstSite
-import Prysm.CommitteeIndex.EncodeSpec
+module
+
+public import Prysm.CommitteeIndex.EncodeGrowFirstSite
+public import Prysm.CommitteeIndex.EncodeSpec
+
+@[expose] public section
 
 /-!
 # `(*primitives.CommitteeIndex).MarshalSSZTo`: case cover over every capacity, with the exact frame

@@ -1,7 +1,11 @@
-import Spec.TestScalars
-import Spec.DeserializeOfSerialize
-import Prysm.SyncCommitteeMessage.SpecDescription
-import Prysm.SyncCommitteeMessage.SpecChecker
+module
+
+public import Spec.TestScalars
+public import Spec.DeserializeOfSerialize
+public import Prysm.SyncCommitteeMessage.SpecDescription
+public import Prysm.SyncCommitteeMessage.SpecChecker
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.SyncCommitteeMessage`

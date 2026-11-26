@@ -1,13 +1,17 @@
-import Runtime.Contracts
-import Machine.Frame
-import Prysm.Epoch.DecodeAcceptFunctionSpec
-import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec
-import Prysm.PendingPartialWithdrawal.Statements
-import Codec.CalleeDecode
-import Codec.InlineUint64RegisterBase
-import Prysm.PendingPartialWithdrawal.Code
-import Prysm.Epoch.Code
-import Prysm.ValidatorIndex.Code
+module
+
+public import Runtime.Contracts
+public import Machine.Frame
+public import Prysm.Epoch.DecodeAcceptFunctionSpec
+public import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec
+public import Prysm.PendingPartialWithdrawal.Statements
+public import Codec.CalleeDecode
+public import Codec.InlineUint64RegisterBase
+public import Prysm.PendingPartialWithdrawal.Code
+public import Prysm.Epoch.Code
+public import Prysm.ValidatorIndex.Code
+
+@[expose] public section
 
 /-!
 # Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`, accept path, Go 1.26.10

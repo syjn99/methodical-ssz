@@ -1,7 +1,11 @@
-import Prysm.Slot.GeneratedDecodeAccept
-import Prysm.Slot.DecodeRejectSize
-import Prysm.Slot.SpecDescription
-import Prysm.Epoch.Spec
+module
+
+public import Prysm.Slot.GeneratedDecodeAccept
+public import Prysm.Slot.DecodeRejectSize
+public import Prysm.Slot.SpecDescription
+public import Prysm.Epoch.Spec
+
+@[expose] public section
 
 /-!
 # Spec alignment of the real Slot decoder

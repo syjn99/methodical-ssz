@@ -1,6 +1,10 @@
-import Prysm.SyncCommittee.DecodeAccept
-import Prysm.SyncCommittee.DecodeRejectSize
-import Prysm.SyncCommittee.Spec
+module
+
+public import Prysm.SyncCommittee.DecodeAccept
+public import Prysm.SyncCommittee.DecodeRejectSize
+public import Prysm.SyncCommittee.Spec
+
+@[expose] public section
 
 /-!
 # Spec alignment of the SyncCommittee decoder

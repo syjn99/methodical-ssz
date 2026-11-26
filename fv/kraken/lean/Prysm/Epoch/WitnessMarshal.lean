@@ -1,6 +1,10 @@
-import Prysm.Epoch.Marshal
-import Runtime.CopyModel
-import Machine.WitnessHost
+module
+
+public import Prysm.Epoch.Marshal
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+
+@[expose] public section
 
 /-!
 # Witness of `Marshal.result` (MarshalSSZ, stack check passes)

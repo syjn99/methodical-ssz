@@ -1,4 +1,8 @@
-import Machine.Bytes
+module
+
+public import Machine.Bytes
+
+@[expose] public section
 
 /-! Splitting a byte block around an 8-byte element (for loops over arrays). -/
 

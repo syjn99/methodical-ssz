@@ -1,7 +1,11 @@
-import Spec.TestScalars
-import Spec.DeserializeOfSerialize
-import Prysm.BeaconBlockHeader.SpecDescription
-import Prysm.BeaconBlockHeader.SpecChecker
+module
+
+public import Spec.TestScalars
+public import Spec.DeserializeOfSerialize
+public import Prysm.BeaconBlockHeader.SpecDescription
+public import Prysm.BeaconBlockHeader.SpecChecker
+
+@[expose] public section
 
 /-!
 # Spec bridge for the Prysm `v1alpha1.BeaconBlockHeader`

@@ -1,6 +1,10 @@
-import Prysm.Checkpoint.EncodeGrowAnySite
-import Prysm.Checkpoint.EncodeSpec
-import Prysm.Checkpoint.Code
+module
+
+public import Prysm.Checkpoint.EncodeGrowAnySite
+public import Prysm.Checkpoint.EncodeSpec
+public import Prysm.Checkpoint.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo`: case cover over every capacity, against EthLib

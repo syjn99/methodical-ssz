@@ -1,5 +1,9 @@
-import Prysm.DataColumnsByRootIdentifier.SpecDecodeBridge
-import Prysm.DataColumnsByRootIdentifier.SpecChecker
+module
+
+public import Prysm.DataColumnsByRootIdentifier.SpecDecodeBridge
+public import Prysm.DataColumnsByRootIdentifier.SpecChecker
+
+@[expose] public section
 
 /-!
 # The hand `Desc` of DataColumnsByRootIdentifier and the Desc checker's `Desc`

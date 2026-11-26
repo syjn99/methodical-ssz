@@ -1,7 +1,11 @@
-import Prysm.DataColumnsByRootIdentifier.EncodeFastPath
-import Runtime.CopyModel
-import Machine.WitnessHost
-import Prysm.DataColumnsByRootIdentifier.Code
+module
+
+public import Prysm.DataColumnsByRootIdentifier.EncodeFastPath
+public import Runtime.CopyModel
+public import Machine.WitnessHost
+public import Prysm.DataColumnsByRootIdentifier.Code
+
+@[expose] public section
 
 /-!
 # Witnesses of `Encode.fast_path` (encoder fast path): n = 0, 1, 128
@@ -48,9 +52,6 @@ def initial_state (root cb : List UInt8) (pc nb : BitVec 64) (dl : Nat) (zmms : 
   ⟨⟨0x10008, 0x10100, 0, 0, 0, UInt64.ofNat dl, 0x100e8, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags,
     mem root cb pc nb dl⟩
 
--- Measured (three builds of `Prysm.DataColumnsByRootIdentifier.WitnessEncodeFastPath`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (the 1000000 build):
--- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (the cause profiled for `Prysm.SyncAggregate.Witness.DecodeAccept.runs`).
-set_option maxHeartbeats 4000000 in
 /-- n = 0: `cap = 36 + 8n = 36`, Columns at 0x10124. -/
 theorem runs_empty (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 0)
     (zmms : RegZmms) (flags : StatusFlags) :
@@ -69,15 +70,10 @@ theorem runs_empty (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.l
       simp only [initial_state, bitvec_word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, UInt64.toBitVec_ofNat,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil,
         show (UInt64.ofNat 0).toBitVec = 0#64 from rfl] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) (by simp [initial_state]) (model_memmove 118 placed_at_118 labels_fresh_at_118 0))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 
--- Measured (three builds of `Prysm.DataColumnsByRootIdentifier.WitnessEncodeFastPath`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (the 1000000 build):
--- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (the cause profiled for `Prysm.SyncAggregate.Witness.DecodeAccept.runs`).
-set_option maxHeartbeats 4000000 in
 /-- n = 1: `cap = 36 + 8n = 44`, Columns at 0x1012c. -/
 theorem runs_one_element (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 8)
     (zmms : RegZmms) (flags : StatusFlags) :
@@ -96,15 +92,10 @@ theorem runs_one_element (root cb : List UInt8) (hroot : root.length = 32) (hcb 
       simp only [initial_state, bitvec_word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, UInt64.toBitVec_ofNat,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil,
         show (UInt64.ofNat 0).toBitVec = 0#64 from rfl] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) (by simp [initial_state]) (model_memmove 118 placed_at_118 labels_fresh_at_118 0))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 
--- Measured (three builds of `Prysm.DataColumnsByRootIdentifier.WitnessEncodeFastPath`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (the 1000000 build):
--- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (the cause profiled for `Prysm.SyncAggregate.Witness.DecodeAccept.runs`).
-set_option maxHeartbeats 4000000 in
 -- maxRecDepth (builds at the default, 2000 and 20000, and a later run): 512 and 2000 fail; WitnessEncodeFastPath n = 128 passes at 4000, WitnessEncodeGrowFirstSite fails at 4000 and passes
 -- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [initial_state]` by `dsimp only [initial_state]; decide`
 -- did not remove it (one more run); the cause is not located. `runs_maximum` only (n = 0, 1 pass at the default).
@@ -127,9 +118,7 @@ theorem runs_maximum (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb
       simp only [initial_state, bitvec_word_bytes, nil_At_emp, Std.ExtHashMap.sep_emp, UInt64.toBitVec_ofNat,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, List.length_nil,
         show (UInt64.ofNat 0).toBitVec = 0#64 from rfl] at H ⊢
-      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
-      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
-      exact H)
+      sep_perm H)
     (by simp [initial_state]) (by simp [initial_state]) (model_memmove 118 placed_at_118 labels_fresh_at_118 0))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 

@@ -1,5 +1,9 @@
-import Prysm.SyncAggregate.Spec
-import Prysm.SyncAggregate.SpecChecker
+module
+
+public import Prysm.SyncAggregate.Spec
+public import Prysm.SyncAggregate.SpecChecker
+
+@[expose] public section
 
 /-!
 # The hand `Desc` of SyncAggregate and the Desc checker's `Desc`

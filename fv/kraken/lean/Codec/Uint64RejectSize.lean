@@ -1,7 +1,11 @@
-import Runtime.Contracts
-import Machine.Frame
-import Machine.Bytes
-import Prysm.ElfData.PrysmTarget
+module
+
+public import Runtime.Contracts
+public import Machine.Frame
+public import Machine.Bytes
+public import Prysm.ElfData.PrysmTarget
+
+@[expose] public section
 
 /-!
 # Size reject of the hand `uint64` decoders: address and memory facts

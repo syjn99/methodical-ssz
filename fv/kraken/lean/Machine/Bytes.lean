@@ -1,4 +1,9 @@
-import Machine.Step
+module
+
+public import Machine.Step
+import all Kraken.Separation
+
+@[expose] public section
 
 /-! Byte facts for the stored values. -/
 

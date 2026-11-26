@@ -1,5 +1,9 @@
-import Prysm.DataColumnsByRootIdentifier.EncodeGrowOneSite
-import Prysm.DataColumnsByRootIdentifier.Spec
+module
+
+public import Prysm.DataColumnsByRootIdentifier.EncodeGrowOneSite
+public import Prysm.DataColumnsByRootIdentifier.Spec
+
+@[expose] public section
 
 /-!
 # One-growth path (growth at any one site) against EthLib (`Encode.grow_one_site_spec_statement`)

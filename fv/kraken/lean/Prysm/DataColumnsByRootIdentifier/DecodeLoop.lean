@@ -1,7 +1,11 @@
-import Machine.Block
-import Machine.Labels
-import Prysm.DataColumnsByRootIdentifier.Code
-import Codec.ByteSliceListLemmas
+module
+
+public import Machine.Block
+public import Machine.Labels
+public import Prysm.DataColumnsByRootIdentifier.Code
+public import Codec.ByteSliceListLemmas
+
+@[expose] public section
 
 /-!
 # Decoder: the element loop

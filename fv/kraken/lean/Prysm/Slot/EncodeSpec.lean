@@ -1,7 +1,11 @@
-import Prysm.Slot.EncodeFastPath
-import Prysm.Slot.SpecDescription
-import Prysm.Epoch.Size
-import Runtime.CopyModel
+module
+
+public import Prysm.Slot.EncodeFastPath
+public import Prysm.Slot.SpecDescription
+public import Prysm.Epoch.Size
+public import Runtime.CopyModel
+
+@[expose] public section
 
 /-!
 # Encoder of `primitives.Slot` against EthLib

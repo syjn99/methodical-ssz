@@ -1,5 +1,9 @@
-import Codec.FixedBytesDecode
-import Codec.NopWindow
+module
+
+public import Codec.FixedBytesDecode
+public import Codec.NopWindow
+
+@[expose] public section
 
 /-!
 # The fixed-bytes decode segment over windows, parametric in the receiver registers

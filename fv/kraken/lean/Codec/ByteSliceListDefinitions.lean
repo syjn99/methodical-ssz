@@ -1,5 +1,9 @@
-import Runtime.Contracts
-import EthLib.Serialization.Ssz
+module
+
+public import Runtime.Contracts
+public import EthLib.Serialization.Ssz
+
+@[expose] public section
 
 /-!
 # Memory objects of a `[][]byte` decoder loop

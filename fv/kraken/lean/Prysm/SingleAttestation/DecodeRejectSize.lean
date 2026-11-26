@@ -1,9 +1,13 @@
-import Machine.Step
-import Machine.Labels
-import Machine.Bytes
-import Prysm.ElfData.PrysmTarget
-import Prysm.SingleAttestation.Statements
-import Prysm.SingleAttestation.Code
+module
+
+public import Machine.Step
+public import Machine.Labels
+public import Machine.Bytes
+public import Prysm.ElfData.PrysmTarget
+public import Prysm.SingleAttestation.Statements
+public import Prysm.SingleAttestation.Code
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.SingleAttestation).UnmarshalSSZ`: size reject

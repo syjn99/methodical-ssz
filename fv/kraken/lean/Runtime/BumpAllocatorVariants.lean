@@ -1,5 +1,9 @@
-import Runtime.BumpAllocator
-import Runtime.NewobjectContract
+module
+
+public import Runtime.BumpAllocator
+public import Runtime.NewobjectContract
+
+@[expose] public section
 
 /-!
 # More bump-allocator models

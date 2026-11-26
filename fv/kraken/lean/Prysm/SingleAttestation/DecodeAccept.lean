@@ -1,8 +1,12 @@
-import Prysm.SingleAttestation.Statements
-import Prysm.SingleAttestation.DecodeAcceptHead
-import Prysm.SingleAttestation.DecodeAcceptData
-import Prysm.SingleAttestation.DecodeAcceptSignature
-import Prysm.SingleAttestation.Code
+module
+
+public import Prysm.SingleAttestation.Statements
+public import Prysm.SingleAttestation.DecodeAcceptHead
+public import Prysm.SingleAttestation.DecodeAcceptData
+public import Prysm.SingleAttestation.DecodeAcceptSignature
+public import Prysm.SingleAttestation.Code
+
+@[expose] public section
 
 /-!
 # Prysm `(*v1alpha1.SingleAttestation).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

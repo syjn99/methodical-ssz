@@ -1,7 +1,11 @@
-import Codec.Kind.DecodeAcceptAnyFrame
-import Prysm.Checkpoint.DecodeAccept
-import Prysm.Checkpoint.Code
-import Prysm.Checkpoint.DecodeLayout
+module
+
+public import Codec.Kind.DecodeAcceptAnyFrame
+public import Prysm.Checkpoint.DecodeAccept
+public import Prysm.Checkpoint.Code
+public import Prysm.Checkpoint.DecodeLayout
+
+@[expose] public section
 
 /-!
 # Tie of `decodeAcceptKindAnyFrame` to the hand accept statement of `Checkpoint`

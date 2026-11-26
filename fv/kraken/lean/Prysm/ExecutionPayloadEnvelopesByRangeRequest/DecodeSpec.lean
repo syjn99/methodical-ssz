@@ -1,7 +1,11 @@
-import Prysm.ExecutionPayloadEnvelopesByRangeRequest.GeneratedDecodeAccept
-import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Spec
-import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code
-import Prysm.Slot.Code
+module
+
+public import Prysm.ExecutionPayloadEnvelopesByRangeRequest.GeneratedDecodeAccept
+public import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Spec
+public import Prysm.ExecutionPayloadEnvelopesByRangeRequest.Code
+public import Prysm.Slot.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.ExecutionPayloadEnvelopesByRangeRequest` decoder

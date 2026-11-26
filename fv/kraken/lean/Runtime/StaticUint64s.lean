@@ -1,5 +1,9 @@
-import Kraken.X64.WP
-import Machine.Include
+module
+
+public import Kraken.X64.WP
+public import Machine.Include
+
+@[expose] public section
 
 /-!
 # The table `runtime.staticuint64s` of the Go runtime

@@ -1,4 +1,8 @@
-import EthLib.Serialization.Ssz
+module
+
+public import EthLib.Serialization.Ssz
+
+@[expose] public section
 
 /-!
 # Hand `Desc` of `v1alpha1.HistoricalBatch`

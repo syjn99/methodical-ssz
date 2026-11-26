@@ -1,5 +1,9 @@
-import Prysm.SingleAttestation.WitnessDecodeRejectSize
-import Prysm.SingleAttestation.DecodeErrorUnreachable
+module
+
+public import Prysm.SingleAttestation.WitnessDecodeRejectSize
+public import Prysm.SingleAttestation.DecodeErrorUnreachable
+
+@[expose] public section
 
 /-!
 # Witness of the three unreachable-path theorems of the SingleAttestation decoder

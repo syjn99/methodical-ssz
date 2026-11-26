@@ -1,7 +1,11 @@
-import Prysm.ValidatorIdentity.GeneratedEncodeFastPath
-import Prysm.ValidatorIdentity.Spec
-import Runtime.CopyModel
-import Prysm.ValidatorIdentity.Code
+module
+
+public import Prysm.ValidatorIdentity.GeneratedEncodeFastPath
+public import Prysm.ValidatorIdentity.Spec
+public import Runtime.CopyModel
+public import Prysm.ValidatorIdentity.Code
+
+@[expose] public section
 
 /-!
 # ValidatorIdentity encoder fast path (generated theorem) against the independent Desc

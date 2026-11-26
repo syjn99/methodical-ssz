@@ -1,5 +1,9 @@
-import Prysm.PowBlock.EncodeFastPathStatements
-import Prysm.PowBlock.GeneratedEncodeFastPath
+module
+
+public import Prysm.PowBlock.EncodeFastPathStatements
+public import Prysm.PowBlock.GeneratedEncodeFastPath
+
+@[expose] public section
 
 /-!
 # Tie of the generated encoder fast-path theorem of `PowBlock` to the hand statement

@@ -1,10 +1,15 @@
-import Kraken.X64.WP
-import Kraken.X64.Sep
-import Kraken.Tactics
-import Kraken.SeparationTactics
-import Kraken.X64.Parser
-import Machine.Include
-import Std.Tactic.BVDecide
+module
+
+public import Kraken.X64.WP
+public import Kraken.X64.Sep
+public import Kraken.Tactics
+public import Kraken.SeparationTactics
+public import Kraken.X64.Parser
+public import Machine.Include
+public import Machine.SepPerm
+public import Std.Tactic.BVDecide
+
+@[expose] public section
 
 /-! Glue on top of Kraken: one-directive steps inside a `Host`. -/
 

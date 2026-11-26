@@ -1,8 +1,12 @@
-import Machine.Step
-import Machine.Labels
-import Machine.Bytes
-import Prysm.ElfData.PrysmTarget
-import Codec.Segment.Bytes32Loop
+module
+
+public import Machine.Step
+public import Machine.Labels
+public import Machine.Bytes
+public import Prysm.ElfData.PrysmTarget
+public import Codec.Segment.Bytes32Loop
+
+@[expose] public section
 
 /-!
 # Size reject of a fixed-size decoder, for ANY frame size `F` and ANY size `sz`

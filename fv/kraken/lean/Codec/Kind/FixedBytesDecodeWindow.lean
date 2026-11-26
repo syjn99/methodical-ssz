@@ -1,5 +1,9 @@
-import Codec.FixedBytesDecodeWindow
-import Machine.Labels
+module
+
+public import Codec.FixedBytesDecodeWindow
+public import Machine.Labels
+
+@[expose] public section
 
 /-!
 # Statement kind of the fixed-bytes decode segment over windows

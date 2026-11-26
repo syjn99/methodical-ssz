@@ -1,5 +1,9 @@
-import Codec.InlineUint64
-import Codec.SegmentAddress
+module
+
+public import Codec.InlineUint64
+public import Codec.SegmentAddress
+
+@[expose] public section
 
 /-!
 # Shared segments for the composition of a container decoder accept path

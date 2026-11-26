@@ -1,10 +1,16 @@
-import Prysm.AttestationData.DecodeAccept
-import Codec.StackGuard
-import Codec.SegmentAddress
-import Prysm.IndexedAttestation.Statements
-import Prysm.IndexedAttestation.DecodeLoop
-import Codec.BitVecShiftLemmas
-import Prysm.IndexedAttestation.Code
+module
+
+public import Prysm.AttestationData.DecodeAccept
+public import Codec.StackGuard
+public import Codec.SegmentAddress
+public import Prysm.IndexedAttestation.Statements
+public import Prysm.IndexedAttestation.DecodeLoop
+public import Codec.BitVecShiftLemmas
+public import Prysm.IndexedAttestation.Code
+import all Kraken.Mem
+import all Kraken.Separation
+
+@[expose] public section
 
 /-!
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`, accept path, Go 1.26.10 machine code

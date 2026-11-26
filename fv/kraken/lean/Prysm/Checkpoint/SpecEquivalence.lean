@@ -1,4 +1,8 @@
-import Prysm.Checkpoint.Spec
+module
+
+public import Prysm.Checkpoint.Spec
+
+@[expose] public section
 
 /-!
 # The hand Desc and the checker Desc have the same codec

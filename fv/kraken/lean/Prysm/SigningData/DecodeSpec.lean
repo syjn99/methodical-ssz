@@ -1,6 +1,10 @@
-import Prysm.SigningData.GeneratedDecodeAccept
-import Prysm.SigningData.Spec
-import Prysm.SigningData.Code
+module
+
+public import Prysm.SigningData.GeneratedDecodeAccept
+public import Prysm.SigningData.Spec
+public import Prysm.SigningData.Code
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `v1alpha1.SigningData` decoder

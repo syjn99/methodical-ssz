@@ -56,8 +56,12 @@ def emit(d, X):
         else:
             args.append(y)
     gname = f'Prysm.{X}.Decode.generated_accept'
-    return f'''import Prysm.{X}.GeneratedDecodeAccept
-import Prysm.{X}.Spec
+    return f'''module
+
+public import Prysm.{X}.GeneratedDecodeAccept
+public import Prysm.{X}.Spec
+
+@[expose] public section
 
 /-!
 # Spec alignment of the `{ty}` decoder

@@ -1,8 +1,12 @@
-import Prysm.Deposit.Statements
-import Prysm.Deposit.SpecDescription
-import Prysm.Deposit_Data.Spec
-import Prysm.Deposit.Code
-import Prysm.Deposit_Data.Code
+module
+
+public import Prysm.Deposit.Statements
+public import Prysm.Deposit.SpecDescription
+public import Prysm.Deposit_Data.Spec
+public import Prysm.Deposit.Code
+public import Prysm.Deposit_Data.Code
+
+@[expose] public section
 
 /-!
 # Hand STATEMENTS of the Deposit spec companions (statements only, no proof)

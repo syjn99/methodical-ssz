@@ -1,5 +1,9 @@
-import Codec.SegmentTemplate
-import Runtime.Contracts
+module
+
+public import Codec.SegmentTemplate
+public import Runtime.Contracts
+
+@[expose] public section
 
 /-!
 # Inline uint64 decode, two-directive form (register base, receiver in rax)

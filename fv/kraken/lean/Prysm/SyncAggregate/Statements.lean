@@ -1,11 +1,15 @@
-import Runtime.Contracts
-import Machine.Frame
-import Machine.Bytes
-import Machine.Labels
-import Prysm.ElfData.PrysmTarget
-import Prysm.SyncAggregate.Code
-import Prysm.SyncAggregate.Spec
-import Codec.ByteSliceListDefinitions
+module
+
+public import Runtime.Contracts
+public import Machine.Frame
+public import Machine.Bytes
+public import Machine.Labels
+public import Prysm.ElfData.PrysmTarget
+public import Prysm.SyncAggregate.Code
+public import Prysm.SyncAggregate.Spec
+public import Codec.ByteSliceListDefinitions
+
+@[expose] public section
 
 /-!
 # Hand STATEMENTS of the target `(*v1alpha1.SyncAggregate).UnmarshalSSZ` (statements only, no proof)

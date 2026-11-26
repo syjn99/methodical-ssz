@@ -1,7 +1,11 @@
-import Codec.Segment.SizeReject
-import Codec.SegmentTemplate
-import Prysm.Deposit.Statements
-import Prysm.Deposit.Code
+module
+
+public import Codec.Segment.SizeReject
+public import Codec.SegmentTemplate
+public import Prysm.Deposit.Statements
+public import Prysm.Deposit.Code
+
+@[expose] public section
 
 /-! Deposit size reject from the general lemma `Codec.Segment.reject_size_any_frame` (frame 88, size 1240). Statement:
 `Decode.reject_size_statement`. -/

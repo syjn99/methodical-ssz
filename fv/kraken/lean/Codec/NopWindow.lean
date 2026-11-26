@@ -1,5 +1,9 @@
-import Codec.SegmentTemplate
-import Machine.Step
+module
+
+public import Codec.SegmentTemplate
+public import Machine.Step
+
+@[expose] public section
 
 /-!
 # A code view that skips padding `nop` directives

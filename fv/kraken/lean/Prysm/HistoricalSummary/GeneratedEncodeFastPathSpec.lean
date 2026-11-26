@@ -1,7 +1,11 @@
-import Prysm.HistoricalSummary.GeneratedEncodeFastPath
-import Prysm.HistoricalSummary.Spec
-import Runtime.CopyModel
-import Prysm.HistoricalSummary.Code
+module
+
+public import Prysm.HistoricalSummary.GeneratedEncodeFastPath
+public import Prysm.HistoricalSummary.Spec
+public import Runtime.CopyModel
+public import Prysm.HistoricalSummary.Code
+
+@[expose] public section
 
 /-!
 # HistoricalSummary encoder fast path (generated theorem) against the independent Desc

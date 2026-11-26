@@ -1,6 +1,10 @@
-import Prysm.SingleAttestation.DecodeAccept
-import Prysm.SingleAttestation.DecodeRejectSize
-import Prysm.SingleAttestation.Spec
+module
+
+public import Prysm.SingleAttestation.DecodeAccept
+public import Prysm.SingleAttestation.DecodeRejectSize
+public import Prysm.SingleAttestation.Spec
+
+@[expose] public section
 
 /-!
 # Spec alignment of the SingleAttestation decoder

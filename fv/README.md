@@ -54,6 +54,7 @@ The proofs assume these items. They do not prove them.
 - The runtime callee contracts. A contract is a Lean hypothesis that describes a Go runtime function.
   Examples are memory allocation, slice growth, memory copy and error formatting.
   The contracts come from a reading of the Go runtime source. No proof shows that the compiled runtime satisfies them.
+  `kraken/lean/README.md` section 4.1 has one table of all runtime contracts, with their sources and models.
 - The hash function of a hash tree root proof. It is a contract until a separate project proves it.
 - The Go memory layout of the receiver types. It comes from the `go/types` size rules, not from the ELF.
 

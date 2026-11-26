@@ -1,6 +1,10 @@
-import Machine.Step
-import Machine.Labels
-import Machine.Bytes
+module
+
+public import Machine.Step
+public import Machine.Labels
+public import Machine.Bytes
+
+@[expose] public section
 
 /-!
 # Shared glue of the parameterized segment lemmas
