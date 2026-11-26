@@ -13,7 +13,7 @@ public import Machine.Labels
 the receiver registers as parameters. Statement `BytesDecodeOffsetZeroWindow n rX rY` = the statement of `bytes_decode_segment_offset_zero` over
 two windows (`jl` = index of the label, `jm` = index of `callq runtime.memmove`, `e` = end), register fact
 `regs.get64 rY = rcv`. Proof: one theorem per case (the proof text of `bytes_decode_segment_offset_zero` with the window tactics).
-Same limits as `Codec/FixedBytesDecodeWindow.lean` (`rX` ∈ {rdx, rsi}, `rY` ∈ {rax, rcx, rdx, rsi, rdi}, `n` ∈ {32, 48, 96}).
+Same limits as `Codec/FixedBytesDecodeWindow.lean` (`rX` ∈ {rdx, rsi}, `rY` ∈ {rax, rcx, rdx, rsi, rdi}, `n` ∈ {32, 48, 96, 20}).
 -/
 
 open Machine Runtime
@@ -414,12 +414,52 @@ theorem bytes_decode_window_offset_zero_96_rsi_rdi : BytesDecodeOffsetZeroWindow
   intro lff lwb dR dB dS fP fL fC qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC St hR hB' hS hRet hLo hP hL hC rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
   bytes_decode_window_offset_zero_case 96 Reg64.rsi Reg64.rdi
 
+theorem bytes_decode_window_offset_zero_20_rdx_rax : BytesDecodeOffsetZeroWindow 20 Reg64.rdx Reg64.rax := by
+  intro lff lwb dR dB dS fP fL fC qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC St hR hB' hS hRet hLo hP hL hC rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
+  bytes_decode_window_offset_zero_case 20 Reg64.rdx Reg64.rax
+
+theorem bytes_decode_window_offset_zero_20_rdx_rcx : BytesDecodeOffsetZeroWindow 20 Reg64.rdx Reg64.rcx := by
+  intro lff lwb dR dB dS fP fL fC qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC St hR hB' hS hRet hLo hP hL hC rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
+  bytes_decode_window_offset_zero_case 20 Reg64.rdx Reg64.rcx
+
+theorem bytes_decode_window_offset_zero_20_rdx_rdx : BytesDecodeOffsetZeroWindow 20 Reg64.rdx Reg64.rdx := by
+  intro lff lwb dR dB dS fP fL fC qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC St hR hB' hS hRet hLo hP hL hC rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
+  bytes_decode_window_offset_zero_case 20 Reg64.rdx Reg64.rdx
+
+theorem bytes_decode_window_offset_zero_20_rdx_rsi : BytesDecodeOffsetZeroWindow 20 Reg64.rdx Reg64.rsi := by
+  intro lff lwb dR dB dS fP fL fC qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC St hR hB' hS hRet hLo hP hL hC rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
+  bytes_decode_window_offset_zero_case 20 Reg64.rdx Reg64.rsi
+
+theorem bytes_decode_window_offset_zero_20_rdx_rdi : BytesDecodeOffsetZeroWindow 20 Reg64.rdx Reg64.rdi := by
+  intro lff lwb dR dB dS fP fL fC qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC St hR hB' hS hRet hLo hP hL hC rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
+  bytes_decode_window_offset_zero_case 20 Reg64.rdx Reg64.rdi
+
+theorem bytes_decode_window_offset_zero_20_rsi_rax : BytesDecodeOffsetZeroWindow 20 Reg64.rsi Reg64.rax := by
+  intro lff lwb dR dB dS fP fL fC qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC St hR hB' hS hRet hLo hP hL hC rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
+  bytes_decode_window_offset_zero_case 20 Reg64.rsi Reg64.rax
+
+theorem bytes_decode_window_offset_zero_20_rsi_rcx : BytesDecodeOffsetZeroWindow 20 Reg64.rsi Reg64.rcx := by
+  intro lff lwb dR dB dS fP fL fC qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC St hR hB' hS hRet hLo hP hL hC rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
+  bytes_decode_window_offset_zero_case 20 Reg64.rsi Reg64.rcx
+
+theorem bytes_decode_window_offset_zero_20_rsi_rdx : BytesDecodeOffsetZeroWindow 20 Reg64.rsi Reg64.rdx := by
+  intro lff lwb dR dB dS fP fL fC qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC St hR hB' hS hRet hLo hP hL hC rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
+  bytes_decode_window_offset_zero_case 20 Reg64.rsi Reg64.rdx
+
+theorem bytes_decode_window_offset_zero_20_rsi_rsi : BytesDecodeOffsetZeroWindow 20 Reg64.rsi Reg64.rsi := by
+  intro lff lwb dR dB dS fP fL fC qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC St hR hB' hS hRet hLo hP hL hC rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
+  bytes_decode_window_offset_zero_case 20 Reg64.rsi Reg64.rsi
+
+theorem bytes_decode_window_offset_zero_20_rsi_rdi : BytesDecodeOffsetZeroWindow 20 Reg64.rsi Reg64.rdi := by
+  intro lff lwb dR dB dS fP fL fC qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC St hR hB' hS hRet hLo hP hL hC rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
+  bytes_decode_window_offset_zero_case 20 Reg64.rsi Reg64.rdi
+
 /-- **Fixed-bytes decode segment over windows, offset-0 form, receiver registers as parameters**. -/
-theorem bytes_decode_segment_offset_zero_window (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (rX rY : Reg64)
+theorem bytes_decode_segment_offset_zero_window (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96 ∨ n = 20) (rX rY : Reg64)
     (hX : rX = Reg64.rdx ∨ rX = Reg64.rsi)
     (hY : rY = Reg64.rax ∨ rY = Reg64.rcx ∨ rY = Reg64.rdx ∨ rY = Reg64.rsi ∨ rY = Reg64.rdi) :
     BytesDecodeOffsetZeroWindow n rX rY := by
-  rcases hn with rfl | rfl | rfl <;> rcases hX with rfl | rfl <;> rcases hY with rfl | rfl | rfl | rfl | rfl
+  rcases hn with rfl | rfl | rfl | rfl <;> rcases hX with rfl | rfl <;> rcases hY with rfl | rfl | rfl | rfl | rfl
   all_goals first
     | exact bytes_decode_window_offset_zero_32_rdx_rax
     | exact bytes_decode_window_offset_zero_32_rdx_rcx
@@ -451,5 +491,15 @@ theorem bytes_decode_segment_offset_zero_window (n : Nat) (hn : n = 32 ∨ n = 4
     | exact bytes_decode_window_offset_zero_96_rsi_rdx
     | exact bytes_decode_window_offset_zero_96_rsi_rsi
     | exact bytes_decode_window_offset_zero_96_rsi_rdi
+    | exact bytes_decode_window_offset_zero_20_rdx_rax
+    | exact bytes_decode_window_offset_zero_20_rdx_rcx
+    | exact bytes_decode_window_offset_zero_20_rdx_rdx
+    | exact bytes_decode_window_offset_zero_20_rdx_rsi
+    | exact bytes_decode_window_offset_zero_20_rdx_rdi
+    | exact bytes_decode_window_offset_zero_20_rsi_rax
+    | exact bytes_decode_window_offset_zero_20_rsi_rcx
+    | exact bytes_decode_window_offset_zero_20_rsi_rdx
+    | exact bytes_decode_window_offset_zero_20_rsi_rsi
+    | exact bytes_decode_window_offset_zero_20_rsi_rdi
 
 end Codec
