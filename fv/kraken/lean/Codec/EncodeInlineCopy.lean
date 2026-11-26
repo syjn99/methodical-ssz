@@ -1,4 +1,8 @@
-import Codec.EncodeSteps
+module
+
+public import Codec.EncodeSteps
+
+@[expose] public section
 
 /-!
 # Step lemmas of the 4-byte inline copy of the encoder fast path

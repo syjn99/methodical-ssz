@@ -1,7 +1,11 @@
-import Codec.Kind.EncodeFastPathAnyFrame
-import Codec.EncodeFrameTest
-import Codec.EncodeInlineCopy
-import Prysm.Status.Code
+module
+
+public import Codec.Kind.EncodeFastPathAnyFrame
+public import Codec.EncodeFrameTest
+public import Codec.EncodeInlineCopy
+public import Prysm.Status.Code
+
+@[expose] public section
 
 /-!
 # Fast path (`encoder --fast-path`): encoder fast path of `(*v1alpha1.Status).MarshalSSZTo`

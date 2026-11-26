@@ -1,5 +1,9 @@
-import Codec.FixedBytesDecodeWindow
-import Machine.Bytes
+module
+
+public import Codec.FixedBytesDecodeWindow
+public import Machine.Bytes
+
+@[expose] public section
 
 /-!
 # The 4-byte fixed-bytes decode segment with an inline copy, over windows

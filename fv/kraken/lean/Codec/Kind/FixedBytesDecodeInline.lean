@@ -1,5 +1,9 @@
-import Codec.FixedBytesDecodeInline
-import Machine.Labels
+module
+
+public import Codec.FixedBytesDecodeInline
+public import Machine.Labels
+
+@[expose] public section
 
 /-!
 # Statement kind of the 4-byte fixed-bytes decode segment with an inline copy, over windows
