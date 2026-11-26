@@ -13,7 +13,9 @@ The statements are `Decode.reject_size_spec_statement` and `Decode.reject_offset
 (`Prysm/DataColumnsByRootIdentifier/StatementsDecodeSpecReject.lean`).
 The text of `Prysm/IndexedAttestation/DecodeSpecReject.lean` with the fixed part of 36 bytes and the offset at `bs[32:36]`.
 EthLib rejects by `spec_rejects`, because the input fails the first or the second check of `decodeChecks`.
-The alignment and overflow rejects have no machine theorem, so this module has no reject completeness theorem.
+The spec forms of the alignment and overflow rejects are in `Prysm/DataColumnsByRootIdentifier/DecodeSpecRejectErrorWordNonzero.lean`.
+These rejects have the premise that the error word is not zero.
+`Decode.reject_complete` is in `Prysm/DataColumnsByRootIdentifier/DecodeSpecRejectComplete.lean`.
 -/
 
 open Machine Runtime EthLib.Serialization.Ssz Prysm.DataColumnsByRootIdentifier.Code

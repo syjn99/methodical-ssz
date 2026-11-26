@@ -431,6 +431,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   - The hash tree root methods of every type.
 - Effect: the frame separation premise of the encoders is not justified for every Go caller.
   The `IndexedAttestation` alignment and overflow rejects are proved only with the premise that the error word is not zero.
+  The `DataColumnsByRootIdentifier` alignment and overflow rejects have the same premise.
 - Where: the proof inventory lists the paths not proved for each method (`README.md` section 5).
 
 ## Target and environment
