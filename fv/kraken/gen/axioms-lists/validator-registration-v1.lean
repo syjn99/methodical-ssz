@@ -1,7 +1,72 @@
 import Prysm.ValidatorRegistrationV1.Code
+import Prysm.ValidatorRegistrationV1.GeneratedDecodeAccept
+import Prysm.ValidatorRegistrationV1.GeneratedEncodeFastPath
 
 /-! Hand list of the `ValidatorRegistrationV1` declarations for `gen/checks/axioms_gate.py`.
 Each name must be in the declaration dump and use only the standard axioms. -/
 
 #print axioms Prysm.ValidatorRegistrationV1.Code.marshalSSZTo
 #print axioms Prysm.ValidatorRegistrationV1.Code.unmarshalSSZ
+#print axioms Prysm.ValidatorRegistrationV1.Code.marshalSSZTo.eq_1
+#print axioms Prysm.ValidatorRegistrationV1.Code.unmarshalSSZ.eq_1
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_FeeRecipient_segment
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_FeeRecipient_segment_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_Pubkey_segment
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_Pubkey_segment_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_accept
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_accept_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_37
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_37_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_38
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_38_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_45
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_45_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_46
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_46_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_47
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_47_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_48
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_48_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_49
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_49_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_50
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_50_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_51
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_51_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_77
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_77_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_78
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_78_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_85
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_85_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_86
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_directive_86_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_epilogue
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_epilogue_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_field_1
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_field_1_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_field_2
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_field_2_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_field_3
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_field_3_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_field_4
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_field_4_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_head
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_head_kind
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_reject
+#print axioms Prysm.ValidatorRegistrationV1.Decode.generated_reject_kind
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_epilogue
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_epilogue_kind
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_fast
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_fast_kind
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_field_0
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_field_0_kind
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_field_1
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_field_1_kind
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_field_2
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_field_2_kind
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_field_3
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_field_3_kind
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_head
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_head_kind
+#print axioms Prysm.ValidatorRegistrationV1.Encode.generated_layout
