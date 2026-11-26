@@ -156,9 +156,12 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 ### The proof generator covers only some code forms
 
 - What does not hold: `gen/generator/generator.py` does not cover every field form.
-  It covers 8-byte `uint64` fields and byte vectors of 32, 48 and 96 bytes.
+  It covers 8-byte `uint64` fields and byte vectors of 4, 20, 32, 48 and 96 bytes.
   It covers the callees `Slot`, `CommitteeIndex`, `ValidatorIndex` and `Epoch`.
-  It refuses byte vectors of other sizes, `bool` fields, the `Gwei` callee, interleaved fields and nested containers.
+  It covers uint64 fields after the set-up of the next callee call, with one field theorem for these fields.
+  It covers a pointer field to a nested `Checkpoint` on the decoder side, with the kinds of `lean/Codec/Kind/DecodeAcceptNestedAnyFrame.lean`.
+  The nested form covers only the code path without a write barrier, and only the callee `Checkpoint`.
+  It refuses byte vectors of other sizes, `bool` fields, the `Gwei` callee, other interleaved fields and other nested containers.
   On the encoder side, the compiled sites that append a 32-byte field have different instruction texts.
   Only the call step is shared between them.
 - Effect: a refused type needs hand proofs.
@@ -238,9 +241,17 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - What does not hold: no negative case covers a changed memory word in the post-state of `Decode.accept_spec` of these types.
   The types are SyncCommitteeMessage, PendingConsolidation, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit and Deposit_Data.
   Lean does not refute such a statement mutant within the heartbeat limit.
+  No negative case changes the word at rsp − 112 in the post-state of `Prysm.AttestationData.Decode.generated_accept`.
+  This word is `rbx + 88`, the stack value `.bufferAddress 88`.
+  Two such mutants (`rbx + 48`, `rax + 88`) did not end within the wall limit of `negative.py`.
+  No negative case changes the return-slot term `F + 8` of `Codec.frame_low_address_extra`.
+  The mutant without this term did not end within the wall limit of `negative.py`.
+  The case of this lemma changes only the extra byte count `n`.
 - Effect: no case shows that a wrong memory word in these post-states fails.
   The generated accept theorems that these proofs use keep their own mutants.
+  The other cases of `generated_accept` and of `frame_low_address_extra` keep their mutants.
 - Where: `lean/Prysm/<GoTypeName>/DecodeSpec.lean` of these types, `gen/checks/negative-cases/`.
+  `lean/Prysm/AttestationData/GeneratedDecodeAccept.lean`, `lean/Codec/FieldFrame.lean`.
 
 ### The Go value check exists only for Checkpoint
 
@@ -265,6 +276,12 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   - `lean/Codec/Segment/SizeReject.lean` and `lean/Codec/DecodeRejectSizeAnyFrame.lean` both give a size reject for any frame.
   - `lean/Machine/WitnessSplit.lean` is the macro of `lean/Machine/WitnessHost.lean` with a larger simp set.
   - Checkpoint has two forms of its encoder covers: `EncodeCover.lean` and `EncodeCoverFramed.lean`.
+  - PendingPartialWithdrawal has two decoder accept theorems for the same accept path.
+    `Decode.accept` in `DecodeAccept.lean` is a hand proof, and the specification corollaries use it.
+    `Decode.generated_accept` in `GeneratedDecodeAccept.lean` is a generated proof.
+  - AttestationData has two decoder accept theorems for the same accept path.
+    `Decode.accept` in `DecodeAccept.lean` is a hand proof, and the specification corollaries use it.
+    `Decode.generated_accept` in `GeneratedDecodeAccept.lean` is a generated proof.
 - Effect: none on a theorem.
   A new proof must use the general form in `Codec` and `Machine/WitnessHost.lean`.
 - Where: the files above.
