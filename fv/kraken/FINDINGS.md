@@ -57,7 +57,8 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 ### The inventory row of the AttestationData encoder does not show every premise
 
 - What does not hold: the row text of an encoder fast path in `prysm/proof-inventory.md` is "len + SizeSSZ <= cap, exact field lengths".
-  `Prysm.AttestationData.Encode.fast_path` needs more premises than that text.
+  The row of AttestationData names `Prysm.AttestationData.Encode.generated_fast`.
+  This theorem and the hand theorem `Prysm.AttestationData.Encode.fast_path` need more premises than that text.
   It needs `Source` and `Target` not nil, the stack bound `guard + 312 < rsp` and `cap < 2^63`.
   It also needs disjoint memory blocks for the receiver, `dst`, the root, both Checkpoints and their roots.
   So `Source = Target` and two roots in one backing array are not covered. Go allows both.
@@ -156,9 +157,14 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 ### The proof generator covers only some code forms
 
 - What does not hold: `gen/generator/generator.py` does not cover every field form.
-  It covers 8-byte `uint64` fields and byte vectors of 32, 48 and 96 bytes.
+  It covers 8-byte `uint64` fields and byte vectors of 4, 20, 32, 48 and 96 bytes.
   It covers the callees `Slot`, `CommitteeIndex`, `ValidatorIndex` and `Epoch`.
-  It refuses byte vectors of other sizes, `bool` fields, the `Gwei` callee, interleaved fields and nested containers.
+  It covers uint64 fields after the set-up of the next callee call, with one field theorem for these fields.
+  It covers a pointer field to a nested `Checkpoint` on the decoder side, with the kinds of `lean/Codec/Kind/DecodeAcceptNestedAnyFrame.lean`.
+  The nested form covers only the code path without a write barrier, and only the callee `Checkpoint`.
+  On the encoder side, it covers a pointer field to a nested `Checkpoint` with the kinds of `lean/Codec/Kind/EncodeFastPathNestedAnyFrame.lean`.
+  This form covers only a pointer that is not nil, and no `runtime.memmove` call after a nested call.
+  It refuses byte vectors of other sizes, `bool` fields, the `Gwei` callee, other interleaved fields and other nested containers.
   On the encoder side, the compiled sites that append a 32-byte field have different instruction texts.
   Only the call step is shared between them.
 - Effect: a refused type needs hand proofs.
@@ -238,9 +244,17 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - What does not hold: no negative case covers a changed memory word in the post-state of `Decode.accept_spec` of these types.
   The types are SyncCommitteeMessage, PendingConsolidation, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit and Deposit_Data.
   Lean does not refute such a statement mutant within the heartbeat limit.
+  No negative case changes the word at rsp − 112 in the post-state of `Prysm.AttestationData.Decode.generated_accept`.
+  This word is `rbx + 88`, the stack value `.bufferAddress 88`.
+  Two such mutants (`rbx + 48`, `rax + 88`) did not end within the wall limit of `negative.py`.
+  No negative case changes the return-slot term `F + 8` of `Codec.frame_low_address_extra`.
+  The mutant without this term did not end within the wall limit of `negative.py`.
+  The case of this lemma changes only the extra byte count `n`.
 - Effect: no case shows that a wrong memory word in these post-states fails.
   The generated accept theorems that these proofs use keep their own mutants.
+  The other cases of `generated_accept` and of `frame_low_address_extra` keep their mutants.
 - Where: `lean/Prysm/<GoTypeName>/DecodeSpec.lean` of these types, `gen/checks/negative-cases/`.
+  `lean/Prysm/AttestationData/GeneratedDecodeAccept.lean`, `lean/Codec/FieldFrame.lean`.
 
 ### The Go value check exists only for Checkpoint
 
@@ -265,6 +279,16 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   - `lean/Codec/Segment/SizeReject.lean` and `lean/Codec/DecodeRejectSizeAnyFrame.lean` both give a size reject for any frame.
   - `lean/Machine/WitnessSplit.lean` is the macro of `lean/Machine/WitnessHost.lean` with a larger simp set.
   - Checkpoint has two forms of its encoder covers: `EncodeCover.lean` and `EncodeCoverFramed.lean`.
+  - PendingPartialWithdrawal has two decoder accept theorems for the same accept path.
+    `Decode.accept` in `DecodeAccept.lean` is a hand proof, and the specification corollaries use it.
+    `Decode.generated_accept` in `GeneratedDecodeAccept.lean` is a generated proof.
+  - AttestationData has two decoder accept theorems for the same accept path.
+    `Decode.accept` in `DecodeAccept.lean` is a hand proof, and the specification corollaries use it.
+    `Decode.generated_accept` in `GeneratedDecodeAccept.lean` is a generated proof.
+  - AttestationData has two encoder fast-path theorems for the same path.
+    `Encode.fast_path` in `EncodeFastPath.lean` is a hand proof, and the specification corollary uses it.
+    `Encode.generated_fast` in `GeneratedEncodeFastPath.lean` is a generated proof.
+    `Encode.generated_fast_spec` and the witness `WitnessGeneratedEncodeFastPath.lean` use the generated proof.
 - Effect: none on a theorem.
   A new proof must use the general form in `Codec` and `Machine/WitnessHost.lean`.
 - Where: the files above.
@@ -296,6 +320,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
   These checks of rule 13 have no broken copy:
   - 13b: the layout name, the layout field line, the top-level line, the namespace, the count of layout defs, the `hk` binder and the first binder line;
   - 13c: the proof line, the tail and the `sep` of a kind line, the count of boundary states, the layout field set and the missing layout def;
+  - 13c: the agreement of the nested fields of `FAST-PATH-JSON` with the IR;
   - 13e: the identity form of the `_statement`;
   - the one valid `FAST-PATH-JSON` line.
   Rules 2 to 12 have no broken copy.
@@ -388,6 +413,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
 - What does not hold: the tree gives no reason why only some generated encoder fast paths have a hand statement.
   Deposit_Data, PowBlock and SyncCommitteeMessage have `EncodeFastPathStatements.lean` and a statement tie.
   The other generated encoder fast paths have only the kind check, and Checkpoint has a hand theorem.
+  AttestationData also has a hand theorem, and `EncodeFastPathStatementTie.lean` ties it to the generated theorem in both directions.
 - Effect: none on a theorem.
   For the other types, only the kind and `gen/generator/kindcheck.py` check the generated statement.
 - Where: `lean/Prysm/<GoTypeName>/EncodeFastPathStatements.lean` and `EncodeFastPathStatementTie.lean`.
@@ -409,6 +435,7 @@ Paths are relative to `fv/kraken/`, unless they start with `sszgen/`, `ssz/` or 
     The memory block or the program of the hand witness differs from the forms of `flat_types_witness.py`.
     For example, the witness of ValidatorBalance calls ValidatorIndex, and the form `frame_0x38` calls Slot.
   - `WitnessGeneratedDecodeAccept.lean` of the `uint64` rows (ValidatorIndex, Epoch, Slot and CommitteeIndex): `flat_types_witness.py` has no form for the `uint64` decoder.
+  - `GeneratedEncodeFastPathSpec.lean` and `WitnessGeneratedEncodeFastPath.lean` of AttestationData: `flat_types_encode_spec.py` has no form for a nested field.
 - Effect: `gen/checks/regenerate_and_compare.py` does not compare these files with a tool output.
   The build and the axioms gate check them, and a reviewer reads them.
 - Where: `lean/Prysm/<GoTypeName>/` of these types, the tools of `gen/flat-types/`, the column `companions` of `gen/generator/types.tsv`.

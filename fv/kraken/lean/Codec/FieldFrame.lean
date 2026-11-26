@@ -51,6 +51,26 @@ theorem frame_low_address_without_calls (x F B : BitVec 64) (S : Nat) (h : F + 8
   generalize BitVec.ofNat 64 S = t
   bv_omega
 
+/-- The low stack of a decoder with a nested callee: `S + n` bytes, then the callee's saved-`rbp` slot at `z`. -/
+theorem frame_low_stack_split_extra (y z : BitVec 64) (S n : Nat) (hS : S < 2 ^ 60) (hn : n < 2 ^ 60)
+    (hz : y + BitVec.ofNat 64 n = z) (a f : List UInt8) (ha : a.length = S + n) (hf : f.length = 8) :
+    Eq ((a ++ f).At (y - BitVec.ofNat 64 S)) = Eq (a.At (y - BitVec.ofNat 64 S)) ⋆ Eq (f.At z) := by
+  subst hz
+  refine at_app _ _ ?_ (by simp only [ha, hf]; omega)
+  rw [ha, BitVec.ofNat_add]
+  generalize BitVec.ofNat 64 S = u
+  generalize BitVec.ofNat 64 n = v
+  bv_omega
+
+/-- Low-stack address of a byte segment in a frame with a nested callee (`S + n` bytes below the return slot). -/
+theorem frame_low_address_extra (x F B : BitVec 64) (S n : Nat) (h : F + 8 + BitVec.ofNat 64 n = B) :
+    x - F - 8 - BitVec.ofNat 64 (S + n) = x - B - BitVec.ofNat 64 S := by
+  subst h
+  rw [BitVec.ofNat_add]
+  generalize BitVec.ofNat 64 S = u
+  generalize BitVec.ofNat 64 n = v
+  bv_omega
+
 variable [Host]
 
 set_option maxHeartbeats 4000000 in

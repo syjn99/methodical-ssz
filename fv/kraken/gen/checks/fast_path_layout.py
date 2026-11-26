@@ -6,10 +6,14 @@ For each lean/Prysm/*/GeneratedEncodeFastPath.lean, it reads the `.S` file and t
 steps (`window_infix_at hk a n`). From them it computes the frame size, gd, rt and the first-touch stack regions with
 their sizes. It compares them with the layout definition of the generated file, or with the pinned hand layout.
 It also checks that the regions do not overlap. It imports neither the generator nor kindcheck.py.
+A file with nested container fields has an `EncoderNestedFrameLayout`: a call of a nested callee of CALLEES writes its
+return slot and the word at rsp + 16 of the callee, and the guard addend is F + 16 + the callee frame.
 Exit 1 if a layout differs or two regions overlap.
 """
 import json, re, glob, pathlib
 bad = 0
+# the nested callees: symbol -> (code constant, callee frame below its return slot)
+CALLEES = {"github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo": ("Prysm.Checkpoint.Code.marshalSSZTo", 120)}
 
 
 def hand_layout_src(T, gen_text):
@@ -32,8 +36,9 @@ for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
     src = hand_layout_src(J["layout"].split(".")[1], t) if J["layout"].endswith(".encodeLayout") else t
     # the def line: root-qualified (a layout of another type than the block), relative to Prysm.<T>, or the last component
     full, m = J["layout"], None
+    nested = re.search(r"\ndef \S+ : EncoderNestedFrameLayout where\n", src) is not None
     for d in (f"_root_.{full}", full.split(".", 2)[2], lay):
-        m = m or re.search(rf"\ndef {re.escape(d)} : EncoderFrameLayout where\n((?:  .*\n)+)", src)
+        m = m or re.search(rf"\ndef {re.escape(d)} : {'EncoderNestedFrameLayout' if nested else 'EncoderFrameLayout'} where\n((?:  .*\n)+)", src)
     L, cur = {}, None
     for l in m[1].split("\n"):
         mm = re.match(r"  (\w+) := (.*)", l)
@@ -52,6 +57,7 @@ for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
             assert o + n <= a or a + s <= o, (f, "overlap", a, s, o, n)
         touched[o] = n
     touch(-8, 8)           # push %rbp
+    called = set()
     for i in sorted(cov):
         d = D[i]
         m1 = re.fullmatch(r"lea (-?0x[0-9a-f]+)\(%rsp\),%(\w+)", d)
@@ -63,6 +69,8 @@ for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
             elif b in reg: touch(reg[b] + off, 16 if m2[1] == "movups" else 8)
             continue
         if d == "callq runtime.memmove": touch(-(F + 16), 8); continue
+        if d.startswith("callq ") and d[6:] in CALLEES:
+            touch(-(F + 16), 8); touch(-F, 8); called.add(d[6:]); continue
         m3 = re.fullmatch(r"(?:mov|lea|add|sub|xor) .*,%(\w+)", d)
         if m3 and m3[1] in reg and not m1: del reg[m3[1]]      # the register no longer holds a frame address
     rt = any(D[i] == "callq runtime.memmove" for i in cov)
@@ -70,8 +78,15 @@ for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
     lens = dict((int(a), int(b)) for a, b in re.findall(r"\((\d+), (\d+)\)", L["stackChunkLengths"]))
     mine = sorted(touched.items())
     theirs = sorted(((int(n) if u == "above" else -int(n)), lens[int(i)]) for u, n, i in pre)
-    ok = (mine == theirs and int(L["frame"]) == F and int(L["guardAddend"]) == gd and (L["callsMemmove"] == "true") == rt and int(L["stackChunkCount"]) == len(pre)
-          and (".low .scratch" in L["pre"]) == rt and len({i for _, _, i in pre}) == len(pre))
+    if nested:
+        cal = [CALLEES[c] for c in sorted(called)]
+        ok = (mine == theirs and int(L["frame"]) == F and len(cal) == 1 and L["callees"] == f"[{cal[0][0]}]"
+              and int(L["lowExtra"]) == cal[0][1] and int(L["guardAddend"]) == F + 16 + cal[0][1] >= gd
+              and int(L["stackChunkCount"]) == len(pre) and L["pre"].endswith(", .low .scratch]") and len({i for _, _, i in pre}) == len(pre))
+        L.update(gd=L["guardAddend"], rt="nested")
+    else:
+        ok = (mine == theirs and int(L["frame"]) == F and int(L["guardAddend"]) == gd and (L["callsMemmove"] == "true") == rt and int(L["stackChunkCount"]) == len(pre)
+              and (".low .scratch" in L["pre"]) == rt and len({i for _, _, i in pre}) == len(pre))
     # disjointness of the pre regions and of the fixed chunks: return slot [0, 8), scratch below -(F+16)
     regs = sorted(theirs + [(0, 8)])
     disj = all(regs[k][0] + regs[k][1] <= regs[k + 1][0] for k in range(len(regs) - 1)) and all(o >= -(F + 16) for o, _ in theirs)

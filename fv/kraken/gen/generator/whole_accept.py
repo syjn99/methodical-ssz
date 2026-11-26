@@ -21,15 +21,31 @@ WHOLE_ACCEPT_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('Prysm.Slot.Code.unmarshalS
               PRIM + 'CommitteeIndex.UnmarshalSSZ': ('Prysm.CommitteeIndex.Code.unmarshalSSZ', 'C', 'Prysm.CommitteeIndex.Decode.accept_function_spec_holds'),
               PRIM + 'ValidatorIndex.UnmarshalSSZ': ('Prysm.ValidatorIndex.Code.unmarshalSSZ', 'V', 'Prysm.ValidatorIndex.Decode.accept_function_spec_holds'),
               PRIM + 'Epoch.UnmarshalSSZ': ('Prysm.Epoch.Code.unmarshalSSZ', 'E', 'Prysm.Epoch.Decode.accept_function_spec_holds')}
+# nested container callees (`Codec.NestedCheckpointCalleeAccept`): callee symbol -> (code constant, binder suffix, proved spec
+# theorem, the callees of the callee). The spec theorem takes the placements of the callee and of its own callees, then
+# `Heap S` and the callee's contracts `MakesliceContract … S`, `MemmoveContract S`.
+V1A = 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.'
+WHOLE_ACCEPT_NESTED_CALLEES = {V1A + 'Checkpoint.UnmarshalSSZ': ('Prysm.Checkpoint.Code.unmarshalSSZ', 'K',
+                                                                'Prysm.Checkpoint.Decode.accept_function_spec_holds',
+                                                                [PRIM + 'Epoch.UnmarshalSSZ'])}
 # callee symbol -> the module that proves its spec theorem; the generated file imports it only when the code calls the callee
 WHOLE_ACCEPT_CALLEE_SPEC_MODULES = {PRIM + 'ValidatorIndex.UnmarshalSSZ': 'Prysm.ValidatorIndex.DecodeAcceptFunctionSpec',
               PRIM + 'Epoch.UnmarshalSSZ': 'Prysm.Epoch.DecodeAcceptFunctionSpec', PRIM + 'Slot.UnmarshalSSZ': 'Prysm.Slot.DecodeAcceptFunctionSpec',
-              PRIM + 'CommitteeIndex.UnmarshalSSZ': 'Prysm.CommitteeIndex.DecodeAcceptFunctionSpec'}
+              PRIM + 'CommitteeIndex.UnmarshalSSZ': 'Prysm.CommitteeIndex.DecodeAcceptFunctionSpec',
+              V1A + 'Checkpoint.UnmarshalSSZ': 'Prysm.Checkpoint.FunctionSpecsAsNestedField'}
 # the imports of every generated file; the spec modules of the called callees go after the first two
 WHOLE_ACCEPT_IMPORTS = ['Codec.Kind.DecodeAcceptAnyFrame', 'Codec.FieldFrame', 'Codec.DecoderHeadEpilogue', 'Codec.DecodeRejectSizeAnyFrame']
 WHOLE_ACCEPT_OPENS = 'Codec'
 # the statement kinds of the whole-accept lemmas (`lean/Codec/Kind/DecodeAcceptAnyFrame.lean`, `lean/Codec/Kind/DecodeRejectAnyFrame.lean`)
 WHOLE_ACCEPT_KINDS = ('decodeHeadKindAnyFrame', 'decodeFieldKindAnyFrame', 'decodeEpilogueKindAnyFrame', 'decodeAcceptKindAnyFrame', 'decodeRejectKindAnyFrame')
+# the kinds of a decoder with nested Checkpoint fields (`lean/Codec/Kind/DecodeAcceptNestedAnyFrame.lean`); the reject kind is the same
+WHOLE_ACCEPT_NESTED_KINDS = ('decodeHeadNestedKindAnyFrame', 'decodeFieldNestedKindAnyFrame', 'decodeEpilogueNestedKindAnyFrame',
+                             'decodeAcceptNestedKindAnyFrame', 'decodeRejectKindAnyFrame')
+WHOLE_ACCEPT_NESTED_IMPORT = 'Codec.Kind.DecodeAcceptNestedAnyFrame'
+# the extra low-stack bytes of a decoder with a nested Checkpoint callee: the callee frame (`nestedCheckpointFrame`)
+NESTED_LOW_EXTRA = 96
+# the heap bytes of a nested Checkpoint field: the object (72) and its root (32)
+NESTED_HEAP = 104
 
 
 class WholeAcceptRefuse(Exception):
@@ -38,6 +54,10 @@ class WholeAcceptRefuse(Exception):
 
 def refuse(why):
     raise WholeAcceptRefuse(why)
+
+
+def _lstr(s):
+    return '"' + s + '"'
 
 
 def destr(var, suf=''):
@@ -69,6 +89,7 @@ class T:
     def __init__(self, **kw):
         self.__dict__.update(kw)
         self.cs = [n for n, _, _ in self.stack] + (['ast'] if self.st else [])
+        self.nested = any(f[1] == 'nested' for f in self.fields)
         for i, f in enumerate(self.fields):
             self.cs += [f'aP{i}', f'aL{i}', f'aC{i}'] if f[1] == 'bytes' else [f'aN{i}']
         self.Sx = None
@@ -78,10 +99,14 @@ class T:
         self.lo_name = lo[0] if lo else None
 
     # ---- sizes
-    def fsize(self, f): return f[2] if f[1] == 'bytes' else 8
-    def heap(self, done): return sum(f[2] for f in self.fields[:done] if f[1] == 'bytes')
+    def fsize(self, f): return f[2] if f[1] == 'bytes' else (40 if f[1] == 'nested' else 8)
+    def vals(self, f):
+        """The value binders of a field and their sizes: a nested Checkpoint has its epoch and its root."""
+        return [(f[0], 8), (f[0] + 'root', 32)] if f[1] == 'nested' else [(f[0], self.fsize(f))]
+    def allvals(self): return [v for f in self.fields for v in self.vals(f)]
+    def heap(self, done): return sum(f[2] if f[1] == 'bytes' else NESTED_HEAP for f in self.fields[:done] if f[1] in ('bytes', 'nested'))
     def ssz(self): return sum(self.fsize(f) for f in self.fields)
-    def nb(self, done): return sum(1 for f in self.fields[:done] if f[1] == 'bytes')
+    def nb(self, done): return sum({'bytes': 1, 'nested': 2}.get(f[1], 0) for f in self.fields[:done])
     def sszoff(self, i): return sum(self.fsize(f) for f in self.fields[:i])
     def gooff(self, i): return (8 if self.st else 0) + sum(24 if f[1] == 'bytes' else 8 for f in self.fields[:i])
 
@@ -95,6 +120,7 @@ class T:
         if k == 'ptr': return f'(Int.toBytes 8 p{v[1] + 1}.toInt)', LEN
         if k == 'zero': return '(Int.toBytes 8 (0 : UInt64).toBitVec.toInt)', LEN
         if k == 'ret': return f'(Int.toBytes 8 (Host.addrOf (k + {v[1]})).toBitVec.toInt)', LEN
+        if k == 'bufaddr': return f"(Int.toBytes 8 {off('s.regs.rbx.toBitVec', v[1])}.toInt)", LEN
         refuse(f'whole-accept: no term for slot value {v}')
 
     def lo_addr(self): return f"(s.regs.rsp.toBitVec - {self.rt['loB']} - BitVec.ofNat 64 S)"
@@ -110,6 +136,7 @@ class T:
         if k == 'reg': return f'(.reg .{v[1]})'
         if k == 'zero': return '.zero'
         if k in ('ex', 'ptr', 'ret'): return f'(.{ {"ex": "existential"}.get(k, k)} {v[1]})'
+        if k == 'bufaddr': return f'(.bufferAddress {v[1]})'
         refuse(f'whole-accept: no slot-language form for {v}')
 
     def sllean(self, sl):
@@ -125,7 +152,14 @@ class T:
         return f"⟨{d['pc']}, {d['done']}, {regs},\n      {stk},\n      {self.exlean(d['exs'])}⟩"
 
     def fieldslean(self):
+        if self.nested:
+            return '[' + ', '.join('.checkpoint' if f[1] == 'nested' else (f'.flat (.bytes {f[2]})' if f[1] == 'bytes' else '.flat .uint64')
+                                   for f in self.fields) + ']'
         return '[' + ', '.join(f'.bytes {f[2]}' if f[1] == 'bytes' else '.uint64' for f in self.fields) + ']'
+
+    def kindname(self, kind):
+        """The kind of a whole-accept theorem: the nested kind when the type has a nested Checkpoint field."""
+        return WHOLE_ACCEPT_NESTED_KINDS[WHOLE_ACCEPT_KINDS.index(kind)] if self.nested else kind
 
     def layout(self):
         """The `DecoderFrameLayout` literal (kind parameter `L`), from the derived frame facts."""
@@ -147,8 +181,10 @@ class T:
         if self.rt:
             h = self.heap(done)
             ch.append('Heap avail' if h == 0 else f'Heap (avail - {h})')
-        for i, f in enumerate(self.fields):
-            ch.append(f"Eq ({f[0]}.At {off('s.regs.rbx.toBitVec', self.sszoff(i))})")
+        so = 0
+        for v, n in self.allvals():
+            ch.append(f"Eq ({v}.At {off('s.regs.rbx.toBitVec', so)})")
+            so += n
         rc = 's.regs.rax.toBitVec'
         if self.st: ch.append(f'Eq (ast.At {rc})')
         bi = 0
@@ -165,6 +201,17 @@ class T:
                 else:
                     ch += [f'Eq (aP{i}.At {off(rc, g)})', f'Eq (aL{i}.At {off(rc, g + 8)})',
                            f'Eq (aC{i}.At {off(rc, g + 16)})']
+            elif f[1] == 'nested':
+                if i < done:
+                    po, pr = f'p{bi + 1}', f'p{bi + 2}'
+                    bi += 2
+                    ch.append(f'Eq ((Int.toBytes 8 {po}.toInt).At {off(rc, g)})')
+                    hp += [f'Eq ((List.replicate 8 0).At {po})', f'Eq ({f[0]}.At ({po} + 8))',
+                           f'Eq ((Int.toBytes 8 {pr}.toInt).At ({po} + 16))', f'Eq ((Int.toBytes 8 32).At ({po} + 24))',
+                           f'Eq ((Int.toBytes 8 32).At ({po} + 32))', f'Eq ((List.replicate 32 0).At ({po} + 40))',
+                           f'Eq ({f[0]}root.At {pr})']
+                else:
+                    ch.append(f'Eq (aN{i}.At {off(rc, g)})')
             else:
                 ch.append(f"Eq ({f[0] if i < done else f'aN{i}'}.At {off(rc, g)})")
         ch += hp
@@ -178,25 +225,26 @@ class T:
         s = f"∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : LabelsFresh {C} k)\n"
         for prog, suf, _ in self.callees:
             s += f"    (k{suf} : Nat) (hk{suf} : {prog}.IsInfixAt Host.prog k{suf}) (hf{suf} : LabelsFresh {prog} k{suf})\n"
-        vn = [f[0] for f in self.fields]
-        s += f"    ({' '.join(vn)} : List UInt8) " + ' '.join(f'(h{f[0]} : {f[0]}.length = {self.fsize(f)})' for f in self.fields) + '\n'
+        vn = [v for v, _ in self.allvals()]
+        s += f"    ({' '.join(vn)} : List UInt8) " + ' '.join(f'(h{v} : {v}.length = {n})' for v, n in self.allvals()) + '\n'
         s += "    (s : MachineData) (ra guard : UInt64)\n"
         s += f"    ({' '.join(self.cs)} : List UInt8)\n    "
         ln = {n: l for n, l, _ in self.stack}
         s += ' '.join(f'(h{c} : {c}.length = {ln.get(c, 8)})' for c in self.cs if ln.get(c, 8) is not None) + '\n'
         s += "    (R : DataMem → Prop)"
         if self.rt:
-            s += " (S : Nat)" + (" (hS : S < 2 ^ 60)" if self.rt['hS'] else '') + f" (hlo : {self.lo_name}.length = {self.Sx})\n"
+            s += (" (S : Nat)" + (" (hS8 : 8 ≤ S)" if self.nested else '') + (" (hS : S < 2 ^ 60)" if self.rt['hS'] else '')
+                  + f" (hlo : {self.lo_name}.length = {self.Sx})\n")
             s += "    (Heap : Nat → DataMem → Prop) (avail : Nat)"
         return s + '\n'
 
     def names(self):
         n = ['k', 'hk', 'hf']
         for _, suf, _ in self.callees: n += [f'k{suf}', f'hk{suf}', f'hf{suf}']
-        n += [f[0] for f in self.fields] + ['h' + f[0] for f in self.fields] + ['s', 'ra', 'guard'] + self.cs
+        n += [v for v, _ in self.allvals()] + ['h' + v for v, _ in self.allvals()] + ['s', 'ra', 'guard'] + self.cs
         ln = {x: l for x, l, _ in self.stack}
         n += ['h' + c for c in self.cs if ln.get(c, 8) is not None] + ['R']
-        if self.rt: n += ['S'] + (['hS'] if self.rt['hS'] else []) + ['hlo', 'Heap', 'avail']
+        if self.rt: n += ['S'] + (['hS8'] if self.nested else []) + (['hS'] if self.rt['hS'] else []) + ['hlo', 'Heap', 'avail']
         return ' '.join(n)
 
     def hguard(self):
@@ -204,10 +252,16 @@ class T:
 
     def rthyps(self):
         if not self.rt: return ''
+        if self.nested:
+            return (f" (hav : {self.heap(len(self.fields))} ≤ avail)\n    (hmsCallee : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 S)"
+                    f" (hmmCallee : MemmoveContract S)\n    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 ({self.Sx}))"
+                    f" (hmm : MemmoveContract ({self.Sx}))\n    (hno : NewobjectContract Heap ElfData.PrysmTarget.typeCheckpoint_addr 72 ({self.Sx}))")
         return (f" (hav : {self.heap(len(self.fields))} ≤ avail)\n    (hms : MakesliceContract Heap ElfData.PrysmTarget.typeUint8_addr 1 "
                 f"{'S' if self.rt['x'] == 0 else '(' + self.Sx + ')'}) (hmm : MemmoveContract {'S' if self.rt['x'] == 0 else '(' + self.Sx + ')'})")
 
-    def rtnames(self): return ' hav hms hmm' if self.rt else ''
+    def rtnames(self):
+        if self.nested: return ' hav hmsCallee hmmCallee hms hmm hno'
+        return ' hav hms hmm' if self.rt else ''
 
     def entry_prem(self):
         return (f"    (h_mem : s.dmem =⋆ {self.mem(self.pre, 0, [])})\n    {self.hguard()} "
@@ -250,6 +304,7 @@ class T:
         return f"set_option maxHeartbeats {16000000 if big else 4000000} in\nset_option maxRecDepth 100000 in\n"
 
     def kind(self, name, kind, extra):
+        kind = self.kindname(kind)
         self.kinds_emitted.append((name, kind))
         return (f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @Codec.{kind} h {self.Cq} {self.L} {self.fieldslean()}"
                 f"{extra} := by\n  intro h; rfl\n\n")
@@ -325,15 +380,29 @@ class T:
         return s + self.kind(name, 'decodeHeadKindAnyFrame', f"\n    {self.dlean(d0)}")
 
     # ---- field theorems
-    def field(self, i):
-        d, d2, f = self.states[i], self.states[i + 1], self.fspec[i]
-        name = f'{self.ns}_field_{i + 1}'
-        big = f['shape'] == 'bytes'
-        s = self.opts(big) + f"/-- Field {i + 1} `{f['name']}` ({f['shape']}): boundary state {i} (directive {d['pc']}) → boundary state {i + 1} (directive {d2['pc']}). -/\n"
+    def block_name(self, f):
+        """`P_field_<i>` for a block of one field, `P_fields_<a>_<b>` for the fields a … b of an interleaved block."""
+        a, b = f['first'] + 1, f['field'] + 1
+        return f'{self.ns}_field_{b}' if a == b else f'{self.ns}_fields_{a}_{b}'
+
+    def field_theorems(self):
+        return [self.block_name(f) for f in self.fspec]
+
+    def field(self, b):
+        d, d2, f = self.states[b], self.states[b + 1], self.fspec[b]
+        i = f['field']
+        name = self.block_name(f)
+        big = f['shape'] in ('bytes', 'inline', 'nested')
+        what = (f"Field {i + 1} `{f['name']}` ({f['shape']})" if f['first'] == i else
+                f"Fields {f['first'] + 1}–{i + 1}, one block (the set-up of `{f['name']}` ({f['shape']}) runs before the earlier field events)")
+        # a nested field theorem passes with the default maxHeartbeats and maxRecDepth (measured on AttestationData Source
+        # and Target), so it sets no option
+        s = ('' if f['shape'] == 'nested' else self.opts(big)) + f"/-- {what}: boundary state {b} (directive {d['pc']}) → boundary state {b + 1} (directive {d2['pc']}). -/\n"
         s += (f"theorem {name} : {self.binders()}    {self.hguard()}{self.rthyps()} (st0 : MachineState),\n"
               f"    ({self.stp(d, 'st0')}) →\n    Eventually (step1 Host.exe)\n      (fun st => {self.stp(d2)})\n      st0 := by\n")
         hy = ' hguard' + self.rtnames()
-        s += {'u64': self.f_u64, 'bytes': self.f_bytes, 'call': self.f_call}[f['shape']](i, d, d2, f, hy)
+        s += {'u64': self.f_u64, 'bytes': self.f_bytes, 'inline': self.f_inline, 'call': self.f_call,
+              'nested': self.f_nested}[f['shape']](i, d, d2, f, hy)
         return s + self.kind(name, 'decodeFieldKindAnyFrame', f"\n    {self.dlean(d)}\n    {self.dlean(d2)}")
 
     def f_u64(self, i, d, d2, f, hy):
@@ -367,9 +436,7 @@ class T:
         rs, hrs = self.vterm(self.slot_at(d, aret), xs)
         lo, hlo = self.vterm(self.lo_val(d), xs)
         ls, hls = self.vterm(self.slot_at(d, f['dS'] - fr), xs)
-        x = self.rt['x']
-        hLo = f"(frame_low_address_with_calls _ {fr} {self.rt['loB']} S (by decide))" if x == 8 else f"(frame_low_address_without_calls _ {fr} {self.rt['loB']} S (by decide))"
-        St = '(S + 8)' if x == 8 else 'S'
+        hLo, St = self.low_address()
         h0 = self.heap(i)
         av = 'avail' if h0 == 0 else f'(avail - {h0})'
         rc, bf = 's.regs.rax.toBitVec', 's.regs.rbx.toBitVec'
@@ -402,17 +469,82 @@ class T:
         if h0: s += f"  rw [show avail - {h0} - {n} = avail - {h0 + n} by omega] at H\n"
         return s + "  ecancel\n"
 
+    def low_address(self):
+        """The proof of the low-stack address argument of a segment and the low-stack length `St`."""
+        fr, x, loB = self.frame, self.rt['x'], self.rt['loB']
+        if x == 8:
+            return f"(frame_low_address_with_calls _ {fr} {loB} S (by decide))", '(S + 8)'
+        if x == 0:
+            return f"(frame_low_address_without_calls _ {fr} {loB} S (by decide))", 'S'
+        return f"(frame_low_address_extra _ {fr} {loB} S {x} (by decide))", f'(S + {x})'
+
+    def f_inline(self, i, d, d2, f, hy):
+        """A 4-byte field: the inline-copy segment theorem; its end state is boundary state i + 1."""
+        fr = self.frame
+        pre = f.get('pre', [])
+        s = self.prefix(d, hy, destructure=bool(pre))
+        s += ''.join(P(l) + '\n' for l in pre)
+        xs = self.xnames(d)
+        v = self.fields[i][0]
+        g = self.gooff(i)
+        so = self.sszoff(i)
+        aret = -(fr + 8)
+        one = not any(sl[0] == 'at' and sl[1] == -fr + 8 for sl in d['stk'])
+        if one: spl, hspl = self.vterm(self.slot_at(d, -fr), xs)
+        memp = '(by ecancel)'
+        if not one:
+            tr = [self.vterm(self.slot_at(d, -fr + 8 * j), xs) for j in range(3)]
+            spl = f'({tr[0][0]} ++ ({tr[1][0]} ++ {tr[2][0]}))'
+            hspl = '(by simp only [List.length_append, Int.toBytes_length, ' + ', '.join(h for _, h in tr if h != LEN) + '])'
+            memp = (f"(by rw [frame_join_three_words {soff(-fr)} {soff(-fr + 8)} {soff(-fr + 16)} _ _ _ {tr[0][1]} {tr[1][1]} {tr[2][1]} (by bv_omega) (by bv_omega)]; ecancel)")
+        rs, hrs = self.vterm(self.slot_at(d, aret), xs)
+        lo, hlo = self.vterm(self.lo_val(d), xs)
+        hLo, St = self.low_address()
+        h0 = self.heap(i)
+        av = 'avail' if h0 == 0 else f'(avail - {h0})'
+        rc, bf = 's.regs.rax.toBitVec', 's.regs.rbx.toBitVec'
+        state = "_ (by rfl) (by rfl) (by rfl)" if pre else "d hrsp hrbp hr14"
+        call = (f"  refine eventually_trans _ _ _ _ ({f['seg']} k hk hf (s.regs.rsp.toBitVec - {fr}) {rc} {bf}\n"
+                f"    {soff(f['dR'] - fr)} {soff(f['dB'] - fr)} {soff(aret)}\n"
+                f"    {self.lo_addr()} {off(rc, g)} {off(rc, g + 8)} {off(rc, g + 16)} {off(bf, so)} {St}\n"
+                f"    {ADDR} {ADDR} (by bv_omega) {hLo}\n"
+                f"    {ADDR0 if g == 0 else ADDR} {ADDR} {ADDR} {ADDR0 if so == 0 else ADDR}\n"
+                f"    {{ toBitVec := s.regs.rsp.toBitVec - 8#64 }} s.regs.r14 {v} h{v}\n"
+                f"    {spl} {rs} {lo} aP{i} aL{i} aC{i}\n"
+                f"    {hspl} {hrs} {hlo} haP{i} haL{i} haC{i}\n"
+                f"    _ Heap {av} (by omega) {state}\n      {memp} hms) ?_\n")
+        s += P(call)
+        pn = f'p{self.nb(i) + 1}'
+        s += (f"  rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hr14', {pn}, spl', lo', hspl', hlo', hrX, hrB, Hm'⟩\n"
+              "  dsimp only at hpc' hrsp' hrbp' hr14' hrX hrB Hm'\n  apply Eventually.done\n")
+        if d2['exs'] != [24, 'lo']:
+            refuse(f'whole-accept field {i + 1}: post state existentials {d2["exs"]} (inline recipe: [24, lo])')
+        rp = []
+        for r, vv in d2['regs']:
+            if r == f['rX'] and vv == 'rcv':
+                rp.append('hrX')
+            elif r == f['rB'] and vv == 'bf':
+                rp.append('hrB')
+            else:
+                refuse(f'whole-accept field {i + 1}: register fact {r} = {vv} after an inline-copy segment '
+                       f'(recipe: {f["rX"]} = receiver, {f["rB"]} = buffer)')
+        s += ("  refine ⟨hpc', hrsp', hrbp', hr14', " + ''.join(h + ', ' for h in rp) + ''.join(p + ', ' for p in self.pnames(d2))
+              + "spl', lo', hspl', hlo', ?_⟩\n  dsimp only\n")
+        s += f"  rw [show k + {f['jc']} + 1 = k + {f['jc'] + 1} from rfl] at Hm'\n"
+        if h0: s += f"  rw [show avail - {h0} - 4 = avail - {h0 + 4} by omega] at Hm'\n"
+        return s + "  ecancel\n"
+
     def f_call(self, i, d, d2, f, hy):
         fr = self.frame
         s = self.prefix(d, hy)
         prog, suf, thm = [c for c in self.callees if c[1] == f['callee']][0]
         s += f"  have hC := {thm} k{suf} hk{suf} hf{suf}\n"
-        s += (f"  have hg : guard.toNat < (rsp.toBitVec - {self.gd}).toNat := by\n"
+        s += (f"  have hg : guard.toNat < (rsp.toBitVec - {fr + 8}).toNat := by\n"
               f"    have hgd : guard.toNat + {self.gd} < rsp.toBitVec.toNat := hguard\n    bv_omega\n")
         xs = self.xnames(d)
         aret, afp, as2 = -(fr + 8), -(fr + 16), -(fr - 8)
-        if self.gd != fr + 8:
-            refuse('whole-accept: call field with a guard addend other than frame + 8')
+        if self.gd != fr + 8 + (NESTED_LOW_EXTRA if self.nested else 0):
+            refuse('whole-accept: call field with a guard addend other than frame + 8 (+ the nested callee frame)')
         so, g = self.sszoff(i), self.gooff(i)
         v = self.fields[i][0]
         src = off('rbx.toBitVec', so)
@@ -434,11 +566,14 @@ class T:
                 s2, hs2 = f'(({X}.drop 8).take 8)', 'hq1'
             else:
                 s2, hs2 = self.vterm(self.slot_at(d, as2), xs)
-            s += (f"  have hlS : ({lo}.take S).length = S := by simp [{hlo}]\n"
-                  f"  have hl8 : ({lo}.drop S).length = 8 := by simp [{hlo}]\n"
-                  f"  have hLs : {lo} = {lo}.take S ++ {lo}.drop S := (List.take_append_drop S {lo}).symm\n")
+            x8 = self.rt['x'] - 8
+            Sk = 'S' if x8 == 0 else f'(S + {x8})'
+            s += (f"  have hlS : ({lo}.take {Sk}).length = {Sk} := by simp [{hlo}]\n"
+                  f"  have hl8 : ({lo}.drop {Sk}).length = 8 := by simp [{hlo}]\n"
+                  f"  have hLs : {lo} = {lo}.take {Sk} ++ {lo}.drop {Sk} := (List.take_append_drop {Sk} {lo}).symm\n")
             j3 = P(f"frame_join_three_words {soff(-fr)} {soff(-fr + 8)} {soff(-fr + 16)} _ _ _")
-            lo8 = P(f"frame_low_stack_split (s.regs.rsp.toBitVec - {self.rt['loB']}) S hS _ _")
+            lo8 = (P(f"frame_low_stack_split (s.regs.rsp.toBitVec - {self.rt['loB']}) S hS _ _") if x8 == 0 else
+                   P(f"frame_low_stack_split_extra (s.regs.rsp.toBitVec - {self.rt['loB']}) {soff(afp)} S {x8} hS (by omega) (by bv_omega) _ _"))
             if merged:
                 s += f"  rw [hXs, hLs, {j3} hq0 hq1 hq2 (by bv_omega) (by bv_omega), {lo8} hlS hl8] at Hm\n"
                 post_x.append((f"({X}.take 8 ++ (Int.toBytes 8 {src}.toInt ++ ({X}.drop 8).drop 8))",
@@ -447,9 +582,10 @@ class T:
             else:
                 s += f"  rw [hLs, {lo8} hlS hl8] at Hm\n"
                 post_x.append((f"(Int.toBytes 8 {src}.toInt)", LEN))
-            fp, hfp = f'({lo}.drop S)', 'hl8'
-            post_x.append((f"({lo}.take S ++ Int.toBytes 8 (rsp.toBitVec - 8#64).toInt)",
-                           "(by simp only [List.length_append, hlS, Int.toBytes_length])"))
+            fp, hfp = f'({lo}.drop {Sk})', 'hl8'
+            post_x.append((f"({lo}.take {Sk} ++ Int.toBytes 8 (rsp.toBitVec - 8#64).toInt)",
+                           "(by simp only [List.length_append, hlS, Int.toBytes_length])" if x8 == 0 else
+                           "(by simp only [List.length_append, hlS, Int.toBytes_length] <;> omega)"))
             goalrw.append(f"{lo8} hlS {LEN}")
         else:
             s2, hs2 = self.vterm(self.slot_at(d, as2), xs)
@@ -474,6 +610,69 @@ class T:
         if goalrw: s += f"  rw [{', '.join(goalrw)}]\n"
         s += f"  rw [show k + {f['jc']} + 1 = k + {f['jc'] + 1} from rfl] at Hm'\n  ecancel\n"
         return s
+
+    def f_nested(self, i, d, d2, f, hy):
+        """A nested Checkpoint field: the nested block theorem (`<prefix>_<field>_nested`) with the callee specification."""
+        fr = self.frame
+        s = self.prefix(d, hy)
+        prog, suf, thm, deps = WHOLE_ACCEPT_NESTED_CALLEES[f['fn']]
+        dep_args = ''.join(f" k{WHOLE_ACCEPT_CALLEES[c][1]} hk{WHOLE_ACCEPT_CALLEES[c][1]} hf{WHOLE_ACCEPT_CALLEES[c][1]}" for c in deps)
+        s += (f"  have hC : Codec.NestedCheckpointCalleeAccept {_lstr(f['fn'])} Heap S := {thm} k{suf} hk{suf} hf{suf}{dep_args} "
+              "Heap S hmsCallee hmmCallee\n")
+        s += (f"  have hg : guard.toNat + 96 < (rsp.toBitVec - {fr + 8}).toNat := by\n"
+              f"    have hgd : guard.toNat + {self.gd} < rsp.toBitVec.toNat := hguard\n    bv_omega\n")
+        if self.gd != fr + 8 + NESTED_LOW_EXTRA or self.rt['x'] != NESTED_LOW_EXTRA:
+            refuse('whole-accept: nested field without the nested callee frame in the guard addend and the low stack')
+        xs = self.xnames(d)
+        merged = not any(sl[0] == 'at' and sl[1] == -fr + 8 for sl in d['stk'])
+        if merged:
+            X, hX = self.vterm(self.slot_at(d, -fr), xs)
+            s += (f"  have hq0 : ({X}.take 8).length = 8 := by simp [{hX}]\n"
+                  f"  have hq1 : (({X}.drop 8).take 8).length = 8 := by simp [{hX}]\n"
+                  f"  have hq2 : (({X}.drop 8).drop 8).length = 8 := by simp [{hX}]\n"
+                  f"  have hXs : {X} = {X}.take 8 ++ (({X}.drop 8).take 8 ++ ({X}.drop 8).drop 8) := by\n"
+                  "    rw [List.take_append_drop, List.take_append_drop]\n")
+            j3 = P(f"frame_join_three_words {soff(-fr)} {soff(-fr + 8)} {soff(-fr + 16)} _ _ _")
+            s += f"  rw [hXs, {j3} hq0 hq1 hq2 (by bv_omega) (by bv_omega)] at Hm\n"
+            w0, hw0, w1, hw1 = f'({X}.take 8)', 'hq0', f'(({X}.drop 8).take 8)', 'hq1'
+            post_x = [(f'(({X}.drop 8).drop 8)', 'hq2')]
+        else:
+            w0, hw0 = self.vterm(self.slot_at(d, -fr), xs)
+            w1, hw1 = self.vterm(self.slot_at(d, -fr + 8), xs)
+            if self.slot_at(d, -fr + 16) != ('ex', 0) or d['exs'] != [8, 'lo']:
+                refuse(f'whole-accept field {i + 1}: nested block after a state whose word at sp + 16 is not the 8-byte existential')
+            post_x = [('x0', 'hx0')]
+        rs, hrs = self.vterm(self.slot_at(d, -(fr + 8)), xs)
+        lo, hlo = self.vterm(self.lo_val(d), xs)
+        cap, hcap = self.vterm(self.slot_at(d, f['dC'] - fr), xs)
+        hLo, _ = self.low_address()
+        h0 = self.heap(i)
+        av = 'avail' if h0 == 0 else f'(avail - {h0})'
+        so, g = self.sszoff(i), self.gooff(i)
+        v = self.fields[i][0]
+        rc, bf = 's.regs.rax.toBitVec', 's.regs.rbx.toBitVec'
+        s += P(f"  refine eventually_trans _ _ _ _ ({f['nest']} k hk hf S hS8 hS Heap hC hno (s.regs.rsp.toBitVec - {fr}) {rc} {bf}\n"
+               f"    {soff(f['dR'] - fr)} {soff(f['dB'] - fr)} {soff(f['dC'] - fr)} {soff(-fr + 8)} {soff(-(fr + 8))} {self.lo_addr()}\n"
+               f"    {off(rc, g)} {off(bf, so)} {off(bf, so + 8)}\n"
+               f"    {ADDR} {ADDR} {ADDR} (by bv_omega) (by bv_omega) {hLo}\n"
+               f"    {ADDR0 if g == 0 else ADDR} {ADDR0 if so == 0 else ADDR} (by bv_omega)\n"
+               f"    {{ toBitVec := s.regs.rsp.toBitVec - 8#64 }} s.regs.r14 guard hg {v} {v}root h{v} h{v}root\n"
+               f"    {w0} {w1} {rs} {lo} {cap} aN{i} {hw0} {hw1} {hrs} {hlo} {hcap} haN{i}\n"
+               f"    {av} (by omega) _ _ (by rfl) (by rfl) (by rfl) (by ecancel)) ?_\n")
+        s += ("  rintro ⟨d', pc'⟩ ⟨hpc', hrax', hrbx', hrsp', hrbp', hr14', po, pr, lo', hlo', Hm'⟩\n"
+              "  dsimp only at hpc' hrax' hrbx' hrsp' hrbp' hr14' Hm'\n  apply Eventually.done\n")
+        rp = {'rax': "(congrArg UInt64.toBitVec hrax')", 'rbx': "(congrArg UInt64.toBitVec hrbx')"}
+        if not all(r in rp and vv == 'zero' for r, vv in d2['regs']):
+            refuse(f'whole-accept field {i + 1}: register facts after a nested field {d2["regs"]} (recipe: rax / rbx zero)')
+        post_x.append(("lo'", "hlo'"))
+        if len(post_x) != len(d2['exs']):
+            refuse(f'whole-accept field {i + 1}: {len(post_x)} chunk witnesses, {len(d2["exs"])} existentials')
+        s += ("  refine ⟨hpc', hrsp', hrbp', hr14', " + ''.join(rp[r] + ', ' for r, vv in d2['regs'])
+              + ''.join(p + ', ' for p in self.pnames(d)) + 'po, pr, '
+              + ', '.join(w for w, _ in post_x) + ',\n    ' + ', '.join(h for _, h in post_x) + ", ?_⟩\n  dsimp only\n")
+        s += f"  rw [show k + {f['jc']} + 1 = k + {f['jc'] + 1} from rfl] at Hm'\n"
+        if h0: s += f"  rw [show avail - {h0} - {NESTED_HEAP} = avail - {h0 + NESTED_HEAP} by omega] at Hm'\n"
+        return s + "  ecancel\n"
 
     # ---- epilogue
     def epilogue(self):
@@ -503,7 +702,7 @@ class T:
             s += self.prefix(d, '')
             s += ''.join(P(l) + '\n' for l in e.get('pre', []))
             s += P(f"  refine eventually_trans _ _ _ _ (decode_epilogue_any_frame {e['F']} _ (k + {a}) (k + {a + 1}) (window_infix_at hk {a} 1) (by rfl) (by rfl)\n"
-                   f"    _ (window_infix_at hk {a + 1} 2) (by rfl) (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
+                   f"    _ (window_infix_at hk {a + 1} {e['nret']}) (by rfl) (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
                    f"    {ADDR} (by bv_omega) rbp ra _ _ (by rfl) (by ecancel)) ?_\n")
             s += tail + "  · dsimp only; rw [hmem']; ecancel\n"
         return s + self.kind(name, 'decodeEpilogueKindAnyFrame', f"\n    {self.dlean(d)}")
@@ -512,15 +711,16 @@ class T:
     def accept(self):
         name = f'{self.ns}_accept'
         a = self.names()
+        per = "field" if len(self.fspec) == len(self.fields) else "field or block of interleaved fields"
         s = self.opts(True) + (f"/-- **Accept path of `{self.go}`, generated proof** (`decoder --whole-accept`): head, one theorem per\n"
-                               "field, epilogue, chained by `eventually_trans`. Statement = the kind instance (`_kind`). -/\n")
+                               f"{per}, epilogue, chained by `eventually_trans`. Statement = the kind instance (`_kind`). -/\n")
         s += (f"theorem {name} : {self.binders()}{self.entry_prem()},\n    Eventually (step1 Host.exe)\n"
               f"      (fun st => {self.final()})\n      ⟨s, Host.addrOf k⟩ := by\n")
         s += f"  intro {a} h_mem hguard hlen{self.rtnames()}\n"
         s += f"  refine eventually_trans _ _ _ _ ({self.ns}_head {a} h_mem hguard hlen{self.rtnames()}) ?_\n  intro st0 h0\n"
-        n = len(self.fields)
-        for i in range(n):
-            s += f"  refine eventually_trans _ _ _ _ ({self.ns}_field_{i + 1} {a} hguard{self.rtnames()} st{i} h{i}) ?_\n  intro st{i + 1} h{i + 1}\n"
+        n = len(self.fspec)
+        for b, t in enumerate(self.field_theorems()):
+            s += f"  refine eventually_trans _ _ _ _ ({t} {a} hguard{self.rtnames()} st{b} h{b}) ?_\n  intro st{b + 1} h{b + 1}\n"
         s += f"  exact {self.ns}_epilogue {a} st{n} h{n}\n"
         s += self.kind(name, 'decodeAcceptKindAnyFrame', '')
         return s
@@ -568,8 +768,8 @@ class T:
         """All whole-accept theorems, in dependency order (head, fields, epilogue, accept, reject)."""
         self.kinds_emitted = []
         s = self.head()
-        for i in range(len(self.fields)):
-            s += self.field(i)
+        for b in range(len(self.fspec)):
+            s += self.field(b)
         s += self.epilogue() + self.accept()
         if self.rejspec is not None:
             s += self.reject()
@@ -661,10 +861,15 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
     go = 8 if st else 0
     for i, (fname, src, fo, cls, info) in enumerate(fields):
         if cls == 'bytes':
-            if info not in (32, 48, 96):
+            if info not in (4, 20, 32, 48, 96):
                 refuse(f"whole-accept: field {fname}: byte size {info}")
             fl.append((f'fv{i}', 'bytes', info))
             sz, gz = info, 24
+        elif cls == 'nested':
+            if info not in WHOLE_ACCEPT_NESTED_CALLEES:
+                refuse(f"whole-accept: field {fname}: nested callee {info} has no proved function specification")
+            fl.append((f'fv{i}', 'nested'))
+            sz, gz = 40, 8
         elif cls in ('u64', 'call'):
             if cls == 'call' and info not in WHOLE_ACCEPT_CALLEES:
                 refuse(f"whole-accept: field {fname}: callee {info} has no proved spec")
@@ -679,8 +884,9 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
     frame = F + 8
     head = whole_accept_head_spec(dirs, head_end, F, st)
     units = [us for _, us in done]
-    has_rt = any(u['kind'] == 'seg' for us in units for u in us)
-    has_call = any(u['kind'] == 'callblk' for us in units for u in us)
+    has_nested = any(u['kind'] == 'nested' for us in units for u in us)
+    has_rt = any(u['kind'] in ('seg', 'inline', 'nested') for us in units for u in us)
+    has_call = any(u['kind'] in ('callblk', 'nested') for us in units for u in us)
     if not has_rt and not has_call:
         refuse("whole-accept: no runtime call and no callee call (no recipe)")
     if not has_rt and any(f[1] == 'bytes' for f in fl):
@@ -695,6 +901,13 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
                     refuse(f"whole-accept: callee {u['fn']} without a proved spec")
                 if c not in callees:
                     callees.append(c)
+            if u['kind'] == 'nested':
+                c = WHOLE_ACCEPT_NESTED_CALLEES.get(u['fn'])
+                if c is None:
+                    refuse(f"whole-accept: nested callee {u['fn']} without a proved function specification")
+                for cc in [c[:3]] + [WHOLE_ACCEPT_CALLEES[x] for x in c[3]]:
+                    if cc not in callees:
+                        callees.append(cc)
     # ---- written frame slots (sp displacement in [0x18, F)): stack stores of the steps and the segment pointer slots
     area = [0] if (has_rt and not has_call) else ([0, 8, 16] if has_rt else [8])
     written = set()
@@ -705,11 +918,12 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
                 if not (0x18 <= d < F) or d % 8:
                     refuse(f"whole-accept: directive {u['jd']} `{u['text']}`: stack store at {d:#x} outside the frame slots [0x18, {F:#x})")
                 written.add(d)
+            if u['kind'] in ('seg', 'inline'):
+                if u['dR'] != frame + 8 or u['dB'] != frame + 16:
+                    refuse(f"whole-accept: segment reloads from {u['dR']:#x} / {u['dB']:#x}, not the receiver / buffer home slots")
             if u['kind'] == 'seg':
                 if not (0x18 <= u['dS'] < F):
                     refuse(f"whole-accept: pointer slot {u['dS']:#x} outside the frame slots")
-                if u['dR'] != frame + 8 or u['dB'] != frame + 16:
-                    refuse(f"whole-accept: segment reloads from {u['dR']:#x} / {u['dB']:#x}, not the receiver / buffer home slots")
                 written.add(u['dS'])
     # ---- the stack chunks (name, length | None for the rt low stack, entry offset)
     stack = [('fp', 8, -8)]
@@ -728,8 +942,10 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
     if len({o for _, _, o in stack if o is not None}) != len([1 for _, _, o in stack if o is not None]):
         refuse("whole-accept: two stack chunks at one offset")
     pre = [('lo', ('orig', 'lo')) if l is None else at(o, ('orig', nm)) for nm, l, o in stack]
-    rt = dict(hS=has_call, x=8 if has_call else 0, loB=frame + 8 + (8 if has_call else 0)) if has_rt else None
-    gd = frame + 8 if has_call else 0
+    # the low stack below the return slot: the uint64 callee's saved rbp (8 bytes), or the nested callee frame (96 bytes)
+    xlow = NESTED_LOW_EXTRA if has_nested else (8 if has_call else 0)
+    rt = dict(hS=has_call, x=xlow, loB=frame + 8 + xlow) if has_rt else None
+    gd = frame + 8 + (NESTED_LOW_EXTRA if has_nested else 0) if has_call else 0
 
     # ---- symbolic simulation: registers (only facts carried at boundaries) and the stack slots
     def setslot(stk, o, v):
@@ -767,44 +983,34 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
     regs = {r: ('UNK',) for r in REGS16}
     regs.update(rax=('RCV', 0), rbx=('BF', 0))   # what the head establishes (decpro_seg preserves rax / rbx)
 
-    def reads(us):
-        return _rw(us)[0]
-
-    def writes(us):
-        return _rw(us)[1]
-
-    def _rw(us):
-        """Registers a unit list reads before it writes them (in STEP_R64 order), and the registers it writes."""
-        rd, wr = [], set()
-
-        def r_(r):
-            if r not in wr and r not in rd and r != 'rsp':
-                rd.append(r)
-        for u in us:
+    def live_in(us, out):
+        """The registers live before the unit list `us` when the registers `out` are live after it (backward liveness).
+        A register move, `lea` or `add` whose destination is dead reads nothing: its step lemma holds for any value."""
+        live = set(out)
+        for u in reversed(us):
             k = u['kind']
             if k == 'ld':
-                r_(u['rB']); wr.add(u['rD'])
+                live.discard(u['rD'])
+                live.add(u['rB'])
             elif k == 'st':
-                r_(u['rS']); r_(u['rB'])
-            elif k in ('lea',):
-                r_(u['rB']); wr.add(u['rD'])
-            elif k == 'movrr':
-                r_(u['rS']); wr.add(u['rD'])
+                live.update((u['rS'], u['rB']))
+            elif k in ('lea', 'movrr'):
+                if u['rD'] in live:
+                    live.discard(u['rD'])
+                    live.add(u['rB'] if k == 'lea' else u['rS'])
             elif k == 'add':
-                r_(u['rD']); wr.add(u['rD'])
+                pass   # reads and writes rD: live before exactly when live after
             elif k == 'movi':
-                wr.add(u['rD'])
+                live.discard(u['rD'])
             elif k == 'callblk':
-                for r in ('rax', 'rbx', 'rcx'):
-                    r_(r)
-                wr.update(REGS16)
-            elif k == 'seg':
-                wr.update(REGS16)
+                live = {'rax', 'rbx', 'rcx'}
+            elif k in ('seg', 'inline', 'nested'):
+                live = set()
             elif k in ('jmp', 'label'):
                 pass
             else:
                 refuse(f"whole-accept: unit kind {k}")
-        return [r for r in REGS16 if r in rd], wr
+        return [r for r in REGS16 if r in live and r != 'rsp']
 
     def facts(need, where):
         out = []
@@ -819,43 +1025,65 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
 
     # epilogue form and its register needs
     epilogue = whole_accept_epilogue_spec(dirs, end, F, has_rt, has_call)
-    # facts needed at boundary i: what field i + 1 reads before writing, plus what is needed at boundary i + 1 and
-    # field i + 1 does not write (a fact is carried through a field that does not touch the register)
+    # facts needed at boundary i: the registers live before field i + 1 (what it reads before writing, plus what is
+    # needed at boundary i + 1 and field i + 1 does not write; a dead move, `lea` or `add` reads nothing)
     needs = [None] * n + [list(epilogue['reads'])]
     for i in range(n - 1, -1, -1):
-        rd, wr = reads(units[i]), writes(units[i])
-        needs[i] = [r for r in REGS16 if r in rd or (r in needs[i + 1] and r not in wr)]
+        needs[i] = live_in(units[i], needs[i + 1])
     states = []
     fspec = []
     regs0 = regs
     states.append(dict(pc=head_end, done=0, regs=facts(needs[0], 'field 1'), stk=freeze(stk), exs=list(exs)))
     bi = 0
     pfx = args.prefix
+    # a block is the run of fields between two boundary states: one field, or uint64 fields whose last boundary holds a
+    # derived register value (an interleaved set-up) and the field after them
+    first = 0          # first field of the open block
+    held = []          # step texts of the earlier fields of the open block
     for i, us in enumerate(units):
         fname = fields[i][0]
-        # registers at the boundary: only the facts of the state
-        regs = {r: ('UNK',) for r in REGS16}
-        for r, rv in states[-1]['regs']:
-            regs[r] = {'rcv': ('RCV', 0), 'bf': ('BF', 0), 'zero': ('ZERO',)}[rv]
+        if i == first:
+            # registers at the boundary: only the facts of the state
+            regs = {r: ('UNK',) for r in REGS16}
+            for r, rv in states[-1]['regs']:
+                regs[r] = {'rcv': ('RCV', 0), 'bf': ('BF', 0), 'zero': ('ZERO',)}[rv]
         steps = []
         blk = None
         tail = []
         for j, u in enumerate(us):
             k = u['kind']
-            if k == 'seg':
+            if k in ('seg', 'inline'):
                 if blk is not None:
                     refuse(f"whole-accept field {fname}: two blocks")
                 blk = u
                 tail = us[j + 1:]
                 break
-            if k == 'callblk':
+            if k in ('callblk', 'nested'):
                 if j != len(us) - 1:
                     refuse(f"whole-accept field {fname}: a unit after the call block")
                 blk = u
                 break
             steps.append(whole_accept_step(u, regs, stk, frame, pfx, fl, i, fields))
         cls = fields[i][3]
-        if cls == 'bytes':
+        if cls == 'bytes' and blk is not None and blk['kind'] == 'inline':
+            # the 4-byte inline-copy segment: the field event is the end of the segment (no pointer tail, no pointer slot)
+            if any(u['kind'] != 'st' or u['rB'] != 'rsp' for u in us[:us.index(blk)]):
+                refuse(f"whole-accept field {fname}: set-up before the segment other than stack stores")
+            if tail:
+                refuse(f"whole-accept field {fname}: units after the inline-copy segment")
+            for a in area[1:]:
+                stk[:] = [sl for sl in stk if not (sl[0] == 'at' and sl[1] == -frame + a)]
+            setslot(stk, -frame, ('ex', 0))
+            setlo(stk, ('ex', 1))
+            setslot(stk, -(frame + 8), ('ret', blk['jc'] + 1))
+            exs = [24, 'lo']
+            regs = {r: ('UNK',) for r in REGS16}
+            regs[blk['rX']] = ('RCV', 0)
+            regs[blk['rB']] = ('BF', 0)
+            fspec.append(dict(name=fname, shape='inline', seg=f"{pfx}_{fname}_segment", dR=blk['dR'], dB=blk['dB'],
+                              jc=blk['jc'], rX=blk['rX'], rB=blk['rB'], pre=steps, first=i, field=i))
+            bi += 1
+        elif cls == 'bytes':
             if blk is None or blk['kind'] != 'seg':
                 refuse(f"whole-accept field {fname}: byte field without a segment")
             # pre steps of a byte field: only stack stores (they write frame slots)
@@ -877,7 +1105,7 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
             regs = {r: ('UNK',) for r in REGS16}
             regs[blk['rY']] = ('RCV', 0)
             fspec.append(dict(name=fname, shape='bytes', seg=f"{pfx}_{fname}_segment", dR=blk['dR'], dB=blk['dB'],
-                              dS=blk['dS'], jm=blk['jm'], tail=[t['jd'] for t in tail], pre=steps))
+                              dS=blk['dS'], jm=blk['jm'], tail=[t['jd'] for t in tail], pre=steps, first=i, field=i))
             bi += 1
         elif cls == 'call':
             if blk is None or blk['kind'] != 'callblk':
@@ -903,24 +1131,57 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
             regs.update(rax=('ZERO',), rbx=('ZERO',))
             c = WHOLE_ACCEPT_CALLEES[blk['fn']]
             fspec.append(dict(name=fname, shape='call', callee=c[1], call=f"{pfx}_{fname}_call", jc=blk['jc'],
-                              steps=steps))
+                              steps=held + steps, first=first, field=i))
+        elif cls == 'nested':
+            if blk is None or blk['kind'] != 'nested':
+                refuse(f"whole-accept field {fname}: nested field without a nested block")
+            if steps:
+                refuse(f"whole-accept field {fname}: set-up steps before the nested block (no recipe)")
+            # the block writes the object pointer at sp and the callee's spill of bf + src at sp + 8; the word at sp + 16
+            # is an 8-byte existential (the last word of the merged spill area, or the one of an earlier nested block)
+            if any(sl[0] == 'at' and sl[1] == -frame + 8 for sl in stk):
+                if getslot(stk, -frame + 16) != ('ex', 0) or exs != [8, 'lo']:
+                    refuse(f"whole-accept field {fname}: nested block after a state without the 8-byte existential at sp + 16")
+            else:
+                if getslot(stk, -frame) != ('ex', 0) or exs != [24, 'lo']:
+                    refuse(f"whole-accept field {fname}: nested block after a state without the 24-byte spill existential")
+                at0 = [x for x, sl in enumerate(stk) if sl[0] == 'at' and sl[1] == -frame][0]
+                stk[at0 + 1:at0 + 1] = [['at', -frame + 8, None], ['at', -frame + 16, ('ex', 0)]]
+            setslot(stk, -frame, ('ptr', bi))
+            setslot(stk, -frame + 8, ('bufaddr', fields[i][1]))
+            setlo(stk, ('ex', 1))
+            setslot(stk, -(frame + 8), ('ret', blk['jc'] + 1))
+            exs = [8, 'lo']
+            regs = {r: ('UNK',) for r in REGS16}
+            regs.update(rax=('ZERO',), rbx=('ZERO',))
+            fspec.append(dict(name=fname, shape='nested', nest=f"{pfx}_{fname}_nested", fn=blk['fn'], jc=blk['jc'],
+                              dR=blk['dR'], dB=blk['dB'], dC=blk['dC'], first=i, field=i))
+            bi += 2
         elif cls == 'u64':
             if blk is not None:
                 refuse(f"whole-accept field {fname}: inline uint64 field with a block")
             last = us[-1]
             if not (last['kind'] == 'st' and last['rB'] != 'rsp'):
                 refuse(f"whole-accept field {fname}: inline uint64 field does not end with its receiver store")
-            fspec.append(dict(name=fname, shape='u64', steps=steps))
+            u64_spec = dict(name=fname, shape='u64', steps=held + steps, first=first, field=i)
         else:
             refuse(f"whole-accept field {fname}: class {cls}")
         if not fl_done_ok(us, cls):
             refuse(f"whole-accept field {fname}: the field event is not the last unit")
-        pc = us[-1]['e'] if cls != 'call' else blk['e']
+        pc = us[-1]['e'] if cls not in ('call', 'nested') else blk['e']
         nxt = units[i + 1][0]['j'] if i + 1 < n else end
         if pc != nxt:
             refuse(f"whole-accept field {fname}: ends at {pc}, the next unit starts at {nxt}")
+        # an interleaved boundary: a register that the next field reads holds a derived value (receiver or buffer plus
+        # an offset, the set-up of the next field run before this field's event); no boundary state, the block goes on
+        if i + 1 < n and whole_accept_interleaved(fname, cls, fields[i + 1][3], [regs.get(r, ('UNK',)) for r in needs[i + 1]]):
+            held = held + steps
+            continue
+        if cls == 'u64':
+            fspec.append(u64_spec)
         states.append(dict(pc=pc, done=i + 1, regs=facts(needs[i + 1], f'field {i + 2}' if i + 1 < n else 'epilogue'),
                            stk=freeze(stk), exs=list(exs)))
+        first, held = i + 1, []
     if states[-1]['pc'] != epilogue['start']:
         refuse("whole-accept: epilogue does not start at the last boundary")
     # epilogue pre steps (loads of the two zero slots) and their slots
@@ -942,26 +1203,58 @@ def whole_accept_derive(dirs, fields, head_end, F, done, end, args, label_index)
     return t
 
 
+def whole_accept_derived(v):
+    """A receiver or buffer address plus a nonzero offset: a value that a boundary state cannot express."""
+    return v[0] in ('RCV', 'BF') and len(v) == 2 and v[1] != 0
+
+
+def whole_accept_interleaved(fname, cls, next_cls, live):
+    """Whether the boundary after field `fname` (class `cls`) is interleaved: a live register value `live` is derived.
+    The recipe of an interleaved block: the field before the boundary is a uint64 field, the field after it a uint64
+    or call field. Any other interleaved boundary: refuse. The derivation does not reach the first refusal: after a call
+    or byte block, every register is a boundary value or unknown."""
+    if not any(whole_accept_derived(v) for v in live):
+        return False
+    if cls != 'u64':
+        refuse(f"whole-accept field {fname}: interleaved boundary after a {cls} field (recipe: after a uint64 field)")
+    if next_cls not in ('u64', 'call'):
+        refuse(f"whole-accept field {fname}: interleaved boundary before a {next_cls} field (recipe: a uint64 or call field)")
+    return True
+
+
 def fl_done_ok(us, cls):
     last = us[-1]
     if cls == 'call':
         return last['kind'] == 'callblk'
+    if cls == 'nested':
+        return last['kind'] == 'nested'
+    if cls == 'bytes' and last['kind'] == 'inline':
+        return True
     return last['kind'] == 'st'
 
 
 def whole_accept_epilogue_spec(dirs, i, F, has_rt, has_call):
-    """The three epilogue forms of the hand-written lemmas (contiguous, no nop): `add $F,%rsp; pop %rbp; retq` (rax = rbx = 0
-    from the boundary facts), `mov d1(%rsp),%rax; mov d2(%rsp),%rbx` + that (two zero slots), and frame 0x20
-    `xor %eax,%eax; xor %ebx,%ebx` + that (`decode_epilogue_segment`). Anything else: refuse."""
-    ret = [f"add ${F:#x},%rsp", "pop %rbp", "retq"]
-    if dirs[i:i + 3] == ret:
-        return dict(form='n', F=F, add=i, start=i, reads=['rax', 'rbx'])
+    """The three epilogue forms of the hand-written lemmas (contiguous; `nop`s only between `pop %rbp` and `retq`, which the
+    `decodeRet` window erases): `add $F,%rsp; pop %rbp; retq` (rax = rbx = 0 from the boundary facts),
+    `mov d1(%rsp),%rax; mov d2(%rsp),%rbx` + that (two zero slots), and frame 0x20 `xor %eax,%eax; xor %ebx,%ebx` + that
+    (`decode_epilogue_segment`, no `nop`). Anything else: refuse."""
+    def ret_at(j):
+        """The length of the return window `pop %rbp; nop*; retq` at j (at most 3 nops), or None."""
+        if j >= len(dirs) or dirs[j] != "pop %rbp":
+            return None
+        m = 1
+        while j + m < len(dirs) and dirs[j + m] == "nop" and m < 4:
+            m += 1
+        return m + 1 if j + m < len(dirs) and dirs[j + m] == "retq" else None
+    add = f"add ${F:#x},%rsp"
+    if i < len(dirs) and dirs[i] == add and ret_at(i + 1):
+        return dict(form='n', F=F, add=i, start=i, nret=ret_at(i + 1), reads=['rax', 'rbx'])
     m1 = re.fullmatch(r"mov (0x[0-9a-f]+)\(%rsp\),%rax", dirs[i]) if i < len(dirs) else None
     m2 = re.fullmatch(r"mov (0x[0-9a-f]+)\(%rsp\),%rbx", dirs[i + 1]) if i + 1 < len(dirs) else None
-    if m1 and m2 and dirs[i + 2:i + 5] == ret:
-        return dict(form='ld', F=F, add=i + 2, start=i, reads=[],
+    if m1 and m2 and i + 2 < len(dirs) and dirs[i + 2] == add and ret_at(i + 3):
+        return dict(form='ld', F=F, add=i + 2, start=i, nret=ret_at(i + 3), reads=[],
                     loads=[('rax', _hx(m1.group(1))), ('rbx', _hx(m2.group(1)))])
-    if dirs[i:i + 2] == ["xor %eax,%eax", "xor %ebx,%ebx"] and dirs[i + 2:i + 5] == ret:
+    if dirs[i:i + 2] == ["xor %eax,%eax", "xor %ebx,%ebx"] and dirs[i + 2:i + 5] == [add, "pop %rbp", "retq"]:
         if F != 0x20:
             refuse(f"whole-accept epilogue: `xor` epilogue in frame {F:#x} (lemma decode_epilogue_segment: frame 0x20 only)")
         return dict(form='e20', F=F, add=i, start=i, reads=[])
@@ -1064,4 +1357,5 @@ def _vterm_plain(v):
     if k == 'ret': return f'(Int.toBytes 8 (Host.addrOf (k + {v[1]})).toBitVec.toInt)', LEN
     if k == 'ex': return f'x{v[1]}', f'hx{v[1]}'
     if k == 'ptr': return f'(Int.toBytes 8 p{v[1] + 1}.toInt)', LEN
+    if k == 'bufaddr': return f"(Int.toBytes 8 {off('s.regs.rbx.toBitVec', v[1])}.toInt)", LEN
     refuse(f"whole-accept: slot value {v} inside a field's steps")
