@@ -1,0 +1,99 @@
+{
+ "schema": "fv.kraken.desc/1",
+ "type": "StatusV2",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "ForkDigest",
+   "FinalizedRoot",
+   "FinalizedEpoch",
+   "HeadRoot",
+   "HeadSlot",
+   "EarliestAvailableSlot"
+  ],
+  "fields": [
+   {
+    "k": "byteVector",
+    "n": 4
+   },
+   {
+    "k": "byteVector",
+    "n": 32
+   },
+   {
+    "k": "uint",
+    "w": 8
+   },
+   {
+    "k": "byteVector",
+    "n": 32
+   },
+   {
+    "k": "uint",
+    "w": 8
+   },
+   {
+    "k": "uint",
+    "w": 8
+   }
+  ]
+ },
+ "fixed_size": 92,
+ "fixed_part_size": 92,
+ "fields": [
+  {
+   "name": "ForkDigest",
+   "index": 0,
+   "offset": 0,
+   "width": 4,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 4
+  },
+  {
+   "name": "FinalizedRoot",
+   "index": 1,
+   "offset": 4,
+   "width": 32,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 32
+  },
+  {
+   "name": "FinalizedEpoch",
+   "index": 2,
+   "offset": 36,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  },
+  {
+   "name": "HeadRoot",
+   "index": 3,
+   "offset": 44,
+   "width": 32,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 32
+  },
+  {
+   "name": "HeadSlot",
+   "index": 4,
+   "offset": 76,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  },
+  {
+   "name": "EarliestAvailableSlot",
+   "index": 5,
+   "offset": 84,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  }
+ ],
+ "variable_order": [],
+ "reference": null
+}

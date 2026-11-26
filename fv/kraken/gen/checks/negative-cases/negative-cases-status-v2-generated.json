@@ -1,0 +1,70 @@
+[
+ {
+  "id": "status-v2-decode-accept-spec-control",
+  "module": "Prysm/StatusV2/DecodeSpec.lean",
+  "theorem": "Prysm.StatusV2.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "status-v2-decode-generated-accept-statement-rax-0-to-1",
+  "module": "Prysm/StatusV2/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.StatusV2.Decode.generated_accept",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "status-v2-decode-generated-reject-statement-rax-e0-to-e1",
+  "module": "Prysm/StatusV2/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.StatusV2.Decode.generated_reject",
+  "kind": "statement",
+  "old": "st.data.regs.rax = e0",
+  "new": "st.data.regs.rax = e1"
+ },
+ {
+  "id": "status-v2-decode-accept-spec-statement-hlen-none-to-1",
+  "module": "Prysm/StatusV2/DecodeSpec.lean",
+  "theorem": "Prysm.StatusV2.Decode.accept_spec",
+  "kind": "statement",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
+ },
+ {
+  "id": "status-v2-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/StatusV2/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.StatusV2.Witness.GeneratedDecodeAccept.runs",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "status-v2-encode-generated-fast-spec-control",
+  "module": "Prysm/StatusV2/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.StatusV2.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "status-v2-encode-generated-fast-statement-rax-rbx-to-rcx",
+  "module": "Prysm/StatusV2/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.StatusV2.Encode.generated_fast",
+  "kind": "statement",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "status-v2-encode-generated-fast-spec-statement-hcap-92-to-84",
+  "module": "Prysm/StatusV2/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.StatusV2.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 92 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 84 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "status-v2-witness-generated-encode-fast-path-runs-empty-statement-rax-0x101d4-to-0x8",
+  "module": "Prysm/StatusV2/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.StatusV2.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x101d4",
+  "new": "st.data.regs.rax = 0x8"
+ }
+]

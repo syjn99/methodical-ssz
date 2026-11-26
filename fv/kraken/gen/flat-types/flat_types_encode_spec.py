@@ -50,6 +50,10 @@ ENCODE_SPEC_TYPES = {
     'PartialDataColumnGroupID': ('Prysm.PartialDataColumnGroupID.Spec', 'Prysm.PartialDataColumnGroupID.SszValue', 'Prysm.PartialDataColumnGroupID.SszValue.encode', 'Prysm.PartialDataColumnGroupID.SszValue.serialize_eq', 'Prysm.PartialDataColumnGroupID.desc', ['b:beaconBlockRoot', 'u:slot']),
     'ValidatorIdentity': ('Prysm.ValidatorIdentity.Spec', 'Prysm.ValidatorIdentity.SszValue', 'Prysm.ValidatorIdentity.SszValue.encode', 'Prysm.ValidatorIdentity.SszValue.serialize_eq', 'Prysm.ValidatorIdentity.desc',
             ['u:index', 'b:pubkey', 'u:activationEpoch']),
+    'Status': ('Prysm.Status.Spec', 'Prysm.Status.SszValue', 'Prysm.Status.SszValue.encode', 'Prysm.Status.SszValue.serialize_eq', 'Prysm.Status.desc',
+            ['b:forkDigest', 'b:finalizedRoot', 'u:finalizedEpoch', 'b:headRoot', 'u:headSlot']),
+    'StatusV2': ('Prysm.StatusV2.Spec', 'Prysm.StatusV2.SszValue', 'Prysm.StatusV2.SszValue.encode', 'Prysm.StatusV2.SszValue.serialize_eq', 'Prysm.StatusV2.desc',
+            ['b:forkDigest', 'b:finalizedRoot', 'u:finalizedEpoch', 'b:headRoot', 'u:headSlot', 'u:earliestAvailableSlot']),
 }
 RTCOPY_LEN = 26
 
