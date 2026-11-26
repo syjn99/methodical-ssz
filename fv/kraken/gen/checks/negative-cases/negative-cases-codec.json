@@ -1,0 +1,508 @@
+[
+ {
+  "id": "codec-callee-decode-call-decode-segment-control",
+  "module": "Codec/CalleeDecode.lean",
+  "theorem": "Codec.call_decode_segment",
+  "kind": "control"
+ },
+ {
+  "id": "codec-callee-decode-call-decode-segment-statement-e8-e8-to-c0",
+  "module": "Codec/CalleeDecode.lean",
+  "theorem": "Codec.call_decode_segment",
+  "kind": "statement",
+  "old": "⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem",
+  "new": "⋆ Eq (e8.At src) ⋆ Eq (c0.At dst) ⋆ F) st.data.dmem"
+ },
+ {
+  "id": "codec-callee-decode-call-decode-segment-statement-hguard-a-ret-to-sp",
+  "module": "Codec/CalleeDecode.lean",
+  "theorem": "Codec.call_decode_segment",
+  "kind": "statement",
+  "old": "(hguard : guard.toNat < aRet.toNat)",
+  "new": "(hguard : guard.toNat < sp.toNat)"
+ },
+ {
+  "id": "codec-callee-decode-call-decode-segment-statement-rax-0-to-1",
+  "module": "Codec/CalleeDecode.lean",
+  "theorem": "Codec.call_decode_segment",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "codec-callee-decode-call-decode-segment-statement-h-c-fn-to-lok",
+  "module": "Codec/CalleeDecode.lean",
+  "theorem": "Codec.call_decode_segment",
+  "kind": "statement",
+  "old": "(hC : Uint64CalleeAccept fn)",
+  "new": "(hC : Uint64CalleeAccept lok)"
+ },
+ {
+  "id": "codec-callee-decode-call-argument-first-segment-control",
+  "module": "Codec/CalleeDecode.lean",
+  "theorem": "Codec.call_argument_first_segment",
+  "kind": "control"
+ },
+ {
+  "id": "codec-callee-decode-call-argument-first-segment-statement-rcx-8-to-9",
+  "module": "Codec/CalleeDecode.lean",
+  "theorem": "Codec.call_argument_first_segment",
+  "kind": "statement",
+  "old": "st.data.regs.rcx = 8 ∧",
+  "new": "st.data.regs.rcx = 9 ∧"
+ },
+ {
+  "id": "codec-callee-decode-call-argument-lea-segment-statement-rsi-a-f-to-rcv",
+  "module": "Codec/CalleeDecode.lean",
+  "theorem": "Codec.call_argument_lea_segment",
+  "kind": "statement",
+  "old": "st.data.regs.rsi.toBitVec = aF",
+  "new": "st.data.regs.rsi.toBitVec = rcv"
+ },
+ {
+  "id": "codec-callee-decode-call-argument-mov-segment-statement-rax-none-to-none",
+  "module": "Codec/CalleeDecode.lean",
+  "theorem": "Codec.call_argument_mov_segment",
+  "kind": "statement",
+  "old": "st.data.regs.rax = s.regs.rsi ∧ st.data.regs.rbx = s.regs.rdx",
+  "new": "st.data.regs.rax = s.regs.rdx ∧ st.data.regs.rbx = s.regs.rsi"
+ },
+ {
+  "id": "codec-inline-uint64-register-base-uint64-decode-scratch-register-segment-control",
+  "module": "Codec/InlineUint64RegisterBase.lean",
+  "theorem": "uint64_decode_scratch_register_segment",
+  "kind": "control"
+ },
+ {
+  "id": "codec-inline-uint64-register-base-uint64-decode-scratch-register-segment-statement-h-x-uint64-scratch-register-to-reg64",
+  "module": "Codec/InlineUint64RegisterBase.lean",
+  "theorem": "uint64_decode_scratch_register_segment",
+  "kind": "statement",
+  "old": "(hX : Uint64ScratchRegister rX)",
+  "new": "(hX : rX = Reg64.rax ∨ rX = Reg64.rcx)"
+ },
+ {
+  "id": "codec-inline-uint64-register-base-uint64-decode-scratch-register-segment-statement-v-v-to-v-f",
+  "module": "Codec/InlineUint64RegisterBase.lean",
+  "theorem": "uint64_decode_scratch_register_segment",
+  "kind": "statement",
+  "old": "(Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem",
+  "new": "(Eq (v.At aSrc) ⋆ Eq (vF.At aF) ⋆ R) st.data.dmem"
+ },
+ {
+  "id": "codec-inline-uint64-register-base-uint64-decode-scratch-register-segment-statement-r-r-x-r-to-none",
+  "module": "Codec/InlineUint64RegisterBase.lean",
+  "theorem": "uint64_decode_scratch_register_segment",
+  "kind": "statement",
+  "old": "(∀ r : Reg64, r ≠ rX → st.data.regs.get64 r = s.regs.get64 r)",
+  "new": "(∀ r : Reg64, st.data.regs.get64 r = s.regs.get64 r)"
+ },
+ {
+  "id": "codec-encode-steps-step-cmp-jae-taken-control",
+  "module": "Codec/EncodeSteps.lean",
+  "theorem": "step_cmp_jae_taken",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-steps-step-cmp-jae-taken-statement-hle-none-to-none",
+  "module": "Codec/EncodeSteps.lean",
+  "theorem": "step_cmp_jae_taken",
+  "kind": "statement",
+  "old": "(hle : (s.regs.get64 rN).toNat ≤ (s.regs.get64 rC).toNat)",
+  "new": "(hle : (s.regs.get64 rC).toNat ≤ (s.regs.get64 rN).toNat)"
+ },
+ {
+  "id": "codec-encode-steps-step-cmp-jb-not-taken-statement-hle-none-to-none",
+  "module": "Codec/EncodeSteps.lean",
+  "theorem": "step_cmp_jb_not_taken",
+  "kind": "statement",
+  "old": "(hle : (s.regs.get64 rN).toNat ≤ (s.regs.get64 rC).toNat)",
+  "new": "(hle : (s.regs.get64 rC).toNat ≤ (s.regs.get64 rN).toNat)"
+ },
+ {
+  "id": "codec-encode-steps-step-length-check-statement-hv-imm-to-disp",
+  "module": "Codec/EncodeSteps.lean",
+  "theorem": "step_length_check",
+  "kind": "statement",
+  "old": "(hv : BitVec.ofInt 64 (Int.ofBytes bs) = imm.toBitVec)",
+  "new": "(hv : BitVec.ofInt 64 (Int.ofBytes bs) = disp.toBitVec)"
+ },
+ {
+  "id": "codec-encode-steps-encode-memmove-call-control",
+  "module": "Codec/EncodeSteps.lean",
+  "theorem": "encode_memmove_call",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-steps-encode-memmove-call-statement-hrcx-none-to-1",
+  "module": "Codec/EncodeSteps.lean",
+  "theorem": "encode_memmove_call",
+  "kind": "statement",
+  "old": "(hrcx : s.regs.rcx.toNat = src.length)",
+  "new": "(hrcx : s.regs.rcx.toNat = src.length + 1)"
+ },
+ {
+  "id": "codec-encode-frame-test-frame50-pointer-apart-control",
+  "module": "Codec/EncodeFrameTest.lean",
+  "theorem": "frame50_pointer_apart",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-frame-test-frame50-pointer-apart-statement-ho-64-to-16",
+  "module": "Codec/EncodeFrameTest.lean",
+  "theorem": "frame50_pointer_apart",
+  "kind": "statement",
+  "old": "(ho : 64 ≤ o.length)",
+  "new": "(ho : 16 ≤ o.length)"
+ },
+ {
+  "id": "codec-encode-frame-test-separated-chunks-apart-statement-ys-none-to-1",
+  "module": "Codec/EncodeFrameTest.lean",
+  "theorem": "separated_chunks_apart",
+  "kind": "statement",
+  "old": "ys.length ≤ (a - b).toNat ∧",
+  "new": "ys.length + 1 ≤ (a - b).toNat ∧"
+ },
+ {
+  "id": "codec-encode-memmove-encode32-memmove-call-control",
+  "module": "Codec/EncodeMemmove.lean",
+  "theorem": "encode32_memmove_call",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-memmove-encode32-memmove-call-statement-hrcx-32-to-31",
+  "module": "Codec/EncodeMemmove.lean",
+  "theorem": "encode32_memmove_call",
+  "kind": "statement",
+  "old": "(hrcx : s.regs.rcx.toNat = 32)",
+  "new": "(hrcx : s.regs.rcx.toNat = 31)"
+ },
+ {
+  "id": "codec-encode-memmove-encode32-memmove-call-statement-root-root-to-e",
+  "module": "Codec/EncodeMemmove.lean",
+  "theorem": "encode32_memmove_call",
+  "kind": "statement",
+  "old": "⋆ Eq (root.At p) ⋆ Eq (root.At d) ⋆ R) st.data.dmem)",
+  "new": "⋆ Eq (root.At p) ⋆ Eq (e.At d) ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "codec-encode-memmove-encode32-memmove-call-statement-mem-root-p-eq-to-none",
+  "module": "Codec/EncodeMemmove.lean",
+  "theorem": "encode32_memmove_call",
+  "kind": "statement",
+  "old": "(h_mem : s.dmem =⋆ Eq (rslot.At aRet) ⋆ Eq (scratch.At aLo) ⋆ Eq (root.At p) ⋆ Eq (e.At d) ⋆ R)",
+  "new": "(h_mem : s.dmem =⋆ Eq (rslot.At aRet) ⋆ Eq (scratch.At aLo) ⋆ Eq (e.At d) ⋆ R)"
+ },
+ {
+  "id": "codec-encode-reject-tail-encode-reject-tail-control",
+  "module": "Codec/EncodeRejectTail.lean",
+  "theorem": "encode_reject_tail",
+  "kind": "control"
+ },
+ {
+  "id": "codec-encode-reject-tail-encode-reject-tail-statement-rcx-none-to-none",
+  "module": "Codec/EncodeRejectTail.lean",
+  "theorem": "encode_reject_tail",
+  "kind": "statement",
+  "old": "∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e0 ∧ st.data.regs.rsi = e1",
+  "new": "∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e1 ∧ st.data.regs.rsi = e0"
+ },
+ {
+  "id": "codec-encode-reject-tail-encode-reject-tail-statement-rsp-8-to-none",
+  "module": "Codec/EncodeRejectTail.lean",
+  "theorem": "encode_reject_tail",
+  "kind": "statement",
+  "old": "∧ st.data.regs.rsp.toBitVec = aRa + 8 ∧",
+  "new": "∧ st.data.regs.rsp.toBitVec = aRa ∧"
+ },
+ {
+  "id": "codec-encode-reject-tail-encode-reject-tail-statement-h-fp-8-to-16",
+  "module": "Codec/EncodeRejectTail.lean",
+  "theorem": "encode_reject_tail",
+  "kind": "statement",
+  "old": "(hFp : releaseAddress sub c sp = aFp) (hRa : aFp + 8 = aRa)",
+  "new": "(hFp : releaseAddress sub c sp = aFp) (hRa : aFp + 16 = aRa)"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-bytes-decode-segment-control",
+  "module": "Codec/FixedBytesDecode.lean",
+  "theorem": "bytes_decode_segment",
+  "kind": "control"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-bytes-decode-segment-statement-heap-n-to-none",
+  "module": "Codec/FixedBytesDecode.lean",
+  "theorem": "bytes_decode_segment",
+  "kind": "statement",
+  "old": "⋆ Heap (avail - n)",
+  "new": "⋆ Heap avail"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-bytes-decode-segment-statement-hn-96-to-64",
+  "module": "Codec/FixedBytesDecode.lean",
+  "theorem": "bytes_decode_segment",
+  "kind": "statement",
+  "old": "(hn : n = 32 ∨ n = 48 ∨ n = 96)",
+  "new": "(hn : n = 32 ∨ n = 48 ∨ n = 64)"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-bytes-decode-segment-offset-zero-statement-of-nat-of-nat-of-nat-n-to-0",
+  "module": "Codec/FixedBytesDecode.lean",
+  "theorem": "bytes_decode_segment_offset_zero",
+  "kind": "statement",
+  "old": "Eq ((Int.toBytes 8 (OfNat.ofNat n)).At aL)",
+  "new": "Eq ((Int.toBytes 8 0).At aL)"
+ },
+ {
+  "id": "codec-inline-uint64-uint64-decode-inline-segment-control",
+  "module": "Codec/InlineUint64.lean",
+  "theorem": "uint64_decode_inline_segment",
+  "kind": "control"
+ },
+ {
+  "id": "codec-inline-uint64-uint64-decode-inline-segment-statement-v-v-to-v-f",
+  "module": "Codec/InlineUint64.lean",
+  "theorem": "uint64_decode_inline_segment",
+  "kind": "statement",
+  "old": "⋆ Eq (v.At aF) ⋆ R) st.data.dmem",
+  "new": "⋆ Eq (vF.At aF) ⋆ R) st.data.dmem"
+ },
+ {
+  "id": "codec-inline-uint64-uint64-decode-inline-segment-statement-h-x-uint64-inline-reg-to-reg64-rax-r-x",
+  "module": "Codec/InlineUint64.lean",
+  "theorem": "uint64_decode_inline_segment",
+  "kind": "statement",
+  "old": "(hX : Uint64InlineReg rX)",
+  "new": "(hX : rX = Reg64.rax ∨ rX = Reg64.rbx ∨ rX = Reg64.rcx ∨ rX = Reg64.rsi ∨ rX = Reg64.rdi ∨ rX = Reg64.r8 ∨ rX = Reg64.r9 ∨ rX = Reg64.r10 ∨ rX = Reg64.r11 ∨ rX = Reg64.r12 ∨ rX = Reg64.r13 ∨ rX = Reg64.rdx)"
+ },
+ {
+  "id": "codec-decoder-head-epilogue-decode-head-segment-statement-hlen-none-to-1",
+  "module": "Codec/DecoderHeadEpilogue.lean",
+  "theorem": "decode_head_segment",
+  "kind": "statement",
+  "old": "(hlen : s.regs.rcx = { toBitVec := sz.toBitVec })",
+  "new": "(hlen : s.regs.rcx = { toBitVec := sz.toBitVec + 1 })"
+ },
+ {
+  "id": "codec-decoder-head-epilogue-decode-epilogue-segment-statement-rsp-48-to-40",
+  "module": "Codec/DecoderHeadEpilogue.lean",
+  "theorem": "decode_epilogue_segment",
+  "kind": "statement",
+  "old": "st.data.regs.rsp = { toBitVec := sp + 48 }",
+  "new": "st.data.regs.rsp = { toBitVec := sp + 40 }"
+ },
+ {
+  "id": "codec-decoder-head-epilogue-bytes-decode-tail-segment-statement-p-int-to-bytes-8-to-v-p",
+  "module": "Codec/DecoderHeadEpilogue.lean",
+  "theorem": "bytes_decode_tail_segment",
+  "kind": "statement",
+  "old": "⋆ Eq ((Int.toBytes 8 p.toInt).At aP) ⋆ R) st.data.dmem",
+  "new": "⋆ Eq (vP.At aP) ⋆ R) st.data.dmem"
+ },
+ {
+  "id": "codec-nop-window-window-directive-at-control",
+  "module": "Codec/NopWindow.lean",
+  "theorem": "window_directive_at",
+  "kind": "control"
+ },
+ {
+  "id": "codec-nop-window-window-skip-between-statement-host-1-to-none",
+  "module": "Codec/NopWindow.lean",
+  "theorem": "window_skip_between",
+  "kind": "statement",
+  "old": "⟨s, Host.addrOf (j + nonNopIndex q i + 1)⟩",
+  "new": "⟨s, Host.addrOf (j + nonNopIndex q i)⟩"
+ },
+ {
+  "id": "codec-window-steps-step-load-value-control",
+  "module": "Codec/WindowSteps.lean",
+  "theorem": "step_load_value",
+  "kind": "control"
+ },
+ {
+  "id": "codec-window-steps-step-load-value-statement-set-register-r-d-to-r-b",
+  "module": "Codec/WindowSteps.lean",
+  "theorem": "step_load_value",
+  "kind": "statement",
+  "old": "⟨setRegister s rD v, Host.addrOf e⟩",
+  "new": "⟨setRegister s rB v, Host.addrOf e⟩"
+ },
+ {
+  "id": "codec-window-steps-step-add-immediate-statement-get64-none-to-none",
+  "module": "Codec/WindowSteps.lean",
+  "theorem": "step_add_immediate",
+  "kind": "statement",
+  "old": "(s.regs.get64 rD + imm.toBitVec), zmms",
+  "new": "(s.regs.get64 rD - imm.toBitVec), zmms"
+ },
+ {
+  "id": "codec-window-steps-step-store-statement-host-e-to-e-1",
+  "module": "Codec/WindowSteps.lean",
+  "theorem": "step_store",
+  "kind": "statement",
+  "old": "final ⟨{ s with dmem := m' }, Host.addrOf e⟩",
+  "new": "final ⟨{ s with dmem := m' }, Host.addrOf (e + 1)⟩"
+ },
+ {
+  "id": "codec-window-steps-step-move-immediate-statement-truncate-32-to-16",
+  "module": "Codec/WindowSteps.lean",
+  "theorem": "step_move_immediate",
+  "kind": "statement",
+  "old": "BitVec.truncate 32 imm.toBitVec",
+  "new": "BitVec.truncate 16 imm.toBitVec"
+ },
+ {
+  "id": "codec-window-steps-step-jump-statement-hk-none-to-1",
+  "module": "Codec/WindowSteps.lean",
+  "theorem": "step_jump",
+  "kind": "statement",
+  "old": "(hk : Eventually (step1 Host.exe) final ⟨s, Host.addrOf jl⟩)",
+  "new": "(hk : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (jl + 1)⟩)"
+ },
+ {
+  "id": "codec-window-steps-step-move-register-statement-set-register-r-s-to-r-d",
+  "module": "Codec/WindowSteps.lean",
+  "theorem": "step_move_register",
+  "kind": "statement",
+  "old": "⟨setRegister s rD (s.regs.get64 rS), Host.addrOf e⟩",
+  "new": "⟨setRegister s rD (s.regs.get64 rD), Host.addrOf e⟩"
+ },
+ {
+  "id": "codec-window-steps-step-lea-statement-get64-disp-to-bit-vec-to-none",
+  "module": "Codec/WindowSteps.lean",
+  "theorem": "step_lea",
+  "kind": "statement",
+  "old": "(s.regs.get64 rB + disp.toBitVec)",
+  "new": "(s.regs.get64 rB)"
+ },
+ {
+  "id": "codec-callee-decode-window-call-decode-segment-window-control",
+  "module": "Codec/CalleeDecodeWindow.lean",
+  "theorem": "Codec.call_decode_segment_window",
+  "kind": "control"
+ },
+ {
+  "id": "codec-callee-decode-window-call-decode-segment-window-statement-host-jc-to-j",
+  "module": "Codec/CalleeDecodeWindow.lean",
+  "theorem": "Codec.call_decode_segment_window",
+  "kind": "statement",
+  "old": "Host.addrOf (jc + 1)).toBitVec.toInt).At aRet",
+  "new": "Host.addrOf (j + 1)).toBitVec.toInt).At aRet"
+ },
+ {
+  "id": "codec-callee-decode-window-call-decode-segment-window-statement-hjc-0-to-1",
+  "module": "Codec/CalleeDecodeWindow.lean",
+  "theorem": "Codec.call_decode_segment_window",
+  "kind": "statement",
+  "old": "(hjc : j + nonNopIndex q 0 = jc)",
+  "new": "(hjc : j + nonNopIndex q 1 = jc)"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-window-bytes-decode-window-32-rdx-rax-control",
+  "module": "Codec/FixedBytesDecodeWindow.lean",
+  "theorem": "bytes_decode_window_32_rdx_rax",
+  "kind": "control"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-window-bytes-decode-window-32-rdx-rax-statement-bytes-decode-window-rax-to-rdx",
+  "module": "Codec/FixedBytesDecodeWindow.lean",
+  "theorem": "bytes_decode_window_32_rdx_rax",
+  "kind": "statement",
+  "old": "BytesDecodeWindow 32 Reg64.rdx Reg64.rax",
+  "new": "BytesDecodeWindow 32 Reg64.rdx Reg64.rdx"
+ },
+ {
+  "id": "codec-fixed-bytes-decode-window-bytes-decode-window-32-rdx-rax-statement-bytes-decode-window-32-to-48",
+  "module": "Codec/FixedBytesDecodeWindow.lean",
+  "theorem": "bytes_decode_window_32_rdx_rax",
+  "kind": "statement",
+  "old": "BytesDecodeWindow 32 Reg64.rdx Reg64.rax",
+  "new": "BytesDecodeWindow 48 Reg64.rdx Reg64.rax"
+ },
+ {
+  "id": "codec-decoder-prologue-decode-prologue-segment-control",
+  "module": "Codec/DecoderPrologue.lean",
+  "theorem": "decode_prologue_segment",
+  "kind": "control"
+ },
+ {
+  "id": "codec-decoder-prologue-decode-prologue-segment-statement-rsp-none-to-8",
+  "module": "Codec/DecoderPrologue.lean",
+  "theorem": "decode_prologue_segment",
+  "kind": "statement",
+  "old": "st.data.regs.rsp = { toBitVec := sp }",
+  "new": "st.data.regs.rsp = { toBitVec := sp + 8 }"
+ },
+ {
+  "id": "codec-decoder-prologue-decode-prologue-segment-statement-hsp-8-to-none",
+  "module": "Codec/DecoderPrologue.lean",
+  "theorem": "decode_prologue_segment",
+  "kind": "statement",
+  "old": "(hsp : s.regs.rsp.toBitVec - 8 - F.toBitVec = sp)",
+  "new": "(hsp : s.regs.rsp.toBitVec - F.toBitVec = sp)"
+ },
+ {
+  "id": "codec-decoder-prologue-decode-return-segment-statement-rsp-16-to-8",
+  "module": "Codec/DecoderPrologue.lean",
+  "theorem": "decode_return_segment",
+  "kind": "statement",
+  "old": "st.data.regs.rsp = { toBitVec := sp + 16 }",
+  "new": "st.data.regs.rsp = { toBitVec := sp + 8 }"
+ },
+ {
+  "id": "codec-decoder-prologue-step-nil-check-control",
+  "module": "Codec/DecoderPrologue.lean",
+  "theorem": "step_nil_check",
+  "kind": "control"
+ },
+ {
+  "id": "codec-field-frame-frame-join-three-words-control",
+  "module": "Codec/FieldFrame.lean",
+  "theorem": "frame_join_three_words",
+  "kind": "control"
+ },
+ {
+  "id": "codec-field-frame-frame-join-three-words-statement-hz-16-to-24",
+  "module": "Codec/FieldFrame.lean",
+  "theorem": "frame_join_three_words",
+  "kind": "statement",
+  "old": "(hz : x + 16 = z)",
+  "new": "(hz : x + 24 = z)"
+ },
+ {
+  "id": "codec-field-frame-decode-epilogue-any-frame-control",
+  "module": "Codec/FieldFrame.lean",
+  "theorem": "decode_epilogue_any_frame",
+  "kind": "control"
+ },
+ {
+  "id": "codec-field-frame-decode-epilogue-any-frame-statement-h-ra-8-to-16",
+  "module": "Codec/FieldFrame.lean",
+  "theorem": "decode_epilogue_any_frame",
+  "kind": "statement",
+  "old": "(hRa : aFp + 8 = aRa)",
+  "new": "(hRa : aFp + 16 = aRa)"
+ },
+ {
+  "id": "codec-decode-reject-size-any-frame-decode-reject-segment-control",
+  "module": "Codec/DecodeRejectSizeAnyFrame.lean",
+  "theorem": "Codec.decode_reject_segment",
+  "kind": "control"
+ },
+ {
+  "id": "codec-decode-reject-size-any-frame-decode-reject-segment-statement-hd-b-24-to-16",
+  "module": "Codec/DecodeRejectSizeAnyFrame.lean",
+  "theorem": "Codec.decode_reject_segment",
+  "kind": "statement",
+  "old": "(hdB : dB.toBitVec = F.toBitVec + 24)",
+  "new": "(hdB : dB.toBitVec = F.toBitVec + 16)"
+ },
+ {
+  "id": "codec-decode-reject-size-any-frame-decode-reject-segment-statement-rax-none-to-none",
+  "module": "Codec/DecodeRejectSizeAnyFrame.lean",
+  "theorem": "Codec.decode_reject_segment",
+  "kind": "statement",
+  "old": "st.data.regs.rax = e0 ∧ st.data.regs.rbx = e1",
+  "new": "st.data.regs.rax = e1 ∧ st.data.regs.rbx = e0"
+ }
+]

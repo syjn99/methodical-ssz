@@ -1,0 +1,351 @@
+[
+ {
+  "id": "committee-index-decode-generated-accept-control",
+  "kind": "control",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-decode-generated-accept-code-cmp-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x9,%rcx"
+ },
+ {
+  "id": "committee-index-decode-generated-accept-code-mov-rbx-to-0x8-rbx",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  mov (%rbx),%rcx",
+  "new": "  mov 0x8(%rbx),%rcx"
+ },
+ {
+  "id": "committee-index-decode-generated-accept-code-mov-rax-to-0x8-rax",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "line": 47,
+  "old": "  mov %rcx,(%rax)",
+  "new": "  mov %rcx,0x8(%rax)"
+ },
+ {
+  "id": "committee-index-decode-generated-accept-statement-rax-0-to-1",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "committee-index-size-result-control",
+  "kind": "control",
+  "module": "Prysm/CommitteeIndex/Size.lean",
+  "theorem": "Prysm.CommitteeIndex.Size.result",
+  "code_definition": "sizeSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.SizeSSZ.S"
+ },
+ {
+  "id": "committee-index-size-result-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/Size.lean",
+  "theorem": "Prysm.CommitteeIndex.Size.result",
+  "code_definition": "sizeSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.SizeSSZ.S",
+  "old": "  mov $0x8,%eax",
+  "new": "  mov $0x9,%eax"
+ },
+ {
+  "id": "committee-index-encode-fast-path-control",
+  "kind": "control",
+  "module": "Prysm/CommitteeIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S"
+ },
+ {
+  "id": "committee-index-encode-fast-path-code-lea-0x8-rcx-to-0x10-rcx",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S",
+  "old": "  lea 0x8(%rcx),%rdx",
+  "new": "  lea 0x10(%rcx),%rdx"
+ },
+ {
+  "id": "committee-index-encode-fast-path-code-mov-rax-to-0x8-rax",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S",
+  "old": "  mov (%rax),%r8",
+  "new": "  mov 0x8(%rax),%r8"
+ },
+ {
+  "id": "committee-index-encode-fast-path-code-jae-to-jb",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo_61",
+  "new": "  jb L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo_61"
+ },
+ {
+  "id": "committee-index-encode-fast-path-code-xor-edi-edi-to-esi-esi",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.fast_path",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S",
+  "old": "  xor %edi,%edi",
+  "new": "  xor %esi,%esi"
+ },
+ {
+  "id": "committee-index-encode-fast-path-statement-rdi-0-to-1",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/EncodeFastPath.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.fast_path",
+  "old": "st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0",
+  "new": "st.data.regs.rdi = 1 ∧ st.data.regs.rsi = 0"
+ },
+ {
+  "id": "committee-index-encode-fast-path-spec-control",
+  "kind": "control",
+  "module": "Prysm/CommitteeIndex/EncodeSpec.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.fast_path_spec"
+ },
+ {
+  "id": "committee-index-encode-fast-path-spec-statement-rbx-none-to-1",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/EncodeSpec.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.fast_path_spec",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-control",
+  "kind": "control",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "old": "  mov $0x8,%edi",
+  "new": "  mov $0x9,%edi",
+  "note": "growslice num 9: old = len - 1 bytes, not len",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-code-mov-0x68-rsp-to-0x70-rsp",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "old": "  mov %rcx,0x68(%rsp)",
+  "new": "  mov %rcx,0x70(%rsp)",
+  "note": "len spilled to the wrong slot before the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-code-mov-0x68-rsp-to-0x60-rsp",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "old": "  mov 0x68(%rsp),%rcx",
+  "new": "  mov 0x60(%rsp),%rcx",
+  "note": "len reloaded from the rbx spill slot after the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-code-jae-to-jb",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo_61",
+  "new": "  jb L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo_61",
+  "note": "with cap < len + 8 the inverted test skips the growslice call",
+  "code_definition": "marshalSSZTo",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZTo.S"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-statement-rbx-8-to-9",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 8",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 9",
+  "note": "the returned length is len + 8"
+ },
+ {
+  "id": "committee-index-encode-grow-first-site-statement-hgrow-lt-to-le",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/EncodeGrowFirstSite.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.grow_first_site",
+  "old": "(hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)",
+  "new": "(hgrow : s.regs.rdi.toNat ≤ s.regs.rcx.toNat + 8)",
+  "note": "with cap = len + 8 the code takes the fast path, not the growslice call"
+ },
+ {
+  "id": "committee-index-encode-cover-framed-control",
+  "kind": "control",
+  "module": "Prysm/CommitteeIndex/EncodeCoverFramed.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.cover_framed"
+ },
+ {
+  "id": "committee-index-encode-cover-framed-statement-rcx-rdi-to-rcx",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/EncodeCoverFramed.lean",
+  "theorem": "Prysm.CommitteeIndex.Encode.cover_framed",
+  "old": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rcx = s.regs.rdi ∧",
+  "new": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rcx = s.regs.rcx ∧",
+  "note": "(1): the fast path returns cap = the caller's cap"
+ },
+ {
+  "id": "committee-index-marshal-result-control",
+  "kind": "control",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-marshal-result-code-mov-0x8-to-0x9",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "line": 18,
+  "old": "  mov $0x8,%ebx",
+  "new": "  mov $0x9,%ebx",
+  "note": "returned length 9, not 8",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-marshal-result-code-mov-0x40-rsp-to-0x38-rsp",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "old": "  mov 0x40(%rsp),%rdx",
+  "new": "  mov 0x38(%rsp),%rdx",
+  "note": "value reloaded from a frame byte range that the code did not write",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-marshal-result-code-mov-rax-to-0x8-rax",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "old": "  mov %rdx,(%rax)",
+  "new": "  mov %rdx,0x8(%rax)",
+  "note": "value stored at new[8..16], not at new[0..8]",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-marshal-result-code-mov-rbx-rdi-to-rbx-rcx",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "old": "  mov %rbx,%rdi",
+  "new": "  mov %rbx,%rcx",
+  "note": "growslice oldCap 8 = newLen and num unset: outside the contract premises",
+  "code_definition": "marshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.MarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-marshal-result-statement-rbx-8-to-9",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "old": "∧ st.data.regs.rbx = 8",
+  "new": "∧ st.data.regs.rbx = 9",
+  "note": "the returned length is 8"
+ },
+ {
+  "id": "committee-index-marshal-result-statement-hbud-8192-to-8191",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/Marshal.lean",
+  "theorem": "Prysm.CommitteeIndex.Marshal.result",
+  "old": "(hbud : 2 * nextSliceCap 8 0 + 8192 ≤ avail)",
+  "new": "(hbud : 2 * nextSliceCap 8 0 + 8191 ≤ avail)",
+  "note": "the growslice contract needs the budget 2 * nextSliceCap 8 0 + 8192"
+ },
+ {
+  "id": "committee-index-decode-reject-size-control",
+  "kind": "control",
+  "module": "Prysm/CommitteeIndex/DecodeRejectSize.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "committee-index-decode-reject-size-code-cmp-0x8-to-0x7",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/DecodeRejectSize.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x7,%rcx"
+ },
+ {
+  "id": "committee-index-decode-reject-size-code-mov-0x28-to-0x27",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/DecodeRejectSize.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  mov $0x28,%ebx",
+  "new": "  mov $0x27,%ebx"
+ },
+ {
+  "id": "committee-index-decode-reject-size-code-mov-0x2-to-0x1",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/DecodeRejectSize.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  mov $0x2,%edi",
+  "new": "  mov $0x1,%edi"
+ },
+ {
+  "id": "committee-index-decode-reject-size-code-format-110107-to-110067",
+  "kind": "code",
+  "module": "Prysm/CommitteeIndex/DecodeRejectSize.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.reject_size",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "line": 24,
+  "old": "  lea go_string._+110107(%rip),%rax",
+  "new": "  lea go_string._+110067(%rip),%rax",
+  "note": "the format string of Epoch in place of the format string of CommitteeIndex"
+ },
+ {
+  "id": "committee-index-decode-reject-size-statement-rax-none-to-none",
+  "kind": "statement",
+  "module": "Prysm/CommitteeIndex/DecodeRejectSize.lean",
+  "theorem": "Prysm.CommitteeIndex.Decode.reject_size",
+  "old": "st.data.regs.rax ≠ 0",
+  "new": "st.data.regs.rax = 0"
+ }
+]

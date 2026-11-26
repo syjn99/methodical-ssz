@@ -1,0 +1,70 @@
+[
+ {
+  "id": "beacon-blocks-by-range-request-decode-accept-spec-control",
+  "module": "Prysm/BeaconBlocksByRangeRequest/DecodeSpec.lean",
+  "theorem": "Prysm.BeaconBlocksByRangeRequest.Decode.accept_spec",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-blocks-by-range-request-decode-generated-accept-statement-rax-0-to-1",
+  "module": "Prysm/BeaconBlocksByRangeRequest/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlocksByRangeRequest.Decode.generated_accept",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "beacon-blocks-by-range-request-decode-generated-reject-statement-rax-e0-to-e1",
+  "module": "Prysm/BeaconBlocksByRangeRequest/GeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlocksByRangeRequest.Decode.generated_reject",
+  "kind": "statement",
+  "old": "st.data.regs.rax = e0",
+  "new": "st.data.regs.rax = e1"
+ },
+ {
+  "id": "beacon-blocks-by-range-request-decode-accept-spec-statement-hlen-none-to-1",
+  "module": "Prysm/BeaconBlocksByRangeRequest/DecodeSpec.lean",
+  "theorem": "Prysm.BeaconBlocksByRangeRequest.Decode.accept_spec",
+  "kind": "statement",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
+ },
+ {
+  "id": "beacon-blocks-by-range-request-witness-generated-decode-accept-runs-statement-rax-0-to-1",
+  "module": "Prysm/BeaconBlocksByRangeRequest/WitnessGeneratedDecodeAccept.lean",
+  "theorem": "Prysm.BeaconBlocksByRangeRequest.Witness.GeneratedDecodeAccept.runs",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "beacon-blocks-by-range-request-encode-generated-fast-spec-control",
+  "module": "Prysm/BeaconBlocksByRangeRequest/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BeaconBlocksByRangeRequest.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "beacon-blocks-by-range-request-encode-generated-fast-statement-rax-rbx-to-rcx",
+  "module": "Prysm/BeaconBlocksByRangeRequest/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlocksByRangeRequest.Encode.generated_fast",
+  "kind": "statement",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "beacon-blocks-by-range-request-encode-generated-fast-spec-statement-hcap-24-to-16",
+  "module": "Prysm/BeaconBlocksByRangeRequest/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.BeaconBlocksByRangeRequest.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 24 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "beacon-blocks-by-range-request-witness-generated-encode-fast-path-runs-empty-statement-rax-0x100e0-to-0x8",
+  "module": "Prysm/BeaconBlocksByRangeRequest/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.BeaconBlocksByRangeRequest.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x100e0",
+  "new": "st.data.regs.rax = 0x8"
+ }
+]

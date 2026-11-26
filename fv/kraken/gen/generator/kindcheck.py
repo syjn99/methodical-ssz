@@ -1,0 +1,1693 @@
+#!/usr/bin/env python3
+"""Reader-side check of the `_kind` lines of a generated file.
+
+The `_kind` line is generator output. Lean checks it (`with_reducible rfl`), but Lean does not check WHICH
+kind it names: a degenerate right-hand side (for example `type_of% (@t h)` itself, or `True`) also compiles.
+This program checks every generated file by text. It does not change the generator.
+
+usage: kindcheck.py <generated.lean>...      exit 0 = every file passes, 1 = a file fails, 2 = usage
+       kindcheck.py --selftest               crafted good and bad files; exit 0 = all controls behave
+
+The rule numbers are labels. The error messages and the tests use them.
+Checks, per file (text only):
+ 2. Top-level lines are only: module, @[expose] public section, import, open, variable, namespace, end, set_option … in, theorem, doc or
+    plain comments, blank lines and indented continuation lines. No def / abbrev / notation / macro /
+    axiom / instance / attribute etc. (a local definition could shadow the kind name).
+ 3. No `sorry`, `admit`, `native_decide`, `bv_decide`, `axiom` token anywhere.
+ 4. Every theorem `t` whose name does not end in `_kind` is followed by exactly one theorem
+    `t_kind` whose whole header is
+        theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.uint64DecodeAcceptKind h C := by
+        (`generator.py uint64`)
+    or  a step kind (rule 10),
+    with C the code constant of `t`'s `hk : C.IsInfixAt Host.prog k` binder,
+    and the next line is exactly `  intro h; with_reducible rfl`.
+ 5. Every `_kind` theorem belongs to a theorem of the file.
+10. step chain (the first part of a `generator.py decoder --whole-accept` file): the step kinds of `lean/Codec/Kind/WindowSteps.lean`,
+    `lean/Codec/Kind/FixedBytesDecodeWindow.lean`, `lean/Codec/Kind/FixedBytesDecodeWindowOffsetZero.lean` and `lean/Codec/Kind/CalleeDecodeWindow.lean`:
+        @Codec.stepMoveRegisterKind h C Reg64.rD Reg64.rS j e          @Codec.stepAddKind h C Reg64.rD imm j e
+        @Codec.stepLoadValueKind / stepLoadBytesKind / stepStoreKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
+        @Codec.stepMoveImmediateKind h C Reg64.rD imm j e                @Codec.stepJumpKind h C "l" j jl
+        @Codec.stepLabelKind h C "l" j e                        @Codec.stepNopsKind h C j e
+        @Codec.callDecodeSegmentKindWindow h C "fn" "lok" j jc j2         fn one of the four callee labels with a proved
+                                                                          accept spec (CALLEES: Slot, CommitteeIndex,
+                                                                          ValidatorIndex, Epoch of consensus-types/primitives)
+        @Codec.bytesDecodeSegmentKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC src
+        @Codec.bytesDecodeSegmentOffsetZeroKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC
+    (n = 32 | 48 | 96; rY one of rax, rcx, rdx, rsi, rdi; registers `Reg64.<one of the 16>`; Int64 literals n or (-n)).
+    10b. The proof of `t` (comments and string literals removed) uses the lemma of its kind
+         (`step_move_register`, `step_load_value`, …, `call_decode_segment_window`, `bytes_decode_segment_window`,
+         `bytes_decode_segment_offset_zero_window`) and no other step lemma: a theorem whose proof and kind name
+         different lemmas fails.
+    10c. A step file carries exactly one line `FIELDS-JSON: [{"field": F, "theorems": [...]}, …]`: every theorem with
+         a step kind is listed in exactly one field, every listed theorem is in the file, a field has at most one block
+         theorem (`<p>_F_call` with `callDecodeSegmentKindWindow`, or `<p>_F_seg` with a byte kind).
+11. A file with a step kind carries exactly one coverage header `step coverage: n of m fields`
+    with n = m = the number of fields of FIELDS-JSON (a dropped header or field hides dropped fields).
+12. whole-accept (`generator.py decoder --whole-accept`): a whole-accept file is checked in two parts. The text before the
+    whole-accept block (`/-! Whole accept (`decoder --whole-accept`…`) by rules 2-11 as a step file; the whole-accept part by
+    rule 12 (12b the exact theorem list with the kinds decodeHeadKindAnyFrame / decodeFieldKindAnyFrame /
+    decodeEpilogueKindAnyFrame / decodeAcceptKindAnyFrame / decodeRejectKindAnyFrame; 12c the kind parameters `L`, `fields`,
+    boundary `pc` / `done` and the reject size RECOMPUTED from the `.S` and the IR named in the header (sha256 checked);
+    12d the accept proof chains every theorem). See the section `Rule 12`.
+    A file with a whole-accept kind and no whole-accept block fails (rule 12: 0 whole-accept blocks).
+13. fast-path (`generator.py encoder --fast-path`, encoder fast path): a file with `FAST-PATH-JSON:` or an encoder kind
+    (encodeHeadKindAnyFrame / encodeFieldKindAnyFrame / encodeEpilogueKindAnyFrame / encodeFastPathKindAnyFrame) is checked by
+    rule 13 only: 13b structure (one layout def or a pinned hand layout; the exact theorem list, each with its kind; the code
+    constant); 13c every kind line equals, as whole text, the line rendered from an OWN recomputation (this file's
+    interpreter, not the generator) of the fields, the layout and every boundary state from the `.S` and the IR named in
+    FAST-PATH-JSON (sha256 checked), and C is bound to that `.S` by `include_x64_code` in an imported code module; 13d the
+    fast-path proof chains every theorem once; 13e the statement tie `_fast_statement_tie` names no generated theorem (implication lemma
+    only from FAST_PATH_VIA). See the section `rule 13`.
+
+Limits (not checked here): step label strings in `stepLabelKind`, `stepJumpKind` and `callDecodeSegmentKindWindow` (`lok`) are
+phantom kind parameters (they do not occur in the kind body; `stepLabelKind C l j e` is
+`stepNopsKind C j e` by `rfl`), so a label name in a kind line is NOT checked by this program or by the `_kind`
+line; the label is checked only by the proof's code fact (`he`, `hl`). Also not checked: that the kind parameters (C, indices, displacements, offsets) are the right
+ones for the Go type (a wrong one fails the proof's code facts, not this check); name resolution (the
+check reads `@Codec.<kind>` as text; an `open` of a namespace that declares another
+`Codec.<kind>` would not be seen); that the kind and lemma modules are unchanged; that the file builds.
+A pass is not a non-vacuity witness.
+"""
+import re
+import sys
+import pathlib
+import tempfile
+
+HERE = pathlib.Path(__file__).resolve().parent
+KR = HERE.parent.parent
+PRYSM = KR / "lean" / "Prysm"   # rule 13e: the type directories with the generated modules
+GENNS = re.compile(r"^Prysm\.\w+\.(?:Decode|Encode)\.generated")  # rule 13e: generated names
+DECL = re.compile(r"^(?:private |protected |noncomputable )*(?:theorem|lemma|def|abbrev) (\S+)")
+
+CALLEES = tuple(f'"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"'
+                for n in ("Slot", "CommitteeIndex", "ValidatorIndex", "Epoch"))
+INT = r"(?:0|[1-9][0-9]*|\(-[1-9][0-9]*\))"  # an Int64 literal as the generator writes it
+STEP_REGISTERS = r"Reg64\.(?:rax|rbx|rcx|rdx|rsi|rdi|rsp|rbp|r8|r9|r10|r11|r12|r13|r14|r15)"
+STEP_RECEIVER_REGISTERS = r"Reg64\.(?:rax|rcx|rdx|rsi|rdi)"
+
+# kind -> (parameter regex after `h `, with {C} for the code constant; namespace of the kind and of its lemma; lemma
+# of the proof). The step kinds, the fixed-bytes window kinds and the call-block kind are in `lean/Codec/Kind/`
+# (`WindowSteps.lean`, `FixedBytesDecodeWindow*.lean`, `CalleeDecodeWindow.lean`); their lemmas are in
+# `lean/Codec/WindowSteps.lean`, `lean/Codec/FixedBytesDecodeWindow*.lean` and `lean/Codec/CalleeDecodeWindow.lean`.
+STEP_KINDS = {
+    "stepMoveRegisterKind": ("{C} STEP_REGISTERS STEP_REGISTERS NAT NAT", "Codec", "step_move_register"),
+    "stepLoadValueKind": ("{C} STEP_REGISTERS STEP_REGISTERS INT NAT NAT", "Codec", "step_load_value"),
+    "stepLoadBytesKind": ("{C} STEP_REGISTERS STEP_REGISTERS INT NAT NAT", "Codec", "step_load_bytes"),
+    "stepStoreKind": ("{C} STEP_REGISTERS STEP_REGISTERS INT NAT NAT", "Codec", "step_store"),
+    "stepLeaKind": ("{C} STEP_REGISTERS STEP_REGISTERS INT NAT NAT", "Codec", "step_lea"),
+    "stepAddKind": ("{C} STEP_REGISTERS INT NAT NAT", "Codec", "step_add_immediate"),
+    "stepMoveImmediateKind": ("{C} STEP_REGISTERS INT NAT NAT", "Codec", "step_move_immediate"),
+    "stepJumpKind": ("{C} LBL NAT NAT", "Codec", "step_jump"),
+    "stepLabelKind": ("{C} LBL NAT NAT", "Codec", "step_label"),
+    "stepNopsKind": ("{C} NAT NAT", "Codec", "step_nops"),
+    "callDecodeSegmentKindWindow": ("{C} LBL LBL NAT NAT NAT", "Codec", "call_decode_segment_window"),
+    "bytesDecodeSegmentKindWindow": ("SIZE {C} STEP_RECEIVER_REGISTERS NAT NAT NAT INT INT INT INT INT INT INT", "Codec", "bytes_decode_segment_window"),
+    "bytesDecodeSegmentOffsetZeroKindWindow": ("SIZE {C} STEP_RECEIVER_REGISTERS NAT NAT NAT INT INT INT INT INT INT", "Codec", "bytes_decode_segment_offset_zero_window"),
+}
+STEP_LEMMAS = {v[2]: v[1] for v in STEP_KINDS.values()}   # lemma -> namespace
+STEP_BLOCK = {"callDecodeSegmentKindWindow": "call", "bytesDecodeSegmentKindWindow": "segment", "bytesDecodeSegmentOffsetZeroKindWindow": "segment"}
+LBL = r'"[^"\\\s]+"'
+COVER = re.compile(r"step coverage: (\d+) of (\d+) fields")
+SIZE = r"(?:32|48|96)"  # the sizes of the hypothesis `hn` of the byte segment lemmas
+
+TOP_OK = re.compile(r"^(module$|@\[expose\] public section$|(public )?import |open |variable |namespace |end\b|set_option \S+ \S+ in$|theorem |/-|--|$|\s)")
+BANNED = re.compile(r"\b(sorry|admit|native_decide|bv_decide|axiom)\b")
+THM = re.compile(r"^theorem (\S+)")
+HK = re.compile(r"\(hk : (\S+)\.IsInfixAt Host\.prog k\)")
+NAT = r"(?:0|[1-9][0-9]*)"
+
+
+def gen_names(lean_dir=PRYSM):
+    """Rule 13e: last name components of every declaration in a generated module `<Type>/Generated*.lean`."""
+    out = set()
+    for f in sorted(lean_dir.glob("*/Generated*.lean")):
+        for l in f.read_text().split("\n"):
+            if (m := DECL.match(l)):
+                out.add(m.group(1).rsplit(".", 1)[-1])
+    return out
+
+
+def strip_comments(s):
+    """Lean text without `--` line comments and `/- … -/` block comments (nested)."""
+    out, i, depth = [], 0, 0
+    while i < len(s):
+        if s.startswith("/-", i):
+            depth, i = depth + 1, i + 2
+        elif depth and s.startswith("-/", i):
+            depth, i = depth - 1, i + 2
+        elif depth:
+            i += 1
+        elif s.startswith("--", i):
+            j = s.find("\n", i)
+            i = len(s) if j < 0 else j
+        else:
+            out.append(s[i])
+            i += 1
+    return "".join(out)
+
+
+def strip_strings(s):
+    """Lean text without the contents of string literals ("…", with escapes)."""
+    return re.sub(r'"(?:[^"\\]|\\.)*"', '""', s)
+
+
+def step_param_rx(spec, C):
+    rx = spec.replace("STEP_REGISTERS", STEP_REGISTERS).replace("STEP_RECEIVER_REGISTERS", STEP_RECEIVER_REGISTERS).replace("INT", INT).replace("NAT", NAT)
+    return rx.replace("LBL", LBL).replace("SIZE", SIZE).replace("{C}", C)
+
+
+def check_text(text):
+    """Rules 2-11. Returns (errors, theorem names)."""
+    step_kind = {}      # theorem -> step kind name (rule 10)
+    errs = []
+    lines = text.split("\n")
+    in_block = 0
+    for i, l in enumerate(lines, 1):
+        # skip block comments (doc and plain) for the top-level and banned-token checks
+        if in_block or l.lstrip().startswith("/-"):
+            in_block += l.count("/-") - l.count("-/")
+            continue
+        code = l.split("--", 1)[0]
+        if BANNED.search(code):
+            errs.append(f"line {i}: banned token: {l.strip()}")
+        if not TOP_OK.match(l):
+            errs.append(f"line {i}: top-level form not allowed: {l.strip()[:80]}")
+    thms = [(i, m.group(1)) for i, l in enumerate(lines) if (m := THM.match(l))]
+    names = [n for _, n in thms]
+    if len(set(names)) != len(names):
+        errs.append("duplicate theorem names")
+    mains = [n for n in names if not n.endswith("_kind")]
+    if not mains:
+        errs.append("no generated theorem found")
+    pos = {n: i for i, n in thms}
+    for t in mains:
+        i = pos[t]
+        # header of t up to ':=' ; code constant from its hk binder
+        hdr = "\n".join(lines[i:i + 40]).split(":=", 1)[0]
+        hk = HK.search(hdr)
+        if not hk:
+            errs.append(f"{t}: no `(hk : C.IsInfixAt Host.prog k)` binder")
+            continue
+        C = re.escape(hk.group(1))
+        nxt = [n for _, n in thms if _ > i]
+        if not nxt or nxt[0] != t + "_kind":
+            errs.append(f"{t}: the next theorem is not {t}_kind")
+            continue
+        j = pos[t + "_kind"]
+        step_match = re.fullmatch(rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
+                           rf"@(Codec)\.(\w+) h (.*) := by", lines[j])
+        if step_match and step_match.group(2) in STEP_KINDS:
+            kn = step_match.group(2)
+            spec, kns, lem = STEP_KINDS[kn]
+            step_kind[t] = kn
+            if step_match.group(1) != kns or not re.fullmatch(step_param_rx(spec, C), step_match.group(3)):
+                errs.append(f"{t}_kind: header is not a kind of lean/Codec/Kind: {lines[j][:160]}")
+            elif kn == "callDecodeSegmentKindWindow" and step_match.group(3).split(" ")[1] not in CALLEES:
+                errs.append(f"{t}_kind: callee {step_match.group(3).split(' ')[1]} has no proved accept spec (allowed: Slot, "
+                            f"CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives)")
+            # rule 10b: the proof uses the lemma of the kind and no other step lemma
+            proof = strip_strings(strip_comments("\n".join(lines[i:j]).split(":= by", 1)[-1]))
+            used = {x for x, xns in STEP_LEMMAS.items() if re.search(rf"\b{xns}\.{x}\b", proof)}
+            if used != {lem}:
+                errs.append(f"{t}: proof uses {sorted(used) or 'no step lemma'}, its kind {kn} is the statement of {lem}")
+            if j + 1 >= len(lines) or lines[j + 1] != "  intro h; with_reducible rfl":
+                errs.append(f"{t}_kind: proof line is not `  intro h; with_reducible rfl`")
+            continue
+        want = (rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
+                rf"@Codec\.uint64DecodeAcceptKind h {C} := by")
+        if not re.fullmatch(want, lines[j]):
+            errs.append(f"{t}_kind: header is not a kind of lean/Codec/Kind: {lines[j][:160]}")
+        if j + 1 >= len(lines) or lines[j + 1] != "  intro h; with_reducible rfl":
+            errs.append(f"{t}_kind: proof line is not `  intro h; with_reducible rfl`")
+    # rules 10c and 11: the step fields and the coverage header
+    cov = [c for c in (COVER.search(l) for l in lines) if c]
+    fjs = [l for l in lines if l.startswith("FIELDS-JSON: ")]
+    if step_kind and not cov:
+        errs.append("no coverage header `step coverage: n of m fields` in a file with step kinds "
+                    "(a dropped header hides dropped fields)")
+    if step_kind or fjs or cov:
+        import json
+        if len(fjs) != 1:
+            errs.append(f"step file: {len(fjs)} `FIELDS-JSON:` lines (expected 1)")
+            fl = []
+        else:
+            try:
+                fl = json.loads(fjs[0][len("FIELDS-JSON: "):])
+                assert isinstance(fl, list) and all(isinstance(f, dict) and set(f) == {"field", "theorems"}
+                                                    and isinstance(f["theorems"], list) for f in fl)
+            except (ValueError, AssertionError):
+                errs.append("step file: FIELDS-JSON is not a list of {field, theorems}")
+                fl = []
+        listed = [x for f in fl for x in f["theorems"]]
+        if len(set(listed)) != len(listed):
+            errs.append("step file: a theorem is listed in two fields of FIELDS-JSON")
+        for x in listed:
+            if x not in mains:
+                errs.append(f"step file: FIELDS-JSON lists {x}, not a theorem of the file")
+        for x in mains:
+            if x not in listed:
+                errs.append(f"step file: theorem {x} is in no field of FIELDS-JSON")
+        if any(x not in step_kind for x in listed if x in mains):
+            errs.append("step file: a listed theorem has no step kind")
+        for f in fl:
+            blocks = [x for x in f["theorems"] if step_kind.get(x) in STEP_BLOCK]
+            if len(blocks) > 1:
+                errs.append(f"step field {f['field']}: {len(blocks)} block theorems (at most 1)")
+            for x in blocks:
+                if not x.endswith(f"_{f['field']}_{STEP_BLOCK[step_kind[x]]}"):
+                    errs.append(f"step field {f['field']}: block theorem {x} is not `<prefix>_{f['field']}_"
+                                f"{STEP_BLOCK[step_kind[x]]}`")
+            if not f["theorems"]:
+                errs.append(f"step field {f['field']}: no theorem")
+        if len(cov) > 1:
+            errs.append(f"{len(cov)} coverage headers (expected at most 1)")
+        elif cov:
+            cn, cm = int(cov[0].group(1)), int(cov[0].group(2))
+            if cn != cm:
+                errs.append(f"coverage header `{cn} of {cm} fields` with n != m (not a complete output)")
+            if cn != len({f["field"] for f in fl}):
+                errs.append(f"coverage header says {cn} fields, theorems present for {len({f['field'] for f in fl})} fields")
+    for n in names:
+        if n.endswith("_kind") and n[:-5] not in mains:
+            errs.append(f"{n}: no generated theorem {n[:-5]}")
+    return errs, mains
+
+
+def main(files):
+    gn = gen_names()
+    bad = 0
+    for f in files:
+        text = pathlib.Path(f).read_text().replace("\ntheorem _root_.", "\ntheorem ")
+        whole_accept_part = WHOLE_ACCEPT_MARK in text or "WHOLE-ACCEPT-JSON" in text or any(f"@Codec.{k} " in text for k in (
+            "decodeHeadKindAnyFrame", "decodeFieldKindAnyFrame", "decodeEpilogueKindAnyFrame", "decodeAcceptKindAnyFrame", "decodeRejectKindAnyFrame"))
+        fast_path_file = "FAST-PATH-JSON" in text or any(f"@Codec.{k} " in text for k in FAST_PATH_KINDS)
+        if fast_path_file:
+            # rule 13: a fast-path file is checked by rule 13 only; a whole-accept kind in it fails
+            errs, info6 = check_fast_path(text, gn)
+            if whole_accept_part:
+                errs.append("rule 13: a fast-path file with a whole-accept kind or block")
+            mains = [info6]
+        elif whole_accept_part:
+            # rule 12: the step part by rules 2-11, the whole-accept part by rule 12
+            part4 = text.split(WHOLE_ACCEPT_MARK, 1)[0] if text.count(WHOLE_ACCEPT_MARK) == 1 else text
+            errs, mains = check_text(part4)
+            e5, info5 = check_whole_accept(text)
+            errs = errs + e5
+            mains = mains + [info5]
+        else:
+            errs, mains = check_text(text)
+        print(("PASS" if not errs else "FAIL"), f, "theorems:", ",".join(mains))
+        for e in errs:
+            print("  ", e)
+        bad |= bool(errs)
+    return 1 if bad else 0
+
+
+GOOD = """import Codec.Uint64Decoder
+import Codec.Kind.FieldPatterns
+
+/-! generated -/
+
+open Machine Runtime Prysm.AttestationData.Code
+variable [Host]
+
+open Codec
+namespace Prysm.Fixture
+
+set_option maxRecDepth 100000 in
+theorem t (k : Nat) (hk : VxUnmarshal.IsInfixAt Host.prog k)
+    (hf : LabelsFresh VxUnmarshal k) : P := by
+  with_reducible exact foo
+theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.uint64DecodeAcceptKind h VxUnmarshal := by
+  intro h; with_reducible rfl
+
+end Prysm.Fixture
+"""
+
+
+def selftest():
+    deg = GOOD.replace("= @Codec.uint64DecodeAcceptKind h VxUnmarshal := by", "= type_of% (@t h) := by")
+    cases = [
+        ("good", GOOD, True),
+        ("degenerate_rhs_self", deg, False),
+        ("degenerate_rhs_true", GOOD.replace("= @Codec.uint64DecodeAcceptKind h VxUnmarshal := by", "= True := by"), False),
+        ("other_kind_const", GOOD.replace("uint64DecodeAcceptKind h VxUnmarshal", "uint64DecodeAcceptKind h Prysm.CommitteeIndex.Code.unmarshalSSZ"), False),
+        ("extra_param", GOOD.replace("uint64DecodeAcceptKind h VxUnmarshal :=", "uint64DecodeAcceptKind h VxUnmarshal 0 :="), False),
+        ("missing_kind", GOOD.replace("theorem t_kind", "theorem t_kinx"), False),
+        ("kind_not_next", GOOD.replace("theorem t_kind :", "theorem zz (hk : VxUnmarshal.IsInfixAt Host.prog k) : True := trivial\ntheorem t_kind :"), False),
+        ("proof_not_rfl", GOOD.replace("intro h; with_reducible rfl\n", "intro h; simp\n"), False),
+        ("local_abbrev", GOOD.replace("namespace Prysm.Fixture\n", "namespace Prysm.Fixture\nabbrev Codec.uint64DecodeAcceptKind := True\n"), False),
+        ("sorry", GOOD.replace("with_reducible exact foo", "sorry"), False),
+        ("kind_other_namespace", GOOD.replace("@Codec.uint64DecodeAcceptKind", "@Prysm.Fixture.uint64DecodeAcceptKind"), False),
+        ("orphan_kind", GOOD + "theorem q_kind : True := trivial\n", False),
+    ]
+    cases = cases + step_cases()
+    bad = []
+    for name, text, ok in cases:
+        errs, _ = check_text(text)
+        if (not errs) != ok:
+            bad.append((name, errs))
+    # the exit codes of main()
+    n_exit, bad_exit = exit_code_cases()
+    bad += bad_exit
+    # rule 12
+    n5, bad5 = whole_accept_selftest()
+    n_exit += n5
+    bad += bad5
+    # rule 13
+    n6, bad6 = fast_path_selftest()
+    n_exit += n6
+    bad += bad6
+    print("selftest", "PASS" if not bad else f"FAIL {bad}", f"({len(cases)} cases + {n_exit} exit-code / rule-12 / rule-13 cases)")
+    return 1 if bad else 0
+
+
+VALIDATOR_INDEX_DECODER_LABEL = '"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ"'
+
+
+# step controls: kind lines and proof lemma as the step front end of `generator.py decoder --whole-accept` writes them
+STEP_TEST_KINDS = {
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50": ("@Codec.stepLoadBytesKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rbx 8 50 51", "step_load_bytes Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.r8 Reg64.rax 16 51 52", "step_store Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52": ("@Codec.stepAddKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdi (-16) 52 53", "step_add_immediate Reg64.rdi (-16) _ (k + 52) (k + 53) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53": ("@Codec.stepMoveImmediateKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rcx 8 53 55", "step_move_immediate Reg64.rcx 8 _ (k + 53) (k + 55) hq he hend"),
+    "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call": (f'@Codec.callDecodeSegmentKindWindow h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ {VALIDATOR_INDEX_DECODER_LABEL} "L_pending_partial_withdrawal_b9" 55 56 88',
+                            "call_decode_segment_window _ _ _ (k + 55) (k + 56) (k + 88) hq he hjc hB hl"),
+    "pending_partial_withdrawal_step_Root_segment": ("@Codec.bytesDecodeSegmentKindWindow h 32 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rax 89 108 114 112 120 56 24 32 40 16",
+                          "bytes_decode_segment_window 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 89) (k + 102) (k + 102) (k + 108) (k + 114) hqA heA hqB heB hjl hl hjm hend"),
+    "pending_partial_withdrawal_step_directive_115": ("@Codec.stepJumpKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pending_partial_withdrawal_200\" 115 130", 'step_jump "L_pending_partial_withdrawal_200" _ (k + 115) (k + 130) hq he hl'),
+    "pending_partial_withdrawal_step_directive_130": ("@Codec.stepLabelKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ \"L_pending_partial_withdrawal_200\" 130 131", 'step_label "L_pending_partial_withdrawal_200" _ (k + 130) (k + 131) hq he hend'),
+    "pending_partial_withdrawal_step_directive_131": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rax 24 131 132", "step_store Reg64.rsi Reg64.rax 24 _ (k + 131) (k + 132) hq he hend"),
+    "pending_partial_withdrawal_step_Sig_segment": ("@Codec.bytesDecodeSegmentOffsetZeroKindWindow h 96 Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rdx 132 150 156 112 120 56 48 56 64",
+                         "bytes_decode_segment_offset_zero_window 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 132) (k + 145) (k + 145) (k + 150) (k + 156) hqA heA hqB heB hjl hl hjm hend"),
+    "pending_partial_withdrawal_step_directive_156": ("@Codec.stepLoadValueKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rsp 56 156 157", "step_load_value Reg64.rsi Reg64.rsp 56 _ (k + 156) (k + 157) hq he hend"),
+    "pending_partial_withdrawal_step_directive_157": ("@Codec.stepStoreKind h Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ Reg64.rsi Reg64.rdx 48 157 158", "step_store Reg64.rsi Reg64.rdx 48 _ (k + 157) (k + 158) hq he hend"),
+}
+STEP_TEST_FIELDS = [("Amount", ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51"]), ("Index", ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]),
+       ("Root", ["pending_partial_withdrawal_step_Root_segment", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]),
+       ("Sig", ["pending_partial_withdrawal_step_Sig_segment", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"])]
+
+
+def step_block(t, kind, proof):
+    return ("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
+            f"/-- Directive `x`. -/\ntheorem {t} (k : Nat) (hk : Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ k) :\n"
+            f"    T := by\n  have hq := Codec.window_infix_at hk 1 1\n  with_reducible exact {STEP_LEMMAS[proof.split()[0]]}.{proof}\n"
+            f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h) = {kind} := by\n  intro h; with_reducible rfl\n\n")
+
+
+def step_text(fields=STEP_TEST_FIELDS, kinds=STEP_TEST_KINDS, n=None, m=None, fj=None):
+    import json
+    n = len(fields) if n is None else n
+    m = n if m is None else m
+    fj = json.dumps([dict(field=f, theorems=ts) for f, ts in fields]) if fj is None else fj
+    return ("import Codec.Kind.WindowSteps\nimport Codec.Kind.FixedBytesDecodeWindow\nimport Codec.Kind.CalleeDecodeWindow\nimport Codec.Kind.FixedBytesDecodeWindowOffsetZero\n\n"
+            f"/-! Generated by `gen/generator/generator.py decoder`; step coverage: {n} of {m} fields. -/\n\n"
+            f"/-! Step chain fields (machine-readable, read by `kindcheck.py`):\nFIELDS-JSON: {fj}\n-/\n\n"
+            "open Machine Runtime Prysm.PendingPartialWithdrawal.Code\nvariable [Host]\n\nopen Codec\nnamespace Prysm.Fixture\n\n"
+            + "".join(step_block(t, *kinds[t]) for _, ts in fields for t in ts) + "end Prysm.Fixture\n")
+
+
+GOOD_STEPS = step_text()
+
+
+def step_cases():
+    """Controls of rules 10, 10b, 10c, 11."""
+
+    def kchg(t, new):
+        old = f"type_of% (@{t} h) = {STEP_TEST_KINDS[t][0]} := by"
+        assert GOOD_STEPS.count(old) == 1, t
+        return GOOD_STEPS.replace(old, f"type_of% (@{t} h) = {new} := by")
+
+    def pchg(t, new):
+        old = f"  with_reducible exact {STEP_LEMMAS[STEP_TEST_KINDS[t][1].split()[0]]}.{STEP_TEST_KINDS[t][1]}\n"
+        assert GOOD_STEPS.count(old) == 1, t
+        return GOOD_STEPS.replace(old, new)
+    st = STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51"][0]
+    k2 = dict(STEP_TEST_KINDS, pending_partial_withdrawal_step_Index_segment=STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"])
+    two_blocks = [STEP_TEST_FIELDS[0], ("Index", STEP_TEST_FIELDS[1][1] + ["pending_partial_withdrawal_step_Index_segment"]), STEP_TEST_FIELDS[2], STEP_TEST_FIELDS[3]]
+    return [
+        ("step_good", GOOD_STEPS, True),
+        ("step_step_degenerate_self", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "type_of% (@Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51 h)"), False),
+        ("step_step_kind_other_namespace", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("@Codec.", "@Prysm.Fixture.")), False),
+        ("step_step_degenerate_true", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "True"), False),
+        ("step_step_kind_missing", GOOD_STEPS.replace("theorem Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51_kind", "theorem pending_partial_withdrawal_step_directive_51_kinx"), False),
+        ("step_st_without_disp", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace(" 16 51 52", " 51 52")), False),
+        ("step_st_register_not_reg64", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("Reg64.r8", "Reg64.xmm0")), False),
+        ("step_st_register_symbolic", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("Reg64.r8", "r")), False),
+        ("step_st_other_const", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", st.replace("Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ", "Prysm.PendingConsolidation.Code.unmarshalSSZ")), False),
+        ("step_add_extra_param", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52"][0] + " 0"), False),
+        ("step_call_two_indices", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call", STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"][0].replace(" 56 88", " 88")), False),
+        ("step_call_callee_without_spec", kchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call", STEP_TEST_KINDS["Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"][0].replace(
+            "consensus_types_primitives.ValidatorIndex", "proto_prysm_v1alpha1.Checkpoint")), False),
+        ("step_seg_ry_rbx", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace("Reg64.rax", "Reg64.rbx")), False),
+        ("step_seg_size_64", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace(" h 32 ", " h 64 ")), False),
+        ("step_seg_missing_src", kchg("pending_partial_withdrawal_step_Root_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Root_segment"][0].replace(" 40 16", " 40")), False),
+        ("step_segz_with_src", kchg("pending_partial_withdrawal_step_Sig_segment", STEP_TEST_KINDS["pending_partial_withdrawal_step_Sig_segment"][0] + " 0"), False),
+        ("step_lemma_kind_mismatch", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  with_reducible exact Codec.step_load_value Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"), False),
+        ("step_lemma_only_in_string", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", '  have x := "Codec.step_load_bytes "\n  with_reducible exact foo\n'), False),
+        ("step_lemma_only_in_comment", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  -- Codec.step_load_bytes\n  with_reducible exact foo\n"), False),
+        ("step_two_lemmas", pchg("Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "  with_reducible exact Codec.step_load_bytes (Codec.step_store x)\n"), False),
+        ("step_fields_json_missing", GOOD_STEPS.replace("FIELDS-JSON: ", "FIELDS: "), False),
+        ("step_fields_json_two_lines", GOOD_STEPS.replace("FIELDS-JSON: ", "FIELDS-JSON: []\nFIELDS-JSON: "), False),
+        ("step_theorem_not_listed", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_segment", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_segment", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"]}]'), False),
+        ("step_listed_theorem_absent", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_49"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_segment", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_segment", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"]}]'), False),
+        ("step_theorem_in_two_fields", step_text(fj='[{"field": "Amount", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_50", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51"]}, {"field": "Index", "theorems": ["Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_51", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_52", "Prysm.PendingPartialWithdrawal.Decode.generated_step_directive_53", "Prysm.PendingPartialWithdrawal.Decode.generated_step_Index_call"]}, {"field": "Root", "theorems": ["pending_partial_withdrawal_step_Root_segment", "pending_partial_withdrawal_step_directive_115", "pending_partial_withdrawal_step_directive_130", "pending_partial_withdrawal_step_directive_131"]}, {"field": "Sig", "theorems": ["pending_partial_withdrawal_step_Sig_segment", "pending_partial_withdrawal_step_directive_156", "pending_partial_withdrawal_step_directive_157"]}]'), False),
+        ("step_two_blocks_one_field", step_text(fields=two_blocks, kinds=k2), False),
+        ("step_block_name_other_field", step_text(fields=[("Amount", STEP_TEST_FIELDS[0][1]), ("Idx", STEP_TEST_FIELDS[1][1]), STEP_TEST_FIELDS[2], STEP_TEST_FIELDS[3]]), False),
+        ("step_count_edited_dropped_field", step_text(fields=STEP_TEST_FIELDS[:3], n=4), False),
+        ("step_n_ne_m_default", step_text(m=5), False),
+        ("step_header_removed_field_dropped", step_text(fields=STEP_TEST_FIELDS[:3]).replace("step coverage: 3 of 3 fields", "generated"), False),
+        ("step_two_coverage_headers", GOOD_STEPS.replace("/-! Step chain fields", "/-! step coverage: 4 of 4 fields -/\n\n/-! Step chain fields", 1), False),
+    ]
+
+
+def exit_code_cases():
+    """main() exit codes on temporary files: 0 for a good file, 1 for a bad one."""
+    import contextlib, io, os
+    out = []
+    for name, text, want in [("exit_good", GOOD, 0), ("exit_bad", GOOD.replace("= @Codec.uint64DecodeAcceptKind h VxUnmarshal := by", "= True := by"), 1)]:
+        fd, path = tempfile.mkstemp(suffix=".lean")
+        os.close(fd)
+        pathlib.Path(path).write_text(text)
+        with contextlib.redirect_stdout(io.StringIO()):
+            rc = main([path])
+        os.unlink(path)
+        if rc != want:
+            out.append((name, f"exit {rc}, expected {want}"))
+    return 2, out
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# Rule 12 (`generator.py decoder --whole-accept`). A whole-accept file is a step file (checked by rules 2-11 up to the whole-accept
+# block) followed by one block `/-! Whole accept (`decoder --whole-accept` … WHOLE-ACCEPT-JSON: {…} -/` and the whole-accept theorems:
+#  12b. the whole-accept theorems are exactly, in this order: P_head, P_field_1 … P_field_n, P_epilogue, P_accept,
+#       P_reject (P = the WHOLE-ACCEPT-JSON prefix, n = the IR field count), each followed by
+#       its `_kind` theorem `theorem T_kind : ∀ (h : Host), type_of% (@T h)` / `    = @Codec.K h C …` with
+#       K = decodeHeadKindAnyFrame / decodeFieldKindAnyFrame / decodeEpilogueKindAnyFrame / decodeAcceptKindAnyFrame /
+#       decodeRejectKindAnyFrame and the proof line
+#       `  intro h; rfl` (`  intro h; with_reducible rfl` for the reject kind); every `hk` binder names C;
+#  12c. the kind parameters are RECOMPUTED here, independently of the generator, from the `.S` file and the IR JSON
+#       named (with sha256) in the file header: the field list (`.bytes n` / `.u64`, IR order, IR SSZ / Go offsets
+#       equal to the kind's running sums), the layout `L` (callees in order of first `callq`, stack chunks, lengths,
+#       runtime configuration, guard addend, state word, post-state slots and existentials, frame) by the rules of the
+#       hand-written whole-accept lemmas, the `pc` and `done` of every boundary state (head end, the end of each field event along the
+#       accept path), and the reject size; a file whose kind parameters differ FAILS. This is the statement check of
+#       a generated accept theorem;
+#  12d. the accept proof chains P_head, every P_field_<i> and P_epilogue.
+# Not checked here: the register facts, stack slots and existentials of the boundary states (the kernel checks that
+# they chain); that the file builds.
+WHOLE_ACCEPT_MARK = "/-! Whole accept (`decoder --whole-accept`"
+WHOLE_ACCEPT_PRIM = "github.com_OffchainLabs_prysm_v7_consensus_types_primitives."
+WHOLE_ACCEPT_CONST = {"Slot": "Prysm.Slot.Code.unmarshalSSZ", "CommitteeIndex": "Prysm.CommitteeIndex.Code.unmarshalSSZ",
+            "ValidatorIndex": "Prysm.ValidatorIndex.Code.unmarshalSSZ", "Epoch": "Prysm.Epoch.Code.unmarshalSSZ"}
+WHOLE_ACCEPT_HDR = re.compile(r"Generated by `gen/generator/generator\.py decoder` from `([^`]+)`\n\(sha256 `([0-9a-f]{64})`\) and `([^`]+)` "
+                    r"\(sha256 `([0-9a-f]{64})`, type `([^`]+)`\)")
+
+
+class WholeAcceptMismatch(Exception):
+    pass
+
+
+def whole_accept_ir(ir_text, tname):
+    """(fields, ssz size) from the IR JSON: fields = [(name, '.bytes n' | '.uint64', callee or None, ssz off, go off)]."""
+    import json
+    pkg, name = tname.rsplit(".", 1)
+    ts = [t for c in json.loads(ir_text)["configs"] for t in c.get("types", [])
+          if t.get("name") == name and t.get("package", "").endswith("/" + pkg)]
+    if len(ts) != 1:
+        raise WholeAcceptMismatch(f"type {tname}: {len(ts)} IR entries")
+    t = ts[0]
+    goff = {f["name"]: f["offset_gc_amd64"] for f in t["go_fields"]}
+    out, so = [], 0
+    for f in t["ir"]["fields"]:
+        v = f["v"]
+        if v.get("k") == "vector" and v.get("elem", {}).get("k") == "byte" and v.get("go_type") == "[]byte" \
+                and v.get("size") in (32, 48, 96) and v.get("fixed_size") == v.get("size") and not v.get("variable"):
+            kd, cal = f".bytes {v['size']}", None
+        elif v.get("k") == "uint" and v.get("bits") == 64 and v.get("go_type") == "uint64" and v.get("fixed_size") == 8:
+            kd, cal = ".uint64", None
+        elif v.get("k") == "overlay" and v.get("fixed_size") == 8 and (v.get("deleg") or {}).get("unmarshaler") \
+                and v.get("name") in WHOLE_ACCEPT_CONST and v.get("pkg", "").endswith("/consensus-types/primitives") \
+                and (v.get("underlying") or {}).get("k") == "uint" and (v.get("underlying") or {}).get("bits") == 64:
+            kd, cal = ".uint64", v["name"]
+        else:
+            raise WholeAcceptMismatch(f"field {f['key']}: IR kind {v.get('k')} ({v.get('go_type')}) is not a whole-accept field kind")
+        out.append((f["key"], kd, cal, so, goff.get(f["key"])))
+        so += v["fixed_size"]
+    if t["ir"].get("fixed_size") != so:
+        raise WholeAcceptMismatch(f"IR fixed size {t['ir'].get('fixed_size')} != sum of field sizes {so}")
+    return out, so
+
+
+def whole_accept_expect(dirs, fields, sz):
+    """Independent recomputation of the whole-accept kind parameters from the directives (`.S`, nonblank lines stripped)
+    and the IR fields. Returns dict(L=text, fields=text, pcs=[pc_0 … pc_n], sz)."""
+    lab = lambda d: d[:-1] if d.endswith(":") and " " not in d else None
+    idx = {lab(d): i for i, d in enumerate(dirs) if lab(d)}
+    m = re.fullmatch(r"sub \$(0x[0-9a-f]+),%rsp", dirs[6]) if len(dirs) > 11 else None
+    if not m or dirs[9] != f"cmp ${sz:#x},%rcx" or not dirs[10].startswith("jne "):
+        raise WholeAcceptMismatch("head: directive 6 is not `sub $F,%rsp` or directive 9 is not `cmp $size,%rcx`")
+    F = int(m.group(1), 16)
+    frame = F + 8
+    st = fields[0][4] == 8
+    so, go = 0, 8 if st else 0
+    for (n_, kd, cal, s_, g_) in fields:
+        if s_ != so or g_ != go:
+            raise WholeAcceptMismatch(f"field {n_}: IR SSZ / Go offsets {s_} / {g_}, kind running sums {so} / {go}")
+        so += int(kd.split()[1]) if kd.startswith(".bytes") else 8
+        go += 24 if kd.startswith(".bytes") else 8
+    home = {"rax": 8, "rbx": 16, "rdi": 32}
+    spills = {16: "rbx"}
+    i = 11
+    while (mm := re.fullmatch(r"mov %(rax|rbx|rdi),(0x[0-9a-f]+)\(%rsp\)", dirs[i])):
+        if int(mm.group(2), 16) - frame != home[mm.group(1)]:
+            raise WholeAcceptMismatch(f"head: spill `{dirs[i]}` not to the home slot")
+        spills[home[mm.group(1)]] = mm.group(1)
+        i += 1
+    if dirs[i] == "test %al,(%rax)":
+        i += 1
+    pcs = [i]
+    # the accept path
+    R = {}
+    written, callees, events = {}, [], {}
+    n_ms = n_mm = 0
+    last_call = None
+    has_rt = has_call = False
+    prev = None
+    seen = set()
+    r32 = {"eax": "rax", "ebx": "rbx", "ecx": "rcx", "edx": "rdx", "esi": "rsi", "edi": "rdi"}
+    while True:
+        if i >= len(dirs) or i in seen:
+            raise WholeAcceptMismatch("accept path: end of file or loop before the epilogue")
+        seen.add(i)
+        d = dirs[i]
+        if d == "nop" or lab(d):
+            i += 1
+            continue
+        if d == f"add ${F:#x},%rsp":
+            break
+        if (mm := re.fullmatch(r"jmp (\S+)", d)):
+            i = idx[mm.group(1)]
+            continue
+        if (mm := re.fullmatch(r"j(e|ne) (\S+)", d)):
+            if prev == "cmpl $0x0,runtime.writeBarrier(%rip)":
+                i = idx[mm.group(2)] if mm.group(1) == "e" else i + 1
+            elif prev == "test %rax,%rax" and mm.group(1) == "e":
+                i = idx[mm.group(2)]
+                # a callee call's continuation label: the event of the call field
+                if pend_call is None:
+                    raise WholeAcceptMismatch("accept path: `je` after `test %rax,%rax` without a callee call")
+                events[pend_call] = i + 1
+            else:
+                raise WholeAcceptMismatch(f"accept path: branch `{d}` after `{prev}`")
+            prev = d
+            continue
+        if (mm := re.fullmatch(r"callq (\S+)", d)):
+            fn = mm.group(1)
+            last_call = i
+            R = {}
+            pend_call = None
+            if fn == "runtime.makeslice":
+                has_rt = True
+                R["rax"] = ("ptr", n_ms)
+                n_ms += 1
+            elif fn == "runtime.memmove":
+                n_mm += 1
+            elif fn.startswith(WHOLE_ACCEPT_PRIM) and fn.endswith(".UnmarshalSSZ") and fn[len(WHOLE_ACCEPT_PRIM):-13] in WHOLE_ACCEPT_CONST:
+                has_call = True
+                c = WHOLE_ACCEPT_CONST[fn[len(WHOLE_ACCEPT_PRIM):-13]]
+                if c not in callees:
+                    callees.append(c)
+                R["rax"] = R["rbx"] = ("zero",)
+                todo = [k for k, f in enumerate(fields) if f[2] == fn[len(WHOLE_ACCEPT_PRIM):-13] and k not in events]
+                if not todo:
+                    raise WholeAcceptMismatch(f"accept path: call {fn} without an open IR field of that callee")
+                pend_call = todo[0]
+            else:
+                raise WholeAcceptMismatch(f"accept path: call of {fn}")
+            prev = d
+            i += 1
+            continue
+        if (mm := re.fullmatch(r"mov %(\w+),(0x[0-9a-f]+)\(%rsp\)", d)):
+            o = int(mm.group(2), 16)
+            if 0x18 <= o < F:
+                v = R.get(mm.group(1))
+                if v is None:
+                    raise WholeAcceptMismatch(f"accept path: store `{d}` of a value this check does not model")
+                written[o] = v
+            elif not (o < 0x18 and False):
+                raise WholeAcceptMismatch(f"accept path: stack store `{d}` outside the frame slots [0x18, F)")
+        elif (mm := re.fullmatch(r"mov %(\w+),(?:(0x[0-9a-f]+))?\(%(\w+)\)", d)) and mm.group(3) not in ("rsp", "r11"):
+            o = int(mm.group(2), 16) if mm.group(2) else 0
+            bi = 0
+            for k, (n_, kd, cal, s_, g_) in enumerate(fields):
+                if kd.startswith(".bytes"):
+                    if g_ == o and k not in events and n_mm >= bi + 1:
+                        events[k] = i + 1
+                    bi += 1
+                elif cal is None and g_ == o and k not in events:
+                    events[k] = i + 1
+        # a register written by this directive is no longer known
+        if not d.startswith(("test ", "cmp ", "cmpl ")) and (mm := re.search(r",%(\w+)$", d)):
+            r = r32.get(mm.group(1), mm.group(1))
+            src = re.fullmatch(r"mov %(\w+),%(\w+)", d)
+            R.pop(r, None)
+            if src and src.group(1) in R:
+                R[r] = R[src.group(1)]
+        prev = d
+        i += 1
+    if sorted(events) != list(range(len(fields))):
+        raise WholeAcceptMismatch(f"accept path: field events for {sorted(events)} of {len(fields)} fields")
+    pcs += [events[k] for k in range(len(fields))]
+    if pcs != sorted(pcs) or len(set(pcs)) != len(pcs):
+        raise WholeAcceptMismatch(f"field events not in IR order: {pcs}")
+    if last_call is None:
+        raise WholeAcceptMismatch("no call on the accept path")
+    # the layout by the rules of the whole-accept lemmas
+    stack = [("at", -8)] + [("at", o) for o in sorted(spills)]
+    area = [0] if has_rt and not has_call else ([0, 8, 16] if has_rt else [8])
+    stack += [("at", -frame + a) for a in area] + [("at", -frame + o) for o in sorted(written)]
+    stack += [("at", -(frame + 8)), ("lo",) if has_rt else ("at", -(frame + 16))]
+    sl = lambda c, v: (".low " + v) if c[0] == "lo" else f".at ({'.above' if c[1] > 0 else '.below'} {abs(c[1])}) {v}"
+    pre = [sl(c, f"(.original {k})") for k, c in enumerate(stack)]
+    lens = [f"({k}, {24 if (has_rt and not has_call and c == ('at', -frame)) else 8})"
+            for k, c in enumerate(stack) if c != ("lo",)]
+    rt = (f"some ⟨{'true' if has_call else 'false'}, {8 if has_call else 0}, {len(stack) - 1}, "
+          f"{frame + 8 + (8 if has_call else 0)}⟩") if has_rt else "none"
+    post = [sl(("at", -8), "(.reg .rbp)")] + [sl(("at", o), f"(.reg .{spills[o]})") for o in sorted(spills)]
+    post.append(sl(("at", -frame if has_rt else -frame + 8), "(.existential 0)"))
+    for o in sorted(written):
+        v = written[o]
+        post.append(sl(("at", -frame + o), ".zero" if v == ("zero",) else f"(.ptr {v[1]})"))
+    post += [sl(("at", -(frame + 8)), f"(.ret {last_call + 1})"), sl(stack[-1], "(.existential 1)")]
+    exs = "[.fixed 24, .low]" if has_rt else "[.fixed 8, .fixed 8]"
+    L = (f"(Codec.DecoderFrameLayout.mk [{', '.join(callees)}] {len(stack)} [{', '.join(lens)}] [{', '.join(pre)}] ({rt}) "
+         f"{frame + 8 if has_call else 0} {'true' if st else 'false'} {exs} [{', '.join(post)}] {frame})")
+    return dict(L=L, fields="[" + ", ".join(f[1] for f in fields) + "]", pcs=pcs, sz=sz)
+
+
+def whole_accept_split_kind(lines, j):
+    """The `_kind` theorem at line j: (theorem name, kind name, parameter text, proof line) or an error string."""
+    m = re.fullmatch(r"theorem (\S+)_kind : ∀ \(h : Host\), type_of% \(@(\S+) h\)", lines[j])
+    if not m or m.group(1) != m.group(2):
+        return f"line {j + 1}: `_kind` header is not `theorem T_kind : ∀ (h : Host), type_of% (@T h)`"
+    k = j + 1
+    body = []
+    while k < len(lines) and not lines[k].endswith(" := by"):
+        body.append(lines[k])
+        k += 1
+    if k >= len(lines):
+        return f"{m.group(1)}_kind: no `:= by`"
+    body.append(lines[k][:-len(" := by")])
+    txt = " ".join(x.strip() for x in body)
+    mk = re.fullmatch(r"= @Codec\.(\w+) h (\S+) ?(.*)", txt)
+    if not mk:
+        return f"{m.group(1)}_kind: right-hand side is not `= @Codec.K h C …`"
+    return m.group(1), mk.group(1), mk.group(2), mk.group(3), (lines[k + 1] if k + 1 < len(lines) else ""), k + 1
+
+
+def whole_accept_balanced(s, open_, close):
+    """Split `s` (starting with `open_`) into the balanced prefix and the rest."""
+    depth = 0
+    for i, ch in enumerate(s):
+        depth += ch == open_
+        depth -= ch == close
+        if depth == 0:
+            return s[:i + 1], s[i + 1:].strip()
+    return None, s
+
+
+def check_whole_accept(text, kr=None, expect=None):
+    """Rule 12 on the whole-accept part of `text`. `expect` (for the selftest) replaces the recomputation from the files."""
+    import hashlib
+    import json
+    kr = KR if kr is None else kr
+    errs, info = [], ""
+    if text.count(WHOLE_ACCEPT_MARK) != 1:
+        return errs + [f"rule 12: {text.count(WHOLE_ACCEPT_MARK)} whole-accept blocks (expected 1)"], info
+    head, whole_accept_part = text.split(WHOLE_ACCEPT_MARK, 1)
+    lines = (WHOLE_ACCEPT_MARK + whole_accept_part).split("\n")
+    gj = [l for l in lines if l.startswith("WHOLE-ACCEPT-JSON: ")]
+    try:
+        assert len(gj) == 1
+        J = json.loads(gj[0][len("WHOLE-ACCEPT-JSON: "):])
+        P = J["accept"][:-len("_accept")]
+        assert J["accept"] == P + "_accept" and P
+    except Exception:
+        return errs + ["rule 12: no single valid `WHOLE-ACCEPT-JSON:` line with the accept theorem name"], info
+    # the inputs named in the header; the kind parameters recomputed from them
+    if expect is None:
+        hm = WHOLE_ACCEPT_HDR.search(head)
+        if not hm:
+            return errs + ["rule 12c: no `Generated … from `S` (sha256 …) and `IR` (sha256 …, type …)` header"], info
+        try:
+            sraw, iraw = (kr / hm.group(1)).read_bytes(), (kr / hm.group(3)).read_bytes()
+        except OSError as e:
+            return errs + [f"rule 12c: input file not readable: {e}"], info
+        if hashlib.sha256(sraw).hexdigest() != hm.group(2) or hashlib.sha256(iraw).hexdigest() != hm.group(4):
+            return errs + ["rule 12c: sha256 of the .S or IR file differs from the header"], info
+        try:
+            fields, sz = whole_accept_ir(iraw.decode(), hm.group(5))
+            dirs = [l.strip() for l in sraw.decode("ascii").split("\n") if l.strip()]
+            expect = whole_accept_expect(dirs, fields, sz)
+        except (WholeAcceptMismatch, KeyError, IndexError, ValueError) as e:
+            return errs + [f"rule 12c: recomputation refused: {type(e).__name__}: {e}"], info
+    n = len(expect["pcs"]) - 1
+    # rules 2 / 3 on the whole-accept part
+    in_block = 0
+    for i, l in enumerate(lines, 1):
+        if in_block or l.lstrip().startswith("/-"):
+            in_block += l.count("/-") - l.count("-/")
+            continue
+        if BANNED.search(l.split("--", 1)[0]):
+            errs.append(f"whole-accept line {i}: banned token: {l.strip()}")
+        if not TOP_OK.match(l):
+            errs.append(f"whole-accept line {i}: top-level form not allowed: {l.strip()[:80]}")
+    thms = [(i, m.group(1)) for i, l in enumerate(lines) if (m := THM.match(l))]
+    names = [t for _, t in thms]
+    kinds = [(f"{P}_head", "decodeHeadKindAnyFrame", 1), *[(f"{P}_field_{k + 1}", "decodeFieldKindAnyFrame", 2) for k in range(n)],
+             (f"{P}_epilogue", "decodeEpilogueKindAnyFrame", 1), (f"{P}_accept", "decodeAcceptKindAnyFrame", 0), (f"{P}_reject", "decodeRejectKindAnyFrame", None)]
+    want = [x for t, _, _ in kinds for x in (t, t + "_kind")]
+    if names != want:
+        return errs + [f"rule 12b: whole-accept theorems {names}, expected {want}"], info
+    pos = {t: i for i, t in thms}
+    C = None
+    for t, kn, nd in kinds:
+        hk = HK.search(lines[pos[t]])
+        if not hk:
+            errs.append(f"rule 12b: {t}: no `(hk : C.IsInfixAt Host.prog k)` binder on its first line")
+            continue
+        C = C or hk.group(1)
+        if hk.group(1) != C:
+            errs.append(f"rule 12b: {t}: code constant {hk.group(1)} != {C}")
+        r = whole_accept_split_kind(lines, pos[t + "_kind"])
+        if isinstance(r, str):
+            errs.append("rule 12b: " + r)
+            continue
+        _, kname, c2, rest, pl, _ = r
+        if kname != kn:
+            errs.append(f"rule 12b: {t}_kind names {kname}, expected {kn}")
+            continue
+        if c2 != C:
+            errs.append(f"rule 12b: {t}_kind: code constant {c2} != {C}")
+        if pl != ("  intro h; with_reducible rfl" if nd is None else "  intro h; rfl"):
+            errs.append(f"rule 12b: {t}_kind: proof line `{pl}`")
+        if nd is None:
+            if rest != str(expect["sz"]):
+                errs.append(f"rule 12c: {t}_kind: size {rest}, recomputed {expect['sz']}")
+            continue
+        Lt, rest = whole_accept_balanced(rest, "(", ")")
+        if Lt is None or " ".join(Lt.split()) != " ".join(expect["L"].split()):
+            errs.append(f"rule 12c: {t}_kind: layout parameter differs from the recomputation\n      file:       "
+                        f"{' '.join((Lt or '').split())}\n      recomputed: {expect['L']}")
+        Ft, rest = whole_accept_balanced(rest, "[", "]")
+        if Ft != expect["fields"]:
+            errs.append(f"rule 12c: {t}_kind: fields {Ft}, recomputed {expect['fields']}")
+        ds = []
+        for _ in range(nd):
+            Dt, rest = whole_accept_balanced(rest, "⟨", "⟩")
+            dm = re.match(r"⟨(\d+), (\d+), ", Dt or "")
+            ds.append((int(dm.group(1)), int(dm.group(2))) if dm else None)
+        if rest:
+            errs.append(f"rule 12b: {t}_kind: extra parameters `{rest[:60]}`")
+        k = int(t.rsplit("_field_", 1)[1]) if kn == "decodeFieldKindAnyFrame" else None
+        exp = {"decodeHeadKindAnyFrame": [0], "decodeFieldKindAnyFrame": [k - 1, k] if k else [], "decodeEpilogueKindAnyFrame": [n], "decodeAcceptKindAnyFrame": []}[kn]
+        for dd, b in zip(ds, exp):
+            if dd != (expect["pcs"][b], b):
+                errs.append(f"rule 12c: {t}_kind: boundary state (pc, done) = {dd}, recomputed {(expect['pcs'][b], b)}")
+    # 12d: the accept proof is the chain
+    acc = "\n".join(lines[pos[f"{P}_accept"]:pos[f"{P}_accept_kind"]])
+    for t in [f"({P}_head "] + [f"({P}_field_{k + 1} " for k in range(n)] + [f"exact {P}_epilogue "]:
+        if acc.count(t) != 1:
+            errs.append(f"rule 12d: the accept proof does not use `{t.strip('( ')}` exactly once")
+    info = "statement check: kind instance only, parameters recomputed from the IR and the .S"
+    return errs, info
+
+
+# ---- rule 12 selftest controls
+# the layouts of four real types, transcribed by hand as constructor text; the recomputation from the real `.S` / IR
+# must give exactly these
+WHOLE_ACCEPT_HAND = {
+    "VoluntaryExit": ("link-set", "(Codec.DecoderFrameLayout.mk [Prysm.Epoch.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 7 [(0, 8), (1, 8), (2, 8), "
+                      "(3, 8), (4, 8), (5, 8), (6, 8)] [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), "
+                      ".at (.above 32) (.original 3), .at (.below 72) (.original 4), .at (.below 88) (.original 5), .at (.below 96) (.original 6)] (none) 88 "
+                      "true [.fixed 8, .fixed 8] [.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) "
+                      "(.reg .rdi), .at (.below 72) (.existential 0), .at (.below 88) (.ret 56), .at (.below 96) (.existential 1)] 80)"),
+    "PendingDeposit": ("link-set", "(Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ] 10 [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), "
+                       "(6, 8), (7, 8), (8, 8)] [.at (.below 8) (.original 0), .at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) "
+                       "(.original 3), .at (.below 72) (.original 4), .at (.below 64) (.original 5), .at (.below 56) (.original 6), .at (.below 32) (.original 7), "
+                       ".at (.below 80) (.original 8), .low (.original 9)] (some ⟨true, 8, 9, 88⟩) 80 true [.fixed 24, .low] [.at (.below 8) (.reg "
+                       ".rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), .at (.below 72) (.existential 0), "
+                       ".at (.below 32) (.ptr 2), .at (.below 80) (.ret 131), .low (.existential 1)] 72)"),
+    "PowBlock": ("link-set", "(Codec.DecoderFrameLayout.mk [] 7 [(0, 8), (1, 8), (2, 8), (3, 24), (4, 8), (5, 8)] [.at (.below 8) (.original 0), "
+                 ".at (.above 8) (.original 1), .at (.above 16) (.original 2), .at (.below 40) (.original 3), .at (.below 16) (.original 4), .at (.below 48) "
+                 "(.original 5), .low (.original 6)] (some ⟨false, 0, 6, 48⟩) 0 false [.fixed 24, .low] [.at (.below 8) (.reg .rbp), .at (.above 8) "
+                 "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 40) (.existential 0), .at (.below 16) (.ptr 2), .at (.below 48) (.ret 104), "
+                 ".low (.existential 1)] 40)"),
+    "SyncCommitteeMessage": ("link-set", "(Codec.DecoderFrameLayout.mk [Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 12 [(0, 8), (1, 8), "
+                             "(2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8), (9, 8), (10, 8)] [.at (.below 8) (.original 0), .at "
+                             "(.above 8) (.original 1), .at (.above 16) (.original 2), .at (.above 32) (.original 3), .at (.below 104) (.original 4), .at (.below "
+                             "96) (.original 5), .at (.below 88) (.original 6), .at (.below 64) (.original 7), .at (.below 56) (.original 8), .at (.below 48) "
+                             "(.original 9), .at (.below 112) (.original 10), .low (.original 11)] (some ⟨true, 8, 11, 120⟩) 112 true [.fixed 24, .low] "
+                             "[.at (.below 8) (.reg .rbp), .at (.above 8) (.reg .rax), .at (.above 16) (.reg .rbx), .at (.above 32) (.reg .rdi), "
+                             ".at (.below 104) (.existential 0), .at (.below 64) .zero, .at (.below 56) .zero, .at (.below 48) (.ptr 1), .at (.below 112) "
+                             "(.ret 141), .low (.existential 1)] 104)"),
+}
+
+
+def whole_accept_inputs(tname, sdir):
+    sp = f"prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.{tname}.UnmarshalSSZ.S"
+    sraw, iraw = (KR / sp).read_bytes(), (KR / "prysm/ir/ir-mainnet.json").read_bytes()
+    return sp, sraw, iraw
+
+
+def whole_accept_good_text():
+    """A whole-accept file for VoluntaryExit in the generator's layout (theorem bodies abbreviated), with the kind
+    parameters from the recomputation; header with the real input paths and sha256."""
+    import hashlib
+    sp, sraw, iraw = whole_accept_inputs("VoluntaryExit", "link-set")
+    fields, sz = whole_accept_ir(iraw.decode(), "v1alpha1.VoluntaryExit")
+    E = whole_accept_expect([l.strip() for l in sraw.decode("ascii").split("\n") if l.strip()], fields, sz)
+    C, P, L, F = "Prysm.VoluntaryExit.Code.unmarshalSSZ", "Decode.generated", E["L"], E["fields"]
+
+    def thm(t, body):
+        return (f"set_option maxRecDepth 100000 in\ntheorem {t} : ∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k) "
+                f"(hf : LabelsFresh {C} k),\n    T := by\n{body}\n")
+
+    def kd(t, k, ds, proof="  intro h; rfl"):
+        return (f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h)\n    = @Codec.{k} h {C} {L} {F}"
+                + "".join(f"\n    ⟨{E['pcs'][d]}, {d}, [], [], []⟩" for d in ds) + f" := by\n{proof}\n\n")
+    n = len(E["pcs"]) - 1
+    out = (f"import Prysm.VoluntaryExit.Code\n\n/-! Generated by `gen/generator/generator.py decoder` from `{sp}`\n(sha256 "
+           f"`{hashlib.sha256(sraw).hexdigest()}`) and `prysm/ir/ir-mainnet.json` (sha256 `{hashlib.sha256(iraw).hexdigest()}`"
+           f", type `v1alpha1.VoluntaryExit`); step coverage. -/\n\nnamespace Prysm.Fixture\nend Prysm.Fixture\n\n"
+           f"{WHOLE_ACCEPT_MARK}): text.\nWHOLE-ACCEPT-JSON: {{\"accept\": \"{P}_accept\"}}\n-/\n\nopen Codec\n\n"
+           f"namespace Prysm.Fixture\n\n")
+    out += thm(f"{P}_head", "  exact x") + kd(f"{P}_head", "decodeHeadKindAnyFrame", [0])
+    for i in range(n):
+        out += thm(f"{P}_field_{i + 1}", "  exact x") + kd(f"{P}_field_{i + 1}", "decodeFieldKindAnyFrame", [i, i + 1])
+    out += thm(f"{P}_epilogue", "  exact x") + kd(f"{P}_epilogue", "decodeEpilogueKindAnyFrame", [n])
+    chain = (f"  refine eventually_trans _ _ _ _ ({P}_head a) ?_\n"
+             + "".join(f"  refine eventually_trans _ _ _ _ ({P}_field_{i + 1} a) ?_\n" for i in range(n)) + f"  exact {P}_epilogue a")
+    out += thm(f"{P}_accept", chain) + kd(f"{P}_accept", "decodeAcceptKindAnyFrame", [])
+    out += (f"set_option maxRecDepth 100000 in\ntheorem {P}_reject : ∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : "
+            f"LabelsFresh {C} k),\n    T := by\n  exact y\ntheorem {P}_reject_kind : ∀ (h : Host), type_of% (@{P}_reject h)\n"
+            f"    = @Codec.decodeRejectKindAnyFrame h {C} {E['sz']} := by\n  intro h; with_reducible rfl\n\n")
+    return out + "end Prysm.Fixture\n"
+
+
+def whole_accept_cases():
+    """Rule 12 controls: (id, text, expect PASS)."""
+    G = whole_accept_good_text()
+    P = "Decode.generated"
+    statement_text = G.replace(f"intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem {P}_reject ",
+                     f"intro h; rfl\n\ntheorem {P}_accept_statement : Prysm.VoluntaryExit.Decode.accept_statement := {P}_accept\n\n"
+                     f"set_option maxRecDepth 100000 in\ntheorem {P}_reject ", 1)
+    assert statement_text != G
+    acc_k = f"theorem {P}_accept_kind : ∀ (h : Host), type_of% (@{P}_accept h)"
+    return [
+        ("whole_accept_good", G, True),
+        ("whole_accept_extra_identity", statement_text, False),
+        ("whole_accept_accept_kind_missing", G.replace(acc_k, acc_k.replace("_accept_kind", "_accept_kinx")), False),
+        ("whole_accept_field_kind_missing", G.replace(f"theorem {P}_field_2_kind ", f"theorem {P}_field_2_kinx "), False),
+        ("whole_accept_reject_missing", G.split("set_option maxRecDepth 100000 in\ntheorem Decode.generated_reject ")[0] + "end Prysm.Fixture\n",
+         False),
+        ("whole_accept_extra_theorem", G.replace("end Prysm.Fixture\n", "theorem extra : True := trivial\n\nend Prysm.Fixture\n")[::-1].replace(
+            "end Prysm.Fixture\n"[::-1], "", 0)[::-1], False),
+        ("whole_accept_kind_name_swapped", G.replace("= @Codec.decodeEpilogueKindAnyFrame h", "= @Codec.decodeFieldKindAnyFrame h", 1), False),
+        ("whole_accept_kind_proof_not_rfl", G.replace("intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem Decode.generated_field_1 ",
+                                            "intro h; simp\n\nset_option maxRecDepth 100000 in\ntheorem Decode.generated_field_1 ", 1), False),
+        ("whole_accept_L_frame_wrong", G.replace("(.existential 1)] 80)", "(.existential 1)] 88)"), False),
+        ("whole_accept_L_gd_wrong", G.replace("(none) 88 true", "(none) 80 true"), False),
+        ("whole_accept_L_callee_order", G.replace("[Prysm.Epoch.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ]", "[Prysm.ValidatorIndex.Code.unmarshalSSZ, "
+                                        "Prysm.Epoch.Code.unmarshalSSZ]"), False),
+        ("whole_accept_L_post_ret", G.replace("(.ret 56)", "(.ret 55)"), False),
+        ("whole_accept_L_slot_dropped", G.replace(".at (.above 32) (.original 3), ", ""), False),
+        ("whole_accept_fields_kind", G.replace("[.uint64, .uint64]", "[.uint64, .bytes 32]"), False),
+        ("whole_accept_fields_extra", G.replace("[.uint64, .uint64]", "[.uint64, .uint64, .uint64]"), False),
+        ("whole_accept_pc_wrong", G.replace("⟨48, 1, ", "⟨47, 1, "), False),
+        ("whole_accept_done_wrong", G.replace("⟨48, 1, ", "⟨48, 2, "), False),
+        ("whole_accept_reject_size", G.replace("decodeRejectKindAnyFrame h Prysm.VoluntaryExit.Code.unmarshalSSZ 16 ", "decodeRejectKindAnyFrame h Prysm.VoluntaryExit.Code.unmarshalSSZ 24 "), False),
+        ("whole_accept_reject_proof", G.replace("intro h; with_reducible rfl", "intro h; rfl"), False),
+        ("whole_accept_const_other", G.replace("decodeAcceptKindAnyFrame h Prysm.VoluntaryExit.Code.unmarshalSSZ", "decodeAcceptKindAnyFrame h Prysm.PendingConsolidation.Code.unmarshalSSZ"), False),
+        ("whole_accept_hk_other", G.replace(f"theorem {P}_epilogue : ∀ (k : Nat) (hk : Prysm.VoluntaryExit.Code.unmarshalSSZ", f"theorem {P}_epilogue : ∀ (k : Nat) (hk : Prysm.PendingConsolidation.Code.unmarshalSSZ"),
+         False),
+        ("whole_accept_chain_skips_field", G.replace(f"  refine eventually_trans _ _ _ _ ({P}_field_1 a) ?_\n", ""), False),
+        ("whole_accept_sorry", G.replace("  exact y\n", "  sorry\n"), False),
+        ("whole_accept_local_def", G.replace("namespace Prysm.Fixture\n\nset_option", "namespace Prysm.Fixture\n\ndef q := 1\n\nset_option"),
+         False),
+        ("whole_accept_sha_wrong", G.replace("(sha256 `" + G.split("(sha256 `")[1][:64], "(sha256 `" + (
+            "0" if G.split("(sha256 `")[1][0] != "0" else "1") + G.split("(sha256 `")[1][1:64], 1), False),
+        ("whole_accept_two_blocks", G.replace("end Prysm.Fixture\n\n" + WHOLE_ACCEPT_MARK, "end Prysm.Fixture\n\n" + WHOLE_ACCEPT_MARK + " x -/\n" + WHOLE_ACCEPT_MARK, 1),
+         False),
+    ]
+
+
+def whole_accept_selftest():
+    """Rule 12 controls + the recomputation against the hand layouts + an IR mutant. Returns (n, bad)."""
+    import json
+    bad = []
+    cs = whole_accept_cases()
+    for name, text, ok in cs:
+        errs, _ = check_whole_accept(text)
+        if (not errs) != ok:
+            bad.append((name, errs[:3]))
+    n = len(cs)
+    for tname, (sdir, Lh) in WHOLE_ACCEPT_HAND.items():
+        sp, sraw, iraw = whole_accept_inputs(tname, sdir)
+        fields, sz = whole_accept_ir(iraw.decode(), "v1alpha1." + tname)
+        E = whole_accept_expect([l.strip() for l in sraw.decode("ascii").split("\n") if l.strip()], fields, sz)
+        n += 1
+        if " ".join(E["L"].split()) != " ".join(Lh.split()):
+            bad.append((f"whole_accept_recompute_{tname}", E["L"], Lh))
+    # an IR mutant: VoluntaryExit ValidatorIndex Go offset 24 (code 16) -> the recomputation refuses
+    sp, sraw, iraw = whole_accept_inputs("VoluntaryExit", "link-set")
+    d = json.loads(iraw)
+    for c in d["configs"]:
+        for t in c.get("types", []):
+            if t.get("name") == "VoluntaryExit":
+                for f in t["go_fields"]:
+                    if f["name"] == "ValidatorIndex":
+                        f["offset_gc_amd64"] = 24
+    n += 1
+    try:
+        fields, sz = whole_accept_ir(json.dumps(d), "v1alpha1.VoluntaryExit")
+        whole_accept_expect([l.strip() for l in sraw.decode("ascii").split("\n") if l.strip()], fields, sz)
+        bad.append(("whole_accept_ir_goff_mutant", "not refused"))
+    except WholeAcceptMismatch:
+        pass
+    # the code mutated: the Epoch call replaced by a ValidatorIndex call -> the recomputation refuses (no open field)
+    n += 1
+    try:
+        dirs = [l.strip().replace("Epoch.UnmarshalSSZ", "ValidatorIndex.UnmarshalSSZ") for l in sraw.decode("ascii").split("\n")
+                if l.strip()]
+        fields, sz = whole_accept_ir(iraw.decode(), "v1alpha1.VoluntaryExit")
+        E = whole_accept_expect(dirs, fields, sz)
+        if E["L"] == WHOLE_ACCEPT_HAND["VoluntaryExit"][1]:
+            bad.append(("whole_accept_code_callee_mutant", "same layout"))
+    except WholeAcceptMismatch:
+        pass
+    return n, bad
+
+
+# ---------------------------------------------------------------- rule 13: fast-path (`generator.py encoder --fast-path`)
+# A fast-path file (header `FAST-PATH-JSON:`, or any of the four encoder kinds) is checked by rule 13 ONLY (it has a `def` of its
+# layout, which rule 2 forbids):
+#  13b. Structure: top-level lines as rule 2 plus exactly one `def <P>_layout : EncoderFrameLayout where` (none when a hand
+#       layout of FAST_PATH_HAND is named); no banned token (rule 3, comments and strings removed); the theorems are exactly
+#       P_head, P_field_0 … P_field_(n-1), P_epilogue, P_fast, each followed by its `_kind` (encHeadKindAnyFrame / encFieldKindAnyFrame /
+#       encEpilogueKindAnyFrame / encFastPathKindAnyFrame), and optionally P_fast_statement_tie; every theorem's `hk` binder names the same code constant C;
+#       `set_option` only `maxHeartbeats 4000000` / `maxRecDepth 100000`; every kind proof is `  intro h; rfl`.
+#  13c. RECOMPUTATION (an own interpreter, it does not import the generator): from the `.S` and the IR named in
+#       FAST-PATH-JSON (sha256 checked) this program recomputes the fields list, the layout (st, frame, gd, rt, nstk, lens,
+#       pre, exs, post) and every boundary state (pc, done, live registers, stack slots, existential sizes); every
+#       kind line must equal, as whole normalised text, the line rendered from the recomputation. A hand layout name
+#       (FAST_PATH_HAND, in the one module of `Prysm/<Type>/` that the file imports and that defines it) is accepted only if its def equals the recomputation in its own
+#       chunk order. C is bound to the `.S`: an imported code module of the file must define
+#       `def C : Program := include_x64_code "../<S of FAST-PATH-JSON>"`.
+#  13d. P_fast's proof uses P_head, every P_field_i and P_epilogue exactly once.
+#  13e. P_fast_statement_tie, if present, is `theorem P_fast_statement_tie : type_of% (@X ‹Host›) :=` + `  [V ]P_fast` with X not generated and V
+#       empty or in FAST_PATH_VIA.
+# Limits: the kind fixes the statement only up to what the kind reads (`hcap63` is a fixed premise; an extra
+# chunk in L.pre would be a stronger premise, and the recomputation would reject it); that the code walk is the
+# function's whole fast path is the generator's claim, checked by the proofs, not here.
+import hashlib as _fast_path_hash
+import json as _fast_path_json
+
+FAST_PATH_KINDS = ("encodeHeadKindAnyFrame", "encodeFieldKindAnyFrame", "encodeEpilogueKindAnyFrame", "encodeFastPathKindAnyFrame")
+FAST_PATH_HAND = ("Prysm.BeaconBlockHeader.encodeLayout", "Prysm.Eth1Data.encodeLayout", "Prysm.Checkpoint.encodeLayout")
+FAST_PATH_VIA = ("Prysm.Checkpoint.Encode.fast_path_kind_tie",)
+FAST_PATH_R64 = "rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15".split()
+FAST_PATH_R32 = dict(eax="rax", ebx="rbx", ecx="rcx", edx="rdx", esi="rsi", edi="rdi")
+FAST_PATH_LAYF = ("stateWord", "frame", "guardAddend", "callsMemmove", "stackChunkCount", "stackChunkLengths", "pre", "existentials", "post")
+
+
+class FastPathMismatch(Exception):
+    pass
+
+
+def fast_path_ir(ir_text, tname):
+    """(fields [('u'|'b', size)], go offsets, ssz size) from the Go field list of the IR (exported fields)."""
+    pkg, name = tname.rsplit(".", 1)
+    hits = []
+    for c in _fast_path_json.loads(ir_text)["configs"]:
+        for t in c.get("types", []):
+            if t.get("name") == name and t.get("package", "").endswith("/" + pkg):
+                hits.append(t)
+    if len(hits) != 1:
+        raise FastPathMismatch(f"{len(hits)} IR entries for {tname}")
+    fs, goffs = [], []
+    for f in hits[0]["go_fields"]:
+        if not f["exported"]:
+            continue
+        m = re.search(r'ssz-size:"(\d+)"', f["tag"])
+        if m and f["type"] == "[]byte":
+            fs.append(("b", int(m.group(1))))
+        elif not m and f["size_gc_amd64"] == 8:
+            fs.append(("u", 8))
+        else:
+            raise FastPathMismatch(f"field {f['name']}: not a byte vector or an 8-byte scalar")
+        goffs.append(f["offset_gc_amd64"])
+    want = 8 if goffs and goffs[0] == 8 else 0
+    for (k, n), g in zip(fs, goffs):
+        if g != want:
+            raise FastPathMismatch(f"Go offset {g}, running sum {want}")
+        want += 24 if k == "b" else 8
+    return fs, goffs, sum(n for _, n in fs)
+
+
+def fast_path_regs_of(text):
+    """64-bit register names in an operand text (32-bit names mapped)."""
+    out = []
+    for r in re.findall(r"%([a-z0-9]+)", text):
+        r = FAST_PATH_R32.get(r, r)
+        if r in FAST_PATH_R64:
+            out.append(r)
+    return out
+
+
+def fast_path_usedef(d):
+    """(uses, defs, end) of one directive by operand position (AT&T: `op src, dst`)."""
+    if d.endswith(":") or d == "nop":
+        return [], [], False
+    if d.startswith("callq "):
+        return ["rax", "rbx", "rcx"], [], True
+    if d == "pop %rbp":
+        return ["rax", "rbx", "rcx", "rdi", "rsi"], [], True
+    op, _, args = d.partition(" ")
+    if op.startswith("j"):
+        return [], [], False
+    # split at the top-level comma
+    depth, cut = 0, -1
+    for i, ch in enumerate(args):
+        depth += ch == "("
+        depth -= ch == ")"
+        if ch == "," and depth == 0:
+            cut = i
+    src, dst = (args[:cut], args[cut + 1:]) if cut >= 0 else (args, "")
+    sr, dr = fast_path_regs_of(src), fast_path_regs_of(dst)
+    dst_is_reg = dst.startswith("%")
+    if op == "xor" and src == dst:
+        return [], dr, False
+    if op in ("mov", "lea") and dst_is_reg:
+        return sr, dr, False
+    if op in ("add", "sub") and dst_is_reg:
+        return sr + dr, dr, False
+    if op in ("mov", "cmp", "cmpq", "movups"):
+        return sr + dr, [], False
+    raise FastPathMismatch(f"no use / def rule for `{d}`")
+
+
+def fast_path_expect(dirs, fs, goffs, size, hand_pre=None):
+    """Own interpreter of the fast path. Returns dict(L={field: text}, fields=text, states=[EncodeBoundaryState text], pcs=[...])."""
+    lab = {d[:-1]: i for i, d in enumerate(dirs) if d.endswith(":")}
+    st = bool(goffs) and goffs[0] == 8
+    soffs = [sum(n for _, n in fs[:i]) for i in range(len(fs))]
+    if dirs[2] == "cmp 0x10(%r14),%rsp":
+        gd, j = 0, 3
+    else:
+        m = re.fullmatch(r"lea -0x([0-9a-f]+)\(%rsp\),%r12", dirs[2])
+        if not m or dirs[3] != "cmp 0x10(%r14),%r12":
+            raise FastPathMismatch("prologue")
+        gd, j = int(m.group(1), 16), 4
+    if not (dirs[j].startswith("jbe ") and dirs[j + 1] == "push %rbp" and dirs[j + 2] == "mov %rsp,%rbp"):
+        raise FastPathMismatch("prologue")
+    a = dirs[j + 3]
+    m1, m2 = re.fullmatch(r"sub \$0x([0-9a-f]+),%rsp", a), re.fullmatch(r"add \$-0x([0-9a-f]+),%rsp", a)
+    if not (m1 or m2):
+        raise FastPathMismatch("frame")
+    F = int((m1 or m2).group(1), 16)
+    SP = -(F + 8)
+    RS = -(F + 16)
+    pc = j + 4
+    R = {"rax": "rcv", "rbx": "ptr", "rcx": ("len", 0), "rdi": "cap", "rsp": ("stk", SP)}
+    # stack: off -> [size, value]; values: "rbp", ("e", reg), ("len", n), ("fld", i), ("z", seq, part), ("ret", n)
+    M = {-8: [8, "rbp"]}
+    first = [-8]
+    firstsz = {-8: 8}
+    seq = [0]
+    scratch = ["scr"]   # "scr" (before any call) or ("z", seq, "lo")
+    done = [0]
+    states = []
+    regsets = []
+
+    def disp(x):
+        return int(x, 16) if x else 0
+
+    def addr(base, dsp):
+        v = R.get(base)
+        if isinstance(v, tuple) and v[0] == "stk":
+            return ("stk", v[1] + dsp)
+        if v == "rcv":
+            return ("rcv", dsp)
+        raise FastPathMismatch(f"address base {base}={v}")
+
+    def region(off, n):
+        for o in list(M):
+            if o <= off and off + n <= o + M[o][0]:
+                return o
+            if not (off + n <= o or o + M[o][0] <= off):
+                raise FastPathMismatch("overlap")
+        M[off] = [n, "orig"]
+        first.append(off)
+        firstsz[off] = n
+        return off
+
+    def live(p):
+        need, wr = [], set()
+        for _ in range(3000):
+            d = dirs[p]
+            u, df, end = fast_path_usedef(d)
+            for r in u:
+                if r not in wr and r not in need and r not in ("rsp", "rbp", "r14"):
+                    need.append(r)
+            if end:
+                return [r for r in FAST_PATH_R64 if r in need]
+            wr.update(df)
+            if d.startswith("jae ") or d.startswith("jmp "):
+                p = lab[d.split()[1]]
+            else:
+                p += 1
+        raise FastPathMismatch("liveness")
+
+    def snap(p):
+        regs = []
+        for r in live(p):
+            v = R.get(r)
+            if v in ("rcv", "ptr", "cap"):
+                regs.append((r, "." + {"rcv": "receiver"}.get(v, v)))
+            elif isinstance(v, tuple) and v[0] == "len":
+                regs.append((r, f".len {v[1]}"))
+            else:
+                raise FastPathMismatch(f"live {r}={v}")
+        return p, done[0], regs, {o: list(v) for o, v in M.items()}, scratch[0]
+
+    # head spills
+    while True:
+        m = re.fullmatch(r"mov %(r\w+),(0x[0-9a-f]+)\(%rsp\)", dirs[pc])
+        if not (m and int(m.group(2), 16) > F + 8):
+            break
+        off = SP + int(m.group(2), 16)
+        region(off, 8)
+        v = R[m.group(1)]
+        M[off][1] = ("e", {"rcv": "rax", "ptr": "rbx", "cap": "rdi"}[v]) if v in ("rcv", "ptr", "cap") else \
+            (("e", "rcx") if v == ("len", 0) else None)
+        if M[off][1] is None:
+            raise FastPathMismatch("spill value")
+        pc += 1
+    states.append(snap(pc))
+    for _ in range(3000):
+        d = dirs[pc]
+        if d == "nop" or d.endswith(":"):
+            pc += 1
+            continue
+        if d == "pop %rbp":
+            break
+        m = re.fullmatch(r"(mov|lea) (-?0x[0-9a-f]+)?\(%(\w+)\),%(\w+)", d)
+        if m:
+            op, dsp, b, dst = m.group(1), disp(m.group(2)), m.group(3), m.group(4)
+            if op == "lea":
+                v = R.get(b)
+                R[dst] = ("len", v[1] + dsp) if isinstance(v, tuple) and v[0] == "len" else \
+                    ("stk", v[1] + dsp) if isinstance(v, tuple) and v[0] == "stk" else None
+                if R[dst] is None:
+                    raise FastPathMismatch("lea")
+            else:
+                ad = addr(b, dsp)
+                if ad[0] == "rcv":
+                    i = goffs.index(ad[1])
+                    R[dst] = ("fv", i) if fs[i][0] == "u" else ("fp", i)
+                else:
+                    sv = M[ad[1]][1]
+                    R[dst] = {"rax": "rcv", "rbx": "ptr", "rdi": "cap", "rcx": ("len", 0)}[sv[1]] if sv[0] == "e" else \
+                        ("len", sv[1]) if sv[0] == "len" else ("fv", sv[1]) if sv[0] == "fld" else None
+                    if R[dst] is None:
+                        raise FastPathMismatch("stack load")
+            pc += 1
+            continue
+        m = re.fullmatch(r"mov %(\w+),(-?0x[0-9a-f]+)?\(%(\w+)\)", d)
+        if m:
+            v, ad = R[m.group(1)], addr(m.group(3), disp(m.group(2)))
+            off = ad[1]
+            if ad[0] != "stk":
+                raise FastPathMismatch("store base")
+            if off not in M or M[off][0] != 8:
+                o = region(off, 8)
+                if o != off:   # 8-byte store into the low half of a 16-byte zeroed chunk: split in place
+                    raise FastPathMismatch("store inside a chunk not at its start")
+                if M[off][0] == 16:
+                    z = M[off][1]
+                    M[off] = [8, ("z", z[1], "lo")]
+                    M[off + 8] = [8, ("z", z[1], "hi")]
+            M[off][1] = ("e", {"rcv": "rax", "ptr": "rbx", "cap": "rdi"}[v]) if v in ("rcv", "ptr", "cap") else \
+                ("e", "rcx") if v == ("len", 0) else ("len", v[1]) if v[0] == "len" else ("fld", v[1]) if v[0] == "fv" else None
+            if M[off][1] is None:
+                raise FastPathMismatch("stored value")
+            pc += 1
+            continue
+        m = re.fullmatch(r"movups %xmm15,(-?0x[0-9a-f]+)?\(%(\w+)\)", d)
+        if m:
+            off = addr(m.group(2), disp(m.group(1)))[1]
+            region(off, 16)
+            seq[0] += 1
+            M[off][1] = ("z", seq[0], "full")
+            pc += 1
+            continue
+        m = re.fullmatch(r"mov %(r\w+),%(r\w+)", d)
+        if m:
+            R[m.group(2)] = R[m.group(1)]
+            pc += 1
+            continue
+        m = re.fullmatch(r"mov \$0x([0-9a-f]+),%(e\w+)", d)
+        if m:
+            R[FAST_PATH_R32[m.group(2)]] = ("imm", int(m.group(1), 16))
+            pc += 1
+            continue
+        m = re.fullmatch(r"xor %(e\w+),%\1", d)
+        if m:
+            R[FAST_PATH_R32[m.group(1)]] = ("imm", 0)
+            pc += 1
+            continue
+        m = re.fullmatch(r"(add|sub) \$(-?0x[0-9a-f]+),%(\w+)", d)
+        if m:
+            v, k = R[m.group(3)], disp(m.group(2)) * (1 if m.group(1) == "add" else -1)
+            R[m.group(3)] = (v[0], v[1] + k)
+            pc += 1
+            continue
+        m = re.fullmatch(r"(?:lea \(%(\w+),%(\w+),1\),%(\w+)|add %(\w+),%(\w+))", d)
+        if m:
+            x, y, dst = (m.group(1), m.group(2), m.group(3)) if m.group(3) else (m.group(4), m.group(5), m.group(5))
+            vs = [R[x], R[y]]
+            ln = [v for v in vs if isinstance(v, tuple) and v[0] == "len"]
+            if not ("ptr" in vs and len(ln) == 1):
+                raise FastPathMismatch("dst address")
+            R[dst] = ("dst", ln[0][1])
+            pc += 1
+            continue
+        m = re.fullmatch(r"sub %rsp,%(\w+)", d)
+        if m:
+            v = R[m.group(1)]
+            R[m.group(1)] = ("pfr",) if v == "ptr" else ("imm", v[1] - SP)
+            pc += 1
+            continue
+        m = re.fullmatch(r"mov %(\w+),(-?0x[0-9a-f]+)?\(%(\w+),%(\w+),1\)", d)
+        if m:
+            i = done[0]
+            vs = [R[m.group(3)], R[m.group(4)]]
+            ln = [v for v in vs if isinstance(v, tuple) and v[0] == "len"]
+            if not ("ptr" in vs and ln and ln[0][1] + disp(m.group(2)) == soffs[i] and R[m.group(1)] == ("fv", i)):
+                raise FastPathMismatch("output store")
+            done[0] += 1
+            pc += 1
+            states.append(snap(pc))
+            continue
+        m = re.fullmatch(r"cmpq \$0x[0-9a-f]+,(-?0x[0-9a-f]+)?\(%\w+\)", d)
+        if m:
+            q = pc + 1
+            while dirs[q] == "nop":
+                q += 1
+            if not dirs[q].startswith("jne "):
+                raise FastPathMismatch("length test")
+            pc = q + 1
+            continue
+        m = re.fullmatch(r"cmp %(\w+),%(\w+)", d)
+        if m:
+            q = pc + 1
+            while dirs[q] == "nop":
+                q += 1
+            jop, tgt = dirs[q].split()
+            if jop == "jae":
+                pc = lab[tgt]
+            elif jop == "jb":
+                pc = q + 1
+            else:
+                raise FastPathMismatch("compare")
+            continue
+        m = re.fullmatch(r"jmp (\S+)", d)
+        if m:
+            pc = lab[m.group(1)]
+            continue
+        if d == "callq runtime.memmove":
+            i = done[0]
+            if not (R.get("rax") == ("dst", soffs[i]) and R.get("rbx") == ("fp", i) and R.get("rcx") == ("imm", fs[i][1])):
+                raise FastPathMismatch("memmove arguments")
+            region(RS, 8)
+            M[RS][1] = ("ret", pc + 1)
+            if scratch[0] == "scr":
+                seq[0] += 1
+                scratch[0] = ("z", seq[0], "lo")
+            R.clear()
+            R["rsp"] = ("stk", SP)
+            done[0] += 1
+            pc += 1
+            states.append(snap(pc))
+            continue
+        raise FastPathMismatch(f"directive {pc} `{d}`")
+    else:
+        raise FastPathMismatch("no return")
+    if done[0] != len(fs):
+        raise FastPathMismatch("fields")
+    rt = RS in M
+    if hand_pre is not None:
+        mem = [o for o, _ in hand_pre]
+        if sorted(mem) != sorted(first) or sorted(b for _, b in hand_pre) != list(range(len(mem))):
+            raise FastPathMismatch("hand layout chunks differ from the recomputed regions")
+        bindex = dict(hand_pre)
+    else:
+        mem = [-8] + sorted(o for o in first if o > 0) + [o for o in first if o < 0 and o not in (-8, RS)] + \
+            ([RS] if rt else [])
+        bindex = {o: i for i, o in enumerate(mem)}
+
+    def exnum(Ms, scr):
+        keys = []
+        for o, (n, v) in Ms.items():
+            if isinstance(v, tuple) and v[0] == "z":
+                keys.append((v[1], o, 16 if v[2] == "full" else 8))
+        if isinstance(scr, tuple):
+            keys.append((scr[1], 10 ** 9, "S"))
+        keys.sort()
+        return {(k[0], k[1]): i for i, k in enumerate(keys)}, [k[2] for k in keys]
+
+    def vk(o, v, num):
+        if v == "orig":
+            return f".original {bindex[o]}"
+        if v == "rbp":
+            return ".reg .rbp"
+        if v[0] == "e":
+            return f".reg .{v[1]}"
+        if v[0] in ("len", "fld", "ret"):
+            return f".{ {'fld': 'field'}.get(v[0], v[0])} {v[1]}"
+        if v[0] == "z":
+            return f".existential {num[(v[1], o)]}"
+        raise FastPathMismatch(f"slot value {v}")
+
+    def slots(Ms, scr):
+        num, ex = exnum(Ms, scr)
+        out = []
+        for o in mem:
+            if o not in Ms:
+                out.append(f".at (.{'above' if o > 0 else 'below'} {abs(o)}) (.original {bindex[o]})")
+                continue
+            parts = [o] if Ms[o][0] == firstsz[o] else [o, o + 8]
+            for p in parts:
+                out.append(f".at (.{'above' if p > 0 else 'below'} {abs(p)}) ({vk(p, Ms[p][1], num)})")
+        if rt:
+            out.append(".low .scratch" if scr == "scr" else f".low (.existential {num[(scr[1], 10 ** 9)]})")
+        return "[" + ", ".join(out) + "]", "[" + ", ".join(".low" if e == "S" else f".fixed {e}" for e in ex) + "]"
+
+    def norm_pre():
+        out = [f".at (.{'above' if o > 0 else 'below'} {abs(o)}) (.original {bindex[o]})" for o in mem]
+        return "[" + ", ".join(out + ([".low .scratch"] if rt else [])) + "]"
+    post, exs = slots(M, scratch[0])
+    L = dict(stateWord=str(st).lower(), frame=str(F), guardAddend=str(gd), callsMemmove=str(rt).lower(), stackChunkCount=str(len(mem)),
+             stackChunkLengths="[" + ", ".join(f"({i}, {firstsz[o]})" for i, o in sorted((bindex[o], o) for o in mem)) + "]",
+             pre=norm_pre(), existentials=exs, post=post)
+    sts = []
+    for p, dn, regs, Ms, scr in states:
+        sl, ex = slots(Ms, scr)
+        rg = "[" + ", ".join(f"(.{r}, {k})" for r, k in regs) + "]"
+        sts.append(f"⟨{p}, {dn}, {rg}, {sl}, {ex}⟩")
+    fields = "[" + ", ".join(".uint64" if k == "u" else f".bytes {n}" for k, n in fs) + "]"
+    return dict(L=L, fields=fields, states=sts, pcs=[x[0] for x in states], size=size)
+
+
+def fast_path_layout_def(text, short, full=None):
+    """{field: normalised value} of `def <short> : EncoderFrameLayout where` in a Lean text, or None. With `full`, a declaring line
+    `def _root_.<full>` (a layout of another type than the namespace block of the module) comes first, then the
+    name relative to the type namespace `Prysm.<T>`."""
+    m = None
+    for d in ([f"_root_.{full}", full.split(".", 2)[2]] if full and full.count(".") >= 2 else []) + [short]:
+        m = m or re.search(rf"(?m)^def {re.escape(d)} : EncoderFrameLayout where\n((?:  .*\n?)+)", text)
+    if not m:
+        return None
+    flds, cur = {}, None
+    for l in m.group(1).split("\n"):
+        mm = re.match(r"  (\w+) := (.*)", l)
+        if mm:
+            cur = mm.group(1)
+            flds[cur] = mm.group(2)
+        elif l.startswith("    ") and cur:
+            flds[cur] += " " + l.strip()
+    return {k: " ".join(v.split()) for k, v in flds.items()}
+
+
+def fast_path_norm(s):
+    return " ".join(s.split())
+
+
+def check_fast_path(text, gnames=frozenset(), kr=None):
+    """Rule 13. Returns (errors, info)."""
+    kr = kr or KR
+    errs, info = [], "fast-path"
+    lines = text.split("\n")
+    gj = [l for l in lines if l.startswith("FAST-PATH-JSON: ")]
+    try:
+        if len(gj) != 1:
+            raise ValueError(f"{len(gj)} FAST-PATH-JSON lines")
+        J = _fast_path_json.loads(gj[0][len("FAST-PATH-JSON: "):])
+        P, C, S, IR, TY, LAY = (J["prefix"], J["const"], J["assembly"], J["ir"], J["ir_type"], J["layout"])
+        if not (re.fullmatch(r"(?:[A-Z][A-Za-z0-9]*\.)?[a-z][a-z0-9_]*", P) and re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", C)):
+            raise ValueError("prefix / const")
+    except Exception as e:
+        return errs + [f"rule 13: no single valid FAST-PATH-JSON line ({e})"], info
+    info = f"{P}_fast"
+    # 13b structure
+    body = strip_strings(strip_comments(text))
+    if BANNED.search(body):
+        errs.append("rule 13b: banned token")
+    hand = LAY in FAST_PATH_HAND
+    if not hand and LAY != f"Prysm.{J['type']}.{P}_layout":
+        errs.append(f"rule 13b: layout name {LAY} is neither a pinned hand layout nor {P}_layout of this file")
+    ndef = 0
+    in_def = False
+    for l in body.split("\n"):
+        if re.match(r"^def ", l):
+            ndef += 1
+            in_def = True
+            if l != f"def {P}_layout : EncoderFrameLayout where" or hand:
+                errs.append(f"rule 13b: top-level `{l[:60]}`")
+            continue
+        if in_def and l.startswith("  "):
+            if not re.match(r"  (stateWord|frame|guardAddend|callsMemmove|stackChunkCount|stackChunkLengths|pre|existentials|post) := |    \S", l):
+                errs.append(f"rule 13b: layout line `{l[:60]}`")
+            continue
+        in_def = False
+        if l and not l[0].isspace():
+            if not TOP_OK.match(l):
+                errs.append(f"rule 13b: top-level `{l[:60]}`")
+            if l.startswith("set_option ") and l not in ("set_option maxHeartbeats 4000000 in",
+                                                       "set_option maxRecDepth 100000 in"):
+                errs.append(f"rule 13b: `{l}`")
+            if l.startswith("namespace ") and l != f"namespace Prysm.{J['type']}":
+                errs.append(f"rule 13b: `{l}`")
+    if ndef != (0 if hand else 1):
+        errs.append(f"rule 13b: {ndef} layout defs (expected {0 if hand else 1})")
+    thms = [m.group(1) for m in re.finditer(r"(?m)^theorem (\S+)", body)]
+    n = None
+    try:
+        tsha = lambda p: _fast_path_hash.sha256((kr / p).read_bytes()).hexdigest()
+        if tsha(S) != J["assembly_sha256"] or tsha(IR) != J["ir_sha256"]:
+            raise FastPathMismatch("sha256 of the .S or the IR differs from FAST-PATH-JSON")
+        fs, goffs, size = fast_path_ir((kr / IR).read_text(), TY)
+        n = len(fs)
+        hand_pre, handdef = None, None
+        if hand:
+            T = LAY.split(".")[1]
+            found = []
+            for m in re.findall(rf"(?m)^(?:public )?import (Prysm\.{T}\.\w+)$", text):
+                hsrc = "lean/" + m.replace(".", "/") + ".lean"
+                d = fast_path_layout_def((kr / hsrc).read_text(), LAY.split(".")[-1], LAY) if (kr / hsrc).exists() else None
+                if d is not None:
+                    found.append(d)
+            if len(found) != 1:
+                raise FastPathMismatch(f"hand layout {LAY} is not in exactly one imported module of Prysm.{T}")
+            handdef = found[0]
+            hand_pre = [(int(k) * (1 if d == "above" else -1), int(i)) for d, k, i in
+                        re.findall(r"\.at \(\.(above|below) (\d+)\) \(\.original (\d+)\)", handdef["pre"])]
+        dirs = [l.strip() for l in (kr / S).read_text().split("\n") if l.strip()]
+        X = fast_path_expect(dirs, fs, goffs, size, hand_pre)
+    except Exception as e:
+        return errs + [f"rule 13c: recomputation refused: {type(e).__name__}: {e}"], info
+    want = [f"{P}_head", f"{P}_head_kind"] + [x for i in range(n) for x in (f"{P}_field_{i}", f"{P}_field_{i}_kind")] + \
+        [f"{P}_epilogue", f"{P}_epilogue_kind", f"{P}_fast", f"{P}_fast_kind"]
+    if thms not in (want, want + [f"{P}_fast_statement_tie"]):
+        return errs + [f"rule 13b: theorems {thms}, expected {want} [+ {P}_fast_statement_tie]"], info
+    # 13c: layout
+    fileL = handdef if hand else fast_path_layout_def(body, f"{P}_layout")
+    if fileL is None:
+        errs.append("rule 13c: no layout def")
+    else:
+        for k in FAST_PATH_LAYF:
+            if fileL.get(k) != X["L"][k]:
+                errs.append(f"rule 13c: layout {k} = {fileL.get(k)!r}, recomputed {X['L'][k]!r}")
+        if set(fileL) != set(FAST_PATH_LAYF):
+            errs.append(f"rule 13c: layout fields {sorted(fileL)}")
+    # 13b / 13c: kind lines, as whole normalised text
+    starts = {m.group(1): m.start() for m in re.finditer(r"(?m)^theorem (\S+)", body)}
+    order = sorted(starts.items(), key=lambda kv: kv[1])
+    chunk = {}
+    for i, (nm, st_) in enumerate(order):
+        chunk[nm] = body[st_: order[i + 1][1] if i + 1 < len(order) else len(body)]
+    S0 = X["states"]
+    if len(S0) != n + 1:
+        errs.append(f"rule 13c: {len(S0)} boundary states for {n} fields")
+        return errs, info
+    exp = {f"{P}_head": ("encodeHeadKindAnyFrame", " " + S0[0])}
+    for i in range(n):
+        exp[f"{P}_field_{i}"] = ("encodeFieldKindAnyFrame", " " + S0[i] + " " + S0[i + 1])
+    exp[f"{P}_epilogue"] = ("encodeEpilogueKindAnyFrame", " " + S0[n])
+    exp[f"{P}_fast"] = ("encodeFastPathKindAnyFrame", "")
+    for t, (kind, sts) in exp.items():
+        k = chunk[f"{t}_kind"]
+        hdr, sep, rest = k.partition(":= by\n")
+        line = (f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h) = @Codec.{kind} h {C} {LAY} {X['fields']}{sts}")
+        rl = rest.split("\n")
+        tail_ok = all(x.strip() in ("", f"end Prysm.{J['type']}") or x.startswith("set_option ") for x in rl[1:])
+        if fast_path_norm(hdr) != fast_path_norm(line) or rl[0] != "  intro h; rfl" or not tail_ok or not sep:
+            errs.append(f"rule 13c: {t}_kind differs from the recomputation\n      file:       {fast_path_norm(hdr)}\n"
+                        f"      recomputed: {fast_path_norm(line)}")
+        hk = HK.search(chunk[t].split("\n")[0])
+        if not hk or hk.group(1) != C:
+            errs.append(f"rule 13b: {t}: `hk` binder does not name {C}")
+        if t != f"{P}_fast" and not chunk[t].startswith(f"theorem {t} : ∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k)"):
+            errs.append(f"rule 13b: {t}: first binder line")
+    # 13c: C is the code of the .S
+    bound = False
+    for imp in re.findall(r"(?m)^(?:public )?import (\S+)$", text):
+        f = kr / "lean" / (imp.replace(".", "/") + ".lean")
+        if f.exists() and any(f'def {d} : Program := include_x64_code "../{S}"' in f.read_text() for d in (C, f"Code.{C}")):
+            bound = True
+    if not bound:
+        errs.append(f"rule 13c: no imported code module defines `{C}` from `{S}`")
+    # 13d: chaining
+    fp = chunk[f"{P}_fast"]
+    for t in [f"({P}_head ", *[f"({P}_field_{i} " for i in range(n)], f"exact {P}_epilogue "]:
+        if fp.count(t) != 1:
+            errs.append(f"rule 13d: the fast-path proof does not use `{t.strip('( ')}` exactly once")
+    # 13e: identity
+    if f"{P}_fast_statement_tie" in chunk:
+        c = chunk[f"{P}_fast_statement_tie"].rstrip()
+        if c.endswith(f"\nend Prysm.{J['type']}"):
+            c = c[: -len(f"\nend Prysm.{J['type']}")].rstrip()
+        m = re.fullmatch(rf"theorem {P}_fast_statement_tie : type_of% \(@(\S+) ‹Host›\) :=\n  (?:(\S+) )?{P}_fast", c)
+        if not m:
+            errs.append(f"rule 13e: {P}_fast_statement_tie: not the identity form")
+        else:
+            x, via = m.group(1), m.group(2)
+            if GENNS.match(x) or x.split(".")[-1] in gnames:
+                errs.append(f"rule 13e: {x} is a generated name")
+            if via and via not in FAST_PATH_VIA:
+                errs.append(f"rule 13e: implication lemma {via} not in FAST_PATH_VIA")
+        info += f", identity {P}_fast_statement_tie"
+    return errs, info
+
+
+# ---- rule 13 selftest controls: mutants of the committed raw fast-path outputs (a missing file is a FAIL)
+FAST_PATH_SELFTEST = {"validator-balance": "lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "checkpoint": "lean/Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
+               "historical-summary": "lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "beacon-block-header": "lean/Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean"}
+# the layout defs of three committed fast-path files: the recomputation must give each of them
+FAST_PATH_LAYOUTS = {"ValidatorBalance": ("lean/Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean", "Prysm.ValidatorBalance.Encode.generated_layout"),
+                     "DepositMessage": ("lean/Prysm/DepositMessage/GeneratedEncodeFastPath.lean", "Prysm.DepositMessage.Encode.generated_layout"),
+                     "HistoricalSummary": ("lean/Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean", "Prysm.HistoricalSummary.Encode.generated_layout")}
+
+
+def fast_path_cases(T):
+    """(name, text, ok) on the committed files T = {key: text}."""
+    V, checkpoint_text, H, B = T["validator-balance"], T["checkpoint"], T["historical-summary"], T["beacon-block-header"]
+
+    def r(t, a, b, n=1):
+        if t.count(a) < n:
+            raise FastPathMismatch(f"selftest setup: `{a[:50]}` not found")
+        return t.replace(a, b, n)
+    sha = V.split('"assembly_sha256": "')[1][:64]
+    return [
+        ("fast_path_good_validator_balance", V, True), ("fast_path_good_checkpoint_hand_via", checkpoint_text, True), ("fast_path_good_historical_summary_frame_test", H, True),
+        ("fast_path_good_beacon_block_header_hand", B, True),
+        ("fast_path_layout_frame", r(V, "  frame := 104\n", "  frame := 112\n"), False),
+        ("fast_path_layout_gd", r(V, "  guardAddend := 0\n", "  guardAddend := 8\n"), False),
+        ("fast_path_layout_pre_order", r(V, ".at (.below 40) (.original 2), .at (.below 24) (.original 3)]\n  existentials",
+                                  ".at (.below 24) (.original 3), .at (.below 40) (.original 2)]\n  existentials"), False),
+        ("fast_path_layout_exs", r(V, "  existentials := [.fixed 8, .fixed 16]\n", "  existentials := [.fixed 16, .fixed 8]\n"), False),
+        ("fast_path_layout_post_fld", r(V, "(.field 0), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1)]\n\n",
+                                 "(.field 1), .at (.below 32) (.existential 0), .at (.below 24) (.existential 1)]\n\n"), False),
+        ("fast_path_layout_lens", r(V, "(2, 16), (3, 16)]", "(2, 8), (3, 16)]"), False),
+        ("fast_path_fields_param", r(V, "Encode.generated_field_0 h)\n    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.generated_layout [.uint64, .uint64]",
+                              "Encode.generated_field_0 h)\n    = @Codec.encodeFieldKindAnyFrame h marshalSSZTo Prysm.ValidatorBalance.Encode.generated_layout [.uint64, .bytes 32]"),
+         False),
+        ("fast_path_boundary_pc", r(V, "[.uint64, .uint64]\n    ⟨8, 0,", "[.uint64, .uint64]\n    ⟨9, 0,"), False),
+        ("fast_path_boundary_done", r(V, "[.uint64, .uint64]\n    ⟨8, 0,", "[.uint64, .uint64]\n    ⟨8, 1,"), False),
+        ("fast_path_boundary_reg_dropped", r(V, "[.uint64, .uint64]\n    ⟨8, 0, [(.rax, .receiver), ", "[.uint64, .uint64]\n    ⟨8, 0, ["), False),
+        ("fast_path_kind_name_swapped", r(V, "= @Codec.encodeEpilogueKindAnyFrame h", "= @Codec.encodeHeadKindAnyFrame h"), False),
+        ("fast_path_kind_line_missing", r(V, "theorem Encode.generated_field_1_kind :", "theorem Encode.generated_field_1_kinx :"), False),
+        ("fast_path_kind_const", r(V, "= @Codec.encodeFastPathKindAnyFrame h marshalSSZTo", "= @Codec.encodeFastPathKindAnyFrame h Prysm.SyncAggregatorSelectionData.Code.marshalSSZTo"), False),
+        ("fast_path_kind_proof", r(V, "  intro h; rfl\n", "  intro h; exact rfl\n"), False),
+        ("fast_path_hk_const", r(V, "theorem Encode.generated_field_1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt",
+                          "theorem Encode.generated_field_1 : ∀ (k : Nat) (hk : Prysm.SyncAggregatorSelectionData.Code.marshalSSZTo.IsInfixAt"), False),
+        ("fast_path_extra_def", r(V, "namespace Prysm.ValidatorBalance\n", "namespace Prysm.ValidatorBalance\n\ndef foo : Nat := 1\n"), False),
+        ("fast_path_sorry", r(V, "  apply Eventually.done\n", "  sorry\n"), False),
+        ("fast_path_heartbeats", r(V, "set_option maxHeartbeats 4000000 in", "set_option maxHeartbeats 8000000 in"), False),
+        ("fast_path_fast_skips_f0", r(V, "(Encode.generated_field_0 k hk", "(Encode.generated_field_1 k hk"), False),
+        ("fast_path_extra_theorem", r(V, "\nend Prysm.ValidatorBalance", "\ntheorem extra : True := trivial\n\nend Prysm.ValidatorBalance"),
+         False),
+        ("fast_path_json_sha", r(V, sha, ("0" if sha[0] != "0" else "1") + sha[1:]), False),
+        ("fast_path_json_missing", r(V, "FAST-PATH-JSON: ", "fast-path-JSOX: "), False),
+        ("fast_path_layout_named_hand", V.replace("Prysm.ValidatorBalance.Encode.generated_layout", "Prysm.BeaconBlockHeader.encodeLayout"), False),
+        ("fast_path_const_unbound", V.replace("marshalSSZTo", "otherMarshalSSZTo"), False),
+        ("fast_path_statement_generated", r(checkpoint_text, "type_of% (@Prysm.Checkpoint.Encode.fast_path ‹Host›)",
+                                "type_of% (@Prysm.Checkpoint.Encode.generated_fast ‹Host›)"), False),
+        ("fast_path_statement_via_unknown", r(checkpoint_text, "  Prysm.Checkpoint.Encode.fast_path_kind_tie Encode.generated_fast", "  Prysm.Checkpoint.foo Encode.generated_fast"), False),
+        ("fast_path_hand_with_def", r(B, "namespace Prysm.BeaconBlockHeader\n", "namespace Prysm.BeaconBlockHeader\n\ndef Encode.generated_layout : EncoderFrameLayout where\n  stateWord := true\n"),
+         False),
+        ("fast_path_historical_summary_frame_state", r(H, "  frame := 80\n", "  frame := 88\n"), False),
+        ("fast_path_beacon_block_header_state_slot", r(B, "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.original 3)",
+                               "(.reg .rax), .at (.above 16) (.reg .rbx), .at (.below 16) (.reg .rbx)"), False),
+    ]
+
+
+def fast_path_selftest():
+    """Rule 13 controls + the recomputation against the layout defs of FAST_PATH_LAYOUTS. Returns (n, bad)."""
+    bad, n = [], 0
+    try:
+        T = {k: (KR / v).read_text() for k, v in FAST_PATH_SELFTEST.items()}
+        cs = fast_path_cases(T)
+    except Exception as e:
+        return 1, [("fast_path_fixtures", f"{type(e).__name__}: {e}")]
+    for name, text, ok in cs:
+        n += 1
+        errs, _ = check_fast_path(text)
+        if (not errs) != ok:
+            bad.append((name, errs[:3]))
+    for tname, (src, short) in FAST_PATH_LAYOUTS.items():
+        n += 1
+        try:
+            d = "norm"
+            sp = f"prysm/go1.26.10/link-set/{d}/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.{tname}.MarshalSSZTo.S"
+            fs, goffs, size = fast_path_ir((KR / "prysm/ir/ir-mainnet.json").read_text(), "v1alpha1." + tname)
+            X = fast_path_expect([l.strip() for l in (KR / sp).read_text().split("\n") if l.strip()], fs, goffs, size)
+            Lx = fast_path_layout_def((KR / src).read_text(), short.rsplit(".", 1)[-1], short)
+            if Lx != X["L"]:
+                bad.append((f"fast_path_recompute_{tname}", Lx, X["L"]))
+        except Exception as e:
+            bad.append((f"fast_path_recompute_{tname}", f"{type(e).__name__}: {e}"))
+    # an IR mutant: ValidatorBalance Balance at Go offset 24 -> the recomputation refuses
+    n += 1
+    try:
+        d = _fast_path_json.loads((KR / "prysm/ir/ir-mainnet.json").read_text())
+        for c in d["configs"]:
+            for t in c.get("types", []):
+                if t.get("name") == "ValidatorBalance" and c["package"].endswith("/v1alpha1"):
+                    t["go_fields"][2]["offset_gc_amd64"] = 24
+        fast_path_ir(_fast_path_json.dumps(d), "v1alpha1.ValidatorBalance")
+        bad.append(("fast_path_ir_goff_mutant", "not refused"))
+    except FastPathMismatch:
+        pass
+    return n, bad
+
+
+if __name__ == "__main__":
+    if sys.argv[1:] == ["--selftest"]:
+        sys.exit(selftest())
+    if len(sys.argv) < 2 or sys.argv[1].startswith("-"):
+        print(__doc__)
+        sys.exit(2)
+    sys.exit(main(sys.argv[1:]))

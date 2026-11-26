@@ -1,0 +1,182 @@
+[
+ {
+  "id": "pending-partial-withdrawal-decode-head-control",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.head",
+  "kind": "control"
+ },
+ {
+  "id": "pending-partial-withdrawal-decode-head-statement-hlen-24-to-25",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.head",
+  "kind": "statement",
+  "old": "(hlen : s.regs.rcx = 24)",
+  "new": "(hlen : s.regs.rcx = 25)"
+ },
+ {
+  "id": "pending-partial-withdrawal-decode-head-control-with-code-copy",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.head",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-partial-withdrawal-decode-head-code-mov-0x70-rsp-to-0x68-rsp",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.head",
+  "kind": "code",
+  "line": 13,
+  "old": "  mov %rdi,0x70(%rsp)",
+  "new": "  mov %rdi,0x68(%rsp)",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-partial-withdrawal-decode-epilogue-code-add-0x48-to-0x40",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.epilogue",
+  "kind": "code",
+  "line": 90,
+  "old": "  add $0x48,%rsp",
+  "new": "  add $0x40,%rsp",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-partial-withdrawal-decode-accept-control",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.accept",
+  "kind": "control"
+ },
+ {
+  "id": "pending-partial-withdrawal-witness-decode-accept-runs-control",
+  "module": "Prysm/PendingPartialWithdrawal/WitnessDecodeAccept.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs",
+  "kind": "control"
+ },
+ {
+  "id": "pending-partial-withdrawal-witness-decode-accept-runs-statement-zeros-0-to-0x10040",
+  "module": "Prysm/PendingPartialWithdrawal/WitnessDecodeAccept.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs",
+  "kind": "statement",
+  "old": "0 0 (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8)",
+  "new": "0 0x10040 (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8) (zeros 8)"
+ },
+ {
+  "id": "pending-partial-withdrawal-decode-reject-size-control",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeRejectSize.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
+  "kind": "control",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-partial-withdrawal-decode-reject-size-statement-rbx-e1-to-e0",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeRejectSize.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
+  "kind": "statement",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "pending-partial-withdrawal-decode-reject-size-code-cmp-0x18-to-0x10",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeRejectSize.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
+  "kind": "code",
+  "old": "  cmp $0x18,%rcx",
+  "new": "  cmp $0x10,%rcx",
+  "code_definition": "unmarshalSSZ",
+  "assembly": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pending-partial-withdrawal-ssz-value-spec-accepts-iff-control",
+  "module": "Prysm/PendingPartialWithdrawal/Spec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.SszValue.spec_accepts_iff",
+  "kind": "control"
+ },
+ {
+  "id": "pending-partial-withdrawal-ssz-value-spec-accepts-iff-statement-size-24-to-25",
+  "module": "Prysm/PendingPartialWithdrawal/Spec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.SszValue.spec_accepts_iff",
+  "kind": "statement",
+  "old": "bs.size = 24",
+  "new": "bs.size = 25"
+ },
+ {
+  "id": "pending-partial-withdrawal-desc-deserialize-checker-statement-deserialize-v-to-seq",
+  "module": "Prysm/PendingPartialWithdrawal/Spec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.desc_deserialize_checker",
+  "kind": "statement",
+  "old": "deserialize checkerDesc bs = .ok v",
+  "new": "deserialize checkerDesc bs = .ok (.seq [])"
+ },
+ {
+  "id": "pending-partial-withdrawal-decode-reject-complete-statement-size-24-to-23",
+  "module": "Prysm/PendingPartialWithdrawal/DecodeSpec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Decode.reject_complete",
+  "kind": "statement",
+  "old": "bs.size ≠ 24 :=",
+  "new": "bs.size ≠ 23 :="
+ },
+ {
+  "id": "pending-partial-withdrawal-witness-decode-reject-size-runs-statement-hlen-24-to-25",
+  "module": "Prysm/PendingPartialWithdrawal/WitnessDecodeRejectSize.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Witness.DecodeRejectSize.runs",
+  "kind": "statement",
+  "old": "(hlen : len ≠ 24)",
+  "new": "(hlen : len ≠ 25)"
+ },
+ {
+  "id": "pending-partial-withdrawal-encode-generated-fast-spec-control",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Encode.generated_fast_spec",
+  "kind": "control"
+ },
+ {
+  "id": "pending-partial-withdrawal-witness-generated-encode-fast-path-runs-empty-control",
+  "module": "Prysm/PendingPartialWithdrawal/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "pending-partial-withdrawal-encode-generated-fast-statement-v2-16-to-24",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Encode.generated_fast",
+  "kind": "statement",
+  "old": "Eq (v2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n          ⋆ R) st.data.dmem)",
+  "new": "Eq (v2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 24))\n          ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "pending-partial-withdrawal-encode-generated-fast-spec-statement-rbx-none-to-8",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "pending-partial-withdrawal-encode-generated-fast-spec-statement-hcap-24-to-16",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedEncodeFastPathSpec.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Encode.generated_fast_spec",
+  "kind": "statement",
+  "old": "(hcap : s.regs.rcx.toNat + 24 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "pending-partial-withdrawal-witness-generated-encode-fast-path-runs-empty-statement-rax-0x10100-to-0x10108",
+  "module": "Prysm/PendingPartialWithdrawal/WitnessGeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Witness.GeneratedEncodeFastPath.runs_empty",
+  "kind": "statement",
+  "old": "st.data.regs.rax = 0x10100",
+  "new": "st.data.regs.rax = 0x10108"
+ },
+ {
+  "id": "pending-partial-withdrawal-encode-generated-fast-statement-v1-v1-to-v2",
+  "module": "Prysm/PendingPartialWithdrawal/GeneratedEncodeFastPath.lean",
+  "theorem": "Prysm.PendingPartialWithdrawal.Encode.generated_fast",
+  "kind": "statement",
+  "old": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))",
+  "new": "Eq (v2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ }
+]

@@ -1,0 +1,149 @@
+import Prysm.BlobSidecarsByRangeRequest.Spec
+import Prysm.BlobSidecarsByRangeRequest.SpecDescription
+import Prysm.BlobSidecarsByRangeRequest.GeneratedEncodeFastPathSpec
+import Prysm.BlobSidecarsByRangeRequest.DecodeSpec
+import Prysm.BlobSidecarsByRangeRequest.Code
+import Prysm.BlobSidecarsByRangeRequest.GeneratedEncodeFastPath
+import Prysm.BlobSidecarsByRangeRequest.GeneratedDecodeAccept
+import Prysm.BlobSidecarsByRangeRequest.WitnessGeneratedDecodeAccept
+import Prysm.BlobSidecarsByRangeRequest.WitnessGeneratedDecodeRejectSize
+import Prysm.BlobSidecarsByRangeRequest.WitnessGeneratedEncodeFastPath
+
+/-! Hand list of the `BlobSidecarsByRangeRequest` declarations for `gen/checks/axioms_gate.py`.
+Each name must be in the declaration dump and use only the standard axioms. -/
+
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue._sizeOf_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue._sizeOf_inst
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.casesOn
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.count
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.ctorIdx
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.mk
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.mk._flat_ctor
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.mk.inj
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.mk.injEq
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.mk.noConfusion
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.mk.sizeOf_spec
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.noConfusion
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.noConfusionType
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.rec
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.recOn
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.startSlot
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.toValue
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.toValue.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.encode
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.encode.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.accepted_is_encoding
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.encode_size
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.roundtrip
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.serialize_eq
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.spec_accepts_iff
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.spec_rejects
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.toValue_fits
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.toValue_injective
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.toValue_surjective'
+#print axioms Prysm.BlobSidecarsByRangeRequest.desc
+#print axioms Prysm.BlobSidecarsByRangeRequest.desc.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.desc_fixedSize
+#print axioms Prysm.BlobSidecarsByRangeRequest.desc_kinds
+#print axioms Prysm.BlobSidecarsByRangeRequest.desc_wellFormed
+#print axioms Prysm.BlobSidecarsByRangeRequest.SszValue.encode_toList_generated
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_fast_spec
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_fast_split
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.accept_spec
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.reject_complete
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.reject_size_spec
+#print axioms Prysm.BlobSidecarsByRangeRequest.Code.marshalSSZTo
+#print axioms Prysm.BlobSidecarsByRangeRequest.Code.marshalSSZTo.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Code.unmarshalSSZ
+#print axioms Prysm.BlobSidecarsByRangeRequest.Code.unmarshalSSZ.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_StartSlot_call
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_StartSlot_call_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_accept
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_accept_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_epilogue
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_epilogue_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_field_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_field_1_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_field_2
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_field_2_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_head
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_head_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_reject
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_reject_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_directive_14
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_directive_14_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_directive_15
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_directive_15_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_directive_48
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_directive_48_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_directive_49
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_directive_49_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_directive_50
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_directive_50_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_directive_51
+#print axioms Prysm.BlobSidecarsByRangeRequest.Decode.generated_directive_51_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_epilogue
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_epilogue_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_field_0
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_field_0_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_field_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_field_1_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_fast
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_fast_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_head
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_head_kind
+#print axioms Prysm.BlobSidecarsByRangeRequest.Encode.generated_layout
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.program
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.program.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.program_length
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.frame_rest
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.frame_rest._proof_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.frame_rest._proof_2
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.frame_rest.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.block
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.runs
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.initial_state
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.initial_state.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.labels_fresh_at_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.labels_fresh_at_74
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.placed_at_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.placed_at_74
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.host
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.host._proof_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.mem
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.host_program_eq
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.zero_word_bytes
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.zeros
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.program
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.program.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.program_length
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.frame_rest
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.frame_rest.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.block
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.runs
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.initial_state
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.initial_state.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.labels_fresh_at_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.placed_at_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.host
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.host._proof_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.label_err_size
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.mem
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.word_bytes
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeRejectSize.zeros
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.program
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.program.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.program_length
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.block
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.runs_empty
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.runs_prefix
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.initial_state
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.initial_state.eq_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.labels_fresh_at_0
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.placed_at_0
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.host
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.host._proof_1
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.mem
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.word_bytes
+#print axioms Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.zeros

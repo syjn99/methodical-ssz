@@ -1,0 +1,74 @@
+import Prysm.BuilderPreferences.Spec
+import Prysm.BuilderPreferences.SpecDescription
+import Prysm.BuilderPreferences.GeneratedEncodeFastPathSpec
+import Prysm.BuilderPreferences.Code
+import Prysm.BuilderPreferences.GeneratedEncodeFastPath
+import Prysm.BuilderPreferences.WitnessGeneratedEncodeFastPath
+
+/-! Hand list of the `BuilderPreferences` declarations for `gen/checks/axioms_gate.py`.
+Each name must be in the declaration dump and use only the standard axioms. -/
+
+#print axioms Prysm.BuilderPreferences.SszValue
+#print axioms Prysm.BuilderPreferences.SszValue._sizeOf_1
+#print axioms Prysm.BuilderPreferences.SszValue._sizeOf_inst
+#print axioms Prysm.BuilderPreferences.SszValue.casesOn
+#print axioms Prysm.BuilderPreferences.SszValue.ctorIdx
+#print axioms Prysm.BuilderPreferences.SszValue.maxExecutionPayment
+#print axioms Prysm.BuilderPreferences.SszValue.mk
+#print axioms Prysm.BuilderPreferences.SszValue.mk._flat_ctor
+#print axioms Prysm.BuilderPreferences.SszValue.mk.inj
+#print axioms Prysm.BuilderPreferences.SszValue.mk.injEq
+#print axioms Prysm.BuilderPreferences.SszValue.mk.noConfusion
+#print axioms Prysm.BuilderPreferences.SszValue.mk.sizeOf_spec
+#print axioms Prysm.BuilderPreferences.SszValue.noConfusion
+#print axioms Prysm.BuilderPreferences.SszValue.noConfusionType
+#print axioms Prysm.BuilderPreferences.SszValue.rec
+#print axioms Prysm.BuilderPreferences.SszValue.recOn
+#print axioms Prysm.BuilderPreferences.SszValue.toValue
+#print axioms Prysm.BuilderPreferences.SszValue.toValue.eq_1
+#print axioms Prysm.BuilderPreferences.SszValue.encode
+#print axioms Prysm.BuilderPreferences.SszValue.encode.eq_1
+#print axioms Prysm.BuilderPreferences.SszValue.accepted_is_encoding
+#print axioms Prysm.BuilderPreferences.SszValue.encode_size
+#print axioms Prysm.BuilderPreferences.SszValue.roundtrip
+#print axioms Prysm.BuilderPreferences.SszValue.serialize_eq
+#print axioms Prysm.BuilderPreferences.SszValue.spec_accepts_iff
+#print axioms Prysm.BuilderPreferences.SszValue.spec_rejects
+#print axioms Prysm.BuilderPreferences.SszValue.toValue_fits
+#print axioms Prysm.BuilderPreferences.SszValue.toValue_injective
+#print axioms Prysm.BuilderPreferences.SszValue.toValue_surjective'
+#print axioms Prysm.BuilderPreferences.desc
+#print axioms Prysm.BuilderPreferences.desc.eq_1
+#print axioms Prysm.BuilderPreferences.desc_fixedSize
+#print axioms Prysm.BuilderPreferences.desc_kinds
+#print axioms Prysm.BuilderPreferences.desc_wellFormed
+#print axioms Prysm.BuilderPreferences.SszValue.encode_toList_generated
+#print axioms Prysm.BuilderPreferences.Encode.generated_fast_spec
+#print axioms Prysm.BuilderPreferences.Encode.generated_fast_split
+#print axioms Prysm.BuilderPreferences.Code.marshalSSZTo
+#print axioms Prysm.BuilderPreferences.Code.marshalSSZTo.eq_1
+#print axioms Prysm.BuilderPreferences.Code.unmarshalSSZ
+#print axioms Prysm.BuilderPreferences.Encode.generated_epilogue
+#print axioms Prysm.BuilderPreferences.Encode.generated_epilogue_kind
+#print axioms Prysm.BuilderPreferences.Encode.generated_field_0
+#print axioms Prysm.BuilderPreferences.Encode.generated_field_0_kind
+#print axioms Prysm.BuilderPreferences.Encode.generated_fast
+#print axioms Prysm.BuilderPreferences.Encode.generated_fast_kind
+#print axioms Prysm.BuilderPreferences.Encode.generated_head
+#print axioms Prysm.BuilderPreferences.Encode.generated_head_kind
+#print axioms Prysm.BuilderPreferences.Encode.generated_layout
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.program
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.program.eq_1
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.program_length
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.block
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.runs_empty
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.runs_prefix
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.initial_state
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.initial_state.eq_1
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.labels_fresh_at_0
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.placed_at_0
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.host
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.host._proof_1
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.mem
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.word_bytes
+#print axioms Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.zeros

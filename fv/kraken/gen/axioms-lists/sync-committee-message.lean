@@ -1,0 +1,133 @@
+import Prysm.SyncCommitteeMessage.DecodeSpec
+import Prysm.SyncCommitteeMessage.WitnessGeneratedDecodeAccept
+import Prysm.SyncCommitteeMessage.WitnessGeneratedDecodeRejectSize
+import Prysm.SyncCommitteeMessage.GeneratedDecodeAccept
+import Prysm.SyncCommitteeMessage.Code
+import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPath
+import Prysm.SyncCommitteeMessage.GeneratedEncodeFastPathSpec
+import Prysm.SyncCommitteeMessage.EncodeFastPathStatements
+import Prysm.SyncCommitteeMessage.EncodeFastPathStatementTie
+import Prysm.SyncCommitteeMessage.WitnessGeneratedEncodeFastPath
+
+/-! Hand list of the `SyncCommitteeMessage` declarations for `gen/checks/axioms_gate.py`.
+Each name must be in the declaration dump and use only the standard axioms. -/
+
+#print axioms Prysm.SyncCommitteeMessage.Decode.accept_spec
+#print axioms Prysm.SyncCommitteeMessage.Decode.reject_complete
+#print axioms Prysm.SyncCommitteeMessage.Decode.reject_size_spec
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.program_length
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_188
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_251
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_314
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_320
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.labels_fresh_at_9
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.placed_at_188
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.placed_at_251
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.placed_at_314
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.placed_at_320
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.placed_at_9
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.label_bump_pointer
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.label_write_barrier
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.lift_heap
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.host_program_eq
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeAccept.runs
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize.program_length
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize.labels_fresh_at_1
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize.placed_at_1
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize.label_err_size
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedDecodeRejectSize.runs
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_BlockRoot_segment
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_BlockRoot_segment_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_Signature_segment
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_Signature_segment_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_Slot_call
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_Slot_call_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_ValidatorIndex_call
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_ValidatorIndex_call_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_accept
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_accept_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_epilogue
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_epilogue_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_field_1
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_field_1_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_field_2
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_field_2_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_field_3
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_field_3_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_field_4
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_field_4_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_head
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_head_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_reject
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_reject_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_118
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_118_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_119
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_119_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_146
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_146_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_147
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_147_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_15
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_154
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_154_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_155
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_155_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_15_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_16
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_16_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_72
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_72_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_73
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_73_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_80
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_80_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_81
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_81_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_82
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_82_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_83
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_83_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_84
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_84_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_85
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_85_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_86
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_86_kind
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_87
+#print axioms Prysm.SyncCommitteeMessage.Decode.generated_directive_87_kind
+#print axioms Prysm.SyncCommitteeMessage.Code.marshalSSZTo
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_epilogue
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_epilogue_kind
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_field_0
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_field_0_kind
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_field_1
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_field_1_kind
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_field_2
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_field_2_kind
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_field_3
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_field_3_kind
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_fast
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_fast_kind
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_head
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_head_kind
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_layout
+#print axioms Prysm.SyncCommitteeMessage.SszValue.encode_toList_generated
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_fast_spec
+#print axioms Prysm.SyncCommitteeMessage.Encode.generated_fast_split
+#print axioms Prysm.SyncCommitteeMessage.Encode.fast_path_statement
+#print axioms Prysm.SyncCommitteeMessage.Encode.fast_path_statement_tie
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.program
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.program_length
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.block
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.initial_state
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.labels_fresh_at_0
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.labels_fresh_copy_model
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.placed_at_0
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.placed_copy_model
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.host
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.mem
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.runs_empty
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.runs_prefix
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.word_bytes
+#print axioms Prysm.SyncCommitteeMessage.Witness.GeneratedEncodeFastPath.zeros

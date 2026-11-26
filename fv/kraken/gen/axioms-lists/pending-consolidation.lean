@@ -1,0 +1,88 @@
+import Prysm.PendingConsolidation.DecodeSpec
+import Prysm.PendingConsolidation.WitnessGeneratedDecodeAccept
+import Prysm.PendingConsolidation.WitnessGeneratedDecodeRejectSize
+import Prysm.PendingConsolidation.GeneratedDecodeAccept
+import Prysm.PendingConsolidation.Code
+import Prysm.PendingConsolidation.GeneratedEncodeFastPath
+import Prysm.PendingConsolidation.GeneratedEncodeFastPathSpec
+import Prysm.PendingConsolidation.WitnessGeneratedEncodeFastPath
+
+/-! Hand list of the `PendingConsolidation` declarations for `gen/checks/axioms_gate.py`.
+Each name must be in the declaration dump and use only the standard axioms. -/
+
+#print axioms Prysm.PendingConsolidation.Decode.accept_spec
+#print axioms Prysm.PendingConsolidation.Decode.reject_complete
+#print axioms Prysm.PendingConsolidation.Decode.reject_size_spec
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.program_length
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.labels_fresh_at_1
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.labels_fresh_at_108
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.placed_at_1
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.placed_at_108
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.runs
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeAccept.host_program_eq
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize.program_length
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize.labels_fresh_at_1
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize.placed_at_1
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize.label_err_size
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedDecodeRejectSize.runs
+#print axioms Prysm.PendingConsolidation.Decode.generated_SourceIndex_call
+#print axioms Prysm.PendingConsolidation.Decode.generated_SourceIndex_call_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_TargetIndex_call
+#print axioms Prysm.PendingConsolidation.Decode.generated_TargetIndex_call_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_accept
+#print axioms Prysm.PendingConsolidation.Decode.generated_accept_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_epilogue
+#print axioms Prysm.PendingConsolidation.Decode.generated_epilogue_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_field_1
+#print axioms Prysm.PendingConsolidation.Decode.generated_field_1_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_field_2
+#print axioms Prysm.PendingConsolidation.Decode.generated_field_2_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_head
+#print axioms Prysm.PendingConsolidation.Decode.generated_head_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_reject
+#print axioms Prysm.PendingConsolidation.Decode.generated_reject_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_15
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_15_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_16
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_16_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_48
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_48_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_49
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_49_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_50
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_50_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_51
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_51_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_52
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_52_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_53
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_53_kind
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_54
+#print axioms Prysm.PendingConsolidation.Decode.generated_directive_54_kind
+#print axioms Prysm.PendingConsolidation.Code.marshalSSZTo
+#print axioms Prysm.PendingConsolidation.Encode.generated_epilogue
+#print axioms Prysm.PendingConsolidation.Encode.generated_epilogue_kind
+#print axioms Prysm.PendingConsolidation.Encode.generated_field_0
+#print axioms Prysm.PendingConsolidation.Encode.generated_field_0_kind
+#print axioms Prysm.PendingConsolidation.Encode.generated_field_1
+#print axioms Prysm.PendingConsolidation.Encode.generated_field_1_kind
+#print axioms Prysm.PendingConsolidation.Encode.generated_fast
+#print axioms Prysm.PendingConsolidation.Encode.generated_fast_kind
+#print axioms Prysm.PendingConsolidation.Encode.generated_head
+#print axioms Prysm.PendingConsolidation.Encode.generated_head_kind
+#print axioms Prysm.PendingConsolidation.Encode.generated_layout
+#print axioms Prysm.PendingConsolidation.SszValue.encode_toList_generated
+#print axioms Prysm.PendingConsolidation.Encode.generated_fast_spec
+#print axioms Prysm.PendingConsolidation.Encode.generated_fast_split
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.program
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.program_length
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.block
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.initial_state
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.labels_fresh_at_0
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.placed_at_0
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.host
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.mem
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.runs_empty
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.runs_prefix
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.word_bytes
+#print axioms Prysm.PendingConsolidation.Witness.GeneratedEncodeFastPath.zeros

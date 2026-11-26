@@ -1,0 +1,242 @@
+module
+
+public import Codec.SegmentAddress
+public import Runtime.Contracts
+public import Machine.Frame
+public import Prysm.CommitteeIndex.DecodeAcceptFunctionSpec
+public import Prysm.ValidatorIndex.DecodeAcceptFunctionSpec
+public import Prysm.SingleAttestation.Code
+
+@[expose] public section
+
+/-!
+# Prysm `(*v1alpha1.SingleAttestation).UnmarshalSSZ`, accept path, head segment
+
+    func (c *SingleAttestation) UnmarshalSSZ(buf []byte) error {        // electra.ssz.go:4914
+        if size != 240 { return ssz.ErrSize }
+        if err = c.CommitteeId.UnmarshalSSZ(buf[0:8]); err != nil { return fmt.Errorf("CommitteeId: %w", err) }
+        if err = c.AttesterIndex.UnmarshalSSZ(buf[8:16]); err != nil { ... }
+        ...
+
+Directive indices of `Prysm.SingleAttestation.Code.unmarshalSSZ` (the Go 1.26.10 `.S`, index = line − 1):
+2–3 stack guard, 4–7 prologue (`push %rbp`, `sub $0x70`, rbx spill at rsp + 16),
+9–10 `cmp $0xf0,%rcx; jne L_2f6`, 11–13 spills of rax, rdi, rbx at rsp + 8, + 32, + 16,
+14 `test %al,(%rax)` (nil check, byte 0 of `state`), 15–17 `add $0x8,%rax; mov $0x8,%ecx;
+callq CommitteeIndex.UnmarshalSSZ`, 18–19 `test %rax,%rax; je L_c7`, 47 `L_c7`, 48–55 arguments and
+`callq ValidatorIndex.UnmarshalSSZ`, 56–57 `test; je L_167`, 85 `L_167` (end of this segment).
+The proof text is `Prysm.AttestationData.Decode.head` with the callees and the order of the spills of this `.S` file.
+
+The callees are used only through `Prysm.CommitteeIndex.Decode.accept_function_spec` / `Prysm.ValidatorIndex.Decode.accept_function_spec`
+(hypotheses of this segment lemma; `Decode.accept` discharges them by
+`Prysm.CommitteeIndex.Decode.accept_function_spec_holds` / `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`).
+
+Stack (rsp = s.regs.rsp at entry): return slot; saved rbp at rsp − 8; argument spills at
+rsp + 8 (receiver), rsp + 16 (buf.ptr), rsp + 32 (buf.cap); the callees' return slot at
+rsp − 128; their saved rbp at rsp − 136 and their rbx spill at rsp − 112 (the frame word
+0x8(%rsp) of this function).
+-/
+
+open Machine Runtime Prysm.SingleAttestation.Code
+variable [Host]
+
+namespace Prysm.SingleAttestation
+
+omit [Host] in
+theorem Decode.head_return_slot (x : BitVec 64) : x - 8#64 - 112 - 8#64 = x - 128 := by bv_omega
+
+omit [Host] in
+theorem Decode.call_return_slot (x : BitVec 64) : x - 120 - 8#64 = x - 128 := by bv_omega
+
+omit [Host] in
+theorem Decode.return_rsp (x : BitVec 64) : ({ toBitVec := x - 128 } + 8 : UInt64) = { toBitVec := x - 120 } := by
+  apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
+
+omit [Host] in
+theorem Decode.callee_guard (x : BitVec 64) (g : Nat) (h : g + 352 < x.toNat) : g < (x - 128).toNat := by bv_omega
+
+/-- Head segment: from the entry to `L_167` (directive 85), through the length check and
+the CommitteeIndex and ValidatorIndex callees. -/
+theorem Decode.head (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
+    (hci : Prysm.CommitteeIndex.Decode.accept_function_spec) (hvi : Prysm.ValidatorIndex.Decode.accept_function_spec)
+    (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
+    (s : MachineData) (ra guard : UInt64)
+    (fp s1 s2 s4 sp1 rslot lf ast a8 a16 : List UInt8)
+    (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (h4 : s4.length = 8)
+    (hsp1 : sp1.length = 8) (hrs : rslot.length = 8) (hlf : lf.length = 8)
+    (hast : ast.length = 8) (ha8 : a8.length = 8) (ha16 : a16.length = 8)
+    (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s1.At (s.regs.rsp.toBitVec + 8))
+      ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16)) ⋆ Eq (s4.At (s.regs.rsp.toBitVec + 32))
+      ⋆ Eq (sp1.At (s.regs.rsp.toBitVec - 112)) ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 128))
+      ⋆ Eq (lf.At (s.regs.rsp.toBitVec - 136))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Eq (in0.At s.regs.rbx.toBitVec) ⋆ Eq (in1.At (s.regs.rbx.toBitVec + 8))
+      ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (a8.At (s.regs.rax.toBitVec + 8))
+      ⋆ Eq (a16.At (s.regs.rax.toBitVec + 16)) ⋆ R)
+    (hguard : guard.toNat + 352 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 240) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + 85) ∧ st.data.regs.rsp = s.regs.rsp - 120
+        ∧ st.data.regs.rbp = s.regs.rsp - 8 ∧ st.data.regs.r14 = s.regs.r14 ∧
+        (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rax.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rdi.toBitVec.toInt).At (s.regs.rsp.toBitVec + 32))
+          ⋆ Eq ((Int.toBytes 8 (s.regs.rbx.toBitVec + 8).toInt).At (s.regs.rsp.toBitVec - 112))
+          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 56)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 128))
+          ⋆ Eq ((Int.toBytes 8 (s.regs.rsp.toBitVec - 8#64).toInt).At (s.regs.rsp.toBitVec - 136))
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+          ⋆ Eq (in0.At s.regs.rbx.toBitVec) ⋆ Eq (in1.At (s.regs.rbx.toBitVec + 8))
+          ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))
+          ⋆ Eq (in1.At (s.regs.rax.toBitVec + 16)) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf k⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hguard hlen ⊢
+  subst hlen
+  have := rsp.toNat_lt_size; have := guard.toNat_lt_size; simp only [UInt64.size] at *
+  have hcs : Eq (ast.At rax.toBitVec) = Eq ((ast.take 1).At rax.toBitVec) ⋆ Eq ((ast.drop 1).At (rax.toBitVec + 1)) := by
+    conv => lhs; rw [← List.take_append_drop 1 ast]
+    exact at_app _ _ (by rw [List.length_take, hast]; rfl) (by simp [hast])
+  rw [hcs] at h_mem
+  step_directive hk unmarshalSSZ 0
+  step_directive hk unmarshalSSZ 1
+  step_directive hk unmarshalSSZ 2
+  apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  unfold_step
+  step_directive hk unmarshalSSZ 3
+  split
+  · rename_i h; exfalso
+    simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+    rcases h with h | h
+    · apply h; omega
+    · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
+  simp only [Effects.All]
+  step_directive hk unmarshalSSZ 4
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
+  intro m1' H1
+  simp only [Width.bytes, Width.bits] at H1
+  unfold_step
+  step_directive hk unmarshalSSZ 5
+  step_directive hk unmarshalSSZ 6
+  step_directive hk unmarshalSSZ 7
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
+  intro m2' H2
+  simp only [Width.bytes, Width.bits] at H2
+  unfold_step
+  step_directive hk unmarshalSSZ 8
+  step_directive hk unmarshalSSZ 9
+  step_directive hk unmarshalSSZ 10
+  split
+  case isTrue h => exact absurd h (by decide)
+  simp only [Effects.All]
+  step_directive hk unmarshalSSZ 11
+  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by bv_omega) (by ecancel) (by exact h1)
+  intro m3' H3
+  simp only [Width.bytes, Width.bits] at H3
+  unfold_step
+  step_directive hk unmarshalSSZ 12
+  apply store_step_at _ _ (rsp.toBitVec + 32) _ _ _ s4 _ _ (by bv_omega) (by ecancel) (by exact h4)
+  intro m4' H4
+  simp only [Width.bytes, Width.bits] at H4
+  unfold_step
+  step_directive hk unmarshalSSZ 13
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by bv_omega) (by ecancel)
+    (by exact Int.toBytes_length 8 _)
+  intro m5' H5
+  simp only [Width.bytes, Width.bits] at H5
+  unfold_step
+  step_directive hk unmarshalSSZ 14
+  apply load_step _ _ _ _ (ast.take 1) _ _ (by ecancel) (by simp [hast])
+  unfold_step
+  intro _
+  step_directive hk unmarshalSSZ 15
+  step_directive hk unmarshalSSZ 16
+  step_directive hk unmarshalSSZ 17
+  apply store_step_at _ _ (rsp.toBitVec - 128) _ _ _ rslot _ _ (Decode.head_return_slot _) (by ecancel) (by exact hrs)
+  intro m6' H6
+  simp only [Width.bytes, Width.bits] at H6
+  unfold_step
+  rw [Decode.head_return_slot] at *
+  rw [show (8 : BitVec 64) + rax.toBitVec = rax.toBitVec + 8 from BitVec.add_comm _ _]
+  refine eventually_trans _ _ _ _ (hci _  (Host.addrOf (k + 17 + 1)) in0 lf sp1 a8 guard _
+    hin0 hlf hsp1 ha8 rfl (Decode.callee_guard _ _ hguard)
+    (by dsimp only; rw [show rsp.toBitVec - 128 - 8 = rsp.toBitVec - 136 by bv_omega,
+      show rsp.toBitVec - 128 + 16 = rsp.toBitVec - 112 by bv_omega]; ecancel)) ?_
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrax2, hrbx2, hrsp2, hrbp2, hr142, Hm2⟩
+  dsimp only at hpc2 hrax2 hrbx2 hrsp2 hrbp2 hr142 Hm2
+  subst hpc2
+  obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
+    zmms2, flags2, mem2⟩ := d2
+  simp only at hrax2 hrbx2 hrsp2 hrbp2 hr142 Hm2
+  rw [Decode.return_rsp] at hrsp2
+  subst rax2 rbx2 rsp2 rbp2 r142
+  rw [show rsp.toBitVec - 128 - 8 = rsp.toBitVec - 136 by bv_omega,
+    show rsp.toBitVec - 128 + 16 = rsp.toBitVec - 112 by bv_omega] at Hm2
+  step_directive hk unmarshalSSZ 18
+  intro _
+  step_directive hk unmarshalSSZ 19
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  label_address hk hf unmarshalSSZ 47
+  step_directive hk unmarshalSSZ 47
+  step_directive hk unmarshalSSZ 48
+  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
+    (by exact Int.toBytes_length 8 _)
+  unfold_step
+  step_directive hk unmarshalSSZ 49
+  step_directive hk unmarshalSSZ 50
+  apply load_step_at _ _ (rsp.toBitVec + 32) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
+    (by exact Int.toBytes_length 8 _)
+  unfold_step
+  step_directive hk unmarshalSSZ 51
+  step_directive hk unmarshalSSZ 52
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by segment_addr) (by ecancel)
+    (by exact Int.toBytes_length 8 _)
+  unfold_step
+  step_directive hk unmarshalSSZ 53
+  step_directive hk unmarshalSSZ 54
+  step_directive hk unmarshalSSZ 55
+  apply store_step_at _ _ (rsp.toBitVec - 128) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 17 + 1)).toBitVec.toInt) _ _
+    (Decode.call_return_slot _) (by ecancel) (by exact Int.toBytes_length 8 _)
+  intro m7' H7
+  simp only [Width.bytes, Width.bits] at H7
+  unfold_step
+  rw [Decode.call_return_slot] at *
+  rw [show (8 : BitVec 64) + rbx.toBitVec = rbx.toBitVec + 8 from BitVec.add_comm _ _,
+    show (16 : BitVec 64) + rax.toBitVec = rax.toBitVec + 16 from BitVec.add_comm _ _]
+  rw [show Eq ((Int.toBytes 8 (rsp.toBitVec - 8#64).toInt).At (rsp.toBitVec - 136))
+      = Eq ((Int.toBytes 8 (rsp.toBitVec - 8#64).toInt).At (rsp.toBitVec - 136)) from rfl] at H7
+  refine eventually_trans _ _ _ _ (hvi _ (Host.addrOf (k + 55 + 1)) in1 (Int.toBytes 8 (rsp.toBitVec - 8#64).toInt)
+    (Int.toBytes 8 rbx.toBitVec.toInt) a16 guard _
+    hin1 (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) ha16 rfl (Decode.callee_guard _ _ hguard)
+    (by dsimp only; rw [show rsp.toBitVec - 128 - 8 = rsp.toBitVec - 136 by bv_omega,
+      show rsp.toBitVec - 128 + 16 = rsp.toBitVec - 112 by bv_omega]; ecancel)) ?_
+  rintro ⟨d3, pc3⟩ ⟨hpc3, hrax3, hrbx3, hrsp3, hrbp3, hr143, Hm3⟩
+  dsimp only at hpc3 hrax3 hrbx3 hrsp3 hrbp3 hr143 Hm3
+  subst hpc3
+  obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,
+    zmms3, flags3, mem3⟩ := d3
+  simp only at hrax3 hrbx3 hrsp3 hrbp3 hr143 Hm3
+  rw [Decode.return_rsp] at hrsp3
+  subst rax3 rbx3 rsp3 rbp3 r143
+  rw [show rsp.toBitVec - 128 - 8 = rsp.toBitVec - 136 by bv_omega,
+    show rsp.toBitVec - 128 + 16 = rsp.toBitVec - 112 by bv_omega] at Hm3
+  step_directive hk unmarshalSSZ 56
+  intro _
+  step_directive hk unmarshalSSZ 57
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  label_address hk hf unmarshalSSZ 85
+  apply Eventually.done
+  rw [show k + 55 + 1 = k + 56 from rfl] at Hm3
+  rw [show Eq ((Int.toBytes 8 (rsp.toBitVec - 8#64).toInt).At (rsp.toBitVec - 136))
+      = Eq ((Int.toBytes 8 (rsp.toBitVec - 8#64).toInt).At (rsp.toBitVec - 136)) from rfl] at Hm3
+  refine ⟨rfl, ?_, ?_, rfl, ?_⟩
+  rotate_right
+  · rw [hcs]; simp only [Std.ExtHashMap.sep_assoc]; ecancel
+  all_goals (apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_sub, UInt64.toBitVec_ofNat]; try rfl)
+
+end Prysm.SingleAttestation
